@@ -9,7 +9,7 @@
 
 Good evening, everyone. Quick audio and screen check. Let's begin.
 
-Just a short recap of the previous session: based on how the market settles and the swing that forms around that settlement, we can take entries with better clarity and read the day with more confidence. Now we move on to the bigger picture — the **major overview**.
+Just a short recap of the previous session: we established a method based on how the market settles and the swing that forms around that settlement — working off the **previous day's close**, identifying the first swing in roughly the **~9:45–12 window**, and entering on simple support/resistance formation. That way we can take entries with better clarity and read the day with more confidence. Now we move on to the bigger picture — the **major overview**.
 
 ## What the "major overview" actually is
 
@@ -25,7 +25,7 @@ Once the major swings are marked, we compare — normally you'd base the compari
 1. The **recent range** (the current/nearest range the market is in), and
 2. The **next range** — the support/resistance we mark from the next, bigger swings.
 
-For example, if I shift to the daily chart, the recent range gives a smaller box, and the next support/resistance is marked from the larger swings. All range/support-resistance marking is done on the basis of buying/selling swings.
+For example, if I shift to the daily chart, the recent range gives a smaller box, and the next support/resistance is marked from the larger swings. He illustrated with a few recent sessions crowded into that recent range (across roughly the Feb sessions around the ~21st, 24th, 25th-26th, 29th, up to the most recent Friday, 1 March) — which is how you conclude which level the market is actually performing from on a given day. All range/support-resistance marking is done on the basis of buying/selling swings.
 
 ### The pace of momentum
 A lot of people have seen the tools — but how do you actually observe them? For example, how fib is plotted: it depends on the **pace of momentum**. What does pace of momentum mean? At what pace is the market moving?
@@ -55,7 +55,7 @@ We can't force the market to move the way we want; but there are times when we *
 
 So, for example, when the market is at a lower level — in a strong selling zone — there's a reduced probability the market simply flips straight to the buying side. That's the kind of thing a trader uses.
 
-You can also choose to... `[unclear]`. So we can take positions on either side depending on the momentum expectation.
+The key framing: **most people lose money precisely because they fight the market's nature** — it keeps swinging down, then up, then down again. If instead you *use* that nature to your benefit, your whole game changes. So we take positions **in line with** the expected momentum (buying on support, selling at resistance), rather than fighting it.
 
 ---
 
@@ -80,12 +80,27 @@ Instead — because you are taking *more* time to confirm, more observation, and
 
 The catch with small stop-loss planning is: the entry has to be **precise**. If the entry isn't precise, then the momentum may not come right after the entry — and you're out.
 
+For this style of trading, **option selling** is the preferred, easier method — because you give even more time for confirmation and can hold the position comfortably (he noted he'd rarely seen losses on this base method). Option *buying* on top of it is also fine, but it adds a bit more risk.
+
 ## The backup plan overall
 So this six-day live session has a **backup plan**: for anyone who isn't yet able to take the more complicated things we'll discuss later, there's a simple method they can execute profitably, and keep doing until they level up.
 
 It's also about your mental peace: to be able to trade a process successfully, then later learn the deeper complications. So begin by getting this "proper process" working — trade it successfully and continuously — then, later, improve into the deeper concepts.
 
-`[unclear — a few lines here are too garbled to reconstruct]`
+## Option execution — buying vs. selling
+
+The practical thread running through the session's walkthroughs was **options**, with a simple capital-size rule:
+
+- If you have a **small capital**, do **option buying** — he personally would not go for option selling on small capital.
+- If you have a **big capital** (where buying no longer scales well / you keep crossing limits), **option selling is the safer, preferred route** — because the base method is confirmation-based, the trade can be held longer, and a bigger stop fits.
+
+So in practice: with small capital you buy (usually from the lower/support side); with big capital you sell the opposite side. Either way, the overview decides the side.
+
+Walkthrough mechanics (on a selling read / market at the high side):
+- If the market makes the **intraday high and doesn't hold it** — a **rejection candle** forms — you can **sell the call option**.
+- After it falls and a **support forms**, you buy on confirmation (at the lower level). If the market then turns up (aggressive buying starts), **exit the selling-side lot**.
+- If a **buying swing fails** — the buying swing you believed in breaks down — you can take a **put option in small quantity**, placing the stop near the swing.
+- Where the market is just **sideways**, the call/put position keeps decaying, so you still make money on that side; once momentum shows, exit on the confirmation.
 
 ## Handling both sides — the two-position approach
 
@@ -99,9 +114,7 @@ Later in the session he walked through a real day where both sides, buying and s
 
 So in some days the market stays **sideways**. In a sideways market, selling (or that side) makes you money — and at the closing, if the market shot the opposite side, the sufficient momentum comes and you book it.
 
-In the **support strategy** — when the market is at support and confirms, you don't expect it to go straight up... `[unclear]`. When the market makes a buying swing and retraces, if it can't go back to the prior high (no recovery — meaning lack of strength...), you either wait or act on the basis of what you've been taught.
-
-`[unclear]`
+In the **support strategy** — when the market is at support and confirms, you don't expect it to rocket straight up; you expect only a bounce first. When the market makes a buying swing and retraces, if it can't get back to the prior high (no recovery — meaning lack of strength), you either wait or act on the basis of what you've been taught.
 
 The whole point: **placement** — observe the momentum, exit the side that is going against you, and hold the side that aligns with the overview.
 
@@ -116,11 +129,9 @@ So:
 - After that, the next W-shape also forms → continue, money again.
 - If the reversal doesn't come (the first shape just keeps going) — still, money. Because in all of these cases the swing kept flowing in the direction.
 
-Where does the **loss** happen? Only in one condition: if the market dips, goes down, retraces, goes back down to a level, and even after the strength is confirmed and the intraday low gets tested — the market doesn't recover properly — only then the loss happens. `[unclear]`
+Where does the **loss** happen? Only in one condition: if the market dips, goes down, retraces, goes back down to a level, and even after the strength is confirmed and the intraday low gets tested — the market doesn't recover properly — only then the loss happens.
 
 He said: I need time to explain this properly — it takes multiple sessions to build the depth. From the second session onward there will be substantially more clarity.
-
-`[unclear clauses]`
 
 ---
 
