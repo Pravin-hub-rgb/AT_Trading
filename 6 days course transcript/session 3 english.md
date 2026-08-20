@@ -77,6 +77,20 @@ When you identify whether the first swing has strength or weakness, set your **e
 
 He stressed he wasn't asserting the "facts" strictly, but that the **minimum expectation** you keep should be these. He also said: as a trader, execute where the *probability is highest* — on the weak selling swing (support → intraday high), because that's what market nature most often does.
 
+### Strong vs. weak swings — practical logic
+
+The instructor kept reinforcing that the important thing is not to judge a swing from a single candle or from a single moment of market noise. The real question is: **is the swing strong enough to continue, or weak enough to reverse?**
+
+- A weak selling swing often leads to **reversal trading**: the market takes support, then recovers upward.
+- A weak buying swing often **retraces** instead of continuing strongly; if the market keeps selling back into the swing, that means the buying pressure is not decisive.
+- A strong swing is one where momentum is clear and the market does not keep giving back the move. Big candles, rapid directional continuation, and limited retracement are characteristic of strength.
+- A weak swing is one where the market keeps **rejecting higher/lower levels**, retracing repeatedly, and failing to hold the move.
+- This is why the instructor said: do not assume "if it retraced once then it is weak" in a rigid way; it is a probability judgment, not a certainty. The key is *momentum + retracement pattern*.
+- On chart examples, the class discussed how a market can form a buying swing, push up, then fail and reverse; the question was whether that was a weak buying swing or merely a healthy retracement before continuation.
+- The same logic works on the selling side: a weak selling swing may create support and invite a recovery; a strong selling swing keeps pushing lower with less reversal.
+
+He also emphasized that these are all **building blocks**. The next sessions will connect them into a larger chain: overview → swing strength/weakness → support/resistance → execution → expectation.
+
 ### Risk management / small SL
 If you keep a small stop-loss you get a better **return on investment**. If your ratio is fixed but you try to **consistently capture very big momentum every single day**, your failure rate will be high. So keep the SL small and the expectation realistic — trade the highest-probability move.
 
