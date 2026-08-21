@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+frontend/node_modules/
+
+# next.js
+.next/
+out/
+frontend/.next/
+
+# env / secrets
+backend/.env
+.env
+.env.local
+.env.production
+
+# python
+backend/venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# runtime data
+data/
+
+# logs
+*.log
+frontend/*.log
+
+# misc
+.DS_Store
+*.pkl

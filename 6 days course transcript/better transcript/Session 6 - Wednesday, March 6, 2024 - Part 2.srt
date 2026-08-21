@@ -1,0 +1,244 @@
+1
+00:00:00,000 --> 00:00:30,000
+ताग है अब एकदम low पर short कर रहे हैं कि और नीचे गिरेगा, not a good probability execution, तो flow के favor में करना है, और overall अगर swing भी देखेंगे तो क्या बना है, market एक दो candle बनाया है, लेकिन फिर उसको reverse कर दिया, तो support बनने पर buying side जो overview कहता है कि buying side execution करना चाहिए, तो pattern break देखेंगे तो यहाँ यह candle wise pattern
+
+2
+00:00:30,000 --> 00:01:00,000
+तो यहाँ कहीं, even यहाँ कहीं, retracement के बाद, high low के बाद, इस range में कहीं भी execution can be planned in this particular example, minimum expectation will be intraday high breakout, तो यह example हो गया, इसके बाद और देख लेंगे, तो किसी दिन अब क्या है, अब जैसे कुछ case होते हैं, जिसमें continuation बड़ा हो जाता है, आँजसे यह case है, इसमें क्या हो गया ह
+
+3
+00:01:00,000 --> 00:01:30,000
+है, 11th of October यह क्या होए, अब market selling side आ गया, retracement हुआ, high लगाया, lower high बना करके sell off हुआ, again buying side close हुआ, तो अब market क्या चल रहा है, buying overview में था, but sideways हो गया and selling side भी आने लगा है, ठीक है, but still ऐसे condition में, previous day इतना buying side market गया है, selling आया, वो पूरा selling reverse हो गया, तो still our bias will be of the buying side, क्यापी भी market major flow म
+
+4
+00:01:30,000 --> 00:02:00,000
+market क्या क्या, high levels पर चल रहा है, तो retracement होगा, we will not expect continuous retracement, तो selling swing बनेगा, तो हम क्या trade करना prefer करेंगे, bounce back trade करना prefer करेंगे, तो इस case में होगा कि थोड़ा choppiness हुआ है, तो ऐसा है हर एक case आप बिलकुल right identify कर पाएंगे, 10 बजे क्या आस पास ही support बन रहा है, pattern break आ रहा है, हम हर case मे
+
+5
+00:02:00,000 --> 00:02:30,000
+तो क्या हो रहा है, दो candle दोजी बनी, फिर एक छोटी मोटी candle बन रही है, तो यह 945 का candle है, जहां तक कोई action नहीं लेना, तो इसके बाद क्या हुआ, red candle आई, अब एक और red candle आई, तो नीचे गिर रहा है, हम तो pattern break buying side का देख रहेंगे, support बनना चाहिए, तो यह कुछ-कुछ
+
+6
+00:02:30,000 --> 00:03:00,000
+क्या और अभी तक, जितना अभी तक buyer push किया है, उससे और जादा strength के साथ, क्या buyer activity कर रहा है, अगर कर रहा है तो वो pattern break है, जैसे यहां कहीं buyer तो dominate ही नहीं कर पाया है, doji, doji, doji, doji बन रहा है, seller reverse कर दिया, और नीचे गिरा दिया, अब support बननेगा, पहली बार, पहली candle में buyer
+
+7
+00:03:00,000 --> 00:03:30,000
+पर reversal हो गया, तो यह एक stop loss case होगा, पहले stop loss का, अगर जैसे अगेन नीचे गिरने लगा है, तो पहला swing जो market nature है, rule है कि continuously गिरेगा, यह बहुत कम cases में होगा, इसलिए दो entry का प्राविदान है, कि max to max, दो entry लेना है, तो पहला support अगर गलत हो जाता है, तो दूसरा यहां बना
+
+8
+00:03:30,000 --> 00:04:00,000
+and or domination आया, तो अगर पहला break होता है, और नीचे गिरता है, तो अगला जहां भी green बनेगा, यह strength का आ जा रहा है, तो वो एक अलग confidence होता है कि जादा probability अपने आप increase होता है, जितना नीचे जाएगा, बाइर के लिए उतना अच्छा होता जाएगा, या उतने ही chances और support creation बढ़
+
+9
+00:04:00,000 --> 00:04:30,000
+पहला ही candle green बना है, यहां कहीं, minimum expectation तो high break का होता है, बट इतना ही momentum sufficient है, तो this momentum is also sufficient, तो इसमें भी target easily आ जाएगा, इसके पहले यहां कहीं भी जहां भी आपका entry अगर इस range में होता है, तो entry के बाद यहां भी momentum हुआ है, यहां भी entry लिए है, तो इसमें भी entry में entry के बाद momentum हु
+
+10
+00:04:30,000 --> 00:05:00,000
+अगर ऐसा हो रहा है, तो आपका identification सही है, और आप सही observe कर रहा है, टारगेट आपको मिलेगा, लेकिन अगर आप entry जब live market में execute कर रहा है, और ऐसा हो रहा है कि momentum नहीं हो रहा है, जस्ट इंस्टेंट होना चाहिए, एंट्री लिया है, अगले ही candle में, या same candle अगले candle में, momentum आ
+
+11
+00:05:00,000 --> 00:05:30,000
+ठीक है, बर maximum case में आप देखो कि ऐसा होगा, जैसे इसमें हुआ, इसमें भी हुआ, इसमें भी हुआ, ये case था कि इसमें momentum तो आया, बट reverse हो गया, again entry हुआ, again momentum मिला, तो ये market conditions होता है, अब देखे, अब जैसे यहां क्या हो गया है, market अब higher level से lower levels की तरफ आ गया है, and ये case क
+
+12
+00:05:30,000 --> 00:06:00,000
+pure observation, universal concept है, continuous यहां भी आया, तो हमने यहां देख लिया, क्या हो रहा है आपर, अब market previous day का closing जैसे overall overview का नीचे levels पर आ गया है, and previous day का देखेंगे, तो trending one-sided selling side का closing है, तो ये भी मैं कहता हूं हमेशा वीडियो में कि one-sided momentum आएगा, trending session के बाद वाले sessions most easy to execute होते हैं, तो ये भी व
+
+13
+00:06:00,000 --> 00:06:30,000
+आपको क्या पता है, क्या करना है, resistance बनेगा, हम तो short करेंगे, I mean your expectation क्या होगा, intraday low breakdown, तो वही same चीज़ आज के दुन हुई है, buying swing बन रहा है, ये 9.45 candle है, अब यहां अगर flow observe करेंगे, तो 9.45 की single candle नहीं flow break को confirm कर दिया है, क्योंकि अभी तक इसमें आज सच कोई selling आया ही �
+
+14
+00:06:30,000 --> 00:07:00,000
+कुछ case में क्या होगा, ये पहला candle close होगा, आपने wait किया, अपने execution नहीं किया, आपने wait किया, observe कि जादा से जादा क्या ही होगा, अगला candle बनेगा, वो थोड़ा और नीचे जाएगा, जो previous candle से उनके lows के पास जाएगा, तो जादे जादा worst case क्या होगा, थोड़ा momentum miss हो जाए
+
+15
+00:07:00,000 --> 00:07:30,000
+confirmation आ जाए, जिसे ये वाले case है, उनमें wait करने का need नहीं, जिसमें आपको doubt है, लग रहा है तो एक candle close होगा, वेट कर जाए, आपको लग रहा है, pattern break नहीं हुआ है, और उपर जा सकता है, wait, just observe, जाद जादा क्या होगा, momentum miss होगा, तो इस case में अगर नीचे गिरता है, थोड़
+
+16
+00:07:30,000 --> 00:08:00,000
+आए, वो break हो रहा है, तो it will be a confirmation, minimum expectation low breakdown, market नीचे गिरा momentum मिलेगा, correct, अब कुछ cases ऐसे जरूर होते हैं, जैसे जिसमें लगातार गिर रहा है, तो bounce back भी sufficient ना आए हो गिरता चला जाए, जैसे ये case है, 13th of October है, अब market क्या किया है, lower levels पर तो आ गया है, major overview के according, बट यहां क्या कि
+
+17
+00:08:00,000 --> 00:08:30,000
+support बनने पर buy करेंगे, तो pattern break अगर आप इस swing में observe करने जाएंगे, तो क्या हो रहा है अभी तक, एक दो green बना है, दो-तीन red बना है, फिर एक green आया है, फिर एक red आया है, तो 9.45 तक क्या पता चल जाएगा, यह general pattern है, कि market गिर रहा है, एक support बना रहा है, buy dominant कर रहा है, अगली candle
+
+18
+00:08:30,000 --> 00:09:00,000
+या तो domination strong आना चाहिए, या 2-3 candle sideways हो, higher low बनाया, higher high break करें, तो वो confirmation होगा, तो यह एक green आया, हम कुछ नहीं करेंगे, फिर seller low breakdown, एक green आया, फिर lows breakdown, कुछ नहीं करेंगे, फिर यहाँ से जो support बना है, इसमें pattern break आया, market उपर गया, दो candle rejection और again high break, तो it will be a confirmation of a pattern break, तो support बनने प
+
+19
+00:09:00,000 --> 00:09:30,000
+retracement तो है, लेकिन selling swing है काफी बड़ा हो जाता है, तो जाधा probability क्या है, strength का selling swing है, इसमें retracement है, retracement का weightage जादा है, मैंने ये भी कहा है, लेकिन selling swing अगर जाधा ही बड़ा हो जाए, तो जाधा probability क्या है, market high break जो expectation है, वो fail होने वाला है, क्योंकि जाधा momentum हो गया, अब support बना के V-
+
+20
+00:09:30,000 --> 00:10:00,000
+करते भी हैं, आप जो general integritys इतनी सारी बताईगे हैं, अगर उसको आप ध्यान में कभी नहीं है या नहीं भी है, तो उसके अलावा भी करेंगे तो कर सकते हैं, बट अगर सारी चीज़ों को use करेंगे तो better, otherwise क्या होगा, जाधा जाधा कुछ नहीं होना, एक दिन लाल हो जा�
+
+21
+00:10:00,000 --> 00:10:30,000
+हमें अपने तरफ से best कुशिश करना है, कुछ ऐसे case होंगे, सारा confirmation होगा, तो भी stop loss चला गया, कुछ ऐसे case होगे, confirmation भी नहीं था, जाधा हो market support बनाया और target दे दिया, या flow के against में ले लिया, high break out, generally is not expected flow के against ले बट फिर भी दे दिया, तो ऐसा होगा, बट हमें अपने side से क
+
+22
+00:10:30,000 --> 00:11:00,000
+तो यह है, तो पहला stop लो जाएगा, इसके बाद अब दूसरा अगर creation देखेंगे, तो फिर जब यह पहला अब यह भी favor में उसमें count होने लगेगा, pattern break में, तो फिर इस support को भी अगर observe करने जा रहे हैं, तो नहीं किलिया जाएगा, कि एक single high, एक domination and second bounce back, यह general nature हो गया, अब near
+
+23
+00:11:00,000 --> 00:11:30,000
+ताइमिंग जादा हो गया, आपको कहा गया, 12 बजे के, 11 बजे के पहले ही पहले, morning momentum का ही trade करें, तो इस better to execute, तो यह सारे example, अगर एक और देख लें, last है, यह सब ही वही cases हैं, आप देखोगे, same support resistance, वही timing के around बन रहा है, अब हम pattern break पर observe कर रहे हैं, यह 9.45 का candle है, इस दिन,
+
+24
+00:11:30,000 --> 00:12:00,000
+अप अप हो गया, तो continuously तो गिरेगा नहीं, तो हमें पता है क्या करेंगे, support बनने पर buy करेंगे, तो यहां क्या हुआ है, यह पहला pattern break observe होगा, दो candle, rejection, फिर यह दो candle sustain हुआ, high break होने लगा, तो breakout and continuation will be expected, तो यहां पहला buying हो जाए, market reverse कर गया, stop loss हो जाएगा, इसके बाद जो
+
+25
+00:12:00,000 --> 00:12:30,000
+expectation, intra day, high break out, तो यह भी around 10 बजे के आसपा support लिया, इसके बाद फिर अगले दिन आ जाएगे, अब market क्या हो गया, support बना करके bounce back कर लिया, और retracement भी हो गया, तो उपर bounce back के बाद continuously retrace हुआ है, तो अगले दिन भी continuously अगर selling swing बनता है, तो continuously तो गिरेगा नहीं, तो क्या करना है, selling
+
+26
+00:12:30,000 --> 00:13:00,000
+seller, इसमें आप overall observe करेंगे, तो उपर wick है, dominate किया और इस wick के low तक dominate किया, फिर buyer ने reverse किया, फिर अगला candle भी sustain हुआ, तो sufficient for pattern break, यहां execution है, intraday high comminium, high breakout expected है, तो वही cases हैं, आप देख रहे हो, वही सारी चीज़ है, again and again, even किसी भी chart पर देखें, और पीछे scroll करके देखें, आ�
+
+27
+00:13:00,000 --> 00:13:31,280
+इस वरकिंग, concept क्या वरकिंग है, जो universal concept है, कि किसी भी दिन market open हो करके, अगर जो भी पहला swing बनाएगा, वो continuously momentum नहीं होता है, बात सिर्फ इतनी सी है, बात सिर्फ कितना सा है, कि किसी भी दिन open हो करके, अगर momentum हो रहा है, continuous नहीं होगा, भले अगर गिरना है, किसी भी case में, �
+
+28
+00:13:31,280 --> 00:14:03,300
+रजिस्ट करके, अगेन ऊपर चला जाए, बट रजिस्ट जरूर करेगा, या जैसे ये case है, कि नीचे गिर रहा है, तो continuous नहीं गिरेगा, भले अब गिरने के बाद, या तो reversal हो जाए, और या फिर तो continuation हो जाए, बट bounce back तो आएगा, भले कुछ भी हो, bounce back आएगा, ये general price है
+
+29
+00:14:03,300 --> 00:14:19,020
+तो swing trading का क्या है, simple logic है, कि आपको क्या करना है, कुछ नहीं करना है, बस time frame change करना है, time frame change करेंगे, hourly time frame अगर observe करेंगे, तो hourly time frame पर क्या find out करना है,
+
+30
+00:14:19,020 --> 00:14:51,950
+hourly time frame पर observe करना है, कि market supports पर कहा है, ओके just a second, ठीक है, क्या observe करना है, कि market supports पर कहा है, इस chart को zoom out करेंगे, charts पर वापस आ जाएंगे, ये daily frame, daily frame में simple swing जो trade execute के जाते हैं, अगर index options करना है, तो क्या करना है, low observe करना है,
+
+31
+00:14:51,950 --> 00:15:21,950
+market major flow क्या चल रहा है, bind side charge, यहाँ देखेंगे, कई दिनों से trend जो है, अब चाहे moving average plot करिए, कुछ भी trend के लिए करिए, वो आपका choice है, बाकी कुछ भी करने की जरुद नहीं होती है, simple flow देख सकते हैं, swing trades जो मेरा personal मैं prefer करता हूँ, वो 3 से 4 और 5 दिन का, इसको मैं swing trade करता हू
+
+32
+00:15:21,950 --> 00:15:51,950
+and then retracement को देखा जाता है, कि retracement के बाद, फिर same जो हमारा intraday का execution वाला entry है, उसी entry को hold कर लिया जाता है, support level से, कि intraday execution तो हम हर दिन कर रहे हैं, highs पर भी कर रहे हैं, lows पर भी कर रहे हैं, बीच में भी कर रहे हैं, हर जिगा कर रहे हैं, but अगर swing करना है, कुछ दिनों के लिए hold
+
+33
+00:15:51,950 --> 00:16:21,950
+रहा है, वो correct के जो intraday session में, जिस दिन support बनने वाला है, वो session को हम पकड़ेंगे, और buy करेंगे, और buy करके छोड़ देंगे, यह simple concept है, और कुछ भी नहीं, इसमें btst भी ऐसी होता है, swing भी ऐसी होता है, और even positional observe कर हैं, जो trend identification है, वो major frame का किया जाता है, major frame का trend identification करेंगे, daily chart
+
+34
+00:16:21,950 --> 00:16:51,950
+particular daily trading sessions में जा करके, same intraday का जो method है, कि नीचे गिर रहा है, उपर जा रहा है, उसमें हम strength, lower levels पर buy करने ही कोशिश करेंगे, execution जो method है, वो same रहेगा, intraday का execution है, वही रहेगा, बस time frame change हो जाएगा, और entry point will be different, swing आप positional हर एक दिन नहीं ले सकता हो, वो certain days आएंगे, उनका wait करना
+
+35
+00:16:51,950 --> 00:17:21,950
+तो यहाँ जो obsession बनेगा, वहाँ support को identification में इंट्राडे जाकर के trade करेंगे, I don't recommend कि high level चल रहा है, यहाँ कहीं अब support पर execute करें, swing के लिए, no, retracement आने दीजे, retracement के बाद जैसे यहाँ support बन रहा है, यहाँ support बन रहा है, बनने दीजे, significant, जो flow चल रहा है, उस flow के according, significant retracement आना शी
+
+36
+00:17:21,950 --> 00:17:51,950
+किया जाता है, तो जैसे यह particular trading session है, यहाँ देखेंगे, तो 22nd of December, 21st of December, तो same intraday session में जाकर के, यहाँ भी पहला या तो selling swing बनेगा, या तो पहला buying swing बनेगा, हमारा bias क्या है, buying side है, तो जैसे ही confirmation आएगा, चाहे N pattern का confirmation आए, या M pattern का confirmation आए, swing trade है, या फिर तो intraday execution, selling swing बन ज
+
+37
+00:17:51,950 --> 00:18:21,950
+तो यहाँ भी same method पर execute होगा, तो यहाँ फिर कितने days का यह trade है, यहाँ से 21st से near about 29 तक market momentum किया, exit या target booking देखेंगे, तो trailing method पर इस पर किया जाता है, या fixed ratios के according भी चल सकते हैं, अब जैसे यह session है, market नीचे गिर गया, और again अगले दिन gap down हो जाता है, 18th of June को, तो 18th of June को gap down हो
+
+38
+00:18:21,950 --> 00:18:51,950
+तो अगले दिन भी gap up हुआ, 19th and और उपर गया, trailing हो जाएगा, intraday lows पर आप trail कर सकता हैं, यहाँ intraday low यह होगा, इसका intraday लो यहाँ trail हो जाएगा, और उपर trail हो जाएगा, ऐसे trailing होगा, intraday lows पर, और even major lows पर भी trailing को कर सकता हैं, तो यह general क्या होगा, यह intraday का identification होगा,
+
+39
+00:18:51,950 --> 00:19:21,950
+चोटे frame पर आकर के, यह hourly पहले daily लगाएंगे, फिर hourly लगाएंगे, daily पर देखें support कहा बन रहा है, फिर hourly आप मैं आकर के देखना है, कहां पर sufficient या significant retracement है, फिर intraday session जो market मिलेगा, उसमें execute करेंगे, यह general pattern होता है, कि जैसे यहाँ भी इस दिन market selling swing बनाया होगा, या buying swing बनाय
+
+40
+00:19:21,950 --> 00:19:51,950
+लिख लेंगे या, यहाँ पर मैं अगर एक circles mark कर दूँ, तो जा करके चाहेंगे तो देख भी सकते हैं, यह है, यह वाला session है, इसके बाद यह significant retracement है, तो retracement कहां खतम होगा, यह कैसे पता चलेगा, यह पता नहीं चलेगा, आपको सिर्फ देखना significant retracement आ रहा है, जैसे significant यहा
+
+41
+00:19:51,950 --> 00:20:21,950
+expectation है, कि continuous नहीं गिरेगा, यही concept major frame पर applicable है, कि बड़ा time frame है, गिर रहा है, continuous नहीं गिरेगा, bounce back आएगा, यह जो selling swings भी बन रहे है, यही logic है, कि गिरेगा तो continuously काफी बड़े-बड़े swings नहीं बन सकते हैं, तो भी आप playing on probabilities, कि गिर रहा है, गिर नहीं देता है, हम तो intraday के reversal �
+
+42
+00:20:21,950 --> 00:20:51,950
+बांस बैक में, it's not necessary कि continuation हो, बट bounce back आएगा, फिर reversal हो सकता है, जैसे यह वाला case है, यहां continuation हो गया, यहां क्या होगा है, bounce back तो आया, भाले lower high बना के reverse हो जाए, bounce back आएगा, और swing है, बीटेस्टी है तो enough bounce back रहेगा, maximum case में weekend trail, ठीक है, जैसे यह support है, अब यहां आप कहें कि,
+
+43
+00:20:51,950 --> 00:21:21,950
+start कर दो 12 तारिक से, कि support बन चुका है, और मैं 12 को buy करूँ, तो यहां mark कर देते हैं, तो क्या होगा, एक stop लो जाएगा, फिर नीचे आ जाएगे, वहाँ से support identification देखेंगे, तो method same है, यहां significant retracement है, यह start of 20 seconds, 10, 15, 9, 15, 9, 15 को और नीचे गिरा है, यहां जब support बनेगा, reversal आएग
+
+44
+00:21:21,950 --> 00:21:55,820
+change हो रहा है, जो execution points है, वो change हो रहा है, तो अगर एक दो example देखना चाहें, तो जा के देख सकते हैं, 21st December 2023, तो 5 minute का time frame open करेंगे, यह है, तो इस दिन आपका क्या होगा, general bias पहले से fixed है, general bias क्या है, buying site का है, तो market अगले दिन क्या हुआ है, open हुआ है, और या तो intraday का जो same confirmations ह
+
+45
+00:21:55,820 --> 00:22:15,980
+पैसल के साथ entry बनाना है, तो जो हमारा entry logic है, support बनाएगा, अगर वैसा entry मिलता तो best है कि support बनाएगा, pattern break हो रहा हम execute कर रहा है, वो पहला entry है, वो safe side entry है, उसमें stop loss भी शोटा रहेगा, लेकिन अगर वैसा entry नहीं बनता है, proper domination confirmation आजाता है, market नीचे यह lows लगाया,
+
+46
+00:22:15,980 --> 00:22:45,980
+lows के बाद 2-3 candle selling side बना और near the highs आगया, तो domination हो गया, high से ही तो market नीचे गिरा था, lows से again buyers ने उपर levels पर market को push कर दिया, तो it's a confirmation, तो confirmation आगया तो execute कर सकता है, intraday low के थोड़ा उपर stop लो जाएगा, hold करेंगे, trail करेंगे, तो वही same है, बस जो picking point है, वो क्या कर रहे हैं, बड़
+
+47
+00:22:45,980 --> 00:23:15,980
+example है, इसके बाद ये है, जिसमें continuation नहीं हुआ, लेकिन bounce back तो आएगा, भले reversal हो जाए, तो इस दिन क्या हुआ था, market नीचे गिर गया, ये retracement आया, continuously नहीं गिरेगा, गिरना भी होगा, तो कैसे गिरेगा, support बनाके bounce back आएगा, फिर भले गिर सकता है, बट bounce back आएगा, continuously नही
+
+48
+00:23:15,980 --> 00:23:45,980
+पर आएगा, किसी भी दिन हमारा तो buy is clear है, हमें तो confusion नहीं है कि sell बनेगा, sell भी कर सकते हैं, ना buy ही करना है, lower levels पर है market already retrace कर गया है, तो हमें पता है, गिरेगा, कितना गिरेगा, देखेंगे हैं, मज़ा देखेंगे, तो यहाँ पर क्या हुआ हुआ है, गिर रहा है, गिर
+
+49
+00:23:45,980 --> 00:24:15,980
+दूसरे दिन ट्रेल कर देगे, तीसरे दिन देखेंगे, नेगेटिव जाने लगा है, और वेट कर लिया, gap up हुआ, sustain नहीं हो रहा है, गिर रहा है, ट्रेलिंग, यहाँ कहीं तक तो करी लिजे, काट दीजे, यह है, इसके बाद यहाँ support बनाया था, कि और नीचे गिर गया
+
+50
+00:24:15,980 --> 00:24:45,980
+तो जब भी ऐसे cases हो, क्या करना है, buying swing के top पर buying नहीं करना है, momentum हो रहा है, हो जाने दीजे, जब proper retrace करेगा, और higher low बनायेगा, या एक तो यह है, retrace कर गया, अब इसके बाद lows break ना हो, higher low बन रहा है, higher low के उपर higher highs बन रहा है, resistance ब्रेक हो रहा है, तो यहाँ पर ऐसे buying कर सकते
+
+51
+00:24:45,980 --> 00:25:15,980
+एक SL जा सकता है, दो SL जा सकता है, swing ले रहा है और छोटा SL के साथ planning है, तो यह जो 1 ratio 3 reward वाला जो छोटा SL है, वो एक दो जाएगा भी तो आपको trade लेने में कोई दिक्कत नहीं है, क्योंकि आप लंबा duration hold कर रहा है, दो तीन SL भी जाता है, च्छटे-च्छटे point का, कोई दि
+
+52
+00:25:15,980 --> 00:25:45,980
+यह example मैंने आपको देखा, ऐसा ही same है, and even it's better, अगर आपको holding का डर नहीं है, और छोटा quantity कर रहा है, तो इसको कर सकते है, target point काफी जादा मिलेगा in comparison to the SL, और the amount which is at risk into the markets, ठीक है, तो swing का यही है, positional का भी यही है, positional में क्या हो जाएगा, जो major retracement है, वो बस आप जाकर के daily time frame
+
+53
+00:25:45,980 --> 00:26:15,980
+पर execution point fight out करेंगे, execute करेंगे, तो जिसको जितना जादा long term का लेना है, उतना जादा timing बढ़ा सकता है, यही same चीज़ें applicable हो, hourly पर आके ही execution plan हो, और आपको और better high probability अगर सिर्फ intra day ही execution करना है, तो ऐसे कर सकते हैं, हर एक trading session trade मत करो, जिसमें hourly से confirmation आ रहा है, significant major हो चुका, या त
+
+54
+00:26:15,980 --> 00:26:47,420
+retracement के expectation पर, या तो जादा नीचे गर जाने पर buy करना है, तो किसी को अगर rose trade नहीं करना है, intraday, specific high probability sessions करने है, तो swing वाले trades pick करें, और उसमें intraday trade करें, ठीक है, तो उसका एक probability आप देखोगे, increase होगा, execution का, clarity रहेगा, कि buy ही करना है, ऐसा रहेगा, ठीक है, तो यही सारी ची
+
+55
+00:26:47,420 --> 00:27:17,420
+strike price selection है, always suggest, आप मेरे जितने भी trades देखेंगे, आप find out करेंगे, strike price selection भई है, या तो add the money है, जैसे आज का भी 22,400 है, या तो 100 points, nearest in the money, strike price यही है, जो selection का simple, आपको जादा देखेंगे, beginning में, 10-50 चीज़ने discuss करेंगे, ये भी देखें, वो भी देखें, उतना confusion होगा, and difference कितना
+
+56
+00:27:17,420 --> 00:27:47,420
+दीरे दीरे और साथ 20-30% से आएगा, तो ऐसे difference create होता है, बट beginning में क्या advice है, या हमारे session के according क्या advice है, कि बहुत सारी चीज़ने देखने का need नहीं है, छे दिन में बहुत कुछ ऐसे हम नहीं कर सकते हैं, तो जो best है, या यहां से जो best हैं, चीज़ने का need नहीं है, strike price देखना
+
+57
+00:27:47,420 --> 00:28:17,420
+simple 100 points in the money, at the money, nearest in the money, prefer करें 100 points, इसके बाद divergen जरूर देखना और एक volume बताया गया, कि volume जिसमें domination आ रहा है, जिसमें spike बन रहा है, support अगर buy कर रहे हैं, support पर बन रहा है call option में, sell कर रहे हैं, put option में बन रहा है, तो वैसे strikes को put करें, observe करें, तो nearest क्या कर सकते हैं, आप strike लेने का �
+
+58
+00:28:17,420 --> 00:28:47,420
+ठीक है, हर एक case में क्या होगा, पहला preference देना है weekly strike को, अब कोई कहेगा कभी monthly लेते हैं, कभी weekly लेते हैं, तो अभी आपके लिए क्या point है, कि पहला preference weekly दीजे, जादा से जादा पहले 100 points का check करें in the money, और फिर 200 points in the money का check करें, weekly का पहले, उसमें आज सच divergence नहीं है, volume behavior नहीं है
+
+59
+00:28:47,420 --> 00:29:17,420
+जिसमें volume आ रहा है, best जिसमें आपके favor में volume आ रहा है, best जिसमें divergence आ रहा है, जिसमें best strength है, वो strike choose करें लेते हैं, यहीं simple से 3 point रहें है, volume, price behavior, monthly and weekly, देखना है, 100-100 points, weekly में 200 points देख सकते हैं, 100 points देख सकते हैं, and monthly में 100 points in the money, या add the money, यहीं simple point है, strike price selection के लिए, volume analysis देखेंगे,
+
+60
+00:29:17,420 --> 00:29:47,420
+discussion करने को इतना discussion हो सकता है, कि समय कम पड़ जाएग, even हमारा session भी जो planning था, वो तो चीजने discuss होते गई, तो even session का schedule किया गया, suppose से 1 hour daily, but चीजने discuss होते गई, तो 1.5 hours, even someday 2 hours, तो उसकी कोई बात ने, हाना तो discussion करने में देखें क्या है, कि कितना भी किया जा सकता है, मैं यह point mention क
+
+61
+00:29:47,420 --> 00:29:59,840
+कुस को run किया गया था, जो best course till date है, मैं कहूंगा, 52 hour का session है, कि चीजें अगर यह 6 दिन में जितना best possible है, उसको share किया गया, और deep में जाएंगे, तो
+
