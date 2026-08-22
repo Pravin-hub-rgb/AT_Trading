@@ -26,7 +26,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   const { result } = concurrently(
     [
       {
-        command: isProd ? 'bun run start' : 'bun run dev',
+        command: 'powershell -Command "$env:PORT=3002; bun run dev"',
         name: 'next',
         cwd: 'frontend',
         prefixColor: 'blue',

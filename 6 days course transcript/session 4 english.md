@@ -1,7 +1,7 @@
 # Session 4 – Confirmation, Domination & the N/W Setup (Monday, March 4, 2024)
 ### Cleaned-up English Version
 
-*A note on this pass: this transcript has been fully updated against the improved SRT transcripts from the "better transcript" folder (Parts 0–3 of Session 4). All content — including the two-layer system, N/M/W pattern mechanics, single-candle rules, trailing prohibition, capital/ROI discussion, and all Q&A — has been cross-checked and captured.*
+*A note on this pass: this transcript has been fully updated against the improved SRT transcripts from the "better transcript" folder (Parts 0–3 of Session 4), re-verified part-by-part against all four SRT files, and written as full-English notes in the same style as Session 1. All content — including the two-layer system, retracement-weightage reading, N/M/W pattern mechanics (including the anti-misconception W definition), single-candle rules, wick-wait rule, trapped-buyer logic, stop-loss placement, no-trailing prohibition, no-stacking rule, timing rules, capital/ROI discussion, psychology, program scope, every day-by-day walkthrough, and all Q&A — has been cross-checked and captured.*
 
 ---
 
@@ -12,7 +12,8 @@ Good evening, everyone. Today's session continues from the previous one — we'l
 A quick recap of the operating idea: we don't trade on every single candle. We take **more confirmation** — we wait for support/resistance to form, and we can execute on either side (or via option selling). It is not about catching the most momentum; it is about entering with proper confirmation, letting the market reject / reverse before we act.
 
 ### No FOMO, no rush
-"ज़ादा confirmation लेने के बाद execution किया जा रहा है... ऐसा नहीं है कि entry काफी ज़ादा quick लेना है या कोई भी ऐसा FOMO नहीं है कि momentum miss हो जाएगा. तो अराम से इसमें execution plan कर सकते हैं" — There's no FOMO about missing momentum. Execute calmly ("aram se") with proper waiting. If you wonder "how will I know resistance has formed?" — the answer is: proper wait + confirmation (proper rejection/reversal) makes the confirmation come automatically.
+
+Execution happens after taking more confirmation. There is no need to take entries very quickly, and there is no FOMO about missing momentum — you can plan executions calmly. If you wonder "how will I know resistance has formed?" — the answer is: proper waiting plus confirmation (a proper rejection/reversal) makes the confirmation come automatically.
 
 The challenge comes when you try to **find out the resistance at the moment it is being formed**. That is difficult — you have to understand deeper concepts before calling it early.
 
@@ -20,15 +21,30 @@ The challenge comes when you try to **find out the resistance at the moment it i
 
 ## The two-layer system: confirmatory → identification
 
-"पहले हम बहुत जादा confirmatory observations हमने सिखा कि buying swing का अगर reversal ही हो जाएगा 70-80% निर दी support area आ जाएगा तब जाकर के हम call option sell करेंगे... इसके बाद हमने अब एक step और उपर आ गए कि सिर्फ swing को देखकर के ही अब हम थोड़ा prepare होने लगें कि weakness है या strength है" — The course progresses in layers:
+The course progresses in layers:
 
-- **Layer 1 (confirmatory):** Wait for the full reversal (70–80% toward support area), then execute.
-- **Layer 2 (identification):** Just by watching the swing itself, start preparing — judge whether weakness or strength is present, whether reversal or continuation probability is higher.
+- **Layer 1 (confirmatory):** Earlier we learned heavy confirmatory observation — if a buying swing reverses, there is a 70–80% chance price comes near the support area, and only then do we sell the call option (or buy a put).
+- **Layer 2 (identification):** Now we've moved one step up — just by watching the swing itself, start preparing: judge whether weakness or strength is present, whether reversal or continuation probability is higher.
 
 Execution still happens only on confirmation — but your *preparation* starts earlier. Don't mix the systems: the backup plan is confirmation-based execution. No rush in these executions — especially if selling, there's zero need for hurry because we're playing **both legs**, not a single leg.
 
 ### Clubbing overview + confirmation
-"overview को club किया जाता है कि market नीचे गिर रहा है और confirmation किस चीज़ का है इन दोनों चीज़ों को club कर लेना है" — Combine (club) what the overview says with what the confirmation shows. Both together form the trade plan.
+
+Combine ("club") what the overview says with what the confirmation shows — e.g., the market is falling AND here is the confirmation. Both together form the trade plan.
+
+Later clarification: checking the overview alongside the N/W/M pattern read is **not strictly mandatory** — but combining is good: it saves you from wrong trades (e.g., an N that turns into an M), reduces the total number of trades, and pushes probability to the higher side.
+
+---
+
+## Reading weakness/strength inside a swing — retracement carries the weightage
+
+Two things are observed in any selling/buying swing: its **size**, and how deep the **retracement** against it runs. Of the two, retracement always carries the higher weightage: if the market is retracing deeply, the higher probability is that the swing is weak there. A deeper retracement = weak swing = reversal generally expected. This is the base of the weakness/strength observation.
+
+### Execution condition for reversal-based entries
+
+A reversal-based buy is NOT taken just because price reversed. It executes only when the move has reversed **70–80%** AND the strength suggests the market will actually go test the intraday high — execute only then; don't be hasty. If rejection starts appearing or options show weakness, the trade can be avoided/saved that way too.
+
+For even higher probability, tighten the trigger: use **80% instead of 70%** as the reversal depth — demonstrated while measuring an actual swing of ~138 points that had retraced ≈80%.
 
 ---
 
@@ -42,17 +58,24 @@ The **major overview** tells you what to do even when the market's first move go
 So the sequence always goes: **build the overview → plan the direction → then react to the actual intraday swing within that plan.**
 
 ### Simple overview rules
-"overview simple है high levels पर है high level से गिरेगा तो continuous नहीं गिरना है एक यह सीधी सी बात ध्यान रखनी है lower levels पर testing हो रहा है तो high level पर continuous नहीं जाएगा" — Keep it dead simple:
+
+Keep the overview dead simple — one straight rule to remember:
+
 - At high levels / all-time high → if it falls, it won't fall continuously.
 - At lower levels → if it rises, it won't rise continuously.
 
 ### Overview protects from bad shorts
-"all time high से हम short नहीं करेंगे even अगर buying swing का reversal हो गया then also तो overview आपको बचाएगा" — At an all-time high, we don't short — even if a buying swing reverses. The overview saves you.
+
+At an all-time high we don't short — even if a buying swing reverses. The overview saves you.
+
+Two nuances: **weekly highs count the same way** as all-time highs. And this is not an absolute ban on shorting at highs — if the *morning-session observation* itself builds a selling case (e.g., a buying swing at ATH followed by a V-shape reversal), the short per the morning view is allowed — "per the opening session's observation you can short; I'm not forbidding it." The major overview then governs the *next* structural entry (higher lows + high breakout → buying side).
 
 ### Case study: ATH + sideways expiry
+
 Market near all-time high, sideways expiry close, then falls → buying overview forms: it won't fall continuously, will make support and bounce back — even if the full reversal doesn't happen in one session, and even if it dips again after bouncing. From ATH, retracement is running; a good bounce-back from support is generally expected.
 
 ### The "10%" exception (inverted case)
+
 He noted a smaller probability case: the market opens, drops immediately, and confirms buyer strength through a V-reversal. In such a case the reversal-based buying leg executes — and since it matches the major overview (buying), **no second position is taken**: single leg running, momentum comes, take it and exit.
 
 ---
@@ -64,14 +87,17 @@ Depending on how the **morning overview** combines with the setup:
 - If they do **not** combine (only one view), then plan only one entry — and if the stop-loss gets hit, don't force a second entry.
 
 ### Three sub-rules for the second entry
-1. **First entry hits target with sufficient momentum → close the day.** "अगर पहला lag लिया और दूसरा position बनने के पहले ही sufficient आपका वो target आ गया एक में तो फिर setup close कर दीजे and let the day get close in green side" — Let the day close green. "जितना जादा green देखेंगे उतना जादा सेहत के लिए starting में अच्छा होगा" — The more green you see early, the healthier it is for your beginning.
+
+1. **First entry hits target with sufficient momentum → close the day.** If the first leg was taken and your target arrived before the second position even formed, close the setup and let the day get close in green. "The more green you see early on, the healthier it is for your beginning." **Exception:** if leg 1 produced NO sufficient momentum and was never booked, and leg 2 then forms per the overview → executing leg 2 IS allowed. (Statistically leg 2 is positive-expectancy too — even across a hypothetical 10 trades the ROI would rise — but mental pressure rises with it, hence the beginner default of skipping it.)
 2. **First stops out + second setup forms per overview → execute the second entry.** One SL gone doesn't invalidate the overview.
-3. **No lower high formed → invalidation.** "अगर lower high नहीं होता और market continuation करके highs को break कर देता previous तो फिर selling side को overview लेना नहीं बनता है उस दिन" — If the lower high never forms and the market breaks previous highs instead, the selling-side overview isn't valid that day — don't execute the second leg regardless of profit/loss potential.
+3. **No lower high formed → invalidation.** If the lower high never forms and the market keeps breaking previous highs instead, taking a selling-side overview that day doesn't make sense — don't execute the second leg regardless of profit/loss potential.
 
 ### Priority when views mismatch
-"when morning momentum and overview doesn't match अगर दोनों match नहीं करते हैं तो हम prioritize करेंगे morning view को वो पहले execute होगा and फिर next किया जाएगा" — When morning view and major overview conflict, **prioritize the morning view first**; execute it, then plan the next entry only after the first exits.
+
+When morning momentum and the major overview don't match, **prioritize the morning view** — it executes first, and only then is the next entry planned (after the first exits).
 
 ### Second-trade ROI vs mental pressure
+
 Taking the second trade raises overall ROI (its probability is also positive-side weighted), but mental pressure rises too. Beginning stage: if the first target came, skip the second.
 
 ---
@@ -83,19 +109,28 @@ He introduced a **domination** idea: the market keeps showing which side is domi
 - But if **sellers repeatedly dominate** (double domination of sellers), the probability shifts — the market's selling-side continuation becomes more likely.
 
 ### Reversal = strength confirmation
-"reversal मतलब strength का confirmation होता है कि selling side पहले market push हुआ बट seller sustain नहीं कर पाया तो buyers ने again high level पर push किया" — A reversal means strength confirmed: sellers pushed, couldn't sustain, buyers pushed back to higher levels.
+
+A reversal means confirmation of strength: the market was first pushed by the selling side, but the seller couldn't sustain it, so buyers pushed again at the higher level.
+
+### Trapped traders fuel the move
+
+When buyers are already trapped at higher levels and price reverses, their panic-exits create fresh selling that fuels the move. Cross-checking the **option chart** supports taking such a trade.
 
 ### Double-opposition probability escalation
-"दो-दो selling domination oppose हो रहा है तो किसी भी site का domination अगर दो बार confirmatory oppose होता है तो उसके work करने का probability बहुत ही जादा markets में increase हो जाता है" — When any side's domination gets confirmatorily opposed **twice**, the probability of the opposing side working becomes very high. You'll rarely see a market fully reverse 70% and then flip-flop repeatedly beyond that.
+
+When any side's domination gets confirmatorily opposed **twice**, the probability of the opposing side working becomes very high in markets. You'll rarely see a market fully reverse 70% and then flip-flop repeatedly beyond that.
 
 ### Max 2–3 bluffs
-"ये जो reversals है इसका जो probability होता है ये जादा से जादा 2-3 बार हो सकता है" — The market can bluff (reverse) at most 2–3 times. That's why we plan two entries — covering either the selling swing continuing or reversing.
+
+These reversals can happen at most **2–3 times**. The market can bluff (reverse) at most 2–3 times — that's why we plan two entries, covering either the selling swing continuing or reversing.
 
 ### Domination can't run forever
-"domination markets में continuous नहीं होते चले जा सकते हैं क्योंकि यह market का nature नहीं है" — Domination cannot continue indefinitely — that's simply not the market's nature.
+
+Domination cannot continue indefinitely — that's simply not the market's nature.
 
 ### Never switch sides in confusion
-"अगर आप bias में confused हो गए... कहा selling side oppose हुआ buying side वी-ship बनाया तो यहाँ buy कर लिया अब इसके बाद कहा यह तो buying side फिर नीचे गिर रहा है तो यहाँ sell कर दिया ऐसा करेंगे तो first जाएंगे... आप switch ना करें" — Do NOT keep switching sides while confused. Only act after **momentum arrives and the congestion breaks** — proving one party successfully dominates. Switching up-down in confusion ruins everything.
+
+If you get confused in your bias — the selling side got opposed, buying made a V-shape so you bought, then it fell again so you sold — do NOT keep switching sides like that. Only act after **momentum arrives and the congestion breaks** — proving one party successfully dominates. Switching up-down in confusion ruins everything.
 
 ---
 
@@ -104,35 +139,49 @@ He introduced a **domination** idea: the market keeps showing which side is domi
 To read the day's structure he used simple **N / M / W-type patterns** with colored boxes (green = working setup; long rectangles for N; squares for M/W):
 
 ### Definitions via domination
-- **W pattern:** "selling domination W में दो बार reverse होता है" — Sellers' domination gets reversed twice by buyers → bullish. Highest probability.
-- **M pattern:** "M में buying swing 2 बार reverse होता है" — Buyers' domination gets reversed twice by sellers → bearish. Highest probability.
+
+- **W pattern:** In a W, the selling domination gets reversed twice (by buyers) → bullish. Highest probability.
+- **M pattern:** In an M, the buying swing gets reversed twice (by sellers) → bearish. Highest probability.
 - **N pattern:** Single reversal — selling swing → buyers fully dominate → buyers fail → sellers continue (or the mirror image). More frequent than M, still good probability.
 - **Reverse-N:** The mirrored structure.
 
-"N जादा बनेगा M definitely M is a more higher probability execution but वो pattern frequent है M उतना frequent नहीं है बट उसमें काफी जादा कम stop loss जाएंगे क्योंकि दो बार domination के reverse होने का probability अपने आप में काफी कम होता है" — N forms more often; M is rarer but carries far fewer stop-loss hits, because double-domination-reversal is inherently rare.
+He explicitly rejected the common way people draw these patterns: some people draw a W as "this is a higher low, we'll execute on it" — no. We observe whether the swing's *domination* actually reversed. Related: a **successful domination** means the market travels from the low back up to the highs — it's confirmation that the seller who pushed didn't have the power to prevent the full reversal; the seller became weak somewhere, which is why the swing returned to the high.
+
+N will form more often; M is definitely a higher-probability execution, but that pattern isn't as frequent — though far fewer stop-losses hit in it, because the probability of a domination reversing twice is inherently quite low.
 
 ### Proper W requires previous-high testing
-"W means यह previous जो high होगा वो testing होना चीए... क्योंकि यह swing भी तो हम 70-80% पर consider कर रहे हैं तो already जो swing हो गया है वो reduce हो गया तो अब इसका 70 देखेंगे तो definitely market को बहुत कम momentum चाहिए reverse करने के लिए तो यह previous high से ही comparison करना" — For a true W, the recovery must test the previous high. Since we already count swings at 70–80%, the remaining distance needs little momentum — compare against the prior high to judge real strength.
+
+For a true W, the recovery must test the **previous high**. Since we already count swings at 70–80%, the earlier swing is already consumed/reduced — so completing the remaining distance needs very little momentum. Compare strength against the prior high to judge whether it's a real W.
 
 ### Formations must complete before ~11 AM
-"11 बजे के पहले-पहले formations आना चीए" — These patterns should form in the **morning hours only**. "यह चीजज सिर्फ morning hours में ही होनी चाहिए ऐसा नहीं है कि नीचे उपर नीचे उपर हो गया बारा बच गया वहाँ पर और फिर execution कर रहें" — Not random up-down chop later in the day. And: "morning में ही लेना है trade जैसे W and M में बतायेगे afternoon में नहीं लेना" — Take W/M trades in the morning, NOT the afternoon.
+
+These formations should come right before ~11 o'clock — in the **morning hours only**. It's not that random up-down chop happened later in the day, you escaped the big move, and then you started executing. And: take the W/M trade in the **morning only — NOT the afternoon**.
+
+One demonstrated exception: a second-half execution was considered acceptable only because price was still **holding near the previous highs** — but had the SL zone broken first, there would be NO trade at all that day.
 
 ### N forms near 10 AM naturally
-"in n pattern do we need to wait till 10 a.m — 10 a.m तक तो बनेगा ही sir... 2-2-3-3 domination नहीं हो सकता है कि seller को buyer dominate कर दे और फिर buyer को seller dominate कर दे... 9.30 तक 3 swing नहीं बन सकता 9.50 तो होई जाएगा nearly 10 होई जाएगा maximum case में out of 10 देखेंगे 9 case में 10 तो near the 10 हो जाएगा n बनते बनते" — An N can't form by 9:30; in ~9 of 10 cases it completes near 10 AM anyway.
+
+Question: "In the N pattern, do we need to wait till 10 AM?" Answer: it will form by 10 AM anyway. The repeated back-to-back dominations (seller dominating buyer, then buyer dominating seller) cannot happen instantly — three swings cannot form by 9:30; by 9:50 it can happen, i.e., nearly 10 o'clock. In maximum cases — 9 out of 10 — the N completes near 10 AM anyway.
 
 ### N-to-M transition: N's SL will hit
-"जब m create होगा तब n का sl भी तो जाएगा — mostly नहीं... जब n create है और n से m तो n के बाद ही बन रहा है तो n का जो last lag है वो domination में reverse हो रहा है तो उस हर एक case में जाएगा" — When an N transitions into an M, N's last leg gets reversed by the new domination — **the N stop-loss hits essentially every time**. This is expected behavior, not a flaw. (Earlier estimate: ~90% of such cases.)
+
+Question: "When an M is created, won't the N's stop-loss also go?" Essentially yes: when an N exists and the M forms after it, the N's *last leg* is precisely what's reversing under the new domination — so in essentially every such case it goes. **The N stop-loss hits essentially every time.** This is expected behavior, not a flaw. (Earlier estimate: ~90% of such cases.)
 
 ### Two entries in highly-confirmed cases
-"W तो highly confirmed execution है तो failure होगा जैसे selling swing का failure हुआ buying swing आया फिर buying swing का failure हुआ फिर buyers dominate कर गया तो it's a highly confirmed execution तो ऐसे case में दो entry plan कर सकते हैं" — In a full W (double failure + double domination), you may plan two entries: first on the N (expect SL), then on the W (expect target).
 
-But: "पहला end पर बन गया है तो फिर W पर कब लेंगे जब पहला exit हो जाएगा एक साथ दो trade running नहीं रहेगा" — Only ONE trade runs at a time in W/N systems; take the W only after the first exits.
+A W is a highly confirmed execution: the selling swing failed, a buying swing came, the buying swing failed, then buyers dominated — in such a case you may plan **two entries**: first on the N (expect SL), then on the W (expect target).
+
+But: the W is taken only when the first trade exits — two trades will NOT run simultaneously in this W-and-N system. Only ONE trade runs at a time; take the W only after the first exits.
+
+This is the **general rule everywhere**, not just W/N: never run two same-direction positions simultaneously — if leg 1 is running in profit, do NOT stack; re-entry is valid only after leg 1 has properly exited (including via a stop-out) and a fresh overview-aligned structure forms. Both legs also use the same SL marking/line on the chart.
 
 ### Conservative step-down option
-"जिसका emotions control और भी जादा थोड़ा confusion है उसको या और जादा इसमें भी अगर stop loss जादा hit हो रहा है चीजें confusing हो रही है तो इससे एक step और नीचे अपने आपको conservative कर लेना... W and M में V-shape reversals में और भी जादा probability... execution ज़रूर जादा नहीं मिलेंगे बट जो भी मिलेगा उसके वर्ख होने का probability बहुत ही ज़ादा high रहेगा" — If emotions/confusion are high or SLs keep hitting, step DOWN one level of conservatism: trade only W/M/V-shape reversals. Fewer executions, but each has very high win probability.
+
+Whoever has weaker emotional control or more confusion, or is hitting too many stop-losses and finding things confusing — step one level further down and make yourself more conservative: trade only W/M/V-shape reversals. Probability there is even higher; you won't get many executions, but whatever you get will have a very high probability of working.
 
 ### Setup frequency balance
-"ऐसा भी नहीं कि बिलकुल once in a while day हो रहा है कि महीने में दो session बन रहा है... तो session थोड़ा जादा भी होना चाहिए जिससे हम जो अच्छे cases हैं उसमें से फिर select करके execute कर सकें" — Your chosen setup shouldn't be so rare it appears only 2–3 times a month; pick something frequent enough to select good cases from.
+
+It shouldn't be that setups appear only once in a while — just two sessions a month. There should be somewhat more candidate sessions, so that from the good cases you can select and execute the best ones.
 
 ---
 
@@ -140,45 +189,59 @@ But: "पहला end पर बन गया है तो फिर W पर 
 
 Three distinct rules — don't mix them:
 
-1. **First-candle neglect:** "पहली candle ही जैसे reverse हो गया है तो इसको तो neglect किया जाएगा इसको कोई भी swing consider नहीं किया जाएगा क्योंकि पहली candle direct अगली candle में neglect हो गया है" — If the FIRST candle of the day gets fully consumed/reversed by the next candle, neglect it entirely; count the swing from the reversal point.
-2. **Single candle from intraday low:** "intraday low से directly काफी बड़ा reversal आ रहा है तो chances है कि intraday low से direct continuous run में नहीं जाएगा... single candle में इतना bounce back हुआ है तो इसका probability कम है कि continuous green candles में market पूरा reversal कर दे... general expectation थोड़ा market resist करेगा" — A huge single-candle bounce straight off the intraday low usually does NOT continue directly upward; expect resistance. Don't rush buys into it.
-3. **Single candle AFTER settling = valid:** "दो-तीन candle market settle होने के बाद अगर single ने reversal किया है तो उसको consider किया जाए" — After 2–3 candles have passed and the market settled, a single-candle reversal IS valid. But note: in the two-leg system, a move going straight from low to high has reduced probability — keep the two concepts separate, don't mix them.
+1. **First-candle neglect:** If the very first candle itself gets reversed, it is neglected — it is not considered any swing at all, because the first candle got negated directly in the very next candle. Count the swing from the reversal point.
+2. **Single candle from intraday low:** If a large reversal comes directly from the intraday low, chances are it will NOT run continuously straight from that low. Such a big bounce within a single candle lowers the probability that the market completes the full reversal in continuous green candles — the general expectation is the market will resist a bit. Don't rush buys into it.
+3. **Single candle AFTER settling = valid:** After 2–3 candles have passed and the market has settled, a single-candle reversal IS valid — consider it. But note: in the two-leg system, a move going straight from low to high has reduced probability — keep the two concepts separate, don't mix them.
+
+### Wick-wait rule
+
+If price bounces off support but keeps making **wicks**, WAIT: watch whether price returns toward the lows again. Execute only on the proper confirmatory retest / lower-level approach — not on the first bounce. Related: if a single candle drops and price continues directly at higher levels (e.g., gap-up continuation with no real retracement or selling activity), the probability of direct continuation is low — rejection is expected; wait for the rejection, then for support, then buy (in that case support was never even taken). This candle rule alone saved multiple first legs across the backtests shown.
 
 ---
 
 ## Timing rules
 
 ### 9:45 rule (detailed)
-"9.45 तक जैसे market subtle नहीं रहता है तो it's better कि 9.45 के candle तक अगर execution ना करें beginning में तो वो काफी अच्छा रहेगा... general जो opening का जो 3-4 candle होता है उसमें execution preferable नहीं है" — Avoid execution in the first 3–4 opening candles. "9.45 के पहले आप trade दिखोगे तो बहुत rare होता है" — Trades before 9:45 are rare for him.
 
-"अगर settle नहीं है तो volatility high है and market काफी जादा तेजी से either side का momentum करता है तो stop loss morning बिलकुल morning time पर अगर trade कर रहें तो hit होने का एक जनरल tendency है वो जादा हो जाता है so 9.45 की candle से अगर execution करें तो वो काफी बचल है" — Unsettled mornings = high volatility = general tendency for SLs to get hit. Executing from the 9:45 candle onward avoids most of this. Following the timing rule alone saves multiple legs across the backtests shown.
+Until 9:45 the market isn't really settled, so it's better not to execute before the 9:45 candle in the beginning — execution inside the general opening 3–4 candles is not preferable. Trades before 9:45 are very rare for him.
+
+If the market hasn't settled, volatility is high and it moves fast to either side — so trading right in the early morning carries a general tendency of stop-losses getting hit. Executing from the 9:45 candle onward avoids most of that. Following the timing rule alone saves multiple legs across the backtests shown.
 
 ---
 
 ## Stop-loss placement & risk management
 
+### Never park the SL exactly at the extreme
+
+Don't place the stop exactly AT the intraday low/support or at the swing extreme — place it slightly beyond/inside (e.g., a bit ABOVE the intraday lows for longs). Rationale: if price can travel that extra bit, the trade idea is already dead — don't waste room hoping. For shorts, the SL sits near the intraday high or the previous major swing high.
+
 ### Consistent rupee-loss per trade
-"आपका stop loss जो जा रहा है वो amount क्या होना चाइए similar जाना चाइए... ऐसा नहीं कि किसी में जादा चला गया किसी में कम चला गया... points different हो सकता है हर एक condition में points same नहीं मिलेगा लेकिन हमारे हाथ में quantities तो है quantities हम अपने according manage कर सकता है" — **Keep the RUPEE amount lost per SL-hit consistent across trades.** Points will differ trade-to-trade; adjust QUANTITY to normalize the money at risk. Inconsistent loss sizes wreck overall management.
+
+The amount your stop-loss carries should be **similar across trades** — not bigger in some and smaller in others. Points will differ in every condition; points won't be the same everywhere — but quantity is in your hands, so manage quantity according to yourself. **Keep the RUPEE amount lost per SL-hit consistent; adjust QUANTITY to normalize the money at risk.** Inconsistent loss sizes wreck overall management.
 
 ### Range too big → reduce quantity
-"अगर range काफी जादा बड़ी हो जाती है तो फिर definitely quantities को reduce कर देना and sufficient momentum भी फिर थोड़ा कम आएगा तो उसके according booking को कर लेना" — Bigger range = smaller quantity AND book earlier since momentum will be relatively smaller.
+
+If the range becomes too big, definitely reduce the quantities — and sufficient momentum will also come relatively smaller, so book accordingly, depending on the case. Bigger range = smaller quantity AND book earlier.
 
 ### Against-overview trades: exit early
-"अगर major overview के against में trade executed है तो उस दिन better क्या है... गिरेगा तो continuous तो जाएगा नहीं तो better क्या है कि exit कर दें अगर थोड़ा बहुत भी momentum आता है या support लेकर के bounce back करता है" — If your trade runs AGAINST the major overview, exit on the first decent momentum/bounce — don't hold, because the overview says the counter-move won't be continuous.
+
+If your trade runs AGAINST the major overview, remember the overview says the counter-move won't be continuous — so the better choice is to exit if even a little momentum comes against you, or price bounces back taking support. Don't hold and hope.
 
 ### NO TRAILING — explicit advice
-"stop loss को entry पर trail कर सकते हैं क्या probability बढ़ाने के लिए मैं suggest नहीं करूँगा trail करना... momentum आगया तो आप सीधा book करो ना trail मैं advise नहीं करता हूँ मैं खुद भी trail नहीं करता हूँ या तो fix ratio पर काम करीए ratio आगया exit कर दिये... trail मत करिये या तो exit कर दो या तो hold रहो trailing is not उतना beneficial कुछ negative points भी उसका होता है" — **Do not trail stop-losses.** Either work on fixed ratios (exit when ratio arrives) or hold. Trailing has negative points; he personally never trails.
+
+Question: "Can we trail the stop-loss to entry to increase probability?" Answer: he would not suggest trailing. If momentum has come, just book directly. He doesn't advise trailing — he himself never trails. Either work on a fixed ratio (the ratio arrived → exit), or don't trail at all: either exit or hold. Trailing isn't that beneficial; it has negative points too. **Do not trail stop-losses.**
 
 ### Big SL but rarely hit (+ decay)
-"stop loss में बड़ा रहेगा इसलिए क्या है बढ़ chances of hitting the stop loss क्या है कम है और selling कर रहे है तो नीचे ही अगर वो stop loss level के रह रहा है तो decay का आपको फायदा मिलेगा यही तो इसका main crux है कि stop loss बड़ा बले लेकिन जाएगा नहीं बहुत कम जाएगा" — The SL is bigger BUT the chance of it being hit is smaller; and while selling, price hovering near your entry means theta decay works for you. That's the main crux.
+
+The stop-loss will be bigger — therefore the CHANCES of hitting the stop-loss are lower. And if you're selling, while price hovers down near your stop-loss level, theta decay works in your favor. That's the main crux: the SL is big, but it rarely goes.
 
 ---
 
 ## Exit strategy
 
-- **First leg exits at 1:1.5–1:2:** "अगर sufficient one ratio two के around भी अगर momentum आ रहा है one ratio 1.5 के भी उपर आ रहा है तो आप 2 lag play कर रहे हैं तो इतना target sufficient है... पहला lag तो आपका exit हो जाएगा" — Playing two legs? 1:1.5–1:2 on the first leg is sufficient; exit it.
-- **Book on momentum:** "momentum आगया तो आप सीधा book करो" — Momentum arrived? Book directly.
-- **Sideways holding:** If neither side moves, the held position keeps decaying (selling side) or waits; exit when sufficient momentum finally shows.
+- **First leg exits at 1:1.5–1:2:** If sufficient momentum is coming around 1:2 — even above 1:1.5 — and you're playing 2 legs, then this much target is sufficient; your first leg exits there.
+- **Book on momentum:** Momentum arrived? Book directly.
+- **Sideways holding:** If neither side moves, the held position keeps decaying (selling side) or waits; exit when sufficient momentum finally shows. Even a sideways-held selling position ultimately delivers a good momentum move.
 
 ---
 
@@ -187,93 +250,117 @@ Three distinct rules — don't mix them:
 Confirmed (confirmatory) entries produce a **high hit rate**, but the trade duration is longer and the stop bigger, so the overall ROI may be lower. That's fine — it suits a beginner.
 
 ### Acknowledged drawbacks
-"drawback एक ही है या 2-3 drawback है... target ratio कम है SL बड़ा है risk reward कम है बट इसके चलते क्या होगा definitely जो target day होंगे जो PNL आप देखोगे तो वो एक अच्छी चीज है positive चीज है आपका mindset भी build करेगी beginning में" — Yes: smaller target ratios, bigger SL, lower R:R. But the resulting steady green P&L builds your mindset in the beginning.
+
+There's one drawback, or 2–3 drawbacks: the target ratio is small, the SL is big, risk-reward is low. But because of that, the targets that do come and the P&L you see are a good, positive thing — steady green P&L builds your mindset in the beginning.
 
 ### The 8-of-11 stat
-"8 trading sessions हमारा positive close हुआ है out of say 9, 10 and 11... out of 11 sessions 8 sessions positive में close होगा तो mindset बिल्ड करेगा" — In his marked backtest, 8 of 11 sessions closed positive with this system. That consistency is what builds psychology.
+
+In his marked backtest, 8 of 11 sessions closed positive with this system ("out of say 9, 10, 11 sessions, 8 close positive — that builds mindset"). Within the same sample: 1 day hit 2 stop-losses, and 2 days hit 1 SL each. That consistency is what builds psychology.
 
 ### Realistic return expectations
-"जो एक trader का expectation होता है कि आपको बनाना होता है महिने का 20%, 50%, 80%, वो इसमें नहीं बन सकता 20%, 30%" — Monthly expectations of 50–80% are unrealistic here; think 20–30%.
+
+A trader's expectation of making 20%, 50%, 80% a month — that cannot be made here; think **20–30%** monthly.
 
 ### Option buying capital limitation
-"60,000 quantity अगर उठाने जाएंगे 200-300 के premium वाला तो वो छोटे range में नहीं लिया जा सकता है buy करेंगे price jump करेंगे... overall probability देखेंगे तो फिर कम हो जाए इसलिए काफी बड़ा capital उस चीज में deploy नहीं किया जा सकता है लेकिन छोटे capital में definitely return percentage wise देखेंगे" — Large capital can't deploy efficiently in option buying: big quantity = price jumps = worse fills = lower overall probability. Small capital gets great percentage returns.
+
+If you're going to lift 60,000 quantity at a 200–300 premium, it can't be taken in a small range — when you buy, prices jump — and looking at overall probability, it drops. So a lot of capital cannot be deployed in option buying. But in small capital, returns percentage-wise are definitely attractive. Large capital can't deploy efficiently in option buying: big quantity = price jumps = worse fills = lower overall probability.
 
 ### Instructor's own journey: buying → selling
-"start of the journey था buyer से buying and then selling and now buying भी फिर भी... buying continued यह capital उसमें risk जादा नहीं है capital छोटा deployed है तो buying में मज़ा आता है वो habit में है तो buying will be always continued लेकिन जो बड़ा game है बड़ा capital है वो एक time के बाद आप selling में खुद भी deploy करना start करने लगे तो monthly selling" — He started as a buyer; still enjoys small-capital buying as a habit; the big capital went to (monthly) selling over time.
+
+The start of his journey was buying, then selling, and buying also continued — buying carries less capital risk with small capital deployed, so buying is enjoyable; it's a habit, and buying will always continue. But the big game, the big capital — after a point you start deploying in selling yourself: monthly selling.
 
 ### Selling duration-match advantage
-"trade duration है अगर stop loss बड़ा होता है तो duration hold का जादा होता है तो selling में decay का benefit उठाईए न और direction तो हम proper confirmations पर ले रहे हैं तो market domination के according work करेगा maximum case में तो decay का भी आपको फायदा होगा" — Bigger SL = longer hold = more theta decay captured, PLUS the direction edge from confirmations. Double advantage for sellers.
+
+Trade duration: if the stop-loss is bigger, the holding duration is longer — so capture decay's benefit in selling. And the direction is taken on proper confirmations, so the market works according to domination in maximum cases — decay benefits you too. Bigger SL = longer hold = more theta captured, PLUS the direction edge. Double advantage for sellers.
 
 ---
 
 ## Psychology & discipline — the root cause
 
-"psychology का problem कब होता है जब आपको confidence नहीं होता है खुद के execution setup पर या discipline loose कब होता है जब वहाँ पर हमारा execution में clarity ना हो तो understanding जितना जादा clear होगा उतना ही जादा अपने आप discipline आता है" — Psychology problems come from lack of confidence in YOUR setup; discipline breaks when execution lacks clarity. Deeper understanding → automatic discipline. This will be discussed further in upcoming sessions.
+Psychology problems occur when you lack confidence in your own execution setup; discipline loosens when there's no clarity in execution. The clearer the understanding, the more discipline comes automatically. This will be discussed further in upcoming sessions.
+
+Supporting observation: even traders with **8–10 years** in the markets still fear intraday and still lose — which is exactly why this deliberately easy, green-generating setup exists: build the mindset first, accept lower returns initially.
 
 ### Missing entries disturb psychology
-"if due to lack of quick decision making if we miss one entry then what to do this happens frequently and it disturbs psychology... N और M में आज सच quick decision लेना नहीं है इसके उपर जो मेरा entries होता है तो उसमें आपका quick entry चाहिए तो उसके लिए mindset जब strong होगा psychology strong होगी तभी consistently कर सकते है otherwise 2-3 session अच्छे जाएंगे आचानक से losses streak आने लगेगा" — Missed entries happen and hurt. N/M setups don't need split-second decisions; his current system does. Strong mindset comes with practice — otherwise 2–3 good sessions get followed by sudden loss streaks.
+
+If, due to lack of quick decision-making, we miss one entry — what to do? This happens frequently and it disturbs psychology. In N and M you don't need split-second decisions; his own current entries do need quick entry. For that, when the mindset is strong and psychology is strong, only then can you remain consistent — otherwise 2–3 sessions go well and suddenly a loss streak begins.
 
 ### 3-day SL streaks are digestible
-"तीन दिन भी मेरा SL amount गया मुझे कुछ फरक नहीं पड़ रहा है... क्योंकि तीन दिन भी stop loss आ रहा है तो किसी दिन एक दिन में single day में cover up हो जाएगा तो यह खासियत है इस चीज़ की risk and reward जादा है" — Even 3 consecutive SL days don't bother him: one winning day covers all of them. That's the specialty of high R:R systems.
+
+Even if his SL amount went for three days straight, it wouldn't make any difference to him — because even if stop-losses come three days in a row, some single day covers it all up in one day. That's the specialty of this system: risk and reward are high. One winning day covers three losing days.
 
 ### Soft-hearted traders: avoid tiny SLs
-"कोई जादा अगर soft hearted है तो बहुत छोटे SL के साथ में काम करना advice नहीं करूँगा इसके लिए safe side चीज़े हमने discuss किये है" — If you're emotionally sensitive, don't work with very small SLs; use the safe-side setups discussed.
+
+Anyone who is too soft-hearted — he wouldn't advise working with very small stop-losses; use the safe-side setups discussed instead.
 
 ---
 
 ## Which script — why Nifty over Bank Nifty
 
-"certain चीज़ें है nifty है bank nifty को prefer करने का एक तो Indian जो major index है वो nifty 50 है... nifty 50 अपने आप में पूरा Indian market का index है nifty bank तो banking index पर based है तो जो certain comparison analysis होते हैं global cues के basis पर identification होता है... nifty में it's comparatively easy than bank nifty जो main point वही है कि nifty is a combination of average of 50 stocks and bank nifty banking sector पर based" — He prefers Nifty because: (1) it's THE major Indian index (average of 50 stocks across sectors), making global-cue comparisons and overall view-building easier; Bank Nifty is sector-concentrated. Personal comfort from the beginning also matters. You may prefer Bank Nifty — but stay with one script.
+He prefers Nifty. Reasons: (1) India's major index is Nifty 50 — in itself it represents the whole Indian market (an average of 50 stocks across sectors), whereas Bank Nifty is based only on the banking sector; (2) certain comparison analyses happen on the basis of global cues, and that identification/comparison is comparatively easier in Nifty than Bank Nifty. Personal comfort from the beginning also matters. You may prefer Bank Nifty — but stay with one script.
 
 ---
 
 ## Program scope
 
-- **This program = intraday** (buying and selling). "monthly option selling का ये particular program based नहीं है... monthly selling इसमें cover नहीं किया जाएगा" — Monthly option selling is NOT covered.
-- **BTST:** "btst के लिए use कर सकते हैं... other compliance रहेंगे btst के लिए करने को definitely किया जा सकता है बट कुछ points हैं जो उसमें ध्यान रखने वाली बात रहेंगे" — BTST use is possible with compliance caveats.
-- **His personal practice:** "मैं तो personally buying ही कर रहा हूँ intraday... मैं monthly selling कर रहा हूँ मैं intraday selling नहीं कर रहा हूँ" — He personally does intraday BUYING and MONTHLY selling — not intraday selling.
+- **This program = intraday** (buying and selling). This particular program is not based on monthly option selling — monthly selling will NOT be covered in this.
+- **BTST:** You can use it for BTST — subject to other compliances it can definitely be done, but there are certain points to keep in mind.
+- **His personal practice:** He personally does intraday BUYING and MONTHLY selling — not intraday selling. With bigger capital, the safe side for him is option selling; his capital sits in investments plus (monthly) option selling — "I prefer selling a lot."
+- **No capital for selling?** Do the same things via **BUYING** instead — but remain a bit cautious. Also: a **1-minute timeframe is NOT sufficient** for observing these setups.
 
 ### Strike selection & targets for selling
-"option selling में ATM strike ले सकते हैं add the money is always good या थोड़ा सा उपर का ले सकते हैं तो बेतर रहेगा... what targets to expect — 1 ratio 1 or 1 ratio 1.5 कि कुछ cases में आपको बड़ा target में लेगा जिसमें stop loss थोड़ा छोटा जा रहा है जिसमें बड़ा जाएगा definitely उसमें target ratio थोड़ा कम हो जाएग" — Sell ATM (always good) or slightly above. Targets: 1:1 to 1:1.5. Smaller SL allows bigger targets; bigger SL forces smaller ratios.
+
+In option selling you can take the ATM strike — ATM is always good — or take slightly above it; that's better. Targets to expect: **1:1 or 1:1.5**. Some cases carry a bigger target where the stop-loss is smaller; where the SL is bigger, the target ratio is definitely smaller.
 
 ### Next-session preview
-"support, resistance, identification, strike price selection cover होगा... अगला जो session है उसमें हम support identification and resistance identification and strike price selection discuss किया जाएग" — Support/resistance identification + strike price selection come next session. Strike charts will also be covered live this week since markets are open during sessions.
+
+Support identification, resistance identification, and strike price selection will be discussed in the next session. Strike charts will also be covered live this week since markets are open during sessions.
+
+What changes in upcoming sessions: only **TWO things** — the **stop-loss and the entry**. The overview, planning, and direction-planning stay largely similar; the aim is to get direction maximally right.
 
 ---
 
 ## The "one step ahead" idea & the ultimate game
 
-He explained that the key to keeping the **stop-loss small** is to **identify before the entry** — reading what the market has done before the final confirmation. 
+He explained that the key to keeping the **stop-loss small** is to **identify before the entry** — reading what the market has done before the final confirmation.
 
-"ultimate game क्या होगा छोटे SL के लिए कि यह confirmation domination आने के पहले ही identification करना है कि end बनने वाला domination आने वाला... यह जो last domination है आने के पहले ही identify करना and यहीं कहीं पर short करना तो SL छोटा हो जाएगा entry अच्छा हो जाएगा" — The ultimate game for small SLs: identify the coming final domination BEFORE it confirms, and enter there. Example flow: buying swing → weakness identified within it → expect reversal → the N/M is forming → enter before the last domination confirms → tiny SL, 1:2–1:3 momentum follows.
+The ultimate game for a small SL: identify, BEFORE the confirmation/domination arrives, that the ending domination is coming — identify this last domination before it arrives and enter (short) right there. The SL becomes small and the entry becomes good. Example flow: buying swing → weakness identified within it → expect reversal → the N/M is forming → enter before the last domination confirms → tiny SL, 1:2–1:3 momentum follows.
 
-"daily overview है कि market जो बनाया है उस पर again आ नहीं रहा है maximum cases में" — Once a level is built, the market does **not** come back to retest it in maximum cases — that's your daily overview.
+The daily overview: the market does NOT come back again to what it has built, in maximum cases. Once a level is built, price does not retest it — that's your daily overview (and why stops placed beyond levels don't get hit).
 
 ### Level-up tradeoff
-"जितना इस से level up करेंगे complications बढ़ेगा लेकिन return on investment बढ़ेगा तो risk reward favorable रहेगा losses का chances कम रहेगा या lose करेंगे तो एक छोटा amount होगा and target 1 ratio 3 से around के पास मिलेगे" — Each level up adds complication but raises ROI: favorable R:R, fewer/smaller losses, targets approaching 1:3. Also: "दो लग में भी काफी अच्छा perform करेंगे इवन WM से जादा एक जो better है later point पर देखेंगे" — The two-leg system will eventually outperform even W/M.
+
+The more you level up from this, complications increase — but ROI increases, risk-reward stays favorable, chances of loss reduce (or losses become a small amount), and targets come around **1:3**. Also: the two-leg system will perform quite well — even better than W/M; that better version will be looked at at a later point.
 
 ---
 
 ## Day-by-day walkthroughs
 
-- **23rd Feb:** Market at all-time highs testing → fell → support formed → reversal. New concept: "अगर market नीचे नहीं गिर पाता higher location करता है तो it's also a confirmation of strength" — failure to fall = strength confirmation. Options showed momentum even though spot didn't — "confused होने की जरुवत नहीं" — same execution applies on options charts.
+- **23rd Feb:** Market at all-time highs testing → fell → support formed → reversal. New concept: if the market fails to fall and instead makes higher locations, it's also a confirmation of strength — failure to fall = strength confirmation. Options showed momentum even though spot didn't — no need to be confused; same execution applies on options charts.
 - **20th Feb:** Strength-type selling swing created → overview-based selling plan valid. Confused? Then don't execute the selling leg. Two overviews coexist (ATH falling → buy support; recent-high rejection with lower highs → short). First leg SL'd; second entry after retrace/support/higher-low/high-break worked.
 - **21st Feb:** Weak selling swing reversed → 70–80% buy per rule (even though a weakness-based short had been flagged pre-open). First buying leg SL'd at intraday-low-plus; second entry after support + higher lows + high break. Insufficient option momentum that day — some days both legs die; mark red box, day negative.
 - **25th Feb:** Selling swing sustained → reversal → buying execution; SL just above intraday lows. First leg stopped; market broke the low a bit more, but the bullish overview held — support sustained, reversal again → buying side. W-pattern continuation happened; max 2–3 bluffs discussed.
 - **16th Feb:** Selling swing; single-candle retrace then continuation — pace-of-momentum context for swing reading.
-- **7th Feb:** Selling swing with no reversal → selling continuation. Single red candle sustained = considered. V-shape recovery; 70–80% reversal near lows considered; measured ~80% on the actual swing.
-- **5th Feb:** Selling swing → reversal → another selling swing → buying-swing-selling-side reversal → short entry near lows. SL bigger here → quantity reduced. Option selling: premium decays even if highs get tested — "profit selling में तो पक्का है buying में definitely choppy होगा".
+- **7th Feb:** Selling swing with no reversal → selling continuation. Single red candle sustained = considered. V-shape recovery; reversal trigger raised from 70% → **80%** for higher probability — measured on an actual ~**138-point** swing that had retraced ≈80%. Wick-wait applied (bounce-with-wicks → wait to see if lows get revisited); an ambiguous middle case was skipped/not considered; day closed positive.
+- **5th Feb:** Selling swing → reversal → another selling swing → buying-swing-selling-side reversal → short entry near lows. SL bigger here → quantity reduced. Option selling: premium decays even if highs get tested — profit in selling is guaranteed; in buying it will definitely be choppy.
 - **29th Feb:** Buying swing → reversed → buyers dominated again → M pattern. 70%+ retrace = sellers dominated → intraday-high break expected. Safest SL just above intraday lows.
+- **Boundary/ambiguous-reversal day:** selling swing with a marginal reversal — counting it is **personal choice**; whoever counted it got a winning trade (buyers were trapped; verified via the option chart), whoever didn't simply had no entry. Both outcomes acceptable. Also a "50-50" previous-system day: ~70% reversal → re-short, market fell then went sideways — book, or exit on any momentum/buying against the major overview.
+- **W-formed-but-N-executed demo:** a visible W on the chart, but entering on the N first → SL hit (red box); the planned second entry on the W — taken only after the first exit — then rode to target. The two-entry plan absorbing the small loss and collecting the big win.
+- **Both-N-and-W small-swings day:** N entry stopped once; at 70–80% near the highs the second entry went on the buying side (call-option sell mentioned); overall positive day — small box (SL) vs big box (target) drawn.
+- **Near-highs-N day:** N created near the highs — could confidently be called a W; selling-side execution planned first; price held near previous highs into the second half (the rare afternoon-execution case); red box marked.
+- **Strength-sign day:** full successful-domination reversal of a selling swing = strength sign; buyers pushed up, then aggressive selling followed; N executed; bigger SL / smaller target ratio but high hit-rate; market stayed positive → green box.
+- **WM-only re-scan notes:** scanning days purely through the W/M lens — a first-candle-neglect day created nothing (the morning timing ran out before any valid formation); 1st March had no reversal at all (direct buying continuation → nothing to execute); one sideways N-day got a long red rectangle; and a confirmatory big-SL selling case was marked green/no-color since option-selling decay would have absorbed the test (in buying it would have been stopped at the highs).
+- **No-trade demo days:** buyer-continuation morning (minor retrace, buyers continued) → no execution; seller-continuation day (buying swing fully reversed, sellers ran it till ~12 o'clock) → no case; pure V-shape recovery days (no reversal confirmation, twice) → skipped. Rule: no reversal / no domination failure = don't trade the case.
 - **Missed-entry case study:** Correct entry was the buying swing at support (announced a day earlier in session), but he missed it for personal reasons; market ran to highs; he then analyzed weakness, expected support breakdown, entered short — market chopped sideways, didn't break down; exited near highs. Honest lesson: the first high-probability entry was the buy; subsequent trades were recovery attempts.
 
 ---
 
 ## Backtesting principles
 
-- **Test worst cases:** "back testing हमेशा worst case पर होना चीए" — Always backtest on worst-case scenarios, not best-case.
-- **Homework:** "कल का task यह है कि यह जो setup बताये गया इसको पूरा अच्छे से testing करें" — Test this setup thoroughly. Sequence: test W/M → test N → then observe the two-leg identification setup.
-- **Marking system:** Green box = positive close; red box = negative; long rectangle = N pattern; square = M/W. Neutral/50-50 days can be marked either way (personal choice).
-- **Mindset building path:** Start with this system even with a negative mindset; continue 1–3 months; confidence builds automatically; then advance. "ऐसे लोग इससे begin करें जो सोचते है market mindset थोड़ा अच्छा है या सभी इससे begin करेंगे तो continue करें न जल्द बाजी महीने दो महीने तीन महीना continue करें इसके बाद confidence अपने आप देखेंगे mindset change होगा"
+- **Test worst cases:** Backtesting should always be done on the **worst case**, not the best case.
+- **Homework:** Tomorrow's task — test this setup that was taught, thoroughly. Sequence: test W/M → test N → then observe the two-leg identification setup.
+- **Marking system:** Green box = positive close; red box = negative; long rectangle = N pattern; square = M/W; small box = SL outcome, big box = target outcome. Neutral/50-50 days can be marked either way (personal choice). Ignore the SMALL boxes on his charts — those belong to the other (previous) system's testing marks; count only this system's long stretched rectangles.
+- **Mindset building path:** Start with this system even with a negative mindset; continue 1–3 months; confidence builds automatically; then advance. People who feel their market mindset is reasonably good — or everyone — should begin with this and continue without haste: two months, three months. After that you'll see confidence build on its own and the mindset change.
 
 ---
 
@@ -281,9 +368,12 @@ He explained that the key to keeping the **stop-loss small** is to **identify be
 
 - **"Buy at high level? — no" (Sumit's question):** "you said if market is on high level we short and when at low level we buy but we are also buying at high level and selling at low level?" → Answer: generally buy at lower levels/sell at higher levels — buying after support in a falling market gives better price + safer entry. BUT in N/M patterns, entry comes AFTER full confirmation/domination, which is structurally at the highs — hence the bigger SL. The fix (next-level tweak): enter at lows mid-confirmation → small SL, better R:R. Same concept, one simple adjustment.
 - **Tanu's question (N→M):** Covered above — N's last-leg SL hits whenever N converts to M.
+- **Yugesh ji — "the END pattern is confusing":** plain-language restatement: sellers dominate the first swing, buyers fully reverse it, sellers dominate AGAIN → that's the END (seller dominated twice); the mirror image (buyers dominate twice) is the reverse-END. A simple observation — rewatch if unclear.
+- **"Why wasn't the 23rd's morning move treated as a W?":** Because the selling swing near the highs didn't make a *proper* reversal there — buying dominated once, then selling returned, so the N executes right there anyway. A genuine W requires testing the previous high; since swings are already cut at 70–80%, little momentum is needed to reverse, so strength must be judged from the prior high — hence **W forms rarely**. If someone wants absolutely maximum probability, trade only on W. Nuance: over-filtering breeds its own problem — too few setups trigger FOMO entries on random days ("let's just take it"); keep enough candidate sessions to cherry-pick from, and take N trades in the meantime.
+- **Class exercise (21st chart):** he asked the class live to identify the pattern (selling swing → buying swing → mark ~70%) before resolving it as a clean N with a green mark.
 - **Confusion between the two-leg system:** Rewatch yesterday's video, then today's; or rewatch recent sessions (skipping the very first) — clarity develops.
-- **On expiry / hero-zero trading:** "hero zero में दूर का strike थोड़ा ले लेंगे जब N या M बनेगा तो थोड़ा out of the money ले ली जएगा buy कर ली जएगा simple" — On expiry, take slightly OTM strikes when N/M forms; buy them. Patterns work on expiry day and every trading session.
-- **On option-chain (OI/AOC/POC) data:** "आज सज नीड नहीं है prices में चीज़े reflect हो जाते है and we give the most priority to the price" — Not needed daily; everything reflects in price, and price carries highest weightage.
+- **On expiry / hero-zero trading:** In hero-zero, take a slightly farther strike — when an N or M forms, take slightly out-of-the-money and buy it. Simple. Patterns work on expiry day and every trading session.
+- **On option-chain (OI/AOC/POC) data:** No need for it daily — things reflect in prices, and we give the most priority to the price. Everything reflects in price, and price carries highest weightage.
 - **Volumes:** Volume theory exists (morning volume decides domination/day bias — Indian market's two-session structure), but the execution here reads it through price/swings.
 - **"Market is my mentor":** "market is my mentor, the biggest mentor" — everything came from price observation.
 - **Experience:** Currently in his 5th–6th year in markets; based in Mumbai.
@@ -300,4 +390,6 @@ The lesson: don't rush. Keep doing this for one-two-three months, test it proper
 
 ## Coverage note
 
-This file now covers all four parts of Session 4 in full — Parts 0–3 have been cross-checked against the improved SRT transcripts from the "better transcript" folder. All content (two-layer system, N/M/W mechanics, single-candle rules, timing rules, risk management, no-trailing advice, capital/ROI, psychology, script preference, program scope, all day-by-day examples, and the complete Q&A) is incorporated.
+This file now covers all four parts of Session 4 in full — Parts 0–3 have been cross-checked against the improved SRT transcripts from the "better transcript" folder, then re-verified part-by-part against each SRT file (Part 0: opening + overview/two-leg case-building; Part 1: weakness/strength weightage, 9:45 rule detail, W/M-only decision; Part 2: N/M/W walkthroughs, capital/ROI; Part 3: closing Q&A), and written as full-English notes matching the Session 1 style. All content is incorporated: two-layer system, retracement-weightage reading, overview rules (incl. weekly-high nuance), two-entries idea with green-day exception, domination/double-domination logic, trapped-buyer logic, full N/M/W mechanics incl. the anti-misconception W definition and successful-domination definition, single-candle rules + wick-wait rule, timing rules (9:45 detail, morning-only with second-half exception), stop-loss placement (never at the extreme), consistent rupee-loss sizing, no-trailing advice, general no-stacking rule, exit strategy, capital/ROI discussion, psychology, script preference, program scope (incl. buying alternative when selling capital is lacking, 1-minute timeframe insufficiency), next-session scope (only SL + entry change), every day-by-day example, backtesting/marking principles, and the complete Q&A.
+
+Minor housekeeping moments captured for completeness: he briefly paused the meeting (~15 seconds) mid-session while switching charts, and demonstrated adding a "session break" marker in the platform during the Q&A part; doubts were collected throughout and addressed in the same/later sessions.

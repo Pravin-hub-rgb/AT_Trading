@@ -27,7 +27,7 @@ When market arrives at lower levels (or upper levels), exactly two things can ha
 1. **Bounce back** from support (or rejection from resistance)
 2. **Continue lower** with lower highs (or continue higher with higher lows)
 
-The market can't stay in the middle. "Market बीच में तो नहीं रह सकता" — it must pick a direction.
+The market can't stay in the middle — it must pick a direction.
 
 ### When marking gets confusing — the mountain pattern
 A confusion can arise when the market makes one big swing and then reverses — going up and then coming all the way back down in a single trading session. That creates a mountain: a big divergence between the buying side and the selling side. In that case you can consider the **mid-point** of that mountain as a candidate mark. If continuation happens from either side, you can mark those intermediate points too. So the idea is: you watch the big swings that get created at the market level, mark around them, and draw conclusions based on the relationship of the price to those ranges.
@@ -114,7 +114,7 @@ A trading plan has three components:
 2. **Risk management** — how you manage the trade once in it
 3. **Clarity of the decision** — knowing what to do when market opens, how it will react, what chart pattern to make, and what decision to take
 
-**Clarity of decision is the most important.** "सबसे पहले clarity of decision है कि market में क्या करना है" — First comes clarity of what to do in the market. When you know from the overview that market won't continuously fall, you wait for support confirmation calmly. That's the right execution mindset.
+**Clarity of decision is the most important.** First comes clarity of what to do in the market. When you know from the overview that market won't continuously fall, you wait for support confirmation calmly. That's the right execution mindset.
 
 ---
 
@@ -130,13 +130,13 @@ If you're at the beginning / professionalism stage, you can plan a small entry. 
 Because once mental pressure rises, discipline breaks, **emotion** takes over — and once emotion is in, "the job is over." Remember the saying: **whoever is scared, is already dead**. When you feel fear or emotion in the market, consider it a signal — exit the trade. It doesn't matter whether the target or stop-loss was going to be hit — it means your mental state isn't right for execution right now. First fix your system and your emotion, then execute — with a small quantity.
 
 ### Big SL + small quantity (NOT small SL)
-Use a **larger stop loss with smaller quantity**, NOT small stop losses. "बड़ा SL रहेगा... छोटा-छोटा SL लगाए... ना, बड़ा SL रहेगा" — The SL will be bigger. Don't try to place tiny stops. With bigger SL and smaller quantity, the mental pressure stays manageable.
+Use a **larger stop loss with smaller quantity**, NOT small stop losses. The SL will be bigger — don't try to place tiny stops. With bigger SL and smaller quantity, the mental pressure stays manageable.
 
 ### Acceptable R:R range
-If 1:3 or 1:4 isn't available, **exit at 1:2 or even 1:1.5**. The goal is peace of mind, not maximizing R:R. "one ratio 4 ना मिले, one ratio 3 ना मिले, one ratio 2 में exit करें, one ratio 1.5 में exit करें" — If you don't get 1:4, exit at 1:2 or 1:1.5. That's fine. The positive mindset from seeing green panels is more important than squeezing every last point.
+If 1:3 or 1:4 isn't available, **exit at 1:2 or even 1:1.5** — if you don't get 1:4 or 1:3, exiting at 1:2 or 1:1.5 is completely fine. The goal is peace of mind, not maximizing R:R. The positive mindset from seeing green panels is more important than squeezing every last point.
 
 ### Positive mindset from high success rate
-Better to execute in a method with **high success rate** — where you see green panels more often. Even if risk-reward is lower, the positive mindset from consistent wins builds confidence. "हरा हरा panel देखने को मिले" — You should see green panels. That builds the mental state needed for trading.
+Better to execute in a method with **high success rate** — where you see green panels more often. Even if risk-reward is lower, the positive mindset from consistent wins builds confidence. You should be seeing green, green panels — that builds the mental state needed for trading.
 
 ## The backup (easiest) execution method
 
@@ -152,25 +152,25 @@ For this style of trading, **option selling** is the preferred, easier method �
 
 ## Right mindset of execution
 
-The right execution mindset = **knowing each and every step**. "execution should be like कि आपको each and every step पता है, क्या होने वाला है" — You should know what's going to happen. Not worrying about where market will go.
+The right execution mindset = **knowing each and every step** — execution should be such that you know what is going to happen at every step. Not worrying about where the market will go.
 
-From the overview, you know: market won't continuously fall. So you wait for support confirmation calmly. "शान्ती से बैठके observe करेंगे" — You sit peacefully and observe. When market gives proper confirmation that support has formed, you buy in small quantity. This is how execution should feel — calm, methodical, not rushed.
+From the overview, you know: market won't continuously fall. So you sit peacefully and observe. When market gives proper confirmation that support has formed, you buy in small quantity. This is how execution should feel — calm, methodical, not rushed.
 
 ## The backup plan overall
 So this six-day live session has a **backup plan**: for anyone who isn't yet able to take the more complicated things we'll discuss later, there's a simple method they can execute profitably, and keep doing until they level up.
 
 It's also about your mental peace: to be able to trade a process successfully, then later learn the deeper complications. So begin by getting this "proper process" working — trade it successfully and continuously — then, later, improve into the deeper concepts.
 
-**Confidence threshold before advancing:** "confidence बहुत ज़रूरी है... जब confidence आ जाए... जो losses लगातार देखें है... जब वो लगे कि हालात बदल रहे हैं... तब फिर आप switch मार सकते हैं" — Master the backup plan first, build confidence, then switch to advanced methods. Don't rush to complicated systems before the basics are solid.
+**Confidence threshold before advancing:** confidence is essential — once it arrives (after seeing the consistent losses stop and feeling that things are changing), then you can switch methods. Master the backup plan first, build confidence, then switch to advanced methods. Don't rush to complicated systems before the basics are solid.
 
 ---
 
 ## 9:45 timing rule and morning candle observation
 
-**No execution before 9:45.** "9.45 का timing rule दिया गया है, कि इसके पहले execution नहीं करना है" — Do not take positions immediately after open. The market is still finding its direction, volatility is high, it hasn't settled. Wait for it to settle.
+**No execution before 9:45.** This timing rule was given explicitly — do not execute before it. Do not take positions immediately after open: the market is still finding its direction, volatility is high, it hasn't settled. Wait for it to settle.
 
 ### Morning candle observation pattern
-On any day, the opening produces either **2–4 green candles** or **2–4 red candles** — nothing else. "या तो 2-4 green candle बनेंगी, या तो 2-4 red candle बनेंगी... इसके अलावा कुछ है नहीं" — Just watch what forms. That's your first data point for the day.
+On any day, the opening produces either **2–4 green candles** or **2–4 red candles** — nothing exists beyond these two. Just watch what forms. That's your first data point for the day.
 
 ---
 
@@ -208,7 +208,7 @@ This is the core swing analysis framework:
    - **No (retracement doesn't reach support, forms higher = strength):** The buying swing held. Buy.
 
 ### Complete sequence: Support → Recovery → Intraday high = strength
-Market falls → support forms → recovery with strength → reaches intraday high → this is a sign of strength. Don't wait for full breakout — **execute at 70–80% recovery**. "70-80% हो गया है... call option sell कर दें" — When recovery reaches 70-80% of the intraday range, execute immediately. Don't wait for the last 20%.
+Market falls → support forms → recovery with strength → reaches intraday high → this is a sign of strength. Don't wait for full breakout — **execute at 70–80% recovery**: when the recovery has reached 70–80%, sell the call option right there. Don't wait for the last 20%.
 
 ---
 
@@ -234,18 +234,18 @@ Later in the session he walked through a real day where both sides, buying and s
 ### The two-slot cut-and-hold system
 - If you've set up positions on **both sides** (buying and selling), when one goes against you, **cut that one**; hold the one that aligns with the major overview.
 - First slot cut = approximately **1:1 loss**. Second slot held until near the lows/highs.
-- **Hold the overview-aligned position until near the lows** — "इसको कब काटेंगे... जब यह near the lows आ जाएगा... तब इसको काटेंगे" — Don't exit early. Wait until price approaches the target level.
+- **Hold the overview-aligned position until near the lows** — when will we cut it? Only when price comes near the lows. Don't exit early; wait until price approaches the target level.
 
 ### When directions match — don't double
-"If overview and morning session both say buy, take ONE position, not two. If they clash (one says buy, other says sell), take BOTH." — "double double position execute नहीं करना है... जब भी दोनों match कर जाएंगे, clash होंगे... तो दोनों ले लेना है, अगर clash नहीं हो रहा है... तो एक ही लेना है"
+If the overview and morning session both say buy, take ONE position, not two. If they clash (one says buy, the other says sell), plan BOTH sides — the double-double position approach applies when the views conflict; when there's no clash, a single position suffices.
 
 ### Second position executes BEFORE first is cut
-The second position (opposite side) executes based on overview **before** the first losing position is formally cut. "दूसरा position एग्जिक्यूट हो जाएगा... overview कह रहा है कि अगर rejection होता है... तो short कर दें" — When the overview triggers, execute the second position. Then cut the first one when it's clearly losing.
+The second position (opposite side) executes based on the overview **before** the first losing position is formally cut — the second position gets executed because the overview says that if a rejection comes, short it. When the overview triggers, execute the second position; then cut the first one when it's clearly losing.
 
 ### Exact exit trigger for buying position
-"market में weakness से गिरने लगा है... intra day lows के करीब आ जाएगा... call option... buying side का position है... वो यहां पर exit हो जाएगा" — Exit the buying position when market shows weakness and approaches intraday lows.
+Exit the buying position (e.g., the call option) when the market starts falling with weakness and price approaches the intraday lows.
 
-So in some days the market stays **sideways**. In a sideways market, selling (or that side) makes you money — "sideways रहेगा... selling किया है... तो आप पैसा definitely बनाएगे sideways में" — and at the closing, if the market shot the opposite side, the sufficient momentum comes and you book it.
+So in some days the market stays **sideways**. In a sideways market, selling makes you money for certain — the sold premium keeps decaying — and at the closing, if the market shoots the opposite side, the sufficient momentum comes and you book it.
 
 In the **support strategy** — when the market is at support and confirms, you don't expect it to rocket straight up; you expect only a bounce first. When the market makes a buying swing and retraces, if it can't get back to the prior high (no recovery — meaning lack of strength), you either wait or act on the basis of what you've been taught.
 
@@ -263,7 +263,7 @@ So:
 - If the reversal doesn't come (the first shape just keeps going) — still, money. Because in all of these cases the swing kept flowing in the direction.
 
 ### Swing reversal probability degrades
-After a selling swing, V-shape reversal is likely. After **another** selling swing, the probability of another reversal drops significantly. "probability काफी जादा कम हो जाता है" — Successive reversals have diminishing probability. The first reversal is most reliable; each subsequent one is less likely.
+After a selling swing, V-shape reversal is likely. After **another** selling swing, the probability of another reversal drops significantly — successive reversals have diminishing probability. The first reversal is most reliable; each subsequent one is less likely.
 
 ### Where does the loss happen?
 Only in one condition: if the market dips, goes up, dips again, doesn't break down further → weakness confirmed but no follow-through → then buying continuation happens. Otherwise, sideways = no loss from selling.
@@ -281,7 +281,7 @@ Loss happens when M is followed by continuation down, or W by continuation up. B
 
 ## Stop-loss placement
 
-Place SL at **intraday low** (for selling trades) or **intraday high** (for buying trades). Don't wait for price to come all the way to the lows before acting — "इसका SL कहां रखोगे... intra-day low तक के reversal का weight नहीं करना है" — The SL is at the intraday extreme. If market reverses that far, your overview is wrong anyway.
+Where will you place the SL? At the **intraday low** (for selling trades) or the **intraday high** (for buying trades). Don't weight a reversal all the way to the intraday extreme before acting — if the market reverses that far, your overview is wrong anyway.
 
 ---
 
@@ -302,24 +302,24 @@ Place SL at **intraday low** (for selling trades) or **intraday high** (for buyi
 
 ## Major overview in one line
 
-"Major overview एक single line में कहा जाएगा... higher level test हो रहा है तो strength है, lower level test हो रहा है तो weakness है" — Higher level test = strength. Lower level test = weakness. That's it.
+The major overview can be said in a single line: **higher level test = strength. Lower level test = weakness.** That's it.
 
 ### When confusion resolves
-"जब भी confusion हो... अगले दिन live market में clear हो जाएगा" — When overview is uncertain/undecided, the next day's live market action resolves it. Higher level test = strength, lower level test = weakness. Just watch the next day.
+Whenever there is confusion, the next day's live market action clears it — when the overview is uncertain/undecided, just watch the next day: higher level test = strength, lower level test = weakness.
 
 ---
 
 ## Homework and backtesting
 
-"back testing करेंगे... concept जो अभी इसके लिए है... base concept complete नहीं है... practice करिये, देखिये, observe करिये" — Homework: observe and backtest on prior charts. The base concept is still incomplete (will be developed further in upcoming sessions). Watch the session again. Practice.
+Homework: backtest on prior charts — practice, watch, observe. The base concept is still incomplete (it will be developed further in upcoming sessions). Watch the session again. Practice.
 
-"Doubt session इसमें नहीं रहेगा... कल के दिन concept अभी अधूरा है" — Doubt session postponed to next day because the concept is still incomplete.
+No doubt session today — it's postponed to the next day because the concept is still incomplete.
 
 ---
 
 ## Recap / Closing
 
-The market created `[...]` — one needs to master one's own concept of how the swings unfold. He said to do `[unclear]` and also that if you settle yourself on a level, you'll find more clarity — and that nobody will succeed who doesn't do it.
+One needs to master one's own concept of how the swings unfold. Keep settling yourself on the marked levels — you'll find more clarity there — and nobody succeeds who skips this practice.
 
 Today's doubts will clear by the next session, and he said wait to cover the remaining things. Good night to all — see in the day/week.
 
