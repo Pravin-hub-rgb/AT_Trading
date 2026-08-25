@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -7,11 +7,16 @@ import {
   IChartApi,
   CandlestickSeries,
   TickMarkType,
+  createSeriesMarkers,
   type Time,
+  type SeriesMarker,
   type TimeRangeChangeEventHandler,
 } from "lightweight-charts";
-import type { Candle } from "@/lib/api";
+import type { Candle, BiasLabel } from "@/lib/api";
 import { SwingSRPrimitive, SwingPoint } from "./SwingSRPrimitive";
+import { PositionPrimitive, TradeBox } from "./PositionPrimitive";
+import { SessionBreakPrimitive } from "./SessionBreakPrimitive";
+import { FlowLinePrimitive, FlowSegment } from "./FlowLinePrimitive";
 
 interface Props {
   symbol: string;
@@ -20,6 +25,13 @@ interface Props {
   interval?: string;
   height?: number;
   swings?: SwingPoint[];
+  bias?: BiasLabel[];
+  trades?: TradeBox[];
+  sessionBreaks?: boolean;
+  oneMinSwingN?: number;
+  swingDots?: boolean;
+  flowLine?: FlowSegment[] | null;
+  algoFlowLine?: FlowSegment[] | null;
 }
 
 interface OHLCV {
@@ -29,6 +41,8 @@ interface OHLCV {
   low: number;
   close: number;
   volume: number;
+  nextBias?: string | null;
+  nextBiasDate?: string | null;
 }
 
 const IST_OFFSET = 5.5 * 3600;
@@ -94,13 +108,34 @@ function saveView(interval: string, range: { from: number; to: number }) {
   } catch {}
 }
 
-export default function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings }: Props) {
+export default function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, flowLine, algoFlowLine }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const [ohlcv, setOhlcv] = useState<OHLCV | null>(null);
+  const [biasTip, setBiasTip] = useState<{ x: number; y: number; paneW: number; label: BiasLabel } | null>(null);
+  const [pinnedBiasTip, setPinnedBiasTip] = useState<typeof biasTip>(null);
 
   useEffect(() => {
     if (!containerRef.current || candles.length === 0) return;
+
+    // date -> last candle of that day (marker anchor) + bias lookup
+    const lastByDate = new Map<string, Candle>();
+    candles.forEach((c) => {
+      const d = c.date.slice(0, 10);
+      lastByDate.set(d, c); // always overwrite -> last one wins
+    });
+    // O(1) crosshair lookups Ã¢Â€Â” linear find() over 19k+ candles janks the UI
+    const byTs = new Map<number, Candle>();
+    if (intraday) {
+      candles.forEach((c) => byTs.set(c.ts, c));
+    }
+    const biasMap = new Map<string, BiasLabel>((bias ?? []).map((b) => [b.date, b]));
+    // date (prev) -> bias for the NEXT day (marker on last candle shows what it decided)
+    const nextBiasMap = new Map<string, BiasLabel>();
+    bias?.forEach((lb) => {
+      const prevDate = lb.details?.prev_date;
+      if (prevDate) nextBiasMap.set(prevDate, lb);
+    });
 
     const prevRange = chartRef.current ? chartRef.current.timeScale().getVisibleRange() : null;
 
@@ -171,9 +206,151 @@ export default function StockChart({ symbol, candles, intraday = false, interval
 
     candleSer.setData(formatted);
 
+    // Bias markers: one per day, under the LAST candle (3:30 PM) Ã¢Â€Â” shows next-day bias
+    if (intraday && bias && bias.length > 0) {
+      const markers: SeriesMarker<Time>[] = [];
+      lastByDate.forEach((c, d) => {
+        const lb = nextBiasMap.get(d);
+        if (!lb) return;
+        const color =
+          lb.bias === "bullish" ? "#10b981" : lb.bias === "bearish" ? "#ef4444" : "#8b949e";
+        const shape = lb.bias === "bullish" ? "arrowUp" : lb.bias === "bearish" ? "arrowDown" : "circle";
+        markers.push({
+          time: c.ts as Time,
+          position: "belowBar",
+          shape,
+          color,
+          size: 2,
+        });
+      });
+
+      // Prev-day intraday swing dots with HH/HL/LH/LL tags Ã¢Â€Â” these are 5-min
+      // pivots from the bias engine, so they only belong on the 5-min chart.
+      // The 1-min chart gets its own true 1-minute structure tags instead.
+      if (interval === "5min" && swingDots) {
+        bias.forEach((lb) => {
+          (lb.prev_day?.swings ?? []).forEach((s) => {
+            const tagColor =
+              s.tag === "HH" || s.tag === "HL"
+                ? "#10b981"
+                : s.tag === "LH" || s.tag === "LL"
+                  ? "#f97316"
+                  : "#8b949e";
+            markers.push({
+              time: s.ts as Time,
+              position: s.kind === "high" ? "aboveBar" : "belowBar",
+              shape: "circle",
+              color: tagColor,
+              text: s.tag ?? "",
+              size: 0.5,
+            });
+          });
+        });
+      }
+
+      markers.sort((a, b) => timeToSec(a.time) - timeToSec(b.time));
+      if (markers.length > 0) createSeriesMarkers(candleSer, markers);
+    }
+
+    // True intraday structure: per-day Williams fractals (user-set n) tagged
+    // HH/HL/LH/LL in sequence — works on both 5-min and 1-min charts.
+    if (intraday && swingDots) {
+      const N = Math.max(2, Math.floor(oneMinSwingN ?? 12));
+      const byDate = new Map<string, number[]>();
+      candles.forEach((c, gi) => {
+        const d = c.date.slice(0, 10);
+        if (!byDate.has(d)) byDate.set(d, []);
+        byDate.get(d)!.push(gi);
+      });
+
+      const tagMarkers: SeriesMarker<Time>[] = [];
+      byDate.forEach((idxs) => {
+        const arr = idxs.map((gi) => candles[gi]);
+        if (arr.length < 2 * N + 1) return;
+
+        type Pivot = { g: number; kind: "high" | "low"; price: number };
+        const pivots: Pivot[] = [];
+        for (let k = N; k < arr.length - N; k++) {
+          let isHigh = true;
+          let isLow = true;
+          for (let m = k - N; m <= k + N; m++) {
+            if (m === k) continue;
+            if (arr[m].high >= arr[k].high) isHigh = false;
+            if (arr[m].low <= arr[k].low) isLow = false;
+          }
+          if (isHigh) pivots.push({ g: idxs[k], kind: "high", price: arr[k].high });
+          else if (isLow) pivots.push({ g: idxs[k], kind: "low", price: arr[k].low });
+        }
+
+        let lastHigh: number | null = null;
+        let lastLow: number | null = null;
+        for (const p of pivots) {
+          let tag: string | null = null;
+          if (p.kind === "high") {
+            if (lastHigh != null) tag = p.price > lastHigh ? "HH" : "LH";
+            lastHigh = p.price;
+          } else {
+            if (lastLow != null) tag = p.price > lastLow ? "HL" : "LL";
+            lastLow = p.price;
+          }
+          if (!tag) continue;
+          const ts = candles[p.g].ts as Time;
+          tagMarkers.push({
+            time: ts,
+            position: p.kind === "high" ? "aboveBar" : "belowBar",
+            shape: "circle",
+            color: tag === "HH" || tag === "HL" ? "#10b981" : "#f97316",
+            text: tag,
+            size: 0.5,
+          });
+        }
+      });
+
+      if (tagMarkers.length > 0) createSeriesMarkers(candleSer, tagMarkers);
+    }
+
     const swingPrimitive = new SwingSRPrimitive(candleSer, swings ?? [], intraday);
     if (swings && swings.length > 0) {
       chart.panes()[0].attachPrimitive(swingPrimitive);
+    }
+
+    const posPrimitive = new PositionPrimitive(candleSer, trades ?? []);
+    if (intraday && trades && trades.length > 0) {
+      chart.panes()[0].attachPrimitive(posPrimitive);
+    }
+
+    // session breaks: first bar of every day except the chart's very first
+    let sbPrimitive: SessionBreakPrimitive | null = null;
+    if (intraday && sessionBreaks) {
+      const dayStarts: number[] = [];
+      let prevDate = "";
+      candles.forEach((c, idx) => {
+        const d = c.date.slice(0, 10);
+        if (d !== prevDate) {
+          dayStarts.push(idx);
+          prevDate = d;
+        }
+      });
+      const boundaryIdx = dayStarts.slice(1);
+      if (boundaryIdx.length > 0) {
+        sbPrimitive = new SessionBreakPrimitive(candleSer, boundaryIdx);
+        chart.panes()[0].attachPrimitive(sbPrimitive);
+      }
+    }
+
+    // Flow-Line — attach order = paint order: WHITE (algo) first, then
+    // ORANGE (manual ground truth) last so it stays visible on top.
+    // Each day is drawn separately; segments never connect across days.
+    let algoPrimitive: FlowLinePrimitive | null = null;
+    if (intraday && algoFlowLine && algoFlowLine.length > 0) {
+      algoPrimitive = new FlowLinePrimitive(candleSer, algoFlowLine, candles.length - 1, "#ffffff");
+      candleSer.attachPrimitive(algoPrimitive);
+    }
+
+    let flowPrimitive: FlowLinePrimitive | null = null;
+    if (intraday && flowLine && flowLine.length > 0) {
+      flowPrimitive = new FlowLinePrimitive(candleSer, flowLine, candles.length - 1, "#fb923c");
+      candleSer.attachPrimitive(flowPrimitive);
     }
 
     let saveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -228,6 +405,7 @@ export default function StockChart({ symbol, candles, intraday = false, interval
     const setLast = () => {
       const last = candles[candles.length - 1];
       if (last) {
+        const lastDate = last.date.slice(0, 10);
         setOhlcv({
           date: formatDateLabel(intraday ? last.ts : last.date.slice(0, 10)),
           open: last.open,
@@ -235,19 +413,24 @@ export default function StockChart({ symbol, candles, intraday = false, interval
           low: last.low,
           close: last.close,
           volume: last.volume,
+          nextBias: biasMap.get(lastDate)?.bias ?? null,
+          nextBiasDate: lastDate,
         });
       }
     };
 
     chart.subscribeCrosshairMove((param) => {
-      if (!param.time) { setLast(); return; }
+      if (!param.time) { setLast(); setBiasTip(null); return; }
       const data = param.seriesData.get(candleSer) as any;
-      if (!data) { setLast(); return; }
+      if (!data) { setLast(); setBiasTip(null); return; }
       const t = param.time;
       let match: Candle | undefined;
+      let hoveredDate: string | undefined;
       if (typeof t === "number") {
-        match = candles.find((c) => Math.abs(c.ts - t) < 30);
+        match = byTs.get(t);
+        hoveredDate = match?.date.slice(0, 10);
       } else {
+        hoveredDate = String(t);
         match = candles.find((c) => c.date.slice(0, 10) === t);
       }
       setOhlcv({
@@ -257,7 +440,17 @@ export default function StockChart({ symbol, candles, intraday = false, interval
         low: data.low,
         close: data.close,
         volume: match?.volume ?? 0,
+        nextBias: hoveredDate ? biasMap.get(hoveredDate)?.bias ?? null : null,
+        nextBiasDate: hoveredDate ?? null,
       });
+      const isLast = !!match && !!hoveredDate && lastByDate.get(hoveredDate)?.ts === match.ts;
+      const nextLb = intraday && isLast && hoveredDate ? nextBiasMap.get(hoveredDate) : undefined;
+      if (nextLb && param.point) {
+        const paneW = containerRef.current?.clientWidth ?? 800;
+        setBiasTip({ x: param.point.x, y: param.point.y, label: nextLb, paneW });
+      } else {
+        setBiasTip(null);
+      }
     });
 
     setLast();
@@ -278,10 +471,22 @@ export default function StockChart({ symbol, candles, intraday = false, interval
       if (swings && swings.length > 0) {
         chart.panes()[0].detachPrimitive(swingPrimitive);
       }
+      if (intraday && trades && trades.length > 0) {
+        chart.panes()[0].detachPrimitive(posPrimitive);
+      }
+      if (sbPrimitive) {
+        chart.panes()[0].detachPrimitive(sbPrimitive);
+      }
+      if (flowPrimitive) {
+        candleSer.detachPrimitive(flowPrimitive);
+      }
+      if (algoPrimitive) {
+        candleSer.detachPrimitive(algoPrimitive);
+      }
       chart.remove();
       chartRef.current = null;
     };
-  }, [symbol, candles, intraday, height, swings, interval]);
+  }, [symbol, candles, intraday, height, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots, flowLine, algoFlowLine, interval]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -310,9 +515,106 @@ export default function StockChart({ symbol, candles, intraday = false, interval
             <span style={{ color: "#e2e8f0" }}>C: <b>{ohlcv.close.toFixed(2)}</b></span>
             {ohlcv.volume > 0 && <span style={{ color: "#94a3b8" }}>Vol: <b>{ohlcv.volume.toLocaleString()}</b></span>}
           </div>
+          {ohlcv.nextBias && (
+            <div style={{
+              color: ohlcv.nextBias === "bullish" ? "#10b981" : ohlcv.nextBias === "bearish" ? "#ef4444" : "#9ca3af",
+              marginTop: 2,
+              fontWeight: 600,
+            }}>
+              {ohlcv.nextBias === "bullish" ? "\u25B2" : ohlcv.nextBias === "bearish" ? "\u25BC" : "\u25CF"} Bias: {ohlcv.nextBias}
+            </div>
+          )}
         </div>
       )}
-      <div ref={containerRef} style={{ width: "100%", height }} />
+      <div
+        ref={containerRef}
+        style={{ width: "100%", height }}
+        onClick={() => {
+          if (pinnedBiasTip) {
+            setPinnedBiasTip(null);
+          } else if (biasTip) {
+            setPinnedBiasTip(biasTip);
+            setBiasTip(null);
+          }
+        }}
+      />
+      {(pinnedBiasTip ?? biasTip) && (() => {
+        const tip = pinnedBiasTip ?? biasTip!;
+        const pinned = !!pinnedBiasTip;
+        return (
+        <div
+          style={{
+            position: "absolute",
+            left: Math.min(Math.max(tip.x + 14, 8), Math.max(tip.paneW - 330, 8)),
+            top: tip.y + 14,
+            zIndex: 20,
+            maxWidth: 320,
+            background: "rgba(13,17,23,0.95)",
+            border: pinned
+              ? "1px solid #e2e8f0"
+              : `1px solid ${
+                  tip.label.bias === "bullish"
+                    ? "#10b981"
+                    : tip.label.bias === "bearish"
+                      ? "#ef4444"
+                      : "#6b7280"
+                }`,
+            borderRadius: 6,
+            padding: "6px 10px",
+            fontSize: 11,
+            lineHeight: "15px",
+            pointerEvents: pinned ? "auto" : "none",
+            userSelect: pinned ? "text" : "none",
+            boxShadow: pinned ? "0 4px 16px rgba(0,0,0,0.5)" : "none",
+          }}
+        >
+          {pinned && (
+            <div
+              onClick={(e) => { e.stopPropagation(); setPinnedBiasTip(null); }}
+              style={{
+                position: "absolute", top: 4, right: 8, cursor: "pointer",
+                color: "#94a3b8", fontSize: 12, lineHeight: "12px",
+              }}
+            >
+              &#x2715;
+            </div>
+          )}
+          <div
+            style={{
+              color:
+                tip.label.bias === "bullish"
+                  ? "#10b981"
+                  : tip.label.bias === "bearish"
+                    ? "#ef4444"
+                    : "#9ca3af",
+              fontWeight: 600,
+              marginBottom: 2,
+              paddingRight: pinned ? 16 : 0,
+            }}
+          >
+            {pinned ? "\uD83D\uDCCC " : ""}Bias for {tip.label.date}: {tip.label.bias}
+          </div>
+          {tip.label.overview?.sh_price !== undefined && tip.label.overview?.sl_price !== undefined && (
+            <div style={{ color: "#79c0ff", marginBottom: 2 }}>
+              <b>ZONES:</b> {tip.label.overview.zone ?? "-"} Ã‚Â· pos{" "}
+              {tip.label.overview.pos_pct ?? "?"}% | SL{" "}
+              {tip.label.overview.sl_price} ({tip.label.overview.sl_date})
+              {" \u2190 "}{tip.label.overview.pos_pct ?? "?"}%{" \u2192 "}SH{" "}
+              {tip.label.overview.sh_price} ({tip.label.overview.sh_date})
+            </div>
+          )}
+          {tip.label.prev_day?.structure && (
+            <div style={{ color: "#d29922", marginBottom: 2 }}>
+              <b>CLOSING SESSION:</b> structure {tip.label.prev_day.structure}
+              {tip.label.prev_day.sustain ? ` Ã‚Â· sustain ${tip.label.prev_day.sustain}` : ""}
+              {tip.label.prev_day.close_pos_pct != null ? ` (close at ${tip.label.prev_day.close_pos_pct}%)` : ""}
+              {tip.label.prev_day.summary ? ` Ã¢Â€Â” ${tip.label.prev_day.summary}` : ""}
+            </div>
+          )}
+          <div style={{ color: "#94a3b8" }}>{tip.label.reason}</div>
+        </div>
+        );
+      })()}
     </div>
   );
 }

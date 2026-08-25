@@ -1,5 +1,6 @@
 import threading
 import uuid
+from collections import OrderedDict
 from contextlib import asynccontextmanager
 from datetime import datetime
 
@@ -14,8 +15,86 @@ from src import config, token as token_svc
 from src import upstox_fetcher as F
 from src.scheduler import DataScheduler
 from src import swing as swing_svc
+from src import bias as bias_svc
+from src import intraday as intraday_svc
 
 active_operations: dict = {}
+
+# per-config backtest results (combo switches keep separate entries so UI
+# toggling doesn't thrash a single-slot cache)
+_intraday_caches: "OrderedDict[tuple, tuple]" = OrderedDict()
+INTRADAY_CACHE_MAX = 8
+_bias_cache: dict = {"key": None, "labels": None}
+
+
+def _data_key() -> tuple:
+    p5 = config.DATA_DIR / "nifty_5min.csv"
+    pd_ = config.DATA_DIR / "nifty_daily.csv"
+    return (
+        p5.stat().st_mtime_ns if p5.exists() else 0,
+        pd_.stat().st_mtime_ns if pd_.exists() else 0,
+    )
+
+
+def _bias_labels_cached() -> list:
+    """compute_bias memoized on data-file mtimes (shared by /api/bias & backtest)."""
+    key = _data_key()
+    if _bias_cache["key"] == key:
+        return _bias_cache["labels"]
+    df5 = pd.read_csv(config.DATA_DIR / "nifty_5min.csv")
+    daily_path = config.DATA_DIR / "nifty_daily.csv"
+    daily_df = pd.read_csv(daily_path) if daily_path.exists() else None
+    labels = bias_svc.compute_bias(df5, daily_df)
+    _bias_cache["key"] = key
+    _bias_cache["labels"] = labels
+    return labels
+
+
+def _intraday_backtest(cfg: dict | None = None):
+    """Run (or reuse cached) intraday backtest keyed on data mtimes + config."""
+    p5 = config.DATA_DIR / "nifty_5min.csv"
+    pd_ = config.DATA_DIR / "nifty_daily.csv"
+    p1 = config.DATA_DIR / "nifty_1min.csv"
+    if not p5.exists():
+        raise FileNotFoundError("No 5min data yet. Download first.")
+    key = (
+        p5.stat().st_mtime_ns,
+        pd_.stat().st_mtime_ns if pd_.exists() else 0,
+        tuple(sorted((cfg or {}).items())),
+    )
+    if key in _intraday_caches:
+        _intraday_caches.move_to_end(key)
+        return _intraday_caches[key]
+
+    df5 = pd.read_csv(p5)
+    daily_df = pd.read_csv(pd_) if pd_.exists() else None
+    df1 = pd.read_csv(p1) if (p1.exists() and (cfg or {}).get("execution") == "1min") else None
+    labels = [lb for lb in _bias_labels_cached() if lb["date"] in set(df5["timestamp"].astype(str).str[:10])]
+    bt = intraday_svc.run_backtest(df5, labels, cfg=cfg, df_1min=df1)
+
+    days_summary = [
+        {
+            "date": d["date"],
+            # unbiased days trade via U1/U2 (first-swing direction) — show that
+            "bias": d.get("effective_bias") or d["bias"],
+            "raw_bias": d["bias"],
+            "case": d.get("case"),
+            "swing_direction": d["swing_direction"],
+            "n_trades": len(d["trades"]),
+            "outcomes": [t["outcome"] for t in d["trades"]],
+            # full trade rows so the chart can draw position boxes without
+            # a per-day fetch; events stay in /api/intraday/{date}
+            "trades": d["trades"],
+        }
+        for d in bt["days"]
+    ]
+    data = {"stats": bt["stats"], "days": days_summary, "config": bt.get("config", cfg)}
+    payload = (data, bt["days"])
+    _intraday_caches[key] = payload
+    _intraday_caches.move_to_end(key)
+    while len(_intraday_caches) > INTRADAY_CACHE_MAX:
+        _intraday_caches.popitem(last=False)
+    return payload
 
 
 def _job_running() -> bool:
@@ -26,17 +105,26 @@ def _start_update_job() -> dict | None:
     if _job_running():
         return None
     operation_id = _new_op_id("upd")
-    intervals = ["daily", "5min"]
+    intervals = ["daily", "5min", "1min"]
     active_operations[operation_id] = _new_op(operation_id, intervals, 0)
     thread = threading.Thread(target=_run_update, args=(operation_id, intervals), daemon=True)
     thread.start()
     return {"status": "started", "operation_id": operation_id, "mode": "update"}
 
 
+def _warm_intraday():
+    """Precompute default-combo backtest at startup so the first UI hit is instant."""
+    try:
+        _intraday_backtest({})
+    except Exception:
+        pass  # never block startup (e.g. no data yet)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     scheduler = DataScheduler(_start_update_job)
     scheduler.start()
+    threading.Thread(target=_warm_intraday, daemon=True).start()
     yield
     scheduler.stop()
 
@@ -195,7 +283,7 @@ def put_settings(payload: SettingsPayload):
 # Download / update jobs
 # ---------------------------------------------------------------------------
 class DownloadPayload(BaseModel):
-    interval: str = "both"  # daily | 5min | both
+    interval: str = "all"  # daily | 5min | 1min | all | both (legacy = daily+5min)
     years: int = 1
 
 
@@ -207,10 +295,13 @@ def start_download(payload: DownloadPayload):
         return JSONResponse(status_code=400, content={"detail": "Upstox token is missing or invalid — add a valid token first"})
 
     interval = payload.interval
-    if interval not in ("daily", "5min", "both"):
-        return JSONResponse(status_code=400, content={"detail": "interval must be daily | 5min | both"})
+    if interval not in ("daily", "5min", "1min", "all", "both"):
+        return JSONResponse(status_code=400, content={"detail": "interval must be daily | 5min | 1min | all | both"})
 
-    intervals = ["daily", "5min"] if interval == "both" else [interval]
+    intervals = {
+        "both": ["daily", "5min"],
+        "all": ["daily", "5min", "1min"],
+    }.get(interval, [interval])
     operation_id = _new_op_id("dl")
     active_operations[operation_id] = _new_op(operation_id, intervals, payload.years)
 
@@ -247,8 +338,8 @@ def operation_status(operation_id: str):
 # ---------------------------------------------------------------------------
 @app.get("/api/chart/data")
 def chart_data(interval: str = "daily", limit: int | None = None):
-    if interval not in ("daily", "5min"):
-        return JSONResponse(status_code=400, content={"detail": "interval must be daily | 5min"})
+    if interval not in ("daily", "5min", "1min"):
+        return JSONResponse(status_code=400, content={"detail": "interval must be daily | 5min | 1min"})
 
     path = config.DATA_DIR / f"nifty_{interval}.csv"
     if not path.exists():
@@ -302,6 +393,66 @@ def get_swings(interval: str = "daily", pivot: int = 10, levels: int = 5, lookah
         "swings": swings,
         "sr_levels": sr_levels,
     }
+
+
+@app.get("/api/bias")
+def get_bias(limit: int | None = None):
+    """Initial-bias labels (pre-open): previous-day close reads + daily-swing overview."""
+    path = config.DATA_DIR / "nifty_5min.csv"
+    if not path.exists():
+        return JSONResponse(status_code=404, content={"detail": "No 5min data yet. Download first."})
+
+    labels = _bias_labels_cached()
+    if limit and limit > 0:
+        labels = labels[-int(limit) :]
+
+    counts = {"bullish": 0, "bearish": 0, "unbiased": 0}
+    for lb in labels:
+        counts[lb["bias"]] += 1
+
+    return {"count": len(labels), "summary": counts, "bias": labels}
+
+
+@app.get("/api/intraday/backtest")
+def intraday_backtest(
+    sl_mode: str = "avg",
+    execution: str = "5min",
+    trailing: str = "off",
+    trail_distance_r: float = 1.0,
+    gap_pct: float = 0.27,
+):
+    """Full-history intraday results for one experiment combo.
+
+    Switches (best-combo search): sl_mode avg|avg075|avg05|fixed8,
+    execution 5min|1min, trailing off|ladder, gap_pct in PERCENT (0.27 = 0.27%).
+    """
+    cfg = {
+        "sl_mode": sl_mode,
+        "execution": execution,
+        "trailing": trailing,
+        "trail_distance_r": trail_distance_r,
+        # UI/API speak percent; engine expects fraction (0.27% -> 0.0027)
+        "gap_pct": float(gap_pct) / 100.0,
+    }
+    try:
+        data, _ = _intraday_backtest(cfg)
+    except FileNotFoundError as e:
+        return JSONResponse(status_code=404, content={"detail": str(e)})
+    return data
+
+
+@app.get("/api/intraday/{date}")
+def intraday_day(date: str):
+    """Single-day detail: trades + full event timeline for chart annotation."""
+    try:
+        _, days = _intraday_backtest()
+    except FileNotFoundError as e:
+        return JSONResponse(status_code=404, content={"detail": str(e)})
+
+    for d in days:
+        if d["date"] == date:
+            return d
+    return JSONResponse(status_code=404, content={"detail": f"No backtest day for {date}"})
 
 
 if __name__ == "__main__":

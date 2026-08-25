@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "node dev.js",
+    "kb": "node backend.js kill",
+    "sb": "node backend.js start",
     "start": "node dev.js --prod",
     "build": "cd frontend && bun run build"
   },

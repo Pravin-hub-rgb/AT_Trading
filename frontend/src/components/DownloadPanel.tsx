@@ -25,7 +25,7 @@ const badgeStyles: Record<IntervalStatus["badge"], { pill: string; bar: string }
   no_data: { pill: "bg-[#64748b]/20 text-[#64748b]", bar: "bg-[#64748b]" },
 };
 
-const intervalLabels: Record<string, string> = { daily: "Daily", "5min": "5-min" };
+const intervalLabels: Record<string, string> = { daily: "Daily", "5min": "5-Min", "1min": "1-Min" };
 
 export default function DownloadPanel() {
   const [dataStatus, setDataStatus] = useState<DataStatus | null>(null);
@@ -35,7 +35,7 @@ export default function DownloadPanel() {
   const [error, setError] = useState<string | null>(null);
   const [tokenOpen, setTokenOpen] = useState(false);
   const [validating, setValidating] = useState(false);
-  const [interval, setInterval] = useState("both");
+  const [interval, setInterval] = useState("all");
   const [years, setYears] = useState(1);
   const pollRef = useRef<number | null>(null);
 
@@ -81,7 +81,7 @@ export default function DownloadPanel() {
   const handleUpdate = async () => {
     try {
       const res = await updateData();
-      setOp({ ...res, progress: 0, message: "Updating...", log: [], intervals: ["daily", "5min"], years: 0, done_months: 0, total_months: 0, error: null, mode: "update" });
+      setOp({ ...res, progress: 0, message: "Updating...", log: [], intervals: ["daily", "5min", "1min"], years: 0, done_months: 0, total_months: 0, error: null, mode: "update" });
       pollOperation(res.operation_id);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -91,7 +91,18 @@ export default function DownloadPanel() {
   const handleFullDownload = async () => {
     try {
       const res = await startDownload(interval, years);
-      setOp({ ...res, progress: 0, message: "Downloading...", log: [], intervals: interval === "both" ? ["daily", "5min"] : [interval], years, done_months: 0, total_months: 0, error: null, mode: "download" });
+      setOp({
+        ...res,
+        progress: 0,
+        message: "Downloading...",
+        log: [],
+        intervals: interval === "all" ? ["daily", "5min", "1min"] : [interval],
+        years,
+        done_months: 0,
+        total_months: 0,
+        error: null,
+        mode: "download",
+      });
       pollOperation(res.operation_id);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -171,8 +182,8 @@ export default function DownloadPanel() {
       </div>
 
       {/* Status cards */}
-      <div className="grid gap-4 md:grid-cols-2">
-        {(["daily", "5min"] as const).map((key) => {
+      <div className="grid gap-4 md:grid-cols-3">
+        {(["daily", "5min", "1min"] as const).map((key) => {
           const s = dataStatus?.[key];
           const badge = s ? badgeStyles[s.badge] : badgeStyles.no_data;
           return (
@@ -232,9 +243,10 @@ export default function DownloadPanel() {
           <div className="flex flex-wrap items-end gap-3">
             <div className="flex gap-1">
               {[
-                { value: "both", label: "Daily + 5-min" },
+                { value: "all", label: "All" },
                 { value: "daily", label: "Daily" },
-                { value: "5min", label: "5-min" },
+                { value: "5min", label: "5-Min" },
+                { value: "1min", label: "1-Min" },
               ].map((opt) => (
                 <button
                   key={opt.value}

@@ -16,7 +16,12 @@ BASE_URL = "https://api.upstox.com/v3/historical-candle"
 INTERVALS = {
     "daily": "days/1",
     "5min": "minutes/5",
+    "1min": "minutes/1",
 }
+
+# Pacing between API calls (rate-limit guard). Long 1-min backfills run a
+# touch gentler than the short daily/5min syncs.
+INTER_CALL_SLEEP_S = {"daily": 1.2, "5min": 1.2, "1min": 1.5}
 
 META_FILE = Path(DATA_DIR) / "meta.json"
 DEFAULT_SETTINGS = {"auto_update": True, "update_time": "19:00", "years": 1}
@@ -87,6 +92,14 @@ def build_url(instrument_key: str, api_interval: str, to_date: str, from_date: s
     return f"{BASE_URL}/{key}/{api_interval}/{to_date}/{from_date}"
 
 
+def _retry_after_seconds(resp) -> int:
+    """Parse Retry-After header if the API sends one on 429."""
+    try:
+        return int(resp.headers.get("Retry-After") or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
 def fetch_candles(token: str, instrument_key: str, api_interval: str, from_date: str, to_date: str) -> list:
     url = build_url(instrument_key, api_interval, to_date, from_date)
     resp = requests.get(
@@ -96,6 +109,17 @@ def fetch_candles(token: str, instrument_key: str, api_interval: str, from_date:
     )
     if resp.status_code == 401:
         raise RuntimeError("Invalid/expired access token (401)")
+    if resp.status_code == 429:
+        # rate limited: back off (honour Retry-After when present) and retry
+        # once here; the caller's attempt-loop handles further retries.
+        time.sleep(max(_retry_after_seconds(resp), 6))
+        resp = requests.get(
+            url,
+            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+            timeout=30,
+        )
+        if resp.status_code == 429:
+            raise RuntimeError("Upstox rate limit persisting after backoff (429)")
     resp.raise_for_status()
     data = resp.json()
     return (data.get("data") or {}).get("candles") or []
@@ -212,7 +236,7 @@ def _sync_interval(token: str, interval: str, requested_from: date, requested_to
         fetched_months += 1
         if progress_cb:
             progress_cb(i + 1, total, label, new_rows)
-        time.sleep(1.2)
+        time.sleep(INTER_CALL_SLEEP_S.get(interval, 1.2))
 
     return {
         "rows_fetched": total_fetched,
@@ -359,4 +383,8 @@ def interval_status(interval: str) -> dict:
 
 
 def all_data_status() -> dict:
-    return {"daily": interval_status("daily"), "5min": interval_status("5min")}
+    return {
+        "daily": interval_status("daily"),
+        "5min": interval_status("5min"),
+        "1min": interval_status("1min"),
+    }

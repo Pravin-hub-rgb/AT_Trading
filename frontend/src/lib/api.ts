@@ -57,6 +57,7 @@ export interface IntervalStatus {
 export interface DataStatus {
   daily: IntervalStatus;
   "5min": IntervalStatus;
+  "1min": IntervalStatus;
 }
 
 export interface Settings {
@@ -177,3 +178,147 @@ export const getSwings = (interval: string, pivot: number, levels = 5, lookahead
   request<SwingsResponse>(
     `/api/swings?interval=${interval}&pivot=${pivot}&levels=${levels}&lookahead=${lookahead}`,
   );
+
+// --- initial bias (pre-open labels) ---
+export type Bias = "bullish" | "bearish" | "unbiased";
+
+export interface OverviewInfo {
+  zone?: string;
+  lean?: string | null;
+  reason?: string;
+  sh_price?: number;
+  sh_date?: string;
+  sl_price?: number;
+  sl_date?: string;
+  pos_pct?: number;
+}
+
+export interface BiasDetails {
+  prev_date?: string;
+  prev_close?: number;
+  closing_signal?: string | null;
+  closing_net_pts?: number | null;
+  closing_frac?: number | null;
+  closing_sustain?: string | null;
+  closing_structure?: string | null;
+}
+
+export interface PrevSwingPoint {
+  index?: number;
+  ts: number;
+  price: number;
+  time?: string;
+  kind: "high" | "low";
+  tag: string | null;
+}
+
+export interface BreakInfo {
+  kind: string; // "above" | "below"
+  level: number;
+  closed_beyond: boolean;
+  at: string;
+}
+
+export interface PrevDayInfo {
+  structure?: string; // bullish | bearish | mixed | unclear
+  sustain?: string; // strong | weak
+  summary?: string;
+  close_pos_pct?: number | null;
+  breaks?: BreakInfo[] | null;
+  swings?: PrevSwingPoint[];
+}
+
+export interface BiasLabel {
+  date: string;
+  bias: Bias;
+  reason: string;
+  details?: BiasDetails;
+  overview?: OverviewInfo | null;
+  prev_day?: PrevDayInfo | null;
+}
+
+export interface BiasResponse {
+  count: number;
+  summary: Record<Bias, number>;
+  bias: BiasLabel[];
+}
+
+export const getBias = (limit?: number) =>
+  request<BiasResponse>(`/api/bias${limit ? `?limit=${limit}` : ""}`);
+
+// --- intraday backtest engine ---
+export type TradeOutcome = "target" | "sl" | "eod" | "cost-to-cost" | "ft_fail" | "no_momentum" | "trail";
+
+export interface BacktestParams {
+  sl_mode: string;    // avg | avg075 | avg05 | fixed8
+  execution: string;  // 5min | 1min
+  trailing: string;   // off | ladder
+  gap_pct: string;    // gap threshold in %, e.g. "0.27"
+}
+
+export const DEFAULT_BT_PARAMS: BacktestParams = {
+  sl_mode: "avg",
+  execution: "5min",
+  trailing: "off",
+  gap_pct: "0.27",
+};
+
+export interface IntradayTrade {
+  dir: "long" | "short";
+  case?: string | null;
+  entry_time: string;
+  entry_ts: number;
+  entry_price: number;
+  sl: number;
+  target: number;
+  level: number;
+  pace_break_type: string;
+  domination_time: string;
+  mfe_r: number;
+  exit_time?: string;
+  exit_ts?: number;
+  exit_price?: number;
+  outcome?: TradeOutcome;
+  r_multiple?: number;
+}
+
+export interface IntradayDaySummary {
+  date: string;
+  bias: Bias;
+  raw_bias?: Bias;
+  case?: string | null;
+  swing_direction: string | null;
+  n_trades: number;
+  outcomes: string[];
+  trades: IntradayTrade[];
+}
+
+export interface IntradayStats {
+  days_total: number;
+  days_traded: number;
+  trades: number;
+  wins: number;
+  win_rate: number;
+  total_r: number;
+  avg_r: number;
+  outcomes: Record<string, number>;
+  longs: number;
+  shorts: number;
+  cases?: Record<string, { trades: number; wins: number; total_r: number }>;
+}
+
+export interface IntradayBacktestResponse {
+  stats: IntradayStats;
+  days: IntradayDaySummary[];
+  config?: BacktestParams & { trail_distance_r?: number };
+}
+
+export const getIntradayBacktest = (params: BacktestParams = DEFAULT_BT_PARAMS) => {
+  const q = new URLSearchParams({
+    sl_mode: params.sl_mode,
+    execution: params.execution,
+    trailing: params.trailing,
+    gap_pct: params.gap_pct,
+  });
+  return request<IntradayBacktestResponse>(`/api/intraday/backtest?${q.toString()}`);
+};
