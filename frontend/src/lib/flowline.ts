@@ -238,12 +238,13 @@ function walkDay(items: { c: FlowCandle; gIdx: number }[]): AlgoPivot[] {
     p: Pending,
   ): { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null => {
     if (p.inner.length === 0) return null;
-    const farPx = Math.max(p.px, p.near);
-    const nearPx = Math.min(p.px, p.near);
+    // ROLE-BASED edges: pendPx is ALWAYS the far edge, pendNear the near
+    // edge — regardless of which is numerically higher. (max/min here was a
+    // latent pk=L bug: it silently swapped roles on up-leg stacks.)
     const wantFar = p.inner.length % 2 === 0;
     const rec: { idx: number; k: number; time: string; kind: "H" | "L"; px: number } = wantFar
-      ? { idx: p.idx, k: p.k, time: p.time, kind: p.kind, px: farPx }
-      : { idx: p.idx, k: p.k, time: p.time, kind: p.kind === "H" ? "L" : "H", px: nearPx };
+      ? { idx: p.idx, k: p.k, time: p.time, kind: p.kind, px: p.px }
+      : { idx: p.idx, k: p.k, time: p.time, kind: p.kind === "H" ? "L" : "H", px: p.near };
     p.inner.push(rec);
     let last: { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null = null;
     while (p.inner.length > 0) {
@@ -316,15 +317,14 @@ let loPx: number | null = null;
       // peel buffer decides which side this layer contributes. Append this
       // layer's record, shrink stack to this bar.
       if (c.high < stackHi && c.low > stackLo) {
-        const farPx  = Math.max(pending.px, pending.near);
-        const nearPx = Math.min(pending.px, pending.near);
+        // ROLE-BASED (see closeStack) — pendPx = far edge BY DEFINITION.
         const wantFar = pending.inner.length % 2 === 0;
         cov((wantFar ? "onion:FAR-layer:pk" : "onion:NEAR-layer:pk") + pk);
         pending.inner.push(
           wantFar
-            ? { idx: pending.idx, k: pending.k, time: pending.time, kind: pk, px: farPx }
+            ? { idx: pending.idx, k: pending.k, time: pending.time, kind: pk, px: pending.px }
             : { idx: pending.idx, k: pending.k, time: pending.time,
-                kind: pk === "H" ? "L" : "H", px: nearPx },
+                kind: pk === "H" ? "L" : "H", px: pending.near },
         );
         pending = {
           kind: pk,
@@ -500,7 +500,7 @@ let loPx: number | null = null;
     // ---- inside-candle detection -> pending far-side extreme ----
     // (checked AFTER this bar resolves: an insider never marks itself;
     //  the NEXT bar's break decides confirm vs skip)
-    if (!pending && !flippedThisBar && c.high <= prevHigh && c.low >= prevLow) {
+    if (!pending && !flippedThisBar && c.open !== c.close && c.high <= prevHigh && c.low >= prevLow) {
       pending = {
         kind: dir === "down" ? "H" : "L",
         idx: items[k].gIdx,

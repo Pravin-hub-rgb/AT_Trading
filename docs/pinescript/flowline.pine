@@ -6,8 +6,9 @@
 //  ZIGZAG FLOW-LINE — color-aware candle-path structure engine
 //
 //  Live TradingView port of frontend/src/lib/flowline.ts — the walker that
-//  scored 71/71 pivots against hand-marked ground truth
-//  (19 · 20 · 21 · 24 Aug 2026 — NIFTY 50, 5-min).
+//  scored 75/75 pivots against hand-marked ground truth
+//  (19 · 20 · 21 · 24 · 25 Aug 2026 — NIFTY 50). Rules are timeframe-
+//  universal in design; validated extensively on 5-min.
 //
 //  RULES ENCODED (course S6 + trader spec):
 //   • GREEN candle path LOW→HIGH · RED candle path HIGH→LOW  (half-stepping)
@@ -36,21 +37,9 @@ colPrev  = input.color(#a78bfa, "Forming swing",  group = grpC)
 lineW    = input.int(2,          "Line width",    group = grpC, minval = 1, maxval = 5)
 showTags = input.bool(false,     "H/L pivot tags", group = grpC)
 
-grpA = "Behavior"
-warnTF = input.bool(true, "Show notice when not on 5-min", group = grpA)
-
 grpR = "Forming swing (live)"
 retracePts = input.float(10.0, "Retrace warning distance (points, 0 = off)", group = grpR, minval = 0.0, step = 1.0)
 colWarn    = input.color(#f59e0b, "Retracing color", group = grpR)
-
-// ── timeframe notice ──────────────────────────────────────────────────────
-var bool tfWarned = false
-if warnTF and not tfWarned and barstate.islast and timeframe.period != "5"
-    label.new(bar_index, high,
-         "⚠ ZigZag Flow-Line was tuned on 5-min\n(current TF: " + timeframe.period + ")",
-         style = label.style_label_left, color = color.new(#f59e0b, 15),
-         textcolor = #0b0f14, size = size.small)
-    tfWarned := true
 
 // ── mutable state (UDT — Pine's way of letting methods mutate state) ──────
 type FL
@@ -143,11 +132,10 @@ method closeStack(FL fl) =>
     float lastPx  = na
     int   lastBar = na
     if array.size(fl.innerPx) > 0
+        // ROLE-BASED edges (see absorption) — no max/min role-swapping.
         bool   wantFar = array.size(fl.innerPx) % 2 == 0
-        float  farPx   = math.max(fl.pendPx, fl.pendNear)
-        float  nearPx  = math.min(fl.pendPx, fl.pendNear)
         string knd     = wantFar ? (fl.pendKind == 1 ? "H" : "L") : (fl.pendKind == 1 ? "L" : "H")
-        float  rPx     = wantFar ? farPx : nearPx
+        float  rPx     = wantFar ? fl.pendPx : fl.pendNear
         int    rBar    = fl.pendBar
         array.push(fl.innerPx, rPx)
         array.push(fl.innerBar, rBar)
@@ -242,15 +230,16 @@ if barstate.isconfirmed
             float stackHi = math.max(st.pendPx, st.pendNear)
             float stackLo = math.min(st.pendPx, st.pendNear)
 
-            if high < stackHi and low > stackLo
+            // DOJI LAW — exact open==close candle never joins the stack
+            if open != close and high < stackHi and low > stackLo
                 // ONION ABSORB — every stack layer contributes ONE alternating
                 // zigzag point: layer 1 its FAR edge, layer 2 its NEAR edge,
                 // layer 3 FAR again... peel-buffer parity decides.
+                // ROLE-BASED edges — pendPx is ALWAYS the far edge, pendNear
+                // the near edge (max/min yahan latent pk=L bug tha).
                 bool   wantFar = array.size(st.innerPx) % 2 == 0
-                float  farPx   = math.max(st.pendPx, st.pendNear)
-                float  nearPx  = math.min(st.pendPx, st.pendNear)
                 string layKind = wantFar ? (st.pendKind == 1 ? "H" : "L") : (st.pendKind == 1 ? "L" : "H")
-                float  layPx   = wantFar ? farPx : nearPx
+                float  layPx   = wantFar ? st.pendPx : st.pendNear
                 int    layBar  = st.pendBar
                 array.push(st.innerPx, layPx)
                 array.push(st.innerBar, layBar)
@@ -350,7 +339,8 @@ if barstate.isconfirmed
             st.loRed := close < open
 
         // ---- 4 · insider detection ----------------------------------------
-        if st.pendKind == 0 and not flipped and high <= st.prevHigh and low >= st.prevLow
+        // DOJI LAW — exact open==close candle never classifies as structure
+        if st.pendKind == 0 and not flipped and open != close and high <= st.prevHigh and low >= st.prevLow
             st.pendKind := st.dir == -1 ? 1 : -1
             st.pendBar  := bar_index
             st.pendPx   := st.dir == -1 ? high : low

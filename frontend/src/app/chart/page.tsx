@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import StockChart from "@/components/StockChart";
 import IntradayPanel from "@/components/IntradayPanel";
 import { computeFlowLine, computeAlgoFlowLine } from "@/lib/flowline";
+import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
   Swing,
@@ -22,6 +23,7 @@ const BT_KEY = "intraday_bt_on";
 const SWING_N_KEY = "chart_1min_swing_n";
 const DOTS_KEY = "chart_hhll_dots";
 const FLOW_KEY = "chart_flow_line";
+const ENV_KEY = "chart_envelope_on";
 const SWING_N_DEFAULT = 12;
 
 function clampSwingN(v: number): number {
@@ -73,6 +75,7 @@ export default function ChartPage() {
   const [swingN, setSwingN] = useState(SWING_N_DEFAULT);
   const [dotsOn, setDotsOn] = useState(true);
   const [flowOn, setFlowOn] = useState(true);
+  const [envOn, setEnvOn] = useState(false);
   const btLoading = btOn && !btData && !btError;
 
   useEffect(() => {
@@ -83,6 +86,7 @@ export default function ChartPage() {
       if (nRaw) setSwingN(clampSwingN(Number(nRaw)));
       setDotsOn(window.localStorage.getItem(DOTS_KEY) !== "0");
       setFlowOn(window.localStorage.getItem(FLOW_KEY) !== "0");
+      setEnvOn(window.localStorage.getItem(ENV_KEY) === "1");
     }
   }, []);
 
@@ -232,6 +236,13 @@ export default function ChartPage() {
     return computeAlgoFlowLine(data);
   }, [flowOn, interval, data]);
 
+  // Envelope-law audit: candles breaching the algo line's own marked extremes.
+  // Computed only while toggled on (walks every day through computeAlgoPivots).
+  const envelopeViolations = useMemo(() => {
+    if (!envOn || interval !== "5min" || data.length < 2) return null;
+    return computeEnvelopeViolations(data);
+  }, [envOn, interval, data]);
+
   const changeInterval = (iv: ChartInterval) => {    window.localStorage.setItem(STORAGE_KEY, iv);
     setData([]);
     setInterval(iv);
@@ -335,6 +346,28 @@ export default function ChartPage() {
 
           <button
             onClick={() => {
+              setEnvOn((v) => {
+                window.localStorage.setItem(ENV_KEY, v ? "0" : "1");
+                return !v;
+              });
+            }}
+            className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+              envOn && interval === "5min"
+                ? "border-[#ef4444] text-[#e6edf3]"
+                : "border-[#30363d] text-[#8b949e]"
+            }`}
+            title="Envelope-law audit: red boxes on candles breaching the algo line's marked extremes (5-min chart only)"
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${envOn ? "bg-[#ef4444]" : "bg-[#8b949e]"}`}
+            />
+            Env{envOn && interval === "5min" && envelopeViolations
+              ? ` (${envelopeViolations.length})`
+              : ""}
+          </button>
+
+          <button
+            onClick={() => {
               setBtOn((v) => {
                 window.localStorage.setItem(BT_KEY, v ? "0" : "1");
                 return !v;
@@ -389,6 +422,7 @@ export default function ChartPage() {
           swingDots={dotsOn}
           flowLine={flowSegments}
           algoFlowLine={algoSegments}
+          envelope={envelopeViolations}
         />
       )}
 

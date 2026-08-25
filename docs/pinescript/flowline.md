@@ -158,7 +158,7 @@ candidates are catalogued in the test output for future ruling.
 ## TradingView usage
 
 1. Open `docs/pinescript/flowline.pine`, copy everything.
-2. TradingView → Pine Editor → paste → **Add to chart** (NIFTY 50, 5-min).
+2. TradingView → Pine Editor → paste → **Add to chart** (NIFTY 50, 5-min recommended; rules are timeframe-universal — live-tested on 5-min and 1-min).
 3. Inputs: leg colors, forming-swing color, width, optional H/L tags,
    retrace warning distance (points) + retracing color.
 4. **The forming swing is breach-gated** — three live states:
@@ -195,12 +195,20 @@ a weaker one is dropped. Same-candle volatile pairs (`H+L`) pass through.
 - Line budget: TV keeps the newest 500 segments, silently GC-ing older ones —
   display-only, machine state unaffected.
 
+## Known Limitations (accepted, documented)
+
+| Case | What happens | Ruling |
+|------|--------------|--------|
+| `2025-11-24 09:20` zone | Ambiguous multi-insider cluster; order-flow trace unclear even by eye | **Dropped** — intentionally unhandled |
+| Inside-band skip discards buffered stack layers | e.g. `2026-02-23`: buffered swing-high `H@09:55(43.95)` dropped when a volatile double-break resolves inside the band → later wick exceeds final H-mark (envelope candidate) | **Accepted** — emitting them broke 21 Aug GT; revisit only if this family recurs on hand-marked days |
+| Unlabeled-day envelope candidates (~6) | Micro-wicks (0.3–6.5 pts) between sealed markers | Warn-only — reviewed periodically, never block |
+
 ## Roadmap
 
-- [ ] Rule-refine the 7 unlabeled envelope candidates
+- [ ] Rule-refine remaining unlabeled envelope candidates
 - [ ] Mark more days orange → grow the GT suite (the more wild days, the stronger the proof)
 - [ ] TradingView webhook experiments (if automation ever becomes interesting)
-- [ ] Optional: multi-TF study (rules are TF-universal in theory — verify empirically)
+ - [x] Timeframe-universality — rules carry to any TF (1-min live-tested); no TF-lock in the script
 
 ---
 

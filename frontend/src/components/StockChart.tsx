@@ -17,6 +17,8 @@ import { SwingSRPrimitive, SwingPoint } from "./SwingSRPrimitive";
 import { PositionPrimitive, TradeBox } from "./PositionPrimitive";
 import { SessionBreakPrimitive } from "./SessionBreakPrimitive";
 import { FlowLinePrimitive, FlowSegment } from "./FlowLinePrimitive";
+import { EnvelopePrimitive } from "./EnvelopePrimitive";
+import type { EnvelopeViolation } from "@/lib/envelope";
 
 interface Props {
   symbol: string;
@@ -32,6 +34,7 @@ interface Props {
   swingDots?: boolean;
   flowLine?: FlowSegment[] | null;
   algoFlowLine?: FlowSegment[] | null;
+  envelope?: EnvelopeViolation[] | null;
 }
 
 interface OHLCV {
@@ -108,7 +111,7 @@ function saveView(interval: string, range: { from: number; to: number }) {
   } catch {}
 }
 
-export default function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, flowLine, algoFlowLine }: Props) {
+export default function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, flowLine, algoFlowLine, envelope }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const [ohlcv, setOhlcv] = useState<OHLCV | null>(null);
@@ -353,6 +356,12 @@ export default function StockChart({ symbol, candles, intraday = false, interval
       candleSer.attachPrimitive(flowPrimitive);
     }
 
+    let envPrimitive: EnvelopePrimitive | null = null;
+    if (intraday && envelope && envelope.length > 0) {
+      envPrimitive = new EnvelopePrimitive(candleSer, envelope, candles.length - 1);
+      chart.panes()[0].attachPrimitive(envPrimitive);
+    }
+
     let saveTimer: ReturnType<typeof setTimeout> | null = null;
     const onVisibleTimeRangeChange: TimeRangeChangeEventHandler<Time> = (timeRange) => {
       if (!timeRange) return;
@@ -483,10 +492,13 @@ export default function StockChart({ symbol, candles, intraday = false, interval
       if (algoPrimitive) {
         candleSer.detachPrimitive(algoPrimitive);
       }
+      if (envPrimitive) {
+        chart.panes()[0].detachPrimitive(envPrimitive);
+      }
       chart.remove();
       chartRef.current = null;
     };
-  }, [symbol, candles, intraday, height, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots, flowLine, algoFlowLine, interval]);
+  }, [symbol, candles, intraday, height, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots, flowLine, algoFlowLine, envelope, interval]);
 
   return (
     <div style={{ position: "relative" }}>
