@@ -87,6 +87,22 @@ def _expected_latest_date() -> date:
 # ---------------------------------------------------------------------------
 # Upstox fetch
 # ---------------------------------------------------------------------------
+def fetch_intraday_candles(token: str, instrument_key: str, api_interval: str) -> list:
+    """CURRENT trading day's candles. The dated historical endpoint excludes
+    today's session entirely — Upstox serves it via this /intraday route."""
+    key = quote(instrument_key, safe="")
+    url = f"{BASE_URL}/intraday/{key}/{api_interval}"
+    resp = requests.get(
+        url,
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+        timeout=30,
+    )
+    if resp.status_code == 401:
+        raise RuntimeError("Invalid/expired access token (401)")
+    resp.raise_for_status()
+    return ((resp.json() or {}).get("data") or {}).get("candles") or []
+
+
 def build_url(instrument_key: str, api_interval: str, to_date: str, from_date: str) -> str:
     key = quote(instrument_key, safe="")
     return f"{BASE_URL}/{key}/{api_interval}/{to_date}/{from_date}"
@@ -237,6 +253,25 @@ def _sync_interval(token: str, interval: str, requested_from: date, requested_to
         if progress_cb:
             progress_cb(i + 1, total, label, new_rows)
         time.sleep(INTER_CALL_SLEEP_S.get(interval, 1.2))
+
+    # TODAY's candles live on the /intraday route — the dated historical API
+    # excludes the current session entirely. Merge them when the requested
+    # window reaches today.
+    if requested_to >= _ist_now().date():
+        try:
+            candles = fetch_intraday_candles(token, NIFTY_INDEX_KEY, api_interval)
+        except Exception:
+            candles = []
+        if candles:
+            rows = [process_candle(c) for c in candles]
+            day_df = pd.DataFrame(rows)
+            day_df["timestamp"] = pd.to_datetime(day_df["timestamp"])
+            existing_ts = set(df["timestamp"]) if not df.empty else set()
+            new_rows_today = int((~day_df["timestamp"].isin(existing_ts)).sum())
+            df = pd.concat([df, day_df], ignore_index=True)
+            df = df.drop_duplicates(subset="timestamp", keep="last").sort_values("timestamp")
+            df.to_csv(path, index=False)
+            total_fetched += new_rows_today
 
     return {
         "rows_fetched": total_fetched,
