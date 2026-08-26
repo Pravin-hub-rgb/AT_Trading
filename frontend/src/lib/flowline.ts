@@ -676,6 +676,9 @@ export class FirstSwingEngine {
     const t = c.date.slice(11, 16);
     this.barsSeen++;
 
+    this.histH.push(c.high);
+    this.histL.push(c.low);
+
     const halves: [number, boolean][] = green
       ? [[c.low, true], [c.high, false]]
       : [[c.high, true], [c.low, false]];
@@ -831,6 +834,7 @@ export class FsV2Engine {
   candIdx = -1; candTime = ""; candPx = NaN;
   declared = false;
   endTime = ""; endIdx = -1; endPx = NaN; confirmedAtTime = "";
+  confirmedAtIdx = -1;
   convertedByZone = false;
 
   // ── v3 fast-path (single-E-break lock) ──
@@ -859,6 +863,9 @@ export class FsV2Engine {
   // ── Y) N-candle sustain beyond the broken extreme ──
   private lockedLevelPx = NaN; // E-level that was crossed at lock (frozen)
   private sustainStreak = 0;
+  private armedSeen = false;
+  private histH: number[] = []; // per-bar highs/lows for touch-seeding
+  private histL: number[] = [];
 
   constructor(private opts: FsV2Opts = {}) {}
 
@@ -942,6 +949,9 @@ export class FsV2Engine {
       }
     }
 
+    this.histH.push(c.high);
+    this.histL.push(c.low);
+
     const halves: [number, boolean][] = green
       ? [[c.low, true], [c.high, false]]
       : [[c.high, true], [c.low, false]];
@@ -966,6 +976,21 @@ export class FsV2Engine {
       if (armed && rng > 0) {
         const pos = ((px - this.eLo.px) / rng) * 100;
         const z = this.zonePct;
+
+        // ── one-time seeding: opening bars get evaluated against the
+        // armed-time range so pre-arm tops/bottoms count as touches
+        // (the 17-Aug failure: session top preceded arming) ──
+        if (!this.armedSeen) {
+          this.armedSeen = true;
+          const hiCut = 100 - z;
+          for (let h = 0; h < this.histH.length; h++) {
+            const ph = ((this.histH[h] - this.eLo.px) / rng) * 100;
+            const pl = ((this.histL[h] - this.eLo.px) / rng) * 100;
+            if (ph >= hiCut) this.touchedUp = true;
+            if (pl <= z) this.touchedDown = true;
+          }
+        }
+
         if (pos >= 100 - z) this.touchedUp = true;
         if (pos <= z) this.touchedDown = true;
 
@@ -1108,7 +1133,7 @@ export class FsV2Engine {
     this.endTime = this.candTime;
     this.endPx = this.candPx;
     this.confirmedAtTime = t;
-    void gIdx;
+    this.confirmedAtIdx = gIdx;
   }
 }
 
@@ -1118,6 +1143,7 @@ export class FsV2Engine {
 export interface FsV2Result {
   day: string;
   invalid: boolean;
+  confIdx: number; // global candle index of the CONFIRM bar (-1 if invalid)
   seg: FlowSegment;
 }
 
@@ -1141,6 +1167,7 @@ export function computeFsV2Results(
     out.push({
       day,
       invalid: eng.invalidated,
+      confIdx: eng.confirmedAtIdx,
       seg: {
         dir: eng.dir === "up" ? "B" : "S",
         startIdx: eng.startIdx,

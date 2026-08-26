@@ -318,13 +318,19 @@ export default function ChartPage() {
         envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
         algoFirstSwing:
           fsOn && iv === "1min" && d.length >= 2
-            ? computeFsV2Results(d, {
-                zonePct: fsRevPct,
-                simpleMode: true,
-                armBars: 5,
-                armRangePts: 20,
-              }).map((r) => ({ ...r.seg, invalid: r.invalid }))
-            : null,
+            ? (() => {
+                const res = computeFsV2Results(d, {
+                  zonePct: fsRevPct,
+                  simpleMode: true,
+                  armBars: 5,
+                  armRangePts: 20,
+                });
+                return {
+                  algoFirstSwing: res.map((r) => ({ ...r.seg, invalid: r.invalid })),
+                  fsMarkers: res.filter((r) => r.confIdx >= 0).map((r) => ({ idx: r.confIdx, invalid: r.invalid })),
+                };
+              })()
+            : { algoFirstSwing: null, fsMarkers: null },
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },

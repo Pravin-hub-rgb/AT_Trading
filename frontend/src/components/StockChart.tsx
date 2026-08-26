@@ -42,6 +42,7 @@ interface Props {
   envelope?: EnvelopeViolation[] | null;
   manualFirstSwing?: Record<string, FsDayMark> | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
+  fsMarkers?: { idx: number; invalid: boolean }[] | null;
   drawMode?: boolean;
   onSwingDraw?: (mark: { day: string; start: FsPoint; end: FsPoint }) => void;
   onDrawStatus?: (status: string | null) => void;
@@ -159,7 +160,7 @@ function fsSegsFromMarks(candles: Candle[], marks: Record<string, FsDayMark>): F
   return segs;
 }
 
-const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, flowLine, algoFlowLine, envelope, manualFirstSwing, algoFirstSwing, drawMode = false, onSwingDraw, onDrawStatus, onHoverTime }: Props, ref) {
+const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, flowLine, algoFlowLine, envelope, manualFirstSwing, algoFirstSwing, fsMarkers, drawMode = false, onSwingDraw, onDrawStatus, onHoverTime }: Props, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -685,11 +686,11 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
       manualFirstSwing ? fsSegsFromMarks(candles, manualFirstSwing) : [],
       candles.length - 1,
     );
-    chart.panes()[0].attachPrimitive(prim);
+    ser.attachPrimitive(prim);
     fsPrimRef.current = prim;
     return () => {
       try {
-        chart.panes()[0].detachPrimitive(prim);
+        ser.detachPrimitive(prim);
       } catch {}
       if (fsPrimRef.current === prim) fsPrimRef.current = null;
     };
@@ -703,31 +704,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
     prim.setSegs(fsSegsFromMarks(candles, manualFirstSwing));
   }, [manualFirstSwing, candles, intraday]);
 
-  // ── overlay: First-Swing ALGO candidate — cyan = declared, red = invalid ──
-  useEffect(() => {
-    const ser = seriesRef.current;
-    if (!ser || !intraday || !algoFirstSwing || algoFirstSwing.length === 0) return;
-    const okSegs = algoFirstSwing.filter((s) => !s.invalid);
-    const badSegs = algoFirstSwing.filter((s) => s.invalid);
-    const prims: FlowLinePrimitive[] = [];
-    if (okSegs.length > 0) {
-      const p = new FlowLinePrimitive(ser, okSegs, candles.length - 1, "#22d3ee", 2);
-      ser.attachPrimitive(p);
-      prims.push(p);
-    }
-    if (badSegs.length > 0) {
-      const p = new FlowLinePrimitive(ser, badSegs, candles.length - 1, "#ef4444", 2);
-      ser.attachPrimitive(p);
-      prims.push(p);
-    }
-    return () => {
-      for (const p of prims) {
-        try {
-          ser.detachPrimitive(p);
-        } catch {}
-      }
-    };
-  }, [algoFirstSwing, intraday, candles]);
 
   // ── interaction: FS draw-mode clicks + draggable endpoint handles ──
   // Lives on its own effect: toggling Draw never rebuilds the chart either.
@@ -887,6 +863,50 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
       containerEl.style.cursor = "";
     };
   }, [drawMode, intraday, candles]);
+
+  // ── overlay: First-Swing ALGO candidate — cyan = declared, red = invalid ──
+  useEffect(() => {
+    const ser = seriesRef.current;
+    if (!ser || !intraday || !algoFirstSwing || algoFirstSwing.length === 0) return;
+    let mkApi: ReturnType<typeof createSeriesMarkers> | null = null;
+    if (fsMarkers && fsMarkers.length > 0) {
+      const ms: SeriesMarker<Time>[] = [];
+      for (const mk of fsMarkers) {
+        const cc = candles[mk.idx];
+        if (!cc) continue;
+        ms.push({
+          time: cc.ts as Time,
+          position: "belowBar",
+          shape: "arrowUp",
+          color: mk.invalid ? "#ef4444" : "#22d3ee",
+          text: "FS",
+          size: 1,
+        });
+      }
+      if (ms.length > 0) mkApi = createSeriesMarkers(ser, ms);
+    }
+    const okSegs = algoFirstSwing.filter((s) => !s.invalid);
+    const badSegs = algoFirstSwing.filter((s) => s.invalid);
+    const prims: FlowLinePrimitive[] = [];
+    if (okSegs.length > 0) {
+      const p = new FlowLinePrimitive(ser, okSegs, candles.length - 1, "#22d3ee", 2);
+      ser.attachPrimitive(p);
+      prims.push(p);
+    }
+    if (badSegs.length > 0) {
+      const p = new FlowLinePrimitive(ser, badSegs, candles.length - 1, "#ef4444", 2);
+      ser.attachPrimitive(p);
+      prims.push(p);
+    }
+    return () => {
+      for (const p of prims) {
+        try {
+          ser.detachPrimitive(p);
+        } catch {}
+      }
+      mkApi?.setMarkers([]);
+    };
+  }, [algoFirstSwing, fsMarkers, intraday, candles]);
 
   return (
     <div style={{ position: "relative" }}>
