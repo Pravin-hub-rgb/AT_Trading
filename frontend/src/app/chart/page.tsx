@@ -1,9 +1,11 @@
 ﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
-import StockChart from "@/components/StockChart";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import StockChart, { type StockChartHandle } from "@/components/StockChart";
+import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
-import { computeFlowLine, computeAlgoFlowLine } from "@/lib/flowline";
+import type { SwingPoint } from "@/components/SwingSRPrimitive";
+import { computeFlowLine, computeAlgoFlowLine, computeFirstSwing } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
@@ -16,14 +18,22 @@ import {
   getSwings,
   getBias,
   getIntradayBacktest,
+  FsDayMark,
+  getFirstSwingManual,
+  saveFirstSwingDay,
 } from "@/lib/api";
 
 const STORAGE_KEY = "chart_interval";
+const INTERVAL_B_KEY = "chart_interval_b";
+const LAYOUT_KEY = "chart_layout";
 const BT_KEY = "intraday_bt_on";
 const SWING_N_KEY = "chart_1min_swing_n";
 const DOTS_KEY = "chart_hhll_dots";
 const FLOW_KEY = "chart_flow_line";
 const ENV_KEY = "chart_envelope_on";
+const FS_KEY = "chart_first_swing_on";
+const FS_PCT_KEY = "chart_fs_min_pct";
+const FS_PCT_DEFAULT = 0.12;
 const SWING_N_DEFAULT = 12;
 
 function clampSwingN(v: number): number {
@@ -38,6 +48,9 @@ const INTERVAL_LABELS: Record<ChartInterval, string> = {
   "5min": "5-Min",
   "1min": "1-Min",
 };
+
+const SELECT_CLS =
+  "rounded-md border border-[#30363d] bg-[#161b22] px-2 py-1 text-sm text-[#e6edf3] outline-none focus:border-[#6366f1]";
 
 // 1-min history is large (~97k rows); load a recent window so the chart stays snappy
 const ONE_MIN_LIMIT = 25000;
@@ -76,6 +89,22 @@ export default function ChartPage() {
   const [dotsOn, setDotsOn] = useState(true);
   const [flowOn, setFlowOn] = useState(true);
   const [envOn, setEnvOn] = useState(false);
+  const [fsOn, setFsOn] = useState(false);
+  const [fsDraw, setFsDraw] = useState(false);
+  const [fsMarks, setFsMarks] = useState<Record<string, FsDayMark>>({});
+  const [fsDrawStatus, setFsDrawStatus] = useState<string | null>(null);
+  const [fsMinPct, setFsMinPct] = useState(FS_PCT_DEFAULT);
+
+  // dual-chart layout
+  const [dual, setDual] = useState(false);
+  const [intervalB, setIntervalB] = useState<ChartInterval>("5min");
+  const [dataB, setDataB] = useState<Candle[]>([]);
+  const [countB, setCountB] = useState(0);
+  const [loadingB, setLoadingB] = useState(false);
+  const [errorB, setErrorB] = useState<string | null>(null);
+  const chartARef = useRef<StockChartHandle | null>(null);
+  const chartBRef = useRef<StockChartHandle | null>(null);
+
   const btLoading = btOn && !btData && !btError;
 
   useEffect(() => {
@@ -87,7 +116,26 @@ export default function ChartPage() {
       setDotsOn(window.localStorage.getItem(DOTS_KEY) !== "0");
       setFlowOn(window.localStorage.getItem(FLOW_KEY) !== "0");
       setEnvOn(window.localStorage.getItem(ENV_KEY) === "1");
+      setFsOn(window.localStorage.getItem(FS_KEY) === "1");
+      const pctRaw = window.localStorage.getItem(FS_PCT_KEY);
+      if (pctRaw && Number.isFinite(Number(pctRaw))) setFsMinPct(Math.max(0, Number(pctRaw)));
+      setDual(window.localStorage.getItem(LAYOUT_KEY) === "2");
+      const savedIvB = window.localStorage.getItem(INTERVAL_B_KEY);
+      if (savedIvB === "daily" || savedIvB === "5min" || savedIvB === "1min") setIntervalB(savedIvB);
     }
+  }, []);
+
+  // load hand-drawn GT marks once (backend JSON file)
+  useEffect(() => {
+    let cancelled = false;
+    getFirstSwingManual()
+      .then((res) => {
+        if (!cancelled) setFsMarks(res.days ?? {});
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const changeSwingN = (v: number) => {
@@ -118,6 +166,30 @@ export default function ChartPage() {
       cancelled = true;
     };
   }, [interval]);
+
+  // pane B candles (dual mode)
+  useEffect(() => {
+    let cancelled = false;
+    setLoadingB(true);
+    setErrorB(null);
+    getChartData(intervalB, intervalB === "1min" ? ONE_MIN_LIMIT : undefined)
+      .then((res) => {
+        if (cancelled) return;
+        setDataB(res.candles);
+        setCountB(res.count);
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setErrorB(e instanceof Error ? e.message : String(e));
+        setDataB([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingB(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [intervalB]);
 
   useEffect(() => {
     let cancelled = false;
@@ -154,38 +226,6 @@ export default function ChartPage() {
       cancelled = true;
     };
   }, []);
-
-  const displaySwings = useMemo(() => {
-    if (interval === "daily") return swings;
-    const dates: string[] = [];
-    const lastIdxByDate = new Map<string, number>();
-    const maxHighIdx: Record<string, number> = {};
-    const minLowIdx: Record<string, number> = {};
-    data.forEach((c, i) => {
-      const d = c.date.slice(0, 10);
-      if (!lastIdxByDate.has(d)) dates.push(d);
-      lastIdxByDate.set(d, i);
-      const hi = maxHighIdx[d];
-      const lo = minLowIdx[d];
-      if (hi === undefined || c.high >= data[hi].high) maxHighIdx[d] = i;
-      if (lo === undefined || c.low <= data[lo].low) minLowIdx[d] = i;
-    });
-    return swings
-      .map((s) => {
-        const idx = s.kind === "high" ? maxHighIdx[s.date_only] : minLowIdx[s.date_only];
-        if (idx === undefined) return null;
-        const k = dates.indexOf(s.date_only);
-        const endDate = k < 0 ? s.date_only : dates[Math.min(k + LOOKAHEAD, dates.length - 1)];
-        const endIndex = lastIdxByDate.get(endDate) ?? idx;
-        return {
-          kind: s.kind,
-          index: idx,
-          price: s.price,
-          end_index: endIndex,
-        };
-      })
-      .filter((s): s is { kind: "high" | "low"; index: number; price: number; end_index: number } => s !== null);
-  }, [interval, swings, data]);
 
   useEffect(() => {
     if (!btOn) return;
@@ -224,29 +264,135 @@ export default function ChartPage() {
       );
   }, [btOn, btData, btCase]);
 
-  const flowSegments = useMemo(() => {
-    if (!flowOn || interval === "daily" || data.length < 2) return null;
-    const segs = computeFlowLine(data);
-    return segs;
-  }, [flowOn, interval, data]);
+  // Per-pane overlay bundle: computes every optional overlay for one pane's
+  // interval/data so dual mode costs exactly two computations.
+  const buildPaneOverlays = useCallback(
+    (iv: ChartInterval, d: Candle[]) => {
+      const isIntraday = iv !== "daily";
 
-  // TRAINED ALGO: deviation zigzag T=11 (white line â€” manual/orange ke against compare)
-  const algoSegments = useMemo(() => {
-    if (!flowOn || interval === "daily" || data.length < 2) return null;
-    return computeAlgoFlowLine(data);
-  }, [flowOn, interval, data]);
+      // intraday swings are date-mapped projections of the daily pivots
+      let dispSwings: SwingPoint[] | undefined;
+      if (swingOn) {
+        if (iv === "daily") {
+          dispSwings = swings;
+        } else {
+          // map daily swing dates onto this pane's intraday candles
+          const dates: string[] = [];
+          const lastIdxByDate = new Map<string, number>();
+          const maxHighIdx: Record<string, number> = {};
+          const minLowIdx: Record<string, number> = {};
+          d.forEach((c, i) => {
+            const day = c.date.slice(0, 10);
+            if (!lastIdxByDate.has(day)) dates.push(day);
+            lastIdxByDate.set(day, i);
+            const hi = maxHighIdx[day];
+            const lo = minLowIdx[day];
+            if (hi === undefined || c.high >= d[hi].high) maxHighIdx[day] = i;
+            if (lo === undefined || c.low <= d[lo].low) minLowIdx[day] = i;
+          });
+          dispSwings = swings
+            .map((s) => {
+              const idx = s.kind === "high" ? maxHighIdx[s.date_only] : minLowIdx[s.date_only];
+              if (idx === undefined) return null;
+              const k = dates.indexOf(s.date_only);
+              const endDate = k < 0 ? s.date_only : dates[Math.min(k + LOOKAHEAD, dates.length - 1)];
+              const endIndex = lastIdxByDate.get(endDate) ?? idx;
+              return {
+                kind: s.kind,
+                index: idx,
+                price: s.price,
+                end_index: endIndex,
+              };
+            })
+            .filter((s): s is { kind: "high" | "low"; index: number; price: number; end_index: number } => s !== null);
+        }
+      }
 
-  // Envelope-law audit: candles breaching the algo line's own marked extremes.
-  // Computed only while toggled on (walks every day through computeAlgoPivots).
-  const envelopeViolations = useMemo(() => {
-    if (!envOn || interval !== "5min" || data.length < 2) return null;
-    return computeEnvelopeViolations(data);
-  }, [envOn, interval, data]);
+      return {
+        swings: dispSwings,
+        bias: isIntraday && biasOn ? biasLabels : undefined,
+        trades: isIntraday ? allTrades : undefined,
+        sessionBreaks: isIntraday,
+        flowLine: flowOn && isIntraday && d.length >= 2 ? computeFlowLine(d) : null,
+        algoFlowLine: flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
+        envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
+        algoFirstSwing:
+          fsOn && iv === "5min" && d.length >= 2
+            ? computeFirstSwing(d, { minTime: "09:30", minRangePct: fsMinPct })
+            : null,
+        manualFirstSwing: iv === "5min" && fsOn ? fsMarks : null,
+      };
+    },
+    [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsMinPct, fsMarks],
+  );
 
-  const changeInterval = (iv: ChartInterval) => {    window.localStorage.setItem(STORAGE_KEY, iv);
+  const overlaysA = useMemo(() => buildPaneOverlays(interval, data), [buildPaneOverlays, interval, data]);
+  const overlaysB = useMemo(() => buildPaneOverlays(intervalB, dataB), [buildPaneOverlays, intervalB, dataB]);
+
+  // ── crosshair sync between panes (dual mode) ──
+  // Remote panes draw a silent vertical sync line via SyncCrosshairPrimitive
+  // (not the real crosshair), so no echo events can loop back — direct wiring.
+  const timesA = useMemo(() => buildTimes(data, interval !== "daily"), [data, interval]);
+  const timesB = useMemo(() => buildTimes(dataB, intervalB !== "daily"), [dataB, intervalB]);
+
+  const onHoverA = useCallback(
+    (sec: number | null) => {
+      if (!dual) return;
+      const handle = chartBRef.current;
+      if (!handle) return;
+      const t = sec == null ? null : nearestSec(timesB, sec);
+      if (t == null) handle.clearCrosshair();
+      else handle.setCrosshairAt(t);
+    },
+    [dual, timesB],
+  );
+
+  const onHoverB = useCallback(
+    (sec: number | null) => {
+      if (!dual) return;
+      const handle = chartARef.current;
+      if (!handle) return;
+      const t = sec == null ? null : nearestSec(timesA, sec);
+      if (t == null) handle.clearCrosshair();
+      else handle.setCrosshairAt(t);
+    },
+    [dual, timesA],
+  );
+
+  const handleSwingDraw = useCallback((mark: { day: string; start: FsDayMark["start"]; end: FsDayMark["end"] }) => {
+    saveFirstSwingDay(mark.day, mark)
+      .then(() => setFsMarks((prev) => ({ ...prev, [mark.day]: mark })))
+      .catch((e) => setFsDrawStatus(e instanceof Error ? e.message : String(e)));
+  }, []);
+
+  const handleDrawStatus = useCallback((s: string | null) => setFsDrawStatus(s), []);
+
+  const changeFsMinPct = (v: number) => {
+    const clamped = Number.isFinite(v) ? Math.max(0, v) : FS_PCT_DEFAULT;
+    setFsMinPct(clamped);
+    window.localStorage.setItem(FS_PCT_KEY, String(clamped));
+  };
+
+  const changeInterval = (iv: ChartInterval) => {
+    window.localStorage.setItem(STORAGE_KEY, iv);
     setData([]);
     setInterval(iv);
   };
+
+  const changeIntervalB = (iv: ChartInterval) => {
+    window.localStorage.setItem(INTERVAL_B_KEY, iv);
+    setDataB([]);
+    setIntervalB(iv);
+  };
+
+  const changeLayout = (d: boolean) => {
+    window.localStorage.setItem(LAYOUT_KEY, d ? "2" : "1");
+    if (d) setFsDraw(false); // draw mode is single-chart only
+    setDual(d);
+  };
+
+  const envCount =
+    (overlaysA.envelope?.length ?? 0) + (dual ? overlaysB.envelope?.length ?? 0 : 0);
 
   return (
     <div className="space-y-4">
@@ -262,16 +408,30 @@ export default function ChartPage() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <select
-            value={interval}
-            onChange={(e) => changeInterval(e.target.value as ChartInterval)}
-            className="rounded-md border border-[#30363d] bg-[#161b22] px-3 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#6366f1]"
-            title="Chart timeframe"
+          <div
+            className="flex overflow-hidden rounded-md border border-[#30363d]"
+            role="group"
+            aria-label="Chart layout"
           >
-            {VALID_INTERVALS.map((iv) => (
-              <option key={iv} value={iv}>{INTERVAL_LABELS[iv]}</option>
-            ))}
-          </select>
+            <button
+              onClick={() => changeLayout(false)}
+              className={`px-3 py-1.5 text-sm transition-colors ${
+                !dual ? "bg-[#6366f1] text-white" : "bg-[#161b22] text-[#8b949e] hover:text-[#e6edf3]"
+              }`}
+              title="Single chart"
+            >
+              1 Chart
+            </button>
+            <button
+              onClick={() => changeLayout(true)}
+              className={`border-l border-[#30363d] px-3 py-1.5 text-sm transition-colors ${
+                dual ? "bg-[#6366f1] text-white" : "bg-[#161b22] text-[#8b949e] hover:text-[#e6edf3]"
+              }`}
+              title="Two charts side by side (crosshair synced)"
+            >
+              2 Charts
+            </button>
+          </div>
 
           <button
             onClick={() => setSwingOn((v) => !v)}
@@ -361,10 +521,64 @@ export default function ChartPage() {
             <span
               className={`h-2 w-2 rounded-full ${envOn ? "bg-[#ef4444]" : "bg-[#8b949e]"}`}
             />
-            Env{envOn && interval === "5min" && envelopeViolations
-              ? ` (${envelopeViolations.length})`
+            Env{envOn && envCount > 0 ? ` (${envCount})` : ""}
+          </button>
+
+          <button
+            onClick={() => {
+              setFsOn((v) => {
+                window.localStorage.setItem(FS_KEY, v ? "0" : "1");
+                return !v;
+              });
+            }}
+            className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+              fsOn && interval === "5min"
+                ? "border-[#facc15] text-[#e6edf3]"
+                : "border-[#30363d] text-[#8b949e]"
+            }`}
+            title="First Swing: your hand-drawn GT (thick yellow) vs flow-walker candidate (cyan)"
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${fsOn ? "bg-[#facc15]" : "bg-[#8b949e]"}`}
+            />
+            FS{interval === "5min" && Object.keys(fsMarks).length > 0
+              ? ` (${Object.keys(fsMarks).length})`
               : ""}
           </button>
+
+          {fsOn && interval === "5min" && (
+            <>
+              <button
+                onClick={() => setFsDraw((v) => !v)}
+                disabled={dual}
+                className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+                  fsDraw && !dual
+                    ? "border-[#facc15] bg-[#facc15]/10 text-[#e6edf3]"
+                    : dual
+                      ? "cursor-not-allowed border-[#30363d] text-[#8b949e] opacity-40"
+                      : "border-[#30363d] text-[#8b949e]"
+                }`}
+                title={dual ? "Draw mode: single-chart layout only" : "Draw mode: click START candle then END candle on the chart \u2014 auto-saves"}
+              >
+                <span
+                  className={`h-2 w-2 rounded-full ${fsDraw ? "bg-[#facc15]" : "bg-[#8b949e]"}`}
+                />
+                Draw
+              </button>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-[#8b949e]">Min %</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={0.01}
+                  value={fsMinPct}
+                  onChange={(e) => changeFsMinPct(Number(e.target.value))}
+                  className="w-16 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#22d3ee]"
+                  title="First-swing minimum range (% of seed price) for the algo candidate"
+                />
+              </div>
+            </>
+          )}
 
           <button
             onClick={() => {
@@ -404,29 +618,118 @@ export default function ChartPage() {
         </div>
       </div>
 
-      {error ? (
+      {error && (
         <div className="rounded-md border border-[#ef4444]/50 bg-[#ef4444]/10 px-4 py-3 text-sm text-[#ef4444]">
-          {error}
+          Chart A: {error}
         </div>
-      ) : (
-        <StockChart
-          symbol="NIFTY 50"
-          candles={data}
-          intraday={interval !== "daily"}
-          interval={interval}
-          swings={swingOn ? displaySwings : undefined}
-          bias={interval !== "daily" && biasOn ? biasLabels : undefined}
-          trades={interval !== "daily" ? allTrades : undefined}
-          sessionBreaks={interval !== "daily"}
-          oneMinSwingN={swingN}
-          swingDots={dotsOn}
-          flowLine={flowSegments}
-          algoFlowLine={algoSegments}
-          envelope={envelopeViolations}
-        />
+      )}
+      {fsDraw && !dual && interval === "5min" && (
+        <div className="flex items-center gap-2 rounded-md border border-[#facc15]/40 bg-[#facc15]/5 px-4 py-2 text-sm">
+          <span className="text-[#facc15]">
+            {fsDrawStatus ?? "Draw mode: click START candle, then END candle (same day). Auto-saves."}
+          </span>
+          <button
+            onClick={() => setFsDraw(false)}
+            className="ml-auto rounded border border-[#30363d] px-2 py-0.5 text-xs text-[#8b949e] hover:text-[#e6edf3]"
+          >
+            Done
+          </button>
+        </div>
       )}
 
-      {interval !== "daily" && btOn && (
+      <div className={dual ? "flex items-start gap-3" : ""}>
+        {/* Pane A */}
+        <div className={dual ? "w-1/2 min-w-0" : "w-full"}>
+          <div className="mb-1.5 flex items-center gap-2">
+            <span className="text-xs font-bold tracking-wider text-[#6366f1]">A</span>
+            <select
+              value={interval}
+              onChange={(e) => changeInterval(e.target.value as ChartInterval)}
+              className={SELECT_CLS}
+              title="Chart A timeframe"
+            >
+              {VALID_INTERVALS.map((iv) => (
+                <option key={iv} value={iv}>{INTERVAL_LABELS[iv]}</option>
+              ))}
+            </select>
+            <span className="text-xs text-[#8b949e]">
+              {loading ? "Loading..." : `${count} candles`}
+            </span>
+          </div>
+          <StockChart
+            ref={chartARef}
+            symbol="NIFTY 50"
+            candles={data}
+            intraday={interval !== "daily"}
+            interval={interval}
+            swings={overlaysA.swings}
+            bias={overlaysA.bias}
+            trades={overlaysA.trades}
+            sessionBreaks={overlaysA.sessionBreaks}
+            oneMinSwingN={swingN}
+            swingDots={dotsOn}
+            flowLine={overlaysA.flowLine}
+            algoFlowLine={overlaysA.algoFlowLine}
+            envelope={overlaysA.envelope}
+            manualFirstSwing={overlaysA.manualFirstSwing}
+            algoFirstSwing={overlaysA.algoFirstSwing}
+            drawMode={fsDraw && !dual && interval === "5min"}
+            onSwingDraw={handleSwingDraw}
+            onDrawStatus={handleDrawStatus}
+            onHoverTime={onHoverA}
+            height={dual ? 620 : 720}
+          />
+        </div>
+
+        {/* Pane B (dual mode only) */}
+        {dual && (
+          <div className="w-1/2 min-w-0">
+            {errorB && (
+              <div className="mb-2 rounded-md border border-[#ef4444]/50 bg-[#ef4444]/10 px-3 py-2 text-xs text-[#ef4444]">
+                Chart B: {errorB}
+              </div>
+            )}
+            <div className="mb-1.5 flex items-center gap-2">
+              <span className="text-xs font-bold tracking-wider text-[#22d3ee]">B</span>
+              <select
+                value={intervalB}
+                onChange={(e) => changeIntervalB(e.target.value as ChartInterval)}
+                className={SELECT_CLS}
+                title="Chart B timeframe"
+              >
+                {VALID_INTERVALS.map((iv) => (
+                  <option key={iv} value={iv}>{INTERVAL_LABELS[iv]}</option>
+                ))}
+              </select>
+              <span className="text-xs text-[#8b949e]">
+                {loadingB ? "Loading..." : `${countB} candles`}
+              </span>
+            </div>
+            <StockChart
+              ref={chartBRef}
+              symbol="NIFTY 50"
+              candles={dataB}
+              intraday={intervalB !== "daily"}
+              interval={intervalB}
+              swings={overlaysB.swings}
+              bias={overlaysB.bias}
+              trades={overlaysB.trades}
+              sessionBreaks={overlaysB.sessionBreaks}
+              oneMinSwingN={swingN}
+              swingDots={dotsOn}
+              flowLine={overlaysB.flowLine}
+              algoFlowLine={overlaysB.algoFlowLine}
+              envelope={overlaysB.envelope}
+              manualFirstSwing={overlaysB.manualFirstSwing}
+              algoFirstSwing={overlaysB.algoFirstSwing}
+              onHoverTime={onHoverB}
+              height={620}
+            />
+          </div>
+        )}
+      </div>
+
+      {btOn && (interval !== "daily" || (dual && intervalB !== "daily")) && (
         <IntradayPanel
           backtest={btData}
           loading={btLoading}

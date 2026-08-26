@@ -587,6 +587,50 @@ export function computeAlgoPivots(candles: FlowCandle[]): AlgoPivot[] {
   return all;
 }
 
+// ===== 🟡 FIRST SWING (flow-based, gated) =====
+export interface FirstSwingOpts {
+  minTime?: string; // "09:30" earliest seal bar time
+  minRangePct?: number; // e.g. 0.12 means 0.12% of seed price
+  minBreaks?: number; // reserved: flow pivots breached count (default 0 = no break gate)
+}
+
+export function computeFirstSwing(
+  candles: FlowCandle[],
+  opts: FirstSwingOpts = {},
+): FlowSegment[] {
+  const minTime = opts.minTime ?? "09:30";
+  const minPct = opts.minRangePct ?? 0.12;
+  // minBreaks reserved for future: for now 0 = no break gate
+  const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
+  candles.forEach((c, gIdx) => {
+    const d = c.date.slice(0, 10);
+    if (!byDay.has(d)) byDay.set(d, []);
+    byDay.get(d)!.push({ c, gIdx });
+  });
+  const segs: FlowSegment[] = [];
+  byDay.forEach((items) => {
+    const pivots = walkDay(items);
+    const sealed = pivots.filter((p) => p.sealed);
+    if (sealed.length < 2) return;
+    const p0 = sealed[0];
+    for (let i = 1; i < sealed.length; i++) {
+      const p1 = sealed[i];
+      if (p1.time < minTime) continue;
+      const rangePct = (Math.abs(p1.px - p0.px) / p0.px) * 100;
+      if (rangePct < minPct) continue;
+      segs.push({
+        dir: p1.px >= p0.px ? "B" : "S",
+        startIdx: p0.idx,
+        startPx: p0.px,
+        endIdx: p1.idx,
+        endPx: p1.px,
+      });
+      break; // only first qualifying swing per day
+    }
+  });
+  return segs;
+}
+
 // ===== ⚪ ALGO FLOW LINE =====
 export function computeAlgoFlowLine(candles: FlowCandle[]): FlowSegment[] {
   // Each day is walked and chained SEPARATELY — no line ever connects

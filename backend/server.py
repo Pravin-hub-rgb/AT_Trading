@@ -1,4 +1,5 @@
 import threading
+import json
 import uuid
 from collections import OrderedDict
 from contextlib import asynccontextmanager
@@ -453,6 +454,65 @@ def intraday_day(date: str):
         if d["date"] == date:
             return d
     return JSONResponse(status_code=404, content={"detail": f"No backtest day for {date}"})
+
+
+# ===== First-Swing manual ground truth (user-drawn) =====
+
+_FS_FILE = config.DATA_DIR / "first_swing_manual.json"
+
+
+class FsPoint(BaseModel):
+    time: str  # "HH:MM"
+    kind: str  # "H" | "L"
+    px: float
+
+
+class FsDay(BaseModel):
+    start: FsPoint
+    end: FsPoint
+
+
+def _fs_read() -> dict:
+    if not _FS_FILE.exists():
+        return {}
+    try:
+        raw = json.loads(_FS_FILE.read_text(encoding="utf-8"))
+        return raw if isinstance(raw, dict) else {}
+    except Exception:
+        return {}
+
+
+@app.get("/api/firstswing/manual")
+def firstswing_get():
+    data = _fs_read()
+    return {"count": len(data), "days": data}
+
+
+@app.post("/api/firstswing/manual")
+def firstswing_upsert(day: str, mark: FsDay):
+    """Upsert one day's hand-drawn first swing. day = YYYY-MM-DD."""
+    if len(day) != 10 or day[4] != "-" or day[7] != "-":
+        return JSONResponse(status_code=400, content={"detail": "day must be YYYY-MM-DD"})
+    if mark.start.kind not in ("H", "L") or mark.end.kind not in ("H", "L"):
+        return JSONResponse(status_code=400, content={"detail": "kind must be H or L"})
+
+    data = _fs_read()
+    data[day] = {
+        "start": {"time": mark.start.time, "kind": mark.start.kind, "px": mark.start.px},
+        "end": {"time": mark.end.time, "kind": mark.end.kind, "px": mark.end.px},
+    }
+    _FS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return {"ok": True, "day": day, "count": len(data)}
+
+
+@app.delete("/api/firstswing/manual/{day}")
+def firstswing_delete(day: str):
+    data = _fs_read()
+    if day in data:
+        del data[day]
+        _FS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        return {"ok": True, "deleted": day, "count": len(data)}
+    return JSONResponse(status_code=404, content={"detail": f"{day} not marked"})
 
 
 if __name__ == "__main__":

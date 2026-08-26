@@ -322,3 +322,34 @@ export const getIntradayBacktest = (params: BacktestParams = DEFAULT_BT_PARAMS) 
   });
   return request<IntradayBacktestResponse>(`/api/intraday/backtest?${q.toString()}`);
 };
+
+// --- first-swing manual ground truth (user-drawn) ---
+export interface FsPoint {
+  time: string; // "HH:MM"
+  kind: "H" | "L";
+  px: number;
+}
+
+export interface FsDayMark {
+  start: FsPoint;
+  end: FsPoint;
+}
+
+export interface FsManualResponse {
+  count: number;
+  days: Record<string, FsDayMark>;
+}
+
+export const getFirstSwingManual = () => request<FsManualResponse>("/api/firstswing/manual");
+
+export const saveFirstSwingDay = (day: string, mark: FsDayMark) =>
+  request<{ ok: boolean; day: string; count: number }>(
+    `/api/firstswing/manual?day=${encodeURIComponent(day)}`,
+    { method: "POST", body: JSON.stringify(mark) },
+  );
+
+export const deleteFirstSwingDay = (day: string) =>
+  request<{ ok: boolean; deleted: string; count: number }>(
+    `/api/firstswing/manual/${encodeURIComponent(day)}`,
+    { method: "DELETE" },
+  );

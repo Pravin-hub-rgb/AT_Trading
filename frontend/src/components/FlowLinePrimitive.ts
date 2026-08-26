@@ -34,6 +34,7 @@ export class FlowLinePrimitive implements IPanePrimitive<Time> {
     private segments: FlowSegment[],
     private lastIndex: number,
     private lineColor: string = "#ffffff",
+    private lineWidth = 2,
   ) {}
 
   private recalc() {
@@ -73,7 +74,7 @@ export class FlowLinePrimitive implements IPanePrimitive<Time> {
   }
 
   paneViews(): readonly IPanePrimitivePaneView[] {
-    return [new FlowLinePaneView(this.pts, this.lineColor)];
+    return [new FlowLinePaneView(this.pts, this.lineColor, this.lineWidth)];
   }
 }
 
@@ -81,10 +82,11 @@ class FlowLinePaneView implements IPanePrimitivePaneView {
   constructor(
     private pts: Pt[],
     private color: string,
+    private lineWidth = 2,
   ) {}
 
   renderer(): IPrimitivePaneRenderer | null {
-    return new FlowLinePaneRenderer(this.pts, this.color);
+    return new FlowLinePaneRenderer(this.pts, this.color, this.lineWidth);
   }
 }
 
@@ -92,6 +94,7 @@ class FlowLinePaneRenderer implements IPrimitivePaneRenderer {
   constructor(
     private pts: Pt[],
     private color: string,
+    private lineWidth = 2,
   ) {}
 
   zOrder(): PrimitivePaneViewZOrder {
@@ -101,7 +104,7 @@ class FlowLinePaneRenderer implements IPrimitivePaneRenderer {
   draw(target: CanvasRenderingTarget2D): void {
     target.useMediaCoordinateSpace(({ context: ctx }) => {
       ctx.save();
-      ctx.lineWidth = 2;
+      ctx.lineWidth = this.lineWidth;
       ctx.lineCap = "round";
       ctx.strokeStyle = this.color;
       for (let i = 0; i + 1 < this.pts.length; i += 2) {
