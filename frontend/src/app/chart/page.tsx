@@ -32,8 +32,8 @@ const DOTS_KEY = "chart_hhll_dots";
 const FLOW_KEY = "chart_flow_line";
 const ENV_KEY = "chart_envelope_on";
 const FS_KEY = "chart_first_swing_on";
-const FS_MPTS_KEY = "chart_fs_mpts";
-const FS_MPTS_DEFAULT = 25;
+const FS_MPTS_KEY = "chart_fs_gap_v2";
+const FS_MPTS_DEFAULT = 15;
 const SWING_N_DEFAULT = 12;
 
 function clampSwingN(v: number): number {
