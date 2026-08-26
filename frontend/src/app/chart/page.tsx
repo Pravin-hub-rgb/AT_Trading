@@ -317,6 +317,7 @@ export default function ChartPage() {
                 zonePct: 25,
                 armBars: 10,
                 armRangePts: 80,
+                sustainBars: 7,
               }).map((r) => ({ ...r.seg, invalid: r.invalid }))
             : null,
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,

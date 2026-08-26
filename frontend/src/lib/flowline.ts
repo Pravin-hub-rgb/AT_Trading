@@ -800,6 +800,7 @@ export interface FsV2Opts {
   zonePct?: number; // deep-zone % of range (default 25)
   armBars?: number; // min bars before zone rules arm (default 5)
   armRangePts?: number; // min range pts before zone arms (default 20)
+  sustainBars?: number; // N consecutive closes beyond broken extreme = confirm (default 7)
 }
 
 interface FsLevel {
@@ -845,6 +846,18 @@ export class FsV2Engine {
   private zoneSide: "up" | "down" | null = null; // last zone-conversion side
   private touchedUp = false; // price reached upper deep-zone while armed
   private touchedDown = false;
+
+  // ── X) micro-top/lows: zero-lag local extremes (no walker seal needed) ──
+  private microHighs: FsLevel[] = [];
+  private microLows: FsLevel[] = [];
+  private pHigh = NaN; private pHighIdx = -1; private pHighT = "";   // previous bar high
+  private ppHigh = NaN; private ppHighIdx = -1; private ppHighT = ""; // bar-before-that high
+  private pLow = NaN; private pLowIdx = -1; private pLowT = "";
+  private ppLow = NaN; private ppLowIdx = -1; private ppLowT = "";
+
+  // ── Y) N-candle sustain beyond the broken extreme ──
+  private lockedLevelPx = NaN; // E-level that was crossed at lock (frozen)
+  private sustainStreak = 0;
 
   constructor(private opts: FsV2Opts = {}) {}
 
@@ -909,6 +922,20 @@ export class FsV2Engine {
       this.barsSeen > (this.opts.armBars ?? 5) &&
       this.eHi.px - this.eLo.px >= (this.opts.armRangePts ?? 20);
 
+    // ---- X) micro local-extremes: completed 2-side pivots, zero seal-lag ----
+    // Bar k-1 was a LOCAL TOP/BOTTOM if its extreme beat both neighbours and
+    // bar k failed to exceed it — detectable at k's close, no lookahead.
+    if (this.dir && this.barsSeen >= 3 && Number.isFinite(this.ppHigh)) {
+      const topFormed = this.pHigh > this.ppHigh && c.high < this.pHigh;
+      const botFormed = this.pLow < this.ppLow && c.low > this.pLow;
+      if (topFormed && this.pHighIdx > this.startIdx) {
+        this.pushUnique(this.microHighs, { px: this.pHigh, idx: this.pHighIdx, time: this.pHighT });
+      }
+      if (botFormed && this.pLowIdx > this.startIdx) {
+        this.pushUnique(this.microLows, { px: this.pLow, idx: this.pLowIdx, time: this.pLowT });
+      }
+    }
+
     const halves: [number, boolean][] = green
       ? [[c.low, true], [c.high, false]]
       : [[c.high, true], [c.low, false]];
@@ -972,6 +999,7 @@ export class FsV2Engine {
           const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
           if (px < eLoLvl) {
             this.locked = true;
+            this.lockedLevelPx = eLoLvl;
             this.setCand(this.eLo);
           } else if (this.convertedByZone && this.startIdx >= 0) {
             // invalidation: reversal(zone)-established day dies if an opposite
@@ -986,6 +1014,7 @@ export class FsV2Engine {
           const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
           if (px > eHiLvl) {
             this.locked = true;
+            this.lockedLevelPx = eHiLvl;
             this.setCand(this.eHi);
           } else if (this.convertedByZone && this.startIdx >= 0) {
             const hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
@@ -1003,13 +1032,17 @@ export class FsV2Engine {
       // never a stale pre-move level.
       if ((this.stage >= 2 || this.locked) && this.dir && this.startIdx >= 0) {
         if (this.dir === "down") {
-          const hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
+          const hit = this.normalHighs
+            .concat(this.microHighs)
+            .find((l) => l.idx > this.startIdx && px > l.px);
           if (hit) {
             this.confirm(gIdx, t);
             return;
           }
         } else {
-          const hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
+          const hit = this.normalLows
+            .concat(this.microLows)
+            .find((l) => l.idx > this.startIdx && px < l.px);
           if (hit) {
             this.confirm(gIdx, t);
             return;
@@ -1017,10 +1050,33 @@ export class FsV2Engine {
         }
       }
     }
+
+    // ---- Y) N-candle sustain beyond the broken extreme (bar-level) ----
+    if ((this.stage >= 2 || this.locked) && this.dir && !this.declared && !this.invalidated) {
+      const n = this.opts.sustainBars ?? 7;
+      const ref =
+        this.locked
+          ? this.lockedLevelPx
+          : this.dir === "down"
+            ? this.eLoPivot?.px ?? this.eLo.px
+            : this.eHiPivot?.px ?? this.eHi.px;
+      this.sustainStreak =
+        this.dir === "down" ? (c.close < ref ? this.sustainStreak + 1 : 0)
+                              : (c.close > ref ? this.sustainStreak + 1 : 0);
+      if (this.sustainStreak >= n) {
+        this.confirm(gIdx, t);
+        return;
+      }
+    } else {
+      this.sustainStreak = 0;
+    }
   }
 
   private initiate(dir: "up" | "down", t: string) {
     this.dir = dir;
+    this.microHighs.length = 0;
+    this.microLows.length = 0;
+    this.sustainStreak = 0;
     // swing start = the counter-extreme at initiation moment
     const s = dir === "up" ? this.eLo : this.eHi;
     this.startIdx = s.idx;

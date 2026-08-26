@@ -28,7 +28,7 @@ for (const c of cs) {
 }
 
 function runDay(bars: typeof cs, zonePct = 25, armRange = 80, armBarsN = 10) {
-  const eng = new FsV2Engine({ zonePct, armRangePts: armRange, armBars: armBarsN });
+  const eng = new FsV2Engine({ zonePct, armRangePts: armRange, armBars: armBarsN, sustainBars: 7 });
   bars.forEach((c, i) => eng.processBar(c, i));
   return eng;
 }

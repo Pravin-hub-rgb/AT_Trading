@@ -1,9 +1,9 @@
-// FS v3 trace: 24 Aug bar-by-bar state transitions
+﻿// FS v3 trace: 24 Aug bar-by-bar state transitions
 import { readFileSync } from "fs";
 import { FsV2Engine } from "./src/lib/flowline";
 
 const lines = readFileSync("C:/Users/Pravin/Desktop/main/AT_Trading/data/nifty_1min.csv", "utf8").split("\n").slice(1);
-const day = "2026-08-24";
+const day = process.argv[2] ?? "2026-08-24";
 const bars = lines.map((l) => l.split(",")).filter((p) => p.length >= 7 && p[0].startsWith(day)).map((p) => ({
   date: p[0], ts: 0, open: +p[2], high: +p[3], low: +p[4], close: +p[5], volume: 0, oi: 0,
 }));
