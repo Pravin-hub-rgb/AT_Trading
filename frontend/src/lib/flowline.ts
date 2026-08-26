@@ -587,46 +587,164 @@ export function computeAlgoPivots(candles: FlowCandle[]): AlgoPivot[] {
   return all;
 }
 
-// ===== 🟡 FIRST SWING (flow-based, gated) =====
+// ===== 🟡 FIRST SWING ENGINE (live-safe state machine) =====
+// Same contract as the flow-line walker:
+//   - processBar() consumes CLOSED candles only — zero hindsight
+//   - color-aware half-steps (green: L→H · red: H→L)
+//   - candidate end rides bar-by-bar while tracking (the live question)
+//   - declared END freezes forever — sealed, never repaints
+//
+// Phases:
+//   LOCK   : direction declares when a half-step breaks ALL-prior-bars'
+//            opposite extreme. Start = the running counter-extreme so far
+//            (data: 88% of swings start at the 09:15 bar itself).
+//   TRACK  : running extreme E extends in direction (candidate end).
+//   DECLARE: first trigger to fire freezes E as THE end:
+//     T-A  counter-move ≥ mPoints from candidate (path-ordered half-step)
+//     T-B  two consecutive closes against the move ("2-candle behaviour")
+
 export interface FirstSwingOpts {
-  minTime?: string; // "09:30" earliest seal bar time
-  minRangePct?: number; // e.g. 0.12 means 0.12% of seed price
-  minBreaks?: number; // reserved: flow pivots breached count (default 0 = no break gate)
+  mPoints?: number; // T-A trigger distance in points (default 20)
+  twoClose?: boolean; // enable T-B (default true)
 }
 
-export function computeFirstSwing(
+export class FirstSwingEngine {
+  private barsSeen = 0;
+  private prevClose: number | null = null;
+  private refHi = -Infinity; // all-prior-bars high (lock reference)
+  private refLo = Infinity; // all-prior-bars low
+  private hiIdx = -1; private hiT = ""; private hiPx = -Infinity;
+  private loIdx = -1; private loT = ""; private loPx = Infinity;
+
+  locked = false;
+  dir: "up" | "down" | null = null;
+  startIdx = -1; startTime = ""; startPx = NaN;
+  candIdx = -1; candTime = ""; candPx = NaN;
+  declared = false;
+  endTime = ""; endPx = NaN; endIdx = -1; declaredAtTime = "";
+
+  constructor(
+    private mPoints = 20,
+    private twoClose = true,
+  ) {}
+
+  get phase(): "locking" | "tracking" | "declared" {
+    return this.declared ? "declared" : this.locked ? "tracking" : "locking";
+  }
+
+  private declare(gIdx: number, t: string) {
+    this.declared = true;
+    this.endIdx = this.candIdx;
+    this.endTime = this.candTime;
+    this.endPx = this.candPx;
+    this.declaredAtTime = t;
+    void gIdx;
+  }
+
+  processBar(c: FlowCandle, gIdx: number) {
+    if (this.declared) return;
+    const green = c.close >= c.open;
+    const t = c.date.slice(11, 16);
+    this.barsSeen++;
+
+    const halves: [number, boolean][] = green
+      ? [[c.low, true], [c.high, false]]
+      : [[c.high, true], [c.low, false]];
+    // flag meaning here: true = LOW-side step, false = HIGH-side step
+
+    for (const [px, isLow] of halves) {
+      if (!this.locked) {
+        // maintain running stamped extremes
+        if (px > this.hiPx) { this.hiPx = px; this.hiIdx = gIdx; this.hiT = t; }
+        if (px < this.loPx) { this.loPx = px; this.loIdx = gIdx; this.loT = t; }
+
+        if (this.barsSeen > 1) {
+          if (!isLow && px > this.refHi) {
+            // UP-LOCK: broke every prior high → swing = run-up from lowest low
+            this.locked = true;
+            this.dir = "up";
+            this.startIdx = this.loIdx; this.startTime = this.loT; this.startPx = this.loPx;
+            this.candIdx = gIdx; this.candTime = t; this.candPx = px;
+          } else if (isLow && px < this.refLo) {
+            // DOWN-LOCK: broke every prior low → swing = slide from highest high
+            this.locked = true;
+            this.dir = "down";
+            this.startIdx = this.hiIdx; this.startTime = this.hiT; this.startPx = this.hiPx;
+            this.candIdx = gIdx; this.candTime = t; this.candPx = px;
+          }
+        }
+        if (!this.locked) continue;
+        // just locked THIS step → fall through so the bar's remaining
+        // half-step(s) immediately get tracking treatment (T-A can even
+        // fire on the same bar)
+      }
+
+      if (this.declared) break;
+
+      // ---- TRACK / DECLARE (path-ordered) ----
+      if (this.dir === "up") {
+        if (isLow) {
+          if (this.candPx - px >= this.mPoints) { this.declare(gIdx, t); return; }
+        } else if (px > this.candPx) {
+          this.candIdx = gIdx; this.candTime = t; this.candPx = px;
+        }
+      } else {
+        if (!isLow) {
+          if (px - this.candPx >= this.mPoints) { this.declare(gIdx, t); return; }
+        } else if (px < this.candPx) {
+          this.candIdx = gIdx; this.candTime = t; this.candPx = px;
+        }
+      }
+    }
+
+    // T-B: two consecutive closes against the move (closed-bar info)
+    if (!this.declared && this.twoClose && this.prevClose !== null && this.locked) {
+      if (this.dir === "up") {
+        this.lowerStreak = c.close < this.prevClose ? this.lowerStreak + 1 : 0;
+        if (this.lowerStreak >= 2) this.declare(gIdx, t);
+      } else {
+        this.higherStreak = c.close > this.prevClose ? this.higherStreak + 1 : 0;
+        if (this.higherStreak >= 2) this.declare(gIdx, t);
+      }
+    }
+
+    // roll references AFTER the bar completes
+    if (!this.locked) {
+      this.refHi = Math.max(this.refHi === -Infinity ? c.high : Math.max(this.refHi, c.high), c.high);
+      this.refLo = Math.min(this.refLo === Infinity ? c.low : Math.min(this.refLo, c.low), c.low);
+    }
+    this.prevClose = c.close;
+  }
+
+  private lowerStreak = 0;
+  private higherStreak = 0;
+}
+
+// Batch helper (offline/chart): replay each day through a fresh engine and
+// emit start→declared-end segments. IDENTICAL path to live processing.
+export function computeFirstSwingDeclared(
   candles: FlowCandle[],
   opts: FirstSwingOpts = {},
 ): FlowSegment[] {
-  const minTime = opts.minTime ?? "09:30";
-  const minPct = opts.minRangePct ?? 0.12;
-  // minBreaks reserved for future: for now 0 = no break gate
   const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
   candles.forEach((c, gIdx) => {
     const d = c.date.slice(0, 10);
     if (!byDay.has(d)) byDay.set(d, []);
     byDay.get(d)!.push({ c, gIdx });
   });
+
   const segs: FlowSegment[] = [];
   byDay.forEach((items) => {
-    const pivots = walkDay(items);
-    const sealed = pivots.filter((p) => p.sealed);
-    if (sealed.length < 2) return;
-    const p0 = sealed[0];
-    for (let i = 1; i < sealed.length; i++) {
-      const p1 = sealed[i];
-      if (p1.time < minTime) continue;
-      const rangePct = (Math.abs(p1.px - p0.px) / p0.px) * 100;
-      if (rangePct < minPct) continue;
-      segs.push({
-        dir: p1.px >= p0.px ? "B" : "S",
-        startIdx: p0.idx,
-        startPx: p0.px,
-        endIdx: p1.idx,
-        endPx: p1.px,
-      });
-      break; // only first qualifying swing per day
-    }
+    const eng = new FirstSwingEngine(opts.mPoints ?? 20, opts.twoClose ?? true);
+    for (const it of items) eng.processBar(it.c, it.gIdx);
+    if (!(eng.declared && eng.startIdx >= 0)) return;
+    segs.push({
+      dir: eng.dir === "up" ? "B" : "S",
+      startIdx: eng.startIdx,
+      startPx: eng.startPx,
+      endIdx: eng.endIdx,
+      endPx: eng.endPx,
+    });
   });
   return segs;
 }

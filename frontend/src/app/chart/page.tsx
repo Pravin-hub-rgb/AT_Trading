@@ -5,7 +5,7 @@ import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
-import { computeFlowLine, computeAlgoFlowLine, computeFirstSwing } from "@/lib/flowline";
+import { computeFlowLine, computeAlgoFlowLine, computeFirstSwingDeclared } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
@@ -318,7 +318,7 @@ export default function ChartPage() {
         envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
         algoFirstSwing:
           fsOn && iv === "5min" && d.length >= 2
-            ? computeFirstSwing(d, { minTime: "09:30", minRangePct: fsMinPct })
+            ? computeFirstSwingDeclared(d, { mPoints: Math.round(fsMinPct * 100), twoClose: true })
             : null,
         manualFirstSwing: iv === "5min" && fsOn ? fsMarks : null,
       };
