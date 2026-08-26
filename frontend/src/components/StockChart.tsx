@@ -703,6 +703,19 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
     prim.setSegs(fsSegsFromMarks(candles, manualFirstSwing));
   }, [manualFirstSwing, candles, intraday]);
 
+  // ── overlay: First-Swing ALGO candidate (cyan) — declared swings only ──
+  useEffect(() => {
+    const ser = seriesRef.current;
+    if (!ser || !intraday || !algoFirstSwing || algoFirstSwing.length === 0) return;
+    const prim = new FlowLinePrimitive(ser, algoFirstSwing, candles.length - 1, "#22d3ee", 2);
+    ser.attachPrimitive(prim);
+    return () => {
+      try {
+        ser.detachPrimitive(prim);
+      } catch {}
+    };
+  }, [algoFirstSwing, intraday, candles]);
+
   // ── interaction: FS draw-mode clicks + draggable endpoint handles ──
   // Lives on its own effect: toggling Draw never rebuilds the chart either.
   useEffect(() => {
