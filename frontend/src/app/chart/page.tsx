@@ -685,6 +685,7 @@ export default function ChartPage() {
             envelope={overlaysA.envelope}
             manualFirstSwing={overlaysA.manualFirstSwing}
             algoFirstSwing={overlaysA.algoFirstSwing}
+            fsMarkers={overlaysA.fsMarkers}
             drawMode={fsDraw && !dual && (interval === "5min" || interval === "1min")}
             onSwingDraw={handleSwingDraw}
             onDrawStatus={handleDrawStatus}
@@ -734,6 +735,7 @@ export default function ChartPage() {
               envelope={overlaysB.envelope}
               manualFirstSwing={overlaysB.manualFirstSwing}
               algoFirstSwing={overlaysB.algoFirstSwing}
+            fsMarkers={overlaysB.fsMarkers}
               onHoverTime={onHoverB}
               height={620}
             />
