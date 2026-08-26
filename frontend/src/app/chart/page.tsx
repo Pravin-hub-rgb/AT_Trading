@@ -32,8 +32,6 @@ const DOTS_KEY = "chart_hhll_dots";
 const FLOW_KEY = "chart_flow_line";
 const ENV_KEY = "chart_envelope_on";
 const FS_KEY = "chart_first_swing_on";
-const FS_MPTS_KEY = "chart_fs_gap_v2";
-const FS_MPTS_DEFAULT = 15;
 const SWING_N_DEFAULT = 12;
 
 function clampSwingN(v: number): number {
@@ -93,7 +91,6 @@ export default function ChartPage() {
   const [fsDraw, setFsDraw] = useState(false);
   const [fsMarks, setFsMarks] = useState<Record<string, FsDayMark>>({});
   const [fsDrawStatus, setFsDrawStatus] = useState<string | null>(null);
-  const [fsMinPts, setFsMinPts] = useState(FS_MPTS_DEFAULT);
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -117,8 +114,6 @@ export default function ChartPage() {
       setFlowOn(window.localStorage.getItem(FLOW_KEY) !== "0");
       setEnvOn(window.localStorage.getItem(ENV_KEY) === "1");
       setFsOn(window.localStorage.getItem(FS_KEY) === "1");
-      const ptsRaw = window.localStorage.getItem(FS_MPTS_KEY);
-      if (ptsRaw && Number.isFinite(Number(ptsRaw))) setFsMinPts(Math.max(0, Number(ptsRaw)));
       setDual(window.localStorage.getItem(LAYOUT_KEY) === "2");
       const savedIvB = window.localStorage.getItem(INTERVAL_B_KEY);
       if (savedIvB === "daily" || savedIvB === "5min" || savedIvB === "1min") setIntervalB(savedIvB);
@@ -322,14 +317,12 @@ export default function ChartPage() {
                 zonePct: 25,
                 armBars: 10,
                 armRangePts: 80,
-                confirmGapPts: fsMinPts,
-                closeConfirm: true,
               }).map((r) => ({ ...r.seg, invalid: r.invalid }))
             : null,
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },
-    [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsMinPts, fsMarks],
+    [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsMarks],
   );
 
   const overlaysA = useMemo(() => buildPaneOverlays(interval, data), [buildPaneOverlays, interval, data]);
@@ -373,11 +366,7 @@ export default function ChartPage() {
 
   const handleDrawStatus = useCallback((s: string | null) => setFsDrawStatus(s), []);
 
-  const changeFsMinPts = (v: number) => {
-    const clamped = Number.isFinite(v) ? Math.max(0, Math.round(v)) : FS_MPTS_DEFAULT;
-    setFsMinPts(clamped);
-    window.localStorage.setItem(FS_MPTS_KEY, String(clamped));
-  };
+
 
   const changeInterval = (iv: ChartInterval) => {
     window.localStorage.setItem(STORAGE_KEY, iv);
@@ -571,18 +560,6 @@ export default function ChartPage() {
                 />
                 Draw
               </button>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-[#8b949e]">Gap</span>
-                <input
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  value={fsMinPts}
-                  onChange={(e) => changeFsMinPts(Number(e.target.value))}
-                  className="w-16 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#22d3ee]"
-                  title="First-swing minimum range (% of seed price) for the algo candidate"
-                />
-              </div>
             </>
           )}
 

@@ -800,8 +800,6 @@ export interface FsV2Opts {
   zonePct?: number; // deep-zone % of range (default 25)
   armBars?: number; // min bars before zone rules arm (default 5)
   armRangePts?: number; // min range pts before zone arms (default 20)
-  confirmGapPts?: number; // final-pivot must sit ≥ this far beyond cand (default 0)
-  closeConfirm?: boolean; // require CLOSE through the level, not just a wick
 }
 
 interface FsLevel {
@@ -975,12 +973,10 @@ export class FsV2Engine {
           if (px < eLoLvl) {
             this.locked = true;
             this.setCand(this.eLo);
-          } else if (this.stage < 2 && !this.closeConfirm) {
-            // invalidation: opposite chop-high breaks before any E-break
-            // (SAME quality bar as confirm: gap beyond candidate)
-            const hit = this.normalHighs.find(
-              (l) => l.px >= this.candPx + this.confirmGap && px > l.px,
-            );
+          } else if (this.convertedByZone && this.startIdx >= 0) {
+            // invalidation: reversal(zone)-established day dies if an opposite
+            // fresh chop-high breaks BEFORE the E-break lock arrives
+            const hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
             if (hit) {
               this.invalidated = true;
               return;
@@ -991,10 +987,8 @@ export class FsV2Engine {
           if (px > eHiLvl) {
             this.locked = true;
             this.setCand(this.eHi);
-          } else if (this.stage < 2 && !this.closeConfirm) {
-            const hit = this.normalLows.find(
-              (l) => l.px <= this.candPx - this.confirmGap && px < l.px,
-            );
+          } else if (this.convertedByZone && this.startIdx >= 0) {
+            const hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
             if (hit) {
               this.invalidated = true;
               return;
@@ -1003,63 +997,27 @@ export class FsV2Engine {
         }
       }
 
-      // final confirmation: normal OPPOSITE pivot break (stage ≥ 2 OR locked)
-      // closeConfirm mode is evaluated once on the closed bar (below)
-      if (!this.closeConfirm && (this.stage >= 2 || this.locked) && this.dir) {
+      // final confirmation: ANY FRESH normal OPPOSITE pivot crossed by wick
+      // (stage ≥ 2 OR locked). Fresh = formed AFTER the swing started —
+      // the 19-Aug confirming high was a bounce pivot born mid-move,
+      // never a stale pre-move level.
+      if ((this.stage >= 2 || this.locked) && this.dir && this.startIdx >= 0) {
         if (this.dir === "down") {
-          const gap = this.confirmGap;
-          const hit = this.normalHighs.find((l) => l.px >= this.candPx + gap && px > l.px);
+          const hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
           if (hit) {
             this.confirm(gIdx, t);
             return;
           }
         } else {
-          const gap = this.confirmGap;
-          const hit = this.normalLows.find((l) => l.px <= this.candPx - gap && px < l.px);
+          const hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
           if (hit) {
             this.confirm(gIdx, t);
             return;
           }
-        }
-      }
-    }
-
-    // close-based final confirmation
-    if (this.closeConfirm && (this.stage >= 2 || this.locked) && this.dir && !this.invalidated) {
-      if (this.dir === "down") {
-        const gap = this.confirmGap;
-        const hit = this.normalHighs.find((l) => l.px >= this.candPx + gap && c.close > l.px);
-        if (hit) {
-          this.confirm(gIdx, t);
-          return;
-        }
-      } else {
-        const gap = this.confirmGap;
-        const hit = this.normalLows.find((l) => l.px <= this.candPx - gap && c.close < l.px);
-        if (hit) {
-          this.confirm(gIdx, t);
-          return;
-        }
-      }
-      // close-mode invalidation: opposite chop level closed-through pre-lock
-      if (!this.locked && this.stage < 2) {
-        if (this.dir === "down") {
-          const hit = this.normalHighs.find(
-            (l) => l.px >= this.candPx + this.confirmGap && c.close > l.px,
-          );
-          if (hit) this.invalidated = true;
-        } else {
-          const hit = this.normalLows.find(
-            (l) => l.px <= this.candPx - this.confirmGap && c.close < l.px,
-          );
-          if (hit) this.invalidated = true;
         }
       }
     }
   }
-
-  private get confirmGap() { return this.opts.confirmGapPts ?? 0; }
-  private get closeConfirm() { return this.opts.closeConfirm ?? false; }
 
   private initiate(dir: "up" | "down", t: string) {
     this.dir = dir;

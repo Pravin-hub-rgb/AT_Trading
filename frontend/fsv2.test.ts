@@ -27,20 +27,20 @@ for (const c of cs) {
   daysMap.get(d)!.push(c);
 }
 
-function runDay(bars: typeof cs, zonePct = 25, armRange = 80, armBarsN = 10, gap = 15, closeC = true) {
-  const eng = new FsV2Engine({ zonePct, armRangePts: armRange, armBars: armBarsN, confirmGapPts: gap, closeConfirm: closeC });
-  for (const c of bars) eng.processBar(c, 0);
+function runDay(bars: typeof cs, zonePct = 25, armRange = 80, armBarsN = 10) {
+  const eng = new FsV2Engine({ zonePct, armRangePts: armRange, armBars: armBarsN });
+  bars.forEach((c, i) => eng.processBar(c, i));
   return eng;
 }
 
 console.log(`=== FS v2 SWEEP (GT=${gtDays.length} days, 1-min replay) ===`);
 console.log(`zone% | match | med-lag | declare-med-time`);
-let bestZ = 25, bestAR = 60, bestAB = 10, bestG = 0, bestCC = false, bestMatch = -1;
-for (const [z, ar, ab, gp, cc] of [[25,80,10,0,false],[25,80,10,8,false],[25,80,10,8,true],[25,80,10,15,false],[25,80,10,15,true],[30,80,10,8,false],[30,80,10,8,true],[30,80,10,15,true],[35,100,10,8,false],[35,100,10,8,true]] as const) {
+let bestZ = 25, bestAR = 60, bestAB = 10, bestMatch = -1;
+for (const [z, ar, ab] of [[20,60,5],[25,60,5],[25,80,5],[25,80,10],[30,80,10],[30,100,10],[35,120,10]] as const) {
   let match = 0; const lags: number[] = []; const dtimes: number[] = [];
   for (const g of gtDays) {
     const bars = daysMap.get(g.day); if (!bars || bars.length < 50) continue;
-    const eng = runDay(bars, z, ar, ab, gp, cc);
+    const eng = runDay(bars, z, ar, ab);
     if (eng.invalidated) continue;
     if (!eng.declared || eng.dir !== g.dir) continue;
     if (Math.abs(tm(eng.endTime) - tm(g.eTime)) <= 5 && Math.abs(eng.endPx - g.ePx) <= 8) {
@@ -56,7 +56,7 @@ for (const [z, ar, ab, gp, cc] of [[25,80,10,0,false],[25,80,10,8,false],[25,80,
   const medLag = sorted.length ? String(sorted[Math.floor(sorted.length / 2)]) : "-";
   const medT = dts.length ? `${String(Math.floor(dts[Math.floor(dts.length / 2)] / 60)).padStart(2, "0")}:${String(dts[Math.floor(dts.length / 2)] % 60).padStart(2, "0")}` : "-";
   console.log(`${String(z).padStart(4)} | ${String(match).padStart(2)}/${gtDays.length} | ${medLag.padStart(4)} | ${medT}`);
-  if (match > bestMatch) { bestMatch = match; bestZ = z; bestAR = ar; bestAB = ab; bestG = gp; bestCC = cc; }
+  if (match > bestMatch) { bestMatch = match; bestZ = z; bestAR = ar; bestAB = ab; }
 }
 console.log(`\nBEST ZONE=${bestZ}% -> ${bestMatch}/${gtDays.length}`);
 
@@ -65,7 +65,7 @@ console.log(`\n=== DETAIL (z=${bestZ}) ===`);
 let dirWrong = 0, noDecl = 0, lateMiss = 0;
 for (const g of gtDays) {
   const bars = daysMap.get(g.day); if (!bars || bars.length < 50) continue;
-  const eng = runDay(bars, bestZ, bestAR, bestAB, bestG, bestCC);
+  const eng = runDay(bars, bestZ, bestAR, bestAB);
   if (!eng.declared) { noDecl++; console.log(`${g.day} ${g.dir} gt=${g.eTime} | NOT-DECLARED`); continue; }
   const okDir = eng.dir === g.dir;
   if (!okDir) dirWrong++;
@@ -82,7 +82,7 @@ let total = 0, decl = 0; const times: number[] = [];
 for (const [, bars] of daysMap) {
   if (bars.length < 100) continue;
   total++;
-  const eng = runDay(bars, bestZ, bestAR, bestAB, bestG, bestCC);
+  const eng = runDay(bars, bestZ, bestAR, bestAB);
   if (eng.declared) { decl++; times.push(tm(eng.confirmedAtTime)); }
 }
 times.sort((a, b) => a - b);
