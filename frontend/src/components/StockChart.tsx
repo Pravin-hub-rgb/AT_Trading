@@ -8,6 +8,7 @@ import {
   CandlestickSeries,
   TickMarkType,
   createSeriesMarkers,
+  type ISeriesMarkersPluginApi,
   type Logical,
   type Time,
   type SeriesMarker,
@@ -868,7 +869,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
   useEffect(() => {
     const ser = seriesRef.current;
     if (!ser || !intraday || !algoFirstSwing || algoFirstSwing.length === 0) return;
-    let mkApi: ReturnType<typeof createSeriesMarkers> | null = null;
+    let mkApi: ISeriesMarkersPluginApi<Time> | null = null;
     if (fsMarkers && fsMarkers.length > 0) {
       const ms: SeriesMarker<Time>[] = [];
       for (const mk of fsMarkers) {

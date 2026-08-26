@@ -24,3 +24,5 @@ for (let i = 0; i < Math.min(bars.length, 240); i++) {
     break;
   }
 }
+
+console.log('POOLS', JSON.stringify((eng as any).debugPools?.()));

@@ -834,6 +834,7 @@ export class FsV2Engine {
   endTime = ""; endIdx = -1; endPx = NaN; confirmedAtTime = "";
   confirmedAtIdx = -1;
   convertedByZone = false;
+  lastConfirmHit: { pool: string; px: number; idx: number; time: string } | null = null;
 
   // ── v3 fast-path (single-E-break lock) ──
   // After direction is set, ONE live cross of the current E-pivot level in
@@ -1021,7 +1022,8 @@ export class FsV2Engine {
         }
       }
 
-      // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
+
+  // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
       if (this.dir && !this.locked) {
         if (this.dir === "down") {
           // lock: live cross BELOW the current E-LOW pivot level
@@ -1061,18 +1063,26 @@ export class FsV2Engine {
       // never a stale pre-move level.
       if ((this.stage >= 2 || this.locked) && this.dir && this.startIdx >= 0) {
         if (this.dir === "down") {
-          const hit = this.normalHighs
-            .concat(this.microHighs)
-            .find((l) => l.idx > this.startIdx && px > l.px);
+          let hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
+          let pool = "normal";
+          if (!hit) {
+            hit = this.microHighs.find((l) => l.idx > this.startIdx && px > l.px);
+            pool = "micro";
+          }
           if (hit) {
+            this.lastConfirmHit = { pool, px: hit.px, idx: hit.idx, time: hit.time };
             this.confirm(gIdx, t);
             return;
           }
         } else {
-          const hit = this.normalLows
-            .concat(this.microLows)
-            .find((l) => l.idx > this.startIdx && px < l.px);
+          let hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
+          let pool = "normal";
+          if (!hit) {
+            hit = this.microLows.find((l) => l.idx > this.startIdx && px < l.px);
+            pool = "micro";
+          }
           if (hit) {
+            this.lastConfirmHit = { pool, px: hit.px, idx: hit.idx, time: hit.time };
             this.confirm(gIdx, t);
             return;
           }
@@ -1099,6 +1109,17 @@ export class FsV2Engine {
     } else {
       this.sustainStreak = 0;
     }
+  }
+
+  debugPools() {
+    return {
+      startIdx: this.startIdx,
+      startPx: this.startPx,
+      lockedLevelPx: this.lockedLevelPx,
+      lastConfirmHit: this.lastConfirmHit,
+      normalHighs: this.normalHighs.map((l) => l.time + "@" + l.px.toFixed(2)),
+      microHighs: this.microHighs.map((l) => l.time + "@" + l.px.toFixed(2)),
+    };
   }
 
   private initiate(dir: "up" | "down", t: string) {
