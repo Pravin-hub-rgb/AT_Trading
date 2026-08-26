@@ -5,7 +5,7 @@ import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
-import { computeFlowLine, computeAlgoFlowLine, computeFsV2Results } from "@/lib/flowline";
+import { computeFlowLine, computeAlgoFlowLine, computeFsV2Results, type FlowSegment } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
@@ -316,21 +316,20 @@ export default function ChartPage() {
         flowLine: flowOn && isIntraday && d.length >= 2 ? computeFlowLine(d) : null,
         algoFlowLine: flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
         envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
-        algoFirstSwing:
-          fsOn && iv === "1min" && d.length >= 2
-            ? (() => {
-                const res = computeFsV2Results(d, {
-                  zonePct: fsRevPct,
-                  simpleMode: true,
-                  armBars: 5,
-                  armRangePts: 20,
-                });
-                return {
-                  algoFirstSwing: res.map((r) => ({ ...r.seg, invalid: r.invalid })),
-                  fsMarkers: res.filter((r) => r.confIdx >= 0).map((r) => ({ idx: r.confIdx, invalid: r.invalid })),
-                };
-              })()
-            : { algoFirstSwing: null, fsMarkers: null },
+        ...(fsOn && iv === "1min" && d.length >= 2
+          ? (() => {
+              const res = computeFsV2Results(d, {
+                zonePct: fsRevPct,
+                simpleMode: true,
+                armBars: 5,
+                armRangePts: 20,
+              });
+              return {
+                algoFirstSwing: res.map((r) => ({ ...r.seg, invalid: r.invalid })),
+                fsMarkers: res.filter((r) => r.confIdx >= 0).map((r) => ({ idx: r.confIdx, invalid: r.invalid })),
+              };
+            })()
+          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean }[] | null }),
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },

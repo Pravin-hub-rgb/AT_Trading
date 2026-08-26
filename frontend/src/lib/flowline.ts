@@ -676,8 +676,6 @@ export class FirstSwingEngine {
     const t = c.date.slice(11, 16);
     this.barsSeen++;
 
-    this.histH.push(c.high);
-    this.histL.push(c.low);
 
     const halves: [number, boolean][] = green
       ? [[c.low, true], [c.high, false]]
