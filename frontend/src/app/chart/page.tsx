@@ -5,7 +5,7 @@ import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
-import { computeFlowLine, computeAlgoFlowLine, computeFirstSwingDeclared } from "@/lib/flowline";
+import { computeFlowLine, computeAlgoFlowLine, computeFirstSwingDeclared, computeFsV2Declared } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
@@ -317,10 +317,16 @@ export default function ChartPage() {
         algoFlowLine: flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
         envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
         algoFirstSwing:
-          fsOn && iv === "5min" && d.length >= 2
-            ? computeFirstSwingDeclared(d, { mPoints: fsMinPts, twoClose: true })
+          fsOn && iv === "1min" && d.length >= 2
+            ? computeFsV2Declared(d, {
+                zonePct: 25,
+                armBars: 10,
+                armRangePts: 80,
+                confirmGapPts: fsMinPts,
+                closeConfirm: true,
+              })
             : null,
-        manualFirstSwing: iv === "5min" && fsOn ? fsMarks : null,
+        manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },
     [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsMinPts, fsMarks],
@@ -532,7 +538,7 @@ export default function ChartPage() {
               });
             }}
             className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
-              fsOn && interval === "5min"
+              fsOn && (interval === "5min" || interval === "1min")
                 ? "border-[#facc15] text-[#e6edf3]"
                 : "border-[#30363d] text-[#8b949e]"
             }`}
@@ -546,7 +552,7 @@ export default function ChartPage() {
               : ""}
           </button>
 
-          {fsOn && interval === "5min" && (
+          {fsOn && (interval === "5min" || interval === "1min") && (
             <>
               <button
                 onClick={() => setFsDraw((v) => !v)}
@@ -566,7 +572,7 @@ export default function ChartPage() {
                 Draw
               </button>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs text-[#8b949e]">M pts</span>
+                <span className="text-xs text-[#8b949e]">Gap</span>
                 <input
                   type="number"
                   min={0}
@@ -623,7 +629,7 @@ export default function ChartPage() {
           Chart A: {error}
         </div>
       )}
-      {fsDraw && !dual && interval === "5min" && (
+      {fsDraw && !dual && (interval === "5min" || interval === "1min") && (
         <div className="flex items-center gap-2 rounded-md border border-[#facc15]/40 bg-[#facc15]/5 px-4 py-2 text-sm">
           <span className="text-[#facc15]">
             {fsDrawStatus ?? "Draw mode: click START candle, then END candle (same day). Auto-saves."}
@@ -673,7 +679,7 @@ export default function ChartPage() {
             envelope={overlaysA.envelope}
             manualFirstSwing={overlaysA.manualFirstSwing}
             algoFirstSwing={overlaysA.algoFirstSwing}
-            drawMode={fsDraw && !dual && interval === "5min"}
+            drawMode={fsDraw && !dual && (interval === "5min" || interval === "1min")}
             onSwingDraw={handleSwingDraw}
             onDrawStatus={handleDrawStatus}
             onHoverTime={onHoverA}

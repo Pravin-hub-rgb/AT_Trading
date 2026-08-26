@@ -179,64 +179,352 @@ function barSteps(c: FlowCandle): Step[] {
     : [{ side: "high", px: c.high }, { side: "low", px: c.low }];
 }
 
-function walkDay(items: { c: FlowCandle; gIdx: number }[]): AlgoPivot[] {
-  const n = items.length;
-  if (n === 0) return [];
-
-  const pivots: AlgoPivot[] = [];
-  const tOf = (i: number) => items[i].c.date.slice(11, 16);
-
-  // ---- seed from first bar's colour ----
-  const firstGreen = items[0].c.close >= items[0].c.open;
-  pivots.push({
-    idx: items[0].gIdx,
-    time: tOf(0),
-    kind: firstGreen ? "L" : "H",
-    px: firstGreen ? items[0].c.low : items[0].c.high,
-    sealed: true,
-  });
-  let dir: "up" | "down" = firstGreen ? "up" : "down";
-  let stampIdx = items[0].gIdx;
-  let stampK = 0;
-  let stampT = tOf(0);
-  let stampPx = firstGreen ? items[0].c.high : items[0].c.low;
-
-  let prevHigh = items[0].c.high;
-  let prevLow = items[0].c.low;
-
+// Steppable walker — EXACT state-machine translation of the original
+// batch walkDay(): same seeds, same pending/onion/band logic, same seals.
+// Contract: feed CLOSED bars via processBar(); each call returns the pivots
+// SEALED during that bar. finalize() emits the trailing open swing.
+export class WalkerEngine {
+  private k = -1;
+  private dir: "up" | "down" = "up";
+  private stampIdx = -1;
+  private stampK = -1;
+  private stampT = "";
+  private stampPx = NaN;
+  private prevHigh = NaN;
+  private prevLow = NaN;
   // Marker band = px of the most recently PUSHED H pivot and L pivot.
   // Used to decide insider+volatile handling (skip inside / mark outside).
   // One-sided until the opposite kind actually prints its first marker.
-  let bandLow: number | null = null;
-  let bandHigh: number | null = null;
+  private bandLow: number | null = null;
+  private bandHigh: number | null = null;
+  private pending: WPending | null = null;
+  // Running extremes since the last pushed pivot of each kind. These are the
+  // trader's "real" swing marks: a confirming insider may sit inside an
+  // extreme the leg already printed, and the LEG's extreme wins.
+  private hiPx: number | null = null;
+  private hiIdx = -1;
+  private hiK = -1;
+  private hiT = "";
+  private loPx: number | null = null;
+  private loK = -1;
+  private loIdx = -1;
+  private loT = "";
+  private barOut: AlgoPivot[] = [];
 
-  type Pending = {
-    k: number;
-    kind: "H" | "L";
-    idx: number;
-    time: string;
-    px: number; // far-side extreme (current STACK's far edge)
-    near: number; // near-side extreme (current STACK's near edge)
-    // Onion peel: alternating zigzag points contributed by each stack layer
-    // (layer 1 = FAR edge, layer 2 = NEAR edge, layer 3 = FAR again...),
-    // flushed chronologically when the stack finally resolves.
-    inner: { idx: number; k: number; time: string; kind: "H" | "L"; px: number }[];
-  };
-  let pending: Pending | null = null;
+  /** Sealed pivots emitted during THIS bar (usually empty). */
+  processBar(c: FlowCandle, gIdx: number): AlgoPivot[] {
+    this.barOut = [];
+    this.k++;
+    const k = this.k;
+    const t = c.date.slice(11, 16);
 
-  const flushInner = (p: Pending) => {
-    for (const ip of p.inner) {
-      pivots.push({ idx: ip.idx, time: ip.time, kind: ip.kind, px: ip.px, sealed: true });
-      trackBand(ip.kind, ip.px);
+    if (k === 0) {
+      // ---- seed from first bar's colour ----
+      const firstGreen = c.close >= c.open;
+      this.emit({
+        idx: gIdx,
+        time: t,
+        kind: firstGreen ? "L" : "H",
+        px: firstGreen ? c.low : c.high,
+        sealed: true,
+      });
+      this.dir = firstGreen ? "up" : "down";
+      this.stampIdx = gIdx;
+      this.stampK = 0;
+      this.stampT = t;
+      this.stampPx = firstGreen ? c.high : c.low;
+      this.prevHigh = c.high;
+      this.prevLow = c.low;
+      if (firstGreen) {
+        this.bandLow = c.low;
+        this.loPx = null;
+        this.hiPx = c.high; this.hiIdx = gIdx; this.hiK = 0; this.hiT = t;
+        this.hiCloseGreen = true;
+      } else {
+        this.bandHigh = c.high;
+        this.hiPx = null;
+        this.loPx = c.low; this.loIdx = gIdx; this.loK = 0; this.loT = t;
+        this.loCloseRed = true;
+      }
+      cov(firstGreen ? "seed:green" : "seed:red");
+      return this.barOut;
     }
-  };
+
+    let flippedThisBar = false;
+    let skipSteps = false;
+
+    // ---- pending resolution BEFORE this bar's steps ----
+    // Outside bar (breaks BOTH sides) => insider SKIPPED, leg takes the
+    // bar's ending direction. Single-side break => confirm/skip normally.
+    const pend = this.pending;
+    if (pend) {
+      const pk: "H" | "L" = pend.kind;
+      const stackHi = Math.max(pend.px, pend.near);
+      const stackLo = Math.min(pend.px, pend.near);
+
+      // ---- ONION RULE: nested insider absorbs into the stack ----
+      // Strictly inside the current stack => consolidation continues. Every
+      // stack layer contributes ONE alternating zigzag point: layer 1 its
+      // FAR edge, layer 2 its NEAR edge, layer 3 FAR again... Parity of the
+      // peel buffer decides which side this layer contributes. Append this
+      // layer's record, shrink stack to this bar.
+      if (c.high < stackHi && c.low > stackLo) {
+        // ROLE-BASED (see closeStack) — pendPx = far edge BY DEFINITION.
+        const wantFar = pend.inner.length % 2 === 0;
+        cov((wantFar ? "onion:FAR-layer:pk" : "onion:NEAR-layer:pk") + pk);
+        pend.inner.push(
+          wantFar
+            ? { idx: pend.idx, k: pend.k, time: pend.time, kind: pk, px: pend.px }
+            : { idx: pend.idx, k: pend.k, time: pend.time,
+                kind: pk === "H" ? "L" : "H", px: pend.near },
+        );
+        this.pending = {
+          kind: pk,
+          idx: gIdx,
+          k,
+          time: t,
+          px: pk === "H" ? c.high : c.low,
+          near: pk === "H" ? c.low : c.high,
+          inner: pend.inner,
+        };
+        flippedThisBar = true;
+        skipSteps = true;
+      } else {
+        // STRICT breaks: an exact touch/equal-print does NOT count as a break.
+        const confirmHit = pk === "H" ? c.low < pend.near : c.high > pend.near;
+        const skipHit = pk === "H" ? c.high > pend.px : c.low < pend.px;
+        if (confirmHit && !skipHit) {
+          cov("confirm:pk" + pk + (pend.inner.length > 0 ? ":peeled" : ""));
+          // CONFIRM — seal pre-insider swing; a PEELED stack emits its
+          // remaining alternating layers (continuation keeps the leg);
+          // a plain single insider prints its far edge (+override).
+          this.pushStamp();
+          const p = pend;
+          const hadPeel = p.inner.length > 0;
+          const lastRec = this.closeStack(p);
+          if (hadPeel && lastRec) {
+            this.stampIdx = lastRec.idx;
+            this.stampK = lastRec.k;
+            this.stampT = lastRec.time;
+            this.stampPx = lastRec.px;
+          } else {
+            let pIdx = p.idx;
+            let pT = p.time;
+            let pPx = p.px;
+            let pK = p.k;
+            if (pk === "H" && this.hiPx !== null && this.hiPx > pPx) {
+              // leg already printed a higher high AFTER the reference marker
+              const hiAfter = this.hiK > this.stampK || (this.hiK === this.stampK && this.hiCloseGreen);
+              if (hiAfter) {
+                pIdx = this.hiIdx;
+                pT = this.hiT;
+                pPx = this.hiPx;
+                pK = this.hiK;
+              }
+            }
+            if (pk === "L" && this.loPx !== null && this.loPx < pPx) {
+              const loAfter = this.loK > this.stampK || (this.loK === this.stampK && this.loCloseRed);
+              if (loAfter) {
+                pIdx = this.loIdx;
+                pT = this.loT;
+                pPx = this.loPx;
+                pK = this.loK;
+              }
+            }
+            this.emit({ idx: pIdx, time: pT, kind: pk, px: pPx, sealed: true });
+            this.trackBand(pk, pPx);
+            this.stampIdx = pIdx;
+            this.stampK = pK;
+            this.stampT = pT;
+            this.stampPx = pPx;
+          }
+          this.pending = null;
+        } else if (skipHit && !confirmHit) {
+          cov("skip1:pk" + pk);
+          // SINGLE-SIDE far break -> reversal flip. Peeled stacks emit their
+          // remaining alternating layers before the flip; single insiders
+          // stay print-free (legacy).
+          const p0 = pend;
+          this.pending = null;
+          this.pushStamp();
+          this.closeStack(p0);
+          this.dir = pk === "H" ? "up" : "down";
+          this.stampIdx = gIdx;
+          this.stampK = k;
+          this.stampT = t;
+          this.stampPx = pk === "H" ? c.high : c.low;
+          flippedThisBar = true;
+          skipSteps = true;
+        } else if (skipHit) {
+          // DOUBLE-BREAK (volatile candle) — marker-band decides.
+          // Band = [active low marker, active high marker]; the ACTIVE leg's
+          // running stamp IS its side's live marker.
+          const iLo = Math.min(pend.px, pend.near); // stack low
+          const iHi = Math.max(pend.px, pend.near); // stack high
+          const effLo = this.dir === "down" ? this.stampPx : this.bandLow ?? Number.NEGATIVE_INFINITY;
+          const effHi = this.dir === "up" ? this.stampPx : this.bandHigh ?? Number.POSITIVE_INFINITY;
+          const insideBand =
+            iHi <= effHi && iLo >= effLo && c.high <= effHi && c.low >= effLo;
+          if (insideBand) {
+            cov("dbl:insideBand:pk" + pk);
+            // Inside band -> SKIP insider (continuation); line rides to the
+            // volatile bar's extreme. (e.g. 21 Aug 11:00/11:05)
+            this.pending = null;
+            this.pushStamp();
+            this.dir = pk === "H" ? "up" : "down";
+            this.stampIdx = gIdx;
+            this.stampK = k;
+            this.stampT = t;
+            this.stampPx = pk === "H" ? c.high : c.low;
+            skipSteps = true; // bar consumed — its halves already priced in
+          } else {
+            cov("dbl:escape:pk" + pk);
+            // Band ESCAPE -> MARK the stack's far-side extreme (mirrored):
+            //   marker L (pk=H): seal L@stamp -> peel -> H@stack.high, leg down from near
+            //   marker H (pk=L): seal H@stamp -> peel -> L@stack.low, leg up from near
+            // The volatile bar's own halves then play out via normal steps,
+            // producing both the green-volatile and red-volatile chains.
+            const p = pend;
+            this.pending = null;
+            this.pushStamp(); // seal the running stamp (the P-candle marker)
+            const lastRec = this.closeStack(p); // peel layers + final far-edge record
+            if (!lastRec) {
+              // single insider (no peel): legacy direct far-edge print
+              this.emit({ idx: p.idx, time: p.time, kind: pk, px: p.px, sealed: true });
+              this.trackBand(pk, p.px);
+            }
+            this.dir = pk === "H" ? "down" : "up"; // leg heads toward the near side
+            this.stampIdx = p.idx;
+            this.stampK = p.k;
+            this.stampT = p.time;
+            this.stampPx = p.near; // seed at stack's near extreme
+          }
+          flippedThisBar = true;
+        }
+      }
+    }
+
+    for (const step of skipSteps ? [] : barSteps(c)) {
+      if (step.side === "low") {
+        if (this.dir === "down") {
+          if (step.px < this.stampPx) {
+            this.stampIdx = gIdx;
+            this.stampK = k;
+            this.stampT = t;
+            this.stampPx = step.px;
+          }
+        } else if (step.px < this.prevLow) {
+          // up-leg violated -> seal H stamp, flip down (dead pending dies too)
+          this.pending = null;
+          this.pushStamp();
+          this.dir = "down";
+          this.stampIdx = gIdx;
+          this.stampK = k;
+          this.stampT = t;
+          this.stampPx = step.px;
+          flippedThisBar = true;
+        }
+      } else {
+        if (this.dir === "up") {
+          if (step.px > this.stampPx) {
+            this.stampIdx = gIdx;
+            this.stampK = k;
+            this.stampT = t;
+            this.stampPx = step.px;
+          }
+        } else if (step.px > this.prevHigh) {
+          // down-leg violated -> seal L stamp, flip up (dead pending dies too)
+          this.pending = null;
+          this.pushStamp();
+          this.dir = "up";
+          this.stampIdx = gIdx;
+          this.stampK = k;
+          this.stampT = t;
+          this.stampPx = step.px;
+          flippedThisBar = true;
+        }
+      }
+    }
+
+    // ---- inside-candle detection -> pending far-side extreme ----
+    // (checked AFTER this bar resolves: an insider never marks itself;
+    //  the NEXT bar's break decides confirm vs skip)
+    if (!this.pending && !flippedThisBar && c.open !== c.close && c.high <= this.prevHigh && c.low >= this.prevLow) {
+      this.pending = {
+        kind: this.dir === "down" ? "H" : "L",
+        idx: gIdx,
+        k,
+        time: t,
+        px: this.dir === "down" ? c.high : c.low,
+        near: this.dir === "down" ? c.low : c.high,
+        inner: [],
+      };
+    }
+
+    void flippedThisBar;
+
+    // running extremes since each side's last pushed pivot
+    if (this.hiPx === null || c.high > this.hiPx) {
+      this.hiPx = c.high;
+      this.hiIdx = gIdx;
+      this.hiK = k;
+      this.hiT = t;
+      this.hiCloseGreen = c.close >= c.open;
+    }
+    if (this.loPx === null || c.low < this.loPx) {
+      this.loPx = c.low;
+      this.loIdx = gIdx;
+      this.loK = k;
+      this.loT = t;
+      this.loCloseRed = c.close < c.open;
+    }
+
+    this.prevHigh = c.high;
+    this.prevLow = c.low;
+    return this.barOut;
+  }
+
+  /** Trailing open swing (unsealed) — call once after the day ends. */
+  finalize(): AlgoPivot | null {
+    if (this.k < 0) return null;
+    return {
+      idx: this.stampIdx,
+      time: this.stampT,
+      kind: this.dir === "up" ? "H" : "L",
+      px: this.stampPx,
+      sealed: false,
+    };
+  }
+
+  private emit(p: AlgoPivot) {
+    this.barOut.push(p);
+  }
+
+  private trackBand(kind: "H" | "L", px: number) {
+    if (kind === "H") {
+      this.bandHigh = px;
+      this.hiPx = null; // H finalized — highs restart accumulating toward next L
+    } else {
+      this.bandLow = px;
+      this.loPx = null; // L finalized — lows restart accumulating toward next H
+    }
+  }
+
+  private pushStamp() {
+    this.emit({
+      idx: this.stampIdx,
+      time: this.stampT,
+      kind: this.dir === "up" ? "H" : "L",
+      px: this.stampPx,
+      sealed: true,
+    });
+    this.trackBand(this.dir === "up" ? "H" : "L", this.stampPx);
+  }
 
   // Close a resolved stack: append its final alternating layer record (only
   // when the stack actually peeled — single insiders contribute nothing) and
   // flush chronologically. Returns the last flushed record, or null.
-  const closeStack = (
-    p: Pending,
-  ): { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null => {
+  private closeStack(p: WPending): { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null {
     if (p.inner.length === 0) return null;
     // ROLE-BASED edges: pendPx is ALWAYS the far edge, pendNear the near
     // edge — regardless of which is numerically higher. (max/min here was a
@@ -249,300 +537,41 @@ function walkDay(items: { c: FlowCandle; gIdx: number }[]): AlgoPivot[] {
     let last: { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null = null;
     while (p.inner.length > 0) {
       const ip = p.inner.shift()!;
-      pivots.push({ idx: ip.idx, time: ip.time, kind: ip.kind, px: ip.px, sealed: true });
-      trackBand(ip.kind, ip.px);
+      this.emit({ idx: ip.idx, time: ip.time, kind: ip.kind, px: ip.px, sealed: true });
+      this.trackBand(ip.kind, ip.px);
       last = ip;
     }
     return last;
-  };
-
-  const trackBand = (kind: "H" | "L", px: number) => {
-    if (kind === "H") {
-      bandHigh = px;
-      hiPx = null; // H finalized — highs restart accumulating toward next L
-    } else {
-      bandLow = px;
-      loPx = null; // L finalized — lows restart accumulating toward next H
-    }
-  };
-
-  // Running extremes since the last pushed pivot of each kind. These are the
-  // trader's "real" swing marks: a confirming insider may sit inside an
-  // extreme the leg already printed, and the LEG's extreme wins.
-  let hiPx: number | null = null;
-  let hiIdx = -1;
-  let hiK = -1;
-  let hiT = "";
-let loPx: number | null = null;
-  let loK = -1;
-  let loIdx = -1;
-  let loT = "";
-
-  const pushStamp = () => {
-    pivots.push({
-      idx: stampIdx,
-      time: stampT,
-      kind: dir === "up" ? "H" : "L",
-      px: stampPx,
-      sealed: true,
-    });
-    trackBand(dir === "up" ? "H" : "L", stampPx);
-  };
-
-  trackBand(firstGreen ? "L" : "H", firstGreen ? items[0].c.low : items[0].c.high);
-  hiPx = firstGreen ? items[0].c.high : null;
-  if (hiPx !== null) { hiIdx = items[0].gIdx; hiK = 0; hiT = tOf(0); }
-  loPx = firstGreen ? null : items[0].c.low;
-  if (loPx !== null) { loIdx = items[0].gIdx; loK = 0; loT = tOf(0); }
-  cov(firstGreen ? "seed:green" : "seed:red");
-
-  for (let k = 1; k < n; k++) {
-    const c = items[k].c;
-
-    let flippedThisBar = false;
-    let skipSteps = false;
-
-    // ---- pending resolution BEFORE this bar's steps ----
-    // Outside bar (breaks BOTH sides) => insider SKIPPED, leg takes the
-    // bar's ending direction. Single-side break => confirm/skip normally.
-    if (pending) {
-      const pk: "H" | "L" = pending.kind;
-      const stackHi = Math.max(pending.px, pending.near);
-      const stackLo = Math.min(pending.px, pending.near);
-
-      // ---- ONION RULE: nested insider absorbs into the stack ----
-      // Strictly inside the current stack => consolidation continues. Every
-      // stack layer contributes ONE alternating zigzag point: layer 1 its
-      // FAR edge, layer 2 its NEAR edge, layer 3 FAR again... Parity of the
-      // peel buffer decides which side this layer contributes. Append this
-      // layer's record, shrink stack to this bar.
-      if (c.high < stackHi && c.low > stackLo) {
-        // ROLE-BASED (see closeStack) — pendPx = far edge BY DEFINITION.
-        const wantFar = pending.inner.length % 2 === 0;
-        cov((wantFar ? "onion:FAR-layer:pk" : "onion:NEAR-layer:pk") + pk);
-        pending.inner.push(
-          wantFar
-            ? { idx: pending.idx, k: pending.k, time: pending.time, kind: pk, px: pending.px }
-            : { idx: pending.idx, k: pending.k, time: pending.time,
-                kind: pk === "H" ? "L" : "H", px: pending.near },
-        );
-        pending = {
-          kind: pk,
-          idx: items[k].gIdx,
-
-          k,
-          time: tOf(k),
-          px: pk === "H" ? c.high : c.low,
-          near: pk === "H" ? c.low : c.high,
-          inner: pending.inner,
-        };
-        flippedThisBar = true;
-        skipSteps = true;
-      } else {
-        // STRICT breaks: an exact touch/equal-print does NOT count as a break.
-        const confirmHit = pk === "H" ? c.low < pending.near : c.high > pending.near;
-        const skipHit = pk === "H" ? c.high > pending.px : c.low < pending.px;
-        if (confirmHit && !skipHit) {
-          cov("confirm:pk" + pk + (pending.inner.length > 0 ? ":peeled" : ""));
-                    // CONFIRM — seal pre-insider swing; a PEELED stack emits its
-                    // remaining alternating layers (continuation keeps the leg);
-                    // a plain single insider prints its far edge (+override).
-                    pushStamp();
-                    const p = pending;
-                    const hadPeel = p.inner.length > 0;
-                    const lastRec = closeStack(p);
-                    if (hadPeel && lastRec) {
-                        stampIdx = lastRec.idx;
-                        stampK = lastRec.k;
-                        stampT = lastRec.time;
-                        stampPx = lastRec.px;
-                    } else {
-                        let pIdx = p.idx;
-                        let pT = p.time;
-                        let pPx = p.px;
-                        let pK = p.k;
-                        if (pk === "H" && hiPx !== null && hiPx > pPx) {
-                            // leg already printed a higher high AFTER the reference marker
-                            const hiAfter = hiK > stampK || (hiK === stampK && items[hiK].c.close >= items[hiK].c.open);
-                            if (hiAfter) {
-                                pIdx = hiIdx;
-                                pT = hiT;
-                                pPx = hiPx;
-                                pK = hiK;
-                            }
-                        }
-                        if (pk === "L" && loPx !== null && loPx < pPx) {
-                            const loAfter = loK > stampK || (loK === stampK && items[loK].c.close < items[loK].c.open);
-                            if (loAfter) {
-                                pIdx = loIdx;
-                                pT = loT;
-                                pPx = loPx;
-                                pK = loK;
-                            }
-                        }
-                        pivots.push({ idx: pIdx, time: pT, kind: pk, px: pPx, sealed: true });
-                        trackBand(pk, pPx);
-                        stampIdx = pIdx;
-                        stampK = pK;
-                        stampT = pT;
-                        stampPx = pPx;
-                    }
-                    pending = null;
-                } else if (skipHit && !confirmHit) {
-          cov("skip1:pk" + pk);
-          // SINGLE-SIDE far break -> reversal flip. Peeled stacks emit their
-          // remaining alternating layers before the flip; single insiders
-          // stay print-free (legacy).
-          const p0 = pending;
-          const hadPeel = p0.inner.length > 0;
-          pending = null;
-          pushStamp();
-          closeStack(p0);
-          dir = pk === "H" ? "up" : "down";
-          stampIdx = items[k].gIdx;
-          stampK = k;
-          stampT = tOf(k);
-          stampPx = pk === "H" ? c.high : c.low;
-          flippedThisBar = true;
-          skipSteps = true;
-          void hadPeel;
-        } else if (skipHit) {
-        // DOUBLE-BREAK (volatile candle) — marker-band decides.
-        // Band = [active low marker, active high marker]; the ACTIVE leg's
-        // running stamp IS its side's live marker.
-        const iLo = Math.min(pending.px, pending.near); // stack low
-        const iHi = Math.max(pending.px, pending.near); // stack high
-        const effLo = dir === "down" ? stampPx : bandLow ?? Number.NEGATIVE_INFINITY;
-        const effHi = dir === "up" ? stampPx : bandHigh ?? Number.POSITIVE_INFINITY;
-        const insideBand =
-          iHi <= effHi && iLo >= effLo && c.high <= effHi && c.low >= effLo;
-        if (insideBand) {
-            cov("dbl:insideBand:pk" + pk);
-          // Inside band -> SKIP insider (continuation); line rides to the
-          // volatile bar's extreme. (e.g. 21 Aug 11:00/11:05)
-          pending = null;
-          pushStamp();
-          dir = pk === "H" ? "up" : "down";
-          stampIdx = items[k].gIdx;
-          stampK = k;
-          stampT = tOf(k);
-          stampPx = pk === "H" ? c.high : c.low;
-          skipSteps = true; // bar consumed — its halves already priced in
-        } else {
-          cov("dbl:escape:pk" + pk);
-          // Band ESCAPE -> MARK the stack's far-side extreme (mirrored):
-          //   marker L (pk=H): seal L@stamp -> peel -> H@stack.high, leg down from near
-          //   marker H (pk=L): seal H@stamp -> peel -> L@stack.low, leg up from near
-          // The volatile bar's own halves then play out via normal steps,
-          // producing both the green-volatile and red-volatile chains.
-          const p = pending;
-          pending = null;
-          pushStamp(); // seal the running stamp (the P-candle marker)
-          const lastRec = closeStack(p); // peel layers + final far-edge record
-          if (!lastRec) {
-            // single insider (no peel): legacy direct far-edge print
-            pivots.push({ idx: p.idx, time: p.time, kind: pk, px: p.px, sealed: true });
-            trackBand(pk, p.px);
-          }
-          dir = pk === "H" ? "down" : "up"; // leg heads toward the near side
-          stampIdx = p.idx;
-          stampK = p.k;
-          stampT = p.time;
-          stampPx = p.near; // seed at stack's near extreme
-        }
-        flippedThisBar = true;
-      }
-      }
-    }
-
-    for (const step of skipSteps ? [] : barSteps(c)) {
-      if (step.side === "low") {
-        if (dir === "down") {
-          if (step.px < stampPx) {
-            stampIdx = items[k].gIdx;
-          stampK = k;
-            stampT = tOf(k);
-            stampPx = step.px;
-          }
-        } else if (step.px < prevLow) {
-          // up-leg violated -> seal H stamp, flip down (dead pending dies too)
-          pending = null;
-          pushStamp();
-          dir = "down";
-          stampIdx = items[k].gIdx;
-          stampK = k;
-          stampT = tOf(k);
-          stampPx = step.px;
-          flippedThisBar = true;
-        }
-      } else {
-        if (dir === "up") {
-          if (step.px > stampPx) {
-            stampIdx = items[k].gIdx;
-          stampK = k;
-            stampT = tOf(k);
-            stampPx = step.px;
-          }
-        } else if (step.px > prevHigh) {
-          // down-leg violated -> seal L stamp, flip up (dead pending dies too)
-          pending = null;
-          pushStamp();
-          dir = "up";
-          stampIdx = items[k].gIdx;
-          stampK = k;
-          stampT = tOf(k);
-          stampPx = step.px;
-          flippedThisBar = true;
-        }
-      }
-    }
-
-    // ---- inside-candle detection -> pending far-side extreme ----
-    // (checked AFTER this bar resolves: an insider never marks itself;
-    //  the NEXT bar's break decides confirm vs skip)
-    if (!pending && !flippedThisBar && c.open !== c.close && c.high <= prevHigh && c.low >= prevLow) {
-      pending = {
-        kind: dir === "down" ? "H" : "L",
-        idx: items[k].gIdx,
-
-        k,
-        time: tOf(k),
-        px: dir === "down" ? c.high : c.low,
-        near: dir === "down" ? c.low : c.high,
-        inner: [],
-      };
-    }
-
-    void flippedThisBar;
-
-    // running extremes since each side's last pushed pivot
-    if (hiPx === null || c.high > hiPx) {
-      hiPx = c.high;
-      hiIdx = items[k].gIdx;
-      hiK = k;
-      hiT = tOf(k);
-    }
-    if (loPx === null || c.low < loPx) {
-      loPx = c.low;
-      loIdx = items[k].gIdx;
-      loK = k;
-      loT = tOf(k);
-    }
-
-    prevHigh = c.high;
-    prevLow = c.low;
   }
 
-  // trailing open swing (not yet confirmed)
-  pivots.push({
-    idx: stampIdx,
-    time: stampT,
-    kind: dir === "up" ? "H" : "L",
-    px: stampPx,
-    sealed: false,
-  });
+  // Tie-break helpers for the confirm-override: original used
+  // items[hiK].close >= items[hiK].open evaluated against the EXTREME BAR
+  // itself; we capture that bit when the extreme updates.
+  private hiCloseGreen = false;
+  private loCloseRed = false;
+}
 
-  return enforceAlternation(dedupe(pivots));
+type WPending = {
+  k: number;
+  kind: "H" | "L";
+  idx: number;
+  time: string;
+  px: number; // far-side extreme (current STACK's far edge)
+  near: number; // near-side extreme (current STACK's near edge)
+  // Onion peel: alternating zigzag points contributed by each stack layer
+  // (layer 1 = FAR edge, layer 2 = NEAR edge, layer 3 FAR again...),
+  // flushed chronologically when the stack finally resolves.
+  inner: { idx: number; k: number; time: string; kind: "H" | "L"; px: number }[];
+};
+
+function walkDay(items: { c: FlowCandle; gIdx: number }[]): AlgoPivot[] {
+  if (items.length === 0) return [];
+  const eng = new WalkerEngine();
+  const all: AlgoPivot[] = [];
+  for (const it of items) all.push(...eng.processBar(it.c, it.gIdx));
+  const tail = eng.finalize();
+  if (tail) all.push(tail);
+  return enforceAlternation(dedupe(all));
 }
 
 // Zigzag law: cross-candle H,H / L,L can never render. Same-kind neighbours
@@ -738,6 +767,290 @@ export function computeFirstSwingDeclared(
     const eng = new FirstSwingEngine(opts.mPoints ?? 20, opts.twoClose ?? true);
     for (const it of items) eng.processBar(it.c, it.gIdx);
     if (!(eng.declared && eng.startIdx >= 0)) return;
+    segs.push({
+      dir: eng.dir === "up" ? "B" : "S",
+      startIdx: eng.startIdx,
+      startPx: eng.startPx,
+      endIdx: eng.endIdx,
+      endPx: eng.endPx,
+    });
+  });
+  return segs;
+}
+
+// =====================================================================
+// 🟡 FS v2 ENGINE — user-spec stage machine (1-min, walker-driven)
+//
+// Blocks:
+//   E-PIVOTS   session extreme high/low (start: first bar's hi+lo).
+//              New-extreme-PIVOT seals = direction progress events.
+//   STAGES     selling: 2 consecutive new E-LOW pivots (count 1 → 2)
+//              buying : mirror with E-HIGH pivots
+//   ZONE       range-position shortcut: price entering the opposite deep
+//              zone (≤ zonePct% of [E-lo, E-hi]) converts to stage-2 of
+//              that side — works WITHOUT any prior count too.
+//   FINAL      one NORMAL (non-extreme) opposite pivot level broken:
+//              sell-swing confirmed by a normal HIGH break; buy by a
+//              normal LOW break. END stamp = deepest extreme so far.
+// Demoted extremes join the normal pool. First swing per day only.
+// Live-safe: closed bars only; declared end never repaints.
+// =====================================================================
+
+export interface FsV2Opts {
+  zonePct?: number; // deep-zone % of range (default 25)
+  armBars?: number; // min bars before zone rules arm (default 5)
+  armRangePts?: number; // min range pts before zone arms (default 20)
+  confirmGapPts?: number; // final-pivot must sit ≥ this far beyond cand (default 0)
+  closeConfirm?: boolean; // require CLOSE through the level, not just a wick
+}
+
+interface FsLevel {
+  px: number;
+  idx: number;
+  time: string;
+}
+
+export class FsV2Engine {
+  private walker = new WalkerEngine();
+  private barsSeen = 0;
+
+  // live session extremes (path-stamped — freshest candle wins)
+  private eHi: FsLevel = { px: -Infinity, idx: -1, time: "" };
+  private eLo: FsLevel = { px: Infinity, idx: -1, time: "" };
+  // current EXTREME PIVOTS (walker-sealed; init from bar 0)
+  private eHiPivot: FsLevel | null = null;
+  private eLoPivot: FsLevel | null = null;
+
+  // unbroken normal-pivot levels (one-time-use triggers)
+  private normalHighs: FsLevel[] = [];
+  private normalLows: FsLevel[] = [];
+
+  dir: "up" | "down" | null = null;
+  stage = 0;
+  startIdx = -1; startTime = ""; startPx = NaN;
+  candIdx = -1; candTime = ""; candPx = NaN;
+  declared = false;
+  endTime = ""; endIdx = -1; endPx = NaN; confirmedAtTime = "";
+  convertedByZone = false;
+
+  private upStreak = 0;
+  private downStreak = 0;
+  private zoneSide: "up" | "down" | null = null; // last zone-conversion side
+  private touchedUp = false; // price reached upper deep-zone while armed
+  private touchedDown = false;
+
+  constructor(private opts: FsV2Opts = {}) {}
+
+  get zonePct() { return this.opts.zonePct ?? 25; }
+
+  processBar(c: FlowCandle, gIdx: number) {
+    if (this.declared) return;
+    this.barsSeen++;
+    const t = c.date.slice(11, 16);
+    const green = c.close >= c.open;
+
+    if (this.barsSeen === 1) {
+      this.eHi = { px: c.high, idx: gIdx, time: t };
+      this.eLo = { px: c.low, idx: gIdx, time: t };
+      this.eHiPivot = { ...this.eHi };
+      this.eLoPivot = { ...this.eLo };
+    }
+
+    // ---- B) consume walker seals FIRST (records/pools/E-pivots) ----
+    for (const p of this.walker.processBar(c, gIdx)) {
+      if (!p.sealed) continue;
+      if (p.kind === "H") {
+        const cur = this.eHiPivot!;
+        if (p.px > cur.px) {
+          // NEW EXTREME-HIGH PIVOT — demote old to normals, count it
+          this.normalHighs.push(cur);
+          this.eHiPivot = { px: p.px, idx: p.idx, time: p.time };
+          this.upStreak++;
+          this.downStreak = 0;
+          if (this.dir !== "up") {
+            this.initiate("up", t);
+            this.stage = 1;
+            this.convertedByZone = false;
+          } else {
+            this.stage = Math.min(2, Math.max(this.stage, this.upStreak));
+          }
+        } else {
+          this.pushUnique(this.normalHighs, { px: p.px, idx: p.idx, time: p.time });
+        }
+      } else {
+        const cur = this.eLoPivot!;
+        if (p.px < cur.px) {
+          this.normalLows.push(cur);
+          this.eLoPivot = { px: p.px, idx: p.idx, time: p.time };
+          this.downStreak++;
+          this.upStreak = 0;
+          if (this.dir !== "down") {
+            this.initiate("down", t);
+            this.stage = 1;
+            this.convertedByZone = false;
+          } else {
+            this.stage = Math.min(2, Math.max(this.stage, this.downStreak));
+          }
+        } else {
+          this.pushUnique(this.normalLows, { px: p.px, idx: p.idx, time: p.time });
+        }
+      }
+    }
+
+    // ---- A) live path steps: stamps, zone, final trigger ----
+    const armed =
+      this.barsSeen > (this.opts.armBars ?? 5) &&
+      this.eHi.px - this.eLo.px >= (this.opts.armRangePts ?? 20);
+
+    const halves: [number, boolean][] = green
+      ? [[c.low, true], [c.high, false]]
+      : [[c.high, true], [c.low, false]];
+    for (const [px, isLow] of halves) {
+      if (this.declared) break;
+
+      // live extreme stamps
+      if (px > this.eHi.px) {
+        this.eHi = { px, idx: gIdx, time: t };
+        if (this.dir === "up") this.setCand(this.eHi);
+      }
+      if (px < this.eLo.px) {
+        this.eLo = { px, idx: gIdx, time: t };
+        if (this.dir === "down") this.setCand(this.eLo);
+      }
+
+      // zone conversion / re-arm bookkeeping
+      // A deep-zone entry counts as CONVERSION only if price had earlier
+      // touched the OPPOSITE deep zone while armed (true range reversal —
+      // the 18-Aug "shadiest" pattern). Prevents micro-opening-range abuse.
+      const rng = this.eHi.px - this.eLo.px;
+      if (armed && rng > 0) {
+        const pos = ((px - this.eLo.px) / rng) * 100;
+        const z = this.zonePct;
+        if (pos >= 100 - z) this.touchedUp = true;
+        if (pos <= z) this.touchedDown = true;
+
+        if (pos <= z) {
+          const alreadyDone = this.dir === "down" && this.stage >= 2;
+          const wantsChange =
+            !alreadyDone &&
+            this.zoneSide !== "down" &&
+            this.touchedUp; // reversal proof required
+          if (wantsChange) {
+            this.zoneSide = "down";
+            if (this.dir !== "down") this.initiate("down", t);
+            this.stage = Math.max(this.stage, 2);
+            this.convertedByZone = true;
+          }
+        } else if (pos >= 100 - z) {
+          const alreadyDone = this.dir === "up" && this.stage >= 2;
+          const wantsChange =
+            !alreadyDone &&
+            this.zoneSide !== "up" &&
+            this.touchedDown;
+          if (wantsChange) {
+            this.zoneSide = "up";
+            if (this.dir !== "up") this.initiate("up", t);
+            this.stage = Math.max(this.stage, 2);
+            this.convertedByZone = true;
+          }
+        } else {
+          this.zoneSide = null; // middle band re-arms both sides
+        }
+      }
+
+      // final confirmation: normal OPPOSITE pivot break (stage ≥ 2)
+      // closeConfirm mode is evaluated once on the closed bar (below)
+      if (!this.closeConfirm && this.stage >= 2 && this.dir) {
+        if (this.dir === "down") {
+          const gap = this.confirmGap;
+          const hit = this.normalHighs.find((l) => l.px >= this.candPx + gap && px > l.px);
+          if (hit) {
+            this.confirm(gIdx, t);
+            return;
+          }
+        } else {
+          const gap = this.confirmGap;
+          const hit = this.normalLows.find((l) => l.px <= this.candPx - gap && px < l.px);
+          if (hit) {
+            this.confirm(gIdx, t);
+            return;
+          }
+        }
+      }
+    }
+
+    // close-based final confirmation
+    if (this.closeConfirm && this.stage >= 2 && this.dir) {
+      if (this.dir === "down") {
+        const gap = this.confirmGap;
+        const hit = this.normalHighs.find((l) => l.px >= this.candPx + gap && c.close > l.px);
+        if (hit) {
+          this.confirm(gIdx, t);
+          return;
+        }
+      } else {
+        const gap = this.confirmGap;
+        const hit = this.normalLows.find((l) => l.px <= this.candPx - gap && c.close < l.px);
+        if (hit) {
+          this.confirm(gIdx, t);
+          return;
+        }
+      }
+    }
+  }
+
+  private get confirmGap() { return this.opts.confirmGapPts ?? 0; }
+  private get closeConfirm() { return this.opts.closeConfirm ?? false; }
+
+  private initiate(dir: "up" | "down", t: string) {
+    this.dir = dir;
+    // swing start = the counter-extreme at initiation moment
+    const s = dir === "up" ? this.eLo : this.eHi;
+    this.startIdx = s.idx;
+    this.startTime = s.time;
+    this.startPx = s.px;
+    this.setCand(dir === "up" ? this.eHi : this.eLo);
+    void t;
+  }
+
+  private setCand(l: FsLevel) {
+    this.candIdx = l.idx;
+    this.candTime = l.time;
+    this.candPx = l.px;
+  }
+
+  private pushUnique(pool: FsLevel[], l: FsLevel) {
+    if (!pool.some((x) => x.idx === l.idx && x.px === l.px)) pool.push(l);
+  }
+
+  private confirm(gIdx: number, t: string) {
+    this.declared = true;
+    this.endIdx = this.candIdx;
+    this.endTime = this.candTime;
+    this.endPx = this.candPx;
+    this.confirmedAtTime = t;
+    void gIdx;
+  }
+}
+
+// Batch helper: replay each day through FsV2 (identical to live path),
+// emit start→declared-end segments for confirmed swings only.
+export function computeFsV2Declared(
+  candles: FlowCandle[],
+  opts: FsV2Opts = {},
+): FlowSegment[] {
+  const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
+  candles.forEach((c, gIdx) => {
+    const d = c.date.slice(0, 10);
+    if (!byDay.has(d)) byDay.set(d, []);
+    byDay.get(d)!.push({ c, gIdx });
+  });
+
+  const segs: FlowSegment[] = [];
+  byDay.forEach((items) => {
+    const eng = new FsV2Engine(opts);
+    for (const it of items) eng.processBar(it.c, it.gIdx);
+    if (!eng.declared || eng.startIdx < 0) return;
     segs.push({
       dir: eng.dir === "up" ? "B" : "S",
       startIdx: eng.startIdx,
