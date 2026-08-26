@@ -8,7 +8,8 @@ const bars = lines.map((l) => l.split(",")).filter((p) => p.length >= 7 && p[0].
   date: p[0], ts: 0, open: +p[2], high: +p[3], low: +p[4], close: +p[5], volume: 0, oi: 0,
 }));
 
-const eng = new FsV2Engine({ zonePct: 25, armRangePts: 80, armBars: 10 });
+const eng = new FsV2Engine({ zonePct: Number(process.env.FS_Z ?? 10), simpleMode: true, armBars: 5, armRangePts: 20 });
+
 let prev = "";
 for (let i = 0; i < Math.min(bars.length, 240); i++) {
   const c = bars[i];

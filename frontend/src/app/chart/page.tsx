@@ -32,6 +32,8 @@ const DOTS_KEY = "chart_hhll_dots";
 const FLOW_KEY = "chart_flow_line";
 const ENV_KEY = "chart_envelope_on";
 const FS_KEY = "chart_first_swing_on";
+const FS_REV_KEY = "chart_fs_rev_pct";
+const FS_REV_DEFAULT = 10;
 const SWING_N_DEFAULT = 12;
 
 function clampSwingN(v: number): number {
@@ -87,6 +89,7 @@ export default function ChartPage() {
   const [dotsOn, setDotsOn] = useState(true);
   const [flowOn, setFlowOn] = useState(true);
   const [envOn, setEnvOn] = useState(false);
+  const [fsRevPct, setFsRevPct] = useState(FS_REV_DEFAULT);
   const [fsOn, setFsOn] = useState(false);
   const [fsDraw, setFsDraw] = useState(false);
   const [fsMarks, setFsMarks] = useState<Record<string, FsDayMark>>({});
@@ -114,6 +117,8 @@ export default function ChartPage() {
       setFlowOn(window.localStorage.getItem(FLOW_KEY) !== "0");
       setEnvOn(window.localStorage.getItem(ENV_KEY) === "1");
       setFsOn(window.localStorage.getItem(FS_KEY) === "1");
+      const rvRaw = window.localStorage.getItem(FS_REV_KEY);
+      if (rvRaw && Number.isFinite(Number(rvRaw))) setFsRevPct(Math.min(50, Math.max(1, Number(rvRaw))));
       setDual(window.localStorage.getItem(LAYOUT_KEY) === "2");
       const savedIvB = window.localStorage.getItem(INTERVAL_B_KEY);
       if (savedIvB === "daily" || savedIvB === "5min" || savedIvB === "1min") setIntervalB(savedIvB);
@@ -314,16 +319,16 @@ export default function ChartPage() {
         algoFirstSwing:
           fsOn && iv === "1min" && d.length >= 2
             ? computeFsV2Results(d, {
-                zonePct: 25,
-                armBars: 10,
-                armRangePts: 80,
-                sustainBars: 7,
+                zonePct: fsRevPct,
+                simpleMode: true,
+                armBars: 5,
+                armRangePts: 20,
               }).map((r) => ({ ...r.seg, invalid: r.invalid }))
             : null,
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },
-    [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsMarks],
+    [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsRevPct, fsMarks],
   );
 
   const overlaysA = useMemo(() => buildPaneOverlays(interval, data), [buildPaneOverlays, interval, data]);
@@ -358,6 +363,12 @@ export default function ChartPage() {
     },
     [dual, timesA],
   );
+
+  const changeFsRevPct = (v: number) => {
+    const clamped = Number.isFinite(v) ? Math.min(50, Math.max(1, Math.round(v))) : FS_REV_DEFAULT;
+    setFsRevPct(clamped);
+    window.localStorage.setItem(FS_REV_KEY, String(clamped));
+  };
 
   const handleSwingDraw = useCallback((mark: { day: string; start: FsDayMark["start"]; end: FsDayMark["end"] }) => {
     saveFirstSwingDay(mark.day, mark)
@@ -561,6 +572,18 @@ export default function ChartPage() {
                 />
                 Draw
               </button>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-[#8b949e]">Rev %</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={50}
+                  value={fsRevPct}
+                  onChange={(e) => changeFsRevPct(Number(e.target.value))}
+                  className="w-14 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#22d3ee]"
+                  title="Reversal zone: price entering this deep-% of the session range flips direction (lock). Lower = stricter."
+                />
+              </div>
             </>
           )}
 

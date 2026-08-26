@@ -36,7 +36,7 @@ function runDay(bars: typeof cs, zonePct = 25, armRange = 80, armBarsN = 10) {
 console.log(`=== FS v2 SWEEP (GT=${gtDays.length} days, 1-min replay) ===`);
 console.log(`zone% | match | med-lag | declare-med-time`);
 let bestZ = 25, bestAR = 60, bestAB = 10, bestMatch = -1;
-for (const [z, ar, ab] of [[20,60,5],[25,60,5],[25,80,5],[25,80,10],[30,80,10],[30,100,10],[35,120,10]] as const) {
+for (const [z, ar, ab] of [[5,20,5],[10,20,5],[15,20,5],[20,20,5],[10,40,5],[15,40,5]] as const) {
   let match = 0; const lags: number[] = []; const dtimes: number[] = [];
   for (const g of gtDays) {
     const bars = daysMap.get(g.day); if (!bars || bars.length < 50) continue;

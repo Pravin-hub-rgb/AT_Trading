@@ -801,6 +801,7 @@ export interface FsV2Opts {
   armBars?: number; // min bars before zone rules arm (default 5)
   armRangePts?: number; // min range pts before zone arms (default 20)
   sustainBars?: number; // N consecutive closes beyond broken extreme = confirm (default 7)
+  simpleMode?: boolean; // v4-simple: reversal(90% flip) IS the lock; one chop break confirms
 }
 
 interface FsLevel {
@@ -862,6 +863,7 @@ export class FsV2Engine {
   constructor(private opts: FsV2Opts = {}) {}
 
   get zonePct() { return this.opts.zonePct ?? 25; }
+  get simple() { return this.opts.simpleMode ?? false; }
 
   processBar(c: FlowCandle, gIdx: number) {
     if (this.declared || this.invalidated) return;
@@ -887,12 +889,14 @@ export class FsV2Engine {
           this.eHiPivot = { px: p.px, idx: p.idx, time: p.time };
           this.upStreak++;
           this.downStreak = 0;
-          if (this.dir !== "up") {
-            this.initiate("up", t);
-            this.stage = 1;
-            this.convertedByZone = false;
-          } else {
-            this.stage = Math.min(2, Math.max(this.stage, this.upStreak));
+          if (!this.simple) {
+            if (this.dir !== "up") {
+              this.initiate("up", t);
+              this.stage = 1;
+              this.convertedByZone = false;
+            } else {
+              this.stage = Math.min(2, Math.max(this.stage, this.upStreak));
+            }
           }
         } else {
           this.pushUnique(this.normalHighs, { px: p.px, idx: p.idx, time: p.time });
@@ -904,12 +908,14 @@ export class FsV2Engine {
           this.eLoPivot = { px: p.px, idx: p.idx, time: p.time };
           this.downStreak++;
           this.upStreak = 0;
-          if (this.dir !== "down") {
-            this.initiate("down", t);
-            this.stage = 1;
-            this.convertedByZone = false;
-          } else {
-            this.stage = Math.min(2, Math.max(this.stage, this.downStreak));
+          if (!this.simple) {
+            if (this.dir !== "down") {
+              this.initiate("down", t);
+              this.stage = 1;
+              this.convertedByZone = false;
+            } else {
+              this.stage = Math.min(2, Math.max(this.stage, this.downStreak));
+            }
           }
         } else {
           this.pushUnique(this.normalLows, { px: p.px, idx: p.idx, time: p.time });
@@ -1001,7 +1007,7 @@ export class FsV2Engine {
             this.locked = true;
             this.lockedLevelPx = eLoLvl;
             this.setCand(this.eLo);
-          } else if (this.convertedByZone && this.startIdx >= 0) {
+          } else if (!this.simple && this.convertedByZone && this.startIdx >= 0) {
             // invalidation: reversal(zone)-established day dies if an opposite
             // fresh chop-high breaks BEFORE the E-break lock arrives
             const hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
@@ -1016,7 +1022,7 @@ export class FsV2Engine {
             this.locked = true;
             this.lockedLevelPx = eHiLvl;
             this.setCand(this.eHi);
-          } else if (this.convertedByZone && this.startIdx >= 0) {
+          } else if (!this.simple && this.convertedByZone && this.startIdx >= 0) {
             const hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
             if (hit) {
               this.invalidated = true;
