@@ -41,7 +41,7 @@ interface Props {
   algoFlowLine?: FlowSegment[] | null;
   envelope?: EnvelopeViolation[] | null;
   manualFirstSwing?: Record<string, FsDayMark> | null;
-  algoFirstSwing?: FlowSegment[] | null;
+  algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
   drawMode?: boolean;
   onSwingDraw?: (mark: { day: string; start: FsPoint; end: FsPoint }) => void;
   onDrawStatus?: (status: string | null) => void;
@@ -703,16 +703,29 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
     prim.setSegs(fsSegsFromMarks(candles, manualFirstSwing));
   }, [manualFirstSwing, candles, intraday]);
 
-  // ── overlay: First-Swing ALGO candidate (cyan) — declared swings only ──
+  // ── overlay: First-Swing ALGO candidate — cyan = declared, red = invalid ──
   useEffect(() => {
     const ser = seriesRef.current;
     if (!ser || !intraday || !algoFirstSwing || algoFirstSwing.length === 0) return;
-    const prim = new FlowLinePrimitive(ser, algoFirstSwing, candles.length - 1, "#22d3ee", 2);
-    ser.attachPrimitive(prim);
+    const okSegs = algoFirstSwing.filter((s) => !s.invalid);
+    const badSegs = algoFirstSwing.filter((s) => s.invalid);
+    const prims: FlowLinePrimitive[] = [];
+    if (okSegs.length > 0) {
+      const p = new FlowLinePrimitive(ser, okSegs, candles.length - 1, "#22d3ee", 2);
+      ser.attachPrimitive(p);
+      prims.push(p);
+    }
+    if (badSegs.length > 0) {
+      const p = new FlowLinePrimitive(ser, badSegs, candles.length - 1, "#ef4444", 2);
+      ser.attachPrimitive(p);
+      prims.push(p);
+    }
     return () => {
-      try {
-        ser.detachPrimitive(prim);
-      } catch {}
+      for (const p of prims) {
+        try {
+          ser.detachPrimitive(p);
+        } catch {}
+      }
     };
   }, [algoFirstSwing, intraday, candles]);
 

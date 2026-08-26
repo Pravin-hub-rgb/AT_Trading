@@ -833,6 +833,15 @@ export class FsV2Engine {
   endTime = ""; endIdx = -1; endPx = NaN; confirmedAtTime = "";
   convertedByZone = false;
 
+  // ── v3 fast-path (single-E-break lock) ──
+  // After direction is set, ONE live cross of the current E-pivot level in
+  // the swing direction LOCKS the swing instantly (end rides the live
+  // extreme from there). If instead an OPPOSITE normal-pivot breaks before
+  // any such lock (and before natural stage-2), the day is INVALIDATED —
+  // no-swing; renderer draws it red.
+  locked = false;
+  invalidated = false;
+
   private upStreak = 0;
   private downStreak = 0;
   private zoneSide: "up" | "down" | null = null; // last zone-conversion side
@@ -844,7 +853,7 @@ export class FsV2Engine {
   get zonePct() { return this.opts.zonePct ?? 25; }
 
   processBar(c: FlowCandle, gIdx: number) {
-    if (this.declared) return;
+    if (this.declared || this.invalidated) return;
     this.barsSeen++;
     const t = c.date.slice(11, 16);
     const green = c.close >= c.open;
@@ -958,9 +967,45 @@ export class FsV2Engine {
         }
       }
 
-      // final confirmation: normal OPPOSITE pivot break (stage ≥ 2)
+      // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
+      if (this.dir && !this.locked) {
+        if (this.dir === "down") {
+          // lock: live cross BELOW the current E-LOW pivot level
+          const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
+          if (px < eLoLvl) {
+            this.locked = true;
+            this.setCand(this.eLo);
+          } else if (this.stage < 2 && !this.closeConfirm) {
+            // invalidation: opposite chop-high breaks before any E-break
+            // (SAME quality bar as confirm: gap beyond candidate)
+            const hit = this.normalHighs.find(
+              (l) => l.px >= this.candPx + this.confirmGap && px > l.px,
+            );
+            if (hit) {
+              this.invalidated = true;
+              return;
+            }
+          }
+        } else {
+          const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
+          if (px > eHiLvl) {
+            this.locked = true;
+            this.setCand(this.eHi);
+          } else if (this.stage < 2 && !this.closeConfirm) {
+            const hit = this.normalLows.find(
+              (l) => l.px <= this.candPx - this.confirmGap && px < l.px,
+            );
+            if (hit) {
+              this.invalidated = true;
+              return;
+            }
+          }
+        }
+      }
+
+      // final confirmation: normal OPPOSITE pivot break (stage ≥ 2 OR locked)
       // closeConfirm mode is evaluated once on the closed bar (below)
-      if (!this.closeConfirm && this.stage >= 2 && this.dir) {
+      if (!this.closeConfirm && (this.stage >= 2 || this.locked) && this.dir) {
         if (this.dir === "down") {
           const gap = this.confirmGap;
           const hit = this.normalHighs.find((l) => l.px >= this.candPx + gap && px > l.px);
@@ -980,7 +1025,7 @@ export class FsV2Engine {
     }
 
     // close-based final confirmation
-    if (this.closeConfirm && this.stage >= 2 && this.dir) {
+    if (this.closeConfirm && (this.stage >= 2 || this.locked) && this.dir && !this.invalidated) {
       if (this.dir === "down") {
         const gap = this.confirmGap;
         const hit = this.normalHighs.find((l) => l.px >= this.candPx + gap && c.close > l.px);
@@ -994,6 +1039,20 @@ export class FsV2Engine {
         if (hit) {
           this.confirm(gIdx, t);
           return;
+        }
+      }
+      // close-mode invalidation: opposite chop level closed-through pre-lock
+      if (!this.locked && this.stage < 2) {
+        if (this.dir === "down") {
+          const hit = this.normalHighs.find(
+            (l) => l.px >= this.candPx + this.confirmGap && c.close > l.px,
+          );
+          if (hit) this.invalidated = true;
+        } else {
+          const hit = this.normalLows.find(
+            (l) => l.px <= this.candPx - this.confirmGap && c.close < l.px,
+          );
+          if (hit) this.invalidated = true;
         }
       }
     }
@@ -1033,12 +1092,19 @@ export class FsV2Engine {
   }
 }
 
-// Batch helper: replay each day through FsV2 (identical to live path),
-// emit start→declared-end segments for confirmed swings only.
-export function computeFsV2Declared(
+// Batch helper: replay each day through FsV2 (identical to live path).
+// Returns BOTH outcomes: declared swings (cyan) and invalidated days
+// (red — no-swing per v3 rule), each with its start→end segment.
+export interface FsV2Result {
+  day: string;
+  invalid: boolean;
+  seg: FlowSegment;
+}
+
+export function computeFsV2Results(
   candles: FlowCandle[],
   opts: FsV2Opts = {},
-): FlowSegment[] {
+): FsV2Result[] {
   const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
   candles.forEach((c, gIdx) => {
     const d = c.date.slice(0, 10);
@@ -1046,20 +1112,35 @@ export function computeFsV2Declared(
     byDay.get(d)!.push({ c, gIdx });
   });
 
-  const segs: FlowSegment[] = [];
-  byDay.forEach((items) => {
+  const out: FsV2Result[] = [];
+  byDay.forEach((items, day) => {
     const eng = new FsV2Engine(opts);
     for (const it of items) eng.processBar(it.c, it.gIdx);
-    if (!eng.declared || eng.startIdx < 0) return;
-    segs.push({
-      dir: eng.dir === "up" ? "B" : "S",
-      startIdx: eng.startIdx,
-      startPx: eng.startPx,
-      endIdx: eng.endIdx,
-      endPx: eng.endPx,
+    if (!eng.invalidated && !eng.declared) return;
+    if (eng.startIdx < 0) return;
+    out.push({
+      day,
+      invalid: eng.invalidated,
+      seg: {
+        dir: eng.dir === "up" ? "B" : "S",
+        startIdx: eng.startIdx,
+        startPx: eng.startPx,
+        endIdx: eng.endIdx,
+        endPx: eng.endPx,
+      },
     });
   });
-  return segs;
+  return out;
+}
+
+// Backward-compatible wrapper: declared-only segments.
+export function computeFsV2Declared(
+  candles: FlowCandle[],
+  opts: FsV2Opts = {},
+): FlowSegment[] {
+  return computeFsV2Results(candles, opts)
+    .filter((r) => !r.invalid)
+    .map((r) => r.seg);
 }
 
 // ===== ⚪ ALGO FLOW LINE =====

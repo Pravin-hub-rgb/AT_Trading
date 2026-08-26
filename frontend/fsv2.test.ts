@@ -27,7 +27,7 @@ for (const c of cs) {
   daysMap.get(d)!.push(c);
 }
 
-function runDay(bars: typeof cs, zonePct: number, armRange = 20, armBarsN = 5, gap = 0, closeC = false) {
+function runDay(bars: typeof cs, zonePct = 25, armRange = 80, armBarsN = 10, gap = 15, closeC = true) {
   const eng = new FsV2Engine({ zonePct, armRangePts: armRange, armBars: armBarsN, confirmGapPts: gap, closeConfirm: closeC });
   for (const c of bars) eng.processBar(c, 0);
   return eng;
@@ -41,6 +41,7 @@ for (const [z, ar, ab, gp, cc] of [[25,80,10,0,false],[25,80,10,8,false],[25,80,
   for (const g of gtDays) {
     const bars = daysMap.get(g.day); if (!bars || bars.length < 50) continue;
     const eng = runDay(bars, z, ar, ab, gp, cc);
+    if (eng.invalidated) continue;
     if (!eng.declared || eng.dir !== g.dir) continue;
     if (Math.abs(tm(eng.endTime) - tm(g.eTime)) <= 5 && Math.abs(eng.endPx - g.ePx) <= 8) {
       match++;
@@ -64,7 +65,7 @@ console.log(`\n=== DETAIL (z=${bestZ}) ===`);
 let dirWrong = 0, noDecl = 0, lateMiss = 0;
 for (const g of gtDays) {
   const bars = daysMap.get(g.day); if (!bars || bars.length < 50) continue;
-  const eng = runDay(bars, bestZ);
+  const eng = runDay(bars, bestZ, bestAR, bestAB, bestG, bestCC);
   if (!eng.declared) { noDecl++; console.log(`${g.day} ${g.dir} gt=${g.eTime} | NOT-DECLARED`); continue; }
   const okDir = eng.dir === g.dir;
   if (!okDir) dirWrong++;
@@ -81,7 +82,7 @@ let total = 0, decl = 0; const times: number[] = [];
 for (const [, bars] of daysMap) {
   if (bars.length < 100) continue;
   total++;
-  const eng = runDay(bars, bestZ);
+  const eng = runDay(bars, bestZ, bestAR, bestAB, bestG, bestCC);
   if (eng.declared) { decl++; times.push(tm(eng.confirmedAtTime)); }
 }
 times.sort((a, b) => a - b);
