@@ -326,10 +326,10 @@ export default function ChartPage() {
               });
               return {
                 algoFirstSwing: res.map((r) => ({ ...r.seg, invalid: r.invalid })),
-                fsMarkers: res.filter((r) => r.confIdx >= 0).map((r) => ({ idx: r.confIdx, invalid: r.invalid })),
+                fsMarkers: res.filter((r) => r.confIdx >= 0).map((r) => ({ idx: r.confIdx, invalid: r.invalid, source: r.source })),
               };
             })()
-          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean }[] | null }),
+          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean; source: "chop" | "sustain" | null }[] | null }),
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },

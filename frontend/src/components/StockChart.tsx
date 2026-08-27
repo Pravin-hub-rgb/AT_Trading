@@ -43,7 +43,7 @@ interface Props {
   envelope?: EnvelopeViolation[] | null;
   manualFirstSwing?: Record<string, FsDayMark> | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
-  fsMarkers?: { idx: number; invalid: boolean }[] | null;
+  fsMarkers?: { idx: number; invalid: boolean; source?: "chop" | "sustain" | null }[] | null;
   drawMode?: boolean;
   onSwingDraw?: (mark: { day: string; start: FsPoint; end: FsPoint }) => void;
   onDrawStatus?: (status: string | null) => void;
@@ -875,12 +875,13 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
       for (const mk of fsMarkers) {
         const cc = candles[mk.idx];
         if (!cc) continue;
+        const isSustain = mk.source === "sustain";
         ms.push({
           time: cc.ts as Time,
           position: "belowBar",
           shape: "arrowUp",
-          color: mk.invalid ? "#ef4444" : "#22d3ee",
-          text: "FS",
+          color: mk.invalid ? "#ef4444" : isSustain ? "#a78bfa" : "#22d3ee",
+          text: mk.invalid ? "FS" : isSustain ? "SUS" : "FS",
           size: 1,
         });
       }

@@ -835,6 +835,7 @@ export class FsV2Engine {
   confirmedAtIdx = -1;
   convertedByZone = false;
   lastConfirmHit: { pool: string; px: number; idx: number; time: string } | null = null;
+  confirmSource: "chop" | "sustain" | null = null;
 
   // ── v3 fast-path (single-E-break lock) ──
   // After direction is set, ONE live cross of the current E-pivot level in
@@ -933,6 +934,12 @@ export class FsV2Engine {
     const armed =
       this.barsSeen > (this.opts.armBars ?? 5) &&
       this.eHi.px - this.eLo.px >= (this.opts.armRangePts ?? 20);
+
+    // Capture extremes BEFORE halves loop — if they update this bar, a new
+    // extreme was printed and the sustain streak should NOT count this bar
+    // (the "hold" is measured AFTER the extreme is final, not during it).
+    const eLoBefore = this.eLo.px;
+    const eHiBefore = this.eHi.px;
 
     // ---- X) micro local-extremes: completed 2-side pivots, zero seal-lag ----
     // Bar k-1 was a LOCAL TOP/BOTTOM if its extreme beat both neighbours and
@@ -1071,6 +1078,7 @@ export class FsV2Engine {
           }
           if (hit) {
             this.lastConfirmHit = { pool, px: hit.px, idx: hit.idx, time: hit.time };
+            this.confirmSource = "chop";
             this.confirm(gIdx, t);
             return;
           }
@@ -1083,6 +1091,7 @@ export class FsV2Engine {
           }
           if (hit) {
             this.lastConfirmHit = { pool, px: hit.px, idx: hit.idx, time: hit.time };
+            this.confirmSource = "chop";
             this.confirm(gIdx, t);
             return;
           }
@@ -1095,14 +1104,24 @@ export class FsV2Engine {
       const n = this.opts.sustainBars ?? 7;
       const ref =
         this.locked
-          ? this.lockedLevelPx
+          ? this.candPx
           : this.dir === "down"
             ? this.eLoPivot?.px ?? this.eLo.px
             : this.eHiPivot?.px ?? this.eHi.px;
-      this.sustainStreak =
-        this.dir === "down" ? (c.close < ref ? this.sustainStreak + 1 : 0)
-                              : (c.close > ref ? this.sustainStreak + 1 : 0);
+      // If this bar printed a new extreme in the swing direction, it's part
+      // of the MOVE, not the HOLD. Reset streak so the 7-count starts after
+      // the extreme is final (bar that makes the low/high doesn't count).
+      const madeNewExtreme =
+        this.dir === "down" ? this.eLo.px < eLoBefore : this.eHi.px > eHiBefore;
+      if (madeNewExtreme) {
+        this.sustainStreak = 0;
+      } else {
+        this.sustainStreak =
+          this.dir === "down" ? (c.close > ref ? this.sustainStreak + 1 : 0)
+                                : (c.close < ref ? this.sustainStreak + 1 : 0);
+      }
       if (this.sustainStreak >= n) {
+        this.confirmSource = "sustain";
         this.confirm(gIdx, t);
         return;
       }
@@ -1164,6 +1183,7 @@ export interface FsV2Result {
   invalid: boolean;
   confIdx: number; // global candle index of the CONFIRM bar (-1 if invalid)
   seg: FlowSegment;
+  source: "chop" | "sustain" | null;
 }
 
 export function computeFsV2Results(
@@ -1194,6 +1214,7 @@ export function computeFsV2Results(
         endIdx: eng.endIdx,
         endPx: eng.endPx,
       },
+      source: eng.confirmSource,
     });
   });
   return out;
