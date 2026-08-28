@@ -38,12 +38,11 @@ interface Props {
   sessionBreaks?: boolean;
   oneMinSwingN?: number;
   swingDots?: boolean;
-  flowLine?: FlowSegment[] | null;
   algoFlowLine?: FlowSegment[] | null;
   envelope?: EnvelopeViolation[] | null;
   manualFirstSwing?: Record<string, FsDayMark> | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
-  fsMarkers?: { idx: number; invalid: boolean; source?: "chop" | "sustain" | null }[] | null;
+  fsMarkers?: { idx: number; invalid: boolean; source?: "chop" | "sustain" | null; dir?: "up" | "down" | null }[] | null;
   drawMode?: boolean;
   onSwingDraw?: (mark: { day: string; start: FsPoint; end: FsPoint }) => void;
   onDrawStatus?: (status: string | null) => void;
@@ -161,7 +160,7 @@ function fsSegsFromMarks(candles: Candle[], marks: Record<string, FsDayMark>): F
   return segs;
 }
 
-const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, flowLine, algoFlowLine, envelope, manualFirstSwing, algoFirstSwing, fsMarkers, drawMode = false, onSwingDraw, onDrawStatus, onHoverTime }: Props, ref) {
+const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, algoFlowLine, envelope, manualFirstSwing, algoFirstSwing, fsMarkers, drawMode = false, onSwingDraw, onDrawStatus, onHoverTime }: Props, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -639,27 +638,21 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
     };
   }, [sessionBreaks, intraday, candles]);
 
-  // ── overlay: flow-lines — WHITE (algo) first, ORANGE (manual GT) on top ──
+  // ── overlay: algo flow-line (white) ──
   useEffect(() => {
     const ser = seriesRef.current;
     if (!ser || !intraday) return;
     let algoPrim: FlowLinePrimitive | null = null;
-    let flowPrim: FlowLinePrimitive | null = null;
     if (algoFlowLine && algoFlowLine.length > 0) {
       algoPrim = new FlowLinePrimitive(ser, algoFlowLine, candles.length - 1, "#ffffff");
       ser.attachPrimitive(algoPrim);
     }
-    if (flowLine && flowLine.length > 0) {
-      flowPrim = new FlowLinePrimitive(ser, flowLine, candles.length - 1, "#fb923c");
-      ser.attachPrimitive(flowPrim);
-    }
     return () => {
       try {
-        if (flowPrim) ser.detachPrimitive(flowPrim);
         if (algoPrim) ser.detachPrimitive(algoPrim);
       } catch {}
     };
-  }, [flowLine, algoFlowLine, intraday, candles]);
+  }, [algoFlowLine, intraday, candles]);
 
   // ── overlay: envelope-law red boxes ──
   useEffect(() => {

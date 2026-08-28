@@ -5,7 +5,7 @@ import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
-import { computeFlowLine, computeAlgoFlowLine, computeFsV2Results, type FlowSegment } from "@/lib/flowline";
+import { computeAlgoFlowLine, computeFsV2Results, type FlowSegment } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
@@ -33,7 +33,7 @@ const FLOW_KEY = "chart_flow_line";
 const ENV_KEY = "chart_envelope_on";
 const FS_KEY = "chart_first_swing_on";
 const FS_REV_KEY = "chart_fs_rev_pct";
-const FS_REV_DEFAULT = 10;
+const FS_REV_DEFAULT = 15;
 const SWING_N_DEFAULT = 12;
 
 function clampSwingN(v: number): number {
@@ -313,23 +313,18 @@ export default function ChartPage() {
         bias: isIntraday && biasOn ? biasLabels : undefined,
         trades: isIntraday ? allTrades : undefined,
         sessionBreaks: isIntraday,
-        flowLine: flowOn && isIntraday && d.length >= 2 ? computeFlowLine(d) : null,
         algoFlowLine: flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
         envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
         ...(fsOn && iv === "1min" && d.length >= 2
           ? (() => {
-              const res = computeFsV2Results(d, {
-                zonePct: fsRevPct,
-                simpleMode: true,
-                armBars: 5,
-                armRangePts: 20,
-              });
+              const res = computeFsV2Results(d, { timeCap: "09:29" });
+              const valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
               return {
-                algoFirstSwing: res.map((r) => ({ ...r.seg, invalid: r.invalid })),
-                fsMarkers: res.filter((r) => r.confIdx >= 0).map((r) => ({ idx: r.confIdx, invalid: r.invalid, source: r.source })),
+                algoFirstSwing: valid.map((r) => r.seg!),
+                fsMarkers: valid.map((r) => ({ idx: r.confIdx, invalid: false, source: r.source, dir: r.dir })),
               };
             })()
-          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean; source: "chop" | "sustain" | null }[] | null }),
+          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean; source: "chop" | "sustain" | null; dir: "up" | "down" | null }[] | null }),
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },
@@ -680,7 +675,6 @@ export default function ChartPage() {
             sessionBreaks={overlaysA.sessionBreaks}
             oneMinSwingN={swingN}
             swingDots={dotsOn}
-            flowLine={overlaysA.flowLine}
             algoFlowLine={overlaysA.algoFlowLine}
             envelope={overlaysA.envelope}
             manualFirstSwing={overlaysA.manualFirstSwing}
@@ -730,7 +724,6 @@ export default function ChartPage() {
               sessionBreaks={overlaysB.sessionBreaks}
               oneMinSwingN={swingN}
               swingDots={dotsOn}
-              flowLine={overlaysB.flowLine}
               algoFlowLine={overlaysB.algoFlowLine}
               envelope={overlaysB.envelope}
               manualFirstSwing={overlaysB.manualFirstSwing}

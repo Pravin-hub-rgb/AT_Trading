@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { computeAlgoFlowLine, computeFlowLine } from "./src/lib/flowline";
+import { computeAlgoFlowLine } from "./src/lib/flowline";
 
 const raw = readFileSync(
   "C:/Users/Pravin/Desktop/main/AT_Trading/data/nifty_5min.csv",
@@ -29,9 +29,4 @@ try {
   console.error("ALGO CRASH:", e);
 }
 
-try {
-  const manual = computeFlowLine(day);
-  console.log("MANUAL segments:", manual.length);
-} catch (e) {
-  console.error("MANUAL CRASH:", e);
-}
+console.log("MANUAL removed - orange line deleted");

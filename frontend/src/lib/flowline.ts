@@ -1,10 +1,10 @@
-﻿// Flow-Line — TWO SYSTEMS side-by-side (permanent identity):
-//
-//   🟠 ORANGE = computeFlowLine()     → MANUAL_PIVOTS (hardcoded ground truth)
-//   ⚪ WHITE  = computeAlgoFlowLine() → ALGO walker (zero hardcoding)
-//
-// Orange is ALWAYS the manual line. White is ALWAYS the algo. Never swap.
-// Naya date mark karna ho toh MANUAL_PIVOTS mein rows jodo.
+﻿// Flow-Line — Algo walker + FsV2 (white line only, orange manual line removed):
+
+// First-swing detection now lives in its own engine (see firstswing.ts),
+// driven by the WalkerEngine pivot stream. flowline.ts keeps the public
+// computeFsV2* surface and delegates to it.
+import { FirstSwingEngine } from "./firstswing";
+export { FirstSwingEngine } from "./firstswing";
 
 // ── branch coverage instrumentation (active only with FLOW_COV=1) ────────
 const FLOW_COV: Record<string, number> = {};
@@ -27,7 +27,7 @@ export interface FlowSegment {
   endPx: number;
 }
 
-interface FlowCandle {
+export interface FlowCandle {
   date: string;
   open: number;
   high: number;
@@ -41,116 +41,6 @@ export interface AlgoPivot {
   kind: "H" | "L";
   px: number;
   sealed: boolean; // true = leg flipped after it; false = current forming swing
-}
-
-// ===== GROUND TRUTH: user-defined manual pivots =====
-const MANUAL_PIVOTS: Record<string, { time: string; kind: "H" | "L" }[]> = {
-  "2026-08-20": [
-    { time: "09:15", kind: "H" },
-    { time: "09:20", kind: "L" },
-    { time: "09:25", kind: "H" },
-    { time: "09:30", kind: "L" },
-    { time: "09:45", kind: "H" },
-    { time: "09:50", kind: "L" },
-    { time: "09:55", kind: "H" },
-    { time: "10:00", kind: "L" },
-    { time: "10:15", kind: "H" },
-    { time: "10:25", kind: "L" },
-    { time: "10:30", kind: "H" },
-    { time: "10:35", kind: "L" },
-    { time: "10:45", kind: "H" },
-    { time: "10:55", kind: "L" },
-    { time: "11:00", kind: "H" },
-    { time: "11:20", kind: "L" },
-    { time: "11:30", kind: "H" },
-    { time: "11:40", kind: "L" },
-    { time: "11:45", kind: "H" },
-    { time: "11:55", kind: "L" },
-    { time: "11:55", kind: "H" },
-    { time: "12:05", kind: "L" },
-    { time: "12:15", kind: "H" },
-    { time: "12:25", kind: "L" },
-    { time: "12:30", kind: "H" },
-    { time: "12:35", kind: "L" },
-    { time: "12:50", kind: "H" },
-    { time: "12:55", kind: "L" },
-    { time: "13:00", kind: "H" },
-    { time: "13:05", kind: "L" },
-    { time: "13:10", kind: "H" },
-    { time: "13:15", kind: "L" },
-  ],
-  "2026-08-21": [
-    { time: "09:15", kind: "H" },
-    { time: "09:20", kind: "L" },
-    { time: "09:25", kind: "H" },
-    { time: "09:30", kind: "L" },
-    { time: "09:50", kind: "H" },
-    { time: "09:55", kind: "L" },
-    { time: "10:00", kind: "H" },
-    { time: "10:10", kind: "L" },
-    { time: "10:15", kind: "H" },
-    { time: "10:20", kind: "L" },
-    { time: "10:30", kind: "H" },
-    { time: "10:35", kind: "L" },
-    { time: "10:55", kind: "H" },
-    { time: "10:55", kind: "L" },
-    { time: "11:05", kind: "H" },
-    { time: "11:10", kind: "L" },
-    { time: "11:15", kind: "H" },
-    { time: "11:20", kind: "L" },
-    { time: "11:30", kind: "H" },
-    { time: "11:45", kind: "L" },
-    { time: "11:50", kind: "H" },
-    { time: "12:15", kind: "L" },
-    { time: "12:20", kind: "H" },
-    { time: "12:25", kind: "L" },
-    { time: "12:35", kind: "H" },
-    { time: "12:40", kind: "L" },
-    { time: "12:45", kind: "H" },
-    { time: "12:55", kind: "L" },
-    { time: "13:05", kind: "H" },
-    { time: "13:20", kind: "L" },
-    { time: "13:30", kind: "H" },
-  ],
-};
-
-// ===== 🟠 MANUAL FLOW LINE (ground truth) =====
-export function computeFlowLine(candles: FlowCandle[]): FlowSegment[] {
-  const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
-  candles.forEach((c, gIdx) => {
-    const d = c.date.slice(0, 10);
-    if (!byDay.has(d)) byDay.set(d, []);
-    byDay.get(d)!.push({ c, gIdx });
-  });
-
-  const segs: FlowSegment[] = [];
-  byDay.forEach((items, dayKey) => {
-    const marks = MANUAL_PIVOTS[dayKey];
-    if (!marks) return; // unmarked days -> no orange line
-
-    const pts: { idx: number; px: number }[] = [];
-    for (const m of marks) {
-      const item = items.find((it) => it.c.date.slice(11, 16) === m.time);
-      if (!item) continue;
-      pts.push({
-        idx: item.gIdx,
-        px: m.kind === "H" ? item.c.high : item.c.low,
-      });
-    }
-
-    for (let i = 0; i + 1 < pts.length; i++) {
-      const a = pts[i];
-      const b = pts[i + 1];
-      segs.push({
-        dir: b.px >= a.px ? "B" : "S",
-        startIdx: a.idx,
-        startPx: a.px,
-        endIdx: b.idx,
-        endPx: b.px,
-      });
-    }
-  });
-  return segs;
 }
 
 // =====================================================================
@@ -616,193 +506,38 @@ export function computeAlgoPivots(candles: FlowCandle[]): AlgoPivot[] {
   return all;
 }
 
-// ===== 🟡 FIRST SWING ENGINE (live-safe state machine) =====
-// Same contract as the flow-line walker:
-//   - processBar() consumes CLOSED candles only — zero hindsight
-//   - color-aware half-steps (green: L→H · red: H→L)
-//   - candidate end rides bar-by-bar while tracking (the live question)
-//   - declared END freezes forever — sealed, never repaints
-//
-// Phases:
-//   LOCK   : direction declares when a half-step breaks ALL-prior-bars'
-//            opposite extreme. Start = the running counter-extreme so far
-//            (data: 88% of swings start at the 09:15 bar itself).
-//   TRACK  : running extreme E extends in direction (candidate end).
-//   DECLARE: first trigger to fire freezes E as THE end:
-//     T-A  counter-move ≥ mPoints from candidate (path-ordered half-step)
-//     T-B  two consecutive closes against the move ("2-candle behaviour")
-
-export interface FirstSwingOpts {
-  mPoints?: number; // T-A trigger distance in points (default 20)
-  twoClose?: boolean; // enable T-B (default true)
-}
-
-export class FirstSwingEngine {
-  private barsSeen = 0;
-  private prevClose: number | null = null;
-  private refHi = -Infinity; // all-prior-bars high (lock reference)
-  private refLo = Infinity; // all-prior-bars low
-  private hiIdx = -1; private hiT = ""; private hiPx = -Infinity;
-  private loIdx = -1; private loT = ""; private loPx = Infinity;
-
-  locked = false;
-  dir: "up" | "down" | null = null;
-  startIdx = -1; startTime = ""; startPx = NaN;
-  candIdx = -1; candTime = ""; candPx = NaN;
-  declared = false;
-  endTime = ""; endPx = NaN; endIdx = -1; declaredAtTime = "";
-
-  constructor(
-    private mPoints = 20,
-    private twoClose = true,
-  ) {}
-
-  get phase(): "locking" | "tracking" | "declared" {
-    return this.declared ? "declared" : this.locked ? "tracking" : "locking";
-  }
-
-  private declare(gIdx: number, t: string) {
-    this.declared = true;
-    this.endIdx = this.candIdx;
-    this.endTime = this.candTime;
-    this.endPx = this.candPx;
-    this.declaredAtTime = t;
-    void gIdx;
-  }
-
-  processBar(c: FlowCandle, gIdx: number) {
-    if (this.declared) return;
-    const green = c.close >= c.open;
-    const t = c.date.slice(11, 16);
-    this.barsSeen++;
-
-
-    const halves: [number, boolean][] = green
-      ? [[c.low, true], [c.high, false]]
-      : [[c.high, true], [c.low, false]];
-    // flag meaning here: true = LOW-side step, false = HIGH-side step
-
-    for (const [px, isLow] of halves) {
-      if (!this.locked) {
-        // maintain running stamped extremes
-        if (px > this.hiPx) { this.hiPx = px; this.hiIdx = gIdx; this.hiT = t; }
-        if (px < this.loPx) { this.loPx = px; this.loIdx = gIdx; this.loT = t; }
-
-        if (this.barsSeen > 1) {
-          if (!isLow && px > this.refHi) {
-            // UP-LOCK: broke every prior high → swing = run-up from lowest low
-            this.locked = true;
-            this.dir = "up";
-            this.startIdx = this.loIdx; this.startTime = this.loT; this.startPx = this.loPx;
-            this.candIdx = gIdx; this.candTime = t; this.candPx = px;
-          } else if (isLow && px < this.refLo) {
-            // DOWN-LOCK: broke every prior low → swing = slide from highest high
-            this.locked = true;
-            this.dir = "down";
-            this.startIdx = this.hiIdx; this.startTime = this.hiT; this.startPx = this.hiPx;
-            this.candIdx = gIdx; this.candTime = t; this.candPx = px;
-          }
-        }
-        if (!this.locked) continue;
-        // just locked THIS step → fall through so the bar's remaining
-        // half-step(s) immediately get tracking treatment (T-A can even
-        // fire on the same bar)
-      }
-
-      if (this.declared) break;
-
-      // ---- TRACK / DECLARE (path-ordered) ----
-      if (this.dir === "up") {
-        if (isLow) {
-          if (this.candPx - px >= this.mPoints) { this.declare(gIdx, t); return; }
-        } else if (px > this.candPx) {
-          this.candIdx = gIdx; this.candTime = t; this.candPx = px;
-        }
-      } else {
-        if (!isLow) {
-          if (px - this.candPx >= this.mPoints) { this.declare(gIdx, t); return; }
-        } else if (px < this.candPx) {
-          this.candIdx = gIdx; this.candTime = t; this.candPx = px;
-        }
-      }
-    }
-
-    // T-B: two consecutive closes against the move (closed-bar info)
-    if (!this.declared && this.twoClose && this.prevClose !== null && this.locked) {
-      if (this.dir === "up") {
-        this.lowerStreak = c.close < this.prevClose ? this.lowerStreak + 1 : 0;
-        if (this.lowerStreak >= 2) this.declare(gIdx, t);
-      } else {
-        this.higherStreak = c.close > this.prevClose ? this.higherStreak + 1 : 0;
-        if (this.higherStreak >= 2) this.declare(gIdx, t);
-      }
-    }
-
-    // roll references AFTER the bar completes
-    if (!this.locked) {
-      this.refHi = Math.max(this.refHi === -Infinity ? c.high : Math.max(this.refHi, c.high), c.high);
-      this.refLo = Math.min(this.refLo === Infinity ? c.low : Math.min(this.refLo, c.low), c.low);
-    }
-    this.prevClose = c.close;
-  }
-
-  private lowerStreak = 0;
-  private higherStreak = 0;
-}
-
-// Batch helper (offline/chart): replay each day through a fresh engine and
-// emit start→declared-end segments. IDENTICAL path to live processing.
-export function computeFirstSwingDeclared(
-  candles: FlowCandle[],
-  opts: FirstSwingOpts = {},
-): FlowSegment[] {
-  const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
-  candles.forEach((c, gIdx) => {
-    const d = c.date.slice(0, 10);
-    if (!byDay.has(d)) byDay.set(d, []);
-    byDay.get(d)!.push({ c, gIdx });
-  });
-
-  const segs: FlowSegment[] = [];
-  byDay.forEach((items) => {
-    const eng = new FirstSwingEngine(opts.mPoints ?? 20, opts.twoClose ?? true);
-    for (const it of items) eng.processBar(it.c, it.gIdx);
-    if (!(eng.declared && eng.startIdx >= 0)) return;
-    segs.push({
-      dir: eng.dir === "up" ? "B" : "S",
-      startIdx: eng.startIdx,
-      startPx: eng.startPx,
-      endIdx: eng.endIdx,
-      endPx: eng.endPx,
-    });
-  });
-  return segs;
-}
+// NOTE: the old FirstSwingEngine (fixed mPoints=20 point-distance trigger,
+// plus a two-close rule) has been retired per the first-swing-detection
+// rebuild spec — it predated FsV2Engine and used an unscaled fixed-point
+// threshold. FsV2Engine below is now the only first-swing engine.
+// >>> If anything outside this file still imports FirstSwingEngine or
+// computeFirstSwingDeclared, repoint it at computeFsV2Declared /
+// computeFsV2Results before shipping this change. <<<
 
 // =====================================================================
-// 🟡 FS v2 ENGINE — user-spec stage machine (1-min, walker-driven)
+// 🟡 FS v2 ENGINE — first-swing detection (1-min, walker-driven)
 //
-// Blocks:
-//   E-PIVOTS   session extreme high/low (start: first bar's hi+lo).
-//              New-extreme-PIVOT seals = direction progress events.
-//   STAGES     selling: 2 consecutive new E-LOW pivots (count 1 → 2)
-//              buying : mirror with E-HIGH pivots
-//   ZONE       range-position shortcut: price entering the opposite deep
-//              zone (≤ zonePct% of [E-lo, E-hi]) converts to stage-2 of
-//              that side — works WITHOUT any prior count too.
-//   FINAL      one NORMAL (non-extreme) opposite pivot level broken:
-//              sell-swing confirmed by a normal HIGH break; buy by a
-//              normal LOW break. END stamp = deepest extreme so far.
-// Demoted extremes join the normal pool. First swing per day only.
+// Indefinite monitoring, no fallback tier (removed per user spec).
+//   REAL — CONTINUATION   session extreme extends twice in a row, same
+//                         direction (A/B open extremes, break→C, break→D)
+//                         → direction confirmed.
+//   REAL — REVERSAL       one extreme breaks, then price reverses and
+//                         breaks the OTHER original extreme — a single
+//                         break is enough here → direction confirmed.
+//   (both REAL paths)     once direction is confirmed, wait for
+//                         CHOP-BACK (a prior opposite pivot breaks) or
+//                         7-BAR SUSTAIN (price holds past the broken
+//                         level) to actually declare.
+//   No fallback — if neither fires, engine keeps monitoring until EOD.
+//   Nothing declares before `timeCap` (hard gate, not deferred).
+//
 // Live-safe: closed bars only; declared end never repaints.
 // =====================================================================
 
 export interface FsV2Opts {
-  zonePct?: number; // deep-zone % of range (default 25)
-  armBars?: number; // min bars before zone rules arm (default 5)
-  armRangePts?: number; // min range pts before zone arms (default 20)
-  sustainBars?: number; // N consecutive closes beyond broken extreme = confirm (default 7)
-  simpleMode?: boolean; // v4-simple: reversal(90% flip) IS the lock; one chop break confirms
+  sustainBars?: number;
+  simpleMode?: boolean;
+  timeCap?: string; // nothing declares before this (default "09:29")
 }
 
 interface FsLevel {
@@ -827,30 +562,31 @@ export class FsV2Engine {
   private normalLows: FsLevel[] = [];
 
   dir: "up" | "down" | null = null;
-  stage = 0;
   startIdx = -1; startTime = ""; startPx = NaN;
   candIdx = -1; candTime = ""; candPx = NaN;
   declared = false;
+  tier: "real" | null = null;
   endTime = ""; endIdx = -1; endPx = NaN; confirmedAtTime = "";
   confirmedAtIdx = -1;
-  convertedByZone = false;
   lastConfirmHit: { pool: string; px: number; idx: number; time: string } | null = null;
   confirmSource: "chop" | "sustain" | null = null;
 
-  // ── v3 fast-path (single-E-break lock) ──
-  // After direction is set, ONE live cross of the current E-pivot level in
-  // the swing direction LOCKS the swing instantly (end rides the live
-  // extreme from there). If instead an OPPOSITE normal-pivot breaks before
-  // any such lock (and before natural stage-2), the day is INVALIDATED —
-  // no-swing; renderer draws it red.
-  locked = false;
-  invalidated = false;
+  private timeCap = "09:29";
 
-  private upStreak = 0;
-  private downStreak = 0;
-  private zoneSide: "up" | "down" | null = null; // last zone-conversion side
-  private touchedUp = false; // price reached upper deep-zone while armed
-  private touchedDown = false;
+  // ── direction detection: same-side vs opposite-side breaks ──
+  private baseDir: "up" | "down" | null = null; // direction of first extreme break
+  private sameSideBreaks = 0; // consecutive breaks in baseDir
+  private oppositeSideBreaks = 0; // breaks opposite to baseDir
+  private dirConfirmed = false; // direction confirmed by breaks
+  private dirConfirmedIdx = -1;
+
+  // ── single-E-break trigger ──
+  // After direction is set, ONE live cross of the current E-pivot level in
+  // the swing direction TRIGGERS the swing (freezes the broken pivot level
+  // as the sustain reference). After trigger, only chop or 7-bar sustain
+  // can confirm (REAL tier). If neither ever fires, Fallback covers it —
+  // there is no separate "invalidated" state.
+  locked = false;
 
   // ── X) micro-top/lows: zero-lag local extremes (no walker seal needed) ──
   private microHighs: FsLevel[] = [];
@@ -863,17 +599,15 @@ export class FsV2Engine {
   // ── Y) N-candle sustain beyond the broken extreme ──
   private lockedLevelPx = NaN; // E-level that was crossed at lock (frozen)
   private sustainStreak = 0;
-  private armedSeen = false;
   private histH: number[] = []; // per-bar highs/lows for touch-seeding
   private histL: number[] = [];
 
-  constructor(private opts: FsV2Opts = {}) {}
-
-  get zonePct() { return this.opts.zonePct ?? 25; }
-  get simple() { return this.opts.simpleMode ?? false; }
+  constructor(private opts: FsV2Opts = {}) {
+    this.timeCap = this.opts.timeCap ?? "09:29";
+  }
 
   processBar(c: FlowCandle, gIdx: number) {
-    if (this.declared || this.invalidated) return;
+    if (this.declared) return;
     this.barsSeen++;
     const t = c.date.slice(11, 16);
     const green = c.close >= c.open;
@@ -885,26 +619,23 @@ export class FsV2Engine {
       this.eLoPivot = { ...this.eLo };
     }
 
-    // ---- B) consume walker seals FIRST (records/pools/E-pivots) ----
+    // ---- B) consume walker seals FIRST (records/pools/E-pivots only) ----
+    // Direction is decided ONLY by the live E-break path below (block A) —
+    // this block just maintains the sealed-pivot bookkeeping (eHiPivot/
+    // eLoPivot reference levels, and the normalHighs/normalLows pools used
+    // later by chop-break confirmation). It used to ALSO call initiate()
+    // independently whenever a walker-sealed pivot extended — a second,
+    // laggier trigger for direction that could silently reset progress the
+    // live path had already made. Removed: one source of truth for
+    // direction now, per the rebuild spec.
     for (const p of this.walker.processBar(c, gIdx)) {
       if (!p.sealed) continue;
       if (p.kind === "H") {
         const cur = this.eHiPivot!;
         if (p.px > cur.px) {
-          // NEW EXTREME-HIGH PIVOT — demote old to normals, count it
+          // NEW EXTREME-HIGH PIVOT — demote old to normals (only true extremes, not every small high)
           this.normalHighs.push(cur);
           this.eHiPivot = { px: p.px, idx: p.idx, time: p.time };
-          this.upStreak++;
-          this.downStreak = 0;
-          if (!this.simple) {
-            if (this.dir !== "up") {
-              this.initiate("up", t);
-              this.stage = 1;
-              this.convertedByZone = false;
-            } else {
-              this.stage = Math.min(2, Math.max(this.stage, this.upStreak));
-            }
-          }
         } else {
           this.pushUnique(this.normalHighs, { px: p.px, idx: p.idx, time: p.time });
         }
@@ -913,28 +644,46 @@ export class FsV2Engine {
         if (p.px < cur.px) {
           this.normalLows.push(cur);
           this.eLoPivot = { px: p.px, idx: p.idx, time: p.time };
-          this.downStreak++;
-          this.upStreak = 0;
-          if (!this.simple) {
-            if (this.dir !== "down") {
-              this.initiate("down", t);
-              this.stage = 1;
-              this.convertedByZone = false;
-            } else {
-              this.stage = Math.min(2, Math.max(this.stage, this.downStreak));
-            }
-          }
         } else {
           this.pushUnique(this.normalLows, { px: p.px, idx: p.idx, time: p.time });
         }
       }
     }
 
-    // ---- A) live path steps: stamps, zone, final trigger ----
-    const armed =
-      this.barsSeen > (this.opts.armBars ?? 5) &&
-      this.eHi.px - this.eLo.px >= (this.opts.armRangePts ?? 20);
+    // Invalidate swing if opposite extreme breaks the start before declaration (e.g., up swing low broken by 09:29)
+    if (this.dirConfirmed && this.dir && !this.declared && this.startIdx >= 0) {
+      if (this.dir === "up" && this.eLo.px < this.startPx) {
+        this.dir = null;
+        this.locked = false;
+        this.dirConfirmed = false;
+        this.dirConfirmedIdx = -1;
+        this.baseDir = null;
+        this.sameSideBreaks = 0;
+        this.oppositeSideBreaks = 0;
+        this.sustainStreak = 0;
+        this.lockedLevelPx = NaN;
+        this.microHighs.length = 0;
+        this.microLows.length = 0;
+        this.startIdx = -1; this.startTime = ""; this.startPx = NaN;
+        this.candIdx = -1; this.candTime = ""; this.candPx = NaN;
+      } else if (this.dir === "down" && this.eHi.px > this.startPx) {
+        this.dir = null;
+        this.locked = false;
+        this.dirConfirmed = false;
+        this.dirConfirmedIdx = -1;
+        this.baseDir = null;
+        this.sameSideBreaks = 0;
+        this.oppositeSideBreaks = 0;
+        this.sustainStreak = 0;
+        this.lockedLevelPx = NaN;
+        this.microHighs.length = 0;
+        this.microLows.length = 0;
+        this.startIdx = -1; this.startTime = ""; this.startPx = NaN;
+        this.candIdx = -1; this.candTime = ""; this.candPx = NaN;
+      }
+    }
 
+    // ---- A) live path steps: stamps, final trigger ----
     // Capture extremes BEFORE halves loop — if they update this bar, a new
     // extreme was printed and the sustain streak should NOT count this bar
     // (the "hold" is measured AFTER the extreme is final, not during it).
@@ -942,11 +691,14 @@ export class FsV2Engine {
     const eHiBefore = this.eHi.px;
 
     // ---- X) micro local-extremes: completed 2-side pivots, zero seal-lag ----
-    // Bar k-1 was a LOCAL TOP/BOTTOM if its extreme beat both neighbours and
-    // bar k failed to exceed it — detectable at k's close, no lookahead.
-    if (this.dir && this.barsSeen >= 3 && Number.isFinite(this.ppHigh)) {
-      const topFormed = this.pHigh > this.ppHigh && c.high < this.pHigh;
-      const botFormed = this.pLow < this.ppLow && c.low > this.pLow;
+    // Bar k-1 was a LOCAL TOP/BOTTOM if its extreme beat previous bar and is confirmed by next bar.
+    // Classic: next bar lower high (c.high < pHigh) for tops, higher low for bottoms.
+    // Immediate-break: next bar breaks opposite side (c.low < pLow for tops) still counts as pivot
+    // (fixes 20 July 12:51->12:52 where 12:52 immediately breaks 12:51).
+    // Guarded by dirConfirmed so chop cannot fire before direction is set.
+    if (this.dirConfirmed && this.dir && this.barsSeen >= 3 && Number.isFinite(this.ppHigh)) {
+      const topFormed = this.pHigh > this.ppHigh && (c.high < this.pHigh || c.low < this.pLow);
+      const botFormed = this.pLow < this.ppLow && (c.low > this.pLow || c.high > this.pHigh);
       if (topFormed && this.pHighIdx > this.startIdx) {
         this.pushUnique(this.microHighs, { px: this.pHigh, idx: this.pHighIdx, time: this.pHighT });
       }
@@ -964,7 +716,7 @@ export class FsV2Engine {
     for (const [px, isLow] of halves) {
       if (this.declared) break;
 
-      // live extreme stamps
+      // live extreme stamps — always update, even before timeCap
       if (px > this.eHi.px) {
         this.eHi = { px, idx: gIdx, time: t };
         if (this.dir === "up") this.setCand(this.eHi);
@@ -974,151 +726,152 @@ export class FsV2Engine {
         if (this.dir === "down") this.setCand(this.eLo);
       }
 
-      // zone conversion / re-arm bookkeeping
-      // A deep-zone entry counts as CONVERSION only if price had earlier
-      // touched the OPPOSITE deep zone while armed (true range reversal —
-      // the 18-Aug "shadiest" pattern). Prevents micro-opening-range abuse.
-      const rng = this.eHi.px - this.eLo.px;
-      if (armed && rng > 0) {
-        const pos = ((px - this.eLo.px) / rng) * 100;
-        const z = this.zonePct;
+      // nothing else (lock / dirConfirm / chop) before timeCap
+      if (t < this.timeCap) continue;
 
-        // ── one-time seeding: opening bars get evaluated against the
-        // armed-time range so pre-arm tops/bottoms count as touches
-        // (the 17-Aug failure: session top preceded arming) ──
-        if (!this.armedSeen) {
-          this.armedSeen = true;
-          const hiCut = 100 - z;
-          for (let h = 0; h < this.histH.length; h++) {
-            const ph = ((this.histH[h] - this.eLo.px) / rng) * 100;
-            const pl = ((this.histL[h] - this.eLo.px) / rng) * 100;
-            if (ph >= hiCut) this.touchedUp = true;
-            if (pl <= z) this.touchedDown = true;
-          }
-        }
-
-        if (pos >= 100 - z) this.touchedUp = true;
-        if (pos <= z) this.touchedDown = true;
-
-        if (pos <= z) {
-          const alreadyDone = this.dir === "down" && this.stage >= 2;
-          const wantsChange =
-            !alreadyDone &&
-            this.zoneSide !== "down" &&
-            this.touchedUp; // reversal proof required
-          if (wantsChange) {
-            this.zoneSide = "down";
-            if (this.dir !== "down") this.initiate("down", t);
-            this.stage = Math.max(this.stage, 2);
-            this.convertedByZone = true;
-          }
-        } else if (pos >= 100 - z) {
-          const alreadyDone = this.dir === "up" && this.stage >= 2;
-          const wantsChange =
-            !alreadyDone &&
-            this.zoneSide !== "up" &&
-            this.touchedDown;
-          if (wantsChange) {
-            this.zoneSide = "up";
-            if (this.dir !== "up") this.initiate("up", t);
-            this.stage = Math.max(this.stage, 2);
-            this.convertedByZone = true;
-          }
-        } else {
-          this.zoneSide = null; // middle band re-arms both sides
+      // direction detection: count same-side and opposite-side breaks
+      // Only count NEW extreme breaks (lower than previous eLo / higher than previous eHi)
+      // Any break > / < counts, no point threshold
+      if (this.dirConfirmed) {
+      } else if (this.locked || this.dir) {
+        const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
+        const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
+        if (this.baseDir === "down" && px < eLoLvl && px < eLoBefore) {
+          this.sameSideBreaks++;
+          if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+        } else if (this.baseDir === "up" && px > eHiLvl && px > eHiBefore) {
+          this.sameSideBreaks++;
+          if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+        } else if (this.baseDir === "down" && px > eHiLvl && px > eHiBefore) {
+          this.oppositeSideBreaks = 1;
+          this.dir = "up";
+          this.dirConfirmed = true;
+          this.dirConfirmedIdx = gIdx;
+          this.lockedLevelPx = eHiLvl; // reversal: sustain must reference the level that flipped it
+        } else if (this.baseDir === "up" && px < eLoLvl && px < eLoBefore) {
+          this.oppositeSideBreaks = 1;
+          this.dir = "down";
+          this.dirConfirmed = true;
+          this.dirConfirmedIdx = gIdx;
+          this.lockedLevelPx = eLoLvl; // reversal: sustain must reference the level that flipped it
         }
       }
 
 
   // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
-      if (this.dir && !this.locked) {
-        if (this.dir === "down") {
-          // lock: live cross BELOW the current E-LOW pivot level
-          const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
-          if (px < eLoLvl) {
-            this.locked = true;
-            this.lockedLevelPx = eLoLvl;
-            this.setCand(this.eLo);
-          } else if (!this.simple && this.convertedByZone && this.startIdx >= 0) {
-            // invalidation: reversal(zone)-established day dies if an opposite
-            // fresh chop-high breaks BEFORE the E-break lock arrives
-            const hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
-            if (hit) {
-              this.invalidated = true;
-              return;
-            }
+      if (!this.locked) {
+        const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
+        const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
+        const downBreak = this.dir === "down" && px < eLoLvl;
+        const upBreak = this.dir === "up" && px > eHiLvl;
+        const firstBreakDown = !this.dir && px < eLoLvl;
+        const firstBreakUp = !this.dir && px > eHiLvl;
+        const firstBreak = firstBreakDown || firstBreakUp;
+
+        if (downBreak || firstBreakDown) {
+          this.locked = true;
+          this.lockedLevelPx = eLoLvl;
+          this.setCand(this.eLo);
+          if (!this.dir) {
+            this.dir = "down";
+            this.initiate("down", t);
+            this.baseDir = "down";
+            this.sameSideBreaks = 1;
+          } else if (this.baseDir === "down") {
+            this.sameSideBreaks++;
+            if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+          } else {
+            this.oppositeSideBreaks = 1;
+            this.dir = "up";
+            this.dirConfirmed = true;
+            this.dirConfirmedIdx = gIdx;
           }
-        } else {
-          const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
-          if (px > eHiLvl) {
-            this.locked = true;
-            this.lockedLevelPx = eHiLvl;
-            this.setCand(this.eHi);
-          } else if (!this.simple && this.convertedByZone && this.startIdx >= 0) {
-            const hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
-            if (hit) {
-              this.invalidated = true;
-              return;
-            }
+        } else if (upBreak || firstBreakUp) {
+          this.locked = true;
+          this.lockedLevelPx = eHiLvl;
+          this.setCand(this.eHi);
+          if (!this.dir) {
+            this.dir = "up";
+            this.initiate("up", t);
+            this.baseDir = "up";
+            this.sameSideBreaks = 1;
+          } else if (this.baseDir === "up") {
+            this.sameSideBreaks++;
+            if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+          } else {
+            this.oppositeSideBreaks = 1;
+            this.dir = "down";
+            this.dirConfirmed = true;
+            this.dirConfirmedIdx = gIdx;
           }
         }
       }
 
-      // final confirmation: ANY FRESH normal OPPOSITE pivot crossed by wick
-      // (stage ≥ 2 OR locked). Fresh = formed AFTER the swing started —
-      // the 19-Aug confirming high was a bounce pivot born mid-move,
-      // never a stale pre-move level.
-      if ((this.stage >= 2 || this.locked) && this.dir && this.startIdx >= 0) {
+      // CHOP-BREAK: after direction confirmed, break of the *most recent* opposite pivot = chop.
+      // For shorts we break the latest high pivot (normal or micro) after start; for longs the latest low.
+      // Any > / < counts, no point threshold. Allow immediate next-bar break for highs (12:51->12:52)
+      // but require 1 bar gap for lows to avoid tiny 09:35->09:36 wiggle.
+      if (this.dirConfirmed && this.dir && this.startIdx >= 0) {
         if (this.dir === "down") {
-          let hit = this.normalHighs.find((l) => l.idx > this.startIdx && px > l.px);
-          let pool = "normal";
-          if (!hit) {
-            hit = this.microHighs.find((l) => l.idx > this.startIdx && px > l.px);
-            pool = "micro";
+          const normalCands = this.normalHighs.filter((l) => l.idx > this.startIdx && l.idx < gIdx);
+          if (normalCands.length > 0) {
+            const target = normalCands.reduce((a, b) => (b.idx > a.idx ? b : a), normalCands[0]);
+            if (px > target.px) {
+              this.lastConfirmHit = { pool: "normal", px: target.px, idx: target.idx, time: target.time };
+              this.confirmSource = "chop";
+              this.confirm(gIdx, t);
+              return;
+            }
           }
-          if (hit) {
-            this.lastConfirmHit = { pool, px: hit.px, idx: hit.idx, time: hit.time };
-            this.confirmSource = "chop";
-            this.confirm(gIdx, t);
-            return;
+          const microCands = this.microHighs.filter((l) => l.idx > this.startIdx && l.idx < gIdx);
+          if (microCands.length > 0) {
+            const target = microCands.reduce((a, b) => (b.idx > a.idx ? b : a), microCands[0]);
+            if (px > target.px) {
+              this.lastConfirmHit = { pool: "micro", px: target.px, idx: target.idx, time: target.time };
+              this.confirmSource = "chop";
+              this.confirm(gIdx, t);
+              return;
+            }
           }
         } else {
-          let hit = this.normalLows.find((l) => l.idx > this.startIdx && px < l.px);
-          let pool = "normal";
-          if (!hit) {
-            hit = this.microLows.find((l) => l.idx > this.startIdx && px < l.px);
-            pool = "micro";
+          const normalCands = this.normalLows.filter((l) => l.idx > this.startIdx && l.idx + 1 < gIdx);
+          if (normalCands.length > 0) {
+            const target = normalCands.reduce((a, b) => (b.idx > a.idx ? b : a), normalCands[0]);
+            if (px < target.px) {
+              this.lastConfirmHit = { pool: "normal", px: target.px, idx: target.idx, time: target.time };
+              this.confirmSource = "chop";
+              this.confirm(gIdx, t);
+              return;
+            }
           }
-          if (hit) {
-            this.lastConfirmHit = { pool, px: hit.px, idx: hit.idx, time: hit.time };
-            this.confirmSource = "chop";
-            this.confirm(gIdx, t);
-            return;
+          const microCands = this.microLows.filter((l) => l.idx > this.startIdx && l.idx + 1 < gIdx);
+          if (microCands.length > 0) {
+            const target = microCands.reduce((a, b) => (b.idx > a.idx ? b : a), microCands[0]);
+            if (px < target.px) {
+              this.lastConfirmHit = { pool: "micro", px: target.px, idx: target.idx, time: target.time };
+              this.confirmSource = "chop";
+              this.confirm(gIdx, t);
+              return;
+            }
           }
         }
       }
     }
 
     // ---- Y) N-candle sustain beyond the broken extreme (bar-level) ----
-    if ((this.stage >= 2 || this.locked) && this.dir && !this.declared && !this.invalidated) {
+    if (t < this.timeCap) {
+      this.sustainStreak = 0;
+    } else if (this.dirConfirmed && this.dir && !this.declared) {
       const n = this.opts.sustainBars ?? 7;
-      const ref =
-        this.locked
-          ? this.candPx
-          : this.dir === "down"
-            ? this.eLoPivot?.px ?? this.eLo.px
-            : this.eHiPivot?.px ?? this.eHi.px;
-      // If this bar printed a new extreme in the swing direction, it's part
-      // of the MOVE, not the HOLD. Reset streak so the 7-count starts after
-      // the extreme is final (bar that makes the low/high doesn't count).
+      const ref = this.lockedLevelPx;
       const madeNewExtreme =
         this.dir === "down" ? this.eLo.px < eLoBefore : this.eHi.px > eHiBefore;
       if (madeNewExtreme) {
         this.sustainStreak = 0;
       } else {
         this.sustainStreak =
-          this.dir === "down" ? (c.close > ref ? this.sustainStreak + 1 : 0)
-                                : (c.close < ref ? this.sustainStreak + 1 : 0);
+          this.dir === "down" ? (c.close < ref ? this.sustainStreak + 1 : 0)
+                                  : (c.close > ref ? this.sustainStreak + 1 : 0);
       }
       if (this.sustainStreak >= n) {
         this.confirmSource = "sustain";
@@ -1128,6 +881,12 @@ export class FsV2Engine {
     } else {
       this.sustainStreak = 0;
     }
+
+    // shift micro history for next bar (local extreme detection uses prev 2 bars)
+    this.ppHigh = this.pHigh; this.ppHighIdx = this.pHighIdx; this.ppHighT = this.pHighT;
+    this.pHigh = c.high; this.pHighIdx = gIdx; this.pHighT = t;
+    this.ppLow = this.pLow; this.ppLowIdx = this.pLowIdx; this.ppLowT = this.pLowT;
+    this.pLow = c.low; this.pLowIdx = gIdx; this.pLowT = t;
   }
 
   debugPools() {
@@ -1146,6 +905,11 @@ export class FsV2Engine {
     this.microHighs.length = 0;
     this.microLows.length = 0;
     this.sustainStreak = 0;
+    this.baseDir = null;
+    this.sameSideBreaks = 0;
+    this.oppositeSideBreaks = 0;
+    this.dirConfirmed = false;
+    this.dirConfirmedIdx = -1;
     // swing start = the counter-extreme at initiation moment
     const s = dir === "up" ? this.eLo : this.eHi;
     this.startIdx = s.idx;
@@ -1166,7 +930,10 @@ export class FsV2Engine {
   }
 
   private confirm(gIdx: number, t: string) {
+    // hard timeCap — nothing declares before timeCap, not deferred
+    if (t < this.timeCap) return;
     this.declared = true;
+    this.tier = "real";
     this.endIdx = this.candIdx;
     this.endTime = this.candTime;
     this.endPx = this.candPx;
@@ -1176,14 +943,15 @@ export class FsV2Engine {
 }
 
 // Batch helper: replay each day through FsV2 (identical to live path).
-// Returns BOTH outcomes: declared swings (cyan) and invalidated days
-// (red — no-swing per v3 rule), each with its start→end segment.
+// Outcome is now only "real" (declared) or "none" (still monitoring / EOD no-call).
+// Fallback tier removed — engine keeps monitoring until chop/sustain fires.
 export interface FsV2Result {
   day: string;
-  invalid: boolean;
-  confIdx: number; // global candle index of the CONFIRM bar (-1 if invalid)
-  seg: FlowSegment;
+  outcome: "real" | "none";
+  confIdx: number; // global candle index of the CONFIRM bar (-1 if none)
+  seg: FlowSegment | null;
   source: "chop" | "sustain" | null;
+  dir: "up" | "down" | null;
 }
 
 export function computeFsV2Results(
@@ -1199,13 +967,21 @@ export function computeFsV2Results(
 
   const out: FsV2Result[] = [];
   byDay.forEach((items, day) => {
-    const eng = new FsV2Engine(opts);
+    const eng = new FirstSwingEngine(opts);
     for (const it of items) eng.processBar(it.c, it.gIdx);
-    if (!eng.invalidated && !eng.declared) return;
-    if (eng.startIdx < 0) return;
+
+    if (!eng.declared || eng.startIdx < 0) {
+      // still monitoring or no swing by EOD — explicit none
+      // For backward compat, emit none only if day fully processed; callers filtering seg!=null will ignore.
+      if (eng.declared) return;
+      // emit none for completeness if you need it, else return empty — keeping legacy: no segment.
+      // To preserve explicit none, uncomment below:
+      // out.push({ day, outcome: "none", confIdx: -1, seg: null, source: null, dir: null });
+      return;
+    }
     out.push({
       day,
-      invalid: eng.invalidated,
+      outcome: "real",
       confIdx: eng.confirmedAtIdx,
       seg: {
         dir: eng.dir === "up" ? "B" : "S",
@@ -1215,18 +991,20 @@ export function computeFsV2Results(
         endPx: eng.endPx,
       },
       source: eng.confirmSource,
+      dir: eng.dir,
     });
   });
   return out;
 }
 
-// Backward-compatible wrapper: declared-only segments.
+// Backward-compatible wrapper: declared segments only (real),
+// dropping explicit "none" no-call days.
 export function computeFsV2Declared(
   candles: FlowCandle[],
   opts: FsV2Opts = {},
 ): FlowSegment[] {
   return computeFsV2Results(candles, opts)
-    .filter((r) => !r.invalid)
+    .filter((r): r is FsV2Result & { seg: FlowSegment } => r.seg !== null)
     .map((r) => r.seg);
 }
 
@@ -1258,4 +1036,3 @@ export function computeAlgoFlowLine(candles: FlowCandle[]): FlowSegment[] {
   });
   return segs;
 }
-
