@@ -34,15 +34,12 @@ interface BoxItem {
 
 const GREEN = "#10b981";
 const RED = "#ef4444";
-const ENTRY_LINE = "#cbd5e1";
-const ENTRY_MARKER = "#fde047"; // bright yellow
+const ENTRY_ARROW = "#fde047"; // yellow-300
 
 /**
  * TradingView-style position tool: translucent green box entry -> target,
- * red box entry -> SL, dashed entry line, an R-multiple tag, and a
- * bright yellow vertical "ENTRY" marker at the entry bar so the entry
- * bar is instantly visible. One box per simulated trade, drawn between
- * the entry bar and the exit bar.
+ * red box entry -> SL, and a small downward arrow at the entry price to
+ * mark where the trade was taken.
  */
 export class PositionPrimitive implements IPanePrimitive<Time> {
   private chart: IChartApi | null = null;
@@ -109,11 +106,10 @@ class PositionPaneRenderer implements IPrimitivePaneRenderer {
   constructor(private items: BoxItem[]) {}
 
   draw(target: CanvasRenderingTarget2D): void {
-    target.useMediaCoordinateSpace(({ context: ctx, mediaSize }) => {
+    target.useMediaCoordinateSpace(({ context: ctx }) => {
       ctx.font = "bold 11px ui-monospace, SFMono-Regular, Menlo, monospace";
       ctx.textBaseline = "middle";
       ctx.textAlign = "left";
-      const h = mediaSize.height;
 
       for (const it of this.items) {
         // profit zone (entry -> target)
@@ -140,20 +136,8 @@ class PositionPaneRenderer implements IPrimitivePaneRenderer {
         ctx.strokeStyle = "rgba(239, 68, 68, 0.55)";
         hline(ctx, it.x1, it.x2, it.ySl);
 
-        // ENTRY marker — bright yellow vertical line spanning the whole pane
-        ctx.strokeStyle = ENTRY_MARKER;
-        ctx.lineWidth = 2;
-        ctx.setLineDash([]);
-        vline(ctx, it.x1, 0, h);
-
-        // "ENTRY" label at top of pane, right of the vertical bar
-        ctx.font = "bold 10px ui-monospace, SFMono-Regular, Menlo, monospace";
-        ctx.strokeStyle = "#0d1117";
-        ctx.lineWidth = 3;
-        ctx.strokeText("ENTRY", it.x1 + 4, 12);
-        ctx.fillStyle = ENTRY_MARKER;
-        ctx.fillText("ENTRY", it.x1 + 4, 12);
-        ctx.font = "bold 11px ui-monospace, SFMono-Regular, Menlo, monospace";
+        // small downward arrow at entry price (marks entry candle)
+        drawEntryArrow(ctx, it.x1, it.yEntry, ENTRY_ARROW);
 
         // R tag near the TARGET line
         const color = it.win ? GREEN : RED;
@@ -180,14 +164,22 @@ function hline(
   ctx.stroke();
 }
 
-function vline(
+/** Draw a small filled downward-pointing triangle above (x, y). */
+function drawEntryArrow(
   ctx: CanvasRenderingContext2D,
   x: number,
-  y1: number,
-  y2: number,
+  y: number,
+  color: string,
 ) {
+  const size = 8; // half-width of triangle
   ctx.beginPath();
-  ctx.moveTo(x, y1);
-  ctx.lineTo(x, y2);
+  ctx.moveTo(x, y); // tip at entry price
+  ctx.lineTo(x - size, y - size - 4); // bottom-left
+  ctx.lineTo(x + size, y - size - 4); // bottom-right
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.strokeStyle = "#0d1117";
+  ctx.lineWidth = 1.5;
   ctx.stroke();
 }
