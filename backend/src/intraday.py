@@ -68,6 +68,7 @@ DEFAULT_CFG = {
     "gap_pct": 0.0027,       # |open - prev_close| beyond this fraction = gap-up/down
                              # 0.27% researched from labeled examples (Oct-Dec'25,
                              # Mar-Apr'26): separates GOOD vs noise gaps 8/9
+    "first_swing_v2": False,  # use new FirstSwingEngine (port of frontend logic)
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -222,6 +223,69 @@ def _classify_first_swing(candles: list[dict]) -> tuple[str | None, int, list[di
     return direction, seed, events
 
 
+    return direction, seed, events
+
+
+def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | None, int, list[dict]]:
+    """First-swing classification using the new FirstSwingEngine.
+
+    Uses advanced price-action detection (continuation/reversal + chop/sustain
+    confirmation). Falls back to legacy _classify_first_swing if not declared.
+    """
+    from datetime import datetime, timezone
+    from .swing_engine import FirstSwingEngine
+    from .walker import FlowCandle
+
+    events: list[dict] = []
+    if not candles:
+        return None, -1, events
+
+    flow_candles: list[FlowCandle] = []
+    for c in candles:
+        ts = c.get("ts", 0)
+        if ts:
+            dt = datetime.fromtimestamp(int(ts), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+        else:
+            dt = f"{day_date}T{c.get('time', '00:00')}:00"
+        flow_candles.append(FlowCandle(
+            date=dt, open=c["open"], high=c["high"], low=c["low"], close=c["close"],
+        ))
+
+    eng = FirstSwingEngine()
+    for g_idx, fc in enumerate(flow_candles):
+        eng.process_bar(fc, g_idx)
+
+    if not eng.declared:
+        return _classify_first_swing(candles)
+
+    direction = "buying" if eng.dir == "up" else "selling"
+    seed = eng.start_idx
+    events.append({
+        "type": "swing_classified_v2",
+        "bar": seed,
+        "time": eng.start_time,
+        "direction": direction,
+        "engine": "FirstSwingEngine",
+        "source": eng.confirm_source,
+    })
+    events.append({
+        "type": "fs_breaks",
+        "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                   for b in eng.break_marks],
+    })
+    events.append({
+        "type": "fs_segment",
+        "dir": eng.dir,
+        "start_idx": eng.start_idx,
+        "start_px": eng.start_px,
+        "end_idx": eng.end_idx,
+        "end_px": eng.end_px,
+        "confirmed_at_idx": eng.confirmed_at_idx,
+        "confirmed_at_time": eng.confirmed_at_time,
+    })
+    return direction, seed, events
+
+
 # --- pace break -----------------------------------------------------------------
 
 def detect_pace_break(
@@ -316,7 +380,10 @@ def simulate_day(
         result["events"].append({"type": "skipped_thin_session", "bars": len(candles)})
         return result
 
-    swing_dir, swing_start, ev = _classify_first_swing(candles[: len(candles)])
+    if cfg.get("first_swing_v2"):
+        swing_dir, swing_start, ev = _classify_first_swing_v2(candles[: len(candles)], result["date"])
+    else:
+        swing_dir, swing_start, ev = _classify_first_swing(candles[: len(candles)])
     result["swing_direction"] = swing_dir
     result["events"].extend(ev)
 

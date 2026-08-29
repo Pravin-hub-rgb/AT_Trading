@@ -23,6 +23,7 @@ from src.scheduler import DataScheduler
 from src import swing as swing_svc
 from src import bias as bias_svc
 from src import intraday as intraday_svc
+from src import swing_engine as fs_engine
 
 active_operations: dict = {}
 
@@ -518,6 +519,99 @@ def firstswing_delete(day: str):
         _FS_FILE.write_text(json.dumps(data, indent=2), encoding="utf-8")
         return {"ok": True, "deleted": day, "count": len(data)}
     return JSONResponse(status_code=404, content={"detail": f"{day} not marked"})
+
+
+# ===== First-Swing Engine (computed via WalkerEngine + FirstSwingEngine) =====
+
+class FlowCandleInput(BaseModel):
+    """Input candle for first-swing computation."""
+    date: str       # ISO datetime string like "2025-08-28T09:15:00"
+    open: float
+    high: float
+    low: float
+    close: float
+
+
+class FsBreakMarkOut(BaseModel):
+    """B1/B2/FLIP marker output."""
+    idx: int
+    time: str
+    kind: str       # "B1" | "B2" | "FLIP"
+    dir: str        # "up" | "down"
+    px: float
+
+
+class FlowSegmentOut(BaseModel):
+    """First-swing segment: start -> end with direction."""
+    dir: str        # "B" (buying) | "S" (selling)
+    start_idx: int
+    start_px: float
+    end_idx: int
+    end_px: float
+
+
+class FsV2ResultOut(BaseModel):
+    """One day's first-swing result."""
+    day: str
+    outcome: str             # always "real" (only declared swings returned)
+    conf_idx: int            # global candle index of the CONFIRM bar
+    seg: FlowSegmentOut
+    source: str | None       # "chop" | "sustain" | null
+    dir: str                 # "up" | "down"
+    breaks: list[FsBreakMarkOut]
+
+
+@app.post("/api/firstswing/compute")
+def compute_first_swing(candles: list[FlowCandleInput]) -> list[FsV2ResultOut]:
+    """Run first-swing detection on provided candles.
+
+    Candles should be sorted by date globally. Returns one result per day with
+    a declared swing (real outcome). Includes B1/B2/FLIP break marks and the
+    FS segment (start/end points).
+    """
+    from src.walker import FlowCandle
+
+    # Convert to internal format
+    flow_candles = [
+        FlowCandle(
+            date=c.date,
+            open=float(c.open),
+            high=float(c.high),
+            low=float(c.low),
+            close=float(c.close),
+        )
+        for c in candles
+    ]
+
+    results = fs_engine.compute_fs_v2_results(flow_candles)
+
+    return [
+        FsV2ResultOut(
+            day=r.day,
+            outcome=r.outcome,
+            conf_idx=r.conf_idx,
+            seg=FlowSegmentOut(
+                dir=r.seg.dir,
+                start_idx=r.seg.start_idx,
+                start_px=r.seg.start_px,
+                end_idx=r.seg.end_idx,
+                end_px=r.seg.end_px,
+            ),
+            source=r.source,
+            dir=r.dir,
+            breaks=[
+                FsBreakMarkOut(
+                    idx=b.idx,
+                    time=b.time,
+                    kind=b.kind,
+                    dir=b.dir,
+                    px=b.px,
+                )
+                for b in r.breaks
+            ],
+        )
+        for r in results
+    ]
 
 
 if __name__ == "__main__":
