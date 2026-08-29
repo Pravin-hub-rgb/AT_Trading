@@ -448,14 +448,37 @@ def simulate_day(
             # For a LONG: SL goes below entry -> use the most recent LOW pivot
             # (recent support). For a SHORT: SL goes above entry -> use the
             # most recent HIGH pivot (recent resistance).
+            # HOWEVER: if that pivot has already been breached by the entry
+            # candle's low/high, fall back to Entry Candle Low/High - buffer.
             buf = float(cfg.get("sl_pivot_buffer", SL_PIVOT_BUFFER))
             opposing_pool = normal_lows if dirn == 1 else normal_highs
+            entry_candle_low = candles[bar_idx]["low"]
+            entry_candle_high = candles[bar_idx]["high"]
             if opposing_pool:
                 pivot_ref = opposing_pool[-1]  # most recent sealed opposing pivot
+                pivot_px = pivot_ref.px
+                # Check if pivot was already breached by the entry candle.
+                # A LOW pivot is "breached" if the entry candle went below it
+                # (price action already went through that support).
+                # A HIGH pivot is "breached" if the entry candle went above it.
                 if dirn == 1:
-                    sl = pivot_ref.px - buf
+                    breached = pivot_px >= entry_candle_low  # L pivot above ECL → breached
                 else:
-                    sl = pivot_ref.px + buf
+                    breached = pivot_px <= entry_candle_high  # H pivot below ECH → breached
+
+                if breached:
+                    # Pivot already breached — use Entry Candle Low/High instead
+                    if dirn == 1:
+                        sl = entry_candle_low - buf
+                    else:
+                        sl = entry_candle_high + buf
+                    pivot_ref = None  # mark as ECL fallback
+                else:
+                    # Pivot still intact — use it
+                    if dirn == 1:
+                        sl = pivot_px - buf
+                    else:
+                        sl = pivot_px + buf
             else:
                 # No opposing pivot yet — fallback to avg
                 sl_used_mode = "avg"
