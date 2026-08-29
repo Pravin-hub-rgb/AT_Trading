@@ -20,12 +20,14 @@ Course rules implemented here:
       unlocks the second entry, NO trailing (S5/S6)
     - Square-off 15:15 (user setting); ambiguous candle (SL & target both
       touched) resolves conservatively as SL-first
+    - SL modes: avg (default), prev_pivot (uses WalkerEngine pivot + buffer)
 """
 
 from __future__ import annotations
 
 import pandas as pd
 from collections import Counter
+from .walker import WalkerEngine, FlowCandle
 
 # --- tunable thresholds -------------------------------------------------------
 ENTRY_START = "09:45"        # hard rule: no entries before this (S1/S4/S5)
@@ -57,16 +59,20 @@ MOMENTUM_MIN_R = 0.0         # DISABLED: backtest showed the filter cuts winners
 SL_AVG_MULT = 1.0            # SL distance beyond reference low/high = mult x average candle size
                              # (1.0 = course default; user experiment: decreasing fractions)
 
+# --- prev-pivot SL constants -------------------------------------------------
+SL_PIVOT_BUFFER = 1.0        # points beyond the opposing pivot for SL (prev_pivot mode)
+
 # --- experiment switches (best-combo search, BTC-backtester style) ------------
 # Defaults preserve the current engine behaviour exactly.
 DEFAULT_CFG = {
-    "sl_mode": "avg",        # avg | avg075 | avg05 | fixed8
+    "sl_mode": "avg",        # avg | avg075 | avg05 | fixed8 | prev_pivot
     "execution": "5min",     # 5min (conservative, SL-first) | 1min (color-aware precise)
     "trailing": "off",       # off (course: fixed 3R target) | ladder (R-chunk trail; disables 3R target)
     "trail_distance_r": 1.0, # ladder step size in R
     "gap_pct": 0.0027,       # |open - prev_close| beyond this fraction = gap-up/down
                              # 0.27% researched from labeled examples (Oct-Dec'25,
                              # Mar-Apr'26): separates GOOD vs noise gaps 8/9
+    "sl_pivot_buffer": 1.0,  # buffer in absolute points for prev_pivot SL mode
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -329,6 +335,11 @@ def simulate_day(
         result["events"].append({"type": "skipped_thin_session", "bars": len(candles)})
         return result
 
+    # WalkerEngine: track pivots for prev_pivot SL mode
+    walker = WalkerEngine()
+    normal_highs: list = []   # sealed H pivots
+    normal_lows: list = []    # sealed L pivots
+
     swing_dir, swing_start, ev = _classify_first_swing_v2(candles[: len(candles)], result["date"])
     result["swing_direction"] = swing_dir
     result["events"].extend(ev)
@@ -365,16 +376,21 @@ def simulate_day(
 
     # running swing state (reclassified as breaks print)
     cur_swing = swing_dir
-    swing_extreme = (
-        max(c["high"] for c in candles[: swing_start + 1])
-        if cur_swing == "buying"
-        else min(c["low"] for c in candles[: swing_start + 1])
-    )
-    swing_base = (
-        min(c["low"] for c in candles[: swing_start + 1])
-        if cur_swing == "buying"
-        else max(c["high"] for c in candles[: swing_start + 1])
-    )
+    if cur_swing is not None and swing_start >= 0:
+        swing_extreme = (
+            max(c["high"] for c in candles[: swing_start + 1])
+            if cur_swing == "buying"
+            else min(c["low"] for c in candles[: swing_start + 1])
+        )
+        swing_base = (
+            min(c["low"] for c in candles[: swing_start + 1])
+            if cur_swing == "buying"
+            else max(c["high"] for c in candles[: swing_start + 1])
+        )
+    else:
+        # No swing declared — seed from first candle
+        swing_extreme = candles[0]["high"]
+        swing_base = candles[0]["low"]
 
     def _swing_size() -> float:
         return abs(swing_extreme - swing_base)
@@ -422,18 +438,40 @@ def simulate_day(
 
     def _open_trade(bar_idx: int, dirn: int, ref_level: float, dbar: dict, btype: str) -> bool:
         nonlocal open_trade, entries_done
-        if cfg["sl_mode"] in SL_MODE_FIXED:
-            ref_dist = float(SL_MODE_FIXED[cfg["sl_mode"]])
-        else:
-            ref_dist = base_avg * SL_MODE_MULT.get(cfg["sl_mode"], 1.0)
         entry = candles[bar_idx]["close"]
+        sl_mode = cfg["sl_mode"]
+        sl_used_mode = sl_mode
+        pivot_ref = None
+
+        if sl_mode == "prev_pivot":
+            # SL = opposing pivot + buffer (below for long, above for short)
+            buf = float(cfg.get("sl_pivot_buffer", SL_PIVOT_BUFFER))
+            opposing_pool = normal_highs if dirn == 1 else normal_lows
+            if opposing_pool:
+                pivot_ref = opposing_pool[-1]  # most recent sealed opposing pivot
+                if dirn == 1:
+                    sl = pivot_ref.px - buf
+                else:
+                    sl = pivot_ref.px + buf
+            else:
+                # No opposing pivot yet — fallback to avg
+                sl_used_mode = "avg"
+
+        if sl_used_mode != "prev_pivot":
+            if sl_mode in SL_MODE_FIXED:
+                ref_dist = float(SL_MODE_FIXED[sl_mode])
+            else:
+                ref_dist = base_avg * SL_MODE_MULT.get(sl_mode, 1.0)
+            if dirn == 1:
+                sl = min(ref_level, candles[bar_idx]["low"]) - ref_dist
+            else:
+                sl = max(ref_level, candles[bar_idx]["high"]) + ref_dist
+
         if dirn == 1:
-            sl = min(ref_level, candles[bar_idx]["low"]) - ref_dist
             risk = entry - sl
             target = entry + RR_TARGET * risk
             direction = "long"
         else:
-            sl = max(ref_level, candles[bar_idx]["high"]) + ref_dist
             risk = sl - entry
             target = entry - RR_TARGET * risk
             direction = "short"
@@ -456,6 +494,8 @@ def simulate_day(
             "dom_low": dbar["low"],
             "dom_high": dbar["high"],
             "validated": False,
+            "sl_mode_used": sl_used_mode,
+            "pivot_ref": {"px": pivot_ref.px, "time": pivot_ref.time, "kind": pivot_ref.kind, "idx": pivot_ref.idx} if pivot_ref is not None else None,
             # live execution state (1-min mode)
             "_cur_sl": sl,
             "_init_sl": sl,
@@ -610,6 +650,17 @@ def simulate_day(
 
     while i < len(candles):
         cur = candles[i]
+
+        # ---- WalkerEngine: feed candles and collect pivots for prev_pivot SL ----
+        if cfg["sl_mode"] == "prev_pivot":
+            dt_str = f"{result['date']}T{cur['time']}:00"
+            fc = FlowCandle(date=dt_str, open=cur["open"], high=cur["high"], low=cur["low"], close=cur["close"])
+            new_pivots = walker.process_bar(fc, i)
+            for p in new_pivots:
+                if p.kind == "H":
+                    normal_highs.append(p)
+                else:
+                    normal_lows.append(p)
 
         # ---- manage open trade ----
         if open_trade is not None:
