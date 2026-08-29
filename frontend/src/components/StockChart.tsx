@@ -43,6 +43,7 @@ interface Props {
   manualFirstSwing?: Record<string, FsDayMark> | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
   fsMarkers?: { idx: number; invalid: boolean; source?: "chop" | "sustain" | null; dir?: "up" | "down" | null }[] | null;
+  fsBreaks?: { idx: number; time: string; kind: "B1" | "B2" | "FLIP"; dir: "up" | "down"; px: number }[] | null;
   drawMode?: boolean;
   onSwingDraw?: (mark: { day: string; start: FsPoint; end: FsPoint }) => void;
   onDrawStatus?: (status: string | null) => void;
@@ -160,7 +161,7 @@ function fsSegsFromMarks(candles: Candle[], marks: Record<string, FsDayMark>): F
   return segs;
 }
 
-const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, algoFlowLine, envelope, manualFirstSwing, algoFirstSwing, fsMarkers, drawMode = false, onSwingDraw, onDrawStatus, onHoverTime }: Props, ref) {
+const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ symbol, candles, intraday = false, interval = "daily", height = 720, swings, bias, trades, sessionBreaks, oneMinSwingN, swingDots = true, algoFlowLine, envelope, manualFirstSwing, algoFirstSwing, fsMarkers, fsBreaks, drawMode = false, onSwingDraw, onDrawStatus, onHoverTime }: Props, ref) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -863,8 +864,21 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
     const ser = seriesRef.current;
     if (!ser || !intraday || !algoFirstSwing || algoFirstSwing.length === 0) return;
     let mkApi: ISeriesMarkersPluginApi<Time> | null = null;
+    // break markers first (B1/B2/FLIP) so FS/SUS arrows stay visually on top
+    const ms: SeriesMarker<Time>[] = [];
+    for (const b of fsBreaks ?? []) {
+      const cc = candles[b.idx];
+      if (!cc) continue;
+      ms.push({
+        time: cc.ts as Time,
+        position: b.dir === "up" ? "aboveBar" : "belowBar",
+        shape: "circle",
+        color: b.kind === "FLIP" ? "#f97316" : "#64748b",
+        text: b.kind,
+        size: 1,
+      });
+    }
     if (fsMarkers && fsMarkers.length > 0) {
-      const ms: SeriesMarker<Time>[] = [];
       for (const mk of fsMarkers) {
         const cc = candles[mk.idx];
         if (!cc) continue;
@@ -878,8 +892,8 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
           size: 1,
         });
       }
-      if (ms.length > 0) mkApi = createSeriesMarkers(ser, ms);
     }
+    if (ms.length > 0) mkApi = createSeriesMarkers(ser, ms);
     const okSegs = algoFirstSwing.filter((s) => !s.invalid);
     const badSegs = algoFirstSwing.filter((s) => s.invalid);
     const prims: FlowLinePrimitive[] = [];
@@ -901,7 +915,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart({ sym
       }
       mkApi?.setMarkers([]);
     };
-  }, [algoFirstSwing, fsMarkers, intraday, candles]);
+  }, [algoFirstSwing, fsMarkers, fsBreaks, intraday, candles]);
 
   return (
     <div style={{ position: "relative" }}>

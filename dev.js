@@ -90,8 +90,22 @@ killPort(3002);
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+async function waitPortFree(port, timeoutMs = 10000) {
+  const t0 = Date.now();
+  while (Date.now() - t0 < timeoutMs) {
+    if (listeningPids(port).length === 0) return true;
+    await sleep(300);
+  }
+  console.log(`[dev] WARNING: port ${port} still busy after ${timeoutMs}ms — starting anyway`);
+  return false;
+}
+
 (async () => {
-  await sleep(1000);
+  // Wait until the force-killed processes have FULLY released their ports —
+  // starting next while the old one still holds 3002 corrupts the Turbopack
+  // cache (symptom: every route 404s after a restart).
+  await waitPortFree(8003);
+  await waitPortFree(3002);
 
   const isProd = process.argv.includes('--prod');
 
@@ -104,11 +118,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         prefixColor: 'blue',
       },
       {
-        // NOTE: intentionally UNQUOTED — concurrently runs via cmd.exe which
-        // strips the first/last quote ("cmd /c" bug). Paths here are
-        // space-free; absolute form keeps the at_trading marker in the
-        // process cmdline for backend.js ownership checks.
-        command: `${BACKEND_PYTHON} ${BACKEND_SERVER}`,
+        // dev-py.ps1: auto-restarts the backend on non-zero exit (the sporadic
+        // 4294967295 native crash) — clean exits (Ctrl+C) stop the loop.
+        // Unquoted like before: space-free absolute paths, cmd.exe-safe.
+        command: `powershell -ExecutionPolicy Bypass -File ${ROOT}\\backend\\dev-py.ps1 ${BACKEND_PYTHON} ${BACKEND_SERVER}`,
         name: 'py',
         cwd: 'backend',
         prefixColor: 'yellow',

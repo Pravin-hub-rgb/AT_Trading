@@ -5,6 +5,11 @@ from collections import OrderedDict
 from contextlib import asynccontextmanager
 from datetime import datetime
 
+import faulthandler
+
+# Native-crash (Windows exit code 4294967295) dumps its traceback to stderr
+faulthandler.enable()
+
 import pandas as pd
 import uvicorn
 from fastapi import FastAPI

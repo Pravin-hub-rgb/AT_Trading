@@ -3,7 +3,7 @@
 // First-swing detection now lives in its own engine (see firstswing.ts),
 // driven by the WalkerEngine pivot stream. flowline.ts keeps the public
 // computeFsV2* surface and delegates to it.
-import { FirstSwingEngine } from "./firstswing";
+import { FirstSwingEngine, type FsBreakMark } from "./firstswing";
 export { FirstSwingEngine } from "./firstswing";
 
 // ── branch coverage instrumentation (active only with FLOW_COV=1) ────────
@@ -952,6 +952,9 @@ export interface FsV2Result {
   seg: FlowSegment | null;
   source: "chop" | "sustain" | null;
   dir: "up" | "down" | null;
+  // Direction-building break markers (B1 = first A/B break → lock,
+  // B2 = fresh-extreme extension → confirm, FLIP = opposite extreme → confirm).
+  breaks?: FsBreakMark[];
 }
 
 export function computeFsV2Results(
@@ -992,6 +995,7 @@ export function computeFsV2Results(
       },
       source: eng.confirmSource,
       dir: eng.dir,
+      breaks: eng.breakMarks,
     });
   });
   return out;

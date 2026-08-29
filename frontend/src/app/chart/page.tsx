@@ -322,9 +322,10 @@ export default function ChartPage() {
               return {
                 algoFirstSwing: valid.map((r) => r.seg!),
                 fsMarkers: valid.map((r) => ({ idx: r.confIdx, invalid: false, source: r.source, dir: r.dir })),
+                fsBreaks: valid.flatMap((r) => r.breaks ?? []),
               };
             })()
-          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean; source: "chop" | "sustain" | null; dir: "up" | "down" | null }[] | null }),
+          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean; source: "chop" | "sustain" | null; dir: "up" | "down" | null }[] | null, fsBreaks: null as { idx: number; time: string; kind: "B1" | "B2" | "FLIP"; dir: "up" | "down"; px: number }[] | null }),
         manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
       };
     },
@@ -680,6 +681,7 @@ export default function ChartPage() {
             manualFirstSwing={overlaysA.manualFirstSwing}
             algoFirstSwing={overlaysA.algoFirstSwing}
             fsMarkers={overlaysA.fsMarkers}
+            fsBreaks={overlaysA.fsBreaks}
             drawMode={fsDraw && !dual && (interval === "5min" || interval === "1min")}
             onSwingDraw={handleSwingDraw}
             onDrawStatus={handleDrawStatus}
@@ -729,6 +731,7 @@ export default function ChartPage() {
               manualFirstSwing={overlaysB.manualFirstSwing}
               algoFirstSwing={overlaysB.algoFirstSwing}
             fsMarkers={overlaysB.fsMarkers}
+            fsBreaks={overlaysB.fsBreaks}
               onHoverTime={onHoverB}
               height={620}
             />

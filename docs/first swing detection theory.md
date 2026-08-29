@@ -1,103 +1,135 @@
-# The Story of First Swing Detection
+# The Story of First Swing Detection (v2)
 
 ## The Market Opens
 
-Every day at 9:15, the market opens with energy. Prices spike, dip, and explore. Within minutes, a natural range forms — a ceiling and a floor. But inside that opening range, a story is beginning. The first swing of the day.
+Every day at 9:15, the market opens with energy. Prices spike, dip, and
+explore. Within minutes, a natural range forms — a ceiling and a floor.
+Somewhere inside that, a story is beginning: the first swing of the day.
 
-Our job is to find that swing. Not with magic, but by watching how price behaves from the first bell through the morning drift.
+Our job is to find that swing. Not with magic — by watching how price
+behaves from the first bell onward. First swing only, every day starts
+fresh. Nothing about previous days matters.
 
 ---
 
 ## What We're Looking At
 
-**The range** is simply the highest high and lowest low printed so far. Think of it as the market's playground — the boundaries it's working within.
+**A** and **B** — the session's opening high and low, set from bar one
+(9:15). Whichever prints first doesn't matter; they're just the two
+starting reference points everything else measures against.
 
-**Pivots** are the little bounces and dips along the way. They're markers, not the main event.
+**Pivots** — the bounces and dips along the way. Most are just noise
+markers. A few become meaningful (see Confirmation, below).
 
-**The swing direction** is either up (buying) or down (selling). We figure this out by watching which way price breaks out of the opening range.
-
----
-
-## How It Works
-
-### The Opening Act (9:15 – 9:29)
-
-The day starts with no opinion. We watch the first bars print highs and lows, learning where the market wants to trade. But here's the thing: the opening minutes are noisy. A spike at 9:16 doesn't mean the market is suddenly bullish.
-
-So we have a rule: **no swing is declared before 9:29**. But that doesn't mean we're not paying attention. We ARE tracking every break, every extreme, every pivot. We're building the case. We just don't announce the verdict until the opening drama settles.
-
-If the engine sees a swing forming before 9:29, it holds that thought. It waits. At 9:29 sharp, it makes the call based on everything it observed.
-
-### Two Cases: Same Direction vs Reversal
-
-This is the core of the system. There are only two possibilities from the open.
-
-**Case 1: Same Direction**
-
-The market opens and keeps going the same way. It doesn't reverse — it just continues.
-
-For a **selling swing**: price drops from the opening high, breaks the low once, then breaks it again for a new low. Two breaks of the same extreme in the same direction. That's the signal: the market is serious about selling.
-
-For a **buying swing**: price rallies from the opening low, breaks the high once, then breaks it again for a new high. Two breaks of the same extreme in the same direction. That's the signal: the market is serious about buying.
-
-The rule: **same side needs two breaks**. One break could be a fakeout. Two breaks proves the move is real.
-
-**Case 2: Reversal**
-
-The market opens, moves one way, then turns around and goes the other way.
-
-For a **reversal to buying**: price drops from the opening high, makes a low, then reverses upward and breaks the opening high. Just one break of the opposite extreme is enough. The market has clearly flipped.
-
-For a **reversal to selling**: price rallies from the opening low, makes a high, then reverses downward and breaks the opening low. Just one break of the opposite extreme is enough. The market has clearly flipped.
-
-The rule: **opposite side needs only one break**. The reversal itself is the proof.
-
-### The Trigger
-
-Once the direction is confirmed (by either case), the swing is triggered. The broken extreme level is frozen as the sustain reference. From that moment, the swing needs one more thing: confirmation.
-
-### The Confirmation
-
-At this point, we know the direction and we've triggered the swing. But we need proof that the move is real and will last. There are two ways to get that proof.
-
-**Chop confirmation:** After direction is confirmed, if price breaks any previous pivot in the opposite direction, that's chop. For a selling swing, if price rallies back above a previous pivot high, that's chop. But the swing still counts — the market is just chopping around before the real move.
-
-**Sustain confirmation:** Price holds beyond the frozen broken level for 7 consecutive bars. For selling, that means 7 closes above the low that was broken. Each time a new lower low prints, the count resets — because that bar belongs to the move down, not the hold up. But once the broken level is established and price stays above it for 7 bars, we have sustain. The market is respecting the level.
-
-The final confirmation is the SUS or FS marker. That's the moment the swing is declared and frozen.
+**Direction** — up (buying) or down (selling). Decided by which way price
+actually breaks out of the A/B range, not by guessing.
 
 ---
 
-## The 9:29 Rule
+## Two ways to earn a "real" swing
 
-The opening range is treacherous. A swing that looks confirmed at 9:22 might vanish by 9:28. So everything before 9:29 is treated as preliminary. We track it, we count it, we build the case — but we don't declare.
+Both require at least one genuine break. Nothing gets called "real" on
+price position alone 
 
-At 9:29, the engine reviews everything:
-- Did the swing survive the morning chop?
-- Did the market reverse hard enough to kill it?
-- Is there a clear direction with confirmation?
+### Continuation
 
-If yes, the swing is declared. If no, it's discarded. No swing exists before 9:29. That's the rule.
+- **A** = session high, **B** = session low.
+- Price breaks **B** → prints a new, lower low. Call it **C**. Break #1.
+- Price breaks **C** → prints an even lower low, **D**. Break #2.
+- Two extensions in a row, same direction → **direction confirmed.**
+
+Mirror logic for buying (extending the high twice: A → break → new high →
+break → newer high).
+
+Note: it's "extend the extreme twice," not "break one fixed level twice."
+Each break has to be against a *fresh* extreme, not a re-test of the same
+number.
+
+### Reversal
+
+- Price breaks one extreme (say **B**, the low) — first move.
+- Price turns and breaks the **other original extreme** (**A**, the high)
+  — **exactly one break needed here**, not two.
+- Direction confirmed = the reversal side.
+
+Important: this is specifically the *original opening* extreme, not just
+any pivot along the way. Breaking some minor bounce doesn't count as a
+reversal — see the Chop-confirmation Known Issue below, which is exactly
+about not confusing minor bounces with real reversals.
 
 ---
 
-## What Makes a Swing?
+## Confirmation — proving the move will hold
 
-**There is no minimum size.** A swing of 0.5 points counts just as much as a swing of 50 points. The engine doesn't care about percentage moves or point thresholds. If the market shows direction, confirms it through chop or sustain, and respects the time guard — it's a swing. Big or small, the rules treat them the same.
+Once direction is confirmed, the broken level freezes as the reference
+price, and the swing waits for one of two things:
 
-The only built-in minimums are:
-- The range must be at least 20 points before zone rules activate
-- Sustain requires 7 bars of consistent behavior
+**Chop-back** — price breaks through just previous pivot in the opposite
+direction. Counts as confirmation; the swing still stands, the market's
+just chopping before/around it.
 
-But there's no "swing must be at least X%" rule. A tiny move that meets the confirmation criteria is still a valid first swing.
+**Sustain** — price holds beyond the frozen reference level for 7 bars
+straight. This is symmetric by direction, and it's a *failure-to-extend*
+pattern in both cases, not a "holding the breakout" pattern:
+- Selling swing: 7 closes back **above** the broken low (price stops
+  making new lows and rests above where it broke down). Note a sus for selling swing will always be above a low 
+- Buying swing: 7 closes back **below** the broken high (price stops
+  making new highs and rests below where it broke up). Note here sus will be below a high
+
+
+Streak resets any time a fresh extreme prints in the trend direction —
+that bar belongs to the move, not the hold.
+
+**Reversal detail:** if direction flips via a reversal (not a
+continuation), the reference price for sustain re-pins to whichever
+extreme was just broken to cause the reversal — not the very first break
+of the day. (This was a real bug — sustain was checking against the
+wrong price for every reversal swing. Fixed and verified.)
+
+Whichever confirmation fires first wins. Once either fires, the swing is
+frozen — start, end, direction, and which confirmation type triggered it.
+
+---
+
+## The 9:29 rule — a floor, not a deadline
+
+Nothing declares before 9:29. The opening minutes are noisy — a break at
+9:16 doesn't prove anything on its own.
+
+But this is a **floor for announcing**, not a **ceiling on when a swing
+can finish forming.** If a trigger condition fires before 9:29, it's held
+and re-evaluated bar by bar (it can even get overwritten by a later,
+better trigger) until 9:29, when whatever is pending gets flushed and
+declared. If nothing has triggered by 9:29, the engine just keeps
+watching — there is **no upper time limit** on real detection. A swing
+that only confirms at 10:10 or 10:20 is completely normal and expected.
+
+---
+
+
+---
+
+## Minimum swing size
+
+**Parked, deliberately not implemented.** The idea on the table: build a
+rolling average of the 9:15–9:45 move size over the past N days, require
+today's candidate to reach roughly 90% of that before Real detection is
+trusted. Not wired up yet — no clean history to calibrate against.
+Currently: no size floor. A 0.5-point move and a 50-point move are
+treated identically as long as they meet the confirmation rules.
+
+---
 
 ---
 
 ## The Ending
 
-When the swing confirms, three things freeze:
-- **Start**: the counter-extreme from the opening range
-- **End**: the deepest extreme reached after confirmation
-- **Type**: chop (purple SUS marker) or sustain (cyan FS marker)
+When a day resolves, it lands in exactly one of four states:
 
-The story ends there. The next swing will have its own tale, but the first swing is history — declared, frozen, and ready to trade.
+- **Real — Continuation**: confirmed by chop or sustain, tier = real
+- **Real — Reversal**: confirmed by chop or sustain, tier = real
+
+
+Every outcome freezes: start, end, direction, and which path produced it.
+Nothing stays in limbo — every day gets one of the four states above,
+eventually.
