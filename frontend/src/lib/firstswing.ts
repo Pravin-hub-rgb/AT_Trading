@@ -88,6 +88,21 @@ export class FirstSwingEngine {
   dir: "up" | "down" | null = null;
   private baseDir: "up" | "down" | null = null;
   private sameSideBreaks = 0;
+  // CORNER pivot: the first walker-sealed pivot AFTER B1 in the locked
+  // direction. This forms the V/^ corner shape. B2 requires a LATER pivot
+  // to BREAK this corner (not the corner itself).
+  private cornerPivot: Lvl | null = null;
+  // B2 trigger pivot: the pivot that BROKE the corner and triggered B2
+  private b2Pivot: Lvl | null = null;
+  // Block chop/sustain on the same bar as B2 (B2 must be followed by at least
+  // one bar before confirmation can fire).
+  private justFiredB2 = false;
+  // B1 bar index: only pivots from AFTER this bar can trigger B2
+  // (B2 should not fire on the same bar as B1)
+  private b1BarIdx = -1;
+  // Flag to allow corner recording. Starts FALSE after lock,
+  // becomes TRUE on the next bar.
+  private allowCornerRecord = false;
   private dirConfirmed = false;
   private lockedLevel = NaN;
 
@@ -119,11 +134,12 @@ export class FirstSwingEngine {
   // The living session extremes at arming moment ARE A/B; they cannot move
   // without immediately breaking out (which is the lock).
   private armed = false;
-  // Held pre-cap trigger (9:29 rule): a chop/sustain that fires before the
-  // timeCap is held here — carrying the TRIGGER candle (for the FS marker) —
-  // and flushed on the first bar at/after the cap. First trigger wins.
-  private pendingConfirm: { src: "chop" | "sustain"; idx: number; time: string } | null = null;
-  lastConfirmHit: { pool: string; px: number; idx: number; time: string } | null = null;
+  lastConfirmHit: {
+    pool: string;
+    px: number;
+    idx: number;
+    time: string;
+  } | null = null;
   // Direction-building break markers (chart: B1/B2/FLIP). Continuation day:
   // B1 (first A/B break → lock) + B2 (fresh-extreme extension → confirm).
   // Reversal day: B1 + FLIP (opposite extreme break → confirm). A flip day
@@ -143,14 +159,10 @@ export class FirstSwingEngine {
     this.hi = c.high;
     this.lo = c.low;
 
-    // 0) 9:29 rule (theory doc): a trigger HELD from before the cap is flushed
-    //    and declared on the first bar at/after the cap — but the FS marker
-    //    stays on the TRIGGER candle (the one that actually broke the level).
-    if (this.pendingConfirm && this.t >= this.timeCap) {
-      const pend = this.pendingConfirm;
-      this.confirm(pend.src, { idx: pend.idx, time: pend.time });
-      if (this.declared) return;
-    }
+    // 0) 9:29 rule: triggers before 9:29 are IGNORED. The first valid trigger
+    //    at/after 9:29 is the one that declares.
+    // Clear the B2-block flag at start of each bar.
+    this.justFiredB2 = false;
 
     if (this.barsSeen === 1) {
       this.eHi = { px: c.high, idx: gIdx, time: this.t };
@@ -174,16 +186,48 @@ export class FirstSwingEngine {
         if (p.px > cur.px) {
           this.normalHighs.push(cur);
           this.eHiPivot = { px: p.px, idx: p.idx, time: p.time };
+          // CORNER: track the first pivot after B1 as the corner (V/^ shape).
+          // Use >= to include the B1 candle itself as the corner.
+          if (
+            this.dir === "up" &&
+            p.px > this.lockedLevel &&
+            p.idx >= this.b1BarIdx &&
+            this.allowCornerRecord
+          ) {
+            if (!this.cornerPivot) {
+              this.cornerPivot = { px: p.px, idx: p.idx, time: p.time };
+            }
+          }
         } else {
-          this.pushUnique(this.normalHighs, { px: p.px, idx: p.idx, time: p.time });
+          this.pushUnique(this.normalHighs, {
+            px: p.px,
+            idx: p.idx,
+            time: p.time,
+          });
         }
       } else {
         const cur = this.eLoPivot!;
         if (p.px < cur.px) {
           this.normalLows.push(cur);
           this.eLoPivot = { px: p.px, idx: p.idx, time: p.time };
+          // CORNER: track the first pivot after B1 as the corner (V/^ shape).
+          // Use >= to include the B1 candle itself as the corner (17 Aug case).
+          if (
+            this.dir === "down" &&
+            p.px < this.lockedLevel &&
+            p.idx >= this.b1BarIdx &&
+            this.allowCornerRecord
+          ) {
+            if (!this.cornerPivot) {
+              this.cornerPivot = { px: p.px, idx: p.idx, time: p.time };
+            }
+          }
         } else {
-          this.pushUnique(this.normalLows, { px: p.px, idx: p.idx, time: p.time });
+          this.pushUnique(this.normalLows, {
+            px: p.px,
+            idx: p.idx,
+            time: p.time,
+          });
         }
       }
     }
@@ -223,13 +267,19 @@ export class FirstSwingEngine {
     this.checkSustain(c);
 
     // 6) Advance frozen extremes to include THIS bar.
-    if (c.high > this.eHi.px) this.eHi = { px: c.high, idx: gIdx, time: this.t };
+    if (c.high > this.eHi.px)
+      this.eHi = { px: c.high, idx: gIdx, time: this.t };
     if (c.low < this.eLo.px) this.eLo = { px: c.low, idx: gIdx, time: this.t };
     this.eHiPrev = { ...this.eHi };
     this.eLoPrev = { ...this.eLo };
     // Walker extreme-pivot levels as of THIS bar become next bar's reference.
     this.eHiPivotPrev = { ...this.eHiPivot! };
     this.eLoPivotPrev = { ...this.eLoPivot! };
+    // Enable corner recording for the NEXT bar onwards
+    // (prevents same-bar walker emissions from recording the corner)
+    if (this.state === "locked") {
+      this.allowCornerRecord = true;
+    }
   }
 
   private step(downBreak: boolean, upBreak: boolean) {
@@ -260,13 +310,25 @@ export class FirstSwingEngine {
       return;
     }
     // LOCKED, direction not yet confirmed.
+    // B2 confirmation:
+    //   - If a corner pivot exists: B2 fires when PRICE breaks the corner.
+    //   - If no corner yet: B2 fires on the first break of the B1 extreme.
+    // B2 fires when candle's low breaks BELOW the LATEST walker-sealed low pivot
+    // (eLoPivot). The corner is just the latest eLoPivot after B1. We only fire
+    // B2 when the corner is from a PREVIOUS bar (so the walker has had a chance
+    // to update eLoPivot with the corner value).
     if (this.dir === "down") {
       if (downBreak) {
-        // continuation takes precedence over a same-bar opposite poke
-        this.sameSideBreaks++;
-        if (this.sameSideBreaks >= 2) {
+        // Check against the latest walker-sealed eLoPivot
+        // Must be from a different bar than B1 (so it's a fresh pivot)
+        if (
+          this.eLoPivot &&
+          this.eLoPivot.idx >= this.b1BarIdx &&
+          this.lo < this.eLoPivot.px
+        ) {
+          this.b2Pivot = { px: this.lo, idx: this.gIdx, time: this.t };
           this.confirmDirection();
-          this.checkChop(); // same-bar chop is safe: reversal flip was already blocked
+          this.checkChop();
         }
       } else if (upBreak) {
         this.flip("up");
@@ -274,8 +336,12 @@ export class FirstSwingEngine {
       }
     } else if (this.dir === "up") {
       if (upBreak) {
-        this.sameSideBreaks++;
-        if (this.sameSideBreaks >= 2) {
+        if (
+          this.eHiPivot &&
+          this.eHiPivot.idx >= this.b1BarIdx &&
+          this.hi > this.eHiPivot.px
+        ) {
+          this.b2Pivot = { px: this.hi, idx: this.gIdx, time: this.t };
           this.confirmDirection();
           this.checkChop();
         }
@@ -290,65 +356,113 @@ export class FirstSwingEngine {
     this.dir = dir;
     this.baseDir = dir;
     this.sameSideBreaks = 1;
+    // Reset corner tracking for new lock
+    this.cornerPivot = null;
+    this.b2Pivot = null; // Reset B2 trigger
+    // Track the B1 bar index so B2 can only fire from a LATER bar
+    this.b1BarIdx = this.gIdx;
     this.state = "locked";
+    // Don't record corner on the same bar as lock
+    this.allowCornerRecord = false;
     const s = dir === "up" ? this.eLo : this.eHi;
     this.startIdx = s.idx;
     this.startTime = s.time;
     this.startPx = s.px;
     this.lockedLevel = dir === "up" ? this.eHiPrev.px : this.eLoPrev.px;
-    this.breakMarks.push({ idx: this.gIdx, time: this.t, kind: "B1", dir, px: this.lockedLevel });
+    this.breakMarks.push({
+      idx: this.gIdx,
+      time: this.t,
+      kind: "B1",
+      dir,
+      px: this.lockedLevel,
+    });
   }
 
   private confirmDirection() {
     this.dirConfirmed = true;
-    this.lockedLevel =
-      this.dir === "up" ? this.eHiPrev.px : this.eLoPrev.px;
+    // B2 mark goes on the PIVOT candle that extended beyond B1, not on
+    // the current bar. This is the bar where the walker sealed the new
+    // extreme pivot that confirmed the break.
+    const b2 = this.b2Pivot;
+    this.lockedLevel = this.dir === "up" ? this.eHiPrev.px : this.eLoPrev.px;
     this.breakMarks.push({
-      idx: this.gIdx, time: this.t, kind: "B2", dir: this.dir!, px: this.lockedLevel,
+      idx: b2 ? b2.idx : this.gIdx,
+      time: b2 ? b2.time : this.t,
+      kind: "B2",
+      dir: this.dir!,
+      px: b2 ? b2.px : this.lockedLevel,
     });
+    this.b2Pivot = null;
+    this.justFiredB2 = true; // block chop/sustain on this bar
   }
 
   private flip(dir: "up" | "down") {
     this.dir = dir;
     this.baseDir = null;
     this.sameSideBreaks = 0;
+    this.cornerPivot = null; // Reset corner pivot on flip
+    this.b2Pivot = null; // Reset B2 trigger
+    this.b1BarIdx = -1; // Reset B1 bar index on flip
+    this.allowCornerRecord = false; // Block same-bar corner recording after flip
     this.dirConfirmed = true;
-    this.pendingConfirm = null; // thesis reversed — any held trigger died with it
     const s = dir === "up" ? this.eLo : this.eHi;
     this.startIdx = s.idx;
     this.startTime = s.time;
     this.startPx = s.px;
     this.lockedLevel = dir === "up" ? this.eHiPrev.px : this.eLoPrev.px;
-    this.breakMarks.push({ idx: this.gIdx, time: this.t, kind: "FLIP", dir, px: this.lockedLevel });
+    this.breakMarks.push({
+      idx: this.gIdx,
+      time: this.t,
+      kind: "FLIP",
+      dir,
+      px: this.lockedLevel,
+    });
   }
 
   private checkChop() {
+    // Block chop on the same bar as B2 (B2 must be followed by at least one bar).
+    if (this.justFiredB2) return;
+    // Chop = price reclaims the most recently marked pivot:
+    // - Selling swing (down): breaks above the most recent high pivot
+    // - Buying swing (up): breaks below the most recent low pivot
     if (this.dir === "down") {
-      const tgt = this.latestAfter(this.normalHighs);
+      const tgt = this.latestPivot(this.normalHighs);
       if (tgt && this.hi > tgt.px) {
-        this.lastConfirmHit = { pool: "normal", px: tgt.px, idx: tgt.idx, time: tgt.time };
+        this.lastConfirmHit = {
+          pool: "normal",
+          px: tgt.px,
+          idx: tgt.idx,
+          time: tgt.time,
+        };
         this.confirm("chop");
       }
     } else if (this.dir === "up") {
-      const tgt = this.latestAfter(this.normalLows);
+      const tgt = this.latestPivot(this.normalLows);
       if (tgt && this.lo < tgt.px) {
-        this.lastConfirmHit = { pool: "normal", px: tgt.px, idx: tgt.idx, time: tgt.time };
+        this.lastConfirmHit = {
+          pool: "normal",
+          px: tgt.px,
+          idx: tgt.idx,
+          time: tgt.time,
+        };
         this.confirm("chop");
       }
     }
   }
 
   private checkSustain(c: FlowCandle) {
+    // Block sustain on the same bar as B2 (B2 must be followed by at least one bar).
+    if (this.justFiredB2) return;
     if (!this.dirConfirmed) {
       this.sustainStreak = 0;
       return;
     }
     // FRESH-EXTREME reset (theory doc): a bar extending the swing belongs to
     // the move, not the hold — also withdraws any held sustain trigger.
-    const fresh = this.dir === "down" ? c.low < this.eLo.px : c.high > this.eHi.px;
+    const fresh =
+      this.dir === "down" ? c.low < this.eLo.px : c.high > this.eHi.px;
     if (fresh) {
       this.sustainStreak = 0;
-      if (this.pendingConfirm?.src === "sustain") this.pendingConfirm = null;
       return;
     }
     // FAILURE-TO-EXTEND (theory doc): a selling swing sustains when price
@@ -361,25 +475,22 @@ export class FirstSwingEngine {
     if (this.sustainStreak >= this.sustainBars) this.confirm("sustain");
   }
 
-  private confirm(src: "chop" | "sustain", trig?: { idx: number; time: string }) {
-    // 9:29 rule: nothing DECLARES before the cap — but the trigger is HELD as
-    // pending (carrying the trigger candle) and flushed on the first bar
-    // at/after the cap (step 0). First trigger wins.
+  private confirm(
+    src: "chop" | "sustain",
+    trig?: { idx: number; time: string },
+  ) {
+    // 9:29 rule: nothing DECLARES before the cap. If trigger fires pre-9:29,
+    // IGNORE it — continue looking for a new chop/sustain. The first valid
+    // trigger AT or AFTER 9:29 is the one that declares.
     if (this.t < this.timeCap) {
-      if (!this.pendingConfirm) {
-        this.pendingConfirm = { src, idx: this.gIdx, time: this.t };
-      }
-      return;
+      return; // ignore pre-cap triggers
     }
-    this.pendingConfirm = null;
     this.declared = true;
     this.tier = "real";
     this.endIdx = this.candIdx;
     this.endTime = this.candTime;
     this.endPx = this.candPx;
-    // FS marker sits on the TRIGGER candle when flushed from pending
-    // (e.g. 21 Aug: 9:28 breached the 9:26 pivot — marker at 09:28,
-    // declaration announced at the 9:29 cap).
+    // FS marker sits on the TRIGGER candle.
     this.confirmedAtTime = trig ? trig.time : this.t;
     this.confirmedAtIdx = trig ? trig.idx : this.gIdx;
     this.confirmSource = src;
@@ -395,24 +506,16 @@ export class FirstSwingEngine {
     if (!pool.some((x) => x.idx === l.idx && x.px === l.px)) pool.push(l);
   }
 
-  private latestAfter(pool: Lvl[]): Lvl | null {
-    let best: Lvl | null = null;
-    for (const l of pool) {
-      // SELF-RATCHET GUARD (price-movement order, 24 Aug 10:03): the current
-      // bar's own fresh pivot must NOT become the chop target — the candle
-      // that breaks the previous pivot would otherwise be measured against
-      // its own extreme and block its own confirmation. One helper serves
-      // chop targets for BOTH directions, so this mirror is automatic.
-      if (l.idx === this.gIdx) continue;
-      if (l.idx > this.startIdx && (!best || l.idx > best.idx)) best = l;
-    }
-    return best;
+  // Returns the LATEST (most recent) marked pivot in the pool.
+  // Chop fires when price reclaims this level.
+  private latestPivot(pool: Lvl[]): Lvl | null {
+    if (pool.length === 0) return null;
+    return pool[pool.length - 1]; // most recent
   }
 
   debugPools() {
     return {
       armed: this.armed,
-      pending: this.pendingConfirm,
       startIdx: this.startIdx,
       startPx: this.startPx,
       lockedLevelPx: this.lockedLevel,
