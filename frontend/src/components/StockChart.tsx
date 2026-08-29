@@ -22,13 +22,12 @@ import {
   type MouseEventParams,
   type ISeriesApi,
 } from "lightweight-charts";
-import type { Candle, BiasLabel, FsDayMark, FsPoint } from "@/lib/api";
+import type { Candle, BiasLabel } from "@/lib/api";
 import { SwingSRPrimitive, SwingPoint } from "./SwingSRPrimitive";
 import { PositionPrimitive, TradeBox } from "./PositionPrimitive";
 import { SessionBreakPrimitive } from "./SessionBreakPrimitive";
 import { FlowLinePrimitive, FlowSegment } from "./FlowLinePrimitive";
 import { EnvelopePrimitive } from "./EnvelopePrimitive";
-import { FirstSwingPrimitive, FsSeg } from "./FirstSwingPrimitive";
 import { SyncCrosshairPrimitive } from "./SyncCrosshairPrimitive";
 import type { EnvelopeViolation } from "@/lib/envelope";
 
@@ -46,7 +45,6 @@ interface Props {
   swingDots?: boolean;
   algoFlowLine?: FlowSegment[] | null;
   envelope?: EnvelopeViolation[] | null;
-  manualFirstSwing?: Record<string, FsDayMark> | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
   fsMarkers?:
     | {
@@ -65,9 +63,6 @@ interface Props {
         px: number;
       }[]
     | null;
-  drawMode?: boolean;
-  onSwingDraw?: (mark: { day: string; start: FsPoint; end: FsPoint }) => void;
-  onDrawStatus?: (status: string | null) => void;
   // Crosshair-sync hook: emitted with the hovered epoch sec (UTC) on every
   // crosshair move, null when the crosshair leaves the data. Keep stable
   // (useCallback) if provided — read via ref, so it never rebuilds the chart.
@@ -171,37 +166,6 @@ function saveView(interval: string, range: { from: number; to: number }) {
   } catch {}
 }
 
-// Pure mapper: hand-drawn marks -> renderable segments (snaps to candle indices).
-function fsSegsFromMarks(
-  candles: Candle[],
-  marks: Record<string, FsDayMark>,
-): FsSeg[] {
-  const days = new Set(Object.keys(marks));
-  if (days.size === 0) return [];
-  const idxByDT = new Map<string, number>();
-  candles.forEach((c, gi) => {
-    const d = c.date.slice(0, 10);
-    if (!days.has(d)) return;
-    idxByDT.set(`${d} ${c.date.slice(11, 16)}`, gi);
-  });
-  const segs: FsSeg[] = [];
-  for (const [day, m] of Object.entries(marks)) {
-    const si = idxByDT.get(`${day} ${m.start.time}`);
-    const ei = idxByDT.get(`${day} ${m.end.time}`);
-    if (si === undefined || ei === undefined) continue;
-    segs.push({
-      day,
-      startIdx: si,
-      startPx: m.start.px,
-      startKind: m.start.kind,
-      endIdx: ei,
-      endPx: m.end.px,
-      endKind: m.end.kind,
-    });
-  }
-  return segs;
-}
-
 const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   {
     symbol,
@@ -217,13 +181,9 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     swingDots = true,
     algoFlowLine,
     envelope,
-    manualFirstSwing,
     algoFirstSwing,
     fsMarkers,
     fsBreaks,
-    drawMode = false,
-    onSwingDraw,
-    onDrawStatus,
     onHoverTime,
   }: Props,
   ref,
@@ -231,7 +191,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
-  const fsPrimRef = useRef<FirstSwingPrimitive | null>(null);
   const syncPrimRef = useRef<SyncCrosshairPrimitive | null>(null);
   const hoverCbRef = useRef(onHoverTime);
   useEffect(() => {
@@ -541,7 +500,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
         .timeScale()
         .unsubscribeVisibleTimeRangeChange(onVisibleTimeRangeChange);
       seriesRef.current = null;
-      fsPrimRef.current = null;
       try {
         chart.panes()[0].detachPrimitive(syncPrim);
       } catch {}
@@ -573,7 +531,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   // value is used at creation and later changes flow through the ResizeObserver
   // (applyOptions) so a layout toggle never disposes the chart the overlay
   // effects captured in their closures.
-  // onSwingDraw / onDrawStatus must stay stable (useCallback) — page contract.
 
   // ── imperative crosshair-sync API (StockChartHandle) ──
   // Draws the remote sync line (vertical only — price axes are independent
@@ -876,231 +833,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       } catch {}
     };
   }, [envelope, intraday, candles]);
-
-  // ── overlay: manual First-Swing GT (persistent primitive; marks sync via
-  // setSegs below so saving/dragging never touches chart lifecycle) ──
-  const fsActive = manualFirstSwing != null;
-  useEffect(() => {
-    const chart = chartRef.current;
-    const ser = seriesRef.current;
-    if (!chart || !ser || !intraday || !fsActive) return;
-    const prim = new FirstSwingPrimitive(
-      ser,
-      manualFirstSwing ? fsSegsFromMarks(candles, manualFirstSwing) : [],
-      candles.length - 1,
-    );
-    ser.attachPrimitive(prim);
-    fsPrimRef.current = prim;
-    return () => {
-      try {
-        ser.detachPrimitive(prim);
-      } catch {}
-      if (fsPrimRef.current === prim) fsPrimRef.current = null;
-    };
-    // manualFirstSwing contents intentionally excluded — see sync effect below
-  }, [fsActive, intraday, candles]);
-
-  // Live-sync FS segments into the persistent primitive (no chart rebuild).
-  useEffect(() => {
-    const prim = fsPrimRef.current;
-    if (!prim || !intraday || !manualFirstSwing) return;
-    prim.setSegs(fsSegsFromMarks(candles, manualFirstSwing));
-  }, [manualFirstSwing, candles, intraday]);
-
-  // ── interaction: FS draw-mode clicks + draggable endpoint handles ──
-  // Lives on its own effect: toggling Draw never rebuilds the chart either.
-  useEffect(() => {
-    const chart = chartRef.current;
-    const ser = seriesRef.current;
-    const containerEl = containerRef.current;
-    if (!chart || !ser || !containerEl || !intraday) return;
-
-    const byTs = new Map<number, Candle>();
-    candles.forEach((c) => byTs.set(c.ts, c));
-    const dayIdxs = new Map<string, number[]>();
-    candles.forEach((c, gi) => {
-      const d = c.date.slice(0, 10);
-      let arr = dayIdxs.get(d);
-      if (!arr) {
-        arr = [];
-        dayIdxs.set(d, arr);
-      }
-      arr.push(gi);
-    });
-
-    // ---- two-click draw ----
-    let pendingClick: number | null = null;
-    let suppressClickUntil = 0;
-    const handleChartClick = (param: MouseEventParams<Time>) => {
-      if (!drawMode || !param.point || param.time == null) return;
-      if (performance.now() < suppressClickUntil) return;
-      const t = typeof param.time === "number" ? param.time : NaN;
-      const c2 = Number.isFinite(t) ? byTs.get(t) : undefined;
-      if (!c2) return;
-
-      if (pendingClick == null) {
-        pendingClick = t;
-        onDrawStatus?.(
-          `FS draw ${c2.date.slice(0, 10)}: start=${c2.date.slice(11, 16)} — click END candle`,
-        );
-        return;
-      }
-
-      const c1 = byTs.get(pendingClick);
-      pendingClick = null;
-      if (!c1) return;
-      const day1 = c1.date.slice(0, 10);
-      const day2 = c2.date.slice(0, 10);
-      if (day1 !== day2 || c1.ts === c2.ts) {
-        onDrawStatus?.(
-          "FS draw: start & end must be different candles of the SAME day — redraw",
-        );
-        return;
-      }
-      const up = c2.close >= c1.close;
-      const mark = {
-        start: {
-          time: c1.date.slice(11, 16),
-          kind: up ? ("L" as const) : ("H" as const),
-          px: up ? c1.low : c1.high,
-        },
-        end: {
-          time: c2.date.slice(11, 16),
-          kind: up ? ("H" as const) : ("L" as const),
-          px: up ? c2.high : c2.low,
-        },
-      };
-      onDrawStatus?.(
-        `Saved ${day1}: ${mark.start.kind}@${mark.start.time} → ${mark.end.kind}@${mark.end.time}`,
-      );
-      onSwingDraw?.({ day: day1, start: mark.start, end: mark.end });
-    };
-    if (drawMode) chart.subscribeClick(handleChartClick);
-
-    // ---- endpoint drag ----
-    let dragState: { day: string; which: "start" | "end" } | null = null;
-    let lastPreview: {
-      day: string;
-      which: "start" | "end";
-      idx: number;
-      px: number;
-    } | null = null;
-
-    const relPos = (e: MouseEvent) => {
-      const r = containerEl.getBoundingClientRect();
-      return { x: e.clientX - r.left, y: e.clientY - r.top };
-    };
-
-    const onMouseDown = (e: MouseEvent) => {
-      const prim = fsPrimRef.current;
-      if (!drawMode || !prim || e.button !== 0) return;
-      const { x, y } = relPos(e);
-      const h = prim.pickHandle(x, y);
-      if (!h) return;
-      e.preventDefault();
-      dragState = { day: h.day, which: h.which };
-      lastPreview = null;
-      chart.applyOptions({
-        handleScroll: {
-          horzTouchDrag: false,
-          vertTouchDrag: false,
-          mouseWheel: false,
-          pressedMouseMove: false,
-        },
-      });
-      containerEl.style.cursor = "grabbing";
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      const prim = fsPrimRef.current;
-      if (!prim) return;
-      const { x, y } = relPos(e);
-      if (dragState) {
-        const logical = chart.timeScale().coordinateToLogical(x as Logical);
-        if (logical == null) return;
-        const bounds = dayIdxs.get(dragState.day);
-        if (!bounds || bounds.length === 0) return;
-        const idx = Math.min(
-          Math.max(Math.round(logical), bounds[0]),
-          bounds[bounds.length - 1],
-        );
-        const candle = candles[idx];
-        const cur = prim.segOf(dragState.day);
-        if (!cur) return;
-        const kind = dragState.which === "start" ? cur.startKind : cur.endKind;
-        const px = kind === "L" ? candle.low : candle.high;
-        lastPreview = { day: dragState.day, which: dragState.which, idx, px };
-        prim.preview(dragState.day, dragState.which, idx, px);
-      } else {
-        const h = drawMode ? prim.pickHandle(x, y) : null;
-        containerEl.style.cursor = h ? "grab" : "";
-      }
-    };
-
-    const finishDrag = () => {
-      const prim = fsPrimRef.current;
-      if (dragState && lastPreview && prim) {
-        const cur = prim.segOf(lastPreview.day);
-        const s = cur ? candles[cur.startIdx] : undefined;
-        const e = cur ? candles[cur.endIdx] : undefined;
-        if (cur && s && e) {
-          const updated = {
-            start: {
-              time: s.date.slice(11, 16),
-              kind: cur.startKind,
-              px: cur.startPx,
-            },
-            end: {
-              time: e.date.slice(11, 16),
-              kind: cur.endKind,
-              px: cur.endPx,
-            },
-          };
-          onDrawStatus?.(
-            `Updated ${lastPreview.day}: ${updated.start.kind}@${updated.start.time} → ${updated.end.kind}@${updated.end.time}`,
-          );
-          onSwingDraw?.({ day: lastPreview.day, ...updated });
-          suppressClickUntil = performance.now() + 250;
-        }
-      }
-      dragState = null;
-      lastPreview = null;
-      chart.applyOptions({
-        handleScroll: {
-          horzTouchDrag: true,
-          vertTouchDrag: true,
-          mouseWheel: true,
-          pressedMouseMove: true,
-        },
-      });
-      containerEl.style.cursor = "";
-    };
-
-    const onMouseUp = () => {
-      if (dragState) finishDrag();
-    };
-    const onMouseLeave = () => {
-      if (!dragState) containerEl.style.cursor = "";
-    };
-
-    if (drawMode) {
-      containerEl.addEventListener("mousedown", onMouseDown);
-      containerEl.addEventListener("mousemove", onMouseMove);
-      containerEl.addEventListener("mouseup", onMouseUp);
-      containerEl.addEventListener("mouseleave", onMouseLeave);
-    }
-
-    return () => {
-      try {
-        chart.unsubscribeClick(handleChartClick);
-      } catch {}
-      containerEl.removeEventListener("mousedown", onMouseDown);
-      containerEl.removeEventListener("mousemove", onMouseMove);
-      containerEl.removeEventListener("mouseup", onMouseUp);
-      containerEl.removeEventListener("mouseleave", onMouseLeave);
-      containerEl.style.cursor = "";
-    };
-  }, [drawMode, intraday, candles]);
 
   // ── overlay: First-Swing ALGO flow lines (cyan = declared, red = invalid) ──
   useEffect(() => {

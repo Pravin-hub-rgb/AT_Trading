@@ -5,7 +5,11 @@ import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
-import { computeAlgoFlowLine, computeFsV2Results, type FlowSegment } from "@/lib/flowline";
+import {
+  computeAlgoFlowLine,
+  computeFsV2Results,
+  type FlowSegment,
+} from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
@@ -18,9 +22,6 @@ import {
   getSwings,
   getBias,
   getIntradayBacktest,
-  FsDayMark,
-  getFirstSwingManual,
-  saveFirstSwingDay,
 } from "@/lib/api";
 
 const STORAGE_KEY = "chart_interval";
@@ -62,7 +63,9 @@ const LOOKAHEAD = 5;
 function loadInterval(): ChartInterval {
   if (typeof window === "undefined") return "daily";
   const saved = window.localStorage.getItem(STORAGE_KEY);
-  return saved === "daily" || saved === "5min" || saved === "1min" ? saved : "daily";
+  return saved === "daily" || saved === "5min" || saved === "1min"
+    ? saved
+    : "daily";
 }
 
 export default function ChartPage() {
@@ -91,9 +94,6 @@ export default function ChartPage() {
   const [envOn, setEnvOn] = useState(false);
   const [fsRevPct, setFsRevPct] = useState(FS_REV_DEFAULT);
   const [fsOn, setFsOn] = useState(false);
-  const [fsDraw, setFsDraw] = useState(false);
-  const [fsMarks, setFsMarks] = useState<Record<string, FsDayMark>>({});
-  const [fsDrawStatus, setFsDrawStatus] = useState<string | null>(null);
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -118,24 +118,13 @@ export default function ChartPage() {
       setEnvOn(window.localStorage.getItem(ENV_KEY) === "1");
       setFsOn(window.localStorage.getItem(FS_KEY) === "1");
       const rvRaw = window.localStorage.getItem(FS_REV_KEY);
-      if (rvRaw && Number.isFinite(Number(rvRaw))) setFsRevPct(Math.min(50, Math.max(1, Number(rvRaw))));
+      if (rvRaw && Number.isFinite(Number(rvRaw)))
+        setFsRevPct(Math.min(50, Math.max(1, Number(rvRaw))));
       setDual(window.localStorage.getItem(LAYOUT_KEY) === "2");
       const savedIvB = window.localStorage.getItem(INTERVAL_B_KEY);
-      if (savedIvB === "daily" || savedIvB === "5min" || savedIvB === "1min") setIntervalB(savedIvB);
+      if (savedIvB === "daily" || savedIvB === "5min" || savedIvB === "1min")
+        setIntervalB(savedIvB);
     }
-  }, []);
-
-  // load hand-drawn GT marks once (backend JSON file)
-  useEffect(() => {
-    let cancelled = false;
-    getFirstSwingManual()
-      .then((res) => {
-        if (!cancelled) setFsMarks(res.days ?? {});
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
   const changeSwingN = (v: number) => {
@@ -292,10 +281,16 @@ export default function ChartPage() {
           });
           dispSwings = swings
             .map((s) => {
-              const idx = s.kind === "high" ? maxHighIdx[s.date_only] : minLowIdx[s.date_only];
+              const idx =
+                s.kind === "high"
+                  ? maxHighIdx[s.date_only]
+                  : minLowIdx[s.date_only];
               if (idx === undefined) return null;
               const k = dates.indexOf(s.date_only);
-              const endDate = k < 0 ? s.date_only : dates[Math.min(k + LOOKAHEAD, dates.length - 1)];
+              const endDate =
+                k < 0
+                  ? s.date_only
+                  : dates[Math.min(k + LOOKAHEAD, dates.length - 1)];
               const endIndex = lastIdxByDate.get(endDate) ?? idx;
               return {
                 kind: s.kind,
@@ -304,7 +299,16 @@ export default function ChartPage() {
                 end_index: endIndex,
               };
             })
-            .filter((s): s is { kind: "high" | "low"; index: number; price: number; end_index: number } => s !== null);
+            .filter(
+              (
+                s,
+              ): s is {
+                kind: "high" | "low";
+                index: number;
+                price: number;
+                end_index: number;
+              } => s !== null,
+            );
         }
       }
 
@@ -313,33 +317,84 @@ export default function ChartPage() {
         bias: isIntraday && biasOn ? biasLabels : undefined,
         trades: isIntraday ? allTrades : undefined,
         sessionBreaks: isIntraday,
-        algoFlowLine: flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
-        envelope: envOn && iv === "5min" && d.length >= 2 ? computeEnvelopeViolations(d) : null,
+        algoFlowLine:
+          flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
+        envelope:
+          envOn && iv === "5min" && d.length >= 2
+            ? computeEnvelopeViolations(d)
+            : null,
         ...(fsOn && iv === "1min" && d.length >= 2
           ? (() => {
               const res = computeFsV2Results(d, { timeCap: "09:29" });
               const valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
               return {
                 algoFirstSwing: valid.map((r) => r.seg!),
-                fsMarkers: valid.map((r) => ({ idx: r.confIdx, invalid: false, source: r.source, dir: r.dir })),
+                fsMarkers: valid.map((r) => ({
+                  idx: r.confIdx,
+                  invalid: false,
+                  source: r.source,
+                  dir: r.dir,
+                })),
                 fsBreaks: valid.flatMap((r) => r.breaks ?? []),
               };
             })()
-          : { algoFirstSwing: null as (FlowSegment & { invalid?: boolean })[] | null, fsMarkers: null as { idx: number; invalid: boolean; source: "chop" | "sustain" | null; dir: "up" | "down" | null }[] | null, fsBreaks: null as { idx: number; time: string; kind: "B1" | "B2" | "FLIP"; dir: "up" | "down"; px: number }[] | null }),
-        manualFirstSwing: isIntraday && fsOn ? fsMarks : null,
+          : {
+              algoFirstSwing: null as
+                | (FlowSegment & { invalid?: boolean })[]
+                | null,
+              fsMarkers: null as
+                | {
+                    idx: number;
+                    invalid: boolean;
+                    source: "chop" | "sustain" | null;
+                    dir: "up" | "down" | null;
+                  }[]
+                | null,
+              fsBreaks: null as
+                | {
+                    idx: number;
+                    time: string;
+                    kind: "B1" | "B2" | "FLIP";
+                    dir: "up" | "down";
+                    px: number;
+                  }[]
+                | null,
+            }),
       };
     },
-    [swings, swingOn, biasOn, biasLabels, allTrades, flowOn, envOn, fsOn, fsRevPct, fsMarks],
+    [
+      swings,
+      swingOn,
+      biasOn,
+      biasLabels,
+      allTrades,
+      flowOn,
+      envOn,
+      fsOn,
+      fsRevPct,
+    ],
   );
 
-  const overlaysA = useMemo(() => buildPaneOverlays(interval, data), [buildPaneOverlays, interval, data]);
-  const overlaysB = useMemo(() => buildPaneOverlays(intervalB, dataB), [buildPaneOverlays, intervalB, dataB]);
+  const overlaysA = useMemo(
+    () => buildPaneOverlays(interval, data),
+    [buildPaneOverlays, interval, data],
+  );
+  const overlaysB = useMemo(
+    () => buildPaneOverlays(intervalB, dataB),
+    [buildPaneOverlays, intervalB, dataB],
+  );
 
   // ── crosshair sync between panes (dual mode) ──
   // Remote panes draw a silent vertical sync line via SyncCrosshairPrimitive
   // (not the real crosshair), so no echo events can loop back — direct wiring.
-  const timesA = useMemo(() => buildTimes(data, interval !== "daily"), [data, interval]);
-  const timesB = useMemo(() => buildTimes(dataB, intervalB !== "daily"), [dataB, intervalB]);
+  const timesA = useMemo(
+    () => buildTimes(data, interval !== "daily"),
+    [data, interval],
+  );
+  const timesB = useMemo(
+    () => buildTimes(dataB, intervalB !== "daily"),
+    [dataB, intervalB],
+  );
 
   const onHoverA = useCallback(
     (sec: number | null) => {
@@ -366,20 +421,12 @@ export default function ChartPage() {
   );
 
   const changeFsRevPct = (v: number) => {
-    const clamped = Number.isFinite(v) ? Math.min(50, Math.max(1, Math.round(v))) : FS_REV_DEFAULT;
+    const clamped = Number.isFinite(v)
+      ? Math.min(50, Math.max(1, Math.round(v)))
+      : FS_REV_DEFAULT;
     setFsRevPct(clamped);
     window.localStorage.setItem(FS_REV_KEY, String(clamped));
   };
-
-  const handleSwingDraw = useCallback((mark: { day: string; start: FsDayMark["start"]; end: FsDayMark["end"] }) => {
-    saveFirstSwingDay(mark.day, mark)
-      .then(() => setFsMarks((prev) => ({ ...prev, [mark.day]: mark })))
-      .catch((e) => setFsDrawStatus(e instanceof Error ? e.message : String(e)));
-  }, []);
-
-  const handleDrawStatus = useCallback((s: string | null) => setFsDrawStatus(s), []);
-
-
 
   const changeInterval = (iv: ChartInterval) => {
     window.localStorage.setItem(STORAGE_KEY, iv);
@@ -395,21 +442,25 @@ export default function ChartPage() {
 
   const changeLayout = (d: boolean) => {
     window.localStorage.setItem(LAYOUT_KEY, d ? "2" : "1");
-    if (d) setFsDraw(false); // draw mode is single-chart only
     setDual(d);
   };
 
   const envCount =
-    (overlaysA.envelope?.length ?? 0) + (dual ? overlaysB.envelope?.length ?? 0 : 0);
+    (overlaysA.envelope?.length ?? 0) +
+    (dual ? (overlaysB.envelope?.length ?? 0) : 0);
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-[#e6edf3]">Nifty 50 Chart</h1>
+          <h1 className="text-xl font-semibold text-[#e6edf3]">
+            Nifty 50 Chart
+          </h1>
           <p className="text-sm text-[#8b949e]">
             {loading ? "Loading..." : `${count} candles loaded`}
-            {swingOn && swingCount > 0 ? ` Â· ${swingCount} swings (pivot ${PIVOT})` : ""}
+            {swingOn && swingCount > 0
+              ? ` Â· ${swingCount} swings (pivot ${PIVOT})`
+              : ""}
             {interval !== "daily" && biasOn && biasSummary.bullish !== undefined
               ? ` Â· bias â–²${biasSummary.bullish ?? 0} â–¼${biasSummary.bearish ?? 0} â—${biasSummary.unbiased ?? 0}`
               : ""}
@@ -424,7 +475,9 @@ export default function ChartPage() {
             <button
               onClick={() => changeLayout(false)}
               className={`px-3 py-1.5 text-sm transition-colors ${
-                !dual ? "bg-[#6366f1] text-white" : "bg-[#161b22] text-[#8b949e] hover:text-[#e6edf3]"
+                !dual
+                  ? "bg-[#6366f1] text-white"
+                  : "bg-[#161b22] text-[#8b949e] hover:text-[#e6edf3]"
               }`}
               title="Single chart"
             >
@@ -433,7 +486,9 @@ export default function ChartPage() {
             <button
               onClick={() => changeLayout(true)}
               className={`border-l border-[#30363d] px-3 py-1.5 text-sm transition-colors ${
-                dual ? "bg-[#6366f1] text-white" : "bg-[#161b22] text-[#8b949e] hover:text-[#e6edf3]"
+                dual
+                  ? "bg-[#6366f1] text-white"
+                  : "bg-[#161b22] text-[#8b949e] hover:text-[#e6edf3]"
               }`}
               title="Two charts side by side (crosshair synced)"
             >
@@ -544,48 +599,27 @@ export default function ChartPage() {
                 ? "border-[#facc15] text-[#e6edf3]"
                 : "border-[#30363d] text-[#8b949e]"
             }`}
-            title="First Swing: your hand-drawn GT (thick yellow) vs flow-walker candidate (cyan)"
+            title="First Swing: flow-walker candidate (cyan)"
           >
             <span
-              className={`h-2 w-2 rounded-full ${fsOn ? "bg-[#facc15]" : "bg-[#8b949e]"}`}
+              className={`h-2 w-2 rounded-full ${fsOn ? "bg-[#22d3ee]" : "bg-[#8b949e]"}`}
             />
-            FS{interval === "5min" && Object.keys(fsMarks).length > 0
-              ? ` (${Object.keys(fsMarks).length})`
-              : ""}
+            FS
           </button>
 
           {fsOn && (interval === "5min" || interval === "1min") && (
-            <>
-              <button
-                onClick={() => setFsDraw((v) => !v)}
-                disabled={dual}
-                className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
-                  fsDraw && !dual
-                    ? "border-[#facc15] bg-[#facc15]/10 text-[#e6edf3]"
-                    : dual
-                      ? "cursor-not-allowed border-[#30363d] text-[#8b949e] opacity-40"
-                      : "border-[#30363d] text-[#8b949e]"
-                }`}
-                title={dual ? "Draw mode: single-chart layout only" : "Draw mode: click START candle then END candle on the chart \u2014 auto-saves"}
-              >
-                <span
-                  className={`h-2 w-2 rounded-full ${fsDraw ? "bg-[#facc15]" : "bg-[#8b949e]"}`}
-                />
-                Draw
-              </button>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs text-[#8b949e]">Rev %</span>
-                <input
-                  type="number"
-                  min={1}
-                  max={50}
-                  value={fsRevPct}
-                  onChange={(e) => changeFsRevPct(Number(e.target.value))}
-                  className="w-14 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#22d3ee]"
-                  title="Reversal zone: price entering this deep-% of the session range flips direction (lock). Lower = stricter."
-                />
-              </div>
-            </>
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-[#8b949e]">Rev %</span>
+              <input
+                type="number"
+                min={1}
+                max={50}
+                value={fsRevPct}
+                onChange={(e) => changeFsRevPct(Number(e.target.value))}
+                className="w-14 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#22d3ee]"
+                title="Reversal zone: price entering this deep-% of the session range flips direction (lock). Lower = stricter."
+              />
+            </div>
           )}
 
           <button
@@ -631,25 +665,14 @@ export default function ChartPage() {
           Chart A: {error}
         </div>
       )}
-      {fsDraw && !dual && (interval === "5min" || interval === "1min") && (
-        <div className="flex items-center gap-2 rounded-md border border-[#facc15]/40 bg-[#facc15]/5 px-4 py-2 text-sm">
-          <span className="text-[#facc15]">
-            {fsDrawStatus ?? "Draw mode: click START candle, then END candle (same day). Auto-saves."}
-          </span>
-          <button
-            onClick={() => setFsDraw(false)}
-            className="ml-auto rounded border border-[#30363d] px-2 py-0.5 text-xs text-[#8b949e] hover:text-[#e6edf3]"
-          >
-            Done
-          </button>
-        </div>
-      )}
 
       <div className={dual ? "flex items-start gap-3" : ""}>
         {/* Pane A */}
         <div className={dual ? "w-1/2 min-w-0" : "w-full"}>
           <div className="mb-1.5 flex items-center gap-2">
-            <span className="text-xs font-bold tracking-wider text-[#6366f1]">A</span>
+            <span className="text-xs font-bold tracking-wider text-[#6366f1]">
+              A
+            </span>
             <select
               value={interval}
               onChange={(e) => changeInterval(e.target.value as ChartInterval)}
@@ -657,7 +680,9 @@ export default function ChartPage() {
               title="Chart A timeframe"
             >
               {VALID_INTERVALS.map((iv) => (
-                <option key={iv} value={iv}>{INTERVAL_LABELS[iv]}</option>
+                <option key={iv} value={iv}>
+                  {INTERVAL_LABELS[iv]}
+                </option>
               ))}
             </select>
             <span className="text-xs text-[#8b949e]">
@@ -678,13 +703,9 @@ export default function ChartPage() {
             swingDots={dotsOn}
             algoFlowLine={overlaysA.algoFlowLine}
             envelope={overlaysA.envelope}
-            manualFirstSwing={overlaysA.manualFirstSwing}
             algoFirstSwing={overlaysA.algoFirstSwing}
             fsMarkers={overlaysA.fsMarkers}
             fsBreaks={overlaysA.fsBreaks}
-            drawMode={fsDraw && !dual && (interval === "5min" || interval === "1min")}
-            onSwingDraw={handleSwingDraw}
-            onDrawStatus={handleDrawStatus}
             onHoverTime={onHoverA}
             height={dual ? 620 : 720}
           />
@@ -699,15 +720,21 @@ export default function ChartPage() {
               </div>
             )}
             <div className="mb-1.5 flex items-center gap-2">
-              <span className="text-xs font-bold tracking-wider text-[#22d3ee]">B</span>
+              <span className="text-xs font-bold tracking-wider text-[#22d3ee]">
+                B
+              </span>
               <select
                 value={intervalB}
-                onChange={(e) => changeIntervalB(e.target.value as ChartInterval)}
+                onChange={(e) =>
+                  changeIntervalB(e.target.value as ChartInterval)
+                }
                 className={SELECT_CLS}
                 title="Chart B timeframe"
               >
                 {VALID_INTERVALS.map((iv) => (
-                  <option key={iv} value={iv}>{INTERVAL_LABELS[iv]}</option>
+                  <option key={iv} value={iv}>
+                    {INTERVAL_LABELS[iv]}
+                  </option>
                 ))}
               </select>
               <span className="text-xs text-[#8b949e]">
@@ -728,10 +755,9 @@ export default function ChartPage() {
               swingDots={dotsOn}
               algoFlowLine={overlaysB.algoFlowLine}
               envelope={overlaysB.envelope}
-              manualFirstSwing={overlaysB.manualFirstSwing}
               algoFirstSwing={overlaysB.algoFirstSwing}
-            fsMarkers={overlaysB.fsMarkers}
-            fsBreaks={overlaysB.fsBreaks}
+              fsMarkers={overlaysB.fsMarkers}
+              fsBreaks={overlaysB.fsBreaks}
               onHoverTime={onHoverB}
               height={620}
             />
@@ -757,4 +783,3 @@ export default function ChartPage() {
     </div>
   );
 }
-
