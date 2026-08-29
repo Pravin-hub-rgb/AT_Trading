@@ -29,7 +29,6 @@ from collections import Counter
 
 # --- tunable thresholds -------------------------------------------------------
 ENTRY_START = "09:45"        # hard rule: no entries before this (S1/S4/S5)
-OPENING_SETTLE = "09:45"     # first swing = the 9:15 -> settle initial move itself (S5/S6)
 ENTRY_END = "11:12"          # cutoff for NEW entries (~S5:203)
 EOD_EXIT = "15:15"           # square-off time (user setting)
 MIN_CANDLES = 20             # skip thin sessions (same guard as bias.py)
@@ -68,7 +67,6 @@ DEFAULT_CFG = {
     "gap_pct": 0.0027,       # |open - prev_close| beyond this fraction = gap-up/down
                              # 0.27% researched from labeled examples (Oct-Dec'25,
                              # Mar-Apr'26): separates GOOD vs noise gaps 8/9
-    "first_swing_v2": False,  # use new FirstSwingEngine (port of frontend logic)
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -173,56 +171,6 @@ def _micro_pivots(candles: list[dict], upto: int, kind: str) -> list[float]:
     return prices
 
 
-def _classify_first_swing(candles: list[dict]) -> tuple[str | None, int, list[dict]]:
-    """First swing = the opening move ITSELF, from the open until 9:45.
-
-    The market's initial run (9:15 -> settle) IS the first swing; entries
-    only come later, on its break/retracement (S5: 'never inside the first
-    swing', S6: 'forms around 9:45-10').
-
-    Direction: whichever extreme printed LATE inside the window tells where
-    the leg was heading at completion — low early + high late = buying;
-    high early + low late = selling. Ties fall back to the window's net
-    move, then to the opening candle colour.
-
-    Returns (direction ('buying'|'selling'|None), extreme_bar_index, events).
-    """
-    events: list[dict] = []
-    if not candles:
-        return None, -1, events
-
-    win = [c for c in candles if c["time"] < OPENING_SETTLE]
-    if not win:
-        win = candles[:1]
-
-    hi_i = max(range(len(win)), key=lambda k: win[k]["high"])
-    lo_i = min(range(len(win)), key=lambda k: win[k]["low"])
-
-    if hi_i > lo_i:
-        direction, seed = "buying", lo_i   # low printed first, rose into settle
-    elif hi_i < lo_i:
-        direction, seed = "selling", hi_i  # high printed first, fell into settle
-    else:
-        net = win[-1]["close"] - win[0]["open"]
-        if net > 0:
-            direction, seed = "buying", lo_i
-        elif net < 0:
-            direction, seed = "selling", hi_i
-        else:
-            direction = "buying" if win[0]["color"] >= 0 else "selling"
-            seed = lo_i
-
-    events.append(
-        {
-            "type": "swing_classified",
-            "bar": seed,
-            "time": candles[min(seed, len(candles) - 1)]["time"],
-            "direction": direction,
-        }
-    )
-    return direction, seed, events
-
-
     return direction, seed, events
 
 
@@ -256,7 +204,8 @@ def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | 
         eng.process_bar(fc, g_idx)
 
     if not eng.declared:
-        return _classify_first_swing(candles)
+        # No swing declared - return None (no swing direction for this day)
+        return None, -1, [{"type": "no_swing_declared"}]
 
     direction = "buying" if eng.dir == "up" else "selling"
     seed = eng.start_idx
@@ -380,10 +329,7 @@ def simulate_day(
         result["events"].append({"type": "skipped_thin_session", "bars": len(candles)})
         return result
 
-    if cfg.get("first_swing_v2"):
-        swing_dir, swing_start, ev = _classify_first_swing_v2(candles[: len(candles)], result["date"])
-    else:
-        swing_dir, swing_start, ev = _classify_first_swing(candles[: len(candles)])
+    swing_dir, swing_start, ev = _classify_first_swing_v2(candles[: len(candles)], result["date"])
     result["swing_direction"] = swing_dir
     result["events"].extend(ev)
 
