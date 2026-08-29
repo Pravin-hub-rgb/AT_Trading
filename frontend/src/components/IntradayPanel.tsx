@@ -33,7 +33,7 @@ const SL_MODES = [
   { value: "avg075", label: "SL: Avg ×0.75" },
   { value: "avg05", label: "SL: Avg ×0.5" },
   { value: "fixed8", label: "SL: Fixed 8 pt" },
-  { value: "prev_pivot", label: "SL: Prev pivot ± 1pt" },
+  { value: "prev_pivot", label: "SL: Pivot / ECL ± 1pt" },
 ];
 
 const EXECUTION_MODES = [
