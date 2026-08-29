@@ -444,9 +444,12 @@ def simulate_day(
         pivot_ref = None
 
         if sl_mode == "prev_pivot":
-            # SL = opposing pivot + buffer (below for long, above for short)
+            # SL = swing in the OPPOSITE direction + buffer.
+            # For a LONG: SL goes below entry -> use the most recent LOW pivot
+            # (recent support). For a SHORT: SL goes above entry -> use the
+            # most recent HIGH pivot (recent resistance).
             buf = float(cfg.get("sl_pivot_buffer", SL_PIVOT_BUFFER))
-            opposing_pool = normal_highs if dirn == 1 else normal_lows
+            opposing_pool = normal_lows if dirn == 1 else normal_highs
             if opposing_pool:
                 pivot_ref = opposing_pool[-1]  # most recent sealed opposing pivot
                 if dirn == 1:
