@@ -192,6 +192,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   const chartRef = useRef<IChartApi | null>(null);
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const syncPrimRef = useRef<SyncCrosshairPrimitive | null>(null);
+  const positionPrimRef = useRef<PositionPrimitive | null>(null);
   const hoverCbRef = useRef(onHoverTime);
   useEffect(() => {
     hoverCbRef.current = onHoverTime;
@@ -504,6 +505,12 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
         chart.panes()[0].detachPrimitive(syncPrim);
       } catch {}
       syncPrimRef.current = null;
+      if (positionPrimRef.current) {
+        try {
+          chart.panes()[0].detachPrimitive(positionPrimRef.current);
+        } catch {}
+        positionPrimRef.current = null;
+      }
       chartRef.current = null;
       // lightweight-charts v5.2.1 bug: a pending draw frame can execute AFTER
       // remove() and hit disposed canvases -> "Object is disposed" (crashes
@@ -764,9 +771,20 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     const chart = chartRef.current;
     const ser = seriesRef.current;
     if (!chart || !ser || !intraday || !trades || trades.length === 0) return;
+
+    // Detach the previous position primitive if it exists
+    if (positionPrimRef.current) {
+      try {
+        chart.panes()[0].detachPrimitive(positionPrimRef.current);
+      } catch {}
+    }
+
     const prim = new PositionPrimitive(ser, trades);
     chart.panes()[0].attachPrimitive(prim);
+    positionPrimRef.current = prim;
+
     return () => {
+      positionPrimRef.current = null;
       try {
         chart.panes()[0].detachPrimitive(prim);
       } catch {}
