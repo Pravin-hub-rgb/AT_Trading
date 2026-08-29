@@ -1,7 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { BacktestParams, IntradayBacktestResponse, IntradayDaySummary, TradeOutcome } from "@/lib/api";
+import type {
+  BacktestParams,
+  IntradayBacktestResponse,
+  IntradayDaySummary,
+  TradeOutcome,
+} from "@/lib/api";
 
 interface Props {
   backtest: IntradayBacktestResponse | null;
@@ -28,6 +33,7 @@ const SL_MODES = [
   { value: "avg075", label: "SL: Avg ×0.75" },
   { value: "avg05", label: "SL: Avg ×0.5" },
   { value: "fixed8", label: "SL: Fixed 8 pt" },
+  { value: "prev_pivot", label: "SL: Prev pivot ± 1pt" },
 ];
 
 const EXECUTION_MODES = [
@@ -48,18 +54,33 @@ const GAP_MODES = [
 ];
 
 function OutcomeChip({ outcome }: { outcome: string }) {
-  const s = OUTCOME_STYLE[outcome] ?? { color: "#8b949e", label: outcome.toUpperCase() };
+  const s = OUTCOME_STYLE[outcome] ?? {
+    color: "#8b949e",
+    label: outcome.toUpperCase(),
+  };
   return (
     <span
       className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold"
-      style={{ color: s.color, border: `1px solid ${s.color}55`, background: `${s.color}14` }}
+      style={{
+        color: s.color,
+        border: `1px solid ${s.color}55`,
+        background: `${s.color}14`,
+      }}
     >
       {s.label}
     </span>
   );
 }
 
-export default function IntradayPanel({ backtest, loading, error, params, onParamsChange, selectedCase, onCaseChange }: Props) {
+export default function IntradayPanel({
+  backtest,
+  loading,
+  error,
+  params,
+  onParamsChange,
+  selectedCase,
+  onCaseChange,
+}: Props) {
   const tradedDays = useMemo(
     () => (backtest?.days ?? []).filter((d) => d.n_trades > 0),
     [backtest],
@@ -110,7 +131,8 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-  const activeDate = selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
+  const activeDate =
+    selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
   const activeDay: IntradayDaySummary | null =
     view?.days.find((d) => d.date === activeDate) ?? null;
 
@@ -140,7 +162,9 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
     <div className="space-y-3">
       {/* Experiment switches — best-combo search */}
       <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">Experiment</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">
+          Experiment
+        </span>
         <select
           value={selectedCase}
           onChange={(e) => onCaseChange(e.target.value)}
@@ -153,68 +177,104 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
             return (
               <option key={c} value={c}>
                 Case: {c}
-                {cs ? ` (${cs.trades}T ${cs.total_r >= 0 ? "+" : ""}${cs.total_r}R)` : ""}
+                {cs
+                  ? ` (${cs.trades}T ${cs.total_r >= 0 ? "+" : ""}${cs.total_r}R)`
+                  : ""}
               </option>
             );
           })}
         </select>
         <select
           value={params.sl_mode}
-          onChange={(e) => onParamsChange({ ...params, sl_mode: e.target.value })}
+          onChange={(e) =>
+            onParamsChange({ ...params, sl_mode: e.target.value })
+          }
           className={selectCls}
         >
           {SL_MODES.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
           ))}
         </select>
         <select
           value={params.execution}
-          onChange={(e) => onParamsChange({ ...params, execution: e.target.value })}
+          onChange={(e) =>
+            onParamsChange({ ...params, execution: e.target.value })
+          }
           className={selectCls}
         >
           {EXECUTION_MODES.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
           ))}
         </select>
         <select
           value={params.trailing}
-          onChange={(e) => onParamsChange({ ...params, trailing: e.target.value })}
+          onChange={(e) =>
+            onParamsChange({ ...params, trailing: e.target.value })
+          }
           className={selectCls}
         >
           {TRAILING_MODES.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
           ))}
         </select>
         <select
           value={params.gap_pct}
-          onChange={(e) => onParamsChange({ ...params, gap_pct: e.target.value })}
+          onChange={(e) =>
+            onParamsChange({ ...params, gap_pct: e.target.value })
+          }
           className={selectCls}
           title="Minimum |open - prev close| for a move to count as a gap (case classification)"
         >
           {GAP_MODES.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
           ))}
         </select>
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
         <Stat label="Trades" value={String(s.trades)} />
-        <Stat label="Win rate" value={`${s.win_rate}%`} accent={s.win_rate >= 25 ? "#10b981" : "#ef4444"} />
-        <Stat label="Total R" value={`${s.total_r >= 0 ? "+" : ""}${s.total_r}`} accent={s.total_r >= 0 ? "#10b981" : "#ef4444"} />
-        <Stat label="Avg R" value={`${s.avg_r >= 0 ? "+" : ""}${s.avg_r}`} accent={s.avg_r >= 0 ? "#10b981" : "#ef4444"} />
+        <Stat
+          label="Win rate"
+          value={`${s.win_rate}%`}
+          accent={s.win_rate >= 25 ? "#10b981" : "#ef4444"}
+        />
+        <Stat
+          label="Total R"
+          value={`${s.total_r >= 0 ? "+" : ""}${s.total_r}`}
+          accent={s.total_r >= 0 ? "#10b981" : "#ef4444"}
+        />
+        <Stat
+          label="Avg R"
+          value={`${s.avg_r >= 0 ? "+" : ""}${s.avg_r}`}
+          accent={s.avg_r >= 0 ? "#10b981" : "#ef4444"}
+        />
         <Stat label="Days" value={`${s.days_traded}/${s.days_total}`} />
         <Stat label="Long / Short" value={`${s.longs}/${s.shorts}`} />
         {Object.entries(s.outcomes)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 2)
           .map(([k, v]) => (
-            <Stat key={k} label={OUTCOME_STYLE[k]?.label ?? k} value={String(v)} />
+            <Stat
+              key={k}
+              label={OUTCOME_STYLE[k]?.label ?? k}
+              value={String(v)}
+            />
           ))}
       </div>
 
       <div className="rounded-md border border-[#30363d] bg-[#0d1117]">
         <div className="flex flex-wrap items-center gap-2 border-b border-[#30363d] px-3 py-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">Trades</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">
+            Trades
+          </span>
           <select
             value={activeDate ?? ""}
             onChange={(e) => setSelectedDate(e.target.value || null)}
@@ -222,8 +282,10 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
           >
             {viewDays.map((d) => (
               <option key={d.date} value={d.date}>
-                {d.date} · {d.bias === "bullish" ? "▲" : d.bias === "bearish" ? "▼" : "●"} ·{" "}
-                {d.n_trades}T · {d.outcomes.map((o) => OUTCOME_STYLE[o]?.label ?? o).join(",")}
+                {d.date} ·{" "}
+                {d.bias === "bullish" ? "▲" : d.bias === "bearish" ? "▼" : "●"}{" "}
+                · {d.n_trades}T ·{" "}
+                {d.outcomes.map((o) => OUTCOME_STYLE[o]?.label ?? o).join(",")}
               </option>
             ))}
           </select>
@@ -248,24 +310,35 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
               {(activeDay?.trades ?? []).map((t, idx) => {
                 const r = t.r_multiple ?? 0;
                 return (
-                  <tr key={idx} className="border-t border-[#21262d] text-[#c9d1d9]">
+                  <tr
+                    key={idx}
+                    className="border-t border-[#21262d] text-[#c9d1d9]"
+                  >
                     <td className="px-3 py-1.5 text-[#6e7681]">{idx + 1}</td>
-                    <td className={`px-3 py-1.5 font-bold ${t.dir === "long" ? "text-[#10b981]" : "text-[#ef4444]"}`}>
+                    <td
+                      className={`px-3 py-1.5 font-bold ${t.dir === "long" ? "text-[#10b981]" : "text-[#ef4444]"}`}
+                    >
                       {t.dir.toUpperCase()}
                     </td>
                     <td className="px-3 py-1.5">
                       {t.entry_time} @{t.entry_price}
                     </td>
                     <td className="px-3 py-1.5 text-[#ef4444]/80">{t.sl}</td>
-                    <td className="px-3 py-1.5 text-[#10b981]/80">{t.target}</td>
+                    <td className="px-3 py-1.5 text-[#10b981]/80">
+                      {t.target}
+                    </td>
                     <td className="px-3 py-1.5">
                       {t.exit_time ?? "-"} @{t.exit_price ?? "-"}
                     </td>
-                    <td className={`px-3 py-1.5 font-bold ${r > 0 ? "text-[#10b981]" : r < 0 ? "text-[#ef4444]" : "text-[#8b949e]"}`}>
+                    <td
+                      className={`px-3 py-1.5 font-bold ${r > 0 ? "text-[#10b981]" : r < 0 ? "text-[#ef4444]" : "text-[#8b949e]"}`}
+                    >
                       {r >= 0 ? "+" : ""}
                       {r.toFixed(2)}
                     </td>
-                    <td className="px-3 py-1.5 text-[10px] text-[#8b949e]">{t.pace_break_type}</td>
+                    <td className="px-3 py-1.5 text-[10px] text-[#8b949e]">
+                      {t.pace_break_type}
+                    </td>
                     <td className="px-3 py-1.5">
                       <OutcomeChip outcome={t.outcome as TradeOutcome} />
                     </td>
@@ -274,7 +347,10 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
               })}
               {!activeDay && (
                 <tr>
-                  <td colSpan={9} className="px-3 py-3 text-center text-[#8b949e]">
+                  <td
+                    colSpan={9}
+                    className="px-3 py-3 text-center text-[#8b949e]"
+                  >
                     No trades recorded.
                   </td>
                 </tr>
@@ -287,11 +363,24 @@ export default function IntradayPanel({ backtest, loading, error, params, onPara
   );
 }
 
-function Stat({ label, value, accent }: { label: string; value: string; accent?: string }) {
+function Stat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent?: string;
+}) {
   return (
     <div className="rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2">
-      <div className="text-[10px] uppercase tracking-wider text-[#6e7681]">{label}</div>
-      <div className="font-mono text-base font-semibold" style={{ color: accent ?? "#e6edf3" }}>
+      <div className="text-[10px] uppercase tracking-wider text-[#6e7681]">
+        {label}
+      </div>
+      <div
+        className="font-mono text-base font-semibold"
+        style={{ color: accent ?? "#e6edf3" }}
+      >
         {value}
       </div>
     </div>

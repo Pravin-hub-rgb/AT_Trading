@@ -427,11 +427,13 @@ def intraday_backtest(
     trailing: str = "off",
     trail_distance_r: float = 1.0,
     gap_pct: float = 0.27,
+    sl_pivot_buffer: float = 1.0,
 ):
     """Full-history intraday results for one experiment combo.
 
-    Switches (best-combo search): sl_mode avg|avg075|avg05|fixed8,
-    execution 5min|1min, trailing off|ladder, gap_pct in PERCENT (0.27 = 0.27%).
+    Switches (best-combo search): sl_mode avg|avg075|avg05|fixed8|prev_pivot,
+    execution 5min|1min, trailing off|ladder, gap_pct in PERCENT (0.27 = 0.27%),
+    sl_pivot_buffer in points (default 1.0) for prev_pivot mode.
     """
     cfg = {
         "sl_mode": sl_mode,
@@ -440,6 +442,7 @@ def intraday_backtest(
         "trail_distance_r": trail_distance_r,
         # UI/API speak percent; engine expects fraction (0.27% -> 0.0027)
         "gap_pct": float(gap_pct) / 100.0,
+        "sl_pivot_buffer": float(sl_pivot_buffer),
     }
     try:
         data, _ = _intraday_backtest(cfg)

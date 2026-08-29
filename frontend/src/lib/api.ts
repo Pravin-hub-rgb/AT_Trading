@@ -97,17 +97,26 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 // --- token ---
-export const getHealth = () => request<{ status: string; token_configured: boolean }>("/api/health");
+export const getHealth = () =>
+  request<{ status: string; token_configured: boolean }>("/api/health");
 
 export const getTokenStatus = () => request<TokenStatus>("/api/token/status");
 
-export const saveToken = (creds: { token: string; api_key: string; api_secret: string }) =>
+export const saveToken = (creds: {
+  token: string;
+  api_key: string;
+  api_secret: string;
+}) =>
   request<{ ok: boolean; status: TokenStatus }>("/api/token", {
     method: "POST",
     body: JSON.stringify(creds),
   });
 
-export const validateToken = (creds: { token: string; api_key: string; api_secret: string }) =>
+export const validateToken = (creds: {
+  token: string;
+  api_key: string;
+  api_secret: string;
+}) =>
   request<TokenCheck>("/api/token/validate", {
     method: "POST",
     body: JSON.stringify(creds),
@@ -128,16 +137,22 @@ export const putSettings = (patch: Partial<Settings>) =>
 
 // --- jobs ---
 export const startDownload = (interval: string, years: number) =>
-  request<{ status: string; operation_id: string; mode: string }>("/api/data/download", {
-    method: "POST",
-    body: JSON.stringify({ interval, years }),
-  });
+  request<{ status: string; operation_id: string; mode: string }>(
+    "/api/data/download",
+    {
+      method: "POST",
+      body: JSON.stringify({ interval, years }),
+    },
+  );
 
 export const updateData = () =>
-  request<{ status: string; operation_id: string; mode: string }>("/api/data/update", {
-    method: "POST",
-    body: JSON.stringify({}),
-  });
+  request<{ status: string; operation_id: string; mode: string }>(
+    "/api/data/update",
+    {
+      method: "POST",
+      body: JSON.stringify({}),
+    },
+  );
 
 export const getOperationStatus = (operationId: string) =>
   request<OperationStatus>(`/api/data/status/${operationId}`);
@@ -174,7 +189,12 @@ export interface SwingsResponse {
   sr_levels: SwingLevel[];
 }
 
-export const getSwings = (interval: string, pivot: number, levels = 5, lookahead = 50) =>
+export const getSwings = (
+  interval: string,
+  pivot: number,
+  levels = 5,
+  lookahead = 50,
+) =>
   request<SwingsResponse>(
     `/api/swings?interval=${interval}&pivot=${pivot}&levels=${levels}&lookahead=${lookahead}`,
   );
@@ -247,13 +267,21 @@ export const getBias = (limit?: number) =>
   request<BiasResponse>(`/api/bias${limit ? `?limit=${limit}` : ""}`);
 
 // --- intraday backtest engine ---
-export type TradeOutcome = "target" | "sl" | "eod" | "cost-to-cost" | "ft_fail" | "no_momentum" | "trail";
+export type TradeOutcome =
+  | "target"
+  | "sl"
+  | "eod"
+  | "cost-to-cost"
+  | "ft_fail"
+  | "no_momentum"
+  | "trail";
 
 export interface BacktestParams {
-  sl_mode: string;    // avg | avg075 | avg05 | fixed8
-  execution: string;  // 5min | 1min
-  trailing: string;   // off | ladder
-  gap_pct: string;    // gap threshold in %, e.g. "0.27"
+  sl_mode: string; // avg | avg075 | avg05 | fixed8 | prev_pivot
+  execution: string; // 5min | 1min
+  trailing: string; // off | ladder
+  gap_pct: string; // gap threshold in %, e.g. "0.27"
+  sl_pivot_buffer?: number; // buffer in points (default 1.0) when sl_mode=prev_pivot
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -261,6 +289,7 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   execution: "5min",
   trailing: "off",
   gap_pct: "0.27",
+  sl_pivot_buffer: 1.0,
 };
 
 export interface IntradayTrade {
@@ -313,14 +342,19 @@ export interface IntradayBacktestResponse {
   config?: BacktestParams & { trail_distance_r?: number };
 }
 
-export const getIntradayBacktest = (params: BacktestParams = DEFAULT_BT_PARAMS) => {
+export const getIntradayBacktest = (
+  params: BacktestParams = DEFAULT_BT_PARAMS,
+) => {
   const q = new URLSearchParams({
     sl_mode: params.sl_mode,
     execution: params.execution,
     trailing: params.trailing,
     gap_pct: params.gap_pct,
+    sl_pivot_buffer: String(params.sl_pivot_buffer ?? 1.0),
   });
-  return request<IntradayBacktestResponse>(`/api/intraday/backtest?${q.toString()}`);
+  return request<IntradayBacktestResponse>(
+    `/api/intraday/backtest?${q.toString()}`,
+  );
 };
 
 // --- first-swing manual ground truth (user-drawn) ---
@@ -340,7 +374,8 @@ export interface FsManualResponse {
   days: Record<string, FsDayMark>;
 }
 
-export const getFirstSwingManual = () => request<FsManualResponse>("/api/firstswing/manual");
+export const getFirstSwingManual = () =>
+  request<FsManualResponse>("/api/firstswing/manual");
 
 export const saveFirstSwingDay = (day: string, mark: FsDayMark) =>
   request<{ ok: boolean; day: string; count: number }>(
