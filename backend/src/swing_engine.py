@@ -1,24 +1,23 @@
-"""FirstSwingEngine — Full first-swing detection with continuation/reversal/confirmation.
+"""FsV2Engine — Full first-swing detection (v2) with continuation/reversal/confirmation.
 
-Port of FirstSwingEngine from frontend/src/lib/firstswing.ts (lines 59-527).
+Port of FsV2Engine from frontend/src/lib/flowline.ts (lines 549-943).
 
 Rules (course S6 + user spec + docs/first swing detection theory.md):
     REAL — CONTINUATION: session extreme EXTENDS twice in a row (each break against
                           a FRESH extreme, never re-breaking one fixed level) -> dir confirmed.
     REAL — REVERSAL:     one extreme breaks, then price reverses and breaks the
                           OTHER original extreme — exactly ONE break needed -> dir confirmed (flip).
-    REVERSAL CASE:       once locked (even dirConfirmed), an OPPOSITE extreme
-                          break wipes the swing memory -> flip -> ONE chop/sustain confirms.
-    once dir confirmed:   CHOP-BREAK (previous MARKED PIVOT taken out) or
-                          N-BAR SUSTAIN -> declared. Sustain is FAILURE-TO-EXTEND:
-                          selling swing = 7 closes back ABOVE the broken low;
-                          buying swing = 7 closes back BELOW the broken high;
+    REAL — INVALIDATION: opposite extreme breaks the START before declaration -> reset.
+    once dir confirmed:   CHOP-BREAK (previous MARKED PIVOT taken out, normal OR micro)
+                          or N-BAR SUSTAIN -> declared. Sustain is FAILURE-TO-EXTEND:
+                          selling swing = N closes back BELOW the broken low;
+                          buying swing = N closes back ABOVE the broken high;
                           a fresh extreme print resets the streak.
-    Levels: LIVING session extremes (A/B, zero-lag) drive lock/extend/flip/
-            sustain-reference. Walker-sealed pivots are ONLY chop-back targets.
-    timeCap gates DECLARATION only — counting runs from bar one; a pre-cap
-    trigger is HELD (pending) and flushed on the first bar at/after the cap.
-    Arming gate: no lock/flip fires before the first walker pivot exists.
+    Levels: LIVING session extremes (A/B, zero-lag) drive lock/extend/flip/sustain-reference.
+            Walker-sealed pivots are BOTH chop-break targets (normal) and E-level references.
+            Micro pivots are additional chop-break targets.
+    timeCap gates all actions — nothing before 9:29.
+    v3 fast-path: single E-break lock + opposite-break invalidation.
 
 Live-safe: closed bars only; declared end never repaints.
 """
@@ -35,7 +34,6 @@ from .walker import WalkerEngine, FlowCandle, AlgoPivot
 # ── data types ──────────────────────────────────────────────────────────────
 
 Dir = Literal["up", "down"]
-State = Literal["watch", "locked", "confirmed"]
 BreakKind = Literal["B1", "B2", "FLIP"]
 
 
@@ -72,7 +70,7 @@ class FsV2Result:
 
 
 @dataclass
-class Lvl:
+class FsLevel:
     """A price level with index and time."""
     px: float
     idx: int
@@ -81,12 +79,11 @@ class Lvl:
 
 # ── engine ──────────────────────────────────────────────────────────────────
 
-class FirstSwingEngine:
-    """Full first-swing detection engine.
+class FsV2Engine:
+    """Full first-swing detection engine (v2).
 
     Options:
-        time_cap: nothing declares before this time (default "09:29")
-        sustain_bars: N-bar sustain requirement (default 7)
+        sustainBars: N-bar sustain requirement (default 7)
     """
 
     # Tunables
@@ -95,81 +92,81 @@ class FirstSwingEngine:
 
     def __init__(self, opts: Optional[dict] = None) -> None:
         if opts:
-            self.time_cap = opts.get("time_cap", self.time_cap)
             self.sustain_bars = opts.get("sustain_bars", self.sustain_bars)
 
         self.walker = WalkerEngine()
         self.bars_seen: int = 0
         self.t: str = "00:00"
         self.g_idx: int = -1
-        self.hi: float = math.nan
-        self.lo: float = math.nan
+        self.green: bool = False
 
-        # Running session extremes (updated at end of each bar).
-        self.e_hi = Lvl(px=float("-inf"), idx=-1, time="")
-        self.e_lo = Lvl(px=float("inf"), idx=-1, time="")
-        # Frozen extremes as of the PREVIOUS bar close.
-        self.e_hi_prev = Lvl(px=float("-inf"), idx=-1, time="")
-        self.e_lo_prev = Lvl(px=float("inf"), idx=-1, time="")
-        # Frozen WALKER extreme-pivot levels as of the previous bar.
-        self.e_hi_pivot: Optional[Lvl] = None
-        self.e_lo_pivot: Optional[Lvl] = None
-        self.e_hi_pivot_prev: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
-        self.e_lo_pivot_prev: Lvl = Lvl(px=float("inf"), idx=-1, time="")
+        # Running session extremes (path-stamped — freshest candle wins).
+        self.e_hi: FsLevel = FsLevel(px=float("-inf"), idx=-1, time="")
+        self.e_lo: FsLevel = FsLevel(px=float("inf"), idx=-1, time="")
+        # Walker extreme pivots (sealed pivots).
+        self.e_hi_pivot: Optional[FsLevel] = None
+        self.e_lo_pivot: Optional[FsLevel] = None
 
-        # Walker-sealed extreme pivots + demoted "normal" pivots.
-        self.e_hi_pivot = None
-        self.e_lo_pivot = None
-        self.normal_highs: list[Lvl] = []
-        self.normal_lows: list[Lvl] = []
+        # Normal (walker-sealed) and micro (local) pivot pools.
+        self.normal_highs: list[FsLevel] = []
+        self.normal_lows: list[FsLevel] = []
+        self.micro_highs: list[FsLevel] = []
+        self.micro_lows: list[FsLevel] = []
 
-        self.state: State = "watch"
+        # Direction state.
         self.dir: Optional[Dir] = None
         self.base_dir: Optional[Dir] = None
         self.same_side_breaks: int = 0
-
-        # CORNER pivot: the first walker-sealed pivot AFTER B1 in the locked
-        # direction. This forms the V/^ corner shape. B2 requires a LATER pivot
-        # to BREAK this corner (not the corner itself).
-        self.corner_pivot: Optional[Lvl] = None
-        # B2 trigger pivot: the pivot that BROKE the corner and triggered B2
-        self.b2_pivot: Optional[Lvl] = None
-        # Block chop/sustain on the same bar as B2
-        self.just_fired_b2: bool = False
-        # B1 bar index: only pivots from AFTER this bar can trigger B2
-        self.b1_bar_idx: int = -1
-        # Allow corner recording. Starts FALSE after lock, becomes TRUE on next bar.
-        self.allow_corner_record: bool = False
+        self.opposite_side_breaks: int = 0
         self.dir_confirmed: bool = False
-        self.locked_level: float = math.nan
+        self.dir_confirmed_idx: int = -1
 
+        # Lock state.
+        self.locked: bool = False
+        self.locked_level_px: float = float("nan")
+
+        # Swing start/candidate.
         self.start_idx: int = -1
         self.start_time: str = ""
-        self.start_px: float = math.nan
+        self.start_px: float = float("nan")
         self.cand_idx: int = -1
         self.cand_time: str = ""
-        self.cand_px: float = math.nan
+        self.cand_px: float = float("nan")
 
+        # Declaration.
         self.declared: bool = False
         self.tier: Optional[Literal["real"]] = None
         self.end_time: str = ""
         self.end_idx: int = -1
-        self.end_px: float = math.nan
+        self.end_px: float = float("nan")
         self.confirmed_at_time: str = ""
         self.confirmed_at_idx: int = -1
         self.confirm_source: Optional[Literal["chop", "sustain"]] = None
-
-        self.sustain_streak: int = 0
-        # Arming gate: no lock/flip fires before walker emits its first pivot.
-        self.armed: bool = False
-
         self.last_confirm_hit: Optional[dict] = None
-        self.break_marks: list[FsBreakMark] = []
 
-    @property
-    def locked(self) -> bool:
-        """True once a first break has locked a tentative direction."""
-        return self.state != "watch"
+        # Sustain tracking.
+        self.sustain_streak: int = 0
+
+        # History for micro pivot detection.
+        self.hist_h: list[float] = []
+        self.hist_l: list[float] = []
+
+        # Micro pivot state (previous bar extremes).
+        self.p_high: float = float("nan")
+        self.p_high_idx: int = -1
+        self.p_high_t: str = ""
+        self.pp_high: float = float("nan")
+        self.pp_high_idx: int = -1
+        self.pp_high_t: str = ""
+        self.p_low: float = float("nan")
+        self.p_low_idx: int = -1
+        self.p_low_t: str = ""
+        self.pp_low: float = float("nan")
+        self.pp_low_idx: int = -1
+        self.pp_low_t: str = ""
+
+        # Break marks for chart.
+        self.break_marks: list[FsBreakMark] = []
 
     # ── public API ─────────────────────────────────────────────────────────
 
@@ -178,97 +175,228 @@ class FirstSwingEngine:
         if self.declared:
             return
         self.bars_seen += 1
-        self.g_idx = g_idx
         self.t = c.date[11:16] if len(c.date) >= 16 else ""
-        self.hi = c.high
-        self.lo = c.low
-
-        # Clear the B2-block flag at start of each bar.
-        self.just_fired_b2 = False
+        self.green = c.close >= c.open
+        self.g_idx = g_idx
 
         if self.bars_seen == 1:
-            self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
-            self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
-            self.e_hi_prev = Lvl(px=c.high, idx=g_idx, time=self.t)
-            self.e_lo_prev = Lvl(px=c.low, idx=g_idx, time=self.t)
-            self.e_hi_pivot = Lvl(px=c.high, idx=g_idx, time=self.t)
-            self.e_lo_pivot = Lvl(px=c.low, idx=g_idx, time=self.t)
-            self.e_hi_pivot_prev = Lvl(px=c.high, idx=g_idx, time=self.t)
-            self.e_lo_pivot_prev = Lvl(px=c.low, idx=g_idx, time=self.t)
+            self.e_hi = FsLevel(px=c.high, idx=g_idx, time=self.t)
+            self.e_lo = FsLevel(px=c.low, idx=g_idx, time=self.t)
+            self.e_hi_pivot = FsLevel(px=c.high, idx=g_idx, time=self.t)
+            self.e_lo_pivot = FsLevel(px=c.low, idx=g_idx, time=self.t)
 
-        # 1) Consume walker seals — single source of truth for pivots.
-        #    The FIRST flip-sealed pivot (bar-1 seed excluded) arms the engine.
+        # ---- A) Consume walker seals FIRST ----
         for p in self.walker.process_bar(c, g_idx):
             if not p.sealed:
                 continue
-            if self.bars_seen >= 2:
-                self.armed = True
             if p.kind == "H":
                 cur = self.e_hi_pivot
                 if cur and p.px > cur.px:
                     self.normal_highs.append(cur)
-                    self.e_hi_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
-                    # CORNER: track first pivot after B1 as corner (V/^ shape).
-                    if (
-                        self.dir == "up"
-                        and p.px > self.locked_level
-                        and p.idx >= self.b1_bar_idx
-                        and self.allow_corner_record
-                    ):
-                        if self.corner_pivot is None:
-                            self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
+                    self.e_hi_pivot = FsLevel(px=p.px, idx=p.idx, time=p.time)
                 else:
-                    self._push_unique(self.normal_highs, Lvl(px=p.px, idx=p.idx, time=p.time))
+                    self._push_unique(self.normal_highs, FsLevel(px=p.px, idx=p.idx, time=p.time))
             else:
                 cur = self.e_lo_pivot
                 if cur and p.px < cur.px:
                     self.normal_lows.append(cur)
-                    self.e_lo_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
-                    # CORNER: track first pivot after B1 as corner (V/^ shape).
-                    if (
-                        self.dir == "down"
-                        and p.px < self.locked_level
-                        and p.idx >= self.b1_bar_idx
-                        and self.allow_corner_record
-                    ):
-                        if self.corner_pivot is None:
-                            self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
+                    self.e_lo_pivot = FsLevel(px=p.px, idx=p.idx, time=p.time)
                 else:
-                    self._push_unique(self.normal_lows, Lvl(px=p.px, idx=p.idx, time=p.time))
+                    self._push_unique(self.normal_lows, FsLevel(px=p.px, idx=p.idx, time=p.time))
 
-        # 2) Direction/break step — per BAR, against FROZEN LIVING SESSION EXTREMES.
-        #    Counting ALWAYS runs — timeCap gates DECLARATION only.
-        up_break = c.high > self.e_hi_prev.px
-        down_break = c.low < self.e_lo_prev.px
-        if self.armed:
-            self._step(down_break, up_break)
+        # ---- B) Invalidation: opposite extreme breaks start before declaration ----
+        if self.dir_confirmed and self.dir and not self.declared and self.start_idx >= 0:
+            if self.dir == "up" and self.e_lo.px < self.start_px:
+                self._invalidate()
+            elif self.dir == "down" and self.e_hi.px > self.start_px:
+                self._invalidate()
 
-        # 3) Keep candidate end glued to actual bar extreme in swing dir.
-        if self.dir == "down" and c.low <= self.e_lo.px:
-            self._set_cand(Lvl(px=c.low, idx=g_idx, time=self.t))
-        if self.dir == "up" and c.high >= self.e_hi.px:
-            self._set_cand(Lvl(px=c.high, idx=g_idx, time=self.t))
+        # ---- C) Live path: capture extremes BEFORE halves loop ----
+        e_lo_before = self.e_lo.px
+        e_hi_before = self.e_hi.px
 
-        # 4) Sustain check (bar-level) once direction is confirmed.
-        self._check_sustain(c)
+        # ---- D) Micro local-extremes (completed 2-side pivots) ----
+        if self.dir_confirmed and self.dir and self.bars_seen >= 3 and math.isfinite(self.pp_high):
+            top_formed = self.p_high > self.pp_high and (c.high < self.p_high or c.low < self.p_low)
+            bot_formed = self.p_low < self.pp_low and (c.low > self.p_low or c.high > self.p_high)
+            if top_formed and self.p_high_idx > self.start_idx:
+                self._push_unique(self.micro_highs, FsLevel(px=self.p_high, idx=self.p_high_idx, time=self.p_high_t))
+            if bot_formed and self.p_low_idx > self.start_idx:
+                self._push_unique(self.micro_lows, FsLevel(px=self.p_low, idx=self.p_low_idx, time=self.p_low_t))
 
-        # 5) Advance frozen extremes to include THIS bar.
-        if c.high > self.e_hi.px:
-            self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
-        if c.low < self.e_lo.px:
-            self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
-        self.e_hi_prev = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
-        self.e_lo_prev = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
-        # Walker extreme-pivot levels as of THIS bar become next bar's reference.
-        if self.e_hi_pivot:
-            self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx,
-                                       time=self.e_hi_pivot.time)
-        if self.e_lo_pivot:
-            self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx,
-                                       time=self.e_lo_pivot.time)
-        # Enable corner recording for the NEXT bar onwards.
-        if self.state == "locked":
-            self.allow_corner_record = True
+        self.hist_h.append(c.high)
+        self.hist_l.append(c.low)
+
+        # Process halves: green = [low, high], red = [high, low]
+        halves: list[tuple[float, bool]] = (
+            [(c.low, True), (c.high, False)] if self.green else [(c.high, True), (c.low, False)]
+        )
+
+        for px, is_low in halves:
+            if self.declared:
+                break
+
+            # Live extreme stamps — always update
+            if px > self.e_hi.px:
+                self.e_hi = FsLevel(px=px, idx=g_idx, time=self.t)
+                if self.dir == "up":
+                    self._set_cand(self.e_hi)
+            if px < self.e_lo.px:
+                self.e_lo = FsLevel(px=px, idx=g_idx, time=self.t)
+                if self.dir == "down":
+                    self._set_cand(self.e_lo)
+
+            # Nothing before timeCap
+            if self.t < self.time_cap:
+                continue
+
+            # Get E-levels for break detection
+            e_lo_lvl = self.e_lo_pivot.px if self.e_lo_pivot else self.e_lo.px
+            e_hi_lvl = self.e_hi_pivot.px if self.e_hi_pivot else self.e_hi.px
+
+            # ---- Direction detection ----
+            if self.dir_confirmed:
+                pass  # Only chop/sustain can fire after confirmation
+            elif self.locked or self.dir:
+                # Count same-side and opposite-side breaks
+                if self.base_dir == "down" and px < e_lo_lvl and px < e_lo_before:
+                    self.same_side_breaks += 1
+                    if self.same_side_breaks >= 2:
+                        self.dir_confirmed = True
+                        self.dir_confirmed_idx = g_idx
+                        self.locked_level_px = px
+                elif self.base_dir == "up" and px > e_hi_lvl and px > e_hi_before:
+                    self.same_side_breaks += 1
+                    if self.same_side_breaks >= 2:
+                        self.dir_confirmed = True
+                        self.dir_confirmed_idx = g_idx
+                        self.locked_level_px = px
+                elif self.base_dir == "down" and px > e_hi_lvl and px > e_hi_before:
+                    self.opposite_side_breaks = 1
+                    self.dir = "up"
+                    self.dir_confirmed = True
+                    self.dir_confirmed_idx = g_idx
+                    self.locked_level_px = e_hi_lvl
+                elif self.base_dir == "up" and px < e_lo_lvl and px < e_lo_before:
+                    self.opposite_side_breaks = 1
+                    self.dir = "down"
+                    self.dir_confirmed = True
+                    self.dir_confirmed_idx = g_idx
+                    self.locked_level_px = e_lo_lvl
+
+            # ---- v3 fast-path: single E-break LOCK ----
+            if not self.locked:
+                down_break = self.dir == "down" and px < e_lo_lvl
+                up_break = self.dir == "up" and px > e_hi_lvl
+                first_break_down = self.dir is None and px < e_lo_lvl
+                first_break_up = self.dir is None and px > e_hi_lvl
+
+                if down_break or first_break_down:
+                    self.locked = True
+                    self.locked_level_px = e_lo_lvl
+                    self._set_cand(self.e_lo)
+                    if self.dir is None:
+                        self.dir = "down"
+                        self._initiate("down", self.t)
+                        self.base_dir = "down"
+                        self.same_side_breaks = 1
+                    elif self.base_dir == "down":
+                        self.same_side_breaks += 1
+                        if self.same_side_breaks >= 2:
+                            self.dir_confirmed = True
+                            self.dir_confirmed_idx = g_idx
+                            self.locked_level_px = px
+                    else:
+                        self.opposite_side_breaks = 1
+                        self.dir = "up"
+                        self.dir_confirmed = True
+                        self.dir_confirmed_idx = g_idx
+
+                elif up_break or first_break_up:
+                    self.locked = True
+                    self.locked_level_px = e_hi_lvl
+                    self._set_cand(self.e_hi)
+                    if self.dir is None:
+                        self.dir = "up"
+                        self._initiate("up", self.t)
+                        self.base_dir = "up"
+                        self.same_side_breaks = 1
+                    elif self.base_dir == "up":
+                        self.same_side_breaks += 1
+                        if self.same_side_breaks >= 2:
+                            self.dir_confirmed = True
+                            self.dir_confirmed_idx = g_idx
+                            self.locked_level_px = px
+                    else:
+                        self.opposite_side_breaks = 1
+                        self.dir = "down"
+                        self.dir_confirmed = True
+                        self.dir_confirmed_idx = g_idx
+
+            # ---- CHOP-BREAK ----
+            if self.dir_confirmed and self.dir and self.start_idx >= 0:
+                if self.dir == "down":
+                    # For shorts: break of latest high pivot after start
+                    normal_cands = [l for l in self.normal_highs if l.idx > self.start_idx and l.idx < g_idx]
+                    if normal_cands:
+                        target = max(normal_cands, key=lambda l: l.idx)
+                        if px > target.px:
+                            self.last_confirm_hit = {"pool": "normal", "px": target.px, "idx": target.idx, "time": target.time}
+                            self.confirm_source = "chop"
+                            self._confirm(g_idx, self.t)
+                            return
+                    micro_cands = [l for l in self.micro_highs if l.idx > self.start_idx and l.idx < g_idx]
+                    if micro_cands:
+                        target = max(micro_cands, key=lambda l: l.idx)
+                        if px > target.px:
+                            self.last_confirm_hit = {"pool": "micro", "px": target.px, "idx": target.idx, "time": target.time}
+                            self.confirm_source = "chop"
+                            self._confirm(g_idx, self.t)
+                            return
+                else:
+                    # For longs: break of latest low pivot after start (with 1-bar gap for lows)
+                    normal_cands = [l for l in self.normal_lows if l.idx > self.start_idx and l.idx + 1 < g_idx]
+                    if normal_cands:
+                        target = max(normal_cands, key=lambda l: l.idx)
+                        if px < target.px:
+                            self.last_confirm_hit = {"pool": "normal", "px": target.px, "idx": target.idx, "time": target.time}
+                            self.confirm_source = "chop"
+                            self._confirm(g_idx, self.t)
+                            return
+                    micro_cands = [l for l in self.micro_lows if l.idx > self.start_idx and l.idx + 1 < g_idx]
+                    if micro_cands:
+                        target = max(micro_cands, key=lambda l: l.idx)
+                        if px < target.px:
+                            self.last_confirm_hit = {"pool": "micro", "px": target.px, "idx": target.idx, "time": target.time}
+                            self.confirm_source = "chop"
+                            self._confirm(g_idx, self.t)
+                            return
+
+        # ---- E) N-candle sustain (bar-level) ----
+        if self.t < self.time_cap:
+            self.sustain_streak = 0
+        elif self.dir_confirmed and self.dir and not self.declared:
+            made_new_extreme = (self.dir == "down" and self.e_lo.px < e_lo_before) or \
+                             (self.dir == "up" and self.e_hi.px > e_hi_before)
+            if made_new_extreme:
+                self.sustain_streak = 0
+            else:
+                if self.dir == "down":
+                    self.sustain_streak = self.sustain_streak + 1 if c.close < self.locked_level_px else 0
+                else:
+                    self.sustain_streak = self.sustain_streak + 1 if c.close > self.locked_level_px else 0
+            if self.sustain_streak >= self.sustain_bars:
+                self.confirm_source = "sustain"
+                self._confirm(g_idx, self.t)
+                return
+        else:
+            self.sustain_streak = 0
+
+        # ---- Shift micro history ----
+        self.pp_high, self.pp_high_idx, self.pp_high_t = self.p_high, self.p_high_idx, self.p_high_t
+        self.p_high, self.p_high_idx, self.p_high_t = c.high, g_idx, self.t
+        self.pp_low, self.pp_low_idx, self.pp_low_t = self.p_low, self.p_low_idx, self.p_low_t
+        self.p_low, self.p_low_idx, self.p_low_t = c.low, g_idx, self.t
 
     def get_result(self, day: str) -> Optional[FsV2Result]:
         """Return structured result if declared, else None."""
@@ -290,186 +418,75 @@ class FirstSwingEngine:
             breaks=self.break_marks,
         )
 
-    # ── private helpers ────────────────────────────────────────────────────
+    # ── private helpers ───────────────────────────────────────────────────
 
-    def _step(self, down_break: bool, up_break: bool) -> None:
-        if self.state == "watch":
-            if down_break:
-                self._lock("down")
-            elif up_break:
-                self._lock("up")
-            return
-
-        if self.dir_confirmed:
-            # REVERSAL CASE: opposite extreme break wipes thesis entirely.
-            if self.dir == "down" and up_break and not down_break:
-                self._flip("up")
-                self._check_chop()
-                return
-            if self.dir == "up" and down_break and not up_break:
-                self._flip("down")
-                self._check_chop()
-                return
-            self._check_chop()
-            return
-
-        # LOCKED, direction not yet confirmed.
-        # B2 confirmation:
-        #   - If a corner pivot exists: B2 fires when PRICE breaks the corner.
-        #   - If no corner yet: B2 fires on first break of B1 extreme.
-        if self.dir == "down":
-            if down_break:
-                # Check against the latest walker-sealed eLoPivot.
-                # Must be from a different bar than B1.
-                if (
-                    self.e_lo_pivot
-                    and self.e_lo_pivot.idx >= self.b1_bar_idx
-                    and self.lo < self.e_lo_pivot.px
-                ):
-                    self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
-                    self._confirm_direction()
-                    self._check_chop()
-            elif up_break:
-                self._flip("up")
-                self._check_chop()
-        elif self.dir == "up":
-            if up_break:
-                if (
-                    self.e_hi_pivot
-                    and self.e_hi_pivot.idx >= self.b1_bar_idx
-                    and self.hi > self.e_hi_pivot.px
-                ):
-                    self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
-                    self._confirm_direction()
-                    self._check_chop()
-            elif down_break:
-                self._flip("down")
-                self._check_chop()
-
-    def _lock(self, dir: Dir) -> None:
-        self.dir = dir
-        self.base_dir = dir
-        self.same_side_breaks = 1
-        self.corner_pivot = None
-        self.b2_pivot = None
-        self.b1_bar_idx = self.g_idx
-        self.state = "locked"
-        self.allow_corner_record = False
-        s = self.e_lo if dir == "up" else self.e_hi
-        self.start_idx = s.idx
-        self.start_time = s.time
-        self.start_px = s.px
-        self.locked_level = self.e_hi_prev.px if dir == "up" else self.e_lo_prev.px
-        self.break_marks.append(FsBreakMark(
-            idx=self.g_idx, time=self.t, kind="B1", dir=dir, px=self.locked_level,
-        ))
-
-    def _confirm_direction(self) -> None:
-        self.dir_confirmed = True
-        b2 = self.b2_pivot
-        self.locked_level = self.e_hi_prev.px if self.dir == "up" else self.e_lo_prev.px
-        self.break_marks.append(FsBreakMark(
-            idx=b2.idx if b2 else self.g_idx,
-            time=b2.time if b2 else self.t,
-            kind="B2",
-            dir=self.dir,
-            px=b2.px if b2 else self.locked_level,
-        ))
-        self.b2_pivot = None
-        self.just_fired_b2 = True
-
-    def _flip(self, dir: Dir) -> None:
-        self.dir = dir
+    def _invalidate(self) -> None:
+        """Reset all state after opposite extreme breaks start."""
+        self.dir = None
+        self.locked = False
+        self.dir_confirmed = False
+        self.dir_confirmed_idx = -1
         self.base_dir = None
         self.same_side_breaks = 0
-        self.corner_pivot = None
-        self.b2_pivot = None
-        self.b1_bar_idx = -1
-        self.allow_corner_record = False
-        self.dir_confirmed = True
+        self.opposite_side_breaks = 0
+        self.sustain_streak = 0
+        self.locked_level_px = float("nan")
+        self.micro_highs.clear()
+        self.micro_lows.clear()
+        self.start_idx = -1
+        self.start_time = ""
+        self.start_px = float("nan")
+        self.cand_idx = -1
+        self.cand_time = ""
+        self.cand_px = float("nan")
+
+    def _initiate(self, dir: Dir, t: str) -> None:
+        """Initialize swing on first break."""
+        self.dir = dir
+        self.micro_highs.clear()
+        self.micro_lows.clear()
+        self.sustain_streak = 0
+        self.base_dir = None
+        self.same_side_breaks = 0
+        self.opposite_side_breaks = 0
+        self.dir_confirmed = False
+        self.dir_confirmed_idx = -1
+        # Swing start = counter-extreme at initiation moment
         s = self.e_lo if dir == "up" else self.e_hi
         self.start_idx = s.idx
         self.start_time = s.time
         self.start_px = s.px
-        self.locked_level = self.e_hi_prev.px if dir == "up" else self.e_lo_prev.px
-        self.break_marks.append(FsBreakMark(
-            idx=self.g_idx, time=self.t, kind="FLIP", dir=dir, px=self.locked_level,
-        ))
+        self._set_cand(self.e_hi if dir == "up" else self.e_lo)
 
-    def _check_chop(self) -> None:
-        # Block chop on same bar as B2.
-        if self.just_fired_b2:
-            return
-        if self.dir == "down":
-            tgt = self._latest_pivot(self.normal_highs)
-            if tgt and self.hi > tgt.px:
-                self.last_confirm_hit = {"pool": "normal", "px": tgt.px,
-                                        "idx": tgt.idx, "time": tgt.time}
-                self._confirm("chop")
-        elif self.dir == "up":
-            tgt = self._latest_pivot(self.normal_lows)
-            if tgt and self.lo < tgt.px:
-                self.last_confirm_hit = {"pool": "normal", "px": tgt.px,
-                                        "idx": tgt.idx, "time": tgt.time}
-                self._confirm("chop")
+    def _set_cand(self, l: FsLevel) -> None:
+        self.cand_idx = l.idx
+        self.cand_time = l.time
+        self.cand_px = l.px
 
-    def _check_sustain(self, c: FlowCandle) -> None:
-        # Block sustain on same bar as B2.
-        if self.just_fired_b2:
-            return
-        if not self.dir_confirmed:
-            self.sustain_streak = 0
-            return
-        # FRESH-EXTREME reset: a bar extending the swing belongs to the move.
-        fresh = c.low < self.e_lo.px if self.dir == "down" else c.high > self.e_hi.px
-        if fresh:
-            self.sustain_streak = 0
-            return
-        # FAILURE-TO-EXTEND: selling swing sustains when price rests ABOVE broken low.
-        ref = self.locked_level
-        hold = c.close > ref if self.dir == "down" else c.close < ref
-        self.sustain_streak = self.sustain_streak + 1 if hold else 0
-        if self.sustain_streak >= self.sustain_bars:
-            self._confirm("sustain")
+    def _push_unique(self, pool: list[FsLevel], l: FsLevel) -> None:
+        if not any(x.idx == l.idx and x.px == l.px for x in pool):
+            pool.append(l)
 
-    def _confirm(self, src: Literal["chop", "sustain"],
-                 trig: Optional[dict] = None) -> None:
-        # 9:29 rule: nothing DECLARES before the cap.
-        if self.t < self.time_cap:
+    def _confirm(self, g_idx: int, t: str) -> None:
+        """Confirm the swing (hard timeCap gate)."""
+        if t < self.time_cap:
             return
         self.declared = True
         self.tier = "real"
         self.end_idx = self.cand_idx
         self.end_time = self.cand_time
         self.end_px = self.cand_px
-        self.confirmed_at_time = trig["time"] if trig else self.t
-        self.confirmed_at_idx = trig["idx"] if trig else self.g_idx
-        self.confirm_source = src
-
-    def _set_cand(self, l: Lvl) -> None:
-        self.cand_idx = l.idx
-        self.cand_time = l.time
-        self.cand_px = l.px
-
-    def _push_unique(self, pool: list[Lvl], l: Lvl) -> None:
-        if not any(x.idx == l.idx and x.px == l.px for x in pool):
-            pool.append(l)
-
-    def _latest_pivot(self, pool: list[Lvl]) -> Optional[Lvl]:
-        """Return the LATEST (most recent) marked pivot in the pool."""
-        if not pool:
-            return None
-        return pool[-1]
+        self.confirmed_at_time = t
+        self.confirmed_at_idx = g_idx
 
     def debug_pools(self) -> dict:
         return {
-            "armed": self.armed,
             "start_idx": self.start_idx,
             "start_px": self.start_px,
-            "locked_level_px": self.locked_level,
+            "locked_level_px": self.locked_level_px,
             "last_confirm_hit": self.last_confirm_hit,
             "normal_highs": [f"{l.time}@{l.px:.2f}" for l in self.normal_highs],
-            "normal_lows": [f"{l.time}@{l.px:.2f}" for l in self.normal_lows],
+            "micro_highs": [f"{l.time}@{l.px:.2f}" for l in self.micro_highs],
         }
 
 
@@ -481,12 +498,11 @@ def compute_fs_v2_results(candles: list[FlowCandle],
 
     Args:
         candles: List of FlowCandle sorted by date globally.
-        opts: Engine options (time_cap, sustain_bars).
+        opts: Engine options (sustain_bars).
 
     Returns:
         List of FsV2Result, one per day with a declared swing.
     """
-    # Group candles by day.
     by_day: dict[str, list[tuple[int, FlowCandle]]] = {}
     for g_idx, c in enumerate(candles):
         d = c.date[:10]
@@ -494,7 +510,7 @@ def compute_fs_v2_results(candles: list[FlowCandle],
 
     out: list[FsV2Result] = []
     for day, items in by_day.items():
-        eng = FirstSwingEngine(opts)
+        eng = FsV2Engine(opts)
         for g_idx, c in items:
             eng.process_bar(c, g_idx)
 
@@ -508,3 +524,7 @@ def compute_fs_v2_declared(candles: list[FlowCandle],
                             opts: Optional[dict] = None) -> list[FlowSegment]:
     """Return declared segments only (real swing days)."""
     return [r.seg for r in compute_fs_v2_results(candles, opts)]
+
+
+# Alias for backward compatibility
+FirstSwingEngine = FsV2Engine
