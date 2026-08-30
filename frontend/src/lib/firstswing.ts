@@ -65,6 +65,7 @@ export class FirstSwingEngine {
   private lo = NaN;
   private timeCap = "09:29";
   private sustainBars: number;
+  private seedIdx = -1;
 
   // Running session extremes (updated at end of each bar).
   private eHi: Lvl = { px: -Infinity, idx: -1, time: "" };
@@ -173,6 +174,7 @@ export class FirstSwingEngine {
       this.eLoPivot = { ...this.eLo };
       this.eHiPivotPrev = { ...this.eHiPivot };
       this.eLoPivotPrev = { ...this.eLoPivot };
+      this.seedIdx = gIdx;
     }
 
     // 1) Consume walker seals — the single source of truth for pivots.
@@ -238,17 +240,19 @@ export class FirstSwingEngine {
     //    the new extreme prints — strictly before the old next-bar reset.
 
     // 3) Direction / break step — per BAR, against the FROZEN LIVING SESSION
-    //    EXTREMES (A/B — zero-lag, updated at end of each bar). The theory doc
-    //    is explicit: locks/reversals are breaks of the session extremes, and
-    //    continuation = EXTENDING the extreme twice — never re-breaking one
-    //    fixed level. Walker-sealed pivots are used ONLY as chop-back targets
-    //    ("previous marked pivot").
-    //    COUNTING ALWAYS RUNS — the timeCap gates DECLARATION only (confirm()
-    //    holds pre-cap triggers as pending). Locks / flips / chop observations
-    //    before 09:29 are remembered so a pre-cap reversal case (e.g. 28 Aug:
-    //    09:20 E-low break → 09:26 E-high break) is not lost.
-    const upBreak = c.high > this.eHiPrev.px;
-    const downBreak = c.low < this.eLoPrev.px;
+    //    EXTREMES (A/B — zero-lag, updated at end of each bar) AND the last
+    //    walker-sealed pivot visible on flow line. User noted 10:30 B1 on 25-Aug
+    //    didn't break any flow-line pivot, so B1 must be 10:31 breaking 10:26 H.
+    //    To match that, B1 now requires BOTH living and pivot break, and pivot
+    //    must be after seed (so 09:29 break of 09:28 seed low is not B1, 09:30
+    //    break of 09:29 pivot is B1).
+    //    COUNTING ALWAYS RUNS — the timeCap gates DECLARATION only.
+    const upBreakLiving = c.high > this.eHiPrev.px;
+    const downBreakLiving = c.low < this.eLoPrev.px;
+    const upBreakPivot = c.high > this.eHiPivotPrev.px && this.eHiPivotPrev.idx > this.seedIdx;
+    const downBreakPivot = c.low < this.eLoPivotPrev.px && this.eLoPivotPrev.idx > this.seedIdx;
+    const upBreak = upBreakLiving && upBreakPivot;
+    const downBreak = downBreakLiving && downBreakPivot;
     // ARMING GATE: before the first flowline pivot exists there is no A/B to
     // break — early pokes of the single opening candle are noise (24 Aug:
     // 9:16 +0.4pt poke must NOT lock a swing).
@@ -523,6 +527,127 @@ export class FirstSwingEngine {
       normalHighs: this.normalHighs.map((l) => l.time + "@" + l.px.toFixed(2)),
       normalLows: this.normalLows.map((l) => l.time + "@" + l.px.toFixed(2)),
     };
+  }
+
+  /** Re-initialize the engine to detect a new swing starting from a pre-defined
+   *  price level (e.g., the first swing's extreme). After reset, the next
+   *  processBar increments barsSeen to 2, skipping the barsSeen==1 initialization
+   *  (seed bar is already set). This makes the seed behave exactly like the
+   *  09:15 candle for the new swing.
+   *  NOTE: seedPx seeds BOTH hi/lo to the same extreme (flat). For a true
+   *  mirror of first-swing init (which uses 09:15 high/low), use resetWithCandle. */
+  reset(seedPx: number, seedIdx: number, seedTime: string) {
+    this.walker = new WalkerEngine();
+    this.barsSeen = 1;
+    this.t = seedTime;
+    this.gIdx = seedIdx;
+    this.hi = NaN;
+    this.lo = NaN;
+    this.seedIdx = seedIdx;
+
+    const seed: Lvl = { px: seedPx, idx: seedIdx, time: seedTime };
+    this.eHi = { ...seed };
+    this.eLo = { ...seed };
+    this.eHiPrev = { ...seed };
+    this.eLoPrev = { ...seed };
+    this.eHiPivot = { ...seed };
+    this.eLoPivot = { ...seed };
+    this.eHiPivotPrev = { ...seed };
+    this.eLoPivotPrev = { ...seed };
+
+    this.normalHighs.length = 0;
+    this.normalLows.length = 0;
+
+    this.state = "watch";
+    this.dir = null;
+    this.baseDir = null;
+    this.sameSideBreaks = 0;
+    this.cornerPivot = null;
+    this.b2Pivot = null;
+    this.justFiredB2 = false;
+    this.b1BarIdx = -1;
+    this.allowCornerRecord = false;
+    this.dirConfirmed = false;
+    this.lockedLevel = NaN;
+
+    this.startIdx = -1;
+    this.startTime = "";
+    this.startPx = NaN;
+    this.candIdx = -1;
+    this.candTime = "";
+    this.candPx = NaN;
+
+    this.declared = false;
+    this.tier = null;
+    this.endTime = "";
+    this.endIdx = -1;
+    this.endPx = NaN;
+    this.confirmedAtTime = "";
+    this.confirmedAtIdx = -1;
+    this.confirmSource = null;
+    this.lastConfirmHit = null;
+    this.sustainStreak = 0;
+    this.armed = false;
+    this.breakMarks.length = 0;
+  }
+
+  /** True mirror of first-swing init: seed with the actual OHLC of the 09:27
+   *  cyan candle (high/low), not a flat level. This is what the user asked:
+   *  “take ohlc value from 9:27 and run it though first swing engine”.
+   *  After this, 09:28 is the second bar (barsSeen=2) and must break the
+   *  09:27 low/high to lock. */
+  resetWithCandle(c: FlowCandle, gIdx: number) {
+    this.walker = new WalkerEngine();
+    this.barsSeen = 1;
+    this.t = c.date.slice(11, 16);
+    this.gIdx = gIdx;
+    this.hi = NaN;
+    this.lo = NaN;
+    this.seedIdx = gIdx;
+
+    this.eHi = { px: c.high, idx: gIdx, time: this.t };
+    this.eLo = { px: c.low, idx: gIdx, time: this.t };
+    this.eHiPrev = { ...this.eHi };
+    this.eLoPrev = { ...this.eLo };
+    this.eHiPivot = { ...this.eHi };
+    this.eLoPivot = { ...this.eLo };
+    this.eHiPivotPrev = { ...this.eHiPivot };
+    this.eLoPivotPrev = { ...this.eLoPivot };
+
+    this.normalHighs.length = 0;
+    this.normalLows.length = 0;
+
+    this.state = "watch";
+    this.dir = null;
+    this.baseDir = null;
+    this.sameSideBreaks = 0;
+    this.cornerPivot = null;
+    this.b2Pivot = null;
+    this.justFiredB2 = false;
+    this.b1BarIdx = -1;
+    this.allowCornerRecord = false;
+    this.dirConfirmed = false;
+    this.lockedLevel = NaN;
+
+    this.startIdx = -1;
+    this.startTime = "";
+    this.startPx = NaN;
+    this.candIdx = -1;
+    this.candTime = "";
+    this.candPx = NaN;
+
+    this.declared = false;
+    this.tier = null;
+    this.endTime = "";
+    this.endIdx = -1;
+    this.endPx = NaN;
+    this.confirmedAtTime = "";
+    this.confirmedAtIdx = -1;
+    this.confirmSource = null;
+    this.lastConfirmHit = null;
+    this.sustainStreak = 0;
+    this.armed = false;
+    this.breakMarks.length = 0;
   }
 }
 

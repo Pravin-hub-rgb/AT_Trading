@@ -1,0 +1,191 @@
+loading data
+Loaded 19887 rows across 266 dates
+Bias labels: 266
+
+=== AVG MODE ===
+{
+  "days_total": 265,
+  "days_traded": 17,
+  "trades": 20,
+  "wins": 7,
+  "win_rate": 35.0,
+  "total_r": 6.84,
+  "avg_r": 0.34,
+  "outcomes": {
+    "ft_fail": 2,
+    "sl": 11,
+    "target": 5,
+    "eod": 2
+  },
+  "longs": 5,
+  "shorts": 15,
+  "cases": {
+    "B1": {
+      "trades": 1,
+      "wins": 1,
+      "total_r": 1.37
+    },
+    "B2": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "B3": {
+      "trades": 2,
+      "wins": 0,
+      "total_r": -2.0
+    },
+    "B4": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "B5": {
+      "trades": 2,
+      "wins": 2,
+      "total_r": 6.0
+    },
+    "B6": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "Bc1": {
+      "trades": 3,
+      "wins": 0,
+      "total_r": -3.0
+    },
+    "Bc2": {
+      "trades": 2,
+      "wins": 0,
+      "total_r": -2.0
+    },
+    "Bc4": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "Bc5": {
+      "trades": 5,
+      "wins": 4,
+      "total_r": 10.86
+    },
+    "Bc6": {
+      "trades": 5,
+      "wins": 0,
+      "total_r": -4.39
+    }
+  }
+}
+
+=== PREV_PIVOT MODE (buffer=1.0) ===
+{
+  "days_total": 265,
+  "days_traded": 8,
+  "trades": 9,
+  "wins": 2,
+  "win_rate": 22.2,
+  "total_r": -1.0,
+  "avg_r": -0.11,
+  "outcomes": {
+    "sl": 7,
+    "target": 2
+  },
+  "longs": 2,
+  "shorts": 7,
+  "cases": {
+    "B1": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "B2": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "B3": {
+      "trades": 1,
+      "wins": 0,
+      "total_r": -1.0
+    },
+    "B4": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "B5": {
+      "trades": 1,
+      "wins": 1,
+      "total_r": 3.0
+    },
+    "B6": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "Bc1": {
+      "trades": 1,
+      "wins": 0,
+      "total_r": -1.0
+    },
+    "Bc2": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "Bc4": {
+      "trades": 0,
+      "wins": 0,
+      "total_r": 0.0
+    },
+    "Bc5": {
+      "trades": 2,
+      "wins": 1,
+      "total_r": 2.0
+    },
+    "Bc6": {
+      "trades": 4,
+      "wins": 0,
+      "total_r": -4.0
+    }
+  }
+}
+
+=== Sample prev_pivot trade ===
+{
+  "dir": "short",
+  "case": "Bc6",
+  "entry_time": "09:45",
+  "entry_ts": 1754885700,
+  "entry_price": 24356.85,
+  "sl": 24362.4,
+  "target": 24340.2,
+  "level": 24356.3,
+  "pace_break_type": "domination",
+  "domination_time": "09:45",
+  "mfe_r": 0.0,
+  "entry_bar": 6,
+  "validate_until": 8,
+  "dom_low": 24356.3,
+  "dom_high": 24384.55,
+  "validated": false,
+  "sl_mode_used": "prev_pivot",
+  "pivot_ref": {
+    "px": 24361.4,
+    "time": "09:30",
+    "kind": "L",
+    "idx": 3
+  },
+  "_cur_sl": 24362.4,
+  "_init_sl": 24362.4,
+  "_max_profit": 0.0,
+  "_last_m1_ts": 1754885700,
+  "exit_time": "09:50",
+  "exit_ts": 1754886000,
+  "exit_price": 24362.4,
+  "outcome": "sl",
+  "r_multiple": -1.0
+}
+
+DONE

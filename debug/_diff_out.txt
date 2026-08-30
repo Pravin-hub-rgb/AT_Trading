@@ -1,0 +1,27 @@
+============================================================
+FRONTEND (TS): 2026-08-28 | 375 bars
+  declared: True
+  dir:      up
+  tier:     real
+  start:    idx=5 px=24106.55
+  end:      idx=28 px=24166.25
+  confirmedAtIdx:  34
+  confirmSource:   chop
+  lastConfirmHit:  {'pool': 'normal', 'px': 24148.1, 'idx': 32, 'time': '09:47'}
+
+BACKEND (PY): 2026-08-28 | 375 bars
+  declared: True
+  dir:      up
+  tier:     real
+  start:    idx=5 px=24106.55
+  end:      idx=28 px=24166.25
+  confirmedAtIdx:  34
+  confirmSource:   chop
+  lastConfirmHit:  {'pool': 'normal', 'px': 24148.1, 'idx': 32, 'time': '09:47'}
+
+============================================================
+Comparing 375 bars...
+
+
+============================================================
+PERFECT MATCH -- zero diffs across all bars!

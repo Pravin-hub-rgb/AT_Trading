@@ -1,0 +1,1 @@
+{"day": "2026-08-24", "totalBars": 375, "final": {"declared": true, "dir": "down", "tier": "real", "startIdx": 3, "startPx": 24313.0, "endIdx": 44, "endPx": 24267.3, "confirmedAtIdx": 48, "confirmSource": "chop", "lastConfirmHit": {"pool": "normal", "px": 24274.8, "idx": 45, "time": "10:00"}}, "states": []}

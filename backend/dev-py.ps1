@@ -13,6 +13,14 @@ while ($true) {
     Write-Host "[py] backend exited cleanly ($code) - not restarting."
     break
   }
+  # Exit code 3 = uvicorn startup failure, almost always "port already in
+  # use" (10048). Another backend instance is holding the port - restarting
+  # forever just spams the log. Stop and tell the user.
+  if ($code -eq 3) {
+    Write-Host "[py] backend could not START (exit 3) - port 8003 is already in use by another instance."
+    Write-Host "[py] Not restarting. Kill the other backend (or close this window) and run again."
+    break
+  }
   Write-Host "[py] backend CRASHED with exit code $code - restarting in 2s ..."
   Start-Sleep -Seconds 2
 }

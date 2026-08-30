@@ -53,6 +53,16 @@ const GAP_MODES = [
   { value: "0.35", label: "Gap ≥ 0.35%" },
 ];
 
+const ENTRY_METHODS = [
+  { value: "pace_break", label: "Entry: Pace Break (course)" },
+  { value: "pivot_break", label: "Entry: Pivot Break" },
+];
+
+const SWING_MODES = [
+  { value: "none", label: "Swing: No Gate (1min)" },
+  { value: "opposite_swing_needed", label: "Swing: Opposite Required (1min)" },
+];
+
 function OutcomeChip({ outcome }: { outcome: string }) {
   const s = OUTCOME_STYLE[outcome] ?? {
     color: "#8b949e",
@@ -211,6 +221,32 @@ export default function IntradayPanel({
           ))}
         </select>
         <select
+          value={params.entry_method ?? "pace_break"}
+          onChange={(e) =>
+            onParamsChange({ ...params, entry_method: e.target.value })
+          }
+          className={selectCls}
+        >
+          {ENTRY_METHODS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={params.swing_mode ?? "opposite_swing_needed"}
+          onChange={(e) =>
+            onParamsChange({ ...params, swing_mode: e.target.value })
+          }
+          className={selectCls}
+        >
+          {SWING_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
           value={params.trailing}
           onChange={(e) =>
             onParamsChange({ ...params, trailing: e.target.value })
@@ -237,6 +273,20 @@ export default function IntradayPanel({
             </option>
           ))}
         </select>
+        <label
+          className="flex items-center gap-1.5 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-xs text-[#c9d1d9] cursor-pointer hover:border-[#58a6ff]"
+          title="Early exit when close goes beyond dom_level within 2 bars of entry (S5:98 follow-through rule). When OFF, trades run until SL/target/EOD."
+        >
+          <input
+            type="checkbox"
+            checked={params.ft_fail_enabled}
+            onChange={(e) =>
+              onParamsChange({ ...params, ft_fail_enabled: e.target.checked })
+            }
+            className="accent-[#f59e0b]"
+          />
+          FT-fail early exit
+        </label>
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">

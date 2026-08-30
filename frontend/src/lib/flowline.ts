@@ -65,8 +65,14 @@ type Step = { side: "low" | "high"; px: number };
 function barSteps(c: FlowCandle): Step[] {
   const green = c.close >= c.open;
   return green
-    ? [{ side: "low", px: c.low }, { side: "high", px: c.high }]
-    : [{ side: "high", px: c.high }, { side: "low", px: c.low }];
+    ? [
+        { side: "low", px: c.low },
+        { side: "high", px: c.high },
+      ]
+    : [
+        { side: "high", px: c.high },
+        { side: "low", px: c.low },
+      ];
 }
 
 // Steppable walker — EXACT state-machine translation of the original
@@ -128,12 +134,18 @@ export class WalkerEngine {
       if (firstGreen) {
         this.bandLow = c.low;
         this.loPx = null;
-        this.hiPx = c.high; this.hiIdx = gIdx; this.hiK = 0; this.hiT = t;
+        this.hiPx = c.high;
+        this.hiIdx = gIdx;
+        this.hiK = 0;
+        this.hiT = t;
         this.hiCloseGreen = true;
       } else {
         this.bandHigh = c.high;
         this.hiPx = null;
-        this.loPx = c.low; this.loIdx = gIdx; this.loK = 0; this.loT = t;
+        this.loPx = c.low;
+        this.loIdx = gIdx;
+        this.loK = 0;
+        this.loT = t;
         this.loCloseRed = true;
       }
       cov(firstGreen ? "seed:green" : "seed:red");
@@ -164,9 +176,20 @@ export class WalkerEngine {
         cov((wantFar ? "onion:FAR-layer:pk" : "onion:NEAR-layer:pk") + pk);
         pend.inner.push(
           wantFar
-            ? { idx: pend.idx, k: pend.k, time: pend.time, kind: pk, px: pend.px }
-            : { idx: pend.idx, k: pend.k, time: pend.time,
-                kind: pk === "H" ? "L" : "H", px: pend.near },
+            ? {
+                idx: pend.idx,
+                k: pend.k,
+                time: pend.time,
+                kind: pk,
+                px: pend.px,
+              }
+            : {
+                idx: pend.idx,
+                k: pend.k,
+                time: pend.time,
+                kind: pk === "H" ? "L" : "H",
+                px: pend.near,
+              },
         );
         this.pending = {
           kind: pk,
@@ -204,7 +227,9 @@ export class WalkerEngine {
             let pK = p.k;
             if (pk === "H" && this.hiPx !== null && this.hiPx > pPx) {
               // leg already printed a higher high AFTER the reference marker
-              const hiAfter = this.hiK > this.stampK || (this.hiK === this.stampK && this.hiCloseGreen);
+              const hiAfter =
+                this.hiK > this.stampK ||
+                (this.hiK === this.stampK && this.hiCloseGreen);
               if (hiAfter) {
                 pIdx = this.hiIdx;
                 pT = this.hiT;
@@ -213,7 +238,9 @@ export class WalkerEngine {
               }
             }
             if (pk === "L" && this.loPx !== null && this.loPx < pPx) {
-              const loAfter = this.loK > this.stampK || (this.loK === this.stampK && this.loCloseRed);
+              const loAfter =
+                this.loK > this.stampK ||
+                (this.loK === this.stampK && this.loCloseRed);
               if (loAfter) {
                 pIdx = this.loIdx;
                 pT = this.loT;
@@ -251,8 +278,14 @@ export class WalkerEngine {
           // running stamp IS its side's live marker.
           const iLo = Math.min(pend.px, pend.near); // stack low
           const iHi = Math.max(pend.px, pend.near); // stack high
-          const effLo = this.dir === "down" ? this.stampPx : this.bandLow ?? Number.NEGATIVE_INFINITY;
-          const effHi = this.dir === "up" ? this.stampPx : this.bandHigh ?? Number.POSITIVE_INFINITY;
+          const effLo =
+            this.dir === "down"
+              ? this.stampPx
+              : (this.bandLow ?? Number.NEGATIVE_INFINITY);
+          const effHi =
+            this.dir === "up"
+              ? this.stampPx
+              : (this.bandHigh ?? Number.POSITIVE_INFINITY);
           const insideBand =
             iHi <= effHi && iLo >= effLo && c.high <= effHi && c.low >= effLo;
           if (insideBand) {
@@ -280,7 +313,13 @@ export class WalkerEngine {
             const lastRec = this.closeStack(p); // peel layers + final far-edge record
             if (!lastRec) {
               // single insider (no peel): legacy direct far-edge print
-              this.emit({ idx: p.idx, time: p.time, kind: pk, px: p.px, sealed: true });
+              this.emit({
+                idx: p.idx,
+                time: p.time,
+                kind: pk,
+                px: p.px,
+                sealed: true,
+              });
               this.trackBand(pk, p.px);
             }
             this.dir = pk === "H" ? "down" : "up"; // leg heads toward the near side
@@ -339,7 +378,13 @@ export class WalkerEngine {
     // ---- inside-candle detection -> pending far-side extreme ----
     // (checked AFTER this bar resolves: an insider never marks itself;
     //  the NEXT bar's break decides confirm vs skip)
-    if (!this.pending && !flippedThisBar && c.open !== c.close && c.high <= this.prevHigh && c.low >= this.prevLow) {
+    if (
+      !this.pending &&
+      !flippedThisBar &&
+      c.open !== c.close &&
+      c.high <= this.prevHigh &&
+      c.low >= this.prevLow
+    ) {
       this.pending = {
         kind: this.dir === "down" ? "H" : "L",
         idx: gIdx,
@@ -414,20 +459,50 @@ export class WalkerEngine {
   // Close a resolved stack: append its final alternating layer record (only
   // when the stack actually peeled — single insiders contribute nothing) and
   // flush chronologically. Returns the last flushed record, or null.
-  private closeStack(p: WPending): { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null {
+  private closeStack(p: WPending): {
+    idx: number;
+    k: number;
+    time: string;
+    kind: "H" | "L";
+    px: number;
+  } | null {
     if (p.inner.length === 0) return null;
     // ROLE-BASED edges: pendPx is ALWAYS the far edge, pendNear the near
     // edge — regardless of which is numerically higher. (max/min here was a
     // latent pk=L bug: it silently swapped roles on up-leg stacks.)
     const wantFar = p.inner.length % 2 === 0;
-    const rec: { idx: number; k: number; time: string; kind: "H" | "L"; px: number } = wantFar
+    const rec: {
+      idx: number;
+      k: number;
+      time: string;
+      kind: "H" | "L";
+      px: number;
+    } = wantFar
       ? { idx: p.idx, k: p.k, time: p.time, kind: p.kind, px: p.px }
-      : { idx: p.idx, k: p.k, time: p.time, kind: p.kind === "H" ? "L" : "H", px: p.near };
+      : {
+          idx: p.idx,
+          k: p.k,
+          time: p.time,
+          kind: p.kind === "H" ? "L" : "H",
+          px: p.near,
+        };
     p.inner.push(rec);
-    let last: { idx: number; k: number; time: string; kind: "H" | "L"; px: number } | null = null;
+    let last: {
+      idx: number;
+      k: number;
+      time: string;
+      kind: "H" | "L";
+      px: number;
+    } | null = null;
     while (p.inner.length > 0) {
       const ip = p.inner.shift()!;
-      this.emit({ idx: ip.idx, time: ip.time, kind: ip.kind, px: ip.px, sealed: true });
+      this.emit({
+        idx: ip.idx,
+        time: ip.time,
+        kind: ip.kind,
+        px: ip.px,
+        sealed: true,
+      });
       this.trackBand(ip.kind, ip.px);
       last = ip;
     }
@@ -451,7 +526,13 @@ type WPending = {
   // Onion peel: alternating zigzag points contributed by each stack layer
   // (layer 1 = FAR edge, layer 2 = NEAR edge, layer 3 FAR again...),
   // flushed chronologically when the stack finally resolves.
-  inner: { idx: number; k: number; time: string; kind: "H" | "L"; px: number }[];
+  inner: {
+    idx: number;
+    k: number;
+    time: string;
+    kind: "H" | "L";
+    px: number;
+  }[];
 };
 
 function walkDay(items: { c: FlowCandle; gIdx: number }[]): AlgoPivot[] {
@@ -485,7 +566,8 @@ function dedupe(pivots: AlgoPivot[]): AlgoPivot[] {
   const out: AlgoPivot[] = [];
   for (const p of pivots) {
     const last = out[out.length - 1];
-    if (last && last.idx === p.idx && last.kind === p.kind && last.px === p.px) continue;
+    if (last && last.idx === p.idx && last.kind === p.kind && last.px === p.px)
+      continue;
     out.push(p);
   }
   return out;
@@ -562,14 +644,33 @@ export class FsV2Engine {
   private normalLows: FsLevel[] = [];
 
   dir: "up" | "down" | null = null;
-  startIdx = -1; startTime = ""; startPx = NaN;
-  candIdx = -1; candTime = ""; candPx = NaN;
+  startIdx = -1;
+  startTime = "";
+  startPx = NaN;
+  candIdx = -1;
+  candTime = "";
+  candPx = NaN;
   declared = false;
   tier: "real" | null = null;
-  endTime = ""; endIdx = -1; endPx = NaN; confirmedAtTime = "";
+  endTime = "";
+  endIdx = -1;
+  endPx = NaN;
+  confirmedAtTime = "";
   confirmedAtIdx = -1;
-  lastConfirmHit: { pool: string; px: number; idx: number; time: string } | null = null;
+  lastConfirmHit: {
+    pool: string;
+    px: number;
+    idx: number;
+    time: string;
+  } | null = null;
   confirmSource: "chop" | "sustain" | null = null;
+  breakMarks: {
+    idx: number;
+    time: string;
+    kind: "B1" | "B2" | "FLIP";
+    dir: "up" | "down";
+    px: number;
+  }[] = [];
 
   private timeCap = "09:29";
 
@@ -591,10 +692,18 @@ export class FsV2Engine {
   // ── X) micro-top/lows: zero-lag local extremes (no walker seal needed) ──
   private microHighs: FsLevel[] = [];
   private microLows: FsLevel[] = [];
-  private pHigh = NaN; private pHighIdx = -1; private pHighT = "";   // previous bar high
-  private ppHigh = NaN; private ppHighIdx = -1; private ppHighT = ""; // bar-before-that high
-  private pLow = NaN; private pLowIdx = -1; private pLowT = "";
-  private ppLow = NaN; private ppLowIdx = -1; private ppLowT = "";
+  private pHigh = NaN;
+  private pHighIdx = -1;
+  private pHighT = ""; // previous bar high
+  private ppHigh = NaN;
+  private ppHighIdx = -1;
+  private ppHighT = ""; // bar-before-that high
+  private pLow = NaN;
+  private pLowIdx = -1;
+  private pLowT = "";
+  private ppLow = NaN;
+  private ppLowIdx = -1;
+  private ppLowT = "";
 
   // ── Y) N-candle sustain beyond the broken extreme ──
   private lockedLevelPx = NaN; // E-level that was crossed at lock (frozen)
@@ -637,7 +746,11 @@ export class FsV2Engine {
           this.normalHighs.push(cur);
           this.eHiPivot = { px: p.px, idx: p.idx, time: p.time };
         } else {
-          this.pushUnique(this.normalHighs, { px: p.px, idx: p.idx, time: p.time });
+          this.pushUnique(this.normalHighs, {
+            px: p.px,
+            idx: p.idx,
+            time: p.time,
+          });
         }
       } else {
         const cur = this.eLoPivot!;
@@ -645,7 +758,11 @@ export class FsV2Engine {
           this.normalLows.push(cur);
           this.eLoPivot = { px: p.px, idx: p.idx, time: p.time };
         } else {
-          this.pushUnique(this.normalLows, { px: p.px, idx: p.idx, time: p.time });
+          this.pushUnique(this.normalLows, {
+            px: p.px,
+            idx: p.idx,
+            time: p.time,
+          });
         }
       }
     }
@@ -664,8 +781,12 @@ export class FsV2Engine {
         this.lockedLevelPx = NaN;
         this.microHighs.length = 0;
         this.microLows.length = 0;
-        this.startIdx = -1; this.startTime = ""; this.startPx = NaN;
-        this.candIdx = -1; this.candTime = ""; this.candPx = NaN;
+        this.startIdx = -1;
+        this.startTime = "";
+        this.startPx = NaN;
+        this.candIdx = -1;
+        this.candTime = "";
+        this.candPx = NaN;
       } else if (this.dir === "down" && this.eHi.px > this.startPx) {
         this.dir = null;
         this.locked = false;
@@ -678,8 +799,12 @@ export class FsV2Engine {
         this.lockedLevelPx = NaN;
         this.microHighs.length = 0;
         this.microLows.length = 0;
-        this.startIdx = -1; this.startTime = ""; this.startPx = NaN;
-        this.candIdx = -1; this.candTime = ""; this.candPx = NaN;
+        this.startIdx = -1;
+        this.startTime = "";
+        this.startPx = NaN;
+        this.candIdx = -1;
+        this.candTime = "";
+        this.candPx = NaN;
       }
     }
 
@@ -696,14 +821,29 @@ export class FsV2Engine {
     // Immediate-break: next bar breaks opposite side (c.low < pLow for tops) still counts as pivot
     // (fixes 20 July 12:51->12:52 where 12:52 immediately breaks 12:51).
     // Guarded by dirConfirmed so chop cannot fire before direction is set.
-    if (this.dirConfirmed && this.dir && this.barsSeen >= 3 && Number.isFinite(this.ppHigh)) {
-      const topFormed = this.pHigh > this.ppHigh && (c.high < this.pHigh || c.low < this.pLow);
-      const botFormed = this.pLow < this.ppLow && (c.low > this.pLow || c.high > this.pHigh);
+    if (
+      this.dirConfirmed &&
+      this.dir &&
+      this.barsSeen >= 3 &&
+      Number.isFinite(this.ppHigh)
+    ) {
+      const topFormed =
+        this.pHigh > this.ppHigh && (c.high < this.pHigh || c.low < this.pLow);
+      const botFormed =
+        this.pLow < this.ppLow && (c.low > this.pLow || c.high > this.pHigh);
       if (topFormed && this.pHighIdx > this.startIdx) {
-        this.pushUnique(this.microHighs, { px: this.pHigh, idx: this.pHighIdx, time: this.pHighT });
+        this.pushUnique(this.microHighs, {
+          px: this.pHigh,
+          idx: this.pHighIdx,
+          time: this.pHighT,
+        });
       }
       if (botFormed && this.pLowIdx > this.startIdx) {
-        this.pushUnique(this.microLows, { px: this.pLow, idx: this.pLowIdx, time: this.pLowT });
+        this.pushUnique(this.microLows, {
+          px: this.pLow,
+          idx: this.pLowIdx,
+          time: this.pLowT,
+        });
       }
     }
 
@@ -711,8 +851,14 @@ export class FsV2Engine {
     this.histL.push(c.low);
 
     const halves: [number, boolean][] = green
-      ? [[c.low, true], [c.high, false]]
-      : [[c.high, true], [c.low, false]];
+      ? [
+          [c.low, true],
+          [c.high, false],
+        ]
+      : [
+          [c.high, true],
+          [c.low, false],
+        ];
     for (const [px, isLow] of halves) {
       if (this.declared) break;
 
@@ -738,10 +884,18 @@ export class FsV2Engine {
         const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
         if (this.baseDir === "down" && px < eLoLvl && px < eLoBefore) {
           this.sameSideBreaks++;
-          if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+          if (this.sameSideBreaks >= 2) {
+            this.dirConfirmed = true;
+            this.dirConfirmedIdx = gIdx;
+            this.lockedLevelPx = px;
+          }
         } else if (this.baseDir === "up" && px > eHiLvl && px > eHiBefore) {
           this.sameSideBreaks++;
-          if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+          if (this.sameSideBreaks >= 2) {
+            this.dirConfirmed = true;
+            this.dirConfirmedIdx = gIdx;
+            this.lockedLevelPx = px;
+          }
         } else if (this.baseDir === "down" && px > eHiLvl && px > eHiBefore) {
           this.oppositeSideBreaks = 1;
           this.dir = "up";
@@ -757,8 +911,7 @@ export class FsV2Engine {
         }
       }
 
-
-  // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
+      // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
       if (!this.locked) {
         const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
         const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
@@ -777,14 +930,39 @@ export class FsV2Engine {
             this.initiate("down", t);
             this.baseDir = "down";
             this.sameSideBreaks = 1;
+            this.breakMarks.push({
+              idx: gIdx,
+              time: t,
+              kind: "B1",
+              dir: "down",
+              px,
+            });
           } else if (this.baseDir === "down") {
             this.sameSideBreaks++;
-            if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+            if (this.sameSideBreaks >= 2) {
+              this.dirConfirmed = true;
+              this.dirConfirmedIdx = gIdx;
+              this.lockedLevelPx = px;
+              this.breakMarks.push({
+                idx: gIdx,
+                time: t,
+                kind: "B2",
+                dir: "down",
+                px,
+              });
+            }
           } else {
             this.oppositeSideBreaks = 1;
             this.dir = "up";
             this.dirConfirmed = true;
             this.dirConfirmedIdx = gIdx;
+            this.breakMarks.push({
+              idx: gIdx,
+              time: t,
+              kind: "FLIP",
+              dir: "up",
+              px,
+            });
           }
         } else if (upBreak || firstBreakUp) {
           this.locked = true;
@@ -795,14 +973,39 @@ export class FsV2Engine {
             this.initiate("up", t);
             this.baseDir = "up";
             this.sameSideBreaks = 1;
+            this.breakMarks.push({
+              idx: gIdx,
+              time: t,
+              kind: "B1",
+              dir: "up",
+              px,
+            });
           } else if (this.baseDir === "up") {
             this.sameSideBreaks++;
-            if (this.sameSideBreaks >= 2) { this.dirConfirmed = true; this.dirConfirmedIdx = gIdx; this.lockedLevelPx = px; }
+            if (this.sameSideBreaks >= 2) {
+              this.dirConfirmed = true;
+              this.dirConfirmedIdx = gIdx;
+              this.lockedLevelPx = px;
+              this.breakMarks.push({
+                idx: gIdx,
+                time: t,
+                kind: "B2",
+                dir: "up",
+                px,
+              });
+            }
           } else {
             this.oppositeSideBreaks = 1;
             this.dir = "down";
             this.dirConfirmed = true;
             this.dirConfirmedIdx = gIdx;
+            this.breakMarks.push({
+              idx: gIdx,
+              time: t,
+              kind: "FLIP",
+              dir: "down",
+              px,
+            });
           }
         }
       }
@@ -813,42 +1016,82 @@ export class FsV2Engine {
       // but require 1 bar gap for lows to avoid tiny 09:35->09:36 wiggle.
       if (this.dirConfirmed && this.dir && this.startIdx >= 0) {
         if (this.dir === "down") {
-          const normalCands = this.normalHighs.filter((l) => l.idx > this.startIdx && l.idx < gIdx);
+          const normalCands = this.normalHighs.filter(
+            (l) => l.idx > this.startIdx && l.idx < gIdx,
+          );
           if (normalCands.length > 0) {
-            const target = normalCands.reduce((a, b) => (b.idx > a.idx ? b : a), normalCands[0]);
+            const target = normalCands.reduce(
+              (a, b) => (b.idx > a.idx ? b : a),
+              normalCands[0],
+            );
             if (px > target.px) {
-              this.lastConfirmHit = { pool: "normal", px: target.px, idx: target.idx, time: target.time };
+              this.lastConfirmHit = {
+                pool: "normal",
+                px: target.px,
+                idx: target.idx,
+                time: target.time,
+              };
               this.confirmSource = "chop";
               this.confirm(gIdx, t);
               return;
             }
           }
-          const microCands = this.microHighs.filter((l) => l.idx > this.startIdx && l.idx < gIdx);
+          const microCands = this.microHighs.filter(
+            (l) => l.idx > this.startIdx && l.idx < gIdx,
+          );
           if (microCands.length > 0) {
-            const target = microCands.reduce((a, b) => (b.idx > a.idx ? b : a), microCands[0]);
+            const target = microCands.reduce(
+              (a, b) => (b.idx > a.idx ? b : a),
+              microCands[0],
+            );
             if (px > target.px) {
-              this.lastConfirmHit = { pool: "micro", px: target.px, idx: target.idx, time: target.time };
+              this.lastConfirmHit = {
+                pool: "micro",
+                px: target.px,
+                idx: target.idx,
+                time: target.time,
+              };
               this.confirmSource = "chop";
               this.confirm(gIdx, t);
               return;
             }
           }
         } else {
-          const normalCands = this.normalLows.filter((l) => l.idx > this.startIdx && l.idx + 1 < gIdx);
+          const normalCands = this.normalLows.filter(
+            (l) => l.idx > this.startIdx && l.idx + 1 < gIdx,
+          );
           if (normalCands.length > 0) {
-            const target = normalCands.reduce((a, b) => (b.idx > a.idx ? b : a), normalCands[0]);
+            const target = normalCands.reduce(
+              (a, b) => (b.idx > a.idx ? b : a),
+              normalCands[0],
+            );
             if (px < target.px) {
-              this.lastConfirmHit = { pool: "normal", px: target.px, idx: target.idx, time: target.time };
+              this.lastConfirmHit = {
+                pool: "normal",
+                px: target.px,
+                idx: target.idx,
+                time: target.time,
+              };
               this.confirmSource = "chop";
               this.confirm(gIdx, t);
               return;
             }
           }
-          const microCands = this.microLows.filter((l) => l.idx > this.startIdx && l.idx + 1 < gIdx);
+          const microCands = this.microLows.filter(
+            (l) => l.idx > this.startIdx && l.idx + 1 < gIdx,
+          );
           if (microCands.length > 0) {
-            const target = microCands.reduce((a, b) => (b.idx > a.idx ? b : a), microCands[0]);
+            const target = microCands.reduce(
+              (a, b) => (b.idx > a.idx ? b : a),
+              microCands[0],
+            );
             if (px < target.px) {
-              this.lastConfirmHit = { pool: "micro", px: target.px, idx: target.idx, time: target.time };
+              this.lastConfirmHit = {
+                pool: "micro",
+                px: target.px,
+                idx: target.idx,
+                time: target.time,
+              };
               this.confirmSource = "chop";
               this.confirm(gIdx, t);
               return;
@@ -870,8 +1113,13 @@ export class FsV2Engine {
         this.sustainStreak = 0;
       } else {
         this.sustainStreak =
-          this.dir === "down" ? (c.close < ref ? this.sustainStreak + 1 : 0)
-                                  : (c.close > ref ? this.sustainStreak + 1 : 0);
+          this.dir === "down"
+            ? c.close < ref
+              ? this.sustainStreak + 1
+              : 0
+            : c.close > ref
+              ? this.sustainStreak + 1
+              : 0;
       }
       if (this.sustainStreak >= n) {
         this.confirmSource = "sustain";
@@ -883,10 +1131,18 @@ export class FsV2Engine {
     }
 
     // shift micro history for next bar (local extreme detection uses prev 2 bars)
-    this.ppHigh = this.pHigh; this.ppHighIdx = this.pHighIdx; this.ppHighT = this.pHighT;
-    this.pHigh = c.high; this.pHighIdx = gIdx; this.pHighT = t;
-    this.ppLow = this.pLow; this.ppLowIdx = this.pLowIdx; this.ppLowT = this.pLowT;
-    this.pLow = c.low; this.pLowIdx = gIdx; this.pLowT = t;
+    this.ppHigh = this.pHigh;
+    this.ppHighIdx = this.pHighIdx;
+    this.ppHighT = this.pHighT;
+    this.pHigh = c.high;
+    this.pHighIdx = gIdx;
+    this.pHighT = t;
+    this.ppLow = this.pLow;
+    this.ppLowIdx = this.pLowIdx;
+    this.ppLowT = this.pLowT;
+    this.pLow = c.low;
+    this.pLowIdx = gIdx;
+    this.pLowT = t;
   }
 
   debugPools() {
@@ -940,6 +1196,139 @@ export class FsV2Engine {
     this.confirmedAtTime = t;
     this.confirmedAtIdx = gIdx;
   }
+
+  /** Re-initialize the engine to detect a new swing starting from a pre-defined
+   *  price level (e.g., the first swing's extreme).
+   *
+   *  After reset, the next processBar increments barsSeen to 2, skipping the
+   *  barsSeen==1 initialization — the seed bar is already set. */
+  reset(seedPx: number, seedIdx: number, seedTime: string) {
+    // Fresh walker (pivot history not shared with previous swing)
+    this.walker = new WalkerEngine();
+
+    // Fake barsSeen=1 state so next processBar goes to barsSeen=2
+    this.barsSeen = 1;
+    // t/green/g_idx are internal; just set the seed time for timeCap check
+    void seedTime; // consumed below
+
+    // Seed extremes — these are the "session start" for second-swing detection
+    this.eHi = { px: seedPx, idx: seedIdx, time: seedTime };
+    this.eLo = { px: seedPx, idx: seedIdx, time: seedTime };
+    this.eHiPivot = { px: seedPx, idx: seedIdx, time: seedTime };
+    this.eLoPivot = { px: seedPx, idx: seedIdx, time: seedTime };
+
+    // Zero all direction/state
+    this.dir = null;
+    this.baseDir = null;
+    this.sameSideBreaks = 0;
+    this.oppositeSideBreaks = 0;
+    this.dirConfirmed = false;
+    this.dirConfirmedIdx = -1;
+    this.locked = false;
+    this.lockedLevelPx = NaN;
+
+    // Zero swing start/candidate
+    this.startIdx = -1;
+    this.startTime = "";
+    this.startPx = NaN;
+    this.candIdx = -1;
+    this.candTime = "";
+    this.candPx = NaN;
+
+    // Zero declaration
+    this.declared = false;
+    this.tier = null;
+    this.endTime = "";
+    this.endIdx = -1;
+    this.endPx = NaN;
+    this.confirmedAtTime = "";
+    this.confirmedAtIdx = -1;
+    this.confirmSource = null;
+    this.lastConfirmHit = null;
+    this.sustainStreak = 0;
+
+    // Clear pools
+    this.normalHighs.length = 0;
+    this.normalLows.length = 0;
+    this.microHighs.length = 0;
+    this.microLows.length = 0;
+    this.histH.length = 0;
+    this.histL.length = 0;
+    this.breakMarks.length = 0;
+  }
+}
+
+// ── Second Swing Detection ────────────────────────────────────────────────────
+
+/** Mirror of the backend's detectSecondSwing() — runs a fresh FsV2 engine
+ *  seeded from the first-swing's end-point, feeding bars AFTER that endpoint.
+ *
+ *  Returns one FsV2Result per day (or null for days with no first swing). */
+export interface SecondSwingDetail extends FsV2Result {
+  fs1Dir: "up" | "down" | null;
+}
+
+export function computeSecondSwingResults(
+  sourceCandles: FlowCandle[],
+  fs1Results: FsV2Result[],
+  opts: FsV2Opts = {},
+): SecondSwingDetail[] {
+  // Build a fast lookup: day -> fs1 result
+  const fs1ByDay = new Map<string, FsV2Result>();
+  for (const r of fs1Results) {
+    if (r.seg !== null) fs1ByDay.set(r.day, r);
+  }
+
+  // Group candles by day
+  const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
+  sourceCandles.forEach((c, gIdx) => {
+    const d = c.date.slice(0, 10);
+    if (!byDay.has(d)) byDay.set(d, []);
+    byDay.get(d)!.push({ c, gIdx });
+  });
+
+  const out: SecondSwingDetail[] = [];
+
+  byDay.forEach((items, day) => {
+    const fs1 = fs1ByDay.get(day);
+    if (!fs1 || fs1.seg === null || fs1.confIdx < 0) return;
+
+    // SECOND SWING: start from 09:28 as new 09:15 — give ALL OHLC from 09:28
+    // to the first-swing engine exactly as you said: "from 9:28 give all the
+    // ohlc value to first swing engine". This is a fresh engine fed from 09:28
+    // inclusive, so 09:28 nothing, 09:29 nothing (arm), 09:30 B1 breaking 09:29
+    // low, 09:36 B2 breaking 09:31 low — your 09:30/09:36.
+    const seedIdx = fs1.seg!.endIdx + 1;
+    const afterFs1 = items.filter((it) => it.gIdx >= seedIdx);
+    if (afterFs1.length === 0) return;
+
+    const eng = new FirstSwingEngine(opts);
+    // No reset — just feed from 09:28 as bar 1, exactly like 09:15 for 1st swing.
+    // This gives B1@09:30, B2@09:36 per your observation.
+
+    for (const it of afterFs1) eng.processBar(it.c, it.gIdx);
+
+    if (!eng.declared || eng.startIdx < 0) return;
+
+    out.push({
+      day,
+      outcome: "real",
+      confIdx: eng.confirmedAtIdx,
+      seg: {
+        dir: eng.dir === "up" ? "B" : "S",
+        startIdx: eng.startIdx,
+        startPx: eng.startPx,
+        endIdx: eng.endIdx,
+        endPx: eng.endPx,
+      },
+      source: eng.confirmSource,
+      dir: eng.dir,
+      breaks: eng.breakMarks,
+      fs1Dir: fs1.dir,
+    });
+  });
+
+  return out;
 }
 
 // Batch helper: replay each day through FsV2 (identical to live path).

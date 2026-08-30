@@ -46,6 +46,24 @@ interface Props {
   algoFlowLine?: FlowSegment[] | null;
   envelope?: EnvelopeViolation[] | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
+  algoSecondSwing?: (FlowSegment & { fs1Dir?: "up" | "down" | null })[] | null;
+  algoSecondSwingMarkers?:
+    | {
+        idx: number;
+        invalid: boolean;
+        source?: "chop" | "sustain" | null;
+        dir?: "up" | "down" | null;
+      }[]
+    | null;
+  algoSecondSwingBreaks?:
+    | {
+        idx: number;
+        time: string;
+        kind: "B1" | "B2" | "FLIP";
+        dir: "up" | "down";
+        px: number;
+      }[]
+    | null;
   fsMarkers?:
     | {
         idx: number;
@@ -182,6 +200,9 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     algoFlowLine,
     envelope,
     algoFirstSwing,
+    algoSecondSwing,
+    algoSecondSwingMarkers,
+    algoSecondSwingBreaks,
     fsMarkers,
     fsBreaks,
     onHoverTime,
@@ -720,6 +741,45 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       }
     }
 
+    // 5. Second-swing break markers (B1/B2/FLIP) — yellow/gold palette to
+    //    distinguish from cyan first-swing breaks above. Labels mirror
+    //    first-swing ("B1"/"B2"/"FLIP") — only the colour identifies the
+    //    swing, the kind stays the same.
+    for (const b of algoSecondSwingBreaks ?? []) {
+      const cc = candles[b.idx];
+      if (!cc) continue;
+      markers.push({
+        time: cc.ts as Time,
+        position: "aboveBar",
+        shape: "arrowDown",
+        color:
+          b.kind === "FLIP"
+            ? "#eab308"
+            : b.kind === "B2"
+              ? "#fde047"
+              : "#facc15",
+        text: b.kind,
+        size: 1,
+      });
+    }
+
+    // 6. Second-swing FS/SUS markers — yellow/orange palette.
+    if (algoSecondSwingMarkers && algoSecondSwingMarkers.length > 0) {
+      for (const mk of algoSecondSwingMarkers) {
+        const cc = candles[mk.idx];
+        if (!cc) continue;
+        const isSustain = mk.source === "sustain";
+        markers.push({
+          time: cc.ts as Time,
+          position: "aboveBar",
+          shape: "arrowDown",
+          color: mk.invalid ? "#ef4444" : isSustain ? "#fb923c" : "#facc15",
+          text: mk.invalid ? "FS2" : isSustain ? "SUS2" : "FS2",
+          size: 1,
+        });
+      }
+    }
+
     // Sort markers by time for consistent rendering
     markers.sort((a, b) => timeToSec(a.time) - timeToSec(b.time));
 
@@ -749,6 +809,8 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     candles,
     fsMarkers,
     fsBreaks,
+    algoSecondSwingMarkers,
+    algoSecondSwingBreaks,
     oneMinSwingN,
   ]);
 
@@ -890,6 +952,30 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       }
     };
   }, [algoFirstSwing, intraday, candles]);
+
+  // ── overlay: Second-Swing flow lines (yellow) ──
+  useEffect(() => {
+    const ser = seriesRef.current;
+    if (!ser || !intraday || !algoSecondSwing || algoSecondSwing.length === 0)
+      return;
+    const prims: FlowLinePrimitive[] = [];
+    const p = new FlowLinePrimitive(
+      ser,
+      algoSecondSwing,
+      candles.length - 1,
+      "#eab308",
+      2,
+    );
+    ser.attachPrimitive(p);
+    prims.push(p);
+    return () => {
+      for (const prim of prims) {
+        try {
+          ser.detachPrimitive(prim);
+        } catch {}
+      }
+    };
+  }, [algoSecondSwing, intraday, candles]);
 
   // On-chart diagnostic: proves whether break marks reached the chart
   const fsBreakCount = fsBreaks?.length ?? 0;

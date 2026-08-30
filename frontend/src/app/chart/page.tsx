@@ -8,6 +8,7 @@ import type { SwingPoint } from "@/components/SwingSRPrimitive";
 import {
   computeAlgoFlowLine,
   computeFsV2Results,
+  computeSecondSwingResults,
   type FlowSegment,
 } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
@@ -53,9 +54,6 @@ const INTERVAL_LABELS: Record<ChartInterval, string> = {
 const SELECT_CLS =
   "rounded-md border border-[#30363d] bg-[#161b22] px-2 py-1 text-sm text-[#e6edf3] outline-none focus:border-[#6366f1]";
 
-// 1-min history is large (~97k rows); load a recent window so the chart stays snappy
-const ONE_MIN_LIMIT = 25000;
-
 const PIVOT = 10;
 const LEVELS = 5;
 const LOOKAHEAD = 5;
@@ -94,6 +92,9 @@ export default function ChartPage() {
   const [envOn, setEnvOn] = useState(false);
   const [fsRevPct, setFsRevPct] = useState(FS_REV_DEFAULT);
   const [fsOn, setFsOn] = useState(false);
+
+  // 1-min candle data (fetched when fsOn is on, used for first-swing on 5min pane)
+  const [data1min, setData1min] = useState<Candle[]>([]);
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -137,7 +138,7 @@ export default function ChartPage() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    getChartData(interval, interval === "1min" ? ONE_MIN_LIMIT : undefined)
+    getChartData(interval)
       .then((res) => {
         if (cancelled) return;
         setData(res.candles);
@@ -161,7 +162,7 @@ export default function ChartPage() {
     let cancelled = false;
     setLoadingB(true);
     setErrorB(null);
-    getChartData(intervalB, intervalB === "1min" ? ONE_MIN_LIMIT : undefined)
+    getChartData(intervalB)
       .then((res) => {
         if (cancelled) return;
         setDataB(res.candles);
@@ -179,6 +180,27 @@ export default function ChartPage() {
       cancelled = true;
     };
   }, [intervalB]);
+
+  // 1-min data for first-swing on 5min pane (dual mode: 1min pane A drives the FS display on pane B)
+  useEffect(() => {
+    if (!fsOn) {
+      setData1min([]);
+      return;
+    }
+    let cancelled = false;
+    getChartData("1min")
+      .then((res) => {
+        if (cancelled) return;
+        setData1min(res.candles);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setData1min([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fsOn]);
 
   useEffect(() => {
     let cancelled = false;
@@ -323,24 +345,242 @@ export default function ChartPage() {
           envOn && iv === "5min" && d.length >= 2
             ? computeEnvelopeViolations(d)
             : null,
-        ...(fsOn && iv === "1min" && d.length >= 2
+        ...(fsOn && (iv === "1min" || iv === "5min") && d.length >= 2
           ? (() => {
-              const res = computeFsV2Results(d, { timeCap: "09:29" });
+              // 1min pane: run FsV2 directly on its own candles.
+              // 5min pane: run FsV2 on 1min candles (source of truth) and
+              // project startIdx/confIdx/breaks onto the 5min candles by
+              // matching each 1min timestamp to the containing 5min bar.
+              const sourceCandles: Candle[] = iv === "1min" ? d : data1min;
+              if (sourceCandles.length < 2) {
+                return {
+                  algoFirstSwing: null,
+                  fsMarkers: null,
+                  fsBreaks: null,
+                };
+              }
+              const res = computeFsV2Results(sourceCandles, {
+                timeCap: "09:29",
+              });
               const valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
+              if (iv === "1min") {
+                // Second swing: run fresh FsV2 seeded from first-swing end extreme
+                const ss2 = computeSecondSwingResults(sourceCandles, res, {
+                  timeCap: "09:29",
+                });
+                const ss2Valid = ss2.filter(
+                  (r) => r.seg !== null && r.confIdx >= 0,
+                );
+                return {
+                  algoFirstSwing: valid.map((r) => r.seg!),
+                  algoSecondSwing: ss2Valid.map((r) => r.seg!),
+                  fsMarkers: valid.map((r) => ({
+                    idx: r.confIdx,
+                    invalid: false,
+                    source: r.source,
+                    dir: r.dir,
+                  })),
+                  fsBreaks: valid.flatMap((r) => r.breaks ?? []),
+                  algoSecondSwingMarkers: ss2Valid.map((r) => ({
+                    idx: r.confIdx,
+                    invalid: false,
+                    source: r.source,
+                    dir: r.dir,
+                  })),
+                  algoSecondSwingBreaks: ss2Valid.flatMap(
+                    (r) => r.breaks ?? [],
+                  ),
+                };
+              }
+              // 5min: project each 1min index onto the 5min bar that
+              // contains its timestamp. d are the 5min candles of THIS pane.
+              const min5: Candle[] = d;
+              // build a fast lookup: for each 5min candle, store [open_ts, close_ts]
+              const m5IndexByTs = new Map<number, number>();
+              const m5Ranges: {
+                openTs: number;
+                closeTs: number;
+                idx: number;
+              }[] = [];
+              min5.forEach((c5, i5) => {
+                const openTs = Math.floor(new Date(c5.date).getTime() / 1000);
+                const closeTs = openTs + 5 * 60;
+                m5IndexByTs.set(openTs, i5);
+                m5Ranges.push({ openTs, closeTs, idx: i5 });
+              });
+              const find5minIdx = (ts: number): number => {
+                // binary search by openTs
+                let lo = 0,
+                  hi = m5Ranges.length - 1;
+                while (lo <= hi) {
+                  const mid = (lo + hi) >> 1;
+                  if (m5Ranges[mid].openTs === ts) return m5Ranges[mid].idx;
+                  if (m5Ranges[mid].openTs < ts) lo = mid + 1;
+                  else hi = mid - 1;
+                }
+                // ts is between two 5min bars; pick the one whose range contains it
+                const i = Math.min(lo, m5Ranges.length - 1);
+                for (
+                  let k = Math.max(0, i - 1);
+                  k <= Math.min(m5Ranges.length - 1, i + 1);
+                  k++
+                ) {
+                  const r = m5Ranges[k];
+                  if (ts >= r.openTs && ts < r.closeTs) return r.idx;
+                }
+                return -1;
+              };
+              const algoFirstSwing5 = valid
+                .map((r) => {
+                  const sIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[r.seg!.startIdx].date).getTime() /
+                        1000,
+                    ),
+                  );
+                  const eIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[r.seg!.endIdx].date).getTime() /
+                        1000,
+                    ),
+                  );
+                  if (sIdx < 0 || eIdx < 0) return null;
+                  return { ...r.seg!, startIdx: sIdx, endIdx: eIdx };
+                })
+                .filter((s): s is FlowSegment => s !== null);
+              const fsMarkers5 = valid
+                .map((r) => {
+                  const cIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[r.confIdx].date).getTime() / 1000,
+                    ),
+                  );
+                  if (cIdx < 0) return null;
+                  return {
+                    idx: cIdx,
+                    invalid: false,
+                    source: r.source,
+                    dir: r.dir,
+                  };
+                })
+                .filter(
+                  (
+                    m,
+                  ): m is {
+                    idx: number;
+                    invalid: boolean;
+                    source: "chop" | "sustain" | null;
+                    dir: "up" | "down" | null;
+                  } => m !== null,
+                );
+              const fsBreaks5 = valid
+                .flatMap((r) => r.breaks ?? [])
+                .map((b) => {
+                  const bIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[b.idx].date).getTime() / 1000,
+                    ),
+                  );
+                  return bIdx < 0 ? null : { ...b, idx: bIdx };
+                })
+                .filter(
+                  (
+                    b,
+                  ): b is {
+                    idx: number;
+                    time: string;
+                    kind: "B1" | "B2" | "FLIP";
+                    dir: "up" | "down";
+                    px: number;
+                  } => b !== null,
+                );
+              // Second swing projected onto 5min indices
+              const ss2 = computeSecondSwingResults(sourceCandles, res, {
+                timeCap: "09:29",
+              });
+              const ss2Valid = ss2.filter(
+                (r) => r.seg !== null && r.confIdx >= 0,
+              );
+              const algoSecondSwing5 = ss2Valid
+                .map((r) => {
+                  const sIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[r.seg!.startIdx].date).getTime() /
+                        1000,
+                    ),
+                  );
+                  const eIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[r.seg!.endIdx].date).getTime() /
+                        1000,
+                    ),
+                  );
+                  if (sIdx < 0 || eIdx < 0) return null;
+                  return { ...r.seg!, startIdx: sIdx, endIdx: eIdx };
+                })
+                .filter((s): s is FlowSegment => s !== null);
+              // Second-swing markers projected onto 5min
+              const algoSecondSwingMarkers5 = ss2Valid
+                .map((r) => {
+                  const cIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[r.confIdx].date).getTime() / 1000,
+                    ),
+                  );
+                  if (cIdx < 0) return null;
+                  return {
+                    idx: cIdx,
+                    invalid: false,
+                    source: r.source,
+                    dir: r.dir,
+                  };
+                })
+                .filter(
+                  (
+                    m,
+                  ): m is {
+                    idx: number;
+                    invalid: boolean;
+                    source: "chop" | "sustain" | null;
+                    dir: "up" | "down" | null;
+                  } => m !== null,
+                );
+              const algoSecondSwingBreaks5 = ss2Valid
+                .flatMap((r) => r.breaks ?? [])
+                .map((b) => {
+                  const bIdx = find5minIdx(
+                    Math.floor(
+                      new Date(sourceCandles[b.idx].date).getTime() / 1000,
+                    ),
+                  );
+                  return bIdx < 0 ? null : { ...b, idx: bIdx };
+                })
+                .filter(
+                  (
+                    b,
+                  ): b is {
+                    idx: number;
+                    time: string;
+                    kind: "B1" | "B2" | "FLIP";
+                    dir: "up" | "down";
+                    px: number;
+                  } => b !== null,
+                );
               return {
-                algoFirstSwing: valid.map((r) => r.seg!),
-                fsMarkers: valid.map((r) => ({
-                  idx: r.confIdx,
-                  invalid: false,
-                  source: r.source,
-                  dir: r.dir,
-                })),
-                fsBreaks: valid.flatMap((r) => r.breaks ?? []),
+                algoFirstSwing: algoFirstSwing5,
+                algoSecondSwing: algoSecondSwing5,
+                fsMarkers: fsMarkers5,
+                fsBreaks: fsBreaks5,
+                algoSecondSwingMarkers: algoSecondSwingMarkers5,
+                algoSecondSwingBreaks: algoSecondSwingBreaks5,
               };
             })()
           : {
               algoFirstSwing: null as
                 | (FlowSegment & { invalid?: boolean })[]
+                | null,
+              algoSecondSwing: null as
+                | (FlowSegment & { fs1Dir?: "up" | "down" | null })[]
                 | null,
               fsMarkers: null as
                 | {
@@ -351,6 +591,23 @@ export default function ChartPage() {
                   }[]
                 | null,
               fsBreaks: null as
+                | {
+                    idx: number;
+                    time: string;
+                    kind: "B1" | "B2" | "FLIP";
+                    dir: "up" | "down";
+                    px: number;
+                  }[]
+                | null,
+              algoSecondSwingMarkers: null as
+                | {
+                    idx: number;
+                    invalid: boolean;
+                    source: "chop" | "sustain" | null;
+                    dir: "up" | "down" | null;
+                  }[]
+                | null,
+              algoSecondSwingBreaks: null as
                 | {
                     idx: number;
                     time: string;
@@ -372,6 +629,7 @@ export default function ChartPage() {
       envOn,
       fsOn,
       fsRevPct,
+      data1min,
     ],
   );
 
@@ -704,6 +962,9 @@ export default function ChartPage() {
             algoFlowLine={overlaysA.algoFlowLine}
             envelope={overlaysA.envelope}
             algoFirstSwing={overlaysA.algoFirstSwing}
+            algoSecondSwing={overlaysA.algoSecondSwing}
+            algoSecondSwingMarkers={overlaysA.algoSecondSwingMarkers}
+            algoSecondSwingBreaks={overlaysA.algoSecondSwingBreaks}
             fsMarkers={overlaysA.fsMarkers}
             fsBreaks={overlaysA.fsBreaks}
             onHoverTime={onHoverA}
@@ -756,6 +1017,9 @@ export default function ChartPage() {
               algoFlowLine={overlaysB.algoFlowLine}
               envelope={overlaysB.envelope}
               algoFirstSwing={overlaysB.algoFirstSwing}
+              algoSecondSwing={overlaysB.algoSecondSwing}
+              algoSecondSwingMarkers={overlaysB.algoSecondSwingMarkers}
+              algoSecondSwingBreaks={overlaysB.algoSecondSwingBreaks}
               fsMarkers={overlaysB.fsMarkers}
               fsBreaks={overlaysB.fsBreaks}
               onHoverTime={onHoverB}

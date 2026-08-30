@@ -282,6 +282,9 @@ export interface BacktestParams {
   trailing: string; // off | ladder
   gap_pct: string; // gap threshold in %, e.g. "0.27"
   sl_pivot_buffer?: number; // buffer in points (default 1.0) when sl_mode=prev_pivot
+  ft_fail_enabled: boolean; // early exit when close beyond dom_level within 2 bars (S5:98)
+  entry_method?: string; // pace_break | pivot_break
+  swing_mode?: string; // none | opposite_swing_needed (1min only)
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -290,6 +293,9 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   trailing: "off",
   gap_pct: "0.27",
   sl_pivot_buffer: 1.0,
+  ft_fail_enabled: true,
+  entry_method: "pace_break",
+  swing_mode: "opposite_swing_needed",
 };
 
 export interface IntradayTrade {
@@ -351,6 +357,9 @@ export const getIntradayBacktest = (
     trailing: params.trailing,
     gap_pct: params.gap_pct,
     sl_pivot_buffer: String(params.sl_pivot_buffer ?? 1.0),
+    ft_fail_enabled: String(params.ft_fail_enabled),
+    entry_method: params.entry_method ?? "pace_break",
+    swing_mode: params.swing_mode ?? "opposite_swing_needed",
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,

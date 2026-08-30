@@ -1,3 +1,4 @@
+
 """Intraday backtest engine — port of `docs/2 - intraday-trading-system.md`.
 
 Runs over historical 5-minute candles using ONLY pre-open information for
@@ -28,6 +29,7 @@ from __future__ import annotations
 import pandas as pd
 from collections import Counter
 from .walker import WalkerEngine, FlowCandle
+from .intraday_1m import manage_1m_chunk, resolve_pending_direct
 
 # --- tunable thresholds -------------------------------------------------------
 ENTRY_START = "09:45"        # hard rule: no entries before this (S1/S4/S5)
@@ -73,6 +75,9 @@ DEFAULT_CFG = {
                              # 0.27% researched from labeled examples (Oct-Dec'25,
                              # Mar-Apr'26): separates GOOD vs noise gaps 8/9
     "sl_pivot_buffer": 1.0,  # buffer in absolute points for prev_pivot SL mode
+    "ft_fail_enabled": True,  # early exit when close goes beyond dom_level within 2 bars (S5:98)
+    "entry_method": "pace_break",   # pace_break | pivot_break
+    "swing_mode": "opposite_swing_needed",  # none | opposite_swing_needed (1min only)
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -177,28 +182,39 @@ def _micro_pivots(candles: list[dict], upto: int, kind: str) -> list[float]:
     return prices
 
 
-    return direction, seed, events
-
-
-def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | None, int, list[dict]]:
+def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | None, int, list[dict], int, int, float, str]:
     """First-swing classification using the new FirstSwingEngine.
 
     Uses advanced price-action detection (continuation/reversal + chop/sustain
     confirmation). Falls back to legacy _classify_first_swing if not declared.
+
+    Returns: (direction, start_idx, events, confirmed_at_idx, end_idx, end_px, end_time)
+      direction: 'buying' or 'selling' or None
+      start_idx: bar index where the first swing seeds
+      events: list of event dicts for chart annotation
+      confirmed_at_idx: bar index where FsV2 confirmed the swing (-1 if not confirmed)
+      end_idx: bar index of the swing's confirmed extreme (high for buying, low for selling)
+      end_px: price of the swing's confirmed extreme
+      end_time: HH:MM time of the confirmed extreme
     """
-    from datetime import datetime, timezone
-    from .swing_engine import FirstSwingEngine
+    from datetime import datetime, timezone, timedelta
+    from .firstswing import FirstSwingEngine
     from .walker import FlowCandle
 
     events: list[dict] = []
     if not candles:
-        return None, -1, events
+        return None, -1, events, -1, -1, float("nan"), ""
 
+    # Candle `ts` values are IST epoch seconds (see upstox_fetcher). The engine
+    # parses HH:MM out of the date string and gates on session times (timeCap
+    # 09:29 etc.), so we MUST render in IST — formatting in UTC shifted every
+    # session 5h30m early ("09:15" -> "03:45") and nothing ever declared.
+    IST = timezone(timedelta(hours=5, minutes=30))
     flow_candles: list[FlowCandle] = []
     for c in candles:
         ts = c.get("ts", 0)
         if ts:
-            dt = datetime.fromtimestamp(int(ts), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
+            dt = datetime.fromtimestamp(int(ts), tz=IST).strftime("%Y-%m-%dT%H:%M:%S")
         else:
             dt = f"{day_date}T{c.get('time', '00:00')}:00"
         flow_candles.append(FlowCandle(
@@ -211,7 +227,7 @@ def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | 
 
     if not eng.declared:
         # No swing declared - return None (no swing direction for this day)
-        return None, -1, [{"type": "no_swing_declared"}]
+        return None, -1, [{"type": "no_swing_declared"}], -1, -1, float("nan"), ""
 
     direction = "buying" if eng.dir == "up" else "selling"
     seed = eng.start_idx
@@ -238,7 +254,155 @@ def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | 
         "confirmed_at_idx": eng.confirmed_at_idx,
         "confirmed_at_time": eng.confirmed_at_time,
     })
-    return direction, seed, events
+    return (
+        direction, seed, events, eng.confirmed_at_idx,
+        eng.end_idx, eng.end_px, eng.end_time,
+    )
+
+
+# --- second swing detection (1min only) -----------------------------------------
+
+def detect_second_swing(
+    candles: list[dict],
+    day_date: str,
+    fs1_dir: str,
+    fs1_end_idx: int,
+    fs1_end_px: float,
+    fs1_end_time: str,
+    m1_candles: list[dict] | None = None,
+) -> tuple[str | None, int, list[dict], int]:
+    """Run FsV2 from the first-swing extreme onwards to detect the second swing.
+
+    Args:
+        candles: full day candle list (5min reference for index mapping)
+        day_date: date string for timestamp formatting
+        fs1_dir: first swing direction ('buying' | 'selling')
+        fs1_end_idx: bar index of the first swing's confirmed extreme (in `candles` units)
+        fs1_end_px: price of the first swing's confirmed extreme
+        fs1_end_time: HH:MM time of the first swing's confirmed extreme
+        m1_candles: optional 1-min candles for finer-grain detection (1min execution)
+
+    Returns: (direction, start_idx, events, confirmed_at_idx)
+        direction: second swing direction or None if not declared
+        start_idx, confirmed_at_idx: indices expressed in `candles` units (5min) so the
+        entry-gate `i > entry_swing_confirmed_idx` check works against the main loop.
+        If m1_candles is supplied, indices are mapped back from 1min to 5min by finding
+        the 5min bar whose timestamp <= the 1min bar's timestamp.
+    """
+    from datetime import datetime, timezone, timedelta
+    from .firstswing import FirstSwingEngine
+    from .walker import FlowCandle
+
+    events: list[dict] = []
+
+    # Decide which candle list to use for detection
+    if m1_candles:
+        # 1min execution: detect second swing on 1min bars for precision.
+        # SECOND SWING SPEC: start from first swing's END (cyan line), not its
+        # confirmation. The first swing's end is the new "09:15" for the second
+        # swing — we run the EXACT same FirstSwingEngine logic (B1/B2/FLIP +
+        # chop/sustain) on bars AFTER that end.
+        # e.g. 28 Aug: first swing end = 09:27 high 24158.25, FS at 09:30.
+        # Second swing feeds 09:28 onward, B1 at 09:30, B2 at 09:36, FS at 09:42.
+        fs1_end_ts = candles[fs1_end_idx].get("ts", 0) if fs1_end_idx >= 0 else 0
+        fs1_end_m1_idx = -1
+        for k, mc in enumerate(m1_candles):
+            if mc.get("ts", 0) <= fs1_end_ts:
+                fs1_end_m1_idx = k
+            else:
+                break
+
+        if fs1_end_m1_idx < 0:
+            return None, -1, [{"type": "no_second_swing", "reason": "m1_timestamp_not_found"}], -1
+
+        # User fix: give ALL OHLC from 09:28 to the first-swing engine.
+        # 09:28 is the new 09:15 — feed from 09:28 inclusive, so 09:28 nothing,
+        # 09:29 nothing, 09:30 B1 breaking 09:29 low, 09:36 B2 breaking 09:31 low.
+        # This is exactly "from 9:28 give all the ohlc value to first swing engine".
+        seed_m1_idx = fs1_end_m1_idx + 1
+        if seed_m1_idx >= len(m1_candles):
+            return None, -1, [{"type": "no_second_swing", "reason": "no_m1_seed_after_first_swing"}], -1
+        # Feed from 09:28 inclusive — fresh engine, no reset, just processBar from seed.
+        IST = timezone(timedelta(hours=5, minutes=30))
+        flow_candles: list[tuple[int, FlowCandle]] = []
+        for idx in range(seed_m1_idx, len(m1_candles)):
+            mc = m1_candles[idx]
+            mts = mc.get("ts", 0)
+            dt = datetime.fromtimestamp(int(mts), tz=IST).strftime("%Y-%m-%dT%H:%M:%S") if mts else f"{day_date}T{mc.get('time','00:00')}:00"
+            flow_candles.append((idx, FlowCandle(date=dt, open=float(mc["open"]), high=float(mc["high"]), low=float(mc["low"]), close=float(mc["close"]))))
+        eng = FirstSwingEngine()
+        for g_idx, fc in flow_candles:
+            eng.process_bar(fc, g_idx)
+
+        if not eng.declared:
+            return None, -1, [{"type": "no_second_swing_declared"}], -1
+
+        # Map 1min indices back to 5min for the entry gate:
+        # For each 1min index, find the 5min bar whose open_ts <= 1min_ts
+        def m1_idx_to_5(idx: int) -> int:
+            mts = m1_candles[idx].get("ts", 0)
+            result = 0
+            for j, c5 in enumerate(candles):
+                if c5.get("ts", 0) <= mts:
+                    result = j
+                else:
+                    break
+            return result
+
+        start_idx_5 = m1_idx_to_5(eng.start_idx)
+        confirmed_at_idx_5 = m1_idx_to_5(eng.confirmed_at_idx)
+        end_idx_5 = m1_idx_to_5(eng.end_idx)
+        start_px = eng.start_px
+        end_px = eng.end_px
+        start_time = eng.start_time
+        confirmed_at_time = eng.confirmed_at_time
+    else:
+        # 5min fallback: give ALL OHLC from seed (09:28) to first-swing engine
+        seed_5_idx = fs1_end_idx + 1
+        if seed_5_idx >= len(candles):
+            return None, -1, [{"type": "no_second_swing", "reason": "no_5min_seed_after_first_swing"}], -1
+        IST = timezone(timedelta(hours=5, minutes=30))
+        flow_candles_5: list[tuple[int, FlowCandle]] = []
+        for idx in range(seed_5_idx, len(candles)):
+            c = candles[idx]
+            ts = c.get("ts", 0)
+            dt = datetime.fromtimestamp(int(ts), tz=IST).strftime("%Y-%m-%dT%H:%M:%S") if ts else f"{day_date}T{c.get('time','00:00')}:00"
+            flow_candles_5.append((idx, FlowCandle(date=dt, open=float(c["open"]), high=float(c["high"]), low=float(c["low"]), close=float(c["close"]))))
+        eng = FirstSwingEngine()
+        for g_idx, fc in flow_candles_5:
+            eng.process_bar(fc, g_idx)
+
+        if not eng.declared:
+            return None, -1, [{"type": "no_second_swing_declared"}], -1
+
+        start_idx_5 = eng.start_idx
+        confirmed_at_idx_5 = eng.confirmed_at_idx
+        end_idx_5 = eng.end_idx
+        start_px = eng.start_px
+        end_px = eng.end_px
+        start_time = eng.start_time
+        confirmed_at_time = eng.confirmed_at_time
+
+    direction = "buying" if eng.dir == "up" else "selling"
+    events.append({
+        "type": "swing2_classified",
+        "dir": direction,
+        "bar": start_idx_5,
+        "time": start_time,
+        "first_swing": fs1_dir,
+    })
+    events.append({
+        "type": "fs2_segment",
+        "dir": eng.dir,
+        "start_idx": start_idx_5,
+        "start_px": start_px,
+        "end_idx": end_idx_5,
+        "end_px": end_px,
+        "confirmed_at_idx": confirmed_at_idx_5,
+        "confirmed_at_time": confirmed_at_time,
+    })
+
+    return direction, start_idx_5, events, confirmed_at_idx_5
 
 
 # --- pace break -----------------------------------------------------------------
@@ -266,6 +430,8 @@ def detect_pace_break(
     avg = base_avg
     if cur["range"] <= 0:
         return None
+    
+    
     if avg and swing_size is not None and swing_size < SWING_MIN_AVG_MULT * avg:
         return None
 
@@ -297,6 +463,34 @@ def detect_pace_break(
             if pivots and made_higher_low and cur["close"] > pivots[-1]:
                 return {"type": "structure", "level": pivots[-1], "bar": i}
 
+    return None
+
+
+def detect_pivot_break(
+    candles: list[dict],
+    i: int,
+    trade_dir: int,           # 1 = long, -1 = short
+    normal_highs: list,
+    normal_lows: list,
+) -> dict | None:
+    """Bar i breaks the most recent sealed pivot in the trade direction.
+
+    For a LONG (trade_dir=1): close above most recent sealed HIGH pivot.
+    For a SHORT (trade_dir=-1): close below most recent sealed LOW pivot.
+
+    Returns {type: 'pivot_break', level, bar} or None.
+
+    Used by the 'pivot_break' entry method (1min execution).
+    """
+    if i < 2:
+        return None
+    cur = candles[i]
+    if trade_dir == 1:
+        if normal_highs and cur["close"] > normal_highs[-1].px:
+            return {"type": "pivot_break", "level": normal_highs[-1].px, "bar": i}
+    else:
+        if normal_lows and cur["close"] < normal_lows[-1].px:
+            return {"type": "pivot_break", "level": normal_lows[-1].px, "bar": i}
     return None
 
 
@@ -340,7 +534,8 @@ def simulate_day(
     normal_highs: list = []   # sealed H pivots
     normal_lows: list = []    # sealed L pivots
 
-    swing_dir, swing_start, ev = _classify_first_swing_v2(candles[: len(candles)], result["date"])
+    (swing_dir, swing_start, ev, fs_confirmed_idx,
+     fs1_end_idx, fs1_end_px, fs1_end_time) = _classify_first_swing_v2(candles[: len(candles)], result["date"])
     result["swing_direction"] = swing_dir
     result["events"].extend(ev)
 
@@ -398,6 +593,7 @@ def simulate_day(
     day_setup: dict | None = None  # THE day level: first bias-aligned pace break (S5:63 ~10 o'clock S/R)
     armed: dict | None = None      # active confirmation hunt at the day level
     retro: dict | None = None      # retracement candidate: counter-break level serving the bias
+    pending_direct: dict | None = None  # 1-min precision entry: deferred until next 1-min bar close
     consec_opp = 0                 # consecutive low/high-breaking candles (voiding)
     entries_done = 0
     open_trade: dict | None = None
@@ -436,9 +632,38 @@ def simulate_day(
         )
         open_trade = None
 
-    def _open_trade(bar_idx: int, dirn: int, ref_level: float, dbar: dict, btype: str) -> bool:
+    def _open_trade(
+        bar_idx: int, dirn: int, ref_level: float, dbar: dict, btype: str,
+        m1_bar: dict | None = None,
+    ) -> bool:
+        """Open a new trade at the given 5-min bar index.
+
+        When m1_bar is provided (1min execution mode), the entry price, timestamp,
+        and OHLC come from the 1-min candle instead of the 5-min bar. The SL is still
+        calculated against the 5-min reference (consistent with the engine's swing context).
+        bar_idx is used only for logging / the 5-min bar record.
+        """
         nonlocal open_trade, entries_done
-        entry = candles[bar_idx]["close"]
+        # Entry data: prefer 1-min bar if available, else 5-min bar
+        if m1_bar is not None:
+            entry = float(m1_bar["close"])
+            entry_ts = int(m1_bar["ts"])
+            entry_time = str(m1_bar["timestamp"])[11:16] + ":00"
+            entry_candle_low = float(m1_bar["low"])
+            entry_candle_high = float(m1_bar["high"])
+            dom_low = entry_candle_low
+            dom_high = entry_candle_high
+            dom_time = entry_time
+        else:
+            entry = candles[bar_idx]["close"]
+            entry_ts = int(candles[bar_idx]["ts"])
+            entry_time = candles[bar_idx]["time"]
+            entry_candle_low = candles[bar_idx]["low"]
+            entry_candle_high = candles[bar_idx]["high"]
+            dom_low = dbar["low"]
+            dom_high = dbar["high"]
+            dom_time = dbar["time"]
+
         sl_mode = cfg["sl_mode"]
         sl_used_mode = sl_mode
         pivot_ref = None
@@ -452,8 +677,6 @@ def simulate_day(
             # candle's low/high, fall back to Entry Candle Low/High - buffer.
             buf = float(cfg.get("sl_pivot_buffer", SL_PIVOT_BUFFER))
             opposing_pool = normal_lows if dirn == 1 else normal_highs
-            entry_candle_low = candles[bar_idx]["low"]
-            entry_candle_high = candles[bar_idx]["high"]
             if opposing_pool:
                 pivot_ref = opposing_pool[-1]  # most recent sealed opposing pivot
                 pivot_px = pivot_ref.px
@@ -506,19 +729,19 @@ def simulate_day(
         open_trade = {
             "dir": direction,
             "case": result.get("case"),
-            "entry_time": candles[bar_idx]["time"],
-            "entry_ts": int(candles[bar_idx]["ts"]),
+            "entry_time": entry_time,
+            "entry_ts": entry_ts,
             "entry_price": round(entry, 2),
             "sl": round(sl, 2),
             "target": round(target, 2),
             "level": round(ref_level, 2),
             "pace_break_type": btype,
-            "domination_time": dbar["time"],
+            "domination_time": dom_time,
             "mfe_r": 0.0,
             "entry_bar": bar_idx,
             "validate_until": bar_idx + 2,
-            "dom_low": dbar["low"],
-            "dom_high": dbar["high"],
+            "dom_low": dom_low,
+            "dom_high": dom_high,
             "validated": False,
             "sl_mode_used": sl_used_mode,
             "pivot_ref": {"px": pivot_ref.px, "time": pivot_ref.time, "kind": pivot_ref.kind, "idx": pivot_ref.idx} if pivot_ref is not None else None,
@@ -526,14 +749,14 @@ def simulate_day(
             "_cur_sl": sl,
             "_init_sl": sl,
             "_max_profit": 0.0,
-            "_last_m1_ts": int(candles[bar_idx]["ts"]),
+            "_last_m1_ts": entry_ts,
         }
         entries_done += 1
         result["events"].append(
             {
                 "type": "entry",
                 "bar": bar_idx,
-                "time": candles[bar_idx]["time"],
+                "time": entry_time,
                 "dir": direction,
                 "price": round(entry, 2),
                 "sl": round(sl, 2),
@@ -544,149 +767,150 @@ def simulate_day(
 
     use_1m = cfg["execution"] == "1min" and m1_day is not None and len(m1_day) > 0
 
-    def _manage_1m_chunk(trade: dict, upto_ts: int) -> bool:
-        """Color-aware 1-minute execution over bars since the last processed ts.
-
-        Ported from the BTC Strategy-3 engine: a candle's colour tells the
-        intra-bar path — green means low printed early (adverse-first for
-        longs), red means high printed early. Exits fill AT the level.
-        Returns True when the trade closed.
-        """
-        nonlocal open_trade
-        t_dir = 1 if trade["dir"] == "long" else -1
-        entry = float(trade["entry_price"])
-        init_risk = abs(entry - float(trade["sl"])) or 1e-9
-        cur_sl = float(trade["_cur_sl"])
-        max_profit = float(trade["_max_profit"])
-        trail_dist = float(cfg["trail_distance_r"]) * init_risk
-        ladder_on = cfg["trailing"] == "ladder"
-
-        rows = m1_day[(m1_day["ts"] > trade["_last_m1_ts"]) & (m1_day["ts"] <= upto_ts)]
-        if rows.empty:
-            return False
-
-        init_sl = float(trade["_init_sl"])
-
-        def _oc() -> str:
-            """Exit outcome for a fill at cur_sl (float-safe vs rounded stored sl)."""
-            if t_dir == 1:
-                if cur_sl >= entry - 1e-9:
-                    return "cost-to-cost"
-                return "trail" if cur_sl > init_sl + 1e-9 else "sl"
-            if cur_sl <= entry + 1e-9:
-                return "cost-to-cost"
-            return "trail" if cur_sl < init_sl - 1e-9 else "sl"
-
-        for row in rows.sort_values("ts").itertuples():
-            trade["_last_m1_ts"] = int(row.ts)
-            hhmm = str(row.timestamp)[11:16]
-            if hhmm >= EOD_EXIT:
-                # square-off at this bar's open
-                _close_trade(trade, i, float(row.open), "eod", exit_time=hhmm + ":00", exit_ts=int(row.ts))
-                return True
-
-            green = float(row.close) > float(row.open)
-            hi, lo, cl = float(row.high), float(row.low), float(row.close)
-            exited = False
-
-            if t_dir == 1:
-                if green:
-                    # adverse first (low early)
-                    if lo <= cur_sl:
-                        outcome = _oc()
-                        _close_trade(trade, i, cur_sl, outcome, exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                        exited = True
+    # ── second-swing detection (1min only, when swing_mode = opposite_swing_needed) ──
+    # For 1min mode: second swing is on 1-min chart, starting from the candle
+    # AFTER the 1-min cyan end (09:28). This mirrors exactly how the 1-min
+    # first swing was found (09:27 low→high), per user: "it goes form 9:27 low
+    # to high okay ... we should start from 9:28 candle".
+    # We compute the 1-min first swing separately (its end is 09:27), then seed
+    # the second swing with 09:28 OHLC and feed 09:29 onward.
+    swing_mode = cfg.get("swing_mode", "none")
+    fs2_dir: str | None = None
+    fs2_confirmed_idx: int = -1
+    # Keep 5min first swing for bias/entry logic, but for second swing on 1min we
+    # use the 1-min first swing's end (09:27) as the anchor, matching the chart.
+    if use_1m and swing_mode == "opposite_swing_needed" and swing_dir is not None and fs1_end_idx >= 0:
+        m1_day_candles = _prep_day(m1_day) if m1_day is not None else []
+        # 1-min first swing (cyan line on 1-min chart)
+        fs1_1min_dir: str | None = None
+        fs1_1min_end_idx: int = -1
+        fs1_1min_end_px: float = float("nan")
+        fs1_1min_end_time: str = ""
+        if m1_day_candles:
+            fs1_1min_dir, _, _, _, fs1_1min_end_idx, fs1_1min_end_px, fs1_1min_end_time = _classify_first_swing_v2(m1_day_candles, result["date"])
+        # Use 1-min first swing if available, else fall back to 5-min
+        use_fs1_for_2nd_dir = fs1_1min_dir if fs1_1min_dir is not None else swing_dir
+        use_fs1_end_idx = fs1_1min_end_idx if fs1_1min_end_idx >= 0 else fs1_end_idx
+        use_fs1_end_px = fs1_1min_end_px if fs1_1min_end_idx >= 0 else fs1_end_px
+        use_fs1_end_time = fs1_1min_end_time if fs1_1min_end_idx >= 0 else fs1_end_time
+        # For second swing we want the *next* candle after the cyan end as the new 09:15
+        # (09:28). When we have the 1-min cyan end, we can seed directly with 09:28
+        # and feed 09:29 onward — no 5-min mapping needed for the seed.
+        if use_fs1_for_2nd_dir is not None and use_fs1_end_idx >= 0:
+            # If we have a valid 1-min cyan end, do direct 1-min second swing
+            if fs1_1min_end_idx >= 0 and m1_day_candles:
+                from datetime import datetime, timezone, timedelta
+                from src.firstswing import FirstSwingEngine
+                from src.walker import FlowCandle as _FC
+                IST = timezone(timedelta(hours=5, minutes=30))
+                seed_idx = fs1_1min_end_idx + 1  # 09:28
+                if seed_idx < len(m1_day_candles):
+                    seed_c = m1_day_candles[seed_idx]
+                    seed_dt = datetime.fromtimestamp(int(seed_c.get("ts", 0)), tz=IST).strftime("%Y-%m-%dT%H:%M:%S") if seed_c.get("ts") else f"{result['date']}T{seed_c.get('time','00:00')}:00"
+                    seed_fc = _FC(date=seed_dt, open=float(seed_c["open"]), high=float(seed_c["high"]), low=float(seed_c["low"]), close=float(seed_c["close"]))
+                    eng2 = FirstSwingEngine()
+                    eng2.reset_with_candle(seed_fc, seed_idx)
+                    # Build flow for 09:29 onward
+                    for j in range(seed_idx+1, len(m1_day_candles)):
+                        mc = m1_day_candles[j]
+                        dt = datetime.fromtimestamp(int(mc.get("ts", 0)), tz=IST).strftime("%Y-%m-%dT%H:%M:%S") if mc.get("ts") else f"{result['date']}T{mc.get('time','00:00')}:00"
+                        fc = _FC(date=dt, open=float(mc["open"]), high=float(mc["high"]), low=float(mc["low"]), close=float(mc["close"]))
+                        eng2.process_bar(fc, j)
+                    if eng2.declared:
+                        fs2_dir = "buying" if eng2.dir == "up" else "selling"
+                        # Map 1-min confirmed idx back to 5-min for gate (entry loop is 5-min)
+                        def m1_to_5(idx: int) -> int:
+                            mts = m1_day_candles[idx].get("ts", 0)
+                            res = 0
+                            for k5, c5 in enumerate(candles):
+                                if c5.get("ts", 0) <= mts:
+                                    res = k5
+                                else:
+                                    break
+                            return res
+                        fs2_confirmed_idx = m1_to_5(eng2.confirmed_at_idx)
+                        fs2_events: list[dict] = [
+                            {"type": "swing2_classified", "dir": fs2_dir, "bar": m1_to_5(eng2.start_idx), "time": eng2.start_time, "first_swing": use_fs1_for_2nd_dir},
+                            {"type": "fs2_segment", "dir": eng2.dir, "start_idx": m1_to_5(eng2.start_idx), "start_px": eng2.start_px, "end_idx": m1_to_5(eng2.end_idx), "end_px": eng2.end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": eng2.confirmed_at_time},
+                        ]
+                        # also include break marks for chart if needed
+                        fs2_events.append({"type": "fs_breaks_2", "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px} for b in eng2.break_marks]})
                     else:
-                        max_profit = max(max_profit, hi - entry)
-                        if ladder_on and trail_dist > 0:
-                            lvl = int(max_profit // trail_dist)
-                            if lvl >= 1:
-                                cand = entry + (lvl - 1) * trail_dist
-                                if cand > cur_sl:
-                                    cur_sl = cand
-                        if not exited and cl <= cur_sl:
-                            outcome = _oc()
-                            _close_trade(trade, i, cur_sl, outcome, exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                            exited = True
-                        elif not ladder_on and hi >= float(trade["target"]):
-                            _close_trade(trade, i, float(trade["target"]), "target", exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                            exited = True
+                        fs2_dir = None
+                        fs2_confirmed_idx = -1
+                        fs2_events = [{"type": "no_second_swing_declared"}]
                 else:
-                    # favourable first (high early): target/trail before SL check
-                    max_profit = max(max_profit, hi - entry)
-                    if ladder_on and trail_dist > 0:
-                        lvl = int(max_profit // trail_dist)
-                        if lvl >= 1:
-                            cand = entry + (lvl - 1) * trail_dist
-                            if cand > cur_sl:
-                                cur_sl = cand
-                    if not ladder_on and hi >= float(trade["target"]):
-                        _close_trade(trade, i, float(trade["target"]), "target", exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                        exited = True
-                    elif lo <= cur_sl or cl <= cur_sl:
-                        px = cur_sl if lo <= cur_sl else cur_sl
-                        outcome = _oc()
-                        _close_trade(trade, i, px, outcome, exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                        exited = True
+                    fs2_dir = None
+                    fs2_confirmed_idx = -1
+                    fs2_events = [{"type": "no_second_swing", "reason": "no_seed_after_cyan"}]
+                result["events"].extend(fs2_events)
+                result["swing2_direction"] = fs2_dir
+                result["swing2_confirmed_idx"] = fs2_confirmed_idx
+                swing_dir_for_gate = use_fs1_for_2nd_dir
             else:
-                if not green:
-                    # SHORT + red candle: favourable first (low early)
-                    max_profit = max(max_profit, entry - lo)
-                    if ladder_on and trail_dist > 0:
-                        lvl = int(max_profit // trail_dist)
-                        if lvl >= 1:
-                            cand = entry - (lvl - 1) * trail_dist
-                            if cand < cur_sl:
-                                cur_sl = cand
-                    if not ladder_on and lo <= float(trade["target"]):
-                        _close_trade(trade, i, float(trade["target"]), "target", exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                        exited = True
-                    elif hi >= cur_sl or cl >= cur_sl:
-                        outcome = _oc()
-                        _close_trade(trade, i, cur_sl, outcome, exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                        exited = True
-                else:
-                    # SHORT + green candle: adverse first (high early)
-                    if hi >= cur_sl:
-                        outcome = _oc()
-                        _close_trade(trade, i, cur_sl, outcome, exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                        exited = True
-                    else:
-                        max_profit = max(max_profit, entry - lo)
-                        if ladder_on and trail_dist > 0:
-                            lvl = int(max_profit // trail_dist)
-                            if lvl >= 1:
-                                cand = entry - (lvl - 1) * trail_dist
-                                if cand < cur_sl:
-                                    cur_sl = cand
-                        if not exited and cl >= cur_sl:
-                            outcome = _oc()
-                            _close_trade(trade, i, cur_sl, outcome, exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                            exited = True
-                        elif not ladder_on and lo <= float(trade["target"]):
-                            _close_trade(trade, i, float(trade["target"]), "target", exit_time=str(row.timestamp)[11:16] + ":00", exit_ts=int(row.ts))
-                            exited = True
+                # Fallback to original 5-min→1-min mapping path
+                fs2_dir, _fs2_start, _fs2_ev, fs2_confirmed_idx = detect_second_swing(
+                    candles, result["date"], use_fs1_for_2nd_dir, use_fs1_end_idx, use_fs1_end_px, use_fs1_end_time,
+                    m1_candles=m1_day_candles if m1_day_candles else None,
+                )
+                result["events"].extend(_fs2_ev)
+                result["swing2_direction"] = fs2_dir
+                result["swing2_confirmed_idx"] = fs2_confirmed_idx
+                swing_dir_for_gate = use_fs1_for_2nd_dir
+        else:
+            result["swing2_direction"] = None
+            result["swing2_confirmed_idx"] = -1
+            swing_dir_for_gate = swing_dir
+    else:
+        result["swing2_direction"] = None
+        result["swing2_confirmed_idx"] = -1
+        swing_dir_for_gate = swing_dir
 
-            if exited:
-                return True
+    # ── entry-swing gate ──
+    # Determines which swing must be confirmed before entries are allowed.
+    # Use the 1-min cyan dir for 1-min mode (the line the user sees), else 5-min.
+    gate_first_dir = locals().get("swing_dir_for_gate", swing_dir)
+    if use_1m and swing_mode == "opposite_swing_needed":
+        if fs2_dir is not None and fs2_dir != gate_first_dir:
+            entry_swing_confirmed_idx = fs2_confirmed_idx
+            result["events"].append({
+                "type": "second_swing_armed",
+                "dir": fs2_dir,
+                "confirmed_at_idx": fs2_confirmed_idx,
+            })
+        else:
+            # Same direction as first swing or not declared → skip day.
+            entry_swing_confirmed_idx = 9999999
+            result["events"].append({
+                "type": "skipped_same_direction_swing2",
+                "fs1_dir": gate_first_dir,
+                "fs2_dir": fs2_dir,
+            })
+    else:
+        # 5min OR swing_mode=none: use FsV2 gate (existing behavior).
+        entry_swing_confirmed_idx = fs_confirmed_idx
 
-        trade["_cur_sl"] = cur_sl
-        trade["_max_profit"] = max_profit
-        return False
+    def _manage_1m_chunk(trade: dict, upto_ts: int) -> bool:
+        """Delegate 1-min exit management to the intraday_1m module."""
+        return manage_1m_chunk(
+            trade, m1_day, upto_ts, cfg,
+            on_exit=lambda price, outcome, exit_time, exit_ts:
+                _close_trade(trade, i, price, outcome, exit_time=exit_time, exit_ts=exit_ts),
+        )
+
 
     while i < len(candles):
         cur = candles[i]
 
-        # ---- WalkerEngine: feed candles and collect pivots for prev_pivot SL ----
-        if cfg["sl_mode"] == "prev_pivot":
-            dt_str = f"{result['date']}T{cur['time']}:00"
-            fc = FlowCandle(date=dt_str, open=cur["open"], high=cur["high"], low=cur["low"], close=cur["close"])
-            new_pivots = walker.process_bar(fc, i)
-            for p in new_pivots:
-                if p.kind == "H":
-                    normal_highs.append(p)
-                else:
-                    normal_lows.append(p)
+        # ---- WalkerEngine: feed candles and collect pivots for prev_pivot SL + pivot_break entry ----
+        dt_str = f"{result['date']}T{cur['time']}:00"
+        fc = FlowCandle(date=dt_str, open=cur["open"], high=cur["high"], low=cur["low"], close=cur["close"])
+        new_pivots = walker.process_bar(fc, i)
+        for p in new_pivots:
+            if p.kind == "H":
+                normal_highs.append(p)
+            else:
+                normal_lows.append(p)
 
         # ---- manage open trade ----
         if open_trade is not None:
@@ -699,11 +923,11 @@ def simulate_day(
                 if not exited:
                     risk = abs(t["entry_price"] - t["sl"]) or 1e-9
                     if t["dir"] == "long":
-                        if not t["validated"] and i <= t["validate_until"] and cur["close"] < t["dom_low"]:
+                        if cfg["ft_fail_enabled"] and not t["validated"] and i <= t["validate_until"] and cur["close"] < t["dom_low"]:
                             _close_trade(t, i, cur["close"], "ft_fail")
                             exited = True
                     else:
-                        if not t["validated"] and i <= t["validate_until"] and cur["close"] > t["dom_high"]:
+                        if cfg["ft_fail_enabled"] and not t["validated"] and i <= t["validate_until"] and cur["close"] > t["dom_high"]:
                             _close_trade(t, i, cur["close"], "ft_fail")
                             exited = True
                     if not exited and not t["validated"] and i > t["validate_until"]:
@@ -714,7 +938,7 @@ def simulate_day(
                     if cur["low"] <= t["sl"]:
                         _close_trade(t, i, t["sl"], "sl")
                         exited = True
-                    elif not t["validated"] and i <= t["validate_until"] and cur["close"] < t["dom_low"]:
+                    elif cfg["ft_fail_enabled"] and not t["validated"] and i <= t["validate_until"] and cur["close"] < t["dom_low"]:
                         # follow-through never arrived -> bad entry, admit it fast (S5:98)
                         _close_trade(t, i, cur["close"], "ft_fail")
                         exited = True
@@ -725,7 +949,7 @@ def simulate_day(
                     if cur["high"] >= t["sl"]:
                         _close_trade(t, i, t["sl"], "sl")
                         exited = True
-                    elif not t["validated"] and i <= t["validate_until"] and cur["close"] > t["dom_high"]:
+                    elif cfg["ft_fail_enabled"] and not t["validated"] and i <= t["validate_until"] and cur["close"] > t["dom_high"]:
                         _close_trade(t, i, cur["close"], "ft_fail")
                         exited = True
                     elif cur["low"] <= t["target"]:
@@ -750,11 +974,33 @@ def simulate_day(
                 if cur["time"] >= EOD_EXIT and open_trade is not None:
                     _close_trade(open_trade, i, cur["close"], "eod")
 
+        # ---- 1-min precision entry hunt ----
+        # When a direct pace break was deferred in 1-min mode, resolve it now
+        # using the most recent 1-min bar close that falls inside this 5-min bar.
+        if open_trade is None and pending_direct is not None and use_1m:
+            m1_bar = resolve_pending_direct(pending_direct, m1_day, cur["ts"])
+            if m1_bar is not None and m1_bar["ts"] <= cur["ts"]:
+                if _open_trade(
+                    pending_direct["bar_idx"],
+                    pending_direct["trade_dir"],
+                    pending_direct["level"],
+                    candles[pending_direct["bar_idx"]],
+                    pending_direct["break_type"],
+                    m1_bar=m1_bar,
+                ):
+                    pending_direct = None
+
         # ---- square-off / window guards for NEW work ----
+        # FsV2 gate: wait for first-swing confirmation before entering.
+        # Every trade must happen AFTER the entry-relevant swing is confirmed.
+        # For 1min with swing_mode=opposite_swing_needed → wait for second swing.
+        # Otherwise → wait for first swing (FsV2 gate).
+        fs_gate_ok = entry_swing_confirmed_idx < 0 or i > entry_swing_confirmed_idx
         can_enter = (
             open_trade is None
             and entries_done < MAX_ENTRIES
             and ENTRY_START <= cur["time"] <= ENTRY_END
+            and fs_gate_ok
         )
 
         # ---- voiding: consecutive LOW/HIGH-breaking candles reclassify the leg (S6:102) ----
@@ -820,12 +1066,15 @@ def simulate_day(
                         )
                         armed = None
 
-        # ---- pace break detection on every closed bar ----
+        # ---- entry trigger: pace_break or pivot_break ----
         if i > 0 and cur_swing is not None and can_enter:
-            brk = detect_pace_break(candles, i, cur_swing, swing_extreme, _swing_size(), base_avg)
+            trade_dir = -1 if cur_swing == "buying" else 1
+            if cfg.get("entry_method") == "pivot_break":
+                brk = detect_pivot_break(candles, i, trade_dir, normal_highs, normal_lows)
+            else:
+                brk = detect_pace_break(candles, i, cur_swing, swing_extreme, _swing_size(), base_avg)
             if brk is not None:
                 # break of a buying swing = selling pressure -> expect SUPPORT longs
-                trade_dir = -1 if cur_swing == "buying" else 1
                 aligned = trade_dir == want_dir
                 result["events"].append(
                     {
@@ -873,9 +1122,30 @@ def simulate_day(
                             if trade_dir == 1
                             else (cur["high"] - cur["close"]) / cur["range"]
                         ) if cur["range"] > 0 else 0.0
-                        entered = brk_q >= DOM_CLOSE_Q and _open_trade(
-                            i, trade_dir, brk["level"], cur, brk["type"]
-                        )
+                        if use_1m:
+                            # 1-min precision: defer the entry to the next 1-min bar close.
+                            # The 5-min close has already printed; the 1-min bar that
+                            # closes inside this 5-min bar gives a tighter entry price.
+                            # Resolved in the 1-min hunt loop below (after _manage_1m_chunk).
+                            pending_direct = {
+                                "bar_idx": i,
+                                "trade_dir": trade_dir,
+                                "level": brk["level"],
+                                "break_type": brk["type"],
+                                "armed_ts": int(cur["ts"]),
+                            }
+                            result["events"].append({
+                                "type": "pending_direct_1m",
+                                "bar": i, "time": cur["time"],
+                                "ts": int(cur["ts"]),
+                                "level": round(brk["level"], 2),
+                                "break_type": brk["type"],
+                            })
+                            entered = False
+                        else:
+                            entered = brk_q >= DOM_CLOSE_Q and _open_trade(
+                                i, trade_dir, brk["level"], cur, brk["type"]
+                            )
                         if not entered:
                             armed = {
                                 "level": brk["level"],
@@ -1105,7 +1375,13 @@ def run_backtest(
 
     df = df_5min.copy()
     df["timestamp"] = pd.to_datetime(df["timestamp"])
-    df = df.sort_values("timestamp").drop_duplicates(subset="timestamp", keep="last")
+    # Preserve original ts (IST epoch) if present — recomputing from naive timestamp
+    # treats 09:15 IST as 09:15 UTC (+5:30 error) and shifts swing times to 14:45.
+    if "ts" in df.columns and not df["ts"].isna().all():
+        df["ts"] = df["ts"].astype("int64")
+    else:
+        df["ts"] = (df["timestamp"].astype("int64") // 1_000_000_000).astype("int64")
+    df = df.sort_values("timestamp").drop_duplicates(subset="ts", keep="last")
     dates = df["timestamp"].dt.strftime("%Y-%m-%d")
     groups = {d: g for d, g in df.groupby(dates, sort=True)}
 

@@ -489,6 +489,81 @@ class FsV2Engine:
             "micro_highs": [f"{l.time}@{l.px:.2f}" for l in self.micro_highs],
         }
 
+    def reset(self, seed_px: float, seed_idx: int, seed_time: str) -> None:
+        """Re-initialize the engine to detect a new swing starting from a
+        pre-defined price level (e.g., the first swing's extreme).
+
+        After reset, the next process_bar call increments bars_seen to 2,
+        skipping the bars_seen==1 initialization — the seed bar is already set.
+        This allows us to re-run swing detection from an arbitrary point."""
+        # Fresh walker (pivot history not shared with first swing)
+        self.walker = WalkerEngine()
+
+        # Fake bars_seen=1 state so next process_bar goes to bars_seen=2
+        self.bars_seen = 1
+        self.t = seed_time
+        self.g_idx = seed_idx
+        self.green = False
+
+        # Seed extremes — these are the "session start" for second-swing detection
+        self.e_hi = FsLevel(px=seed_px, idx=seed_idx, time=seed_time)
+        self.e_lo = FsLevel(px=seed_px, idx=seed_idx, time=seed_time)
+        self.e_hi_pivot = FsLevel(px=seed_px, idx=seed_idx, time=seed_time)
+        self.e_lo_pivot = FsLevel(px=seed_px, idx=seed_idx, time=seed_time)
+
+        # Zero all direction/state
+        self.dir: Optional[Dir] = None
+        self.base_dir: Optional[Dir] = None
+        self.same_side_breaks = 0
+        self.opposite_side_breaks = 0
+        self.dir_confirmed = False
+        self.dir_confirmed_idx = -1
+        self.locked = False
+        self.locked_level_px = float("nan")
+
+        # Zero swing start/candidate
+        self.start_idx = -1
+        self.start_time = ""
+        self.start_px = float("nan")
+        self.cand_idx = -1
+        self.cand_time = ""
+        self.cand_px = float("nan")
+
+        # Zero declaration
+        self.declared = False
+        self.tier = None
+        self.end_time = ""
+        self.end_idx = -1
+        self.end_px = float("nan")
+        self.confirmed_at_time = ""
+        self.confirmed_at_idx = -1
+        self.confirm_source = None
+        self.last_confirm_hit = None
+        self.sustain_streak = 0
+
+        # Clear pools
+        self.normal_highs.clear()
+        self.normal_lows.clear()
+        self.micro_highs.clear()
+        self.micro_lows.clear()
+        self.hist_h.clear()
+        self.hist_l.clear()
+        self.break_marks.clear()
+
+        # Reset micro pivot state
+        self.p_high = float("nan")
+        self.pp_high = float("nan")
+        self.p_high_idx = -1
+        self.pp_high_idx = -1
+        self.p_high_t = ""
+        self.pp_high_t = ""
+        self.p_low = float("nan")
+        self.pp_low = float("nan")
+        self.p_low_idx = -1
+        self.pp_low_idx = -1
+        self.p_low_t = ""
+        self.pp_low_t = ""
+
 
 # ── batch helpers ───────────────────────────────────────────────────────────
 
@@ -526,5 +601,12 @@ def compute_fs_v2_declared(candles: list[FlowCandle],
     return [r.seg for r in compute_fs_v2_results(candles, opts)]
 
 
-# Alias for backward compatibility
-FirstSwingEngine = FsV2Engine
+# Alias for backward compatibility — now points to correct FirstSwingEngine (port of frontend/src/lib/firstswing.ts)
+# The old FsV2Engine (flowline.ts port) is kept as LegacyFsV2Engine for any direct legacy usage.
+try:
+    from .firstswing import FirstSwingEngine as _CorrectFSE  # type: ignore
+    FirstSwingEngine = _CorrectFSE  # type: ignore
+    LegacyFsV2Engine = FsV2Engine
+except Exception:
+    FirstSwingEngine = FsV2Engine  # fallback if firstswing not available
+    LegacyFsV2Engine = FsV2Engine
