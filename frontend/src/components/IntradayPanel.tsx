@@ -141,6 +141,15 @@ export default function IntradayPanel({
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
+  // Local state for the three key filters that will be applied together
+  const [localExecution, setLocalExecution] = useState(params.execution);
+  const [localEntryMethod, setLocalEntryMethod] = useState(
+    params.entry_method ?? "pace_break",
+  );
+  const [localSwingMode, setLocalSwingMode] = useState(
+    params.swing_mode ?? "opposite_swing_needed",
+  );
+
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
   const activeDay: IntradayDaySummary | null =
@@ -208,45 +217,6 @@ export default function IntradayPanel({
           ))}
         </select>
         <select
-          value={params.execution}
-          onChange={(e) =>
-            onParamsChange({ ...params, execution: e.target.value })
-          }
-          className={selectCls}
-        >
-          {EXECUTION_MODES.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <select
-          value={params.entry_method ?? "pace_break"}
-          onChange={(e) =>
-            onParamsChange({ ...params, entry_method: e.target.value })
-          }
-          className={selectCls}
-        >
-          {ENTRY_METHODS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <select
-          value={params.swing_mode ?? "opposite_swing_needed"}
-          onChange={(e) =>
-            onParamsChange({ ...params, swing_mode: e.target.value })
-          }
-          className={selectCls}
-        >
-          {SWING_MODES.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <select
           value={params.trailing}
           onChange={(e) =>
             onParamsChange({ ...params, trailing: e.target.value })
@@ -287,6 +257,59 @@ export default function IntradayPanel({
           />
           FT-fail early exit
         </label>
+      </div>
+
+      {/* Apply button section for the three key filters */}
+      <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2">
+        <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">
+          Core Settings
+        </span>
+        <select
+          value={localExecution}
+          onChange={(e) => setLocalExecution(e.target.value)}
+          className={selectCls}
+        >
+          {EXECUTION_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localEntryMethod}
+          onChange={(e) => setLocalEntryMethod(e.target.value)}
+          className={selectCls}
+        >
+          {ENTRY_METHODS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localSwingMode}
+          onChange={(e) => setLocalSwingMode(e.target.value)}
+          className={selectCls}
+        >
+          {SWING_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            onParamsChange({
+              ...params,
+              execution: localExecution,
+              entry_method: localEntryMethod,
+              swing_mode: localSwingMode,
+            });
+          }}
+          className="ml-2 px-3 py-1 rounded border border-[#6366f1] bg-[#6366f1]/20 text-xs font-semibold hover:bg-[#6366f1]/30"
+        >
+          Apply
+        </button>
       </div>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">

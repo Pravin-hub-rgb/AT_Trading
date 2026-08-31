@@ -1,0 +1,1070 @@
+=== Config ===
+  sl_mode: avg
+  execution: 1min
+  trailing: off
+  trail_distance_r: 1.0
+  gap_pct: 0.0027
+  sl_pivot_buffer: 1.0
+  ft_fail_enabled: True
+  entry_method: pivot_break
+  swing_mode: opposite_swing_needed
+
+=== Running backtest ===
+
+  [_classify_first_swing_v2] day=2025-08-04 confirmed_idx=28 end_idx=27 end_time=11:30
+
+  [_classify_first_swing_v2] day=2025-08-04 confirmed_idx=17 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-08-05 confirmed_idx=62 end_idx=58 end_time=14:05
+
+  [_classify_first_swing_v2] day=2025-08-05 confirmed_idx=15 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2025-08-06 confirmed_idx=7 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2025-08-06 confirmed_idx=16 end_idx=9 end_time=09:24
+
+  [_classify_first_swing_v2] day=2025-08-07 confirmed_idx=28 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2025-08-07 confirmed_idx=14 end_idx=6 end_time=09:21
+
+  [_classify_first_swing_v2] day=2025-08-08 confirmed_idx=12 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2025-08-08 confirmed_idx=22 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2025-08-11 confirmed_idx=23 end_idx=19 end_time=10:50
+
+  [_classify_first_swing_v2] day=2025-08-11 confirmed_idx=14 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2025-08-12 confirmed_idx=14 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-08-12 confirmed_idx=15 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2025-08-13 confirmed_idx=12 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2025-08-13 confirmed_idx=21 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2025-08-14 confirmed_idx=20 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2025-08-14 confirmed_idx=78 end_idx=71 end_time=10:26
+
+  [_classify_first_swing_v2] day=2025-08-18 confirmed_idx=41 end_idx=36 end_time=12:15
+
+  [_classify_first_swing_v2] day=2025-08-18 confirmed_idx=17 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-08-19 confirmed_idx=26 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2025-08-19 confirmed_idx=35 end_idx=30 end_time=09:45
+
+  [_classify_first_swing_v2] day=2025-08-20 confirmed_idx=19 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2025-08-20 confirmed_idx=18 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2025-08-21 confirmed_idx=18 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2025-08-21 confirmed_idx=16 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2025-08-22 confirmed_idx=21 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2025-08-22 confirmed_idx=25 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2025-08-25 confirmed_idx=15 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2025-08-25 confirmed_idx=30 end_idx=28 end_time=09:43
+
+  [_classify_first_swing_v2] day=2025-08-26 confirmed_idx=74 end_idx=71 end_time=15:10
+
+  [_classify_first_swing_v2] day=2025-08-26 confirmed_idx=26 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2025-08-28 confirmed_idx=73 end_idx=71 end_time=15:10
+
+  [_classify_first_swing_v2] day=2025-08-28 confirmed_idx=21 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2025-08-29 confirmed_idx=31 end_idx=29 end_time=11:40
+
+  [_classify_first_swing_v2] day=2025-08-29 confirmed_idx=60 end_idx=53 end_time=10:08
+
+  [_classify_first_swing_v2] day=2025-09-01 confirmed_idx=43 end_idx=41 end_time=12:40
+
+  [_classify_first_swing_v2] day=2025-09-01 confirmed_idx=25 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2025-09-02 confirmed_idx=15 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2025-09-02 confirmed_idx=26 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2025-09-03 confirmed_idx=65 end_idx=64 end_time=14:35
+
+  [_classify_first_swing_v2] day=2025-09-03 confirmed_idx=184 end_idx=183 end_time=12:18
+
+  [_classify_first_swing_v2] day=2025-09-04 confirmed_idx=21 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2025-09-04 confirmed_idx=64 end_idx=60 end_time=10:15
+
+  [_classify_first_swing_v2] day=2025-09-05 confirmed_idx=26 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2025-09-05 confirmed_idx=15 end_idx=14 end_time=09:29
+
+  [_classify_first_swing_v2] day=2025-09-08 confirmed_idx=48 end_idx=47 end_time=13:10
+
+  [_classify_first_swing_v2] day=2025-09-08 confirmed_idx=14 end_idx=9 end_time=09:24
+
+  [_classify_first_swing_v2] day=2025-09-09 confirmed_idx=6 end_idx=3 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-09-09 confirmed_idx=14 end_idx=7 end_time=09:22
+
+  [_classify_first_swing_v2] day=2025-09-10 confirmed_idx=17 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2025-09-10 confirmed_idx=32 end_idx=31 end_time=09:46
+
+  [_classify_first_swing_v2] day=2025-09-11 confirmed_idx=42 end_idx=39 end_time=12:30
+
+  [_classify_first_swing_v2] day=2025-09-11 confirmed_idx=196 end_idx=195 end_time=12:30
+
+  [_classify_first_swing_v2] day=2025-09-12 confirmed_idx=32 end_idx=27 end_time=11:30
+
+  [_classify_first_swing_v2] day=2025-09-12 confirmed_idx=14 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2025-09-15 confirmed_idx=15 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2025-09-15 confirmed_idx=26 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2025-09-16 confirmed_idx=13 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-09-16 confirmed_idx=21 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2025-09-17 confirmed_idx=46 end_idx=39 end_time=12:30
+
+  [_classify_first_swing_v2] day=2025-09-17 confirmed_idx=29 end_idx=27 end_time=09:42
+
+  [_classify_first_swing_v2] day=2025-09-18 confirmed_idx=50 end_idx=46 end_time=13:05
+
+  [_classify_first_swing_v2] day=2025-09-18 confirmed_idx=14 end_idx=5 end_time=09:20
+
+  [_classify_first_swing_v2] day=2025-09-19 confirmed_idx=35 end_idx=34 end_time=12:05
+
+  [_classify_first_swing_v2] day=2025-09-19 confirmed_idx=28 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2025-09-22 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2025-09-22 confirmed_idx=15 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2025-09-23 confirmed_idx=21 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2025-09-23 confirmed_idx=24 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2025-09-24 confirmed_idx=26 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2025-09-24 confirmed_idx=22 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2025-09-25 confirmed_idx=45 end_idx=41 end_time=12:40
+
+  [_classify_first_swing_v2] day=2025-09-25 confirmed_idx=14 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2025-09-26 confirmed_idx=31 end_idx=30 end_time=11:45
+
+  [_classify_first_swing_v2] day=2025-09-26 confirmed_idx=24 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2025-09-29 confirmed_idx=18 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2025-09-29 confirmed_idx=33 end_idx=30 end_time=09:45
+
+  [_classify_first_swing_v2] day=2025-09-30 confirmed_idx=19 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2025-09-30 confirmed_idx=45 end_idx=30 end_time=09:45
+
+  [_classify_first_swing_v2] day=2025-10-01 confirmed_idx=36 end_idx=35 end_time=12:10
+
+  [_classify_first_swing_v2] day=2025-10-01 confirmed_idx=14 end_idx=5 end_time=09:20
+
+  [_classify_first_swing_v2] day=2025-10-03 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2025-10-03 confirmed_idx=331 end_idx=330 end_time=14:45
+
+  [_classify_first_swing_v2] day=2025-10-06 confirmed_idx=30 end_idx=23 end_time=11:10
+
+  [_classify_first_swing_v2] day=2025-10-06 confirmed_idx=18 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-10-07 confirmed_idx=61 end_idx=60 end_time=14:15
+
+  [_classify_first_swing_v2] day=2025-10-07 confirmed_idx=51 end_idx=49 end_time=10:04
+
+  [_classify_first_swing_v2] day=2025-10-08 confirmed_idx=6 end_idx=5 end_time=09:40
+
+  [_classify_first_swing_v2] day=2025-10-08 confirmed_idx=19 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2025-10-09 confirmed_idx=12 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2025-10-09 confirmed_idx=17 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-10-10 confirmed_idx=10 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2025-10-10 confirmed_idx=19 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2025-10-13 confirmed_idx=69 end_idx=62 end_time=14:25
+
+  [_classify_first_swing_v2] day=2025-10-13 confirmed_idx=318 end_idx=314 end_time=14:29
+
+  [_classify_first_swing_v2] day=2025-10-14 confirmed_idx=14 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2025-10-14 confirmed_idx=45 end_idx=44 end_time=09:59
+
+  [_classify_first_swing_v2] day=2025-10-15 confirmed_idx=30 end_idx=21 end_time=11:00
+
+  [_classify_first_swing_v2] day=2025-10-15 confirmed_idx=19 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-10-16 confirmed_idx=11 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2025-10-16 confirmed_idx=22 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2025-10-17 confirmed_idx=29 end_idx=28 end_time=11:35
+
+  [_classify_first_swing_v2] day=2025-10-17 confirmed_idx=28 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2025-10-20 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2025-10-20 confirmed_idx=41 end_idx=31 end_time=09:46
+
+  [_classify_first_swing_v2] day=2025-10-23 confirmed_idx=18 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2025-10-23 confirmed_idx=24 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2025-10-24 confirmed_idx=21 end_idx=18 end_time=10:45
+
+  [_classify_first_swing_v2] day=2025-10-24 confirmed_idx=70 end_idx=67 end_time=10:22
+
+  [_classify_first_swing_v2] day=2025-10-27 confirmed_idx=15 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2025-10-27 confirmed_idx=31 end_idx=29 end_time=09:44
+
+  [_classify_first_swing_v2] day=2025-10-28 confirmed_idx=24 end_idx=21 end_time=11:00
+
+  [_classify_first_swing_v2] day=2025-10-28 confirmed_idx=24 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2025-10-29 confirmed_idx=8 end_idx=5 end_time=09:40
+
+  [_classify_first_swing_v2] day=2025-10-29 confirmed_idx=28 end_idx=27 end_time=09:42
+
+  [_classify_first_swing_v2] day=2025-10-30 confirmed_idx=10 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2025-10-30 confirmed_idx=14 end_idx=7 end_time=09:22
+
+  [_classify_first_swing_v2] day=2025-10-31 confirmed_idx=24 end_idx=23 end_time=11:10
+
+  [_classify_first_swing_v2] day=2025-10-31 confirmed_idx=28 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2025-11-03 confirmed_idx=26 end_idx=18 end_time=10:45
+
+  [_classify_first_swing_v2] day=2025-11-03 confirmed_idx=19 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2025-11-04 confirmed_idx=9 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2025-11-04 confirmed_idx=29 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2025-11-06 confirmed_idx=19 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2025-11-06 confirmed_idx=63 end_idx=62 end_time=10:17
+
+  [_classify_first_swing_v2] day=2025-11-07 confirmed_idx=30 end_idx=27 end_time=11:30
+
+  [_classify_first_swing_v2] day=2025-11-07 confirmed_idx=14 end_idx=8 end_time=09:23
+
+  [_classify_first_swing_v2] day=2025-11-10 confirmed_idx=16 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2025-11-10 confirmed_idx=41 end_idx=39 end_time=09:54
+
+  [_classify_first_swing_v2] day=2025-11-11 confirmed_idx=10 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2025-11-11 confirmed_idx=23 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2025-11-12 confirmed_idx=5 end_idx=4 end_time=09:35
+
+  [_classify_first_swing_v2] day=2025-11-12 confirmed_idx=18 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-11-13 confirmed_idx=39 end_idx=37 end_time=12:20
+
+  [_classify_first_swing_v2] day=2025-11-13 confirmed_idx=65 end_idx=60 end_time=10:15
+
+  [_classify_first_swing_v2] day=2025-11-14 confirmed_idx=13 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-11-14 confirmed_idx=56 end_idx=49 end_time=10:04
+
+  [_classify_first_swing_v2] day=2025-11-17 confirmed_idx=10 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2025-11-17 confirmed_idx=19 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2025-11-18 confirmed_idx=19 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2025-11-18 confirmed_idx=64 end_idx=45 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-11-19 confirmed_idx=18 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2025-11-19 confirmed_idx=73 end_idx=71 end_time=10:26
+
+  [_classify_first_swing_v2] day=2025-11-20 confirmed_idx=31 end_idx=27 end_time=11:30
+
+  [_classify_first_swing_v2] day=2025-11-20 confirmed_idx=35 end_idx=29 end_time=09:44
+
+  [_classify_first_swing_v2] day=2025-11-21 confirmed_idx=16 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2025-11-21 confirmed_idx=15 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2025-11-24 confirmed_idx=19 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2025-11-24 confirmed_idx=24 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2025-11-25 confirmed_idx=60 end_idx=58 end_time=14:05
+
+  [_classify_first_swing_v2] day=2025-11-25 confirmed_idx=293 end_idx=291 end_time=14:06
+
+  [_classify_first_swing_v2] day=2025-11-26 confirmed_idx=44 end_idx=43 end_time=12:50
+
+  [_classify_first_swing_v2] day=2025-11-26 confirmed_idx=56 end_idx=53 end_time=10:08
+
+  [_classify_first_swing_v2] day=2025-11-27 confirmed_idx=14 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2025-11-27 confirmed_idx=55 end_idx=53 end_time=10:08
+
+  [_classify_first_swing_v2] day=2025-11-28 confirmed_idx=25 end_idx=18 end_time=10:45
+
+  [_classify_first_swing_v2] day=2025-11-28 confirmed_idx=55 end_idx=50 end_time=10:05
+
+  [_classify_first_swing_v2] day=2025-12-01 confirmed_idx=23 end_idx=21 end_time=11:00
+
+  [_classify_first_swing_v2] day=2025-12-01 confirmed_idx=46 end_idx=45 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-12-02 confirmed_idx=15 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2025-12-02 confirmed_idx=14 end_idx=8 end_time=09:23
+
+  [_classify_first_swing_v2] day=2025-12-03 confirmed_idx=13 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2025-12-03 confirmed_idx=26 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2025-12-04 confirmed_idx=20 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2025-12-04 confirmed_idx=32 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2025-12-05 confirmed_idx=14 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2025-12-05 confirmed_idx=37 end_idx=34 end_time=09:49
+
+  [_classify_first_swing_v2] day=2025-12-08 confirmed_idx=11 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-12-08 confirmed_idx=15 end_idx=7 end_time=09:22
+
+  [_classify_first_swing_v2] day=2025-12-09 confirmed_idx=40 end_idx=38 end_time=12:25
+
+  [_classify_first_swing_v2] day=2025-12-09 confirmed_idx=24 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2025-12-10 confirmed_idx=16 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2025-12-10 confirmed_idx=25 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2025-12-11 confirmed_idx=9 end_idx=5 end_time=09:40
+
+  [_classify_first_swing_v2] day=2025-12-11 confirmed_idx=33 end_idx=27 end_time=09:42
+
+  [_classify_first_swing_v2] day=2025-12-12 confirmed_idx=21 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2025-12-12 confirmed_idx=20 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2025-12-15 confirmed_idx=38 end_idx=34 end_time=12:05
+
+  [_classify_first_swing_v2] day=2025-12-15 confirmed_idx=22 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2025-12-16 confirmed_idx=12 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2025-12-16 confirmed_idx=26 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2025-12-17 confirmed_idx=5 end_idx=4 end_time=09:35
+
+  [_classify_first_swing_v2] day=2025-12-17 confirmed_idx=23 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2025-12-18 confirmed_idx=19 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2025-12-18 confirmed_idx=36 end_idx=32 end_time=09:47
+
+  [_classify_first_swing_v2] day=2025-12-19 confirmed_idx=21 end_idx=19 end_time=10:50
+
+  [_classify_first_swing_v2] day=2025-12-19 confirmed_idx=21 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2025-12-22 confirmed_idx=16 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2025-12-22 confirmed_idx=19 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2025-12-23 confirmed_idx=8 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2025-12-23 confirmed_idx=19 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2025-12-24 confirmed_idx=68 end_idx=67 end_time=14:50
+
+  [_classify_first_swing_v2] day=2025-12-24 confirmed_idx=20 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2025-12-26 confirmed_idx=8 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2025-12-26 confirmed_idx=34 end_idx=28 end_time=09:43
+
+  [_classify_first_swing_v2] day=2025-12-29 confirmed_idx=30 end_idx=25 end_time=11:20
+
+  [_classify_first_swing_v2] day=2025-12-29 confirmed_idx=14 end_idx=5 end_time=09:20
+
+  [_classify_first_swing_v2] day=2025-12-30 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2025-12-30 confirmed_idx=19 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2025-12-31 confirmed_idx=27 end_idx=24 end_time=11:15
+
+  [_classify_first_swing_v2] day=2025-12-31 confirmed_idx=82 end_idx=78 end_time=10:33
+
+  [_classify_first_swing_v2] day=2026-01-01 confirmed_idx=8 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-01-01 confirmed_idx=14 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2026-01-02 confirmed_idx=33 end_idx=31 end_time=11:50
+
+  [_classify_first_swing_v2] day=2026-01-02 confirmed_idx=41 end_idx=39 end_time=09:54
+
+  [_classify_first_swing_v2] day=2026-01-05 confirmed_idx=17 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-01-05 confirmed_idx=25 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-01-06 confirmed_idx=32 end_idx=25 end_time=11:20
+
+  [_classify_first_swing_v2] day=2026-01-06 confirmed_idx=134 end_idx=127 end_time=11:22
+
+  [_classify_first_swing_v2] day=2026-01-07 confirmed_idx=19 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-01-07 confirmed_idx=41 end_idx=38 end_time=09:53
+
+  [_classify_first_swing_v2] day=2026-01-08 confirmed_idx=45 end_idx=34 end_time=12:05
+
+  [_classify_first_swing_v2] day=2026-01-08 confirmed_idx=21 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2026-01-09 confirmed_idx=5 end_idx=4 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-01-09 confirmed_idx=27 end_idx=24 end_time=09:39
+
+  [_classify_first_swing_v2] day=2026-01-12 confirmed_idx=57 end_idx=52 end_time=13:35
+
+  [_classify_first_swing_v2] day=2026-01-12 confirmed_idx=15 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2026-01-13 confirmed_idx=49 end_idx=45 end_time=13:00
+
+  [_classify_first_swing_v2] day=2026-01-13 confirmed_idx=30 end_idx=28 end_time=09:43
+
+  [_classify_first_swing_v2] day=2026-01-14 confirmed_idx=34 end_idx=33 end_time=12:00
+
+  [_classify_first_swing_v2] day=2026-01-14 confirmed_idx=22 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-01-16 confirmed_idx=17 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-01-16 confirmed_idx=43 end_idx=39 end_time=09:54
+
+  [_classify_first_swing_v2] day=2026-01-19 confirmed_idx=20 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2026-01-19 confirmed_idx=53 end_idx=52 end_time=10:07
+
+  [_classify_first_swing_v2] day=2026-01-20 confirmed_idx=57 end_idx=55 end_time=13:50
+
+  [_classify_first_swing_v2] day=2026-01-20 confirmed_idx=18 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-01-21 confirmed_idx=47 end_idx=45 end_time=13:00
+
+  [_classify_first_swing_v2] day=2026-01-21 confirmed_idx=97 end_idx=96 end_time=10:51
+
+  [_classify_first_swing_v2] day=2026-01-22 confirmed_idx=8 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-01-22 confirmed_idx=24 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-01-23 confirmed_idx=41 end_idx=35 end_time=12:10
+
+  [_classify_first_swing_v2] day=2026-01-23 confirmed_idx=158 end_idx=155 end_time=11:50
+
+  [_classify_first_swing_v2] day=2026-01-27 confirmed_idx=17 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-01-27 confirmed_idx=16 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2026-01-28 confirmed_idx=57 end_idx=55 end_time=13:50
+
+  [_classify_first_swing_v2] day=2026-01-28 confirmed_idx=250 end_idx=247 end_time=13:22
+
+  [_classify_first_swing_v2] day=2026-01-29 confirmed_idx=19 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-01-29 confirmed_idx=33 end_idx=30 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-01-30 confirmed_idx=10 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-01-30 confirmed_idx=24 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2026-02-01 confirmed_idx=21 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-02-01 confirmed_idx=71 end_idx=69 end_time=10:24
+
+  [_classify_first_swing_v2] day=2026-02-02 confirmed_idx=9 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-02-02 confirmed_idx=29 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2026-02-03 confirmed_idx=12 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2026-02-03 confirmed_idx=23 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-02-04 confirmed_idx=12 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-02-04 confirmed_idx=22 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2026-02-05 confirmed_idx=11 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-02-05 confirmed_idx=14 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2026-02-06 confirmed_idx=12 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-02-06 confirmed_idx=30 end_idx=29 end_time=09:44
+
+  [_classify_first_swing_v2] day=2026-02-09 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-02-09 confirmed_idx=31 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-02-10 confirmed_idx=17 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2026-02-10 confirmed_idx=24 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-02-11 confirmed_idx=12 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-02-11 confirmed_idx=53 end_idx=47 end_time=10:02
+
+  [_classify_first_swing_v2] day=2026-02-12 confirmed_idx=35 end_idx=33 end_time=12:00
+
+  [_classify_first_swing_v2] day=2026-02-12 confirmed_idx=20 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2026-02-13 confirmed_idx=14 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-02-13 confirmed_idx=26 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-02-16 confirmed_idx=18 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-02-16 confirmed_idx=22 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-02-17 confirmed_idx=18 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2026-02-17 confirmed_idx=17 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-02-18 confirmed_idx=16 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-02-18 confirmed_idx=49 end_idx=46 end_time=10:01
+
+  [_classify_first_swing_v2] day=2026-02-19 confirmed_idx=46 end_idx=42 end_time=12:45
+
+  [_classify_first_swing_v2] day=2026-02-19 confirmed_idx=20 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-02-20 confirmed_idx=23 end_idx=18 end_time=10:45
+
+  [_classify_first_swing_v2] day=2026-02-20 confirmed_idx=45 end_idx=41 end_time=09:56
+
+  [_classify_first_swing_v2] day=2026-02-23 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-02-23 confirmed_idx=16 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-02-24 confirmed_idx=25 end_idx=19 end_time=10:50
+
+  [_classify_first_swing_v2] day=2026-02-24 confirmed_idx=32 end_idx=29 end_time=09:44
+
+  [_classify_first_swing_v2] day=2026-02-25 confirmed_idx=16 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-02-25 confirmed_idx=55 end_idx=54 end_time=10:09
+
+  [_classify_first_swing_v2] day=2026-02-26 confirmed_idx=40 end_idx=37 end_time=12:20
+
+  [_classify_first_swing_v2] day=2026-02-26 confirmed_idx=17 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-02-27 confirmed_idx=14 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-02-27 confirmed_idx=25 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-03-02 confirmed_idx=7 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-03-02 confirmed_idx=34 end_idx=33 end_time=09:48
+
+  [_classify_first_swing_v2] day=2026-03-04 confirmed_idx=12 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-03-04 confirmed_idx=14 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2026-03-05 confirmed_idx=14 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-03-05 confirmed_idx=26 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-03-06 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-03-06 confirmed_idx=97 end_idx=95 end_time=10:50
+
+  [_classify_first_swing_v2] day=2026-03-09 confirmed_idx=73 end_idx=70 end_time=15:05
+
+  [_classify_first_swing_v2] day=2026-03-09 confirmed_idx=15 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2026-03-10 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-03-10 confirmed_idx=27 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-03-11 confirmed_idx=15 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-03-11 confirmed_idx=26 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-03-12 confirmed_idx=24 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2026-03-12 confirmed_idx=86 end_idx=85 end_time=10:40
+
+  [_classify_first_swing_v2] day=2026-03-13 confirmed_idx=14 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-03-13 confirmed_idx=14 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-03-16 confirmed_idx=22 end_idx=20 end_time=10:55
+
+  [_classify_first_swing_v2] day=2026-03-16 confirmed_idx=29 end_idx=26 end_time=09:41
+
+  [_classify_first_swing_v2] day=2026-03-17 confirmed_idx=14 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-03-17 confirmed_idx=14 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2026-03-18 confirmed_idx=33 end_idx=29 end_time=11:40
+
+  [_classify_first_swing_v2] day=2026-03-18 confirmed_idx=40 end_idx=36 end_time=09:51
+
+  [_classify_first_swing_v2] day=2026-03-19 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-03-19 confirmed_idx=255 end_idx=254 end_time=13:29
+
+  [_classify_first_swing_v2] day=2026-03-20 confirmed_idx=28 end_idx=25 end_time=11:20
+
+  [_classify_first_swing_v2] day=2026-03-20 confirmed_idx=22 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-03-23 confirmed_idx=16 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2026-03-23 confirmed_idx=49 end_idx=46 end_time=10:01
+
+  [_classify_first_swing_v2] day=2026-03-24 confirmed_idx=24 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-03-24 confirmed_idx=14 end_idx=7 end_time=09:22
+
+  [_classify_first_swing_v2] day=2026-03-25 confirmed_idx=28 end_idx=24 end_time=11:15
+
+  [_classify_first_swing_v2] day=2026-03-25 confirmed_idx=23 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-03-27 confirmed_idx=15 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-03-27 confirmed_idx=14 end_idx=5 end_time=09:20
+
+  [_classify_first_swing_v2] day=2026-03-30 confirmed_idx=27 end_idx=23 end_time=11:10
+
+  [_classify_first_swing_v2] day=2026-03-30 confirmed_idx=29 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-04-01 confirmed_idx=11 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-04-01 confirmed_idx=16 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-04-02 confirmed_idx=11 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2026-04-02 confirmed_idx=59 end_idx=55 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-04-06 confirmed_idx=28 end_idx=23 end_time=11:10
+
+  [_classify_first_swing_v2] day=2026-04-06 confirmed_idx=48 end_idx=46 end_time=10:01
+
+  [_classify_first_swing_v2] day=2026-04-07 confirmed_idx=15 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-04-07 confirmed_idx=17 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-04-08 confirmed_idx=26 end_idx=24 end_time=11:15
+
+  [_classify_first_swing_v2] day=2026-04-08 confirmed_idx=38 end_idx=35 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-04-09 confirmed_idx=57 end_idx=54 end_time=13:45
+
+  [_classify_first_swing_v2] day=2026-04-09 confirmed_idx=15 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2026-04-10 confirmed_idx=10 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-04-10 confirmed_idx=47 end_idx=46 end_time=10:01
+
+  [_classify_first_swing_v2] day=2026-04-13 confirmed_idx=17 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-04-13 confirmed_idx=76 end_idx=72 end_time=10:27
+
+  [_classify_first_swing_v2] day=2026-04-15 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-04-15 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-04-16 confirmed_idx=12 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-04-16 confirmed_idx=17 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-04-17 confirmed_idx=16 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-04-17 confirmed_idx=15 end_idx=14 end_time=09:29
+
+  [_classify_first_swing_v2] day=2026-04-20 confirmed_idx=34 end_idx=30 end_time=11:45
+
+  [_classify_first_swing_v2] day=2026-04-20 confirmed_idx=83 end_idx=82 end_time=10:37
+
+  [_classify_first_swing_v2] day=2026-04-21 confirmed_idx=14 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2026-04-21 confirmed_idx=37 end_idx=36 end_time=09:51
+
+  [_classify_first_swing_v2] day=2026-04-22 confirmed_idx=16 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-04-22 confirmed_idx=37 end_idx=36 end_time=09:51
+
+  [_classify_first_swing_v2] day=2026-04-23 confirmed_idx=15 end_idx=10 end_time=10:05
+
+  [_classify_first_swing_v2] day=2026-04-23 confirmed_idx=45 end_idx=38 end_time=09:53
+
+  [_classify_first_swing_v2] day=2026-04-24 confirmed_idx=9 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-04-24 confirmed_idx=37 end_idx=32 end_time=09:47
+
+  [_classify_first_swing_v2] day=2026-04-27 confirmed_idx=62 end_idx=54 end_time=13:45
+
+  [_classify_first_swing_v2] day=2026-04-27 confirmed_idx=42 end_idx=41 end_time=09:56
+
+  [_classify_first_swing_v2] day=2026-04-28 confirmed_idx=16 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-04-28 confirmed_idx=14 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2026-04-29 confirmed_idx=17 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-04-29 confirmed_idx=15 end_idx=9 end_time=09:24
+
+  [_classify_first_swing_v2] day=2026-04-30 confirmed_idx=16 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-04-30 confirmed_idx=17 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-05-04 confirmed_idx=59 end_idx=51 end_time=13:30
+
+  [_classify_first_swing_v2] day=2026-05-04 confirmed_idx=28 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-05-05 confirmed_idx=21 end_idx=20 end_time=10:55
+
+  [_classify_first_swing_v2] day=2026-05-05 confirmed_idx=76 end_idx=73 end_time=10:28
+
+  [_classify_first_swing_v2] day=2026-05-06 confirmed_idx=7 end_idx=5 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-05-06 confirmed_idx=39 end_idx=35 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-05-07 confirmed_idx=33 end_idx=30 end_time=11:45
+
+  [_classify_first_swing_v2] day=2026-05-07 confirmed_idx=14 end_idx=7 end_time=09:22
+
+  [_classify_first_swing_v2] day=2026-05-08 confirmed_idx=11 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-05-08 confirmed_idx=35 end_idx=30 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-05-11 confirmed_idx=19 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-05-11 confirmed_idx=39 end_idx=29 end_time=09:44
+
+  [_classify_first_swing_v2] day=2026-05-12 confirmed_idx=17 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-05-12 confirmed_idx=21 end_idx=18 end_time=09:33
+
+  [_classify_first_swing_v2] day=2026-05-13 confirmed_idx=39 end_idx=36 end_time=12:15
+
+  [_classify_first_swing_v2] day=2026-05-13 confirmed_idx=29 end_idx=24 end_time=09:39
+
+  [_classify_first_swing_v2] day=2026-05-14 confirmed_idx=11 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-05-14 confirmed_idx=17 end_idx=14 end_time=09:29
+
+  [_classify_first_swing_v2] day=2026-05-15 confirmed_idx=9 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-05-15 confirmed_idx=43 end_idx=40 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-05-18 confirmed_idx=12 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-05-18 confirmed_idx=18 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2026-05-19 confirmed_idx=5 end_idx=4 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-05-19 confirmed_idx=16 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-05-20 confirmed_idx=9 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-05-20 confirmed_idx=21 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-05-21 confirmed_idx=26 end_idx=24 end_time=11:15
+
+  [_classify_first_swing_v2] day=2026-05-21 confirmed_idx=28 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-05-22 confirmed_idx=14 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-05-22 confirmed_idx=14 end_idx=9 end_time=09:24
+
+  [_classify_first_swing_v2] day=2026-05-25 confirmed_idx=73 end_idx=69 end_time=15:00
+
+  [_classify_first_swing_v2] day=2026-05-25 confirmed_idx=15 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-05-26 confirmed_idx=24 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-05-26 confirmed_idx=20 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2026-05-27 confirmed_idx=17 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-05-27 confirmed_idx=47 end_idx=45 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-05-29 confirmed_idx=9 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-05-29 confirmed_idx=33 end_idx=30 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-06-01 confirmed_idx=5 end_idx=4 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-06-01 confirmed_idx=16 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-06-02 confirmed_idx=10 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-06-02 confirmed_idx=14 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2026-06-03 confirmed_idx=25 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2026-06-03 confirmed_idx=16 end_idx=12 end_time=09:27
+
+  [_classify_first_swing_v2] day=2026-06-04 confirmed_idx=15 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-06-04 confirmed_idx=25 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2026-06-05 confirmed_idx=29 end_idx=18 end_time=10:45
+
+  [_classify_first_swing_v2] day=2026-06-05 confirmed_idx=14 end_idx=6 end_time=09:21
+
+  [_classify_first_swing_v2] day=2026-06-08 confirmed_idx=14 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-06-08 confirmed_idx=20 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-06-09 confirmed_idx=28 end_idx=26 end_time=11:25
+
+  [_classify_first_swing_v2] day=2026-06-09 confirmed_idx=57 end_idx=55 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-06-10 confirmed_idx=8 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-06-10 confirmed_idx=22 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-06-11 confirmed_idx=19 end_idx=17 end_time=10:40
+
+  [_classify_first_swing_v2] day=2026-06-11 confirmed_idx=15 end_idx=7 end_time=09:22
+
+  [_classify_first_swing_v2] day=2026-06-12 confirmed_idx=14 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-06-12 confirmed_idx=19 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2026-06-15 confirmed_idx=46 end_idx=39 end_time=12:30
+
+  [_classify_first_swing_v2] day=2026-06-15 confirmed_idx=24 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2026-06-16 confirmed_idx=21 end_idx=19 end_time=10:50
+
+  [_classify_first_swing_v2] day=2026-06-16 confirmed_idx=21 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-06-17 confirmed_idx=9 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-06-17 confirmed_idx=46 end_idx=43 end_time=09:58
+
+  [_classify_first_swing_v2] day=2026-06-18 confirmed_idx=30 end_idx=25 end_time=11:20
+
+  [_classify_first_swing_v2] day=2026-06-18 confirmed_idx=44 end_idx=40 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-06-19 confirmed_idx=15 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-06-19 confirmed_idx=64 end_idx=60 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-06-22 confirmed_idx=15 end_idx=11 end_time=10:10
+
+  [_classify_first_swing_v2] day=2026-06-22 confirmed_idx=18 end_idx=8 end_time=09:23
+
+  [_classify_first_swing_v2] day=2026-06-23 confirmed_idx=12 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-06-23 confirmed_idx=28 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-06-24 confirmed_idx=17 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-06-24 confirmed_idx=14 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2026-06-25 confirmed_idx=22 end_idx=18 end_time=10:45
+
+  [_classify_first_swing_v2] day=2026-06-25 confirmed_idx=15 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-06-29 confirmed_idx=18 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-06-29 confirmed_idx=23 end_idx=20 end_time=09:35
+
+  [_classify_first_swing_v2] day=2026-06-30 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-07-01 confirmed_idx=17 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-07-01 confirmed_idx=26 end_idx=25 end_time=09:40
+
+  [_classify_first_swing_v2] day=2026-07-02 confirmed_idx=69 end_idx=66 end_time=14:45
+
+  [_classify_first_swing_v2] day=2026-07-02 confirmed_idx=15 end_idx=10 end_time=09:25
+
+  [_classify_first_swing_v2] day=2026-07-03 confirmed_idx=69 end_idx=68 end_time=14:55
+
+  [_classify_first_swing_v2] day=2026-07-03 confirmed_idx=265 end_idx=261 end_time=13:36
+
+  [_classify_first_swing_v2] day=2026-07-06 confirmed_idx=10 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-07-06 confirmed_idx=29 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-07-07 confirmed_idx=17 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-07-07 confirmed_idx=20 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-07-08 confirmed_idx=24 end_idx=23 end_time=11:10
+
+  [_classify_first_swing_v2] day=2026-07-08 confirmed_idx=25 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2026-07-09 confirmed_idx=16 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-07-09 confirmed_idx=17 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-07-10 confirmed_idx=14 end_idx=9 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-07-10 confirmed_idx=48 end_idx=45 end_time=10:00
+
+  [_classify_first_swing_v2] day=2026-07-13 confirmed_idx=19 end_idx=14 end_time=10:25
+
+  [_classify_first_swing_v2] day=2026-07-13 confirmed_idx=48 end_idx=46 end_time=10:01
+
+  [_classify_first_swing_v2] day=2026-07-14 confirmed_idx=68 end_idx=66 end_time=14:45
+
+  [_classify_first_swing_v2] day=2026-07-14 confirmed_idx=15 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2026-07-15 confirmed_idx=48 end_idx=44 end_time=12:55
+
+  [_classify_first_swing_v2] day=2026-07-15 confirmed_idx=14 end_idx=13 end_time=09:28
+
+  [_classify_first_swing_v2] day=2026-07-16 confirmed_idx=26 end_idx=21 end_time=11:00
+
+  [_classify_first_swing_v2] day=2026-07-16 confirmed_idx=22 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-07-17 confirmed_idx=17 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2026-07-17 confirmed_idx=16 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-07-20 confirmed_idx=63 end_idx=58 end_time=14:05
+
+  [_classify_first_swing_v2] day=2026-07-20 confirmed_idx=292 end_idx=290 end_time=14:05
+
+  [_classify_first_swing_v2] day=2026-07-21 confirmed_idx=21 end_idx=19 end_time=10:50
+
+  [_classify_first_swing_v2] day=2026-07-21 confirmed_idx=74 end_idx=72 end_time=10:27
+
+  [_classify_first_swing_v2] day=2026-07-22 confirmed_idx=9 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-07-22 confirmed_idx=26 end_idx=21 end_time=09:36
+
+  [_classify_first_swing_v2] day=2026-07-23 confirmed_idx=24 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2026-07-23 confirmed_idx=14 end_idx=9 end_time=09:24
+
+  [_classify_first_swing_v2] day=2026-07-24 confirmed_idx=16 end_idx=13 end_time=10:20
+
+  [_classify_first_swing_v2] day=2026-07-24 confirmed_idx=38 end_idx=37 end_time=09:52
+
+  [_classify_first_swing_v2] day=2026-07-27 confirmed_idx=30 end_idx=27 end_time=11:30
+
+  [_classify_first_swing_v2] day=2026-07-27 confirmed_idx=88 end_idx=84 end_time=10:39
+
+  [_classify_first_swing_v2] day=2026-07-28 confirmed_idx=23 end_idx=20 end_time=10:55
+
+  [_classify_first_swing_v2] day=2026-07-28 confirmed_idx=57 end_idx=53 end_time=10:08
+
+  [_classify_first_swing_v2] day=2026-07-29 confirmed_idx=18 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-07-29 confirmed_idx=36 end_idx=35 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-07-30 confirmed_idx=43 end_idx=39 end_time=12:30
+
+  [_classify_first_swing_v2] day=2026-07-30 confirmed_idx=15 end_idx=11 end_time=09:26
+
+  [_classify_first_swing_v2] day=2026-07-31 confirmed_idx=51 end_idx=50 end_time=13:25
+
+  [_classify_first_swing_v2] day=2026-07-31 confirmed_idx=183 end_idx=180 end_time=12:15
+
+  [_classify_first_swing_v2] day=2026-08-03 confirmed_idx=27 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2026-08-03 confirmed_idx=67 end_idx=63 end_time=10:18
+
+  [_classify_first_swing_v2] day=2026-08-04 confirmed_idx=19 end_idx=16 end_time=10:35
+
+  [_classify_first_swing_v2] day=2026-08-04 confirmed_idx=79 end_idx=78 end_time=10:33
+
+  [_classify_first_swing_v2] day=2026-08-05 confirmed_idx=11 end_idx=8 end_time=09:55
+
+  [_classify_first_swing_v2] day=2026-08-05 confirmed_idx=24 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2026-08-06 confirmed_idx=9 end_idx=7 end_time=09:50
+
+  [_classify_first_swing_v2] day=2026-08-06 confirmed_idx=18 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2026-08-07 confirmed_idx=63 end_idx=59 end_time=14:10
+
+  [_classify_first_swing_v2] day=2026-08-07 confirmed_idx=46 end_idx=44 end_time=09:59
+
+  [_classify_first_swing_v2] day=2026-08-10 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-08-10 confirmed_idx=31 end_idx=22 end_time=09:37
+
+  [_classify_first_swing_v2] day=2026-08-11 confirmed_idx=30 end_idx=27 end_time=11:30
+
+  [_classify_first_swing_v2] day=2026-08-11 confirmed_idx=20 end_idx=15 end_time=09:30
+
+  [_classify_first_swing_v2] day=2026-08-12 confirmed_idx=25 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2026-08-12 confirmed_idx=55 end_idx=53 end_time=10:08
+
+  [_classify_first_swing_v2] day=2026-08-13 confirmed_idx=19 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2026-08-13 confirmed_idx=23 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-08-14 confirmed_idx=22 end_idx=15 end_time=10:30
+
+  [_classify_first_swing_v2] day=2026-08-14 confirmed_idx=17 end_idx=16 end_time=09:31
+
+  [_classify_first_swing_v2] day=2026-08-17 confirmed_idx=26 end_idx=25 end_time=11:20
+
+  [_classify_first_swing_v2] day=2026-08-17 confirmed_idx=59 end_idx=57 end_time=10:12
+
+  [_classify_first_swing_v2] day=2026-08-18 confirmed_idx=14 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-08-18 confirmed_idx=65 end_idx=62 end_time=10:17
+
+  [_classify_first_swing_v2] day=2026-08-19 confirmed_idx=30 end_idx=22 end_time=11:05
+
+  [_classify_first_swing_v2] day=2026-08-19 confirmed_idx=28 end_idx=23 end_time=09:38
+
+  [_classify_first_swing_v2] day=2026-08-20 confirmed_idx=47 end_idx=43 end_time=12:50
+
+  [_classify_first_swing_v2] day=2026-08-20 confirmed_idx=16 end_idx=9 end_time=09:24
+
+  [_classify_first_swing_v2] day=2026-08-21 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-08-21 confirmed_idx=24 end_idx=19 end_time=09:34
+
+  [_classify_first_swing_v2] day=2026-08-24 confirmed_idx=62 end_idx=60 end_time=14:15
+
+  [_classify_first_swing_v2] day=2026-08-24 confirmed_idx=55 end_idx=44 end_time=09:59
+
+  [_classify_first_swing_v2] day=2026-08-25 confirmed_idx=-1 end_idx=-1 end_time=
+
+  [_classify_first_swing_v2] day=2026-08-25 confirmed_idx=76 end_idx=71 end_time=10:26
+
+  [_classify_first_swing_v2] day=2026-08-26 confirmed_idx=9 end_idx=6 end_time=09:45
+
+  [_classify_first_swing_v2] day=2026-08-26 confirmed_idx=34 end_idx=33 end_time=09:48
+
+  [_classify_first_swing_v2] day=2026-08-27 confirmed_idx=32 end_idx=26 end_time=11:25
+
+  [_classify_first_swing_v2] day=2026-08-27 confirmed_idx=19 end_idx=17 end_time=09:32
+
+  [_classify_first_swing_v2] day=2026-08-28 confirmed_idx=14 end_idx=12 end_time=10:15
+
+  [_classify_first_swing_v2] day=2026-08-28 confirmed_idx=15 end_idx=12 end_time=09:27
+Traceback (most recent call last):
+  File "c:\Users\Pravin\Desktop\main\AT_Trading\backend\debug\_check_1min_fs_in_run.py", line 64, in <module>
+    days = result.get("days_summary", [])
+AttributeError: 'tuple' object has no attribute 'get'

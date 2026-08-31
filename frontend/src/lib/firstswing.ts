@@ -240,19 +240,10 @@ export class FirstSwingEngine {
     //    the new extreme prints — strictly before the old next-bar reset.
 
     // 3) Direction / break step — per BAR, against the FROZEN LIVING SESSION
-    //    EXTREMES (A/B — zero-lag, updated at end of each bar) AND the last
-    //    walker-sealed pivot visible on flow line. User noted 10:30 B1 on 25-Aug
-    //    didn't break any flow-line pivot, so B1 must be 10:31 breaking 10:26 H.
-    //    To match that, B1 now requires BOTH living and pivot break, and pivot
-    //    must be after seed (so 09:29 break of 09:28 seed low is not B1, 09:30
-    //    break of 09:29 pivot is B1).
+    //    EXTREMES (A/B — zero-lag, updated at end of each bar).
     //    COUNTING ALWAYS RUNS — the timeCap gates DECLARATION only.
-    const upBreakLiving = c.high > this.eHiPrev.px;
-    const downBreakLiving = c.low < this.eLoPrev.px;
-    const upBreakPivot = c.high > this.eHiPivotPrev.px && this.eHiPivotPrev.idx > this.seedIdx;
-    const downBreakPivot = c.low < this.eLoPivotPrev.px && this.eLoPivotPrev.idx > this.seedIdx;
-    const upBreak = upBreakLiving && upBreakPivot;
-    const downBreak = downBreakLiving && downBreakPivot;
+    const upBreak = c.high > this.eHiPrev.px;
+    const downBreak = c.low < this.eLoPrev.px;
     // ARMING GATE: before the first flowline pivot exists there is no A/B to
     // break — early pokes of the single opening candle are noise (24 Aug:
     // 9:16 +0.4pt poke must NOT lock a swing).

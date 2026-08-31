@@ -167,26 +167,50 @@ def resolve_pending_direct(
     m1_day: pd.DataFrame,
     upto_ts: int,
 ) -> dict | None:
-    """Resolve a pending 5-min direct entry into a 1-min bar for precision timing.
+    """Resolve a pending 5-min direct entry into the FIRST 1-min bar that broke the pivot.
 
-    Returns the latest 1-min bar with `ts <= upto_ts` AND `ts > pending["armed_ts"]`,
-    or None if no 1-min bar has closed yet (caller should re-check next bar).
+    When execution=1min, we want the entry to fire at the exact 1-min candle that
+    actually broke the pivot level, not the last bar of the 5-min window.
 
-    The simplest possible "precision" rule: the 1-min bar closest to (but not after)
-    the 5-min bar's close wins. Caller decides what to do with it.
+    - For shorts (trade_dir=-1): find the FIRST bar whose low < level (pivot broken down)
+    - For longs (trade_dir=1): find the FIRST bar whose high > level (pivot broken up)
+
+    Returns the first breaking 1-min bar, or None if no break found in the window.
+    Caller should re-check next bar if None.
     """
     if m1_day is None or len(m1_day) == 0:
         return None
     armed_ts = int(pending["armed_ts"])
+    level = float(pending["level"])
+    trade_dir = int(pending["trade_dir"])
+
     rows = m1_day[(m1_day["ts"] > armed_ts) & (m1_day["ts"] <= upto_ts)].sort_values("ts")
     if rows.empty:
         return None
-    last = rows.iloc[-1]
-    return {
-        "ts": int(last["ts"]),
-        "timestamp": last["timestamp"],
-        "open": float(last["open"]),
-        "high": float(last["high"]),
-        "low": float(last["low"]),
-        "close": float(last["close"]),
-    }
+
+    # Find the FIRST 1-min bar that actually broke the pivot level.
+    # For shorts: low < level (price broke below pivot)
+    # For longs: high > level (price broke above pivot)
+    for _, bar in rows.iterrows():
+        low = float(bar["low"])
+        high = float(bar["high"])
+        if trade_dir == -1 and low < level:
+            return {
+                "ts": int(bar["ts"]),
+                "timestamp": bar["timestamp"],
+                "open": float(bar["open"]),
+                "high": float(bar["high"]),
+                "low": low,
+                "close": float(bar["close"]),
+            }
+        elif trade_dir == 1 and high > level:
+            return {
+                "ts": int(bar["ts"]),
+                "timestamp": bar["timestamp"],
+                "open": float(bar["open"]),
+                "high": high,
+                "low": float(bar["low"]),
+                "close": float(bar["close"]),
+            }
+
+    return None

@@ -1,0 +1,10 @@
+=== 28 Aug (pivot_break + 1min + opposite_swing_needed) AFTER gate fix ===
+Swing direction: buying
+First swing confirmed: conf_idx=N/A time=N/A
+1-min FS 5min idx: N/A
+1-min FS time: N/A
+Trades: 2
+  Entry: 09:55:00 | dir=short | -1.00R
+  Entry: 10:25:00 | dir=short | 3.00R
+
+=== All events ===

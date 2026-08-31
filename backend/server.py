@@ -461,10 +461,32 @@ def intraday_backtest(
 
 
 @app.get("/api/intraday/{date}")
-def intraday_day(date: str):
+def intraday_day(
+    date: str,
+    sl_mode: str = "avg",
+    execution: str = "5min",
+    trailing: str = "off",
+    trail_distance_r: float = 1.0,
+    gap_pct: float = 0.27,
+    sl_pivot_buffer: float = 1.0,
+    ft_fail_enabled: bool = True,
+    entry_method: str = "pace_break",
+    swing_mode: str = "opposite_swing_needed",
+):
     """Single-day detail: trades + full event timeline for chart annotation."""
+    cfg = {
+        "sl_mode": sl_mode,
+        "execution": execution,
+        "trailing": trailing,
+        "trail_distance_r": trail_distance_r,
+        "gap_pct": float(gap_pct) / 100.0,
+        "sl_pivot_buffer": float(sl_pivot_buffer),
+        "ft_fail_enabled": ft_fail_enabled,
+        "entry_method": entry_method,
+        "swing_mode": swing_mode,
+    }
     try:
-        _, days = _intraday_backtest()
+        _, days = _intraday_backtest(cfg)
     except FileNotFoundError as e:
         return JSONResponse(status_code=404, content={"detail": str(e)})
 

@@ -529,7 +529,7 @@ def simulate_day(
         result["events"].append({"type": "skipped_thin_session", "bars": len(candles)})
         return result
 
-    # WalkerEngine: track pivots for prev_pivot SL mode
+    # WalkerEngine: track pivots for prev_pivot SL mode (5-min reference)
     walker = WalkerEngine()
     normal_highs: list = []   # sealed H pivots
     normal_lows: list = []    # sealed L pivots
@@ -537,6 +537,8 @@ def simulate_day(
     (swing_dir, swing_start, ev, fs_confirmed_idx,
      fs1_end_idx, fs1_end_px, fs1_end_time) = _classify_first_swing_v2(candles[: len(candles)], result["date"])
     result["swing_direction"] = swing_dir
+    result["first_swing_confirmed_idx"] = fs_confirmed_idx
+    result["first_swing_end_time"] = fs1_end_time
     result["events"].extend(ev)
 
     if bias in ("bullish", "bearish"):
@@ -767,6 +769,27 @@ def simulate_day(
 
     use_1m = cfg["execution"] == "1min" and m1_day is not None and len(m1_day) > 0
 
+    # Separate WalkerEngine for 1-min candles (used for pivot_break detection
+    # when execution=1min + entry_method=pivot_break). The 1-min walker sees
+    # finer-grained pivot structure (e.g. the 10:23 low on the 1-min chart)
+    # so breaks are detected on the correct timeframe, not the 5-min one.
+    walker_1m: WalkerEngine | None = None
+    normal_highs_1m: list = []
+    normal_lows_1m: list = []
+    m1_candles: list[dict] = []
+    if use_1m and cfg.get("entry_method") == "pivot_break":
+        walker_1m = WalkerEngine()
+        m1_candles = _prep_day(m1_day) if m1_day is not None else []
+        for idx, mc in enumerate(m1_candles):
+            mc_dt = f"{result['date']}T{mc['time']}:00"
+            fc = FlowCandle(date=mc_dt, open=mc["open"], high=mc["high"], low=mc["low"], close=mc["close"])
+            new_p = walker_1m.process_bar(fc, idx)
+            for p in new_p:
+                if p.kind == "H":
+                    normal_highs_1m.append(p)
+                else:
+                    normal_lows_1m.append(p)
+
     # ── second-swing detection (1min only, when swing_mode = opposite_swing_needed) ──
     # For 1min mode: second swing is on 1-min chart, starting from the candle
     # AFTER the 1-min cyan end (09:28). This mirrors exactly how the 1-min
@@ -777,17 +800,40 @@ def simulate_day(
     swing_mode = cfg.get("swing_mode", "none")
     fs2_dir: str | None = None
     fs2_confirmed_idx: int = -1
+    # 1-min first swing info (used for 2nd swing direction detection)
+    fs1_1min_dir: str | None = None
+    fs1_1min_confirmed_idx: int = -1
+    fs1_1min_end_idx: int = -1
+    fs1_1min_end_px: float = float("nan")
+    fs1_1min_end_time: str = ""
+    m1_day_candles: list[dict] = []
     # Keep 5min first swing for bias/entry logic, but for second swing on 1min we
     # use the 1-min first swing's end (09:27) as the anchor, matching the chart.
+    # Always compute 1-min first swing if 1-min data is available, so the gate
+    # can use the EARLIER of (1-min FS confirmed, 5-min FS confirmed) regardless
+    # of swing_mode. The 1-min FS confirms earlier (09:30 vs 10:25 for 28-Aug)
+    # and is the correct one after the revert.
+    m1_day_candles = _prep_day(m1_day) if m1_day is not None else []
+    fs1_1min_dir: str | None = None
+    fs1_1min_confirmed_idx: int = -1
+    fs1_1min_end_idx: int = -1
+    fs1_1min_end_px: float = 0.0
+    fs1_1min_end_time: str = ""
+    if m1_day_candles:
+        fs1_1min_dir, _, _, fs1_1min_confirmed_idx, fs1_1min_end_idx, fs1_1min_end_px, fs1_1min_end_time = _classify_first_swing_v2(m1_day_candles, result["date"])
+    # Map 1-min FS confirmed idx to 5-min bar idx for the entry loop gate
+    fs1_1min_confirmed_idx_5 = -1
+    if m1_day_candles and fs1_1min_confirmed_idx >= 0:
+        mts = m1_day_candles[fs1_1min_confirmed_idx].get("ts", 0)
+        for k5, c5 in enumerate(candles):
+            if c5.get("ts", 0) <= mts:
+                fs1_1min_confirmed_idx_5 = k5
+            else:
+                break
+    result["fs1_1min_confirmed_idx_5min"] = fs1_1min_confirmed_idx_5
+    result["fs1_1min_confirmed_time"] = fs1_1min_end_time
+
     if use_1m and swing_mode == "opposite_swing_needed" and swing_dir is not None and fs1_end_idx >= 0:
-        m1_day_candles = _prep_day(m1_day) if m1_day is not None else []
-        # 1-min first swing (cyan line on 1-min chart)
-        fs1_1min_dir: str | None = None
-        fs1_1min_end_idx: int = -1
-        fs1_1min_end_px: float = float("nan")
-        fs1_1min_end_time: str = ""
-        if m1_day_candles:
-            fs1_1min_dir, _, _, _, fs1_1min_end_idx, fs1_1min_end_px, fs1_1min_end_time = _classify_first_swing_v2(m1_day_candles, result["date"])
         # Use 1-min first swing if available, else fall back to 5-min
         use_fs1_for_2nd_dir = fs1_1min_dir if fs1_1min_dir is not None else swing_dir
         use_fs1_end_idx = fs1_1min_end_idx if fs1_1min_end_idx >= 0 else fs1_end_idx
@@ -867,16 +913,25 @@ def simulate_day(
         swing_dir_for_gate = swing_dir
 
     # ── entry-swing gate ──
-    # Determines which swing must be confirmed before entries are allowed.
-    # Use the 1-min cyan dir for 1-min mode (the line the user sees), else 5-min.
+    # The ENTRY GATE is always the FIRST SWING (cyan line). The second swing
+    # (yellow line) is used only for DIRECTION FILTERING, not the gate.
     gate_first_dir = locals().get("swing_dir_for_gate", swing_dir)
     if use_1m and swing_mode == "opposite_swing_needed":
+        # Gate uses the first-swing confirmed index from the relevant timeframe.
+        # After the revert, the 1-min FsV2 correctly finds FS at 09:30 (idx 15).
+        # Use 1-min FS confirmed (mapped to 5-min idx) if available, else 5-min FS.
+        # The earlier gate time is the correct one — FS or SUS confirms the first swing.
+        if fs1_1min_confirmed_idx_5 >= 0:
+            entry_swing_confirmed_idx = fs1_1min_confirmed_idx_5
+        else:
+            entry_swing_confirmed_idx = fs_confirmed_idx
+
         if fs2_dir is not None and fs2_dir != gate_first_dir:
-            entry_swing_confirmed_idx = fs2_confirmed_idx
             result["events"].append({
                 "type": "second_swing_armed",
                 "dir": fs2_dir,
                 "confirmed_at_idx": fs2_confirmed_idx,
+                "gate_uses_fs1": True,
             })
         else:
             # Same direction as first swing or not declared → skip day.
@@ -888,7 +943,12 @@ def simulate_day(
             })
     else:
         # 5min OR swing_mode=none: use FsV2 gate (existing behavior).
-        entry_swing_confirmed_idx = fs_confirmed_idx
+        # If we have a valid 1-min first swing, prefer it (it's the correct one
+        # after the revert — 1-min FS confirms earlier at 09:30 vs 5-min at 10:25).
+        if use_1m and fs1_1min_confirmed_idx_5 >= 0:
+            entry_swing_confirmed_idx = fs1_1min_confirmed_idx_5
+        else:
+            entry_swing_confirmed_idx = fs_confirmed_idx
 
     def _manage_1m_chunk(trade: dict, upto_ts: int) -> bool:
         """Delegate 1-min exit management to the intraday_1m module."""
@@ -977,18 +1037,48 @@ def simulate_day(
         # ---- 1-min precision entry hunt ----
         # When a direct pace break was deferred in 1-min mode, resolve it now
         # using the most recent 1-min bar close that falls inside this 5-min bar.
+        # MUST respect the swing gate + entry-window + max-entries, same as every
+        # other entry path. pending_direct was set when can_enter was True (gate open
+        # at that moment), but the 1-min bar close may arrive on a subsequent 5-min
+        # bar iteration where the gate needs to be re-verified.
         if open_trade is None and pending_direct is not None and use_1m:
-            m1_bar = resolve_pending_direct(pending_direct, m1_day, cur["ts"])
-            if m1_bar is not None and m1_bar["ts"] <= cur["ts"]:
-                if _open_trade(
-                    pending_direct["bar_idx"],
-                    pending_direct["trade_dir"],
-                    pending_direct["level"],
-                    candles[pending_direct["bar_idx"]],
-                    pending_direct["break_type"],
-                    m1_bar=m1_bar,
-                ):
-                    pending_direct = None
+            # Recompute the gate check here — same formula as can_enter below.
+            # This ensures the 1-min hunt fires only when the gate is still open.
+            gate_ok = entry_swing_confirmed_idx < 0 or i > entry_swing_confirmed_idx
+            # In 1-min mode, the ENTRY_START minimum is bypassed for pending_direct
+            # since the entry window is already controlled by the fs_gate (first swing
+            # confirmation). The pending_direct entry was armed AFTER the swing confirmed
+            # and after entry_start, so it's safe to allow it without re-checking ENTRY_START.
+            window_ok = ENTRY_START <= cur["time"] <= ENTRY_END
+            if use_1m:
+                window_ok = True  # Trust the fs_gate + entry_start already enforced at arm time
+            entries_ok = entries_done < MAX_ENTRIES
+            if not (gate_ok and window_ok and entries_ok):
+                # Gate/window still closed: drop the deferred entry.
+                # Rationale: pace breaks detected before the gate has no trade value
+                # once the gate finally opens (the 1-min bar is stale). A 9:45 pace
+                # break firing as a 10:25 entry violates "can't trade before swing
+                # confirmed". Drop it and let the retest path re-arm if needed.
+                result["events"].append({
+                    "type": "setup_disarmed_pre_gate",
+                    "bar": i,
+                    "time": cur["time"],
+                    "reason": "swing_gate_not_open_yet",
+                    "armed_ts": int(pending_direct.get("armed_ts", 0)),
+                })
+                pending_direct = None
+            else:
+                m1_bar = resolve_pending_direct(pending_direct, m1_day, cur["ts"])
+                if m1_bar is not None and m1_bar["ts"] <= cur["ts"]:
+                    if _open_trade(
+                        pending_direct["bar_idx"],
+                        pending_direct["trade_dir"],
+                        pending_direct["level"],
+                        candles[pending_direct["bar_idx"]],
+                        pending_direct["break_type"],
+                        m1_bar=m1_bar,
+                    ):
+                        pending_direct = None
 
         # ---- square-off / window guards for NEW work ----
         # FsV2 gate: wait for first-swing confirmation before entering.
@@ -996,10 +1086,20 @@ def simulate_day(
         # For 1min with swing_mode=opposite_swing_needed → wait for second swing.
         # Otherwise → wait for first swing (FsV2 gate).
         fs_gate_ok = entry_swing_confirmed_idx < 0 or i > entry_swing_confirmed_idx
+        # In 1-min mode, entry window starts from the first swing confirmation
+        # (fs1_1min_end_time or fs1_end_time). This allows earlier entries (e.g. 09:36)
+        # after a 1-min FS confirms at 09:30, instead of the hardcoded 09:45 minimum.
+        # 5-min mode retains the default 09:45 start.
+        entry_start = ENTRY_START
+        if use_1m:
+            # Use the 1-min FS end time if available, else 5-min FS end time
+            fs_end_t = fs1_1min_end_time if fs1_1min_end_time else fs1_end_time
+            if fs_end_t and fs_end_t < ENTRY_START:
+                entry_start = fs_end_t
         can_enter = (
             open_trade is None
             and entries_done < MAX_ENTRIES
-            and ENTRY_START <= cur["time"] <= ENTRY_END
+            and entry_start <= cur["time"] <= ENTRY_END
             and fs_gate_ok
         )
 
@@ -1070,7 +1170,37 @@ def simulate_day(
         if i > 0 and cur_swing is not None and can_enter:
             trade_dir = -1 if cur_swing == "buying" else 1
             if cfg.get("entry_method") == "pivot_break":
-                brk = detect_pivot_break(candles, i, trade_dir, normal_highs, normal_lows)
+                # In 1-min mode, pivot_break uses the 1-min Walker's sealed pivots
+                # (finer-grained structure, e.g. the 10:23 low on the 1-min chart)
+                # rather than 5-min pivots. Detection scans for the most recent
+                # sealed pivot at or before the current 5-min bar's time, then checks
+                # if the 5-min bar's LOW (short) or HIGH (long) broke through it.
+                brk = None
+                if use_1m and walker_1m is not None:
+                    cur_5_ts = cur["ts"]
+                    # find the last 1-min bar whose ts <= current 5-min bar's ts
+                    m1_end_idx = -1
+                    for k in range(len(m1_candles) - 1, -1, -1):
+                        if m1_candles[k]["ts"] <= cur_5_ts:
+                            m1_end_idx = k
+                            break
+                    if m1_end_idx >= 0:
+                        if trade_dir == -1 and normal_lows_1m:
+                            # SHORT pivot break: the 5-min bar's LOW breaks below the
+                            # most recent sealed L-pivot.
+                            for piv in reversed(normal_lows_1m):
+                                if piv.idx <= m1_end_idx:
+                                    if cur["low"] < piv.px:
+                                        brk = {"type": "pivot_break", "level": piv.px, "bar": i}
+                                    break
+                        elif trade_dir == 1 and normal_highs_1m:
+                            for piv in reversed(normal_highs_1m):
+                                if piv.idx <= m1_end_idx:
+                                    if cur["high"] > piv.px:
+                                        brk = {"type": "pivot_break", "level": piv.px, "bar": i}
+                                    break
+                if brk is None:
+                    brk = detect_pivot_break(candles, i, trade_dir, normal_highs, normal_lows)
             else:
                 brk = detect_pace_break(candles, i, cur_swing, swing_extreme, _swing_size(), base_avg)
             if brk is not None:
@@ -1111,7 +1241,7 @@ def simulate_day(
                             "break_type": brk["type"],
                         }
                     )
-                    if brk["type"] in ("domination", "candle-size"):
+                    if brk["type"] in ("domination", "candle-size", "pivot_break"):
                         # Direct flow-favor entry ON the aggressive break candle
                         # (S5:193 'sold live on the aggressive candle', S5:101
                         # 'direct buy on the pace break'). The candle must close

@@ -1,0 +1,36 @@
+28 Aug 1-min bars: 375
+First bar: 2026-08-28 09:15:00
+Last bar: 2026-08-28 15:29:00
+
+Port 8003: 1 results
+{
+  "day": "2026-08-28",
+  "outcome": "real",
+  "conf_idx": 15,
+  "seg": {
+    "dir": "B",
+    "start_idx": 5,
+    "start_px": 24106.55,
+    "end_idx": 12,
+    "end_px": 24158.25
+  },
+  "source": "chop",
+  "dir": "up",
+  "breaks": [
+    {
+      "idx": 4,
+      "time": "09:19",
+      "kind": "B1",
+      "dir": "down",
+      "px": 24110.9
+    },
+    {
+      "idx": 11,
+      "time": "09:26",
+      "kind": "FLIP",
+      "dir": "up",
+      "px": 24146.1
+    }
+  ]
+}
+Port 8004: Error - <urlopen error [WinError 10061] No connection could be made because the target machine actively refused it>
