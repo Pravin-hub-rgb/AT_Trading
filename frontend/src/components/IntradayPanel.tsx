@@ -63,6 +63,8 @@ const SWING_MODES = [
   { value: "opposite_swing_needed", label: "Swing: Opposite Required (1min)" },
 ];
 
+const STORAGE_KEY = "intraday_filters";
+
 function OutcomeChip({ outcome }: { outcome: string }) {
   const s = OUTCOME_STYLE[outcome] ?? {
     color: "#8b949e",
@@ -80,6 +82,48 @@ function OutcomeChip({ outcome }: { outcome: string }) {
       {s.label}
     </span>
   );
+}
+
+// Load saved filters from localStorage
+function loadSavedFilters(): Partial<{
+  caseValue: string;
+  sl_mode: string;
+  execution: string;
+  trailing: string;
+  gap_pct: string;
+  ft_fail_enabled: boolean;
+  entry_method: string;
+  swing_mode: string;
+}> {
+  if (typeof window === "undefined") return {};
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error("Failed to load saved filters:", e);
+  }
+  return {};
+}
+
+// Save filters to localStorage
+function saveFilters(filters: {
+  caseValue: string;
+  sl_mode: string;
+  execution: string;
+  trailing: string;
+  gap_pct: string;
+  ft_fail_enabled: boolean;
+  entry_method: string;
+  swing_mode: string;
+}) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+  } catch (e) {
+    console.error("Failed to save filters:", e);
+  }
 }
 
 export default function IntradayPanel({
@@ -141,14 +185,44 @@ export default function IntradayPanel({
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
-  // Local state for the three key filters that will be applied together
-  const [localExecution, setLocalExecution] = useState(params.execution);
+  // Load saved filters or use defaults from params
+  const saved = loadSavedFilters();
+
+  // Local state for ALL filters — applied together when user clicks Apply
+  // Initialize from localStorage if available, otherwise from current params
+  const [localCase, setLocalCase] = useState(saved.caseValue ?? selectedCase);
+  const [localSlMode, setLocalSlMode] = useState(
+    saved.sl_mode ?? params.sl_mode,
+  );
+  const [localExecution, setLocalExecution] = useState(
+    saved.execution ?? params.execution,
+  );
+  const [localTrailing, setLocalTrailing] = useState(
+    saved.trailing ?? params.trailing,
+  );
+  const [localGapPct, setLocalGapPct] = useState(
+    saved.gap_pct ?? params.gap_pct,
+  );
+  const [localFtFail, setLocalFtFail] = useState(
+    saved.ft_fail_enabled ?? params.ft_fail_enabled,
+  );
   const [localEntryMethod, setLocalEntryMethod] = useState(
-    params.entry_method ?? "pace_break",
+    saved.entry_method ?? params.entry_method ?? "pace_break",
   );
   const [localSwingMode, setLocalSwingMode] = useState(
-    params.swing_mode ?? "opposite_swing_needed",
+    saved.swing_mode ?? params.swing_mode ?? "opposite_swing_needed",
   );
+
+  // Check if any local value differs from the current applied params
+  const hasChanges =
+    localCase !== selectedCase ||
+    localSlMode !== params.sl_mode ||
+    localExecution !== params.execution ||
+    localTrailing !== params.trailing ||
+    localGapPct !== params.gap_pct ||
+    localFtFail !== params.ft_fail_enabled ||
+    localEntryMethod !== (params.entry_method ?? "pace_break") ||
+    localSwingMode !== (params.swing_mode ?? "opposite_swing_needed");
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -177,16 +251,42 @@ export default function IntradayPanel({
   const selectCls =
     "rounded border border-[#30363d] bg-[#161b22] px-2 py-1 text-xs text-[#e6edf3] outline-none focus:border-[#6366f1]";
 
+  const handleApply = () => {
+    // Save to localStorage first
+    saveFilters({
+      caseValue: localCase,
+      sl_mode: localSlMode,
+      execution: localExecution,
+      trailing: localTrailing,
+      gap_pct: localGapPct,
+      ft_fail_enabled: localFtFail,
+      entry_method: localEntryMethod,
+      swing_mode: localSwingMode,
+    });
+    // Apply all filters in one go
+    onCaseChange(localCase);
+    onParamsChange({
+      ...params,
+      sl_mode: localSlMode,
+      execution: localExecution,
+      trailing: localTrailing,
+      gap_pct: localGapPct,
+      ft_fail_enabled: localFtFail,
+      entry_method: localEntryMethod,
+      swing_mode: localSwingMode,
+    });
+  };
+
   return (
     <div className="space-y-3">
-      {/* Experiment switches — best-combo search */}
+      {/* All filters in one row — applied together with the Apply button */}
       <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2">
         <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">
           Experiment
         </span>
         <select
-          value={selectedCase}
-          onChange={(e) => onCaseChange(e.target.value)}
+          value={localCase}
+          onChange={(e) => setLocalCase(e.target.value)}
           className={selectCls}
           title="Filter stats, table and chart boxes by case (master list in explained doc)"
         >
@@ -204,10 +304,8 @@ export default function IntradayPanel({
           })}
         </select>
         <select
-          value={params.sl_mode}
-          onChange={(e) =>
-            onParamsChange({ ...params, sl_mode: e.target.value })
-          }
+          value={localSlMode}
+          onChange={(e) => setLocalSlMode(e.target.value)}
           className={selectCls}
         >
           {SL_MODES.map((o) => (
@@ -216,54 +314,6 @@ export default function IntradayPanel({
             </option>
           ))}
         </select>
-        <select
-          value={params.trailing}
-          onChange={(e) =>
-            onParamsChange({ ...params, trailing: e.target.value })
-          }
-          className={selectCls}
-        >
-          {TRAILING_MODES.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <select
-          value={params.gap_pct}
-          onChange={(e) =>
-            onParamsChange({ ...params, gap_pct: e.target.value })
-          }
-          className={selectCls}
-          title="Minimum |open - prev close| for a move to count as a gap (case classification)"
-        >
-          {GAP_MODES.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <label
-          className="flex items-center gap-1.5 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-xs text-[#c9d1d9] cursor-pointer hover:border-[#58a6ff]"
-          title="Early exit when close goes beyond dom_level within 2 bars of entry (S5:98 follow-through rule). When OFF, trades run until SL/target/EOD."
-        >
-          <input
-            type="checkbox"
-            checked={params.ft_fail_enabled}
-            onChange={(e) =>
-              onParamsChange({ ...params, ft_fail_enabled: e.target.checked })
-            }
-            className="accent-[#f59e0b]"
-          />
-          FT-fail early exit
-        </label>
-      </div>
-
-      {/* Apply button section for the three key filters */}
-      <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">
-          Core Settings
-        </span>
         <select
           value={localExecution}
           onChange={(e) => setLocalExecution(e.target.value)}
@@ -297,16 +347,49 @@ export default function IntradayPanel({
             </option>
           ))}
         </select>
+        <select
+          value={localTrailing}
+          onChange={(e) => setLocalTrailing(e.target.value)}
+          className={selectCls}
+        >
+          {TRAILING_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localGapPct}
+          onChange={(e) => setLocalGapPct(e.target.value)}
+          className={selectCls}
+          title="Minimum |open - prev close| for a move to count as a gap (case classification)"
+        >
+          {GAP_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <label
+          className="flex items-center gap-1.5 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-xs text-[#c9d1d9] cursor-pointer hover:border-[#58a6ff]"
+          title="Early exit when close goes beyond dom_level within 2 bars of entry (S5:98 follow-through rule). When OFF, trades run until SL/target/EOD."
+        >
+          <input
+            type="checkbox"
+            checked={localFtFail}
+            onChange={(e) => setLocalFtFail(e.target.checked)}
+            className="accent-[#f59e0b]"
+          />
+          FT-fail early exit
+        </label>
         <button
-          onClick={() => {
-            onParamsChange({
-              ...params,
-              execution: localExecution,
-              entry_method: localEntryMethod,
-              swing_mode: localSwingMode,
-            });
-          }}
-          className="ml-2 px-3 py-1 rounded border border-[#6366f1] bg-[#6366f1]/20 text-xs font-semibold hover:bg-[#6366f1]/30"
+          onClick={handleApply}
+          disabled={!hasChanges}
+          className={`ml-auto px-3 py-1 rounded border text-xs font-semibold transition-colors ${
+            hasChanges
+              ? "border-[#6366f1] bg-[#6366f1] text-white hover:bg-[#4f46e5] cursor-pointer"
+              : "border-[#30363d] bg-[#21262d] text-[#6e7681] cursor-not-allowed"
+          }`}
         >
           Apply
         </button>

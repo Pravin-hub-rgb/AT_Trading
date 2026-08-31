@@ -609,7 +609,12 @@ def simulate_day(
         exit_time: str | None = None,
         exit_ts: int | None = None,
     ):
-        nonlocal open_trade
+        nonlocal open_trade, day_setup, pending_direct
+        # Clear day_setup and pending_direct on exit so next aligned break can create new entry.
+        # After a trade exits, the market context has changed - a new break should be treated
+        # as a fresh setup, not a continuation of the previous one.
+        day_setup = None
+        pending_direct = None
         risk = abs(trade["entry_price"] - trade["sl"])
         r = ((price - trade["entry_price"]) / risk) * (1 if trade["dir"] == "long" else -1)
         xt = exit_time or candles[bar_idx]["time"]
@@ -637,12 +642,13 @@ def simulate_day(
     def _open_trade(
         bar_idx: int, dirn: int, ref_level: float, dbar: dict, btype: str,
         m1_bar: dict | None = None,
+        m1_pivots: tuple[list, list] | None = None,
     ) -> bool:
         """Open a new trade at the given 5-min bar index.
 
         When m1_bar is provided (1min execution mode), the entry price, timestamp,
-        and OHLC come from the 1-min candle instead of the 5-min bar. The SL is still
-        calculated against the 5-min reference (consistent with the engine's swing context).
+        OHLC come from the 1-min candle. The SL uses 1-min pivots via m1_pivots
+        for consistency with the 1-min entry timing.
         bar_idx is used only for logging / the 5-min bar record.
         """
         nonlocal open_trade, entries_done
@@ -676,37 +682,53 @@ def simulate_day(
             # (recent support). For a SHORT: SL goes above entry -> use the
             # most recent HIGH pivot (recent resistance).
             # HOWEVER: if that pivot has already been breached by the entry
-            # candle's low/high, fall back to Entry Candle Low/High - buffer.
             buf = float(cfg.get("sl_pivot_buffer", SL_PIVOT_BUFFER))
-            opposing_pool = normal_lows if dirn == 1 else normal_highs
-            if opposing_pool:
-                pivot_ref = opposing_pool[-1]  # most recent sealed opposing pivot
-                pivot_px = pivot_ref.px
-                # Check if pivot was already breached by the entry candle.
-                # A LOW pivot is "breached" if the entry candle went below it
-                # (price action already went through that support).
-                # A HIGH pivot is "breached" if the entry candle went above it.
-                if dirn == 1:
-                    breached = pivot_px >= entry_candle_low  # L pivot above ECL → breached
-                else:
-                    breached = pivot_px <= entry_candle_high  # H pivot below ECH → breached
-
-                if breached:
-                    # Pivot already breached — use Entry Candle Low/High instead
+            # For 1-min execution: use PIVOT (no buffer). ECL is fallback only when no pivot.
+            if m1_bar is not None and m1_pivots is not None:
+                # 1min mode: use 1-min pivots, filter to only those sealed BEFORE the entry bar
+                m1_entry_idx = m1_bar.get("index", 0)
+                # m1_pivots = (normal_highs_1m, normal_lows_1m)
+                # For LONG: opposing = LOW pivots = m1_pivots[1]
+                # For SHORT: opposing = HIGH pivots = m1_pivots[0]
+                all_pivots = m1_pivots[1] if dirn == 1 else m1_pivots[0]
+                opposing_pool = [p for p in all_pivots if p.idx <= m1_entry_idx]
+                if opposing_pool:
+                    # Use pivot directly (no buffer per user request)
+                    pivot_ref = opposing_pool[-1]
                     if dirn == 1:
-                        sl = entry_candle_low - buf
+                        sl = pivot_ref.px  # L pivot = SL for LONG (no buffer)
                     else:
-                        sl = entry_candle_high + buf
-                    pivot_ref = None  # mark as ECL fallback
+                        sl = pivot_ref.px  # H pivot = SL for SHORT (no buffer)
                 else:
-                    # Pivot still intact — use it
+                    # No pivot yet -> fall back to ECL
                     if dirn == 1:
-                        sl = pivot_px - buf
+                        sl = entry_candle_low
                     else:
-                        sl = pivot_px + buf
+                        sl = entry_candle_high
             else:
-                # No opposing pivot yet — fallback to avg
-                sl_used_mode = "avg"
+                # 5-min mode: use pivot + buffer (original logic)
+                opposing_pool = normal_lows if dirn == 1 else normal_highs
+                if opposing_pool:
+                    pivot_ref = opposing_pool[-1]
+                    pivot_px = pivot_ref.px
+                    if dirn == 1:
+                        breached = pivot_px >= entry_candle_low
+                    else:
+                        breached = pivot_px <= entry_candle_high
+
+                    if breached:
+                        if dirn == 1:
+                            sl = entry_candle_low - buf
+                        else:
+                            sl = entry_candle_high + buf
+                        pivot_ref = None
+                    else:
+                        if dirn == 1:
+                            sl = pivot_px - buf
+                        else:
+                            sl = pivot_px + buf
+                else:
+                    sl_used_mode = "avg"
 
         if sl_used_mode != "prev_pivot":
             if sl_mode in SL_MODE_FIXED:
@@ -1070,6 +1092,8 @@ def simulate_day(
             else:
                 m1_bar = resolve_pending_direct(pending_direct, m1_day, cur["ts"])
                 if m1_bar is not None and m1_bar["ts"] <= cur["ts"]:
+                    # Store the found 1-min bar idx so subsequent calls skip it
+                    pending_direct["found_m1_idx"] = m1_bar.get("index", 0)
                     if _open_trade(
                         pending_direct["bar_idx"],
                         pending_direct["trade_dir"],
@@ -1077,6 +1101,7 @@ def simulate_day(
                         candles[pending_direct["bar_idx"]],
                         pending_direct["break_type"],
                         m1_bar=m1_bar,
+                        m1_pivots=(normal_highs_1m, normal_lows_1m),
                     ):
                         pending_direct = None
 
@@ -1174,31 +1199,62 @@ def simulate_day(
                 # (finer-grained structure, e.g. the 10:23 low on the 1-min chart)
                 # rather than 5-min pivots. Detection scans for the most recent
                 # sealed pivot at or before the current 5-min bar's time, then checks
-                # if the 5-min bar's LOW (short) or HIGH (long) broke through it.
+                # For 1-min execution with pivot_break: check each 1-min bar against 1-min pivots.
+                # For 5-min execution (or non-pivot_break entry): use existing logic.
                 brk = None
                 if use_1m and walker_1m is not None:
-                    cur_5_ts = cur["ts"]
-                    # find the last 1-min bar whose ts <= current 5-min bar's ts
-                    m1_end_idx = -1
-                    for k in range(len(m1_candles) - 1, -1, -1):
-                        if m1_candles[k]["ts"] <= cur_5_ts:
-                            m1_end_idx = k
-                            break
-                    if m1_end_idx >= 0:
-                        if trade_dir == -1 and normal_lows_1m:
-                            # SHORT pivot break: the 5-min bar's LOW breaks below the
-                            # most recent sealed L-pivot.
-                            for piv in reversed(normal_lows_1m):
-                                if piv.idx <= m1_end_idx:
-                                    if cur["low"] < piv.px:
-                                        brk = {"type": "pivot_break", "level": piv.px, "bar": i}
-                                    break
-                        elif trade_dir == 1 and normal_highs_1m:
-                            for piv in reversed(normal_highs_1m):
-                                if piv.idx <= m1_end_idx:
-                                    if cur["high"] > piv.px:
-                                        brk = {"type": "pivot_break", "level": piv.px, "bar": i}
-                                    break
+                    entry_method = cfg.get("entry_method", "pace_break")
+                    if entry_method == "pivot_break":
+                        # For 1-min pivot_break: check each 1-min bar individually.
+                        # Find 1-min bars that fall within this 5-min bar.
+                        cur_5_ts = cur["ts"]
+                        prev_5_ts = candles[i - 1]["ts"] if i > 0 else 0
+                        
+                        # Iterate through 1-min bars in this 5-min window
+                        for k in range(len(m1_candles)):
+                            mc = m1_candles[k]
+                            if mc["ts"] > prev_5_ts and mc["ts"] <= cur_5_ts:
+                                # Check if this 1-min bar breaks a 1-min pivot
+                                if trade_dir == -1 and normal_lows_1m:
+                                    # SHORT: 1-min low < pivot low
+                                    for piv in reversed(normal_lows_1m):
+                                        if piv.idx <= k:  # pivot must be sealed before this bar
+                                            if mc["low"] < piv.px:
+                                                brk = {"type": "pivot_break", "level": piv.px, "bar": i}
+                                                break
+                                    if brk:
+                                        break
+                                elif trade_dir == 1 and normal_highs_1m:
+                                    # LONG: 1-min high > pivot high
+                                    for piv in reversed(normal_highs_1m):
+                                        if piv.idx <= k:
+                                            if mc["high"] > piv.px:
+                                                brk = {"type": "pivot_break", "level": piv.px, "bar": i}
+                                                break
+                                    if brk:
+                                        break
+                    else:
+                        # For 1-min but non-pivot_break entry: fall back to 5-min pace_break
+                        # But check against 1-min pivot extremes for reference
+                        cur_5_ts = cur["ts"]
+                        m1_end_idx = -1
+                        for k in range(len(m1_candles) - 1, -1, -1):
+                            if m1_candles[k]["ts"] <= cur_5_ts:
+                                m1_end_idx = k
+                                break
+                        if m1_end_idx >= 0:
+                            if trade_dir == -1 and normal_lows_1m:
+                                for piv in reversed(normal_lows_1m):
+                                    if piv.idx <= m1_end_idx:
+                                        if cur["low"] < piv.px:
+                                            brk = {"type": "pivot_break", "level": piv.px, "bar": i}
+                                        break
+                            elif trade_dir == 1 and normal_highs_1m:
+                                for piv in reversed(normal_highs_1m):
+                                    if piv.idx <= m1_end_idx:
+                                        if cur["high"] > piv.px:
+                                            brk = {"type": "pivot_break", "level": piv.px, "bar": i}
+                                        break
                 if brk is None:
                     brk = detect_pivot_break(candles, i, trade_dir, normal_highs, normal_lows)
             else:
@@ -1257,12 +1313,37 @@ def simulate_day(
                             # The 5-min close has already printed; the 1-min bar that
                             # closes inside this 5-min bar gives a tighter entry price.
                             # Resolved in the 1-min hunt loop below (after _manage_1m_chunk).
+                            # Determine armed_ts: normally we use the 5-min bar's close ts.
+                            # But if the pivot was sealed MID-bar (within the current 5-min window),
+                            # the break happened before the 5-min close. We need to expand armed_ts
+                            # to include bars after the pivot sealed, so resolve_pending_direct
+                            # can find the correct first-breaking bar.
+                            default_armed_ts = int(cur["ts"])
+                            # Check if the broken pivot was sealed within the current 5-min bar
+                            piv_sealed_ts = None
+                            piv_pool = normal_lows_1m if trade_dir == -1 else normal_highs_1m
+                            for piv in piv_pool:
+                                if abs(piv.px - brk["level"]) < 1e-9:
+                                    # Found the broken pivot. Check if it sealed within the current 5-min bar.
+                                    # pivot.sealed_at is the 1-min bar index where pivot was sealed.
+                                    if piv.idx >= 0 and piv.idx < len(m1_candles):
+                                        piv_bar_ts = m1_candles[piv.idx]["ts"]
+                                        prev_5_ts = candles[i - 1]["ts"] if i > 0 else 0
+                                        # If pivot sealed within the current 5-min bar's window, expand armed_ts
+                                        if piv_bar_ts > prev_5_ts and piv_bar_ts <= int(cur["ts"]):
+                                            # Pivot sealed mid-bar. Include bars AFTER the pivot.
+                                            if piv.idx + 1 < len(m1_candles):
+                                                piv_sealed_ts = m1_candles[piv.idx + 1]["ts"]
+                                            else:
+                                                piv_sealed_ts = piv_bar_ts + 60  # next minute
+                                    break
+                            armed_ts = piv_sealed_ts if piv_sealed_ts is not None else default_armed_ts
                             pending_direct = {
                                 "bar_idx": i,
                                 "trade_dir": trade_dir,
                                 "level": brk["level"],
                                 "break_type": brk["type"],
-                                "armed_ts": int(cur["ts"]),
+                                "armed_ts": armed_ts,
                             }
                             result["events"].append({
                                 "type": "pending_direct_1m",
@@ -1521,8 +1602,12 @@ def run_backtest(
         d1["timestamp"] = pd.to_datetime(d1["timestamp"])
         d1["ts"] = d1["ts"].astype("int64")
         d1 = d1.sort_values("timestamp").drop_duplicates(subset="ts", keep="last")
+        # CRITICAL: reset_index so bar.name in resolve_pending_direct matches Walker's
+        # positional indices from _prep_day(enumerate). groupby() preserves original
+        # indices (e.g. 99060) which don't match Walker's 0-based _prep_day indices.
+        d1 = d1.reset_index(drop=True)
         d1_dates = d1["timestamp"].dt.strftime("%Y-%m-%d")
-        m1_map = {d: g for d, g in d1.groupby(d1_dates, sort=True)}
+        m1_map = {d: g.reset_index(drop=True) for d, g in d1.groupby(d1_dates, sort=True)}
 
     bias_map: dict[str, str] = {}
     zone_map: dict[str, str | None] = {}

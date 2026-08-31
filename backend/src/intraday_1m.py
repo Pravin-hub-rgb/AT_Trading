@@ -175,6 +175,14 @@ def resolve_pending_direct(
     - For shorts (trade_dir=-1): find the FIRST bar whose low < level (pivot broken down)
     - For longs (trade_dir=1): find the FIRST bar whose high > level (pivot broken up)
 
+    If pending["found_m1_idx"] is set, skip all bars up to and including that index
+    to prevent re-firing the same break across multiple 5-min bar iterations.
+
+    Uses pending["armed_ts"] as the lower bound. By default armed_ts = end of the
+    armed 5-min bar (so we only look at 1-min bars AFTER the 5-min close). The caller
+    can set armed_ts to a smaller value to allow scanning the armed 5-min bar's
+    1-min candles too (used when the pivot was sealed mid-bar).
+
     Returns the first breaking 1-min bar, or None if no break found in the window.
     Caller should re-check next bar if None.
     """
@@ -183,6 +191,8 @@ def resolve_pending_direct(
     armed_ts = int(pending["armed_ts"])
     level = float(pending["level"])
     trade_dir = int(pending["trade_dir"])
+    # Skip bars that have already been found/processed
+    skip_until_idx = pending.get("found_m1_idx", -1)
 
     rows = m1_day[(m1_day["ts"] > armed_ts) & (m1_day["ts"] <= upto_ts)].sort_values("ts")
     if rows.empty:
@@ -191,7 +201,19 @@ def resolve_pending_direct(
     # Find the FIRST 1-min bar that actually broke the pivot level.
     # For shorts: low < level (price broke below pivot)
     # For longs: high > level (price broke above pivot)
+    # IMPORTANT: bar.name is the original DataFrame index from m1_day.
+    # WalkerEngine uses _prep_day's positional indices (enumerate 0..N).
+    # So we use bar.name BUT: m1_day should have a reset index (0..N) so that
+    # bar.name matches the Walker's positional indices. This is ensured by
+    # run_backtest calling _prep_day on reset_index data AND the m1_map groups
+    # having reset indices.
     for _, bar in rows.iterrows():
+        bar_idx = int(bar.name) if bar.name is not None else 0
+        
+        # Skip bars we've already processed (to prevent re-trigger on subsequent 5-min bars)
+        if bar_idx <= skip_until_idx:
+            continue
+        
         low = float(bar["low"])
         high = float(bar["high"])
         if trade_dir == -1 and low < level:
@@ -202,6 +224,7 @@ def resolve_pending_direct(
                 "high": float(bar["high"]),
                 "low": low,
                 "close": float(bar["close"]),
+                "index": bar_idx,
             }
         elif trade_dir == 1 and high > level:
             return {
@@ -211,6 +234,7 @@ def resolve_pending_direct(
                 "high": high,
                 "low": float(bar["low"]),
                 "close": float(bar["close"]),
+                "index": bar_idx,
             }
 
     return None

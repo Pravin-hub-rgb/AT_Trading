@@ -38,6 +38,56 @@ const FS_REV_KEY = "chart_fs_rev_pct";
 const FS_REV_DEFAULT = 15;
 const SWING_N_DEFAULT = 12;
 
+// localStorage key shared with IntradayPanel — restores saved filter config
+const INTRADAY_FILTERS_KEY = "intraday_filters";
+
+/** Load saved intraday backtest filters from localStorage. */
+function loadSavedIntradayFilters(): { params: BacktestParams; case: string } {
+  const defaults = { params: DEFAULT_BT_PARAMS, case: "all" };
+  if (typeof window === "undefined") return defaults;
+  try {
+    const raw = window.localStorage.getItem(INTRADAY_FILTERS_KEY);
+    if (!raw) return defaults;
+    const saved = JSON.parse(raw) as Record<string, unknown>;
+    const params: BacktestParams = {
+      ...DEFAULT_BT_PARAMS,
+      sl_mode:
+        typeof saved.sl_mode === "string"
+          ? saved.sl_mode
+          : DEFAULT_BT_PARAMS.sl_mode,
+      execution:
+        typeof saved.execution === "string"
+          ? saved.execution
+          : DEFAULT_BT_PARAMS.execution,
+      trailing:
+        typeof saved.trailing === "string"
+          ? saved.trailing
+          : DEFAULT_BT_PARAMS.trailing,
+      gap_pct:
+        typeof saved.gap_pct === "string"
+          ? saved.gap_pct
+          : DEFAULT_BT_PARAMS.gap_pct,
+      ft_fail_enabled:
+        typeof saved.ft_fail_enabled === "boolean"
+          ? saved.ft_fail_enabled
+          : DEFAULT_BT_PARAMS.ft_fail_enabled,
+      entry_method:
+        typeof saved.entry_method === "string"
+          ? saved.entry_method
+          : (DEFAULT_BT_PARAMS.entry_method ?? "pace_break"),
+      swing_mode:
+        typeof saved.swing_mode === "string"
+          ? saved.swing_mode
+          : (DEFAULT_BT_PARAMS.swing_mode ?? "opposite_swing_needed"),
+    };
+    const caseValue =
+      typeof saved.caseValue === "string" ? saved.caseValue : "all";
+    return { params, case: caseValue };
+  } catch {
+    return defaults;
+  }
+}
+
 function clampSwingN(v: number): number {
   if (!Number.isFinite(v)) return SWING_N_DEFAULT;
   return Math.max(2, Math.min(60, Math.floor(v)));
@@ -84,8 +134,11 @@ export default function ChartPage() {
   const [btOn, setBtOn] = useState(false);
   const [btData, setBtData] = useState<IntradayBacktestResponse | null>(null);
   const [btError, setBtError] = useState<string | null>(null);
-  const [btParams, setBtParams] = useState<BacktestParams>(DEFAULT_BT_PARAMS);
-  const [btCase, setBtCase] = useState<string>("all");
+  // Initialize backtest config from localStorage so saved filters take effect
+  // on first render (no extra fetch needed, Apply button starts disabled).
+  const [_savedBt] = useState(loadSavedIntradayFilters());
+  const [btParams, setBtParams] = useState<BacktestParams>(_savedBt.params);
+  const [btCase, setBtCase] = useState<string>(_savedBt.case);
   const [swingN, setSwingN] = useState(SWING_N_DEFAULT);
   const [dotsOn, setDotsOn] = useState(true);
   const [flowOn, setFlowOn] = useState(true);
