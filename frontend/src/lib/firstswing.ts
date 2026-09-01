@@ -84,6 +84,23 @@ export class FirstSwingEngine {
   private eLoPivot: Lvl | null = null;
   private normalHighs: Lvl[] = [];
   private normalLows: Lvl[] = [];
+  // Chop target: the latest marked pivot whose PIVOT CANDLE is at least 2 bars
+  // old. A bar's own walker seal must never become its own chop reference
+  // (same-bar self-block bug — 24 Aug:10:03), and a pivot must survive one
+  // full bar after its pivot candle before it can be chopped back through
+  // (12 Aug:10:03 — 1-bar-old micro-pivot broken by 0.25pt noise).
+  private latestChoppableHigh(): Lvl | null {
+    return this.latestPivotMinAge(this.normalHighs);
+  }
+  private latestChoppableLow(): Lvl | null {
+    return this.latestPivotMinAge(this.normalLows);
+  }
+  private latestPivotMinAge(pool: Lvl[]): Lvl | null {
+    for (let i = pool.length - 1; i >= 0; i--) {
+      if (pool[i].idx <= this.gIdx - 2) return pool[i];
+    }
+    return null;
+  }
 
   private state: State = "watch";
   dir: "up" | "down" | null = null;
@@ -422,8 +439,13 @@ export class FirstSwingEngine {
     // Chop = price reclaims the most recently marked pivot:
     // - Selling swing (down): breaks above the most recent high pivot
     // - Buying swing (up): breaks below the most recent low pivot
+    // The target is the latest pivot whose PIVOT CANDLE is at least 2 bars old:
+    // a pivot must survive one full bar after its pivot candle before it becomes
+    // a valid chop reference. This both fixes the same-bar self-block
+    // (24 Aug: 10:03 — own seal has age 0) and avoids noise-firing on
+    // 1-bar-old micro-pivots (12 Aug: 10:03 breaking 10:02@24375.75 by 0.25pt).
     if (this.dir === "down") {
-      const tgt = this.latestPivot(this.normalHighs);
+      const tgt = this.latestChoppableHigh() ?? this.latestPivot(this.normalHighs);
       if (tgt && this.hi > tgt.px) {
         this.lastConfirmHit = {
           pool: "normal",
@@ -434,7 +456,7 @@ export class FirstSwingEngine {
         this.confirm("chop");
       }
     } else if (this.dir === "up") {
-      const tgt = this.latestPivot(this.normalLows);
+      const tgt = this.latestChoppableLow() ?? this.latestPivot(this.normalLows);
       if (tgt && this.lo < tgt.px) {
         this.lastConfirmHit = {
           pool: "normal",

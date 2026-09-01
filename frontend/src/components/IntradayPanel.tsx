@@ -58,6 +58,15 @@ const ENTRY_METHODS = [
   { value: "pivot_break", label: "Entry: Pivot Break" },
 ];
 
+const RR_MODES = [
+  { value: "1", label: "Target: 1:1" },
+  { value: "1.5", label: "Target: 1:1.5" },
+  { value: "2", label: "Target: 1:2" },
+  { value: "2.5", label: "Target: 1:2.5" },
+  { value: "3", label: "Target: 1:3 (course)" },
+  { value: "4", label: "Target: 1:4" },
+];
+
 const STORAGE_KEY = "intraday_filters";
 
 function OutcomeChip({ outcome }: { outcome: string }) {
@@ -88,6 +97,7 @@ function loadSavedFilters(): Partial<{
   gap_pct: string;
   ft_fail_enabled: boolean;
   entry_method: string;
+  rr_target: number;
 }> {
   if (typeof window === "undefined") return {};
   try {
@@ -110,6 +120,7 @@ function saveFilters(filters: {
   gap_pct: string;
   ft_fail_enabled: boolean;
   entry_method: string;
+  rr_target: number;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -202,6 +213,9 @@ export default function IntradayPanel({
   const [localEntryMethod, setLocalEntryMethod] = useState(
     saved.entry_method ?? params.entry_method ?? "pivot_break",
   );
+  const [localRR, setLocalRR] = useState(
+    String(saved.rr_target ?? params.rr_target ?? 3.0),
+  );
 
   // Check if any local value differs from the current applied params
   const hasChanges =
@@ -211,7 +225,8 @@ export default function IntradayPanel({
     localTrailing !== params.trailing ||
     localGapPct !== params.gap_pct ||
     localFtFail !== params.ft_fail_enabled ||
-    localEntryMethod !== (params.entry_method ?? "pivot_break");
+    localEntryMethod !== (params.entry_method ?? "pivot_break") ||
+    localRR !== String(params.rr_target ?? 3.0);
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -250,6 +265,7 @@ export default function IntradayPanel({
       gap_pct: localGapPct,
       ft_fail_enabled: localFtFail,
       entry_method: localEntryMethod,
+      rr_target: Number(localRR),
     });
     // Apply all filters in one go
     onCaseChange(localCase);
@@ -261,6 +277,7 @@ export default function IntradayPanel({
       gap_pct: localGapPct,
       ft_fail_enabled: localFtFail,
       entry_method: localEntryMethod,
+      rr_target: Number(localRR),
     });
   };
 
@@ -318,6 +335,18 @@ export default function IntradayPanel({
           className={selectCls}
         >
           {ENTRY_METHODS.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localRR}
+          onChange={(e) => setLocalRR(e.target.value)}
+          className={selectCls}
+          title="Fixed target in R (only used when trailing is off)"
+        >
+          {RR_MODES.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>

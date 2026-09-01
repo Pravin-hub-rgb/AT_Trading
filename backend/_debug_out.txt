@@ -1,0 +1,859 @@
+[DEBUG _open_trade] bar=25, dirn=-1, ref_level=24644.05, dbar_close=24649.3, ref_swing_end_px=24669.95, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=6, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 25): [(15, 24669.95), (20, 24661.35), (23, 24658.05)]
+[DEBUG _open_trade] eligible_lows (before bar 25): [(13, 24649.1), (17, 24641.75), (22, 24644.05)]
+[DEBUG _open_trade] entry=24644.05, sl=24658.05, risk=14.0, dirn=-1
+[DEBUG _open_trade] bar=32, dirn=1, ref_level=24498.5, dbar_close=24510.25, ref_swing_end_px=24498.5, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 32): [(23, 24520.75), (25, 24522.5), (29, 24506.75)]
+[DEBUG _open_trade] eligible_lows (before bar 32): [(24, 24513.35), (27, 24498.5), (30, 24500.15)]
+[DEBUG _open_trade] entry=24498.5, sl=24496.65, risk=1.8499999999985448, dirn=1
+[DEBUG _open_trade] bar=22, dirn=-1, ref_level=24407.8, dbar_close=24396.1, ref_swing_end_px=24428.4, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 22): [(12, 24428.4), (19, 24419.9), (21, 24414.95)]
+[DEBUG _open_trade] eligible_lows (before bar 22): [(9, 24405.1), (16, 24361.4), (20, 24407.8)]
+[DEBUG _open_trade] entry=24407.8, sl=24414.95, risk=7.150000000001455, dirn=-1
+[DEBUG _open_trade] bar=69, dirn=1, ref_level=24643.55, dbar_close=24657.75, ref_swing_end_px=24643.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 69): [(54, 24695.6), (61, 24682.0), (65, 24660.85)]
+[DEBUG _open_trade] eligible_lows (before bar 69): [(60, 24648.3), (64, 24643.55), (67, 24650.25)]
+[DEBUG _open_trade] entry=24643.55, sl=24623.65, risk=19.899999999997817, dirn=1
+[DEBUG _open_trade] bar=39, dirn=-1, ref_level=24596.75, dbar_close=24583.45, ref_swing_end_px=24596.75, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 39): [(30, 24585.6), (34, 24596.75), (37, 24593.0)]
+[DEBUG _open_trade] eligible_lows (before bar 39): [(29, 24569.55), (32, 24576.1), (36, 24583.3)]
+[DEBUG _open_trade] entry=24596.75, sl=24599.55, risk=2.7999999999992724, dirn=-1
+[DEBUG _open_trade] bar=89, dirn=1, ref_level=24635.55, dbar_close=24656.5, ref_swing_end_px=24635.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=25, normal_lows count=25
+[DEBUG _open_trade] eligible_highs (before bar 89): [(84, 24659.1), (86, 24654.65), (88, 24660.5)]
+[DEBUG _open_trade] eligible_lows (before bar 89): [(81, 24646.65), (85, 24650.1), (86, 24635.55)]
+[DEBUG _open_trade] entry=24635.55, sl=24625.8, risk=9.75, dirn=1
+[DEBUG _open_trade] bar=69, dirn=-1, ref_level=24927.5, dbar_close=24920.45, ref_swing_end_px=24927.5, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=16, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 69): [(60, 24925.05), (65, 24927.0), (67, 24927.5)]
+[DEBUG _open_trade] eligible_lows (before bar 69): [(53, 24897.9), (60, 24902.85), (66, 24923.15)]
+[DEBUG _open_trade] entry=24927.5, sl=24936.45, risk=8.950000000000728, dirn=-1
+[DEBUG _open_trade] bar=26, dirn=1, ref_level=24958.45, dbar_close=24953.5, ref_swing_end_px=24929.7, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 26): [(15, 24940.45), (20, 24959.65), (22, 24958.45)]
+[DEBUG _open_trade] eligible_lows (before bar 26): [(17, 24929.7), (21, 24951.7), (24, 24942.55)]
+[DEBUG _open_trade] entry=24958.45, sl=24942.55, risk=15.900000000001455, dirn=1
+[DEBUG _open_trade] bar=59, dirn=-1, ref_level=25135.05, dbar_close=25115.15, ref_swing_end_px=25135.05, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 59): [(46, 25114.65), (50, 25135.05), (56, 25122.5)]
+[DEBUG _open_trade] eligible_lows (before bar 59): [(45, 25100.75), (47, 25106.85), (55, 25117.05)]
+[DEBUG _open_trade] entry=25135.05, sl=25144.85, risk=9.799999999999272, dirn=-1
+[DEBUG _open_trade] bar=36, dirn=-1, ref_level=24985.65, dbar_close=24963.9, ref_swing_end_px=24985.65, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 36): [(24, 24967.9), (27, 24975.7), (32, 24985.65)]
+[DEBUG _open_trade] eligible_lows (before bar 36): [(23, 24959.7), (25, 24958.65), (28, 24968.2)]
+[DEBUG _open_trade] entry=24985.65, sl=25000.85, risk=15.19999999999709, dirn=-1
+[DEBUG _open_trade] bar=35, dirn=-1, ref_level=24951.5, dbar_close=24952.75, ref_swing_end_px=24973.95, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 35): [(26, 24971.1), (28, 24973.95), (34, 24958.85)]
+[DEBUG _open_trade] eligible_lows (before bar 35): [(25, 24962.1), (27, 24962.7), (33, 24951.5)]
+[DEBUG _open_trade] entry=24951.5, sl=24958.85, risk=7.349999999998545, dirn=-1
+[DEBUG _open_trade] bar=35, dirn=-1, ref_level=24581.95, dbar_close=24558.1, ref_swing_end_px=24581.95, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 35): [(27, 24569.0), (29, 24569.75), (31, 24581.95)]
+[DEBUG _open_trade] eligible_lows (before bar 35): [(28, 24549.45), (30, 24560.55), (34, 24549.75)]
+[DEBUG _open_trade] entry=24581.95, sl=24702.65, risk=120.70000000000073, dirn=-1
+[DEBUG _open_trade] bar=72, dirn=-1, ref_level=24518.1, dbar_close=24513.75, ref_swing_end_px=24518.1, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=19, normal_lows count=20
+[DEBUG _open_trade] eligible_highs (before bar 72): [(62, 24490.65), (67, 24511.2), (69, 24518.1)]
+[DEBUG _open_trade] eligible_lows (before bar 72): [(63, 24484.55), (68, 24504.55), (71, 24504.1)]
+[DEBUG _open_trade] entry=24518.1, sl=24531.2, risk=13.100000000002183, dirn=-1
+[DEBUG _open_trade] bar=29, dirn=-1, ref_level=24530.7, dbar_close=24535.8, ref_swing_end_px=24546.65, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 29): [(23, 24546.65), (27, 24536.6), (28, 24537.25)]
+[DEBUG _open_trade] eligible_lows (before bar 29): [(22, 24534.1), (26, 24523.9), (28, 24530.7)]
+[DEBUG _open_trade] entry=24530.7, sl=24537.25, risk=6.549999999999272, dirn=-1
+[DEBUG _open_trade] bar=65, dirn=1, ref_level=24718.85, dbar_close=24735.3, ref_swing_end_px=24718.85, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=18
+[DEBUG _open_trade] eligible_highs (before bar 65): [(56, 24742.35), (60, 24733.05), (62, 24726.95)]
+[DEBUG _open_trade] eligible_lows (before bar 65): [(59, 24723.6), (61, 24724.0), (63, 24718.85)]
+[DEBUG _open_trade] entry=24718.85, sl=24706.6, risk=12.25, dirn=1
+[DEBUG _open_trade] bar=45, dirn=-1, ref_level=24803.6, dbar_close=24789.4, ref_swing_end_px=24803.6, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 45): [(32, 24795.95), (35, 24795.55), (37, 24803.6)]
+[DEBUG _open_trade] eligible_lows (before bar 45): [(33, 24774.25), (36, 24789.65), (44, 24775.3)]
+[DEBUG _open_trade] entry=24803.6, sl=24812.9, risk=9.30000000000291, dirn=-1
+[DEBUG _open_trade] bar=29, dirn=-1, ref_level=24845.7, dbar_close=24829.05, ref_swing_end_px=24845.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 29): [(14, 24796.65), (22, 24838.4), (26, 24845.7)]
+[DEBUG _open_trade] eligible_lows (before bar 29): [(12, 24770.3), (15, 24783.8), (23, 24823.2)]
+[DEBUG _open_trade] entry=24845.7, sl=24838.4, risk=-7.299999999999272, dirn=-1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=18, dirn=-1, ref_level=24852.2, dbar_close=24848.55, ref_swing_end_px=24879.05, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=6, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 18): [(7, 24879.05), (12, 24850.65), (15, 24865.05)]
+[DEBUG _open_trade] eligible_lows (before bar 18): [(11, 24842.35), (13, 24843.15), (17, 24852.2)]
+[DEBUG _open_trade] entry=24852.2, sl=24865.05, risk=12.849999999998545, dirn=-1
+[DEBUG _open_trade] bar=46, dirn=1, ref_level=24989.95, dbar_close=25006.35, ref_swing_end_px=24989.95, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 46): [(31, 25017.4), (35, 25006.35), (42, 25007.05)]
+[DEBUG _open_trade] eligible_lows (before bar 46): [(33, 24992.7), (38, 24989.95), (44, 24998.55)]
+[DEBUG _open_trade] entry=24989.95, sl=24985.95, risk=4.0, dirn=1
+[DEBUG _open_trade] bar=217, dirn=1, ref_level=24993.6, dbar_close=25001.4, ref_swing_end_px=24993.6, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=57, normal_lows count=58
+[DEBUG _open_trade] eligible_highs (before bar 217): [(206, 25007.2), (208, 25007.75), (214, 24999.55)]
+[DEBUG _open_trade] eligible_lows (before bar 217): [(207, 25003.65), (211, 24993.6), (215, 24995.45)]
+[DEBUG _open_trade] entry=24993.6, sl=24986.4, risk=7.19999999999709, dirn=1
+[DEBUG _open_trade] bar=42, dirn=-1, ref_level=25064.7, dbar_close=25054.75, ref_swing_end_px=25064.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 42): [(33, 25060.6), (36, 25061.7), (37, 25064.7)]
+[DEBUG _open_trade] eligible_lows (before bar 42): [(27, 25039.95), (34, 25055.85), (36, 25054.0)]
+[DEBUG _open_trade] entry=25064.7, sl=25079.95, risk=15.25, dirn=-1
+[DEBUG _open_trade] bar=31, dirn=1, ref_level=25092.65, dbar_close=25099.3, ref_swing_end_px=25081.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 31): [(21, 25092.3), (26, 25094.25), (30, 25092.65)]
+[DEBUG _open_trade] eligible_lows (before bar 31): [(19, 25081.3), (23, 25082.35), (29, 25087.0)]
+[DEBUG _open_trade] entry=25092.65, sl=25087.0, risk=5.650000000001455, dirn=1
+[DEBUG _open_trade] bar=27, dirn=1, ref_level=25422.25, dbar_close=25422.3, ref_swing_end_px=25393.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 27): [(14, 25428.5), (18, 25423.55), (21, 25422.25)]
+[DEBUG _open_trade] eligible_lows (before bar 27): [(17, 25415.8), (20, 25416.25), (24, 25403.9)]
+[DEBUG _open_trade] entry=25422.25, sl=25403.9, risk=18.349999999998545, dirn=1
+[DEBUG _open_trade] bar=39, dirn=1, ref_level=25345.75, dbar_close=25340.7, ref_swing_end_px=25322.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 39): [(26, 25344.35), (29, 25347.3), (36, 25345.75)]
+[DEBUG _open_trade] eligible_lows (before bar 39): [(27, 25332.1), (32, 25326.7), (38, 25338.85)]
+[DEBUG _open_trade] entry=25345.75, sl=25338.85, risk=6.900000000001455, dirn=1
+[DEBUG _open_trade] bar=51, dirn=-1, ref_level=25153.25, dbar_close=25147.45, ref_swing_end_px=25153.25, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 51): [(43, 25148.85), (47, 25149.6), (49, 25153.25)]
+[DEBUG _open_trade] eligible_lows (before bar 51): [(40, 25123.9), (44, 25135.95), (48, 25144.35)]
+[DEBUG _open_trade] entry=25153.25, sl=25178.75, risk=25.5, dirn=-1
+[DEBUG _open_trade] bar=49, dirn=-1, ref_level=24826.2, dbar_close=24799.1, ref_swing_end_px=24826.2, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 49): [(35, 24817.8), (43, 24826.2), (47, 24805.3)]
+[DEBUG _open_trade] eligible_lows (before bar 49): [(37, 24796.1), (46, 24800.5), (48, 24795.05)]
+[DEBUG _open_trade] entry=24826.2, sl=24826.85, risk=0.6499999999978172, dirn=-1
+[DEBUG _open_trade] bar=36, dirn=-1, ref_level=24738.45, dbar_close=24746.2, ref_swing_end_px=24755.8, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=11
+[DEBUG _open_trade] eligible_highs (before bar 36): [(30, 24755.8), (33, 24749.7), (35, 24744.1)]
+[DEBUG _open_trade] eligible_lows (before bar 36): [(27, 24731.25), (32, 24744.45), (34, 24738.45)]
+[DEBUG _open_trade] entry=24738.45, sl=24744.1, risk=5.649999999997817, dirn=-1
+[DEBUG _open_trade] bar=49, dirn=-1, ref_level=24679.0, dbar_close=24668.7, ref_swing_end_px=24679.0, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 49): [(38, 24664.55), (43, 24663.85), (47, 24679.0)]
+[DEBUG _open_trade] eligible_lows (before bar 49): [(37, 24652.7), (41, 24650.35), (44, 24656.25)]
+[DEBUG _open_trade] entry=24679.0, sl=24687.7, risk=8.700000000000728, dirn=-1
+[DEBUG _open_trade] bar=37, dirn=-1, ref_level=24694.05, dbar_close=24662.0, ref_swing_end_px=24694.05, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 37): [(27, 24680.4), (29, 24687.4), (34, 24694.05)]
+[DEBUG _open_trade] eligible_lows (before bar 37): [(25, 24663.95), (28, 24671.85), (32, 24675.15)]
+[DEBUG _open_trade] entry=24694.05, sl=24687.4, risk=-6.649999999997817, dirn=-1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=21, dirn=1, ref_level=24914.35, dbar_close=24923.75, ref_swing_end_px=24881.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 21): [(14, 24916.0), (17, 24908.95), (18, 24914.35)]
+[DEBUG _open_trade] eligible_lows (before bar 21): [(15, 24881.65), (18, 24897.4), (19, 24900.5)]
+[DEBUG _open_trade] entry=24914.35, sl=24900.5, risk=13.849999999998545, dirn=1
+[DEBUG _open_trade] bar=71, dirn=1, ref_level=25114.9, dbar_close=25142.7, ref_swing_end_px=25114.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=20, normal_lows count=20
+[DEBUG _open_trade] eligible_highs (before bar 71): [(59, 25151.7), (63, 25152.85), (68, 25132.95)]
+[DEBUG _open_trade] eligible_lows (before bar 71): [(61, 25138.65), (67, 25125.5), (69, 25114.9)]
+[DEBUG _open_trade] entry=25114.9, sl=25092.7, risk=22.200000000000728, dirn=1
+[DEBUG _open_trade] bar=48, dirn=1, ref_level=25034.75, dbar_close=25048.4, ref_swing_end_px=25034.75, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 48): [(39, 25060.2), (41, 25061.6), (43, 25056.4)]
+[DEBUG _open_trade] eligible_lows (before bar 48): [(40, 25051.6), (42, 25048.95), (45, 25036.6)]
+[DEBUG _open_trade] entry=25034.75, sl=25048.95, risk=-14.200000000000728, dirn=1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=46, dirn=1, ref_level=25257.0, dbar_close=25269.15, ref_swing_end_px=25257.0, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=13, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 46): [(39, 25269.6), (42, 25270.65), (45, 25271.05)]
+[DEBUG _open_trade] eligible_lows (before bar 46): [(38, 25262.15), (40, 25257.0), (44, 25259.55)]
+[DEBUG _open_trade] entry=25257.0, sl=25235.5, risk=21.5, dirn=1
+[DEBUG _open_trade] bar=338, dirn=1, ref_level=25228.55, dbar_close=25251.65, ref_swing_end_px=25228.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=93, normal_lows count=93
+[DEBUG _open_trade] eligible_highs (before bar 338): [(330, 25252.75), (332, 25244.2), (335, 25239.9)]
+[DEBUG _open_trade] eligible_lows (before bar 338): [(332, 25238.55), (334, 25233.5), (336, 25232.25)]
+[DEBUG _open_trade] entry=25228.55, sl=25195.55, risk=33.0, dirn=1
+[DEBUG _open_trade] bar=31, dirn=1, ref_level=25215.1, dbar_close=25225.05, ref_swing_end_px=25215.1, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 31): [(15, 25267.95), (17, 25265.65), (28, 25231.4)]
+[DEBUG _open_trade] eligible_lows (before bar 31): [(17, 25258.85), (26, 25215.1), (29, 25220.5)]
+[DEBUG _open_trade] entry=25215.1, sl=25159.35, risk=55.75, dirn=1
+[DEBUG _open_trade] bar=48, dirn=1, ref_level=25834.75, dbar_close=25838.25, ref_swing_end_px=25788.5, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 48): [(34, 25832.55), (39, 25819.5), (42, 25834.75)]
+[DEBUG _open_trade] eligible_lows (before bar 48): [(36, 25797.75), (40, 25791.55), (45, 25795.9)]
+[DEBUG _open_trade] entry=25834.75, sl=25795.9, risk=38.849999999998545, dirn=1
+[DEBUG _open_trade] bar=46, dirn=1, ref_level=26040.3, dbar_close=26074.85, ref_swing_end_px=26040.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 46): [(33, 26084.45), (35, 26080.45), (40, 26064.5)]
+[DEBUG _open_trade] eligible_lows (before bar 46): [(34, 26070.55), (39, 26054.5), (42, 26040.3)]
+[DEBUG _open_trade] entry=26040.3, sl=26026.35, risk=13.950000000000728, dirn=1
+[DEBUG _open_trade] bar=40, dirn=1, ref_level=25988.75, dbar_close=25990.7, ref_swing_end_px=25960.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 40): [(25, 25974.0), (32, 25995.5), (36, 25988.75)]
+[DEBUG _open_trade] eligible_lows (before bar 40): [(27, 25960.3), (34, 25965.0), (38, 25979.75)]
+[DEBUG _open_trade] entry=25988.75, sl=25979.75, risk=9.0, dirn=1
+[DEBUG _open_trade] bar=40, dirn=-1, ref_level=25756.45, dbar_close=25747.35, ref_swing_end_px=25756.45, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 40): [(30, 25735.7), (35, 25754.7), (38, 25756.45)]
+[DEBUG _open_trade] eligible_lows (before bar 40): [(31, 25723.8), (37, 25739.6), (39, 25738.9)]
+[DEBUG _open_trade] entry=25756.45, sl=25754.7, risk=-1.75, dirn=-1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=114, dirn=-1, ref_level=25575.25, dbar_close=25559.2, ref_swing_end_px=25575.25, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=36, normal_lows count=35
+[DEBUG _open_trade] eligible_highs (before bar 114): [(105, 25569.25), (110, 25575.05), (111, 25575.25)]
+[DEBUG _open_trade] eligible_lows (before bar 114): [(105, 25561.4), (108, 25560.95), (111, 25569.5)]
+[DEBUG _open_trade] entry=25575.25, sl=25639.7, risk=64.45000000000073, dirn=-1
+[DEBUG _open_trade] bar=42, dirn=-1, ref_level=25391.15, dbar_close=25349.25, ref_swing_end_px=25391.15, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 42): [(17, 25362.35), (26, 25353.05), (34, 25391.15)]
+[DEBUG _open_trade] eligible_lows (before bar 42): [(15, 25335.5), (21, 25318.45), (28, 25340.45)]
+[DEBUG _open_trade] entry=25391.15, sl=25447.1, risk=55.94999999999709, dirn=-1
+[DEBUG _open_trade] bar=54, dirn=1, ref_level=25552.3, dbar_close=25566.35, ref_swing_end_px=25552.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=16, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 54): [(47, 25575.35), (50, 25562.6), (52, 25566.85)]
+[DEBUG _open_trade] eligible_lows (before bar 54): [(49, 25553.1), (50, 25552.3), (53, 25559.35)]
+[DEBUG _open_trade] entry=25552.3, sl=25548.7, risk=3.599999999998545, dirn=1
+[DEBUG _open_trade] bar=24, dirn=1, ref_level=25511.75, dbar_close=25513.45, ref_swing_end_px=25488.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 24): [(16, 25528.1), (20, 25508.2), (23, 25511.75)]
+[DEBUG _open_trade] eligible_lows (before bar 24): [(15, 25511.1), (19, 25499.4), (21, 25488.9)]
+[DEBUG _open_trade] entry=25511.75, sl=25488.9, risk=22.849999999998545, dirn=1
+[DEBUG _open_trade] bar=148, dirn=1, ref_level=25958.05, dbar_close=25960.65, ref_swing_end_px=25958.05, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=35, normal_lows count=34
+[DEBUG _open_trade] eligible_highs (before bar 148): [(138, 25964.55), (141, 25963.65), (144, 25973.35)]
+[DEBUG _open_trade] eligible_lows (before bar 148): [(137, 25959.15), (140, 25958.05), (142, 25960.5)]
+[DEBUG _open_trade] entry=25958.05, sl=25954.6, risk=3.4500000000007276, dirn=1
+[DEBUG _open_trade] bar=60, dirn=1, ref_level=25781.6, dbar_close=25783.1, ref_swing_end_px=25764.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 60): [(45, 25814.85), (52, 25804.15), (59, 25781.6)]
+[DEBUG _open_trade] eligible_lows (before bar 60): [(44, 25805.15), (49, 25764.9), (58, 25773.85)]
+[DEBUG _open_trade] entry=25781.6, sl=25773.85, risk=7.75, dirn=1
+[DEBUG _open_trade] bar=68, dirn=1, ref_level=25916.55, dbar_close=25915.5, ref_swing_end_px=25881.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 68): [(51, 25914.6), (55, 25903.7), (66, 25916.55)]
+[DEBUG _open_trade] eligible_lows (before bar 68): [(45, 25881.9), (54, 25897.15), (60, 25893.45)]
+[DEBUG _open_trade] entry=25916.55, sl=25893.45, risk=23.099999999998545, dirn=1
+[DEBUG _open_trade] bar=37, dirn=1, ref_level=26094.25, dbar_close=26094.05, ref_swing_end_px=26063.2, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 37): [(25, 26105.35), (32, 26093.2), (36, 26094.25)]
+[DEBUG _open_trade] eligible_lows (before bar 37): [(23, 26096.3), (29, 26063.2), (34, 26083.25)]
+[DEBUG _open_trade] entry=26094.25, sl=26083.25, risk=11.0, dirn=1
+[DEBUG _open_trade] bar=44, dirn=-1, ref_level=26107.9, dbar_close=26085.4, ref_swing_end_px=26107.9, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 44): [(28, 26088.75), (36, 26107.9), (42, 26093.25)]
+[DEBUG _open_trade] eligible_lows (before bar 44): [(27, 26080.3), (32, 26064.7), (40, 26085.65)]
+[DEBUG _open_trade] entry=26107.9, sl=26116.8, risk=8.899999999997817, dirn=-1
+[DEBUG _open_trade] bar=301, dirn=-1, ref_level=26016.6, dbar_close=26024.45, ref_swing_end_px=26029.15, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=86, normal_lows count=86
+[DEBUG _open_trade] eligible_highs (before bar 301): [(291, 26029.15), (295, 26022.45), (299, 26023.85)]
+[DEBUG _open_trade] eligible_lows (before bar 301): [(290, 26017.9), (295, 26012.9), (297, 26016.6)]
+[DEBUG _open_trade] entry=26016.6, sl=26023.85, risk=7.25, dirn=-1
+[DEBUG _open_trade] bar=63, dirn=-1, ref_level=26083.05, dbar_close=26083.85, ref_swing_end_px=26098.35, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=15
+[DEBUG _open_trade] eligible_highs (before bar 63): [(58, 26086.75), (60, 26092.7), (62, 26091.7)]
+[DEBUG _open_trade] eligible_lows (before bar 63): [(57, 26074.75), (59, 26080.3), (61, 26083.05)]
+[DEBUG _open_trade] entry=26083.05, sl=26091.7, risk=8.650000000001455, dirn=-1
+[DEBUG _open_trade] bar=62, dirn=-1, ref_level=26290.85, dbar_close=26275.7, ref_swing_end_px=26290.85, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=16
+[DEBUG _open_trade] eligible_highs (before bar 62): [(54, 26290.85), (56, 26288.2), (60, 26288.7)]
+[DEBUG _open_trade] eligible_lows (before bar 62): [(52, 26277.6), (55, 26279.35), (57, 26281.3)]
+[DEBUG _open_trade] entry=26290.85, sl=26297.65, risk=6.80000000000291, dirn=-1
+[DEBUG _open_trade] bar=32, dirn=1, ref_level=25947.6, dbar_close=25947.7, ref_swing_end_px=25921.85, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 32): [(23, 25934.5), (28, 25948.85), (31, 25947.6)]
+[DEBUG _open_trade] eligible_lows (before bar 32): [(22, 25924.7), (25, 25921.85), (29, 25938.5)]
+[DEBUG _open_trade] entry=25947.6, sl=25938.5, risk=9.099999999998545, dirn=1
+[DEBUG _open_trade] bar=104, dirn=1, ref_level=26074.8, dbar_close=26075.5, ref_swing_end_px=26074.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=27, normal_lows count=26
+[DEBUG _open_trade] eligible_highs (before bar 104): [(99, 26081.0), (100, 26081.2), (103, 26087.25)]
+[DEBUG _open_trade] eligible_lows (before bar 104): [(98, 26075.45), (100, 26075.15), (101, 26074.8)]
+[DEBUG _open_trade] entry=26074.8, sl=26055.7, risk=19.099999999998545, dirn=1
+[DEBUG _open_trade] bar=75, dirn=-1, ref_level=25848.85, dbar_close=25819.55, ref_swing_end_px=25848.85, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=21, normal_lows count=21
+[DEBUG _open_trade] eligible_highs (before bar 75): [(64, 25848.85), (69, 25843.45), (71, 25845.0)]
+[DEBUG _open_trade] eligible_lows (before bar 75): [(57, 25774.1), (66, 25812.7), (71, 25829.2)]
+[DEBUG _open_trade] entry=25848.85, sl=25890.95, risk=42.10000000000218, dirn=-1
+[DEBUG _open_trade] bar=48, dirn=1, ref_level=25876.65, dbar_close=25907.8, ref_swing_end_px=25876.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=13, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 48): [(36, 25898.95), (38, 25897.05), (42, 25893.7)]
+[DEBUG _open_trade] eligible_lows (before bar 48): [(37, 25893.4), (41, 25881.65), (44, 25876.65)]
+[DEBUG _open_trade] entry=25876.65, sl=25873.35, risk=3.3000000000029104, dirn=1
+[DEBUG _open_trade] bar=43, dirn=-1, ref_level=25739.7, dbar_close=25720.75, ref_swing_end_px=25739.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 43): [(34, 25739.7), (36, 25731.85), (40, 25734.45)]
+[DEBUG _open_trade] eligible_lows (before bar 43): [(31, 25695.45), (35, 25725.1), (38, 25713.05)]
+[DEBUG _open_trade] entry=25739.7, sl=25792.0, risk=52.29999999999927, dirn=-1
+[DEBUG _open_trade] bar=24, dirn=1, ref_level=25932.7, dbar_close=25928.15, ref_swing_end_px=25910.25, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 24): [(11, 25938.8), (18, 25930.75), (22, 25932.7)]
+[DEBUG _open_trade] eligible_lows (before bar 24): [(15, 25910.25), (20, 25912.9), (23, 25922.35)]
+[DEBUG _open_trade] entry=25932.7, sl=25922.35, risk=10.350000000002183, dirn=1
+[DEBUG _open_trade] bar=30, dirn=1, ref_level=25930.8, dbar_close=25928.45, ref_swing_end_px=25901.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 30): [(13, 25935.2), (18, 25925.0), (28, 25930.8)]
+[DEBUG _open_trade] eligible_lows (before bar 30): [(18, 25906.6), (22, 25901.65), (29, 25916.35)]
+[DEBUG _open_trade] entry=25930.8, sl=25916.35, risk=14.450000000000728, dirn=1
+[DEBUG _open_trade] bar=27, dirn=-1, ref_level=25909.85, dbar_close=25904.75, ref_swing_end_px=25929.15, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 27): [(20, 25927.5), (22, 25929.15), (26, 25917.75)]
+[DEBUG _open_trade] eligible_lows (before bar 27): [(16, 25894.8), (21, 25920.6), (25, 25909.85)]
+[DEBUG _open_trade] entry=25909.85, sl=25917.75, risk=7.900000000001455, dirn=-1
+[DEBUG _open_trade] bar=40, dirn=1, ref_level=25752.6, dbar_close=25755.35, ref_swing_end_px=25726.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 40): [(31, 25747.75), (35, 25742.05), (38, 25752.6)]
+[DEBUG _open_trade] eligible_lows (before bar 40): [(32, 25726.3), (35, 25734.65), (39, 25745.75)]
+[DEBUG _open_trade] entry=25752.6, sl=25745.75, risk=6.849999999998545, dirn=1
+[DEBUG _open_trade] bar=40, dirn=1, ref_level=25939.95, dbar_close=25950.95, ref_swing_end_px=25939.95, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 40): [(35, 25948.95), (36, 25949.9), (38, 25947.5)]
+[DEBUG _open_trade] eligible_lows (before bar 40): [(35, 25942.05), (37, 25939.95), (39, 25943.55)]
+[DEBUG _open_trade] entry=25939.95, sl=25933.35, risk=6.600000000002183, dirn=1
+[DEBUG _open_trade] bar=65, dirn=1, ref_level=26120.9, dbar_close=26128.1, ref_swing_end_px=26120.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 65): [(56, 26131.65), (61, 26134.8), (64, 26134.2)]
+[DEBUG _open_trade] eligible_lows (before bar 65): [(56, 26124.9), (57, 26120.9), (63, 26123.55)]
+[DEBUG _open_trade] entry=26120.9, sl=26116.15, risk=4.75, dirn=1
+[DEBUG _open_trade] bar=21, dirn=1, ref_level=26145.4, dbar_close=26146.6, ref_swing_end_px=26134.4, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=6, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 21): [(14, 26152.0), (17, 26144.95), (19, 26145.4)]
+[DEBUG _open_trade] eligible_lows (before bar 21): [(16, 26134.4), (18, 26135.4), (20, 26140.8)]
+[DEBUG _open_trade] entry=26145.4, sl=26140.8, risk=4.600000000002183, dirn=1
+[DEBUG _open_trade] bar=38, dirn=1, ref_level=26202.65, dbar_close=26218.05, ref_swing_end_px=26202.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 38): [(18, 26229.55), (26, 26215.45), (30, 26222.5)]
+[DEBUG _open_trade] eligible_lows (before bar 38): [(25, 26207.9), (28, 26202.65), (33, 26203.35)]
+[DEBUG _open_trade] entry=26202.65, sl=26198.7, risk=3.9500000000007276, dirn=1
+[DEBUG _open_trade] bar=55, dirn=-1, ref_level=26102.1, dbar_close=26087.1, ref_swing_end_px=26102.1, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 55): [(47, 26087.2), (51, 26100.25), (53, 26102.1)]
+[DEBUG _open_trade] eligible_lows (before bar 55): [(46, 26081.75), (47, 26080.8), (52, 26094.35)]
+[DEBUG _open_trade] entry=26102.1, sl=26114.15, risk=12.05000000000291, dirn=-1
+[DEBUG _open_trade] bar=16, dirn=1, ref_level=26063.25, dbar_close=26060.05, ref_swing_end_px=26044.15, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 16): [(11, 26061.45), (12, 26059.7), (14, 26063.25)]
+[DEBUG _open_trade] eligible_lows (before bar 16): [(12, 26052.2), (13, 26052.0), (15, 26050.25)]
+[DEBUG _open_trade] entry=26063.25, sl=26050.25, risk=13.0, dirn=1
+[DEBUG _open_trade] bar=33, dirn=-1, ref_level=25942.5, dbar_close=25910.35, ref_swing_end_px=25942.5, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 33): [(23, 25916.0), (25, 25926.25), (29, 25942.5)]
+[DEBUG _open_trade] eligible_lows (before bar 33): [(13, 25878.0), (22, 25909.9), (26, 25917.8)]
+[DEBUG _open_trade] entry=25942.5, sl=25956.15, risk=13.650000000001455, dirn=-1
+[DEBUG _open_trade] bar=139, dirn=1, ref_level=26040.35, dbar_close=26048.45, ref_swing_end_px=26040.35, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=38, normal_lows count=41
+[DEBUG _open_trade] eligible_highs (before bar 139): [(130, 26052.0), (132, 26050.75), (136, 26047.6)]
+[DEBUG _open_trade] eligible_lows (before bar 139): [(131, 26046.4), (135, 26040.35), (137, 26041.4)]
+[DEBUG _open_trade] entry=26040.35, sl=26037.35, risk=3.0, dirn=1
+[DEBUG _open_trade] bar=20, dirn=1, ref_level=26182.35, dbar_close=26184.15, ref_swing_end_px=26149.25, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 20): [(11, 26169.6), (14, 26189.6), (18, 26182.35)]
+[DEBUG _open_trade] eligible_lows (before bar 20): [(12, 26149.25), (16, 26166.1), (18, 26168.4)]
+[DEBUG _open_trade] entry=26182.35, sl=26168.4, risk=13.94999999999709, dirn=1
+[DEBUG _open_trade] bar=60, dirn=1, ref_level=26238.65, dbar_close=26262.2, ref_swing_end_px=26238.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=16
+[DEBUG _open_trade] eligible_highs (before bar 60): [(48, 26261.0), (50, 26254.8), (55, 26246.3)]
+[DEBUG _open_trade] eligible_lows (before bar 60): [(49, 26246.5), (55, 26238.65), (57, 26239.0)]
+[DEBUG _open_trade] entry=26238.65, sl=26235.8, risk=2.850000000002183, dirn=1
+[DEBUG _open_trade] bar=34, dirn=1, ref_level=26288.9, dbar_close=26298.95, ref_swing_end_px=26263.6, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 34): [(25, 26296.95), (27, 26293.95), (32, 26288.9)]
+[DEBUG _open_trade] eligible_lows (before bar 34): [(26, 26279.55), (29, 26272.2), (33, 26279.2)]
+[DEBUG _open_trade] entry=26288.9, sl=26279.2, risk=9.700000000000728, dirn=1
+[DEBUG _open_trade] bar=139, dirn=1, ref_level=26173.8, dbar_close=26170.75, ref_swing_end_px=26141.05, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=36, normal_lows count=37
+[DEBUG _open_trade] eligible_highs (before bar 139): [(119, 26201.95), (135, 26176.6), (138, 26173.8)]
+[DEBUG _open_trade] eligible_lows (before bar 139): [(118, 26192.65), (127, 26141.05), (137, 26165.9)]
+[DEBUG _open_trade] entry=26173.8, sl=26165.9, risk=7.899999999997817, dirn=1
+[DEBUG _open_trade] bar=48, dirn=1, ref_level=26145.45, dbar_close=26147.25, ref_swing_end_px=26096.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=13, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 48): [(33, 26125.55), (36, 26115.05), (45, 26145.45)]
+[DEBUG _open_trade] eligible_lows (before bar 48): [(35, 26108.9), (38, 26096.65), (46, 26132.9)]
+[DEBUG _open_trade] entry=26145.45, sl=26132.9, risk=12.549999999999272, dirn=1
+[DEBUG _open_trade] bar=26, dirn=1, ref_level=26095.9, dbar_close=26100.65, ref_swing_end_px=26049.85, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=5, normal_lows count=5
+[DEBUG _open_trade] eligible_highs (before bar 26): [(9, 26102.85), (19, 26065.95), (24, 26095.9)]
+[DEBUG _open_trade] eligible_lows (before bar 26): [(18, 26049.85), (20, 26053.25), (25, 26087.3)]
+[DEBUG _open_trade] entry=26095.9, sl=26087.3, risk=8.600000000002183, dirn=1
+[DEBUG _open_trade] bar=39, dirn=-1, ref_level=25897.65, dbar_close=25877.3, ref_swing_end_px=25897.65, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 39): [(30, 25876.85), (34, 25897.65), (37, 25875.15)]
+[DEBUG _open_trade] eligible_lows (before bar 39): [(31, 25849.65), (35, 25857.2), (38, 25852.45)]
+[DEBUG _open_trade] entry=25897.65, sl=25940.6, risk=42.94999999999709, dirn=-1
+[DEBUG _open_trade] bar=24, dirn=-1, ref_level=25730.85, dbar_close=25732.85, ref_swing_end_px=25750.45, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 24): [(15, 25750.45), (20, 25746.55), (22, 25746.6)]
+[DEBUG _open_trade] eligible_lows (before bar 24): [(12, 25708.55), (18, 25722.2), (21, 25730.85)]
+[DEBUG _open_trade] entry=25730.85, sl=25746.6, risk=15.75, dirn=-1
+[DEBUG _open_trade] bar=27, dirn=-1, ref_level=25395.15, dbar_close=25398.35, ref_swing_end_px=25425.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 27): [(19, 25417.25), (21, 25425.7), (25, 25412.25)]
+[DEBUG _open_trade] eligible_lows (before bar 27): [(17, 25398.1), (20, 25403.45), (24, 25395.15)]
+[DEBUG _open_trade] entry=25395.15, sl=25412.25, risk=17.099999999998545, dirn=-1
+[DEBUG _open_trade] bar=48, dirn=1, ref_level=25928.8, dbar_close=25956.85, ref_swing_end_px=25928.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=16
+[DEBUG _open_trade] eligible_highs (before bar 48): [(37, 25952.0), (42, 25949.45), (45, 25955.95)]
+[DEBUG _open_trade] eligible_lows (before bar 48): [(40, 25928.8), (43, 25942.35), (47, 25943.95)]
+[DEBUG _open_trade] entry=25928.8, sl=25909.65, risk=19.149999999997817, dirn=1
+[DEBUG _open_trade] bar=55, dirn=1, ref_level=25926.95, dbar_close=25933.55, ref_swing_end_px=25911.9, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=13, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 55): [(48, 25926.2), (50, 25921.15), (53, 25926.95)]
+[DEBUG _open_trade] eligible_lows (before bar 55): [(49, 25912.6), (51, 25913.55), (54, 25919.55)]
+[DEBUG _open_trade] entry=25926.95, sl=25919.55, risk=7.400000000001455, dirn=1
+[DEBUG _open_trade] bar=21, dirn=1, ref_level=25843.35, dbar_close=25844.4, ref_swing_end_px=25822.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 21): [(11, 25850.95), (14, 25843.2), (20, 25843.35)]
+[DEBUG _open_trade] eligible_lows (before bar 21): [(8, 25836.6), (12, 25831.25), (16, 25822.3)]
+[DEBUG _open_trade] entry=25843.35, sl=25822.3, risk=21.049999999999272, dirn=1
+[DEBUG _open_trade] bar=82, dirn=-1, ref_level=25574.7, dbar_close=25571.25, ref_swing_end_px=25574.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=24, normal_lows count=26
+[DEBUG _open_trade] eligible_highs (before bar 82): [(77, 25564.4), (79, 25572.15), (80, 25574.7)]
+[DEBUG _open_trade] eligible_lows (before bar 82): [(78, 25556.55), (80, 25564.3), (81, 25562.7)]
+[DEBUG _open_trade] entry=25574.7, sl=25576.75, risk=2.0499999999992724, dirn=-1
+[DEBUG _open_trade] bar=25, dirn=-1, ref_level=25489.55, dbar_close=25478.2, ref_swing_end_px=25528.45, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 25): [(16, 25509.2), (19, 25528.45), (24, 25497.65)]
+[DEBUG _open_trade] eligible_lows (before bar 25): [(14, 25472.25), (17, 25498.95), (24, 25489.55)]
+[DEBUG _open_trade] entry=25489.55, sl=25497.65, risk=8.100000000002183, dirn=-1
+[DEBUG _open_trade] bar=24, dirn=1, ref_level=25616.5, dbar_close=25616.6, ref_swing_end_px=25570.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 24): [(14, 25595.8), (16, 25591.0), (18, 25616.5)]
+[DEBUG _open_trade] eligible_lows (before bar 24): [(15, 25578.7), (17, 25580.2), (22, 25584.05)]
+[DEBUG _open_trade] entry=25616.5, sl=25584.05, risk=32.45000000000073, dirn=1
+[DEBUG _open_trade] bar=56, dirn=1, ref_level=25669.6, dbar_close=25671.1, ref_swing_end_px=25650.25, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 56): [(47, 25661.85), (51, 25674.85), (54, 25669.6)]
+[DEBUG _open_trade] eligible_lows (before bar 56): [(48, 25656.4), (53, 25652.3), (55, 25658.5)]
+[DEBUG _open_trade] entry=25669.6, sl=25658.5, risk=11.099999999998545, dirn=1
+[DEBUG _open_trade] bar=48, dirn=-1, ref_level=25503.05, dbar_close=25492.05, ref_swing_end_px=25524.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=11
+[DEBUG _open_trade] eligible_highs (before bar 48): [(41, 25524.7), (44, 25521.2), (45, 25523.45)]
+[DEBUG _open_trade] eligible_lows (before bar 48): [(43, 25510.55), (44, 25512.4), (47, 25503.05)]
+[DEBUG _open_trade] entry=25503.05, sl=25523.45, risk=20.400000000001455, dirn=-1
+[DEBUG _open_trade] bar=33, dirn=1, ref_level=25718.6, dbar_close=25744.1, ref_swing_end_px=25718.6, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 33): [(23, 25768.25), (29, 25740.5), (30, 25740.25)]
+[DEBUG _open_trade] eligible_lows (before bar 33): [(26, 25718.6), (29, 25730.0), (31, 25727.15)]
+[DEBUG _open_trade] entry=25718.6, sl=25707.6, risk=11.0, dirn=1
+[DEBUG _open_trade] bar=45, dirn=1, ref_level=25519.1, dbar_close=25516.9, ref_swing_end_px=25482.85, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 45): [(34, 25535.6), (40, 25520.4), (44, 25519.1)]
+[DEBUG _open_trade] eligible_lows (before bar 45): [(29, 25482.85), (38, 25494.95), (41, 25510.1)]
+[DEBUG _open_trade] entry=25519.1, sl=25510.1, risk=9.0, dirn=1
+[DEBUG _open_trade] bar=77, dirn=1, ref_level=25629.95, dbar_close=25642.2, ref_swing_end_px=25629.95, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=24, normal_lows count=25
+[DEBUG _open_trade] eligible_highs (before bar 77): [(72, 25638.7), (74, 25639.65), (75, 25639.75)]
+[DEBUG _open_trade] eligible_lows (before bar 77): [(73, 25634.15), (74, 25633.35), (76, 25633.5)]
+[DEBUG _open_trade] entry=25629.95, sl=25627.7, risk=2.25, dirn=1
+[DEBUG _open_trade] bar=37, dirn=-1, ref_level=25565.6, dbar_close=25544.0, ref_swing_end_px=25565.6, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 37): [(25, 25556.3), (30, 25565.6), (34, 25563.45)]
+[DEBUG _open_trade] eligible_lows (before bar 37): [(16, 25492.1), (26, 25538.8), (32, 25547.05)]
+[DEBUG _open_trade] entry=25565.6, sl=25567.6, risk=2.0, dirn=-1
+[DEBUG _open_trade] bar=37, dirn=-1, ref_level=24921.4, dbar_close=24921.05, ref_swing_end_px=24989.35, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 37): [(28, 24977.1), (30, 24972.7), (33, 24989.35)]
+[DEBUG _open_trade] eligible_lows (before bar 37): [(29, 24961.5), (31, 24954.25), (36, 24921.4)]
+[DEBUG _open_trade] entry=24921.4, sl=24989.35, risk=67.94999999999709, dirn=-1
+[DEBUG _open_trade] bar=25, dirn=1, ref_level=24362.05, dbar_close=24372.7, ref_swing_end_px=24315.45, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 25): [(13, 24374.45), (16, 24366.5), (22, 24362.05)]
+[DEBUG _open_trade] eligible_lows (before bar 25): [(14, 24339.75), (20, 24317.15), (24, 24343.3)]
+[DEBUG _open_trade] entry=24362.05, sl=24343.3, risk=18.75, dirn=1
+[DEBUG _open_trade] bar=88, dirn=-1, ref_level=23697.9, dbar_close=23688.55, ref_swing_end_px=23721.05, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=24, normal_lows count=23
+[DEBUG _open_trade] eligible_highs (before bar 88): [(83, 23720.0), (85, 23721.05), (87, 23715.5)]
+[DEBUG _open_trade] eligible_lows (before bar 88): [(81, 23673.45), (84, 23707.45), (86, 23697.9)]
+[DEBUG _open_trade] entry=23697.9, sl=23715.5, risk=17.599999999998545, dirn=-1
+[DEBUG _open_trade] bar=32, dirn=-1, ref_level=23237.4, dbar_close=23231.75, ref_swing_end_px=23284.65, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 32): [(23, 23270.0), (26, 23284.65), (31, 23276.95)]
+[DEBUG _open_trade] eligible_lows (before bar 32): [(17, 23185.7), (24, 23238.1), (29, 23237.4)]
+[DEBUG _open_trade] entry=23237.4, sl=23276.95, risk=39.54999999999927, dirn=-1
+[DEBUG _open_trade] bar=47, dirn=-1, ref_level=23669.55, dbar_close=23669.8, ref_swing_end_px=23754.65, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 47): [(32, 23719.9), (36, 23754.65), (45, 23695.65)]
+[DEBUG _open_trade] eligible_lows (before bar 47): [(31, 23704.45), (33, 23704.9), (42, 23669.55)]
+[DEBUG _open_trade] entry=23669.55, sl=23695.65, risk=26.100000000002183, dirn=-1
+[DEBUG _open_trade] bar=25, dirn=-1, ref_level=23262.7, dbar_close=23254.95, ref_swing_end_px=23319.7, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=6, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 25): [(15, 23291.5), (20, 23319.7), (24, 23280.0)]
+[DEBUG _open_trade] eligible_lows (before bar 25): [(9, 23244.5), (16, 23279.55), (23, 23262.7)]
+[DEBUG _open_trade] entry=23262.7, sl=23280.0, risk=17.299999999999272, dirn=-1
+[DEBUG _open_trade] bar=73, dirn=1, ref_level=23283.35, dbar_close=23303.9, ref_swing_end_px=23283.35, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=22, normal_lows count=22
+[DEBUG _open_trade] eligible_highs (before bar 73): [(62, 23317.9), (66, 23313.65), (71, 23314.6)]
+[DEBUG _open_trade] eligible_lows (before bar 73): [(64, 23289.95), (68, 23283.35), (72, 23308.05)]
+[DEBUG _open_trade] entry=23283.35, sl=23246.55, risk=36.79999999999927, dirn=1
+[DEBUG _open_trade] bar=33, dirn=-1, ref_level=22652.65, dbar_close=22637.5, ref_swing_end_px=22714.1, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 33): [(21, 22714.1), (26, 22703.7), (31, 22690.0)]
+[DEBUG _open_trade] eligible_lows (before bar 33): [(20, 22661.9), (25, 22658.75), (29, 22652.65)]
+[DEBUG _open_trade] entry=22652.65, sl=22690.0, risk=37.349999999998545, dirn=-1
+[DEBUG _open_trade] bar=20, dirn=-1, ref_level=22845.45, dbar_close=22837.4, ref_swing_end_px=22937.65, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=6, normal_lows count=5
+[DEBUG _open_trade] eligible_highs (before bar 20): [(10, 22912.5), (15, 22937.65), (18, 22860.45)]
+[DEBUG _open_trade] eligible_lows (before bar 20): [(6, 22872.55), (11, 22899.35), (17, 22845.45)]
+[DEBUG _open_trade] entry=22845.45, sl=22860.45, risk=15.0, dirn=-1
+[DEBUG _open_trade] bar=40, dirn=1, ref_level=22793.0, dbar_close=22861.0, ref_swing_end_px=22793.0, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=11
+[DEBUG _open_trade] eligible_highs (before bar 40): [(25, 22868.5), (33, 22863.0), (37, 22849.45)]
+[DEBUG _open_trade] eligible_lows (before bar 40): [(29, 22793.0), (35, 22811.25), (38, 22825.95)]
+[DEBUG _open_trade] entry=22793.0, sl=22758.75, risk=34.25, dirn=1
+[DEBUG _open_trade] bar=51, dirn=1, ref_level=23891.85, dbar_close=23908.35, ref_swing_end_px=23891.85, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 51): [(41, 23936.6), (43, 23932.45), (47, 23923.9)]
+[DEBUG _open_trade] eligible_lows (before bar 51): [(42, 23922.0), (44, 23891.85), (49, 23892.85)]
+[DEBUG _open_trade] entry=23891.85, sl=23879.45, risk=12.399999999997817, dirn=1
+[DEBUG _open_trade] bar=47, dirn=1, ref_level=23759.45, dbar_close=23808.3, ref_swing_end_px=23759.45, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=15
+[DEBUG _open_trade] eligible_highs (before bar 47): [(41, 23799.85), (42, 23801.6), (45, 23787.7)]
+[DEBUG _open_trade] eligible_lows (before bar 47): [(41, 23793.7), (44, 23771.05), (45, 23759.45)]
+[DEBUG _open_trade] entry=23759.45, sl=23771.05, risk=-11.599999999998545, dirn=1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=235, dirn=1, ref_level=23771.75, dbar_close=23804.75, ref_swing_end_px=23771.75, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=66, normal_lows count=66
+[DEBUG _open_trade] eligible_highs (before bar 235): [(223, 23825.15), (226, 23815.0), (234, 23817.95)]
+[DEBUG _open_trade] eligible_lows (before bar 235): [(222, 23780.9), (225, 23795.7), (228, 23771.75)]
+[DEBUG _open_trade] entry=23771.75, sl=23758.05, risk=13.700000000000728, dirn=1
+[DEBUG _open_trade] bar=22, dirn=-1, ref_level=24353.0, dbar_close=24335.0, ref_swing_end_px=24400.95, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 22): [(12, 24398.25), (15, 24396.05), (21, 24364.05)]
+[DEBUG _open_trade] eligible_lows (before bar 22): [(11, 24383.65), (13, 24376.0), (20, 24353.0)]
+[DEBUG _open_trade] entry=24353.0, sl=24364.05, risk=11.049999999999272, dirn=-1
+[DEBUG _open_trade] bar=18, dirn=-1, ref_level=24205.1, dbar_close=24199.3, ref_swing_end_px=24235.6, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 18): [(12, 24229.8), (14, 24235.6), (17, 24218.85)]
+[DEBUG _open_trade] eligible_lows (before bar 18): [(12, 24221.5), (13, 24221.2), (16, 24205.1)]
+[DEBUG _open_trade] entry=24205.1, sl=24218.85, risk=13.75, dirn=-1
+[DEBUG _open_trade] bar=76, dirn=1, ref_level=24487.5, dbar_close=24510.1, ref_swing_end_px=24487.5, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=21, normal_lows count=22
+[DEBUG _open_trade] eligible_highs (before bar 76): [(61, 24524.65), (70, 24500.5), (71, 24499.25)]
+[DEBUG _open_trade] eligible_lows (before bar 76): [(68, 24495.05), (70, 24491.6), (74, 24487.5)]
+[DEBUG _open_trade] entry=24487.5, sl=24485.0, risk=2.5, dirn=1
+[DEBUG _open_trade] bar=62, dirn=-1, ref_level=24003.35, dbar_close=23978.9, ref_swing_end_px=24003.35, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 62): [(41, 23958.55), (52, 24003.35), (58, 24000.9)]
+[DEBUG _open_trade] eligible_lows (before bar 62): [(40, 23944.1), (43, 23949.2), (55, 23977.35)]
+[DEBUG _open_trade] entry=24003.35, sl=24004.35, risk=1.0, dirn=-1
+[DEBUG _open_trade] bar=26, dirn=1, ref_level=24090.4, dbar_close=24120.7, ref_swing_end_px=24090.4, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 26): [(14, 24125.05), (19, 24118.25), (22, 24112.8)]
+[DEBUG _open_trade] eligible_lows (before bar 26): [(18, 24100.2), (20, 24090.4), (24, 24097.3)]
+[DEBUG _open_trade] entry=24090.4, sl=24074.25, risk=16.150000000001455, dirn=1
+[DEBUG _open_trade] bar=19, dirn=1, ref_level=23912.8, dbar_close=23918.75, ref_swing_end_px=23864.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 19): [(9, 23908.8), (13, 23896.05), (17, 23912.8)]
+[DEBUG _open_trade] eligible_lows (before bar 19): [(12, 23878.95), (15, 23864.55), (18, 23893.75)]
+[DEBUG _open_trade] entry=23912.8, sl=23893.75, risk=19.049999999999272, dirn=1
+[DEBUG _open_trade] bar=46, dirn=1, ref_level=24225.25, dbar_close=24252.35, ref_swing_end_px=24225.25, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=16, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 46): [(37, 24260.25), (41, 24246.95), (43, 24248.1)]
+[DEBUG _open_trade] eligible_lows (before bar 46): [(39, 24225.25), (42, 24236.8), (43, 24233.25)]
+[DEBUG _open_trade] entry=24225.25, sl=24181.05, risk=44.20000000000073, dirn=1
+[DEBUG _open_trade] bar=42, dirn=1, ref_level=24163.8, dbar_close=24163.4, ref_swing_end_px=24121.1, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=16
+[DEBUG _open_trade] eligible_highs (before bar 42): [(30, 24144.9), (32, 24144.9), (41, 24163.8)]
+[DEBUG _open_trade] eligible_lows (before bar 42): [(29, 24131.75), (31, 24133.45), (35, 24121.1)]
+[DEBUG _open_trade] entry=24163.8, sl=24121.1, risk=42.70000000000073, dirn=1
+[DEBUG _open_trade] bar=16, dirn=1, ref_level=24346.75, dbar_close=24352.0, ref_swing_end_px=24300.7, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=5, normal_lows count=5
+[DEBUG _open_trade] eligible_highs (before bar 16): [(6, 24337.05), (10, 24336.4), (14, 24346.75)]
+[DEBUG _open_trade] eligible_lows (before bar 16): [(7, 24300.7), (11, 24312.2), (15, 24320.15)]
+[DEBUG _open_trade] entry=24346.75, sl=24320.15, risk=26.599999999998545, dirn=1
+[DEBUG _open_trade] bar=38, dirn=1, ref_level=24176.85, dbar_close=24180.25, ref_swing_end_px=24138.4, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=11
+[DEBUG _open_trade] eligible_highs (before bar 38): [(23, 24204.5), (32, 24175.05), (35, 24176.85)]
+[DEBUG _open_trade] eligible_lows (before bar 38): [(30, 24138.4), (33, 24146.6), (36, 24161.8)]
+[DEBUG _open_trade] entry=24176.85, sl=24161.8, risk=15.049999999999272, dirn=1
+[DEBUG _open_trade] bar=47, dirn=1, ref_level=23886.4, dbar_close=23884.8, ref_swing_end_px=23864.1, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 47): [(35, 23888.05), (40, 23899.95), (43, 23886.4)]
+[DEBUG _open_trade] eligible_lows (before bar 47): [(38, 23870.5), (42, 23868.2), (44, 23872.85)]
+[DEBUG _open_trade] entry=23886.4, sl=23872.85, risk=13.55000000000291, dirn=1
+[DEBUG _open_trade] bar=33, dirn=-1, ref_level=23657.85, dbar_close=23634.65, ref_swing_end_px=23657.85, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 33): [(26, 23642.95), (28, 23657.85), (31, 23650.15)]
+[DEBUG _open_trade] eligible_lows (before bar 33): [(24, 23620.5), (27, 23631.3), (30, 23633.3)]
+[DEBUG _open_trade] entry=23657.85, sl=23738.4, risk=80.55000000000291, dirn=-1
+[DEBUG _open_trade] bar=56, dirn=-1, ref_level=23426.25, dbar_close=23384.7, ref_swing_end_px=23426.25, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=13, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 56): [(46, 23390.95), (52, 23426.25), (54, 23413.85)]
+[DEBUG _open_trade] eligible_lows (before bar 56): [(45, 23354.15), (48, 23368.45), (53, 23402.05)]
+[DEBUG _open_trade] entry=23426.25, sl=23441.15, risk=14.900000000001455, dirn=-1
+[DEBUG _open_trade] bar=31, dirn=1, ref_level=23493.8, dbar_close=23517.35, ref_swing_end_px=23493.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=11
+[DEBUG _open_trade] eligible_highs (before bar 31): [(21, 23569.95), (23, 23553.75), (28, 23512.5)]
+[DEBUG _open_trade] eligible_lows (before bar 31): [(22, 23538.95), (27, 23502.35), (29, 23493.8)]
+[DEBUG _open_trade] entry=23493.8, sl=23502.35, risk=-8.549999999999272, dirn=1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=60, dirn=1, ref_level=23781.25, dbar_close=23804.5, ref_swing_end_px=23781.25, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 60): [(52, 23810.75), (56, 23801.35), (58, 23797.85)]
+[DEBUG _open_trade] eligible_lows (before bar 60): [(54, 23785.25), (57, 23781.25), (59, 23791.7)]
+[DEBUG _open_trade] entry=23781.25, sl=23734.1, risk=47.150000000001455, dirn=1
+[DEBUG _open_trade] bar=74, dirn=-1, ref_level=23389.45, dbar_close=23379.85, ref_swing_end_px=23389.45, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=21, normal_lows count=21
+[DEBUG _open_trade] eligible_highs (before bar 74): [(64, 23389.45), (70, 23385.95), (72, 23385.75)]
+[DEBUG _open_trade] eligible_lows (before bar 74): [(68, 23373.5), (71, 23379.4), (73, 23375.5)]
+[DEBUG _open_trade] entry=23389.45, sl=23394.8, risk=5.349999999998545, dirn=-1
+[DEBUG _open_trade] bar=38, dirn=1, ref_level=23793.5, dbar_close=23804.4, ref_swing_end_px=23728.05, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 38): [(30, 23796.85), (32, 23795.15), (36, 23793.5)]
+[DEBUG _open_trade] eligible_lows (before bar 38): [(31, 23786.25), (34, 23777.2), (37, 23786.55)]
+[DEBUG _open_trade] entry=23793.5, sl=23786.55, risk=6.950000000000728, dirn=1
+[DEBUG _open_trade] bar=30, dirn=1, ref_level=23927.75, dbar_close=23947.1, ref_swing_end_px=23927.75, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 30): [(18, 23969.75), (23, 23953.55), (26, 23944.9)]
+[DEBUG _open_trade] eligible_lows (before bar 30): [(22, 23941.5), (25, 23931.5), (28, 23927.75)]
+[DEBUG _open_trade] entry=23927.75, sl=23922.85, risk=4.900000000001455, dirn=1
+[DEBUG _open_trade] bar=47, dirn=1, ref_level=24014.55, dbar_close=24023.9, ref_swing_end_px=24014.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=14
+[DEBUG _open_trade] eligible_highs (before bar 47): [(41, 24037.55), (44, 24030.45), (45, 24030.15)]
+[DEBUG _open_trade] eligible_lows (before bar 47): [(43, 24014.55), (45, 24022.9), (46, 24022.2)]
+[DEBUG _open_trade] entry=24014.55, sl=24013.75, risk=0.7999999999992724, dirn=1
+[DEBUG _open_trade] bar=68, dirn=-1, ref_level=23957.9, dbar_close=23945.35, ref_swing_end_px=23957.9, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=18, normal_lows count=18
+[DEBUG _open_trade] eligible_highs (before bar 68): [(59, 23946.4), (63, 23955.6), (66, 23957.9)]
+[DEBUG _open_trade] eligible_lows (before bar 68): [(57, 23929.55), (61, 23934.7), (64, 23947.85)]
+[DEBUG _open_trade] entry=23957.9, sl=23955.6, risk=-2.3000000000029104, dirn=-1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=36, dirn=1, ref_level=23912.75, dbar_close=23913.3, ref_swing_end_px=23871.1, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 36): [(32, 23909.2), (33, 23913.6), (35, 23912.75)]
+[DEBUG _open_trade] eligible_lows (before bar 36): [(30, 23871.1), (33, 23891.95), (34, 23905.45)]
+[DEBUG _open_trade] entry=23912.75, sl=23905.45, risk=7.299999999999272, dirn=1
+[DEBUG _open_trade] bar=30, dirn=-1, ref_level=23623.8, dbar_close=23592.1, ref_swing_end_px=23623.8, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 30): [(16, 23615.95), (18, 23618.7), (25, 23623.8)]
+[DEBUG _open_trade] eligible_lows (before bar 30): [(15, 23587.7), (17, 23600.25), (22, 23565.8)]
+[DEBUG _open_trade] entry=23623.8, sl=23653.4, risk=29.600000000002183, dirn=-1
+[DEBUG _open_trade] bar=18, dirn=-1, ref_level=23264.1, dbar_close=23266.55, ref_swing_end_px=23297.75, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=9, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 18): [(11, 23297.75), (14, 23295.75), (17, 23288.25)]
+[DEBUG _open_trade] eligible_lows (before bar 18): [(11, 23270.8), (13, 23281.1), (15, 23264.1)]
+[DEBUG _open_trade] entry=23264.1, sl=23288.25, risk=24.150000000001455, dirn=-1
+[DEBUG _open_trade] bar=64, dirn=1, ref_level=23305.8, dbar_close=23334.65, ref_swing_end_px=23305.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=18
+[DEBUG _open_trade] eligible_highs (before bar 64): [(53, 23360.05), (55, 23357.1), (62, 23326.05)]
+[DEBUG _open_trade] eligible_lows (before bar 64): [(54, 23348.9), (60, 23305.8), (63, 23318.15)]
+[DEBUG _open_trade] entry=23305.8, sl=23299.0, risk=6.799999999999272, dirn=1
+[DEBUG _open_trade] bar=18, dirn=-1, ref_level=23100.95, dbar_close=23099.55, ref_swing_end_px=23148.05, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=4, normal_lows count=4
+[DEBUG _open_trade] eligible_highs (before bar 18): [(7, 23148.05), (14, 23126.4), (17, 23124.5)]
+[DEBUG _open_trade] eligible_lows (before bar 18): [(2, 23072.05), (12, 23092.8), (16, 23100.95)]
+[DEBUG _open_trade] entry=23100.95, sl=23124.5, risk=23.549999999999272, dirn=-1
+[DEBUG _open_trade] bar=25, dirn=1, ref_level=23949.5, dbar_close=23948.75, ref_swing_end_px=23927.35, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 25): [(15, 23952.1), (19, 23950.6), (22, 23949.5)]
+[DEBUG _open_trade] eligible_lows (before bar 25): [(17, 23927.35), (20, 23934.15), (23, 23931.85)]
+[DEBUG _open_trade] entry=23949.5, sl=23931.85, risk=17.650000000001455, dirn=1
+[DEBUG _open_trade] bar=24, dirn=-1, ref_level=23932.1, dbar_close=23934.4, ref_swing_end_px=23954.75, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 24): [(19, 23954.75), (20, 23948.1), (22, 23949.25)]
+[DEBUG _open_trade] eligible_lows (before bar 24): [(16, 23932.7), (19, 23939.5), (21, 23932.1)]
+[DEBUG _open_trade] entry=23932.1, sl=23949.25, risk=17.150000000001455, dirn=-1
+[DEBUG _open_trade] bar=28, dirn=1, ref_level=24081.45, dbar_close=24082.4, ref_swing_end_px=24005.45, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 28): [(14, 24073.85), (18, 24046.25), (26, 24081.45)]
+[DEBUG _open_trade] eligible_lows (before bar 28): [(17, 24028.3), (20, 24005.45), (27, 24067.0)]
+[DEBUG _open_trade] entry=24081.45, sl=24067.0, risk=14.450000000000728, dirn=1
+[DEBUG _open_trade] bar=55, dirn=-1, ref_level=23916.05, dbar_close=23886.05, ref_swing_end_px=23916.05, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=14, normal_lows count=15
+[DEBUG _open_trade] eligible_highs (before bar 55): [(38, 23872.35), (43, 23890.1), (50, 23916.05)]
+[DEBUG _open_trade] eligible_lows (before bar 55): [(40, 23863.9), (45, 23878.65), (54, 23872.7)]
+[DEBUG _open_trade] entry=23916.05, sl=23962.6, risk=46.54999999999927, dirn=-1
+[DEBUG _open_trade] bar=269, dirn=1, ref_level=24294.0, dbar_close=24288.9, ref_swing_end_px=24272.65, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=74, normal_lows count=73
+[DEBUG _open_trade] eligible_highs (before bar 269): [(259, 24293.65), (266, 24298.9), (268, 24294.0)]
+[DEBUG _open_trade] eligible_lows (before bar 269): [(261, 24272.65), (267, 24287.5), (268, 24288.05)]
+[DEBUG _open_trade] entry=24294.0, sl=24288.05, risk=5.950000000000728, dirn=1
+[DEBUG _open_trade] bar=31, dirn=1, ref_level=24235.45, dbar_close=24241.05, ref_swing_end_px=24207.2, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=9
+[DEBUG _open_trade] eligible_highs (before bar 31): [(20, 24224.8), (24, 24221.45), (26, 24235.45)]
+[DEBUG _open_trade] eligible_lows (before bar 31): [(23, 24207.2), (25, 24213.15), (30, 24223.35)]
+[DEBUG _open_trade] entry=24235.45, sl=24223.35, risk=12.100000000002183, dirn=1
+[DEBUG _open_trade] bar=25, dirn=1, ref_level=24109.8, dbar_close=24112.1, ref_swing_end_px=24097.05, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 25): [(21, 24112.3), (22, 24119.75), (24, 24109.8)]
+[DEBUG _open_trade] eligible_lows (before bar 25): [(20, 24105.15), (21, 24097.05), (23, 24102.75)]
+[DEBUG _open_trade] entry=24109.8, sl=24102.75, risk=7.049999999999272, dirn=1
+[DEBUG _open_trade] bar=29, dirn=1, ref_level=24030.85, dbar_close=24027.0, ref_swing_end_px=24016.15, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 29): [(25, 24029.8), (26, 24031.05), (28, 24030.85)]
+[DEBUG _open_trade] eligible_lows (before bar 29): [(21, 24016.15), (24, 24020.75), (27, 24024.3)]
+[DEBUG _open_trade] entry=24030.85, sl=24024.3, risk=6.549999999999272, dirn=1
+[DEBUG _open_trade] bar=16, dirn=-1, ref_level=23915.7, dbar_close=23912.75, ref_swing_end_px=23952.0, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=5
+[DEBUG _open_trade] eligible_highs (before bar 16): [(6, 23949.65), (9, 23952.0), (11, 23944.0)]
+[DEBUG _open_trade] eligible_lows (before bar 16): [(7, 23940.4), (10, 23933.6), (15, 23915.7)]
+[DEBUG _open_trade] entry=23915.7, sl=23944.0, risk=28.299999999999272, dirn=-1
+[DEBUG _open_trade] bar=42, dirn=1, ref_level=23657.05, dbar_close=23661.45, ref_swing_end_px=23631.35, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 42): [(33, 23656.05), (36, 23648.3), (39, 23657.05)]
+[DEBUG _open_trade] eligible_lows (before bar 42): [(35, 23635.65), (37, 23631.35), (41, 23651.25)]
+[DEBUG _open_trade] entry=23657.05, sl=23651.25, risk=5.799999999999272, dirn=1
+[DEBUG _open_trade] bar=97, dirn=1, ref_level=23919.35, dbar_close=23918.15, ref_swing_end_px=23891.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=27, normal_lows count=28
+[DEBUG _open_trade] eligible_highs (before bar 97): [(80, 23917.45), (90, 23927.75), (95, 23919.35)]
+[DEBUG _open_trade] eligible_lows (before bar 97): [(84, 23891.55), (94, 23912.5), (96, 23907.8)]
+[DEBUG _open_trade] entry=23919.35, sl=23907.8, risk=11.549999999999272, dirn=1
+[DEBUG _open_trade] bar=76, dirn=1, ref_level=23998.2, dbar_close=23996.7, ref_swing_end_px=23961.95, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=20, normal_lows count=20
+[DEBUG _open_trade] eligible_highs (before bar 76): [(63, 24006.1), (70, 24001.9), (73, 23998.2)]
+[DEBUG _open_trade] eligible_lows (before bar 76): [(67, 23984.8), (72, 23993.55), (74, 23985.65)]
+[DEBUG _open_trade] entry=23998.2, sl=23985.65, risk=12.549999999999272, dirn=1
+[DEBUG _open_trade] bar=50, dirn=1, ref_level=24184.95, dbar_close=24208.8, ref_swing_end_px=24184.95, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=12, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 50): [(39, 24210.0), (42, 24203.9), (47, 24203.15)]
+[DEBUG _open_trade] eligible_lows (before bar 50): [(41, 24199.5), (44, 24184.95), (47, 24195.2)]
+[DEBUG _open_trade] entry=24184.95, sl=24181.8, risk=3.150000000001455, dirn=1
+[DEBUG _open_trade] bar=30, dirn=1, ref_level=24245.8, dbar_close=24253.2, ref_swing_end_px=24245.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 30): [(24, 24267.0), (27, 24257.0), (29, 24261.65)]
+[DEBUG _open_trade] eligible_lows (before bar 30): [(23, 24254.6), (26, 24245.8), (27, 24248.5)]
+[DEBUG _open_trade] entry=24245.8, sl=24187.1, risk=58.70000000000073, dirn=1
+[DEBUG _open_trade] bar=274, dirn=1, ref_level=24390.2, dbar_close=24400.15, ref_swing_end_px=24390.2, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=64, normal_lows count=65
+[DEBUG _open_trade] eligible_highs (before bar 274): [(254, 24420.75), (263, 24411.3), (269, 24399.25)]
+[DEBUG _open_trade] eligible_lows (before bar 274): [(259, 24396.05), (266, 24391.45), (271, 24390.2)]
+[DEBUG _open_trade] entry=24390.2, sl=24389.8, risk=0.4000000000014552, dirn=1
+[DEBUG _open_trade] bar=34, dirn=1, ref_level=24628.8, dbar_close=24629.5, ref_swing_end_px=24604.6, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=12
+[DEBUG _open_trade] eligible_highs (before bar 34): [(27, 24635.95), (29, 24632.05), (32, 24628.8)]
+[DEBUG _open_trade] eligible_lows (before bar 34): [(28, 24626.9), (31, 24621.6), (33, 24621.9)]
+[DEBUG _open_trade] entry=24628.8, sl=24621.9, risk=6.899999999997817, dirn=1
+[DEBUG _open_trade] bar=35, dirn=1, ref_level=24538.8, dbar_close=24540.5, ref_swing_end_px=24511.1, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 35): [(26, 24530.35), (29, 24523.8), (33, 24538.8)]
+[DEBUG _open_trade] eligible_lows (before bar 35): [(28, 24512.95), (30, 24518.45), (34, 24525.55)]
+[DEBUG _open_trade] entry=24538.8, sl=24525.55, risk=13.25, dirn=1
+[DEBUG _open_trade] bar=62, dirn=1, ref_level=24369.7, dbar_close=24370.55, ref_swing_end_px=24357.5, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=15
+[DEBUG _open_trade] eligible_highs (before bar 62): [(51, 24367.5), (56, 24372.1), (59, 24369.7)]
+[DEBUG _open_trade] eligible_lows (before bar 62): [(53, 24357.5), (58, 24362.4), (60, 24359.25)]
+[DEBUG _open_trade] entry=24369.7, sl=24359.25, risk=10.450000000000728, dirn=1
+[DEBUG _open_trade] bar=28, dirn=1, ref_level=24345.85, dbar_close=24348.05, ref_swing_end_px=24316.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 28): [(15, 24344.15), (21, 24330.95), (25, 24345.85)]
+[DEBUG _open_trade] eligible_lows (before bar 28): [(19, 24316.3), (22, 24324.2), (27, 24337.1)]
+[DEBUG _open_trade] entry=24345.85, sl=24337.1, risk=8.75, dirn=1
+[DEBUG _open_trade] bar=21, dirn=1, ref_level=24336.7, dbar_close=24332.85, ref_swing_end_px=24304.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=6, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 21): [(9, 24335.9), (11, 24326.05), (19, 24336.7)]
+[DEBUG _open_trade] eligible_lows (before bar 21): [(10, 24318.05), (16, 24304.3), (20, 24326.45)]
+[DEBUG _open_trade] entry=24336.7, sl=24326.45, risk=10.25, dirn=1
+[DEBUG _open_trade] bar=61, dirn=1, ref_level=24283.8, dbar_close=24281.2, ref_swing_end_px=24276.85, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=20, normal_lows count=20
+[DEBUG _open_trade] eligible_highs (before bar 61): [(54, 24293.35), (58, 24282.35), (59, 24283.8)]
+[DEBUG _open_trade] eligible_lows (before bar 61): [(57, 24276.85), (59, 24277.4), (60, 24280.05)]
+[DEBUG _open_trade] entry=24283.8, sl=24280.05, risk=3.75, dirn=1
+[DEBUG _open_trade] bar=70, dirn=1, ref_level=24220.75, dbar_close=24214.1, ref_swing_end_px=24208.0, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=17, normal_lows count=17
+[DEBUG _open_trade] eligible_highs (before bar 70): [(56, 24224.9), (64, 24215.95), (68, 24220.75)]
+[DEBUG _open_trade] eligible_lows (before bar 70): [(62, 24208.0), (65, 24210.8), (69, 24212.35)]
+[DEBUG _open_trade] entry=24220.75, sl=24212.35, risk=8.400000000001455, dirn=1
+[DEBUG _open_trade] bar=41, dirn=-1, ref_level=24108.45, dbar_close=24102.1, ref_swing_end_px=24108.45, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=11, normal_lows count=11
+[DEBUG _open_trade] eligible_highs (before bar 41): [(29, 24090.95), (36, 24108.45), (38, 24106.15)]
+[DEBUG _open_trade] eligible_lows (before bar 41): [(31, 24079.55), (38, 24095.8), (40, 24093.6)]
+[DEBUG _open_trade] entry=24108.45, sl=24109.15, risk=0.7000000000007276, dirn=-1
+[DEBUG _open_trade] bar=19, dirn=1, ref_level=24192.75, dbar_close=24197.9, ref_swing_end_px=24184.55, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=8, normal_lows count=8
+[DEBUG _open_trade] eligible_highs (before bar 19): [(12, 24201.6), (15, 24196.05), (18, 24192.75)]
+[DEBUG _open_trade] eligible_lows (before bar 19): [(14, 24188.95), (17, 24187.0), (18, 24185.1)]
+[DEBUG _open_trade] entry=24192.75, sl=24185.1, risk=7.650000000001455, dirn=1
+[DEBUG _open_trade] bar=30, dirn=1, ref_level=24247.85, dbar_close=24245.6, ref_swing_end_px=24206.8, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=7
+[DEBUG _open_trade] eligible_highs (before bar 30): [(14, 24236.2), (22, 24219.45), (27, 24247.85)]
+[DEBUG _open_trade] eligible_lows (before bar 30): [(19, 24206.8), (23, 24214.2), (28, 24238.8)]
+[DEBUG _open_trade] entry=24247.85, sl=24238.8, risk=9.049999999999272, dirn=1
+[DEBUG _open_trade] bar=59, dirn=1, ref_level=24275.2, dbar_close=24273.05, ref_swing_end_px=24267.3, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=15, normal_lows count=16
+[DEBUG _open_trade] eligible_highs (before bar 59): [(48, 24276.55), (51, 24274.3), (56, 24275.2)]
+[DEBUG _open_trade] eligible_lows (before bar 59): [(49, 24267.65), (52, 24267.7), (57, 24269.6)]
+[DEBUG _open_trade] entry=24275.2, sl=24269.6, risk=5.600000000002183, dirn=1
+[DEBUG _open_trade] bar=87, dirn=1, ref_level=24133.45, dbar_close=24130.2, ref_swing_end_px=24115.45, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=19, normal_lows count=19
+[DEBUG _open_trade] eligible_highs (before bar 87): [(79, 24137.15), (81, 24134.2), (84, 24133.45)]
+[DEBUG _open_trade] eligible_lows (before bar 87): [(80, 24128.2), (83, 24126.75), (86, 24125.85)]
+[DEBUG _open_trade] entry=24133.45, sl=24125.85, risk=7.600000000002183, dirn=1
+[DEBUG _open_trade] bar=75, dirn=1, ref_level=24294.25, dbar_close=24307.4, ref_swing_end_px=24294.25, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=21, normal_lows count=21
+[DEBUG _open_trade] eligible_highs (before bar 75): [(65, 24320.15), (68, 24311.95), (70, 24305.7)]
+[DEBUG _open_trade] eligible_lows (before bar 75): [(66, 24303.4), (69, 24294.55), (72, 24294.25)]
+[DEBUG _open_trade] entry=24294.25, sl=24294.55, risk=-0.2999999999992724, dirn=1
+[DEBUG _open_trade] REJECTING: risk <= 0
+[DEBUG _open_trade] bar=36, dirn=-1, ref_level=24228.2, dbar_close=24209.05, ref_swing_end_px=24228.2, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=10, normal_lows count=10
+[DEBUG _open_trade] eligible_highs (before bar 36): [(26, 24206.15), (32, 24224.8), (34, 24228.2)]
+[DEBUG _open_trade] eligible_lows (before bar 36): [(25, 24195.95), (27, 24197.75), (33, 24215.8)]
+[DEBUG _open_trade] entry=24228.2, sl=24232.3, risk=4.099999999998545, dirn=-1
+[DEBUG _open_trade] bar=21, dirn=-1, ref_level=24137.8, dbar_close=24137.75, ref_swing_end_px=24158.25, ref_swing_end_dir=buying
+[DEBUG _open_trade] normal_highs count=7, normal_lows count=6
+[DEBUG _open_trade] eligible_highs (before bar 21): [(12, 24158.25), (15, 24154.35), (19, 24154.9)]
+[DEBUG _open_trade] eligible_lows (before bar 21): [(9, 24112.6), (14, 24143.65), (16, 24137.8)]
+[DEBUG _open_trade] entry=24137.8, sl=24154.9, risk=17.100000000002183, dirn=-1
+[DEBUG _open_trade] bar=49, dirn=1, ref_level=24032.0, dbar_close=24031.8, ref_swing_end_px=24013.15, ref_swing_end_dir=selling
+[DEBUG _open_trade] normal_highs count=13, normal_lows count=13
+[DEBUG _open_trade] eligible_highs (before bar 49): [(39, 24029.2), (45, 24033.25), (47, 24032.0)]
+[DEBUG _open_trade] eligible_lows (before bar 49): [(41, 24013.15), (46, 24025.45), (48, 24023.4)]
+[DEBUG _open_trade] entry=24032.0, sl=24023.4, risk=8.599999999998545, dirn=1
+Case: Bc3
+Trade mode: conservative
+Trades: 1
+
+=== All events for 27 Aug ===
+  {'type': 'swing_classified_v2', 'bar': 1, 'time': '09:16', 'direction': 'selling', 'engine': 'FirstSwingEngine', 'source': 'chop'}
+  {'type': 'fs_breaks', 'breaks': [{'idx': 2, 'time': '09:17', 'kind': 'B1', 'dir': 'down', 'px': 24263.8}, {'idx': 7, 'time': '09:22', 'kind': 'B2', 'dir': 'down', 'px': 24230.7}]}
+  {'type': 'fs_segment', 'dir': 'down', 'start_idx': 1, 'start_px': 24297.45, 'end_idx': 17, 'end_px': 24188.6, 'confirmed_at_idx': 19, 'confirmed_at_time': '09:34'}
+  {'type': 'swing2_classified', 'dir': 'buying', 'bar': 22, 'time': '09:37', 'first_swing': 'selling'}
+  {'type': 'fs2_segment', 'dir': 'up', 'start_idx': 22, 'start_px': 24192.45, 'end_idx': 34, 'end_px': 24228.2, 'confirmed_at_idx': 35, 'confirmed_at_time': '09:50'}
+  {'type': 'fs_breaks_2', 'breaks': [{'idx': 19, 'time': '09:34', 'kind': 'B1', 'dir': 'up', 'px': 24203.55}, {'idx': 22, 'time': '09:37', 'kind': 'FLIP', 'dir': 'down', 'px': 24196.95}, {'idx': 30, 'time': '09:45', 'kind': 'FLIP', 'dir': 'up', 'px': 24216.9}]}
+  {'type': 'second_swing_armed', 'dir': 'buying', 'confirmed_at_idx': 35, 'trade_mode': 'conservative'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 2, 'time': '09:17', 'level': 24263.8, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 7, 'time': '09:22', 'level': 24238.35, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 12, 'time': '09:27', 'level': 24217.75, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 16, 'time': '09:31', 'level': 24198.35, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 35, 'time': '09:50', 'level': 24215.8, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'pace_break', 'bar': 36, 'time': '09:51', 'break_type': 'pivot_break', 'level': 24228.2, 'swing_before': 'buying', 'aligned_with_bias': True, 'pivot_break_count': 1}
+  {'type': 'entry', 'bar': 36, 'time': '09:51:00', 'dir': 'short', 'price': 24228.2, 'sl': 24232.3, 'target': 24215.9}
+  {'type': 'day_level_set', 'bar': 36, 'time': '09:51', 'ts': 1787804460, 'level': 24228.2, 'break_type': 'pivot_break'}
+  {'type': 'exit', 'bar': 37, 'time': '09:52', 'outcome': 'target', 'price': 24215.9, 'r': 3.0}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 49, 'time': '10:04', 'level': 24193.6, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 54, 'time': '10:09', 'level': 24195.4, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 72, 'time': '10:27', 'level': 24185.8, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 78, 'time': '10:33', 'level': 24190.45, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 99, 'time': '10:54', 'level': 24162.3, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 107, 'time': '11:02', 'level': 24161.15, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 110, 'time': '11:05', 'level': 24164.75, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 114, 'time': '11:09', 'level': 24167.1, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 134, 'time': '11:29', 'level': 24144.6, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 136, 'time': '11:31', 'level': 24146.4, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 145, 'time': '11:40', 'level': 24160.15, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 152, 'time': '11:47', 'level': 24154.1, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 157, 'time': '11:52', 'level': 24155.65, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 160, 'time': '11:55', 'level': 24156.5, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 178, 'time': '12:13', 'level': 24148.95, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 182, 'time': '12:17', 'level': 24157.95, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 190, 'time': '12:25', 'level': 24148.8, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 201, 'time': '12:36', 'level': 24162.15, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 206, 'time': '12:41', 'level': 24177.1, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 211, 'time': '12:46', 'level': 24175.65, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 214, 'time': '12:49', 'level': 24178.0, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 217, 'time': '12:52', 'level': 24181.9, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 225, 'time': '13:00', 'level': 24186.65, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 227, 'time': '13:02', 'level': 24184.35, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 236, 'time': '13:11', 'level': 24184.95, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 240, 'time': '13:15', 'level': 24195.55, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 249, 'time': '13:24', 'level': 24192.55, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 263, 'time': '13:38', 'level': 24178.9, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 278, 'time': '13:53', 'level': 24143.15, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 286, 'time': '14:01', 'level': 24134.05, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 290, 'time': '14:05', 'level': 24131.25, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 296, 'time': '14:11', 'level': 24134.5, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 304, 'time': '14:19', 'level': 24141.95, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 307, 'time': '14:22', 'level': 24144.0, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 311, 'time': '14:26', 'level': 24149.55, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 313, 'time': '14:28', 'level': 24152.2, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 335, 'time': '14:50', 'level': 24154.85, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 341, 'time': '14:56', 'level': 24155.6, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 344, 'time': '14:59', 'level': 24155.9, 'reason': 'pivot_broken_while_gate_closed'}
+  {'type': 'skipped_already_broken_gate_closed', 'bar': 356, 'time': '15:11', 'level': 24145.5, 'reason': 'pivot_broken_while_gate_closed'}

@@ -338,6 +338,7 @@ export interface BacktestParams {
   sl_pivot_buffer?: number; // buffer in points (default 1.0) when sl_mode=prev_pivot
   ft_fail_enabled: boolean; // early exit when close beyond dom_level within 2 bars (S5:98)
   entry_method?: string; // pace_break | pivot_break
+  rr_target?: number; // fixed target in R (default 3.0); only used when trailing=off
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -348,6 +349,7 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   sl_pivot_buffer: 1.0,
   ft_fail_enabled: true,
   entry_method: "pace_break",
+  rr_target: 3.0,
 };
 
 export interface IntradayTrade {
@@ -412,6 +414,7 @@ export const getIntradayBacktest = (
     sl_pivot_buffer: String(params.sl_pivot_buffer ?? 1.0),
     ft_fail_enabled: String(params.ft_fail_enabled),
     entry_method: params.entry_method ?? "pace_break",
+    rr_target: String(params.rr_target ?? 3.0),
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,

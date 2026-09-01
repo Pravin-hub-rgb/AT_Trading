@@ -1,0 +1,12 @@
+Case: Bc5
+Trade mode: conservative
+Trades: 1
+  Trade: short 09:58:00 @ 24200.85 SL=24208.25 exit=10:26:00 @24178.65 outcome=target
+
+Key events:
+  {'type': 'second_swing_armed', 'dir': 'buying', 'confirmed_at_idx': 7, 'trade_mode': 'conservative'}
+  {'type': 'pace_break', 'bar': 9, 'time': '10:00', 'break_type': 'pivot_break', 'level': 24200.85, 'swing_before': 'buying', 'swing_size': 116.2, 'aligned_with_bias': True, 'pivot_break_count': 1}
+  {'type': 'day_level_set', 'bar': 9, 'time': '10:00', 'ts': 1787805000, 'level': 24200.85, 'break_type': 'pivot_break'}
+  {'type': 'entry', 'bar': 9, 'time': '09:58:00', 'dir': 'short', 'price': 24200.85, 'sl': 24208.25, 'target': 24178.65}
+  {'type': 'pending_direct_1m', 'bar': 9, 'time': '10:00', 'ts': 1787805000, 'level': 24200.85, 'break_type': 'pivot_break', 'direct': True}
+  {'type': 'exit', 'bar': 15, 'time': '10:26:00', 'outcome': 'target', 'price': 24178.65, 'r': 3.0}

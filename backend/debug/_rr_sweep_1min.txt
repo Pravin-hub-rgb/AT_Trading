@@ -1,0 +1,22 @@
+RR 1:1.0  | trades=125  wins=71   wr=56.8   total_r=17.0     avg_r=0.14   longs=82 shorts=43
+          outcomes: sl:54 target:71
+          cases R : B1:+0.0 B2:+2.0 B3:-1.0 B4:+2.0 B5:-1.0 B6:-1.0 B8:+3.0 Bc1:-3.0 Bc2:+1.0 Bc3:+2.0 Bc4:+3.0 Bc5:+8.0 Bc6:+3.0 Bc8:-1.0
+RR 1:1.5  | trades=125  wins=60   wr=48.0   total_r=25.0     avg_r=0.2    longs=82 shorts=43
+          outcomes: sl:65 target:60
+          cases R : B1:-1.5 B2:+4.0 B3:-0.5 B4:+1.0 B5:+0.5 B6:-3.0 B8:+7.5 Bc1:-3.0 Bc2:-1.0 Bc3:+3.5 Bc4:+4.5 Bc5:+7.5 Bc6:+6.0 Bc8:-0.5
+RR 1:2.0  | trades=125  wins=51   wr=40.8   total_r=28.0     avg_r=0.22   longs=82 shorts=43
+          outcomes: sl:74 target:51
+          cases R : B1:-4.0 B2:+6.0 B3:+0.0 B4:+2.0 B5:+4.0 B6:-5.0 B8:+5.0 Bc1:-3.0 Bc2:-1.0 Bc3:+5.0 Bc4:+3.0 Bc5:+11.0 Bc6:+6.0 Bc8:-1.0
+RR 1:2.5  | trades=125  wins=38   wr=30.4   total_r=21.0     avg_r=0.17   longs=82 shorts=43
+          outcomes: cost-to-cost:13 sl:74 target:38
+          cases R : B1:-4.0 B2:+5.5 B3:+0.5 B4:-2.0 B5:+0.0 B6:-2.0 B8:+0.0 Bc1:-3.0 Bc2:-1.0 Bc3:+6.5 Bc4:+4.0 Bc5:+9.5 Bc6:+6.0 Bc8:+1.0
+RR 1:3.0  | trades=125  wins=29   wr=23.2   total_r=13.0     avg_r=0.1    longs=82 shorts=43
+          outcomes: cost-to-cost:22 sl:74 target:29
+          cases R : B1:-4.0 B2:+4.0 B3:-2.0 B4:-2.0 B5:-1.0 B6:-2.0 B8:-3.0 Bc1:-3.0 Bc2:-1.0 Bc3:+8.0 Bc4:+2.0 Bc5:+12.0 Bc6:+8.0 Bc8:-3.0
+RR 1:4.0  | trades=125  wins=22   wr=17.6   total_r=14.0     avg_r=0.11   longs=82 shorts=43
+          outcomes: cost-to-cost:29 sl:74 target:22
+          cases R : B1:-4.0 B2:+6.0 B3:-2.0 B4:-2.0 B5:-2.0 B6:-1.0 B8:-7.0 Bc1:-3.0 Bc2:-1.0 Bc3:+11.0 Bc4:+3.0 Bc5:+13.0 Bc6:+4.0 Bc8:-1.0
+
+=== SUMMARY (1min) ===
+best total_r : RR 1:2.0  (28.0R over 125 trades)
+best avg_r   : RR 1:2.0  (0.22R/trade)

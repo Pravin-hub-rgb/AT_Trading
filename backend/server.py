@@ -534,6 +534,7 @@ def intraday_backtest(
     ft_fail_enabled: bool = True,
     entry_method: str = "pace_break",
     swing_mode: str = "opposite_swing_needed",
+    rr_target: float = 3.0,
 ):
     """Full-history intraday results for one experiment combo.
 
@@ -542,7 +543,8 @@ def intraday_backtest(
     sl_pivot_buffer in points (default 1.0) for prev_pivot mode,
     ft_fail_enabled (default True): early exit when close beyond dom_level within 2 bars (S5:98),
     entry_method (default pace_break): pace_break | pivot_break,
-    swing_mode (default opposite_swing_needed): none | opposite_swing_needed (1min only).
+    swing_mode (default opposite_swing_needed): none | opposite_swing_needed (1min only),
+    rr_target (default 3.0): fixed target in R; only used when trailing=off.
     """
     cfg = {
         "sl_mode": sl_mode,
@@ -555,6 +557,7 @@ def intraday_backtest(
         "ft_fail_enabled": ft_fail_enabled,
         "entry_method": entry_method,
         "swing_mode": swing_mode,
+        "rr_target": float(rr_target),
     }
     try:
         data, _ = _intraday_backtest(cfg)
@@ -575,6 +578,7 @@ def intraday_day(
     ft_fail_enabled: bool = True,
     entry_method: str = "pace_break",
     swing_mode: str = "opposite_swing_needed",
+    rr_target: float = 3.0,
 ):
     """Single-day detail: trades + full event timeline for chart annotation."""
     cfg = {
@@ -587,6 +591,7 @@ def intraday_day(
         "ft_fail_enabled": ft_fail_enabled,
         "entry_method": entry_method,
         "swing_mode": swing_mode,
+        "rr_target": float(rr_target),
     }
     try:
         _, days = _intraday_backtest(cfg)

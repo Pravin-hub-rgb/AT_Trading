@@ -78,6 +78,10 @@ function loadSavedIntradayFilters(): { params: BacktestParams; case: string } {
         typeof saved.entry_method === "string"
           ? saved.entry_method
           : (DEFAULT_BT_PARAMS.entry_method ?? "pivot_break"),
+      rr_target:
+        typeof saved.rr_target === "number"
+          ? saved.rr_target
+          : (DEFAULT_BT_PARAMS.rr_target ?? 3.0),
     };
     const caseValue =
       typeof saved.caseValue === "string" ? saved.caseValue : "all";

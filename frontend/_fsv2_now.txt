@@ -1,0 +1,65 @@
+=== FS v2 (GT=57 days, 1-min replay, hard timeCap 09:29, no fallback) ===
+match 24/57 | medLag -5 | medT 09:58
+
+=== DETAIL ===
+2026-08-25 down gt=10:25(24115.5) | down@end=10:26(24115.5) conf=10:32 src=chop ?
+2026-08-24 down gt=09:55(24267.3) | down@end=09:59(24267.3) conf=10:03 src=chop ?
+2026-08-21 down gt=09:34(24206.8) | down@end=09:34(24206.8) conf=09:39 src=chop ?
+2026-08-20 down gt=09:24(24184.5) | down@end=09:24(24184.5) conf=09:31 src=sustain ?
+2026-08-19 down gt=09:35(24065.1) | down@end=09:38(24065.1) conf=09:43 src=chop ?
+2026-08-18 down gt=10:15(24208.0) | down@end=10:17(24208.0) conf=10:21 src=chop ?
+2026-08-17 down gt=09:30(24280.8) | down@end=10:12(24276.8) conf=10:15 src=chop ?
+2026-08-14 down gt=09:30(24304.3) | down@end=09:31(24304.3) conf=09:32 src=chop ?
+2026-08-13 down gt=09:30(24316.3) | down@end=09:34(24316.3) conf=09:38 src=chop ?
+2026-08-12 down gt=10:05(24357.5) | down@end=10:08(24357.5) conf=10:10 src=chop ?
+2026-08-11 down gt=09:55(24460.9) | down@end=09:30(24478.6) conf=09:34 src=chop ?
+2026-08-10 down gt=09:35(24511.1) | down@end=09:37(24511.1) conf=09:46 src=chop ?
+2026-08-07 up   gt=09:55(24630.4) | up@end=09:56(24628.5) conf=09:58 src=chop ?
+2026-08-06 up   gt=09:50(24665.0) | up@end=09:31(24650.5) conf=09:33 src=chop ?
+2026-08-04 down gt=09:30(24589.3) | down@end=10:33(24580.9) conf=10:34 src=chop ?
+2026-08-03 up   gt=10:15(24592.5) | up@end=10:18(24592.5) conf=10:22 src=chop ?
+2026-08-05 down gt=09:55(24581.5) | down@end=09:37(24604.6) conf=09:39 src=chop ?
+2026-07-31 down gt=09:35(24299.7) | up@end=12:15(24384.4) conf=12:18 src=chop ?
+2026-07-30 up   gt=09:30(24287.3) | up@end=09:26(24280.5) conf=09:30 src=chop ?
+2026-07-29 up   gt=09:50(24221.7) | up@end=09:50(24221.7) conf=09:51 src=chop ?
+2026-07-28 down gt=10:05(23962.0) | down@end=10:08(23962.0) conf=10:12 src=chop ?
+2026-07-27 down gt=10:05(23909.0) | down@end=10:39(23891.5) conf=10:43 src=chop ?
+2026-07-24 down gt=10:20(23606.3) | down@end=09:52(23631.3) conf=09:53 src=chop ?
+2026-07-23 up   gt=10:05(23970.0) | up@end=09:24(23952.0) conf=09:29 src=chop ?
+2026-07-22 down gt=09:55(24008.7) | down@end=09:36(24016.2) conf=09:42 src=chop ?
+2026-07-21 down gt=10:50(24163.8) | down@end=10:27(24186.2) conf=10:29 src=chop ?
+2026-07-20 down gt=09:45(24157.5) | up@end=14:05(24266.1) conf=14:07 src=chop ?
+2026-07-17 up   gt=09:50(24247.0) | up@end=09:30(24216.8) conf=09:31 src=chop ?
+2026-07-15 up   gt=09:30(24218.2) | up@end=09:28(24211.8) conf=09:29 src=chop ?
+2026-07-14 down gt=09:45(24062.5) | up@end=09:26(24157.1) conf=09:30 src=chop ?
+2026-07-10 up   gt=10:00(24226.0) | up@end=10:00(24226.0) conf=10:03 src=chop ?
+2026-07-13 up   gt=10:00(24128.8) | up@end=10:01(24128.8) conf=10:04 src=chop ?
+2026-07-09 up   gt=09:45(24067.4) | up@end=09:30(24040.8) conf=09:32 src=chop ?
+2026-07-08 down gt=09:35(24207.2) | down@end=09:38(24207.2) conf=09:41 src=chop ?
+2026-07-06 up   gt=09:45(24394.4) | up@end=09:36(24379.9) conf=09:44 src=chop ?
+2026-07-03 down gt=10:05(24311.8) | down@end=13:36(24272.7) conf=13:40 src=chop ?
+2026-07-02 up   gt=09:40(24159.5) | up@end=09:25(24127.6) conf=09:30 src=chop ?
+2026-07-01 up   gt=10:00(23996.4) | up@end=09:40(23950.0) conf=09:42 src=chop ?
+2026-06-30 down gt=09:50(23852.0) | down@end=09:35(23866.8) conf=09:36 src=chop ?
+2026-06-29 down gt=09:35(24005.5) | down@end=09:35(24005.5) conf=09:38 src=chop ?
+2026-06-25 up   gt=09:50(24185.3) | up@end=09:25(24169.7) conf=09:31 src=chop ?
+2026-06-24 up   gt=09:40(23895.3) | up@end=09:28(23885.3) conf=09:29 src=chop ?
+2026-06-23 up   gt=10:00(24135.5) | up@end=09:40(24133.0) conf=09:43 src=chop ?
+2026-06-22 up   gt=10:10(24159.7) | up@end=09:23(24142.5) conf=09:29 src=chop ?
+2026-06-19 up   gt=10:15(24011.5) | up@end=10:15(24011.5) conf=10:20 src=chop ?
+2026-06-18 up   gt=09:55(24139.7) | up@end=09:55(24139.7) conf=09:59 src=chop ?
+2026-06-17 up   gt=09:55(24071.7) | up@end=09:58(24071.7) conf=10:01 src=chop ?
+2026-06-16 up   gt=10:50(23977.8) | up@end=09:34(23954.8) conf=09:36 src=chop ?
+2026-06-15 down gt=10:10(23933.5) | down@end=09:32(23927.3) conf=09:39 src=sustain ?
+2026-06-12 down gt=10:20(23322.7) | down@end=09:31(23385.7) conf=09:34 src=chop ?
+2026-06-11 up   gt=09:50(23172.8) | up@end=09:22(23148.0) conf=09:30 src=sustain ?
+2026-06-10 up   gt=09:55(23384.5) | up@end=09:30(23351.3) conf=09:37 src=sustain ?
+2026-06-09 down gt=10:50(23129.1) | down@end=10:10(23160.5) conf=10:12 src=chop ?
+2026-06-08 up   gt=09:35(23185.2) | up@end=09:35(23185.2) conf=09:36 src=chop ?
+2026-06-05 down gt=10:00(23423.8) | down@end=09:21(23439.3) conf=09:29 src=chop ?
+2026-06-04 up   gt=09:55(23443.3) | up@end=09:37(23366.7) conf=09:40 src=chop ?
+2026-06-03 down gt=09:55(23225.5) | down@end=09:27(23265.3) conf=09:32 src=chop ?
+
+summary: dirWrong=3 notDeclared=0 dirOkButEndMissed=30
+
+FULL HISTORY: declared 266/267 · confirm-time med=09:40 p90=10:28

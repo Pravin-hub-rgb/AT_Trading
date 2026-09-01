@@ -77,6 +77,7 @@ DEFAULT_CFG = {
     "sl_pivot_buffer": 1.0,  # buffer in absolute points for prev_pivot SL mode
     "ft_fail_enabled": True,  # early exit when close goes beyond dom_level within 2 bars (S5:98)
     "entry_method": "pivot_break",   # pace_break | pivot_break
+    "rr_target": 3.0,        # fixed target in R (1:3 course default); only used when trailing=off
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -718,10 +719,13 @@ def simulate_day(
         # Must be checked for EVERY entry attempt, not just day_level_set
         if ref_swing_end_px is not None:
             # For 1-min direct, entry price will be level (pivot) if pivot_break else close
-            # Estimate entry price for guard: use ref_level for pivot_break direct, else candle close
+            # Estimate entry price for guard: use the dbar's close (actual entry candle), NOT the break level.
+            # The break level is the trigger, but the entry happens on the candle that triggered it.
+            # For conservative SHORT after buying swing: break triggers at fs2_end_px (24228.2),
+            # but entry is at the close of the candle that broke below it. If close < ref_swing_end_px, valid.
             est_entry = float(m1_bar["close"]) if m1_bar is not None else float(candles[bar_idx]["close"])
             if m1_bar is not None and cfg.get("entry_method") == "pivot_break" and btype == "pivot_break":
-                est_entry = float(ref_level)
+                est_entry = float(dbar.get("close", m1_bar["close"]))
             def _m1_time_str(mb):
                 if not mb:
                     return candles[bar_idx]["time"]
@@ -845,13 +849,14 @@ def simulate_day(
             else:
                 sl = max(ref_level, candles[bar_idx]["high"]) + ref_dist
 
+        rr = float(cfg.get("rr_target", RR_TARGET))
         if dirn == 1:
             risk = entry - sl
-            target = entry + RR_TARGET * risk
+            target = entry + rr * risk
             direction = "long"
         else:
             risk = sl - entry
-            target = entry - RR_TARGET * risk
+            target = entry - rr * risk
             direction = "short"
         if risk <= 0:
             return False
@@ -923,6 +928,7 @@ def simulate_day(
     #   - SKIP: unbiased days (no trade in 1-min) → already returned earlier
     fs2_dir: str | None = None
     fs2_confirmed_idx: int = -1
+    fs2_end_px: float = float("nan")
     # 1-min first swing info (used for 2nd swing direction detection)
     fs1_1min_dir: str | None = None
     fs1_1min_confirmed_idx: int = -1
@@ -1005,6 +1011,7 @@ def simulate_day(
                             {"type": "swing2_classified", "dir": fs2_dir, "bar": m1_to_5(eng2.start_idx), "time": eng2.start_time, "first_swing": use_fs1_for_2nd_dir},
                             {"type": "fs2_segment", "dir": eng2.dir, "start_idx": m1_to_5(eng2.start_idx), "start_px": eng2.start_px, "end_idx": m1_to_5(eng2.end_idx), "end_px": eng2.end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": eng2.confirmed_at_time},
                         ]
+                        fs2_end_px = eng2.end_px
                         # also include break marks for chart if needed
                         fs2_events.append({"type": "fs_breaks_2", "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px} for b in eng2.break_marks]})
                     else:
@@ -1029,6 +1036,11 @@ def simulate_day(
                 result["swing2_direction"] = fs2_dir
                 result["swing2_confirmed_idx"] = fs2_confirmed_idx
                 swing_dir_for_gate = use_fs1_for_2nd_dir
+                # Extract fs2_end_px from fs2_segment event for swing-end-line filter
+                for _ev in _fs2_ev:
+                    if _ev.get("type") == "fs2_segment":
+                        fs2_end_px = _ev.get("end_px", float("nan"))
+                        break
         else:
             result["swing2_direction"] = None
             result["swing2_confirmed_idx"] = -1
@@ -1071,6 +1083,23 @@ def simulate_day(
     else:
         # AGGRESSIVE (or 5min): use FS gate (FS1)
         entry_swing_confirmed_idx = fs1_gate_idx
+
+    # FIX: For conservative, ref_swing_end_px should use fs2_end_px (not fs1_end_px)
+    # Per entry theory.md: "entry must be ABOVE/BELOW the swing END point"
+    # For conservative, the relevant swing is FS2, not FS1.
+    # This ensures the swing-end-line filter checks against FS2's end, not FS1's end.
+    if trade_mode == "conservative" and fs2_end_px == fs2_end_px:  # NaN != NaN so this is False for NaN
+        ref_swing_end_px = fs2_end_px
+        ref_swing_end_dir = fs2_dir
+        # Also update cur_swing to fs2_dir for conservative entry tracking
+        cur_swing = fs2_dir
+        # Update swing_extreme and swing_base for the fs2 direction
+        if fs2_dir == "buying":
+            swing_extreme = fs2_end_px  # FS2 end high
+            swing_base = min(c["low"] for c in candles[:fs2_confirmed_idx+1]) if fs2_confirmed_idx >= 0 else candles[0]["low"]
+        else:
+            swing_extreme = fs2_end_px  # FS2 end low
+            swing_base = max(c["high"] for c in candles[:fs2_confirmed_idx+1]) if fs2_confirmed_idx >= 0 else candles[0]["high"]
 
     def _manage_1m_chunk(trade: dict, upto_ts: int) -> bool:
         """Delegate 1-min exit management to the intraday_1m module."""
@@ -1323,6 +1352,7 @@ def simulate_day(
         # ---- entry trigger: pace_break or pivot_break ----
         if i > 0 and cur_swing is not None and can_enter:
             trade_dir = -1 if cur_swing == "buying" else 1
+            # DEBUG
             if cfg.get("entry_method") == "pivot_break":
                 # In 1-min mode, pivot_break uses the 1-min Walker's sealed pivots
                 # (finer-grained structure, e.g. the 10:23 low on the 1-min chart)
@@ -1346,6 +1376,7 @@ def simulate_day(
                             mc = m1_candles[k]
                             if mc["ts"] > prev_5_ts and mc["ts"] <= cur_5_ts:
                                 # Check if this 1-min bar breaks the MOST RECENT sealed pivot
+                                # Per detect_pivot_break: LONG=high above high pivot, SHORT=low below low pivot
                                 if trade_dir == -1 and normal_lows_1m:
                                     # SHORT: 1-min low < most recent low pivot
                                     for piv in reversed(normal_lows_1m):

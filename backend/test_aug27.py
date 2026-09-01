@@ -47,6 +47,8 @@ for t in result.get('trades', []):
     print(f'  Dir: {t["dir"]}, Entry: {t["entry_time"]} @ {t["entry_price"]}')
     print(f'  SL: {t["sl"]}, mode: {t.get("sl_mode_used")}, pivot_ref: {t.get("pivot_ref")}')
     print(f'  Exit: {t.get("exit_time")} @ {t.get("exit_price")}, outcome: {t.get("outcome")}')
+    print(f'  All keys: {list(t.keys())}')
+    print(f'  entry_ts={t.get("entry_ts")}, exit_ts={t.get("exit_ts")}')
 
 print('\nKey events:')
 for ev in result.get("events", []):

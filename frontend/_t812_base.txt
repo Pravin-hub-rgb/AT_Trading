@@ -1,0 +1,14 @@
+=== PRE-FIX(base) 2026-08-12 ===
+09:58 H24395.25 L24380 dir=down conf=false cand=09:58@24380 lastH=09:56@24407.00 lastL=09:55@24402.50 snap=-/-
+09:59 H24382.8 L24376.55 dir=down conf=false cand=09:59@24376.55 lastH=09:56@24407.00 lastL=09:55@24402.50 snap=-/-
+10:00 H24379.5 L24371.05 dir=down conf=false cand=10:00@24371.05 lastH=09:56@24407.00 lastL=09:55@24402.50 snap=-/-
+10:01 H24375.55 L24370.3 dir=down conf=false cand=10:01@24370.3 lastH=09:56@24407.00 lastL=09:55@24402.50 snap=-/-
+10:02 H24375.75 L24370.2 dir=down conf=true cand=10:02@24370.2 lastH=10:02@24375.75 lastL=09:18@24390.60 snap=-/-
+10:03 H24376 L24360.75 dir=down conf=true cand=10:03@24360.75 lastH=10:03@24376.00 lastL=10:01@24370.30 snap=-/-
+10:04 H24368.65 L24361.55 dir=down conf=true cand=10:03@24360.75 lastH=10:03@24376.00 lastL=10:01@24370.30 snap=-/-
+10:05 H24365.4 L24359.8 dir=down conf=true cand=10:05@24359.8 lastH=10:04@24368.65 lastL=10:02@24370.20 snap=-/-
+10:06 H24367.5 L24364.25 dir=down conf=true cand=10:05@24359.8 lastH=10:04@24368.65 lastL=10:03@24360.75 snap=-/-
+10:07 H24365.6 L24357.75 dir=down conf=true cand=10:07@24357.75 lastH=10:06@24367.50 lastL=10:03@24360.75 snap=-/-
+10:08 H24361.35 L24357.5 dir=down conf=true cand=10:08@24357.5 lastH=10:06@24367.50 lastL=10:03@24360.75 snap=-/-
+10:09 H24364.75 L24359.6 dir=down conf=true cand=10:08@24357.5 lastH=10:06@24367.50 lastL=10:05@24359.80 snap=-/-
+DECLARED end=10:08@24357.5 conf=10:10 src=chop hit={"pool":"normal","px":24367.5,"idx":51,"time":"10:06"}

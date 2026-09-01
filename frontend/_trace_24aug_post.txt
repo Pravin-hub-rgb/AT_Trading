@@ -1,0 +1,10 @@
+=== POST-FIX(worktree) 2026-08-24 ===
+09:55 H24276.6 L24270.45 dir=down conf=false cand=09:55@24270.45 lastH=09:50@24283.95 lastL=09:49@24276.70
+09:56 H24281.35 L24276.1 dir=down conf=false cand=09:55@24270.45 lastH=09:50@24283.95 lastL=09:15@24271.10
+09:57 H24281.05 L24277.7 dir=down conf=false cand=09:55@24270.45 lastH=09:50@24283.95 lastL=09:15@24271.10
+09:58 H24280.55 L24268.6 dir=down conf=true cand=09:58@24268.6 lastH=09:56@24281.35 lastL=09:15@24271.10
+09:59 H24271.6 L24267.3 dir=down conf=true cand=09:59@24267.3 lastH=09:56@24281.35 lastL=09:15@24271.10
+10:00 H24274.8 L24267.9 dir=down conf=true cand=09:59@24267.3 lastH=09:56@24281.35 lastL=09:55@24270.45
+10:01 H24273.85 L24268.9 dir=down conf=true cand=09:59@24267.3 lastH=09:56@24281.35 lastL=09:55@24270.45
+10:02 H24274.8 L24270.6 dir=down conf=true cand=09:59@24267.3 lastH=10:00@24274.80 lastL=10:00@24267.90
+DECLARED end=09:59@24267.3 conf=10:03 src=chop

@@ -321,7 +321,9 @@ class FirstSwingEngine:
         if self.just_fired_b2:
             return
         if self.dir == "down":
-            tgt = self._latest_pivot(self.normal_highs)
+            tgt = self._latest_choppable(self.normal_highs)
+            if tgt is None:
+                tgt = self._latest_pivot(self.normal_highs)
             if tgt and self.hi > tgt.px:
                 # Record THE swing's own structural pivot-break (the first bar where
                 # its high pivot is taken out. Declaration may be delayed by minBars —
@@ -333,7 +335,9 @@ class FirstSwingEngine:
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
         elif self.dir == "up":
-            tgt = self._latest_pivot(self.normal_lows)
+            tgt = self._latest_choppable(self.normal_lows)
+            if tgt is None:
+                tgt = self._latest_pivot(self.normal_lows)
             if tgt and self.lo < tgt.px:
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
@@ -385,6 +389,17 @@ class FirstSwingEngine:
         if not pool:
             return None
         return pool[-1]
+
+    def _latest_choppable(self, pool: list[Lvl]) -> Optional[Lvl]:
+        # Latest marked pivot whose PIVOT CANDLE is at least 2 bars old. A bar's
+        # own walker seal must never become its own chop reference (same-bar
+        # self-block bug — 24 Aug:10:03), and a pivot must survive one full bar
+        # after its pivot candle before it can be chopped back through
+        # (12 Aug:10:03 — 1-bar-old micro-pivot broken by 0.25pt noise).
+        for l in reversed(pool):
+            if l.idx <= self.g_idx - 2:
+                return l
+        return None
 
     def debug_pools(self) -> dict:
         return {

@@ -229,7 +229,10 @@ def simulate_day_1min(
     def _open_trade(bar_idx, dirn, ref_level, dbar, btype):
         nonlocal open_trade, entries_done
         if ref_swing_end_px is not None:
-            est_entry = float(ref_level)  # direct
+            # Use the candle's close for end_line check - the actual entry price must be on the correct
+            # side of the swing end. The break itself is already confirmed by cur["low"] < fs2_high
+            # (or cur["high"] > fs2_low for long), so if close is on the correct side, entry is valid.
+            est_entry = float(dbar.get("close", ref_level))
             # For long, ref should be selling swing low; for short, buying swing high
             # Currently ref is FS1's end, but for B7 (FS1 buying, trade long) we need selling swing low, not buying high
             # So only check if entry is on wrong side of ref based on trade_dir vs ref_dir
@@ -253,10 +256,36 @@ def simulate_day_1min(
             # only pivots strictly before entry bar
             eligible = [p for p in pool if p.idx < bar_idx]
             if eligible:
-                pivot_ref = eligible[-1]
-                sl = pivot_ref.px
+                # For SHORT (dirn==-1): need a high pivot ABOVE entry
+                # For LONG (dirn==1): need a low pivot BELOW entry
+                if dirn == -1:
+                    # Find highest high pivot that's above entry
+                    above = [p for p in eligible if p.px > ref_level]
+                    if above:
+                        pivot_ref = above[-1]  # closest above
+                    else:
+                        # No pivot above entry - use second-to-last or fallback to candle high + buffer
+                        pivot_ref = eligible[-2] if len(eligible) >= 2 else None
+                else:
+                    # Find lowest low pivot that's below entry
+                    below = [p for p in eligible if p.px < ref_level]
+                    if below:
+                        pivot_ref = below[-1]  # closest below
+                    else:
+                        # No pivot below entry - use second-to-last or fallback to candle low - buffer
+                        pivot_ref = eligible[-2] if len(eligible) >= 2 else None
+                
+                if pivot_ref is not None:
+                    sl = pivot_ref.px
+                else:
+                    # No valid pivot - use candle's extreme + buffer
+                    sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
+                    sl = entry_high + sl_buffer if dirn==-1 else entry_low - sl_buffer
             else:
-                sl = entry_low if dirn==1 else entry_high
+                # No eligible prev pivot - use fixed distance based on entry direction
+                # For SHORT: SL above entry (candle high + buffer); For LONG: SL below entry (candle low - buffer)
+                sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
+                sl = entry_high + sl_buffer if dirn==-1 else entry_low - sl_buffer
         else:
             if sl_mode in SL_MODE_FIXED:
                 ref_dist = float(SL_MODE_FIXED[sl_mode])
@@ -269,7 +298,8 @@ def simulate_day_1min(
         risk = entry - sl if dirn==1 else sl - entry
         if risk <=0:
             return False
-        target = entry + RR_TARGET * risk if dirn==1 else entry - RR_TARGET * risk
+        rr = float(cfg.get("rr_target", RR_TARGET))
+        target = entry + rr * risk if dirn==1 else entry - rr * risk
         direction = "long" if dirn==1 else "short"
         open_trade = {
             "dir":direction,"case":result.get("case"),"entry_time":entry_time,"entry_ts":entry_ts,
@@ -383,33 +413,47 @@ def simulate_day_1min(
             trade_dir = -1 if cur_swing=="buying" else 1
             brk=None
             if trade_mode == "conservative" and fs2_dir is not None and fs2_end_idx >=0:
-                # For conservative, ONLY use FS2's extreme (no fallback to recent Walker pivot)
-                # This ensures we trade the second swing's pivot break, not a random recent pivot
-                fs2_low = None
-                fs2_high = None
+                # Conservative entry: break a pivot INSIDE FS2's range.
+                # For SHORT (buying swing): break a LOW pivot going DOWN (start of downward momentum).
+                # For LONG (selling swing): break a HIGH pivot going UP (start of upward momentum).
+                # We do NOT break FS2's own end extreme (it's the swing boundary).
+                # Read segment boundaries directly from the fs2_segment event.
+                fs2_seg_start = None
+                fs2_seg_end = None
                 for ev in result["events"]:
                     if ev.get("type") == "fs2_segment":
-                        if fs2_dir == "buying":
-                            fs2_low = ev.get("start_px")
-                            fs2_high = ev.get("end_px")
-                        else:
-                            fs2_high = ev.get("start_px")
-                            fs2_low = ev.get("end_px")
+                        fs2_seg_start = ev.get("start_idx")
+                        fs2_seg_end = ev.get("end_idx")  # the candle that FORMED the extreme
                         break
-                if trade_dir==1 and fs2_high is not None and cur["high"] > fs2_high:
-                    brk = {"type":"pivot_break","level":fs2_high,"bar":i}
-                elif trade_dir==-1 and fs2_low is not None and cur["low"] < fs2_low:
-                    brk = {"type":"pivot_break","level":fs2_low,"bar":i}
-                # Fallback to most recent Walker pivot if FS2 extreme not broken (e.g., 19 Aug 10:09 breaks recent low 24093.85, not FS2 low 24067.1)
-                if brk is None:
-                    if trade_dir==1 and normal_highs:
-                        piv = next((p for p in reversed(normal_highs) if p.idx < i), None)
-                        if piv and cur["high"] > piv.px:
-                            brk = {"type":"pivot_break","level":piv.px,"bar":i}
-                    elif trade_dir==-1 and normal_lows:
-                        piv = next((p for p in reversed(normal_lows) if p.idx < i), None)
-                        if piv and cur["low"] < piv.px:
-                            brk = {"type":"pivot_break","level":piv.px,"bar":i}
+
+                def _is_fs2_internal(p, pool_type):
+                    """Pivot is strictly inside FS2: idx in (start, end) excluding boundary."""
+                    if fs2_seg_start is None or fs2_seg_end is None:
+                        return False
+                    if fs2_seg_start < p.idx < fs2_seg_end:
+                        return True
+                    if p.idx > fs2_seg_end and p.idx < i:
+                        return True
+                    return False
+
+                piv = None
+                if trade_dir==-1 and normal_lows:
+                    # SHORT: need a LOW pivot INSIDE FS2 (price breaks below it going DOWN)
+                    candidates = [p for p in normal_lows
+                                  if _is_fs2_internal(p, 'low')]
+                    if candidates:
+                        piv = candidates[-1]  # most recent qualifying low pivot
+                    if piv and cur["low"] < piv.px:
+                        brk = {"type":"pivot_break","level":piv.px,"bar":i}
+                elif trade_dir==1 and normal_highs:
+                    # LONG: need a HIGH pivot INSIDE FS2 (price breaks above it going UP)
+                    candidates = [p for p in normal_highs
+                                  if _is_fs2_internal(p, 'high')]
+                    if candidates:
+                        piv = candidates[-1]  # most recent qualifying high pivot
+                    if piv and cur["high"] > piv.px:
+                        brk = {"type":"pivot_break","level":piv.px,"bar":i}
+                # Fallback: if no qualifying internal pivot exists yet, skip entry entirely.
             else:
                 if trade_dir==1 and normal_highs:
                     piv = next((p for p in reversed(normal_highs) if p.idx < i), None)
@@ -429,14 +473,22 @@ def simulate_day_1min(
                     aligned = trade_dir == want_dir
                     pivot_break_count+=1
                     result["events"].append({"type":"pace_break","bar":i,"time":cur["time"],"break_type":brk["type"],"level":round(brk["level"],2),"swing_before":cur_swing,"aligned_with_bias":aligned,"pivot_break_count":pivot_break_count})
-                    required = 2 if trade_mode == "conservative" else 1
-                    if pivot_break_count >= required:
+                    # Per entry theory.md:
+                    #   aggressive  = FIRST pivot break
+                    #   conservative = SECOND pivot break (of the opposite swing)
+                    # So aggressive enters on break #1; conservative waits for break #2.
+                    # The broken_pivot_levels dedup guarantees break #2 is a NEW pivot level
+                    # (e.g. 27 Aug: 09:55 breaks 24206.5 -> count 1, 09:58 breaks 24200.85
+                    #  -> count 2 -> entry at 09:58, not 09:55).
+                    required_breaks = 2 if trade_mode == "conservative" else 1
+                    if aligned and pivot_break_count >= required_breaks:
                         new_swing = "selling" if cur_swing=="buying" else "buying"
                         cur_swing = new_swing
-                        if aligned:
-                            if _open_trade(i, trade_dir, brk["level"], cur, brk["type"]):
-                                pivot_break_count=0
-                                result["events"].append({"type":"day_level_set","bar":i,"time":cur["time"],"ts":int(cur["ts"]),"level":round(brk["level"],2),"break_type":brk["type"]})
+                        if _open_trade(i, trade_dir, brk["level"], cur, brk["type"]):
+                            result["events"].append({"type":"day_level_set","bar":i,"time":cur["time"],"ts":int(cur["ts"]),"level":round(brk["level"],2),"break_type":brk["type"]})
+                            pivot_break_count = 0
+                    elif not aligned:
+                        pivot_break_count = 0
 
         i+=1
 

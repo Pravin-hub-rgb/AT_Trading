@@ -1,0 +1,3 @@
+=== FS v2 engineDir=_basecheck (GT=57 days, 1-min replay, hard timeCap 09:29) ===
+match 24/57 | medLag -5 | medT 09:59
+summary: dirWrong=3 notDeclared=0 dirOkButEndMissed=30
