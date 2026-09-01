@@ -62,8 +62,10 @@ class FirstSwingEngine:
         # sustainBars may be passed as sustainBars or sustain_bars
         if isinstance(opts, dict):
             self.sustain_bars: int = opts.get("sustainBars", opts.get("sustain_bars", 7))
+            self.min_bars: int = int(opts.get("minBars", opts.get("min_bars", 14)))
         else:
             self.sustain_bars: int = 7
+            self.min_bars: int = 14
 
         self.walker = WalkerEngine()
         self.bars_seen: int = 0
@@ -115,6 +117,14 @@ class FirstSwingEngine:
         self.sustain_streak: int = 0
         self.armed: bool = False
         self.last_confirm_hit: Optional[dict] = None
+        # First bar where the swing's own structural pivot is broken (chop-break).
+        # This is the swing's true completion moment — e.g. a down swing is
+        # complete the instant its high pivot is taken out. Declaration can be
+        # delayed by minBars, but this records the actual pivot-break bar so the
+        # whole-day FS/SUS marker lands where the swing confirmed itself.
+        self.first_chop_cross_idx: int = -1
+        self.first_chop_cross_px: float = float("nan")
+        self.first_chop_cross_time: str = ""
         self.break_marks: list[FsBreakMark] = []
         self.seed_idx: int = -1
 
@@ -313,11 +323,22 @@ class FirstSwingEngine:
         if self.dir == "down":
             tgt = self._latest_pivot(self.normal_highs)
             if tgt and self.hi > tgt.px:
+                # Record THE swing's own structural pivot-break (the first bar where
+                # its high pivot is taken out. Declaration may be delayed by minBars —
+                # this keeps the true completion bar for the FS/SUS marker.
+                if self.first_chop_cross_idx < 0:
+                    self.first_chop_cross_idx = self.g_idx
+                    self.first_chop_cross_px = tgt.px
+                    self.first_chop_cross_time = self.t
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
         elif self.dir == "up":
             tgt = self._latest_pivot(self.normal_lows)
             if tgt and self.lo < tgt.px:
+                if self.first_chop_cross_idx < 0:
+                    self.first_chop_cross_idx = self.g_idx
+                    self.first_chop_cross_px = tgt.px
+                    self.first_chop_cross_time = self.t
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
 
@@ -339,6 +360,8 @@ class FirstSwingEngine:
 
     def _confirm(self, src: Literal["chop", "sustain"], trig: Optional[dict] = None) -> None:
         if self.t < self.time_cap:
+            return
+        if self.bars_seen < self.min_bars:
             return
         self.declared = True
         self.tier = "real"
@@ -426,6 +449,9 @@ class FirstSwingEngine:
         self.last_confirm_hit = None
         self.sustain_streak = 0
         self.armed = False
+        self.first_chop_cross_idx = -1
+        self.first_chop_cross_px = float("nan")
+        self.first_chop_cross_time = ""
         self.break_marks.clear()
 
     def reset_with_candle(self, c: FlowCandle, g_idx: int) -> None:
@@ -484,6 +510,9 @@ class FirstSwingEngine:
         self.last_confirm_hit = None
         self.sustain_streak = 0
         self.armed = False
+        self.first_chop_cross_idx = -1
+        self.first_chop_cross_px = float("nan")
+        self.first_chop_cross_time = ""
         self.break_marks.clear()
 
 

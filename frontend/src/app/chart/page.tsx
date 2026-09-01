@@ -5,6 +5,7 @@ import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
+import type { WholeDaySwingPoint } from "@/components/WholeDaySwingPrimitive";
 import {
   computeAlgoFlowLine,
   computeFsV2Results,
@@ -23,6 +24,8 @@ import {
   getSwings,
   getBias,
   getIntradayBacktest,
+  getWholeDaySwings,
+  type WholeDaySwing,
 } from "@/lib/api";
 
 const STORAGE_KEY = "chart_interval";
@@ -74,11 +77,7 @@ function loadSavedIntradayFilters(): { params: BacktestParams; case: string } {
       entry_method:
         typeof saved.entry_method === "string"
           ? saved.entry_method
-          : (DEFAULT_BT_PARAMS.entry_method ?? "pace_break"),
-      swing_mode:
-        typeof saved.swing_mode === "string"
-          ? saved.swing_mode
-          : (DEFAULT_BT_PARAMS.swing_mode ?? "opposite_swing_needed"),
+          : (DEFAULT_BT_PARAMS.entry_method ?? "pivot_break"),
     };
     const caseValue =
       typeof saved.caseValue === "string" ? saved.caseValue : "all";
@@ -148,6 +147,15 @@ export default function ChartPage() {
 
   // 1-min candle data (fetched when fsOn is on, used for first-swing on 5min pane)
   const [data1min, setData1min] = useState<Candle[]>([]);
+
+  // Whole-day swings — fetched automatically for 1min chart (default ON)
+  const [wholeDaySwings, setWholeDaySwings] = useState<WholeDaySwingPoint[]>(
+    [],
+  );
+  // Pane B whole-day swings
+  const [wholeDaySwingsB, setWholeDaySwingsB] = useState<WholeDaySwingPoint[]>(
+    [],
+  );
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -255,6 +263,85 @@ export default function ChartPage() {
     };
   }, [fsOn]);
 
+  // Whole-day swings — fetched automatically when on 1min chart (default ON).
+  // Returns all detected swings for the visible day range; rendered as a
+  // cyan/yellow alternating zigzag line on top of the candles.
+  useEffect(() => {
+    if (interval !== "1min") {
+      setWholeDaySwings([]);
+      return;
+    }
+    let cancelled = false;
+    getWholeDaySwings("1min")
+      .then((res) => {
+        if (cancelled) return;
+        // Convert backend response to WholeDaySwingPoint[] for the primitive.
+        const points: WholeDaySwingPoint[] = res.swings.map(
+          (s: WholeDaySwing) => ({
+            dir: s.seg.dir,
+            start_idx: s.seg.start_idx,
+            start_px: s.seg.start_px,
+            end_idx: s.seg.end_idx,
+            end_px: s.seg.end_px,
+            swing_index: s.swing_index,
+            kind: s.kind,
+            break_kind: s.break_kind,
+            breaks: s.breaks ?? [],
+            confirmed_at_idx: s.confirmed_at_idx,
+            confirmed_at_time: s.confirmed_at_time,
+            fs_at_idx: s.fs_at_idx,
+            fs_at_time: s.fs_at_time,
+          }),
+        );
+        setWholeDaySwings(points);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setWholeDaySwings([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [interval]);
+
+  // Pane B whole-day swings — fetched when intervalB is 1min
+  useEffect(() => {
+    if (intervalB !== "1min") {
+      setWholeDaySwingsB([]);
+      return;
+    }
+    let cancelled = false;
+    getWholeDaySwings("1min")
+      .then((res) => {
+        if (cancelled) return;
+        const points: WholeDaySwingPoint[] = res.swings.map(
+          (s: WholeDaySwing) => ({
+            dir: s.seg.dir,
+            start_idx: s.seg.start_idx,
+            start_px: s.seg.start_px,
+            end_idx: s.seg.end_idx,
+            end_px: s.seg.end_px,
+            swing_index: s.swing_index,
+            kind: s.kind,
+            break_kind: s.break_kind,
+            breaks: s.breaks ?? [],
+            confirmed_at_idx: s.confirmed_at_idx,
+            confirmed_at_time: s.confirmed_at_time,
+            fs_at_idx: s.fs_at_idx,
+            fs_at_time: s.fs_at_time,
+          }),
+        );
+        setWholeDaySwingsB(points);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setWholeDaySwingsB([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [intervalB]);
+
   useEffect(() => {
     let cancelled = false;
     getSwings("daily", PIVOT, LEVELS, LOOKAHEAD)
@@ -291,6 +378,30 @@ export default function ChartPage() {
     };
   }, []);
 
+  // Load intraday backtest whenever we're in intraday mode (so the chart
+  // overlay can show trade_mode / case without forcing the user to enable
+  // the BT panel). The BT panel just toggles display + heavier work on top
+  // of this always-on cache.
+  useEffect(() => {
+    if (interval === "daily" && (!dual || intervalB === "daily")) {
+      return;
+    }
+    let cancelled = false;
+    getIntradayBacktest(btParams)
+      .then((res) => {
+        if (cancelled) return;
+        setBtData(res);
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setBtError(e instanceof Error ? e.message : String(e));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [btParams, interval, dual, intervalB]);
+  // Keep btOn on the dependency chain so toggling BT also refreshes the
+  // backtest parameters (separate from the always-on initial load).
   useEffect(() => {
     if (!btOn) return;
     let cancelled = false;
@@ -410,6 +521,11 @@ export default function ChartPage() {
                   algoFirstSwing: null,
                   fsMarkers: null,
                   fsBreaks: null,
+                  tradeMode: btData
+                    ? Object.fromEntries(
+                        btData.days.map((d) => [d.date, d.trade_mode ?? null]),
+                      )
+                    : undefined,
                 };
               }
               const res = computeFsV2Results(sourceCandles, {
@@ -443,6 +559,11 @@ export default function ChartPage() {
                   algoSecondSwingBreaks: ss2Valid.flatMap(
                     (r) => r.breaks ?? [],
                   ),
+                  tradeMode: btData
+                    ? Object.fromEntries(
+                        btData.days.map((d) => [d.date, d.trade_mode ?? null]),
+                      )
+                    : undefined,
                 };
               }
               // 5min: project each 1min index onto the 5min bar that
@@ -626,6 +747,11 @@ export default function ChartPage() {
                 fsBreaks: fsBreaks5,
                 algoSecondSwingMarkers: algoSecondSwingMarkers5,
                 algoSecondSwingBreaks: algoSecondSwingBreaks5,
+                tradeMode: btData
+                  ? Object.fromEntries(
+                      btData.days.map((d) => [d.date, d.trade_mode ?? null]),
+                    )
+                  : undefined,
               };
             })()
           : {
@@ -669,6 +795,11 @@ export default function ChartPage() {
                     px: number;
                   }[]
                 | null,
+              tradeMode: btData
+                ? Object.fromEntries(
+                    btData.days.map((d) => [d.date, d.trade_mode ?? null]),
+                  )
+                : undefined,
             }),
       };
     },
@@ -683,6 +814,7 @@ export default function ChartPage() {
       fsOn,
       fsRevPct,
       data1min,
+      btData,
     ],
   );
 
@@ -1020,7 +1152,9 @@ export default function ChartPage() {
             algoSecondSwingBreaks={overlaysA.algoSecondSwingBreaks}
             fsMarkers={overlaysA.fsMarkers}
             fsBreaks={overlaysA.fsBreaks}
+            tradeMode={overlaysA.tradeMode}
             onHoverTime={onHoverA}
+            wholeDaySwings={wholeDaySwings}
             height={dual ? 620 : 720}
           />
         </div>
@@ -1075,7 +1209,9 @@ export default function ChartPage() {
               algoSecondSwingBreaks={overlaysB.algoSecondSwingBreaks}
               fsMarkers={overlaysB.fsMarkers}
               fsBreaks={overlaysB.fsBreaks}
+              tradeMode={overlaysB.tradeMode}
               onHoverTime={onHoverB}
+              wholeDaySwings={wholeDaySwingsB}
               height={620}
             />
           </div>

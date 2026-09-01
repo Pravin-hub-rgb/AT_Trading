@@ -58,15 +58,23 @@ def _bias_labels_cached() -> list:
 
 
 def _intraday_backtest(cfg: dict | None = None):
-    """Run (or reuse cached) intraday backtest keyed on data mtimes + config."""
+    """Run (or reuse cached) intraday backtest keyed on data mtimes + config.
+    
+    5min and 1min are now separate engines:
+    - 5min: loops over 5min, uses 1min only for precise entry/exit (intraday.py)
+    - 1min: loops directly over 1min, fully independent (intraday_1m_standalone.py)
+    """
     p5 = config.DATA_DIR / "nifty_5min.csv"
     pd_ = config.DATA_DIR / "nifty_daily.csv"
     p1 = config.DATA_DIR / "nifty_1min.csv"
     if not p5.exists():
         raise FileNotFoundError("No 5min data yet. Download first.")
+    # include p1 mtime in key when 1min execution (so 1min data changes bust cache)
+    p1_mtime = p1.stat().st_mtime_ns if p1.exists() else 0
     key = (
         p5.stat().st_mtime_ns,
         pd_.stat().st_mtime_ns if pd_.exists() else 0,
+        p1_mtime,
         tuple(sorted((cfg or {}).items())),
     )
     if key in _intraday_caches:
@@ -75,9 +83,21 @@ def _intraday_backtest(cfg: dict | None = None):
 
     df5 = pd.read_csv(p5)
     daily_df = pd.read_csv(pd_) if pd_.exists() else None
-    df1 = pd.read_csv(p1) if (p1.exists() and (cfg or {}).get("execution") == "1min") else None
+    df1 = pd.read_csv(p1) if p1.exists() else None
     labels = [lb for lb in _bias_labels_cached() if lb["date"] in set(df5["timestamp"].astype(str).str[:10])]
-    bt = intraday_svc.run_backtest(df5, labels, cfg=cfg, df_1min=df1)
+
+    execution = (cfg or {}).get("execution", "5min")
+    if execution == "1min":
+        # 1min standalone engine: needs 1min data, no 5min loop
+        if df1 is None or len(df1) == 0:
+            raise FileNotFoundError("No 1min data yet. Download first.")
+        import src.intraday_1m_standalone as m1_engine
+        # 1min engine uses 1min df, but still needs bias labels (from 5min/daily)
+        bt = m1_engine.run_backtest_1min(df1, labels, cfg=cfg)
+    else:
+        # 5min engine: may use 1min for precise entry/exit
+        df1_for_5min = df1 if (df1 is not None and len(df1) > 0) else None
+        bt = intraday_svc.run_backtest(df5, labels, cfg=cfg, df_1min=df1_for_5min)
 
     days_summary = [
         {
@@ -87,6 +107,7 @@ def _intraday_backtest(cfg: dict | None = None):
             "raw_bias": d["bias"],
             "case": d.get("case"),
             "swing_direction": d["swing_direction"],
+            "trade_mode": d.get("trade_mode"),
             "n_trades": len(d["trades"]),
             "outcomes": [t["outcome"] for t in d["trades"]],
             # full trade rows so the chart can draw position boxes without
@@ -399,6 +420,88 @@ def get_swings(interval: str = "daily", pivot: int = 10, levels: int = 5, lookah
         "lookahead": max(1, int(lookahead)),
         "swings": swings,
         "sr_levels": sr_levels,
+    }
+
+
+@app.get("/api/swings/whole_day")
+def get_whole_day_swings(
+    interval: str = "1min",
+    sustain_bars: int = 7,
+    whole_day: bool = True,
+):
+    """Whole-day alternating swing detection.
+
+    Detects multiple swings per day (not just the first 2), assigning each
+    a swing_index (0, 1, 2, ...) that can be used for alternating colors
+    (cyan, yellow, cyan, yellow, ...).
+
+    Args:
+        interval: 1min only (whole-day swing is 1min-only feature)
+        sustain_bars: N-bar sustain requirement (default 7)
+        whole_day: If True, detect all swings for the day. If False, only the first swing.
+
+    Returns:
+        {
+            "interval": str,
+            "whole_day": bool,
+            "swings": [ {day, swing_index, seg: {dir, start_idx, start_px, end_idx, end_px}, source, dir} ]
+        }
+    """
+    # Whole-day swing is 1min-only (user confirmed). Keep error explicit.
+    if interval != "1min":
+        return JSONResponse(status_code=400, content={"detail": "whole-day swings only available for interval=1min"})
+    if interval not in ("daily", "5min", "1min"):
+        return JSONResponse(status_code=400, content={"detail": "interval must be daily | 5min | 1min"})
+
+    path = config.DATA_DIR / f"nifty_{interval}.csv"
+    if not path.exists():
+        return JSONResponse(status_code=404, content={"detail": f"No {interval} data yet. Download first."})
+
+    df = pd.read_csv(path)
+    df["timestamp"] = pd.to_datetime(df["timestamp"])
+    df = df.sort_values("timestamp").drop_duplicates(subset="timestamp", keep="last")
+
+    # Build FlowCandle list
+    from src.intraday import FlowCandle
+    candles: list[FlowCandle] = []
+    for _, row in df.iterrows():
+        candles.append(FlowCandle(
+            date=row["timestamp"].strftime("%Y-%m-%d %H:%M:%S"),
+            open=float(row["open"]),
+            high=float(row["high"]),
+            low=float(row["low"]),
+            close=float(row["close"]),
+        ))
+
+    if whole_day:
+        from src.swing_engine import compute_whole_day_swings
+        # 1min-only, minBars 14 for ALL swings (user confirmed)
+        swings = compute_whole_day_swings(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29"})
+    else:
+        from src.swing_engine import compute_fs_v2_results
+        results = compute_fs_v2_results(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29"})
+        swings = [
+            {
+                "day": r.day,
+                "swing_index": 0,
+                "seg": {
+                    "dir": r.seg.dir,
+                    "start_idx": r.seg.start_idx,
+                    "start_px": r.seg.start_px,
+                    "end_idx": r.seg.end_idx,
+                    "end_px": r.seg.end_px,
+                },
+                "source": r.source,
+                "dir": r.dir,
+            }
+            for r in results
+        ]
+
+    return {
+        "interval": interval,
+        "whole_day": whole_day,
+        "sustain_bars": sustain_bars,
+        "swings": swings,
     }
 
 

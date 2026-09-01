@@ -58,11 +58,6 @@ const ENTRY_METHODS = [
   { value: "pivot_break", label: "Entry: Pivot Break" },
 ];
 
-const SWING_MODES = [
-  { value: "none", label: "Swing: No Gate (1min)" },
-  { value: "opposite_swing_needed", label: "Swing: Opposite Required (1min)" },
-];
-
 const STORAGE_KEY = "intraday_filters";
 
 function OutcomeChip({ outcome }: { outcome: string }) {
@@ -93,7 +88,6 @@ function loadSavedFilters(): Partial<{
   gap_pct: string;
   ft_fail_enabled: boolean;
   entry_method: string;
-  swing_mode: string;
 }> {
   if (typeof window === "undefined") return {};
   try {
@@ -116,7 +110,6 @@ function saveFilters(filters: {
   gap_pct: string;
   ft_fail_enabled: boolean;
   entry_method: string;
-  swing_mode: string;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -207,10 +200,7 @@ export default function IntradayPanel({
     saved.ft_fail_enabled ?? params.ft_fail_enabled,
   );
   const [localEntryMethod, setLocalEntryMethod] = useState(
-    saved.entry_method ?? params.entry_method ?? "pace_break",
-  );
-  const [localSwingMode, setLocalSwingMode] = useState(
-    saved.swing_mode ?? params.swing_mode ?? "opposite_swing_needed",
+    saved.entry_method ?? params.entry_method ?? "pivot_break",
   );
 
   // Check if any local value differs from the current applied params
@@ -221,8 +211,7 @@ export default function IntradayPanel({
     localTrailing !== params.trailing ||
     localGapPct !== params.gap_pct ||
     localFtFail !== params.ft_fail_enabled ||
-    localEntryMethod !== (params.entry_method ?? "pace_break") ||
-    localSwingMode !== (params.swing_mode ?? "opposite_swing_needed");
+    localEntryMethod !== (params.entry_method ?? "pivot_break");
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -261,7 +250,6 @@ export default function IntradayPanel({
       gap_pct: localGapPct,
       ft_fail_enabled: localFtFail,
       entry_method: localEntryMethod,
-      swing_mode: localSwingMode,
     });
     // Apply all filters in one go
     onCaseChange(localCase);
@@ -273,7 +261,6 @@ export default function IntradayPanel({
       gap_pct: localGapPct,
       ft_fail_enabled: localFtFail,
       entry_method: localEntryMethod,
-      swing_mode: localSwingMode,
     });
   };
 
@@ -331,17 +318,6 @@ export default function IntradayPanel({
           className={selectCls}
         >
           {ENTRY_METHODS.map((o) => (
-            <option key={o.value} value={o.value}>
-              {o.label}
-            </option>
-          ))}
-        </select>
-        <select
-          value={localSwingMode}
-          onChange={(e) => setLocalSwingMode(e.target.value)}
-          className={selectCls}
-        >
-          {SWING_MODES.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
@@ -441,6 +417,12 @@ export default function IntradayPanel({
                 {d.date} ·{" "}
                 {d.bias === "bullish" ? "▲" : d.bias === "bearish" ? "▼" : "●"}{" "}
                 · {d.n_trades}T ·{" "}
+                {d.trade_mode === "aggressive"
+                  ? "⚡"
+                  : d.trade_mode === "conservative"
+                    ? "🐢"
+                    : ""}
+                {d.case ?? ""} ·{" "}
                 {d.outcomes.map((o) => OUTCOME_STYLE[o]?.label ?? o).join(",")}
               </option>
             ))}

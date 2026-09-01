@@ -147,9 +147,11 @@ export class FirstSwingEngine {
   // like 2025-09-05 can carry several FLIPs — the last one wins.
   breakMarks: FsBreakMark[] = [];
 
+  private minBars: number;
   constructor(opts: FsV2Opts = {}) {
     this.timeCap = opts.timeCap ?? "09:29";
     this.sustainBars = opts.sustainBars ?? 7;
+    this.minBars = (opts as any).minBars ?? (opts as any).min_bars ?? 14;
   }
 
   processBar(c: FlowCandle, gIdx: number) {
@@ -479,6 +481,9 @@ export class FirstSwingEngine {
     // trigger AT or AFTER 9:29 is the one that declares.
     if (this.t < this.timeCap) {
       return; // ignore pre-cap triggers
+    }
+    if (this.barsSeen < this.minBars) {
+      return;
     }
     this.declared = true;
     this.tier = "real";

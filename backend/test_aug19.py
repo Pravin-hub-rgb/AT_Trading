@@ -28,7 +28,6 @@ for i, row in day_1m.iterrows():
         print(f"  {bar_time}: O={row['open']:.2f} H={row['high']:.2f} L={row['low']:.2f} C={row['close']:.2f}")
 
 cfg = resolve_cfg({
-    "swing_mode": "opposite_swing_needed",
     "entry_method": "pivot_break",
     "execution": "1min",
     "sl_mode": "prev_pivot",
@@ -41,6 +40,8 @@ result = simulate_day(
 
 print('\n=== Results ===')
 print('Date:', result.get('date'))
+print('Case:', result.get('case'))
+print('Trade mode:', result.get('trade_mode'))
 print('Trades:', len(result.get('trades', [])))
 for t in result.get('trades', []):
     print(f'  Dir: {t["dir"]}, Entry: {t["entry_time"]} @ {t["entry_price"]}')
@@ -49,5 +50,5 @@ for t in result.get('trades', []):
 
 print('\nKey events:')
 for ev in result.get("events", []):
-    if ev.get('type') in ['pace_break', 'domination', 'day_level_set', 'pending_direct_1m', 'entry', 'exit', 'fs_segment']:
+    if ev.get('type') in ['pace_break', 'domination', 'day_level_set', 'pending_direct_1m', 'entry', 'exit', 'fs_segment', 'debug_gate', 'first_break_skipped', 'second_swing_armed', 'skipped_same_direction_swing2', 'swing_flip_break']:
         print(f'  {ev}')

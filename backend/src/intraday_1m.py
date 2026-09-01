@@ -188,6 +188,8 @@ def resolve_pending_direct(
     """
     if m1_day is None or len(m1_day) == 0:
         return None
+    # Ensure positional indices 0..N (Walker uses positional, not global DB indices)
+    m1_day = m1_day.reset_index(drop=True)
     armed_ts = int(pending["armed_ts"])
     level = float(pending["level"])
     trade_dir = int(pending["trade_dir"])

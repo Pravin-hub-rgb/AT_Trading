@@ -601,6 +601,303 @@ def compute_fs_v2_declared(candles: list[FlowCandle],
     return [r.seg for r in compute_fs_v2_results(candles, opts)]
 
 
+# ── whole-day swing loop ─────────────────────────────────────────────────────
+# Uses FirstSwingEngine (correct port of frontend/src/lib/firstswing.ts) so
+# swing 0/1 via whole-day exactly match the dedicated first/second-swing
+# detection (intraday, StockChart overlays). 1min ONLY, minBars=14 for ALL swings.
+
+def compute_whole_day_swings(candles: list[FlowCandle],
+                               opts: Optional[dict] = None) -> list[dict]:
+    """Run first-swing detection across ALL days, detecting MULTIPLE swings per day.
+
+    Algorithm (per day) — mirrors frontend/src/lib/flowline.ts::computeSecondSwingResults
+    and backend/src/intraday.py::detect_second_swing:
+      1. First swing: fresh FirstSwingEngine, feed candles of the day naturally
+         (bars_seen==1 init uses 09:15 OHLC, armed gate, etc.).
+      2. On declaration: record swing, NEXT swing starts from NEXT candle after
+         the declared extreme (prev_end_idx + 1) as new bar 1, fresh engine.
+         This matches user's spec: "second swing used from start from the first
+         swing end candle's next candle ... so for third swing it goes from
+         second swing last candle +1".
+      3. Repeat until no more swings or 50 per day cap.
+    No forced stitching — each swing's start is the engine's natural start, which
+    avoids artificial low->low / high->high forcing that produced "high to high"
+    complaints. Frontend draws each swing as its own cyan/yellow segment.
+
+    Only 1min is intended; caller (server / frontend) gates on interval == "1min".
+    minBars=14 is enforced for every swing (user confirmed).
+
+    Returns list of dicts with keys:
+        day, swing_index, seg{start_idx/start_px/end_idx/end_px/dir},
+        source, dir, kind, break_kind
+    """
+    from dataclasses import dataclass
+    from typing import Literal as _Lit
+
+    # Import here to avoid circular import at module load; FirstSwingEngine is
+    # the SINGLE SOURCE OF TRUTH for swing detection (frontend + intraday).
+    try:
+        from .firstswing import FirstSwingEngine as _FSE  # type: ignore
+    except Exception:
+        # Fallback to legacy engine if firstswing unavailable (should not happen)
+        _FSE = FsV2Engine  # type: ignore
+
+    Dir = _Lit["up", "down"]
+
+    @dataclass
+    class WholeDaySwing:
+        day: str
+        swing_index: int
+        seg: FlowSegment
+        source: Optional[_Lit["chop", "sustain"]]
+        dir: Dir
+        kind: str   # "SUS" or "FS"
+        break_kind: Optional[BreakKind]  # "B1"/"B2"/"FLIP" or None
+        breaks: list = field(default_factory=list)  # full ordered FsBreakMark list
+        confirmed_at_idx: int = -1
+        confirmed_at_time: str = ""
+        # The swing's true structural completion bar (the first bar where its
+        # own high/low pivot was taken out). For chop swings this is where FS/SUS
+        # should be marked — not the minBars-delayed declaration bar. e.g. a down
+        # swing is complete the instant its high pivot breaks (31-Aug 11:11 high
+        # 24001.7 broken at 11:14 -> FS@11:14, not 11:15).
+        fs_at_idx: int = -1
+        fs_at_time: str = ""
+
+    # Normalise opts: ensure sustain_bars + min_bars + timeCap propagate correctly
+    # FirstSwingEngine understands both sustainBars/sustain_bars and minBars/min_bars
+    _opts: dict = {}
+    if opts:
+        _opts.update(opts)
+    # Enforce 1min-only whole-day: minBars 14 for ALL swings (user confirmed)
+    if "minBars" not in _opts and "min_bars" not in _opts:
+        _opts["minBars"] = 14
+    if "sustainBars" not in _opts and "sustain_bars" not in _opts:
+        _opts["sustain_bars"] = 7
+    # Keep timeCap 09:29 for first swing; later swings are naturally after cap anyway.
+    # If caller wants to override, they can pass timeCap explicitly.
+    if "timeCap" not in _opts and "time_cap" not in _opts:
+        _opts["timeCap"] = "09:29"
+
+    by_day: dict[str, list[tuple[int, FlowCandle]]] = {}
+    for g_idx, c in enumerate(candles):
+        d = c.date[:10]
+        by_day.setdefault(d, []).append((g_idx, c))
+
+    out: list[WholeDaySwing] = []
+    for day, items in by_day.items():
+        swing_index = 0
+        # Position in items[] where the NEXT swing starts.
+        # Mirrors frontend/src/lib/flowline.ts::computeSecondSwingResults and
+        # backend/src/intraday.py::detect_second_swing:
+        #   seedIdx = prev_end_idx + 1  (next candle after previous extreme)
+        #   fresh FirstSwingEngine fed from seedIdx inclusive as bar 1 (no reset_with_candle).
+        # This matches user's spec: "second swing used from start from the first swing
+        # end candle's next candle not from the first swing end candle itself ... so for
+        # third swing it goes from second swing last candle +1"
+        next_start_pos = 0
+
+        while True:
+            if swing_index >= 50:  # safety cap per day
+                break
+
+            eng = _FSE(_opts)  # type: ignore
+
+            swing_found_this_iter = False
+            # Feed remaining bars of the day starting at next_start_pos
+            for pos in range(next_start_pos, len(items)):
+                g_idx, c = items[pos]
+                eng.process_bar(c, g_idx)
+
+                # Check declaration after each bar (both engines expose declared/start_idx)
+                # For FirstSwingEngine: eng.declared + eng.start_idx >=0
+                # For FsV2Engine: same via get_result, but we check directly for speed.
+                is_declared = bool(getattr(eng, "declared", False))
+                has_start = getattr(eng, "start_idx", -1) >= 0 or getattr(eng, "startIdx", -1) >= 0
+                # Unified getter for end/start fields (handle both engines)
+                # Try FirstSwingEngine shape first
+                if is_declared and has_start:
+                    # Pull fields in engine-agnostic way
+                    if hasattr(eng, "end_idx"):
+                        end_idx = eng.end_idx  # FsV2 / FirstSwing common? FirstSwing uses endIdx
+                        # FirstSwingEngine uses endIdx, FsV2 uses end_idx
+                        if end_idx == -1 and hasattr(eng, "endIdx"):
+                            end_idx = eng.endIdx  # type: ignore
+                    elif hasattr(eng, "endIdx"):
+                        end_idx = eng.endIdx  # type: ignore
+                    else:
+                        end_idx = -1
+
+                    # If not yet declared with end, try get_result helper (FsV2)
+                    # For FirstSwing we already know declared; we can build result manually
+                    # Use engine-specific extraction below instead of early break
+                    pass
+
+                # Prefer official get_result for FsV2Engine; for FirstSwingEngine we
+                # check declared flag directly and synthesize result. Unified:
+                result_seg = None
+                result_dir = None
+                result_source = None
+                result_breaks = []
+                result_conf_idx = -1
+
+                if hasattr(eng, "get_result"):
+                    # FsV2Engine path (legacy) — also works if _FSE == FirstSwing then no get_result
+                    try:
+                        r = eng.get_result(day)  # type: ignore
+                        if r is not None:
+                            result_seg = r.seg
+                            result_dir = r.dir
+                            result_source = r.source
+                            result_breaks = r.breaks
+                            result_conf_idx = r.conf_idx
+                    except Exception:
+                        pass
+                else:
+                    # FirstSwingEngine path
+                    if getattr(eng, "declared", False) and getattr(eng, "start_idx", -1) >= 0:
+                        # FirstSwing uses start_idx/start_px/end_idx/end_px etc.
+                        # Also has dir, confirm_source, break_marks
+                        try:
+                            # Access FirstSwing fields (see firstswing.py)
+                            s_idx = eng.start_idx  # type: ignore
+                            s_px = eng.start_px  # type: ignore
+                            e_idx = eng.end_idx  # type: ignore
+                            e_px = eng.end_px  # type: ignore
+                            # Fallback for camelCase (frontend port leftover)
+                            if s_idx == -1 and hasattr(eng, "startIdx"):
+                                s_idx = eng.startIdx  # type: ignore
+                                s_px = eng.startPx  # type: ignore
+                                e_idx = eng.endIdx  # type: ignore
+                                e_px = eng.endPx  # type: ignore
+                            if s_idx >= 0 and e_idx >= 0:
+                                result_seg = FlowSegment(
+                                    dir="B" if eng.dir == "up" else "S",  # type: ignore
+                                    start_idx=s_idx,
+                                    start_px=s_px,
+                                    end_idx=e_idx,
+                                    end_px=e_px,
+                                )
+                                result_dir = eng.dir  # type: ignore
+                                result_source = eng.confirm_source  # type: ignore
+                                result_breaks = getattr(eng, "break_marks", [])  # type: ignore
+                                result_conf_idx = getattr(eng, "confirmed_at_idx", g_idx)  # type: ignore
+                        except Exception:
+                            pass
+
+                if result_seg is not None:
+                    # Derive label: sustain→"SUS", chop/null→"FS"
+                    src_kind = "SUS" if result_source == "sustain" else "FS"
+                    # Use the decisive break (last) — B2 for continuation, FLIP for reversal.
+                    # First break is always B1; the last reveals whether it was B2 or FLIP.
+                    decisive_break = result_breaks[-1] if result_breaks else None
+                    bk: Optional[BreakKind] = None
+                    if decisive_break is not None:
+                        try:
+                            bk = decisive_break.kind  # type: ignore
+                        except Exception:
+                            bk = None
+
+                    # Derive confirmation time from the candle at confirmed_at_idx
+                    _conf_time = ""
+                    if result_conf_idx >= 0:
+                        for _gi, _cc in items:
+                            if _gi == result_conf_idx:
+                                _conf_time = _cc.date[11:16] if len(_cc.date) >= 16 else ""
+                                break
+
+                    # FS/SUS marker position = the swing's OWN structural completion bar: the
+                    # first bar >= the swing's end extreme where its opposing pivot
+                    # was taken out (the chop cross). Declaration may be delayed by
+                    # minBars, so this keeps the FS marker at the true completion bar
+                    # (e.g. 31-Aug swing 2: the 11:11 high 24001.7 is broken at 11:14
+                    # -> FS@11:14, NOT 11:15). A chop-cross that happens BEFORE the
+                    # swing's extreme (mid-rally pullback break) is not a completion,
+                    # so it is ignored — sustain swings keep the confirmed bar.
+                    fs_at_idx = result_conf_idx
+                    fs_at_time = _conf_time
+                    if result_source == "chop" and getattr(eng, "first_chop_cross_idx", -1) >= 0:
+                        _cx = int(getattr(eng, "first_chop_cross_idx", -1))
+                        if _cx >= result_seg.end_idx:
+                            fs_at_idx = _cx
+                            fs_at_time = getattr(eng, "first_chop_cross_time", "") or _conf_time
+
+                    out.append(WholeDaySwing(
+                        day=day,
+                        swing_index=swing_index,
+                        seg=result_seg,
+                        source=result_source,  # type: ignore
+                        dir=result_dir,  # type: ignore
+                        kind=src_kind,
+                        break_kind=bk,
+                        breaks=result_breaks,
+                        confirmed_at_idx=result_conf_idx,
+                        confirmed_at_time=_conf_time,
+                        fs_at_idx=fs_at_idx,
+                        fs_at_time=fs_at_time,
+                    ))
+                    swing_index += 1
+
+                    # Seed NEXT swing at this swing's END extreme bar (not confirmation bar)
+                    end_abs = result_seg.end_idx
+                    # Find end candle object + its position in items[]
+                    end_pos = -1
+                    end_c: Optional[FlowCandle] = None
+                    for p, (gi, cc) in enumerate(items):
+                        if gi == end_abs:
+                            end_pos = p
+                            end_c = cc
+                            break
+                    if end_c is None:
+                        # Fallback: synthesize candle at end_px if not found (should not happen)
+                        # Use current c as fallback
+                        end_c = c
+                        end_pos = pos
+
+                    # NEXT swing starts from the bar AFTER this swing's extreme
+                    # (mirrors computeSecondSwingResults: seedIdx = endIdx+1, fresh engine)
+                    next_start_pos = end_pos + 1 if end_pos >= 0 else pos + 1
+
+                    swing_found_this_iter = True
+                    break
+
+            if not swing_found_this_iter:
+                break
+
+    # No forced stitching — each swing is independent, starting at next candle after
+    # previous extreme (gap of 1 bar). This matches second-swing spec and avoids
+    # artificial low->low / high->high forcing that produced "high to high" zigzag
+    # complaints. The frontend draws each swing as its own segment (cyan/yellow).
+
+    # Convert to dict for JSON serialization
+    return [
+        {
+            "day": s.day,
+            "swing_index": s.swing_index,
+            "seg": {
+                "dir": s.seg.dir,
+                "start_idx": s.seg.start_idx,
+                "start_px": s.seg.start_px,
+                "end_idx": s.seg.end_idx,
+                "end_px": s.seg.end_px,
+            },
+            "source": s.source,
+            "dir": s.dir,
+            "kind": s.kind,
+            "break_kind": s.break_kind,
+            "breaks": [
+                {"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                for b in s.breaks
+            ],
+            "confirmed_at_idx": s.confirmed_at_idx,
+            "confirmed_at_time": s.confirmed_at_time,
+            "fs_at_idx": s.fs_at_idx,
+            "fs_at_time": s.fs_at_time,
+        }
+        for s in out
+    ]
+
+
 # Alias for backward compatibility — now points to correct FirstSwingEngine (port of frontend/src/lib/firstswing.ts)
 # The old FsV2Engine (flowline.ts port) is kept as LegacyFsV2Engine for any direct legacy usage.
 try:

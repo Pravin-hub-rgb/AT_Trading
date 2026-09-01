@@ -24,6 +24,10 @@ import {
 } from "lightweight-charts";
 import type { Candle, BiasLabel } from "@/lib/api";
 import { SwingSRPrimitive, SwingPoint } from "./SwingSRPrimitive";
+import {
+  WholeDaySwingPrimitive,
+  type WholeDaySwingPoint,
+} from "./WholeDaySwingPrimitive";
 import { PositionPrimitive, TradeBox } from "./PositionPrimitive";
 import { SessionBreakPrimitive } from "./SessionBreakPrimitive";
 import { FlowLinePrimitive, FlowSegment } from "./FlowLinePrimitive";
@@ -47,6 +51,11 @@ interface Props {
   envelope?: EnvelopeViolation[] | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
   algoSecondSwing?: (FlowSegment & { fs1Dir?: "up" | "down" | null })[] | null;
+  /** Whole-day swings with zigzag line rendering (cyan/yellow alternating).
+   *  Default ON — renders automatically on 1min intraday chart. */
+  wholeDaySwings?: WholeDaySwingPoint[];
+  // Per-date trade_mode map from intraday backtest (aggressive/conservative/skip)
+  tradeMode?: Record<string, string | null>;
   algoSecondSwingMarkers?:
     | {
         idx: number;
@@ -102,6 +111,11 @@ interface OHLCV {
   volume: number;
   nextBias?: string | null;
   nextBiasDate?: string | null;
+  // Trade mode for the *session/day* the candle belongs to.
+  // "aggressive" ⚡, "conservative" 🐢, "skip" (no entry). From intraday
+  // backtest's per-day trade_mode field. Hovered candle drives the lookup;
+  // null while no backtest is loaded.
+  tradeMode?: string | null;
 }
 
 const IST_OFFSET = 5.5 * 3600;
@@ -203,8 +217,10 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     algoSecondSwing,
     algoSecondSwingMarkers,
     algoSecondSwingBreaks,
+    wholeDaySwings,
     fsMarkers,
     fsBreaks,
+    tradeMode,
     onHoverTime,
   }: Props,
   ref,
@@ -214,6 +230,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const syncPrimRef = useRef<SyncCrosshairPrimitive | null>(null);
   const positionPrimRef = useRef<PositionPrimitive | null>(null);
+  const wholeDayPrimRef = useRef<WholeDaySwingPrimitive | null>(null);
   const hoverCbRef = useRef(onHoverTime);
   useEffect(() => {
     hoverCbRef.current = onHoverTime;
@@ -226,7 +243,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     n: new Map(),
   });
 
-  // bias lookup maps for the crosshair tooltip — mirrored via ref so bias
+  // bias lookup maps for the crosshair tooltip - mirrored via ref so bias
   // loading/toggling never rebuilds the chart
   useEffect(() => {
     const m = new Map<string, BiasLabel>((bias ?? []).map((b) => [b.date, b]));
@@ -237,6 +254,23 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     });
     biasMapsRef.current = { m, n };
   }, [bias]);
+
+  // tradeMode map (date -> aggressive/conservative/skip) - mirrored into a
+  // ref so the chart's setLast() and crosshair callback always see the
+  // current value even if the prop arrives after mount.
+  const tradeModeRef = useRef<Record<string, string | null> | undefined>(
+    undefined,
+  );
+  useEffect(() => {
+    tradeModeRef.current = tradeMode;
+    // After tradeMode arrives (or changes), refresh the ohlcv display so the
+    // newly-available per-day mode is shown for the currently-hovered candle.
+    setOhlcv((prev) =>
+      prev
+        ? { ...prev, tradeMode: tradeMode?.[prev.nextBiasDate ?? ""] ?? null }
+        : prev,
+    );
+  }, [tradeMode]);
   const [ohlcv, setOhlcv] = useState<OHLCV | null>(null);
   const [biasTip, setBiasTip] = useState<{
     x: number;
@@ -417,6 +451,8 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       const last = candles[candles.length - 1];
       if (last) {
         const lastDate = last.date.slice(0, 10);
+        const tmMap = tradeModeRef.current;
+        const tm = tmMap?.[lastDate] ?? null;
         setOhlcv({
           date: formatDateLabel(intraday ? last.ts : last.date.slice(0, 10)),
           open: last.open,
@@ -426,6 +462,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
           volume: last.volume,
           nextBias: biasMapsRef.current.m.get(lastDate)?.bias ?? null,
           nextBiasDate: lastDate,
+          tradeMode: tm,
         });
       }
     };
@@ -468,6 +505,9 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
           ? (biasMapsRef.current.m.get(hoveredDate)?.bias ?? null)
           : null,
         nextBiasDate: hoveredDate ?? null,
+        tradeMode: hoveredDate
+          ? (tradeModeRef.current?.[hoveredDate] ?? null)
+          : null,
       });
       const isLast =
         !!match &&
@@ -783,18 +823,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     // Sort markers by time for consistent rendering
     markers.sort((a, b) => timeToSec(a.time) - timeToSec(b.time));
 
-    // Debug logging for fsBreaks
-    if (typeof console !== "undefined" && (fsMarkers?.length ?? 0) > 0) {
-      console.log(
-        "[fs-overlay] marks:",
-        fsMarkers?.length ?? 0,
-        "breaks:",
-        fsBreaks?.length ?? 0,
-        "first break:",
-        fsBreaks?.[0],
-      );
-    }
-
     const api = markers.length > 0 ? createSeriesMarkers(ser, markers) : null;
     return () => {
       try {
@@ -813,6 +841,105 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     algoSecondSwingBreaks,
     oneMinSwingN,
   ]);
+
+  // ── overlay: whole-day swing arrow markers ──
+  // Mirrors the exact shape/color/text convention used by fsMarkers/fsBreaks:
+  //   • each B1/B2/FLIP → arrowUp, belowBar, at the break's ACTUAL bar
+  //     FLIP → orange (#f97316), B2 → blue (#60a5fa), B1 → grey (#94a3b8)
+  //   • FS/SUS → arrowDown, aboveBar, at the swing's confirmation bar
+  //     SUS → violet (#a78bfa), FS → the swing's line tone (cyan/yellow)
+  // Previously the decisive break was drawn once at the swing's END bar, which
+  // made e.g. a FLIP appear at the swing end instead of its true bar — now each
+  // mark (B1/B2/FLIP) is drawn at its own bar + the FS/SUS at the confirmed bar.
+  useEffect(() => {
+    const ser = seriesRef.current;
+    if (!ser || !intraday) return;
+    if (!wholeDaySwings || wholeDaySwings.length === 0) return;
+
+    const markers: SeriesMarker<Time>[] = [];
+    for (const s of wholeDaySwings) {
+      // Skip swing_index 0 and 1 — those already have fsMarkers/fsBreaks markers.
+      if (s.swing_index < 2) continue;
+
+      // Human swing number: swing_index 0 = 1st, 1 = 2nd, 2 = 3rd, 3 = 4th ...
+      // Every mark below is suffixed with this so you always know which swing
+      // a B1/B2/FLIP/FS/SUS belongs to (e.g. "B1-3", "FLIP-3", "FS-3").
+      const swingNo = s.swing_index + 1;
+
+      // Break markers (B1/B2/FLIP) — one arrow per break at its actual bar.
+      // Defensive fallback for older backend responses that lack `breaks`:
+      // draw the decisive break at the swing's end bar so marks are never missing.
+      const brks: {
+        idx: number;
+        time?: string;
+        kind: "B1" | "B2" | "FLIP";
+        dir: "up" | "down";
+        px: number;
+      }[] =
+        Array.isArray(s.breaks) && s.breaks.length > 0
+          ? s.breaks
+          : s.break_kind
+            ? [
+                {
+                  idx: s.end_idx,
+                  kind: s.break_kind,
+                  dir: s.dir === "B" ? "up" : "down",
+                  px: s.end_px,
+                },
+              ]
+            : [];
+      for (const b of brks) {
+        const cc = candles[b.idx];
+        if (!cc) continue;
+        markers.push({
+          time: cc.ts as Time,
+          position: "belowBar",
+          shape: "arrowUp",
+          color:
+            b.kind === "FLIP"
+              ? "#f97316"
+              : b.kind === "B2"
+                ? "#60a5fa"
+                : "#94a3b8",
+          text: `${b.kind}-${swingNo}`,
+          size: 1,
+        });
+      }
+
+      // Confirmation marker (FS / SUS) — at the swing's OWN structural completion
+      // bar (fs_at_idx, the opposing pivot-break) when available, else the
+      // confirmed bar, else the swing end.
+      if (s.kind) {
+        const confIdx =
+          (s.fs_at_idx ?? -1) >= 0
+            ? (s.fs_at_idx as number)
+            : s.confirmed_at_idx >= 0
+              ? s.confirmed_at_idx
+              : s.end_idx;
+        const cc = candles[confIdx];
+        if (cc) {
+          const isSustain = s.kind === "SUS";
+          const lineTone = s.swing_index % 2 === 0 ? "#22d3ee" : "#facc15"; // cyan/yellow
+          markers.push({
+            time: cc.ts as Time,
+            position: "aboveBar",
+            shape: "arrowDown",
+            color: isSustain ? "#a78bfa" : lineTone,
+            text: `${s.kind}-${swingNo}`,
+            size: 1,
+          });
+        }
+      }
+    }
+
+    markers.sort((a, b) => timeToSec(a.time) - timeToSec(b.time));
+    const api = markers.length > 0 ? createSeriesMarkers(ser, markers) : null;
+    return () => {
+      try {
+        api?.setMarkers([]);
+      } catch {}
+    };
+  }, [wholeDaySwings, intraday, candles]);
 
   // ── overlay: Swing S/R labels & levels ──
   useEffect(() => {
@@ -913,6 +1040,24 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       } catch {}
     };
   }, [envelope, intraday, candles]);
+
+  // ── overlay: Whole-day swing zigzag (cyan/yellow alternating) ──
+  useEffect(() => {
+    const chart = chartRef.current;
+    const ser = seriesRef.current;
+    if (!chart || !ser || !intraday) return;
+    if (!wholeDaySwings || wholeDaySwings.length === 0) return;
+
+    const prim = new WholeDaySwingPrimitive(ser, wholeDaySwings);
+    chart.panes()[0].attachPrimitive(prim);
+    wholeDayPrimRef.current = prim;
+    return () => {
+      wholeDayPrimRef.current = null;
+      try {
+        chart.panes()[0].detachPrimitive(prim);
+      } catch {}
+    };
+  }, [wholeDaySwings, intraday, candles]);
 
   // ── overlay: First-Swing ALGO flow lines (cyan = declared, red = invalid) ──
   useEffect(() => {
@@ -1051,6 +1196,42 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
                   ? "\u25BC"
                   : "\u25CF"}{" "}
               Bias: {ohlcv.nextBias}
+            </div>
+          )}
+          {tradeMode !== undefined && (
+            <div
+              style={{
+                color:
+                  ohlcv.tradeMode === "aggressive"
+                    ? "#fbbf24" // amber for aggressive ⚡
+                    : ohlcv.tradeMode === "conservative"
+                      ? "#a78bfa" // violet for conservative 🐢
+                      : ohlcv.tradeMode === "skip"
+                        ? "#6b7280" // grey for skip
+                        : "#94a3b8", // muted grey for unknown / no-data
+                marginTop: 2,
+                fontWeight: 600,
+              }}
+              title={
+                ohlcv.tradeMode === "aggressive"
+                  ? "Aggressive mode: 2nd pivot break of first swing (FS opposite bias)"
+                  : ohlcv.tradeMode === "conservative"
+                    ? "Conservative mode: 2nd pivot break of opposite swing (FS same as bias)"
+                    : ohlcv.tradeMode === "skip"
+                      ? "Skip: no trade today (unbiased or no setup)"
+                      : "No trade_mode data for this day (backtest not loaded)"
+              }
+            >
+              {ohlcv.tradeMode === "aggressive"
+                ? "\u26A1"
+                : ohlcv.tradeMode === "conservative"
+                  ? "\uD83D\uDC22"
+                  : ohlcv.tradeMode === "skip"
+                    ? "\u2715"
+                    : "\u2014"}{" "}
+              {ohlcv.tradeMode
+                ? ohlcv.tradeMode[0].toUpperCase() + ohlcv.tradeMode.slice(1)
+                : "No mode"}
             </div>
           )}
         </div>

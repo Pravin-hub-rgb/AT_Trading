@@ -189,6 +189,51 @@ export interface SwingsResponse {
   sr_levels: SwingLevel[];
 }
 
+export interface WholeDaySwing {
+  day: string;
+  swing_index: number;
+  seg: {
+    dir: "B" | "S";
+    start_idx: number;
+    start_px: number;
+    end_idx: number;
+    end_px: number;
+  };
+  source: "chop" | "sustain" | null;
+  dir: "up" | "down";
+  /** "SUS" or "FS" — the kind label at the turning point. */
+  kind: string;
+  /** "B1", "B2", "FLIP" or null — first break marker kind. */
+  break_kind: "B1" | "B2" | "FLIP" | null;
+  /** Full ordered list of break marks for this swing (idx is a global bar index). */
+  breaks: {
+    idx: number;
+    time: string;
+    kind: "B1" | "B2" | "FLIP";
+    dir: "up" | "down";
+    px: number;
+  }[];
+  /** Bar index where the swing was confirmed/declared. */
+  confirmed_at_idx: number;
+  /** HH:MM time of confirmation ("FS" / "SUS" label point). */
+  confirmed_at_time: string;
+  /**
+   * Bar index of the swing's OWN structural completion — the first bar at/after
+   * the swing's end extreme where its opposing pivot was taken out. For chop
+   * swings this is where FS/SUS should be drawn (e.g. a down swing's high pivot
+   * breaks -> FS there), not the minBars-delayed declaration bar.
+   */
+  fs_at_idx?: number;
+  fs_at_time?: string;
+}
+
+export interface WholeDaySwingsResponse {
+  interval: string;
+  whole_day: boolean;
+  sustain_bars: number;
+  swings: WholeDaySwing[];
+}
+
 export const getSwings = (
   interval: string,
   pivot: number,
@@ -197,6 +242,15 @@ export const getSwings = (
 ) =>
   request<SwingsResponse>(
     `/api/swings?interval=${interval}&pivot=${pivot}&levels=${levels}&lookahead=${lookahead}`,
+  );
+
+export const getWholeDaySwings = (
+  interval = "1min",
+  sustainBars = 7,
+  wholeDay = true,
+) =>
+  request<WholeDaySwingsResponse>(
+    `/api/swings/whole_day?interval=${interval}&sustain_bars=${sustainBars}&whole_day=${wholeDay}`,
   );
 
 // --- initial bias (pre-open labels) ---
@@ -284,7 +338,6 @@ export interface BacktestParams {
   sl_pivot_buffer?: number; // buffer in points (default 1.0) when sl_mode=prev_pivot
   ft_fail_enabled: boolean; // early exit when close beyond dom_level within 2 bars (S5:98)
   entry_method?: string; // pace_break | pivot_break
-  swing_mode?: string; // none | opposite_swing_needed (1min only)
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -295,7 +348,6 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   sl_pivot_buffer: 1.0,
   ft_fail_enabled: true,
   entry_method: "pace_break",
-  swing_mode: "opposite_swing_needed",
 };
 
 export interface IntradayTrade {
@@ -323,6 +375,7 @@ export interface IntradayDaySummary {
   raw_bias?: Bias;
   case?: string | null;
   swing_direction: string | null;
+  trade_mode?: "aggressive" | "conservative" | "skip" | null;
   n_trades: number;
   outcomes: string[];
   trades: IntradayTrade[];
@@ -359,7 +412,6 @@ export const getIntradayBacktest = (
     sl_pivot_buffer: String(params.sl_pivot_buffer ?? 1.0),
     ft_fail_enabled: String(params.ft_fail_enabled),
     entry_method: params.entry_method ?? "pace_break",
-    swing_mode: params.swing_mode ?? "opposite_swing_needed",
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,
