@@ -545,18 +545,21 @@ export default function ChartPage() {
                 timeCap: "09:29",
               });
               const valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
-              // Per-swing B1 filter: engine may emit multiple B1s (pre-confirmation
-              // re-locks); keep first B1 + any B2/FLIP per swing. FlatMap-then-filter
-              // globally would drop B1s for later days — must filter per result.
+              // Per-swing filter: engine may emit multiple B1s (pre-confirm re-locks)
+              // or multiple FLIPs (whipsaw like FLIP@10:16 + FLIP@10:17) — keep
+              // only the first B1 + the last decisive break (last non-B1) per swing.
+              // FlatMap-then-filter globally would drop B1s for later days — must filter per result.
               const filterBreaksPerSwing = <
                 T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
               >(
                 breaks: T[],
               ): T[] => {
-                if (breaks.length <= 2) return breaks;
-                const first = breaks[0];
-                const rest = breaks.filter((b, i) => i > 0 && b.kind !== "B1");
-                return rest.length > 0 ? [first, ...rest] : [first];
+                if (breaks.length <= 1) return breaks;
+                const first = breaks.find((b) => b.kind === "B1") ?? breaks[0];
+                const nonB1 = breaks.filter((b) => b.kind !== "B1");
+                if (nonB1.length === 0) return [first];
+                const last = nonB1[nonB1.length - 1];
+                return [first, last];
               };
               if (iv === "1min") {
                 // Second swing: run fresh FsV2 seeded from first-swing end extreme

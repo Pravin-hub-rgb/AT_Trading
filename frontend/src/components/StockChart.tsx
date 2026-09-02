@@ -624,18 +624,20 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   // ── overlay: ALL markers (consolidated into single effect to prevent interference) ──
   // This combines: bias arrows, Williams fractal tags, fsBreaks (B1/B2/FLIP), and fsMarkers (FS/SUS)
 
-  // Filter intermediate B1 marks: keep only the first B1 + any FLIP/B2.
-  // The engine may produce multiple B1s (pre-confirmation lock attempts);
-  // only the first one and the decisive break matter on the chart.
+  // Filter intermediate marks: keep only the first B1 + the last decisive break
+  // (last FLIP/B2). Engine may emit FLIP@10:16 + FLIP@10:17 whipsaw — only
+  // FLIP@10:17 (last) matters on the chart.
   const filterBreaks = <
     T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
   >(
     breaks: T[],
   ): T[] => {
-    if (breaks.length <= 2) return breaks;
-    const first = breaks[0];
-    const rest = breaks.filter((b, i) => i > 0 && b.kind !== "B1");
-    return rest.length > 0 ? [first, ...rest] : [first];
+    if (breaks.length <= 1) return breaks;
+    const first = breaks.find((b) => b.kind === "B1") ?? breaks[0];
+    const nonB1 = breaks.filter((b) => b.kind !== "B1");
+    if (nonB1.length === 0) return [first];
+    const last = nonB1[nonB1.length - 1];
+    return [first, last];
   };
 
   useEffect(() => {
