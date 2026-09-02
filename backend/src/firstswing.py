@@ -104,6 +104,9 @@ class SwingEngine:
         self.allow_corner_record: bool = False
         self.dir_confirmed: bool = False
         self.locked_level: float = float("nan")
+        self.flip_established: bool = False   # current dir was born from a FLIP, not a B1
+        self.ever_b1_dir: Optional[Literal["up", "down"]] = None  # dir of last B1 that never got its B2
+        self.dir_established_idx: int = -1    # bar where current leg became confirmed (B2 or flip)
 
         self.start_idx: int = -1
         self.start_time: str = ""
@@ -241,11 +244,31 @@ class SwingEngine:
             return
         if self.dir_confirmed:
             if self.dir == "down" and up_break and not down_break:
-                self._flip("up")
+                # Flip back to a direction that still has a live B1 (never B2d)
+                # from a flip-born direction: this break IS that legs B2, not a
+                # new flip. (1 Sep 2026 swing 6: B1(up)@11:55 -> FLIP(down)@12:01
+                # -> high-extreme break @12:05 was marked FLIP instead of B2.)
+                if (
+                    self.flip_established
+                    and self.ever_b1_dir == "up"
+                    and self.e_hi_pivot is not None
+                    and self.hi > self.e_hi_pivot.px
+                ):
+                    self._flip("up", as_b2=True)
+                else:
+                    self._flip("up")
                 self._check_chop()
                 return
             if self.dir == "up" and down_break and not up_break:
-                self._flip("down")
+                if (
+                    self.flip_established
+                    and self.ever_b1_dir == "down"
+                    and self.e_lo_pivot is not None
+                    and self.lo < self.e_lo_pivot.px
+                ):
+                    self._flip("down", as_b2=True)
+                else:
+                    self._flip("down")
                 self._check_chop()
                 return
             self._check_chop()
@@ -286,6 +309,8 @@ class SwingEngine:
         self.b1_bar_idx = self.g_idx
         self.state = "locked"
         self.allow_corner_record = False
+        self.ever_b1_dir = dir
+        self.flip_established = False
         s = self.e_lo if dir == "up" else self.e_hi
         self.start_idx = s.idx
         self.start_time = s.time
@@ -295,6 +320,12 @@ class SwingEngine:
 
     def _confirm_direction(self) -> None:
         self.dir_confirmed = True
+        self.ever_b1_dir = None  # B1+B2 complete - the leg is done, later flip-backs are genuine FLIPs
+        # Chop may only target pivots formed AFTER this bar (fresh structure):
+        # a break of a pre-B2 pivot is not the opposing break that completes
+        # the leg. (1 Sep 2026 swing 8: B2@13:26, cross of the pre-B2 13:24 low
+        # @13:27 marked fs_at mid-swing 8 bars before the 13:35 top.)
+        self.dir_established_idx = self.g_idx
         b2 = self.b2_pivot
         self.locked_level = self.e_hi_prev.px if self.dir == "up" else self.e_lo_prev.px
         self.break_marks.append(
@@ -309,7 +340,7 @@ class SwingEngine:
         self.b2_pivot = None
         self.just_fired_b2 = True
 
-    def _flip(self, dir: Literal["up", "down"]) -> None:
+    def _flip(self, dir: Literal["up", "down"], as_b2: bool = False) -> None:
         self.dir = dir
         self.base_dir = None
         self.same_side_breaks = 0
@@ -318,6 +349,8 @@ class SwingEngine:
         self.b1_bar_idx = -1
         self.allow_corner_record = False
         self.dir_confirmed = True
+        self.flip_established = True
+        self.dir_established_idx = self.g_idx  # chop may only target pivots formed after this bar
         # The pre-flip direction dies with its confirmation hunt: reset the
         # chop-cross tracking so the NEW direction records its OWN first chop
         # cross (fs_at), and reset the SUS streak so a stale count from the
@@ -334,7 +367,9 @@ class SwingEngine:
         self.start_time = s.time
         self.start_px = s.px
         self.locked_level = self.e_hi_prev.px if dir == "up" else self.e_lo_prev.px
-        self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="FLIP", dir=dir, px=self.locked_level))
+        # as_b2: same state transition as a flip, but the break is recorded as
+        # the live B1 legs B2 (flip-back into a direction whose B1 never got B2).
+        self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="B2" if as_b2 else "FLIP", dir=dir, px=self.locked_level))
 
     def _check_chop(self) -> None:
         if self.just_fired_b2:
@@ -360,15 +395,23 @@ class SwingEngine:
 
     def _chop_target_high(self) -> Optional[Lvl]:
         p = self.latest_sealed_high
-        if p is not None and p.idx >= 0 and p.idx <= self.g_idx - 2:
-            return p
-        return None
+        if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
+            return None
+        # Fresh-structure rule: the opposing pivot must have FORMED after the
+        # current leg was established (B2 or flip) - breaking a pre-existing
+        # pivot does not complete the leg.
+        if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
+            return None
+        return p
 
     def _chop_target_low(self) -> Optional[Lvl]:
         p = self.latest_sealed_low
-        if p is not None and p.idx >= 0 and p.idx <= self.g_idx - 2:
-            return p
-        return None
+        if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
+            return None
+        # Fresh-structure rule: see _chop_target_high.
+        if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
+            return None
+        return p
 
     def _check_sustain(self, c: FlowCandle) -> None:
         if self.just_fired_b2:
@@ -456,6 +499,9 @@ class SwingEngine:
         self.allow_corner_record = False
         self.dir_confirmed = False
         self.locked_level = float("nan")
+        self.flip_established = False
+        self.ever_b1_dir = None
+        self.dir_established_idx = -1
 
         self.start_idx = -1
         self.start_time = ""
@@ -515,6 +561,9 @@ class SwingEngine:
         self.allow_corner_record = False
         self.dir_confirmed = False
         self.locked_level = float("nan")
+        self.flip_established = False
+        self.ever_b1_dir = None
+        self.dir_established_idx = -1
 
         self.start_idx = -1
         self.start_time = ""
@@ -625,7 +674,15 @@ def compute_swing_results(
 
                 fs_at_idx = eng.confirmed_at_idx
                 fs_at_time = _conf_time
-                if eng.confirm_source == "chop" and eng.first_chop_cross_idx >= 0:
+                # FS marker = the opposing pivot-break that actually COMPLETED the
+                # swing. If the first chop cross happened BEFORE the final extreme
+                # (cross was gate-blocked by minBars, swing then extended), that
+                # cross is stale - fall back to the bar that actually confirmed.
+                if (
+                    eng.confirm_source == "chop"
+                    and eng.first_chop_cross_idx >= 0
+                    and eng.first_chop_cross_idx >= eng.end_idx
+                ):
                     fs_at_idx = eng.first_chop_cross_idx
                     fs_at_time = eng.first_chop_cross_time or _conf_time
 

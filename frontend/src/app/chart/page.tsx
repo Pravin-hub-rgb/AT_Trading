@@ -625,8 +625,12 @@ export default function ChartPage() {
                 const last = nonB1[nonB1.length - 1];
                 // A B2 that got flip-cancelled still happened and must stay
                 // visible (1 Sep 2026: B2@11:25 swallowed by FLIP@11:28).
+                const lastFlip = [...nonB1].reverse().find((b: any) => b.kind === "FLIP");
                 const lastB2 = [...nonB1].reverse().find((b: any) => b.kind === "B2");
                 const out: any[] = [first];
+                // Fake-out FLIP before the confirming B2 still happened - keep it
+                // visible (1 Sep 2026 swing 6: B1@11:55 -> FLIP@12:01 -> B2@12:05).
+                if (lastFlip && lastFlip !== last && lastFlip !== first) out.push(lastFlip);
                 if (lastB2 && lastB2 !== last && lastB2 !== first) out.push(lastB2);
                 out.push(last);
                 return out;

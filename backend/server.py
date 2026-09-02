@@ -775,7 +775,12 @@ def _filter_breaks_per_swing(breaks: list) -> list:
         return [first]
     last = non_b1[-1]
     out = [first]
+    last_flip = next((b for b in reversed(non_b1) if getattr(b, "kind", None) == "FLIP"), None)
     last_b2 = next((b for b in reversed(non_b1) if getattr(b, "kind", None) == "B2"), None)
+    # Fake-out FLIP before the confirming B2 still happened - keep it visible
+    # (1 Sep 2026 swing 6: B1@11:55 -> FLIP@12:01 -> B2@12:05).
+    if last_flip is not None and last_flip is not last and last_flip is not first:
+        out.append(last_flip)
     if last_b2 is not None and last_b2 is not last and last_b2 is not first:
         out.append(last_b2)
     out.append(last)
