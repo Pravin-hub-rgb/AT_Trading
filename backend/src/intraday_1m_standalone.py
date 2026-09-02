@@ -9,7 +9,7 @@ from __future__ import annotations
 import pandas as pd
 from collections import Counter
 from .walker import WalkerEngine, FlowCandle
-from .firstswing import FirstSwingEngine
+from .firstswing import SwingEngine as FirstSwingEngine
 from .intraday import (
     _prep_day,
     _classify_first_swing_v2,

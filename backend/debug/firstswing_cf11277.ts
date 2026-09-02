@@ -83,6 +83,10 @@ export class FirstSwingEngine {
   private eLoPivot: Lvl | null = null;
   private normalHighs: Lvl[] = [];
   private normalLows: Lvl[] = [];
+  private barHighs: Map<number, number> = new Map();
+  private barLows: Map<number, number> = new Map();
+  private latestSealedHigh: Lvl | null = null;
+  private latestSealedLow: Lvl | null = null;
 
   private state: State = "watch";
   dir: "up" | "down" | null = null;
@@ -173,7 +177,15 @@ export class FirstSwingEngine {
       this.eLoPivot = { ...this.eLo };
       this.eHiPivotPrev = { ...this.eHiPivot };
       this.eLoPivotPrev = { ...this.eLoPivot };
+      this.latestSealedHigh = { ...this.eHi };
+      this.latestSealedLow = { ...this.eLo };
+      this.barHighs.clear();
+      this.barLows.clear();
     }
+
+    // Record current bar for gap-check lookups
+    this.barHighs.set(gIdx, c.high);
+    this.barLows.set(gIdx, c.low);
 
     // 1) Consume walker seals — the single source of truth for pivots.
     //    The FIRST flip-sealed pivot (bar-1 seed excluded) is the arming
@@ -182,6 +194,10 @@ export class FirstSwingEngine {
       if (!p.sealed) continue;
       if (this.barsSeen >= 2) this.armed = true;
       if (p.kind === "H") {
+        const gapHigh = this.barHighs.get(p.idx + 1);
+        if (gapHigh === undefined || gapHigh <= p.px) {
+          this.latestSealedHigh = { px: p.px, idx: p.idx, time: p.time };
+        }
         const cur = this.eHiPivot!;
         if (p.px > cur.px) {
           this.normalHighs.push(cur);
@@ -206,6 +222,10 @@ export class FirstSwingEngine {
           });
         }
       } else {
+        const gapLow = this.barLows.get(p.idx + 1);
+        if (gapLow === undefined || gapLow >= p.px) {
+          this.latestSealedLow = { px: p.px, idx: p.idx, time: p.time };
+        }
         const cur = this.eLoPivot!;
         if (p.px < cur.px) {
           this.normalLows.push(cur);
@@ -420,13 +440,12 @@ export class FirstSwingEngine {
   }
 
   private checkChop() {
-    // Block chop on the same bar as B2 (B2 must be followed by at least one bar).
     if (this.justFiredB2) return;
-    // Chop = price reclaims the most recently marked pivot:
-    // - Selling swing (down): breaks above the most recent high pivot
-    // - Buying swing (up): breaks below the most recent low pivot
+    // Chop target = the latest walker-sealed extreme pivot (frozen from
+    // previous bar). When a NEW pivot is created the old one is dead —
+    // the market moved on.  Requires 1-candle gap (idx <= gIdx - 2).
     if (this.dir === "down") {
-      const tgt = this.latestPivot(this.normalHighs);
+      const tgt = this.chopTargetHigh();
       if (tgt && this.hi > tgt.px) {
         this.lastConfirmHit = {
           pool: "normal",
@@ -437,7 +456,7 @@ export class FirstSwingEngine {
         this.confirm("chop");
       }
     } else if (this.dir === "up") {
-      const tgt = this.latestPivot(this.normalLows);
+      const tgt = this.chopTargetLow();
       if (tgt && this.lo < tgt.px) {
         this.lastConfirmHit = {
           pool: "normal",
@@ -448,6 +467,18 @@ export class FirstSwingEngine {
         this.confirm("chop");
       }
     }
+  }
+
+  private chopTargetHigh(): Lvl | null {
+    const p = this.latestSealedHigh;
+    if (p && p.idx >= 0 && p.idx <= this.gIdx - 2) return p;
+    return null;
+  }
+
+  private chopTargetLow(): Lvl | null {
+    const p = this.latestSealedLow;
+    if (p && p.idx >= 0 && p.idx <= this.gIdx - 2) return p;
+    return null;
   }
 
   private checkSustain(c: FlowCandle) {

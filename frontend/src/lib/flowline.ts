@@ -3,8 +3,8 @@
 // First-swing detection now lives in its own engine (see firstswing.ts),
 // driven by the WalkerEngine pivot stream. flowline.ts keeps the public
 // computeFsV2* surface and delegates to it.
-import { FirstSwingEngine, type FsBreakMark } from "./firstswing";
-export { FirstSwingEngine } from "./firstswing";
+import { SwingEngine, type FsBreakMark } from "./firstswing";
+export { SwingEngine, FirstSwingEngine } from "./firstswing";
 
 // -- branch coverage instrumentation (active only with FLOW_COV=1) --------
 const FLOW_COV: Record<string, number> = {};
@@ -1302,7 +1302,7 @@ export function computeSecondSwingResults(
     const afterFs1 = items.filter((it) => it.gIdx >= seedIdx);
     if (afterFs1.length === 0) return;
 
-    const eng = new FirstSwingEngine(opts);
+    const eng = new SwingEngine(opts);
     // No reset – just feed from 09:28 as bar 1, exactly like 09:15 for 1st swing.
     // This gives B1@09:30, B2@09:36 per your observation.
 
@@ -1359,7 +1359,7 @@ export function computeFsV2Results(
 
   const out: FsV2Result[] = [];
   byDay.forEach((items, day) => {
-    const eng = new FirstSwingEngine(opts);
+    const eng = new SwingEngine(opts);
     for (const it of items) eng.processBar(it.c, it.gIdx);
 
     if (!eng.declared || eng.startIdx < 0) {

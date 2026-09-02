@@ -1,4 +1,5 @@
-// FirstSwingEngine — SEPARATE engine for first-swing detection.
+// SwingEngine — single source of truth for swing detection in the frontend.
+// Mirrors backend/src/firstswing.py exactly.
 //
 // Architectural fix for the FsV2 half-step ordering bug:
 //   - The WalkerEngine (in flowline.ts) is the SINGLE SOURCE OF TRUTH for
@@ -56,7 +57,7 @@ interface Lvl {
 
 type State = "watch" | "locked" | "confirmed";
 
-export class FirstSwingEngine {
+export class SwingEngine {
   private walker = new WalkerEngine();
   private barsSeen = 0;
   private t = "00:00";
@@ -84,11 +85,12 @@ export class FirstSwingEngine {
   private eLoPivot: Lvl | null = null;
   private normalHighs: Lvl[] = [];
   private normalLows: Lvl[] = [];
-  // Chop target: the latest marked pivot whose PIVOT CANDLE is at least 2 bars
-  // old. A bar's own walker seal must never become its own chop reference
-  // (same-bar self-block bug — 24 Aug:10:03), and a pivot must survive one
-  // full bar after its pivot candle before it can be chopped back through
-  // (12 Aug:10:03 — 1-bar-old micro-pivot broken by 0.25pt noise).
+  // Chop target: the latest walker-sealed pivot that SURVIVED 1-candle gap
+  // (the bar right after the pivot must not break the pivot level).
+  private barHighs: Map<number, number> = new Map();
+  private barLows: Map<number, number> = new Map();
+  private latestSealedHigh: Lvl | null = null;
+  private latestSealedLow: Lvl | null = null;
   private latestChoppableHigh(): Lvl | null {
     return this.latestPivotMinAge(this.normalHighs);
   }
@@ -139,6 +141,9 @@ export class FirstSwingEngine {
   confirmedAtTime = "";
   confirmedAtIdx = -1;
   confirmSource: "chop" | "sustain" | null = null;
+  firstChopCrossIdx = -1;
+  firstChopCrossPx = NaN;
+  firstChopCrossTime = "";
 
   /** True once a first break has locked a tentative direction (watch -> locked). */
   get locked() {
@@ -193,8 +198,16 @@ export class FirstSwingEngine {
       this.eLoPivot = { ...this.eLo };
       this.eHiPivotPrev = { ...this.eHiPivot };
       this.eLoPivotPrev = { ...this.eLoPivot };
+      this.latestSealedHigh = { ...this.eHi };
+      this.latestSealedLow = { ...this.eLo };
+      this.barHighs.clear();
+      this.barLows.clear();
       this.seedIdx = gIdx;
     }
+
+    // Record current bar for gap-check lookups
+    this.barHighs.set(gIdx, c.high);
+    this.barLows.set(gIdx, c.low);
 
     // 1) Consume walker seals — the single source of truth for pivots.
     //    The FIRST flip-sealed pivot (bar-1 seed excluded) is the arming
@@ -203,6 +216,10 @@ export class FirstSwingEngine {
       if (!p.sealed) continue;
       if (this.barsSeen >= 2) this.armed = true;
       if (p.kind === "H") {
+        const gapHigh = this.barHighs.get(p.idx + 1);
+        if (gapHigh === undefined || gapHigh <= p.px) {
+          this.latestSealedHigh = { px: p.px, idx: p.idx, time: p.time };
+        }
         const cur = this.eHiPivot!;
         if (p.px > cur.px) {
           this.normalHighs.push(cur);
@@ -227,6 +244,10 @@ export class FirstSwingEngine {
           });
         }
       } else {
+        const gapLow = this.barLows.get(p.idx + 1);
+        if (gapLow === undefined || gapLow >= p.px) {
+          this.latestSealedLow = { px: p.px, idx: p.idx, time: p.time };
+        }
         const cur = this.eLoPivot!;
         if (p.px < cur.px) {
           this.normalLows.push(cur);
@@ -434,20 +455,15 @@ export class FirstSwingEngine {
   }
 
   private checkChop() {
-    // Block chop on the same bar as B2 (B2 must be followed by at least one bar).
     if (this.justFiredB2) return;
-    // Chop = price reclaims the most recently marked pivot:
-    // - Selling swing (down): breaks above the most recent high pivot
-    // - Buying swing (up): breaks below the most recent low pivot
-    // The target is the latest pivot whose PIVOT CANDLE is at least 2 bars old:
-    // a pivot must survive one full bar after its pivot candle before it becomes
-    // a valid chop reference. This both fixes the same-bar self-block
-    // (24 Aug: 10:03 — own seal has age 0) and avoids noise-firing on
-    // 1-bar-old micro-pivots (12 Aug: 10:03 breaking 10:02@24375.75 by 0.25pt).
     if (this.dir === "down") {
-      const tgt =
-        this.latestChoppableHigh() ?? this.latestPivot(this.normalHighs);
+      const tgt = this.chopTargetHigh();
       if (tgt && this.hi > tgt.px) {
+        if (this.firstChopCrossIdx < 0) {
+          this.firstChopCrossIdx = this.gIdx;
+          this.firstChopCrossPx = tgt.px;
+          this.firstChopCrossTime = this.t;
+        }
         this.lastConfirmHit = {
           pool: "normal",
           px: tgt.px,
@@ -457,9 +473,13 @@ export class FirstSwingEngine {
         this.confirm("chop");
       }
     } else if (this.dir === "up") {
-      const tgt =
-        this.latestChoppableLow() ?? this.latestPivot(this.normalLows);
+      const tgt = this.chopTargetLow();
       if (tgt && this.lo < tgt.px) {
+        if (this.firstChopCrossIdx < 0) {
+          this.firstChopCrossIdx = this.gIdx;
+          this.firstChopCrossPx = tgt.px;
+          this.firstChopCrossTime = this.t;
+        }
         this.lastConfirmHit = {
           pool: "normal",
           px: tgt.px,
@@ -469,6 +489,18 @@ export class FirstSwingEngine {
         this.confirm("chop");
       }
     }
+  }
+
+  private chopTargetHigh(): Lvl | null {
+    const p = this.latestSealedHigh;
+    if (p && p.idx >= 0 && p.idx <= this.gIdx - 2) return p;
+    return null;
+  }
+
+  private chopTargetLow(): Lvl | null {
+    const p = this.latestSealedLow;
+    if (p && p.idx >= 0 && p.idx <= this.gIdx - 2) return p;
+    return null;
   }
 
   private checkSustain(c: FlowCandle) {
@@ -574,6 +606,10 @@ export class FirstSwingEngine {
     this.eLoPivot = { ...seed };
     this.eHiPivotPrev = { ...seed };
     this.eLoPivotPrev = { ...seed };
+    this.latestSealedHigh = { ...seed };
+    this.latestSealedLow = { ...seed };
+    this.barHighs.clear();
+    this.barLows.clear();
 
     this.normalHighs.length = 0;
     this.normalLows.length = 0;
@@ -605,6 +641,9 @@ export class FirstSwingEngine {
     this.confirmedAtTime = "";
     this.confirmedAtIdx = -1;
     this.confirmSource = null;
+    this.firstChopCrossIdx = -1;
+    this.firstChopCrossPx = NaN;
+    this.firstChopCrossTime = "";
     this.lastConfirmHit = null;
     this.sustainStreak = 0;
     this.armed = false;
@@ -633,6 +672,10 @@ export class FirstSwingEngine {
     this.eLoPivot = { ...this.eLo };
     this.eHiPivotPrev = { ...this.eHiPivot };
     this.eLoPivotPrev = { ...this.eLoPivot };
+    this.latestSealedHigh = { ...this.eHi };
+    this.latestSealedLow = { ...this.eLo };
+    this.barHighs.clear();
+    this.barLows.clear();
 
     this.normalHighs.length = 0;
     this.normalLows.length = 0;
@@ -664,6 +707,9 @@ export class FirstSwingEngine {
     this.confirmedAtTime = "";
     this.confirmedAtIdx = -1;
     this.confirmSource = null;
+    this.firstChopCrossIdx = -1;
+    this.firstChopCrossPx = NaN;
+    this.firstChopCrossTime = "";
     this.lastConfirmHit = null;
     this.sustainStreak = 0;
     this.armed = false;
@@ -671,7 +717,95 @@ export class FirstSwingEngine {
   }
 }
 
-// ===== Batch helpers (same surface as the legacy flowline.ts API) =====
+// ===== Batch helpers =====
+
+export function computeSwingResults(
+  candles: FlowCandle[],
+  opts: FsV2Opts = {},
+  swingCount: number | "whole" = 1,
+): Record<string, unknown>[] {
+  const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
+  candles.forEach((c, gIdx) => {
+    const d = c.date.slice(0, 10);
+    if (!byDay.has(d)) byDay.set(d, []);
+    byDay.get(d)!.push({ c, gIdx });
+  });
+
+  const out: Record<string, unknown>[] = [];
+  byDay.forEach((items, day) => {
+    let swingIndex = 0;
+    let nextStartPos = 0;
+    const maxSwings = swingCount === "whole" ? 50 : swingCount;
+
+    while (swingIndex < maxSwings) {
+      const eng = new SwingEngine(opts);
+      let found = false;
+
+      for (let pos = nextStartPos; pos < items.length; pos++) {
+        const it = items[pos];
+        eng.processBar(it.c, it.gIdx);
+
+        if (!eng.declared || eng.startIdx < 0) continue;
+
+        const srcKind = eng.confirmSource === "sustain" ? "SUS" : "FS";
+        const decisive = eng.breakMarks.length > 0 ? eng.breakMarks[eng.breakMarks.length - 1] : null;
+        const bk = decisive?.kind ?? null;
+
+        let confTime = "";
+        if (eng.confirmedAtIdx >= 0) {
+          for (const _it of items) {
+            if (_it.gIdx === eng.confirmedAtIdx) {
+              confTime = _it.c.date.slice(11, 16);
+              break;
+            }
+          }
+        }
+
+        let fsAtIdx = eng.confirmedAtIdx;
+        let fsAtTime = confTime;
+        if (eng.confirmSource === "chop" && eng.firstChopCrossIdx >= 0) {
+          fsAtIdx = eng.firstChopCrossIdx;
+          fsAtTime = eng.firstChopCrossTime || confTime;
+        }
+
+        out.push({
+          day,
+          swing_index: swingIndex,
+          seg: {
+            dir: eng.dir === "up" ? "B" : "S",
+            start_idx: eng.startIdx,
+            start_px: eng.startPx,
+            end_idx: eng.endIdx,
+            end_px: eng.endPx,
+          },
+          source: eng.confirmSource,
+          dir: eng.dir,
+          kind: srcKind,
+          break_kind: bk,
+          breaks: eng.breakMarks.map((b) => ({
+            idx: b.idx, time: b.time, kind: b.kind, dir: b.dir, px: b.px,
+          })),
+          confirmed_at_idx: eng.confirmedAtIdx,
+          confirmed_at_time: confTime,
+          fs_at_idx: fsAtIdx,
+          fs_at_time: fsAtTime,
+        });
+        swingIndex++;
+
+        // Seed next swing from bar after this swing's extreme
+        let endPos = -1;
+        for (let p = 0; p < items.length; p++) {
+          if (items[p].gIdx === eng.endIdx) { endPos = p; break; }
+        }
+        nextStartPos = endPos >= 0 ? endPos + 1 : pos + 1;
+        found = true;
+        break;
+      }
+      if (!found) break;
+    }
+  });
+  return out;
+}
 
 export function computeFsV2Results(
   candles: FlowCandle[],
@@ -686,7 +820,7 @@ export function computeFsV2Results(
 
   const out: FsV2Result[] = [];
   byDay.forEach((items, day) => {
-    const eng = new FirstSwingEngine(opts);
+    const eng = new SwingEngine(opts);
     for (const it of items) eng.processBar(it.c, it.gIdx);
 
     if (!eng.declared || eng.startIdx < 0) return;
@@ -717,3 +851,6 @@ export function computeFsV2Declared(
     .filter((r): r is FsV2Result & { seg: FlowSegment } => r.seg !== null)
     .map((r) => r.seg);
 }
+
+// Backward-compat alias
+export { SwingEngine as FirstSwingEngine };

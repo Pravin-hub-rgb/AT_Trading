@@ -45,8 +45,6 @@ interface Props {
   bias?: BiasLabel[];
   trades?: TradeBox[];
   sessionBreaks?: boolean;
-  oneMinSwingN?: number;
-  swingDots?: boolean;
   algoFlowLine?: FlowSegment[] | null;
   envelope?: EnvelopeViolation[] | null;
   algoFirstSwing?: (FlowSegment & { invalid?: boolean })[] | null;
@@ -209,8 +207,6 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     bias,
     trades,
     sessionBreaks,
-    oneMinSwingN,
-    swingDots = true,
     algoFlowLine,
     envelope,
     algoFirstSwing,
@@ -627,6 +623,21 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
 
   // ── overlay: ALL markers (consolidated into single effect to prevent interference) ──
   // This combines: bias arrows, Williams fractal tags, fsBreaks (B1/B2/FLIP), and fsMarkers (FS/SUS)
+
+  // Filter intermediate B1 marks: keep only the first B1 + any FLIP/B2.
+  // The engine may produce multiple B1s (pre-confirmation lock attempts);
+  // only the first one and the decisive break matter on the chart.
+  const filterBreaks = <
+    T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
+  >(
+    breaks: T[],
+  ): T[] => {
+    if (breaks.length <= 2) return breaks;
+    const first = breaks[0];
+    const rest = breaks.filter((b, i) => i > 0 && b.kind !== "B1");
+    return rest.length > 0 ? [first, ...rest] : [first];
+  };
+
   useEffect(() => {
     const ser = seriesRef.current;
     if (!ser || !intraday) return;
@@ -669,7 +680,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       });
 
       // 5-min HH/HL/LH/LL swing tags from bias
-      if (interval === "5min" && swingDots) {
+      if (interval === "5min") {
         bias.forEach((lb) => {
           (lb.prev_day?.swings ?? []).forEach((s) => {
             const tagColor =
@@ -691,61 +702,9 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       }
     }
 
-    // 2. Williams fractal tags (per-day HH/HL/LH/LL)
-    if (swingDots) {
-      const N = Math.max(2, Math.floor(oneMinSwingN ?? 12));
-      const byDate = new Map<string, number[]>();
-      candles.forEach((c, gi) => {
-        const d = c.date.slice(0, 10);
-        if (!byDate.has(d)) byDate.set(d, []);
-        byDate.get(d)!.push(gi);
-      });
-
-      byDate.forEach((idxs) => {
-        const arr = idxs.map((gi) => candles[gi]);
-        if (arr.length < 2 * N + 1) return;
-
-        type Pivot = { g: number; kind: "high" | "low"; price: number };
-        const pivots: Pivot[] = [];
-        for (let k = N; k < arr.length - N; k++) {
-          let isHigh = true;
-          let isLow = true;
-          for (let m = k - N; m <= k + N; m++) {
-            if (m === k) continue;
-            if (arr[m].high >= arr[k].high) isHigh = false;
-            if (arr[m].low <= arr[k].low) isLow = false;
-          }
-          if (isHigh)
-            pivots.push({ g: idxs[k], kind: "high", price: arr[k].high });
-          else if (isLow)
-            pivots.push({ g: idxs[k], kind: "low", price: arr[k].low });
-        }
-
-        let lastHigh: number | null = null;
-        let lastLow: number | null = null;
-        for (const p of pivots) {
-          let tag: string | null = null;
-          if (p.kind === "high") {
-            if (lastHigh != null) tag = p.price > lastHigh ? "HH" : "LH";
-            lastHigh = p.price;
-          } else {
-            if (lastLow != null) tag = p.price > lastLow ? "HL" : "LL";
-            lastLow = p.price;
-          }
-          if (!tag) continue;
-          markers.push({
-            time: candles[p.g].ts as Time,
-            position: p.kind === "high" ? "aboveBar" : "belowBar",
-            shape: "circle",
-            color: tag === "HH" || tag === "HL" ? "#10b981" : "#f97316",
-            text: tag,
-            size: 0.5,
-          });
-        }
-      });
-    }
-
-    // 3. Break markers (B1/B2/FLIP) - added first so they render below
+    // 2. Break markers (B1/B2/FLIP) - added first so they render below
+    // Filtering is done per-swing in page.tsx before flatMap; do NOT
+    // re-filter globally here or multi-day B1s get dropped.
     for (const b of fsBreaks ?? []) {
       const cc = candles[b.idx];
       if (!cc) continue;
@@ -832,14 +791,12 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   }, [
     intraday,
     interval,
-    swingDots,
     bias,
     candles,
     fsMarkers,
     fsBreaks,
     algoSecondSwingMarkers,
     algoSecondSwingBreaks,
-    oneMinSwingN,
   ]);
 
   // ── overlay: whole-day swing arrow markers ──
@@ -888,7 +845,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
                 },
               ]
             : [];
-      for (const b of brks) {
+      for (const b of filterBreaks(brks)) {
         const cc = candles[b.idx];
         if (!cc) continue;
         markers.push({

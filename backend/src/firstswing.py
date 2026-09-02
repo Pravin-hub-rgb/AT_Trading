@@ -1,17 +1,21 @@
-"""FirstSwingEngine — Python port of frontend/src/lib/firstswing.ts
+"""SwingEngine — single source of truth for all swing detection.
 
-Exact logic mirror for 1-min first & second swing detection.
+Python port of frontend/src/lib/firstswing.ts.
+Detects 1 or more swings per day.  Use compute_swing_results() for N swings,
+compute_whole_day_swings() for all swings in a day.
+
 - WalkerEngine is SINGLE SOURCE OF TRUTH for sealed pivots
 - Break detection per BAR against PREVIOUS bar frozen extremes (eHiPrev/eLoPrev)
 - Continuation takes precedence over reversal on same bar
 - timeCap gates DECLARATION only, counting runs from bar one
+- Immediate 1-bar gap check at seal time prevents micro-pivot noise on chop targets
 """
 
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 
 from .walker import WalkerEngine, FlowCandle
 
@@ -55,11 +59,10 @@ class FsV2Result:
     breaks: list[FsBreakMark]
 
 
-class FirstSwingEngine:
+class SwingEngine:
     def __init__(self, opts: Optional[dict] = None):
         opts = opts or {}
         self.time_cap: str = opts.get("timeCap", "09:29") if isinstance(opts, dict) else getattr(opts, "timeCap", "09:29")
-        # sustainBars may be passed as sustainBars or sustain_bars
         if isinstance(opts, dict):
             self.sustain_bars: int = opts.get("sustainBars", opts.get("sustain_bars", 7))
             self.min_bars: int = int(opts.get("minBars", opts.get("min_bars", 14)))
@@ -85,6 +88,10 @@ class FirstSwingEngine:
         self.e_lo_pivot: Optional[Lvl] = None
         self.normal_highs: list[Lvl] = []
         self.normal_lows: list[Lvl] = []
+        self.bar_highs: dict[int, float] = {}
+        self.bar_lows: dict[int, float] = {}
+        self.latest_sealed_high: Optional[Lvl] = None
+        self.latest_sealed_low: Optional[Lvl] = None
 
         self.state: State = "watch"
         self.dir: Optional[Literal["up", "down"]] = None
@@ -117,11 +124,6 @@ class FirstSwingEngine:
         self.sustain_streak: int = 0
         self.armed: bool = False
         self.last_confirm_hit: Optional[dict] = None
-        # First bar where the swing's own structural pivot is broken (chop-break).
-        # This is the swing's true completion moment — e.g. a down swing is
-        # complete the instant its high pivot is taken out. Declaration can be
-        # delayed by minBars, but this records the actual pivot-break bar so the
-        # whole-day FS/SUS marker lands where the swing confirmed itself.
         self.first_chop_cross_idx: int = -1
         self.first_chop_cross_px: float = float("nan")
         self.first_chop_cross_time: str = ""
@@ -152,15 +154,24 @@ class FirstSwingEngine:
             self.e_lo_pivot = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
             self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx, time=self.e_hi_pivot.time)
             self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx, time=self.e_lo_pivot.time)
+            self.latest_sealed_high = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+            self.latest_sealed_low = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+            self.bar_highs.clear()
+            self.bar_lows.clear()
             self.seed_idx = g_idx
 
-        # 1) Consume walker seals
+        self.bar_highs[g_idx] = c.high
+        self.bar_lows[g_idx] = c.low
+
         for p in self.walker.process_bar(c, g_idx):
             if not p.sealed:
                 continue
             if self.bars_seen >= 2:
                 self.armed = True
             if p.kind == "H":
+                gap_high = self.bar_highs.get(p.idx + 1)
+                if gap_high is None or gap_high <= p.px:
+                    self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_hi_pivot  # type: ignore
                 assert cur is not None
                 if p.px > cur.px:
@@ -176,7 +187,10 @@ class FirstSwingEngine:
                             self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
                 else:
                     self._push_unique(self.normal_highs, Lvl(px=p.px, idx=p.idx, time=p.time))
-            else:  # L
+            else:
+                gap_low = self.bar_lows.get(p.idx + 1)
+                if gap_low is None or gap_low >= p.px:
+                    self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_lo_pivot  # type: ignore
                 assert cur is not None
                 if p.px < cur.px:
@@ -193,29 +207,24 @@ class FirstSwingEngine:
                 else:
                     self._push_unique(self.normal_lows, Lvl(px=p.px, idx=p.idx, time=p.time))
 
-        # 3) Direction / break step — per BAR, against FROZEN extremes
         up_break = c.high > self.e_hi_prev.px
         down_break = c.low < self.e_lo_prev.px
         if self.armed:
             self._step(down_break, up_break)
 
-        # 4) Keep candidate end glued to actual bar extreme
         if self.dir == "down" and c.low < self.e_lo.px:
             self._set_cand(Lvl(px=c.low, idx=g_idx, time=self.t))
         if self.dir == "up" and c.high > self.e_hi.px:
             self._set_cand(Lvl(px=c.high, idx=g_idx, time=self.t))
 
-        # 5) Sustain check
         self._check_sustain(c)
 
-        # 6) Advance frozen extremes
         if c.high > self.e_hi.px:
             self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
         if c.low < self.e_lo.px:
             self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
         self.e_hi_prev = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
         self.e_lo_prev = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
-        # Walker extreme-pivot levels as of THIS bar become next bar's reference.
         assert self.e_hi_pivot is not None and self.e_lo_pivot is not None
         self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx, time=self.e_hi_pivot.time)
         self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx, time=self.e_lo_pivot.time)
@@ -241,7 +250,6 @@ class FirstSwingEngine:
                 return
             self._check_chop()
             return
-        # LOCKED, direction not yet confirmed
         if self.dir == "down":
             if down_break:
                 if (
@@ -321,13 +329,8 @@ class FirstSwingEngine:
         if self.just_fired_b2:
             return
         if self.dir == "down":
-            tgt = self._latest_choppable(self.normal_highs)
-            if tgt is None:
-                tgt = self._latest_pivot(self.normal_highs)
+            tgt = self._chop_target_high()
             if tgt and self.hi > tgt.px:
-                # Record THE swing's own structural pivot-break (the first bar where
-                # its high pivot is taken out. Declaration may be delayed by minBars —
-                # this keeps the true completion bar for the FS/SUS marker.
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
                     self.first_chop_cross_px = tgt.px
@@ -335,9 +338,7 @@ class FirstSwingEngine:
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
         elif self.dir == "up":
-            tgt = self._latest_choppable(self.normal_lows)
-            if tgt is None:
-                tgt = self._latest_pivot(self.normal_lows)
+            tgt = self._chop_target_low()
             if tgt and self.lo < tgt.px:
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
@@ -345,6 +346,18 @@ class FirstSwingEngine:
                     self.first_chop_cross_time = self.t
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
+
+    def _chop_target_high(self) -> Optional[Lvl]:
+        p = self.latest_sealed_high
+        if p is not None and p.idx >= 0 and p.idx <= self.g_idx - 2:
+            return p
+        return None
+
+    def _chop_target_low(self) -> Optional[Lvl]:
+        p = self.latest_sealed_low
+        if p is not None and p.idx >= 0 and p.idx <= self.g_idx - 2:
+            return p
+        return None
 
     def _check_sustain(self, c: FlowCandle) -> None:
         if self.just_fired_b2:
@@ -385,22 +398,6 @@ class FirstSwingEngine:
         if not any(x.idx == l.idx and x.px == l.px for x in pool):
             pool.append(l)
 
-    def _latest_pivot(self, pool: list[Lvl]) -> Optional[Lvl]:
-        if not pool:
-            return None
-        return pool[-1]
-
-    def _latest_choppable(self, pool: list[Lvl]) -> Optional[Lvl]:
-        # Latest marked pivot whose PIVOT CANDLE is at least 2 bars old. A bar's
-        # own walker seal must never become its own chop reference (same-bar
-        # self-block bug — 24 Aug:10:03), and a pivot must survive one full bar
-        # after its pivot candle before it can be chopped back through
-        # (12 Aug:10:03 — 1-bar-old micro-pivot broken by 0.25pt noise).
-        for l in reversed(pool):
-            if l.idx <= self.g_idx - 2:
-                return l
-        return None
-
     def debug_pools(self) -> dict:
         return {
             "armed": self.armed,
@@ -413,7 +410,6 @@ class FirstSwingEngine:
         }
 
     def reset(self, seed_px: float, seed_idx: int, seed_time: str) -> None:
-        """Re-initialize to detect a new swing starting from a pre-defined price level (e.g., first swing's extreme)."""
         self.walker = WalkerEngine()
         self.bars_seen = 1
         self.t = seed_time
@@ -430,6 +426,10 @@ class FirstSwingEngine:
         self.e_lo_pivot = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
         self.e_hi_pivot_prev = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
         self.e_lo_pivot_prev = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.latest_sealed_high = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.latest_sealed_low = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.bar_highs.clear()
+        self.bar_lows.clear()
 
         self.normal_highs.clear()
         self.normal_lows.clear()
@@ -470,12 +470,6 @@ class FirstSwingEngine:
         self.break_marks.clear()
 
     def reset_with_candle(self, c: FlowCandle, g_idx: int) -> None:
-        """True mirror of first-swing init: seed with actual OHLC of the cyan candle.
-
-        This is what the user asked: “take ohlc value from 9:27 and run it though
-        first swing engine”. After this, the next bar (09:28) is barsSeen=2 and must
-        break the 09:27 low/high to lock — B1@09:28 breaking 24148.65.
-        """
         self.walker = WalkerEngine()
         self.bars_seen = 1
         self.t = c.date[11:16] if len(c.date) >= 16 else ""
@@ -491,6 +485,10 @@ class FirstSwingEngine:
         self.e_lo_pivot = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
         self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx, time=self.e_hi_pivot.time)
         self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx, time=self.e_lo_pivot.time)
+        self.latest_sealed_high = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+        self.latest_sealed_low = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+        self.bar_highs.clear()
+        self.bar_lows.clear()
 
         self.normal_highs.clear()
         self.normal_lows.clear()
@@ -531,41 +529,168 @@ class FirstSwingEngine:
         self.break_marks.clear()
 
 
-def compute_fs_v2_results(candles: list[FlowCandle], opts: Optional[dict] = None) -> list[FsV2Result]:
+# ── batch helpers ──────────────────────────────────────────────────────────
+
+def compute_swing_results(
+    candles: list[FlowCandle],
+    opts: Optional[dict] = None,
+    swing_count: Union[int, Literal["whole"]] = 1,
+) -> list[dict]:
+    """Detect N swings per day across all days.
+
+    Args:
+        candles: All candles sorted globally by time.
+        opts: Engine options (timeCap, sustainBars, minBars).
+        swing_count: Number of swings per day. Use "whole" for all swings.
+
+    Returns:
+        List of swing dicts, one per swing, with keys:
+            day, swing_index, seg{dir, start_idx, start_px, end_idx, end_px},
+            source, dir, kind, break_kind, breaks, confirmed_at_idx, confirmed_at_time,
+            fs_at_idx, fs_at_time
+    """
+    from dataclasses import dataclass as _dc, field as _f
+    from typing import Literal as _Lit
+
+    BreakKind = _Lit["B1", "B2", "FLIP"]
+
+    @_dc
+    class _Swing:
+        day: str
+        swing_index: int
+        seg: FlowSegment
+        source: Optional[_Lit["chop", "sustain"]]
+        dir: _Lit["up", "down"]
+        kind: str
+        break_kind: Optional[BreakKind]
+        breaks: list = _f(default_factory=list)
+        confirmed_at_idx: int = -1
+        confirmed_at_time: str = ""
+        fs_at_idx: int = -1
+        fs_at_time: str = ""
+
+    _opts: dict = {}
+    if opts:
+        _opts.update(opts)
+    if "minBars" not in _opts and "min_bars" not in _opts:
+        _opts["minBars"] = 14
+    if "sustainBars" not in _opts and "sustain_bars" not in _opts:
+        _opts["sustain_bars"] = 7
+    if "timeCap" not in _opts and "time_cap" not in _opts:
+        _opts["timeCap"] = "09:29"
+
     by_day: dict[str, list[tuple[int, FlowCandle]]] = {}
     for g_idx, c in enumerate(candles):
         d = c.date[:10]
         by_day.setdefault(d, []).append((g_idx, c))
-    out: list[FsV2Result] = []
+
+    out: list[_Swing] = []
     for day, items in by_day.items():
-        eng = FirstSwingEngine(opts)
-        for g_idx, c in items:
-            eng.process_bar(c, g_idx)
-        if not eng.declared or eng.start_idx < 0:
-            continue
-        out.append(
-            FsV2Result(
-                day=day,
-                outcome="real",
-                conf_idx=eng.confirmed_at_idx,
-                seg=FlowSegment(
-                    dir="B" if eng.dir == "up" else "S",
-                    start_idx=eng.start_idx,
-                    start_px=eng.start_px,
-                    end_idx=eng.end_idx,
-                    end_px=eng.end_px,
-                ),
-                source=eng.confirm_source,
-                dir=eng.dir,
-                breaks=eng.break_marks,
-            )
-        )
-    return out
+        swing_index = 0
+        next_start_pos = 0
+        max_swings = 50 if swing_count == "whole" else swing_count
+
+        while swing_index < max_swings:
+            eng = SwingEngine(_opts)
+            swing_found = False
+
+            for pos in range(next_start_pos, len(items)):
+                g_idx, c = items[pos]
+                eng.process_bar(c, g_idx)
+
+                if not eng.declared or eng.start_idx < 0:
+                    continue
+
+                src_kind = "SUS" if eng.confirm_source == "sustain" else "FS"
+                decisive_break = eng.break_marks[-1] if eng.break_marks else None
+                bk: Optional[BreakKind] = decisive_break.kind if decisive_break else None
+
+                _conf_time = ""
+                if eng.confirmed_at_idx >= 0:
+                    for _gi, _cc in items:
+                        if _gi == eng.confirmed_at_idx:
+                            _conf_time = _cc.date[11:16] if len(_cc.date) >= 16 else ""
+                            break
+
+                fs_at_idx = eng.confirmed_at_idx
+                fs_at_time = _conf_time
+                if eng.confirm_source == "chop" and eng.first_chop_cross_idx >= 0:
+                    fs_at_idx = eng.first_chop_cross_idx
+                    fs_at_time = eng.first_chop_cross_time or _conf_time
+
+                out.append(_Swing(
+                    day=day,
+                    swing_index=swing_index,
+                    seg=FlowSegment(
+                        dir="B" if eng.dir == "up" else "S",
+                        start_idx=eng.start_idx,
+                        start_px=eng.start_px,
+                        end_idx=eng.end_idx,
+                        end_px=eng.end_px,
+                    ),
+                    source=eng.confirm_source,
+                    dir=eng.dir,  # type: ignore
+                    kind=src_kind,
+                    break_kind=bk,
+                    breaks=list(eng.break_marks),
+                    confirmed_at_idx=eng.confirmed_at_idx,
+                    confirmed_at_time=_conf_time,
+                    fs_at_idx=fs_at_idx,
+                    fs_at_time=fs_at_time,
+                ))
+                swing_index += 1
+
+                end_abs = eng.end_idx
+                end_pos = -1
+                for p, (gi, _cc) in enumerate(items):
+                    if gi == end_abs:
+                        end_pos = p
+                        break
+                next_start_pos = end_pos + 1 if end_pos >= 0 else pos + 1
+                swing_found = True
+                break
+
+            if not swing_found:
+                break
+
+    return [
+        {
+            "day": s.day,
+            "swing_index": s.swing_index,
+            "seg": {
+                "dir": s.seg.dir,
+                "start_idx": s.seg.start_idx,
+                "start_px": s.seg.start_px,
+                "end_idx": s.seg.end_idx,
+                "end_px": s.seg.end_px,
+            },
+            "source": s.source,
+            "dir": s.dir,
+            "kind": s.kind,
+            "break_kind": s.break_kind,
+            "breaks": [
+                {"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                for b in s.breaks
+            ],
+            "confirmed_at_idx": s.confirmed_at_idx,
+            "confirmed_at_time": s.confirmed_at_time,
+            "fs_at_idx": s.fs_at_idx,
+            "fs_at_time": s.fs_at_time,
+        }
+        for s in out
+    ]
 
 
-def compute_fs_v2_declared(candles: list[FlowCandle], opts: Optional[dict] = None) -> list[FlowSegment]:
-    return [r.seg for r in compute_fs_v2_results(candles, opts)]
-
-
-# Alias for backward compatibility — now points to the correct FirstSwingEngine
-FsV2Engine = FirstSwingEngine
+# Backward-compat aliases
+FirstSwingEngine = SwingEngine
+FsV2Engine = SwingEngine
+compute_whole_day_swings = lambda candles, opts=None: compute_swing_results(candles, opts, swing_count="whole")
+compute_fs_v2_results = lambda candles, opts=None: [
+    FsV2Result(
+        day=r["day"], outcome="real", conf_idx=r["confirmed_at_idx"],
+        seg=FlowSegment(**r["seg"]), source=r["source"], dir=r["dir"],
+        breaks=[FsBreakMark(**b) for b in r["breaks"]],
+    )
+    for r in compute_swing_results(candles, opts, swing_count=1)
+]
+compute_fs_v2_declared = lambda candles, opts=None: [r.seg for r in compute_fs_v2_results(candles, opts)]

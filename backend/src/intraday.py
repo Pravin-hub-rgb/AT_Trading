@@ -235,7 +235,7 @@ def _classify_first_swing_v2(candles: list[dict], day_date: str) -> tuple[str | 
       end_time: HH:MM time of the confirmed extreme
     """
     from datetime import datetime, timezone, timedelta
-    from .firstswing import FirstSwingEngine
+    from .firstswing import SwingEngine as FirstSwingEngine
     from .walker import FlowCandle
 
     events: list[dict] = []
@@ -327,7 +327,7 @@ def detect_second_swing(
         the 5min bar whose timestamp <= the 1min bar's timestamp.
     """
     from datetime import datetime, timezone, timedelta
-    from .firstswing import FirstSwingEngine
+    from .firstswing import SwingEngine as FirstSwingEngine
     from .walker import FlowCandle
 
     events: list[dict] = []
@@ -1007,7 +1007,7 @@ def simulate_day(
             # If we have a valid 1-min cyan end, do direct 1-min second swing
             if fs1_1min_end_idx >= 0 and m1_day_candles:
                 from datetime import datetime, timezone, timedelta
-                from .firstswing import FirstSwingEngine
+                from .firstswing import SwingEngine as FirstSwingEngine
                 from .walker import FlowCandle as _FC
                 IST = timezone(timedelta(hours=5, minutes=30))
                 seed_idx = fs1_1min_end_idx + 1  # 09:28

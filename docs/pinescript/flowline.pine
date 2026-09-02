@@ -15,8 +15,10 @@
 //   • Extended legs — same-direction breaks SHIFT the stamp, never print
 //   • Opposite break of PREV bar's extreme seals a pivot and flips the leg
 //   • INSIDE candles hold a pending far-side edge; the next closed bar
-//     resolves them: confirm · skip · volatile double-break (marker band
-//     decides; band escape marks the stack's far edge)
+//     resolves them: confirm · skip · volatile double-break (TRUE
+//     first-touch order via lower-timeframe intrabars when available;
+//     marker-band heuristic is the fallback — band escape marks the
+//     stack's far edge)
 //   • ONION STACKS — nested insiders buffer rejected outer edges, flushed
 //     chronologically when the stack resolves
 //   • Leg-extreme memory — a confirming insider can never demote an extreme
@@ -40,6 +42,12 @@ showTags = input.bool(false,     "H/L pivot tags", group = grpC)
 grpR = "Forming swing (live)"
 retracePts = input.float(10.0, "Retrace warning distance (points, 0 = off)", group = grpR, minval = 0.0, step = 1.0)
 colWarn    = input.color(#f59e0b, "Retracing color", group = grpR)
+
+grpL = "First-touch order (advanced)"
+useLtf = input.bool(true, "Resolve double-break bars via lower-timeframe intrabars", group = grpL,
+     tooltip = "When a bar breaks BOTH sides of a pending inside-bar stack, a plain OHLC bar can't tell you which side got hit first — it only has open/high/low/close, never the path. This pulls real lower-timeframe intrabars and walks them in true chronological order to answer that. Falls back to the marker-band heuristic when this is off, the resolution below isn't lower than the chart timeframe, or intrabar data isn't available this far back in history.")
+ltfRes = input.timeframe("1", "Intrabar resolution", group = grpL,
+     tooltip = "Must be strictly lower than the chart timeframe. Finer = more accurate first-touch order, but TradingView's standard plans cap lower-timeframe requests at roughly 100K intrabars total, so very fine resolutions run out of history sooner (Expert/Ultimate plans get more).")
 
 // ── mutable state (UDT — Pine's way of letting methods mutate state) ──────
 type FL
@@ -178,6 +186,50 @@ method half(FL fl, float sv, bool isLow) =>
             fl.stampPx  := sv
             fl.stampBar := bar_index
 
+// ── TRUE first-touch order between a pending stack's near/far edges,
+//    walked across genuine lower-timeframe intrabars in chronological
+//    order. This is the one place in the whole engine that a regular OHLC
+//    bar structurally cannot answer on its own — it only ever has open/
+//    high/low/close, never the path — so this reaches for a finer data
+//    source instead of guessing.
+//    Returns  1 = confirm-side touched first (leg continues)
+//            -1 = skip/far-side touched first (genuine reversal)
+//             0 = neither touched yet (or no usable intrabar data)
+//             2 = BOTH sides broke inside ONE intrabar — order is still
+//                 irreducibly unknown even at this finer resolution
+f_firstTouch(array<float> ihi, array<float> ilo, int pk, float near, float far) =>
+    int result = 0
+    int n = array.size(ihi)
+    if n > 0
+        for i = 0 to n - 1
+            float hi = array.get(ihi, i)
+            float lo = array.get(ilo, i)
+            bool cHit = pk == 1 ? lo < near : hi > near
+            bool sHit = pk == 1 ? hi > far  : lo < far
+            if cHit and sHit
+                result := 2
+                break
+            else if cHit
+                result := 1
+                break
+            else if sHit
+                result := -1
+                break
+    result
+
+// ── lower-timeframe intrabars for THIS bar — historical: the full path
+//    once confirmed · live: the partial path so far. Empty arrays when
+//    unusable (setting off, ltfRes not below chart TF, or data exhausted
+//    this far back in history) — every call site treats an empty/
+//    inconclusive result as "fall back to the marker band," never as an
+//    error.
+bool ltfOk = useLtf and timeframe.in_seconds(ltfRes) > 0 and timeframe.in_seconds(ltfRes) < timeframe.in_seconds(timeframe.period)
+array<float> ltfHi = array.new<float>()
+array<float> ltfLo = array.new<float>()
+if ltfOk
+    ltfHi := request.security_lower_tf(syminfo.tickerid, ltfRes, high)
+    ltfLo := request.security_lower_tf(syminfo.tickerid, ltfRes, low)
+
 // ═══ CONFIRMED-BAR STATE MACHINE ══════════════════════════════════════════
 bool newDay = nz(ta.change(time("D")), 1) != 0
 
@@ -289,34 +341,80 @@ if barstate.isconfirmed
                     skipSteps   := true
                     st.pendingDie()
                 else if skipHit
-                    // DOUBLE-BREAK volatile — marker band decides
-                    float iLo = math.min(st.pendPx, st.pendNear)
-                    float iHi = math.max(st.pendPx, st.pendNear)
-                    float effLo = st.dir == -1 ? st.stampPx : na(st.bandLo) ? -1e10 : st.bandLo
-                    float effHi = st.dir == 1 ? st.stampPx : na(st.bandHi) ? 1e10 : st.bandHi
-                    bool insideBand = iHi <= effHi and iLo >= effLo and high <= effHi and low >= effLo
+                    // DOUBLE-BREAK volatile — both edges broke this bar.
+                    // Ask the lower-timeframe intrabars which one is TRUE
+                    // first; only fall back to the marker-band guess when
+                    // real order genuinely can't be determined.
+                    int touch = ltfOk ? f_firstTouch(ltfHi, ltfLo, st.pendKind, st.pendNear, st.pendPx) : 0
 
-                    if insideBand
-                        // continuation — ride straight to the volatile extreme
+                    if touch == 1
+                        // CONFIRM really was first — resolve exactly like a
+                        // clean CONFIRM. The skip event still happened
+                        // later, but that's just this bar's second half-step
+                        // now, so leave skipSteps alone and let step 2 catch it.
                         st.sealStamp()
-                        st.dir      := st.pendKind == 1 ? 1 : -1
-                        st.stampPx  := st.pendKind == 1 ? high : low
+                        bool hadPeel = array.size(st.innerPx) > 0
+                        [lastPx, lastBar] = st.closeStack()
+                        if hadPeel
+                            st.stampPx  := lastPx
+                            st.stampBar := lastBar
+                        else
+                            bool useHi = st.pendKind == 1
+                            bool okHi  = useHi and not na(st.hiPx) and st.hiPx > st.pendPx
+                                 and (st.hiBar > st.stampBar or (st.hiBar == st.stampBar and st.hiGrn))
+                            bool okLo  = not useHi and not na(st.loPx) and st.loPx < st.pendPx
+                                 and (st.loBar > st.stampBar or (st.loBar == st.stampBar and st.loRed))
+                            float pPx  = okHi ? st.hiPx : okLo ? st.loPx : st.pendPx
+                            int   pBar = okHi ? st.hiBar : okLo ? st.loBar : st.pendBar
+                            string pKd = useHi ? "H" : "L"
+                            st.push(pPx, pKd, pBar)
+                            st.stampPx  := pPx
+                            st.stampBar := pBar
+                        st.pendKind := 0
+                    else if touch == -1
+                        // SKIP really was first — a genuine reversal.
+                        // Resolve exactly like a clean single-side far break.
+                        int   pkSave = st.pendKind
+                        st.sealStamp()
+                        st.closeStack()
+                        st.dir      := pkSave == 1 ? 1 : -1
+                        st.stampPx  := pkSave == 1 ? high : low
                         st.stampBar := bar_index
                         flipped     := true
                         skipSteps   := true
                         st.pendingDie()
                     else
-                        // ESCAPE — mark the stack's far edge; halves walk
-                        int   escPk  = st.pendKind
-                        st.sealStamp()
-                        [escPx, escBar] = st.closeStack()
-                        if na(escPx)
-                            st.push(st.pendPx, escPk == 1 ? "H" : "L", st.pendBar)
-                        st.dir      := escPk == 1 ? -1 : 1
-                        st.stampPx  := st.pendNear
-                        st.stampBar := st.pendBar
-                        st.pendingDie()
-                        flipped     := true
+                        // touch == 0 (no usable intrabar data reached here)
+                        // or touch == 2 (both edges broke inside ONE
+                        // intrabar — order unknown even there) — marker
+                        // band decides, same convention as before.
+                        float iLo = math.min(st.pendPx, st.pendNear)
+                        float iHi = math.max(st.pendPx, st.pendNear)
+                        float effLo = st.dir == -1 ? st.stampPx : na(st.bandLo) ? -1e10 : st.bandLo
+                        float effHi = st.dir == 1 ? st.stampPx : na(st.bandHi) ? 1e10 : st.bandHi
+                        bool insideBand = iHi <= effHi and iLo >= effLo and high <= effHi and low >= effLo
+
+                        if insideBand
+                            // continuation — ride straight to the volatile extreme
+                            st.sealStamp()
+                            st.dir      := st.pendKind == 1 ? 1 : -1
+                            st.stampPx  := st.pendKind == 1 ? high : low
+                            st.stampBar := bar_index
+                            flipped     := true
+                            skipSteps   := true
+                            st.pendingDie()
+                        else
+                            // ESCAPE — mark the stack's far edge; halves walk
+                            int   escPk  = st.pendKind
+                            st.sealStamp()
+                            [escPx, escBar] = st.closeStack()
+                            if na(escPx)
+                                st.push(st.pendPx, escPk == 1 ? "H" : "L", st.pendBar)
+                            st.dir      := escPk == 1 ? -1 : 1
+                            st.stampPx  := st.pendNear
+                            st.stampBar := st.pendBar
+                            st.pendingDie()
+                            flipped     := true
 
         // ---- 2 · half-steps in candle-path order --------------------------
         if not skipSteps
@@ -359,23 +457,79 @@ if barstate.isconfirmed
 // stays PINNED at the stamped extreme: no fake follow into weak candles.
 // RETRACING: when price pulls back ≥ retracePts from the live extreme, the
 // line shifts to the warning color (momentum-break cue).
+//
+// SOLID-ON-BREAK, tiered by how sure we actually are:
+//  1) Plain leg, no pending stack — breaking prevHigh/prevLow is a single
+//     monotonic OHLC fact: once true intrabar it cannot un-happen for the
+//     rest of this bar. Goes solid immediately, safely.
+//  2) Pending stack active, LTF data available — walk the REAL intrabars
+//     seen so far and ask which threshold was actually touched first. A
+//     true first touch, once observed, can never be un-first-ed by
+//     whatever the bar does afterward, so this also locks solid immediately.
+//  3) Pending stack active, no LTF data (or a same-intrabar tie) — fall
+//     back to watching for a genuine escape of the marker band, which is
+//     also monotonic-safe on plain OHLC. Short of that, stay dashed: we're
+//     honestly still unsure, and pretending otherwise is how you get a
+//     confident line that flips color when the bar actually closes.
 var line openLn = na
 if st.pvSet and st.dir != 0
-    // INTRABAR FLIP-TINT — live candle is currently beyond its flip trigger?
-    // tint the dashed line in the NEW leg's color instantly (display only;
-    // the real seal still commits on this bar's close — zero repaint).
-    bool flipBrewing = (st.dir == -1 and high > st.prevHigh) or (st.dir == 1 and low < st.prevLow)
-    bool  extending  = st.dir == 1 ? high > st.prevHigh : low < st.prevLow
-    float tgt        = extending ? (st.dir == 1 ? high : low) : st.stampPx
-    int   endBar     = extending ? bar_index : st.stampBar
-    float retrace    = st.dir == 1 ? tgt - close : close - tgt
-    bool  retracing  = retracePts > 0 and retrace >= retracePts and not flipBrewing
-    color pc         = flipBrewing ? (st.dir == 1 ? colDn : colUp) : retracing ? colWarn : colPrev
+    bool  havePending = st.pendKind != 0
+    bool  solidLock   = false
+    float tgt         = st.stampPx
+    int   endBar      = st.stampBar
+    color pc          = colPrev
+
+    if not havePending
+        // Tier 1 — plain flip trigger (unchanged from before: monotonic,
+        // always safe on OHLC alone)
+        bool flipBrewing = (st.dir == -1 and high > st.prevHigh) or (st.dir == 1 and low < st.prevLow)
+        bool extending   = st.dir == 1 ? high > st.prevHigh : low < st.prevLow
+        tgt       := extending ? (st.dir == 1 ? high : low) : st.stampPx
+        endBar    := extending ? bar_index : st.stampBar
+        solidLock := flipBrewing
+        pc        := flipBrewing ? (st.dir == 1 ? colDn : colUp) : colPrev
+    else
+        int touch = ltfOk ? f_firstTouch(ltfHi, ltfLo, st.pendKind, st.pendNear, st.pendPx) : 0
+
+        if touch == -1
+            // Tier 2 — TRUE first touch: skip/far side won. Locked, no
+            // matter what the rest of this bar goes on to do.
+            solidLock := true
+            tgt       := st.pendKind == 1 ? high : low
+            endBar    := bar_index
+            pc        := st.pendKind == 1 ? colUp : colDn
+        else if touch != 1
+            // touch == 0 (no data, or nothing touched yet) or touch == 2
+            // (tied inside one intrabar) — Tier 3 fallback: has price
+            // truly escaped the marker band on plain OHLC? Also monotonic
+            // once both sides are genuinely hit.
+            float iLo     = math.min(st.pendPx, st.pendNear)
+            float iHi     = math.max(st.pendPx, st.pendNear)
+            float effLo   = st.dir == -1 ? st.stampPx : na(st.bandLo) ? -1e10 : st.bandLo
+            float effHi   = st.dir == 1 ? st.stampPx : na(st.bandHi) ? 1e10 : st.bandHi
+            bool  bothHit = (st.pendKind == 1 ? high > st.pendPx  : low < st.pendPx) and
+                 (st.pendKind == 1 ? low  < st.pendNear : high > st.pendNear)
+            bool  escaped = not (iHi <= effHi and iLo >= effLo and high <= effHi and low >= effLo)
+            if bothHit and escaped
+                int escPk = st.pendKind
+                solidLock := true
+                tgt       := st.pendNear
+                endBar    := st.pendBar
+                pc        := escPk == 1 ? colDn : colUp   // escape keeps the ORIGINAL leg direction
+        // touch == 1: confirm-side was genuinely first — the leg isn't
+        // flipping, so there's nothing new to lock in; stays dashed/pinned.
+
+    float retrace   = st.dir == 1 ? tgt - close : close - tgt
+    bool  retracing = retracePts > 0 and retrace >= retracePts and not solidLock
+    color finalC    = solidLock ? pc : retracing ? colWarn : pc
+    int   transp    = solidLock ? 0 : 30
+    string lnStyle  = solidLock ? line.style_solid : line.style_dashed
+
     if na(openLn)
         openLn := line.new(st.pvBar, st.pvPx, endBar, tgt,
-             color = color.new(pc, 30), width = lineW, style = line.style_dashed)
+             color = color.new(finalC, transp), width = lineW, style = lnStyle)
     else
         line.set_xy1(openLn, st.pvBar, st.pvPx)
         line.set_xy2(openLn, endBar, tgt)
-        line.set_color(openLn, color.new(pc, 30))
-
+        line.set_color(openLn, color.new(finalC, transp))
+        line.set_style(openLn, lnStyle)

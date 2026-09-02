@@ -229,7 +229,7 @@ export interface WholeDaySwing {
 
 export interface WholeDaySwingsResponse {
   interval: string;
-  whole_day: boolean;
+  swing_count: string;
   sustain_bars: number;
   swings: WholeDaySwing[];
 }
@@ -247,10 +247,10 @@ export const getSwings = (
 export const getWholeDaySwings = (
   interval = "1min",
   sustainBars = 7,
-  wholeDay = true,
+  swingCount: number | "whole" = "whole",
 ) =>
   request<WholeDaySwingsResponse>(
-    `/api/swings/whole_day?interval=${interval}&sustain_bars=${sustainBars}&whole_day=${wholeDay}`,
+    `/api/swings/whole_day?interval=${interval}&sustain_bars=${sustainBars}&swing_count=${swingCount}`,
   );
 
 // --- initial bias (pre-open labels) ---

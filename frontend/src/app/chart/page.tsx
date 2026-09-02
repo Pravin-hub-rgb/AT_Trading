@@ -33,13 +33,13 @@ const INTERVAL_B_KEY = "chart_interval_b";
 const LAYOUT_KEY = "chart_layout";
 const BT_KEY = "intraday_bt_on";
 const SWING_N_KEY = "chart_1min_swing_n";
-const DOTS_KEY = "chart_hhll_dots";
+const ALL_SWINGS_KEY = "chart_all_swings";
 const FLOW_KEY = "chart_flow_line";
 const ENV_KEY = "chart_envelope_on";
 const FS_KEY = "chart_first_swing_on";
 const FS_REV_KEY = "chart_fs_rev_pct";
 const FS_REV_DEFAULT = 15;
-const SWING_N_DEFAULT = 12;
+const SWING_N_DEFAULT = 3;
 
 // localStorage key shared with IntradayPanel — restores saved filter config
 const INTRADAY_FILTERS_KEY = "intraday_filters";
@@ -151,7 +151,7 @@ export default function ChartPage() {
   const [btParams, setBtParams] = useState<BacktestParams>(_savedBt.params);
   const [btCase, setBtCase] = useState<string>(_savedBt.case);
   const [swingN, setSwingN] = useState(SWING_N_DEFAULT);
-  const [dotsOn, setDotsOn] = useState(true);
+  const [allSwings, setAllSwings] = useState(true);
   const [flowOn, setFlowOn] = useState(true);
   const [envOn, setEnvOn] = useState(false);
   const [fsRevPct, setFsRevPct] = useState(FS_REV_DEFAULT);
@@ -187,7 +187,7 @@ export default function ChartPage() {
       setBtOn(window.localStorage.getItem(BT_KEY) === "1");
       const nRaw = window.localStorage.getItem(SWING_N_KEY);
       if (nRaw) setSwingN(clampSwingN(Number(nRaw)));
-      setDotsOn(window.localStorage.getItem(DOTS_KEY) !== "0");
+      setAllSwings(window.localStorage.getItem(ALL_SWINGS_KEY) !== "0");
       setFlowOn(window.localStorage.getItem(FLOW_KEY) !== "0");
       setEnvOn(window.localStorage.getItem(ENV_KEY) === "1");
       setFsOn(window.localStorage.getItem(FS_KEY) === "1");
@@ -284,10 +284,10 @@ export default function ChartPage() {
       return;
     }
     let cancelled = false;
-    getWholeDaySwings("1min")
+    const sc = allSwings ? "whole" : swingN;
+    getWholeDaySwings("1min", 7, sc)
       .then((res) => {
         if (cancelled) return;
-        // Convert backend response to WholeDaySwingPoint[] for the primitive.
         const points: WholeDaySwingPoint[] = res.swings.map(
           (s: WholeDaySwing) => ({
             dir: s.seg.dir,
@@ -314,7 +314,7 @@ export default function ChartPage() {
     return () => {
       cancelled = true;
     };
-  }, [interval]);
+  }, [interval, swingN, allSwings]);
 
   // Pane B whole-day swings — fetched when intervalB is 1min
   useEffect(() => {
@@ -323,7 +323,8 @@ export default function ChartPage() {
       return;
     }
     let cancelled = false;
-    getWholeDaySwings("1min")
+    const sc = allSwings ? "whole" : swingN;
+    getWholeDaySwings("1min", 7, sc)
       .then((res) => {
         if (cancelled) return;
         const points: WholeDaySwingPoint[] = res.swings.map(
@@ -352,7 +353,7 @@ export default function ChartPage() {
     return () => {
       cancelled = true;
     };
-  }, [intervalB]);
+  }, [intervalB, swingN, allSwings]);
 
   useEffect(() => {
     let cancelled = false;
@@ -544,6 +545,19 @@ export default function ChartPage() {
                 timeCap: "09:29",
               });
               const valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
+              // Per-swing B1 filter: engine may emit multiple B1s (pre-confirmation
+              // re-locks); keep first B1 + any B2/FLIP per swing. FlatMap-then-filter
+              // globally would drop B1s for later days — must filter per result.
+              const filterBreaksPerSwing = <
+                T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
+              >(
+                breaks: T[],
+              ): T[] => {
+                if (breaks.length <= 2) return breaks;
+                const first = breaks[0];
+                const rest = breaks.filter((b, i) => i > 0 && b.kind !== "B1");
+                return rest.length > 0 ? [first, ...rest] : [first];
+              };
               if (iv === "1min") {
                 // Second swing: run fresh FsV2 seeded from first-swing end extreme
                 const ss2 = computeSecondSwingResults(sourceCandles, res, {
@@ -561,15 +575,17 @@ export default function ChartPage() {
                     source: r.source,
                     dir: r.dir,
                   })),
-                  fsBreaks: valid.flatMap((r) => r.breaks ?? []),
+                  fsBreaks: valid.flatMap((r) =>
+                    filterBreaksPerSwing(r.breaks ?? []),
+                  ),
                   algoSecondSwingMarkers: ss2Valid.map((r) => ({
                     idx: r.confIdx,
                     invalid: false,
                     source: r.source,
                     dir: r.dir,
                   })),
-                  algoSecondSwingBreaks: ss2Valid.flatMap(
-                    (r) => r.breaks ?? [],
+                  algoSecondSwingBreaks: ss2Valid.flatMap((r) =>
+                    filterBreaksPerSwing(r.breaks ?? []),
                   ),
                   tradeMode: btData
                     ? Object.fromEntries(
@@ -660,7 +676,7 @@ export default function ChartPage() {
                   } => m !== null,
                 );
               const fsBreaks5 = valid
-                .flatMap((r) => r.breaks ?? [])
+                .flatMap((r) => filterBreaksPerSwing(r.breaks ?? []))
                 .map((b) => {
                   const bIdx = find5minIdx(
                     Math.floor(
@@ -732,7 +748,7 @@ export default function ChartPage() {
                   } => m !== null,
                 );
               const algoSecondSwingBreaks5 = ss2Valid
-                .flatMap((r) => r.breaks ?? [])
+                .flatMap((r) => filterBreaksPerSwing(r.breaks ?? []))
                 .map((b) => {
                   const bIdx = find5minIdx(
                     Math.floor(
@@ -984,26 +1000,6 @@ export default function ChartPage() {
 
           <button
             onClick={() => {
-              setDotsOn((v) => {
-                window.localStorage.setItem(DOTS_KEY, v ? "0" : "1");
-                return !v;
-              });
-            }}
-            className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
-              dotsOn && interval !== "daily"
-                ? "border-[#fb923c] text-[#e6edf3]"
-                : "border-[#30363d] text-[#8b949e]"
-            }`}
-            title="HH/HL/LH/LL swing tags (5-min: prev-day pivots Â· 1-min: live fractals)"
-          >
-            <span
-              className={`h-2 w-2 rounded-full ${dotsOn ? "bg-[#fb923c]" : "bg-[#8b949e]"}`}
-            />
-            HH/LL Tags
-          </button>
-
-          <button
-            onClick={() => {
               setFlowOn((v) => {
                 window.localStorage.setItem(FLOW_KEY, v ? "0" : "1");
                 return !v;
@@ -1100,15 +1096,32 @@ export default function ChartPage() {
 
           {interval === "1min" && (
             <div className="flex items-center gap-1.5">
-              <span className="text-xs text-[#8b949e]">Swing n</span>
+              <span className="text-xs text-[#8b949e]">Swings</span>
+              <button
+                onClick={() => {
+                  setAllSwings((v) => {
+                    window.localStorage.setItem(ALL_SWINGS_KEY, v ? "0" : "1");
+                    return !v;
+                  });
+                }}
+                className={`rounded-md border px-2 py-1 text-xs transition-colors ${
+                  allSwings
+                    ? "border-[#22d3ee] text-[#e6edf3]"
+                    : "border-[#30363d] text-[#8b949e]"
+                }`}
+                title="Show all swings for the day"
+              >
+                All
+              </button>
               <input
                 type="number"
-                min={2}
-                max={60}
+                min={1}
+                max={50}
                 value={swingN}
                 onChange={(e) => changeSwingN(Number(e.target.value))}
-                className="w-16 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-sm text-[#e6edf3] outline-none focus:border-[#22d3ee]"
-                title="1-min swing pivot length (bars each side)"
+                disabled={allSwings}
+                className="w-14 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1 text-xs text-[#e6edf3] outline-none focus:border-[#22d3ee] disabled:opacity-40"
+                title="Number of swings to display"
               />
             </div>
           )}
@@ -1154,8 +1167,6 @@ export default function ChartPage() {
             bias={overlaysA.bias}
             trades={overlaysA.trades}
             sessionBreaks={overlaysA.sessionBreaks}
-            oneMinSwingN={swingN}
-            swingDots={dotsOn}
             algoFlowLine={overlaysA.algoFlowLine}
             envelope={overlaysA.envelope}
             algoFirstSwing={overlaysA.algoFirstSwing}
@@ -1211,8 +1222,6 @@ export default function ChartPage() {
               bias={overlaysB.bias}
               trades={overlaysB.trades}
               sessionBreaks={overlaysB.sessionBreaks}
-              oneMinSwingN={swingN}
-              swingDots={dotsOn}
               algoFlowLine={overlaysB.algoFlowLine}
               envelope={overlaysB.envelope}
               algoFirstSwing={overlaysB.algoFirstSwing}

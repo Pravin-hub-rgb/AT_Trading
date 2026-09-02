@@ -427,27 +427,24 @@ def get_swings(interval: str = "daily", pivot: int = 10, levels: int = 5, lookah
 def get_whole_day_swings(
     interval: str = "1min",
     sustain_bars: int = 7,
-    whole_day: bool = True,
+    swing_count: str = "whole",
 ):
     """Whole-day alternating swing detection.
 
-    Detects multiple swings per day (not just the first 2), assigning each
-    a swing_index (0, 1, 2, ...) that can be used for alternating colors
-    (cyan, yellow, cyan, yellow, ...).
+    Detects multiple swings per day, assigning each a swing_index (0, 1, 2, ...).
 
     Args:
         interval: 1min only (whole-day swing is 1min-only feature)
         sustain_bars: N-bar sustain requirement (default 7)
-        whole_day: If True, detect all swings for the day. If False, only the first swing.
+        swing_count: "whole" for all swings, or an integer string like "3" for N swings per day.
 
     Returns:
         {
             "interval": str,
-            "whole_day": bool,
-            "swings": [ {day, swing_index, seg: {dir, start_idx, start_px, end_idx, end_px}, source, dir} ]
+            "swing_count": str,
+            "swings": [ {day, swing_index, seg, source, dir, ...} ]
         }
     """
-    # Whole-day swing is 1min-only (user confirmed). Keep error explicit.
     if interval != "1min":
         return JSONResponse(status_code=400, content={"detail": "whole-day swings only available for interval=1min"})
     if interval not in ("daily", "5min", "1min"):
@@ -461,7 +458,6 @@ def get_whole_day_swings(
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df = df.sort_values("timestamp").drop_duplicates(subset="timestamp", keep="last")
 
-    # Build FlowCandle list
     from src.intraday import FlowCandle
     candles: list[FlowCandle] = []
     for _, row in df.iterrows():
@@ -473,33 +469,20 @@ def get_whole_day_swings(
             close=float(row["close"]),
         ))
 
-    if whole_day:
-        from src.swing_engine import compute_whole_day_swings
-        # 1min-only, minBars 14 for ALL swings (user confirmed)
-        swings = compute_whole_day_swings(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29"})
+    from src.firstswing import compute_swing_results
+    sc: int | str
+    if swing_count == "whole":
+        sc = "whole"
     else:
-        from src.swing_engine import compute_fs_v2_results
-        results = compute_fs_v2_results(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29"})
-        swings = [
-            {
-                "day": r.day,
-                "swing_index": 0,
-                "seg": {
-                    "dir": r.seg.dir,
-                    "start_idx": r.seg.start_idx,
-                    "start_px": r.seg.start_px,
-                    "end_idx": r.seg.end_idx,
-                    "end_px": r.seg.end_px,
-                },
-                "source": r.source,
-                "dir": r.dir,
-            }
-            for r in results
-        ]
+        try:
+            sc = max(1, int(swing_count))
+        except ValueError:
+            sc = "whole"
+    swings = compute_swing_results(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29"}, swing_count=sc)
 
     return {
         "interval": interval,
-        "whole_day": whole_day,
+        "swing_count": swing_count,
         "sustain_bars": sustain_bars,
         "swings": swings,
     }
