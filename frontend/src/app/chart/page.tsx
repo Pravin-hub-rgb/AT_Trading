@@ -6,7 +6,11 @@ import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
 import type { WholeDaySwingPoint } from "@/components/WholeDaySwingPrimitive";
-import type { FlowSegment } from "@/lib/flowline";
+import {
+  computeAlgoFlowLine,
+  type FlowSegment,
+} from "@/lib/flowline";
+import { computeEnvelopeViolations } from "@/lib/envelope";
 import {
   Candle,
   Swing,
@@ -674,13 +678,13 @@ export default function ChartPage() {
           if (!flowOn || !isIntraday || d.length < 2) return null;
           const backend = d === data ? flowLineBackendA : d === dataB ? flowLineBackendB : null;
           if (backend) return backend;
-          return null;
+          return computeAlgoFlowLine(d);
         })(),
         envelope: (() => {
           if (!envOn || iv !== "5min" || d.length < 2) return null;
           const backend = d === data ? envelopeBackendA : d === dataB ? envelopeBackendB : null;
           if (backend) return backend;
-          return null;
+          return computeEnvelopeViolations(d);
         })(),
         ...(fsOn && (iv === "1min" || iv === "5min") && d.length >= 2
           ? (() => {
