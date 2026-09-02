@@ -762,7 +762,11 @@ class FirstSecondResponse(BaseModel):
 
 
 def _filter_breaks_per_swing(breaks: list) -> list:
-    """Keep first B1 + last decisive (last non-B1). Collapses FLIP@10:16+FLIP@10:17 → FLIP@10:17."""
+    """Keep first B1 + last B2 (when a FLIP follows it) + last decisive break.
+
+    Collapses FLIP@10:16+FLIP@10:17 → FLIP@10:17. A B2 that got flip-cancelled
+    still happened and must stay visible (1 Sep 2026: B2@11:25 was swallowed
+    by FLIP@11:28)."""
     if len(breaks) <= 1:
         return breaks
     first = next((b for b in breaks if getattr(b, "kind", None) == "B1"), breaks[0])
@@ -770,7 +774,12 @@ def _filter_breaks_per_swing(breaks: list) -> list:
     if not non_b1:
         return [first]
     last = non_b1[-1]
-    return [first, last]
+    out = [first]
+    last_b2 = next((b for b in reversed(non_b1) if getattr(b, "kind", None) == "B2"), None)
+    if last_b2 is not None and last_b2 is not last and last_b2 is not first:
+        out.append(last_b2)
+    out.append(last)
+    return out
 
 
 @app.post("/api/swings/first_second")

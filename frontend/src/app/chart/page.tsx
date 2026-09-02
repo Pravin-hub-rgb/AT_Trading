@@ -623,7 +623,13 @@ export default function ChartPage() {
                 const nonB1 = breaks.filter((b: any) => b.kind !== "B1");
                 if (nonB1.length === 0) return [first];
                 const last = nonB1[nonB1.length - 1];
-                return [first, last];
+                // A B2 that got flip-cancelled still happened and must stay
+                // visible (1 Sep 2026: B2@11:25 swallowed by FLIP@11:28).
+                const lastB2 = [...nonB1].reverse().find((b: any) => b.kind === "B2");
+                const out: any[] = [first];
+                if (lastB2 && lastB2 !== last && lastB2 !== first) out.push(lastB2);
+                out.push(last);
+                return out;
               };
               // Single source of truth: Python backend if available, else fallback to TS engine
               const backendRes =

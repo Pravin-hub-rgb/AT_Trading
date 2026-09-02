@@ -318,6 +318,17 @@ class SwingEngine:
         self.b1_bar_idx = -1
         self.allow_corner_record = False
         self.dir_confirmed = True
+        # The pre-flip direction dies with its confirmation hunt: reset the
+        # chop-cross tracking so the NEW direction records its OWN first chop
+        # cross (fs_at), and reset the SUS streak so a stale count from the
+        # dead leg can never confirm sustain against the new locked_level.
+        # (1 Sep 2026: down-leg cross @11:27 survived the 11:28 flip, so the
+        # declared up-swing 11:26-11:30 showed no FS mark at its own 11:34 chop.)
+        self.first_chop_cross_idx = -1
+        self.first_chop_cross_px = float("nan")
+        self.first_chop_cross_time = ""
+        self.last_confirm_hit = None
+        self.sustain_streak = 0
         s = self.e_lo if dir == "up" else self.e_hi
         self.start_idx = s.idx
         self.start_time = s.time
