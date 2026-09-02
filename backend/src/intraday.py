@@ -988,6 +988,21 @@ def simulate_day(
     result["fs1_1min_confirmed_idx_5min"] = fs1_1min_confirmed_idx_5
     result["fs1_1min_confirmed_time"] = fs1_1min_end_time
 
+    # Track which 1-min pivot the FS used for its break - entry must use a
+    # DIFFERENT (newer) pivot. FS=buying breaks a LOW pivot; FS=selling breaks
+    # a HIGH pivot. (13 Aug: FS confirms 09:38 breaking the 24330.95 high pivot;
+    # the 09:39 candle sits entirely above it, yet an entry fired on the SAME
+    # pivot.) Must run AFTER _classify_first_swing_v2 sets fs1_1min_confirmed_idx.
+    fs_break_pivot_idx: int = -1
+    if fs1_1min_confirmed_idx >= 0 and (normal_highs_1m or normal_lows_1m):
+        _fs_dir = fs1_1min_dir or swing_dir
+        piv_pool = normal_lows_1m if _fs_dir == "buying" else normal_highs_1m
+        for _p in reversed(piv_pool):
+            if _p.idx <= fs1_1min_confirmed_idx:
+                fs_break_pivot_idx = _p.idx
+                break
+    result["fs_break_pivot_idx"] = fs_break_pivot_idx
+
     # ── CONDITIONAL SECOND SWING (only for CONSERVATIVE 1min) ──
     # CONSERVATIVE: FS same as bias → wait for opposite swing to form
     # AGGRESSIVE: FS opposite to bias → first swing IS counter-trend, no 2nd swing needed
@@ -1421,9 +1436,13 @@ def simulate_day(
                                 # Check if this 1-min bar breaks the MOST RECENT sealed pivot
                                 # Per detect_pivot_break: LONG=high above high pivot, SHORT=low below low pivot
                                 if trade_dir == -1 and normal_lows_1m:
-                                    # SHORT: 1-min low < most recent low pivot
+                                    # SHORT: 1-min low < most recent low pivot.
+                                    # The pivot the FS broke (and anything older) is
+                                    # dead - entry must use a NEWER pivot.
                                     for piv in reversed(normal_lows_1m):
                                         if piv.idx <= k:
+                                            if piv.idx <= fs_break_pivot_idx:
+                                                break  # FS pivot (or older) - no newer pivot sealed yet, skip
                                             if mc["low"] < piv.px:
                                                 brk = {"type": "pivot_break", "level": piv.px, "bar": i}
                                                 brk_m1 = mc
@@ -1432,9 +1451,13 @@ def simulate_day(
                                     if brk:
                                         break
                                 elif trade_dir == 1 and normal_highs_1m:
-                                    # LONG: 1-min high > most recent high pivot
+                                    # LONG: 1-min high > most recent high pivot.
+                                    # The pivot the FS broke (and anything older) is
+                                    # dead - entry must use a NEWER pivot.
                                     for piv in reversed(normal_highs_1m):
                                         if piv.idx <= k:
+                                            if piv.idx <= fs_break_pivot_idx:
+                                                break  # FS pivot (or older) - no newer pivot sealed yet, skip
                                             if mc["high"] > piv.px:
                                                 brk = {"type": "pivot_break", "level": piv.px, "bar": i}
                                                 brk_m1 = mc

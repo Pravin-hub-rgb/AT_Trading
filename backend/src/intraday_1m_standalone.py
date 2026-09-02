@@ -247,6 +247,9 @@ def simulate_day_1min(
     entries_done = 0
     open_trade: dict | None = None
     broken_pivot_levels: set[float] = set()
+    # Index of the pivot the FS used for its own break (chop/confirm target).
+    # Entry must use a DIFFERENT (newer) pivot - resolved lazily in the loop.
+    fs_break_pivot_idx = -1
     i = 0
 
     def _close_trade(trade, bar_idx, price, outcome, exit_time=None, exit_ts=None):
@@ -545,12 +548,25 @@ def simulate_day_1min(
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
                 # Fallback: if no qualifying internal pivot exists yet, skip entry entirely.
             else:
+                # Entry pivot must be NEWER than the pivot the FS used for its
+                # break (13 Aug: FS confirms 09:38 breaking the 24330.95 high
+                # pivot; the 09:39 candle sits entirely ABOVE it, yet an entry
+                # fired on the SAME pivot). The FS pivot is dead once the FS
+                # confirms - skip it and everything older, look for the next
+                # pivot formed after the FS break.
+                # FS=buying breaks a LOW pivot; FS=selling breaks a HIGH pivot.
+                if fs_break_pivot_idx < 0 and fs_confirmed_idx >= 0:
+                    _fs_pool = normal_lows if swing_dir == "buying" else normal_highs
+                    for _p in reversed(_fs_pool):
+                        if _p.idx <= fs_confirmed_idx:
+                            fs_break_pivot_idx = _p.idx
+                            break
                 if trade_dir==1 and normal_highs:
-                    piv = next((p for p in reversed(normal_highs) if p.idx < i), None)
+                    piv = next((p for p in reversed(normal_highs) if p.idx < i and p.idx > fs_break_pivot_idx), None)
                     if piv and cur["high"] > piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
                 elif trade_dir==-1 and normal_lows:
-                    piv = next((p for p in reversed(normal_lows) if p.idx < i), None)
+                    piv = next((p for p in reversed(normal_lows) if p.idx < i and p.idx > fs_break_pivot_idx), None)
                     if piv and cur["low"] < piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
             if brk is not None:
