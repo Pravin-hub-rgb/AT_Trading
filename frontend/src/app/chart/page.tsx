@@ -445,7 +445,14 @@ export default function ChartPage() {
     postFlowLine(payload)
       .then((res) => {
         if (cancelled) return;
-        setFlowLineBackendA(res.segments as any);
+        const segs = (res.segments ?? []).map((s: any) => ({
+          dir: s.dir,
+          startIdx: s.start_idx ?? s.startIdx,
+          startPx: s.start_px ?? s.startPx,
+          endIdx: s.end_idx ?? s.endIdx,
+          endPx: s.end_px ?? s.endPx,
+        }));
+        setFlowLineBackendA(segs as any);
       })
       .catch(() => {
         if (cancelled) return;
@@ -464,7 +471,14 @@ export default function ChartPage() {
     postFlowLine(payload)
       .then((res) => {
         if (cancelled) return;
-        setFlowLineBackendB(res.segments as any);
+        const segs = (res.segments ?? []).map((s: any) => ({
+          dir: s.dir,
+          startIdx: s.start_idx ?? s.startIdx,
+          startPx: s.start_px ?? s.startPx,
+          endIdx: s.end_idx ?? s.endIdx,
+          endPx: s.end_px ?? s.endPx,
+        }));
+        setFlowLineBackendB(segs as any);
       })
       .catch(() => {
         if (cancelled) return;
@@ -677,13 +691,13 @@ export default function ChartPage() {
         algoFlowLine: (() => {
           if (!flowOn || !isIntraday || d.length < 2) return null;
           const backend = d === data ? flowLineBackendA : d === dataB ? flowLineBackendB : null;
-          if (backend) return backend;
+          if (backend && backend.length > 0) return backend;
           return computeAlgoFlowLine(d);
         })(),
         envelope: (() => {
           if (!envOn || iv !== "5min" || d.length < 2) return null;
           const backend = d === data ? envelopeBackendA : d === dataB ? envelopeBackendB : null;
-          if (backend) return backend;
+          if (backend && backend.length > 0) return backend;
           return computeEnvelopeViolations(d);
         })(),
         ...(fsOn && (iv === "1min" || iv === "5min") && d.length >= 2
