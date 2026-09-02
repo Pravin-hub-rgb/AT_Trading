@@ -882,57 +882,5 @@ def compute_first_second(req: FirstSecondRequest) -> FirstSecondResponse:
     return FirstSecondResponse(first=first_filtered, second=second_out)
 
 
-class EnvelopeViolationOut(BaseModel):
-    idx: int
-    side: str
-    px: float
-    markerIdx: int
-    markerTime: str
-    markerKind: str
-    markerPx: float
-    day: str
-
-
-@app.post("/api/walker/flowline")
-def walker_flowline(candles: list[FlowCandleInput]) -> dict:
-    """Walker flow-line — per-day pivots chained into B/S segments (visual)."""
-    from src.walker import FlowCandle, compute_algo_flowline
-
-    flow = [
-        FlowCandle(date=c.date, open=float(c.open), high=float(c.high), low=float(c.low), close=float(c.close))
-        for c in candles
-    ]
-    segs = compute_algo_flowline(flow)
-    return {
-        "segments": [
-            {"dir": s.dir, "start_idx": s.start_idx, "start_px": s.start_px, "end_idx": s.end_idx, "end_px": s.end_px}
-            for s in segs
-        ]
-    }
-
-
-@app.post("/api/walker/envelope")
-def walker_envelope(candles: list[FlowCandleInput]) -> dict:
-    """Envelope violations — per-day pivot breach check."""
-    from src.walker import FlowCandle
-    from src.envelope import compute_envelope_violations
-
-    flow = [
-        FlowCandle(date=c.date, open=float(c.open), high=float(c.high), low=float(c.low), close=float(c.close))
-        for c in candles
-    ]
-    viols = compute_envelope_violations(flow)
-    return {
-        "violations": [
-            {
-                "idx": v.idx, "side": v.side, "px": v.px,
-                "markerIdx": v.markerIdx, "markerTime": v.markerTime,
-                "markerKind": v.markerKind, "markerPx": v.markerPx, "day": v.day,
-            }
-            for v in viols
-        ]
-    }
-
-
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8003)

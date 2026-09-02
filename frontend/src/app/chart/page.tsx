@@ -24,8 +24,6 @@ import {
   getIntradayBacktest,
   getWholeDaySwings,
   postFirstSecond,
-  postFlowLine,
-  postEnvelope,
   type WholeDaySwing,
   type FirstSecondResponse,
 } from "@/lib/api";
@@ -175,12 +173,6 @@ export default function ChartPage() {
   // Falls back to in-browser TS engine if backend unavailable.
   const [fsBackendA, setFsBackendA] = useState<import("@/lib/api").FirstSecondResponse | null>(null);
   const [fsBackendB, setFsBackendB] = useState<import("@/lib/api").FirstSecondResponse | null>(null);
-
-  // Walker flowline + envelope — also Python single source, fetched via backend
-  const [flowLineBackendA, setFlowLineBackendA] = useState<FlowSegment[] | null>(null);
-  const [flowLineBackendB, setFlowLineBackendB] = useState<FlowSegment[] | null>(null);
-  const [envelopeBackendA, setEnvelopeBackendA] = useState<any[] | null>(null);
-  const [envelopeBackendB, setEnvelopeBackendB] = useState<any[] | null>(null);
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -434,98 +426,6 @@ export default function ChartPage() {
     };
   }, [fsOn, intervalB, dataB, data1min]);
 
-  // Walker flowline — Python single source
-  useEffect(() => {
-    if (!flowOn || interval === "daily" || data.length < 2) {
-      setFlowLineBackendA(null);
-      return;
-    }
-    let cancelled = false;
-    const payload = data.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
-    postFlowLine(payload)
-      .then((res) => {
-        if (cancelled) return;
-        const segs = (res.segments ?? []).map((s: any) => ({
-          dir: s.dir,
-          startIdx: s.start_idx ?? s.startIdx,
-          startPx: s.start_px ?? s.startPx,
-          endIdx: s.end_idx ?? s.endIdx,
-          endPx: s.end_px ?? s.endPx,
-        }));
-        setFlowLineBackendA(segs as any);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setFlowLineBackendA(null);
-      });
-    return () => { cancelled = true; };
-  }, [flowOn, interval, data]);
-
-  useEffect(() => {
-    if (!flowOn || intervalB === "daily" || dataB.length < 2) {
-      setFlowLineBackendB(null);
-      return;
-    }
-    let cancelled = false;
-    const payload = dataB.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
-    postFlowLine(payload)
-      .then((res) => {
-        if (cancelled) return;
-        const segs = (res.segments ?? []).map((s: any) => ({
-          dir: s.dir,
-          startIdx: s.start_idx ?? s.startIdx,
-          startPx: s.start_px ?? s.startPx,
-          endIdx: s.end_idx ?? s.endIdx,
-          endPx: s.end_px ?? s.endPx,
-        }));
-        setFlowLineBackendB(segs as any);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setFlowLineBackendB(null);
-      });
-    return () => { cancelled = true; };
-  }, [flowOn, intervalB, dataB]);
-
-  // Envelope — Python single source (5min only)
-  useEffect(() => {
-    if (!envOn || interval !== "5min" || data.length < 2) {
-      setEnvelopeBackendA(null);
-      return;
-    }
-    let cancelled = false;
-    const payload = data.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
-    postEnvelope(payload)
-      .then((res) => {
-        if (cancelled) return;
-        setEnvelopeBackendA(res.violations as any);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setEnvelopeBackendA(null);
-      });
-    return () => { cancelled = true; };
-  }, [envOn, interval, data]);
-
-  useEffect(() => {
-    if (!envOn || intervalB !== "5min" || dataB.length < 2) {
-      setEnvelopeBackendB(null);
-      return;
-    }
-    let cancelled = false;
-    const payload = dataB.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
-    postEnvelope(payload)
-      .then((res) => {
-        if (cancelled) return;
-        setEnvelopeBackendB(res.violations as any);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setEnvelopeBackendB(null);
-      });
-    return () => { cancelled = true; };
-  }, [envOn, intervalB, dataB]);
-
   useEffect(() => {
     let cancelled = false;
     getSwings("daily", PIVOT, LEVELS, LOOKAHEAD)
@@ -688,18 +588,12 @@ export default function ChartPage() {
         bias: isIntraday && biasOn ? biasLabels : undefined,
         trades: isIntraday ? allTrades : undefined,
         sessionBreaks: isIntraday,
-        algoFlowLine: (() => {
-          if (!flowOn || !isIntraday || d.length < 2) return null;
-          const backend = d === data ? flowLineBackendA : d === dataB ? flowLineBackendB : null;
-          if (backend && backend.length > 0) return backend;
-          return computeAlgoFlowLine(d);
-        })(),
-        envelope: (() => {
-          if (!envOn || iv !== "5min" || d.length < 2) return null;
-          const backend = d === data ? envelopeBackendA : d === dataB ? envelopeBackendB : null;
-          if (backend && backend.length > 0) return backend;
-          return computeEnvelopeViolations(d);
-        })(),
+        algoFlowLine:
+          flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
+        envelope:
+          envOn && iv === "5min" && d.length >= 2
+            ? computeEnvelopeViolations(d)
+            : null,
         ...(fsOn && (iv === "1min" || iv === "5min") && d.length >= 2
           ? (() => {
               // 1min pane: run FsV2 directly on its own candles.
@@ -1045,10 +939,6 @@ export default function ChartPage() {
       btData,
       fsBackendA,
       fsBackendB,
-      flowLineBackendA,
-      flowLineBackendB,
-      envelopeBackendA,
-      envelopeBackendB,
     ],
   );
 

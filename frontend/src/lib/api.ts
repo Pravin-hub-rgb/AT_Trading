@@ -292,33 +292,6 @@ export const postFirstSecond = (
     body: JSON.stringify({ candles, opts, include_second: includeSecond }),
   });
 
-export const postFlowLine = (
-  candles: { date: string; open: number; high: number; low: number; close: number }[],
-) =>
-  request<{ segments: { dir: string; start_idx: number; start_px: number; end_idx: number; end_px: number }[] }>(
-    "/api/walker/flowline",
-    { method: "POST", body: JSON.stringify(candles) },
-  );
-
-export const postEnvelope = (
-  candles: { date: string; open: number; high: number; low: number; close: number }[],
-) =>
-  request<{
-    violations: {
-      idx: number;
-      side: string;
-      px: number;
-      markerIdx: number;
-      markerTime: string;
-      markerKind: string;
-      markerPx: number;
-      day: string;
-    }[];
-  }>("/api/walker/envelope", {
-    method: "POST",
-    body: JSON.stringify(candles),
-  });
-
 // --- initial bias (pre-open labels) ---
 export type Bias = "bullish" | "bearish" | "unbiased";
 
