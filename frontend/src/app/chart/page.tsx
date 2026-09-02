@@ -869,13 +869,14 @@ export default function ChartPage() {
                     px: number;
                   } => b !== null,
                 );
+              // 5-min: only swing lines, no markers (per your call — markers only on 1-min)
               return {
                 algoFirstSwing: algoFirstSwing5,
                 algoSecondSwing: algoSecondSwing5,
-                fsMarkers: fsMarkers5,
-                fsBreaks: fsBreaks5,
-                algoSecondSwingMarkers: algoSecondSwingMarkers5,
-                algoSecondSwingBreaks: algoSecondSwingBreaks5,
+                fsMarkers: null,
+                fsBreaks: null,
+                algoSecondSwingMarkers: null,
+                algoSecondSwingBreaks: null,
                 tradeMode: btData
                   ? Object.fromEntries(
                       btData.days.map((d) => [d.date, d.trade_mode ?? null]),

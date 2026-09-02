@@ -705,9 +705,11 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     }
 
     // 2. Break markers (B1/B2/FLIP) - added first so they render below
+    // Only on 1-min TF — 5-min shows just swing lines per your call.
     // Filtering is done per-swing in page.tsx before flatMap; do NOT
     // re-filter globally here or multi-day B1s get dropped.
-    for (const b of fsBreaks ?? []) {
+    if (interval === "1min") {
+      for (const b of fsBreaks ?? []) {
       const cc = candles[b.idx];
       if (!cc) continue;
       markers.push({
@@ -780,6 +782,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
         });
       }
     }
+    } // end interval === "1min" — 5-min shows only swing lines
 
     // Sort markers by time for consistent rendering
     markers.sort((a, b) => timeToSec(a.time) - timeToSec(b.time));
@@ -813,6 +816,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   useEffect(() => {
     const ser = seriesRef.current;
     if (!ser || !intraday) return;
+    if (interval !== "1min") return; // 5-min shows only swing lines, no markers per your call
     if (!wholeDaySwings || wholeDaySwings.length === 0) return;
 
     const markers: SeriesMarker<Time>[] = [];
@@ -898,7 +902,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
         api?.setMarkers([]);
       } catch {}
     };
-  }, [wholeDaySwings, intraday, candles]);
+  }, [wholeDaySwings, intraday, interval, candles]);
 
   // ── overlay: Swing S/R labels & levels ──
   useEffect(() => {
