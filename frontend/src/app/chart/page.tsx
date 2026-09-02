@@ -82,6 +82,14 @@ function loadSavedIntradayFilters(): { params: BacktestParams; case: string } {
         typeof saved.rr_target === "number"
           ? saved.rr_target
           : (DEFAULT_BT_PARAMS.rr_target ?? 3.0),
+      swing_traverse:
+        typeof saved.swing_traverse === "boolean"
+          ? saved.swing_traverse
+          : (DEFAULT_BT_PARAMS.swing_traverse ?? true),
+      min_sl_pts:
+        typeof saved.min_sl_pts === "number"
+          ? saved.min_sl_pts
+          : (DEFAULT_BT_PARAMS.min_sl_pts ?? 13.0),
     };
     const caseValue =
       typeof saved.caseValue === "string" ? saved.caseValue : "all";

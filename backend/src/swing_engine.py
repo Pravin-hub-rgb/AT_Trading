@@ -337,7 +337,7 @@ class FsV2Engine:
             if self.dir_confirmed and self.dir and self.start_idx >= 0:
                 if self.dir == "down":
                     # For shorts: break of latest high pivot after start
-                    normal_cands = [l for l in self.normal_highs if l.idx > self.start_idx and l.idx < g_idx]
+                    normal_cands = [l for l in self.normal_highs if l.idx > self.start_idx and l.idx + 1 < g_idx]
                     if normal_cands:
                         target = max(normal_cands, key=lambda l: l.idx)
                         if px > target.px:
@@ -345,7 +345,7 @@ class FsV2Engine:
                             self.confirm_source = "chop"
                             self._confirm(g_idx, self.t)
                             return
-                    micro_cands = [l for l in self.micro_highs if l.idx > self.start_idx and l.idx < g_idx]
+                    micro_cands = [l for l in self.micro_highs if l.idx > self.start_idx and l.idx + 1 < g_idx]
                     if micro_cands:
                         target = max(micro_cands, key=lambda l: l.idx)
                         if px > target.px:

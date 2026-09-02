@@ -162,11 +162,7 @@ def manage_1m_chunk(
     return False
 
 
-def resolve_pending_direct(
-    pending: dict,
-    m1_day: pd.DataFrame,
-    upto_ts: int,
-) -> dict | None:
+def resolve_pending_direct(    pending: dict,    m1_day: pd.DataFrame,    upto_ts: int,    fs_confirmed_m1_idx: int = -1,) -> dict | None:
     """Resolve a pending 5-min direct entry into the FIRST 1-min bar that broke the pivot.
 
     When execution=1min, we want the entry to fire at the exact 1-min candle that
@@ -212,9 +208,7 @@ def resolve_pending_direct(
     for _, bar in rows.iterrows():
         bar_idx = int(bar.name) if bar.name is not None else 0
         
-        # Skip bars we've already processed (to prevent re-trigger on subsequent 5-min bars)
-        if bar_idx <= skip_until_idx:
-            continue
+        # Skip bars we have already processed (to prevent re-trigger on subsequent 5-min bars)        if bar_idx <= skip_until_idx:            continue        # 1-min gate: skip the FS-mark bar and any earlier bars        if fs_confirmed_m1_idx >= 0 and bar_idx <= fs_confirmed_m1_idx:            continue
         
         low = float(bar["low"])
         high = float(bar["high"])

@@ -535,6 +535,8 @@ def intraday_backtest(
     entry_method: str = "pace_break",
     swing_mode: str = "opposite_swing_needed",
     rr_target: float = 3.0,
+    swing_traverse: bool = True,
+    min_sl_pts: float = 13.0,
 ):
     """Full-history intraday results for one experiment combo.
 
@@ -544,7 +546,9 @@ def intraday_backtest(
     ft_fail_enabled (default True): early exit when close beyond dom_level within 2 bars (S5:98),
     entry_method (default pace_break): pace_break | pivot_break,
     swing_mode (default opposite_swing_needed): none | opposite_swing_needed (1min only),
-    rr_target (default 3.0): fixed target in R; only used when trailing=off.
+    rr_target (default 3.0): fixed target in R; only used when trailing=off,
+    swing_traverse (default True): reference swing follows extensions (1min engine).
+    swing_traverse (default True): reference swing follows extensions (1min engine).
     """
     cfg = {
         "sl_mode": sl_mode,
@@ -558,6 +562,8 @@ def intraday_backtest(
         "entry_method": entry_method,
         "swing_mode": swing_mode,
         "rr_target": float(rr_target),
+        "swing_traverse": bool(swing_traverse),
+        "min_sl_pts": float(min_sl_pts),
     }
     try:
         data, _ = _intraday_backtest(cfg)
@@ -579,6 +585,8 @@ def intraday_day(
     entry_method: str = "pace_break",
     swing_mode: str = "opposite_swing_needed",
     rr_target: float = 3.0,
+    swing_traverse: bool = True,
+    min_sl_pts: float = 13.0,
 ):
     """Single-day detail: trades + full event timeline for chart annotation."""
     cfg = {
@@ -592,6 +600,8 @@ def intraday_day(
         "entry_method": entry_method,
         "swing_mode": swing_mode,
         "rr_target": float(rr_target),
+        "swing_traverse": bool(swing_traverse),
+        "min_sl_pts": float(min_sl_pts),
     }
     try:
         _, days = _intraday_backtest(cfg)

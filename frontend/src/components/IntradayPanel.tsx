@@ -34,6 +34,7 @@ const SL_MODES = [
   { value: "avg05", label: "SL: Avg ×0.5" },
   { value: "fixed8", label: "SL: Fixed 8 pt" },
   { value: "prev_pivot", label: "SL: Pivot / ECL ± 1pt" },
+  { value: "swing_end", label: "SL: Swing High/Low" },
 ];
 
 const EXECUTION_MODES = [
@@ -67,6 +68,15 @@ const RR_MODES = [
   { value: "4", label: "Target: 1:4" },
 ];
 
+const MIN_SL_MODES = [
+  { value: "0", label: "Min SL: Off" },
+  { value: "8", label: "Min SL: 8 pts" },
+  { value: "10", label: "Min SL: 10 pts" },
+  { value: "13", label: "Min SL: 13 pts (default)" },
+  { value: "15", label: "Min SL: 15 pts" },
+  { value: "20", label: "Min SL: 20 pts" },
+];
+
 const STORAGE_KEY = "intraday_filters";
 
 function OutcomeChip({ outcome }: { outcome: string }) {
@@ -98,6 +108,8 @@ function loadSavedFilters(): Partial<{
   ft_fail_enabled: boolean;
   entry_method: string;
   rr_target: number;
+  swing_traverse: boolean;
+  min_sl_pts: number;
 }> {
   if (typeof window === "undefined") return {};
   try {
@@ -121,6 +133,8 @@ function saveFilters(filters: {
   ft_fail_enabled: boolean;
   entry_method: string;
   rr_target: number;
+  swing_traverse: boolean;
+  min_sl_pts: number;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -216,6 +230,12 @@ export default function IntradayPanel({
   const [localRR, setLocalRR] = useState(
     String(saved.rr_target ?? params.rr_target ?? 3.0),
   );
+  const [localTraverse, setLocalTraverse] = useState(
+    saved.swing_traverse ?? params.swing_traverse ?? true,
+  );
+  const [localMinSl, setLocalMinSl] = useState(
+    String(saved.min_sl_pts ?? params.min_sl_pts ?? 13.0),
+  );
 
   // Check if any local value differs from the current applied params
   const hasChanges =
@@ -226,7 +246,9 @@ export default function IntradayPanel({
     localGapPct !== params.gap_pct ||
     localFtFail !== params.ft_fail_enabled ||
     localEntryMethod !== (params.entry_method ?? "pivot_break") ||
-    localRR !== String(params.rr_target ?? 3.0);
+    localRR !== String(params.rr_target ?? 3.0) ||
+    localTraverse !== (params.swing_traverse ?? true) ||
+    localMinSl !== String(params.min_sl_pts ?? 13.0);
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -266,6 +288,8 @@ export default function IntradayPanel({
       ft_fail_enabled: localFtFail,
       entry_method: localEntryMethod,
       rr_target: Number(localRR),
+      swing_traverse: localTraverse,
+      min_sl_pts: Number(localMinSl),
     });
     // Apply all filters in one go
     onCaseChange(localCase);
@@ -278,6 +302,8 @@ export default function IntradayPanel({
       ft_fail_enabled: localFtFail,
       entry_method: localEntryMethod,
       rr_target: Number(localRR),
+      swing_traverse: localTraverse,
+      min_sl_pts: Number(localMinSl),
     });
   };
 
@@ -375,6 +401,18 @@ export default function IntradayPanel({
             </option>
           ))}
         </select>
+        <select
+          value={localMinSl}
+          onChange={(e) => setLocalMinSl(e.target.value)}
+          className={selectCls}
+          title="Widen the SL to at least this many points (target recomputes from the widened risk)"
+        >
+          {MIN_SL_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
         <label
           className="flex items-center gap-1.5 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-xs text-[#c9d1d9] cursor-pointer hover:border-[#58a6ff]"
           title="Early exit when close goes beyond dom_level within 2 bars of entry (S5:98 follow-through rule). When OFF, trades run until SL/target/EOD."
@@ -386,6 +424,18 @@ export default function IntradayPanel({
             className="accent-[#f59e0b]"
           />
           FT-fail early exit
+        </label>
+        <label
+          className="flex items-center gap-1.5 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-xs text-[#c9d1d9] cursor-pointer hover:border-[#58a6ff]"
+          title="When ON, the reference swing follows extensions (price beyond swing end re-arms to the next swing, 3rd/4th/... nth). When OFF, the reference freezes at the first desired swing (old doc behaviour)."
+        >
+          <input
+            type="checkbox"
+            checked={localTraverse}
+            onChange={(e) => setLocalTraverse(e.target.checked)}
+            className="accent-[#f59e0b]"
+          />
+          Swing traverse
         </label>
         <button
           onClick={handleApply}

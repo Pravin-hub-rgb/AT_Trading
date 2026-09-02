@@ -1,0 +1,4 @@
+5MIN avg: trades 387 wr 28.2 total_r -9.29 avg_r -0.02
+  outcomes: {'ft_fail': 99, 'sl': 150, 'eod': 79, 'target': 47, 'cost-to-cost': 12}
+5MIN swing_end: trades 386 wr 27.7 total_r -17.7 avg_r -0.05
+  outcomes: {'ft_fail': 89, 'sl': 155, 'eod': 87, 'target': 42, 'cost-to-cost': 13}

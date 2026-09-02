@@ -100,16 +100,24 @@ def simulate_day_1min(
         result["events"].append({"type": "skipped_unbiased_1min", "case": case_id})
         return result
 
-    # Second swing for conservative — find FIRST OPPOSITE swing after FS1
+    # Second swing for conservative — find the first OPPOSITE swing after FS1.
+    # Traversal keeps going past same-direction swings (3rd, 4th, ... nth) until
+    # the desired direction is found — we do NOT stop at swing 2 and we do NOT
+    # give up for the day; we only stop when the data runs out.
     fs2_dir: str | None = None
     fs2_confirmed_idx: int = -1
     fs2_end_idx: int = -1
     fs2_end_px: float = float("nan")
-    if trade_mode == "conservative" and swing_dir is not None and fs1_end_idx >= 0:
+    fs2_start_px: float = float("nan")
+    fs2_end_time: str = ""
+
+    def _find_swing(start_idx: int, want_dir: str, log_miss: bool = False):
+        """Scan forward from start_idx for the next confirmed swing in want_dir,
+        skipping swings in the other direction (their ends become the next seed).
+        Returns a dict describing the swing, or None if the data runs out."""
         from datetime import datetime, timezone, timedelta
         IST = timezone(timedelta(hours=5, minutes=30))
-        search_idx = fs1_end_idx + 1
-        # Loop until we find an opposite-direction swing or run out of data
+        search_idx = max(start_idx, 0)
         while search_idx < len(candles):
             seed_c = candles[search_idx]
             # Treat 09:33 as new 09:15: use same engine but with 14-bar min, no timeCap
@@ -128,23 +136,44 @@ def simulate_day_1min(
                     declared = True
                     break
             if not declared:
-                result["events"].append({"type": "no_second_swing_declared"})
-                break
+                if log_miss:
+                    result["events"].append({"type": "no_second_swing_declared"})
+                return None
             cand_dir = "buying" if eng2.dir == "up" else "selling"
-            # If same direction as FS1, skip this swing and continue searching from its end
-            if cand_dir == swing_dir:
+            # Not the desired direction — skip this swing and search from its end
+            if cand_dir != want_dir:
                 result["events"].append({"type": "second_swing_same_dir_skipped", "dir": cand_dir, "bar": eng2.start_idx, "time": eng2.start_time})
                 search_idx = eng2.end_idx + 1
                 continue
-            # Found opposite direction
-            fs2_dir = cand_dir
-            fs2_confirmed_idx = eng2.confirmed_at_idx
-            fs2_end_idx = eng2.end_idx
-            fs2_end_px = eng2.end_px
-            result["events"].append({"type": "swing2_classified", "dir": fs2_dir, "bar": eng2.start_idx, "time": eng2.start_time, "first_swing": swing_dir})
-            result["events"].append({"type": "fs2_segment", "dir": eng2.dir, "start_idx": eng2.start_idx, "start_px": eng2.start_px, "end_idx": fs2_end_idx, "end_px": fs2_end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": eng2.confirmed_at_time})
-            result["events"].append({"type": "fs_breaks_2", "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px} for b in eng2.break_marks]})
-            break
+            return {
+                "dir": cand_dir,
+                "start_idx": eng2.start_idx,
+                "start_time": eng2.start_time,
+                "start_px": eng2.start_px,
+                "end_idx": eng2.end_idx,
+                "end_px": eng2.end_px,
+                "end_time": eng2.end_time,
+                "confirmed_at_idx": eng2.confirmed_at_idx,
+                "confirmed_at_time": eng2.confirmed_at_time,
+                "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px} for b in eng2.break_marks],
+            }
+        if log_miss:
+            result["events"].append({"type": "no_second_swing_declared"})
+        return None
+
+    if trade_mode == "conservative" and swing_dir is not None and fs1_end_idx >= 0:
+        want_dir = "selling" if swing_dir == "buying" else "buying"
+        found = _find_swing(fs1_end_idx + 1, want_dir)
+        if found is not None:
+            fs2_dir = found["dir"]
+            fs2_confirmed_idx = found["confirmed_at_idx"]
+            fs2_end_idx = found["end_idx"]
+            fs2_end_px = found["end_px"]
+            fs2_start_px = found["start_px"]
+            fs2_end_time = found["end_time"]
+            result["events"].append({"type": "swing2_classified", "dir": fs2_dir, "bar": found["start_idx"], "time": found["start_time"], "first_swing": swing_dir})
+            result["events"].append({"type": "fs2_segment", "dir": "down" if fs2_dir == "selling" else "up", "start_idx": found["start_idx"], "start_px": found["start_px"], "end_idx": fs2_end_idx, "end_px": fs2_end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": found["confirmed_at_time"]})
+            result["events"].append({"type": "fs_breaks_2", "breaks": found["breaks"]})
         result["swing2_direction"] = fs2_dir
         result["swing2_confirmed_idx"] = fs2_confirmed_idx
         result["swing2_end_idx"] = fs2_end_idx
@@ -182,17 +211,22 @@ def simulate_day_1min(
             ref_swing_end_px = fs2_end_px
             ref_swing_end_idx = fs2_end_idx
             ref_swing_end_dir = fs2_dir
-            ref_swing_end_time = eng2.end_time if 'eng2' in locals() and eng2.declared else fs1_end_time
+            ref_swing_end_time = fs2_end_time if fs2_end_idx >= 0 else fs1_end_time
         else:
             ref_swing_end_px = fs1_end_px
             ref_swing_end_dir = swing_dir
     else:
         ref_swing_end_px = None
         ref_swing_end_dir = None
-    # New rule: first swing extreme must NEVER be breached before entry
-    # For selling first swing (low): if any 1min low < ref_low after fs1_end, no further longs
-    # For buying first swing (high): if any 1min high > ref_high, no further shorts
-    first_swing_breached = False
+    # Reference-swing traversal: when price moves beyond the reference swing's
+    # end, the desired swing has extended — re-scan for the next swing in the
+    # same direction and move the reference to it. This never blocks entries by
+    # itself; the swing-end-line guard at entry time handles safety (long only
+    # above the selling swing end, short only below the buying swing end).
+    # Toggle (experiment switch): swing_traverse=False freezes the reference at
+    # the first desired swing (old doc behaviour: no trade if it blows through).
+    ref_search_exhausted = False
+    swing_traverse = bool(cfg.get("swing_traverse", True))
 
     cur_swing = initial_cur_swing
     # For conservative, use second swing's start for swing extreme
@@ -286,6 +320,28 @@ def simulate_day_1min(
                 # For SHORT: SL above entry (candle high + buffer); For LONG: SL below entry (candle low - buffer)
                 sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
                 sl = entry_high + sl_buffer if dirn==-1 else entry_low - sl_buffer
+        elif sl_mode == "swing_end":
+            # SL at the reference swing's end extreme (entry theory.md — swing end line):
+            # LONG → selling swing's low; SHORT → buying swing's high.
+            # Uses the CURRENT traversed reference (follows extensions).
+            # Falls back to avg when no reference exists or the side is wrong —
+            # the end-line guard already ensures valid setups have the right side.
+            ref_ok = (
+                ref_swing_end_px is not None
+                and ref_swing_end_px == ref_swing_end_px  # not NaN
+                and (
+                    (dirn == 1 and ref_swing_end_dir == "selling" and ref_swing_end_px < entry)
+                    or (dirn == -1 and ref_swing_end_dir == "buying" and ref_swing_end_px > entry)
+                )
+            )
+            if ref_ok:
+                sl = float(ref_swing_end_px)
+            else:
+                ref_dist = base_avg * SL_MODE_MULT.get("avg", 1.0)
+                if dirn==1:
+                    sl = min(ref_level, candles[bar_idx]["low"]) - ref_dist
+                else:
+                    sl = max(ref_level, candles[bar_idx]["high"]) + ref_dist
         else:
             if sl_mode in SL_MODE_FIXED:
                 ref_dist = float(SL_MODE_FIXED[sl_mode])
@@ -296,6 +352,13 @@ def simulate_day_1min(
             else:
                 sl = max(ref_level, candles[bar_idx]["high"]) + ref_dist
         risk = entry - sl if dirn==1 else sl - entry
+        # Minimum-SL experiment switch: widen too-tight stops to min_sl_pts.
+        # The target is recomputed from the widened risk (fixed RR preserved).
+        min_sl_pts = float(cfg.get("min_sl_pts", 0.0))
+        widened = min_sl_pts > 0 and 0 < risk < min_sl_pts
+        if widened:
+            sl = entry - min_sl_pts if dirn==1 else entry + min_sl_pts
+            risk = min_sl_pts
         if risk <=0:
             return False
         rr = float(cfg.get("rr_target", RR_TARGET))
@@ -309,6 +372,7 @@ def simulate_day_1min(
             "dom_low":entry_low,"dom_high":entry_high,"validated":False,
             "sl_mode_used":sl_mode,"pivot_ref":{"px":pivot_ref.px,"time":pivot_ref.time,"kind":pivot_ref.kind,"idx":pivot_ref.idx} if pivot_ref else None,
             "_cur_sl":sl,"_init_sl":sl,"_max_profit":0.0,
+            "min_sl_applied":widened,
         }
         entries_done+=1
         result["events"].append({"type":"entry","bar":bar_idx,"time":entry_time,"dir":direction,"price":round(entry,2),"sl":round(sl,2),"target":round(target,2)})
@@ -365,17 +429,43 @@ def simulate_day_1min(
             if cur["time"] >= EOD_EXIT and open_trade is not None:
                 _close_trade(open_trade, i, float(cur["close"]), "eod")
 
-        # Check first swing breach - if low/high ever breached, no further entries
-        # For conservative, check against the relevant swing's extreme (FS2), for aggressive FS1
-        if ref_swing_end_px is not None and i > ref_swing_end_idx:
-            if ref_swing_end_dir == "selling" and cur["low"] < ref_swing_end_px:
-                if not first_swing_breached:
-                    first_swing_breached = True
-                    result["events"].append({"type":"first_swing_breached","bar":i,"time":cur["time"],"level":round(ref_swing_end_px,2),"price":cur["low"],"reason":"low_below_first_swing_low"})
-            elif ref_swing_end_dir == "buying" and cur["high"] > ref_swing_end_px:
-                if not first_swing_breached:
-                    first_swing_breached = True
-                    result["events"].append({"type":"first_swing_breached","bar":i,"time":cur["time"],"level":round(ref_swing_end_px,2),"price":cur["high"],"reason":"high_above_first_swing_high"})
+        # Reference-swing traversal: when price moves beyond the reference
+        # swing's end, the desired swing has extended — find the next swing in
+        # the same direction and move the reference to it (6th, 15th, ... swing
+        # all included). This REPLACES the old first-swing-breach kill switch.
+        if ref_swing_end_px is not None and i > ref_swing_end_idx and not ref_search_exhausted and swing_traverse:
+            ref_breached = (
+                (ref_swing_end_dir == "selling" and cur["low"] < ref_swing_end_px) or
+                (ref_swing_end_dir == "buying" and cur["high"] > ref_swing_end_px)
+            )
+            if ref_breached:
+                old_ref_px = ref_swing_end_px
+                found = _find_swing(i, ref_swing_end_dir)
+                if found is not None:
+                    fs2_dir = found["dir"]
+                    fs2_end_idx = found["end_idx"]
+                    fs2_end_px = found["end_px"]
+                    ref_swing_end_dir = found["dir"]
+                    ref_swing_end_idx = found["end_idx"]
+                    ref_swing_end_px = found["end_px"]
+                    ref_swing_end_time = found["end_time"]
+                    entry_swing_confirmed_idx = max(entry_swing_confirmed_idx, found["confirmed_at_idx"])
+                    if trade_mode == "conservative":
+                        result["swing2_direction"] = found["dir"]
+                        result["swing2_confirmed_idx"] = found["confirmed_at_idx"]
+                        result["swing2_end_idx"] = found["end_idx"]
+                        result["swing2_end_px"] = found["end_px"]
+                    effective_swing_start = found["start_idx"]
+                    swing_extreme = max(c["high"] for c in candles[:effective_swing_start+1]) if cur_swing=="buying" else min(c["low"] for c in candles[:effective_swing_start+1])
+                    swing_base = min(c["low"] for c in candles[:effective_swing_start+1]) if cur_swing=="buying" else max(c["high"] for c in candles[:effective_swing_start+1])
+                    result["events"].append({"type":"swing2_classified","dir":found["dir"],"bar":found["start_idx"],"time":found["start_time"],"first_swing":swing_dir,"rearmed":True})
+                    result["events"].append({"type":"fs2_segment","dir":"down" if found["dir"]=="selling" else "up","start_idx":found["start_idx"],"start_px":found["start_px"],"end_idx":found["end_idx"],"end_px":found["end_px"],"confirmed_at_idx":found["confirmed_at_idx"],"confirmed_at_time":found["confirmed_at_time"],"rearmed":True})
+                    result["events"].append({"type":"fs_breaks_2","breaks":found["breaks"],"rearmed":True})
+                    result["events"].append({"type":"reference_swing_updated","bar":i,"time":cur["time"],"dir":found["dir"],"new_end_idx":found["end_idx"],"new_end_px":round(found["end_px"],2),"old_end_px":round(old_ref_px,2)})
+                else:
+                    # No further swing in the desired direction exists today —
+                    # keep the current reference, stop re-scanning.
+                    ref_search_exhausted = True
 
         # Gate
         fs_gate_ok = entry_swing_confirmed_idx <0 or i > entry_swing_confirmed_idx
@@ -383,10 +473,15 @@ def simulate_day_1min(
         if fs1_end_time and fs1_end_time < ENTRY_START:
             entry_start = fs1_end_time
         has_target = any(t.get("outcome") == "target" for t in result["trades"])
-        # Block entries if first swing breached or already hit target (one target per day)
-        can_enter = (open_trade is None and entries_done < MAX_ENTRIES and fs_gate_ok and cur["time"] < EOD_EXIT and cur["time"] >= entry_start and not first_swing_breached and not has_target)
+        # Block entries if already hit target (one target per day). Swing breach
+        # does NOT block — the reference swing just traverses (see above).
+        can_enter = (open_trade is None and entries_done < MAX_ENTRIES and fs_gate_ok and cur["time"] < EOD_EXIT and cur["time"] >= entry_start and not has_target)
 
-        # Track broken pivots even when can_enter is false (so 09:39 break marks 24219.45 as already broken, so 09:40 won't re-enter)
+        # Track broken pivots even when can_enter is false, so the same level
+        # won't re-trigger on the next bar (e.g. 09:39 break -> 09:40 no re-entry).
+        # IMPORTANT: only mark when the fs gate is OPEN — levels broken while the
+        # gate is still closed must stay usable once the gate opens, otherwise
+        # the first valid break after confirmation would be silently poisoned.
         if i>0 and cur_swing is not None:
             # Check most recent pivot break regardless of gate, just to mark as broken
             chk_dir = -1 if cur_swing=="buying" else 1
@@ -399,14 +494,9 @@ def simulate_day_1min(
                 piv = next((p for p in reversed(normal_lows) if p.idx < i), None)
                 if piv and cur["low"] < piv.px:
                     chk_brk = piv.px
-            if chk_brk is not None and chk_brk not in broken_pivot_levels:
-                # Only mark as broken if it was a break, but don't count as trade if gate closed
-                # We still add to broken set so next bar won't re-enter on same level
-                # But only if it's the same level that would have been a trade
-                # Add to broken if gate was closed (so next bar with same level will be skipped)
-                if not can_enter:
-                    broken_pivot_levels.add(chk_brk)
-                    result["events"].append({"type":"skipped_already_broken_gate_closed","bar":i,"time":cur["time"],"level":round(chk_brk,2),"reason":"pivot_broken_while_gate_closed"})
+            if chk_brk is not None and chk_brk not in broken_pivot_levels and not can_enter and fs_gate_ok:
+                broken_pivot_levels.add(chk_brk)
+                result["events"].append({"type":"pivot_marked_broken","bar":i,"time":cur["time"],"level":round(chk_brk,2),"reason":"broken_while_entry_blocked"})
 
         # Entry trigger - pivot_break
         if i>0 and cur_swing is not None and can_enter:
@@ -417,14 +507,14 @@ def simulate_day_1min(
                 # For SHORT (buying swing): break a LOW pivot going DOWN (start of downward momentum).
                 # For LONG (selling swing): break a HIGH pivot going UP (start of upward momentum).
                 # We do NOT break FS2's own end extreme (it's the swing boundary).
-                # Read segment boundaries directly from the fs2_segment event.
+                # Read segment boundaries from the LATEST fs2_segment event
+                # (re-arms append new ones as the reference swing traverses).
                 fs2_seg_start = None
                 fs2_seg_end = None
                 for ev in result["events"]:
                     if ev.get("type") == "fs2_segment":
                         fs2_seg_start = ev.get("start_idx")
                         fs2_seg_end = ev.get("end_idx")  # the candle that FORMED the extreme
-                        break
 
                 def _is_fs2_internal(p, pool_type):
                     """Pivot is strictly inside FS2: idx in (start, end) excluding boundary."""

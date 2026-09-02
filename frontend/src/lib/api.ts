@@ -339,6 +339,8 @@ export interface BacktestParams {
   ft_fail_enabled: boolean; // early exit when close beyond dom_level within 2 bars (S5:98)
   entry_method?: string; // pace_break | pivot_break
   rr_target?: number; // fixed target in R (default 3.0); only used when trailing=off
+  swing_traverse?: boolean; // reference swing follows extensions (1min engine)
+  min_sl_pts?: number; // widen SL to at least this many points (default 13; 0 = off)
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -350,6 +352,8 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   ft_fail_enabled: true,
   entry_method: "pace_break",
   rr_target: 3.0,
+  swing_traverse: true,
+  min_sl_pts: 13.0,
 };
 
 export interface IntradayTrade {
@@ -415,6 +419,8 @@ export const getIntradayBacktest = (
     ft_fail_enabled: String(params.ft_fail_enabled),
     entry_method: params.entry_method ?? "pace_break",
     rr_target: String(params.rr_target ?? 3.0),
+    swing_traverse: String(params.swing_traverse ?? true),
+    min_sl_pts: String(params.min_sl_pts ?? 13.0),
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,

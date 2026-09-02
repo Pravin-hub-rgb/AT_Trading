@@ -1,4 +1,4 @@
-﻿// Flow-Line — Algo walker + FsV2 (white line only, orange manual line removed):
+// Flow-Line – Algo walker + FsV2 (white line only, orange manual line removed):
 
 // First-swing detection now lives in its own engine (see firstswing.ts),
 // driven by the WalkerEngine pivot stream. flowline.ts keeps the public
@@ -6,7 +6,7 @@
 import { FirstSwingEngine, type FsBreakMark } from "./firstswing";
 export { FirstSwingEngine } from "./firstswing";
 
-// ── branch coverage instrumentation (active only with FLOW_COV=1) ────────
+// -- branch coverage instrumentation (active only with FLOW_COV=1) --------
 const FLOW_COV: Record<string, number> = {};
 const cov = (tag: string) => {
   const p = typeof process !== "undefined" ? process : undefined;
@@ -44,16 +44,16 @@ export interface AlgoPivot {
 }
 
 // =====================================================================
-// ⚪ ALGO WALKER — color-aware candle path follower
+// ? ALGO WALKER – color-aware candle path follower
 //
 // Rules (course S6 + user spec):
-//   - GREEN candle path: LOW prints first → HIGH   (bottom-to-top)
-//   - RED candle path: HIGH prints first → LOW     (top-to-bottom)
+//   - GREEN candle path: LOW prints first ? HIGH   (bottom-to-top)
+//   - RED candle path: HIGH prints first ? LOW     (top-to-bottom)
 //   - Each bar processed as TWO half-steps in that order.
 //   - Active leg tracks a running extreme ("stamp"). Same-direction breaks
 //     SHIFT the stamp (extended leg = no new pivot). An opposite-side break
 //     of the PREVIOUS bar's extreme SEALS the stamp as a pivot and flips.
-//   - INSIDE candle: range within prev bar → its far-side extreme becomes a
+//   - INSIDE candle: range within prev bar ? its far-side extreme becomes a
 //     PENDING pivot. Next bar resolves:
 //       breaks near side  -> confirm (push pending), leg continues
 //       breaks far side   -> SKIP insider (discard), seal stamp, flip leg
@@ -75,7 +75,7 @@ function barSteps(c: FlowCandle): Step[] {
       ];
 }
 
-// Steppable walker — EXACT state-machine translation of the original
+// Steppable walker – EXACT state-machine translation of the original
 // batch walkDay(): same seeds, same pending/onion/band logic, same seals.
 // Contract: feed CLOSED bars via processBar(); each call returns the pivots
 // SEALED during that bar. finalize() emits the trailing open swing.
@@ -171,7 +171,7 @@ export class WalkerEngine {
       // peel buffer decides which side this layer contributes. Append this
       // layer's record, shrink stack to this bar.
       if (c.high < stackHi && c.low > stackLo) {
-        // ROLE-BASED (see closeStack) — pendPx = far edge BY DEFINITION.
+        // ROLE-BASED (see closeStack) – pendPx = far edge BY DEFINITION.
         const wantFar = pend.inner.length % 2 === 0;
         cov((wantFar ? "onion:FAR-layer:pk" : "onion:NEAR-layer:pk") + pk);
         pend.inner.push(
@@ -208,7 +208,7 @@ export class WalkerEngine {
         const skipHit = pk === "H" ? c.high > pend.px : c.low < pend.px;
         if (confirmHit && !skipHit) {
           cov("confirm:pk" + pk + (pend.inner.length > 0 ? ":peeled" : ""));
-          // CONFIRM — seal pre-insider swing; a PEELED stack emits its
+          // CONFIRM – seal pre-insider swing; a PEELED stack emits its
           // remaining alternating layers (continuation keeps the leg);
           // a plain single insider prints its far edge (+override).
           this.pushStamp();
@@ -273,7 +273,7 @@ export class WalkerEngine {
           flippedThisBar = true;
           skipSteps = true;
         } else if (skipHit) {
-          // DOUBLE-BREAK (volatile candle) — marker-band decides.
+          // DOUBLE-BREAK (volatile candle) – marker-band decides.
           // Band = [active low marker, active high marker]; the ACTIVE leg's
           // running stamp IS its side's live marker.
           const iLo = Math.min(pend.px, pend.near); // stack low
@@ -299,7 +299,7 @@ export class WalkerEngine {
             this.stampK = k;
             this.stampT = t;
             this.stampPx = pk === "H" ? c.high : c.low;
-            skipSteps = true; // bar consumed — its halves already priced in
+            skipSteps = true; // bar consumed – its halves already priced in
           } else {
             cov("dbl:escape:pk" + pk);
             // Band ESCAPE -> MARK the stack's far-side extreme (mirrored):
@@ -419,7 +419,7 @@ export class WalkerEngine {
     return this.barOut;
   }
 
-  /** Trailing open swing (unsealed) — call once after the day ends. */
+  /** Trailing open swing (unsealed) – call once after the day ends. */
   finalize(): AlgoPivot | null {
     if (this.k < 0) return null;
     return {
@@ -438,10 +438,10 @@ export class WalkerEngine {
   private trackBand(kind: "H" | "L", px: number) {
     if (kind === "H") {
       this.bandHigh = px;
-      this.hiPx = null; // H finalized — highs restart accumulating toward next L
+      this.hiPx = null; // H finalized – highs restart accumulating toward next L
     } else {
       this.bandLow = px;
-      this.loPx = null; // L finalized — lows restart accumulating toward next H
+      this.loPx = null; // L finalized – lows restart accumulating toward next H
     }
   }
 
@@ -457,7 +457,7 @@ export class WalkerEngine {
   }
 
   // Close a resolved stack: append its final alternating layer record (only
-  // when the stack actually peeled — single insiders contribute nothing) and
+  // when the stack actually peeled – single insiders contribute nothing) and
   // flush chronologically. Returns the last flushed record, or null.
   private closeStack(p: WPending): {
     idx: number;
@@ -468,7 +468,7 @@ export class WalkerEngine {
   } | null {
     if (p.inner.length === 0) return null;
     // ROLE-BASED edges: pendPx is ALWAYS the far edge, pendNear the near
-    // edge — regardless of which is numerically higher. (max/min here was a
+    // edge – regardless of which is numerically higher. (max/min here was a
     // latent pk=L bug: it silently swapped roles on up-leg stacks.)
     const wantFar = p.inner.length % 2 === 0;
     const rec: {
@@ -590,27 +590,27 @@ export function computeAlgoPivots(candles: FlowCandle[]): AlgoPivot[] {
 
 // NOTE: the old FirstSwingEngine (fixed mPoints=20 point-distance trigger,
 // plus a two-close rule) has been retired per the first-swing-detection
-// rebuild spec — it predated FsV2Engine and used an unscaled fixed-point
+// rebuild spec – it predated FsV2Engine and used an unscaled fixed-point
 // threshold. FsV2Engine below is now the only first-swing engine.
 // >>> If anything outside this file still imports FirstSwingEngine or
 // computeFirstSwingDeclared, repoint it at computeFsV2Declared /
 // computeFsV2Results before shipping this change. <<<
 
 // =====================================================================
-// 🟡 FS v2 ENGINE — first-swing detection (1-min, walker-driven)
+// ?? FS v2 ENGINE – first-swing detection (1-min, walker-driven)
 //
 // Indefinite monitoring, no fallback tier (removed per user spec).
-//   REAL — CONTINUATION   session extreme extends twice in a row, same
-//                         direction (A/B open extremes, break→C, break→D)
-//                         → direction confirmed.
-//   REAL — REVERSAL       one extreme breaks, then price reverses and
-//                         breaks the OTHER original extreme — a single
-//                         break is enough here → direction confirmed.
+//   REAL – CONTINUATION   session extreme extends twice in a row, same
+//                         direction (A/B open extremes, break?C, break?D)
+//                         ? direction confirmed.
+//   REAL – REVERSAL       one extreme breaks, then price reverses and
+//                         breaks the OTHER original extreme – a single
+//                         break is enough here ? direction confirmed.
 //   (both REAL paths)     once direction is confirmed, wait for
 //                         CHOP-BACK (a prior opposite pivot breaks) or
 //                         7-BAR SUSTAIN (price holds past the broken
 //                         level) to actually declare.
-//   No fallback — if neither fires, engine keeps monitoring until EOD.
+//   No fallback – if neither fires, engine keeps monitoring until EOD.
 //   Nothing declares before `timeCap` (hard gate, not deferred).
 //
 // Live-safe: closed bars only; declared end never repaints.
@@ -632,7 +632,7 @@ export class FsV2Engine {
   private walker = new WalkerEngine();
   private barsSeen = 0;
 
-  // live session extremes (path-stamped — freshest candle wins)
+  // live session extremes (path-stamped – freshest candle wins)
   private eHi: FsLevel = { px: -Infinity, idx: -1, time: "" };
   private eLo: FsLevel = { px: Infinity, idx: -1, time: "" };
   // current EXTREME PIVOTS (walker-sealed; init from bar 0)
@@ -674,22 +674,22 @@ export class FsV2Engine {
 
   private timeCap = "09:29";
 
-  // ── direction detection: same-side vs opposite-side breaks ──
+  // -- direction detection: same-side vs opposite-side breaks --
   private baseDir: "up" | "down" | null = null; // direction of first extreme break
   private sameSideBreaks = 0; // consecutive breaks in baseDir
   private oppositeSideBreaks = 0; // breaks opposite to baseDir
   private dirConfirmed = false; // direction confirmed by breaks
   private dirConfirmedIdx = -1;
 
-  // ── single-E-break trigger ──
+  // -- single-E-break trigger --
   // After direction is set, ONE live cross of the current E-pivot level in
   // the swing direction TRIGGERS the swing (freezes the broken pivot level
   // as the sustain reference). After trigger, only chop or 7-bar sustain
-  // can confirm (REAL tier). If neither ever fires, Fallback covers it —
+  // can confirm (REAL tier). If neither ever fires, Fallback covers it –
   // there is no separate "invalidated" state.
   locked = false;
 
-  // ── X) micro-top/lows: zero-lag local extremes (no walker seal needed) ──
+  // -- X) micro-top/lows: zero-lag local extremes (no walker seal needed) --
   private microHighs: FsLevel[] = [];
   private microLows: FsLevel[] = [];
   private pHigh = NaN;
@@ -705,7 +705,7 @@ export class FsV2Engine {
   private ppLowIdx = -1;
   private ppLowT = "";
 
-  // ── Y) N-candle sustain beyond the broken extreme ──
+  // -- Y) N-candle sustain beyond the broken extreme --
   private lockedLevelPx = NaN; // E-level that was crossed at lock (frozen)
   private sustainStreak = 0;
   private histH: number[] = []; // per-bar highs/lows for touch-seeding
@@ -729,11 +729,11 @@ export class FsV2Engine {
     }
 
     // ---- B) consume walker seals FIRST (records/pools/E-pivots only) ----
-    // Direction is decided ONLY by the live E-break path below (block A) —
+    // Direction is decided ONLY by the live E-break path below (block A) –
     // this block just maintains the sealed-pivot bookkeeping (eHiPivot/
     // eLoPivot reference levels, and the normalHighs/normalLows pools used
     // later by chop-break confirmation). It used to ALSO call initiate()
-    // independently whenever a walker-sealed pivot extended — a second,
+    // independently whenever a walker-sealed pivot extended – a second,
     // laggier trigger for direction that could silently reset progress the
     // live path had already made. Removed: one source of truth for
     // direction now, per the rebuild spec.
@@ -742,7 +742,7 @@ export class FsV2Engine {
       if (p.kind === "H") {
         const cur = this.eHiPivot!;
         if (p.px > cur.px) {
-          // NEW EXTREME-HIGH PIVOT — demote old to normals (only true extremes, not every small high)
+          // NEW EXTREME-HIGH PIVOT – demote old to normals (only true extremes, not every small high)
           this.normalHighs.push(cur);
           this.eHiPivot = { px: p.px, idx: p.idx, time: p.time };
         } else {
@@ -809,7 +809,7 @@ export class FsV2Engine {
     }
 
     // ---- A) live path steps: stamps, final trigger ----
-    // Capture extremes BEFORE halves loop — if they update this bar, a new
+    // Capture extremes BEFORE halves loop – if they update this bar, a new
     // extreme was printed and the sustain streak should NOT count this bar
     // (the "hold" is measured AFTER the extreme is final, not during it).
     const eLoBefore = this.eLo.px;
@@ -862,7 +862,7 @@ export class FsV2Engine {
     for (const [px, isLow] of halves) {
       if (this.declared) break;
 
-      // live extreme stamps — always update, even before timeCap
+      // live extreme stamps – always update, even before timeCap
       if (px > this.eHi.px) {
         this.eHi = { px, idx: gIdx, time: t };
         if (this.dir === "up") this.setCand(this.eHi);
@@ -911,7 +911,7 @@ export class FsV2Engine {
         }
       }
 
-      // ── v3 fast-path: single E-break LOCK + opposite-break INVALIDATION ──
+      // -- v3 fast-path: single E-break LOCK + opposite-break INVALIDATION --
       if (!this.locked) {
         const eLoLvl = this.eLoPivot ? this.eLoPivot.px : this.eLo.px;
         const eHiLvl = this.eHiPivot ? this.eHiPivot.px : this.eHi.px;
@@ -1017,7 +1017,7 @@ export class FsV2Engine {
       if (this.dirConfirmed && this.dir && this.startIdx >= 0) {
         if (this.dir === "down") {
           const normalCands = this.normalHighs.filter(
-            (l) => l.idx > this.startIdx && l.idx < gIdx,
+            (l) => l.idx > this.startIdx && l.idx + 1 < gIdx,
           );
           if (normalCands.length > 0) {
             const target = normalCands.reduce(
@@ -1037,7 +1037,7 @@ export class FsV2Engine {
             }
           }
           const microCands = this.microHighs.filter(
-            (l) => l.idx > this.startIdx && l.idx < gIdx,
+            (l) => l.idx > this.startIdx && l.idx + 1 < gIdx,
           );
           if (microCands.length > 0) {
             const target = microCands.reduce(
@@ -1186,7 +1186,7 @@ export class FsV2Engine {
   }
 
   private confirm(gIdx: number, t: string) {
-    // hard timeCap — nothing declares before timeCap, not deferred
+    // hard timeCap – nothing declares before timeCap, not deferred
     if (t < this.timeCap) return;
     this.declared = true;
     this.tier = "real";
@@ -1201,7 +1201,7 @@ export class FsV2Engine {
    *  price level (e.g., the first swing's extreme).
    *
    *  After reset, the next processBar increments barsSeen to 2, skipping the
-   *  barsSeen==1 initialization — the seed bar is already set. */
+   *  barsSeen==1 initialization – the seed bar is already set. */
   reset(seedPx: number, seedIdx: number, seedTime: string) {
     // Fresh walker (pivot history not shared with previous swing)
     this.walker = new WalkerEngine();
@@ -1211,7 +1211,7 @@ export class FsV2Engine {
     // t/green/g_idx are internal; just set the seed time for timeCap check
     void seedTime; // consumed below
 
-    // Seed extremes — these are the "session start" for second-swing detection
+    // Seed extremes – these are the "session start" for second-swing detection
     this.eHi = { px: seedPx, idx: seedIdx, time: seedTime };
     this.eLo = { px: seedPx, idx: seedIdx, time: seedTime };
     this.eHiPivot = { px: seedPx, idx: seedIdx, time: seedTime };
@@ -1258,9 +1258,9 @@ export class FsV2Engine {
   }
 }
 
-// ── Second Swing Detection ────────────────────────────────────────────────────
+// -- Second Swing Detection ----------------------------------------------------
 
-/** Mirror of the backend's detectSecondSwing() — runs a fresh FsV2 engine
+/** Mirror of the backend's detectSecondSwing() – runs a fresh FsV2 engine
  *  seeded from the first-swing's end-point, feeding bars AFTER that endpoint.
  *
  *  Returns one FsV2Result per day (or null for days with no first swing). */
@@ -1293,17 +1293,17 @@ export function computeSecondSwingResults(
     const fs1 = fs1ByDay.get(day);
     if (!fs1 || fs1.seg === null || fs1.confIdx < 0) return;
 
-    // SECOND SWING: start from 09:28 as new 09:15 — give ALL OHLC from 09:28
+    // SECOND SWING: start from 09:28 as new 09:15 – give ALL OHLC from 09:28
     // to the first-swing engine exactly as you said: "from 9:28 give all the
     // ohlc value to first swing engine". This is a fresh engine fed from 09:28
     // inclusive, so 09:28 nothing, 09:29 nothing (arm), 09:30 B1 breaking 09:29
-    // low, 09:36 B2 breaking 09:31 low — your 09:30/09:36.
+    // low, 09:36 B2 breaking 09:31 low – your 09:30/09:36.
     const seedIdx = fs1.seg!.endIdx + 1;
     const afterFs1 = items.filter((it) => it.gIdx >= seedIdx);
     if (afterFs1.length === 0) return;
 
     const eng = new FirstSwingEngine(opts);
-    // No reset — just feed from 09:28 as bar 1, exactly like 09:15 for 1st swing.
+    // No reset – just feed from 09:28 as bar 1, exactly like 09:15 for 1st swing.
     // This gives B1@09:30, B2@09:36 per your observation.
 
     for (const it of afterFs1) eng.processBar(it.c, it.gIdx);
@@ -1333,7 +1333,7 @@ export function computeSecondSwingResults(
 
 // Batch helper: replay each day through FsV2 (identical to live path).
 // Outcome is now only "real" (declared) or "none" (still monitoring / EOD no-call).
-// Fallback tier removed — engine keeps monitoring until chop/sustain fires.
+// Fallback tier removed – engine keeps monitoring until chop/sustain fires.
 export interface FsV2Result {
   day: string;
   outcome: "real" | "none";
@@ -1341,8 +1341,8 @@ export interface FsV2Result {
   seg: FlowSegment | null;
   source: "chop" | "sustain" | null;
   dir: "up" | "down" | null;
-  // Direction-building break markers (B1 = first A/B break → lock,
-  // B2 = fresh-extreme extension → confirm, FLIP = opposite extreme → confirm).
+  // Direction-building break markers (B1 = first A/B break ? lock,
+  // B2 = fresh-extreme extension ? confirm, FLIP = opposite extreme ? confirm).
   breaks?: FsBreakMark[];
 }
 
@@ -1363,10 +1363,10 @@ export function computeFsV2Results(
     for (const it of items) eng.processBar(it.c, it.gIdx);
 
     if (!eng.declared || eng.startIdx < 0) {
-      // still monitoring or no swing by EOD — explicit none
+      // still monitoring or no swing by EOD – explicit none
       // For backward compat, emit none only if day fully processed; callers filtering seg!=null will ignore.
       if (eng.declared) return;
-      // emit none for completeness if you need it, else return empty — keeping legacy: no segment.
+      // emit none for completeness if you need it, else return empty – keeping legacy: no segment.
       // To preserve explicit none, uncomment below:
       // out.push({ day, outcome: "none", confIdx: -1, seg: null, source: null, dir: null });
       return;
@@ -1401,9 +1401,9 @@ export function computeFsV2Declared(
     .map((r) => r.seg);
 }
 
-// ===== ⚪ ALGO FLOW LINE =====
+// ===== ? ALGO FLOW LINE =====
 export function computeAlgoFlowLine(candles: FlowCandle[]): FlowSegment[] {
-  // Each day is walked and chained SEPARATELY — no line ever connects
+  // Each day is walked and chained SEPARATELY – no line ever connects
   // one day's last pivot to the next day's first pivot.
   const byDay = new Map<string, { c: FlowCandle; gIdx: number }[]>();
   candles.forEach((c, gIdx) => {

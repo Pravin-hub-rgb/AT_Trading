@@ -67,7 +67,7 @@ SL_PIVOT_BUFFER = 1.0        # points beyond the opposing pivot for SL (prev_piv
 # --- experiment switches (best-combo search, BTC-backtester style) ------------
 # Defaults preserve the current engine behaviour exactly.
 DEFAULT_CFG = {
-    "sl_mode": "avg",        # avg | avg075 | avg05 | fixed8 | prev_pivot
+    "sl_mode": "avg",        # avg | avg075 | avg05 | fixed8 | prev_pivot | swing_end
     "execution": "5min",     # 5min (conservative, SL-first) | 1min (color-aware precise)
     "trailing": "off",       # off (course: fixed 3R target) | ladder (R-chunk trail; disables 3R target)
     "trail_distance_r": 1.0, # ladder step size in R
@@ -78,6 +78,8 @@ DEFAULT_CFG = {
     "ft_fail_enabled": True,  # early exit when close goes beyond dom_level within 2 bars (S5:98)
     "entry_method": "pivot_break",   # pace_break | pivot_break
     "rr_target": 3.0,        # fixed target in R (1:3 course default); only used when trailing=off
+    "swing_traverse": True,  # reference swing follows extensions (1min engine); False = frozen at first desired swing
+    "min_sl_pts": 13.0,      # widen SL to at least this many points (0 = off)
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -660,7 +662,6 @@ def simulate_day(
     # For pivot_break method threshold is 1 (direct). For pace_break keep 2 as legacy filter.
     pivot_break_count = 0
     monitored_swing_pivots: list = []  # pivots in the monitored swing (for tracking)
-    first_swing_breached = False
     broken_pivot_levels: set[float] = set()
     i = 0
 
@@ -839,7 +840,25 @@ def simulate_day(
                 else:
                     sl_used_mode = "avg"
 
-        if sl_used_mode != "prev_pivot":
+        if sl_mode == "swing_end":
+            # SL at the reference swing's end extreme (entry theory.md — swing end line):
+            # LONG → selling swing's low; SHORT → buying swing's high.
+            # Falls back to avg when no reference exists or the side is wrong.
+            ref_ok = (
+                ref_swing_end_px is not None
+                and ref_swing_end_px == ref_swing_end_px  # not NaN
+                and (
+                    (dirn == 1 and ref_swing_dir == "selling" and ref_swing_end_px < entry)
+                    or (dirn == -1 and ref_swing_dir == "buying" and ref_swing_end_px > entry)
+                )
+            )
+            if ref_ok:
+                sl = float(ref_swing_end_px)
+                sl_used_mode = "swing_end"
+            else:
+                sl_used_mode = "avg"
+
+        if sl_used_mode != "prev_pivot" and sl_used_mode != "swing_end":
             if sl_mode in SL_MODE_FIXED:
                 ref_dist = float(SL_MODE_FIXED[sl_mode])
             else:
@@ -852,12 +871,21 @@ def simulate_day(
         rr = float(cfg.get("rr_target", RR_TARGET))
         if dirn == 1:
             risk = entry - sl
-            target = entry + rr * risk
             direction = "long"
         else:
             risk = sl - entry
-            target = entry - rr * risk
             direction = "short"
+        # Minimum-SL experiment switch: widen too-tight stops to min_sl_pts.
+        # The target is recomputed from the widened risk (fixed RR preserved).
+        min_sl_pts = float(cfg.get("min_sl_pts", 0.0))
+        widened = min_sl_pts > 0 and 0 < risk < min_sl_pts
+        if widened:
+            sl = entry - min_sl_pts if dirn == 1 else entry + min_sl_pts
+            risk = min_sl_pts
+        if dirn == 1:
+            target = entry + rr * risk
+        else:
+            target = entry - rr * risk
         if risk <= 0:
             return False
         open_trade = {
@@ -884,6 +912,7 @@ def simulate_day(
             "_init_sl": sl,
             "_max_profit": 0.0,
             "_last_m1_ts": entry_ts,
+            "min_sl_applied": widened,
         }
         entries_done += 1
         result["events"].append(
@@ -1007,11 +1036,10 @@ def simulate_day(
                                     break
                             return res
                         fs2_confirmed_idx = m1_to_5(eng2.confirmed_at_idx)
+                        fs2_confirmed_m1_idx = eng2.confirmed_at_idx
                         fs2_events: list[dict] = [
-                            {"type": "swing2_classified", "dir": fs2_dir, "bar": m1_to_5(eng2.start_idx), "time": eng2.start_time, "first_swing": use_fs1_for_2nd_dir},
                             {"type": "fs2_segment", "dir": eng2.dir, "start_idx": m1_to_5(eng2.start_idx), "start_px": eng2.start_px, "end_idx": m1_to_5(eng2.end_idx), "end_px": eng2.end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": eng2.confirmed_at_time},
                         ]
-                        fs2_end_px = eng2.end_px
                         # also include break marks for chart if needed
                         fs2_events.append({"type": "fs_breaks_2", "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px} for b in eng2.break_marks]})
                     else:
@@ -1083,8 +1111,32 @@ def simulate_day(
     else:
         # AGGRESSIVE (or 5min): use FS gate (FS1)
         entry_swing_confirmed_idx = fs1_gate_idx
-
+    # 1-min gate: the 1-min bar index at which the entry-relevant swing was confirmed.
+    # Used to ensure entry is strictly AFTER the FS-mark bar (not on it).
+    fs2_confirmed_m1_idx_default = -1
+    if trade_mode == "conservative" and use_1m:
+        entry_swing_confirmed_m1_idx = fs2_confirmed_m1_idx_default
+    elif fs1_1min_confirmed_idx >= 0:
+        entry_swing_confirmed_m1_idx = fs1_1min_confirmed_idx
+    else:
+        entry_swing_confirmed_m1_idx = -1
+    result["entry_swing_confirmed_m1_idx"] = entry_swing_confirmed_m1_idx
     # FIX: For conservative, ref_swing_end_px should use fs2_end_px (not fs1_end_px)
+    # Per entry theory.md: "entry must be ABOVE/BELOW the swing END point"
+    # For conservative, the relevant swing is FS2, not FS1.
+    # This ensures the swing-end-line filter checks against FS2's end, not FS1's end.
+    if trade_mode == "conservative" and fs2_end_px == fs2_end_px:  # NaN != NaN so this is False for NaN
+        ref_swing_end_px = fs2_end_px
+        ref_swing_end_dir = fs2_dir
+        # Also update cur_swing to fs2_dir for conservative entry tracking
+        cur_swing = fs2_dir
+        # Update swing_extreme and swing_base for the fs2 direction
+        if fs2_dir == "buying":
+            swing_extreme = fs2_end_px  # FS2 end high
+            swing_base = min(c["low"] for c in candles[:fs2_confirmed_idx+1]) if fs2_confirmed_idx >= 0 else candles[0]["low"]
+        else:
+            swing_extreme = fs2_end_px  # FS2 end low
+            swing_base = max(c["high"] for c in candles[:fs2_confirmed_idx+1]) if fs2_confirmed_idx >= 0 else candles[0]["high"]
     # Per entry theory.md: "entry must be ABOVE/BELOW the swing END point"
     # For conservative, the relevant swing is FS2, not FS1.
     # This ensures the swing-end-line filter checks against FS2's end, not FS1's end.
@@ -1194,8 +1246,8 @@ def simulate_day(
         # bar iteration where the gate needs to be re-verified.
         if open_trade is None and pending_direct is not None and use_1m:
             has_target_pending = any(t.get("outcome") == "target" for t in result["trades"])
-            if first_swing_breached or has_target_pending:
-                result["events"].append({"type": "setup_disarmed", "bar": i, "time": cur["time"], "reason": "first_swing_breached" if first_swing_breached else "has_target"})
+            if has_target_pending:
+                result["events"].append({"type": "setup_disarmed", "bar": i, "time": cur["time"], "reason": "has_target"})
                 pending_direct = None
             else:
                 # Recompute the gate check here — same formula as can_enter below.
@@ -1224,7 +1276,7 @@ def simulate_day(
                     })
                     pending_direct = None
                 else:
-                    m1_bar = resolve_pending_direct(pending_direct, m1_day, cur["ts"])
+                    m1_bar = resolve_pending_direct(pending_direct, m1_day, cur["ts"], entry_swing_confirmed_m1_idx)
                     if m1_bar is not None and m1_bar["ts"] <= cur["ts"]:
                         # Store the found 1-min bar idx so subsequent calls skip it
                         pending_direct["found_m1_idx"] = m1_bar.get("index", 0)
@@ -1250,17 +1302,9 @@ def simulate_day(
         # Every trade must happen AFTER the entry-relevant swing is confirmed.
         # For 1min with swing_mode=opposite_swing_needed → wait for second swing.
         # Otherwise → wait for first swing (FsV2 gate).
-        # ---- first swing breach check (new rule) ----
-        # If price ever breaches first swing extreme, no further entries
-        if ref_swing_end_px is not None and i > fs1_end_idx:
-            if swing_dir == "selling" and cur["low"] < ref_swing_end_px:
-                if not first_swing_breached:
-                    first_swing_breached = True
-                    result["events"].append({"type": "first_swing_breached", "bar": i, "time": cur["time"], "level": round(ref_swing_end_px, 2), "price": cur["low"], "reason": "low_below_first_swing_low"})
-            elif swing_dir == "buying" and cur["high"] > ref_swing_end_px:
-                if not first_swing_breached:
-                    first_swing_breached = True
-                    result["events"].append({"type": "first_swing_breached", "bar": i, "time": cur["time"], "level": round(ref_swing_end_px, 2), "price": cur["high"], "reason": "high_above_first_swing_high"})
+        # NOTE: the old first-swing-breach kill switch was removed — a breach of
+        # the swing extreme extends the swing rather than voiding the day; entry
+        # safety is handled by the swing-end-line guard in _open_trade.
 
         fs_gate_ok = entry_swing_confirmed_idx < 0 or i > entry_swing_confirmed_idx
         # In 1-min mode, entry window starts from the first swing confirmation
@@ -1281,7 +1325,6 @@ def simulate_day(
             and entry_start <= cur["time"]
             and cur["time"] < EOD_EXIT
             and fs_gate_ok
-            and not first_swing_breached
             and not has_target
         )
 
@@ -1522,27 +1565,56 @@ def simulate_day(
                                 brk_m1_local = locals().get("brk_m1")
                                 brk_m1_k_local = locals().get("brk_m1_k", -1)
                                 if brk_m1_local is not None:
-                                    # Attempt direct open at brk_m1 (no pending delay)
-                                    # Use brk_m1's level as entry (direct)
-                                    if _open_trade(
-                                        i, trade_dir, brk["level"], cur, brk["type"],
-                                        m1_bar=brk_m1_local,
-                                        m1_pivots=(normal_highs_1m, normal_lows_1m),
-                                    ):
+                                    brk_m1_idx = int(brk_m1_local.get("index", -1))
+                                    # 1-min gate: must be STRICTLY AFTER the entry-swing's confirmation index
+                                    gate_ok = (
+                                        entry_swing_confirmed_m1_idx < 0
+                                        or brk_m1_idx > entry_swing_confirmed_m1_idx
+                                    )
+                                    if not gate_ok:
+                                        # brk_m1 is the FS-mark bar (or earlier). Skip it.
+                                        # Defer: pin armed_ts to the 1-min bar STRICTLY AFTER fs-confirm
+                                        pivot_arm_ts = (
+                                            m1_candles[entry_swing_confirmed_m1_idx + 1]["ts"]
+                                            if entry_swing_confirmed_m1_idx + 1 < len(m1_candles)
+                                            else int(cur["ts"])
+                                        )
+                                        pending_direct = {
+                                            "bar_idx": i,
+                                            "trade_dir": trade_dir,
+                                            "level": brk["level"],
+                                            "break_type": brk["type"],
+                                            "armed_ts": pivot_arm_ts,
+                                            "fs_mark_bar_skipped": True,
+                                        }
                                         result["events"].append({
                                             "type": "pending_direct_1m",
                                             "bar": i, "time": cur["time"],
                                             "ts": int(cur["ts"]),
                                             "level": round(brk["level"], 2),
                                             "break_type": brk["type"],
-                                            "direct": True,
+                                            "direct": False,
+                                            "fs_mark_bar_skipped": True,
                                         })
-                                        entered = True
-                                    else:
-                                        # _open_trade failed due to swing-end-line; do not create pending
-                                        # Check if last event was skipped_end_line, then consume
                                         entered = False
-                                        # No pending for this break
+                                    else:
+                                        # brk_m1 is strictly after FS confirms → safe to enter directly
+                                        if _open_trade(
+                                            i, trade_dir, brk["level"], cur, brk["type"],
+                                            m1_bar=brk_m1_local,
+                                            m1_pivots=(normal_highs_1m, normal_lows_1m),
+                                        ):
+                                            result["events"].append({
+                                                "type": "pending_direct_1m",
+                                                "bar": i, "time": cur["time"],
+                                                "ts": int(cur["ts"]),
+                                                "level": round(brk["level"], 2),
+                                                "break_type": brk["type"],
+                                                "direct": True,
+                                            })
+                                            entered = True
+                                        else:
+                                            entered = False
                                 else:
                                     # Fallback to old pending logic if no brk_m1 captured (should not happen)
                                     default_armed_ts = int(cur["ts"])

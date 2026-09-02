@@ -24,8 +24,8 @@ For SELLING → wait for buying swing (first swing) → then SELL
 | **skip** ✕          | No trade                        |
 
 **Aggressive:** First pivot break pe entry
-**Conservative:** Second swing ke pivot break pe entry
-**Skip:** Agar second bhi desired direction nahi deta → no trade that day
+**Conservative:** Desired direction swing ka pivot break pe entry
+**Skip:** Nahi mila → no trade that day
 
 ---
 
@@ -73,7 +73,9 @@ For SELLING:
 3. Conservative = SECOND SWING pivot break
 
 4. Agar second bhi desired direction nahi deta
-   → NO TRADE on that day
+   → WAIT KARO — third, fourth ... 15th swing tak
+   → desired direction ka swing aaye ga to trade (data khatam hone tak)
+   → swing END price cross ho jaye to reference Naye swing pe shift ho jata hai
 ```
 
 ---
@@ -90,17 +92,20 @@ For SELLING:
 
 ---
 
-## First Swing Breach Rule
+## Swing End Line Traversal (replaces old "First Swing Breach Rule")
 
 ```
-For BUYING:
-  → After first swing, if ANY 1min low < selling swing's LOW → no more longs that day
-  → Entry price above swing end is not enough — the level must NEVER have been breached
+OLD rule (REMOVED): swing end breach → no more trades that day. Not correct.
 
-For SELLING:
-  → After first swing, if ANY 1min high > buying swing's HIGH → no more shorts that day
+NEW behaviour:
+  → Swing end cross hone ka matlab: swing abhi extend ho raha hai
+  → Reference swing naye (same-direction) swing pe shift ho jata hai
+    (selling swing ka low aur neeche gaya → naya selling swing end = reference)
+  → Kabhi bhi day void nahi hota — engine desired swing ka intezaar karta hai
 
-Example: 31 Aug, first swing low 24013.15 broke at 10:11 low 24013.1 → second long at 10:26 invalid
+Safety sirf ENTRY ke waqt check hoti hai (Swing End Line, upar wala rule):
+  For BUYING:  entry price must be ABOVE selling swing's LOW (current reference)
+  For SELLING: entry price must be BELOW buying swing's HIGH (current reference)
 ```
 
 ---

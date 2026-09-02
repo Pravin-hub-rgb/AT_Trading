@@ -270,9 +270,9 @@ export class FirstSwingEngine {
 
     // 4) Keep the candidate end glued to the ACTUAL bar extreme in the swing dir
     //    (use c, not the running eLo/eHi which update only at end-of-bar).
-    if (this.dir === "down" && c.low <= this.eLo.px)
+    if (this.dir === "down" && c.low < this.eLo.px)
       this.setCand({ px: c.low, idx: gIdx, time: this.t });
-    if (this.dir === "up" && c.high >= this.eHi.px)
+    if (this.dir === "up" && c.high > this.eHi.px)
       this.setCand({ px: c.high, idx: gIdx, time: this.t });
 
     // 5) Sustain check (bar-level) once direction is confirmed.
@@ -445,7 +445,8 @@ export class FirstSwingEngine {
     // (24 Aug: 10:03 — own seal has age 0) and avoids noise-firing on
     // 1-bar-old micro-pivots (12 Aug: 10:03 breaking 10:02@24375.75 by 0.25pt).
     if (this.dir === "down") {
-      const tgt = this.latestChoppableHigh() ?? this.latestPivot(this.normalHighs);
+      const tgt =
+        this.latestChoppableHigh() ?? this.latestPivot(this.normalHighs);
       if (tgt && this.hi > tgt.px) {
         this.lastConfirmHit = {
           pool: "normal",
@@ -456,7 +457,8 @@ export class FirstSwingEngine {
         this.confirm("chop");
       }
     } else if (this.dir === "up") {
-      const tgt = this.latestChoppableLow() ?? this.latestPivot(this.normalLows);
+      const tgt =
+        this.latestChoppableLow() ?? this.latestPivot(this.normalLows);
       if (tgt && this.lo < tgt.px) {
         this.lastConfirmHit = {
           pool: "normal",

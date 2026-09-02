@@ -200,9 +200,9 @@ class FirstSwingEngine:
             self._step(down_break, up_break)
 
         # 4) Keep candidate end glued to actual bar extreme
-        if self.dir == "down" and c.low <= self.e_lo.px:
+        if self.dir == "down" and c.low < self.e_lo.px:
             self._set_cand(Lvl(px=c.low, idx=g_idx, time=self.t))
-        if self.dir == "up" and c.high >= self.e_hi.px:
+        if self.dir == "up" and c.high > self.e_hi.px:
             self._set_cand(Lvl(px=c.high, idx=g_idx, time=self.t))
 
         # 5) Sustain check
