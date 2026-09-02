@@ -749,5 +749,138 @@ def compute_first_swing(candles: list[FlowCandleInput]) -> list[FsV2ResultOut]:
     ]
 
 
+# ── Single source of truth: Python engine for first + second swing (replaces TS in-browser) ──
+class FirstSecondRequest(BaseModel):
+    candles: list[FlowCandleInput]
+    opts: dict | None = None  # {timeCap, sustainBars, minBars}
+    include_second: bool = True
+
+
+class FirstSecondResponse(BaseModel):
+    first: list[FsV2ResultOut]
+    second: list[FsV2ResultOut]
+
+
+def _filter_breaks_per_swing(breaks: list) -> list:
+    """Keep first B1 + last decisive (last non-B1). Collapses FLIP@10:16+FLIP@10:17 → FLIP@10:17."""
+    if len(breaks) <= 1:
+        return breaks
+    first = next((b for b in breaks if getattr(b, "kind", None) == "B1"), breaks[0])
+    non_b1 = [b for b in breaks if getattr(b, "kind", None) != "B1"]
+    if not non_b1:
+        return [first]
+    last = non_b1[-1]
+    return [first, last]
+
+
+@app.post("/api/swings/first_second")
+def compute_first_second(req: FirstSecondRequest) -> FirstSecondResponse:
+    """Single source of truth — Python SwingEngine for both first and second swings.
+
+    Replaces frontend in-browser computeFsV2Results + computeSecondSwingResults.
+    Returns filtered break marks (first B1 + last FLIP/B2 per swing).
+    """
+    from src.walker import FlowCandle
+    from src.firstswing import SwingEngine
+
+    opts = req.opts or {"timeCap": "09:29"}
+    # Normalize opts keys (frontend uses timeCap, sustainBars; backend uses timeCap/sustain_bars)
+    if "sustainBars" in opts and "sustain_bars" not in opts:
+        opts["sustain_bars"] = opts["sustainBars"]
+    if "minBars" in opts and "min_bars" not in opts:
+        opts["min_bars"] = opts["minBars"]
+
+    flow_candles = [
+        FlowCandle(
+            date=c.date,
+            open=float(c.open),
+            high=float(c.high),
+            low=float(c.low),
+            close=float(c.close),
+        )
+        for c in req.candles
+    ]
+
+    # First swing — grouped by day, one result per day
+    first_raw = fs_engine.compute_fs_v2_results(flow_candles, opts)
+
+    # Apply per-swing filter (first B1 + last decisive) for chart cleanliness
+    first_filtered: list[FsV2ResultOut] = []
+    for r in first_raw:
+        filtered_breaks = _filter_breaks_per_swing(r.breaks)
+        first_filtered.append(
+            FsV2ResultOut(
+                day=r.day,
+                outcome=r.outcome,
+                conf_idx=r.conf_idx,
+                seg=FlowSegmentOut(
+                    dir=r.seg.dir,
+                    start_idx=r.seg.start_idx,
+                    start_px=r.seg.start_px,
+                    end_idx=r.seg.end_idx,
+                    end_px=r.seg.end_px,
+                ),
+                source=r.source,
+                dir=r.dir,
+                breaks=[
+                    FsBreakMarkOut(idx=b.idx, time=b.time, kind=b.kind, dir=b.dir, px=b.px)
+                    for b in filtered_breaks
+                ],
+            )
+        )
+
+    if not req.include_second:
+        return FirstSecondResponse(first=first_filtered, second=[])
+
+    # Second swing — seed from first swing endIdx+1, fresh engine per day
+    # Mirror frontend/src/lib/flowline.ts:1271 computeSecondSwingResults
+    from collections import defaultdict
+
+    # Build fs1 lookup and group candles by day
+    fs1_by_day: dict[str, FsV2ResultOut] = {r.day: r for r in first_raw if r.seg is not None}
+    by_day: dict[str, list[tuple[int, FlowCandle]]] = defaultdict(list)
+    for g_idx, c in enumerate(flow_candles):
+        by_day[c.date[:10]].append((g_idx, c))
+
+    second_out: list[FsV2ResultOut] = []
+    for day, items in by_day.items():
+        fs1 = fs1_by_day.get(day)
+        if fs1 is None or fs1.seg is None or fs1.conf_idx < 0:
+            continue
+        seed_idx = fs1.seg.end_idx + 1
+        after = [(gi, cc) for gi, cc in items if gi >= seed_idx]
+        if not after:
+            continue
+        eng = SwingEngine(opts)
+        for gi, cc in after:
+            eng.process_bar(cc, gi)
+        if not eng.declared or eng.start_idx < 0:
+            continue
+        raw_breaks = list(eng.break_marks)
+        filtered = _filter_breaks_per_swing(raw_breaks)
+        second_out.append(
+            FsV2ResultOut(
+                day=day,
+                outcome="real",
+                conf_idx=eng.confirmed_at_idx,
+                seg=FlowSegmentOut(
+                    dir="B" if eng.dir == "up" else "S",
+                    start_idx=eng.start_idx,
+                    start_px=eng.start_px,
+                    end_idx=eng.end_idx,
+                    end_px=eng.end_px,
+                ),
+                source=eng.confirm_source,
+                dir=eng.dir,
+                breaks=[
+                    FsBreakMarkOut(idx=b.idx, time=b.time, kind=b.kind, dir=b.dir, px=b.px)
+                    for b in filtered
+                ],
+            )
+        )
+
+    return FirstSecondResponse(first=first_filtered, second=second_out)
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8003)

@@ -25,7 +25,9 @@ import {
   getBias,
   getIntradayBacktest,
   getWholeDaySwings,
+  postFirstSecond,
   type WholeDaySwing,
+  type FirstSecondResponse,
 } from "@/lib/api";
 
 const STORAGE_KEY = "chart_interval";
@@ -168,6 +170,11 @@ export default function ChartPage() {
   const [wholeDaySwingsB, setWholeDaySwingsB] = useState<WholeDaySwingPoint[]>(
     [],
   );
+
+  // Single source of truth — Python engine via backend. Fetched first+second swing results.
+  // Falls back to in-browser TS engine if backend unavailable.
+  const [fsBackendA, setFsBackendA] = useState<import("@/lib/api").FirstSecondResponse | null>(null);
+  const [fsBackendB, setFsBackendB] = useState<import("@/lib/api").FirstSecondResponse | null>(null);
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -355,6 +362,72 @@ export default function ChartPage() {
     };
   }, [intervalB, swingN, allSwings]);
 
+  // Single source of truth — Python engine via backend for first/second swings.
+  // Falls back to in-browser TS engine if backend unavailable.
+  useEffect(() => {
+    if (!fsOn || (interval !== "1min" && interval !== "5min")) {
+      setFsBackendA(null);
+      return;
+    }
+    const sourceCandles: Candle[] = interval === "1min" ? data : data1min;
+    if (sourceCandles.length < 2) {
+      setFsBackendA(null);
+      return;
+    }
+    let cancelled = false;
+    const payload = sourceCandles.map((c) => ({
+      date: c.date,
+      open: c.open,
+      high: c.high,
+      low: c.low,
+      close: c.close,
+    }));
+    postFirstSecond(payload, { timeCap: "09:29" }, true)
+      .then((res) => {
+        if (cancelled) return;
+        setFsBackendA(res);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setFsBackendA(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fsOn, interval, data, data1min]);
+
+  useEffect(() => {
+    if (!fsOn || (intervalB !== "1min" && intervalB !== "5min")) {
+      setFsBackendB(null);
+      return;
+    }
+    const sourceCandlesB: Candle[] = intervalB === "1min" ? dataB : data1min;
+    if (sourceCandlesB.length < 2) {
+      setFsBackendB(null);
+      return;
+    }
+    let cancelled = false;
+    const payloadB = sourceCandlesB.map((c) => ({
+      date: c.date,
+      open: c.open,
+      high: c.high,
+      low: c.low,
+      close: c.close,
+    }));
+    postFirstSecond(payloadB, { timeCap: "09:29" }, true)
+      .then((res) => {
+        if (cancelled) return;
+        setFsBackendB(res);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setFsBackendB(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fsOn, intervalB, dataB, data1min]);
+
   useEffect(() => {
     let cancelled = false;
     getSwings("daily", PIVOT, LEVELS, LOOKAHEAD)
@@ -454,6 +527,7 @@ export default function ChartPage() {
 
   // Per-pane overlay bundle: computes every optional overlay for one pane's
   // interval/data so dual mode costs exactly two computations.
+  // Now uses Python backend as single source of truth via /api/swings/first_second.
   const buildPaneOverlays = useCallback(
     (iv: ChartInterval, d: Candle[]) => {
       const isIntraday = iv !== "daily";
@@ -541,34 +615,64 @@ export default function ChartPage() {
                     : undefined,
                 };
               }
-              const res = computeFsV2Results(sourceCandles, {
-                timeCap: "09:29",
-              });
-              const valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
               // Per-swing filter: engine may emit multiple B1s (pre-confirm re-locks)
               // or multiple FLIPs (whipsaw like FLIP@10:16 + FLIP@10:17) — keep
               // only the first B1 + the last decisive break (last non-B1) per swing.
               // FlatMap-then-filter globally would drop B1s for later days — must filter per result.
-              const filterBreaksPerSwing = <
-                T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
-              >(
-                breaks: T[],
-              ): T[] => {
+              const filterBreaksPerSwing = (breaks: any[]): any[] => {
                 if (breaks.length <= 1) return breaks;
-                const first = breaks.find((b) => b.kind === "B1") ?? breaks[0];
-                const nonB1 = breaks.filter((b) => b.kind !== "B1");
+                const first = breaks.find((b: any) => b.kind === "B1") ?? breaks[0];
+                const nonB1 = breaks.filter((b: any) => b.kind !== "B1");
                 if (nonB1.length === 0) return [first];
                 const last = nonB1[nonB1.length - 1];
                 return [first, last];
               };
-              if (iv === "1min") {
-                // Second swing: run fresh FsV2 seeded from first-swing end extreme
+              // Single source of truth: Python backend if available, else fallback to TS engine
+              const backendRes =
+                d === data ? fsBackendA : d === dataB ? fsBackendB : null;
+              const hasBackend = !!(
+                backendRes && Array.isArray((backendRes as any).first)
+              );
+              let valid: any[] = [];
+              let ss2Valid: any[] = [];
+              if (hasBackend) {
+                const mapR = (r: any) => ({
+                  ...r,
+                  confIdx: r.conf_idx ?? r.confIdx,
+                  seg: r.seg
+                    ? {
+                        ...r.seg,
+                        startIdx: r.seg.start_idx ?? r.seg.startIdx,
+                        startPx: r.seg.start_px ?? r.seg.startPx,
+                        endIdx: r.seg.end_idx ?? r.seg.endIdx,
+                        endPx: r.seg.end_px ?? r.seg.endPx,
+                      }
+                    : null,
+                  breaks: r.breaks ?? [],
+                  source: r.source,
+                  dir: r.dir,
+                  day: r.day,
+                  outcome: r.outcome,
+                });
+                valid = (backendRes as any).first
+                  .map(mapR)
+                  .filter((r: any) => r.seg !== null && r.confIdx >= 0);
+                ss2Valid = (backendRes as any).second
+                  .map(mapR)
+                  .filter((r: any) => r.seg !== null && r.confIdx >= 0);
+              } else {
+                const res = computeFsV2Results(sourceCandles, {
+                  timeCap: "09:29",
+                });
+                valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
                 const ss2 = computeSecondSwingResults(sourceCandles, res, {
                   timeCap: "09:29",
                 });
-                const ss2Valid = ss2.filter(
+                ss2Valid = ss2.filter(
                   (r) => r.seg !== null && r.confIdx >= 0,
                 );
+              }
+              if (iv === "1min") {
                 return {
                   algoFirstSwing: valid.map((r) => r.seg!),
                   algoSecondSwing: ss2Valid.map((r) => r.seg!),
@@ -699,13 +803,7 @@ export default function ChartPage() {
                     px: number;
                   } => b !== null,
                 );
-              // Second swing projected onto 5min indices
-              const ss2 = computeSecondSwingResults(sourceCandles, res, {
-                timeCap: "09:29",
-              });
-              const ss2Valid = ss2.filter(
-                (r) => r.seg !== null && r.confIdx >= 0,
-              );
+              // Second swing projected onto 5min indices (reuse ss2Valid already computed above)
               const algoSecondSwing5 = ss2Valid
                 .map((r) => {
                   const sIdx = find5minIdx(
@@ -844,8 +942,12 @@ export default function ChartPage() {
       envOn,
       fsOn,
       fsRevPct,
+      data,
+      dataB,
       data1min,
       btData,
+      fsBackendA,
+      fsBackendB,
     ],
   );
 

@@ -253,6 +253,45 @@ export const getWholeDaySwings = (
     `/api/swings/whole_day?interval=${interval}&sustain_bars=${sustainBars}&swing_count=${swingCount}`,
   );
 
+export interface FsBreakMark {
+  idx: number;
+  time: string;
+  kind: "B1" | "B2" | "FLIP";
+  dir: "up" | "down";
+  px: number;
+}
+
+export interface FsV2Result {
+  day: string;
+  outcome: string;
+  conf_idx: number;
+  seg: {
+    dir: "B" | "S";
+    start_idx: number;
+    start_px: number;
+    end_idx: number;
+    end_px: number;
+  } | null;
+  source: "chop" | "sustain" | null;
+  dir: "up" | "down" | null;
+  breaks: FsBreakMark[];
+}
+
+export interface FirstSecondResponse {
+  first: FsV2Result[];
+  second: FsV2Result[];
+}
+
+export const postFirstSecond = (
+  candles: { date: string; open: number; high: number; low: number; close: number }[],
+  opts?: { timeCap?: string; sustainBars?: number; minBars?: number },
+  includeSecond = true,
+) =>
+  request<FirstSecondResponse>("/api/swings/first_second", {
+    method: "POST",
+    body: JSON.stringify({ candles, opts, include_second: includeSecond }),
+  });
+
 // --- initial bias (pre-open labels) ---
 export type Bias = "bullish" | "bearish" | "unbiased";
 
