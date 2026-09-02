@@ -6,13 +6,7 @@ import { buildTimes, nearestSec } from "@/lib/chartSync";
 import IntradayPanel from "@/components/IntradayPanel";
 import type { SwingPoint } from "@/components/SwingSRPrimitive";
 import type { WholeDaySwingPoint } from "@/components/WholeDaySwingPrimitive";
-import {
-  computeAlgoFlowLine,
-  computeFsV2Results,
-  computeSecondSwingResults,
-  type FlowSegment,
-} from "@/lib/flowline";
-import { computeEnvelopeViolations } from "@/lib/envelope";
+import type { FlowSegment } from "@/lib/flowline";
 import {
   Candle,
   Swing,
@@ -26,6 +20,8 @@ import {
   getIntradayBacktest,
   getWholeDaySwings,
   postFirstSecond,
+  postFlowLine,
+  postEnvelope,
   type WholeDaySwing,
   type FirstSecondResponse,
 } from "@/lib/api";
@@ -175,6 +171,12 @@ export default function ChartPage() {
   // Falls back to in-browser TS engine if backend unavailable.
   const [fsBackendA, setFsBackendA] = useState<import("@/lib/api").FirstSecondResponse | null>(null);
   const [fsBackendB, setFsBackendB] = useState<import("@/lib/api").FirstSecondResponse | null>(null);
+
+  // Walker flowline + envelope — also Python single source, fetched via backend
+  const [flowLineBackendA, setFlowLineBackendA] = useState<FlowSegment[] | null>(null);
+  const [flowLineBackendB, setFlowLineBackendB] = useState<FlowSegment[] | null>(null);
+  const [envelopeBackendA, setEnvelopeBackendA] = useState<any[] | null>(null);
+  const [envelopeBackendB, setEnvelopeBackendB] = useState<any[] | null>(null);
 
   // dual-chart layout
   const [dual, setDual] = useState(false);
@@ -428,6 +430,84 @@ export default function ChartPage() {
     };
   }, [fsOn, intervalB, dataB, data1min]);
 
+  // Walker flowline — Python single source
+  useEffect(() => {
+    if (!flowOn || interval === "daily" || data.length < 2) {
+      setFlowLineBackendA(null);
+      return;
+    }
+    let cancelled = false;
+    const payload = data.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
+    postFlowLine(payload)
+      .then((res) => {
+        if (cancelled) return;
+        setFlowLineBackendA(res.segments as any);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setFlowLineBackendA(null);
+      });
+    return () => { cancelled = true; };
+  }, [flowOn, interval, data]);
+
+  useEffect(() => {
+    if (!flowOn || intervalB === "daily" || dataB.length < 2) {
+      setFlowLineBackendB(null);
+      return;
+    }
+    let cancelled = false;
+    const payload = dataB.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
+    postFlowLine(payload)
+      .then((res) => {
+        if (cancelled) return;
+        setFlowLineBackendB(res.segments as any);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setFlowLineBackendB(null);
+      });
+    return () => { cancelled = true; };
+  }, [flowOn, intervalB, dataB]);
+
+  // Envelope — Python single source (5min only)
+  useEffect(() => {
+    if (!envOn || interval !== "5min" || data.length < 2) {
+      setEnvelopeBackendA(null);
+      return;
+    }
+    let cancelled = false;
+    const payload = data.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
+    postEnvelope(payload)
+      .then((res) => {
+        if (cancelled) return;
+        setEnvelopeBackendA(res.violations as any);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setEnvelopeBackendA(null);
+      });
+    return () => { cancelled = true; };
+  }, [envOn, interval, data]);
+
+  useEffect(() => {
+    if (!envOn || intervalB !== "5min" || dataB.length < 2) {
+      setEnvelopeBackendB(null);
+      return;
+    }
+    let cancelled = false;
+    const payload = dataB.map((c) => ({ date: c.date, open: c.open, high: c.high, low: c.low, close: c.close }));
+    postEnvelope(payload)
+      .then((res) => {
+        if (cancelled) return;
+        setEnvelopeBackendB(res.violations as any);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setEnvelopeBackendB(null);
+      });
+    return () => { cancelled = true; };
+  }, [envOn, intervalB, dataB]);
+
   useEffect(() => {
     let cancelled = false;
     getSwings("daily", PIVOT, LEVELS, LOOKAHEAD)
@@ -590,12 +670,18 @@ export default function ChartPage() {
         bias: isIntraday && biasOn ? biasLabels : undefined,
         trades: isIntraday ? allTrades : undefined,
         sessionBreaks: isIntraday,
-        algoFlowLine:
-          flowOn && isIntraday && d.length >= 2 ? computeAlgoFlowLine(d) : null,
-        envelope:
-          envOn && iv === "5min" && d.length >= 2
-            ? computeEnvelopeViolations(d)
-            : null,
+        algoFlowLine: (() => {
+          if (!flowOn || !isIntraday || d.length < 2) return null;
+          const backend = d === data ? flowLineBackendA : d === dataB ? flowLineBackendB : null;
+          if (backend) return backend;
+          return null;
+        })(),
+        envelope: (() => {
+          if (!envOn || iv !== "5min" || d.length < 2) return null;
+          const backend = d === data ? envelopeBackendA : d === dataB ? envelopeBackendB : null;
+          if (backend) return backend;
+          return null;
+        })(),
         ...(fsOn && (iv === "1min" || iv === "5min") && d.length >= 2
           ? (() => {
               // 1min pane: run FsV2 directly on its own candles.
@@ -661,16 +747,8 @@ export default function ChartPage() {
                   .map(mapR)
                   .filter((r: any) => r.seg !== null && r.confIdx >= 0);
               } else {
-                const res = computeFsV2Results(sourceCandles, {
-                  timeCap: "09:29",
-                });
-                valid = res.filter((r) => r.seg !== null && r.confIdx >= 0);
-                const ss2 = computeSecondSwingResults(sourceCandles, res, {
-                  timeCap: "09:29",
-                });
-                ss2Valid = ss2.filter(
-                  (r) => r.seg !== null && r.confIdx >= 0,
-                );
+                valid = [];
+                ss2Valid = [];
               }
               if (iv === "1min") {
                 return {
@@ -949,6 +1027,10 @@ export default function ChartPage() {
       btData,
       fsBackendA,
       fsBackendB,
+      flowLineBackendA,
+      flowLineBackendB,
+      envelopeBackendA,
+      envelopeBackendB,
     ],
   );
 

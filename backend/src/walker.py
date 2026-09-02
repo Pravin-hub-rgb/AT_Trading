@@ -447,3 +447,31 @@ def compute_algo_pivots(candles: list[FlowCandle]) -> list[AlgoPivot]:
     for items in by_day.values():
         out.extend(walk_day(items))
     return out
+
+
+@dataclass
+class FlowSegment:
+    """Flow-line segment between two pivots."""
+    dir: Literal["B", "S"]
+    start_idx: int
+    start_px: float
+    end_idx: int
+    end_px: float
+
+
+def compute_algo_flowline(candles: list[FlowCandle]) -> list[FlowSegment]:
+    """Walker flow-line — per-day pivots chained into B/S segments."""
+    by_day: dict[str, list[dict]] = {}
+    for g_idx, c in enumerate(candles):
+        d = c.date[:10]
+        by_day.setdefault(d, []).append({"c": c, "g_idx": g_idx})
+    segs: list[FlowSegment] = []
+    for items in by_day.values():
+        pivots = walk_day(items)
+        for a, b in zip(pivots, pivots[1:]):
+            segs.append(FlowSegment(
+                dir="B" if b.px >= a.px else "S",
+                start_idx=a.idx, start_px=a.px,
+                end_idx=b.idx, end_px=b.px,
+            ))
+    return segs
