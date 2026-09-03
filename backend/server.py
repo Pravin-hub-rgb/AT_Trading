@@ -428,6 +428,7 @@ def get_whole_day_swings(
     interval: str = "1min",
     sustain_bars: int = 7,
     swing_count: str = "whole",
+    b2_gap_bars: int = 1,
 ):
     """Whole-day alternating swing detection.
 
@@ -478,7 +479,7 @@ def get_whole_day_swings(
             sc = max(1, int(swing_count))
         except ValueError:
             sc = "whole"
-    swings = compute_swing_results(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29"}, swing_count=sc)
+    swings = compute_swing_results(candles, opts={"sustain_bars": sustain_bars, "minBars": 14, "timeCap": "09:29", "b2GapBars": b2_gap_bars}, swing_count=sc)
 
     return {
         "interval": interval,
@@ -797,12 +798,14 @@ def compute_first_second(req: FirstSecondRequest) -> FirstSecondResponse:
     from src.walker import FlowCandle
     from src.firstswing import SwingEngine
 
-    opts = req.opts or {"timeCap": "09:29"}
+    opts = req.opts or {"timeCap": "09:29", "b2GapBars": 1}
     # Normalize opts keys (frontend uses timeCap, sustainBars; backend uses timeCap/sustain_bars)
     if "sustainBars" in opts and "sustain_bars" not in opts:
         opts["sustain_bars"] = opts["sustainBars"]
     if "minBars" in opts and "min_bars" not in opts:
         opts["min_bars"] = opts["minBars"]
+    if "b2GapBars" not in opts and "b2_gap_bars" not in opts and "requirePivotGap" not in opts:
+        opts["b2GapBars"] = 1
 
     flow_candles = [
         FlowCandle(

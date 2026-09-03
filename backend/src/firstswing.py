@@ -66,9 +66,18 @@ class SwingEngine:
         if isinstance(opts, dict):
             self.sustain_bars: int = opts.get("sustainBars", opts.get("sustain_bars", 7))
             self.min_bars: int = int(opts.get("minBars", opts.get("min_bars", 14)))
+            raw_gap = opts.get("b2GapBars", opts.get("b2_gap_bars", opts.get("requirePivotGap", 1)))
+            if isinstance(raw_gap, bool):
+                self.b2_gap_bars: int = 1 if raw_gap else 0
+            else:
+                try:
+                    self.b2_gap_bars: int = max(0, int(raw_gap))
+                except Exception:
+                    self.b2_gap_bars: int = 1
         else:
             self.sustain_bars: int = 7
             self.min_bars: int = 14
+            self.b2_gap_bars: int = 1
 
         self.walker = WalkerEngine()
         self.bars_seen: int = 0
@@ -279,10 +288,21 @@ class SwingEngine:
                     and self.e_lo_pivot.idx >= self.b1_bar_idx
                     and self.lo < self.e_lo_pivot.px
                 ):
-                    self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
-                    self._confirm_direction()
-                    self._check_chop()
-                    b2_fired = True
+                    # B2 1-candle pivot gap (permanent default b2_gap_bars=1)
+                    if getattr(self, "b2_gap_bars", 0) > 0:
+                        p = self.e_lo_pivot  # type: ignore
+                        if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
+                            gap_low = self.bar_lows.get(p.idx + 1)
+                            if gap_low is not None and gap_low >= p.px:
+                                self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
+                                self._confirm_direction()
+                                self._check_chop()
+                                b2_fired = True
+                    else:
+                        self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
+                        self._confirm_direction()
+                        self._check_chop()
+                        b2_fired = True
             if up_break and not b2_fired:
                 self._flip("up")
                 self._check_chop()
@@ -294,9 +314,20 @@ class SwingEngine:
                     and self.e_hi_pivot.idx >= self.b1_bar_idx
                     and self.hi > self.e_hi_pivot.px
                 ):
-                    self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
-                    self._confirm_direction()
-                    self._check_chop()
+                    if getattr(self, "b2_gap_bars", 0) > 0:
+                        p = self.e_hi_pivot  # type: ignore
+                        if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
+                            gap_high = self.bar_highs.get(p.idx + 1)
+                            if gap_high is not None and gap_high <= p.px:
+                                self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
+                                self._confirm_direction()
+                                self._check_chop()
+                                b2_fired = True
+                    else:
+                        self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
+                        self._confirm_direction()
+                        self._check_chop()
+                        b2_fired = True
                     b2_fired = True
             if down_break and not b2_fired:
                 self._flip("down")
@@ -648,6 +679,8 @@ def compute_swing_results(
         _opts["sustain_bars"] = 7
     if "timeCap" not in _opts and "time_cap" not in _opts:
         _opts["timeCap"] = "09:29"
+    if "b2GapBars" not in _opts and "b2_gap_bars" not in _opts and "requirePivotGap" not in _opts:
+        _opts["b2GapBars"] = 1
 
     by_day: dict[str, list[tuple[int, FlowCandle]]] = {}
     for g_idx, c in enumerate(candles):
