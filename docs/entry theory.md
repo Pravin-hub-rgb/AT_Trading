@@ -17,14 +17,14 @@ For SELLING → wait for buying swing (first swing) → then SELL
 
 ## Trade Mode ( Aggressive vs Conservative )
 
-| Mode                | Entry                           |
-| ------------------- | ------------------------------- |
-| **aggressive** ⚡   | **First pivot break**           |
-| **conservative** 🐢 | **Second swing** ki pivot break |
-| **skip** ✕          | No trade                        |
+| Mode                | Entry                                      |
+| ------------------- | ------------------------------------------ |
+| **aggressive** ⚡   | **First pivot break after FS**             |
+| **conservative** 🐢 | **Second pivot break after FS (1st skip)** |
+| **skip** ✕          | No trade                                   |
 
-**Aggressive:** First pivot break pe entry
-**Conservative:** Desired direction swing ka pivot break pe entry
+**Aggressive:** FS ke baad jo bhi pehla pivot break ho uspe entry (1st break)
+**Conservative:** FS ke baad pehla break skip, dusre pivot break pe entry (2nd break)
 **Skip:** Nahi mila → no trade that day
 
 ---
@@ -61,16 +61,24 @@ For SELLING:
 
 ---
 
-## Conservative Day Entry ( Second Swing )
+## Conservative Day Entry ( Second Break )
 
 ```
-1. First swing complete hua → second swing ka intezaar
+1. First swing complete hua → desired direction swing ka intezaar
+   (BUYING chahiye → buying swing, SELLING chahiye → selling swing)
+   Second swing hi desired de de to usi pe, nahi to third/fourth...
 
-2. Second swing complete hone ke baad
-   → pivot break dekhna (second swing ka pivot)
-   → entry price must be above/below swing end line
+2. Desired swing complete hone ke baad
+   → FS ke baad ke pivots dekho (FS ke andar wale nahi, FS end ke baad wale)
+   → pehla pivot break = SKIP (1st break ignore)
+   → dusra pivot break = ENTRY (2nd break pe trade)
 
-3. Conservative = SECOND SWING pivot break
+3. Conservative = FS ke baad SECOND PIVOT BREAK (1st skip, 2nd entry)
+   Example 27 Aug 2026 (bearish -> SHORT, FS2 buying 09:37->09:49 FS@09:50):
+     - 09:51 L24206.5 pivot banta hai (FS2 ke baad)
+     - 09:55 low 24200.85 <24206.5 -> 1st break -> SKIP
+     - 09:58 low 24190.15 <24200.85 -> 2nd break -> SHORT ENTRY 09:58
+   Aggressive hota to 09:55 pe hi entry ho jati.
 
 4. Agar second bhi desired direction nahi deta
    → WAIT KARO — third, fourth ... 15th swing tak
@@ -144,10 +152,11 @@ SL ke liye dropdown use karo — jo comfortable lage woh lo.
 
 |                | Aggressive ⚡                         | Conservative 🐢                        |
 | -------------- | ------------------------------------- | -------------------------------------- |
-| Entry on       | First pivot break                     | Second swing pivot break               |
+| Entry on       | **1st pivot break after FS**          | **2nd pivot break after FS (1st skip)**|
 | Entry position | Above/below swing end line            | Above/below swing end line             |
 | Breach rule    | Low/high never breached after 1st FS  | Low/high never breached after 1st FS   |
 | One target     | 1st hits TARGET → no 2nd trade        | 1st hits TARGET → no 2nd trade         |
 | Skip if        | Breached → no trade                   | Breached or second doesn't give desired|
 | Time           | Any (9:34 bhi, 10:30 bhi)             | Any                                    |
 | SL             | Dropdown se select karo               | Dropdown se select karo                |
+| Example 27Aug  | 09:55 entry (1st break)               | 09:58 entry (2nd break, 09:55 skip)    |

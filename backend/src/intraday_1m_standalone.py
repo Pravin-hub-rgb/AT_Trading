@@ -71,16 +71,16 @@ def simulate_day_1min(
     result["events"].extend(ev)
 
     if bias in ("bullish", "bearish"):
-        want_dir = 1 if bias == "bullish" else -1
+        bias_dir = 1 if bias == "bullish" else -1
     elif bias == "unbiased":
         if swing_dir == "buying":
-            want_dir = 1
+            bias_dir = 1
         elif swing_dir == "selling":
-            want_dir = -1
+            bias_dir = -1
         else:
             result["events"].append({"type": "skipped_unbiased"})
             return result
-        result["effective_bias"] = "bullish" if want_dir == 1 else "bearish"
+        result["effective_bias"] = "bullish" if bias_dir == 1 else "bearish"
         result["events"].append({
             "type": "effective_bias_from_first_swing",
             "bar": swing_start,
@@ -91,7 +91,7 @@ def simulate_day_1min(
         result["events"].append({"type": "skipped_unbiased"})
         return result
 
-    eff_bias_for_case = "bullish" if want_dir == 1 else "bearish"
+    eff_bias_for_case = "bullish" if bias_dir == 1 else "bearish"
     case_id, trade_mode = classify_case(eff_bias_for_case, ctx.get("gap", "flat"), ctx.get("extreme"), swing_dir)
     result["case"] = case_id
     result["trade_mode"] = trade_mode
@@ -111,8 +111,8 @@ def simulate_day_1min(
     fs2_start_px: float = float("nan")
     fs2_end_time: str = ""
 
-    def _find_swing(start_idx: int, want_dir: str, log_miss: bool = False):
-        """Scan forward from start_idx for the next confirmed swing in want_dir,
+    def _find_swing(start_idx: int, want_swing_dir: str, log_miss: bool = False):
+        """Scan forward from start_idx for the next confirmed swing in want_swing_dir,
         skipping swings in the other direction (their ends become the next seed).
         Returns a dict describing the swing, or None if the data runs out."""
         from datetime import datetime, timezone, timedelta
@@ -141,7 +141,7 @@ def simulate_day_1min(
                 return None
             cand_dir = "buying" if eng2.dir == "up" else "selling"
             # Not the desired direction — skip this swing and search from its end
-            if cand_dir != want_dir:
+            if cand_dir != want_swing_dir:
                 result["events"].append({"type": "second_swing_same_dir_skipped", "dir": cand_dir, "bar": eng2.start_idx, "time": eng2.start_time})
                 search_idx = eng2.end_idx + 1
                 continue
@@ -162,8 +162,8 @@ def simulate_day_1min(
         return None
 
     if trade_mode == "conservative" and swing_dir is not None and fs1_end_idx >= 0:
-        want_dir = "selling" if swing_dir == "buying" else "buying"
-        found = _find_swing(fs1_end_idx + 1, want_dir)
+        want_swing_dir = "selling" if swing_dir == "buying" else "buying"
+        found = _find_swing(fs1_end_idx + 1, want_swing_dir)
         if found is not None:
             fs2_dir = found["dir"]
             fs2_confirmed_idx = found["confirmed_at_idx"]
@@ -506,10 +506,11 @@ def simulate_day_1min(
             trade_dir = -1 if cur_swing=="buying" else 1
             brk=None
             if trade_mode == "conservative" and fs2_dir is not None and fs2_end_idx >=0:
-                # Conservative entry: break a pivot INSIDE FS2's range.
-                # For SHORT (buying swing): break a LOW pivot going DOWN (start of downward momentum).
-                # For LONG (selling swing): break a HIGH pivot going UP (start of upward momentum).
-                # We do NOT break FS2's own end extreme (it's the swing boundary).
+                # Conservative entry: break a pivot AFTER FS2 (post-swing), not inside FS2.
+                # Aggressive = 1st pivot break after desired swing, Conservative = 2nd pivot break (skip 1st).
+                # For SHORT (buying swing): break a LOW pivot going DOWN after FS2.
+                # For LONG (selling swing): break a HIGH pivot going UP after FS2.
+                # FS2's own end extreme is boundary, not tradable.
                 # Read segment boundaries from the LATEST fs2_segment event
                 # (re-arms append new ones as the reference swing traverses).
                 fs2_seg_start = None
@@ -520,33 +521,31 @@ def simulate_day_1min(
                         fs2_seg_end = ev.get("end_idx")  # the candle that FORMED the extreme
 
                 def _is_fs2_internal(p, pool_type):
-                    """Pivot is strictly inside FS2: idx in (start, end) excluding boundary."""
+                    """Pivot is AFTER FS2: idx > fs2_end and idx < current bar (exclude FS2 interior)."""
                     if fs2_seg_start is None or fs2_seg_end is None:
                         return False
-                    if fs2_seg_start < p.idx < fs2_seg_end:
-                        return True
                     if p.idx > fs2_seg_end and p.idx < i:
                         return True
                     return False
 
                 piv = None
                 if trade_dir==-1 and normal_lows:
-                    # SHORT: need a LOW pivot INSIDE FS2 (price breaks below it going DOWN)
+                    # SHORT: need a LOW pivot AFTER FS2 (price breaks below it going DOWN) - 09:55 first, 09:58 second
                     candidates = [p for p in normal_lows
                                   if _is_fs2_internal(p, 'low')]
                     if candidates:
-                        piv = candidates[-1]  # most recent qualifying low pivot
+                        piv = candidates[-1]  # most recent qualifying low pivot after FS2
                     if piv and cur["low"] < piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
                 elif trade_dir==1 and normal_highs:
-                    # LONG: need a HIGH pivot INSIDE FS2 (price breaks above it going UP)
+                    # LONG: need a HIGH pivot AFTER FS2 (price breaks above it going UP) - 1st skip, 2nd entry for conservative
                     candidates = [p for p in normal_highs
                                   if _is_fs2_internal(p, 'high')]
                     if candidates:
-                        piv = candidates[-1]  # most recent qualifying high pivot
+                        piv = candidates[-1]  # most recent qualifying high pivot after FS2
                     if piv and cur["high"] > piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
-                # Fallback: if no qualifying internal pivot exists yet, skip entry entirely.
+                # Fallback: if no qualifying pivot after FS2 exists yet, skip entry entirely.
             else:
                 # Entry pivot must be NEWER than the pivot the FS used for its
                 # break (13 Aug: FS confirms 09:38 breaking the 24330.95 high
@@ -576,7 +575,7 @@ def simulate_day_1min(
                     brk = None
                 else:
                     broken_pivot_levels.add(brk["level"])
-                    aligned = trade_dir == want_dir
+                    aligned = trade_dir == bias_dir
                     pivot_break_count+=1
                     result["events"].append({"type":"pace_break","bar":i,"time":cur["time"],"break_type":brk["type"],"level":round(brk["level"],2),"swing_before":cur_swing,"aligned_with_bias":aligned,"pivot_break_count":pivot_break_count})
                     # Per entry theory.md:
