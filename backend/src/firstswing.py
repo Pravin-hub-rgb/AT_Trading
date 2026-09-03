@@ -8,7 +8,15 @@ compute_whole_day_swings() for all swings in a day.
 - Break detection per BAR against PREVIOUS bar frozen extremes (eHiPrev/eLoPrev)
 - Continuation takes precedence over reversal on same bar
 - timeCap gates DECLARATION only, counting runs from bar one
-- Any new pivot kills old (latest_sealed = most recent). Gap check at chop-target time (next candle must not breach pivot) prevents micro-pivot noise.
+- Chop target = LATEST sealed pivot only (latest_sealed_high/low), exact like the
+  frontend FsV2Engine (backend/debug/firstswing_cf11277.ts chopTargetHigh/Low):
+  "any new H kills old H / any new L kills old L" — killed pivots are dead, there
+  is NO fallback scan to older pivots. Gap check at chop-target time (next candle
+  must not breach pivot; requires pivot idx <= g_idx - 2) prevents micro-pivot noise.
+  Backend-only additions kept deliberately (user-approved fixes beyond the TS):
+  minBars=14 declaration guard, B2 1-candle pivot gap (b2_gap_bars=1),
+  fresh-structure rule (chop may only target pivots formed after dir_established),
+  flip-back-as-B2 (as_b2), first_chop_cross tracking for fs_at markers.
 """
 
 from __future__ import annotations
@@ -216,6 +224,10 @@ class SwingEngine:
                             self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
                 else:
                     self._push_unique(self.normal_lows, Lvl(px=p.px, idx=p.idx, time=p.time))
+            # NOTE: no white-pivot rebuild and no latest_sealed overwrite here —
+            # latest_sealed_* is updated ONLY at seal time above (lines with
+            # "Any new H/L kills old H/L"), exactly like the frontend engine
+            # (firstswing_cf11277.ts:198/224). Killed pivots stay dead.
 
         up_break = c.high > self.e_hi_prev.px
         down_break = c.low < self.e_lo_prev.px
@@ -427,12 +439,16 @@ class SwingEngine:
                 self._confirm("chop")
 
     def _chop_target_high(self) -> Optional[Lvl]:
+        # Exact like the frontend engine (firstswing_cf11277.ts chopTargetHigh):
+        # the LATEST sealed high pivot ONLY — "any new H kills old H". If it
+        # fails a gate there is NO fallback to older pivots; killed pivots are
+        # dead and the market has moved on.
         p = self.latest_sealed_high
         if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
             return None
-        # Fresh-structure rule: the opposing pivot must have FORMED after the
-        # current leg was established (B2 or flip) - breaking a pre-existing
-        # pivot does not complete the leg.
+        # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): the
+        # opposing pivot must have FORMED after the current leg was established
+        # (B2 or flip) — breaking a pre-existing pivot does not complete the leg.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
             return None
         # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
@@ -442,10 +458,12 @@ class SwingEngine:
         return p
 
     def _chop_target_low(self) -> Optional[Lvl]:
+        # Exact like the frontend engine (firstswing_cf11277.ts chopTargetLow):
+        # the LATEST sealed low pivot ONLY — "any new L kills old L". No fallback.
         p = self.latest_sealed_low
         if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
             return None
-        # Fresh-structure rule: see _chop_target_high.
+        # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): see above.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
             return None
         # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
