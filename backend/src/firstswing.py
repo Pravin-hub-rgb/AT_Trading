@@ -274,6 +274,7 @@ class SwingEngine:
             self._check_chop()
             return
         if self.dir == "down":
+            b2_fired = False
             if down_break:
                 if (
                     self.e_lo_pivot is not None
@@ -283,10 +284,12 @@ class SwingEngine:
                     self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
                     self._confirm_direction()
                     self._check_chop()
-            elif up_break:
+                    b2_fired = True
+            if up_break and not b2_fired:
                 self._flip("up")
                 self._check_chop()
         elif self.dir == "up":
+            b2_fired = False
             if up_break:
                 if (
                     self.e_hi_pivot is not None
@@ -296,7 +299,8 @@ class SwingEngine:
                     self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
                     self._confirm_direction()
                     self._check_chop()
-            elif down_break:
+                    b2_fired = True
+            if down_break and not b2_fired:
                 self._flip("down")
                 self._check_chop()
 
