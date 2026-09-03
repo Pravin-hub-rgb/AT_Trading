@@ -381,6 +381,7 @@ export interface BacktestParams {
   swing_traverse?: boolean; // reference swing follows extensions (1min engine)
   min_sl_pts?: number; // widen SL to at least this many points (default 13; 0 = off)
   breakeven_r?: number; // cost-to-cost trigger in R (default 1.0) — filter: only when < rr_target and rr_target >=3
+  need_opp_swing?: boolean; // 1min precise: wait for opposite swing (FS2) before entry; default ON — even B7/Bc7 extremes wait
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -395,6 +396,7 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   swing_traverse: true,
   min_sl_pts: 13.0,
   breakeven_r: 1.0,
+  need_opp_swing: true,
 };
 
 export interface IntradayTrade {
@@ -463,6 +465,7 @@ export const getIntradayBacktest = (
     swing_traverse: String(params.swing_traverse ?? true),
     min_sl_pts: String(params.min_sl_pts ?? 13.0),
     breakeven_r: String(params.breakeven_r ?? 1.0),
+    need_opp_swing: String(params.need_opp_swing ?? true),
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,

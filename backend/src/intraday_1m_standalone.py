@@ -95,6 +95,13 @@ def simulate_day_1min(
     case_id, trade_mode = classify_case(eff_bias_for_case, ctx.get("gap", "flat"), ctx.get("extreme"), swing_dir)
     result["case"] = case_id
     result["trade_mode"] = trade_mode
+    # Need opposite swing override (default ON): FS same as bias -> force conservative for 1min precise
+    if cfg.get("need_opp_swing", True) and swing_dir is not None:
+        if (bias_dir == 1 and swing_dir == "buying") or (bias_dir == -1 and swing_dir == "selling"):
+            if trade_mode == "aggressive":
+                result["events"].append({"type": "trade_mode_overridden", "from": "aggressive", "to": "conservative", "reason": "need_opp_swing ON + FS same as bias", "case": case_id})
+                trade_mode = "conservative"
+                result["trade_mode"] = trade_mode
 
     if trade_mode == "skip":
         result["events"].append({"type": "skipped_unbiased_1min", "case": case_id})

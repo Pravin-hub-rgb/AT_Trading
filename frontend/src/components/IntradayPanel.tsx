@@ -118,6 +118,7 @@ function loadSavedFilters(): Partial<{
   swing_traverse: boolean;
   min_sl_pts: number;
   breakeven_r: number;
+  need_opp_swing: boolean;
 }> {
   if (typeof window === "undefined") return {};
   try {
@@ -144,6 +145,7 @@ function saveFilters(filters: {
   swing_traverse: boolean;
   min_sl_pts: number;
   breakeven_r: number;
+  need_opp_swing: boolean;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -248,6 +250,9 @@ export default function IntradayPanel({
   const [localBreakeven, setLocalBreakeven] = useState(
     String(saved.breakeven_r ?? (params as any).breakeven_r ?? 1.0),
   );
+  const [localNeedOpp, setLocalNeedOpp] = useState(
+    saved.need_opp_swing ?? (params as any).need_opp_swing ?? true,
+  );
 
   // Check if any local value differs from the current applied params
   const hasChanges =
@@ -261,7 +266,8 @@ export default function IntradayPanel({
     localRR !== String(params.rr_target ?? 3.0) ||
     localTraverse !== (params.swing_traverse ?? true) ||
     localMinSl !== String(params.min_sl_pts ?? 13.0) ||
-    localBreakeven !== String((params as any).breakeven_r ?? 1.0);
+    localBreakeven !== String((params as any).breakeven_r ?? 1.0) ||
+    localNeedOpp !== ((params as any).need_opp_swing ?? true);
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -304,6 +310,7 @@ export default function IntradayPanel({
       swing_traverse: localTraverse,
       min_sl_pts: Number(localMinSl),
       breakeven_r: Number(localBreakeven),
+      need_opp_swing: localNeedOpp,
     });
     // Apply all filters in one go
     onCaseChange(localCase);
@@ -319,6 +326,7 @@ export default function IntradayPanel({
       swing_traverse: localTraverse,
       min_sl_pts: Number(localMinSl),
       breakeven_r: Number(localBreakeven),
+      need_opp_swing: localNeedOpp,
     } as any);
   };
 
@@ -463,6 +471,19 @@ export default function IntradayPanel({
             className="accent-[#f59e0b]"
           />
           Swing traverse
+        </label>
+        <label
+          className="flex items-center gap-1.5 rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1.5 text-xs text-[#c9d1d9] cursor-pointer hover:border-[#58a6ff]"
+          title="When ON (default), 1min precise waits for opposite swing: buy only after selling FS (FS2), sell only after buying FS. Covers B7/Bc7 extremes. OFF keeps legacy aggressive B7/Bc7 on 1st break. 5min ignores."
+        >
+          <input
+            type="checkbox"
+            checked={localNeedOpp}
+            onChange={(e) => setLocalNeedOpp(e.target.checked)}
+            className="accent-[#6366f1]"
+            disabled={localExecution !== "1min"}
+          />
+          Need opposite swing
         </label>
         <button
           onClick={handleApply}

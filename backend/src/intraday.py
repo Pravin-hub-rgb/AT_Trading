@@ -82,6 +82,7 @@ DEFAULT_CFG = {
     "min_sl_pts": 13.0,      # widen SL to at least this many points (0 = off)
     "breakeven_r": 1.0,      # cost-to-cost trigger in R (1.0 = 1:1 breakeven, 2.0 = 2R) — filter enabled only when < rr_target
     "cost_to_cost_r": 2.0,   # alias for breakeven_r (legacy cfg)
+    "need_opp_swing": True,  # 1min precise: wait for opposite swing (FS2) before entry; default ON — even B7/Bc7 extremes wait
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -620,6 +621,15 @@ def simulate_day(
     case_id, trade_mode = classify_case(eff_bias_for_case, ctx.get("gap", "flat"), ctx.get("extreme"), swing_dir)
     result["case"] = case_id
     result["trade_mode"] = trade_mode
+    # Need opposite swing override (1min precise, default ON): even B7/Bc7 extremes wait for opposite swing
+    # buy needs selling FS, sell needs buying FS — FS same as bias -> force conservative
+    use_1m_flag = cfg.get("execution") == "1min" and m1_day is not None
+    if cfg.get("need_opp_swing", True) and use_1m_flag and swing_dir is not None:
+        if (want_dir == 1 and swing_dir == "buying") or (want_dir == -1 and swing_dir == "selling"):
+            if trade_mode == "aggressive":
+                result["events"].append({"type": "trade_mode_overridden", "from": "aggressive", "to": "conservative", "reason": "need_opp_swing ON + FS same as bias", "case": case_id})
+                trade_mode = "conservative"
+                result["trade_mode"] = trade_mode
 
     # Skip unbiased days for 1min execution (figure out later per user)
     if use_1m and trade_mode == "skip":

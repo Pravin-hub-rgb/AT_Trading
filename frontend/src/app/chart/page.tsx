@@ -90,6 +90,14 @@ function loadSavedIntradayFilters(): { params: BacktestParams; case: string } {
         typeof saved.min_sl_pts === "number"
           ? saved.min_sl_pts
           : (DEFAULT_BT_PARAMS.min_sl_pts ?? 13.0),
+      breakeven_r:
+        typeof saved.breakeven_r === "number"
+          ? saved.breakeven_r
+          : ((DEFAULT_BT_PARAMS as any).breakeven_r ?? 1.0),
+      need_opp_swing:
+        typeof saved.need_opp_swing === "boolean"
+          ? saved.need_opp_swing
+          : ((DEFAULT_BT_PARAMS as any).need_opp_swing ?? true),
     };
     const caseValue =
       typeof saved.caseValue === "string" ? saved.caseValue : "all";
