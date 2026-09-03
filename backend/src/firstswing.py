@@ -8,7 +8,7 @@ compute_whole_day_swings() for all swings in a day.
 - Break detection per BAR against PREVIOUS bar frozen extremes (eHiPrev/eLoPrev)
 - Continuation takes precedence over reversal on same bar
 - timeCap gates DECLARATION only, counting runs from bar one
-- Immediate 1-bar gap check at seal time prevents micro-pivot noise on chop targets
+- Any new pivot kills old (latest_sealed = most recent). Gap check at chop-target time (next candle must not breach pivot) prevents micro-pivot noise.
 """
 
 from __future__ import annotations
@@ -172,9 +172,8 @@ class SwingEngine:
             if self.bars_seen >= 2:
                 self.armed = True
             if p.kind == "H":
-                gap_high = self.bar_highs.get(p.idx + 1)
-                if gap_high is None or gap_high <= p.px:
-                    self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
+                # Any new H kills old H — gap validated at chop-target time, not here
+                self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_hi_pivot  # type: ignore
                 assert cur is not None
                 if p.px > cur.px:
@@ -191,9 +190,8 @@ class SwingEngine:
                 else:
                     self._push_unique(self.normal_highs, Lvl(px=p.px, idx=p.idx, time=p.time))
             else:
-                gap_low = self.bar_lows.get(p.idx + 1)
-                if gap_low is None or gap_low >= p.px:
-                    self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
+                # Any new L kills old L — gap validated at chop-target time, not here
+                self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_lo_pivot  # type: ignore
                 assert cur is not None
                 if p.px < cur.px:
@@ -406,6 +404,10 @@ class SwingEngine:
         # pivot does not complete the leg.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
             return None
+        # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
+        gap_high = self.bar_highs.get(p.idx + 1)
+        if gap_high is None or gap_high > p.px:
+            return None
         return p
 
     def _chop_target_low(self) -> Optional[Lvl]:
@@ -414,6 +416,10 @@ class SwingEngine:
             return None
         # Fresh-structure rule: see _chop_target_high.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
+            return None
+        # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
+        gap_low = self.bar_lows.get(p.idx + 1)
+        if gap_low is None or gap_low < p.px:
             return None
         return p
 

@@ -194,10 +194,8 @@ export class FirstSwingEngine {
       if (!p.sealed) continue;
       if (this.barsSeen >= 2) this.armed = true;
       if (p.kind === "H") {
-        const gapHigh = this.barHighs.get(p.idx + 1);
-        if (gapHigh === undefined || gapHigh <= p.px) {
-          this.latestSealedHigh = { px: p.px, idx: p.idx, time: p.time };
-        }
+        // Any new H kills old H — gap validated at chop-target time
+        this.latestSealedHigh = { px: p.px, idx: p.idx, time: p.time };
         const cur = this.eHiPivot!;
         if (p.px > cur.px) {
           this.normalHighs.push(cur);
@@ -222,10 +220,8 @@ export class FirstSwingEngine {
           });
         }
       } else {
-        const gapLow = this.barLows.get(p.idx + 1);
-        if (gapLow === undefined || gapLow >= p.px) {
-          this.latestSealedLow = { px: p.px, idx: p.idx, time: p.time };
-        }
+        // Any new L kills old L — gap validated at chop-target time
+        this.latestSealedLow = { px: p.px, idx: p.idx, time: p.time };
         const cur = this.eLoPivot!;
         if (p.px < cur.px) {
           this.normalLows.push(cur);
@@ -471,14 +467,18 @@ export class FirstSwingEngine {
 
   private chopTargetHigh(): Lvl | null {
     const p = this.latestSealedHigh;
-    if (p && p.idx >= 0 && p.idx <= this.gIdx - 2) return p;
-    return null;
+    if (!p || p.idx < 0 || p.idx > this.gIdx - 2) return null;
+    const gapHigh = this.barHighs.get(p.idx + 1);
+    if (gapHigh === undefined || gapHigh > p.px) return null; // next candle breaches -> invalid gap
+    return p;
   }
 
   private chopTargetLow(): Lvl | null {
     const p = this.latestSealedLow;
-    if (p && p.idx >= 0 && p.idx <= this.gIdx - 2) return p;
-    return null;
+    if (!p || p.idx < 0 || p.idx > this.gIdx - 2) return null;
+    const gapLow = this.barLows.get(p.idx + 1);
+    if (gapLow === undefined || gapLow < p.px) return null; // next candle breaches -> invalid gap
+    return p;
   }
 
   private checkSustain(c: FlowCandle) {
