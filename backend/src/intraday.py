@@ -80,6 +80,8 @@ DEFAULT_CFG = {
     "rr_target": 3.0,        # fixed target in R (1:3 course default); only used when trailing=off
     "swing_traverse": True,  # reference swing follows extensions (1min engine); False = frozen at first desired swing
     "min_sl_pts": 13.0,      # widen SL to at least this many points (0 = off)
+    "breakeven_r": 1.0,      # cost-to-cost trigger in R (1.0 = 1:1 breakeven, 2.0 = 2R) — filter enabled only when < rr_target
+    "cost_to_cost_r": 2.0,   # alias for breakeven_r (legacy cfg)
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}
@@ -89,9 +91,16 @@ SL_MODE_FIXED = {"fixed8": 8.0}
 def resolve_cfg(cfg: dict | None) -> dict:
     out = dict(DEFAULT_CFG)
     if cfg:
+        # alias: cost_to_cost_r -> breakeven_r (keep both in sync)
+        if "cost_to_cost_r" in cfg and "breakeven_r" not in cfg:
+            cfg = dict(cfg)
+            cfg["breakeven_r"] = cfg["cost_to_cost_r"]
         for k, v in cfg.items():
             if k in out and v is not None:
                 out[k] = v
+        # keep alias in sync if breakeven_r was set via alias or directly
+        if out.get("breakeven_r") is not None:
+            out["cost_to_cost_r"] = out["breakeven_r"]
     return out
 
 
@@ -1238,16 +1247,24 @@ def simulate_day(
                     if not t["validated"] and i > t["validate_until"]:
                         t["validated"] = True
                     if not exited:
-                        if t["dir"] == "long":
-                            t["mfe_r"] = max(t.get("mfe_r", 0.0), (cur["high"] - t["entry_price"]) / risk)
-                            if t.get("mfe_r", 0.0) >= COST_TO_COST_R and cur["low"] <= t["entry_price"]:
-                                _close_trade(t, i, t["entry_price"], "cost-to-cost")
-                                exited = True
+                        breakeven_r = float(cfg.get("breakeven_r", cfg.get("cost_to_cost_r", 1.0)))
+                        rr_target = float(cfg.get("rr_target", 3.0))
+                        if rr_target >= 3.0 and breakeven_r < rr_target:
+                            if t["dir"] == "long":
+                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (cur["high"] - t["entry_price"]) / risk)
+                                if t.get("mfe_r", 0.0) >= breakeven_r and cur["low"] <= t["entry_price"]:
+                                    _close_trade(t, i, t["entry_price"], "cost-to-cost")
+                                    exited = True
+                            else:
+                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (t["entry_price"] - cur["low"]) / risk)
+                                if t.get("mfe_r", 0.0) >= breakeven_r and cur["high"] >= t["entry_price"]:
+                                    _close_trade(t, i, t["entry_price"], "cost-to-cost")
+                                    exited = True
                         else:
-                            t["mfe_r"] = max(t.get("mfe_r", 0.0), (t["entry_price"] - cur["low"]) / risk)
-                            if t.get("mfe_r", 0.0) >= COST_TO_COST_R and cur["high"] >= t["entry_price"]:
-                                _close_trade(t, i, t["entry_price"], "cost-to-cost")
-                                exited = True
+                            if t["dir"] == "long":
+                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (cur["high"] - t["entry_price"]) / risk)
+                            else:
+                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (t["entry_price"] - cur["low"]) / risk)
 
                 if cur["time"] >= EOD_EXIT and open_trade is not None:
                     _close_trade(open_trade, i, cur["close"], "eod")

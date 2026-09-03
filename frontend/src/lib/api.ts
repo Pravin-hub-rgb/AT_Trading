@@ -380,6 +380,7 @@ export interface BacktestParams {
   rr_target?: number; // fixed target in R (default 3.0); only used when trailing=off
   swing_traverse?: boolean; // reference swing follows extensions (1min engine)
   min_sl_pts?: number; // widen SL to at least this many points (default 13; 0 = off)
+  breakeven_r?: number; // cost-to-cost trigger in R (default 1.0) — filter: only when < rr_target and rr_target >=3
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -393,6 +394,7 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   rr_target: 3.0,
   swing_traverse: true,
   min_sl_pts: 13.0,
+  breakeven_r: 1.0,
 };
 
 export interface IntradayTrade {
@@ -460,6 +462,7 @@ export const getIntradayBacktest = (
     rr_target: String(params.rr_target ?? 3.0),
     swing_traverse: String(params.swing_traverse ?? true),
     min_sl_pts: String(params.min_sl_pts ?? 13.0),
+    breakeven_r: String(params.breakeven_r ?? 1.0),
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,

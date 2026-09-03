@@ -521,6 +521,7 @@ def intraday_backtest(
     rr_target: float = 3.0,
     swing_traverse: bool = True,
     min_sl_pts: float = 13.0,
+    breakeven_r: float = 1.0,
 ):
     """Full-history intraday results for one experiment combo.
 
@@ -548,6 +549,8 @@ def intraday_backtest(
         "rr_target": float(rr_target),
         "swing_traverse": bool(swing_traverse),
         "min_sl_pts": float(min_sl_pts),
+        "breakeven_r": float(breakeven_r),
+        "cost_to_cost_r": float(breakeven_r),
     }
     try:
         data, _ = _intraday_backtest(cfg)
@@ -571,6 +574,7 @@ def intraday_day(
     rr_target: float = 3.0,
     swing_traverse: bool = True,
     min_sl_pts: float = 13.0,
+    breakeven_r: float = 1.0,
 ):
     """Single-day detail: trades + full event timeline for chart annotation."""
     cfg = {
@@ -586,6 +590,8 @@ def intraday_day(
         "rr_target": float(rr_target),
         "swing_traverse": bool(swing_traverse),
         "min_sl_pts": float(min_sl_pts),
+        "breakeven_r": float(breakeven_r),
+        "cost_to_cost_r": float(breakeven_r),
     }
     try:
         _, days = _intraday_backtest(cfg)

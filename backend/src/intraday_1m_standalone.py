@@ -313,7 +313,8 @@ def simulate_day_1min(
                         pivot_ref = eligible[-2] if len(eligible) >= 2 else None
                 
                 if pivot_ref is not None:
-                    sl = pivot_ref.px
+                    sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
+                    sl = pivot_ref.px + sl_buffer if dirn==-1 else pivot_ref.px - sl_buffer
                 else:
                     # No valid pivot - use candle's extreme + buffer
                     sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
@@ -403,32 +404,53 @@ def simulate_day_1min(
                 entry = float(t["entry_price"])
                 cur_sl = float(t["_cur_sl"])
                 exited=False
+                # SL first (wick hit)
                 if t["dir"]=="long":
                     if lo <= cur_sl:
                         _close_trade(t, i, cur_sl, "sl")
-                        exited=True
-                    elif hi >= float(t["target"]):
-                        _close_trade(t, i, float(t["target"]), "target")
                         exited=True
                 else:
                     if hi >= cur_sl:
                         _close_trade(t, i, cur_sl, "sl")
                         exited=True
-                    elif lo <= float(t["target"]):
+                # FT-fail early exit: close beyond dom within 2 bars (S5:98) — gated by filter
+                if not exited and cfg.get("ft_fail_enabled", True) and not t["validated"] and i <= t["validate_until"]:
+                    if t["dir"]=="long" and float(cur["close"]) < float(t["dom_low"]):
+                        _close_trade(t, i, float(cur["close"]), "ft_fail")
+                        exited=True
+                    elif t["dir"]=="short" and float(cur["close"]) > float(t["dom_high"]):
+                        _close_trade(t, i, float(cur["close"]), "ft_fail")
+                        exited=True
+                # Target after FT-fail (FT-fail admits bad domination before target)
+                if not exited:
+                    if t["dir"]=="long" and hi >= float(t["target"]):
+                        _close_trade(t, i, float(t["target"]), "target")
+                        exited=True
+                    elif t["dir"]=="short" and lo <= float(t["target"]):
                         _close_trade(t, i, float(t["target"]), "target")
                         exited=True
                 if not exited and not t["validated"] and i > t["validate_until"]:
                     t["validated"]=True
                 if not exited:
                     risk = abs(entry - cur_sl) or 1e-9
-                    if t["dir"]=="long":
-                        t["mfe_r"] = max(t.get("mfe_r",0.0), (hi - entry)/risk)
-                        if t.get("mfe_r",0.0) >= COST_TO_COST_R and lo <= entry:
-                            _close_trade(t, i, entry, "cost-to-cost")
+                    breakeven_r = float(cfg.get("breakeven_r", cfg.get("cost_to_cost_r", 1.0)))
+                    rr_target = float(cfg.get("rr_target", 3.0))
+                    # filter: breakeven only when RR >=1:3 and breakeven < target (1:2 target with 2R breakeven meaningless per user)
+                    if rr_target >= 3.0 and breakeven_r < rr_target:
+                        if t["dir"]=="long":
+                            t["mfe_r"] = max(t.get("mfe_r",0.0), (hi - entry)/risk)
+                            if t.get("mfe_r",0.0) >= breakeven_r and lo <= entry:
+                                _close_trade(t, i, entry, "cost-to-cost")
+                        else:
+                            t["mfe_r"] = max(t.get("mfe_r",0.0), (entry - lo)/risk)
+                            if t.get("mfe_r",0.0) >= breakeven_r and hi >= entry:
+                                _close_trade(t, i, entry, "cost-to-cost")
                     else:
-                        t["mfe_r"] = max(t.get("mfe_r",0.0), (entry - lo)/risk)
-                        if t.get("mfe_r",0.0) >= COST_TO_COST_R and hi >= entry:
-                            _close_trade(t, i, entry, "cost-to-cost")
+                        # still track mfe for stats even if breakeven disabled
+                        if t["dir"]=="long":
+                            t["mfe_r"] = max(t.get("mfe_r",0.0), (hi - entry)/risk)
+                        else:
+                            t["mfe_r"] = max(t.get("mfe_r",0.0), (entry - lo)/risk)
             if cur["time"] >= EOD_EXIT and open_trade is not None:
                 _close_trade(open_trade, i, float(cur["close"]), "eod")
 

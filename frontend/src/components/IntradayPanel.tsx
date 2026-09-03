@@ -77,6 +77,13 @@ const MIN_SL_MODES = [
   { value: "20", label: "Min SL: 20 pts" },
 ];
 
+const BREAKEVEN_MODES = [
+  { value: "0", label: "Breakeven: Off" },
+  { value: "1", label: "Breakeven: 1R (1:1)" },
+  { value: "1.5", label: "Breakeven: 1.5R" },
+  { value: "2", label: "Breakeven: 2R" },
+];
+
 const STORAGE_KEY = "intraday_filters";
 
 function OutcomeChip({ outcome }: { outcome: string }) {
@@ -110,6 +117,7 @@ function loadSavedFilters(): Partial<{
   rr_target: number;
   swing_traverse: boolean;
   min_sl_pts: number;
+  breakeven_r: number;
 }> {
   if (typeof window === "undefined") return {};
   try {
@@ -135,6 +143,7 @@ function saveFilters(filters: {
   rr_target: number;
   swing_traverse: boolean;
   min_sl_pts: number;
+  breakeven_r: number;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -236,6 +245,9 @@ export default function IntradayPanel({
   const [localMinSl, setLocalMinSl] = useState(
     String(saved.min_sl_pts ?? params.min_sl_pts ?? 13.0),
   );
+  const [localBreakeven, setLocalBreakeven] = useState(
+    String(saved.breakeven_r ?? (params as any).breakeven_r ?? 1.0),
+  );
 
   // Check if any local value differs from the current applied params
   const hasChanges =
@@ -248,7 +260,8 @@ export default function IntradayPanel({
     localEntryMethod !== (params.entry_method ?? "pivot_break") ||
     localRR !== String(params.rr_target ?? 3.0) ||
     localTraverse !== (params.swing_traverse ?? true) ||
-    localMinSl !== String(params.min_sl_pts ?? 13.0);
+    localMinSl !== String(params.min_sl_pts ?? 13.0) ||
+    localBreakeven !== String((params as any).breakeven_r ?? 1.0);
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -290,6 +303,7 @@ export default function IntradayPanel({
       rr_target: Number(localRR),
       swing_traverse: localTraverse,
       min_sl_pts: Number(localMinSl),
+      breakeven_r: Number(localBreakeven),
     });
     // Apply all filters in one go
     onCaseChange(localCase);
@@ -304,7 +318,8 @@ export default function IntradayPanel({
       rr_target: Number(localRR),
       swing_traverse: localTraverse,
       min_sl_pts: Number(localMinSl),
-    });
+      breakeven_r: Number(localBreakeven),
+    } as any);
   };
 
   return (
@@ -408,6 +423,18 @@ export default function IntradayPanel({
           title="Widen the SL to at least this many points (target recomputes from the widened risk)"
         >
           {MIN_SL_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localBreakeven}
+          onChange={(e) => setLocalBreakeven(e.target.value)}
+          className={selectCls}
+          title="Breakeven exit: when MFE >= this R and price returns to entry, close at entry. Only when < Target and Target>=1:3 (1:2 target with 2R breakeven is disabled)"
+        >
+          {BREAKEVEN_MODES.map((o) => (
             <option key={o.value} value={o.value}>
               {o.label}
             </option>
