@@ -107,34 +107,47 @@ def simulate_day_1min(
         result["events"].append({"type": "skipped_unbiased_1min", "case": case_id})
         return result
 
-    # Second swing for conservative — find the first OPPOSITE swing after FS1.
-    # Traversal keeps going past same-direction swings (3rd, 4th, ... nth) until
-    # the desired direction is found — we do NOT stop at swing 2 and we do NOT
-    # give up for the day; we only stop when the data runs out.
+    # Desired swing (opposite to FS1) — find the FIRST swing in the desired
+    # direction after FS1, no matter its ordinal (2nd, 3rd, 4th, ... 8th —
+    # same-direction swings are skipped along the way). Traversal keeps going
+    # past same-direction swings (3rd, 4th, ... nth) until the desired
+    # direction is found — we do NOT stop at swing 2 and we do NOT give up for
+    # the day; we only stop when the data runs out.
     fs2_dir: str | None = None
     fs2_confirmed_idx: int = -1
     fs2_end_idx: int = -1
     fs2_end_px: float = float("nan")
     fs2_start_px: float = float("nan")
     fs2_end_time: str = ""
+    # The pivot the desired swing itself consumed for its chop confirmation.
+    # Only set when confirm_source == "chop" (a SUS confirm consumes no pivot).
+    # That pivot's break IS the mark — it must never count as a fresh
+    # "1st pivot break after mark" in entry counting.
+    fs2_confirm_pivot_idx: int = -1
+    fs2_confirm_pivot_px: float = float("nan")
 
     def _find_swing(start_idx: int, want_swing_dir: str, log_miss: bool = False):
-        """Scan forward from start_idx for the next confirmed swing in want_swing_dir,
+        """Scan forward from start_idx for the next confirmed swing in want_swing_dir
+        (the DESIRED swing — may be the 2nd, 3rd, 4th, ... nth of the day),
         skipping swings in the other direction (their ends become the next seed).
         Returns a dict describing the swing, or None if the data runs out."""
         from datetime import datetime, timezone, timedelta
         IST = timezone(timedelta(hours=5, minutes=30))
         search_idx = max(start_idx, 0)
         while search_idx < len(candles):
-            seed_c = candles[search_idx]
-            # Treat 09:33 as new 09:15: use same engine but with 14-bar min, no timeCap
-            # Pass minBars=14 and timeCap 00:00 so 09:33 +14 bars = 09:47 earliest
-            seed_dt = datetime.fromtimestamp(int(seed_c["ts"]), tz=IST).strftime("%Y-%m-%dT%H:%M:%S")
-            seed_fc = FlowCandle(date=seed_dt, open=float(seed_c["open"]), high=float(seed_c["high"]), low=float(seed_c["low"]), close=float(seed_c["close"]))
-            eng2 = FirstSwingEngine({"timeCap": "00:00", "minBars": 14})
-            eng2.reset_with_candle(seed_fc, search_idx)
+            # Lifecycle EXACTLY like compute_swing_results (the chart chain):
+            # fresh engine, processing STARTS AT search_idx — the seed candle
+            # goes through process_bar's bars_seen==1 init (extremes + walker
+            # k=0 seeded from ITS colour), NOT through reset_with_candle. The
+            # old reset_with_candle path never fed the seed candle to the
+            # walker and ran one bar ahead on bars_seen — so fresh engines
+            # declared a DIFFERENT swing chain than the chart from the same
+            # seed (2025-08-06: engine S 12:22→12:26 SUS 12:35 vs chart
+            # S 12:22→12:41 chop 12:44 — entries then fired on swings the
+            # chart does not even show).
+            eng2 = FirstSwingEngine({"timeCap": "09:29", "minBars": 14})
             declared = False
-            for j in range(search_idx+1, len(candles)):
+            for j in range(search_idx, len(candles)):
                 mc = candles[j]
                 dt = datetime.fromtimestamp(int(mc["ts"]), tz=IST).strftime("%Y-%m-%dT%H:%M:%S")
                 fc = FlowCandle(date=dt, open=float(mc["open"]), high=float(mc["high"]), low=float(mc["low"]), close=float(mc["close"]))
@@ -162,6 +175,19 @@ def simulate_day_1min(
                 "end_time": eng2.end_time,
                 "confirmed_at_idx": eng2.confirmed_at_idx,
                 "confirmed_at_time": eng2.confirmed_at_time,
+                "confirm_source": eng2.confirm_source,
+                # Chop-confirm pivot: the pivot THIS swing broke to confirm.
+                # Only for chop confirms — a sustain confirm consumes no pivot.
+                "confirm_pivot_idx": (
+                    eng2.last_confirm_hit["idx"]
+                    if (eng2.confirm_source == "chop" and eng2.last_confirm_hit)
+                    else -1
+                ),
+                "confirm_pivot_px": (
+                    eng2.last_confirm_hit["px"]
+                    if (eng2.confirm_source == "chop" and eng2.last_confirm_hit)
+                    else float("nan")
+                ),
                 "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px} for b in eng2.break_marks],
             }
         if log_miss:
@@ -178,18 +204,22 @@ def simulate_day_1min(
             fs2_end_px = found["end_px"]
             fs2_start_px = found["start_px"]
             fs2_end_time = found["end_time"]
+            fs2_confirm_pivot_idx = found["confirm_pivot_idx"]
+            fs2_confirm_pivot_px = found["confirm_pivot_px"]
             result["events"].append({"type": "swing2_classified", "dir": fs2_dir, "bar": found["start_idx"], "time": found["start_time"], "first_swing": swing_dir})
-            result["events"].append({"type": "fs2_segment", "dir": "down" if fs2_dir == "selling" else "up", "start_idx": found["start_idx"], "start_px": found["start_px"], "end_idx": fs2_end_idx, "end_px": fs2_end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": found["confirmed_at_time"]})
+            result["events"].append({"type": "fs2_segment", "dir": "down" if fs2_dir == "selling" else "up", "start_idx": found["start_idx"], "start_px": found["start_px"], "end_idx": fs2_end_idx, "end_px": fs2_end_px, "confirmed_at_idx": fs2_confirmed_idx, "confirmed_at_time": found["confirmed_at_time"], "confirm_source": found["confirm_source"], "confirm_pivot_idx": fs2_confirm_pivot_idx, "confirm_pivot_px": fs2_confirm_pivot_px})
             result["events"].append({"type": "fs_breaks_2", "breaks": found["breaks"]})
         result["swing2_direction"] = fs2_dir
         result["swing2_confirmed_idx"] = fs2_confirmed_idx
         result["swing2_end_idx"] = fs2_end_idx
         result["swing2_end_px"] = fs2_end_px
+        result["swing2_confirm_pivot_idx"] = fs2_confirm_pivot_idx
     else:
         result["swing2_direction"] = None
         result["swing2_confirmed_idx"] = -1
         result["swing2_end_idx"] = -1
         result["swing2_end_px"] = float("nan")
+        result["swing2_confirm_pivot_idx"] = -1
 
     # Gate
     if trade_mode == "conservative":
@@ -472,31 +502,51 @@ def simulate_day_1min(
             )
             if ref_breached:
                 old_ref_px = ref_swing_end_px
-                found = _find_swing(i, ref_swing_end_dir)
+                # Seed the search from the reference swing's END + 1 — the same
+                # stitching the chart's whole-day chain uses (previous swing end
+                # +1 → next engine). Seeding at the breach bar `i` instead made
+                # fresh engines declare a DIFFERENT swing chain than the chart
+                # (2025-08-06: chart shows S 10:22→10:36 mark 10:42 & S
+                #  10:42→11:10 mark 11:14, but the breach-bar-seeded search
+                #  skipped both and found a phantom S 12:22→12:26 mark 12:35 —
+                #  entries then fired on phantom-swing breaks).
+                found = _find_swing(ref_swing_end_idx + 1, ref_swing_end_dir)
                 if found is not None:
                     fs2_dir = found["dir"]
                     fs2_end_idx = found["end_idx"]
                     fs2_end_px = found["end_px"]
+                    fs2_confirm_pivot_idx = found["confirm_pivot_idx"]
+                    fs2_confirm_pivot_px = found["confirm_pivot_px"]
                     ref_swing_end_dir = found["dir"]
                     ref_swing_end_idx = found["end_idx"]
                     ref_swing_end_px = found["end_px"]
                     ref_swing_end_time = found["end_time"]
                     entry_swing_confirmed_idx = max(entry_swing_confirmed_idx, found["confirmed_at_idx"])
+                    # New desired swing = new mark → fresh break counting.
+                    # Breaks counted under the PREVIOUS reference belong to that
+                    # swing's sequence and must not leak into this one's
+                    # (2025-08-12: count 1 from 10:55 leaked across the 11:03
+                    #  traverse and made 11:17 a "2nd break" → premature entry).
+                    pivot_break_count = 0
                     if trade_mode == "conservative":
                         result["swing2_direction"] = found["dir"]
                         result["swing2_confirmed_idx"] = found["confirmed_at_idx"]
                         result["swing2_end_idx"] = found["end_idx"]
                         result["swing2_end_px"] = found["end_px"]
+                        result["swing2_confirm_pivot_idx"] = found["confirm_pivot_idx"]
                     effective_swing_start = found["start_idx"]
                     swing_extreme = max(c["high"] for c in candles[:effective_swing_start+1]) if cur_swing=="buying" else min(c["low"] for c in candles[:effective_swing_start+1])
                     swing_base = min(c["low"] for c in candles[:effective_swing_start+1]) if cur_swing=="buying" else max(c["high"] for c in candles[:effective_swing_start+1])
                     result["events"].append({"type":"swing2_classified","dir":found["dir"],"bar":found["start_idx"],"time":found["start_time"],"first_swing":swing_dir,"rearmed":True})
-                    result["events"].append({"type":"fs2_segment","dir":"down" if found["dir"]=="selling" else "up","start_idx":found["start_idx"],"start_px":found["start_px"],"end_idx":found["end_idx"],"end_px":found["end_px"],"confirmed_at_idx":found["confirmed_at_idx"],"confirmed_at_time":found["confirmed_at_time"],"rearmed":True})
+                    result["events"].append({"type":"fs2_segment","dir":"down" if found["dir"]=="selling" else "up","start_idx":found["start_idx"],"start_px":found["start_px"],"end_idx":found["end_idx"],"end_px":found["end_px"],"confirmed_at_idx":found["confirmed_at_idx"],"confirmed_at_time":found["confirmed_at_time"],"confirm_source":found["confirm_source"],"confirm_pivot_idx":found["confirm_pivot_idx"],"confirm_pivot_px":found["confirm_pivot_px"],"rearmed":True})
                     result["events"].append({"type":"fs_breaks_2","breaks":found["breaks"],"rearmed":True})
                     result["events"].append({"type":"reference_swing_updated","bar":i,"time":cur["time"],"dir":found["dir"],"new_end_idx":found["end_idx"],"new_end_px":round(found["end_px"],2),"old_end_px":round(old_ref_px,2)})
                 else:
                     # No further swing in the desired direction exists today —
-                    # keep the current reference, stop re-scanning.
+                    # keep the current reference, stop re-scanning. Per the
+                    # swing-end rule the reference was BREACHED and there is no
+                    # new desired swing to traverse to → no more entries today
+                    # (can_enter checks ref_search_exhausted below).
                     ref_search_exhausted = True
 
         # Gate
@@ -507,7 +557,7 @@ def simulate_day_1min(
         has_target = any(t.get("outcome") == "target" for t in result["trades"])
         # Block entries if already hit target (one target per day). Swing breach
         # does NOT block — the reference swing just traverses (see above).
-        can_enter = (open_trade is None and entries_done < MAX_ENTRIES and fs_gate_ok and cur["time"] < EOD_EXIT and cur["time"] >= entry_start and not has_target)
+        can_enter = (open_trade is None and entries_done < MAX_ENTRIES and fs_gate_ok and cur["time"] < EOD_EXIT and cur["time"] >= entry_start and not has_target and not ref_search_exhausted)
 
         # Track broken pivots even when can_enter is false, so the same level
         # won't re-trigger on the next bar (e.g. 09:39 break -> 09:40 no re-entry).
@@ -535,27 +585,41 @@ def simulate_day_1min(
             trade_dir = -1 if cur_swing=="buying" else 1
             brk=None
             if trade_mode == "conservative" and fs2_dir is not None and fs2_end_idx >=0:
-                # Conservative entry: break a pivot AFTER FS2 (post-swing), not inside FS2.
-                # Aggressive = 1st pivot break after desired swing, Conservative = 2nd pivot break (skip 1st).
-                # For SHORT (buying swing): break a LOW pivot going DOWN after FS2.
-                # For LONG (selling swing): break a HIGH pivot going UP after FS2.
-                # FS2's own end extreme is boundary, not tradable.
+                # Conservative entry: count pivot breaks AFTER the desired swing's
+                # mark (fs or sus). Aggressive = 1st pivot break after mark,
+                # Conservative = 2nd pivot break (skip 1st).
+                # For SHORT (buying desired swing): break a LOW pivot going DOWN.
+                # For LONG (selling desired swing): break a HIGH pivot going UP.
+                # Candidates = pivots formed after the swing's end line, EXCLUDING
+                # the swing's own chop-confirm pivot — that pivot's break IS the
+                # mark itself, so it can never double-count as a fresh break.
+                # (27 Aug 2026: confirm pivot 24215.8 formed BEFORE the end line,
+                #  so the end-line filter already keeps it out — behavior unchanged.)
                 # Read segment boundaries from the LATEST fs2_segment event
                 # (re-arms append new ones as the reference swing traverses).
                 fs2_seg_start = None
                 fs2_seg_end = None
+                fs2_confirm_idx = None
                 for ev in result["events"]:
                     if ev.get("type") == "fs2_segment":
                         fs2_seg_start = ev.get("start_idx")
                         fs2_seg_end = ev.get("end_idx")  # the candle that FORMED the extreme
+                        fs2_confirm_idx = ev.get("confirm_pivot_idx")
 
                 def _is_fs2_internal(p, pool_type):
-                    """Pivot is AFTER FS2: idx > fs2_end and idx < current bar (exclude FS2 interior)."""
-                    if fs2_seg_start is None or fs2_seg_end is None:
+                    """Candidate = pivot formed AFTER the desired swing's end line,
+                    EXCLUDING the swing's own confirm pivot. The confirm pivot's break
+                    IS the mark itself — per the rule 'fs/sus ke baad jo bhi break
+                    hota hai use gino', the mark-break is never a fresh 1st break.
+                    Pivots formed between the end line and the mark still count when
+                    they break after the mark (doc: 'FS end ke baad wale')."""
+                    if fs2_seg_end is None:
                         return False
-                    if p.idx > fs2_seg_end and p.idx < i:
-                        return True
-                    return False
+                    if p.idx <= fs2_seg_end or p.idx >= i:
+                        return False
+                    if fs2_confirm_idx is not None and p.idx == fs2_confirm_idx:
+                        return False
+                    return True
 
                 piv = None
                 if trade_dir==-1 and normal_lows:
@@ -589,12 +653,21 @@ def simulate_day_1min(
                         if _p.idx <= fs_confirmed_idx:
                             fs_break_pivot_idx = _p.idx
                             break
+                # The CURRENT reference swing's own confirm pivot (after a
+                # traversal) is the mark-break — same rule as the conservative
+                # branch: it can never count as the aggressive 1st pivot break
+                # (2025-08-08: 10:42 entry fired on the 10:41 mark-break of
+                #  pivot 24443.05 right after the traverse confirmed at 10:41).
+                _aggr_confirm_idx = None
+                for _ev in result["events"]:
+                    if _ev.get("type") == "fs2_segment":
+                        _aggr_confirm_idx = _ev.get("confirm_pivot_idx")
                 if trade_dir==1 and normal_highs:
-                    piv = next((p for p in reversed(normal_highs) if p.idx < i and p.idx > fs_break_pivot_idx), None)
+                    piv = next((p for p in reversed(normal_highs) if p.idx < i and p.idx > fs_break_pivot_idx and not (_aggr_confirm_idx is not None and _aggr_confirm_idx >= 0 and p.idx == _aggr_confirm_idx)), None)
                     if piv and cur["high"] > piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
                 elif trade_dir==-1 and normal_lows:
-                    piv = next((p for p in reversed(normal_lows) if p.idx < i and p.idx > fs_break_pivot_idx), None)
+                    piv = next((p for p in reversed(normal_lows) if p.idx < i and p.idx > fs_break_pivot_idx and not (_aggr_confirm_idx is not None and _aggr_confirm_idx >= 0 and p.idx == _aggr_confirm_idx)), None)
                     if piv and cur["low"] < piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
             if brk is not None:
