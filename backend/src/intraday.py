@@ -384,6 +384,9 @@ def detect_second_swing(
             dt = datetime.fromtimestamp(int(mts), tz=IST).strftime("%Y-%m-%dT%H:%M:%S") if mts else f"{day_date}T{mc.get('time','00:00')}:00"
             flow_candles.append((idx, FlowCandle(date=dt, open=float(mc["open"]), high=float(mc["high"]), low=float(mc["low"]), close=float(mc["close"]))))
         eng = FirstSwingEngine()
+        # Second swing (post-first-swing) — same-bar arm guard, same rule as
+        # compute_swing_results swing_index >= 1 (chart parity).
+        eng.defer_same_bar_arm = True
         for g_idx, fc in flow_candles:
             eng.process_bar(fc, g_idx)
 
@@ -422,6 +425,9 @@ def detect_second_swing(
             dt = datetime.fromtimestamp(int(ts), tz=IST).strftime("%Y-%m-%dT%H:%M:%S") if ts else f"{day_date}T{c.get('time','00:00')}:00"
             flow_candles_5.append((idx, FlowCandle(date=dt, open=float(c["open"]), high=float(c["high"]), low=float(c["low"]), close=float(c["close"]))))
         eng = FirstSwingEngine()
+        # Second swing (post-first-swing) — same-bar arm guard, same rule as
+        # compute_swing_results swing_index >= 1 (chart parity).
+        eng.defer_same_bar_arm = True
         for g_idx, fc in flow_candles_5:
             eng.process_bar(fc, g_idx)
 
@@ -1019,13 +1025,38 @@ def simulate_day(
     # the 09:39 candle sits entirely above it, yet an entry fired on the SAME
     # pivot.) Must run AFTER _classify_first_swing_v2 sets fs1_1min_confirmed_idx.
     fs_break_pivot_idx: int = -1
-    if fs1_1min_confirmed_idx >= 0 and (normal_highs_1m or normal_lows_1m):
-        _fs_dir = fs1_1min_dir or swing_dir
-        piv_pool = normal_lows_1m if _fs_dir == "buying" else normal_highs_1m
-        for _p in reversed(piv_pool):
-            if _p.idx <= fs1_1min_confirmed_idx:
-                fs_break_pivot_idx = _p.idx
-                break
+    if fs1_1min_confirmed_idx >= 0:
+        # Correct FS break pivot is last_confirm_hit idx if chop (FS broke a pivot), else -1 for sustain
+        # Break-before-kill snapshot ensures same-bar kill does not hide victim (e.g. 09:44 H kills 09:38 H)
+        try:
+            from datetime import datetime, timezone, timedelta
+            from .firstswing import SwingEngine as _SE2
+            from .walker import FlowCandle as _FC3
+            # m1_candles already prepped; rebuild FlowCandles up to fs1_1min_confirmed_idx to get hit
+            _eng2 = _SE2({"timeCap": "09:29", "minBars": 14})
+            # Need original m1_day candles with ts for accurate FlowCandle dates
+            # Use m1_candles list which already has time strings
+            for _j, _mc in enumerate(m1_candles):
+                if _j > fs1_1min_confirmed_idx:
+                    break
+                # _mc has time like "09:38" need full date
+                _dt2 = f"{result['date']}T{_mc['time']}:00"
+                _fc2 = _FC3(date=_dt2, open=float(_mc["open"]), high=float(_mc["high"]), low=float(_mc["low"]), close=float(_mc["close"]))
+                _eng2.process_bar(_fc2, _j)
+                if _eng2.declared:
+                    break
+            _hit2 = getattr(_eng2, "last_confirm_hit", None)
+            if _hit2 and _hit2.get("idx", -1) >= 0 and getattr(_eng2, "confirm_source", None) == "chop":
+                fs_break_pivot_idx = int(_hit2["idx"])
+            else:
+                fs_break_pivot_idx = -1
+        except Exception:
+            _fs_dir = fs1_1min_dir or swing_dir
+            piv_pool = normal_lows_1m if _fs_dir == "buying" else normal_highs_1m
+            for _p in reversed(piv_pool):
+                if _p.idx <= fs1_1min_confirmed_idx:
+                    fs_break_pivot_idx = _p.idx
+                    break
     result["fs_break_pivot_idx"] = fs_break_pivot_idx
 
     # ── CONDITIONAL SECOND SWING (only for CONSERVATIVE 1min) ──
@@ -1057,6 +1088,9 @@ def simulate_day(
                     seed_fc = _FC(date=seed_dt, open=float(seed_c["open"]), high=float(seed_c["high"]), low=float(seed_c["low"]), close=float(seed_c["close"]))
                     eng2 = FirstSwingEngine({"timeCap": "00:00", "minBars": 14})
                     eng2.reset_with_candle(seed_fc, seed_idx)
+                    # Second swing (post-first-swing) — same-bar arm guard, same
+                    # rule as compute_swing_results swing_index >= 1 (chart parity).
+                    eng2.defer_same_bar_arm = True
                     # Build flow for 09:29 onward
                     for j in range(seed_idx+1, len(m1_day_candles)):
                         mc = m1_day_candles[j]

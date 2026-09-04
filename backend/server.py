@@ -875,6 +875,13 @@ def compute_first_second(req: FirstSecondRequest) -> FirstSecondResponse:
         if not after:
             continue
         eng = SwingEngine(opts)
+        # Second swing = post-first-swing engine: same-bar arm guard — a Walker
+        # seal arms the engine from the NEXT bar, so a B1 can never fire on the
+        # bar the engine first got structure (30 Sep 2025: 09:44 sealed H and
+        # fired phantom B1 up in that same bar). Same rule compute_swing_results
+        # applies to swing_index >= 1. B1 keeps the approved extreme-break
+        # semantics (break of the structure's running extreme).
+        eng.defer_same_bar_arm = True
         for gi, cc in after:
             eng.process_bar(cc, gi)
         if not eng.declared or eng.start_idx < 0:

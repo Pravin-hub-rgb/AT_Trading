@@ -152,6 +152,10 @@ def simulate_day_1min(
             # S 12:22→12:41 chop 12:44 — entries then fired on swings the
             # chart does not even show).
             eng2 = FirstSwingEngine({"timeCap": "09:29", "minBars": 14})
+            # Post-first-swing engine — same-bar arm guard so this chain stays
+            # EXACTLY in sync with the chart (compute_swing_results applies it
+            # to every swing_index >= 1).
+            eng2.defer_same_bar_arm = True
             declared = False
             for j in range(search_idx, len(candles)):
                 mc = candles[j]
@@ -598,22 +602,26 @@ def simulate_day_1min(
                 fs2_seg_start = None
                 fs2_seg_end = None
                 fs2_confirm_idx = None
+                fs2_confirmed_at = None
                 for ev in result["events"]:
                     if ev.get("type") == "fs2_segment":
                         fs2_seg_start = ev.get("start_idx")
                         fs2_seg_end = ev.get("end_idx")  # the candle that FORMED the extreme
                         fs2_confirm_idx = ev.get("confirm_pivot_idx")
+                        fs2_confirmed_at = ev.get("confirmed_at_idx")
 
                 def _is_fs2_internal(p, pool_type):
-                    """Candidate = pivot formed AFTER the desired swing's end line,
+                    """Candidate = pivot formed AFTER the desired swing's confirmation (FS mark),
                     EXCLUDING the swing's own confirm pivot. The confirm pivot's break
                     IS the mark itself — per the rule 'fs/sus ke baad jo bhi break
                     hota hai use gino', the mark-break is never a fresh 1st break.
-                    Pivots formed between the end line and the mark still count when
-                    they break after the mark (doc: 'FS end ke baad wale')."""
-                    if fs2_seg_end is None:
+                    Requires pivot sealed strictly after FS confirmed, not just after end,
+                    so FS's own chop target (e.g. 09:48 L24215.8 for FS2 09:37->09:49 FS@09:50)
+                    broken at 09:51 is not counted as post-FS 1st break."""
+                    if fs2_seg_end is None or fs2_confirmed_at is None:
                         return False
-                    if p.idx <= fs2_seg_end or p.idx >= i:
+                    # Strictly after FS mark (confirmed_at), not just after end
+                    if p.idx <= fs2_confirmed_at or p.idx >= i:
                         return False
                     if fs2_confirm_idx is not None and p.idx == fs2_confirm_idx:
                         return False
@@ -646,11 +654,30 @@ def simulate_day_1min(
                 # pivot formed after the FS break.
                 # FS=buying breaks a LOW pivot; FS=selling breaks a HIGH pivot.
                 if fs_break_pivot_idx < 0 and fs_confirmed_idx >= 0:
-                    _fs_pool = normal_lows if swing_dir == "buying" else normal_highs
-                    for _p in reversed(_fs_pool):
-                        if _p.idx <= fs_confirmed_idx:
-                            fs_break_pivot_idx = _p.idx
-                            break
+                    # Correct FS break pivot is last_confirm_hit idx if chop (FS broke a pivot), else -1 for sustain
+                    # Uses break-before-kill snapshot so same-bar kill does not hide victim (e.g. 09:44 H kills 09:38 H)
+                    try:
+                        from datetime import datetime, timezone, timedelta
+                        _eng = FirstSwingEngine({"timeCap": "09:29", "minBars": 14})
+                        for _j in range(fs_confirmed_idx + 1):
+                            _c = candles[_j]
+                            _dt = datetime.fromtimestamp(int(_c["ts"]), tz=timezone(timedelta(hours=5, minutes=30))).strftime("%Y-%m-%dT%H:%M:%S")
+                            from .walker import FlowCandle as _FC2
+                            _fc = _FC2(date=_dt, open=float(_c["open"]), high=float(_c["high"]), low=float(_c["low"]), close=float(_c["close"]))
+                            _eng.process_bar(_fc, _j)
+                            if _eng.declared:
+                                break
+                        _hit = getattr(_eng, "last_confirm_hit", None)
+                        if _hit and _hit.get("idx", -1) >= 0 and getattr(_eng, "confirm_source", None) == "chop":
+                            fs_break_pivot_idx = int(_hit["idx"])
+                        else:
+                            fs_break_pivot_idx = -1
+                    except Exception:
+                        _fs_pool = normal_lows if swing_dir == "buying" else normal_highs
+                        for _p in reversed(_fs_pool):
+                            if _p.idx <= fs_confirmed_idx:
+                                fs_break_pivot_idx = _p.idx
+                                break
                 # The CURRENT reference swing's own confirm pivot (after a
                 # traversal) is the mark-break — same rule as the conservative
                 # branch: it can never count as the aggressive 1st pivot break

@@ -153,11 +153,17 @@ export default function ChartPage() {
   const [btOn, setBtOn] = useState(false);
   const [btData, setBtData] = useState<IntradayBacktestResponse | null>(null);
   const [btError, setBtError] = useState<string | null>(null);
-  // Initialize backtest config from localStorage so saved filters take effect
-  // on first render (no extra fetch needed, Apply button starts disabled).
-  const [_savedBt] = useState(loadSavedIntradayFilters());
-  const [btParams, setBtParams] = useState<BacktestParams>(_savedBt.params);
-  const [btCase, setBtCase] = useState<string>(_savedBt.case);
+  const [btParams, setBtParams] = useState<BacktestParams>(DEFAULT_BT_PARAMS);
+  const [btCase, setBtCase] = useState<string>("all");
+
+  // Hydration-safe: load saved filters only on client after mount so server and
+  // initial client HTML match (loadSavedIntradayFilters reads window.localStorage
+  // which is missing on server and would otherwise cause hydration mismatch).
+  useEffect(() => {
+    const saved = loadSavedIntradayFilters();
+    setBtParams(saved.params);
+    setBtCase(saved.case);
+  }, []);
   const [swingN, setSwingN] = useState(SWING_N_DEFAULT);
   const [allSwings, setAllSwings] = useState(true);
   const [flowOn, setFlowOn] = useState(true);
@@ -192,7 +198,39 @@ export default function ChartPage() {
   const chartARef = useRef<StockChartHandle | null>(null);
   const chartBRef = useRef<StockChartHandle | null>(null);
 
+  // Go-to-date: picked calendar date per pane + feedback when the exact date
+  // has no candles (holiday/weekend) and the chart snaps to the nearest day.
+  const [goDateA, setGoDateA] = useState("");
+  const [goDateB, setGoDateB] = useState("");
+  const [jumpInfoA, setJumpInfoA] = useState<string | null>(null);
+  const [jumpInfoB, setJumpInfoB] = useState<string | null>(null);
+
   const btLoading = btOn && !btData && !btError;
+
+  // Loaded candle date range per pane — clamps the calendar picker so an
+  // out-of-range date can't even be picked.
+  const minDateA = data.length ? data[0].date.slice(0, 10) : "";
+  const maxDateA = data.length ? data[data.length - 1].date.slice(0, 10) : "";
+  const minDateB = dataB.length ? dataB[0].date.slice(0, 10) : "";
+  const maxDateB = dataB.length ? dataB[dataB.length - 1].date.slice(0, 10) : "";
+
+  const goTo = (
+    date: string,
+    handle: StockChartHandle | null,
+    setInfo: (v: string | null) => void,
+  ) => {
+    if (!date) return;
+    const actual = handle?.goToDate(date) ?? null;
+    if (!actual) return;
+    // Silent on an exact hit; surface the snap when the picked day had no data.
+    setInfo(
+      actual === date
+        ? null
+        : `No data — nearest: ${new Date(`${actual}T00:00:00Z`)
+            .toUTCString()
+            .slice(5, 16)}`,
+    );
+  };
 
   useEffect(() => {
     setInterval(loadInterval());
@@ -1270,6 +1308,44 @@ export default function ChartPage() {
             <span className="text-xs text-[#8b949e]">
               {loading ? "Loading..." : `${count} candles`}
             </span>
+            <div className="ml-auto flex items-center gap-1.5">
+              {jumpInfoA && (
+                <span
+                  className="text-xs text-amber-400/90"
+                  title="Selected date has no candles"
+                >
+                  {jumpInfoA}
+                </span>
+              )}
+              <input
+                type="date"
+                value={goDateA}
+                min={minDateA || undefined}
+                max={maxDateA || undefined}
+                onChange={(e) => {
+                  setGoDateA(e.target.value);
+                  setJumpInfoA(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter")
+                    goTo(goDateA, chartARef.current, setJumpInfoA);
+                }}
+                disabled={!minDateA}
+                suppressHydrationWarning
+                style={{ colorScheme: "dark" }}
+                className={SELECT_CLS}
+                title="Pick a date, then Go — chart A jumps to that trading day"
+              />
+              <button
+                onClick={() => goTo(goDateA, chartARef.current, setJumpInfoA)}
+                disabled={!goDateA || !minDateA}
+                suppressHydrationWarning
+                className="rounded-md border border-[#30363d] px-2 py-1 text-xs text-[#8b949e] transition-colors hover:border-[#6366f1] hover:text-[#e6edf3] disabled:opacity-40"
+                title="Jump chart A to the selected date"
+              >
+                Go
+              </button>
+            </div>
           </div>
           <StockChart
             ref={chartARef}
@@ -1325,6 +1401,44 @@ export default function ChartPage() {
               <span className="text-xs text-[#8b949e]">
                 {loadingB ? "Loading..." : `${countB} candles`}
               </span>
+              <div className="ml-auto flex items-center gap-1.5">
+                {jumpInfoB && (
+                  <span
+                    className="text-xs text-amber-400/90"
+                    title="Selected date has no candles"
+                  >
+                    {jumpInfoB}
+                  </span>
+                )}
+                <input
+                  type="date"
+                  value={goDateB}
+                  min={minDateB || undefined}
+                  max={maxDateB || undefined}
+                  onChange={(e) => {
+                    setGoDateB(e.target.value);
+                    setJumpInfoB(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter")
+                      goTo(goDateB, chartBRef.current, setJumpInfoB);
+                  }}
+                  disabled={!minDateB}
+                  suppressHydrationWarning
+                  style={{ colorScheme: "dark" }}
+                  className={SELECT_CLS}
+                  title="Pick a date, then Go — chart B jumps to that trading day"
+                />
+                <button
+                  onClick={() => goTo(goDateB, chartBRef.current, setJumpInfoB)}
+                  disabled={!goDateB || !minDateB}
+                  suppressHydrationWarning
+                  className="rounded-md border border-[#30363d] px-2 py-1 text-xs text-[#8b949e] transition-colors hover:border-[#22d3ee] hover:text-[#e6edf3] disabled:opacity-40"
+                  title="Jump chart B to the selected date"
+                >
+                  Go
+                </button>
+              </div>
             </div>
             <StockChart
               ref={chartBRef}

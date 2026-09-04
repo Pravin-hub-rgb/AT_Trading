@@ -98,6 +98,10 @@ interface Props {
 export interface StockChartHandle {
   setCrosshairAt(sec: number): void;
   clearCrosshair(): void;
+  /** Jump the visible range to a trading day ("YYYY-MM-DD"). Snaps to the
+   *  nearest day with data when the exact date has none (holiday/weekend).
+   *  Returns the date actually jumped to, or null when nothing can be shown. */
+  goToDate(date: string): string | null;
 }
 
 interface OHLCV {
@@ -617,8 +621,62 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       clearCrosshair() {
         syncPrimRef.current?.setTime(null);
       },
+      goToDate(date: string): string | null {
+        const chart = chartRef.current;
+        if (!chart || !/^\d{4}-\d{2}-\d{2}$/.test(date) || candles.length === 0)
+          return null;
+
+        // First candle index per trading day (candles are chronological).
+        const firstIdx = new Map<string, number>();
+        const days: string[] = [];
+        for (let i = 0; i < candles.length; i++) {
+          const d = candles[i].date.slice(0, 10);
+          if (!firstIdx.has(d)) {
+            firstIdx.set(d, i);
+            days.push(d);
+          }
+        }
+
+        // Exact match, else the nearest day that actually has data
+        // (holiday/weekend pick -> snap so the chart is never left blank).
+        let day = firstIdx.has(date) ? date : null;
+        if (!day) {
+          const want = Date.parse(`${date}T00:00:00Z`);
+          let bestDiff = Infinity;
+          for (const d of days) {
+            const diff = Math.abs(Date.parse(`${d}T00:00:00Z`) - want);
+            if (diff < bestDiff) {
+              bestDiff = diff;
+              day = d;
+            }
+          }
+          if (!day) return null;
+        }
+
+        // First/last candle index of that session.
+        const start = firstIdx.get(day)!;
+        let end = start;
+        while (
+          end + 1 < candles.length &&
+          candles[end + 1].date.slice(0, 10) === day
+        )
+          end++;
+
+        // Center the session in the view: the whole day visible on intraday
+        // charts (± ~8% breathing room), ±30 bars of context on daily.
+        const margin = intraday
+          ? Math.max(10, Math.round(((end - start + 1) * 8) / 100))
+          : 30;
+        chart.timeScale().setVisibleLogicalRange({
+          from: Math.max(0, start - margin),
+          to: end + margin,
+        });
+        return day;
+      },
     }),
-    [intraday],
+    // `candles` is needed by goToDate's day index — recreated on data reload,
+    // which is harmless (the parent only calls methods on the handle).
+    [intraday, candles],
   );
 
   // ── overlay: ALL markers (consolidated into single effect to prevent interference) ──

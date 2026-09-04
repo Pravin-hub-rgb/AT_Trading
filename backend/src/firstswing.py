@@ -94,6 +94,24 @@ class SwingEngine:
         self.hi: float = float("nan")
         self.lo: float = float("nan")
 
+        # Same-bar arm guard (swings after the first): a Walker seal emitted
+        # during the CURRENT bar must not arm the engine for THAT bar — otherwise
+        # a B1 can fire on the same bar the engine first got structure.
+        # (30 Sep 2025: the 09:44 bar sealed H 24669.05 and the up-break fired in
+        # that same bar -> phantom B1 up "breaking" the 09:43 high 24667.7, a
+        # stamp shift inside the straight white 09:42->09:44 leg.) With the guard
+        # the seal arms the engine from the NEXT bar: 09:44 no B1, 09:45 B1 down
+        # breaking the 09:42 low 24647.15 — the structure-extreme break. B1 keeps
+        # the approved extreme-break semantics ("09:30 B1 breaking 09:29 low",
+        # old computeSecondSwingResults @ 7fe645d). Applied ONLY to swings after
+        # the first (swing_index >= 1) — the first swing keeps the approved FsV2
+        # session-extreme spec (firstswing_cf11277).
+        if isinstance(opts, dict):
+            self.defer_same_bar_arm: bool = bool(opts.get("defer_same_bar_arm", False))
+        else:
+            self.defer_same_bar_arm = bool(getattr(opts, "defer_same_bar_arm", False))
+        self._pending_arm: bool = False
+
         self.e_hi: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
         self.e_lo: Lvl = Lvl(px=float("inf"), idx=-1, time="")
         self.e_hi_prev: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
@@ -165,6 +183,12 @@ class SwingEngine:
 
         self.just_fired_b2 = False
 
+        # Deferred arming: a seal from the PREVIOUS bar arms the engine now
+        # (see defer_same_bar_arm note in __init__).
+        if self.defer_same_bar_arm and self._pending_arm:
+            self.armed = True
+            self._pending_arm = False
+
         if self.bars_seen == 1:
             self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
             self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
@@ -183,11 +207,29 @@ class SwingEngine:
         self.bar_highs[g_idx] = c.high
         self.bar_lows[g_idx] = c.low
 
+        # Snapshot latest sealed before walker kill (break-before-kill, live-smart)
+        # Walker may seal a new H/L in this same bar that kills the victim (e.g. 09:44 H 24669.05 kills 09:38 H 24668.7)
+        # Live ticks: 09:38 break (hi > tgt) happens before the new H is considered sealed.
+        # So chop must be evaluated against prev_latest, then latest updated for next bar.
+        _snap_high = self.latest_sealed_high
+        _snap_low = self.latest_sealed_low
+        # Keep deep copy for chop (Lvl is mutable dataclass)
+        if _snap_high is not None:
+            _snap_high = Lvl(px=_snap_high.px, idx=_snap_high.idx, time=_snap_high.time)
+        if _snap_low is not None:
+            _snap_low = Lvl(px=_snap_low.px, idx=_snap_low.idx, time=_snap_low.time)
+        self._snap_high = _snap_high
+        self._snap_low = _snap_low
+
         for p in self.walker.process_bar(c, g_idx):
             if not p.sealed:
                 continue
             if self.bars_seen >= 2:
-                self.armed = True
+                if self.defer_same_bar_arm:
+                    # Arm from the NEXT bar (same-bar arm guard)
+                    self._pending_arm = True
+                else:
+                    self.armed = True
             if p.kind == "H":
                 # Any new H kills old H — gap validated at chop-target time, not here
                 self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
@@ -419,8 +461,18 @@ class SwingEngine:
     def _check_chop(self) -> None:
         if self.just_fired_b2:
             return
+        # Use snapshot of latest sealed before this bar's walker kill (break-before-kill)
+        # If a new H/L was sealed in this same bar that kills the victim, chop must still see victim.
+        # Snapshot is stored as _snap_high/low in process_bar; if not set, fall back to latest.
+        # We access via getattr to stay compatible with direct _check_chop calls (tests).
         if self.dir == "down":
+            # Temporarily swap latest for snap for this check
+            _orig = self.latest_sealed_high
+            _snap = getattr(self, "_snap_high", None)
+            if _snap is not None:
+                self.latest_sealed_high = _snap
             tgt = self._chop_target_high()
+            self.latest_sealed_high = _orig
             if tgt and self.hi > tgt.px:
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
@@ -429,7 +481,12 @@ class SwingEngine:
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
         elif self.dir == "up":
+            _orig_low = self.latest_sealed_low
+            _snap_low = getattr(self, "_snap_low", None)
+            if _snap_low is not None:
+                self.latest_sealed_low = _snap_low
             tgt = self._chop_target_low()
+            self.latest_sealed_low = _orig_low
             if tgt and self.lo < tgt.px:
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
@@ -473,20 +530,10 @@ class SwingEngine:
         return p
 
     def _check_sustain(self, c: FlowCandle) -> None:
-        if self.just_fired_b2:
-            return
-        if not self.dir_confirmed:
-            self.sustain_streak = 0
-            return
-        fresh = (self.dir == "down" and c.low < self.e_lo.px) or (self.dir == "up" and c.high > self.e_hi.px)
-        if fresh:
-            self.sustain_streak = 0
-            return
-        ref = self.locked_level
-        hold = (self.dir == "down" and c.close > ref) or (self.dir == "up" and c.close < ref)
-        self.sustain_streak = self.sustain_streak + 1 if hold else 0
-        if self.sustain_streak >= self.sustain_bars:
-            self._confirm("sustain")
+        # SUS removed — swing must need FS (chop). Sustain no longer declares FS.
+        # Keeps Walker white vs yellow aligned: any tick crossing with gap is FS.
+        # Sustained hold without opposite pivot break is no longer a swing.
+        return
 
     def _confirm(self, src: Literal["chop", "sustain"], trig: Optional[dict] = None) -> None:
         if self.t < self.time_cap:
@@ -580,6 +627,7 @@ class SwingEngine:
         self.last_confirm_hit = None
         self.sustain_streak = 0
         self.armed = False
+        self._pending_arm = False
         self.first_chop_cross_idx = -1
         self.first_chop_cross_px = float("nan")
         self.first_chop_cross_time = ""
@@ -642,6 +690,7 @@ class SwingEngine:
         self.last_confirm_hit = None
         self.sustain_streak = 0
         self.armed = False
+        self._pending_arm = False
         self.first_chop_cross_idx = -1
         self.first_chop_cross_px = float("nan")
         self.first_chop_cross_time = ""
@@ -713,6 +762,12 @@ def compute_swing_results(
 
         while swing_index < max_swings:
             eng = SwingEngine(_opts)
+            # Swings after the first: same-bar arm guard — a Walker seal arms the
+            # engine from the NEXT bar, so a B1 can never fire on the bar the
+            # engine first got structure. The first swing keeps the approved
+            # FsV2 session-extreme semantics untouched.
+            if swing_index > 0:
+                eng.defer_same_bar_arm = True
             swing_found = False
 
             for pos in range(next_start_pos, len(items)):
