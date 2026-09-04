@@ -8,7 +8,7 @@
 | Section | State |
 |---|---|
 | Entry/SL items 1-6 | ✅ ALL resolved (2026-09-04) |
-| Swing engine white-line parity | ✅ closed — B1 = extreme break + same-bar arm guard; FLIP finding retracted; B2/chop verified 100% white-pivot |
+| Swing engine white-line parity | ✅ closed — B1 = extreme break + same-bar arm guard with V-reversal exception; FLIP finding retracted; B2/chop verified 100% white-pivot |
 
 ## Fixed — Verified Correct
 
@@ -71,6 +71,15 @@
 
 ---
 
+
+### ✅ RESOLVED — 3 Sept 2026 second-swing B1 at 9:28 instead of 9:27 (V-reversal same-bar arm)
+
+- **Symptom (user):** FS1 ends 09:25, swing 2 seeds 09:26 (RED, flow high→low). 09:27 broke the 09:26 high — a V reversal — so B1 belongs at 09:27, but it was marked 09:28.
+- **Root cause:** the same-bar arm guard (added for the 30 Sept phantom) deferred ALL same-bar arming. At 09:27 the walker sealed the 09:26 high pivot (`H@23970.15` sealed during 09:27) and 09:27's high broke that pivot — a genuine V reversal — but the guard blocked the B1 to 09:28.
+- **Discriminator vs the 30 Sept phantom:** the break direction vs the leg the seal terminated. 3 Sept: pre-seal leg = DOWN (red seed flow), break = UP → **opposite = V reversal → arm same bar**. 30 Sept 09:44: pre-seal leg = UP, break = UP → **same direction = flow extension → stay deferred**.
+- **Tie-break (seed-colour rule):** on the arming bar BOTH extremes can break (3 Sept: V up +1.25 AND marginal low-dip −0.30). The seed colour decides: red seed flow high→low → the up-break is the B1, the same-direction down-break is flow extension (suppressed). Green seed mirrored.
+- **Fix:** `firstswing.py process_bar` — capture `_pending_leg_dir` (walker leg at bar start); after break computation, if `defer_same_bar_arm` + pending + watch: opposite-direction break → arm SAME bar and suppress the same-direction break; else pending carries to next bar (30 Sept unchanged).
+- **Verified:** 2026-09-03 swing 1 = `B start 11(09:26)/23958.15`, `B1 up @ 23970.15 bar 12 (09:27)` ✓; 2025-09-30 byte-identical (B1 down @ 09:45) ✓; swing-0 identical 270/270 ✓. Full-CSV: 4070 → 4153 swings, 59 days re-chunked (same-bar V-reversals now fire a bar earlier per this rule).
 
 ### ✅ RESOLVED — 30 Sept second-swing B1 at 9:44 (and 08-01 09:37)
 

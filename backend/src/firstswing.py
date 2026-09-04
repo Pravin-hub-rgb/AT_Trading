@@ -111,6 +111,7 @@ class SwingEngine:
         else:
             self.defer_same_bar_arm = bool(getattr(opts, "defer_same_bar_arm", False))
         self._pending_arm: bool = False
+        self._pending_leg_dir = None  # walker leg dir at the bar a seal arrived (V-reversal check)
 
         self.e_hi: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
         self.e_lo: Lvl = Lvl(px=float("inf"), idx=-1, time="")
@@ -221,12 +222,17 @@ class SwingEngine:
         self._snap_high = _snap_high
         self._snap_low = _snap_low
 
+        # Flow direction at bar start — the walker leg the bar's seals will
+        # terminate. Used by the same-bar V-reversal arm exception (below).
+        self._pending_leg_dir = self.walker.dir
+
         for p in self.walker.process_bar(c, g_idx):
             if not p.sealed:
                 continue
             if self.bars_seen >= 2:
                 if self.defer_same_bar_arm:
-                    # Arm from the NEXT bar (same-bar arm guard)
+                    # Same-bar arm guard: defer to NEXT bar (the V-reversal
+                    # exception is applied after the walker loop, below)
                     self._pending_arm = True
                 else:
                     self.armed = True
@@ -273,6 +279,24 @@ class SwingEngine:
 
         up_break = c.high > self.e_hi_prev.px
         down_break = c.low < self.e_lo_prev.px
+        # Same-bar arm guard with V-reversal exception: a Walker seal arriving
+        # THIS bar normally defers arming to the next bar — EXCEPT when the
+        # break runs OPPOSITE to the leg the seal terminated (a V reversal off
+        # the just-sealed pivot: 2026-09-03 09:27 breaking the sealed 09:26
+        # high 23970.15). On the arming bar the SAME-direction break is
+        # seed-colour flow extension (red seed: high->low; green seed: low->high)
+        # and is suppressed, so B1 locks in the V direction. A same-direction
+        # break (2025-09-30 09:44 up-break past the sealed up-leg top) stays
+        # deferred to the next bar — no phantom B1.
+        if self.defer_same_bar_arm and self._pending_arm and self.state == "watch":
+            if self._pending_leg_dir == "down" and up_break:
+                self.armed = True
+                self._pending_arm = False
+                down_break = False
+            elif self._pending_leg_dir == "up" and down_break:
+                self.armed = True
+                self._pending_arm = False
+                up_break = False
         if self.armed:
             self._step(down_break, up_break)
 

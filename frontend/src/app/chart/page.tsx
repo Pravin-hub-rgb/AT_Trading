@@ -40,6 +40,7 @@ const FS_KEY = "chart_first_swing_on";
 const FS_REV_KEY = "chart_fs_rev_pct";
 const FS_REV_DEFAULT = 15;
 const SWING_N_DEFAULT = 3;
+const HHLL_KEY = "chart_hhll_tags_on";
 
 // localStorage key shared with IntradayPanel — restores saved filter config
 const INTRADAY_FILTERS_KEY = "intraday_filters";
@@ -147,6 +148,7 @@ export default function ChartPage() {
   const [swingCount, setSwingCount] = useState(0);
 
   const [biasOn, setBiasOn] = useState(true);
+  const [hhllOn, setHhllOn] = useState(false);
   const [biasLabels, setBiasLabels] = useState<BiasLabel[]>([]);
   const [biasSummary, setBiasSummary] = useState<Record<string, number>>({});
 
@@ -249,6 +251,7 @@ export default function ChartPage() {
       const savedIvB = window.localStorage.getItem(INTERVAL_B_KEY);
       if (savedIvB === "daily" || savedIvB === "5min" || savedIvB === "1min")
         setIntervalB(savedIvB);
+      setHhllOn(window.localStorage.getItem(HHLL_KEY) === "1");
     }
   }, []);
 
@@ -632,6 +635,7 @@ export default function ChartPage() {
       return {
         swings: dispSwings,
         bias: isIntraday && biasOn ? biasLabels : undefined,
+        hhllBias: isIntraday && hhllOn ? biasLabels : undefined,
         trades: isIntraday ? allTrades : undefined,
         sessionBreaks: isIntraday,
         algoFlowLine:
@@ -983,6 +987,7 @@ export default function ChartPage() {
       swings,
       swingOn,
       biasOn,
+      hhllOn,
       biasLabels,
       allTrades,
       flowOn,
@@ -1142,12 +1147,32 @@ export default function ChartPage() {
                 ? "border-[#f59e0b] text-[#e6edf3]"
                 : "border-[#30363d] text-[#8b949e]"
             }`}
-            title="Initial bias per day (pre-open, from previous-day close reads) â€” 5-min chart only"
+            title="Initial bias per day (pre-open, from previous-day close reads) — arrow only, HH/LL hidden"
           >
             <span
               className={`h-2 w-2 rounded-full ${biasOn ? "bg-[#f59e0b]" : "bg-[#8b949e]"}`}
             />
             Bias
+          </button>
+
+          <button
+            onClick={() => {
+              setHhllOn((v) => {
+                window.localStorage.setItem(HHLL_KEY, v ? "0" : "1");
+                return !v;
+              });
+            }}
+            className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+              hhllOn && interval === "5min"
+                ? "border-[#f97316] text-[#e6edf3]"
+                : "border-[#30363d] text-[#8b949e]"
+            }`}
+            title="Prev-day HH/HL/LH/LL swing tags from bias structure (5-min chart only, detached from Bias arrow)"
+          >
+            <span
+              className={`h-2 w-2 rounded-full ${hhllOn ? "bg-[#f97316]" : "bg-[#8b949e]"}`}
+            />
+            HH/LL Tags
           </button>
 
           <button
@@ -1355,6 +1380,7 @@ export default function ChartPage() {
             interval={interval}
             swings={overlaysA.swings}
             bias={overlaysA.bias}
+            hhllBias={overlaysA.hhllBias}
             trades={overlaysA.trades}
             sessionBreaks={overlaysA.sessionBreaks}
             algoFlowLine={overlaysA.algoFlowLine}
@@ -1448,6 +1474,7 @@ export default function ChartPage() {
               interval={intervalB}
               swings={overlaysB.swings}
               bias={overlaysB.bias}
+              hhllBias={overlaysB.hhllBias}
               trades={overlaysB.trades}
               sessionBreaks={overlaysB.sessionBreaks}
               algoFlowLine={overlaysB.algoFlowLine}

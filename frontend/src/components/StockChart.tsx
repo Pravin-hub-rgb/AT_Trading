@@ -43,6 +43,8 @@ interface Props {
   height?: number;
   swings?: SwingPoint[];
   bias?: BiasLabel[];
+  /** Prev-day HH/HL/LH/LL tags — detached from bias arrows, own toggle (5-min only). */
+  hhllBias?: BiasLabel[];
   trades?: TradeBox[];
   sessionBreaks?: boolean;
   algoFlowLine?: FlowSegment[] | null;
@@ -209,6 +211,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     height = 720,
     swings,
     bias,
+    hhllBias,
     trades,
     sessionBreaks,
     algoFlowLine,
@@ -713,7 +716,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     if (!ser || !intraday) return;
     const markers: SeriesMarker<Time>[] = [];
 
-    // 1. Bias arrows (prev-day bias arrows)
+    // 1. Bias arrows (prev-day bias arrows) — gated by `bias` prop (Bias toggle)
     if (bias && bias.length > 0) {
       const lastByDate = new Map<string, Candle>();
       candles.forEach((c) => {
@@ -748,28 +751,28 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
           size: 2,
         });
       });
+    }
 
-      // 5-min HH/HL/LH/LL swing tags from bias
-      if (interval === "5min") {
-        bias.forEach((lb) => {
-          (lb.prev_day?.swings ?? []).forEach((s) => {
-            const tagColor =
-              s.tag === "HH" || s.tag === "HL"
-                ? "#10b981"
-                : s.tag === "LH" || s.tag === "LL"
-                  ? "#f97316"
-                  : "#8b949e";
-            markers.push({
-              time: s.ts as Time,
-              position: s.kind === "high" ? "aboveBar" : "belowBar",
-              shape: "circle",
-              color: tagColor,
-              text: s.tag ?? "",
-              size: 0.5,
-            });
+    // 1b. 5-min HH/HL/LH/LL swing tags — detached, gated by `hhllBias` prop (HH/LL Tags toggle)
+    if (hhllBias && hhllBias.length > 0 && interval === "5min") {
+      hhllBias.forEach((lb) => {
+        (lb.prev_day?.swings ?? []).forEach((s) => {
+          const tagColor =
+            s.tag === "HH" || s.tag === "HL"
+              ? "#10b981"
+              : s.tag === "LH" || s.tag === "LL"
+                ? "#f97316"
+                : "#8b949e";
+          markers.push({
+            time: s.ts as Time,
+            position: s.kind === "high" ? "aboveBar" : "belowBar",
+            shape: "circle",
+            color: tagColor,
+            text: s.tag ?? "",
+            size: 0.5,
           });
         });
-      }
+      });
     }
 
     // 2. Break markers (B1/B2/FLIP) - added first so they render below
@@ -865,6 +868,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     intraday,
     interval,
     bias,
+    hhllBias,
     candles,
     fsMarkers,
     fsBreaks,
