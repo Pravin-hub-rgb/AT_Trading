@@ -26,6 +26,12 @@ from .intraday import (
     SL_PIVOT_BUFFER,
     DEFAULT_CFG,
 )
+from .intraday_shared import (
+    is_breakeven_enabled,
+    get_breakeven_r,
+    update_mfe_and_check_breakeven,
+    track_mfe_only,
+)
 
 def simulate_day_1min(
     day_1m: pd.DataFrame,
@@ -470,24 +476,16 @@ def simulate_day_1min(
                     t["validated"]=True
                 if not exited:
                     risk = abs(entry - cur_sl) or 1e-9
-                    breakeven_r = float(cfg.get("breakeven_r", cfg.get("cost_to_cost_r", 1.0)))
-                    rr_target = float(cfg.get("rr_target", 3.0))
-                    # filter: breakeven only when RR >=1:3 and breakeven < target (1:2 target with 2R breakeven meaningless per user)
-                    if rr_target >= 3.0 and breakeven_r < rr_target:
-                        if t["dir"]=="long":
-                            t["mfe_r"] = max(t.get("mfe_r",0.0), (hi - entry)/risk)
-                            if t.get("mfe_r",0.0) >= breakeven_r and lo <= entry:
-                                _close_trade(t, i, entry, "cost-to-cost")
-                        else:
-                            t["mfe_r"] = max(t.get("mfe_r",0.0), (entry - lo)/risk)
-                            if t.get("mfe_r",0.0) >= breakeven_r and hi >= entry:
-                                _close_trade(t, i, entry, "cost-to-cost")
+                    if is_breakeven_enabled(cfg):
+                        breakeven_r = get_breakeven_r(cfg)
+                        new_mfe, hit = update_mfe_and_check_breakeven(
+                            t["dir"], entry, hi, lo, risk, float(t.get("mfe_r", 0.0)), breakeven_r
+                        )
+                        t["mfe_r"] = new_mfe
+                        if hit:
+                            _close_trade(t, i, entry, "cost-to-cost")
                     else:
-                        # still track mfe for stats even if breakeven disabled
-                        if t["dir"]=="long":
-                            t["mfe_r"] = max(t.get("mfe_r",0.0), (hi - entry)/risk)
-                        else:
-                            t["mfe_r"] = max(t.get("mfe_r",0.0), (entry - lo)/risk)
+                        t["mfe_r"] = track_mfe_only(t["dir"], entry, hi, lo, risk, float(t.get("mfe_r", 0.0)))
             if cur["time"] >= EOD_EXIT and open_trade is not None:
                 _close_trade(open_trade, i, float(cur["close"]), "eod")
 

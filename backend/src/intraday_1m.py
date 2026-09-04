@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import pandas as pd
 
+from .intraday_shared import is_breakeven_enabled, get_breakeven_r
+
 # All 1min management constants live here so the main engine can stay slim.
 EOD_EXIT = "15:15"
 
@@ -154,12 +156,8 @@ def manage_1m_chunk(
                                 str(row.timestamp)[11:16] + ":00", int(row.ts))
                         exited = True
 
-        # Cost-to-cost: breakeven when mfe >= breakeven_r and price returns to entry
-        # Filter: breakeven_r < rr_target, else breakeven == target (e.g. 2R breakeven with 1:2 target) meaningless
-        # Allows comparing 1R vs 2R breakeven results via cfg breakeven_r dropdown
-        breakeven_r = float(cfg.get("breakeven_r", cfg.get("cost_to_cost_r", 1.0)))
-        rr_target = float(cfg.get("rr_target", 3.0))
-        if not exited and rr_target >= 3.0 and breakeven_r < rr_target and max_profit >= breakeven_r * init_risk:
+        # Cost-to-cost: single source via intraday_shared (Off=0 disabled, rr>=3 and <target)
+        if not exited and is_breakeven_enabled(cfg) and max_profit >= get_breakeven_r(cfg) * init_risk:
             if t_dir == 1 and lo <= entry:
                 on_exit(entry, "cost-to-cost", str(row.timestamp)[11:16] + ":00", int(row.ts))
                 exited = True

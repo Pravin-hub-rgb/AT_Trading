@@ -30,6 +30,12 @@ import pandas as pd
 from collections import Counter
 from .walker import WalkerEngine, FlowCandle
 from .intraday_1m import manage_1m_chunk, resolve_pending_direct
+from .intraday_shared import (
+    is_breakeven_enabled,
+    get_breakeven_r,
+    update_mfe_and_check_breakeven,
+    track_mfe_only,
+)
 
 # --- tunable thresholds -------------------------------------------------------
 ENTRY_START = "09:45"        # hard rule: no entries before this (S1/S4/S5) — lowered for 1min via fs_end
@@ -1257,24 +1263,17 @@ def simulate_day(
                     if not t["validated"] and i > t["validate_until"]:
                         t["validated"] = True
                     if not exited:
-                        breakeven_r = float(cfg.get("breakeven_r", cfg.get("cost_to_cost_r", 1.0)))
-                        rr_target = float(cfg.get("rr_target", 3.0))
-                        if rr_target >= 3.0 and breakeven_r < rr_target:
-                            if t["dir"] == "long":
-                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (cur["high"] - t["entry_price"]) / risk)
-                                if t.get("mfe_r", 0.0) >= breakeven_r and cur["low"] <= t["entry_price"]:
-                                    _close_trade(t, i, t["entry_price"], "cost-to-cost")
-                                    exited = True
-                            else:
-                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (t["entry_price"] - cur["low"]) / risk)
-                                if t.get("mfe_r", 0.0) >= breakeven_r and cur["high"] >= t["entry_price"]:
-                                    _close_trade(t, i, t["entry_price"], "cost-to-cost")
-                                    exited = True
+                        if is_breakeven_enabled(cfg):
+                            breakeven_r = get_breakeven_r(cfg)
+                            new_mfe, hit = update_mfe_and_check_breakeven(
+                                t["dir"], float(t["entry_price"]), float(cur["high"]), float(cur["low"]), risk, float(t.get("mfe_r", 0.0)), breakeven_r
+                            )
+                            t["mfe_r"] = new_mfe
+                            if hit:
+                                _close_trade(t, i, t["entry_price"], "cost-to-cost")
+                                exited = True
                         else:
-                            if t["dir"] == "long":
-                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (cur["high"] - t["entry_price"]) / risk)
-                            else:
-                                t["mfe_r"] = max(t.get("mfe_r", 0.0), (t["entry_price"] - cur["low"]) / risk)
+                            t["mfe_r"] = track_mfe_only(t["dir"], float(t["entry_price"]), float(cur["high"]), float(cur["low"]), risk, float(t.get("mfe_r", 0.0)))
 
                 if cur["time"] >= EOD_EXIT and open_trade is not None:
                     _close_trade(open_trade, i, cur["close"], "eod")
