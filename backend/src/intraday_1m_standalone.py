@@ -293,7 +293,7 @@ def simulate_day_1min(
     pivot_break_count = 0
     entries_done = 0
     open_trade: dict | None = None
-    broken_pivot_levels: set[float] = set()
+    broken_pivot_levels: set = set()  # of (price, pivot_idx) — key by pivot, not price alone
     # Index of the pivot the FS used for its own break (chop/confirm target).
     # Entry must use a DIFFERENT (newer) pivot - resolved lazily in the loop.
     fs_break_pivot_idx = -1
@@ -313,10 +313,15 @@ def simulate_day_1min(
     def _open_trade(bar_idx, dirn, ref_level, dbar, btype):
         nonlocal open_trade, entries_done
         if ref_swing_end_px is not None:
-            # Use the candle's close for end_line check - the actual entry price must be on the correct
-            # side of the swing end. The break itself is already confirmed by cur["low"] < fs2_high
-            # (or cur["high"] > fs2_low for long), so if close is on the correct side, entry is valid.
-            est_entry = float(dbar.get("close", ref_level))
+            # End-line guard: the ENTRY LEVEL (the pivot price we actually enter
+            # at, 1min direct) must be on the correct side of the swing end —
+            # NOT the candle close (close varies candle to candle; the level is
+            # the structure). A wick through the level is a genuine fill; the
+            # level's side of the end line decides validity. Note: an end-line
+            # BREACH before entry (price trading through the swing end) is
+            # handled by the reference traversal — it re-arms to the next swing
+            # with fresh break counting, so we never enter on a dead swing.
+            est_entry = float(ref_level)
             # For long, ref should be selling swing low; for short, buying swing high
             # Currently ref is FS1's end, but for B7 (FS1 buying, trade long) we need selling swing low, not buying high
             # So only check if entry is on wrong side of ref based on trade_dir vs ref_dir
@@ -343,34 +348,31 @@ def simulate_day_1min(
                 # For SHORT (dirn==-1): need a high pivot ABOVE entry
                 # For LONG (dirn==1): need a low pivot BELOW entry
                 if dirn == -1:
-                    # Find highest high pivot that's above entry
                     above = [p for p in eligible if p.px > ref_level]
                     if above:
                         pivot_ref = above[-1]  # closest above
-                    else:
-                        # No pivot above entry - use second-to-last or fallback to candle high + buffer
-                        pivot_ref = eligible[-2] if len(eligible) >= 2 else None
                 else:
-                    # Find lowest low pivot that's below entry
                     below = [p for p in eligible if p.px < ref_level]
                     if below:
                         pivot_ref = below[-1]  # closest below
-                    else:
-                        # No pivot below entry - use second-to-last or fallback to candle low - buffer
-                        pivot_ref = eligible[-2] if len(eligible) >= 2 else None
                 
+                sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
                 if pivot_ref is not None:
-                    sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
                     sl = pivot_ref.px + sl_buffer if dirn==-1 else pivot_ref.px - sl_buffer
+                elif float(cfg.get("min_sl_pts", 0) or 0) > 0:
+                    # No pivot on correct side → Min SL from dropdown (13 default) — entry ± min_sl_pts
+                    _min_sl = float(cfg.get("min_sl_pts", 0))
+                    sl = entry + _min_sl if dirn==-1 else entry - _min_sl
                 else:
-                    # No valid pivot - use candle's extreme + buffer
-                    sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
                     sl = entry_high + sl_buffer if dirn==-1 else entry_low - sl_buffer
             else:
-                # No eligible prev pivot - use fixed distance based on entry direction
-                # For SHORT: SL above entry (candle high + buffer); For LONG: SL below entry (candle low - buffer)
-                sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
-                sl = entry_high + sl_buffer if dirn==-1 else entry_low - sl_buffer
+                # No eligible prev pivot - use Min SL if set, else fixed distance
+                if float(cfg.get("min_sl_pts", 0) or 0) > 0:
+                    _min_sl = float(cfg.get("min_sl_pts", 0))
+                    sl = entry + _min_sl if dirn==-1 else entry - _min_sl
+                else:
+                    sl_buffer = cfg.get("sl_pivot_buffer", 1.0)
+                    sl = entry_high + sl_buffer if dirn==-1 else entry_low - sl_buffer
         elif sl_mode == "swing_end":
             # SL at the reference swing's end extreme (entry theory.md — swing end line):
             # LONG → selling swing's low; SHORT → buying swing's high.
@@ -529,7 +531,12 @@ def simulate_day_1min(
                     # swing's sequence and must not leak into this one's
                     # (2025-08-12: count 1 from 10:55 leaked across the 11:03
                     #  traverse and made 11:17 a "2nd break" → premature entry).
+                    # The broken-LEVELS set must be cleared too: a level broken
+                    # under the previous reference belongs to that swing's
+                    # sequence — a fresh pivot at the same price in the new
+                    # swing is a genuine 1st break, not "already broken".
                     pivot_break_count = 0
+                    broken_pivot_levels.clear()
                     if trade_mode == "conservative":
                         result["swing2_direction"] = found["dir"]
                         result["swing2_confirmed_idx"] = found["confirmed_at_idx"]
@@ -696,12 +703,15 @@ def simulate_day_1min(
                     if piv and cur["low"] < piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
             if brk is not None:
-                # Don't re-enter on same pivot level already broken
-                if brk["level"] in broken_pivot_levels:
+                # Don't re-enter on same pivot already broken - keyed by
+                # (price, pivot bar): a double bottom at the same exact price is
+                # a FRESH pivot and must count as a new break (price-only key
+                # blocked it: 2025-12-24 entry delayed 11:21 -> 11:34).
+                if (brk["level"], piv.idx) in broken_pivot_levels:
                     result["events"].append({"type":"skipped_already_broken","bar":i,"time":cur["time"],"level":round(brk["level"],2),"reason":"pivot_already_broken_on_prev_candle"})
                     brk = None
                 else:
-                    broken_pivot_levels.add(brk["level"])
+                    broken_pivot_levels.add((brk["level"], piv.idx))
                     aligned = trade_dir == bias_dir
                     pivot_break_count+=1
                     result["events"].append({"type":"pace_break","bar":i,"time":cur["time"],"break_type":brk["type"],"level":round(brk["level"],2),"swing_before":cur_swing,"aligned_with_bias":aligned,"pivot_break_count":pivot_break_count})

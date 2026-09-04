@@ -7,8 +7,7 @@
 
 | Section | State |
 |---|---|
-| Entry/SL items 1-2 | ✅ resolved |
-| Entry/SL items 3-6 | ⏳ open — **next discussion** |
+| Entry/SL items 1-6 | ✅ ALL resolved (2026-09-04) |
 | Swing engine white-line parity | ✅ closed — B1 = extreme break + same-bar arm guard; FLIP finding retracted; B2/chop verified 100% white-pivot |
 
 ## Fixed — Verified Correct
@@ -38,31 +37,37 @@
 - **Fix:** `intraday_1m_standalone.py:652` now re-runs `FirstSwingEngine` up to `fs_confirmed_idx` to get `last_confirm_hit idx` (`firstswing.py:429` already `>dir_est+gap`) → `fs_break = hit idx if chop else -1` (sustain `-1` no dead pivot). `intraday.py:1021` same for `fs1_1min`. `FS pivot` (`09:48 L24215.8` for `27 Aug`) now dead, `09:51 L24206.5` is `1st post-FS`.
 - **Verified:** `2025-10-30` `buggy 12 → correct -1` entry still `09:49` but now `> -1` live `1st` correct, `2026-03-12` `84→ -1?` actually `84` correct `86` buggy diff `20` days `>dir_est` now, `13 Aug 09:39` no longer fires on `24330.95` same pivot, `09:43` `24345.85` is `1st`.
 
-### 3. ⏳ OPEN — SL prev_pivot fallback wrong side
+### 3. ✅ RESOLVED — SL prev_pivot fallback wrong side
 
-- **Location:** `intraday_1m_standalone.py:341-364`
-- **Code:** `above = [p for p in eligible if p.px > ref_level]; pivot_ref = above[-1] if above else eligible[-2]`
-- **Bug:** `above` empty → `eligible[-2]` taken **without** `> ref_level` check. For `SHORT` (`dirn==-1`, SL must be *above* entry), this can pick a **low** pivot (`px < ref`) → `sl = pivot_ref.px +1` still **below entry** → `risk = sl - entry ≤0` inverted or tiny, target inverted, SL at wrong place.
-- **Fix needed:** Fallback must still satisfy side (`> ref` for short, `< ref` for long) or fall back to candle extreme `entry_high+1 / entry_low-1`.
+- **Location:** `intraday_1m_standalone.py:341-368`
+- **Bug was:** `above = [p for p in eligible if p.px > ref_level]; pivot_ref = above[-1] if above else eligible[-2]` — `above` empty → `eligible[-2]` taken **without** `> ref` check. For `SHORT` (`dirn==-1`, SL must be *above* entry), this could pick a **low** pivot (`px < ref`) → `sl = pivot_ref.px +1` still **below entry** → `risk ≤0` inverted or `risk` tiny → `min_sl` widened but on wrong side, `pivot_ref` logged wrong, trade could be `risk <=0` `return False` silently dropped.
+- **Fix:** Side-blind `eligible[-2]` deleted. `pivot_ref` stays `None` if no pivot on correct side (`> ref` for short, `< ref` for long). Then `elif min_sl_pts>0: sl = entry ± min_sl_pts` (13 default from `cfg min_sl_pts` `408`) → sane `entry ±13` stop, trade fires instead of dropping. `else: sl = entry_high/low + buffer 1.0`. `pivot_ref None` logged honest `null` (no pivot used). Both `eligible` exists but wrong side and `eligible` empty cases now use `min_sl`.
+- **Verified:** `py_compile` + `run_backtest_1min` `270 days` `before/after` diff traceable to `prev_pivot` wrong-side fallback; recovered `risk<=0` dropped trades now `entry±13`.
 
-### 4. ⏳ OPEN — Reference rearm does not reset break count / broken levels
+### 4. ✅ RESOLVED — Reference rearm does not reset break count / broken levels
 
 - **Location:** `intraday_1m_standalone.py:512-528` traversal, `289 pivot_break_count`, `292 broken_pivot_levels`
-- **Rule:** `docs/entry theory.md:64` — each desired swing has its own `1st skip → 2nd entry`. New swing = new count.
-- **Bug:** On `ref_breach → _find_swing → ref update` only `pivot_break_count=0` reset (`528`), `broken_pivot_levels` **not** cleared. Example: `FS2 selling 09:55 count=1` then `low < ref` triggers `10:20` rearm to new selling swing — `count 1` leaks into new swing, so its `1st` post-rearm break becomes `count=2 → ENTRY` (should be `count=1 → SKIP`).
-- **Fix needed:** `broken_pivot_levels.clear()` atomically with `pivot_break_count=0` on every `reference_swing_updated`.
+- **Rule:** `docs/entry theory.md:64` — each desired swing has its own `1st skip → 2nd entry` (conservative day) or `1st break → entry` (aggressive day; mode comes from the bias case, not a per-trade toggle). New swing = new count.
+- **Bug was:** On `ref_breach → _find_swing → ref update` only `pivot_break_count=0` reset (`528`), `broken_pivot_levels` **not** cleared. The stale set could swallow the new swing's genuine 1st break when a fresh pivot's price matched a historically-broken level (`skipped_already_broken`) — shifting the whole skip/entry sequence one break late. (The count-leak half — `2025-08-12: count 1 from 10:55 leaked across the 11:03 traverse` — was already fixed; this was the remaining set-leak half.)
+- **Fix:** `broken_pivot_levels.clear()` added atomically with `pivot_break_count = 0` on every `reference_swing_updated` (`intraday_1m_standalone.py:537`). Within-swing dedup untouched.
+- **Verified:** full-CSV `run_backtest_1min` before/after — identical trades (262 trades, WR 14.1%, total R −14.53): the stale-set swallow needs an exact float price match between a post-rearm fresh pivot and a historically-broken level, which never changed a trade on this dataset. Dedup still active (7,703 `skipped_already_broken` events) and rearm semantics now correct: fresh swing = fresh sequence.
 
-### 5. ⏳ OPEN — Swing-end guard uses `close` vs `entry = pivot level`
+### 5. ✅ RESOLVED — Swing-end guard uses `close` vs `entry = pivot level`
 
-- **Location:** `intraday_1m_standalone.py:309-326` `_open_trade` `est_entry = close` vs `entry = ref_level` `326`, `docs/entry theory.md:90`
-- **Rule:** Entry must be `ABOVE selling low / BELOW buying high`. With direct pivot entry `1min` `entry = pivot level`, a wick `high > level` but `close < ref` should still pass (wick broke), and `low < level` but `close > ref` should still block.
-- **Bug:** `315 est_entry = dbar.close` checked against `ref_swing_end_px` → wick breaks mis-classified as `skipped_end_line` or incorrectly allowed at wrong pivot.
+- **Location:** `intraday_1m_standalone.py:315-328` `_open_trade` guard, `est_entry` vs `ref_swing_end_px`
+- **Rule:** Entry must be `ABOVE selling low / BELOW buying high` (end-line guard), and the **end line must not be breached before entry** — if breached, don't enter: the traversal already handles it (re-arms to the next same-direction swing with fresh break counting; measured **93/262 days** had pre-entry traverses, e.g. `2025-08-08` 3 traverses at `09:42/09:59/10:47` before the `11:09` entry).
+- **Bug was:** `est_entry = dbar["close"]` checked against `ref_swing_end_px`, but 1min direct entry fills at the **pivot level** (wick through the level = genuine fill). The level's side of the end line is a static structural fact; the close varies candle to candle → wick-break entries could be mis-classified (`skipped_end_line`) or a wrong-side level could sneak through on a friendly close.
+- **Measured before fixing:** 262/262 entries had the level on the correct side, 0 `skipped_end_line` blocks ever fired → the bug never produced a wrong verdict on this dataset (latent only). (Earlier "guard never has data" claim was an instrumentation artifact — reading trade dicts instead of events.)
+- **Fix:** `est_entry = float(ref_level)` — deterministic level-side check, wick-through fills stay valid, close noise removed. End-line breaches before entry remain the traversal's job (skip + traverse + fresh counting).
+- **Verified:** in-memory before/after (close-based vs level-based guard) over the full CSV — **262 trades identical, 0 dropped, 0 SL/outcome changes**. `py_compile` ok.
 
-### 6. ⏳ OPEN — Broken level key is `float px` only
+### 6. ✅ RESOLVED — Broken level key is `float px` only
 
-- **Location:** `intraday_1m_standalone.py:602,673` `broken_pivot_levels: set[float]`
-- **Bug:** `if brk["level"] in set` — double bottom with same price `24206.5` at two `idx` `91` and `109` → second fresh pivot at same price blocked by `skipped_already_broken` even though it is a new valid level.
-- **Fix needed:** Key by `(px, idx)` or `idx` alone.
+- **Location:** `intraday_1m_standalone.py:296,706-714` `broken_pivot_levels`
+- **Rule:** `2nd break` must be on a **new pivot** — a double bottom at the same exact `px` formed at two different times is **two different pivots**. "Already broken" should mean *this pivot bar was broken*, not "this price was ever broken".
+- **Bug was:** `broken_pivot_levels` was a `set of float px` — a fresh pivot at the same exact price (double bottom `24206.5` at `idx 91` and `109`) was blocked by `skipped_already_broken` though it was a new valid pivot → conservative entry delayed or never fired.
+- **Fix:** key by `(px, pivot_idx)` — `if (brk["level"], piv.idx) in broken_pivot_levels` / `.add((brk["level"], piv.idx))` (`intraday_1m_standalone.py:710,714`). Same pivot retested → still deduped; fresh pivot at same price → counts. Works with item 4's clear-on-rearm (rearm wipes the sequence; this guards within a sequence).
+- **Verified:** full-CSV before/after (`prev_pivot`, `min_sl_pts=13`) — 262 trades, stats identical except **1 recovered entry**: `2025-12-24` entry moved `11:34 @ 26216.0` → `11:21 @ 26212.2` (13 min earlier — fresh double-bottom pivot no longer blocked). 129 wrongly-swallowed break events eliminated (`skipped_already_broken` 6,484 → 6,355). Honest note: both the old and new 12-24 entries hit SL (`-1R`) — the fix is semantic correctness, not that trade's P&L.
 
 ---
 
