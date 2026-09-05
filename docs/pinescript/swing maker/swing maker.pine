@@ -1,0 +1,603 @@
+// This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © pravvinkumarkumar
+
+//@version=6
+// ═══════════════════════════════════════════════════════════════════════════
+//  SWING MAKER — walker engine + exact first-swing break marks
+//
+//  LAYER 1 · WALKER   (identical to flowline.pine — the validated engine)
+//     Colour-aware candle-path structure. Draws the swing legs:
+//     green = up-leg, red = down-leg. Pure chart-timeframe: every leg lands
+//     exactly on a candle, anchored by bar_index (no drift on drag/zoom).
+//
+//  LAYER 2 · SWING-ENGINE   (Pine port of backend/src/firstswing.py)
+//     A separate state machine on top of the walker that decides the REAL
+//     structure breaks, exactly like the Python backend:
+//       B1   = first break of the FROZEN session extreme (running max/min)
+//       B2   = same-direction break of the sealed pivot past B1 (1-candle gap)
+//       FLIP = opposite-direction break after the direction was confirmed
+//       FS   = chop-cross of the LATEST sealed opposing pivot (swing complete)
+//     Breaks are measured against SESSION EXTREMES, NOT previous-bar
+//     highs/lows — so the walker's internal leg-flips never pollute the
+//     markers. No more "B1/FS on every candle".
+//
+//  Day toggle:
+//     ON  = fresh walker + fresh swing-engine each calendar day (NSE/session)
+//     OFF = continuous flow, no day cut (BTC 24/7)
+//
+//  TF universality: no lower-timeframe dependency anywhere. What you see is
+//  computed from the chart timeframe you're on, bar by bar.
+//
+//  To reproduce the Python backend's NSE 1-min tuning exactly:
+//     Min bars to declare FS = 14 · "Don't declare FS before" = 09:29
+// ═══════════════════════════════════════════════════════════════════════════
+indicator("Swing Marker", overlay = true, max_lines_count = 500)
+
+// ── inputs ────────────────────────────────────────────────────────────────
+grpC     = "Rendering"
+colBuy   = input.color(#22c55e, "Buy swing (up-leg)",    group = grpC)
+colSell  = input.color(#ef4444, "Sell swing (down-leg)", group = grpC)
+lineW    = input.int(2, "Line width", group = grpC, minval = 1, maxval = 4)
+showMark = input.bool(true, "Show B1 / B2 / FLIP markers", group = grpC)
+showFS   = input.bool(true, "Show FS marker at swing seal", group = grpC)
+
+grpD     = "Day isolation"
+dayMode  = input.bool(true, "Reset per day (uncheck for 24/7 continuous)", group = grpD,
+     tooltip = "ON: walker + swing-engine reset at each new calendar day.\nOFF: continuous flow, no day boundary.")
+
+grpS     = "Swing breaks (B1/B2/FLIP/FS)"
+minBars  = input.int(4, "Min bars before FS can declare", group = grpS, minval = 1,
+     tooltip = "Per-bar gate on the FS declaration only (B1/B2/FLIP ignore it).\nDefault 4 keeps FS flowing on any timeframe; set 14 for exact NSE 1-min parity with the Python backend.")
+capStr   = input.string("00:00", "Don't declare FS before (HH:MM)", group = grpS,
+     tooltip = "FS chop-cross is ignored before this clock time every day.\nUse 00:00 for no gate, 09:29 for NSE parity with the Python backend.")
+b2Gap    = input.int(1, "B2 1-candle pivot gap", group = grpS, minval = 0,
+     tooltip = "Require one clean bar between the sealed pivot and its B2 break (0 = off).")
+
+var int capMin = int(nz(str.tonumber(str.substring(capStr, 0, 2)), 0)) * 60 + int(nz(str.tonumber(str.substring(capStr, 3, 5)), 0))
+
+// ── LAYER 1 · WALKER state (identical to flowline.pine) ──────────────────
+type FL
+    int    dir      = 0
+    float  stampPx  = na
+    int    stampBar = na
+    float  prevHigh = na
+    float  prevLow  = na
+    int    pendKind = 0
+    int    pendBar  = na
+    float  pendPx   = na
+    float  pendNear = na
+    array<float>  innerPx
+    array<int>    innerBar
+    array<string> innerKd
+    float  bandHi   = na
+    float  bandLo   = na
+    float  hiPx     = na
+    int    hiBar    = na
+    bool   hiGrn    = false
+    float  loPx     = na
+    int    loBar    = na
+    bool   loRed    = false
+    bool   pvSet    = false
+    int    pvBar    = na
+    float  pvPx     = na
+    string pvKind   = na
+    line   lastSegLn = na
+
+// ── LAYER 2 · SWING-ENGINE state — port of backend/src/firstswing.py ─────
+type SE
+    // cycle bookkeeping
+    int    barsSeen      = 0
+    bool   armed         = false
+    bool   pendingArm    = false
+    bool   deferArm      = false
+    int    pendingLegDir = 0
+    bool   declared      = false
+    // direction machine
+    int    state         = 0        // 0 watch · 1 locked
+    bool   dirConfirmed  = false
+    int    dir           = 0        // 1 up · -1 down
+    bool   flipEst       = false
+    int    everB1Dir     = 0
+    int    b1BarIdx      = -1
+    int    dirEstIdx     = -1
+    float  lockedLevel   = na
+    // frozen session extremes (break thresholds)
+    float  hi            = na
+    float  lo            = na
+    float  eHi           = na
+    float  eLo           = na
+    float  eHiPrev       = na
+    float  eLoPrev       = na
+    // latest sealed pivots (B2 + chop targets)
+    float  eHiPiv        = na
+    int    eHiPivBar     = -1
+    float  eLoPiv        = na
+    int    eLoPivBar     = -1
+    float  latestHi      = na
+    int    latestHiBar   = -1
+    float  latestLo      = na
+    int    latestLoBar   = -1
+    // break-before-kill snapshot (chop sees the pre-kill latest pivot)
+    float  snapHi        = na
+    int    snapHiBar     = -1
+    float  snapLo        = na
+    int    snapLoBar     = -1
+    // per-bar output
+    bool   mkB1          = false
+    bool   mkB2          = false
+    bool   mkFlip        = false
+    bool   mkFS          = false
+    bool   justFiredB2   = false
+
+var SE se = SE.new()
+var FL st = FL.new(innerPx = array.new<float>(), innerBar = array.new<int>(), innerKd = array.new<string>())
+
+// ── LAYER 2 · SWING-ENGINE methods ───────────────────────────────────────
+method onPivot(SE se, string kind, float px, int idx) =>
+    if se.barsSeen >= 2
+        if se.deferArm
+            se.pendingArm := true
+        else
+            se.armed := true
+    if kind == "H"
+        se.latestHi    := px
+        se.latestHiBar := idx
+        if se.eHiPivBar < 0 or px > se.eHiPiv
+            se.eHiPiv    := px
+            se.eHiPivBar := idx
+    else
+        se.latestLo    := px
+        se.latestLoBar := idx
+        if se.eLoPivBar < 0 or px < se.eLoPiv
+            se.eLoPiv    := px
+            se.eLoPivBar := idx
+
+method resetDay(SE se) =>
+    se.barsSeen      := 0
+    se.armed         := false
+    se.pendingArm    := false
+    se.deferArm      := false
+    se.declared      := false
+    se.state         := 0
+    se.dirConfirmed  := false
+    se.dir           := 0
+    se.flipEst       := false
+    se.everB1Dir     := 0
+    se.b1BarIdx      := -1
+    se.dirEstIdx     := -1
+    se.lockedLevel   := na
+    se.eHi      := na
+    se.eLo      := na
+    se.eHiPrev  := na
+    se.eLoPrev  := na
+    se.eHiPiv   := na
+    se.eHiPivBar := -1
+    se.eLoPiv   := na
+    se.eLoPivBar := -1
+    se.latestHi := na
+    se.latestHiBar := -1
+    se.latestLo := na
+    se.latestLoBar := -1
+    se.snapHi   := na
+    se.snapHiBar := -1
+    se.snapLo   := na
+    se.snapLoBar := -1
+
+method resetCycle(SE se) =>
+    se.resetDay()
+    se.deferArm := true
+
+method beforeBar(SE se, FL fl) =>
+    se.justFiredB2 := false
+    se.pendingLegDir := fl.dir
+    se.hi := high
+    se.lo := low
+    if se.deferArm and se.pendingArm
+        se.armed := true
+        se.pendingArm := false
+    if se.barsSeen == 0
+        se.barsSeen := 1
+        se.armed := false
+        se.eHi       := high
+        se.eLo       := low
+        se.eHiPrev   := high
+        se.eLoPrev   := low
+        se.eHiPiv    := high
+        se.eHiPivBar := bar_index
+        se.eLoPiv    := low
+        se.eLoPivBar := bar_index
+        se.latestHi  := high
+        se.latestHiBar := bar_index
+        se.latestLo  := low
+        se.latestLoBar := bar_index
+    else
+        se.barsSeen += 1
+    se.snapHi    := se.latestHi
+    se.snapHiBar := se.latestHiBar
+    se.snapLo    := se.latestLo
+    se.snapLoBar := se.latestLoBar
+
+method seLock(SE se, int dir) =>
+    se.state       := 1
+    se.dir         := dir
+    se.b1BarIdx    := bar_index
+    se.everB1Dir   := dir
+    se.flipEst     := false
+    se.lockedLevel := dir == 1 ? se.eHiPrev : se.eLoPrev
+    se.mkB1        := true
+
+method confirmDirection(SE se) =>
+    se.dirConfirmed := true
+    se.everB1Dir    := 0
+    se.dirEstIdx    := bar_index
+    se.lockedLevel  := se.dir == 1 ? se.eHiPrev : se.eLoPrev
+    se.justFiredB2  := true
+    se.mkB2         := true
+
+method flip(SE se, int dir, bool asB2) =>
+    se.dir          := dir
+    se.b1BarIdx     := -1
+    se.dirConfirmed := true
+    se.flipEst      := true
+    se.dirEstIdx    := bar_index
+    se.lockedLevel  := dir == 1 ? se.eHiPrev : se.eLoPrev
+    if asB2
+        se.mkB2 := true
+    else
+        se.mkFlip := true
+
+method declareForFS(SE se) =>
+    bool pass = se.barsSeen >= minBars and (hour * 60 + minute >= capMin)
+    se.declared := pass
+    pass
+
+method checkChop(SE se) =>
+    bool d1    = se.dir == -1
+    bool d2    = se.dir == 1
+    bool canFS = false
+    if not se.justFiredB2
+        if d1
+            bool okTgt1 = (not na(se.snapHi)) and se.snapHiBar >= 0 and se.snapHiBar <= bar_index - 2
+                 and (se.dirEstIdx < 0 or se.snapHiBar > se.dirEstIdx)
+            int  gapOff1 = math.max(0, bar_index - (se.snapHiBar + 1))
+            canFS := okTgt1 and (high[gapOff1] <= se.snapHi) and (se.hi > se.snapHi)
+        if d2
+            bool okTgt2 = (not na(se.snapLo)) and se.snapLoBar >= 0 and se.snapLoBar <= bar_index - 2
+                 and (se.dirEstIdx < 0 or se.snapLoBar > se.dirEstIdx)
+            int  gapOff2 = math.max(0, bar_index - (se.snapLoBar + 1))
+            canFS := okTgt2 and (low[gapOff2] >= se.snapLo) and (se.lo < se.snapLo)
+    if canFS
+        se.mkFS := se.declareForFS()
+
+method step(SE se, bool upB, bool downB) =>
+    // ── watch → lock (B1)
+    if se.state == 0
+        se.seLock(downB ? -1 : upB ? 1 : se.dir)
+    else if se.dirConfirmed
+        // ── confirmed → flip on opposite break
+        bool flipUp   = se.dir == -1 and upB and not downB
+        bool flipDown = se.dir == 1  and downB and not upB
+        if flipUp
+            bool asB2u = se.flipEst and se.everB1Dir == 1 and (not na(se.eHiPiv)) and se.hi > se.eHiPiv
+            se.flip(1, asB2u)
+        if flipDown
+            bool asB2d = se.flipEst and se.everB1Dir == -1 and (not na(se.eLoPiv)) and se.lo < se.eLoPiv
+            se.flip(-1, asB2d)
+        se.checkChop()
+    else
+        // ── locked, not confirmed → B2 or flip
+        bool b2Fired = false
+        if se.dir == -1 and downB
+            bool gapOkD = (not na(se.eLoPiv)) and se.eLoPivBar >= se.b1BarIdx and se.lo < se.eLoPiv
+            bool gapD   = b2Gap == 0 or (se.eLoPivBar <= bar_index - 1 - b2Gap
+                 and low[math.max(0, bar_index - se.eLoPivBar - 1)] >= se.eLoPiv)
+            b2Fired := gapOkD and gapD
+            if b2Fired
+                se.confirmDirection()
+        if se.dir == 1 and upB
+            bool gapOkU = (not na(se.eHiPiv)) and se.eHiPivBar >= se.b1BarIdx and se.hi > se.eHiPiv
+            bool gapU   = b2Gap == 0 or (se.eHiPivBar <= bar_index - 1 - b2Gap
+                 and high[math.max(0, bar_index - se.eHiPivBar - 1)] <= se.eHiPiv)
+            b2Fired := gapOkU and gapU
+            if b2Fired
+                se.confirmDirection()
+        if se.dir == -1 and upB and not b2Fired
+            se.flip(1, false)
+            se.checkChop()
+        if se.dir == 1 and downB and not b2Fired
+            se.flip(-1, false)
+            se.checkChop()
+
+method afterBar(SE se) =>
+    bool upB   = se.hi > se.eHiPrev
+    bool downB = se.lo < se.eLoPrev
+    if se.deferArm and se.pendingArm and se.state == 0
+        if se.pendingLegDir == -1 and upB
+            se.armed      := true
+            se.pendingArm := false
+            downB := false
+        else if se.pendingLegDir == 1 and downB
+            se.armed      := true
+            se.pendingArm := false
+            upB := false
+    if se.armed
+        se.step(upB, downB)
+    if na(se.eHi) or se.hi > se.eHi
+        se.eHi := se.hi
+    if na(se.eLo) or se.lo < se.eLo
+        se.eLo := se.lo
+    se.eHiPrev := se.eHi
+    se.eLoPrev := se.eLo
+
+// ── LAYER 1 · WALKER methods (identical to flowline.pine) ────────────────
+// ── push — sealed pivot; draws the (bar-index-anchored, zero-drift) leg seg ─
+method push(FL fl, float px, string kind, int barIdx) =>
+    bool dup    = fl.pvSet and fl.pvBar == barIdx and fl.pvKind == kind and math.abs(fl.pvPx - px) <= syminfo.mintick
+    bool sameKd = fl.pvSet and fl.pvKind == kind
+    bool better = kind == "H" ? px > fl.pvPx : px < fl.pvPx
+
+    if kind == "H"
+        fl.bandHi := px
+        fl.hiPx   := na
+    else
+        fl.bandLo := px
+        fl.loPx   := na
+
+    if not dup and sameKd and better
+        if not na(fl.lastSegLn)
+            line.set_xy2(fl.lastSegLn, barIdx, px)
+        fl.pvBar := barIdx
+        fl.pvPx  := px
+    else if not dup and not sameKd
+        if fl.pvSet
+            fl.lastSegLn := line.new(fl.pvBar, fl.pvPx, barIdx, px,
+                 color = px >= fl.pvPx ? colBuy : colSell, width = lineW)
+        fl.pvSet   := true
+        fl.pvKind  := kind
+        fl.pvBar   := barIdx
+        fl.pvPx    := px
+        se.onPivot(kind, px, barIdx)
+
+method sealStamp(FL fl) =>
+    if not na(fl.stampPx)
+        fl.push(fl.stampPx, fl.dir == 1 ? "H" : "L", fl.stampBar)
+
+method pendingDie(FL fl) =>
+    fl.pendKind := 0
+    array.clear(fl.innerPx)
+    array.clear(fl.innerBar)
+    array.clear(fl.innerKd)
+
+method closeStack(FL fl) =>
+    float lastPx  = na
+    int   lastBar = na
+    if array.size(fl.innerPx) > 0
+        bool   wantFar = array.size(fl.innerPx) % 2 == 0
+        string knd     = wantFar ? (fl.pendKind == 1 ? "H" : "L") : (fl.pendKind == 1 ? "L" : "H")
+        float  rPx     = wantFar ? fl.pendPx : fl.pendNear
+        int    rBar    = fl.pendBar
+        array.push(fl.innerPx, rPx)
+        array.push(fl.innerBar, rBar)
+        array.push(fl.innerKd, knd)
+        while array.size(fl.innerPx) > 0
+            float  ePx  = array.shift(fl.innerPx)
+            int    eBar = array.shift(fl.innerBar)
+            string eKd  = array.shift(fl.innerKd)
+            fl.push(ePx, eKd, eBar)
+        lastPx  := rPx
+        lastBar := rBar
+    [lastPx, lastBar]
+
+method half(FL fl, float sv, bool isLow) =>
+    if isLow
+        if fl.dir == -1
+            if sv < fl.stampPx
+                fl.stampPx  := sv
+                fl.stampBar := bar_index
+        else if sv < fl.prevLow
+            fl.sealStamp()
+            fl.pendingDie()
+            fl.dir      := -1
+            fl.stampPx  := sv
+            fl.stampBar := bar_index
+    else
+        if fl.dir == 1
+            if sv > fl.stampPx
+                fl.stampPx  := sv
+                fl.stampBar := bar_index
+        else if sv > fl.prevHigh
+            fl.sealStamp()
+            fl.pendingDie()
+            fl.dir      := 1
+            fl.stampPx  := sv
+            fl.stampBar := bar_index
+
+// ═══ GLOBAL-SCOPE PER-BAR RESET ═══════════════════════════════════════════
+// Marker flags reset every bar so they can never linger into a live
+// (unconfirmed) bar or repaint more than one bar back.
+se.mkB1   := false
+se.mkB2   := false
+se.mkFlip := false
+se.mkFS   := false
+
+bool newDay = nz(ta.change(time("D")), 1) != 0
+
+// ═══ CONFIRMED-BAR STATE MACHINE ══════════════════════════════════════════
+if barstate.isconfirmed
+
+    if dayMode and newDay
+        st.dir      := 0
+        st.pendKind := 0
+        st.pendPx   := na
+        st.pendNear := na
+        st.pvSet    := false
+        st.bandHi   := na
+        st.bandLo   := na
+        st.hiPx     := na
+        st.hiBar    := na
+        st.loPx     := na
+        st.loBar    := na
+        st.prevHigh := na
+        st.prevLow  := na
+        st.lastSegLn := na
+        array.clear(st.innerPx)
+        array.clear(st.innerBar)
+        array.clear(st.innerKd)
+        se.resetDay()
+
+    if se.declared
+        se.resetCycle()
+
+    se.beforeBar(st)
+
+    if st.dir == 0
+        bool greenSeed = close >= open
+        st.push(greenSeed ? low : high, greenSeed ? "L" : "H", bar_index)
+        st.dir      := greenSeed ? 1 : -1
+        st.stampPx  := greenSeed ? high : low
+        st.stampBar := bar_index
+        st.hiPx     := greenSeed ? high : na
+        st.hiBar    := greenSeed ? bar_index : na
+        st.hiGrn    := greenSeed
+        st.loPx     := greenSeed ? na : low
+        st.loBar    := greenSeed ? bar_index : na
+        st.loRed    := not greenSeed
+        st.prevHigh := high
+        st.prevLow  := low
+    else
+        bool flipped   = false
+        bool skipSteps = false
+
+        if st.pendKind != 0
+            float stackHi = math.max(st.pendPx, st.pendNear)
+            float stackLo = math.min(st.pendPx, st.pendNear)
+
+            if open != close and high < stackHi and low > stackLo
+                // layering — put another alternating layer on the stack
+                bool   wantFar = array.size(st.innerPx) % 2 == 0
+                string layKind = wantFar ? (st.pendKind == 1 ? "H" : "L") : (st.pendKind == 1 ? "L" : "H")
+                float  layPx   = wantFar ? st.pendPx : st.pendNear
+                int    layBar  = st.pendBar
+                array.push(st.innerPx, layPx)
+                array.push(st.innerBar, layBar)
+                array.push(st.innerKd, layKind)
+                st.pendBar  := bar_index
+                st.pendPx   := st.pendKind == 1 ? high : low
+                st.pendNear := st.pendKind == 1 ? low  : high
+                flipped     := true
+                skipSteps   := true
+            else
+                bool confirmHit = st.pendKind == 1 ? low < st.pendNear : high > st.pendNear
+                bool skipHit    = st.pendKind == 1 ? high > st.pendPx  : low < st.pendPx
+
+                if confirmHit and not skipHit
+                    // CONFIRM — seal pre-insider swing; a PEELED stack emits its
+                    // remaining alternating layers (continuation keeps the leg);
+                    // a plain single insider prints its far edge (+override).
+                    st.sealStamp()
+                    bool hadPeel = array.size(st.innerPx) > 0
+                    [lastPx, lastBar] = st.closeStack()
+                    if hadPeel
+                        st.stampPx  := lastPx
+                        st.stampBar := lastBar
+                    else
+                        bool useHi = st.pendKind == 1
+                        bool okHi  = useHi and not na(st.hiPx) and st.hiPx > st.pendPx
+                             and (st.hiBar > st.stampBar or (st.hiBar == st.stampBar and st.hiGrn))
+                        bool okLo  = not useHi and not na(st.loPx) and st.loPx < st.pendPx
+                             and (st.loBar > st.stampBar or (st.loBar == st.stampBar and st.loRed))
+                        float  pPx  = okHi ? st.hiPx  : okLo ? st.loPx  : st.pendPx
+                        int    pBar = okHi ? st.hiBar  : okLo ? st.loBar : st.pendBar
+                        string pKd  = useHi ? "H" : "L"
+                        st.push(pPx, pKd, pBar)
+                        st.stampPx  := pPx
+                        st.stampBar := pBar
+                    st.pendKind := 0
+
+                else if skipHit and not confirmHit
+                    // SINGLE-SIDE FAR BREAK — reversal flip; peeled stacks emit
+                    // their remaining alternating layers before the flip.
+                    int   pkSave = st.pendKind
+                    st.sealStamp()
+                    st.closeStack()
+                    st.dir      := pkSave == 1 ? 1 : -1
+                    st.stampPx  := pkSave == 1 ? high : low
+                    st.stampBar := bar_index
+                    flipped     := true
+                    skipSteps   := true
+                    st.pendingDie()
+
+                else if skipHit
+                    // DOUBLE-BREAK volatile — both edges broke this bar.
+                    float  iLo  = math.min(st.pendPx, st.pendNear)
+                    float  iHi  = math.max(st.pendPx, st.pendNear)
+                    float  effLo = st.dir == -1 ? st.stampPx : na(st.bandLo) ? -1e10 : st.bandLo
+                    float  effHi = st.dir ==  1 ? st.stampPx : na(st.bandHi) ?  1e10 : st.bandHi
+                    bool insideBand = iHi <= effHi and iLo >= effLo and high <= effHi and low >= effLo
+
+                    if insideBand
+                        st.sealStamp()
+                        st.dir      := st.pendKind == 1 ? 1 : -1
+                        st.stampPx  := st.pendKind == 1 ? high : low
+                        st.stampBar := bar_index
+                        flipped     := true
+                        skipSteps   := true
+                        st.pendingDie()
+                    else
+                        int escPk = st.pendKind
+                        st.sealStamp()
+                        [escPx, escBar] = st.closeStack()
+                        if na(escPx)
+                            st.push(st.pendPx, escPk == 1 ? "H" : "L", st.pendBar)
+                        st.dir      := escPk == 1 ? -1 : 1
+                        st.stampPx  := st.pendNear
+                        st.stampBar := st.pendBar
+                        st.pendingDie()
+                        flipped     := true
+
+        if not skipSteps
+            bool  green = close >= open
+            float h1    = green ? low  : high
+            float h2    = green ? high : low
+            st.half(h1, green)
+            st.half(h2, not green)
+
+        if na(st.hiPx) or high > st.hiPx
+            st.hiPx  := high
+            st.hiBar := bar_index
+            st.hiGrn := close >= open
+        if na(st.loPx) or low < st.loPx
+            st.loPx  := low
+            st.loBar := bar_index
+            st.loRed := close < open
+
+        if st.pendKind == 0 and not flipped and open != close and high <= st.prevHigh and low >= st.prevLow
+            st.pendKind := st.dir == -1 ? 1 : -1
+            st.pendBar  := bar_index
+            st.pendPx   := st.dir == -1 ? high : low
+            st.pendNear := st.dir == -1 ? low  : high
+            array.clear(st.innerPx)
+            array.clear(st.innerBar)
+            array.clear(st.innerKd)
+
+        st.prevHigh := high
+        st.prevLow  := low
+
+    se.afterBar()
+
+// ═══ MARKERS — plotshape, sticks to candles, zero drift ═══════════════════
+plotshape(showMark and se.mkB1, title = "B1",
+     style = shape.arrowup, location = location.belowbar,
+     color = #94a3b8, size = size.tiny, text = "B1", textcolor = #94a3b8)
+
+plotshape(showMark and se.mkB2, title = "B2",
+     style = shape.arrowup, location = location.belowbar,
+     color = #60a5fa, size = size.tiny, text = "B2", textcolor = #60a5fa)
+
+plotshape(showMark and se.mkFlip, title = "FLIP",
+     style = shape.arrowup, location = location.belowbar,
+     color = #f97316, size = size.tiny, text = "FLIP", textcolor = #f97316)
+
+plotshape(showFS and se.mkFS, title = "FS",
+     style = shape.arrowdown, location = location.abovebar,
+     color = #22d3ee, size = size.tiny, text = "FS", textcolor = #22d3ee)

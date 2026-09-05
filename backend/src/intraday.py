@@ -1580,61 +1580,66 @@ def simulate_day(
                     is_pivot = cfg.get("entry_method") == "pivot_break"
                     required_breaks = 1 if is_pivot else 2
                     if pivot_break_count >= required_breaks:
-                        # Second break: execute trade entry
-                        # swing flips: the break starts the opposing leg
-                        new_swing = "selling" if cur_swing == "buying" else "buying"
-                        cur_swing = new_swing
-                        swing_extreme = cur["low"] if new_swing == "selling" else cur["high"]
-                        swing_base = cur["high"] if new_swing == "selling" else cur["low"]
-                        consec_opp = 0
-                        if aligned and day_setup is None:
-                            # SWING-END-LINE FILTER per entry theory.md:
-                            #   - SHORTS (FS=buying): entry price < first-swing END HIGH
-                            #   - LONGS  (FS=selling): entry price > first-swing END LOW
-                            # For 1-min DIRECT mode we defer this check until the 1-min bar is resolved
-                            # (entry_price = pivot level or 1-min close), so skip pre-arm check for use_1m.
-                            if ref_swing_end_px is not None and not use_1m:
-                                if trade_dir == -1 and cur["high"] >= ref_swing_end_px:
-                                    result["events"].append({
-                                        "type": "skipped_end_line",
-                                        "bar": i,
-                                        "time": cur["time"],
-                                        "reason": "short_entry_above_buying_swing_end",
-                                        "ref_swing_end": round(ref_swing_end_px, 2),
-                                        "entry_price": round(cur["close"], 2),
-                                    })
-                                    pivot_break_count = 0  # consume the count
-                                    continue
-                                if trade_dir == 1 and cur["low"] <= ref_swing_end_px:
-                                    result["events"].append({
-                                        "type": "skipped_end_line",
-                                        "bar": i,
-                                        "time": cur["time"],
-                                        "reason": "long_entry_below_selling_swing_end",
-                                        "ref_swing_end": round(ref_swing_end_px, 2),
-                                        "entry_price": round(cur["close"], 2),
-                                    })
-                                    pivot_break_count = 0  # consume the count
-                                    continue
-                        day_setup = {
-                            "level": brk["level"],
-                            "trade_dir": trade_dir,
-                            "break_type": brk["type"],
-                            "bar": i,
-                        }
-                        # Successful entry fires: reset counter so the NEXT swing's
-                        # 2nd-break rule starts counting from 1 again.
-                        pivot_break_count = 0
-                        result["events"].append(
-                            {
-                                "type": "day_level_set",
-                                "bar": i,
-                                "time": cur["time"],
-                                "ts": int(cur["ts"]),
-                                "level": round(brk["level"], 2),
+                        if aligned:
+                            # Second break: execute trade entry — only when aligned with bias
+                            # swing flips: the break starts the opposing leg
+                            new_swing = "selling" if cur_swing == "buying" else "buying"
+                            cur_swing = new_swing
+                            swing_extreme = cur["low"] if new_swing == "selling" else cur["high"]
+                            swing_base = cur["high"] if new_swing == "selling" else cur["low"]
+                            consec_opp = 0
+                            if day_setup is None:
+                                # SWING-END-LINE FILTER per entry theory.md:
+                                #   - SHORTS (FS=buying): entry price < first-swing END HIGH
+                                #   - LONGS  (FS=selling): entry price > first-swing END LOW
+                                # For 1-min DIRECT mode we defer this check until the 1-min bar is resolved
+                                # (entry_price = pivot level or 1-min close), so skip pre-arm check for use_1m.
+                                if ref_swing_end_px is not None and not use_1m:
+                                    if trade_dir == -1 and cur["high"] >= ref_swing_end_px:
+                                        result["events"].append({
+                                            "type": "skipped_end_line",
+                                            "bar": i,
+                                            "time": cur["time"],
+                                            "reason": "short_entry_above_buying_swing_end",
+                                            "ref_swing_end": round(ref_swing_end_px, 2),
+                                            "entry_price": round(cur["close"], 2),
+                                        })
+                                        pivot_break_count = 0  # consume the count
+                                        continue
+                                    if trade_dir == 1 and cur["low"] <= ref_swing_end_px:
+                                        result["events"].append({
+                                            "type": "skipped_end_line",
+                                            "bar": i,
+                                            "time": cur["time"],
+                                            "reason": "long_entry_below_selling_swing_end",
+                                            "ref_swing_end": round(ref_swing_end_px, 2),
+                                            "entry_price": round(cur["close"], 2),
+                                        })
+                                        pivot_break_count = 0  # consume the count
+                                        continue
+                            day_setup = {
+                                "level": brk["level"],
+                                "trade_dir": trade_dir,
                                 "break_type": brk["type"],
+                                "bar": i,
                             }
-                        )
+                            # Successful entry fires: reset counter so the NEXT swing's
+                            # 2nd-break rule starts counting from 1 again.
+                            pivot_break_count = 0
+                            result["events"].append(
+                                {
+                                    "type": "day_level_set",
+                                    "bar": i,
+                                    "time": cur["time"],
+                                    "ts": int(cur["ts"]),
+                                    "level": round(brk["level"], 2),
+                                    "break_type": brk["type"],
+                                }
+                            )
+                        else:
+                            # Misaligned break — do not flip swing, do not set day_setup, reset count
+                            pivot_break_count = 0
+                            continue
                         if brk["type"] in ("domination", "candle-size", "pivot_break"):
                             # Direct flow-favor entry ON the aggressive break candle
                             brk_q = (

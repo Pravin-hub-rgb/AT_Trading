@@ -31,3 +31,10 @@ and like
 
 ----
 first swing ke fs ke bad next candle mai entry ....  
+
+---
+
+we trade opposite to the second swing trade ..
+
+---
+needs stats like how many days are there where there are two swings oppsote like first swing is buying then next swing is selling .. etc etc 
