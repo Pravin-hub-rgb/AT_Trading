@@ -92,12 +92,18 @@ def compute_btc_swings(
             # swing then extended) — fall back to the confirmation bar.
             fs_at_idx = eng.confirmed_at_idx
             fs_at_time = conf_time
+            # The completing break = the LATEST chop cross before declaration.
+            # The FIRST cross can be stale: gate-blocked before the final
+            # extreme, swing then extended (e.g. swing 18-19 Jan 2025: first
+            # cross 18:45 at bar 21, leg extended to the 21:15 top, completing
+            # cross 01:45 = first ungated bar). confirmed_at_idx stays the
+            # legal declaration time (trail arming) - only the marker moves.
             if (
                 eng.confirm_source == "chop"
-                and eng.first_chop_cross_idx >= 0
-                and eng.first_chop_cross_idx >= eng.end_idx
+                and eng.last_chop_cross_idx >= 0
+                and eng.last_chop_cross_idx >= eng.end_idx
             ):
-                fs_at_idx = eng.first_chop_cross_idx
+                fs_at_idx = eng.last_chop_cross_idx
                 fs_at_time = (
                     candles[fs_at_idx].date[11:16]
                     if 0 <= fs_at_idx < len(candles)

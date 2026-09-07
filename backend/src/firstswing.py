@@ -166,6 +166,10 @@ class SwingEngine:
         self.first_chop_cross_idx: int = -1
         self.first_chop_cross_px: float = float("nan")
         self.first_chop_cross_time: str = ""
+        self.last_chop_cross_idx: int = -1
+        self.last_chop_cross_px: float = float("nan")
+        self.last_chop_cross_time: str = ""
+        self._chop_cross_active: bool = False
         self.break_marks: list[FsBreakMark] = []
         self.seed_idx: int = -1
 
@@ -471,6 +475,10 @@ class SwingEngine:
         self.first_chop_cross_idx = -1
         self.first_chop_cross_px = float("nan")
         self.first_chop_cross_time = ""
+        self.last_chop_cross_idx = -1
+        self.last_chop_cross_px = float("nan")
+        self.last_chop_cross_time = ""
+        self._chop_cross_active = False
         self.last_confirm_hit = None
         self.sustain_streak = 0
         s = self.e_lo if dir == "up" else self.e_hi
@@ -498,12 +506,20 @@ class SwingEngine:
             tgt = self._chop_target_high()
             self.latest_sealed_high = _orig
             if tgt and self.hi > tgt.px:
+                if not self._chop_cross_active:
+                    # completing break = the TRANSITION into the cross
+                    self.last_chop_cross_idx = self.g_idx
+                    self.last_chop_cross_px = tgt.px
+                    self.last_chop_cross_time = self.t
+                self._chop_cross_active = True
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
                     self.first_chop_cross_px = tgt.px
                     self.first_chop_cross_time = self.t
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
+            else:
+                self._chop_cross_active = False
         elif self.dir == "up":
             _orig_low = self.latest_sealed_low
             _snap_low = getattr(self, "_snap_low", None)
@@ -512,12 +528,20 @@ class SwingEngine:
             tgt = self._chop_target_low()
             self.latest_sealed_low = _orig_low
             if tgt and self.lo < tgt.px:
+                if not self._chop_cross_active:
+                    # completing break = the TRANSITION into the cross
+                    self.last_chop_cross_idx = self.g_idx
+                    self.last_chop_cross_px = tgt.px
+                    self.last_chop_cross_time = self.t
+                self._chop_cross_active = True
                 if self.first_chop_cross_idx < 0:
                     self.first_chop_cross_idx = self.g_idx
                     self.first_chop_cross_px = tgt.px
                     self.first_chop_cross_time = self.t
                 self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
                 self._confirm("chop")
+            else:
+                self._chop_cross_active = False
 
     def _chop_target_high(self) -> Optional[Lvl]:
         # Exact like the frontend engine (firstswing_cf11277.ts chopTargetHigh):
@@ -655,6 +679,10 @@ class SwingEngine:
         self.first_chop_cross_idx = -1
         self.first_chop_cross_px = float("nan")
         self.first_chop_cross_time = ""
+        self.last_chop_cross_idx = -1
+        self.last_chop_cross_px = float("nan")
+        self.last_chop_cross_time = ""
+        self._chop_cross_active = False
         self.break_marks.clear()
 
     def reset_with_candle(self, c: FlowCandle, g_idx: int) -> None:
@@ -718,6 +746,10 @@ class SwingEngine:
         self.first_chop_cross_idx = -1
         self.first_chop_cross_px = float("nan")
         self.first_chop_cross_time = ""
+        self.last_chop_cross_idx = -1
+        self.last_chop_cross_px = float("nan")
+        self.last_chop_cross_time = ""
+        self._chop_cross_active = False
         self.break_marks.clear()
 
 

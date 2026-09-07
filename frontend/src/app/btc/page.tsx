@@ -203,12 +203,27 @@ export default function BtcPage() {
     };
   }, [hydrated]);
 
+  // HTF-LTF: the chart swing overlay must show the chain the strategy actually
+  // trades on - the 15m LTF book lives on minBars=50, the 5m book on 14, the
+  // 1h HTF book on 20. Otherwise B2/FLIP entry marks and FS confirmations on
+  // screen come from a chain the engine never uses (chart default was 14).
+  const strategyChainMinBars =
+    htfLtf !== "off"
+      ? tf === "15m"
+        ? 50
+        : tf === "5m"
+          ? 14
+          : tf === "1h"
+            ? 20
+            : btParams.minBars
+      : btParams.minBars;
+
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
     setLoading(true);
     setError(null);
-    getBtcChart(tf, mode, limit, btParams.minBars)
+    getBtcChart(tf, mode, limit, strategyChainMinBars)
       .then((res) => {
         if (!cancelled) setData(res);
       })
@@ -224,7 +239,7 @@ export default function BtcPage() {
     return () => {
       cancelled = true;
     };
-  }, [tf, mode, limit, btParams.minBars, hydrated]);
+  }, [tf, mode, limit, strategyChainMinBars, hydrated]);
 
   const changeTf = (v: BtcTf) => {
     window.localStorage.setItem(TF_KEY, v);
@@ -381,11 +396,17 @@ export default function BtcPage() {
   );
 
   // Trades -> PositionPrimitive boxes (open trades draw to their last bar)
+  // HTF-LTF on a chart finer than the LTF: snap the entry edge to the actual
+  // FILL moment (signal-bar close: entry_ts + 900s for 15m / +300s for 5m)
+  // instead of the signal bar open. Exits are already 1m-precise (fine fills).
+  const ltfBarSec = htfLtf === "15m" ? 900 : htfLtf === "5m" ? 300 : 0;
+  const finerChart =
+    htfLtf !== "off" && (tf === "1m" || (tf === "5m" && htfLtf === "15m"));
   const tradeBoxes: TradeBox[] = useMemo(
     () =>
       (btData?.trades ?? []).map((t) => ({
         dir: t.dir,
-        entryTs: snapTs(t.entry_ts),
+        entryTs: snapTs(t.entry_ts + (finerChart ? ltfBarSec : 0)),
         exitTs: snapTs(t.exit_ts),
         entryPrice: t.entry_price,
         slPrice: t.sl,
@@ -394,7 +415,7 @@ export default function BtcPage() {
         outcome: t.outcome,
         rMultiple: t.r_multiple,
       })),
-    [btData, snapTs],
+    [btData, snapTs, finerChart, ltfBarSec],
   );
 
   const tableTrades = useMemo(
@@ -603,6 +624,14 @@ export default function BtcPage() {
                 <option value="v3">v3 ext-stop 1.5R</option>
               </select>
             )}
+            {htfLtf !== "off" && (
+              <span
+                className="rounded bg-[#10b981]/20 px-1.5 py-0.5 text-[10px] font-semibold text-[#10b981]"
+                title="Swing overlay is locked to the strategy chain so every B2/FLIP entry mark and FS confirmation you see comes from the same chain the engine trades. (15m: mb50, 5m: mb14, 1h: mb20)"
+              >
+                overlay: strategy chain (mb{tf === "15m" ? 50 : tf === "5m" ? 14 : tf === "1h" ? 20 : "?"})
+              </span>
+            )}
             <span className="hidden text-[10px] text-[#8b949e] lg:inline">{htfLtf==="off"?"normal":`1h → ${htfLtf} execution`}</span>
           </div>
 
@@ -800,7 +829,15 @@ export default function BtcPage() {
           <div className="text-xs leading-relaxed text-[#8b949e]">
             Filters applied:{" "}
             <span className="text-[#c9d1d9]">
-              {btData.params.tf} ·{" "}
+              {btData.params.htf_ltf && btData.params.htf_ltf !== "off" ? (
+                <span className="text-[#10b981]">
+                  HTF-LTF 1h→{btData.params.htf_ltf} {btData.params.htf_ltf_ver ?? "v1"}
+                  {btData.params.ext_stop_r ? ` (ext-stop ${btData.params.ext_stop_r}R)` : ""} ·{" "}
+                </span>
+              ) : null}
+              {btData.params.htf_ltf && btData.params.htf_ltf !== "off"
+                ? `executions on ${btData.params.tf}`
+                : `${btData.params.tf}`} ·{" "}
               {btData.params.mode === "continuous" ? "24/7 continuous" : "day reset"} ·{" "}
               fees {btData.params.fee_pct}%/side + {btData.params.slippage_pts}pt slip ·{" "}
               {btData.params.fill_tf === "1m" ? "1m-precise fills · " : ""}
