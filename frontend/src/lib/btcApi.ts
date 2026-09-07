@@ -153,6 +153,24 @@ export interface BtcTradeStats {
   net_total_r?: number;
   net_avg_r?: number;
   total_costs_r?: number;
+  median_r?: number;
+  top1_contribution_r?: number;
+  top5_contribution_r?: number;
+  top10_contribution_r?: number;
+  top1_contribution_pct?: number;
+  top5_contribution_pct?: number;
+  top10_contribution_pct?: number;
+  monthly_r?: Record<string, number>;
+  yearly_r?: Record<string, number>;
+  monthly_equity?: { month: string; net_r: number; cum_r: number }[];
+  rolling_20?: { trade_no: number; net_r: number }[];
+  rolling_50?: { trade_no: number; net_r: number }[];
+  rolling_20_min?: number;
+  rolling_20_max?: number;
+  rolling_20_last?: number;
+  rolling_50_min?: number;
+  rolling_50_max?: number;
+  rolling_50_last?: number;
 }
 
 export interface BtcBacktestParams {

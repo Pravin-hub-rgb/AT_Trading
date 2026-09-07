@@ -77,6 +77,24 @@ Add `htf_v7...` as we brain-storm. Chart `Ver` dropdown (existing `v1..v7`) stay
 - Sizing study (merged book, LTF legs at fraction f of 1h size): v1 book best net/DD at f=0.5 (7.84); **v3 book best AT f=1.0: net +197.71R, maxDD 22.75R, net/DD 8.69** - v3 fixes the risk-stacking problem, no downsizing needed.
 - UI: HTF-LTF got its own Crazy Lab box in Strategy Summary + Ver dropdown (v1 | v3) next to the HTF-LTF selector, persisted to localStorage (`btc_htf_ltf_ver`). Verdict: run v3.
 
+### 2026-09-07c - TRUE OOS test: 2023-2024 backfilled (2 years never seen by any sweep)
+
+Backfilled Binance BTCUSDT 2023-01-01 -> 2025-01-01 into all 5 CSVs (1m now 1.93M rows, 0 dupes, monotonic). Params (mb50, mb20, cap16, 1.5R gate, 0.25 buffer) were chosen on 2025-2026 ONLY - 2023-2024 is genuinely unseen. Per-year net R (LTF legs, after costs):
+
+| Year | v1 | v3 | v5 | v6 |
+|---|---|---|---|---|
+| 2023 (unseen, chop) | -14.40 | -13.10 | **+16.75** | -8.84 |
+| 2024 (unseen, bull) | +74.66 | +78.57 | +56.89 | +49.83 |
+| 2025 (in-sample) | +98.29 | +104.58 | +120.36 | +114.65 |
+| 2026 (semi-seen) | +47.44 | +52.59 | +45.52 | +40.42 |
+| **4yr total** | +205.99 | +222.64 | **+239.52** | +196.06 |
+
+- **v5 is the only version positive in ALL FOUR years** - the ATR buffer specifically earned its keep in 2023 chop (exact-pivot SLs bled -13/-14R there).
+- 2024 bull: every version strongly positive (+50 to +79R) - the core edge is real on unseen data.
+- 2023 was the stress year: v5 +16.75 vs v1/v3 at -13/-14.
+- Extended-window concentration: v5 top5 = 57% of net (was 73% on 2025-26 only) - edge broadens with more data.
+- Note: 2025/2026 per-year slices shift slightly vs the old window (chain warm-up from 2023 changes early-2025 pivots) - expected per the perturbation research.
+
 ### 2026-09-07b - SL placement sweep: v5 (pivot + 0.25 ATR buffer) ACCEPTED, v6 (hhll-30) smooth mode
 
 SL variants tested on the v3-gated 15m legs (everything else identical: mb50 trail, 1m fills, stream, 0.05%+2pt). Baseline harness reproduced engine v3 exactly (187tr +139.95).

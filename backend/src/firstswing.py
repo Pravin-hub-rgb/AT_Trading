@@ -1,4 +1,4 @@
-"""SwingEngine — single source of truth for all swing detection.
+"""SwingEngine � single source of truth for all swing detection.
 
 Python port of frontend/src/lib/firstswing.ts.
 Detects 1 or more swings per day.  Use compute_swing_results() for N swings,
@@ -10,7 +10,7 @@ compute_whole_day_swings() for all swings in a day.
 - timeCap gates DECLARATION only, counting runs from bar one
 - Chop target = LATEST sealed pivot only (latest_sealed_high/low), exact like the
   frontend FsV2Engine (backend/debug/firstswing_cf11277.ts chopTargetHigh/Low):
-  "any new H kills old H / any new L kills old L" — killed pivots are dead, there
+  "any new H kills old H / any new L kills old L" � killed pivots are dead, there
   is NO fallback scan to older pivots. Gap check at chop-target time (next candle
   must not breach pivot; requires pivot idx <= g_idx - 2) prevents micro-pivot noise.
   Backend-only additions kept deliberately (user-approved fixes beyond the TS):
@@ -95,16 +95,16 @@ class SwingEngine:
         self.lo: float = float("nan")
 
         # Same-bar arm guard (swings after the first): a Walker seal emitted
-        # during the CURRENT bar must not arm the engine for THAT bar — otherwise
+        # during the CURRENT bar must not arm the engine for THAT bar � otherwise
         # a B1 can fire on the same bar the engine first got structure.
         # (30 Sep 2025: the 09:44 bar sealed H 24669.05 and the up-break fired in
         # that same bar -> phantom B1 up "breaking" the 09:43 high 24667.7, a
         # stamp shift inside the straight white 09:42->09:44 leg.) With the guard
         # the seal arms the engine from the NEXT bar: 09:44 no B1, 09:45 B1 down
-        # breaking the 09:42 low 24647.15 — the structure-extreme break. B1 keeps
+        # breaking the 09:42 low 24647.15 � the structure-extreme break. B1 keeps
         # the approved extreme-break semantics ("09:30 B1 breaking 09:29 low",
         # old computeSecondSwingResults @ 7fe645d). Applied ONLY to swings after
-        # the first (swing_index >= 1) — the first swing keeps the approved FsV2
+        # the first (swing_index >= 1) � the first swing keeps the approved FsV2
         # session-extreme spec (firstswing_cf11277).
         if isinstance(opts, dict):
             self.defer_same_bar_arm: bool = bool(opts.get("defer_same_bar_arm", False))
@@ -226,7 +226,7 @@ class SwingEngine:
         self._snap_high = _snap_high
         self._snap_low = _snap_low
 
-        # Flow direction at bar start — the walker leg the bar's seals will
+        # Flow direction at bar start � the walker leg the bar's seals will
         # terminate. Used by the same-bar V-reversal arm exception (below).
         self._pending_leg_dir = self.walker.dir
 
@@ -241,7 +241,7 @@ class SwingEngine:
                 else:
                     self.armed = True
             if p.kind == "H":
-                # Any new H kills old H — gap validated at chop-target time, not here
+                # Any new H kills old H � gap validated at chop-target time, not here
                 self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_hi_pivot  # type: ignore
                 assert cur is not None
@@ -259,7 +259,7 @@ class SwingEngine:
                 else:
                     self._push_unique(self.normal_highs, Lvl(px=p.px, idx=p.idx, time=p.time))
             else:
-                # Any new L kills old L — gap validated at chop-target time, not here
+                # Any new L kills old L � gap validated at chop-target time, not here
                 self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_lo_pivot  # type: ignore
                 assert cur is not None
@@ -276,7 +276,7 @@ class SwingEngine:
                             self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
                 else:
                     self._push_unique(self.normal_lows, Lvl(px=p.px, idx=p.idx, time=p.time))
-            # NOTE: no white-pivot rebuild and no latest_sealed overwrite here —
+            # NOTE: no white-pivot rebuild and no latest_sealed overwrite here �
             # latest_sealed_* is updated ONLY at seal time above (lines with
             # "Any new H/L kills old H/L"), exactly like the frontend engine
             # (firstswing_cf11277.ts:198/224). Killed pivots stay dead.
@@ -284,14 +284,14 @@ class SwingEngine:
         up_break = c.high > self.e_hi_prev.px
         down_break = c.low < self.e_lo_prev.px
         # Same-bar arm guard with V-reversal exception: a Walker seal arriving
-        # THIS bar normally defers arming to the next bar — EXCEPT when the
+        # THIS bar normally defers arming to the next bar � EXCEPT when the
         # break runs OPPOSITE to the leg the seal terminated (a V reversal off
         # the just-sealed pivot: 2026-09-03 09:27 breaking the sealed 09:26
         # high 23970.15). On the arming bar the SAME-direction break is
         # seed-colour flow extension (red seed: high->low; green seed: low->high)
         # and is suppressed, so B1 locks in the V direction. A same-direction
         # break (2025-09-30 09:44 up-break past the sealed up-leg top) stays
-        # deferred to the next bar — no phantom B1.
+        # deferred to the next bar � no phantom B1.
         if self.defer_same_bar_arm and self._pending_arm and self.state == "watch":
             if self._pending_leg_dir == "down" and up_break:
                 self.armed = True
@@ -545,7 +545,7 @@ class SwingEngine:
 
     def _chop_target_high(self) -> Optional[Lvl]:
         # Exact like the frontend engine (firstswing_cf11277.ts chopTargetHigh):
-        # the LATEST sealed high pivot ONLY — "any new H kills old H". If it
+        # the LATEST sealed high pivot ONLY � "any new H kills old H". If it
         # fails a gate there is NO fallback to older pivots; killed pivots are
         # dead and the market has moved on.
         p = self.latest_sealed_high
@@ -553,7 +553,7 @@ class SwingEngine:
             return None
         # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): the
         # opposing pivot must have FORMED after the current leg was established
-        # (B2 or flip) — breaking a pre-existing pivot does not complete the leg.
+        # (B2 or flip) � breaking a pre-existing pivot does not complete the leg.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
             return None
         # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
@@ -564,7 +564,7 @@ class SwingEngine:
 
     def _chop_target_low(self) -> Optional[Lvl]:
         # Exact like the frontend engine (firstswing_cf11277.ts chopTargetLow):
-        # the LATEST sealed low pivot ONLY — "any new L kills old L". No fallback.
+        # the LATEST sealed low pivot ONLY � "any new L kills old L". No fallback.
         p = self.latest_sealed_low
         if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
             return None
@@ -578,7 +578,7 @@ class SwingEngine:
         return p
 
     def _check_sustain(self, c: FlowCandle) -> None:
-        # SUS removed — swing must need FS (chop). Sustain no longer declares FS.
+        # SUS removed � swing must need FS (chop). Sustain no longer declares FS.
         # Keeps Walker white vs yellow aligned: any tick crossing with gap is FS.
         # Sustained hold without opposite pivot break is no longer a swing.
         return
@@ -753,7 +753,7 @@ class SwingEngine:
         self.break_marks.clear()
 
 
-# ── batch helpers ──────────────────────────────────────────────────────────
+# -- batch helpers ----------------------------------------------------------
 
 def compute_swing_results(
     candles: list[FlowCandle],
@@ -818,7 +818,7 @@ def compute_swing_results(
 
         while swing_index < max_swings:
             eng = SwingEngine(_opts)
-            # Swings after the first: same-bar arm guard — a Walker seal arms the
+            # Swings after the first: same-bar arm guard � a Walker seal arms the
             # engine from the NEXT bar, so a B1 can never fire on the bar the
             # engine first got structure. The first swing keeps the approved
             # FsV2 session-extreme semantics untouched.

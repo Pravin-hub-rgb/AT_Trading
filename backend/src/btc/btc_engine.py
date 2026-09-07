@@ -587,6 +587,52 @@ def trade_stats(trades: list[dict]) -> dict:
     payoff = round((gross_win / len(wins)) / (gross_loss / len(losses)) if wins and losses else 0.0, 2)
     expectancy = round(sum(rs) / len(rs), 3) if rs else 0.0
 
+    # Cost-aware (net) extended stats: median, top-N contributions, time
+    # buckets, rolling windows. cost_r is set by _trade_costs before this call
+    # in the routes flow; when absent, net == gross (engines' internal calls).
+    net_rs = [float(t["r_multiple"]) - float(t.get("cost_r", 0.0)) for t in closed]
+    net_total = round(sum(net_rs), 2)
+
+    _srt = sorted(net_rs)
+    median_r = round((_srt[len(_srt) // 2] if len(_srt) % 2 == 1
+                      else (_srt[len(_srt) // 2 - 1] + _srt[len(_srt) // 2]) / 2.0), 3) if _srt else 0.0
+
+    _top_sorted = sorted(net_rs, reverse=True)
+    tops: dict = {}
+    for _k in (1, 5, 10):
+        _top = round(sum(_top_sorted[:_k]), 2)
+        tops[f"top{_k}_contribution_r"] = _top
+        tops[f"top{_k}_contribution_pct"] = (round(100.0 * _top / net_total, 1) if net_total > 0 else None)
+
+    # Time buckets by EXIT month/year (net R, costs included)
+    monthly: dict[str, float] = {}
+    yearly: dict[str, float] = {}
+    for _t, _nr in zip(closed, net_rs):
+        _ed = str(_t.get("exit_date", "") or "")
+        if len(_ed) >= 7:
+            monthly[_ed[:7]] = round(monthly.get(_ed[:7], 0.0) + _nr, 2)
+        if len(_ed) >= 4:
+            yearly[_ed[:4]] = round(yearly.get(_ed[:4], 0.0) + _nr, 2)
+    monthly = dict(sorted(monthly.items()))
+    yearly = dict(sorted(yearly.items()))
+
+    monthly_equity: list[dict] = []
+    _cum_m = 0.0
+    for _m, _nr in monthly.items():
+        _cum_m += _nr
+        monthly_equity.append({"month": _m, "net_r": _nr, "cum_r": round(_cum_m, 2)})
+
+    def _rolling(w: int) -> tuple[list[dict], float, float, float]:
+        roll = []
+        for _k in range(1, len(net_rs) + 1):
+            roll.append({"trade_no": _k, "net_r": round(sum(net_rs[max(0, _k - w):_k]), 2)})
+        _vals = [x["net_r"] for x in roll]
+        return (roll, min(_vals) if _vals else 0.0, max(_vals) if _vals else 0.0,
+                _vals[-1] if _vals else 0.0)
+
+    roll20, r20_min, r20_max, r20_last = _rolling(20)
+    roll50, r50_min, r50_max, r50_last = _rolling(50)
+
     # Avg bars held
     bars_held = [int(t.get("bars_held", 0)) for t in closed]
     avg_bars = round(sum(bars_held) / len(bars_held), 1) if bars_held else 0.0
@@ -622,6 +668,25 @@ def trade_stats(trades: list[dict]) -> dict:
         "shorts": sum(1 for t in trades if t["dir"] == "short"),
         "outcomes": _outcome_counts(trades),
         "equity": equity,
+        # cost-aware extended stats (net = r_multiple - cost_r when present)
+        "median_r": median_r,
+        "top1_contribution_r": tops["top1_contribution_r"],
+        "top5_contribution_r": tops["top5_contribution_r"],
+        "top10_contribution_r": tops["top10_contribution_r"],
+        "top1_contribution_pct": tops["top1_contribution_pct"],
+        "top5_contribution_pct": tops["top5_contribution_pct"],
+        "top10_contribution_pct": tops["top10_contribution_pct"],
+        "monthly_r": monthly,
+        "yearly_r": yearly,
+        "monthly_equity": monthly_equity,
+        "rolling_20": roll20,
+        "rolling_20_min": r20_min,
+        "rolling_20_max": r20_max,
+        "rolling_20_last": r20_last,
+        "rolling_50": roll50,
+        "rolling_50_min": r50_min,
+        "rolling_50_max": r50_max,
+        "rolling_50_last": r50_last,
     }
 
 

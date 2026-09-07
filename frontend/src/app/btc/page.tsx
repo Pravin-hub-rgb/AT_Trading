@@ -129,6 +129,7 @@ export default function BtcPage() {
   const [flowOn, setFlowOn] = useState(true);
   const [btParams, setBtParams] = useState<BtcBacktestParams>(BT_DEFAULTS);
   const [btData, setBtData] = useState<BtcBacktestResponse | null>(null);
+  const [reportCopied, setReportCopied] = useState(false);
   const [btError, setBtError] = useState<string | null>(null);
   const [summaryData, setSummaryData] = useState<BtcSummaryResponse | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
@@ -417,6 +418,38 @@ export default function BtcPage() {
       })),
     [btData, snapTs, finerChart, ltfBarSec],
   );
+
+  // Copyable text report of the active backtest
+  const statsReport = useMemo(() => {
+    const s = btData?.stats;
+    const p = btData?.params;
+    if (!s || !p) return "";
+    const fmt = (x: number | undefined, d = 2) => `${(x ?? 0) >= 0 ? "+" : ""}${(x ?? 0).toFixed(d)}`;
+    const L: string[] = [];
+    const isHtf = p.htf_ltf && p.htf_ltf !== "off";
+    L.push(`=== BTC ${isHtf ? `HTF-LTF 1h->${p.htf_ltf} ${p.htf_ltf_ver ?? "v1"}` : `${p.tf} ${p.entry_break} mb${p.min_bars}`} | ${p.mode} ===`);
+    L.push(`SL: ${p.sl_buf_atr ? `pivot+${p.sl_buf_atr}ATR` : p.sl_hhll_n ? `hhll-${p.sl_hhll_n}` : "swing-start pivot"} | ext-stop: ${p.ext_stop_r ?? "off"} | RR 1:${p.rr_target} | trail ${p.trailing} | BE ${p.breakeven_r}`);
+    L.push(`fees ${p.fee_pct}%/side + ${p.slippage_pts}pt slip | 1m fills | stream | one-swing-one-trade`);
+    L.push(`trades     ${String(s.closed).padStart(8)}   (long ${s.longs} / short ${s.shorts})`);
+    L.push(`win rate    ${s.win_rate}%   (${s.wins}W / ${s.losses}L)`);
+    L.push(`net R       ${fmt(s.net_total_r)}   (base ${fmt(s.total_r)} | costs -${s.total_costs_r ?? 0})`);
+    L.push(`median R    ${fmt(s.median_r, 3)}`);
+    L.push(`avg winner  ${fmt(s.avg_win_r, 3)} | avg loser ${fmt(s.avg_loss_r, 3)} | expectancy(net) ${fmt(s.net_avg_r, 3)}`);
+    L.push(`PF          ${s.profit_factor}   | max DD ${s.max_drawdown_r}R (dur ${s.max_drawdown_duration_trades}tr)`);
+    L.push(`max loss streak ${s.max_consecutive_losses}L | max win streak ${s.max_consecutive_wins}W`);
+    L.push(`top1  ${fmt(s.top1_contribution_r)}R  (${s.top1_contribution_pct}% of net)`);
+    L.push(`top5  ${fmt(s.top5_contribution_r)}R  (${s.top5_contribution_pct}% of net)`);
+    L.push(`top10 ${fmt(s.top10_contribution_r)}R  (${s.top10_contribution_pct}% of net)`);
+    L.push(`roll20  last ${fmt(s.rolling_20_last)} | min ${fmt(s.rolling_20_min)} | max ${fmt(s.rolling_20_max)}`);
+    L.push(`roll50  last ${fmt(s.rolling_50_last)} | min ${fmt(s.rolling_50_min)} | max ${fmt(s.rolling_50_max)}`);
+    L.push("yearly: " + Object.entries(s.yearly_r ?? {}).map(([y, v]) => `${y} ${fmt(v)}R`).join(" | "));
+    L.push("monthly (net R, by exit):");
+    const entries = Object.entries(s.monthly_r ?? {});
+    for (let i = 0; i < entries.length; i += 3) {
+      L.push(entries.slice(i, i + 3).map(([m, v]) => `  ${m}  ${fmt(v)}`).join(" | "));
+    }
+    return L.join("\\n");
+  }, [btData]);
 
   const tableTrades = useMemo(
     () => [...(btData?.trades ?? [])].reverse().slice(0, 50),
@@ -871,7 +904,7 @@ export default function BtcPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-8">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
             <Stat
               label="Trades"
               value={`${btData.stats.closed}${btData.stats.open ? ` +${btData.stats.open} open` : ""}`}
@@ -926,6 +959,31 @@ export default function BtcPage() {
               label="Long / Short"
               value={`${btData.stats.longs}/${btData.stats.shorts}`}
             />
+            <Stat
+              label="Median R"
+              value={`${btData.stats.median_r ?? 0}`}
+              accent={(btData.stats.median_r ?? 0) >= 0 ? "#10b981" : "#ef4444"}
+            />
+            <Stat
+              label="Avg Winner"
+              value={`+${btData.stats.avg_win_r ?? 0}`}
+              accent="#10b981"
+            />
+            <Stat
+              label="Avg Loser"
+              value={`${btData.stats.avg_loss_r ?? 0}`}
+              accent="#ef4444"
+            />
+            <Stat
+              label="Expectancy (net)"
+              value={`${(btData.stats.net_avg_r ?? 0) >= 0 ? "+" : ""}${btData.stats.net_avg_r ?? 0}`}
+              accent={(btData.stats.net_avg_r ?? 0) >= 0 ? "#10b981" : "#ef4444"}
+            />
+            <Stat
+              label="Win Streak"
+              value={`${btData.stats.max_consecutive_wins ?? "-"}W`}
+              accent="#10b981"
+            />
             {Object.entries(btData.stats.outcomes)
               .slice(0, 2)
               .map(([k, v]) => (
@@ -936,6 +994,75 @@ export default function BtcPage() {
                 />
               ))}
           </div>
+
+          {/* Monthly R + equity-by-time + robustness chips */}
+          {btData.stats.monthly_r && Object.keys(btData.stats.monthly_r).length > 0 ? (
+            <div className="mt-3 rounded-md border border-[#21262d] bg-[#0d1117] px-3 py-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[#8b949e]">Monthly R (net, by exit)</span>
+                {Object.entries(btData.stats.yearly_r ?? {}).map(([yr, rr]) => (
+                  <span key={yr} className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${(rr as number) >= 0 ? "bg-[#10b981]/20 text-[#10b981]" : "bg-[#ef4444]/20 text-[#ef4444]"}`}>
+                    {yr}: {(rr as number) >= 0 ? "+" : ""}{rr}R
+                  </span>
+                ))}
+              </div>
+              <div className="mt-2 flex items-end gap-1" style={{ height: 72 }}>
+                {Object.entries(btData.stats.monthly_r).map(([m, rr]) => {
+                  const maxAbs = Math.max(...Object.values(btData.stats.monthly_r!).map((x) => Math.abs(x)), 0.001);
+                  const h = Math.max(4, Math.round((Math.abs(rr as number) / maxAbs) * 64));
+                  return (
+                    <div key={m} className="flex flex-col items-center justify-end" style={{ width: 20 }} title={`${m}: ${(rr as number) >= 0 ? "+" : ""}${rr}R`}>
+                      <div className={`w-3 rounded-sm ${(rr as number) >= 0 ? "bg-[#10b981]" : "bg-[#ef4444]"}`} style={{ height: h }} />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-1 flex gap-1">
+                {Object.keys(btData.stats.monthly_r).map((m) => (
+                  <div key={m} className="text-center text-[8px] text-[#6e7681]" style={{ width: 20 }}>
+                    {m.slice(2)}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px]">
+                <span className="rounded bg-[#21262d] px-1.5 py-0.5 text-[#8b949e]">
+                  Top1 {(btData.stats.top1_contribution_r ?? 0) >= 0 ? "+" : ""}{btData.stats.top1_contribution_r}R ({btData.stats.top1_contribution_pct ?? 0}% of net)
+                </span>
+                <span className="rounded bg-[#21262d] px-1.5 py-0.5 text-[#8b949e]">
+                  Top5 {btData.stats.top5_contribution_r}R ({btData.stats.top5_contribution_pct ?? 0}%)
+                </span>
+                <span className="rounded bg-[#21262d] px-1.5 py-0.5 text-[#8b949e]">
+                  Top10 {btData.stats.top10_contribution_r}R ({btData.stats.top10_contribution_pct ?? 0}%)
+                </span>
+                <span className="rounded bg-[#21262d] px-1.5 py-0.5 text-[#8b949e]">
+                  Roll20 last {btData.stats.rolling_20_last} · min {btData.stats.rolling_20_min} · max {btData.stats.rolling_20_max}
+                </span>
+                <span className="rounded bg-[#21262d] px-1.5 py-0.5 text-[#8b949e]">
+                  Roll50 last {btData.stats.rolling_50_last} · min {btData.stats.rolling_50_min} · max {btData.stats.rolling_50_max}
+                </span>
+              </div>
+            </div>
+          ) : null}
+
+          {/* Copyable text report */}
+          {statsReport ? (
+            <div className="mt-3 rounded-md border border-[#21262d] bg-[#0d1117] px-3 py-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wide text-[#8b949e]">Stats report (text — copyable)</span>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(statsReport);
+                    setReportCopied(true);
+                    setTimeout(() => setReportCopied(false), 1500);
+                  }}
+                  className="rounded bg-[#21262d] px-2 py-0.5 text-[10px] font-semibold text-[#e6edf3] hover:bg-[#30363d]"
+                >
+                  {reportCopied ? "copied ✓" : "📋 copy report"}
+                </button>
+              </div>
+              <pre className="mt-1 max-h-72 overflow-auto whitespace-pre text-[10px] leading-relaxed text-[#c9d1d9]">{statsReport}</pre>
+            </div>
+          ) : null}
         </>
       ) : null}
 
