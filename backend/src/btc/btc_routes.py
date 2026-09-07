@@ -60,6 +60,14 @@ try:
     from src.btc.engines.htf_ltf.v3_ext_stop import simulate_htf_ltf_ext_stop
 except Exception:
     simulate_htf_ltf_ext_stop = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v5_sl_buffer import simulate_htf_ltf_sl_buffer
+except Exception:
+    simulate_htf_ltf_sl_buffer = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v6_sl_hhll import simulate_htf_ltf_sl_hhll
+except Exception:
+    simulate_htf_ltf_sl_hhll = None  # type: ignore
 
 BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"]
 VERSION_LABELS = {
@@ -560,8 +568,8 @@ def btc_backtest(
         return JSONResponse(status_code=400, content={"detail": f"version must be one of {BTC_VERSIONS}"})
     if htf_ltf not in ("off", "5m", "15m"):
         return JSONResponse(status_code=400, content={"detail": "htf_ltf must be off | 5m | 15m"})
-    if htf_ltf_ver not in ("v1", "v3"):
-        return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3"})
+    if htf_ltf_ver not in ("v1", "v3", "v5", "v6"):
+        return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3 | v5 | v6"})
 
     win, err = _load_window(tf, limit)
     if err:
@@ -660,6 +668,28 @@ def btc_backtest(
                     ext_stop_r=1.5,
                 )
                 params["ext_stop_r"] = 1.5
+            elif htf_ltf_ver == "v5" and simulate_htf_ltf_sl_buffer is not None:
+                # v5 = v3 ext-stop + SL = pivot + 0.25 ATR(14) buffer.
+                nested = simulate_htf_ltf_sl_buffer(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    htf_entry_break="flip", ltf_entry_break="decisive",
+                    sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
+                    htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
+                    ext_stop_r=1.5, sl_buf_atr=0.25,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+            elif htf_ltf_ver == "v6" and simulate_htf_ltf_sl_hhll is not None:
+                # v6 = v3 ext-stop + SL = highest-high/lowest-low of 30 bars.
+                nested = simulate_htf_ltf_sl_hhll(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    htf_entry_break="flip", ltf_entry_break="decisive",
+                    sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
+                    htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
+                    ext_stop_r=1.5, sl_hhll_n=30,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_hhll_n"] = 30
             else:
                 nested = simulate_htf_ltf_15m(
                     htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
@@ -682,6 +712,23 @@ def btc_backtest(
             stats_htf = _net_stats(stats_htf, htf_trades)
             # Combined net
             combined_net = float(stats_ltf.get("net_total_r", 0)) + float(stats_htf.get("net_total_r", 0))
+            # Combined merged-equity drawdown: both books interleaved by exit
+            # time (the honest risk number for running 1h + 15m on one account)
+            _merged = sorted(
+                [(int(t["exit_ts"]), float(t["r_multiple"]) - float(t.get("cost_r", 0.0)))
+                 for t in htf_trades if t["outcome"] != "open"]
+                + [(int(t["exit_ts"]), float(t["r_multiple"]) - float(t.get("cost_r", 0.0)))
+                   for t in ltf_trades if t["outcome"] != "open"]
+            )
+            _cum = _peak = 0.0
+            combined_maxdd = 0.0
+            for _ts, _r in _merged:
+                _cum += _r
+                if _peak - _cum > combined_maxdd:
+                    combined_maxdd = _peak - _cum
+                if _cum > _peak:
+                    _peak = _cum
+            params["combined_maxdd"] = round(combined_maxdd, 2)
             # Return LTF trades as main, but include htf info in params
             params["htf_trades"] = len(htf_trades)
             params["htf_net"] = stats_htf.get("net_total_r")

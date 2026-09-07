@@ -198,8 +198,14 @@ export interface BtcBacktestResponseParams {
   /** present when htf_ltf != off */
   htf_ltf?: string;
   htf_ltf_ver?: string;
-  /** present when htf_ltf_ver = v3 (extension stop level, in R) */
+  /** present when htf_ltf_ver = v3/v5/v6 (extension stop level, in R) */
   ext_stop_r?: number;
+  /** present when htf_ltf_ver = v5 (SL = pivot + N x ATR14 buffer) */
+  sl_buf_atr?: number;
+  /** present when htf_ltf_ver = v6 (SL = highest-high/lowest-low of N bars) */
+  sl_hhll_n?: number;
+  /** merged-equity drawdown of the combined book (1h legs + 15m legs) */
+  combined_maxdd?: number;
 }
 
 export interface BtcBacktestResponse {
@@ -208,11 +214,16 @@ export interface BtcBacktestResponse {
   swings_used: number;
   trades: BtcTrade[];
   stats: BtcTradeStats;
+  /** present when htf_ltf != off: the 1h book + its stats + merged numbers */
+  htf_trades?: BtcTrade[];
+  htf_stats?: BtcTradeStats;
+  /** 1h book net + 15m book net (both after costs) */
+  combined_net?: number;
 }
 
 export type HtfLtfMode = "off" | "5m" | "15m";
-/** HTF-LTF engine version — v3 = Extension Stop (no new same-dir entries once the 1h leg is >1.5R unrealized). */
-export type HtfLtfVer = "v1" | "v3";
+/** HTF-LTF engine version — v3 = Extension Stop, v5 = + ATR-buffered SL, v6 = + N-bar structure SL. */
+export type HtfLtfVer = "v1" | "v3" | "v5" | "v6";
 
 export async function getBtcBacktest(
   tf: BtcTf,

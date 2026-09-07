@@ -23,6 +23,8 @@ def simulate_htf_ltf_15m(
     entry_selection: str = "stream",
     ext_stop_r: float = 0.0,
     htf_entry_gate=None,
+    sl_buf_atr: float = 0.0,
+    sl_hhll_n: int = 0,
 ) -> dict:
     """Run HTF 1h flip cap16 and LTF 15m decisive inside HTF windows.
 
@@ -102,6 +104,23 @@ def simulate_htf_ltf_15m(
     if n==0:
         return {"htf_trades": htf_trades, "ltf_trades": [], "intervals": intervals}
     candle_ts = [int(c["ts"]) for c in candles_ltf]
+    # ATR(14) on 15m bars (simple mean of TR) - only built when the v5 SL
+    # buffer variant is active (sl_buf_atr > 0).
+    atr15 = None
+    if sl_buf_atr > 0:
+        tr_l = [0.0] * n
+        for _i in range(n):
+            _c = candles_ltf[_i]
+            if _i == 0:
+                tr_l[_i] = float(_c["high"]) - float(_c["low"])
+            else:
+                _pc = float(candles_ltf[_i - 1]["close"])
+                tr_l[_i] = max(float(_c["high"]) - float(_c["low"]),
+                               abs(float(_c["high"]) - _pc), abs(float(_c["low"]) - _pc))
+        atr15 = [0.0] * n
+        for _i in range(n):
+            _lo = max(0, _i - 13)
+            atr15[_i] = sum(tr_l[_lo:_i + 1]) / (_i - _lo + 1)
     fine_ts = [int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     # We need to run LTF engine with filtered signals
     # Simplify: call simulate_btc_trades with a hack — temporarily replace swings_ltf breaks to only include filtered? Instead we run manual loop
@@ -122,14 +141,29 @@ def simulate_htf_ltf_15m(
             continue
         direction = int(sig["dir"])
         entry = float(candles_ltf[i]["close"])
+        # SL placement (v5/v6): ATR buffer beyond the pivot, or the
+        # highest-high/lowest-low structure range of the last sl_hhll_n bars.
+        # Both always land on the valid side of entry (buffer moves away from
+        # it, hhll includes the entry bar's own extreme), so no fallback needed.
+        sl_pivot = sig["swing_start_px"]
         if direction==1:
-            sl = sig["swing_start_px"]
+            sl = sl_pivot
+            if sl_buf_atr > 0 and atr15 is not None:
+                sl = sl_pivot - sl_buf_atr * atr15[i]
+            elif sl_hhll_n > 0:
+                lo_i = max(0, i - sl_hhll_n + 1)
+                sl = min(float(candles_ltf[j]["low"]) for j in range(lo_i, i + 1))
             if sl >= entry: continue
             risk=entry-sl
             if risk < 0.0005*entry: continue
             target=entry+rr_target*risk
         else:
-            sl=sig["swing_start_px"]
+            sl = sl_pivot
+            if sl_buf_atr > 0 and atr15 is not None:
+                sl = sl_pivot + sl_buf_atr * atr15[i]
+            elif sl_hhll_n > 0:
+                lo_i = max(0, i - sl_hhll_n + 1)
+                sl = max(float(candles_ltf[j]["high"]) for j in range(lo_i, i + 1))
             if sl <= entry: continue
             risk=sl-entry
             if risk < 0.0005*entry: continue

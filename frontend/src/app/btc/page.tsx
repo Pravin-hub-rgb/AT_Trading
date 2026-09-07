@@ -136,7 +136,7 @@ export default function BtcPage() {
   const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
   const [showMasterInfo, setShowMasterInfo] = useState(true);
   const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
-  const [htfLtfVer, setHtfLtfVer] = useState<"v1" | "v3">("v1");
+  const [htfLtfVer, setHtfLtfVer] = useState<"v1" | "v3" | "v5" | "v6">("v1");
   const [version, setVersion] = useState<BtcVersion>("v1");
   const [versionLabels, setVersionLabels] = useState<Record<string, string>>({
     v1: "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
@@ -167,8 +167,8 @@ export default function BtcPage() {
     if (v && ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"].includes(v)) setVersion(v);
     const htf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
     if (htf && ["off","5m","15m"].includes(htf)) setHtfLtf(htf as any);
-    const htfVer = window.localStorage.getItem(HTF_VER_KEY) as "v1" | "v3" | null;
-    if (htfVer && ["v1","v3"].includes(htfVer)) setHtfLtfVer(htfVer);
+    const htfVer = window.localStorage.getItem(HTF_VER_KEY) as "v1" | "v3" | "v5" | "v6" | null;
+    if (htfVer && ["v1","v3","v5","v6"].includes(htfVer)) setHtfLtfVer(htfVer);
     const mm = window.localStorage.getItem(MASTER_KEY);
     const modeM = mm ? BTC_MASTER_MODES.find((x) => x.value === mm) : undefined;
     // MASTER always wins: the params must match the selected strategy, otherwise
@@ -266,7 +266,7 @@ export default function BtcPage() {
     window.localStorage.setItem(HTF_KEY, v);
     setHtfLtf(v);
   };
-  const changeHtfLtfVer = (v: "v1" | "v3") => {
+  const changeHtfLtfVer = (v: "v1" | "v3" | "v5" | "v6") => {
     window.localStorage.setItem(HTF_VER_KEY, v);
     setHtfLtfVer(v);
   };
@@ -288,7 +288,7 @@ export default function BtcPage() {
     return () => {
       cancelled = true;
     };
-  }, [tradesOn, hydrated, tf, mode, limit, btParams, version, htfLtf]);
+  }, [tradesOn, hydrated, tf, mode, limit, btParams, version, htfLtf, htfLtfVer]);
 
   // "konsi best hai" — every master preset on the SAME window, ranked by NET R
   useEffect(() => {
@@ -616,12 +616,14 @@ export default function BtcPage() {
             {htfLtf !== "off" && (
               <select
                 value={htfLtfVer}
-                onChange={(e) => changeHtfLtfVer(e.target.value as "v1" | "v3")}
+                onChange={(e) => changeHtfLtfVer(e.target.value as "v1" | "v3" | "v5" | "v6")}
                 className="rounded border border-[#10b981] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#10b981]"
                 title="HTF-LTF engine version — v3 Extension Stop: no new same-dir LTF entries once the 1h leg is beyond +1.5R unrealized. Research: 187tr 32.6% +139.95 net PF 2.47 maxDD 13.15R (v1: 204tr 30.9% +127.49 PF 2.25 maxDD 17.52R). IS+OOS both improve."
               >
                 <option value="v1">v1 plain</option>
                 <option value="v3">v3 ext-stop 1.5R</option>
+                <option value="v5">v5 buf-SL 0.25ATR</option>
+                <option value="v6">v6 hhll-30 SL</option>
               </select>
             )}
             {htfLtf !== "off" && (
@@ -832,7 +834,9 @@ export default function BtcPage() {
               {btData.params.htf_ltf && btData.params.htf_ltf !== "off" ? (
                 <span className="text-[#10b981]">
                   HTF-LTF 1h→{btData.params.htf_ltf} {btData.params.htf_ltf_ver ?? "v1"}
-                  {btData.params.ext_stop_r ? ` (ext-stop ${btData.params.ext_stop_r}R)` : ""} ·{" "}
+                  {btData.params.ext_stop_r ? ` (ext-stop ${btData.params.ext_stop_r}R)` : ""}
+                  {btData.params.sl_buf_atr ? ` · SL pivot+${btData.params.sl_buf_atr}ATR` : ""}
+                  {btData.params.sl_hhll_n ? ` · SL hhll-${btData.params.sl_hhll_n}` : ""} ·{" "}
                 </span>
               ) : null}
               {btData.params.htf_ltf && btData.params.htf_ltf !== "off"
@@ -1228,10 +1232,18 @@ export default function BtcPage() {
                 <td className="py-1 pr-2 font-mono">v4</td>
                 <td className="py-1 pr-2">CHOP&lt;=61.8 gate</td><td className="py-1 pr-2 text-right">202</td><td className="py-1 pr-2 text-right">30.2%</td><td className="py-1 pr-2 text-right">—</td><td className="py-1 pr-2 text-right font-semibold text-[#ef4444]">+121.8</td><td className="py-1 pr-2 text-right">2.20</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">❌ rejected — busy-chain artifact</td>
               </tr>
+              <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v5"?"bg-[#10b981]/10":""}`}>
+                <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v5");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v5"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v5</button></td>
+                <td className="py-1 pr-2">Ext-Stop + SL pivot+0.25ATR</td><td className="py-1 pr-2 text-right">179</td><td className="py-1 pr-2 text-right">34.6%</td><td className="py-1 pr-2 text-right">+182.4</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+152.8</td><td className="py-1 pr-2 text-right">2.70</td><td className="py-1 pr-2 text-right">11.2</td><td className="py-1 text-[10px]">✅ BEST net — maxL 10 (IS maxL 7)</td>
+              </tr>
+              <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v6"?"bg-[#10b981]/10":""}`}>
+                <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v6");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v6"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v6</button></td>
+                <td className="py-1 pr-2">Ext-Stop + SL hhll-30</td><td className="py-1 pr-2 text-right">169</td><td className="py-1 pr-2 text-right">39.6%</td><td className="py-1 pr-2 text-right">+161.8</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+138.4</td><td className="py-1 pr-2 text-right">2.87</td><td className="py-1 pr-2 text-right">9.3</td><td className="py-1 text-[10px]">✅ smooth mode — WR 40%, maxL 9</td>
+              </tr>
             </tbody>
           </table>
           <p className="mt-1 text-[10px] text-[#6e7681]">
-            LTF-leg stats (1m fills, stream, touchable SL, swing trail). Combined book (1h legs + 15m legs): v1 +185.3R net / 27.7R maxDD, v3 +197.7R / 22.8R.
+            LTF-leg stats (1m fills, stream, touchable SL, swing trail).
             v3 Extension Stop: no new same-dir 15m entries once the 1h leg is &gt;+1.5R unrealized — removes the 8-14% WR late-entry zone; IS +56.3 / OOS +83.7, both beat v1 (+51.4 / +76.1).
             Rejected 2026-09-07: 4h bias agree, wait-for-+1R, fresh-window-only, HTF breakeven, fade-when-extended (PF 0.54), partial/secure exits, CHOP gate (v4). Sizing study: v3 at full size already best net/DD 8.69 — no downsizing needed. Doc: <code>fix/multi tf 1hour flip and lower tf execution.md</code>
           </p>

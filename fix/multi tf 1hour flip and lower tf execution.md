@@ -77,3 +77,23 @@ Add `htf_v7...` as we brain-storm. Chart `Ver` dropdown (existing `v1..v7`) stay
 - Sizing study (merged book, LTF legs at fraction f of 1h size): v1 book best net/DD at f=0.5 (7.84); **v3 book best AT f=1.0: net +197.71R, maxDD 22.75R, net/DD 8.69** - v3 fixes the risk-stacking problem, no downsizing needed.
 - UI: HTF-LTF got its own Crazy Lab box in Strategy Summary + Ver dropdown (v1 | v3) next to the HTF-LTF selector, persisted to localStorage (`btc_htf_ltf_ver`). Verdict: run v3.
 
+### 2026-09-07b - SL placement sweep: v5 (pivot + 0.25 ATR buffer) ACCEPTED, v6 (hhll-30) smooth mode
+
+SL variants tested on the v3-gated 15m legs (everything else identical: mb50 trail, 1m fills, stream, 0.05%+2pt). Baseline harness reproduced engine v3 exactly (187tr +139.95).
+
+| SL variant | Tr | Win% | Base | Net | PF | maxDD | maxL | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| baseline pivot (v3) | 187 | 32.6% | +175.93 | +139.95 | 2.47 | 13.15 | 14 | ref |
+| prev same-dir pivot | 185 | 35.7% | +? | +88.31 | 2.21 | 15.27 | 14 | REJECT (-52R) |
+| max(cur, prev) wider | 179 | 36.9% | +? | +106.77 | 2.42 | 13.59 | 12 | REJECT (WR up, net -33R) |
+| **cur pivot + 0.25 ATR buffer** | **179** | **34.6%** | **+182.36** | **+152.77** | **2.70** | **11.22** | **10** | **ACCEPTED as v5** |
+| ATR14 x 1.5 / x 2.0 | 214/205 | 22/27% | - | +141.86/+133.56 | ~2.25 | 14.8-16.6 | 14 | REJECT (pure ATR worse) |
+| highest-high/lowest-low 20 | 172 | 37.8% | +? | +139.05 | 2.73 | 9.29 | 10 | smooth mode |
+| **highest-high/lowest-low 30** | **169** | **39.6%** | **+161.80** | **+138.44** | **2.87** | **9.27** | **9** | **ACCEPTED as v6 (smooth)** |
+| highest-high/lowest-low 50 | 164 | 40.9% | - | +131.71 | 2.94 | 9.27 | 9 | smooth extreme |
+
+- Buffer insight: SL just 0.25 ATR BEYOND the pivot survives exact-level stop-hunts for ~0.08% extra risk - dominates baseline on every metric (net +12.8R, DD -1.9R, maxL 14 -> 10).
+- IS/OOS honesty: v5 IS +80.08 (maxL 7) / OOS +72.69 (baseline: +56.27 / +83.68) - IS much stronger, OOS slightly under; buffer size is a mild overfit flag (0.25 is the sweep peak). hhll N=20-50 is a smooth plateau (robust family).
+- Combined book (1h + 15m legs): baseline +197.71R / DD 22.75R | **v5 +210.53R / 19.78R (net/DD 10.64)** | v6 +196.20R / 18.66R (net/DD 10.51).
+- Wired: `htf_ltf/v5_sl_buffer.py` + `htf_ltf/v6_sl_hhll.py` (both = v3 ext-stop + SL variant), routes `htf_ltf_ver=v5|v6`, frontend Ver dropdown + lab rows. Engine validation: v1/v3/v5/v6 all match harness exactly.
+
