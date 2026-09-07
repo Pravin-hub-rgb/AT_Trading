@@ -1,0 +1,346 @@
+// BTC chart API — isolated client for the /api/btc/* routes.
+// Same base URL + error convention as lib/api.ts (which stays untouched).
+import { API_BASE } from "./api";
+
+export type BtcTf = "1m" | "5m" | "15m" | "1h" | "4h";
+export type BtcMode = "continuous" | "daily";
+export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7";
+
+export interface BtcCandle {
+  date: string;
+  ts: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  oi: number;
+}
+
+export interface BtcSwing {
+  day: string;
+  swing_index: number;
+  seg: {
+    dir: "B" | "S";
+    start_idx: number;
+    start_px: number;
+    end_idx: number;
+    end_px: number;
+  };
+  source: "chop" | "sustain" | null;
+  dir: "up" | "down";
+  /** "FS" or "SUS" — label at the swing's structural completion. */
+  kind: string;
+  /** "B1", "B2", "FLIP" or null — the decisive break kind. */
+  break_kind: "B1" | "B2" | "FLIP" | null;
+  /** Ordered break marks for this swing (idx = global bar index in window). */
+  breaks: {
+    idx: number;
+    time: string;
+    kind: "B1" | "B2" | "FLIP";
+    dir: "up" | "down";
+    px: number;
+  }[];
+  confirmed_at_idx: number;
+  confirmed_at_time: string;
+  /** Bar where the swing's OWN opposing pivot broke (FS marker point). */
+  fs_at_idx?: number;
+  fs_at_time?: string;
+}
+
+export interface BtcFlowSegment {
+  dir: "B" | "S";
+  startIdx: number;
+  startPx: number;
+  endIdx: number;
+  endPx: number;
+}
+
+export interface BtcChartResponse {
+  tf: BtcTf;
+  mode: BtcMode;
+  count: number;
+  first_ts: string | null;
+  last_ts: string | null;
+  candles: BtcCandle[];
+  swings: BtcSwing[];
+  flow: BtcFlowSegment[];
+}
+
+export const BTC_TFS: BtcTf[] = ["1m", "5m", "15m", "1h", "4h"];
+
+export async function getBtcChart(
+  tf: BtcTf,
+  mode: BtcMode,
+  limit: number | null,
+  minBars?: number,
+): Promise<BtcChartResponse> {
+  const params = new URLSearchParams({ tf, mode });
+  if (limit && limit > 0) params.set("limit", String(limit));
+  if (minBars && minBars >= 2) params.set("min_bars", String(minBars));
+  const res = await fetch(`${API_BASE}/api/btc/chart?${params.toString()}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json() as Promise<BtcChartResponse>;
+}
+
+// --- position engine (backtest) ---
+
+export type EntryBreak = "decisive" | "b2" | "flip";
+export type SlMode = "swing" | "pct";
+export type TrailingMode = "off" | "r" | "swing";
+export type BiasMode = "off" | "15m";
+export type RegimeMode = "off" | "streak_311";
+
+export interface BtcTrade {
+  trade_no: number;
+  dir: "long" | "short";
+  swing_no: number;
+  break_kind: string;
+  entry_idx: number;
+  entry_ts: number;
+  entry_date: string;
+  entry_price: number;
+  sl: number;
+  target: number;
+  exit_idx: number;
+  exit_ts: number;
+  exit_date: string;
+  exit_price: number;
+  outcome: "target" | "sl" | "be" | "trail" | "open";
+  r_multiple: number;
+  /** round-trip fee+slippage cost of this trade, in R (0 when fee_pct=0). */
+  cost_r?: number;
+  bars_held: number;
+}
+
+export interface BtcTradeStats {
+  trades: number;
+  closed: number;
+  open: number;
+  wins: number;
+  losses: number;
+  win_rate: number;
+  total_r: number;
+  avg_r: number;
+  avg_win_r: number;
+  avg_loss_r: number;
+  max_drawdown_r: number;
+  longs: number;
+  shorts: number;
+  /** outcome histogram, count-sorted (target/sl/be/trail/open) */
+  outcomes: Record<string, number>;
+  equity: { trade_no: number; cum_r: number }[];
+  /** cost-adjusted aggregates — total_r minus fee+slippage (in R). */
+  net_total_r?: number;
+  net_avg_r?: number;
+  total_costs_r?: number;
+}
+
+export interface BtcBacktestParams {
+  entryBreak: EntryBreak;
+  slMode: SlMode;
+  slPct: number;
+  rrTarget: number;
+  trailing: TrailingMode;
+  trailDistanceR: number;
+  breakevenR: number;
+  bias: BiasMode;
+  /** SwingEngine minBars (sweep winner: 20 > 14 > 7 on BTC). */
+  minBars: number;
+  /** daily-color streak regime gate (3-1-1). */
+  regime: RegimeMode;
+  /** fee % per side (e.g. 0.05 = Binance taker) — 0 shows the raw backtest. */
+  feePct: number;
+  /** adverse exit slippage in price points. */
+  slippagePts: number;
+}
+
+export interface BtcBacktestResponseParams {
+  tf: BtcTf;
+  mode: BtcMode;
+  limit: number | null;
+  fee_pct: number;
+  slippage_pts: number;
+  /** "1m" = exits resolved on 1-minute candles (precise fills). */
+  fill_tf: string;
+  entry_break: EntryBreak;
+  sl_mode: SlMode;
+  sl_pct: number;
+  rr_target: number;
+  trailing: TrailingMode;
+  trail_distance_r: number;
+  breakeven_r: number;
+  skip_first: boolean;
+  bias: BiasMode;
+  bias_applied: boolean;
+  min_bars: number;
+  regime: RegimeMode;
+  version: BtcVersion;
+}
+
+export interface BtcBacktestResponse {
+  params: BtcBacktestResponseParams;
+  count: number;
+  swings_used: number;
+  trades: BtcTrade[];
+  stats: BtcTradeStats;
+}
+
+export type HtfLtfMode = "off" | "5m" | "15m";
+
+export async function getBtcBacktest(
+  tf: BtcTf,
+  mode: BtcMode,
+  limit: number | null,
+  p: BtcBacktestParams,
+  version: BtcVersion = "v1",
+  htfLtf: HtfLtfMode = "off",
+): Promise<BtcBacktestResponse> {
+  const q = new URLSearchParams({
+    tf,
+    mode,
+    fee_pct: String(p.feePct),
+    slippage_pts: String(p.slippagePts),
+    entry_break: p.entryBreak,
+    sl_mode: p.slMode,
+    sl_pct: String(p.slPct),
+    rr_target: String(p.rrTarget),
+    trailing: p.trailing,
+    trail_distance_r: String(p.trailDistanceR),
+    breakeven_r: String(p.breakevenR),
+    bias: p.bias,
+    min_bars: String(p.minBars),
+    regime: p.regime,
+    version,
+    htf_ltf: htfLtf,
+  });
+  if (limit && limit > 0) q.set("limit", String(limit));
+  const res = await fetch(`${API_BASE}/api/btc/backtest?${q.toString()}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json() as Promise<BtcBacktestResponse>;
+}
+
+// --- data coverage (status) ---
+
+export interface BtcStatusTf {
+  exists: boolean;
+  rows: number;
+  first_ts: string | null;
+  last_ts: string | null;
+}
+
+export interface BtcStatusResponse {
+  tfs: Record<string, BtcStatusTf>;
+}
+
+export async function getBtcStatus(): Promise<BtcStatusResponse> {
+  const res = await fetch(`${API_BASE}/api/btc/status`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json() as Promise<BtcStatusResponse>;
+}
+
+export async function getBtcVersions(): Promise<{ versions: BtcVersion[]; labels: Record<string, string>; default: BtcVersion }> {
+  const res = await fetch(`${API_BASE}/api/btc/versions`, { headers: { "Content-Type": "application/json" } });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json();
+}
+
+// --- strategy summary ("konsi best hai" table) ---
+
+export interface BtcSummaryRow {
+  rank: number;
+  key: string;
+  label: string;
+  /** preset's OWN reference timeframe the row was measured on (bestTf) */
+  tf: BtcTf;
+  entry_break: EntryBreak;
+  min_bars: number;
+  trailing: TrailingMode;
+  breakeven_r: number;
+  bias: BiasMode;
+  regime: RegimeMode;
+  trades: number;
+  win_rate: number;
+  /** zero-cost R (what the raw sim made) */
+  base_r: number;
+  /** fee+slippage cost in R */
+  costs_r: number;
+  /** net_r = base_r - costs_r — the honest number */
+  net_r: number;
+}
+
+export interface BtcSummaryResponse {
+  tf: BtcTf;
+  mode: BtcMode;
+  limit: number | null;
+  count: number;
+  fee_pct: number;
+  slippage_pts: number;
+  version: BtcVersion;
+  rows: BtcSummaryRow[];
+  best: string | null;
+}
+
+export async function getBtcSummary(
+  tf: BtcTf,
+  mode: BtcMode,
+  limit: number | null,
+  feePct: number,
+  slippagePts: number,
+  version: BtcVersion = "v1",
+): Promise<BtcSummaryResponse> {
+  const q = new URLSearchParams({
+    tf,
+    mode,
+    fee_pct: String(feePct),
+    slippage_pts: String(slippagePts),
+    version,
+  });
+  if (limit && limit > 0) q.set("limit", String(limit));
+  const res = await fetch(`${API_BASE}/api/btc/summary?${q.toString()}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json() as Promise<BtcSummaryResponse>;
+}

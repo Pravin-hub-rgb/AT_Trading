@@ -1,0 +1,48 @@
+[2026-09-05 09:10:33.016531] LOGICAL GRID total 3456 combos (min_sl>=13)
+  sl_mode: ['avg', 'avg075', 'prev_pivot', 'swing_end']
+  rr_target: [2.0, 3.0, 4.0]
+  min_sl_pts: [13, 15, 20]
+  breakeven_r: [0, 1.0, 1.5]
+  gap_pct: [0.0027, 0.0035]
+  ft_fail_enabled: [True, False]
+  max_entries: [1, 2]
+  entry_cutoff: ['15:15', '12:00']
+  second_trade_after: ['sl_only', 'always']
+Estimated time with 4 workers @0.8s/cfg: 46.1 min
+Estimated time with 8 workers @0.4s/cfg: 23.0 min
+[2026-09-05 09:10:33.020917] Starting MP with 8 workers
+[2026-09-05 09:11:01.486984] 50/3456 elapsed 28.5s avg 0.57s per cfg, est remaining 32.3 min
+[2026-09-05 09:11:20.536569] 100/3456 elapsed 47.5s avg 0.48s per cfg, est remaining 26.6 min
+[2026-09-05 09:11:43.076463] 150/3456 elapsed 70.1s avg 0.47s per cfg, est remaining 25.7 min
+[2026-09-05 09:12:03.045327] 200/3456 elapsed 90.0s avg 0.45s per cfg, est remaining 24.4 min
+  checkpoint saved 200
+[2026-09-05 09:12:23.489934] 250/3456 elapsed 110.5s avg 0.44s per cfg, est remaining 23.6 min
+[2026-09-05 09:12:43.588155] 300/3456 elapsed 130.6s avg 0.44s per cfg, est remaining 22.9 min
+[2026-09-05 09:13:07.202912] 350/3456 elapsed 154.2s avg 0.44s per cfg, est remaining 22.8 min
+[2026-09-05 09:13:27.474191] 400/3456 elapsed 174.5s avg 0.44s per cfg, est remaining 22.2 min
+  checkpoint saved 400
+[2026-09-05 09:13:47.761615] 450/3456 elapsed 194.7s avg 0.43s per cfg, est remaining 21.7 min
+[2026-09-05 09:14:07.808924] 500/3456 elapsed 214.8s avg 0.43s per cfg, est remaining 21.2 min
+[2026-09-05 09:14:32.521741] 550/3456 elapsed 239.5s avg 0.44s per cfg, est remaining 21.1 min
+[2026-09-05 09:14:53.905169] 600/3456 elapsed 260.9s avg 0.43s per cfg, est remaining 20.7 min
+  checkpoint saved 600
+[2026-09-05 09:15:14.955825] 650/3456 elapsed 281.9s avg 0.43s per cfg, est remaining 20.3 min
+[2026-09-05 09:15:36.530732] 700/3456 elapsed 303.5s avg 0.43s per cfg, est remaining 19.9 min
+[2026-09-05 09:16:01.273372] 750/3456 elapsed 328.3s avg 0.44s per cfg, est remaining 19.7 min
+[2026-09-05 09:16:22.846502] 800/3456 elapsed 349.8s avg 0.44s per cfg, est remaining 19.4 min
+  checkpoint saved 800
+[2026-09-05 09:16:44.558151] 850/3456 elapsed 371.5s avg 0.44s per cfg, est remaining 19.0 min
+[2026-09-05 09:17:05.656451] 900/3456 elapsed 392.6s avg 0.44s per cfg, est remaining 18.6 min
+[2026-09-05 09:17:30.370995] 950/3456 elapsed 417.4s avg 0.44s per cfg, est remaining 18.3 min
+[2026-09-05 09:17:52.097628] 1000/3456 elapsed 439.1s avg 0.44s per cfg, est remaining 18.0 min
+  checkpoint saved 1000
+[2026-09-05 09:18:13.345616] 1050/3456 elapsed 460.3s avg 0.44s per cfg, est remaining 17.6 min
+[2026-09-05 09:18:34.541005] 1100/3456 elapsed 481.5s avg 0.44s per cfg, est remaining 17.2 min
+[2026-09-05 09:18:59.374455] 1150/3456 elapsed 506.4s avg 0.44s per cfg, est remaining 16.9 min
+[2026-09-05 09:19:20.945431] 1200/3456 elapsed 527.9s avg 0.44s per cfg, est remaining 16.5 min
+  checkpoint saved 1200
+[2026-09-05 09:19:42.614028] 1250/3456 elapsed 549.6s avg 0.44s per cfg, est remaining 16.2 min
+[2026-09-05 09:20:03.804598] 1300/3456 elapsed 570.8s avg 0.44s per cfg, est remaining 15.8 min
+[2026-09-05 09:20:29.019504] 1350/3456 elapsed 596.0s avg 0.44s per cfg, est remaining 15.5 min
+[2026-09-05 09:20:51.027358] 1400/3456 elapsed 618.0s avg 0.44s per cfg, est remaining 15.1 min
+  checkpoint saved 1400

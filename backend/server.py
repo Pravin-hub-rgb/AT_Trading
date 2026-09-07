@@ -24,6 +24,7 @@ from src import swing as swing_svc
 from src import bias as bias_svc
 from src import intraday as intraday_svc
 from src import firstswing as fs_engine
+from src.btc.btc_routes import router as btc_router
 
 active_operations: dict = {}
 
@@ -37,23 +38,50 @@ _bias_cache: dict = {"key": None, "labels": None}
 def _data_key() -> tuple:
     p5 = config.DATA_DIR / "nifty_5min.csv"
     pd_ = config.DATA_DIR / "nifty_daily.csv"
+    p1 = config.DATA_DIR / "nifty_1min.csv"
     return (
         p5.stat().st_mtime_ns if p5.exists() else 0,
         pd_.stat().st_mtime_ns if pd_.exists() else 0,
+        p1.stat().st_mtime_ns if p1.exists() else 0,
     )
 
 
-def _bias_labels_cached() -> list:
-    """compute_bias memoized on data-file mtimes (shared by /api/bias & backtest)."""
+def _bias_labels_cached(bias_mode: str = "daily_swing") -> list:
+    """compute_bias memoized per bias_mode on data-file mtimes (shared by /api/bias & backtest)."""
+    # Use dict per mode: _bias_cache is now {mode: {"key":..., "labels":...}}
+    # For backward compat, if _bias_cache has old shape, migrate
+    if "daily_swing" not in _bias_cache or not isinstance(_bias_cache.get("daily_swing"), dict):
+        # migrate old single-entry cache to per-mode
+        if "key" in _bias_cache and "labels" in _bias_cache:
+            old_key = _bias_cache.get("key")
+            old_labels = _bias_cache.get("labels")
+            _bias_cache.clear()
+            _bias_cache["daily_swing"] = {"key": old_key, "labels": old_labels}
+        else:
+            _bias_cache.clear()
     key = _data_key()
-    if _bias_cache["key"] == key:
-        return _bias_cache["labels"]
+    entry = _bias_cache.get(bias_mode)
+    if entry and entry.get("key") == key:
+        return entry["labels"]
     df5 = pd.read_csv(config.DATA_DIR / "nifty_5min.csv")
     daily_path = config.DATA_DIR / "nifty_daily.csv"
     daily_df = pd.read_csv(daily_path) if daily_path.exists() else None
-    labels = bias_svc.compute_bias(df5, daily_df)
-    _bias_cache["key"] = key
-    _bias_cache["labels"] = labels
+    # For 1min-based modes we need 1min data (opposite, 1min EMA, 1min far)
+    df1 = None
+    if bias_mode and ("1min" in bias_mode or bias_mode in ("opposite_first", "opposite", "opposite_first_swing")):
+        p1 = config.DATA_DIR / "nifty_1min.csv"
+        if p1.exists():
+            df1 = pd.read_csv(p1)
+    # Dispatch to mode-aware compute
+    if bias_mode and bias_mode != "daily_swing":
+        try:
+            labels = bias_svc.compute_bias_with_mode(df5, daily_df, df1, mode=bias_mode)
+        except Exception:
+            # Fallback to original on error
+            labels = bias_svc.compute_bias(df5, daily_df)
+    else:
+        labels = bias_svc.compute_bias(df5, daily_df)
+    _bias_cache[bias_mode] = {"key": key, "labels": labels}
     return labels
 
 
@@ -84,7 +112,18 @@ def _intraday_backtest(cfg: dict | None = None):
     df5 = pd.read_csv(p5)
     daily_df = pd.read_csv(pd_) if pd_.exists() else None
     df1 = pd.read_csv(p1) if p1.exists() else None
-    labels = [lb for lb in _bias_labels_cached() if lb["date"] in set(df5["timestamp"].astype(str).str[:10])]
+    bias_mode = (cfg or {}).get("bias_mode", "daily_swing")
+    # For 1min-based bias modes (opposite, 1min EMA), filter by 1min dates, not 5min
+    # Otherwise 5min/daily modes filter by 5min dates (original)
+    if bias_mode and bias_mode.startswith("ema_1min") or bias_mode in ("opposite_first", "opposite"):
+        # 1min-based bias: use 1min dates for filtering when execution is 1min
+        if df1 is not None and len(df1) > 0:
+            filter_dates = set(pd.to_datetime(df1["timestamp"]).dt.strftime("%Y-%m-%d"))
+        else:
+            filter_dates = set(df5["timestamp"].astype(str).str[:10])
+    else:
+        filter_dates = set(df5["timestamp"].astype(str).str[:10])
+    labels = [lb for lb in _bias_labels_cached(bias_mode) if lb["date"] in filter_dates]
 
     execution = (cfg or {}).get("execution", "5min")
     if execution == "1min":
@@ -165,6 +204,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# BTC swing engine (self-contained subpackage, zero Nifty coupling)
+app.include_router(btc_router)
 
 
 def _new_op_id(prefix: str) -> str:
@@ -490,13 +532,13 @@ def get_whole_day_swings(
 
 
 @app.get("/api/bias")
-def get_bias(limit: int | None = None):
+def get_bias(limit: int | None = None, bias_mode: str = "daily_swing"):
     """Initial-bias labels (pre-open): previous-day close reads + daily-swing overview."""
     path = config.DATA_DIR / "nifty_5min.csv"
     if not path.exists():
         return JSONResponse(status_code=404, content={"detail": "No 5min data yet. Download first."})
 
-    labels = _bias_labels_cached()
+    labels = _bias_labels_cached(bias_mode)
     if limit and limit > 0:
         labels = labels[-int(limit) :]
 
@@ -504,7 +546,7 @@ def get_bias(limit: int | None = None):
     for lb in labels:
         counts[lb["bias"]] += 1
 
-    return {"count": len(labels), "summary": counts, "bias": labels}
+    return {"count": len(labels), "summary": counts, "bias": labels, "bias_mode": bias_mode}
 
 
 @app.get("/api/intraday/backtest")
@@ -522,6 +564,10 @@ def intraday_backtest(
     swing_traverse: bool = True,
     min_sl_pts: float = 13.0,
     breakeven_r: float = 1.0,
+    max_entries: int = 2,
+    entry_cutoff: str = "15:15",
+    second_trade_after: str = "sl_only",
+    bias_mode: str = "daily_swing",
 ):
     """Full-history intraday results for one experiment combo.
 
@@ -534,6 +580,10 @@ def intraday_backtest(
     rr_target (default 3.0): fixed target in R; only used when trailing=off,
     swing_traverse (default True): reference swing follows extensions (1min engine).
     swing_traverse (default True): reference swing follows extensions (1min engine).
+    max_entries (default 2): 1 = one-and-done, 2 = allow 2nd trade
+    entry_cutoff (default 15:15): no new entries at or after this time (e.g. 12:00)
+    second_trade_after (default sl_only): sl_only | loss | any_non_target | always
+    bias_mode (default daily_swing): daily_swing | ema_daily_10 | ema_5min_20_50 | opposite_first | streak_3_1_1
     """
     cfg = {
         "sl_mode": sl_mode,
@@ -551,6 +601,10 @@ def intraday_backtest(
         "min_sl_pts": float(min_sl_pts),
         "breakeven_r": float(breakeven_r),
         "cost_to_cost_r": float(breakeven_r),
+        "max_entries": int(max_entries),
+        "entry_cutoff": str(entry_cutoff),
+        "second_trade_after": str(second_trade_after),
+        "bias_mode": str(bias_mode),
     }
     try:
         data, _ = _intraday_backtest(cfg)
@@ -575,6 +629,10 @@ def intraday_day(
     swing_traverse: bool = True,
     min_sl_pts: float = 13.0,
     breakeven_r: float = 1.0,
+    max_entries: int = 2,
+    entry_cutoff: str = "15:15",
+    second_trade_after: str = "sl_only",
+    bias_mode: str = "daily_swing",
 ):
     """Single-day detail: trades + full event timeline for chart annotation."""
     cfg = {
@@ -592,6 +650,10 @@ def intraday_day(
         "min_sl_pts": float(min_sl_pts),
         "breakeven_r": float(breakeven_r),
         "cost_to_cost_r": float(breakeven_r),
+        "max_entries": int(max_entries),
+        "entry_cutoff": str(entry_cutoff),
+        "second_trade_after": str(second_trade_after),
+        "bias_mode": str(bias_mode),
     }
     try:
         _, days = _intraday_backtest(cfg)

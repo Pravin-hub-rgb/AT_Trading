@@ -356,8 +356,48 @@ export interface BiasResponse {
   bias: BiasLabel[];
 }
 
-export const getBias = (limit?: number) =>
-  request<BiasResponse>(`/api/bias${limit ? `?limit=${limit}` : ""}`);
+export type BiasMode =
+  | "daily_swing"
+  | "ema_daily_10"
+  | "ema_daily_5"
+  | "ema_5min_20_50"
+  | "opposite_first"
+  | "streak_3_1_1"
+  | "ema_daily_10_far_50"
+  | "ema_daily_5_far_50"
+  | "ema_5min_20_50_far_30"
+  | "ema_1min_5_far_20"
+  | "ema_1min_10_far_30"
+  | "ema_daily_10_inverse"
+  | "ema_daily_5_inverse"
+  | "ema_5min_20_50_inverse"
+  | "ema_1min_5_inverse"
+  | "ema_1min_10_inverse";
+
+export const BIAS_MODES: { value: BiasMode; label: string }[] = [
+  // Sorted best → worst by 16-bias 1152-combo sweep (min≥13, 1min, 1256s, 2026-09-05 21:22) — total_R
+  { value: "ema_1min_5_inverse", label: "★ Bias: EMA 1min 5 INVERSE — +132R" },
+  { value: "ema_1min_10_inverse", label: "Bias: EMA 1min 10 INVERSE — +127R" },
+  { value: "ema_daily_10_far_50", label: "Bias: EMA Daily 10 FAR 50 — +123R" },
+  { value: "ema_daily_5_far_50", label: "Bias: EMA Daily 5 FAR 50 — +105R" },
+  { value: "ema_daily_5_inverse", label: "Bias: EMA Daily 5 INVERSE — +103R" },
+  { value: "streak_3_1_1", label: "Bias: Streak 3-1-1 (daily color) — +96R" },
+  { value: "ema_daily_10_inverse", label: "Bias: EMA Daily 10 INVERSE — +94R" },
+  { value: "ema_5min_20_50_inverse", label: "Bias: EMA 5min 20>50 INVERSE — +94R" },
+  { value: "opposite_first", label: "Bias: Opposite First Swing — +80R" },
+  { value: "ema_1min_5_far_20", label: "Bias: EMA 1min 5 FAR 20 — +76R" },
+  { value: "ema_5min_20_50", label: "Bias: EMA 5min 20>50 cross — +74R" },
+  { value: "ema_1min_10_far_30", label: "Bias: EMA 1min 10 FAR 30 — +71R" },
+  { value: "ema_5min_20_50_far_30", label: "Bias: EMA 5min 20>50 FAR 30 — +62R" },
+  { value: "ema_daily_5", label: "Bias: EMA Daily 5 — +56R" },
+  { value: "ema_daily_10", label: "Bias: EMA Daily 10 — +51R" },
+  { value: "daily_swing", label: "Bias: Daily Swing (original) — +35R" },
+];
+
+export const getBias = (limit?: number, bias_mode: BiasMode = "daily_swing") =>
+  request<BiasResponse>(
+    `/api/bias?bias_mode=${bias_mode}${limit ? `&limit=${limit}` : ""}`,
+  );
 
 // --- intraday backtest engine ---
 export type TradeOutcome =
@@ -382,6 +422,10 @@ export interface BacktestParams {
   min_sl_pts?: number; // widen SL to at least this many points (default 13; 0 = off)
   breakeven_r?: number; // cost-to-cost trigger in R (default 1.0) — filter: only when < rr_target and rr_target >=3
   need_opp_swing?: boolean; // 1min precise: wait for opposite swing (FS2) before entry; default ON — even B7/Bc7 extremes wait
+  max_entries?: number; // 1 or 2 (default 2) — max trades per day
+  entry_cutoff?: string; // no new entries at or after this time (default 15:15)
+  second_trade_after?: string; // sl_only | loss | any_non_target | always (default sl_only)
+  bias_mode?: BiasMode; // master bias mode (daily_swing, ema_*, opposite, streak)
 }
 
 export const DEFAULT_BT_PARAMS: BacktestParams = {
@@ -397,6 +441,10 @@ export const DEFAULT_BT_PARAMS: BacktestParams = {
   min_sl_pts: 13.0,
   breakeven_r: 1.0,
   need_opp_swing: true,
+  max_entries: 2,
+  entry_cutoff: "15:15",
+  second_trade_after: "sl_only",
+  bias_mode: "daily_swing",
 };
 
 export interface IntradayTrade {
@@ -466,6 +514,10 @@ export const getIntradayBacktest = (
     min_sl_pts: String(params.min_sl_pts ?? 13.0),
     breakeven_r: String(params.breakeven_r ?? 1.0),
     need_opp_swing: String(params.need_opp_swing ?? true),
+    max_entries: String(params.max_entries ?? 2),
+    entry_cutoff: String(params.entry_cutoff ?? "15:15"),
+    second_trade_after: String(params.second_trade_after ?? "sl_only"),
+    bias_mode: String(params.bias_mode ?? "daily_swing"),
   });
   return request<IntradayBacktestResponse>(
     `/api/intraday/backtest?${q.toString()}`,

@@ -11,6 +11,7 @@ import {
   type FlowSegment,
 } from "@/lib/flowline";
 import { computeEnvelopeViolations } from "@/lib/envelope";
+import { computeEMA } from "@/lib/ema";
 import {
   Candle,
   Swing,
@@ -99,6 +100,18 @@ function loadSavedIntradayFilters(): { params: BacktestParams; case: string } {
         typeof saved.need_opp_swing === "boolean"
           ? saved.need_opp_swing
           : ((DEFAULT_BT_PARAMS as any).need_opp_swing ?? true),
+      max_entries:
+        typeof saved.max_entries === "number"
+          ? saved.max_entries
+          : ((DEFAULT_BT_PARAMS as any).max_entries ?? 2),
+      entry_cutoff:
+        typeof saved.entry_cutoff === "string"
+          ? saved.entry_cutoff
+          : ((DEFAULT_BT_PARAMS as any).entry_cutoff ?? "15:15"),
+      second_trade_after:
+        typeof saved.second_trade_after === "string"
+          ? saved.second_trade_after
+          : ((DEFAULT_BT_PARAMS as any).second_trade_after ?? "sl_only"),
     };
     const caseValue =
       typeof saved.caseValue === "string" ? saved.caseValue : "all";
@@ -157,6 +170,7 @@ export default function ChartPage() {
   const [btError, setBtError] = useState<string | null>(null);
   const [btParams, setBtParams] = useState<BacktestParams>(DEFAULT_BT_PARAMS);
   const [btCase, setBtCase] = useState<string>("all");
+  const [emaOn, setEmaOn] = useState(false);
 
   // Hydration-safe: load saved filters only on client after mount so server and
   // initial client HTML match (loadSavedIntradayFilters reads window.localStorage
@@ -165,6 +179,9 @@ export default function ChartPage() {
     const saved = loadSavedIntradayFilters();
     setBtParams(saved.params);
     setBtCase(saved.case);
+    if (typeof window !== "undefined") {
+      setEmaOn(window.localStorage.getItem("chart_ema_on") === "1");
+    }
   }, []);
   const [swingN, setSwingN] = useState(SWING_N_DEFAULT);
   const [allSwings, setAllSwings] = useState(true);
@@ -176,6 +193,9 @@ export default function ChartPage() {
   // 1-min candle data (fetched when fsOn is on, used for first-swing on 5min pane)
   const [data1min, setData1min] = useState<Candle[]>([]);
 
+  // Daily and 5min data for correct EMA timeframe (for overlay on 1min)
+  const [dailyEmaData, setDailyEmaData] = useState<Candle[]>([]);
+  const [fiveMinEmaData, setFiveMinEmaData] = useState<Candle[]>([]);
   // Whole-day swings — fetched automatically for 1min chart (default ON)
   const [wholeDaySwings, setWholeDaySwings] = useState<WholeDaySwingPoint[]>(
     [],
@@ -409,6 +429,37 @@ export default function ChartPage() {
     };
   }, [intervalB, swingN, allSwings]);
 
+  // EMA data for correct timeframe overlay (daily EMA on 1min etc.)
+  useEffect(() => {
+    if (!emaOn) {
+      setDailyEmaData([]);
+      setFiveMinEmaData([]);
+      return;
+    }
+    let cancelled = false;
+    getChartData("daily")
+      .then((res) => {
+        if (cancelled) return;
+        setDailyEmaData(res.candles);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setDailyEmaData([]);
+      });
+    getChartData("5min")
+      .then((res) => {
+        if (cancelled) return;
+        setFiveMinEmaData(res.candles);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setFiveMinEmaData([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [emaOn]);
+
   // Single source of truth — Python engine via backend for first/second swings.
   // Falls back to in-browser TS engine if backend unavailable.
   useEffect(() => {
@@ -495,7 +546,7 @@ export default function ChartPage() {
 
   useEffect(() => {
     let cancelled = false;
-    getBias()
+    getBias(undefined, (btParams as any).bias_mode ?? "daily_swing")
       .then((res) => {
         if (cancelled) return;
         setBiasLabels(res.bias);
@@ -509,7 +560,16 @@ export default function ChartPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [(btParams as any).bias_mode]);
+
+  // Auto EMA for ema modes
+  useEffect(() => {
+    const bm = (btParams as any).bias_mode ?? "daily_swing";
+    if (bm.startsWith("ema")) {
+      setEmaOn(true);
+      window.localStorage.setItem("chart_ema_on", "1");
+    }
+  }, [(btParams as any).bias_mode]);
 
   // Load intraday backtest whenever we're in intraday mode (so the chart
   // overlay can show trade_mode / case without forcing the user to enable
@@ -566,6 +626,7 @@ export default function ChartPage() {
             entryPrice: t.entry_price,
             slPrice: t.sl,
             targetPrice: t.target,
+            exitPrice: t.exit_price ?? t.target,
             outcome: t.outcome ?? "eod",
             rMultiple: t.r_multiple ?? 0,
           })),
@@ -1012,6 +1073,148 @@ export default function ChartPage() {
     [buildPaneOverlays, intervalB, dataB],
   );
 
+  // ── EMA lines (toggleable) — timeframe-correct: daily EMA on 1min uses daily data, not 1min 10-period
+  const emaLinesA = useMemo(() => {
+    if (!emaOn) return null;
+    const biasMode = (btParams as any).bias_mode ?? "daily_swing";
+    if (!biasMode.startsWith("ema")) return null;
+    // Daily EMA modes (including far and inverse): ema_daily_10, ema_daily_10_far_50, ema_daily_10_inverse, etc.
+    if (biasMode.startsWith("ema_daily")) {
+      const span = biasMode.includes("ema_daily_5") ? 5 : 10;
+      if (interval === "daily") {
+        if (data.length < span) return null;
+        return { [span]: computeEMA(data, span) } as Record<number, ReturnType<typeof computeEMA>>;
+      }
+      if (dailyEmaData.length < span) return null;
+      const dailyEma = computeEMA(dailyEmaData, span);
+      const dailyByDate = new Map<string, number>();
+      dailyEmaData.forEach((c, idx) => {
+        const emaVal = dailyEma[idx]?.value;
+        if (emaVal !== undefined) dailyByDate.set(c.date.slice(0, 10), emaVal);
+      });
+      const points: ReturnType<typeof computeEMA> = [];
+      let lastVal: number | null = null;
+      data.forEach((c, idx) => {
+        const d = c.date.slice(0, 10);
+        if (dailyByDate.has(d)) lastVal = dailyByDate.get(d)!;
+        if (lastVal !== null) points.push({ idx, value: lastVal });
+      });
+      return points.length ? ({ [span]: points } as Record<number, ReturnType<typeof computeEMA>>) : null;
+    }
+    if (biasMode.startsWith("ema_5min")) {
+      if (interval === "5min") {
+        if (data.length < 50) return null;
+        return { 20: computeEMA(data, 20), 50: computeEMA(data, 50) } as Record<number, ReturnType<typeof computeEMA>>;
+      }
+      if (interval === "1min") {
+        if (fiveMinEmaData.length < 50) return null;
+        const ema20 = computeEMA(fiveMinEmaData, 20);
+        const ema50 = computeEMA(fiveMinEmaData, 50);
+        const fiveByTs = new Map<number, { e20: number; e50: number }>();
+        fiveMinEmaData.forEach((c, idx) => {
+          const e20 = ema20[idx]?.value;
+          const e50 = ema50[idx]?.value;
+          if (e20 !== undefined && e50 !== undefined) fiveByTs.set(c.ts, { e20, e50 });
+        });
+        const sortedFiveTs = Array.from(fiveByTs.keys()).sort((a, b) => a - b);
+        const points20: ReturnType<typeof computeEMA> = [];
+        const points50: ReturnType<typeof computeEMA> = [];
+        let ptr = 0;
+        let last20: number | null = null;
+        let last50: number | null = null;
+        data.forEach((c, idx) => {
+          while (ptr < sortedFiveTs.length && sortedFiveTs[ptr] <= c.ts) {
+            const v = fiveByTs.get(sortedFiveTs[ptr])!;
+            last20 = v.e20;
+            last50 = v.e50;
+            ptr++;
+          }
+          if (last20 !== null) points20.push({ idx, value: last20 });
+          if (last50 !== null) points50.push({ idx, value: last50 });
+        });
+        return points20.length ? ({ 20: points20, 50: points50 } as Record<number, ReturnType<typeof computeEMA>>) : null;
+      }
+      return null;
+    }
+    if (biasMode.startsWith("ema_1min")) {
+      const span = biasMode.includes("ema_1min_5") ? 5 : 10;
+      if (data.length < span) return null;
+      return { [span]: computeEMA(data, span) } as Record<number, ReturnType<typeof computeEMA>>;
+    }
+    if (data.length < 10) return null;
+    return { 10: computeEMA(data, 10) } as Record<number, ReturnType<typeof computeEMA>>;
+  }, [emaOn, data, interval, dailyEmaData, fiveMinEmaData, (btParams as any).bias_mode]);
+
+  const emaLinesB = useMemo(() => {
+    if (!emaOn) return null;
+    const biasMode = (btParams as any).bias_mode ?? "daily_swing";
+    if (!biasMode.startsWith("ema")) return null;
+    if (biasMode.startsWith("ema_daily")) {
+      const span = biasMode.includes("ema_daily_5") ? 5 : 10;
+      if (intervalB === "daily") {
+        if (dataB.length < span) return null;
+        return { [span]: computeEMA(dataB, span) } as Record<number, ReturnType<typeof computeEMA>>;
+      }
+      if (dailyEmaData.length < span) return null;
+      const dailyEma = computeEMA(dailyEmaData, span);
+      const dailyByDate = new Map<string, number>();
+      dailyEmaData.forEach((c, idx) => {
+        const emaVal = dailyEma[idx]?.value;
+        if (emaVal !== undefined) dailyByDate.set(c.date.slice(0, 10), emaVal);
+      });
+      const points: ReturnType<typeof computeEMA> = [];
+      let lastVal: number | null = null;
+      dataB.forEach((c, idx) => {
+        const d = c.date.slice(0, 10);
+        if (dailyByDate.has(d)) lastVal = dailyByDate.get(d)!;
+        if (lastVal !== null) points.push({ idx, value: lastVal });
+      });
+      return points.length ? ({ [span]: points } as Record<number, ReturnType<typeof computeEMA>>) : null;
+    }
+    if (biasMode.startsWith("ema_5min")) {
+      if (intervalB === "5min") {
+        if (dataB.length < 50) return null;
+        return { 20: computeEMA(dataB, 20), 50: computeEMA(dataB, 50) } as Record<number, ReturnType<typeof computeEMA>>;
+      }
+      if (intervalB === "1min") {
+        if (fiveMinEmaData.length < 50) return null;
+        const ema20 = computeEMA(fiveMinEmaData, 20);
+        const ema50 = computeEMA(fiveMinEmaData, 50);
+        const fiveByTs = new Map<number, { e20: number; e50: number }>();
+        fiveMinEmaData.forEach((c, idx) => {
+          const e20 = ema20[idx]?.value;
+          const e50 = ema50[idx]?.value;
+          if (e20 !== undefined && e50 !== undefined) fiveByTs.set(c.ts, { e20, e50 });
+        });
+        const sortedFiveTs = Array.from(fiveByTs.keys()).sort((a, b) => a - b);
+        const points20: ReturnType<typeof computeEMA> = [];
+        const points50: ReturnType<typeof computeEMA> = [];
+        let ptr = 0;
+        let last20: number | null = null;
+        let last50: number | null = null;
+        dataB.forEach((c, idx) => {
+          while (ptr < sortedFiveTs.length && sortedFiveTs[ptr] <= c.ts) {
+            const v = fiveByTs.get(sortedFiveTs[ptr])!;
+            last20 = v.e20;
+            last50 = v.e50;
+            ptr++;
+          }
+          if (last20 !== null) points20.push({ idx, value: last20 });
+          if (last50 !== null) points50.push({ idx, value: last50 });
+        });
+        return points20.length ? ({ 20: points20, 50: points50 } as Record<number, ReturnType<typeof computeEMA>>) : null;
+      }
+      return null;
+    }
+    if (biasMode.startsWith("ema_1min")) {
+      const span = biasMode.includes("ema_1min_5") ? 5 : 10;
+      if (dataB.length < span) return null;
+      return { [span]: computeEMA(dataB, span) } as Record<number, ReturnType<typeof computeEMA>>;
+    }
+    if (dataB.length < 10) return null;
+    return { 10: computeEMA(dataB, 10) } as Record<number, ReturnType<typeof computeEMA>>;
+  }, [emaOn, dataB, intervalB, dailyEmaData, fiveMinEmaData, (btParams as any).bias_mode]);
+
   // ── crosshair sync between panes (dual mode) ──
   // Remote panes draw a silent vertical sync line via SyncCrosshairPrimitive
   // (not the real crosshair), so no echo events can loop back — direct wiring.
@@ -1123,6 +1326,57 @@ export default function ChartPage() {
               2 Charts
             </button>
           </div>
+
+          <button
+            onClick={() => {
+              setEmaOn((v) => {
+                const nv = !v;
+                window.localStorage.setItem("chart_ema_on", nv ? "1" : "0");
+                return nv;
+              });
+            }}
+            className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-sm transition-colors ${
+              emaOn ? "border-[#f59e0b] text-[#e6edf3]" : "border-[#30363d] text-[#8b949e]"
+            }`}
+            title="EMA lines — toggleable, only shows selected bias's EMA (clean)"
+          >
+            <span className={`h-2 w-2 rounded-full ${emaOn ? "bg-[#f59e0b]" : "bg-[#8b949e]"}`} />
+            EMA
+          </button>
+          {emaOn && (
+            <span className="flex items-center gap-2 text-xs text-[#8b949e]">
+              {((btParams as any).bias_mode === "ema_daily_10" || (btParams as any).bias_mode === "ema_daily_10_far_50") && (
+                <>
+                  <span className="h-2 w-4 rounded" style={{ background: "#10b981" }} /> EMA10
+                  {(btParams as any).bias_mode.includes("far") && <span className="text-[10px]">FAR 50</span>}
+                </>
+              )}
+              {((btParams as any).bias_mode === "ema_daily_5" || (btParams as any).bias_mode === "ema_daily_5_far_50") && (
+                <>
+                  <span className="h-2 w-4 rounded" style={{ background: "#f59e0b" }} /> EMA5
+                  {(btParams as any).bias_mode.includes("far") && <span className="text-[10px]">FAR 50</span>}
+                </>
+              )}
+              {((btParams as any).bias_mode === "ema_5min_20_50" || (btParams as any).bias_mode === "ema_5min_20_50_far_30") && (
+                <>
+                  <span className="h-2 w-4 rounded" style={{ background: "#60a5fa" }} /> EMA20{" "}
+                  <span className="h-2 w-4 rounded" style={{ background: "#a78bfa" }} /> EMA50
+                  {(btParams as any).bias_mode.includes("far") && <span className="text-[10px]">FAR 30</span>}
+                </>
+              )}
+              {((btParams as any).bias_mode === "ema_1min_5_far_20") && (
+                <>
+                  <span className="h-2 w-4 rounded" style={{ background: "#f59e0b" }} /> EMA5 (1min) FAR20
+                </>
+              )}
+              {((btParams as any).bias_mode === "ema_1min_10_far_30") && (
+                <>
+                  <span className="h-2 w-4 rounded" style={{ background: "#10b981" }} /> EMA10 (1min) FAR30
+                </>
+              )}
+              {!(btParams as any).bias_mode?.startsWith("ema") && <span className="text-[10px]">EMA (no EMA bias selected)</span>}
+            </span>
+          )}
 
           <button
             onClick={() => setSwingOn((v) => !v)}
@@ -1394,6 +1648,7 @@ export default function ChartPage() {
             tradeMode={overlaysA.tradeMode}
             onHoverTime={onHoverA}
             wholeDaySwings={wholeDaySwings}
+            emaLines={emaLinesA}
             height={dual ? 620 : 720}
           />
         </div>
@@ -1488,6 +1743,7 @@ export default function ChartPage() {
               tradeMode={overlaysB.tradeMode}
               onHoverTime={onHoverB}
               wholeDaySwings={wholeDaySwingsB}
+              emaLines={emaLinesB}
               height={620}
             />
           </div>

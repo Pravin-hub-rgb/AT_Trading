@@ -1,0 +1,84 @@
+5m candles: 78493  2025-01-01 05:30:00 -> 2025-10-01 05:25:00
+15m swings: 1224  bias timeline events: 1224
+5m swings: 3620  (0.8s)
+
+==============================================================================================================
+S1. SWING STRUCTURE STATS (whole series, continuous chain)
+==============================================================================================================
+total swings 3620  up 1821 (50.3%)  down 1799
+leg pts : mean 884 median 683 p25 441 p75 1070 p90 1652
+leg/ATR : mean 5.75 median 5.27 p25 4.10 p75 6.86 p90 8.89
+break kinds: {'FLIP': 1574, 'B2': 2046}
+confirm source: {'FS': 3620}
+next swing SAME dir as prev: 1474/3619 (40.7%)  3-in-a-row same: 573 (15.8%)
+first swing: dir up kind FS leg 1020 pts
+daily candles: 274  green 142 (51.8%)  red 132
+daily color streaks: mean 1.77 max 8  >=3: 28
+
+==============================================================================================================
+S2. CORE GRID SWEEP — entry_break x sl_mode x rr x trailing x breakeven  (skip_first=True, no filters)
+==============================================================================================================
+decisive slSwing rr2 swing be1               Trades 1906  Win% 13.9  TotalR  +378.32 Avg +0.198 PF 2.05  L/S 952/954  [trail 1593 be 298 sl 15]
+decisive slSwing rr3 swing be1               Trades 1906  Win% 13.9  TotalR  +378.32 Avg +0.198 PF 2.05  L/S 952/954  [trail 1593 be 298 sl 15]
+decisive slSwing rr4 swing be1               Trades 1906  Win% 13.9  TotalR  +378.32 Avg +0.198 PF 2.05  L/S 952/954  [trail 1593 be 298 sl 15]
+flip slSwing rr2 swing be1                   Trades 1049  Win% 14.8  TotalR  +340.80 Avg +0.325 PF 2.51  L/S 525/524  [trail 813 be 201 sl 35]
+flip slSwing rr3 swing be1                   Trades 1049  Win% 14.8  TotalR  +340.80 Avg +0.325 PF 2.51  L/S 525/524  [trail 813 be 201 sl 35]
+flip slSwing rr4 swing be1                   Trades 1049  Win% 14.8  TotalR  +340.80 Avg +0.325 PF 2.51  L/S 525/524  [trail 813 be 201 sl 35]
+flip slSwing rr2 swing be0                   Trades 999   Win% 17.2  TotalR  +320.49 Avg +0.321 PF 2.17  L/S 500/499  [trail 946 sl 53]
+flip slSwing rr3 swing be0                   Trades 999   Win% 17.2  TotalR  +320.49 Avg +0.321 PF 2.17  L/S 500/499  [trail 946 sl 53]
+flip slSwing rr4 swing be0                   Trades 999   Win% 17.2  TotalR  +320.49 Avg +0.321 PF 2.17  L/S 500/499  [trail 946 sl 53]
+decisive slSwing rr2 swing be0               Trades 1773  Win% 15.9  TotalR  +298.37 Avg +0.168 PF 1.72  L/S 879/894  [trail 1747 sl 26]
+decisive slSwing rr3 swing be0               Trades 1773  Win% 15.9  TotalR  +298.37 Avg +0.168 PF 1.72  L/S 879/894  [trail 1747 sl 26]
+decisive slSwing rr4 swing be0               Trades 1773  Win% 15.9  TotalR  +298.37 Avg +0.168 PF 1.72  L/S 879/894  [trail 1747 sl 26]
+flip slSwing rr3 off be0                     Trades 488   Win% 36.1  TotalR  +217.00 Avg +0.446 PF 1.70  L/S 232/256  [sl 311 target 176 open 1]
+flip slSwing rr2 r1 be0                      Trades 1016  Win% 44.0  TotalR  +210.36 Avg +0.207 PF 1.67  L/S 516/500  [trail 1001 sl 15]
+flip slSwing rr2 r1 be1                      Trades 1016  Win% 44.0  TotalR  +210.36 Avg +0.207 PF 1.67  L/S 516/500  [trail 1001 sl 15]
+flip slSwing rr3 r1 be0                      Trades 1016  Win% 44.0  TotalR  +210.36 Avg +0.207 PF 1.67  L/S 516/500  [trail 1001 sl 15]
+flip slSwing rr3 r1 be1                      Trades 1016  Win% 44.0  TotalR  +210.36 Avg +0.207 PF 1.67  L/S 516/500  [trail 1001 sl 15]
+flip slSwing rr4 r1 be0                      Trades 1016  Win% 44.0  TotalR  +210.36 Avg +0.207 PF 1.67  L/S 516/500  [trail 1001 sl 15]
+flip slSwing rr4 r1 be1                      Trades 1016  Win% 44.0  TotalR  +210.36 Avg +0.207 PF 1.67  L/S 516/500  [trail 1001 sl 15]
+flip slSwing rr3 off be1                     Trades 681   Win% 23.1  TotalR  +176.81 Avg +0.260 PF 1.60  L/S 342/339  [sl 293 be 231 target 157]
+...
+BASELINE (decisive slSwing rr3 off be1)      Trades 557   Win% 19.8  TotalR   +67.89 Avg +0.122 PF 1.26  L/S 284/273  [sl 262 be 184 target 110 open 1]
+
+==============================================================================================================
+S3. ENGINE PARAMS — minBars x sustainBars  (core = decisive slSwing rr3 off be1)
+==============================================================================================================
+minBars7 sustain3 (swings 3820)              Trades 575   Win% 18.6  TotalR   +51.00 Avg +0.089 PF 1.19  L/S 295/280  [sl 270 be 197 target 107 open 1]
+minBars7 sustain7 (swings 3820)              Trades 575   Win% 18.6  TotalR   +51.00 Avg +0.089 PF 1.19  L/S 295/280  [sl 270 be 197 target 107 open 1]
+minBars7 sustain10 (swings 3820)             Trades 575   Win% 18.6  TotalR   +51.00 Avg +0.089 PF 1.19  L/S 295/280  [sl 270 be 197 target 107 open 1]
+minBars14 sustain3 (swings 3620)             Trades 557   Win% 19.8  TotalR   +67.89 Avg +0.122 PF 1.26  L/S 284/273  [sl 262 be 184 target 110 open 1]
+minBars14 sustain7 (swings 3620)             Trades 557   Win% 19.8  TotalR   +67.89 Avg +0.122 PF 1.26  L/S 284/273  [sl 262 be 184 target 110 open 1]  <-default
+minBars14 sustain10 (swings 3620)            Trades 557   Win% 19.8  TotalR   +67.89 Avg +0.122 PF 1.26  L/S 284/273  [sl 262 be 184 target 110 open 1]
+minBars20 sustain3 (swings 3252)             Trades 556   Win% 21.1  TotalR   +97.00 Avg +0.175 PF 1.38  L/S 288/268  [sl 254 be 184 target 117 open 1]
+minBars20 sustain7 (swings 3252)             Trades 556   Win% 21.1  TotalR   +97.00 Avg +0.175 PF 1.38  L/S 288/268  [sl 254 be 184 target 117 open 1]
+minBars20 sustain10 (swings 3252)            Trades 556   Win% 21.1  TotalR   +97.00 Avg +0.175 PF 1.38  L/S 288/268  [sl 254 be 184 target 117 open 1]
+
+==============================================================================================================
+S4. CRAZY FILTERS — fixed core decisive/slSwing/rr3/off/be1, one filter at a time
+==============================================================================================================
+BASELINE (no filter)                         Trades 557   Win% 19.8  TotalR   +67.89 Avg +0.122 PF 1.26  L/S 284/273  [sl 262 be 184 target 110 open 1]
+skip_first=False (trade 1st swing too)       Trades 560   Win% 19.9  TotalR   +71.89 Avg +0.129 PF 1.28  L/S 287/273  [sl 261 be 187 target 111 open 1]
+leg >= 1.0 ATR (strong swings only)          Trades 557   Win% 19.8  TotalR   +67.89 Avg +0.122 PF 1.26  L/S 284/273  [sl 262 be 184 target 110 open 1]
+leg >= 1.5 ATR                               Trades 556   Win% 19.8  TotalR   +68.89 Avg +0.124 PF 1.26  L/S 284/272  [sl 261 be 184 target 110 open 1]
+leg <= 0.5 ATR (weak fade)                   Trades 0     Win% 0.0   TotalR    +0.00 Avg +0.000 PF inf   L/S 0/0  []
+EMA20 gate (long>/short<)                    Trades 548   Win% 18.2  TotalR   +28.89 Avg +0.053 PF 1.11  L/S 285/263  [sl 271 be 177 target 100]
+EMA50 gate                                   Trades 560   Win% 19.5  TotalR   +57.89 Avg +0.103 PF 1.22  L/S 295/265  [sl 269 be 182 target 109]
+15m bias gate                                Trades 594   Win% 20.4  TotalR  +102.00 Avg +0.172 PF 1.39  L/S 297/297  [sl 261 be 211 target 121 open 1]
+daily streak regime 3-1-1                    Trades 447   Win% 22.2  TotalR  +105.00 Avg +0.235 PF 1.55  L/S 239/208  [sl 192 be 155 target 99 open 1]
+hours 09:15-15:30 IST only                   Trades 395   Win% 21.3  TotalR   +75.89 Avg +0.192 PF 1.43  L/S 208/187  [sl 176 be 135 target 84]
+hours 19:00-01:30 IST (US) only              Trades 349   Win% 16.6  TotalR   +11.00 Avg +0.032 PF 1.07  L/S 192/157  [sl 163 be 128 target 58]
+hours 13:30-01:30 IST (EU+US)                Trades 490   Win% 15.7  TotalR    +6.95 Avg +0.014 PF 1.03  L/S 248/242  [sl 224 be 189 target 77]
+break close >= 0.25 ATR past pivot           Trades 556   Win% 19.6  TotalR   +64.89 Avg +0.117 PF 1.25  L/S 284/272  [sl 262 be 184 target 109 open 1]
+break close >= 0.50 ATR past pivot           Trades 554   Win% 19.3  TotalR   +58.89 Avg +0.106 PF 1.22  L/S 284/270  [sl 262 be 184 target 107 open 1]
+trail r1 (instead of fixed rr3)              Trades 1137  Win% 40.7  TotalR  +139.07 Avg +0.122 PF 1.38  L/S 605/532  [trail 1125 sl 12]
+trail r2                                     Trades 493   Win% 25.6  TotalR   +31.22 Avg +0.063 PF 1.13  L/S 274/219  [sl 238 be 128 trail 126 open 1]
+swing trailing                               Trades 1906  Win% 13.9  TotalR  +378.32 Avg +0.198 PF 2.05  L/S 952/954  [trail 1593 be 298 sl 15]
+
+==============================================================================================================
+S5. WHICH BREAK KIND PAYS — per-kind trade stats (decisive core, no filters)
+==============================================================================================================
+entry kind B2                                Trades 340   Win% 18.6  TotalR   +21.00 Avg +0.062 PF 1.12  L/S 172/168  [sl 168 be 108 target 63 open 1]
+entry kind FLIP                              Trades 217   Win% 21.7  TotalR   +46.89 Avg +0.216 PF 1.50  L/S 112/105  [sl 94 be 76 target 47]
+
+done in 111.3s

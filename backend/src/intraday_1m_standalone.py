@@ -109,9 +109,19 @@ def simulate_day_1min(
                 trade_mode = "conservative"
                 result["trade_mode"] = trade_mode
 
-    if trade_mode == "skip":
+    # Force trade mode for research (your idea: no matter conservative/aggressive, just take one)
+    force = cfg.get("force_trade_mode")
+    if force in ("aggressive", "conservative"):
+        if trade_mode != force and trade_mode != "skip":
+            result["events"].append({"type": "trade_mode_forced", "from": trade_mode, "to": force, "case": case_id})
+            trade_mode = force
+            result["trade_mode"] = trade_mode
+    if trade_mode == "skip" and force not in ("aggressive", "conservative"):
         result["events"].append({"type": "skipped_unbiased_1min", "case": case_id})
         return result
+    if trade_mode == "skip" and force in ("aggressive", "conservative"):
+        # Even skip days will be forced to trade if possible — will try to find FS2 anyway
+        pass
 
     # Desired swing (opposite to FS1) — find the FIRST swing in the desired
     # direction after FS1, no matter its ordinal (2nd, 3rd, 4th, ... 8th —
@@ -298,6 +308,8 @@ def simulate_day_1min(
     # Entry must use a DIFFERENT (newer) pivot - resolved lazily in the loop.
     fs_break_pivot_idx = -1
     i = 0
+    # Per-bar just-closed outcome for post-loss re-arm (see below)
+    just_closed_outcome: str | None = None
 
     def _close_trade(trade, bar_idx, price, outcome, exit_time=None, exit_ts=None):
         nonlocal open_trade
@@ -433,6 +445,7 @@ def simulate_day_1min(
 
     while i < len(candles):
         cur = candles[i]
+        trades_before = len(result["trades"])
         # Walker
         dt_str = f"{result['date']}T{cur['time']}:00"
         fc = FlowCandle(date=dt_str, open=cur["open"], high=cur["high"], low=cur["low"], close=cur["close"])
@@ -494,6 +507,72 @@ def simulate_day_1min(
                         t["mfe_r"] = track_mfe_only(t["dir"], entry, hi, lo, risk, float(t.get("mfe_r", 0.0)))
             if cur["time"] >= EOD_EXIT and open_trade is not None:
                 _close_trade(open_trade, i, float(cur["close"]), "eod")
+
+        # Detect just-closed outcome for post-loss re-arm
+        if len(result["trades"]) > trades_before:
+            just_closed_outcome = result["trades"][-1].get("outcome")
+        else:
+            just_closed_outcome = None
+
+        # Post-loss re-arm: after a losing trade, look for next same-direction swing
+        # even without a swing-end breach (28 Aug: 1st sl at swing2, next buying swing is 3rd -> 10:31)
+        if just_closed_outcome is not None and swing_traverse and ref_swing_end_px is not None and not ref_search_exhausted:
+            max_entries_cfg = int(cfg.get("max_entries", MAX_ENTRIES))
+            if entries_done < max_entries_cfg:
+                sta = cfg.get("second_trade_after", "sl_only")
+                will_retry = False
+                if sta == "sl_only":
+                    will_retry = just_closed_outcome == "sl"
+                elif sta == "loss":
+                    will_retry = just_closed_outcome in ("sl", "ft_fail", "cost-to-cost")
+                elif sta == "any_non_target":
+                    will_retry = just_closed_outcome != "target" and not any(t.get("outcome") == "target" for t in result["trades"])
+                elif sta == "always":
+                    will_retry = True
+                else:
+                    will_retry = just_closed_outcome == "sl"
+                if will_retry:
+                    found_after_loss = _find_swing(ref_swing_end_idx + 1, ref_swing_end_dir)
+                    if found_after_loss is not None:
+                        old_ref_px2 = ref_swing_end_px
+                        fs2_dir = found_after_loss["dir"]
+                        fs2_end_idx = found_after_loss["end_idx"]
+                        fs2_end_px = found_after_loss["end_px"]
+                        fs2_confirm_pivot_idx = found_after_loss["confirm_pivot_idx"]
+                        fs2_confirm_pivot_px = found_after_loss["confirm_pivot_px"]
+                        ref_swing_end_dir = found_after_loss["dir"]
+                        ref_swing_end_idx = found_after_loss["end_idx"]
+                        ref_swing_end_px = found_after_loss["end_px"]
+                        ref_swing_end_time = found_after_loss["end_time"]
+                        entry_swing_confirmed_idx = max(entry_swing_confirmed_idx, found_after_loss["confirmed_at_idx"])
+                        pivot_break_count = 0
+                        # Do NOT clear broken_pivot_levels — pivots broken between
+                        # new FS confirmed_at and SL bar were already marked as
+                        # broken_while_entry_blocked (588) and must stay poisoned.
+                        # Clearing would make an already-broken level look fresh
+                        # and cause entry on FS's own level (28 Aug swing 3).
+                        # Fresh pivots at same price but new idx are already
+                        # distinct via (level, idx) key, so keeping set is safe.
+                        # Reset cur_swing to the new reference direction so the
+                        # retry is same-direction (e.g. long → long, short → short)
+                        # Otherwise cur_swing stays flipped (long→short) and the
+                        # second same-direction entry would be blocked as non-aligned.
+                        cur_swing = found_after_loss["dir"]
+                        if trade_mode == "conservative":
+                            result["swing2_direction"] = found_after_loss["dir"]
+                            result["swing2_confirmed_idx"] = found_after_loss["confirmed_at_idx"]
+                            result["swing2_end_idx"] = found_after_loss["end_idx"]
+                            result["swing2_end_px"] = found_after_loss["end_px"]
+                            result["swing2_confirm_pivot_idx"] = found_after_loss["confirm_pivot_idx"]
+                        effective_swing_start = found_after_loss["start_idx"]
+                        swing_extreme = max(c["high"] for c in candles[:effective_swing_start+1]) if cur_swing=="buying" else min(c["low"] for c in candles[:effective_swing_start+1])
+                        swing_base = min(c["low"] for c in candles[:effective_swing_start+1]) if cur_swing=="buying" else max(c["high"] for c in candles[:effective_swing_start+1])
+                        result["events"].append({"type":"swing2_classified","dir":found_after_loss["dir"],"bar":found_after_loss["start_idx"],"time":found_after_loss["start_time"],"first_swing":swing_dir,"rearmed":True, "reason":"post_loss"})
+                        result["events"].append({"type":"fs2_segment","dir":"down" if found_after_loss["dir"]=="selling" else "up","start_idx":found_after_loss["start_idx"],"start_px":found_after_loss["start_px"],"end_idx":found_after_loss["end_idx"],"end_px":found_after_loss["end_px"],"confirmed_at_idx":found_after_loss["confirmed_at_idx"],"confirmed_at_time":found_after_loss["confirmed_at_time"],"confirm_source":found_after_loss["confirm_source"],"confirm_pivot_idx":found_after_loss["confirm_pivot_idx"],"confirm_pivot_px":found_after_loss["confirm_pivot_px"],"rearmed":True, "reason":"post_loss"})
+                        result["events"].append({"type":"fs_breaks_2","breaks":found_after_loss["breaks"],"rearmed":True, "reason":"post_loss"})
+                        result["events"].append({"type":"reference_swing_updated","bar":i,"time":cur["time"],"dir":found_after_loss["dir"],"new_end_idx":found_after_loss["end_idx"],"new_end_px":round(found_after_loss["end_px"],2),"old_end_px":round(old_ref_px2,2),"reason":"post_loss"})
+                    else:
+                        ref_search_exhausted = True
 
         # Reference-swing traversal: when price moves beyond the reference
         # swing's end, the desired swing has extended — find the next swing in
@@ -564,9 +643,42 @@ def simulate_day_1min(
         if fs1_end_time and fs1_end_time < ENTRY_START:
             entry_start = fs1_end_time
         has_target = any(t.get("outcome") == "target" for t in result["trades"])
-        # Block entries if already hit target (one target per day). Swing breach
-        # does NOT block — the reference swing just traverses (see above).
-        can_enter = (open_trade is None and entries_done < MAX_ENTRIES and fs_gate_ok and cur["time"] < EOD_EXIT and cur["time"] >= entry_start and not has_target and not ref_search_exhausted)
+        # Second-trade gate per cfg: max_entries=1 means one-and-done regardless;
+        # max_entries=2 respects second_trade_after (sl_only / loss / any_non_target / always)
+        max_entries_cfg = int(cfg.get("max_entries", MAX_ENTRIES))
+        entry_cutoff_cfg = cfg.get("entry_cutoff", EOD_EXIT)
+        second_trade_after_cfg = cfg.get("second_trade_after", "sl_only")
+        if entries_done >= 1 and entries_done < max_entries_cfg:
+            # we have a first trade, check if second is allowed per rule
+            last_outcome = result["trades"][-1].get("outcome") if result["trades"] else None
+            if second_trade_after_cfg == "sl_only":
+                second_allowed = last_outcome == "sl"
+            elif second_trade_after_cfg == "loss":
+                second_allowed = last_outcome in ("sl", "ft_fail", "cost-to-cost")
+            elif second_trade_after_cfg == "any_non_target":
+                second_allowed = not has_target
+            elif second_trade_after_cfg == "always":
+                second_allowed = True
+            else:
+                second_allowed = last_outcome == "sl"
+        elif entries_done >= 1:
+            second_allowed = False
+        else:
+            second_allowed = True
+        # overall target gate: if second_trade_after is sl_only/loss, has_target also matters via second_allowed;
+        # for any_non_target we already covered, but keep has_target for legacy when second_trade_after=always? No, always should ignore target.
+        # So we only enforce has_target when second_trade_after in (any_non_target, sl_only, loss) — sl_only/loss already implicitly blocks target because last_outcome==target != sl/loss
+        # For always, we ignore has_target.
+        if second_trade_after_cfg == "always":
+            target_block = False
+        else:
+            target_block = has_target and second_trade_after_cfg == "any_non_target"
+            # sl_only/loss: target already blocks via second_allowed (last_outcome != sl), so no extra block needed
+            # but if first was target, second_allowed False already, so target_block not needed separately
+            # keep has_target block only for any_non_target case; for sl_only/loss let second_allowed decide
+            if second_trade_after_cfg in ("sl_only", "loss"):
+                target_block = False
+        can_enter = (open_trade is None and entries_done < max_entries_cfg and fs_gate_ok and cur["time"] < EOD_EXIT and cur["time"] < entry_cutoff_cfg and cur["time"] >= entry_start and second_allowed and not target_block and not ref_search_exhausted)
 
         # Track broken pivots even when can_enter is false, so the same level
         # won't re-trigger on the next bar (e.g. 09:39 break -> 09:40 no re-entry).
@@ -593,7 +705,12 @@ def simulate_day_1min(
         if i>0 and cur_swing is not None and can_enter:
             trade_dir = -1 if cur_swing=="buying" else 1
             brk=None
-            if trade_mode == "conservative" and fs2_dir is not None and fs2_end_idx >=0:
+            # Use FS-based candidate filtering whenever a desired swing exists
+            # (covers conservative initial FS2 and also aggressive 2nd-trade after
+            # post-loss re-arm where swing 3 becomes new reference). This mirrors
+            # 1st-trade engine exactly: only pivots formed *after* FS mark count,
+            # FS's own chop pivot never counts as 1st break.
+            if fs2_dir is not None and fs2_end_idx >=0:
                 # Conservative entry: count pivot breaks AFTER the desired swing's
                 # mark (fs or sus). Aggressive = 1st pivot break after mark,
                 # Conservative = 2nd pivot break (skip 1st).
@@ -695,11 +812,11 @@ def simulate_day_1min(
                     if _ev.get("type") == "fs2_segment":
                         _aggr_confirm_idx = _ev.get("confirm_pivot_idx")
                 if trade_dir==1 and normal_highs:
-                    piv = next((p for p in reversed(normal_highs) if p.idx < i and p.idx > fs_break_pivot_idx and not (_aggr_confirm_idx is not None and _aggr_confirm_idx >= 0 and p.idx == _aggr_confirm_idx)), None)
+                    piv = next((p for p in reversed(normal_highs) if p.idx < i and p.idx > fs_break_pivot_idx and p.idx > entry_swing_confirmed_idx and not (_aggr_confirm_idx is not None and _aggr_confirm_idx >= 0 and p.idx == _aggr_confirm_idx)), None)
                     if piv and cur["high"] > piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
                 elif trade_dir==-1 and normal_lows:
-                    piv = next((p for p in reversed(normal_lows) if p.idx < i and p.idx > fs_break_pivot_idx and not (_aggr_confirm_idx is not None and _aggr_confirm_idx >= 0 and p.idx == _aggr_confirm_idx)), None)
+                    piv = next((p for p in reversed(normal_lows) if p.idx < i and p.idx > fs_break_pivot_idx and p.idx > entry_swing_confirmed_idx and not (_aggr_confirm_idx is not None and _aggr_confirm_idx >= 0 and p.idx == _aggr_confirm_idx)), None)
                     if piv and cur["low"] < piv.px:
                         brk = {"type":"pivot_break","level":piv.px,"bar":i}
             if brk is not None:

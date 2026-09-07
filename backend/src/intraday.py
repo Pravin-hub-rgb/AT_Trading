@@ -89,6 +89,10 @@ DEFAULT_CFG = {
     "breakeven_r": 1.0,      # cost-to-cost trigger in R (1.0 = 1:1 breakeven, 2.0 = 2R) — filter enabled only when < rr_target
     "cost_to_cost_r": 2.0,   # alias for breakeven_r (legacy cfg)
     "need_opp_swing": True,  # 1min precise: wait for opposite swing (FS2) before entry; default ON — even B7/Bc7 extremes wait
+    "max_entries": 2,        # max trades per day (1 = one-and-done; 2 = per course)
+    "force_trade_mode": None,  # None | "aggressive" | "conservative" — force all days to one mode (research)
+    "entry_cutoff": "15:15", # no new entries at or after this time (open trade still to sl/target/eod)
+    "second_trade_after": "sl_only",  # when max_entries=2, gate for 2nd trade: sl_only | loss | any_non_target | always
 }
 
 SL_MODE_MULT = {"avg": 1.0, "avg075": 0.75, "avg05": 0.5}

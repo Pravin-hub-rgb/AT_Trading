@@ -1,0 +1,1150 @@
+[
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 519,
+      "wins": 92,
+      "win_rate": 17.7,
+      "total_r": 132.97,
+      "avg_r": 0.26,
+      "outcomes": {
+        "target": 84,
+        "ft_fail": 89,
+        "sl": 167,
+        "cost-to-cost": 172,
+        "eod": 7
+      }
+    },
+    "pf": 1.63,
+    "trades": 519,
+    "win_rate": 17.7,
+    "total_r": 132.97,
+    "avg_r": 0.26
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 517,
+      "wins": 90,
+      "win_rate": 17.4,
+      "total_r": 127.21,
+      "avg_r": 0.25,
+      "outcomes": {
+        "target": 82,
+        "ft_fail": 86,
+        "sl": 166,
+        "cost-to-cost": 176,
+        "eod": 7
+      }
+    },
+    "pf": 1.6,
+    "trades": 517,
+    "win_rate": 17.4,
+    "total_r": 127.21,
+    "avg_r": 0.25
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 514,
+      "wins": 130,
+      "win_rate": 25.3,
+      "total_r": 125.02,
+      "avg_r": 0.24,
+      "outcomes": {
+        "target": 108,
+        "ft_fail": 99,
+        "sl": 286,
+        "eod": 21
+      }
+    },
+    "pf": 1.37,
+    "trades": 514,
+    "win_rate": 25.3,
+    "total_r": 125.02,
+    "avg_r": 0.24
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 510,
+      "wins": 129,
+      "win_rate": 25.3,
+      "total_r": 123.47,
+      "avg_r": 0.24,
+      "outcomes": {
+        "sl": 275,
+        "target": 106,
+        "ft_fail": 108,
+        "eod": 21
+      }
+    },
+    "pf": 1.38,
+    "trades": 510,
+    "win_rate": 25.3,
+    "total_r": 123.47,
+    "avg_r": 0.24
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 518,
+      "wins": 92,
+      "win_rate": 17.8,
+      "total_r": 123.03,
+      "avg_r": 0.24,
+      "outcomes": {
+        "target": 80,
+        "ft_fail": 102,
+        "sl": 161,
+        "cost-to-cost": 166,
+        "eod": 9
+      }
+    },
+    "pf": 1.59,
+    "trades": 518,
+    "win_rate": 17.8,
+    "total_r": 123.03,
+    "avg_r": 0.24
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 515,
+      "wins": 127,
+      "win_rate": 24.7,
+      "total_r": 121.55,
+      "avg_r": 0.24,
+      "outcomes": {
+        "target": 112,
+        "ft_fail": 88,
+        "sl": 299,
+        "eod": 16
+      }
+    },
+    "pf": 1.35,
+    "trades": 515,
+    "win_rate": 24.7,
+    "total_r": 121.55,
+    "avg_r": 0.24
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 518,
+      "wins": 115,
+      "win_rate": 22.2,
+      "total_r": 119.94,
+      "avg_r": 0.23,
+      "outcomes": {
+        "target": 108,
+        "ft_fail": 88,
+        "sl": 167,
+        "cost-to-cost": 149,
+        "eod": 6
+      }
+    },
+    "pf": 1.57,
+    "trades": 518,
+    "win_rate": 22.2,
+    "total_r": 119.94,
+    "avg_r": 0.23
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 512,
+      "wins": 150,
+      "win_rate": 29.3,
+      "total_r": 114.22,
+      "avg_r": 0.22,
+      "outcomes": {
+        "sl": 263,
+        "target": 140,
+        "ft_fail": 99,
+        "eod": 10
+      }
+    },
+    "pf": 1.36,
+    "trades": 512,
+    "win_rate": 29.3,
+    "total_r": 114.22,
+    "avg_r": 0.22
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 511,
+      "wins": 129,
+      "win_rate": 25.2,
+      "total_r": 114.22,
+      "avg_r": 0.22,
+      "outcomes": {
+        "sl": 284,
+        "target": 105,
+        "ft_fail": 101,
+        "eod": 21
+      }
+    },
+    "pf": 1.34,
+    "trades": 511,
+    "win_rate": 25.2,
+    "total_r": 114.22,
+    "avg_r": 0.22
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 516,
+      "wins": 89,
+      "win_rate": 17.2,
+      "total_r": 114.21,
+      "avg_r": 0.22,
+      "outcomes": {
+        "target": 77,
+        "ft_fail": 97,
+        "sl": 160,
+        "cost-to-cost": 173,
+        "eod": 9
+      }
+    },
+    "pf": 1.55,
+    "trades": 516,
+    "win_rate": 17.2,
+    "total_r": 114.21,
+    "avg_r": 0.22
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 513,
+      "wins": 127,
+      "win_rate": 24.8,
+      "total_r": 111.87,
+      "avg_r": 0.22,
+      "outcomes": {
+        "target": 107,
+        "ft_fail": 94,
+        "sl": 293,
+        "eod": 19
+      }
+    },
+    "pf": 1.33,
+    "trades": 513,
+    "win_rate": 24.8,
+    "total_r": 111.87,
+    "avg_r": 0.22
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 516,
+      "wins": 111,
+      "win_rate": 21.5,
+      "total_r": 110.75,
+      "avg_r": 0.21,
+      "outcomes": {
+        "target": 104,
+        "ft_fail": 84,
+        "sl": 166,
+        "cost-to-cost": 156,
+        "eod": 6
+      }
+    },
+    "pf": 1.53,
+    "trades": 516,
+    "win_rate": 21.5,
+    "total_r": 110.75,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 511,
+      "wins": 128,
+      "win_rate": 25.0,
+      "total_r": 109.97,
+      "avg_r": 0.22,
+      "outcomes": {
+        "sl": 286,
+        "target": 107,
+        "ft_fail": 101,
+        "eod": 17
+      }
+    },
+    "pf": 1.32,
+    "trades": 511,
+    "win_rate": 25.0,
+    "total_r": 109.97,
+    "avg_r": 0.22
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 512,
+      "wins": 125,
+      "win_rate": 24.4,
+      "total_r": 109.05,
+      "avg_r": 0.21,
+      "outcomes": {
+        "target": 109,
+        "ft_fail": 85,
+        "sl": 301,
+        "eod": 17
+      }
+    },
+    "pf": 1.32,
+    "trades": 512,
+    "win_rate": 24.4,
+    "total_r": 109.05,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 511,
+      "wins": 128,
+      "win_rate": 25.0,
+      "total_r": 107.94,
+      "avg_r": 0.21,
+      "outcomes": {
+        "target": 104,
+        "ft_fail": 94,
+        "sl": 290,
+        "eod": 23
+      }
+    },
+    "pf": 1.32,
+    "trades": 511,
+    "win_rate": 25.0,
+    "total_r": 107.94,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 510,
+      "wins": 124,
+      "win_rate": 24.3,
+      "total_r": 106.22,
+      "avg_r": 0.21,
+      "outcomes": {
+        "sl": 281,
+        "target": 105,
+        "ft_fail": 107,
+        "eod": 17
+      }
+    },
+    "pf": 1.32,
+    "trades": 510,
+    "win_rate": 24.3,
+    "total_r": 106.22,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_daily_5_far_50",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 265,
+      "trades": 512,
+      "wins": 125,
+      "win_rate": 24.4,
+      "total_r": 105.93,
+      "avg_r": 0.21,
+      "outcomes": {
+        "sl": 280,
+        "target": 104,
+        "ft_fail": 107,
+        "eod": 21
+      }
+    },
+    "pf": 1.32,
+    "trades": 512,
+    "win_rate": 24.4,
+    "total_r": 105.93,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 2.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 514,
+      "wins": 193,
+      "win_rate": 37.5,
+      "total_r": 105.58,
+      "avg_r": 0.21,
+      "outcomes": {
+        "sl": 216,
+        "target": 186,
+        "ft_fail": 106,
+        "eod": 6
+      }
+    },
+    "pf": 1.39,
+    "trades": 514,
+    "win_rate": 37.5,
+    "total_r": 105.58,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 2.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 514,
+      "wins": 193,
+      "win_rate": 37.5,
+      "total_r": 105.58,
+      "avg_r": 0.21,
+      "outcomes": {
+        "sl": 216,
+        "target": 186,
+        "ft_fail": 106,
+        "eod": 6
+      }
+    },
+    "pf": 1.39,
+    "trades": 514,
+    "win_rate": 37.5,
+    "total_r": 105.58,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 513,
+      "wins": 127,
+      "win_rate": 24.8,
+      "total_r": 105.4,
+      "avg_r": 0.21,
+      "outcomes": {
+        "target": 103,
+        "ft_fail": 99,
+        "sl": 288,
+        "eod": 23
+      }
+    },
+    "pf": 1.31,
+    "trades": 513,
+    "win_rate": 24.8,
+    "total_r": 105.4,
+    "avg_r": 0.21
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 518,
+      "wins": 112,
+      "win_rate": 21.6,
+      "total_r": 104.03,
+      "avg_r": 0.2,
+      "outcomes": {
+        "target": 103,
+        "ft_fail": 98,
+        "sl": 164,
+        "cost-to-cost": 146,
+        "eod": 7
+      }
+    },
+    "pf": 1.49,
+    "trades": 518,
+    "win_rate": 21.6,
+    "total_r": 104.03,
+    "avg_r": 0.2
+  },
+  {
+    "bias_mode": "ema_daily_5_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 265,
+      "trades": 512,
+      "wins": 127,
+      "win_rate": 24.8,
+      "total_r": 103.91,
+      "avg_r": 0.2,
+      "outcomes": {
+        "sl": 276,
+        "target": 102,
+        "ft_fail": 113,
+        "eod": 21
+      }
+    },
+    "pf": 1.31,
+    "trades": 512,
+    "win_rate": 24.8,
+    "total_r": 103.91,
+    "avg_r": 0.2
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 516,
+      "wins": 110,
+      "win_rate": 21.3,
+      "total_r": 101.62,
+      "avg_r": 0.2,
+      "outcomes": {
+        "target": 101,
+        "ft_fail": 93,
+        "sl": 163,
+        "cost-to-cost": 152,
+        "eod": 7
+      }
+    },
+    "pf": 1.49,
+    "trades": 516,
+    "win_rate": 21.3,
+    "total_r": 101.62,
+    "avg_r": 0.2
+  },
+  {
+    "bias_mode": "ema_daily_10_far_50",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 3.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 512,
+      "wins": 146,
+      "win_rate": 28.5,
+      "total_r": 101.19,
+      "avg_r": 0.2,
+      "outcomes": {
+        "sl": 255,
+        "target": 134,
+        "ft_fail": 112,
+        "eod": 11
+      }
+    },
+    "pf": 1.32,
+    "trades": 512,
+    "win_rate": 28.5,
+    "total_r": 101.19,
+    "avg_r": 0.2
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 510,
+      "wins": 125,
+      "win_rate": 24.5,
+      "total_r": 101.08,
+      "avg_r": 0.2,
+      "outcomes": {
+        "target": 104,
+        "ft_fail": 91,
+        "sl": 295,
+        "eod": 20
+      }
+    },
+    "pf": 1.3,
+    "trades": 510,
+    "win_rate": 24.5,
+    "total_r": 101.08,
+    "avg_r": 0.2
+  },
+  {
+    "bias_mode": "ema_daily_5_far_50",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 265,
+      "trades": 515,
+      "wins": 147,
+      "win_rate": 28.5,
+      "total_r": 100.93,
+      "avg_r": 0.2,
+      "outcomes": {
+        "sl": 269,
+        "target": 138,
+        "ft_fail": 96,
+        "eod": 12
+      }
+    },
+    "pf": 1.31,
+    "trades": 515,
+    "win_rate": 28.5,
+    "total_r": 100.93,
+    "avg_r": 0.2
+  },
+  {
+    "bias_mode": "ema_1min_5_inverse",
+    "cfg": {
+      "sl_mode": "prev_pivot",
+      "rr_target": 3.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 264,
+      "trades": 516,
+      "wins": 148,
+      "win_rate": 28.7,
+      "total_r": 100.53,
+      "avg_r": 0.19,
+      "outcomes": {
+        "target": 138,
+        "ft_fail": 87,
+        "sl": 278,
+        "eod": 13
+      }
+    },
+    "pf": 1.31,
+    "trades": 516,
+    "win_rate": 28.7,
+    "total_r": 100.53,
+    "avg_r": 0.19
+  },
+  {
+    "bias_mode": "ema_1min_10_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 4.0,
+      "min_sl_pts": 15,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 263,
+      "trades": 510,
+      "wins": 126,
+      "win_rate": 24.7,
+      "total_r": 99.25,
+      "avg_r": 0.19,
+      "outcomes": {
+        "target": 101,
+        "ft_fail": 95,
+        "sl": 290,
+        "eod": 24
+      }
+    },
+    "pf": 1.29,
+    "trades": 510,
+    "win_rate": 24.7,
+    "total_r": 99.25,
+    "avg_r": 0.19
+  },
+  {
+    "bias_mode": "ema_daily_5_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 2.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 265,
+      "trades": 516,
+      "wins": 192,
+      "win_rate": 37.2,
+      "total_r": 99.06,
+      "avg_r": 0.19,
+      "outcomes": {
+        "sl": 215,
+        "target": 183,
+        "ft_fail": 111,
+        "eod": 7
+      }
+    },
+    "pf": 1.36,
+    "trades": 516,
+    "win_rate": 37.2,
+    "total_r": 99.06,
+    "avg_r": 0.19
+  },
+  {
+    "bias_mode": "ema_daily_5_inverse",
+    "cfg": {
+      "sl_mode": "avg",
+      "rr_target": 2.0,
+      "min_sl_pts": 13,
+      "breakeven_r": 1.0,
+      "gap_pct": 0.0027,
+      "ft_fail_enabled": true,
+      "max_entries": 2,
+      "entry_cutoff": "15:15",
+      "second_trade_after": "always",
+      "force_trade_mode": null,
+      "execution": "1min",
+      "swing_traverse": true,
+      "need_opp_swing": true
+    },
+    "stats": {
+      "days_total": 270,
+      "days_traded": 265,
+      "trades": 516,
+      "wins": 192,
+      "win_rate": 37.2,
+      "total_r": 99.06,
+      "avg_r": 0.19,
+      "outcomes": {
+        "sl": 215,
+        "target": 183,
+        "ft_fail": 111,
+        "eod": 7
+      }
+    },
+    "pf": 1.36,
+    "trades": 516,
+    "win_rate": 37.2,
+    "total_r": 99.06,
+    "avg_r": 0.19
+  }
+]

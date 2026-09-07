@@ -33,7 +33,9 @@ import { SessionBreakPrimitive } from "./SessionBreakPrimitive";
 import { FlowLinePrimitive, FlowSegment } from "./FlowLinePrimitive";
 import { EnvelopePrimitive } from "./EnvelopePrimitive";
 import { SyncCrosshairPrimitive } from "./SyncCrosshairPrimitive";
+import { EMAPrimitive } from "./EMAPrimitive";
 import type { EnvelopeViolation } from "@/lib/envelope";
+import type { EmaPoint } from "@/lib/ema";
 
 interface Props {
   symbol: string;
@@ -54,6 +56,10 @@ interface Props {
   /** Whole-day swings with zigzag line rendering (cyan/yellow alternating).
    *  Default ON — renders automatically on 1min intraday chart. */
   wholeDaySwings?: WholeDaySwingPoint[];
+  /** Opt-in: draw the B1/B2/FLIP/FS-SUS markers from wholeDaySwings on ANY
+   *  timeframe. Nifty default stays untouched (markers only on 1min); BTC
+   *  chart passes true so 5m/15m swings get their break markers too. */
+  swingMarkers?: boolean;
   // Per-date trade_mode map from intraday backtest (aggressive/conservative/skip)
   tradeMode?: Record<string, string | null>;
   algoSecondSwingMarkers?:
@@ -94,6 +100,7 @@ interface Props {
   // crosshair move, null when the crosshair leaves the data. Keep stable
   // (useCallback) if provided — read via ref, so it never rebuilds the chart.
   onHoverTime?: (sec: number | null) => void;
+  emaLines?: Record<number, EmaPoint[]> | null;
 }
 
 // Imperative API for crosshair sync between two StockChart instances.
@@ -221,10 +228,12 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     algoSecondSwingMarkers,
     algoSecondSwingBreaks,
     wholeDaySwings,
+    swingMarkers,
     fsMarkers,
     fsBreaks,
     tradeMode,
     onHoverTime,
+    emaLines,
   }: Props,
   ref,
 ) {
@@ -685,9 +694,12 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   // ── overlay: ALL markers (consolidated into single effect to prevent interference) ──
   // This combines: bias arrows, Williams fractal tags, fsBreaks (B1/B2/FLIP), and fsMarkers (FS/SUS)
 
-  // Filter intermediate marks: keep only the first B1 + the last decisive break
-  // (last FLIP/B2). Engine may emit FLIP@10:16 + FLIP@10:17 whipsaw — only
-  // FLIP@10:17 (last) matters on the chart.
+  // Filter intermediate marks: keep the first B1 + ALL B2/FLIP marks.
+  // Previously this kept only the last B2/FLIP, which dropped legitimate
+  // intermediate marks in churn cases (e.g. 10 Jan 2025 swing #21:
+  // B1@15:45 -> FLIP@16:00 -> B2@17:00 -> FLIP@23:15 — the 16:00 FLIP
+  // was filtered out). Whipsaw (FLIP@10:16 + FLIP@10:17) is rare; the
+  // cost of showing both is low, but missing real marks is confusing.
   const filterBreaks = <
     T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
   >(
@@ -697,17 +709,21 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     const first = breaks.find((b) => b.kind === "B1") ?? breaks[0];
     const nonB1 = breaks.filter((b) => b.kind !== "B1");
     if (nonB1.length === 0) return [first];
-    const last = nonB1[nonB1.length - 1];
-    // A B2 that got flip-cancelled still happened and must stay visible
-    // (1 Sep 2026: B2@11:25 was swallowed by FLIP@11:28).
-    const lastFlip = [...nonB1].reverse().find((b) => b.kind === "FLIP");
-    const lastB2 = [...nonB1].reverse().find((b) => b.kind === "B2");
+    // Keep first B1 + every B2/FLIP in chronological order (dedup adjacent
+    // identical kind+dir to reduce whipsaw clutter). FLIP up then FLIP down
+    // are different dirs and must both show — e.g. 14 Jan 19:00 FLIP up + 21:30 FLIP down
+    // in same down swing would otherwise hide the 21:30 mark.
     const out: T[] = [first];
-    // Fake-out FLIP before the confirming B2 still happened - keep it visible
-    // (1 Sep 2026 swing 6: B1@11:55 -> FLIP@12:01 -> B2@12:05).
-    if (lastFlip && lastFlip !== last && lastFlip !== first) out.push(lastFlip);
-    if (lastB2 && lastB2 !== last && lastB2 !== first) out.push(lastB2);
-    out.push(last);
+    let prevKind = first.kind;
+    let prevDir = (first as any).dir as string | undefined;
+    for (const b of nonB1) {
+      if (b.kind === "B1") continue;
+      const bDir = (b as any).dir as string | undefined;
+      if (b.kind === prevKind && bDir === prevDir) continue; // skip same-kind+same-dir whipsaw
+      out.push(b);
+      prevKind = b.kind;
+      prevDir = bDir;
+    }
     return out;
   };
 
@@ -888,7 +904,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   useEffect(() => {
     const ser = seriesRef.current;
     if (!ser || !intraday) return;
-    if (interval !== "1min") return; // 5-min shows only swing lines, no markers per your call
+    if (interval !== "1min" && !swingMarkers) return; // 5-min shows only swing lines, no markers per your call
     if (!wholeDaySwings || wholeDaySwings.length === 0) return;
 
     const markers: SeriesMarker<Time>[] = [];
@@ -974,7 +990,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
         api?.setMarkers([]);
       } catch {}
     };
-  }, [wholeDaySwings, intraday, interval, candles]);
+  }, [wholeDaySwings, intraday, interval, candles, swingMarkers]);
 
   // ── overlay: Swing S/R labels & levels ──
   useEffect(() => {
@@ -1156,6 +1172,33 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       }
     };
   }, [algoSecondSwing, intraday, candles]);
+
+  // ── overlay: EMA lines (toggleable) ──
+  useEffect(() => {
+    const ser = seriesRef.current;
+    if (!ser || !emaLines || Object.keys(emaLines).length === 0) return;
+    const colors: Record<number, string> = {
+      5: "#f59e0b",
+      10: "#10b981",
+      20: "#60a5fa",
+      50: "#a78bfa",
+    };
+    const prims: EMAPrimitive[] = [];
+    for (const [periodStr, points] of Object.entries(emaLines)) {
+      const period = Number(periodStr);
+      const color = colors[period] || "#94a3b8";
+      const prim = new EMAPrimitive(ser, points, color, period === 10 ? 2 : 1.5);
+      ser.attachPrimitive(prim);
+      prims.push(prim);
+    }
+    return () => {
+      for (const p of prims) {
+        try {
+          ser.detachPrimitive(p);
+        } catch {}
+      }
+    };
+  }, [emaLines, candles]);
 
   // On-chart diagnostic: proves whether break marks reached the chart
   const fsBreakCount = fsBreaks?.length ?? 0;

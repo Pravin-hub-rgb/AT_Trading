@@ -6,7 +6,10 @@ import type {
   IntradayBacktestResponse,
   IntradayDaySummary,
   TradeOutcome,
+  BiasMode,
 } from "@/lib/api";
+import { BIAS_MODES } from "@/lib/api";
+import { BIAS_PRESETS } from "@/lib/biasPresets";
 
 interface Props {
   backtest: IntradayBacktestResponse | null;
@@ -84,6 +87,26 @@ const BREAKEVEN_MODES = [
   { value: "2", label: "Breakeven: 2R" },
 ];
 
+const MAX_ENTRIES_MODES = [
+  { value: "1", label: "Max Trades: 1" },
+  { value: "2", label: "Max Trades: 2 (course)" },
+];
+
+const CUTOFF_MODES = [
+  { value: "15:15", label: "Cutoff: 15:15 (all day)" },
+  { value: "14:00", label: "Cutoff: 14:00" },
+  { value: "13:00", label: "Cutoff: 13:00" },
+  { value: "12:00", label: "Cutoff: 12:00" },
+  { value: "11:30", label: "Cutoff: 11:30" },
+];
+
+const SECOND_TRADE_MODES = [
+  { value: "sl_only", label: "2nd: Only after SL" },
+  { value: "loss", label: "2nd: After loss (SL/FT-Fail/C2C)" },
+  { value: "any_non_target", label: "2nd: Any non-target" },
+  { value: "always", label: "2nd: Always" },
+];
+
 const STORAGE_KEY = "intraday_filters";
 
 function OutcomeChip({ outcome }: { outcome: string }) {
@@ -119,6 +142,9 @@ function loadSavedFilters(): Partial<{
   min_sl_pts: number;
   breakeven_r: number;
   need_opp_swing: boolean;
+  max_entries: number;
+  entry_cutoff: string;
+  second_trade_after: string;
 }> {
   if (typeof window === "undefined") return {};
   try {
@@ -146,6 +172,9 @@ function saveFilters(filters: {
   min_sl_pts: number;
   breakeven_r: number;
   need_opp_swing: boolean;
+  max_entries: number;
+  entry_cutoff: string;
+  second_trade_after: string;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -253,6 +282,18 @@ export default function IntradayPanel({
   const [localNeedOpp, setLocalNeedOpp] = useState(
     saved.need_opp_swing ?? (params as any).need_opp_swing ?? true,
   );
+  const [localMaxEntries, setLocalMaxEntries] = useState(
+    String(saved.max_entries ?? (params as any).max_entries ?? 2),
+  );
+  const [localCutoff, setLocalCutoff] = useState(
+    saved.entry_cutoff ?? (params as any).entry_cutoff ?? "15:15",
+  );
+  const [localSecondAfter, setLocalSecondAfter] = useState(
+    saved.second_trade_after ?? (params as any).second_trade_after ?? "sl_only",
+  );
+  const [localBiasMode, setLocalBiasMode] = useState<BiasMode>(
+    (saved as any).bias_mode ?? (params as any).bias_mode ?? "daily_swing",
+  );
 
   // Check if any local value differs from the current applied params
   const hasChanges =
@@ -267,7 +308,11 @@ export default function IntradayPanel({
     localTraverse !== (params.swing_traverse ?? true) ||
     localMinSl !== String(params.min_sl_pts ?? 13.0) ||
     localBreakeven !== String((params as any).breakeven_r ?? 1.0) ||
-    localNeedOpp !== ((params as any).need_opp_swing ?? true);
+    localNeedOpp !== ((params as any).need_opp_swing ?? true) ||
+    localMaxEntries !== String((params as any).max_entries ?? 2) ||
+    localCutoff !== ((params as any).entry_cutoff ?? "15:15") ||
+    localSecondAfter !== ((params as any).second_trade_after ?? "sl_only") ||
+    localBiasMode !== ((params as any).bias_mode ?? "daily_swing");
 
   const activeDate =
     selectedDate ?? view?.days[view.days.length - 1]?.date ?? null;
@@ -311,7 +356,11 @@ export default function IntradayPanel({
       min_sl_pts: Number(localMinSl),
       breakeven_r: Number(localBreakeven),
       need_opp_swing: localNeedOpp,
-    });
+      max_entries: Number(localMaxEntries),
+      entry_cutoff: localCutoff,
+      second_trade_after: localSecondAfter,
+      bias_mode: localBiasMode,
+    } as any);
     // Apply all filters in one go
     onCaseChange(localCase);
     onParamsChange({
@@ -327,11 +376,71 @@ export default function IntradayPanel({
       min_sl_pts: Number(localMinSl),
       breakeven_r: Number(localBreakeven),
       need_opp_swing: localNeedOpp,
+      max_entries: Number(localMaxEntries),
+      entry_cutoff: localCutoff,
+      second_trade_after: localSecondAfter,
+      bias_mode: localBiasMode,
     } as any);
   };
 
   return (
     <div className="space-y-3">
+      {/* MASTER BIAS — clean separation: daily_swing vs ema based etc */}
+      <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#6366f1]/50 bg-[#6366f1]/10 px-3 py-2">
+        <span className="text-xs font-bold uppercase tracking-wide text-[#6366f1]">
+          Master Bias
+        </span>
+        <select
+          value={localBiasMode}
+          onChange={(e) => {
+            const v = e.target.value as BiasMode;
+            setLocalBiasMode(v);
+            const preset = (BIAS_PRESETS as any)[v];
+            if (preset) {
+              if (preset.sl_mode) setLocalSlMode(preset.sl_mode);
+              if (preset.rr_target !== undefined) setLocalRR(String(preset.rr_target));
+              if (preset.min_sl_pts !== undefined) setLocalMinSl(String(preset.min_sl_pts));
+              if (preset.breakeven_r !== undefined) setLocalBreakeven(String(preset.breakeven_r));
+              if (preset.gap_pct !== undefined) setLocalGapPct(String(preset.gap_pct));
+              if (preset.ft_fail_enabled !== undefined) setLocalFtFail(preset.ft_fail_enabled);
+              if (preset.max_entries !== undefined) setLocalMaxEntries(String(preset.max_entries));
+              if (preset.entry_cutoff !== undefined) setLocalCutoff(String(preset.entry_cutoff));
+              if (preset.second_trade_after !== undefined) setLocalSecondAfter(String(preset.second_trade_after));
+              if (preset.swing_traverse !== undefined) setLocalTraverse(preset.swing_traverse);
+              if (preset.need_opp_swing !== undefined) setLocalNeedOpp(preset.need_opp_swing);
+            }
+            // Immediate apply — so MASTER change instantly updates chart + trades, no extra Apply click needed
+            const next = { ...params, ...(preset || {}), bias_mode: v } as any;
+            // keep case
+            onCaseChange(localCase);
+            onParamsChange(next);
+            try {
+              window.localStorage.setItem(
+                "intraday_filters",
+                JSON.stringify({ ...JSON.parse(window.localStorage.getItem("intraday_filters") || "{}"), ...(preset || {}), bias_mode: v, caseValue: localCase }),
+              );
+              if (v.startsWith("ema")) window.localStorage.setItem("chart_ema_on", "1");
+            } catch {}
+          }}
+          className="rounded border border-[#6366f1] bg-[#161b22] px-2 py-1.5 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#6366f1]"
+          title="Master bias mode — daily_swing is original (bias.py), ema_* are pure EMA, opposite/streak are research modes. Clean separation, not messed. Auto-applies its best preset instantly."
+        >
+          {BIAS_MODES.map((m) => (
+            <option key={m.value} value={m.value}>
+              {m.label}
+            </option>
+          ))}
+        </select>
+        <span className="text-[10px] text-[#8b949e]">
+          {localBiasMode === "daily_swing"
+            ? "Original daily swing + closing (bias.py)"
+            : localBiasMode.startsWith("ema")
+              ? "Pure EMA trend — no overview/flow"
+              : localBiasMode === "opposite_first"
+                ? "Opposite of 1st swing — ignores bias.py"
+                : "Streak 3-1-1 daily color regime"}
+        </span>
+      </div>
       {/* All filters in one row — applied together with the Apply button */}
       <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#30363d] bg-[#0d1117] px-3 py-2">
         <span className="text-xs font-semibold uppercase tracking-wide text-[#8b949e]">
@@ -485,6 +594,43 @@ export default function IntradayPanel({
           />
           Need opposite swing
         </label>
+        <select
+          value={localMaxEntries}
+          onChange={(e) => setLocalMaxEntries(e.target.value)}
+          className={selectCls}
+          title="Max trades per day (1 = one-and-done regardless, 2 = allow 2nd per rule)"
+        >
+          {MAX_ENTRIES_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localSecondAfter}
+          onChange={(e) => setLocalSecondAfter(e.target.value)}
+          className={selectCls}
+          title="When max=2, when is 2nd allowed? sl_only (default), loss (SL/FT-Fail/C2C), any_non_target, always"
+          disabled={localMaxEntries === "1"}
+        >
+          {SECOND_TRADE_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
+        <select
+          value={localCutoff}
+          onChange={(e) => setLocalCutoff(e.target.value)}
+          className={selectCls}
+          title="No new entries at or after this time (open trade still to SL/target/EOD)"
+        >
+          {CUTOFF_MODES.map((o) => (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ))}
+        </select>
         <button
           onClick={handleApply}
           disabled={!hasChanges}

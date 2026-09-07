@@ -17,6 +17,8 @@ export interface TradeBox {
   entryPrice: number;
   slPrice: number;
   targetPrice: number;
+  /** realized exit price — trail/SL/BE exits differ from the static target */
+  exitPrice: number;
   outcome: string;
   rMultiple: number;
 }
@@ -25,7 +27,7 @@ interface BoxItem {
   x1: number;
   x2: number;
   yEntry: number;
-  yTarget: number;
+  yExit: number;
   ySl: number;
   isLong: boolean;
   label: string;
@@ -60,7 +62,7 @@ export class PositionPrimitive implements IPanePrimitive<Time> {
       const x1 = ts.timeToCoordinate(t.entryTs as Time);
       const x2 = ts.timeToCoordinate(t.exitTs as Time);
       const ye = this.series.priceToCoordinate(t.entryPrice);
-      const yt = this.series.priceToCoordinate(t.targetPrice);
+      const yt = this.series.priceToCoordinate(t.exitPrice);
       const ys = this.series.priceToCoordinate(t.slPrice);
       if (x1 == null || x2 == null || ye == null || yt == null || ys == null)
         continue;
@@ -69,7 +71,7 @@ export class PositionPrimitive implements IPanePrimitive<Time> {
         x1,
         x2,
         yEntry: ye,
-        yTarget: yt,
+        yExit: yt,
         ySl: ys,
         isLong: t.dir === "long",
         label: `${t.dir === "long" ? "L" : "S"} ${r >= 0 ? "+" : ""}${r.toFixed(1)}R ${t.outcome}`,
@@ -112,13 +114,17 @@ class PositionPaneRenderer implements IPrimitivePaneRenderer {
       ctx.textAlign = "left";
 
       for (const it of this.items) {
-        // profit zone (entry -> target)
-        ctx.fillStyle = "rgba(16, 185, 129, 0.13)";
+        // realized zone (entry -> actual exit): green if won, red if lost.
+        // Trail/SL/BE exits land wherever the market took them - the box must
+        // show the REAL result, not the static 3R target.
+        ctx.fillStyle = it.win
+          ? "rgba(16, 185, 129, 0.13)"
+          : "rgba(239, 68, 68, 0.12)";
         ctx.fillRect(
           it.x1,
-          Math.min(it.yEntry, it.yTarget),
+          Math.min(it.yEntry, it.yExit),
           Math.max(it.x2 - it.x1, 2),
-          Math.abs(it.yTarget - it.yEntry),
+          Math.abs(it.yExit - it.yEntry),
         );
         // risk zone (entry -> SL)
         ctx.fillStyle = "rgba(239, 68, 68, 0.10)";
@@ -131,22 +137,55 @@ class PositionPaneRenderer implements IPrimitivePaneRenderer {
 
         // level edges
         ctx.lineWidth = 1;
-        ctx.strokeStyle = "rgba(16, 185, 129, 0.55)";
-        hline(ctx, it.x1, it.x2, it.yTarget);
+        ctx.strokeStyle = it.win
+          ? "rgba(16, 185, 129, 0.55)"
+          : "rgba(239, 68, 68, 0.55)";
+        hline(ctx, it.x1, it.x2, it.yExit);
         ctx.strokeStyle = "rgba(239, 68, 68, 0.55)";
         hline(ctx, it.x1, it.x2, it.ySl);
+
+        // entry line — thin white dotted line spanning the box so you can
+        // instantly see where the trade was taken relative to exit + SL
+        ctx.save();
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+        ctx.lineWidth = 1;
+        hline(ctx, it.x1, it.x2, it.yEntry);
+        ctx.restore();
+
+        // L/S entry badge — big, bold, colored by direction, so you can
+        // instantly tell long vs short without reading the R label
+        const badge = it.isLong ? "L" : "S";
+        const badgeColor = it.isLong ? "#10b981" : "#ef4444";
+        const bx = it.x1 + 4;
+        const by = it.yEntry - 12;
+        ctx.font = "bold 13px ui-monospace, SFMono-Regular, Menlo, monospace";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "left";
+        // badge background pill
+        const badgeW = 14;
+        const badgeH = 16;
+        ctx.fillStyle = "#0d1117";
+        ctx.fillRect(bx - 2, by - badgeH / 2, badgeW, badgeH);
+        ctx.strokeStyle = badgeColor;
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(bx - 2, by - badgeH / 2, badgeW, badgeH);
+        // badge text
+        ctx.fillStyle = badgeColor;
+        ctx.fillText(badge, bx + 1, by + 1);
 
         // small downward arrow at entry price (marks entry candle)
         drawEntryArrow(ctx, it.x1, it.yEntry, ENTRY_ARROW);
 
         // R tag near the TARGET line
         const color = it.win ? GREEN : RED;
-        const ty = it.isLong ? it.yTarget - 8 : it.yTarget + 10;
+        const ty = it.isLong ? it.yExit - 8 : it.yExit + 10;
+        ctx.font = "bold 11px ui-monospace, SFMono-Regular, Menlo, monospace";
         ctx.strokeStyle = "#0d1117";
         ctx.lineWidth = 3;
-        ctx.strokeText(it.label, it.x1 + 2, ty);
+        ctx.strokeText(it.label, it.x1 + 22, ty);
         ctx.fillStyle = color;
-        ctx.fillText(it.label, it.x1 + 2, ty);
+        ctx.fillText(it.label, it.x1 + 22, ty);
       }
     });
   }
