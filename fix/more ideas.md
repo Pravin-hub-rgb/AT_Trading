@@ -44,3 +44,26 @@ have to brainstorm
 yeh joh ... .... 1 hour flijp wali strategy hai 
 toh ismai hum lower time frame mai trade karna shuru kare??
 like jaise he hum yeh 1 hour wale trade mai hai toh uss dureation hum 15min mai long he ke swing trade kare woh decisive wale??? when 1 hour wale mai bhi hum long hai?? vice versa..
+
+
+--- 
+we trade high tf flip 1 hour cap 16 + multitime frame one...  both simultanesouly
+---
+
+instead of direct trading at close we trade when high and low on that candle break on the 1hour flip 16 cap ltf off 
+we won't be trading stuff like 13 feb 2025 6:30 .. so like we can experiment like if next few of 1 hour candle within that it breaks when we trade ... 
+if the low gets broken then may be on ltf we can also trade opposite side .. stuff like that .. kthat kinda expermiemnt
+like for  13 feb 2025 6:30 like the next candle didn't broke the high so we don't enter there but if low get broken so we cant short there...
+
+stuff like we put the entry at low or high and if it get broken directly without getting broken its oppisite then we trade .. stuf flike that ..
+for examle 
+17 mar 19:30 case
+entry will be low of this candle but next candle broken it high .. so we cancel it cuse it was shorting trade nah .. the high shoudn't be breached . or we can expermment like it prev pivot shouldn't be breached stuff like that .
+
+
+we can also do something like if by 16 day we are not at least 2R then we cut but if we are 2R+ and not 3R then we can go beyond 16 day cap ... getting it .. like for 16 days we are just consolidating around 1R then we have to cut but if we are 2R+ then we can go beyond 16day cap .. so like ... gotta experiment like ... 2R or 2.5R whatever ..
+
+
+we have to do research like does the flip candle strength matter???
+like the failing trade where the flip candle was good?
+stuff like the swing movement or angle stuff like that .. 

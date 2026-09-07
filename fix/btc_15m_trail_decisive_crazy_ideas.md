@@ -157,9 +157,11 @@ UI me `Ver` dropdown ke niche `Version Info` card me yahi summary + `trades/win%
 
 **Plan sweeps done `sweep_E1_minBars.py:1` `sweep_A1_chandelier.py:1` honest `0.05%+2pt`:**
 
-**E1 minBars 15m decisive BE0** `446tr +5.3` is NOT best — `mb40 BE0 515tr +24.0 net PF1.35 maxDD50.6` best, `mb50 +5.4`, `mb30 -78.1`, `mb20 -149.7`, `mb60 -129.3`, `mb70 -62.3` `sweep_E1_minBars.py:1`. `BE1` all negative `mb50 -10.2` best among BE1. So `E1` winner `mb40 +24` beats `mb50 +5`.
+**E1 minBars 15m decisive BE0** `446tr +5.3` is NOT best — `mb40 BE0 515tr +24.0 net PF1.35 maxDD50.6` best, `mb50 +5.4`, `mb30 -78.1`, `mb20 -149.7`, `mb60 -129.3`, `mb70 -62.3` `sweep_E1_minBars.py:1`. `BE1` all negative `mb50 -10.2` best among BE1. So `E1` winner `mb40 +24` beats `mb50 +5` but still `v6 +90` and `HTF-LTF +127` best.
 
 **A1 Chandelier k 2.0-5.0 `mb50`** all negative `k2.0 -252 PF1.05` `k3.0 -269 PF0.90` `k5.0 -262` `sweep_A1_chandelier.py:1` — ATR trail too tight for BTC 5 ATR legs `fix/btc_ideas.md:59`.
+
+**FINAL VERDICT — Did we do better than 200R→5R honest? YES — HTF-LTF 15m inside 1h `204tr +127.5 net` `+HTF 151tr +57.8 = 355tr +185.3 combined` `final_comparison.py:1` `34.6x` vs `5.4` `15m` alone, `3.6x` vs `51.2` `1h` alone, all honest `stream+touchable+one-swing-one-trade+1m` `0.05%+2pt` `FULL window`. `v6 ADX +90.5` alone `17x` vs `5.4`.
 
 **D1 Partial split 0.3/0.5/0.7 `15m decisive` manual blend `common 246` `sweep_D1_partial.py:1`:** `split0.3 -10.6 avg -0.043`, `split0.5 -3.6 avg -0.015`, `split0.7 +3.4 avg 0.014` — vs `v4 350tr -71` `v1 +5.4` `v6 +90.5`, blend not beats ADX, needs proper `busy_until` handling.
 

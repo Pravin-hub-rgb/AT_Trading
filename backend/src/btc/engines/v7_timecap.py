@@ -20,6 +20,7 @@ def simulate_btc_trades_v7(
     fine: Optional[list[dict]]=None,
     entry_selection: str="stream",
     cap_days: int=30,  # time cap in days, 0 = off
+    entry_gate=None,  # optional callable(idx)->bool — return False to skip the entry
 ) -> list[dict]:
     n=len(candles)
     if n==0:
@@ -41,6 +42,8 @@ def simulate_btc_trades_v7(
     for sig in signals:
         i=sig["bar"]
         if i <= busy_until or i >= n-1:
+            continue
+        if entry_gate is not None and not entry_gate(i):
             continue
         direction=int(sig["dir"])
         if day_gate is not None:

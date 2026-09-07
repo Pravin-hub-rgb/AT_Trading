@@ -41,11 +41,27 @@ try:
 except Exception:
     simulate_btc_trades_v7 = None  # type: ignore
 try:
+    from src.btc.engines.v8_break_entry import simulate_btc_trades_v8
+except Exception:
+    simulate_btc_trades_v8 = None  # type: ignore
+try:
+    from src.btc.engines.v9_conditional_cap import simulate_btc_trades_v9
+except Exception:
+    simulate_btc_trades_v9 = None  # type: ignore
+try:
+    from src.btc.engines.v10_strength import simulate_btc_trades_v10
+except Exception:
+    simulate_btc_trades_v10 = None  # type: ignore
+try:
     from src.btc.engines.htf_ltf.v1_15m import simulate_htf_ltf_15m
 except Exception:
     simulate_htf_ltf_15m = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v3_ext_stop import simulate_htf_ltf_ext_stop
+except Exception:
+    simulate_htf_ltf_ext_stop = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"]
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -54,6 +70,9 @@ VERSION_LABELS = {
     "v5": "v5 BE1 (breakeven 1R)",
     "v6": "v6 ADX>25",
     "v7": "v7 TimeCap 16d (1h Flip)",
+    "v8": "v8 Break High/Low + Opposite Cancel",
+    "v9": "v9 Conditional Cap 2R→30d",
+    "v10": "v10 Flip Strength Body/ATR",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -488,6 +507,7 @@ def btc_backtest(
     entry_selection: str = "stream",
     version: str = "v1",
     htf_ltf: str = "off",
+    htf_ltf_ver: str = "v1",
 ):
     """Position engine over the swing chain: entries on swing breaks,
     swing/pct SL, fixed R target, breakeven-R and trailing.
@@ -540,6 +560,8 @@ def btc_backtest(
         return JSONResponse(status_code=400, content={"detail": f"version must be one of {BTC_VERSIONS}"})
     if htf_ltf not in ("off", "5m", "15m"):
         return JSONResponse(status_code=400, content={"detail": "htf_ltf must be off | 5m | 15m"})
+    if htf_ltf_ver not in ("v1", "v3"):
+        return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3"})
 
     win, err = _load_window(tf, limit)
     if err:
@@ -605,6 +627,7 @@ def btc_backtest(
         "entry_selection": entry_selection,
         "version": version,
         "htf_ltf": htf_ltf,
+        "htf_ltf_ver": htf_ltf_ver,
     }
     # HTF-LTF nested execution: 1h Flip cap16 + 15m/5m Decisive inside HTF window
     if htf_ltf != "off" and simulate_htf_ltf_15m is not None:
@@ -626,12 +649,24 @@ def btc_backtest(
             htf_fine = _load_fine_1m(htf_candles[0]["ts"], htf_candles[-1]["ts"])
             ltf_fine = _load_fine_1m(ltf_candles[0]["ts"], ltf_candles[-1]["ts"])
             # Use HTF-LTF engine
-            nested = simulate_htf_ltf_15m(
-                htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
-                htf_entry_break="flip", ltf_entry_break="decisive",
-                sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
-                htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
-            )
+            if htf_ltf_ver == "v3" and simulate_htf_ltf_ext_stop is not None:
+                # v3 Extension Stop: block fresh same-dir LTF entries once the
+                # 1h leg is beyond 1.5R unrealized (see v3_ext_stop docstring).
+                nested = simulate_htf_ltf_ext_stop(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    htf_entry_break="flip", ltf_entry_break="decisive",
+                    sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
+                    htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
+                    ext_stop_r=1.5,
+                )
+                params["ext_stop_r"] = 1.5
+            else:
+                nested = simulate_htf_ltf_15m(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    htf_entry_break="flip", ltf_entry_break="decisive",
+                    sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
+                    htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
+                )
             # For chart, we show LTF trades (inside HTF) as main trades, plus HTF trades as context
             # Combine for stats: LTF trades are the execution, HTF trades are regime
             ltf_trades = nested.get("ltf_trades", [])
@@ -821,6 +856,68 @@ def btc_backtest(
             fine=fine,
             entry_selection=entry_selection,
             cap_days=16,
+        )
+    elif version == "v8":
+        if simulate_btc_trades_v8 is None:
+            return JSONResponse(status_code=500, content={"detail": "v8 engine not loaded"})
+        trades = simulate_btc_trades_v8(
+            candles,
+            swings,
+            entry_break=entry_break,
+            sl_mode=sl_mode,
+            sl_pct=float(sl_pct),
+            rr_target=float(rr_target),
+            trailing=trailing,
+            breakeven_r=float(breakeven_r),
+            skip_first=bool(skip_first),
+            bias_timeline=bias_timeline,
+            day_gate=day_gate,
+            fine=fine,
+            entry_selection=entry_selection,
+            cap_days=16,
+            confirm_bars=3,
+        )
+    elif version == "v9":
+        if simulate_btc_trades_v9 is None:
+            return JSONResponse(status_code=500, content={"detail": "v9 engine not loaded"})
+        trades = simulate_btc_trades_v9(
+            candles,
+            swings,
+            entry_break=entry_break,
+            sl_mode=sl_mode,
+            sl_pct=float(sl_pct),
+            rr_target=float(rr_target),
+            trailing=trailing,
+            breakeven_r=float(breakeven_r),
+            skip_first=bool(skip_first),
+            bias_timeline=bias_timeline,
+            day_gate=day_gate,
+            fine=fine,
+            entry_selection=entry_selection,
+            cap_days=16,
+            extend_threshold_r=2.5,
+            extend_cap_days=30,
+        )
+    elif version == "v10":
+        if simulate_btc_trades_v10 is None:
+            return JSONResponse(status_code=500, content={"detail": "v10 engine not loaded"})
+        trades = simulate_btc_trades_v10(
+            candles,
+            swings,
+            entry_break=entry_break,
+            sl_mode=sl_mode,
+            sl_pct=float(sl_pct),
+            rr_target=float(rr_target),
+            trailing=trailing,
+            breakeven_r=float(breakeven_r),
+            skip_first=bool(skip_first),
+            bias_timeline=bias_timeline,
+            day_gate=day_gate,
+            fine=fine,
+            entry_selection=entry_selection,
+            cap_days=16,
+            min_body_atr=0.5,
+            max_wick_atr=1.0,
         )
     else:
         trades = simulate_btc_trades(

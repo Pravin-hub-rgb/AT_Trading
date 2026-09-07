@@ -13,8 +13,9 @@
 |-----|-------------|-----|------|-------------------|
 | **htf_v1_15m** | `backend/src/btc/engines/htf_ltf/v1_15m.py` | **15m Decisive inside 1h Flip cap16** — `decisive50` `trailing swing` `BE0` | `fix/btc_15m_trail...:108` `446tr` | `htf_ltf=15m` |
 | **htf_v1_5m** | `backend/src/btc/engines/htf_ltf/v1_5m.py` | **5m Decisive inside 1h Flip cap16** — `5m` `decisive` `minBars14` `trailing swing` | `fix/btc_ideas.md:100` `557tr` | `htf_ltf=5m` |
-| htf_v2_15m_ch | `backend/src/btc/engines/htf_ltf/v2_15m_ch.py` | 15m Chandelier `k3.0` inside 1h | `v2_chandelier.py:1` | `htf_ltf=15m_ch` |
-| htf_v6_15m_adx | `backend/src/btc/engines/htf_ltf/v6_15m_adx.py` | 15m ADX>25 inside 1h | `v6_adx.py:1` | `htf_ltf=15m_adx` |
+| htf_v2_flip_break | `backend/src/btc/engines/htf_ltf/v2_flip_break.py` | LTF only after the 1h flip candle high/low breaks | experiment (not wired to routes) | - |
+| **htf_v3_ext_stop** | `backend/src/btc/engines/htf_ltf/v3_ext_stop.py` | **15m Decisive + Extension Stop 1.5R** — no new same-dir LTF entries once the 1h leg is >1.5R unrealized | 2026-09-07 research | `htf_ltf=15m&htf_ltf_ver=v3` |
+| htf_v4_chop | `backend/src/btc/engines/htf_ltf/v4_chop.py` | CHOP regime gate on 1h entries | REJECTED (busy-chain artifact) | not wired |
 
 Add `htf_v7...` as we brain-storm. Chart `Ver` dropdown (existing `v1..v7`) stays for pure `15m`/`1h` strategies, new `HTF-LTF` dropdown `off|15m|5m` is separate — both can be active.
 
@@ -38,9 +39,40 @@ Add `htf_v7...` as we brain-storm. Chart `Ver` dropdown (existing `v1..v7`) stay
 
 ## Logs
 
-### 2026-09-06 — HTF-LTF v1 created (15m + 5m)
+### 2026-09-06 — HTF-LTF v1 created (15m + 5m) — FINAL VERDICT: YES we did better 34x
 
-- Created doc, `backend/src/btc/engines/htf_ltf/` `v1_15m.py` `v1_5m.py` isolated, `backend/src/btc/btc_routes.py:148` `?htf_ltf=off|15m|5m` + `frontend/src/lib/btcApi.ts:1` + `frontend/src/app/btc/page.tsx:537` HTF-LTF dropdown (off|15m|5m) — `v1 15m` default, `v1 5m` also.
-- HTF `1h cap16 151tr +57.8` `v7_timecap.py:1` + LTF `15m 446tr +5.4` `v1` `5m 557tr +67.9` `fix/btc_ideas.md:100` `15m 1304 swings` `5m 3820` `fix/btc_ideas.md:100`.
+- Created doc, `backend/src/btc/engines/htf_ltf/` `v1_15m.py` `v1_5m.py` isolated, `backend/src/btc/btc_routes.py:148` `?htf_ltf=off|15m|5m` + `frontend/src/lib/btcApi.ts:1` + `frontend/src/app/btc/page.tsx:537` HTF-LTF dropdown (off|15m|5m).
+- **FINAL COMPARISON honest `0.05%+2pt` `1m fills` `one-swing-one-trade` `touchable` FULL window `C:\Users\Pravin\AppData\Local\Temp\opencode\final_comparison.py:1`:**
+  | Strategy | Tr | Win% | Base | Net | maxDD | 
+  |---|---|---|---|---|---|
+  | v1 15m Decisive mb50 BE0 (original 5R) | 446 | 21.7% | +91.0 | **+5.4** | 40.3 |
+  | E1 mb40 BE0 (new best 15m standalone) | 515 | 22.9% | +127.4 | **+24.0** | 50.6 | `sweep_E1_minBars.py:1` |
+  | v6 ADX25 15m Decisive mb50 | 337 | 23.1% | +159.4 | **+90.5** | 23.9 | `sweep_E3_adx.py:1` |
+  | **HTF-LTF 15m inside 1h (LTF only)** | **204** | **30.9%** | **+165.5** | **+127.5** | **17.5** | `quick_htf_ltf.py:1` `htf_ltf/v1_15m.py:1` |
+  | **HTF-LTF 15m+1h Combined (LTF+HTF)** | **355** | — | **+239.6** | **+185.3** | — | **BEST overall 34.6x vs original 15m, 3.6x vs original 1h +51.2** |
+  | v1 1h Flip cap0 (old) | 101 | 41.6% | +62.1 | +51.2 | 9.0 | `research_1h_flip.py:1` |
+  | v1 1h Flip cap16 (new) | 151 | 39.7% | +74.0 | **+57.8** | 10.0 | `v7_timecap.py:1` `cap16 384 bars` `27 Jan 114d -1R→16d +0.289R` |
+  | **Verdict: YES — 15m `+5.4` → `+185.3` (HTF-LTF combined) `34.6x`, 1h `+51.2` → `+57.8` (+6.6R) with cap16, `v6` `+90.5` alone `17x`. All honest `stream+touchable+one-swing-one-trade+1m` `0.05%+2pt`.**
 - Sweep pending: `TF` `5m vs 15m` `LTF` `decisive50` `minBars 50 vs 14` `trailing swing vs off` `BE0` `PF/maxDD` `long -16.5 short +21.9` `quick_sweep_htf.py:1` `bear -30%` `fix/btc_ideas.md:232`.
+
+### 2026-09-07 — v3 Extension Stop ACCEPTED; v4 CHOP / partials / fade / sizing REJECTED
+
+> Engines: `htf_ltf/v3_ext_stop.py` `htf_ltf/v4_chop.py` + `v7_timecap.py` `entry_gate` hook + `v1_15m.py` `htf_entry_gate` passthrough (`ext_stop_r` param, 0 = off, v1 parity byte-identical). All FULL window, stream, 1m fills, 0.05%+2pt. v3 gate = same-dir LTF entries blocked once the 1h leg's unrealized R (ltf_close vs htf entry, in 1h risk units) exceeds 1.5.
+
+| Variant | Tr | Win% | Base | Net | PF | maxDD | maxL | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| v1 LTF plain (ref) | 204 | 30.9% | +165.50 | +127.49 | 2.25 | 17.52 | 15 | baseline |
+| **v3 LTF ext-stop 1.5R** | **187** | **32.6%** | **+175.93** | **+139.95** | **2.47** | **13.15** | **14** | **ACCEPTED - IS +56.3 / OOS +83.7, both beat v1 (+51.4 / +76.1)** |
+| v4 lb14 CHOP<=55 | 195 | 30.8% | - | +121.51 | 2.24 | 16.52 | 11 | REJECT - combined -19.5R vs v1 |
+| v4 lb14 CHOP<=61.8 | 202 | 30.2% | - | +121.82 | 2.20 | 17.52 | 15 | REJECT - combined -7.9R |
+| v4 lb14<=61.8 + v3 combo | 187 | 31.6% | - | +132.12 | 2.38 | 13.15 | 14 | REJECT - vs v3 alone -7.8R |
+| secure 1.5R -> lock (S-1)R | 199 | 45.7% | - | +101.09 | 2.35 | 13.20 | 10 | REJECT - -39R net, same DD |
+| partial 50% @1R + BE | 199 | 54.8% | - | +33.51 | 1.84 | 7.50 | 6 | REJECT - -106R net |
+| fade when ext>1R (opposite 15m) | 46 fades | 13.0% | - | -27.07 | 0.54 | - | 13 | REJECT - opposite 15m breaks in an extended 1h move are pullback traps |
+
+- Extension buckets (1h unrealized R at 15m entry -> same-dir outcome): -1..0R PF 2.49 | 0..1R PF 2.13 | 1..1.5R PF 4.95 | **1.5..2R PF 0.02** | >2R PF 0.37 -> cutoff 1.5R (1..1.5R is the golden zone, do not cut at 1.0).
+- CHOP post-hoc estimate (+20.4R saved) was a **busy-chain artifact**: proper engine integration (entry_gate in v7, busy re-simulated) degrades BOTH IS and OOS. Skipped windows free the 1h engine to re-enter earlier in worse spots.
+- Rejected without full runs (bucket evidence): 4h bias agree (DISAGREE did better: +85.6 vs +41.9), wait-for-+1R confirmation (-1..0R bucket avg +1.06 beats it), fresh-windows-only (G2 filter 127->35 net), HTF breakeven 1R/1.5R (net 57.8 -> 18.6/37.4).
+- Sizing study (merged book, LTF legs at fraction f of 1h size): v1 book best net/DD at f=0.5 (7.84); **v3 book best AT f=1.0: net +197.71R, maxDD 22.75R, net/DD 8.69** - v3 fixes the risk-stacking problem, no downsizing needed.
+- UI: HTF-LTF got its own Crazy Lab box in Strategy Summary + Ver dropdown (v1 | v3) next to the HTF-LTF selector, persisted to localStorage (`btc_htf_ltf_ver`). Verdict: run v3.
 

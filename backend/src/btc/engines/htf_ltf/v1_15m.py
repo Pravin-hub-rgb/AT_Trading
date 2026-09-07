@@ -21,11 +21,24 @@ def simulate_htf_ltf_15m(
     bias_timeline=None,
     day_gate=None,
     entry_selection: str = "stream",
+    ext_stop_r: float = 0.0,
+    htf_entry_gate=None,
 ) -> dict:
     """Run HTF 1h flip cap16 and LTF 15m decisive inside HTF windows.
 
     Returns dict with htf_trades, ltf_trades, combined stats.
     HTF and LTF have separate busy_until, LTF only enters when inside HTF window and dir matches.
+
+    ext_stop_r (0 = off, v3 runs it at 1.5): block same-dir LTF entries once the
+    HTF leg is already `ext_stop_r` * risk unrealized in profit. Research
+    (2026-09-07, FULL window 1h/15m): same-dir entries taken when the 1h leg is
+    beyond ~+1.5R go 8-14% win rate (vs 30-50% below) — the 1h target is fixed
+    3R, so late entries buy the top of the leg. v3 numbers: 187tr 32.6%
+    +139.95 net PF 2.47 maxDD 13.15R vs v1 204tr 30.9% +127.49 PF 2.25
+    maxDD 17.52R. IS +56.3 / OOS +83.7 — both halves improve over v1.
+    Fading (opposite-dir entries when extended) was tested and REJECTED
+    (fade legs PF 0.54 — opposite 15m breaks inside an extended 1h move are
+    pullback traps).
     """
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import simulate_btc_trades, trade_stats, _collect_signals
@@ -35,15 +48,19 @@ def simulate_htf_ltf_15m(
         candles_htf, swings_htf,
         entry_break=htf_entry_break, sl_mode=sl_mode, rr_target=rr_target, trailing="off", breakeven_r=htf_breakeven,
         skip_first=True, bias_timeline=bias_timeline, day_gate=day_gate, fine=fine_ltf, entry_selection=entry_selection, cap_days=htf_cap_days,
+        entry_gate=htf_entry_gate,
     )
-    # Build HTF intervals
+    # Build HTF intervals — (entry_ts, exit_ts, dir, trade_no, entry_price, sl).
+    # The px fields power the ext_stop_r gate (unrealized 1h R at each LTF
+    # signal bar = (ltf_close - htf_entry) * htf_dir / htf_risk).
     intervals = []
     for t in htf_trades:
         if t["outcome"] == "open":
             continue
-        intervals.append((int(t["entry_ts"]), int(t["exit_ts"]), 1 if t["dir"]=="long" else -1, t["trade_no"]))
+        intervals.append((int(t["entry_ts"]), int(t["exit_ts"]), 1 if t["dir"]=="long" else -1,
+                          t["trade_no"], float(t["entry_price"]), float(t["sl"])))
     intervals.sort(key=lambda x: x[0])
-    starts = [s for s,_,_,_ in intervals]
+    starts = [s for s,_,_,_,_,_ in intervals]
 
     # LTF signals filtered by HTF window
     # We will run LTF engine but with custom gate: only signals inside intervals and dir matches
@@ -61,11 +78,21 @@ def simulate_htf_ltf_15m(
         idx = bs.bisect_right(starts, bar_ts) - 1
         if idx < 0:
             continue
-        s_ts, e_ts, htf_dir, _ = intervals[idx]
+        s_ts, e_ts, htf_dir, _, hentry, hsl = intervals[idx]
         if not (s_ts < bar_ts <= e_ts):
             continue
         if sig["dir"] != htf_dir:
             continue
+        # ext_stop_r > 0 (v3): extension stop — once the 1h leg is beyond
+        # ext_stop_r unrealized, fresh same-dir entries are late (research:
+        # 8-14% WR there). Opposite-dir entries stay blocked (fade tested,
+        # PF 0.54 — pullback traps).
+        if ext_stop_r > 0:
+            hrisk = abs(hentry - hsl)
+            if hrisk > 0:
+                ext = (float(candles_ltf[sig["bar"]]["close"]) - hentry) * htf_dir / hrisk
+                if ext > ext_stop_r:
+                    continue
         filtered_sigs.append(sig)
 
     # Now simulate LTF trades from filtered signals (we need to run full engine but with filtered signals)

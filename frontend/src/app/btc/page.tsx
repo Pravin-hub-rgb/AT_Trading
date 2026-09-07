@@ -33,6 +33,7 @@ const BT_KEY = "btc_bt_params";
 const MASTER_KEY = "btc_master_mode";
 const VER_KEY = "btc_version";
 const HTF_KEY = "btc_htf_ltf";
+const HTF_VER_KEY = "btc_htf_ltf_ver";
 
 const BT_DEFAULTS: BtcBacktestParams = {
   entryBreak: "decisive",
@@ -135,6 +136,7 @@ export default function BtcPage() {
   const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
   const [showMasterInfo, setShowMasterInfo] = useState(true);
   const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
+  const [htfLtfVer, setHtfLtfVer] = useState<"v1" | "v3">("v1");
   const [version, setVersion] = useState<BtcVersion>("v1");
   const [versionLabels, setVersionLabels] = useState<Record<string, string>>({
     v1: "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
@@ -144,6 +146,9 @@ export default function BtcPage() {
     v5: "v5 BE1 (breakeven 1R)",
     v6: "v6 ADX>25 — BEST +90.5 net",
     v7: "v7 TimeCap 16d (1h Flip) — BEST +57.8 net",
+    v8: "v8 Break High/Low + Opposite Cancel",
+    v9: "v9 Conditional Cap 2R→30d",
+    v10: "v10 Flip Strength Body/ATR",
   });
 
   // restore saved prefs (localStorage only on client)
@@ -159,9 +164,11 @@ export default function BtcPage() {
       if (Number.isFinite(n) && n > 0) setLimit(n);
     }
     const v = window.localStorage.getItem(VER_KEY) as BtcVersion | null;
-    if (v && ["v1","v2","v3","v4","v5","v6","v7"].includes(v)) setVersion(v);
+    if (v && ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"].includes(v)) setVersion(v);
     const htf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
     if (htf && ["off","5m","15m"].includes(htf)) setHtfLtf(htf as any);
+    const htfVer = window.localStorage.getItem(HTF_VER_KEY) as "v1" | "v3" | null;
+    if (htfVer && ["v1","v3"].includes(htfVer)) setHtfLtfVer(htfVer);
     const mm = window.localStorage.getItem(MASTER_KEY);
     const modeM = mm ? BTC_MASTER_MODES.find((x) => x.value === mm) : undefined;
     // MASTER always wins: the params must match the selected strategy, otherwise
@@ -244,12 +251,16 @@ export default function BtcPage() {
     window.localStorage.setItem(HTF_KEY, v);
     setHtfLtf(v);
   };
+  const changeHtfLtfVer = (v: "v1" | "v3") => {
+    window.localStorage.setItem(HTF_VER_KEY, v);
+    setHtfLtfVer(v);
+  };
 
   useEffect(() => {
     if (!hydrated || !tradesOn) return;
     let cancelled = false;
     setBtError(null);
-    getBtcBacktest(tf, mode, limit, btParams, version, htfLtf)
+    getBtcBacktest(tf, mode, limit, btParams, version, htfLtf, htfLtfVer)
       .then((res) => {
         if (!cancelled) setBtData(res);
       })
@@ -559,7 +570,7 @@ export default function BtcPage() {
               className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b]"
               title="Crazy-ideas version — v1 lock cap16, v2 Chandelier, v3 HTF, v4 Partial, v5 BE1, v6 ADX, v7 TimeCap. Each has its own engine, never disturbs v1."
             >
-              {(["v1","v2","v3","v4","v5","v6","v7"] as BtcVersion[]).map((v) => (
+              {(["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"] as BtcVersion[]).map((v) => (
                 <option key={v} value={v}>
                   {v} {versionLabels[v] ? `— ${versionLabels[v]}` : ""}
                 </option>
@@ -581,6 +592,17 @@ export default function BtcPage() {
               <option value="15m">15m inside 1h</option>
               <option value="5m">5m inside 1h</option>
             </select>
+            {htfLtf !== "off" && (
+              <select
+                value={htfLtfVer}
+                onChange={(e) => changeHtfLtfVer(e.target.value as "v1" | "v3")}
+                className="rounded border border-[#10b981] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#10b981]"
+                title="HTF-LTF engine version — v3 Extension Stop: no new same-dir LTF entries once the 1h leg is beyond +1.5R unrealized. Research: 187tr 32.6% +139.95 net PF 2.47 maxDD 13.15R (v1: 204tr 30.9% +127.49 PF 2.25 maxDD 17.52R). IS+OOS both improve."
+              >
+                <option value="v1">v1 plain</option>
+                <option value="v3">v3 ext-stop 1.5R</option>
+              </select>
+            )}
             <span className="hidden text-[10px] text-[#8b949e] lg:inline">{htfLtf==="off"?"normal":`1h → ${htfLtf} execution`}</span>
           </div>
 
@@ -839,6 +861,25 @@ export default function BtcPage() {
               label="Max DD"
               value={`${btData.stats.max_drawdown_r}R`}
               accent="#f97316"
+            />
+            <Stat
+              label="PF"
+              value={`${(btData.stats as any).profit_factor ?? "-"}`}
+              accent={(btData.stats as any).profit_factor >= 1.5 ? "#10b981" : "#ef4444"}
+            />
+            <Stat
+              label="Max Cons Loss"
+              value={`${(btData.stats as any).max_consecutive_losses ?? "-"}L`}
+              accent="#ef4444"
+            />
+            <Stat
+              label="DD Dur"
+              value={`${(btData.stats as any).max_drawdown_duration_trades ?? "-"}tr`}
+              accent="#f97316"
+            />
+            <Stat
+              label="Avg Hold"
+              value={`${(btData.stats as any).avg_bars_held ?? "-"} bars`}
             />
             <Stat
               label="Long / Short"
@@ -1115,6 +1156,51 @@ export default function BtcPage() {
         </div>
       ) : null}
 
+      {/* HTF-LTF Crazy Lab - own version track: ?htf_ltf=15m&htf_ltf_ver=v1|v3 */}
+      <div className="rounded-md border border-[#10b981]/40 bg-[#0d1117] px-4 py-3 text-xs text-[#c9d1d9]">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded bg-[#10b981] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">Crazy Lab</span>
+          <span className="text-xs font-semibold text-[#e6edf3]">HTF-LTF — 1h Flip cap16 + 15m Decisive inside (honest FULL window, 0.05%+2pt)</span>
+          <span className="text-[10px] text-[#8b949e]">— click Ver to load (sets HTF-LTF 15m + version)</span>
+        </div>
+        <div className="mt-2 overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="text-[#8b949e]">
+              <tr>
+                <th className="py-1 pr-2">Ver</th>
+                <th className="py-1 pr-2">Engine</th>
+                <th className="py-1 pr-2 text-right">Trades</th>
+                <th className="py-1 pr-2 text-right">Win%</th>
+                <th className="py-1 pr-2 text-right">BaseR</th>
+                <th className="py-1 pr-2 text-right">NetR</th>
+                <th className="py-1 pr-2 text-right">PF</th>
+                <th className="py-1 pr-2 text-right">maxDD</th>
+                <th className="py-1">Verdict</th>
+              </tr>
+            </thead>
+            <tbody className="text-[#e6edf3]">
+              <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v1"?"bg-[#10b981]/10":""}`}>
+                <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v1");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v1"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v1</button></td>
+                <td className="py-1 pr-2">Plain window gate</td><td className="py-1 pr-2 text-right">204</td><td className="py-1 pr-2 text-right">30.9%</td><td className="py-1 pr-2 text-right">+165.5</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+127.5</td><td className="py-1 pr-2 text-right">2.25</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">Baseline (locked)</td>
+              </tr>
+              <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v3"?"bg-[#10b981]/10":""}`}>
+                <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v3");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v3"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v3</button></td>
+                <td className="py-1 pr-2">Ext-Stop 1.5R</td><td className="py-1 pr-2 text-right">187</td><td className="py-1 pr-2 text-right">32.6%</td><td className="py-1 pr-2 text-right">+175.9</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+140.0</td><td className="py-1 pr-2 text-right">2.47</td><td className="py-1 pr-2 text-right">13.2</td><td className="py-1 text-[10px]">✅ BEST — IS+OOS both beat v1</td>
+              </tr>
+              <tr className="border-t border-[#21262d] opacity-60">
+                <td className="py-1 pr-2 font-mono">v4</td>
+                <td className="py-1 pr-2">CHOP&lt;=61.8 gate</td><td className="py-1 pr-2 text-right">202</td><td className="py-1 pr-2 text-right">30.2%</td><td className="py-1 pr-2 text-right">—</td><td className="py-1 pr-2 text-right font-semibold text-[#ef4444]">+121.8</td><td className="py-1 pr-2 text-right">2.20</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">❌ rejected — busy-chain artifact</td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="mt-1 text-[10px] text-[#6e7681]">
+            LTF-leg stats (1m fills, stream, touchable SL, swing trail). Combined book (1h legs + 15m legs): v1 +185.3R net / 27.7R maxDD, v3 +197.7R / 22.8R.
+            v3 Extension Stop: no new same-dir 15m entries once the 1h leg is &gt;+1.5R unrealized — removes the 8-14% WR late-entry zone; IS +56.3 / OOS +83.7, both beat v1 (+51.4 / +76.1).
+            Rejected 2026-09-07: 4h bias agree, wait-for-+1R, fresh-window-only, HTF breakeven, fade-when-extended (PF 0.54), partial/secure exits, CHOP gate (v4). Sizing study: v3 at full size already best net/DD 8.69 — no downsizing needed. Doc: <code>fix/multi tf 1hour flip and lower tf execution.md</code>
+          </p>
+        </div>
+      </div>
+
       {/* MASTER strategy — "how it works" card (fix/btc_ideas.md sweep winners) */}
       {tradesOn && currentMaster ? (
         <div className="rounded-md border border-[#6366f1]/40 bg-[#0d1117] px-4 py-3 text-xs text-[#c9d1d9]">
@@ -1185,6 +1271,9 @@ export default function BtcPage() {
           {version === "v5" && <p><b className="text-[#e6edf3]">v5 BE1</b> — same as v1 but <code>breakeven 1R</code> <code>v5_be1.py:1</code> <code>sl=entry</code> after +1R.</p>}
           {version === "v6" && <p><b className="text-[#e6edf3]">v6 ADX&gt;25</b> — <code>ADX14 Wilder</code> <code>v6_adx.py:1</code> gate at entry bar, else skip. Filters chop, best on 15m decisive: <code>337tr +90.5 net PF1.68</code> vs v1 +5.4.</p>}
           {version === "v7" && <p><b className="text-[#e6edf3]">v7 TimeCap 16d (1h Flip)</b> — <code>cap_days 16</code> <code>v7_timecap.py:1</code> <code>market exit</code> at cap, <code>151tr +57.8 net PF0.78 maxDD10</code> vs cap0 <code>101tr +51.2 PF1.97</code> — 27 Jan 114d -1R → 16d +0.289R, best net. Isolated, v1 15m never disturbed.</p>}
+          {version === "v8" && <p><b className="text-[#e6edf3]">v8 Break High/Low</b> — <code>v8_break_entry.py:1</code> <code>entry high/low break</code> `confirm_bars 3` next 1h must break entry high/low without opposite breach — 13 Feb 06:30 & 17 Mar 19:30 cases. <code>95tr +16.0 net PF1.37</code> vs v1 151tr +57.8 — worse, break entry loses edge.</p>}
+          {version === "v9" && <p><b className="text-[#e6edf3]">v9 Conditional Cap 2R→30d</b> — <code>v9_conditional_cap.py:1</code> <code>cap 16d if &lt;2R at 16d cut, else extend to 30d</code> `thr 2.5` `148tr +58.3 PF1.73` vs v1 +57.8 — marginal +0.5R.</p>}
+          {version === "v10" && <p><b className="text-[#e6edf3]">v10 Flip Strength</b> — <code>v10_strength.py:1</code> `body&gt;=0.5 ATR wick&lt;=1.0 ATR` `angle` `leg/bars/ATR` `min_swing_angle`. <code>129tr +37.3 PF1.47</code> `body 0.3` vs `122tr +26.9` `0.5` `99tr +4.2` `0.8` — strength filter cuts trades -20R.</p>}
           <p className="text-[#6e7681]">Switch Ver dropdown up top — chart trades + Strategy Summary update via <code>?version={version}</code> <code>GET /api/btc/backtest</code> &amp; <code>/summary</code>. Each version has its own file <code>backend/src/btc/engines/v*.py</code>, never disturbs <code>v1</code> (except 1h Flip now cap16). Log: <code>fix/btc_15m_trail_decisive_crazy_ideas.md</code> + <code>fix/btc_1h_flip_fixed_crazy_ideas.md</code></p>
         </div>
       </div>

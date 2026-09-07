@@ -535,7 +535,7 @@ def simulate_btc_trades(
 
 
 def trade_stats(trades: list[dict]) -> dict:
-    """Summary stats + R equity curve over CLOSED trades."""
+    """Summary stats + R equity curve over CLOSED trades — now with streaks, PF, DD duration."""
     closed = [t for t in trades if t["outcome"] != "open"]
     rs = [t["r_multiple"] for t in closed]
     wins = [r for r in rs if r > 0]
@@ -545,12 +545,57 @@ def trade_stats(trades: list[dict]) -> dict:
     cum = 0.0
     peak = 0.0
     max_dd = 0.0
+    peak_idx = 0
+    max_dd_start = 0
+    max_dd_end = 0
+    max_dd_duration_bars = 0
+    # For DD duration: track peak cum and when maxDD occurred
+    cum_history: list[float] = []
     for k, r in enumerate(rs, start=1):
         cum += r
-        peak = max(peak, cum)
-        max_dd = max(max_dd, peak - cum)
+        cum_history.append(cum)
+        if cum > peak:
+            peak = cum
+            peak_idx = k
+        dd = peak - cum
+        if dd > max_dd:
+            max_dd = dd
+            max_dd_start = peak_idx
+            max_dd_end = k
+            max_dd_duration_bars = k - peak_idx
         equity.append({"trade_no": k, "cum_r": round(cum, 3)})
 
+    # Streaks
+    max_consec_losses = 0
+    max_consec_wins = 0
+    cur_losses = 0
+    cur_wins = 0
+    for r in rs:
+        if r <= 0:
+            cur_losses += 1
+            cur_wins = 0
+            max_consec_losses = max(max_consec_losses, cur_losses)
+        else:
+            cur_wins += 1
+            cur_losses = 0
+            max_consec_wins = max(max_consec_wins, cur_wins)
+
+    # Profit factor and payoff
+    gross_win = sum(wins) if wins else 0.0
+    gross_loss = abs(sum(losses)) if losses else 0.0
+    profit_factor = round(gross_win / gross_loss, 2) if gross_loss > 0 else 0.0
+    payoff = round((gross_win / len(wins)) / (gross_loss / len(losses)) if wins and losses else 0.0, 2)
+    expectancy = round(sum(rs) / len(rs), 3) if rs else 0.0
+
+    # Avg bars held
+    bars_held = [int(t.get("bars_held", 0)) for t in closed]
+    avg_bars = round(sum(bars_held) / len(bars_held), 1) if bars_held else 0.0
+    max_bars = max(bars_held) if bars_held else 0
+
+    # DD duration in trades and estimated days (for 1h TF, 24 bars =1 day; for 15m 96 bars =1 day)
+    # We report DD duration as number of trades in drawdown, and also bars
+    # For time-based DD duration, we can estimate via bars_held sum? Simpler: use max_dd_duration_bars as trade count in DD
+    # Also compute max losing streak duration in R
     return {
         "trades": len(trades),
         "closed": len(closed),
@@ -562,7 +607,17 @@ def trade_stats(trades: list[dict]) -> dict:
         "avg_r": round(sum(rs) / len(rs), 3) if rs else 0.0,
         "avg_win_r": round(sum(wins) / len(wins), 3) if wins else 0.0,
         "avg_loss_r": round(sum(losses) / len(losses), 3) if losses else 0.0,
+        "profit_factor": profit_factor,
+        "payoff": payoff,
+        "expectancy": expectancy,
         "max_drawdown_r": round(max_dd, 2),
+        "max_drawdown_duration_trades": max_dd_duration_bars,
+        "max_drawdown_start": max_dd_start,
+        "max_drawdown_end": max_dd_end,
+        "max_consecutive_losses": max_consec_losses,
+        "max_consecutive_wins": max_consec_wins,
+        "avg_bars_held": avg_bars,
+        "max_bars_held": max_bars,
         "longs": sum(1 for t in trades if t["dir"] == "long"),
         "shorts": sum(1 for t in trades if t["dir"] == "short"),
         "outcomes": _outcome_counts(trades),

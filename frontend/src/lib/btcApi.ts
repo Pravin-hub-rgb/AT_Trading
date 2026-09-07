@@ -4,7 +4,7 @@ import { API_BASE } from "./api";
 
 export type BtcTf = "1m" | "5m" | "15m" | "1h" | "4h";
 export type BtcMode = "continuous" | "daily";
-export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7";
+export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10";
 
 export interface BtcCandle {
   date: string;
@@ -133,7 +133,17 @@ export interface BtcTradeStats {
   avg_r: number;
   avg_win_r: number;
   avg_loss_r: number;
+  profit_factor?: number;
+  payoff?: number;
+  expectancy?: number;
   max_drawdown_r: number;
+  max_drawdown_duration_trades?: number;
+  max_drawdown_start?: number;
+  max_drawdown_end?: number;
+  max_consecutive_losses?: number;
+  max_consecutive_wins?: number;
+  avg_bars_held?: number;
+  max_bars_held?: number;
   longs: number;
   shorts: number;
   /** outcome histogram, count-sorted (target/sl/be/trail/open) */
@@ -185,6 +195,11 @@ export interface BtcBacktestResponseParams {
   min_bars: number;
   regime: RegimeMode;
   version: BtcVersion;
+  /** present when htf_ltf != off */
+  htf_ltf?: string;
+  htf_ltf_ver?: string;
+  /** present when htf_ltf_ver = v3 (extension stop level, in R) */
+  ext_stop_r?: number;
 }
 
 export interface BtcBacktestResponse {
@@ -196,6 +211,8 @@ export interface BtcBacktestResponse {
 }
 
 export type HtfLtfMode = "off" | "5m" | "15m";
+/** HTF-LTF engine version — v3 = Extension Stop (no new same-dir entries once the 1h leg is >1.5R unrealized). */
+export type HtfLtfVer = "v1" | "v3";
 
 export async function getBtcBacktest(
   tf: BtcTf,
@@ -204,6 +221,7 @@ export async function getBtcBacktest(
   p: BtcBacktestParams,
   version: BtcVersion = "v1",
   htfLtf: HtfLtfMode = "off",
+  htfLtfVer: HtfLtfVer = "v1",
 ): Promise<BtcBacktestResponse> {
   const q = new URLSearchParams({
     tf,
@@ -222,6 +240,7 @@ export async function getBtcBacktest(
     regime: p.regime,
     version,
     htf_ltf: htfLtf,
+    htf_ltf_ver: htfLtfVer,
   });
   if (limit && limit > 0) q.set("limit", String(limit));
   const res = await fetch(`${API_BASE}/api/btc/backtest?${q.toString()}`, {
