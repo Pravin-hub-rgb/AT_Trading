@@ -3,6 +3,44 @@ from __future__ import annotations
 import bisect
 from typing import Optional
 
+def _fs_intervals(swings, candles, opposite=False):
+    """Generate FS intervals from swing direction; opposite=True trades opposite to swing (FS chop is opposite to swing)."""
+    intervals=[]
+    sw=sorted([s for s in swings if s.get("swing_index",0)>=1], key=lambda x: x["swing_index"])
+    for i,s in enumerate(sw):
+        if s.get("kind") not in ("FS","SUS"):
+            # On BTC all are FS, but keep check
+            if s.get("kind") != "FS":
+                continue
+        swing_dir=1 if s.get("dir")=="up" else -1
+        htf_dir=-swing_dir if opposite else swing_dir
+        # start after confirmation (fs_at or confirmed)
+        start_idx=s.get("confirmed_at_idx")
+        if start_idx is None:
+            start_idx=s["seg"]["end_idx"]
+        # sometimes fs_at_idx is more precise (chop cross)
+        fs_idx=s.get("fs_at_idx")
+        if fs_idx is not None and fs_idx > start_idx:
+            start_idx=fs_idx
+        if i+1 < len(sw):
+            end_idx=sw[i+1]["seg"]["start_idx"] -1
+        else:
+            end_idx=len(candles)-1
+        if start_idx is None or end_idx is None or start_idx<0 or end_idx<0 or start_idx>=len(candles) or end_idx>=len(candles):
+            continue
+        if start_idx >= end_idx:
+            continue
+        # start ts is next bar after confirmation to avoid lookahead (like v1_15m s_ts < bar_ts)
+        s_ts=int(candles[min(start_idx+1, len(candles)-1)]["ts"])
+        e_ts=int(candles[end_idx]["ts"])
+        if e_ts <= s_ts:
+            continue
+        hentry=float(s["seg"]["end_px"])
+        hsl=float(s["seg"]["start_px"])
+        intervals.append((s_ts,e_ts,htf_dir,0,hentry,hsl))
+    intervals.sort(key=lambda x: x[0])
+    return intervals
+
 def simulate_htf_ltf_15m(
     candles_htf: list[dict],
     swings_htf: list[dict],
@@ -25,6 +63,11 @@ def simulate_htf_ltf_15m(
     htf_entry_gate=None,
     sl_buf_atr: float = 0.0,
     sl_hhll_n: int = 0,
+    trail_delay_bars: int = 0,
+    trail_delay_r: float = 0.0,
+    atr_trail_k: float = 0.0,
+    ltf_entry_gate=None,
+    cooldown_bars: int = 0,
 ) -> dict:
     """Run HTF 1h flip cap16 and LTF 15m decisive inside HTF windows.
 
@@ -45,24 +88,30 @@ def simulate_htf_ltf_15m(
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import simulate_btc_trades, trade_stats, _collect_signals
 
-    # HTF trades
-    htf_trades = simulate_btc_trades_v7(
-        candles_htf, swings_htf,
-        entry_break=htf_entry_break, sl_mode=sl_mode, rr_target=rr_target, trailing="off", breakeven_r=htf_breakeven,
-        skip_first=True, bias_timeline=bias_timeline, day_gate=day_gate, fine=fine_ltf, entry_selection=entry_selection, cap_days=htf_cap_days,
-        entry_gate=htf_entry_gate,
-    )
-    # Build HTF intervals — (entry_ts, exit_ts, dir, trade_no, entry_price, sl).
-    # The px fields power the ext_stop_r gate (unrealized 1h R at each LTF
-    # signal bar = (ltf_close - htf_entry) * htf_dir / htf_risk).
-    intervals = []
-    for t in htf_trades:
-        if t["outcome"] == "open":
-            continue
-        intervals.append((int(t["entry_ts"]), int(t["exit_ts"]), 1 if t["dir"]=="long" else -1,
-                          t["trade_no"], float(t["entry_price"]), float(t["sl"])))
-    intervals.sort(key=lambda x: x[0])
-    starts = [s for s,_,_,_,_,_ in intervals]
+    # HTF trades / intervals — support FS and FS-opposite (trade opposite to swing, FS chop is opposite to swing)
+    if htf_entry_break in ("fs", "fs_opposite"):
+        opposite = htf_entry_break == "fs_opposite"
+        intervals = _fs_intervals(swings_htf, candles_htf, opposite=opposite)
+        htf_trades = []  # FS intervals are swing-based, not trade-based, no HTF trades to combine
+        starts = [s for s,_,_,_,_,_ in intervals]
+    else:
+        htf_trades = simulate_btc_trades_v7(
+            candles_htf, swings_htf,
+            entry_break=htf_entry_break, sl_mode=sl_mode, rr_target=rr_target, trailing="off", breakeven_r=htf_breakeven,
+            skip_first=True, bias_timeline=bias_timeline, day_gate=day_gate, fine=fine_ltf, entry_selection=entry_selection, cap_days=htf_cap_days,
+            entry_gate=htf_entry_gate,
+        )
+        # Build HTF intervals — (entry_ts, exit_ts, dir, trade_no, entry_price, sl).
+        # The px fields power the ext_stop_r gate (unrealized 1h R at each LTF
+        # signal bar = (ltf_close - htf_entry) * htf_dir / htf_risk).
+        intervals = []
+        for t in htf_trades:
+            if t["outcome"] == "open":
+                continue
+            intervals.append((int(t["entry_ts"]), int(t["exit_ts"]), 1 if t["dir"]=="long" else -1,
+                              t["trade_no"], float(t["entry_price"]), float(t["sl"])))
+        intervals.sort(key=lambda x: x[0])
+        starts = [s for s,_,_,_,_,_ in intervals]
 
     # LTF signals filtered by HTF window
     # We will run LTF engine but with custom gate: only signals inside intervals and dir matches
@@ -70,8 +119,28 @@ def simulate_htf_ltf_15m(
     from src.btc.btc_engine import _trail_events, _exit_on_fine
     import bisect as bs
 
-    # Collect LTF signals
-    ltf_sigs = _collect_signals(swings_ltf, ltf_entry_break, skip_first=True, selection=entry_selection, candles=candles_ltf)
+    # Collect LTF signals — support FS / FS-opposite (trade opposite to swing, FS chop is opposite)
+    if ltf_entry_break in ("fs", "fs_opposite"):
+        ltf_sigs=[]
+        sw_sorted=sorted([s for s in swings_ltf if s.get("swing_index",0)>=1], key=lambda x: x["swing_index"])
+        for s in sw_sorted:
+            if s.get("kind") not in ("FS","SUS"):
+                if s.get("kind") != "FS":
+                    continue
+            swing_dir=1 if s.get("dir")=="up" else -1
+            sig_dir=-swing_dir if ltf_entry_break=="fs_opposite" else swing_dir
+            # entry bar after FS confirmation (like next bar)
+            bar=s.get("confirmed_at_idx")
+            if bar is None:
+                bar=s["seg"]["end_idx"]
+            bar=int(bar)+1
+            if bar <0 or bar >= len(candles_ltf):
+                continue
+            sl_pivot=float(s["seg"]["start_px"])
+            ltf_sigs.append({"bar": bar, "dir": sig_dir, "swing_start_px": sl_pivot, "swing_no": int(s.get("swing_index",0)), "kind": "FS"})
+        ltf_sigs.sort(key=lambda x: x["bar"])
+    else:
+        ltf_sigs = _collect_signals(swings_ltf, ltf_entry_break, skip_first=True, selection=entry_selection, candles=candles_ltf)
     # Filter by HTF window
     filtered_sigs = []
     for sig in ltf_sigs:
@@ -104,10 +173,9 @@ def simulate_htf_ltf_15m(
     if n==0:
         return {"htf_trades": htf_trades, "ltf_trades": [], "intervals": intervals}
     candle_ts = [int(c["ts"]) for c in candles_ltf]
-    # ATR(14) on 15m bars (simple mean of TR) - only built when the v5 SL
-    # buffer variant is active (sl_buf_atr > 0).
+    # ATR(14) on 15m bars (simple mean of TR) - built for SL buffer or ATR trail
     atr15 = None
-    if sl_buf_atr > 0:
+    if sl_buf_atr > 0 or atr_trail_k > 0:
         tr_l = [0.0] * n
         for _i in range(n):
             _c = candles_ltf[_i]
@@ -122,11 +190,26 @@ def simulate_htf_ltf_15m(
             _lo = max(0, _i - 13)
             atr15[_i] = sum(tr_l[_lo:_i + 1]) / (_i - _lo + 1)
     fine_ts = [int(c["ts"]) for c in fine_ltf] if fine_ltf else []
+    fine_atr = None
+    if atr_trail_k>0 and fine_ltf:
+        tr_f=[0.0]*len(fine_ltf)
+        for _i in range(len(fine_ltf)):
+            _c=fine_ltf[_i]
+            if _i==0:
+                tr_f[_i]=float(_c["high"])-float(_c["low"])
+            else:
+                _pc=float(fine_ltf[_i-1]["close"])
+                tr_f[_i]=max(float(_c["high"])-float(_c["low"]), abs(float(_c["high"])-_pc), abs(float(_c["low"])-_pc))
+        fine_atr=[0.0]*len(fine_ltf)
+        for _i in range(len(fine_ltf)):
+            _lo=max(0,_i-13)
+            fine_atr[_i]=sum(tr_f[_lo:_i+1])/(_i-_lo+1)
     # We need to run LTF engine with filtered signals
     # Simplify: call simulate_btc_trades with a hack — temporarily replace swings_ltf breaks to only include filtered? Instead we run manual loop
     # Manual loop similar to simulate_btc_trades but using filtered_sigs
     ltf_trades = []
     busy_until = -1
+    last_loss_bar = -999999  # cooldown: bar index of last losing exit
     # Need trail events etc — we will just call simulate_btc_trades on filtered swings that only contain filtered signals?
     # Alternative: run simulate_btc_trades but it will re-collect signals; to force filtered, we can create a fake swings list that only has those signals?
     # Simpler: run loop directly
@@ -138,6 +221,10 @@ def simulate_htf_ltf_15m(
     for sig in filtered_sigs:
         i = sig["bar"]
         if i <= busy_until or i >= n-1:
+            continue
+        if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars:
+            continue  # cooldown: skip signals within N bars of a losing exit
+        if ltf_entry_gate is not None and not ltf_entry_gate(i):
             continue
         direction = int(sig["dir"])
         entry = float(candles_ltf[i]["close"])
@@ -172,6 +259,8 @@ def simulate_htf_ltf_15m(
         sl_cur=sl
         best=entry
         events=_te(swings_ltf, direction) if ltf_trailing=="swing" else []
+        if trail_delay_bars>0 and events:
+            events=[(idx+trail_delay_bars, px) for idx,px in events]
         ev_idx=-1
         exit_idx=None
         exit_px=None
@@ -182,6 +271,16 @@ def simulate_htf_ltf_15m(
         for j in range(i+1, n if not fine_ltf else i+1):
             c=candles_ltf[j]
             hi=float(c["high"]); lo=float(c["low"])
+            # track best for delay_r gate
+            if direction==1:
+                if hi>best: best=hi
+            else:
+                if lo<best: best=lo
+            can_trail=True
+            if trail_delay_r>0 and ltf_trailing=="swing":
+                cur_r=(best-entry)/risk if direction==1 else (entry-best)/risk
+                if cur_r < trail_delay_r:
+                    can_trail=False
             if direction==1:
                 if lo <= sl_cur:
                     fill=min(sl_cur, float(c["open"]))
@@ -193,13 +292,18 @@ def simulate_htf_ltf_15m(
                     break
                 if ltf_breakeven>0 and hi >= entry+ltf_breakeven*risk and sl_cur < entry:
                     sl_cur=entry
-                elif ltf_trailing=="swing":
+                elif can_trail and ltf_trailing=="swing":
                     while ev_idx+1 < len(events) and events[ev_idx+1][0] <= j:
                         ev_idx+=1
                         if events[ev_idx][0] < i: continue
                         cand=events[ev_idx][1]
                         if sl_cur < cand < lo:
                             sl_cur=cand
+                elif ltf_trailing=="atr" and atr_trail_k>0 and atr15 is not None:
+                    atr_val = atr15[j]
+                    chand = best - atr_trail_k*atr_val
+                    if chand > sl_cur:
+                        sl_cur = chand
             else:
                 if hi >= sl_cur:
                     fill=max(sl_cur, float(c["open"]))
@@ -211,13 +315,18 @@ def simulate_htf_ltf_15m(
                     break
                 if ltf_breakeven>0 and lo <= entry - ltf_breakeven*risk and sl_cur > entry:
                     sl_cur=entry
-                elif ltf_trailing=="swing":
+                elif can_trail and ltf_trailing=="swing":
                     while ev_idx+1 < len(events) and events[ev_idx+1][0] <= j:
                         ev_idx+=1
                         if events[ev_idx][0] < i: continue
                         cand=events[ev_idx][1]
                         if hi < cand < sl_cur:
                             sl_cur=cand
+                elif ltf_trailing=="atr" and atr_trail_k>0 and atr15 is not None:
+                    atr_val = atr15[j]
+                    chand = best + atr_trail_k*atr_val
+                    if chand < sl_cur:
+                        sl_cur = chand
         if fine_ltf:
             # 1m precise
             candle_ts_ltf=candle_ts
@@ -234,6 +343,15 @@ def simulate_htf_ltf_15m(
                 c=fine_ltf[k]
                 hi=float(c["high"]); lo=float(c["low"]); ts=int(c["ts"])
                 if direction==1:
+                    if hi>best_f: best_f=hi
+                else:
+                    if lo<best_f: best_f=lo
+                can_trail_f=True
+                if trail_delay_r>0 and ltf_trailing=="swing":
+                    cur_r=(best_f-entry)/risk if direction==1 else (entry-best_f)/risk
+                    if cur_r < trail_delay_r:
+                        can_trail_f=False
+                if direction==1:
                     if lo <= sl_cur_f:
                         fill=min(sl_cur_f, float(c["open"]))
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f <= sl0 else "be" if abs(sl_cur_f-entry)<=1e-9 else "trail")
@@ -243,11 +361,18 @@ def simulate_htf_ltf_15m(
                         break
                     if ltf_breakeven>0 and hi >= entry+ltf_breakeven*risk and sl_cur_f < entry:
                         sl_cur_f=entry
-                    while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
-                        ev_idx_f+=1
-                        cand=events_ts[ev_idx_f][1]
-                        if sl_cur_f < cand < lo:
-                            sl_cur_f=cand
+                    if can_trail_f and ltf_trailing=="swing":
+                        while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
+                            ev_idx_f+=1
+                            cand=events_ts[ev_idx_f][1]
+                            if sl_cur_f < cand < lo:
+                                sl_cur_f=cand
+                    elif ltf_trailing=="atr" and atr_trail_k>0 and atr15 is not None:
+                        ltf_idx = bisect.bisect_right(candle_ts, ts)-1
+                        atr_val = atr15[max(0, ltf_idx)]
+                        chand=best_f - atr_trail_k*atr_val
+                        if chand > sl_cur_f:
+                            sl_cur_f=chand
                 else:
                     if hi >= sl_cur_f:
                         fill=max(sl_cur_f, float(c["open"]))
@@ -258,11 +383,18 @@ def simulate_htf_ltf_15m(
                         break
                     if ltf_breakeven>0 and lo <= entry - ltf_breakeven*risk and sl_cur_f > entry:
                         sl_cur_f=entry
-                    while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
-                        ev_idx_f+=1
-                        cand=events_ts[ev_idx_f][1]
-                        if hi < cand < sl_cur_f:
-                            sl_cur_f=cand
+                    if can_trail_f and ltf_trailing=="swing":
+                        while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
+                            ev_idx_f+=1
+                            cand=events_ts[ev_idx_f][1]
+                            if hi < cand < sl_cur_f:
+                                sl_cur_f=cand
+                    elif ltf_trailing=="atr" and atr_trail_k>0 and atr15 is not None:
+                        ltf_idx = bisect.bisect_right(candle_ts, ts)-1
+                        atr_val = atr15[max(0, ltf_idx)]
+                        chand=best_f + atr_trail_k*atr_val
+                        if chand < sl_cur_f:
+                            sl_cur_f=chand
             if fk is None:
                 outcome="open"
                 exit_idx=n-1
@@ -307,5 +439,7 @@ def simulate_htf_ltf_15m(
             "bars_held": exit_idx - i,  # type: ignore
         })
         busy_until=exit_idx  # type: ignore
+        if cooldown_bars > 0 and float(r_multiple) < 0:
+            last_loss_bar = exit_idx  # type: ignore  # cooldown: start timer after a loss
 
     return {"htf_trades": htf_trades, "ltf_trades": ltf_trades, "intervals": intervals}

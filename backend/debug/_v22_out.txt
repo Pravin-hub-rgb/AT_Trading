@@ -1,0 +1,24 @@
+=== BASELINE v18 (one-swing-one-trade) ===
+baseline: 330t  net +331.1R  PF 2.81  maxDD 9.7R  winrate 36.4%
+    yearly: 2023:+52.8  2024:+86.3  2025:+123.0  2026:+69.0
+
+=== VARIANT v22 (any mark can trade) ===
+variant: 430t  net +361.1R  PF 2.53  maxDD 13.5R  winrate 36.7%
+    yearly: 2023:+50.9  2024:+100.3  2025:+152.3  2026:+57.5
+
+Delta: +100 trades, +30.0R
+
+Variant trades Jan 12-18 (to trace the Jan 14-16 cascade):
+
+first 5 variant trades overall:
+  #1 short FLIP entry 2023-01-03 20:15:00  r=-0.941
+  #2 long  FLIP entry 2023-01-04 23:00:00  r=-0.940
+  #3 short B2   entry 2023-01-06 16:30:00  r=-0.981
+  #4 short B2   entry 2023-01-11 21:00:00  r=-0.948
+  #5 long  FLIP entry 2023-01-19 09:45:00  r=+9.224
+
+variant trade #1-#6 r_multiples: [-0.941, -0.94, -0.981, -0.948, 9.224, -0.956]
+
+baseline entries missing in variant: 108  (first 6: ['2023-01-14 22:45:00', '2023-01-16 07:45:00', '2023-02-04 03:45:00', '2023-03-03 06:45:00', '2023-03-30 01:15:00', '2023-03-31 02:00:00'])
+new entries only in variant: 208
+new-only trades: 208  avg +0.331R  t=1.96

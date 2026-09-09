@@ -1,0 +1,40 @@
+=== HTF 1h intervals (flip set) overlapping Jan 14-17 ===
+  2023-01-14 14:00 -> 2023-01-20 22:00  long  entry=20834.40 sl=20225.06
+
+=== LTF trades taken in Jan 14-17 ===
+  #3 long  FLIP entry 2023-01-14 22:45:00 @ 20856.20  exit 2023-01-15 08:45:00 @ 20594.00  sl  -1.000R
+  #4 long  B2   entry 2023-01-16 07:45:00 @ 21344.06  exit 2023-01-16 20:30:00 @ 20665.00  trail  -0.952R
+
+=== RAW 15m swings & break marks Jan 14 12:00 -> Jan 16 12:00 ===
+  sw26 dir=down declared=? seg 2023-01-14 06:15:00(21167.12) -> 2023-01-14 15:45:00(20225.06) conf@18:30
+     B1   down @ 2023-01-14 14:45:00  px=20691.13
+     B2   down @ 2023-01-14 15:45:00  px=20225.06
+  sw27 dir=up declared=? seg 2023-01-14 16:00:00(20289.60) -> 2023-01-14 20:00:00(21200.00) conf@06:00
+     B1   up   @ 2023-01-14 18:00:00  px=20755.19
+     B2   up   @ 2023-01-14 19:00:00  px=20982.26
+  sw28 dir=down declared=? seg 2023-01-15 05:00:00(21072.27) -> 2023-01-15 08:45:00(20551.01) conf@10:00
+     B1   down @ 2023-01-14 21:00:00  px=20707.94
+     FLIP up   @ 2023-01-14 22:45:00  px=20896.00
+     B2   down @ 2023-01-15 06:00:00  px=20629.84
+  sw29 dir=up declared=? seg 2023-01-15 14:30:00(20573.13) -> 2023-01-15 22:45:00(21050.74) conf@23:30
+     B1   up   @ 2023-01-15 10:00:00  px=20742.83
+     B2   up   @ 2023-01-15 10:45:00  px=20777.00
+     FLIP down @ 2023-01-15 14:00:00  px=20625.83
+     FLIP up   @ 2023-01-15 19:00:00  px=20789.58
+  sw30 dir=up declared=? seg 2023-01-15 23:30:00(20665.00) -> 2023-01-16 07:45:00(21439.59) conf@12:00
+     B1   up   @ 2023-01-16 06:30:00  px=21023.60
+     B2   up   @ 2023-01-16 07:45:00  px=21439.59
+  sw31 dir=down declared=? seg 2023-01-16 08:00:00(21371.06) -> 2023-01-16 20:30:00(20611.48) conf@20:45
+     B1   down @ 2023-01-16 09:15:00  px=21031.68
+     B2   down @ 2023-01-16 13:30:00  px=20666.00
+
+=== ALL LTF signals Jan 14-17 with filter verdict (walk-state aware) ===
+  2023-01-14 01:30:00  B2   1     sw 25  chop=45.9  use=flip  skip: outside long window (01-12 12:00->01-12 13:00)
+  2023-01-14 15:45:00  B2   -1    sw 26  chop=35.9  use=flip  skip: outside long window (01-12 12:00->01-12 13:00)
+  2023-01-14 19:00:00  B2   1     sw 27  chop=47.3  use=flip  skip: outside long window (01-12 12:00->01-12 13:00)
+  2023-01-14 22:45:00  FLIP 1     sw 28  chop=51.3  use=flip  skip: dir mismatch (signal 1, window long)
+  2023-01-15 10:45:00  B2   1     sw 29  chop=54.5  use=flip  skip: dir mismatch (signal 1, window long)
+  2023-01-16 07:45:00  B2   1     sw 30  chop=46.4  use=flip  skip: dir mismatch (signal 1, window long)
+  2023-01-16 13:30:00  B2   -1    sw 31  chop=47.1  use=flip  skip: dir mismatch (signal -1, window long)
+
+(real engine trades in window: #3 FLIP long Jan 14 22:45 -> SL Jan 15 08:45 -1R; #4 B2 long Jan 16 07:45 -> trail Jan 16 20:30 -0.952R)

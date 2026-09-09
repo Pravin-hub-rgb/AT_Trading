@@ -4,7 +4,7 @@ import { API_BASE } from "./api";
 
 export type BtcTf = "1m" | "5m" | "15m" | "1h" | "4h";
 export type BtcMode = "continuous" | "daily";
-export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10";
+export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18";
 
 export interface BtcCandle {
   date: string;
@@ -240,8 +240,8 @@ export interface BtcBacktestResponse {
 }
 
 export type HtfLtfMode = "off" | "5m" | "15m";
-/** HTF-LTF engine version — v3 = Extension Stop, v5 = + ATR-buffered SL, v6 = + N-bar structure SL. */
-export type HtfLtfVer = "v1" | "v3" | "v5" | "v6";
+/** HTF-LTF engine version — v3 = Extension Stop, v5 = + ATR-buffered SL, v6 = + N-bar structure SL, v11 = Conditional HTF (all-positive 539 +172.5), v12+cd20 = FROZEN BASELINE (414 trades, +265.3R gross, all 4 years positive), v13 = cooldown 30, v15 = recover 1R, v16 = entry distance (rejected), v17 = ATR filter (rejected), v18 = streak halt at 5L (+331.1R net, NEW BEST), v19 = 1.5R window (rejected, see fix/research_v19.md). */
+export type HtfLtfVer = "v1" | "v3" | "v5" | "v6" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19";
 
 export async function getBtcBacktest(
   tf: BtcTf,

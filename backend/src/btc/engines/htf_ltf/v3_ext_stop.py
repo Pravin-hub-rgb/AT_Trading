@@ -37,6 +37,7 @@ def simulate_htf_ltf_ext_stop(
     day_gate=None,
     entry_selection: str = "stream",
     ext_stop_r: float = 1.5,
+    cooldown_bars: int = 0,
 ) -> dict:
     """v1_15m with the extension stop gate armed (ext_stop_r, default 1.5R)."""
     from src.btc.engines.htf_ltf.v1_15m import simulate_htf_ltf_15m
@@ -55,4 +56,5 @@ def simulate_htf_ltf_ext_stop(
         day_gate=day_gate,
         entry_selection=entry_selection,
         ext_stop_r=ext_stop_r,
+        cooldown_bars=cooldown_bars,
     )

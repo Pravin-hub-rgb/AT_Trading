@@ -1,0 +1,30 @@
+=== v21 'breach is breach' experiment ===
+variant engine built (6 surgical replacements verified)
+data loaded
+
+--- Jan 5-6 swings (your swing 9) ---
+  [BASE] swing#8 B2 01-05 00:30(16991.87) -> 01-06 16:30(16709.88) :: B1@01-05 02:00 px=16787.85 | B2@01-06 16:30 px=16709.88
+  [BASE] swing#9 B2 01-06 19:00(16679.00) -> 01-07 01:45(17041.00) :: B1@01-06 17:15 px=16754.19 | FLIP@01-06 17:45 px=16727.63 | B2@01-06 19:15 px=16794.26
+  [VARIANT] swing#8 B2 01-05 00:30(16991.87) -> 01-05 19:30(16753.00) :: B1@01-05 02:00 px=16787.85 | B2@01-05 19:30 px=16753.00
+  [VARIANT] swing#9 FLIP 01-05 20:00(16775.00) -> 01-05 21:00(16879.82) :: B1@01-05 20:00 px=16799.95 | FLIP@01-05 20:15 px=16821.42
+  [VARIANT] swing#10 B2 01-05 21:15(16879.44) -> 01-06 12:00(16779.96) :: B1@01-05 22:45 px=16823.22 | B2@01-06 11:00 px=16792.12
+  [VARIANT] swing#11 FLIP 01-06 19:00(16679.00) -> 01-07 01:45(17041.00) :: B1@01-06 12:45 px=16802.10 | B2@01-06 13:45 px=16812.22 | FLIP@01-06 14:45 px=16780.15 | FLIP@01-06 19:15 px=16812.22
+
+15m chain: base swings=2936 {'FLIP': 1405, 'B2': 1531}
+15m chain: variant swings=2958 {'FLIP': 1454, 'B2': 1504}
+1h chain: base=1352 {'B2': 737, 'FLIP': 615} | variant=1376 {'B2': 763, 'FLIP': 613}
+
+=== v18 A/B ===
+
+BASELINE          : trades=330 net=+331.1R worst=-1.00
+  yearly: 2023:+52.8R/74t 2024:+86.3R/100t 2025:+123.0R/91t 2026:+69.0R/65t
+
+VARIANT 15m only  : trades=334 net=+347.0R worst=-1.00
+  yearly: 2023:+64.5R/79t 2024:+91.2R/103t 2025:+122.8R/91t 2026:+68.4R/61t
+
+VARIANT 15m + 1h  : trades=331 net=+291.1R worst=-1.00
+  yearly: 2023:+59.5R/78t 2024:+79.6R/104t 2025:+112.0R/86t 2026:+40.1R/63t
+
+bootstrap delta (variant15m - base): mean=+13.6R t=0.00 90%CI=[-171.1, +203.9]
+
+done

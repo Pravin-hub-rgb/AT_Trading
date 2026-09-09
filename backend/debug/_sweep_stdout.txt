@@ -1,0 +1,24 @@
+start
+data loaded
+{"label": "thresh=55", "lb": 14, "thresh": 55, "trades": 335, "totalR": 338.1, "win%": 35.8, "maxDD": 10.4, "maxConsecL": 4, "flip_trades": 225, "b2_trades": 110, "years": {"2023": 58.2, "2024": 84.5, "2025": 125.0, "2026": 70.4}, "neg_years": 0}
+done thresh=55
+{"label": "thresh=58", "lb": 14, "thresh": 58, "trades": 348, "totalR": 334.2, "win%": 36.2, "maxDD": 10.9, "maxConsecL": 4, "flip_trades": 278, "b2_trades": 70, "years": {"2023": 59.3, "2024": 85.9, "2025": 123.1, "2026": 65.9}, "neg_years": 0}
+done thresh=58
+{"label": "thresh=60", "lb": 14, "thresh": 60, "trades": 340, "totalR": 331.0, "win%": 35.6, "maxDD": 10.7, "maxConsecL": 4, "flip_trades": 296, "b2_trades": 44, "years": {"2023": 56.8, "2024": 82.9, "2025": 124.5, "2026": 66.7}, "neg_years": 0}
+done thresh=60
+{"label": "thresh=61.8", "lb": 14, "thresh": 61.8, "trades": 330, "totalR": 331.1, "win%": 36.4, "maxDD": 9.7, "maxConsecL": 4, "flip_trades": 305, "b2_trades": 25, "years": {"2023": 52.8, "2024": 86.3, "2025": 123.0, "2026": 69.0}, "neg_years": 0}
+done thresh=61.8
+{"label": "thresh=64", "lb": 14, "thresh": 64, "trades": 336, "totalR": 305.5, "win%": 35.7, "maxDD": 9.0, "maxConsecL": 4, "flip_trades": 325, "b2_trades": 11, "years": {"2023": 50.1, "2024": 73.8, "2025": 123.6, "2026": 58.0}, "neg_years": 0}
+done thresh=64
+{"label": "thresh=66", "lb": 14, "thresh": 66, "trades": 338, "totalR": 307.8, "win%": 35.8, "maxDD": 9.0, "maxConsecL": 4, "flip_trades": 332, "b2_trades": 6, "years": {"2023": 50.1, "2024": 73.1, "2025": 126.6, "2026": 58.0}, "neg_years": 0}
+done thresh=66
+{"label": "thresh=70", "lb": 14, "thresh": 70, "trades": 336, "totalR": 306.7, "win%": 35.7, "maxDD": 9.0, "maxConsecL": 4, "flip_trades": 335, "b2_trades": 1, "years": {"2023": 50.1, "2024": 73.1, "2025": 127.5, "2026": 56.0}, "neg_years": 0}
+done thresh=70
+{"label": "lb=10", "lb": 10, "thresh": 61.8, "trades": 345, "totalR": 310.4, "win%": 35.7, "maxDD": 13.9, "maxConsecL": 4, "flip_trades": 304, "b2_trades": 41, "years": {"2023": 40.5, "2024": 88.4, "2025": 130.9, "2026": 50.5}, "neg_years": 0}
+done lb=10
+{"label": "lb=20", "lb": 20, "thresh": 61.8, "trades": 345, "totalR": 323.4, "win%": 35.4, "maxDD": 9.5, "maxConsecL": 4, "flip_trades": 317, "b2_trades": 28, "years": {"2023": 58.9, "2024": 82.2, "2025": 126.4, "2026": 55.9}, "neg_years": 0}
+done lb=20
+{"label": "lb=28", "lb": 28, "thresh": 61.8, "trades": 343, "totalR": 323.2, "win%": 35.9, "maxDD": 9.1, "maxConsecL": 4, "flip_trades": 323, "b2_trades": 20, "years": {"2023": 58.1, "2024": 81.9, "2025": 126.3, "2026": 57.0}, "neg_years": 0}
+done lb=28
+{"label": "boundary", "near_61.8_+/-2": 23, "near_R": 26.7, "flip_if_60": 12, "R_flip_if_60": 8.3, "flip_if_64": 11, "R_flip_if_64": 18.4, "chop_min_at_entry": 25.0, "chop_max_at_entry": 69.5}
+ALL DONE

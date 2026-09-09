@@ -18,9 +18,10 @@ BTC_DATA_DIR = ROOT_DIR / "data" / "btc"
 
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60  # 19800
 
-# One dataset, one CSV per timeframe. The CSVs hold the full merged series:
-# in-sample window (2025-01-01 -> 2025-10-01, preserved in
-# data/btc/backup_insample/) PLUS the Binance extension (2025-10-01 -> now).
+# One dataset, one CSV per timeframe. The CSVs hold the FULL merged series:
+# 2023-01-01 -> now (1.93M x1m, 32259 x1h as of 2026-09-06), backfilled
+# 2023-2024 + 2025 in-sample. Old snapshots preserved in
+# data/btc/backup_pre2023/ (2025-01-01->now) and backup_insample/ (2025-01-01->2025-10-01).
 # Refresh new candles with: python debug/_btc_fetch_update.py --tf 5m
 BTC_TFS: dict[str, str] = {
     "1m": "BTCUSDT_1m.csv",

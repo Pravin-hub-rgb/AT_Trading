@@ -17,13 +17,13 @@ export const BTC_MASTER_MODES: BtcMasterMode[] = [
   {
     value: "flip1h20",
     label: "#1 Flip Fixed 3R (1h) — Cap 16d",
-    hint: "BEST 1h — 151tr 39.7% +74.0 → +57.8 net (cap 16d, 16.0d max hold).",
+    hint: "BEST 1h IS — 151tr 39.7% +74.0 → +57.8 net (cap16) | FULL 2023-26: 355tr 31.5% +25.2 net +0.07/tr fragile",
     desc: [
-      "RANK #1. 1h FLIP mb20 fixed 3R BE0 + time cap 16d — v1 is now cap 16 default (old cap 0 101tr +51.2 removed).",
-      "Stream + touchable SL + one-swing-one-trade + 1m fills FULL window: 151 tr / 39.7% win / +74.0 base → +57.8 net, PF 0.78 maxDD 10.0.",
-      "Cap 16d: 27 Jan 114d -1R → 16d +0.289R time exit (12 Feb), busy freed → trades 101→151, win 42→60, net +6.6R. No 2-3 month holds.",
+      "RANK #1 on IS (2025-26). 1h FLIP mb20 fixed 3R BE0 + time cap 16d — v1 is now cap 16 default (old cap 0 101tr +51.2 removed). IS: 151 tr / 39.7% win / +74.0 base → +57.8 net, PF 0.78 maxDD 10.0, cap 16d: 27 Jan 114d -1R → 16d +0.289R, trades 101→151.",
+      "FULL 2023-26 (live 1.93M x1m, 32259 x1h): 355 tr / 31.5% win / +25.2 net +0.07/tr — fragile, -35R in 2023 chop. Keep as regime gate for HTF-LTF, not standalone profit engine.",
+      "Stream + touchable SL + one-swing-one-trade + 1m fills, fees 0.05%+2pt. Old snapshot in backup_pre2023/.",
     ],
-    ref: "1h: 151 tr / 39.7% win / +74.0 base → +57.8 net (cap 16d, one swing one trade)",
+    ref: "1h IS: 151 tr / 39.7% +74.0→+57.8 net | FULL 2023-26: 355 tr / 31.5% +25.2 net (one swing one trade, cap16)",
     bestTf: "1h",
     preset: { entryBreak: "flip", slMode: "swing", rrTarget: 3, trailing: "off", breakevenR: 0, minBars: 20, bias: "off", regime: "off", feePct: 0.05, slippagePts: 2 },
   },

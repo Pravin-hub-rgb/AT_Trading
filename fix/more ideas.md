@@ -67,3 +67,7 @@ we can also do something like if by 16 day we are not at least 2R then we cut bu
 we have to do research like does the flip candle strength matter???
 like the failing trade where the flip candle was good?
 stuff like the swing movement or angle stuff like that .. 
+
+
+---
+what is we need b1, b2 and b3 .. like in this new setup we be needing 3 times confirmation and flip can only be considered only when there is b2 and same for b3 too.

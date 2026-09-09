@@ -68,8 +68,36 @@ try:
     from src.btc.engines.htf_ltf.v6_sl_hhll import simulate_htf_ltf_sl_hhll
 except Exception:
     simulate_htf_ltf_sl_hhll = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v11_conditional_htf import simulate_htf_ltf_conditional
+except Exception:
+    simulate_htf_ltf_conditional = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v13_cooldown import simulate_htf_ltf_cooldown
+except Exception:
+    simulate_htf_ltf_cooldown = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v15_recover_1r import simulate_htf_ltf_recover_1r
+except Exception:
+    simulate_htf_ltf_recover_1r = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v16_entry_dist import simulate_htf_ltf_entry_dist
+except Exception:
+    simulate_htf_ltf_entry_dist = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v17_atr_filter import simulate_htf_ltf_atr_filter
+except Exception:
+    simulate_htf_ltf_atr_filter = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v18_streak_halt import simulate_htf_ltf_streak_halt
+except Exception:
+    simulate_htf_ltf_streak_halt = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v11_conditional_htf import simulate_htf_ltf_conditional
+except Exception:
+    simulate_htf_ltf_conditional = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17"]
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -81,6 +109,12 @@ VERSION_LABELS = {
     "v8": "v8 Break High/Low + Opposite Cancel",
     "v9": "v9 Conditional Cap 2R→30d",
     "v10": "v10 Flip Strength Body/ATR",
+    "v11": "v11 Conditional HTF (chop-aware entry)",
+    "v12": "v12 Cooldown 20 bars (cd20) — FROZEN BASELINE",
+    "v13": "v13 Cooldown 30 bars",
+    "v15": "v15 Recover 1R mode",
+    "v16": "v16 Entry distance <=30% (rejected)",
+    "v17": "v17 ATR<0.5% filter (rejected)",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -516,6 +550,7 @@ def btc_backtest(
     version: str = "v1",
     htf_ltf: str = "off",
     htf_ltf_ver: str = "v1",
+    cooldown_bars: int = 0,
 ):
     """Position engine over the swing chain: entries on swing breaks,
     swing/pct SL, fixed R target, breakeven-R and trailing.
@@ -568,8 +603,8 @@ def btc_backtest(
         return JSONResponse(status_code=400, content={"detail": f"version must be one of {BTC_VERSIONS}"})
     if htf_ltf not in ("off", "5m", "15m"):
         return JSONResponse(status_code=400, content={"detail": "htf_ltf must be off | 5m | 15m"})
-    if htf_ltf_ver not in ("v1", "v3", "v5", "v6"):
-        return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3 | v5 | v6"})
+    if htf_ltf_ver not in ("v1", "v3", "v5", "v6", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19"):
+        return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3 | v5 | v6 | v11 | v12 | v13 | v15 | v16 | v17"})
 
     win, err = _load_window(tf, limit)
     if err:
@@ -636,6 +671,7 @@ def btc_backtest(
         "version": version,
         "htf_ltf": htf_ltf,
         "htf_ltf_ver": htf_ltf_ver,
+        "cooldown_bars": cooldown_bars,
     }
     # HTF-LTF nested execution: 1h Flip cap16 + 15m/5m Decisive inside HTF window
     if htf_ltf != "off" and simulate_htf_ltf_15m is not None:
@@ -665,7 +701,7 @@ def btc_backtest(
                     htf_entry_break="flip", ltf_entry_break="decisive",
                     sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
                     htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
-                    ext_stop_r=1.5,
+                    ext_stop_r=1.5, cooldown_bars=cooldown_bars,
                 )
                 params["ext_stop_r"] = 1.5
             elif htf_ltf_ver == "v5" and simulate_htf_ltf_sl_buffer is not None:
@@ -675,7 +711,7 @@ def btc_backtest(
                     htf_entry_break="flip", ltf_entry_break="decisive",
                     sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
                     htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
-                    ext_stop_r=1.5, sl_buf_atr=0.25,
+                    ext_stop_r=1.5, sl_buf_atr=0.25, cooldown_bars=cooldown_bars,
                 )
                 params["ext_stop_r"] = 1.5
                 params["sl_buf_atr"] = 0.25
@@ -686,10 +722,157 @@ def btc_backtest(
                     htf_entry_break="flip", ltf_entry_break="decisive",
                     sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
                     htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
-                    ext_stop_r=1.5, sl_hhll_n=30,
+                    ext_stop_r=1.5, sl_hhll_n=30, cooldown_bars=cooldown_bars,
                 )
                 params["ext_stop_r"] = 1.5
                 params["sl_hhll_n"] = 30
+            elif htf_ltf_ver == "v11" and simulate_htf_ltf_conditional is not None:
+                # v11 BEST all-positive 539 +172.5 chop_or_atr_low HIGH chop>61.8 OR LOW vol atr%<0.35 -> decisive else Flip — beats v5 +4.4R total +28.6R 2023
+                nested = simulate_htf_ltf_conditional(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    sl_buf_atr=0.25, ext_stop_r=1.5, chop_thresh=61.8, atr_low_thresh=0.35,
+                    mode="chop_or_atr_low", cooldown_bars=cooldown_bars,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["htf_conditional"] = "chop_or_atr_low"
+            elif htf_ltf_ver == "v12" and simulate_htf_ltf_conditional is not None:
+                # v12 = v11 (conditional HTF) + cooldown 20 bars.
+                # FROZEN BASELINE: 414 trades, +265.30R gross, all 4 years positive.
+                # Do not modify — this is the reference version.
+                nested = simulate_htf_ltf_conditional(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    sl_buf_atr=0.25, ext_stop_r=1.5, chop_thresh=61.8, atr_low_thresh=0.35,
+                    mode="b2_vs_flip_chop", cooldown_bars=20,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+                params["htf_conditional"] = "b2_vs_flip_chop"
+            elif htf_ltf_ver == "v13" and simulate_htf_ltf_cooldown is not None:
+                # v13 = v5 (ext-stop + ATR buffer) + loss cooldown: after a
+                # losing LTF trade, skip LTF signals for cooldown_bars
+                # (20 x 15m = 5h). Live-safe, sequential, no lookahead.
+                nested = simulate_htf_ltf_cooldown(
+                    htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
+                    htf_entry_break="flip", ltf_entry_break="decisive",
+                    sl_mode=sl_mode, rr_target=rr_target, ltf_trailing="swing",
+                    htf_breakeven=0.0, ltf_breakeven=0.0, htf_cap_days=16,
+                    ext_stop_r=1.5, sl_buf_atr=0.25, cooldown_bars=20,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+            elif htf_ltf_ver == "v15" and simulate_htf_ltf_recover_1r is not None:
+                # v15 = v12 (b2_vs_flip + ext-stop + ATR buf) + cooldown
+                # + post-loss 1R secure: after a loss, the next trade exits
+                # immediately at +1R (no trail) to lock in the recovery
+                # profit. After a win, trails normally.
+                nested = simulate_htf_ltf_recover_1r(
+                    candles_htf=htf_candles,
+                    swings_htf=htf_swings,
+                    candles_ltf=ltf_candles,
+                    swings_ltf=ltf_swings,
+                    fine_ltf=ltf_fine,
+                    sl_buf_atr=0.25,
+                    ext_stop_r=1.5,
+                    chop_thresh=61.8,
+                    mode="b2_vs_flip_chop",
+                    cooldown_bars=20,
+                    recover_1r=True,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+                params["recover_1r"] = True
+            elif htf_ltf_ver == "v16" and simulate_htf_ltf_entry_dist is not None:
+                # v16 = v12+cd20 + entry distance gate: skip LTF entries
+                # that are >30% into the 15m swing (research: 0-30% bucket
+                # = +220R net, >30% buckets = only +45R combined).
+                nested = simulate_htf_ltf_entry_dist(
+                    candles_htf=candles_htf,
+                    swings_htf=swings_htf,
+                    candles_ltf=ltf_candles,
+                    swings_ltf=ltf_swings,
+                    fine_ltf=ltf_fine,
+                    sl_buf_atr=0.25,
+                    ext_stop_r=1.5,
+                    chop_thresh=61.8,
+                    mode="b2_vs_flip_chop",
+                    cooldown_bars=20,
+                    recover_1r=False,
+                    entry_dist_max=0.3,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+                params["entry_dist_max"] = 0.3
+            elif htf_ltf_ver == "v17" and simulate_htf_ltf_atr_filter is not None:
+                # v17 = v12+cd20 + ATR<0.5% filter: skip LTF entries where
+                # ATR% at entry > 0.5%. Research: low-vol bucket IS +0.449,
+                # OOS +0.961 (2.14x better). Hypothesis: low vol = tighter SL
+                # = more room for runners to develop.
+                nested = simulate_htf_ltf_atr_filter(
+                    candles_htf=candles_htf,
+                    swings_htf=swings_htf,
+                    candles_ltf=ltf_candles,
+                    swings_ltf=ltf_swings,
+                    fine_ltf=ltf_fine,
+                    sl_buf_atr=0.25,
+                    ext_stop_r=1.5,
+                    chop_thresh=61.8,
+                    mode="b2_vs_flip_chop",
+                    cooldown_bars=20,
+                    recover_1r=False,
+                    atr_max_pct=0.5,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+                params["atr_max_pct"] = 0.5
+            elif htf_ltf_ver == "v18" and simulate_htf_ltf_streak_halt is not None:
+                # v18 = v12+cd20 + streak halt at 5L: halt trading after 5
+                # consecutive losses, resume on next winner. Research: +322R net
+                # vs +265R without halt (streak analysis test_streak_analysis.py).
+                nested = simulate_htf_ltf_streak_halt(
+                    candles_htf=htf_candles,
+                    swings_htf=htf_swings,
+                    candles_ltf=ltf_candles,
+                    swings_ltf=ltf_swings,
+                    fine_ltf=ltf_fine,
+                    sl_buf_atr=0.25,
+                    ext_stop_r=1.5,
+                    mode="b2_vs_flip_chop",
+                    cooldown_bars=20,
+                    max_consecutive_losses=5,
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+                params["max_consecutive_losses"] = 5
+            elif htf_ltf_ver == "v19" and simulate_htf_ltf_streak_halt is not None:
+                # v19 = v18 with HTF window ending at first touch of 1.5R (r_touch)
+                # instead of the HTF trade's exit. Research 2026-09-08 (fix/research_v19.md):
+                # 242t +200.6R DD8.5 PF2.51 vs v18 330t +331.1R DD9.7 — REJECTED as default
+                # (removed 88 trades avg +1.48R = pullback winners), kept for comparison.
+                nested = simulate_htf_ltf_streak_halt(
+                    candles_htf=htf_candles,
+                    swings_htf=htf_swings,
+                    candles_ltf=ltf_candles,
+                    swings_ltf=ltf_swings,
+                    fine_ltf=ltf_fine,
+                    sl_buf_atr=0.25,
+                    ext_stop_r=1.5,
+                    mode="b2_vs_flip_chop",
+                    cooldown_bars=20,
+                    max_consecutive_losses=5,
+                    window_end="r_touch",
+                )
+                params["ext_stop_r"] = 1.5
+                params["sl_buf_atr"] = 0.25
+                params["cooldown_bars"] = 20
+                params["max_consecutive_losses"] = 5
+                params["window_end"] = "r_touch"
             else:
                 nested = simulate_htf_ltf_15m(
                     htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,

@@ -1,4 +1,4 @@
-﻿"""htf_ltf v6 - Extension Stop + N-bar structure-range SL (built on v1_15m).
+"""htf_ltf v6 - Extension Stop + N-bar structure-range SL (built on v1_15m).
 
 SL placement: the highest high (short) / lowest low (long) of the last
 sl_hhll_n 15m bars - a pure structure-range stop. The smooth-mode variant:
@@ -35,6 +35,7 @@ def simulate_htf_ltf_sl_hhll(
     entry_selection: str = "stream",
     ext_stop_r: float = 1.5,
     sl_hhll_n: int = 30,
+    cooldown_bars: int = 0,
 ) -> dict:
     """v3 ext-stop + SL = highest-high/lowest-low of the last sl_hhll_n bars."""
     from src.btc.engines.htf_ltf.v1_15m import simulate_htf_ltf_15m
@@ -54,4 +55,5 @@ def simulate_htf_ltf_sl_hhll(
         entry_selection=entry_selection,
         ext_stop_r=ext_stop_r,
         sl_hhll_n=sl_hhll_n,
+        cooldown_bars=cooldown_bars,
     )

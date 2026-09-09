@@ -1,4 +1,4 @@
-﻿"""htf_ltf v5 - Extension Stop + ATR-buffered SL (built on v1_15m).
+"""htf_ltf v5 - Extension Stop + ATR-buffered SL (built on v1_15m).
 
 SL placement: touchable swing-start pivot PLUS 0.25 x ATR(14) buffer beyond the
 pivot (away from entry). Survives exact-level stop-hunts and pivot retests for
@@ -35,6 +35,7 @@ def simulate_htf_ltf_sl_buffer(
     entry_selection: str = "stream",
     ext_stop_r: float = 1.5,
     sl_buf_atr: float = 0.25,
+    cooldown_bars: int = 0,
 ) -> dict:
     """v3 ext-stop + SL = swing-start pivot buffered by sl_buf_atr x ATR(14)."""
     from src.btc.engines.htf_ltf.v1_15m import simulate_htf_ltf_15m
@@ -54,4 +55,5 @@ def simulate_htf_ltf_sl_buffer(
         entry_selection=entry_selection,
         ext_stop_r=ext_stop_r,
         sl_buf_atr=sl_buf_atr,
+        cooldown_bars=cooldown_bars,
     )

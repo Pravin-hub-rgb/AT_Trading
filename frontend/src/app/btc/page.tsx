@@ -23,6 +23,7 @@ import {
   type BtcSummaryResponse,
   type BtcTf,
   type BtcVersion,
+  type HtfLtfVer,
 } from "@/lib/btcApi";
 import { BTC_MASTER_DEFAULT, BTC_MASTER_MODES } from "@/lib/btcMaster";
 
@@ -137,7 +138,7 @@ export default function BtcPage() {
   const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
   const [showMasterInfo, setShowMasterInfo] = useState(true);
   const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
-  const [htfLtfVer, setHtfLtfVer] = useState<"v1" | "v3" | "v5" | "v6">("v1");
+  const [htfLtfVer, setHtfLtfVer] = useState<"v1" | "v3" | "v5" | "v6" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19">("v12");
   const [version, setVersion] = useState<BtcVersion>("v1");
   const [versionLabels, setVersionLabels] = useState<Record<string, string>>({
     v1: "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
@@ -150,6 +151,14 @@ export default function BtcPage() {
     v8: "v8 Break High/Low + Opposite Cancel",
     v9: "v9 Conditional Cap 2R→30d",
     v10: "v10 Flip Strength Body/ATR",
+    v11: "v11 Conditional HTF (chop-aware entry)",
+    v12: "v12 Cooldown 20 bars (cd20) — FROZEN BASELINE",
+    v13: "v13 Cooldown 30 bars",
+    v15: "v15 Recover 1R mode",
+    v16: "v16 Entry distance <=30% (rejected)",
+    v17: "v17 ATR<0.5% filter (rejected)",
+    v18: "v18 Streak halt 5L — NEW BEST +322R",
+    v19: "v19 1.5R window (rejected)",
   });
 
   // restore saved prefs (localStorage only on client)
@@ -165,11 +174,11 @@ export default function BtcPage() {
       if (Number.isFinite(n) && n > 0) setLimit(n);
     }
     const v = window.localStorage.getItem(VER_KEY) as BtcVersion | null;
-    if (v && ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"].includes(v)) setVersion(v);
+    if (v && ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12","v13","v15","v16","v17"].includes(v)) setVersion(v);
     const htf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
     if (htf && ["off","5m","15m"].includes(htf)) setHtfLtf(htf as any);
-    const htfVer = window.localStorage.getItem(HTF_VER_KEY) as "v1" | "v3" | "v5" | "v6" | null;
-    if (htfVer && ["v1","v3","v5","v6"].includes(htfVer)) setHtfLtfVer(htfVer);
+    const htfVer = window.localStorage.getItem(HTF_VER_KEY) as "v1" | "v3" | "v5" | "v6" | "v11" | "v12" | null;
+    if (htfVer && ["v1","v3","v5","v6","v11","v12","v13","v15","v16","v17","v18","v19"].includes(htfVer)) setHtfLtfVer(htfVer as any);
     const mm = window.localStorage.getItem(MASTER_KEY);
     const modeM = mm ? BTC_MASTER_MODES.find((x) => x.value === mm) : undefined;
     // MASTER always wins: the params must match the selected strategy, otherwise
@@ -267,9 +276,9 @@ export default function BtcPage() {
     window.localStorage.setItem(HTF_KEY, v);
     setHtfLtf(v);
   };
-  const changeHtfLtfVer = (v: "v1" | "v3" | "v5" | "v6") => {
+  const changeHtfLtfVer = (v: HtfLtfVer) => {
     window.localStorage.setItem(HTF_VER_KEY, v);
-    setHtfLtfVer(v);
+    setHtfLtfVer(v as any);
   };
 
   useEffect(() => {
@@ -649,14 +658,22 @@ export default function BtcPage() {
             {htfLtf !== "off" && (
               <select
                 value={htfLtfVer}
-                onChange={(e) => changeHtfLtfVer(e.target.value as "v1" | "v3" | "v5" | "v6")}
+                onChange={(e) => changeHtfLtfVer(e.target.value as HtfLtfVer)}
                 className="rounded border border-[#10b981] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#10b981]"
-                title="HTF-LTF engine version — v3 Extension Stop: no new same-dir LTF entries once the 1h leg is beyond +1.5R unrealized. Research: 187tr 32.6% +139.95 net PF 2.47 maxDD 13.15R (v1: 204tr 30.9% +127.49 PF 2.25 maxDD 17.52R). IS+OOS both improve."
+                title="HTF-LTF engine version — v11 BEST all-positive 539 +172.5 PF1.77 21.4/25.7/55.4/70.0 (HIGH chop>61.8 OR LOW vol<0.35 → decisive else Flip) vs v5 442 +168, v12+cd20 FROZEN BASELINE 414 +265.3 all years positive. IS+OOS both improve for v11/v12."
               >
                 <option value="v1">v1 plain</option>
                 <option value="v3">v3 ext-stop 1.5R</option>
                 <option value="v5">v5 buf-SL 0.25ATR</option>
                 <option value="v6">v6 hhll-30 SL</option>
+                <option value="v11">v11 BEST all-positive</option>
+                <option value="v12">v12+cd20 FROZEN BASELINE</option>
+                <option value="v13">v13 cooldown 30</option>
+                <option value="v15">v15 recover 1R</option>
+                <option value="v16">v16 entry dist (rejected)</option>
+                <option value="v17">v17 ATR filter (rejected)</option>
+                <option value="v18">v18 streak halt 5L ⭐ NEW BEST</option>
+                <option value="v19">v19 1.5R window (rejected)</option>
               </select>
             )}
             {htfLtf !== "off" && (
@@ -1339,8 +1356,7 @@ export default function BtcPage() {
                 <th className="py-1 pr-2">Engine</th>
                 <th className="py-1 pr-2 text-right">Trades</th>
                 <th className="py-1 pr-2 text-right">Win%</th>
-                <th className="py-1 pr-2 text-right">BaseR</th>
-                <th className="py-1 pr-2 text-right">NetR</th>
+                <th className="py-1 pr-2 text-right">Net</th>
                 <th className="py-1 pr-2 text-right">PF</th>
                 <th className="py-1 pr-2 text-right">maxDD</th>
                 <th className="py-1">Verdict</th>
@@ -1349,30 +1365,83 @@ export default function BtcPage() {
             <tbody className="text-[#e6edf3]">
               <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v1"?"bg-[#10b981]/10":""}`}>
                 <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v1");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v1"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v1</button></td>
-                <td className="py-1 pr-2">Plain window gate</td><td className="py-1 pr-2 text-right">204</td><td className="py-1 pr-2 text-right">30.9%</td><td className="py-1 pr-2 text-right">+165.5</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+127.5</td><td className="py-1 pr-2 text-right">2.25</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">Baseline (locked)</td>
+                <td className="py-1 pr-2">Plain window gate</td><td className="py-1 pr-2 text-right">204</td><td className="py-1 pr-2 text-right">30.9%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+127.5</td><td className="py-1 pr-2 text-right">2.25</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">Baseline (locked) — IS 2025-26 net</td>
               </tr>
               <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v3"?"bg-[#10b981]/10":""}`}>
                 <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v3");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v3"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v3</button></td>
-                <td className="py-1 pr-2">Ext-Stop 1.5R</td><td className="py-1 pr-2 text-right">187</td><td className="py-1 pr-2 text-right">32.6%</td><td className="py-1 pr-2 text-right">+175.9</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+140.0</td><td className="py-1 pr-2 text-right">2.47</td><td className="py-1 pr-2 text-right">13.2</td><td className="py-1 text-[10px]">✅ BEST — IS+OOS both beat v1</td>
+                <td className="py-1 pr-2">Ext-Stop 1.5R</td><td className="py-1 pr-2 text-right">187</td><td className="py-1 pr-2 text-right">32.6%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+140.0</td><td className="py-1 pr-2 text-right">2.47</td><td className="py-1 pr-2 text-right">13.2</td><td className="py-1 text-[10px]">✅ BEST — IS+OOS both beat v1</td>
               </tr>
               <tr className="border-t border-[#21262d] opacity-60">
                 <td className="py-1 pr-2 font-mono">v4</td>
-                <td className="py-1 pr-2">CHOP&lt;=61.8 gate</td><td className="py-1 pr-2 text-right">202</td><td className="py-1 pr-2 text-right">30.2%</td><td className="py-1 pr-2 text-right">—</td><td className="py-1 pr-2 text-right font-semibold text-[#ef4444]">+121.8</td><td className="py-1 pr-2 text-right">2.20</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">❌ rejected — busy-chain artifact</td>
+                <td className="py-1 pr-2">CHOP&lt;=61.8 gate</td><td className="py-1 pr-2 text-right">202</td><td className="py-1 pr-2 text-right">30.2%</td><td className="py-1 pr-2 text-right font-semibold text-[#ef4444]">+121.8</td><td className="py-1 pr-2 text-right">2.20</td><td className="py-1 pr-2 text-right">17.5</td><td className="py-1 text-[10px]">❌ rejected — busy-chain artifact</td>
               </tr>
               <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v5"?"bg-[#10b981]/10":""}`}>
                 <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v5");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v5"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v5</button></td>
-                <td className="py-1 pr-2">Ext-Stop + SL pivot+0.25ATR</td><td className="py-1 pr-2 text-right">179</td><td className="py-1 pr-2 text-right">34.6%</td><td className="py-1 pr-2 text-right">+182.4</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+152.8</td><td className="py-1 pr-2 text-right">2.70</td><td className="py-1 pr-2 text-right">11.2</td><td className="py-1 text-[10px]">✅ BEST net — maxL 10 (IS maxL 7)</td>
+                <td className="py-1 pr-2">Ext-Stop + SL pivot+0.25ATR</td><td className="py-1 pr-2 text-right">179</td><td className="py-1 pr-2 text-right">34.6%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+152.8</td><td className="py-1 pr-2 text-right">2.70</td><td className="py-1 pr-2 text-right">11.2</td><td className="py-1 text-[10px]">✅ BEST net IS — maxL 10 (IS maxL 7)</td>
               </tr>
               <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v6"?"bg-[#10b981]/10":""}`}>
                 <td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v6");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v6"?"bg-[#10b981] text-white":"bg-[#21262d] text-[#8b949e]"}`}>v6</button></td>
-                <td className="py-1 pr-2">Ext-Stop + SL hhll-30</td><td className="py-1 pr-2 text-right">169</td><td className="py-1 pr-2 text-right">39.6%</td><td className="py-1 pr-2 text-right">+161.8</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+138.4</td><td className="py-1 pr-2 text-right">2.87</td><td className="py-1 pr-2 text-right">9.3</td><td className="py-1 text-[10px]">✅ smooth mode — WR 40%, maxL 9</td>
+                <td className="py-1 pr-2">Ext-Stop + SL hhll-30</td><td className="py-1 pr-2 text-right">169</td><td className="py-1 pr-2 text-right">39.6%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+138.4</td><td className="py-1 pr-2 text-right">2.87</td><td className="py-1 pr-2 text-right">9.3</td><td className="py-1 text-[10px]">✅ smooth mode — WR 40%, maxL 9 — IS net</td>
               </tr>
             </tbody>
           </table>
           <p className="mt-1 text-[10px] text-[#6e7681]">
+            IS 2025-26 window (old 14715 x1h). LTF-leg stats (1m fills, stream, touchable SL, swing trail). Kept as <b>IS</b> — do not touch, this is the locked sweep window.
+          </p>
+        </div>
+        <div className="mt-3 rounded-md border border-[#10b981]/30 bg-[#0d1117] px-3 py-2">
+          <div className="flex items-center gap-2">
+            <span className="rounded bg-[#10b981] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">4yr FULL</span>
+            <span className="text-xs font-semibold text-[#e6edf3]">2023-01-01 → 2026-09-06 — live 1.93M x1m / 32259 x1h (re-run 2026-09-08)</span>
+            <span className="text-[10px] text-[#8b949e]">same engines, LTF legs net after 0.05%+2pt</span>
+          </div>
+          <div className="mt-2 overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="text-[#8b949e]">
+                <tr>
+                  <th className="py-1 pr-2">Ver</th>
+                  <th className="py-1 pr-2">Engine</th>
+                  <th className="py-1 pr-2 text-right">Trades</th>
+                  <th className="py-1 pr-2 text-right">Win%</th>
+                  <th className="py-1 pr-2 text-right">Net</th>
+                  <th className="py-1 pr-2 text-right">PF</th>
+                  <th className="py-1 pr-2 text-right">DD</th>
+                  <th className="py-1 pr-2 text-right">2023</th>
+                  <th className="py-1 pr-2 text-right">2024</th>
+                  <th className="py-1 pr-2 text-right">2025</th>
+                  <th className="py-1 pr-2 text-right">2026</th>
+                  <th className="py-1">Verdict 4yr</th>
+                </tr>
+              </thead>
+              <tbody className="text-[#e6edf3]">
+                <tr className="border-t border-[#21262d]"><td className="py-1 pr-2 font-mono">v1</td><td className="py-1 pr-2">Plain</td><td className="py-1 pr-2 text-right">485</td><td className="py-1 pr-2 text-right">26.6%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+117.2</td><td className="py-1 pr-2 text-right">1.63</td><td className="py-1 pr-2 text-right">34.1</td><td className="py-1 pr-2 text-right text-[#ef4444]">-41.3</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 text-[10px]">Baseline</td></tr>
+                <tr className="border-t border-[#21262d]"><td className="py-1 pr-2 font-mono">v3</td><td className="py-1 pr-2">Ext-Stop 1.5R</td><td className="py-1 pr-2 text-right">452</td><td className="py-1 pr-2 text-right">27.2%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+137.5</td><td className="py-1 pr-2 text-right">1.74</td><td className="py-1 pr-2 text-right">33.5</td><td className="py-1 pr-2 text-right text-[#ef4444]">-41.3</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 text-[10px]">+20 net vs v1</td></tr>
+                <tr className="border-t border-[#21262d]"><td className="py-1 pr-2 font-mono">v5</td><td className="py-1 pr-2">Buf 0.25ATR</td><td className="py-1 pr-2 text-right">442</td><td className="py-1 pr-2 text-right">28.5%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+168.1</td><td className="py-1 pr-2 text-right">1.86</td><td className="py-1 pr-2 text-right">23.3</td><td className="py-1 pr-2 text-right text-[#f59e0b]">-7.2</td><td className="py-1 pr-2 text-right text-[#10b981]">40.1</td><td className="py-1 pr-2 text-right text-[#10b981]">101.5</td><td className="py-1 pr-2 text-right text-[#10b981]">33.7</td><td className="py-1 text-[10px]">Prev BEST net 4yr</td></tr>
+                <tr className="border-t border-[#21262d]"><td className="py-1 pr-2 font-mono">v6</td><td className="py-1 pr-2">hhll-30</td><td className="py-1 pr-2 text-right">417</td><td className="py-1 pr-2 text-right">31.9%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+139.5</td><td className="py-1 pr-2 text-right">1.83</td><td className="py-1 pr-2 text-right">33.1</td><td className="py-1 pr-2 text-right text-[#ef4444]">-26.7</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 text-[10px]">Smooth but -28 vs v5</td></tr>
+                <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v11"?"bg-[#10b981]/20":"bg-[#10b981]/10"}`}><td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v11");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v11"?"bg-[#10b981] text-white":"bg-[#10b981] text-white"}`}>v11</button></td><td className="py-1 pr-2">Cond chop_or_atr_low ⭐</td><td className="py-1 pr-2 text-right">539</td><td className="py-1 pr-2 text-right">26.5%</td><td className="py-1 pr-2 text-right font-bold text-[#10b981]">+172.5</td><td className="py-1 pr-2 text-right">1.77</td><td className="py-1 pr-2 text-right">31.4</td><td className="py-1 pr-2 text-right font-bold text-[#10b981]">+21.4</td><td className="py-1 pr-2 text-right text-[#10b981]">25.7</td><td className="py-1 pr-2 text-right text-[#10b981]">55.4</td><td className="py-1 pr-2 text-right text-[#10b981]">70.0</td><td className="py-1 text-[10px]">✅ BEST all-positive — click to load</td></tr>
+                <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v12"?"bg-[#10b981]/20":"bg-[#10b981]/5"}`}><td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v12");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v12"?"bg-[#10b981] text-white":"bg-[#10b981]/20 text-[#10b981] border border-[#10b981]"}`}>v12+cd20</button></td><td className="py-1 pr-2">b2_vs_flip + cd20 ⭐ BASELINE</td><td className="py-1 pr-2 text-right">414</td><td className="py-1 pr-2 text-right">28.7%</td><td className="py-1 pr-2 text-right font-bold text-[#10b981]">+200.6</td><td className="py-1 pr-2 text-right">2.03</td><td className="py-1 pr-2 text-right">24.4</td><td className="py-1 pr-2 text-right text-[#10b981]">70.3</td><td className="py-1 pr-2 text-right text-[#10b981]">111.2</td><td className="py-1 pr-2 text-right text-[#10b981]">59.4</td><td className="py-1 text-[10px]">FROZEN BASELINE — all 4 years positive</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v17");}} className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]">v17</button></td><td className="py-1 pr-2">ATR&lt;0.5% filter</td><td className="py-1 pr-2 text-right">389</td><td className="py-1 pr-2 text-right">27.5%</td><td className="py-1 pr-2 text-right text-[#ef4444]">+197.3</td><td className="py-1 pr-2 text-right">2.05</td><td className="py-1 pr-2 text-right">26.0</td><td className="py-1 pr-2 text-right text-[#ef4444]">+15.6</td><td className="py-1 pr-2 text-right text-[#10b981]">+80.3</td><td className="py-1 pr-2 text-right text-[#ef4444]">+102.5</td><td className="py-1 pr-2 text-right text-[#10b981]">+63.5</td><td className="py-1 text-[10px] text-[#ef4444]">REJECTED — removes +13R of winners</td></tr>
+                <tr className={`border-t border-[#21262d] ${htfLtf!=="off"&&htfLtfVer==="v18"?"bg-[#10b981]/20":"bg-[#10b981]/10"}`}><td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v18");}} className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${htfLtf!=="off"&&htfLtfVer==="v18"?"bg-[#10b981] text-white":"bg-[#10b981] text-white"}`}>v18</button></td><td className="py-1 pr-2">Streak halt 5L ⭐ NEW BEST</td><td className="py-1 pr-2 text-right">330</td><td className="py-1 pr-2 text-right">36.4%</td><td className="py-1 pr-2 text-right font-bold text-[#10b981]">+331.1</td><td className="py-1 pr-2 text-right">2.81</td><td className="py-1 pr-2 text-right">9.7</td><td className="py-1 pr-2 text-right text-[#10b981]">+52.8</td><td className="py-1 pr-2 text-right text-[#10b981]">+86.3</td><td className="py-1 pr-2 text-right text-[#10b981]">+123.0</td><td className="py-1 pr-2 text-right text-[#10b981]">+69.0</td><td className="py-1 text-[10px]">Halt after 5L, resume on winner — +66R vs v12, 4/4 years positive</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v19");}} className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]">v19</button></td><td className="py-1 pr-2">1.5R window (until 1.5R touch)</td><td className="py-1 pr-2 text-right">242</td><td className="py-1 pr-2 text-right">37.2%</td><td className="py-1 pr-2 text-right text-[#ef4444]">+200.6</td><td className="py-1 pr-2 text-right">2.51</td><td className="py-1 pr-2 text-right">8.5</td><td className="py-1 pr-2 text-right">+41.1</td><td className="py-1 pr-2 text-right">+84.3</td><td className="py-1 pr-2 text-right">+62.8</td><td className="py-1 pr-2 text-right">+12.4</td><td className="py-1 text-[10px] text-[#ef4444]">REJECTED — window past 1.5R touch held +130R of pullback winners</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono">bias_flip</td><td className="py-1 pr-2">window until opposite HTF entry</td><td className="py-1 pr-2 text-right">485</td><td className="py-1 pr-2 text-right">34.8%</td><td className="py-1 pr-2 text-right text-[#ef4444]">+368.6</td><td className="py-1 pr-2 text-right">2.35</td><td className="py-1 pr-2 text-right">9.6</td><td className="py-1 pr-2 text-right">+52.0</td><td className="py-1 pr-2 text-right">+102.1</td><td className="py-1 pr-2 text-right">+159.4</td><td className="py-1 pr-2 text-right text-[#ef4444]">+55.1</td><td className="py-1 text-[10px] text-[#ef4444]">NOT ADOPTED — added cohort t=1.21 (noise), 2026 worse R+DD</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono"><button onClick={()=>{if(htfLtf==="off")changeHtfLtf("15m");changeHtfLtfVer("v16");}} className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#ef4444]/20 text-[#ef4444] border border-[#ef4444]">v16</button></td><td className="py-1 pr-2">Entry distance &lt;=30%</td><td className="py-1 pr-2 text-right">347</td><td className="py-1 pr-2 text-right">23.6%</td><td className="py-1 pr-2 text-right text-[#ef4444]">+165.5</td><td className="py-1 pr-2 text-right">1.92</td><td className="py-1 pr-2 text-right">20.9</td><td className="py-1 pr-2 text-right text-[#10b981]">+24.2</td><td className="py-1 pr-2 text-right text-[#10b981]">+54.1</td><td className="py-1 pr-2 text-right text-[#10b981]">+94.2</td><td className="py-1 pr-2 text-right text-[#10b981]">+58.0</td><td className="py-1 text-[10px] text-[#ef4444]">REJECTED — busy-chain disruption</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono">atr_low</td><td className="py-1 pr-2">LOW vol atr&lt;0.35</td><td className="py-1 pr-2 text-right">536</td><td className="py-1 pr-2 text-right">26.9%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+165.1</td><td className="py-1 pr-2 text-right">1.75</td><td className="py-1 pr-2 text-right">31.4</td><td className="py-1 pr-2 text-right text-[#10b981]">21.4</td><td className="py-1 pr-2 text-right text-[#10b981]">32.4</td><td className="py-1 pr-2 text-right text-[#10b981]">56.5</td><td className="py-1 pr-2 text-right text-[#10b981]">54.8</td><td className="py-1 text-[10px]">All-positive 165 — dominated by v11</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono">atr0.3</td><td className="py-1 pr-2">atr&lt;0.30</td><td className="py-1 pr-2 text-right">512</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+155.9</td><td className="py-1 pr-2 text-right">1.75</td><td className="py-1 pr-2 text-right">20.6</td><td className="py-1 pr-2 text-right text-[#10b981]">32.0</td><td className="py-1 pr-2 text-right text-[#10b981]">17.5</td><td className="py-1 pr-2 text-right text-[#10b981]">53.4</td><td className="py-1 pr-2 text-right text-[#10b981]">53.0</td><td className="py-1 text-[10px]">All-positive but −16 vs v11</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono">atr0.4</td><td className="py-1 pr-2">atr&lt;0.40</td><td className="py-1 pr-2 text-right">542</td><td className="py-1 pr-2 text-right">-</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+156.2</td><td className="py-1 pr-2 text-right">1.72</td><td className="py-1 pr-2 text-right">26.8</td><td className="py-1 pr-2 text-right text-[#10b981]">37.4</td><td className="py-1 pr-2 text-right text-[#10b981]">13.8</td><td className="py-1 pr-2 text-right text-[#10b981]">53.4</td><td className="py-1 pr-2 text-right text-[#10b981]">51.7</td><td className="py-1 text-[10px]">All-positive but −16 vs v11 — best 2023 37.4</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/40"><td className="py-1 pr-2 font-mono">buf0.15</td><td className="py-1 pr-2">Buf 0.15 ATR</td><td className="py-1 pr-2 text-right">444</td><td className="py-1 pr-2 text-right">28.2%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+179.6</td><td className="py-1 pr-2 text-right">1.89</td><td className="py-1 pr-2 text-right">25.5</td><td className="py-1 pr-2 text-right text-[#ef4444]">-13.0</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 text-[10px]">Highest net +11.5 vs 0.25 but worse 2023 — peak overfit flag</td></tr>
+                <tr className="border-t border-[#21262d] bg-[#21262d]/30"><td className="py-1 pr-2 font-mono">hhll60</td><td className="py-1 pr-2">hhll-60</td><td className="py-1 pr-2 text-right">396</td><td className="py-1 pr-2 text-right">34.3%</td><td className="py-1 pr-2 text-right font-semibold text-[#10b981]">+147.3</td><td className="py-1 pr-2 text-right">1.96</td><td className="py-1 pr-2 text-right">18.6</td><td className="py-1 pr-2 text-right text-[#ef4444]">-12.6</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 pr-2 text-right text-[#ef4444]">-</td><td className="py-1 text-[10px]">Best hhll — plateau N20-60 robust</td></tr>
+              </tbody>
+            </table>
+            <p className="mt-1 text-[10px] leading-relaxed text-[#6e7681]">
+              Added 2026-09-08 re-run on live extended data (1.93M x1m). <b>NEW BEST all-positive: v11 chop_or_atr_low 539 +172.5 PF1.77 DD31.4 21.4/25.7/55.4/70.0 all years &gt;0</b> `HIGH chop&gt;61.8 OR LOW vol atr%&lt;0.35 → decisive else Flip` `v11_conditional_htf.py` vs v5 442 +168 −7.2 2023. <b>FROZEN BASELINE: v12+cd20 b2_vs_flip 414 +200.6 net (+265.3 gross) all years positive</b> `HIGH chop→B2 else Flip + 20 bar cooldown` `v11_conditional_htf.py b2_vs_flip_chop` vs v5. buf 0.15 +179.6 −13 is peak overfit. Combined HTF+ LTF book: v11 LTF +172.5 + HTF +25 ≈ <b>+197 net</b> 4yr. — <b>click v11 (all-positive) or v12+cd20 (FROZEN BASELINE) to load trades on chart — stats below show maxDD PF win% for selected</b> — see doc `fix/permutation_htf_ltf.md:122` `C:\Users\Pravin\AppData\Local\Temp\opencode\cond_out.txt`.
+            </p>
+          </div>
+        </div>
+        <div className="mt-2 rounded-md border border-[#21262d] bg-[#0d1117] px-3 py-2">
+          <p className="text-[10px] leading-relaxed text-[#6e7681]">
             LTF-leg stats (1m fills, stream, touchable SL, swing trail).
             v3 Extension Stop: no new same-dir 15m entries once the 1h leg is &gt;+1.5R unrealized — removes the 8-14% WR late-entry zone; IS +56.3 / OOS +83.7, both beat v1 (+51.4 / +76.1).
-            Rejected 2026-09-07: 4h bias agree, wait-for-+1R, fresh-window-only, HTF breakeven, fade-when-extended (PF 0.54), partial/secure exits, CHOP gate (v4). Sizing study: v3 at full size already best net/DD 8.69 — no downsizing needed. Doc: <code>fix/multi tf 1hour flip and lower tf execution.md</code>
+            Rejected 2026-09-07: 4h bias agree, wait-for-+1R, fresh-window-only, HTF breakeven, fade-when-extended (PF 0.54), partial/secure exits, CHOP gate (v4). Sizing study: v3 at full size already best net/DD 8.69 — no downsizing needed. Sweep 2026-09-08: buf 0.10→154 net 0.15→179 net (peak) 0.25→168 net (-7.2 in 2023 best) 0.30→161 net — 0.15 peak is mild overfit, 0.25 keeps regime hedge. hhll 20→119 30→139 50→139 60→147 plateau. Doc: <code>fix/multi tf 1hour flip and lower tf execution.md</code>
           </p>
         </div>
       </div>

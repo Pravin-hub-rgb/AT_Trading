@@ -1,0 +1,15 @@
+bars from 2023-01-05 00:30: 94  (first 2023-01-05 00:30:00, last 2023-01-05 23:45:00)
+
+--- min_bars=14: 0 swing(s) ---
+
+--- min_bars=50: 0 swing(s) ---
+
+=== manual walk, min_bars=14, nifty times ===
+  bar#1 09:16 state=watch dir=None declared=False bars_seen=2 corner=16865.36@09:15
+  09:21  mark B1 down px=16787.85  (real 02:00)
+  bar#16 09:31 state=locked dir=down declared=False bars_seen=17 corner=16777.00@09:21
+  bar#45 10:00 state=locked dir=down declared=False bars_seen=46 corner=16777.00@09:21
+  bar#60 10:15 state=locked dir=down declared=False bars_seen=61 corner=16777.00@09:21
+  bar#75 10:30 state=locked dir=down declared=False bars_seen=76 corner=16777.00@09:21
+  bar#93 10:48 state=locked dir=down declared=False bars_seen=94 corner=16753.00@10:31
+final: declared=False state=locked dir=down marks=[('B1', '09:21')]
