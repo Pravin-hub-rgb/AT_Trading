@@ -363,6 +363,40 @@ export interface BtcSummaryResponse {
   best: string | null;
 }
 
+// --- data fetch (fill data button) ---
+
+export interface BtcFetchResult {
+  tf: string;
+  ok: boolean;
+  seeded?: boolean;
+  note?: string;
+  fetched: number;
+  appended: number;
+  last_ts: string | null;
+  error?: string;
+}
+
+export interface BtcFetchResponse {
+  results: BtcFetchResult[];
+}
+
+export async function fetchBtcData(tfs?: string[]): Promise<BtcFetchResponse> {
+  const res = await fetch(`${API_BASE}/api/btc/fetch`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tfs: tfs ?? null }),
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json() as Promise<BtcFetchResponse>;
+}
+
 export async function getBtcSummary(
   tf: BtcTf,
   mode: BtcMode,

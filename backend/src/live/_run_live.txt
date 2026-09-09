@@ -1,0 +1,17 @@
+------------------------------------------------------------------------------
+Backbencher | boot: fetching rolling window (spot REST)...
+seeded 15m: 2879 candles (2026-08-10 12:15:00 -> 2026-09-09 11:45:00)
+seeded  1h: 479 candles (2026-08-20 12:30:00 -> 2026-09-09 10:30:00)
+watching: every 15m and 1h CLOSE -> OHLC + B1/B2/FLIP marks
+------------------------------------------------------------------------------
+[ws] connected: btcusdt kline_15m + kline_1h (spot)
+[15m CLOSE] 2026-09-09 12:00:00 | O 79156.19  H 79236.02  L 79135.90  C 79187.41
+[15m] no marks on this candle (chain: 58 swings)
+[15m CLOSE] 2026-09-09 12:15:00 | O 79187.42  H 79198.69  L 79117.88  C 79159.03
+[15m] no marks on this candle (chain: 58 swings)
+[ 1h CLOSE] 2026-09-09 11:30:00 | O 78923.43  H 79290.63  L 78865.71  C 79159.03
+[ 1h] no marks on this candle (chain: 15 swings)
+[15m CLOSE] 2026-09-09 12:30:00 | O 79159.03  H 79400.00  L 79151.34  C 79249.36
+[15m] no marks on this candle (chain: 58 swings)
+[15m CLOSE] 2026-09-09 12:45:00 | O 79249.35  H 79292.04  L 79220.17  C 79277.42
+[15m] no marks on this candle (chain: 58 swings)

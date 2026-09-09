@@ -281,6 +281,7 @@ export default function BtcPage() {
     setHtfLtfVer(v as any);
   };
 
+
   useEffect(() => {
     if (!hydrated || !tradesOn) return;
     let cancelled = false;

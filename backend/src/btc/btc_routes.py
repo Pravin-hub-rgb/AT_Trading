@@ -12,6 +12,7 @@ from fastapi.responses import JSONResponse
 
 from src.btc.btc_config import BTC_TFS, btc_csv_path, load_btc_df
 from src.btc.btc_engine import simulate_btc_trades, trade_stats
+from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts
 from src.btc.btc_swing import compute_btc_flow, compute_btc_swings
 from src.walker import FlowCandle
 
@@ -1270,3 +1271,38 @@ def btc_summary(
         "rows": rows,
         "best": rows[0]["key"] if rows else None,
     }
+
+
+# ── data fetch (append new Binance candles to CSVs) ──────────────────────
+
+
+@router.post("/fetch")
+def btc_fetch(body: dict | None = None):
+    """Fetch new Binance candles and append to the CSVs.
+
+    Optional JSON body: {"tfs": ["15m","1h"]} — if omitted, refreshes all TFs.
+    Idempotent: only appends timestamps not already in the CSV.
+    """
+    targets = None
+    if body and body.get("tfs"):
+        tfs = body["tfs"]
+        bad = [t for t in tfs if t not in BTC_TFS]
+        if bad:
+            return JSONResponse(
+                status_code=400,
+                content={"detail": f"unknown tf(s): {bad}. must be in {sorted(BTC_TFS)}"},
+            )
+        targets = tfs
+    try:
+        return refresh_all(targets)
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"detail": str(e)})
+
+
+@router.get("/fetch/status")
+def btc_fetch_status():
+    """Current last timestamp per TF — see what the button would append."""
+    out = {}
+    for tf in BTC_TFS:
+        out[tf] = {"last_ts": btc_last_ts(tf)}
+    return out

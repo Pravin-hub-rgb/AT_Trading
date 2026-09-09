@@ -1,0 +1,7 @@
+------------------------------------------------------------------------------
+Backbencher | boot: fetching rolling window (spot REST)...
+seeded 15m: 2879 candles (2026-08-10 12:15:00 -> 2026-09-09 11:45:00)
+seeded  1h: 479 candles (2026-08-20 12:30:00 -> 2026-09-09 10:30:00)
+watching: every 15m and 1h CLOSE -> OHLC + B1/B2/FLIP marks
+------------------------------------------------------------------------------
+[ws] connected: btcusdt kline_15m + kline_1h (spot)

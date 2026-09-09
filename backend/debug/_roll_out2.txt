@@ -1,0 +1,11 @@
+full 15m history: 128951 bars — computing chain...
+live rolling window: 5759 bars (2026-07-11 12:15:00 -> 2026-09-09 11:45:00)
+
+marks in last 3 days: full-chain 10 bars with marks, rolling-chain 13
+identical bars        : 10
+full-only bars        : 0
+rolling-only bars     : 3
+same-bar differences  : 0
+  roll-only  ts=1788538500: [('B1', 'up', 79555.32)]
+  roll-only  ts=1788624900: [('B2', 'up', 79901.59)]
+  roll-only  ts=1788628500: [('B1', 'down', 80011.32)]

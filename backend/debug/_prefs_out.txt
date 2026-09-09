@@ -1,0 +1,58 @@
+
+============================================================================
+HTF 1h chain  (1352 swings, 32259 bars)
+============================================================================
+marks total                       : 3297
+marks fired while PREV unconfirmed: 843  (25.6%)
+  ...of which also BEFORE prev FS : 780
+  ...prev swing never confirmed   : 0
+first examples:
+   sw1 B1   down @ 2023-01-02 03:30:00  (prev confirm @ 2023-01-02 05:30:00, px=16592.63)
+   sw1 FLIP up   @ 2023-01-02 04:30:00  (prev confirm @ 2023-01-02 05:30:00, px=16613.85)
+   sw3 B1   down @ 2023-01-04 00:30:00  (prev confirm @ 2023-01-04 04:30:00, px=16626.80)
+   sw3 FLIP up   @ 2023-01-04 01:30:00  (prev confirm @ 2023-01-04 04:30:00, px=16657.54)
+   sw4 B1   down @ 2023-01-04 17:30:00  (prev confirm @ 2023-01-04 18:30:00, px=16831.13)
+   sw5 B1   up   @ 2023-01-05 03:30:00  (prev confirm @ 2023-01-05 11:30:00, px=16852.23)
+   sw6 B1   up   @ 2023-01-06 00:30:00  (prev confirm @ 2023-01-06 07:30:00, px=16865.21)
+   sw8 B1   up   @ 2023-01-07 06:30:00  (prev confirm @ 2023-01-07 12:30:00, px=16980.00)
+
+HTF flip signals total 808; fired while PREV swing unconfirmed: 116  (14.4%)
+   2023-01-02 04:30:00  FLIP long  sw1  SLpx=16586.24
+   2023-01-04 01:30:00  FLIP long  sw3  SLpx=16622.41
+   2023-01-15 12:30:00  FLIP short sw14  SLpx=20789.58
+   2023-03-15 06:30:00  FLIP long  sw75  SLpx=24284.60
+   2023-03-16 06:30:00  FLIP short sw76  SLpx=24633.02
+   2023-03-20 18:30:00  FLIP short sw79  SLpx=28267.10
+
+============================================================================
+LTF 15m chain  (2936 swings, 128951 bars)
+============================================================================
+marks total                       : 7813
+marks fired while PREV unconfirmed: 3107  (39.8%)
+  ...of which also BEFORE prev FS : 2880
+  ...prev swing never confirmed   : 0
+first examples:
+   sw1 B1   down @ 2023-01-01 18:30:00  (prev confirm @ 2023-01-01 20:45:00, px=16555.20)
+   sw3 B1   down @ 2023-01-02 14:15:00  (prev confirm @ 2023-01-02 19:00:00, px=16731.55)
+   sw3 B2   down @ 2023-01-02 15:00:00  (prev confirm @ 2023-01-02 19:00:00, px=16710.54)
+   sw4 B1   up   @ 2023-01-03 06:00:00  (prev confirm @ 2023-01-03 07:45:00, px=16693.00)
+   sw4 FLIP down @ 2023-01-03 06:30:00  (prev confirm @ 2023-01-03 07:45:00, px=16677.09)
+   sw5 B1   down @ 2023-01-03 13:00:00  (prev confirm @ 2023-01-03 18:15:00, px=16711.53)
+   sw5 B2   down @ 2023-01-03 14:00:00  (prev confirm @ 2023-01-03 18:15:00, px=16698.15)
+   sw5 FLIP up   @ 2023-01-03 15:00:00  (prev confirm @ 2023-01-03 18:15:00, px=16736.12)
+
+LTF decisive signals total 2935; fired while PREV swing unconfirmed: 1053  (35.9%)
+
+=== v18 LTF trades: 330 total, gross +331.1R ===
+trades whose entry mark fired while PREV swing unconfirmed: 92  (27.9% of trades), gross +10.1R  (3.0% of gross), win 17/92
+sample:
+   #3 long  FLIP sw28 entry 2023-01-14 22:45:00  -1.000R (sl)
+   #5 long  FLIP sw39 entry 2023-01-19 09:45:00  +9.224R (trail)
+   #11 long  B2   sw174 entry 2023-03-20 23:15:00  -0.736R (trail)
+   #12 long  FLIP sw178 entry 2023-03-22 04:45:00  -0.531R (trail)
+   #13 long  B2   sw196 entry 2023-03-30 01:15:00  -1.000R (sl)
+   #18 long  B2   sw223 entry 2023-04-10 13:30:00  -1.000R (sl)
+   #19 long  B2   sw226 entry 2023-04-11 19:15:00  -0.951R (trail)
+   #22 short B2   sw246 entry 2023-04-20 14:00:00  +7.010R (trail)
+   #23 short FLIP sw254 entry 2023-04-23 14:45:00  -0.852R (trail)
+   #30 short B2   sw307 entry 2023-05-16 19:15:00  -0.926R (trail)

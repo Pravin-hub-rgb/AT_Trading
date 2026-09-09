@@ -1088,6 +1088,147 @@ Net: sw29 produced **zero trades** — its single signal slot (10:45 B2) was cla
 - **Live example of the cascade:** in the variant, trades #1–#4 (Jan 3, 4, 6, 11) were all losses (−0.94, −0.94, −0.98, −0.95) → the Jan 14 22:45 flip long became the **5th consecutive loss → streak halt**, skipped; Jan 16 07:45 skipped while halted; halt lifted on the first winner — **Jan 19 09:45 flip long, +9.224R**. So the variant didn't "add" the Jan 15 19:00 entry — it deleted both Jan 14/16 entries entirely. (The 19:00 flip itself is still never a signal: it's sw29's third mark, and marks ≠ trades — busy/cooldown still gate each one.)
 - **Verdict: REJECTED** — same criteria as v16/v17/v19/v21: gross R up but PF down 0.28, DD up 3.8R, net/DD down 7.4, latest regime worse, and the +30R is statistically noise (t=1.96 with cascade contamination). Fourth confirmation of the trade-count law: **more trades → more gross R, worse risk quality.** Silver lining: the run is a clean demonstration that the streak halt does its job — after 5 whipsaw losses it stood aside and still caught the +9.2R runner.
 
+### Q: Jan 19 → Jan 23 2023: trade #5 was a LONG (09:45) and the very next trade #6 was a SHORT (Jan 23 02:15). Did the HTF bias flip? How did the direction switch happen?
+
+**A: Yes — the HTF 1h bias flipped, and the 45-minute turnaround between the two trades is three rules clicking together.** Verified with `backend/debug/test_jan19_23.py`.
+
+The choreography:
+1. **Trade #5 (long FLIP @ Jan 19 09:45, 20822.79)** rode the HTF flip-long window (Jan 14 19:30 → …). The HTF long trade hit its **+3R target Jan 21 03:30** (22662) — closing the long *window* — but trade #5 kept running (runners are never force-closed on HTF window end) and its MB50 trail finally fired **Jan 23 01:30 @ 22604.63 = +9.224R**.
+2. **The flip:** with the long window dead, the 1h structure rolled over — **HTF flip SHORT opened Jan 22 20:30** (22794.51) → new **short window** (Jan 22 20:30 → Jan 23 19:30). Chop stayed < 61.8 throughout → flip regime both sides.
+3. **Trade #6 (short B2 @ Jan 23 02:15, 22459.46)** — 45 minutes after the long exited, because: trade #5 was a **winner → no cooldown** (cooldown only follows losses); the LTF slot freed at 01:30; sw48's B2-down @ 02:15 was the **only** LTF signal in the 01:30–06:00 gap → first qualifying mark in the new short window's direction → in.
+
+**Rule summary (how LTF direction is actually chosen):** the LTF never picks a direction itself — it trades marks matching the **active HTF window's direction** (window set chosen by chop regime). Window dies (SL/3R/cap) → next HTF trade of the selected set opens the next window, possibly opposite. One LTF position at a time, so the runner long must exit before the counter-trend short can use the slot. Winner = instantly rearmed; loser = 20-bar cooldown. (The next signal after 02:15 was a B2 long @ 04:15 — busy-blocked and direction-mismatched, correctly ignored.)
+
+**Follow-up: "Where exactly does the window OPEN on the HTF?" (the Jan 19 confusion resolved — `backend/debug/test_1h_window.py`)**
+
+The window is not a line on any chart — it is **the lifetime of a 1h trade**. For trade #5's long window, the birth certificate is 1h swing **sw12**:
+
+```
+1h chain: down-leg bottoms at 20225.06 (Jan 14 15:30 bar)   ← sw12's start = future SL
+          B1 down @ Jan 14 14:30 (20691.13)                  ← down-leg still printing
+          FLIP up  @ Jan 14 19:30 (breaks 21088)             ← THE REVERSAL MARK
+```
+
+The 1h was in a down-leg (B1 down 14:30); at 19:30 the FLIP-up mark fired — price broke the leg's opposite extreme (21088) → leg reversed up (sw12 dir=up). The v7 HTF engine trades that flip: **LONG @ bar close 20834.40, SL = leg low 20225.06, target 3R = 22662.42**. That trade IS the window: **open Jan 14 19:30 → closed Jan 21 03:30 (target hit)**. Everything the LTF did long between those timestamps (trade #3, #4, #5) rode it.
+
+Why the LTF only entered **Jan 19** when the window opened **Jan 14 19:30**: the window being open ≠ immediate entry. The LTF had its own queue — trade #3 SL'd Jan 15 08:45 (cooldown → 13:45), trade #4 entered Jan 16 07:45 and lost (−0.952R, cooldown → Jan 17 00:30), and no qualifying LTF long mark fired until sw39's flip-up @ **Jan 19 09:45**. The window waited ~4.5 days for the LTF to fire; that patience is normal, not a bug.
+
+### Q: LIVE-READINESS DOUBT — "On live, swings confirm late (FS/chop), so B1/B2/FLIP fire *before* confirmation. Until the FS comes we can't work on the next swing, and we'd have to 'go back' retroactively. And many times there's no FS but marks are already there — so we can't trade?" (the Jan 4 13:30 → Jan 6 20:30 1h mess)
+
+**A: Tested on exactly that region (`backend/debug/test_jan4_mess.py`) — the premise is inverted: marks fire FIRST and confirmation comes LATER, always; and pre-confirmation marks ARE tradeable signals. The engine never waits for FS to act.**
+
+What the Jan 2–8 1h trace shows (every mark in every swing):
+
+| 1h swing | Segment | Confirmed | Lag | Marks before confirm? |
+|---|---|---|---|---|
+| sw3 up | Jan 4 00:30→13:30 | Jan 4 18:30 | 5h | ALL (flip up 01:30) |
+| sw4 up | Jan 4 20:30→Jan 5 00:30 | **Jan 5 11:30** | **11h** | ALL (flip up 21:30) |
+| sw5 up | Jan 5 19:30→20:30 | **Jan 6 07:30** | 11h | **ALL — B1 up fired 03:30, 16h before sw5's segment even starts, while sw4 was still unconfirmed** |
+| sw6 down | Jan 6 00:30→16:30 | Jan 6 18:30 | 2h | ALL (flip down 10:30) |
+| sw7 up | Jan 6 17:30→Jan 7 01:30 | Jan 7 12:30 | 11h | ALL (B2 up 20:30) |
+
+Three conclusions, each directly answering one doubt:
+
+1. **"Until FS comes we can't do anything" — FALSE.** Marks print at their own bar close regardless of confirmation state; the walker keeps walking and later swings start forming while earlier swings are still unconfirmed (sw5's first mark at 03:30 precedes sw4's 11:30 confirmation). Confirmation gates exactly ONE thing: the **trail ratchet** (`_trail_events` uses confirmed swings only). It never gates signals. That's why trade #1's first trail ratchet only arrived at 17:30 — an hour after entry, when sw8 confirmed.
+2. **"We'd have to go back retroactively" — happens, but it's bookkeeping only.** sw5's segment is stamped Jan 5 19:30 even though its B1 fired at 03:30 — the chain re-anchors as structure evolves. But the *trade decision* at any mark needs only what's known at that bar close: mark direction + SL = extreme since the previous leg's end (all seen live). No entry ever depends on the retroactive stamp. The one historical repaint (13 Jan 20:00) was found and fixed during development.
+3. **"No FS but B2/FLIP are there → can't trade" — the engine turned all six pre-confirmation marks (Jan 2 04:30 through Jan 6 10:30) into live-faithful signals with real SLs.** The stream selection is verified live-faithful (Category B1, 2,935 signals), and the Nifty-style per-bar engine — which *is* a live-shaped implementation — reproduces identical behavior (shared walker DNA). The genuinely delicate part of a live port is implementing one-swing-one-trade on a live-tracked current leg instead of the final chain — known, documented, and the shared-walker engines already solve it.
+
+**Follow-up (full-dataset quantification + v23 A/B — `backend/debug/test_pre_fs_marks.py`, `test_v23_skip_prevswing.py`, `_net_check.py`): the "prev swing still unconfirmed" state, pushed to the whole 4 years.**
+
+How common is the feared state (mark of swing N fires while swing N−1's FS/chop confirm hasn't arrived)?
+
+| Chain | Marks total | Fired while prev unconfirmed | Of which also before prev FS |
+|---|---|---|---|
+| 1h (HTF) | 3,297 | **843 (25.6%)** | 780 |
+| 15m (LTF) | 7,813 | **3,107 (39.8%)** | 2,880 |
+
+So ~40% of ALL 15m marks print in this state — it is not an edge case, it is the normal texture of the chain. Signal-level: 116/808 (14.4%) of HTF flip signals and **1,053/2,935 (35.9%) of LTF decisive signals** fired while the prev swing was unconfirmed. Every swing eventually confirms (0 never-confirmed cases).
+
+What the engine does with them: **92 of the 330 v18 trades (27.9%) entered from this state** — gross **+10.1R** (3.0% of the +331.1R edge), win 17/92 (18.5%). The cohort contains both the churn-loser texture the user suspects AND some of the biggest winners: #40 short +24.15R (Jun 5 2023), **#5 long +9.22R (the Jan 19 runner — itself a prev-unconfirmed entry!)**, #199 +8.11R, #63 +7.89R, #22 +7.01R.
+
+**v23 A/B (skip LTF entries in the churn state): REJECTED.** 274t, +281.1R gross (−50.0R), ~+172R net (−27.7R), PF 2.97 / win 39.4% (both up — the cohort is loser-heavy) BUT maxDD 10.2R and per-year 2023 +17 vs +53 (−36R), 2024 −16R, 2025 −3R, 2026 +5R. Worse in 3 of 4 years. Trade-count law confirmed a 5th time: the cohort is gross-positive, so cutting it cuts R. The PF/win% improvement is the classic quality-for-quantity trade that this strategy consistently refuses. **Prod stays v18 — the churn-state entries are part of the edge's raw material, not a bug.**
+
+Live answer in one line: you CAN trade when the prev swing's FS hasn't arrived (mechanics: mark dir + SL-from-extreme are known at bar close), and you SHOULD (empirics: skipping costs 50R gross / 28R net).
+
+### FINAL LIVE-READINESS PROOF: truncation invariance (`backend/debug/test_truncation_invariance.py`)
+
+The one theoretical loophole left after all checklist tests: the retroactive chain re-anchoring could, in principle, let future data leak into past decisions. Definitive test — run the entire v18 pipeline on data TRUNCATED at 2023-07-01 (chains recomputed from scratch on the cut data) and compare every trade decision before Jun 29 against the full 4-year run: **44/44 IDENTICAL** (entry bar, dir, swing_no, entry price, SL — zero differences, zero trades in one run that aren't in the other). Past decisions are a pure function of past data. Combined with the B1 signal-faithfulness test (2,935 signals), walker parity (bar-by-bar replay), and the Nifty-style per-bar engine reproduction, the backtest is proven free of lookahead and live-computable at every bar close.
+
+**What is PROVEN vs what can NEVER be proven by a backtest (honest ledger):**
+- PROVEN: no lookahead; marks/SL/window-state computable at bar close; fills conservative (1m fine, SL-before-target on gaps); all 33 checklist mechanics; edge robustness (4 years positive, sweep-tested parameters).
+- NOT PROVABLE FROM BACKTEST: (1) the live port code itself — it must implement one-swing-one-trade on a live-tracked leg, and until written and replayed, it is unverified; (2) data-feed fidelity — live websocket bars vs historical klines can differ in edge cases; (3) real slippage/latency vs the 0.05%+2pt cost model; (4) market drift — 2026 already behaves differently than 2023-25.
+- Therefore: v18 is live-tradeable ON PAPER and cleared for a **forward test** (paper or minimal size). Real-money confidence comes only from the forward test agreeing with the backtest, not from any additional backtest.
+
+### FORWARD-TEST PLAN: paper-trade month + daily backtester comparison (agreed 2026-09-09)
+
+**The core insight (user's own): the backtester already IS the live trader.** The engine's event loop is "candle closes → walker marks → B2/FLIP prints → window check → enter at close/ticks → SL pinned → trail on confirmed swings". A live engine is the *same loop* with candles arriving from a websocket instead of a file. Truncation invariance proved every decision needs only closed candles; nothing in the pipeline needs the future. So we do NOT write a second strategy engine — we reuse the exact backtester functions as the live brain. Any rewrite would create a second source of truth and guarantee divergence.
+
+**Architecture (live engine = thin wrapper around the backtester):**
+- **Feeder:** Binance websocket klines — 1m base stream (this doubles as the `fine` fill data), aggregated 15m and 1h candles. On each TF candle CLOSE (exchange close event, not wall-clock guess), push the closed candle into the same data structures `load_btc_df` produces (identical schema: date/ts/open/high/low/close).
+- **Brain (reused, not rewritten):** on each 15m close → `_compute_swings` state step / `_collect_signals` on the live leg → window gating (HTF intervals from the 1h chain, chop regime 61.8, mode `b2_vs_flip_chop`) → cooldown/busy/halt → entry at candle-close price (live: market order on the close tick), SL = extreme-since-prev-leg-end ± 0.25·ATR, ext-stop 1.5R, MB50 trail from `_trail_events`, 5-loss halt. Position manager journals every decision with its inputs.
+- **Ground truth is the backtester itself:** the daily comparison (below) catches any porting bug within 24h.
+
+**Daily loop (every day of the paper month):**
+1. Live engine ran all day on ticks; journal has every mark, signal, entry, SL, exit with timestamps + the candle that caused each.
+2. After UTC midnight: download the day's 1m/15m/1h klines, append to the backtester dataset.
+3. Run the v18 backtester over the full history; extract *today's* marks / signals / trades.
+4. Diff: live journal vs backtester output. **Expected: 100% decision parity** (same marks at same bars, same entries, same SLs, same exits). Any mismatch = porting bug found → fix → re-run the day.
+5. Weekly: compare realized R vs backtester R for the week; measure real slippage (fill price vs candle-close price) against the 0.05%+2pt cost model.
+
+**Month gate (go / no-go for minimal real size):**
+- GO: 4 consecutive weeks of 100% decision parity AND realized R within the expected band (paper fills ≈ backtest fills ± slippage) AND no unresolved mechanics incidents.
+- NO-GO: any unexplained divergence, or R wildly off band — port bug or regime shift, either way stop and investigate.
+- After GO: minimal real size first (smallest possible), because paper fills never charge real slippage.
+
+**Known live-only risks the paper month is designed to measure:** websocket gaps/reconnects (must re-sync closed candles on reconnect), partial/unclosed candle handling (never decide on a partial bar), exchange timestamp vs local clock, weekend/low-liquidity spread widening, and the one-swing-one-trade live-leg tracker (the one delicate piece flagged repeatedly — the daily diff will prove it correct or expose it fast).
+
+### DEPLOYMENT & ISOLATION: one engine, one job, zero dead code (`backend/src/live/`)
+
+**Dead-code worry resolved — the complete v18 boil-list (traced 2026-09-09).** The live trader needs exactly 7 modules from the research tree, all shared parity-tested infrastructure:
+
+| Module | What live uses | Role |
+|---|---|---|
+| `src/walker.py` | FlowCandle, WalkerEngine | sealed pivots (live-safe by design) |
+| `src/firstswing.py` | SwingEngine | swing chain single source of truth |
+| `src/btc/btc_swing.py` | compute_btc_swings/flow | continuous 24/7 chain wrapper |
+| `src/btc/btc_engine.py` | _collect_signals, _trail_events, trade_stats | signals + trail + stats |
+| `src/btc/engines/v7_timecap.py` | simulate_btc_trades_v7 | HTF window trades |
+| `src/btc/engines/htf_ltf/v18_streak_halt.py` | _chop_series_1h, _atr_pct_15m, gating params | THE strategy |
+| `src/btc/btc_config.py` | CSV schema only | replaced live by the feeder |
+
+Everything else (v1–v17, v19–v22, FastAPI routes, debug scripts, Nifty) is research-only and never imported by live. **Live does not COPY these modules — it imports them.** Copying would create a second source of truth and guarantee eventual divergence. Instead the shared modules are frozen by the **parity test**: the daily live-vs-backtester diff (above) fails loudly if anything in the shared chain changes behavior. That gives zero dead code AND zero divergence risk.
+
+**Future-strategy isolation:** a new strategy (v19+) = a new file inside `src/live/strategies/` with its own params; the VPS runs exactly ONE strategy file chosen in one config line. Old research versions stay untouched in the research tree; shared infrastructure changes only when the parity suite (33 checklist tests + daily diff) still passes for ALL deployed strategies.
+
+**VPS runbook (simpler than it sounds):**
+- ONE long-running Python process (systemd service, auto-restart): websocket feeder → append closed candle → recompute chains → decide → journal. No FastAPI, no frontend needed for the paper phase.
+- Compute is tiny: chains recompute over rolling history on each candle close (15m chain = 13k bars, 1h = 32k bars — milliseconds); everything else is idle waiting for closes. 1 vCPU / 1 GB RAM is plenty.
+- State = one JSON/SQLite journal (positions, cooldowns, halt counter, last candle timestamps). Restart-safe: on boot, re-download recent candles, recompute chains, resume.
+- A cron job does the daily loop: download klines after UTC midnight → append to dataset → run backtester → diff vs journal → write a one-line status file (PARITY OK / MISMATCH details).
+- Decision-rule for the live loop (keeps it simple and provably identical): on every 15m close, RECOMPUTE the full chains and re-run the v18 gate for the newest bar — never maintain incremental chain state by hand. Truncation invariance is the proof this is safe; it eliminates the entire class of incremental-state bugs.
+
+**Build order (each step verifiable alone):** (1) `daily_fetch.py` downloader/appender, (2) `compare.py` journal-vs-backtester diff, (3) `feeder.py` websocket + recompute loop + journal, (4) systemd unit + cron. Steps 1–2 are useful even before the feeder exists (backfill hygiene).
+
+**Proven live infrastructure located (2026-09-09):** the user's own `BTC_GhostStreak_Strategy 3` project (Desktop/main) paper-traded live for days in Dec 2025 — daily CSV journals exist. Its `data_streamer.py` (tick `@trade` + official `@kline_15m` dual stream, async queue bridge, REST backfill on reconnect, fresh-start guard) and `streak_bot.py` skeleton (callback split, per-day CSV journal, shutdown/reconnect hooks) become `feeder.py`/`journal.py`/`main.py` with strategy callbacks swapped for the v18 recompute-and-decide. Required adaptations recorded in `backend/src/live/MANIFEST.md`: add 1h kline stream, IST wall-clock timestamp conversion (epoch − 19800s), no API keys for paper.
+
+**Journey log:** live-trading decisions (separation, rolling-window data strategy, dead-code resolution, no-visuals/logs-only, L1/L2/L3 mark-compare protocol, timestamp convention) → **`fix/live_trading_doc.md`**. Strategy codename: **Backbencher** — the 36.4%-win-rate student who tops the life game (registered in `backend/src/live/params.py`).
+
+### LIVE-READINESS, PART 2 — full-dataset nesting stats + the repaint (live replay) test (`backend/debug/test_repaint_live.py`)
+
+**Part A — the nesting is real, common, and deeper than the Jan 4–6 example** (all swings with confirmations, full sample):
+
+| Metric | 1h chain | 15m chain |
+|---|---|---|
+| Swings | 1,352 | 2,936 |
+| Confirm lag beyond seg end | median 5 bars / p90 13 / **max 40** | median 10 / p90 33 / **max 63** |
+| Marks fired **before the PREVIOUS swing** confirmed | **843 (25.5%)** | **3,107 (39.7%)** |
+| Marks fired before even the N-2 swing confirmed | 27 (0.8%) | 191 (2.4%) |
+| Total marks | 3,300 | 7,817 |
+
+So a quarter-to-40% of all marks fire while the previous swing is still unconfirmed — the user's suspicion was directionally right, and it is systemic, not an edge case. The question is whether the engine's answers change retroactively (repaint), which Part B tests directly.
+
+**Part B — repaint test (the definitive live-faithfulness proof):** for sampled cutoff times T, recompute the entire swing chain using ONLY `candles[:T]` (exactly what a live engine would hold at bar T-1's close), collect the signals near the boundary, and diff them against the full-history offline chain. Zero differences ⇒ the offline backtest signal stream is *bit-identical* to what a live engine would have emitted ⇒ live ≡ backtest by construction. Results: *(see run output below / `_repaint_out.txt`)*
+
 ## Part 4: Summary
 
 
