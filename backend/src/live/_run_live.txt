@@ -1,17 +1,115 @@
 ------------------------------------------------------------------------------
-Backbencher | boot: fetching rolling window (spot REST)...
-seeded 15m: 2879 candles (2026-08-10 12:15:00 -> 2026-09-09 11:45:00)
-seeded  1h: 479 candles (2026-08-20 12:30:00 -> 2026-09-09 10:30:00)
+Backbencher | boot: loading full history from CSV (path-independent chain)...
+seeded 15m: 129306 candles (2023-01-01 05:30:00 -> 2026-09-09 17:00:00)
+seeded  1h: 32336 candles (2023-01-01 05:30:00 -> 2026-09-09 16:30:00)
+latest marks in CSV:
+[15m] 2026-09-07 14:30:00 | B1   up   sw6092 @ 79530.47
+[15m] 2026-09-07 16:30:00 | FLIP down sw6092 @ 79284.00
+[15m] 2026-09-07 17:15:00 | B1   down sw6093 @ 79402.03
+[15m] 2026-09-07 17:30:00 | FLIP up   sw6093 @ 79487.01
+[15m] 2026-09-07 19:00:00 | B2   down sw6093 @ 79374.00
+[15m] 2026-09-07 22:00:00 | B1   up   sw6094 @ 78920.00
+[15m] 2026-09-07 22:30:00 | B2   up   sw6094 @ 79152.00
+[15m] 2026-09-08 01:30:00 | B1   down sw6095 @ 79342.38
+[15m] 2026-09-08 03:15:00 | B2   down sw6095 @ 79164.00
+[15m] 2026-09-08 06:45:00 | FLIP up   sw6095 @ 79394.92
+[15m] 2026-09-08 08:45:00 | FLIP down sw6095 @ 78781.07
+[15m] 2026-09-08 11:00:00 | B1   down sw6096 @ 78660.00
+[15m] 2026-09-08 13:15:00 | B2   down sw6096 @ 78179.98
+[15m] 2026-09-08 13:45:00 | B1   up   sw6097 @ 78482.00
+[15m] 2026-09-08 15:00:00 | B2   up   sw6097 @ 78780.00
+[15m] 2026-09-08 17:30:00 | B1   down sw6098 @ 78271.63
+[15m] 2026-09-08 19:00:00 | B2   down sw6098 @ 77675.75
+[15m] 2026-09-08 21:15:00 | FLIP up   sw6098 @ 78871.24
+[15m] 2026-09-08 22:30:00 | B1   up   sw6099 @ 78878.00
+[15m] 2026-09-08 22:45:00 | FLIP down sw6099 @ 78654.00
+[15m] 2026-09-09 00:45:00 | B1   down sw6100 @ 78400.00
+[15m] 2026-09-09 01:30:00 | FLIP up   sw6100 @ 78528.00
+[15m] 2026-09-09 03:30:00 | B1   up   sw6101 @ 78565.58
+[15m] 2026-09-09 05:30:00 | B2   up   sw6101 @ 78732.12
+[15m] 2026-09-09 08:30:00 | B1   down sw6102 @ 78686.46
+[15m] 2026-09-09 09:30:00 | FLIP up   sw6102 @ 78841.75
+[15m] 2026-09-09 11:45:00 | B1   up   sw6103 @ 79137.75
+[15m] 2026-09-09 12:30:00 | B2   up   sw6103 @ 79400.00
+[ 1h] 2026-09-01 23:30:00 | B1   down sw1642 @ 76888.00
+[ 1h] 2026-09-02 15:30:00 | B2   down sw1642 @ 76264.00
+[ 1h] 2026-09-02 21:30:00 | B1   up   sw1643 @ 77490.00
+[ 1h] 2026-09-03 07:30:00 | B2   up   sw1643 @ 77900.00
+[ 1h] 2026-09-03 14:30:00 | B1   down sw1644 @ 77663.14
+[ 1h] 2026-09-03 17:30:00 | FLIP up   sw1644 @ 78066.00
+[ 1h] 2026-09-04 06:30:00 | B1   down sw1645 @ 80905.05
+[ 1h] 2026-09-04 11:30:00 | B2   down sw1645 @ 80573.21
+[ 1h] 2026-09-04 16:30:00 | B1   up   sw1646 @ 81310.00
+[ 1h] 2026-09-04 17:30:00 | FLIP down sw1646 @ 80831.14
+[ 1h] 2026-09-05 21:30:00 | B1   up   sw1647 @ 79877.07
+[ 1h] 2026-09-07 04:30:00 | B2   up   sw1647 @ 80559.99
+[ 1h] 2026-09-07 08:30:00 | B1   down sw1648 @ 79800.00
+[ 1h] 2026-09-07 12:30:00 | B2   down sw1648 @ 79001.10
+[ 1h] 2026-09-07 14:30:00 | B1   down sw1649 @ 79397.83
+[ 1h] 2026-09-07 17:30:00 | FLIP up   sw1649 @ 79550.00
+[ 1h] 2026-09-07 19:30:00 | B2   down sw1649 @ 79282.00
+[ 1h] 2026-09-08 03:30:00 | B1   down sw1650 @ 78807.69
+[ 1h] 2026-09-08 06:30:00 | FLIP up   sw1650 @ 79419.17
+[ 1h] 2026-09-08 08:30:00 | B2   down sw1650 @ 78781.07
 watching: every 15m and 1h CLOSE -> OHLC + B1/B2/FLIP marks
 ------------------------------------------------------------------------------
-[ws] connected: btcusdt kline_15m + kline_1h (spot)
-[15m CLOSE] 2026-09-09 12:00:00 | O 79156.19  H 79236.02  L 79135.90  C 79187.41
-[15m] no marks on this candle (chain: 58 swings)
-[15m CLOSE] 2026-09-09 12:15:00 | O 79187.42  H 79198.69  L 79117.88  C 79159.03
-[15m] no marks on this candle (chain: 58 swings)
-[ 1h CLOSE] 2026-09-09 11:30:00 | O 78923.43  H 79290.63  L 78865.71  C 79159.03
-[ 1h] no marks on this candle (chain: 15 swings)
-[15m CLOSE] 2026-09-09 12:30:00 | O 79159.03  H 79400.00  L 79151.34  C 79249.36
-[15m] no marks on this candle (chain: 58 swings)
-[15m CLOSE] 2026-09-09 12:45:00 | O 79249.35  H 79292.04  L 79220.17  C 79277.42
-[15m] no marks on this candle (chain: 58 swings)
+[poll] CSV last 15m: 2026-09-09 17:00:00 | 1h: 2026-09-09 16:30:00
+[poll] polling every 60s for NEW closed candles
+[15m CLOSE] 2026-09-09 17:15:00 | O 79024.44  H 79379.28  L 79024.44  C 79324.75
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 17:30:00 | O 79324.75  H 79452.93  L 79281.51  C 79390.00
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 17:45:00 | O 79390.00  H 79460.04  L 79326.00  C 79405.25
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 18:00:00 | O 79405.25  H 79610.60  L 79405.24  C 79528.58
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 18:15:00 | O 79528.58  H 79662.56  L 79528.55  C 79606.14
+[15m] no marks on this candle (chain: 6104 swings)
+[ 1h CLOSE] 2026-09-09 17:30:00 | O 79324.75  H 79662.56  L 79281.51  C 79606.14
+[ 1h] no marks on this candle (chain: 1651 swings)
+[15m CLOSE] 2026-09-09 18:30:00 | O 79606.15  H 79629.57  L 79498.55  C 79523.45
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 18:45:00 | O 79523.46  H 79640.84  L 79464.08  C 79620.05
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 19:00:00 | O 79620.05  H 79678.84  L 79103.81  C 79246.68
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 19:15:00 | O 79246.68  H 79390.00  L 79103.19  C 79140.69
+[15m] no marks on this candle (chain: 6104 swings)
+[ 1h CLOSE] 2026-09-09 18:30:00 | O 79606.15  H 79678.84  L 79103.19  C 79140.69
+[ 1h] no marks on this candle (chain: 1651 swings)
+[15m CLOSE] 2026-09-09 19:30:00 | O 79140.69  H 79205.43  L 78890.43  C 79086.01
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 19:45:00 | O 79086.00  H 79274.74  L 78877.36  C 79274.74
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 20:00:00 | O 79274.74  H 79413.74  L 78965.69  C 79000.00
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 20:15:00 | O 78999.99  H 79136.01  L 78885.53  C 78958.01
+[15m] no marks on this candle (chain: 6104 swings)
+[ 1h CLOSE] 2026-09-09 19:30:00 | O 79140.69  H 79413.74  L 78877.36  C 78958.01
+[ 1h] no marks on this candle (chain: 1651 swings)
+[15m CLOSE] 2026-09-09 20:30:00 | O 78958.01  H 79394.99  L 78280.00  C 78478.01
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 20:45:00 | O 78478.01  H 78625.19  L 78060.03  C 78377.23
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 21:00:00 | O 78377.23  H 78750.00  L 78340.30  C 78643.39
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 21:15:00 | O 78643.40  H 78689.36  L 78555.39  C 78596.70
+[15m] no marks on this candle (chain: 6104 swings)
+[ 1h CLOSE] 2026-09-09 20:30:00 | O 78958.01  H 79394.99  L 78060.03  C 78596.70
+[ 1h] no marks on this candle (chain: 1652 swings)
+[15m CLOSE] 2026-09-09 21:30:00 | O 78596.70  H 78789.42  L 78493.19  C 78666.96
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 21:45:00 | O 78666.97  H 78667.00  L 78460.34  C 78634.01
+[15m] no marks on this candle (chain: 6104 swings)
+[15m CLOSE] 2026-09-09 22:00:00 | O 78634.01  H 78938.55  L 78634.01  C 78806.02
+[15m] no marks on this candle (chain: 6105 swings)
+[15m CLOSE] 2026-09-09 22:15:00 | O 78806.01  H 78812.19  L 78738.78  C 78804.90
+[15m] no marks on this candle (chain: 6105 swings)
+[ 1h CLOSE] 2026-09-09 21:30:00 | O 78596.70  H 78938.55  L 78460.34  C 78804.90
+[ 1h] no marks on this candle (chain: 1652 swings)
+[15m CLOSE] 2026-09-09 22:30:00 | O 78804.90  H 78919.76  L 78724.00  C 78871.62
+[15m] no marks on this candle (chain: 6105 swings)
+[15m CLOSE] 2026-09-09 22:45:00 | O 78871.62  H 78934.40  L 78794.00  C 78854.17
+[15m] no marks on this candle (chain: 6105 swings)
+[15m CLOSE] 2026-09-09 23:00:00 | O 78854.16  H 78862.01  L 78692.00  C 78702.49
+[15m] no marks on this candle (chain: 6105 swings)

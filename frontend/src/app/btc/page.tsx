@@ -3,8 +3,8 @@
 // BTC/USDT swing chart — continuous 24/7 walker on 1m/5m/15m CSV data.
 // Reuses StockChart + WholeDaySwingPrimitive (untouched); zero Nifty logic.
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import StockChart from "@/components/StockChart";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import type { WholeDaySwingPoint } from "@/components/WholeDaySwingPrimitive";
 import type { TradeBox } from "@/components/PositionPrimitive";
 import type { FlowSegment } from "@/lib/flowline";
@@ -25,6 +25,16 @@ import {
   type BtcVersion,
   type HtfLtfVer,
 } from "@/lib/btcApi";
+import {
+  getCachedChart,
+  setCachedChart,
+  getCachedStatus,
+  setCachedStatus,
+  getCachedBacktest,
+  setCachedBacktest,
+  getCachedSummary,
+  setCachedSummary,
+} from "@/lib/btcCache";
 import { BTC_MASTER_DEFAULT, BTC_MASTER_MODES } from "@/lib/btcMaster";
 
 const TF_KEY = "btc_chart_tf";
@@ -119,9 +129,10 @@ function Stat({
 }
 
 export default function BtcPage() {
+  // ALL state initializes with HARDCODED DEFAULTS (server + client agree on first render)
   const [tf, setTf] = useState<BtcTf>("5m");
   const [mode, setMode] = useState<BtcMode>("continuous");
-  const [limit, setLimit] = useState<number | null>(2000);
+  const [limit, setLimit] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [data, setData] = useState<BtcChartResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -132,14 +143,17 @@ export default function BtcPage() {
   const [btData, setBtData] = useState<BtcBacktestResponse | null>(null);
   const [reportCopied, setReportCopied] = useState(false);
   const [btError, setBtError] = useState<string | null>(null);
+  const [version, setVersion] = useState<BtcVersion>("v1");
+  const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
+  const [htfLtfVer, setHtfLtfVer] = useState<HtfLtfVer>("v18");
+  const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
   const [summaryData, setSummaryData] = useState<BtcSummaryResponse | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
   const [status, setStatus] = useState<BtcStatusResponse | null>(null);
-  const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
   const [showMasterInfo, setShowMasterInfo] = useState(true);
-  const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
-  const [htfLtfVer, setHtfLtfVer] = useState<"v1" | "v3" | "v5" | "v6" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19">("v12");
-  const [version, setVersion] = useState<BtcVersion>("v1");
+  const chartRef = useRef<StockChartHandle | null>(null);
+  const [goDate, setGoDate] = useState("");
+  const [jumpInfo, setJumpInfo] = useState<string | null>(null);
   const [versionLabels, setVersionLabels] = useState<Record<string, string>>({
     v1: "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
     v2: "v2 Chandelier ATR k=3.0",
@@ -161,30 +175,31 @@ export default function BtcPage() {
     v19: "v19 1.5R window (rejected)",
   });
 
-  // restore saved prefs (localStorage only on client)
+  // Hydrate from localStorage AFTER mount (client-only, runs once)
   useEffect(() => {
-    const t = window.localStorage.getItem(TF_KEY) as BtcTf | null;
-    const m = window.localStorage.getItem(MODE_KEY) as BtcMode | null;
-    const l = window.localStorage.getItem(LIMIT_KEY);
-    if (t && (BTC_TFS as string[]).includes(t)) setTf(t);
-    if (m === "continuous" || m === "daily") setMode(m);
-    if (l === "all") setLimit(null);
-    else if (l) {
-      const n = Number(l);
-      if (Number.isFinite(n) && n > 0) setLimit(n);
+    if (typeof window === "undefined") return;
+    // Restore all saved prefs
+    const savedTf = window.localStorage.getItem(TF_KEY) as BtcTf | null;
+    if (savedTf && (BTC_TFS as string[]).includes(savedTf)) setTf(savedTf);
+    const savedMode = window.localStorage.getItem(MODE_KEY) as BtcMode | null;
+    if (savedMode === "continuous" || savedMode === "daily") setMode(savedMode);
+    const savedLimit = window.localStorage.getItem(LIMIT_KEY);
+    if (savedLimit === "all" || savedLimit === null) {
+      setLimit(null);
+    } else {
+      const n = Number(savedLimit);
+      setLimit(Number.isFinite(n) && n > 0 ? n : null);
     }
-    const v = window.localStorage.getItem(VER_KEY) as BtcVersion | null;
-    if (v && ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12","v13","v15","v16","v17"].includes(v)) setVersion(v);
-    const htf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
-    if (htf && ["off","5m","15m"].includes(htf)) setHtfLtf(htf as any);
-    const htfVer = window.localStorage.getItem(HTF_VER_KEY) as "v1" | "v3" | "v5" | "v6" | "v11" | "v12" | null;
-    if (htfVer && ["v1","v3","v5","v6","v11","v12","v13","v15","v16","v17","v18","v19"].includes(htfVer)) setHtfLtfVer(htfVer as any);
-    const mm = window.localStorage.getItem(MASTER_KEY);
-    const modeM = mm ? BTC_MASTER_MODES.find((x) => x.value === mm) : undefined;
-    // MASTER always wins: the params must match the selected strategy, otherwise
-    // the dropdown shows #1 but old bt_params (from another preset) run the
-    // backtest. Force the master preset on hydration (saved master, or the
-    // DEFAULT if nothing saved) so the two can never desync.
+    const savedVer = window.localStorage.getItem(VER_KEY) as BtcVersion | null;
+    const validVers = ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12","v13","v15","v16","v17"];
+    if (savedVer && validVers.includes(savedVer)) setVersion(savedVer);
+    const savedHtf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
+    if (savedHtf && ["off","5m","15m"].includes(savedHtf)) setHtfLtf(savedHtf);
+    const savedHtfVer = window.localStorage.getItem(HTF_VER_KEY) as HtfLtfVer | null;
+    const validHtfVers = ["v1","v3","v5","v6","v11","v12","v13","v15","v16","v17","v18","v19"];
+    if (savedHtfVer && validHtfVers.includes(savedHtfVer)) setHtfLtfVer(savedHtfVer);
+    const savedMaster = window.localStorage.getItem(MASTER_KEY);
+    const modeM = savedMaster ? BTC_MASTER_MODES.find((x) => x.value === savedMaster) : undefined;
     const masterM = modeM ?? BTC_MASTER_MODES.find((x) => x.value === BTC_MASTER_DEFAULT)!;
     setMaster(masterM.value);
     const next = { ...BT_DEFAULTS, ...masterM.preset } as BtcBacktestParams;
@@ -203,9 +218,15 @@ export default function BtcPage() {
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
+    // instant restore from cache on tab switch, then refresh in background
+    const cached = getCachedStatus();
+    if (cached && !cancelled) setStatus(cached);
     getBtcStatus()
       .then((res) => {
-        if (!cancelled) setStatus(res);
+        if (!cancelled) {
+          setStatus(res);
+          setCachedStatus(res);
+        }
       })
       .catch(() => {});
     return () => {
@@ -231,16 +252,27 @@ export default function BtcPage() {
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
-    setLoading(true);
+    const cacheKey = `${tf}|${mode}|${limit}|${strategyChainMinBars}`;
+    // instant restore from cache on tab switch — no loading flash
+    const cached = getCachedChart(cacheKey);
+    if (cached && !cancelled) {
+      setData(cached);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     setError(null);
     getBtcChart(tf, mode, limit, strategyChainMinBars)
       .then((res) => {
-        if (!cancelled) setData(res);
+        if (!cancelled) {
+          setData(res);
+          setCachedChart(cacheKey, res);
+        }
       })
       .catch((e: unknown) => {
         if (!cancelled) {
           setError(e instanceof Error ? e.message : String(e));
-          setData(null);
+          if (!cached) setData(null);
         }
       })
       .finally(() => {
@@ -281,19 +313,41 @@ export default function BtcPage() {
     setHtfLtfVer(v as any);
   };
 
+  // Go-to-date: pick a date, chart jumps to it (snaps to nearest day with data).
+  const goTo = () => {
+    if (!goDate) return;
+    const actual = chartRef.current?.goToDate(goDate) ?? null;
+    if (!actual) return;
+    setJumpInfo(
+      actual === goDate
+        ? null
+        : `No data — nearest: ${new Date(`${actual}T00:00:00Z`).toUTCString().slice(5, 16)}`,
+    );
+  };
+
+  const candles = data?.candles ?? [];
+  const minDate = candles.length ? candles[0].date.slice(0, 10) : "";
+  const maxDate = candles.length ? candles[candles.length - 1].date.slice(0, 10) : "";
 
   useEffect(() => {
     if (!hydrated || !tradesOn) return;
     let cancelled = false;
     setBtError(null);
+    const cacheKey = `${tf}|${mode}|${limit}|${JSON.stringify(btParams)}|${version}|${htfLtf}|${htfLtfVer}`;
+    // instant restore from cache on tab switch — no loading flash
+    const cached = getCachedBacktest(cacheKey);
+    if (cached && !cancelled) setBtData(cached);
     getBtcBacktest(tf, mode, limit, btParams, version, htfLtf, htfLtfVer)
       .then((res) => {
-        if (!cancelled) setBtData(res);
+        if (!cancelled) {
+          setBtData(res);
+          setCachedBacktest(cacheKey, res);
+        }
       })
       .catch((e: unknown) => {
         if (!cancelled) {
           setBtError(e instanceof Error ? e.message : String(e));
-          setBtData(null);
+          if (!cached) setBtData(null);
         }
       });
     return () => {
@@ -306,14 +360,21 @@ export default function BtcPage() {
     if (!hydrated || !tradesOn) return;
     let cancelled = false;
     setSummaryError(null);
+    const cacheKey = `${tf}|${mode}|${limit}|${btParams.feePct}|${btParams.slippagePts}|${version}`;
+    // instant restore from cache on tab switch
+    const cached = getCachedSummary(cacheKey);
+    if (cached && !cancelled) setSummaryData(cached);
     getBtcSummary(tf, mode, limit, btParams.feePct, btParams.slippagePts, version)
       .then((res) => {
-        if (!cancelled) setSummaryData(res);
+        if (!cancelled) {
+          setSummaryData(res);
+          setCachedSummary(cacheKey, res);
+        }
       })
       .catch((e: unknown) => {
         if (!cancelled) {
           setSummaryError(e instanceof Error ? e.message : String(e));
-          setSummaryData(null);
+          if (!cached) setSummaryData(null);
         }
       });
     return () => {
@@ -625,6 +686,42 @@ export default function BtcPage() {
             Trades
           </button>
 
+          {/* Go-to-date: pick a date, chart jumps to it */}
+          <div className="flex items-center gap-1.5">
+            {jumpInfo && (
+              <span className="text-xs text-amber-400/90" title="Selected date has no candles">
+                {jumpInfo}
+              </span>
+            )}
+            <input
+              type="date"
+              value={goDate}
+              min={minDate || undefined}
+              max={maxDate || undefined}
+              onChange={(e) => {
+                setGoDate(e.target.value);
+                setJumpInfo(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") goTo();
+              }}
+              disabled={!minDate}
+              suppressHydrationWarning
+              style={{ colorScheme: "dark" }}
+              className="rounded-md border border-[#30363d] bg-[#0d1117] px-2 py-1 text-xs text-[#8b949e] outline-none focus:border-[#6366f1] disabled:opacity-40"
+              title="Pick a date, then Go — chart jumps to that day"
+            />
+            <button
+              onClick={goTo}
+              disabled={!goDate || !minDate}
+              suppressHydrationWarning
+              className="rounded-md border border-[#30363d] px-2 py-1 text-xs text-[#8b949e] transition-colors hover:border-[#6366f1] hover:text-[#e6edf3] disabled:opacity-40"
+              title="Jump chart to the selected date"
+            >
+              Go
+            </button>
+          </div>
+
           {/* VERSION — crazy ideas v1..v7, each isolated engine */}
           <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
             <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">Ver</span>
@@ -725,6 +822,7 @@ export default function BtcPage() {
       ) : null}
 
       <StockChart
+        ref={chartRef}
         symbol="BTC/USDT"
         candles={data?.candles ?? []}
         interval={tf}

@@ -73,6 +73,20 @@ The live trader produces: console log (INFO), a daily marks journal, and a
 trade journal. No charts, no dashboard. Review happens by reading the logs
 and the daily compare output.
 
+### D4b — Code mirror map (live ≡ backtest, function by function)
+
+The live engine imports the SAME functions the backtest uses — no rewrites, no copies:
+
+| Layer | Function | File | Live import |
+|---|---|---|---|
+| Pivot walker (incl. volatile bar logic) | `WalkerEngine.process_bar()` | `walker.py:141` | `mark_engine.py:8` |
+| Swing chain | `compute_btc_swings()` | `btc_swing.py:33` | `mark_engine.py:7` |
+| Signal gating | `_collect_signals()` | `btc_engine.py:33` | (L2 when wired) |
+| Trail ratchet | `_trail_events()` | `btc_engine.py:179` | (L3 when wired) |
+| Outcome stats | `trade_stats()` | `btc_engine.py:537` | (L3 when wired) |
+
+**Consequence:** the volatile sweep-bar edge case (walker.py:261-290, DOUBLE-BREAK marker-band logic) is shared — "sweep-reversal bar re-anchors instead of firing B2" is identical in both engines by construction, not by testing. When L2/L3 are wired, they will use the same `_collect_signals` + `_trail_events` the backtest uses — the daily compare is the backstop, but the shared code is the primary guarantee.
+
 ### D5 — Journal EVERY mark, not just trades (compare protocol)
 To answer "are marks printed on the RIGHT candles?" the journal records three
 levels, and the daily compare checks them in order:

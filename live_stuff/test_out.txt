@@ -1,0 +1,16 @@
+============================================================
+Backbencher - Live Trading Engine (REAL v18)
+============================================================
+Mode: PAPER
+Database: backbencher.db
+Test window: 120.0s
+============================================================
+[swing] 15m: restored (swing_index=0, armed=False, dir=None)
+[live] Running backtest alignment...
+[live] Aligned: 2948 15m swings, 1356 1h swings
+[live] Backbencher v18 - FULL simulation (live marks)
+[live] 15m window: 30d | 1h window: 20d
+[live] params: mode=b2_vs_flip_chop rr=3.0 cd=20 halt=5
+[live] Test window over (120s) - bye
+[live] Loop stopped
+[main] Done

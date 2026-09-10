@@ -181,7 +181,7 @@ def main() -> int:
     else:
         since_ms = ts_to_ms(last)
         print(f"fetching Binance {tf} candles after {last} ...")
-        start_ms = since_ms + TF_MS[tf]  # start AFTER the last stored candle
+        start_ms = since_ms  # fetch_tf adds TF_MS[tf] internally
     new_rows = fetch_tf(tf, start_ms)
     print(f"fetched {len(new_rows)} candidate rows")
     added = merge_csv(tf, new_rows, seed=seeding)

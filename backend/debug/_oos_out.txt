@@ -1,0 +1,12 @@
+OOS VALIDATION
+
+IS window (2023-2024): 70149 15m bars, 1631 swings
+OOS window (2025-2026): 59147 15m bars, 1315 swings
+
+IS (2023-2024):
+Traceback (most recent call last):
+  File "C:\Users\Pravin\Desktop\main\AT_Trading\backend\debug\test_oos_validation.py", line 55, in <module>
+    print('  v12+cd20:', len(v12_is), 'trades, net=', round(sum(t['r_multiple'] for t in v12_is), 2))
+  File "C:\Users\Pravin\Desktop\main\AT_Trading\backend\debug\test_oos_validation.py", line 55, in <genexpr>
+    print('  v12+cd20:', len(v12_is), 'trades, net=', round(sum(t['r_multiple'] for t in v12_is), 2))
+TypeError: string indices must be integers

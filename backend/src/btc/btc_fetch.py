@@ -116,7 +116,7 @@ def refresh_tf(tf: str) -> dict:
         note = f"seeding from {SEED_IST}"
     else:
         since_ms = ts_to_ms(last)
-        start_ms = since_ms + TF_MS[tf]
+        start_ms = since_ms
         note = f"appending after {last}"
 
     new_rows = fetch_tf(tf, start_ms)

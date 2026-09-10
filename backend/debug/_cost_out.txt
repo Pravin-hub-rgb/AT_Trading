@@ -1,0 +1,19 @@
+Loading data...
+Running v18...
+
+======================================================================
+COST SENSITIVITY — v18
+======================================================================
+Cost Mult      Trades    Gross R      Net R     Max DD       PF     Win%
+----------------------------------------------------------------------
+0x                333     310.77     310.77       9.73     2.66    35.4%
+1x                333     310.77     261.19       9.73     2.66    35.4%
+2x                333     310.77     211.61       9.73     2.66    35.4%
+3x                333     310.77     162.03       9.73     2.66    35.4%
+
+Cost per closed trade (1x): 0.1489 R
+Total cost (1x): 49.58 R
+Gross-Net gap (1x): 49.58 R
+
+CONCLUSION: 3x costs (3x 0.05% + 6pt) still nets +162R, PF 2.66.
+Strategy is NOT cost-sensitive at these levels.
