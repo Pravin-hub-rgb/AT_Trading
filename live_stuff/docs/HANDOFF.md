@@ -106,22 +106,43 @@ Cross-check: `backend/debug/_chop_sweep_results.txt` — thresh=61.8, lb=14 → 
 
 | Path | Verdict |
 |---|---|
-| `engine/walker.py`, `walker_state.py`, `bias.py`, `candle.py`, `mark.py` | **WRONG — toy reimplementation. DELETE/REPLACE, do not patch.** |
-| `engine/original_walker.py` | **WRONG TARGET** — wraps `backend/src/walker.py` (NIFTY flowline WalkerEngine), NOT what v18 uses. v18 uses `compute_btc_swings` from `backend/src/btc/btc_swing.py`. |
-| `engine/htf_window.py`, `ltf_trade.py`, `trading_state.py`, `trade_manager.py` | Concept OK, rules inside come from the toy — re-derive from the real v18 loop |
-| `persistence/` (database, state_store, mark_store, trade_store, trading_state_store) | **KEEP** — SQLite WAL, atomic transactions, append-only marks journal, `check_same_thread=False` |
-| `data/binance.py`, `validator.py`, `backfill.py` | **KEEP** — REST fetch (symbol UPPERCASE in REST, lowercase in stream names), validation, gap backfill |
-| `data/streamer.py` | **KEEP MockStreamer**; real WebSocket streamer to be ported from Ghost Streak / `backend/src/live/` |
-| `bootstrap.py`, `live_loop.py`, `main.py` | **KEEP structure**, but bootstrap seeds the toy walker → re-point at the real engine |
-| `verification/`, `verify_parity.py` | **REWRITE** — must diff against REAL backtester output, never against itself |
-| `tests/` | Walker/trade-engine tests test the toy → rewrite; persistence/data tests largely fine |
-| `docs/design.md` | Good architecture notes but describes the toy + has the 1.5R confusion — superseded by THIS file |
+| `engine/v18_params.py` | **DONE** — verified parameter matrix, each value citing backtest source |
+| `engine/walker.py`, `walker_state.py`, `bias.py`, `candle.py`, `mark.py` | **DELETED** — replaced by `PersistentSwingEngine` + `SwingEngine` from `backend/src/firstswing.py` |
+| `engine/original_walker.py` | **DELETED** — was wrong target (NIFTY flowline, not v18) |
+| `persistence/` (database, state_store, trade_store) | **DONE** — SQLite WAL, atomic transactions, append-only marks, HTF window CRUD, streak halt persistence |
+| `data_streamer.py` | **DONE** — spot API (`api.binance.com`), `backfill_klines()` + `fetch_klines_from()`, mock-friendly |
+| `live_loop.py` | **DONE** — 8 phases: foundation, HTF window tracker, signal filter, trade execution, streak halt, cleanup, seed pipeline, IST+spot fix |
+| `main.py` | **DONE** — CLI with `--seed-1h` / `--seed-15m` args, normal Binance seed fallback |
+| `docs/CHECKLIST.md` | **DONE** — all 8 phases marked with tests |
+| `docs/live_trading_doc.md` | **DONE** — D1-D7 decisions, architecture, seed-by-timestamp (IST convention, spot API) |
 
 ### Works today
-Binance REST candle fetching (15m/1h), gap detection + backfill, SQLite atomic persistence, append-only journal, boot→seed→process→persist skeleton, restart/catch-up concept.
+- Binance REST candle fetching (15m/1h) with timestamp-based seeding
+- SwingEngine replay with PersistentSwingEngine (SQLite state persistence)
+- Full v18 simulation on rolling windows (HTF windows, LTF trades, streak halt)
+- HTF window tracking with chop/regime, extension stop gate
+- Signal filter diagnostics (REJECT/PASS/TAKEN per signal)
+- Trade execution with MB50 trail, conservative gap fill, ATR-scaled tolerance
+- Streak halt (5L → halt, resume on next winner)
+- Seed-by-timestamp API (`POST /api/btc/seed`) + CLI args
 
-### Broken / missing
-**The strategy brain.** Swings, marks, chop regime, windows, entries, SL, trail, exits, gates — all must come from the REAL v18 modules (Section 4).
+### Phase 7: Seed Pipeline (new)
+- `POST /api/btc/seed` — takes `{"1h": "timestamp", "15m": "timestamp"}`
+- `python main.py --seed-1h "..." --seed-15m "..."` — CLI equivalent
+- Timestamps are IST wall-clock (matching CSV convention)
+- Warmup: 50 bars 15m (12.5h), 34 bars 1h (20 minBars + 14 chop)
+- Engine state saved to SQLite, v18 simulation primed on boot
+
+### Phase 8: IST + Spot API Fix
+- All Binance fetches use spot API (`api.binance.com`), not futures (`fapi.binance.com`)
+- All candle date strings use IST wall-clock (matching CSV convention)
+- WebSocket uses spot stream (`stream.binance.com`)
+- Verified: Sept 9 backtest marks match seed engine marks exactly
+
+### Not yet deployed to VPS
+- WebSocket live streaming (needs VPS testing)
+- Daily parity check (L1/L2/L3 compare vs backtest)
+- systemd unit + cron for auto-restart
 
 ---
 
@@ -140,7 +161,7 @@ Binance REST candle fetching (15m/1h), gap detection + backfill, SQLite atomic p
 ### Open items
 - 1m fine-data strategy for live (fetch per trade window vs rolling 1m buffer)
 - WebSocket vs 60s REST polling (Ghost Streak dual-stream vs simpler; VPS-friendly)
-- IST wall-clock vs epoch convention (docs say IST; bit the old build — be consistent)
+- ~~IST wall-clock vs epoch convention (docs say IST; bit the old build — be consistent)~~ **FIXED**: all timestamps are IST wall-clock, converted to UTC epoch for Binance API
 - DB retention + 1m buffer sizing
 - systemd unit + cron for daily parity (checklist build order: daily_fetch → compare → feeder → systemd)
 
@@ -175,12 +196,23 @@ Binance REST candle fetching (15m/1h), gap detection + backfill, SQLite atomic p
 
 ## 7. Where We Left Off (the immediate next step)
 
-**Task:** Execute the Section-4 rebuild:
+**Phase 7 done.** Seed pipeline is built and tested:
+- `POST /api/btc/seed` endpoint works
+- `_seed_from_timestamps()` method works (tested with real Binance data)
+- CLI args `--seed-1h` / `--seed-15m` work
+- Backtest still passes (330t +331.1R)
 
-1. Delete toy walker files (`engine/walker.py`, `walker_state.py`, `bias.py`, `engine/original_walker.py` + their tests)
-2. Create `live_stuff/engine/v18_params.py` — the Section-2 matrix as code, each value citing its source file:line
-3. Create the smoke test by **copying `backend/debug/test_cat_f.py`'s recipe verbatim** (Section 2b) but feeding it Binance-fetched candles instead of CSVs → it must produce trades consistent with the golden test on overlapping windows. This proves the real engine runs in the live process with live data.
-4. Wire `live_loop` to: rolling-window recompute per 15m close → signal diff vs journal → journal new signals → trade lifecycle bookkeeping (SL/3R/16d/trail from v18 semantics). **Sanity gate: run the golden test (full CSVs) after any engine-touching change — 330t/+331.1R must hold.**
-5. Rewrite `verify_parity.py` to diff live journal vs REAL backtester output on the same window (L1 marks / L2 trades / L3 R)
+**Next: Deploy to VPS and test live.**
 
-**Definition of done:** run live for N days → daily compare vs backtester shows ZERO diffs at L1, L2, L3. Only then is it deployable to the VPS.
+1. Deploy `live_stuff/` + `backend/` to VPS
+2. Run `python main.py --seed-1h "..." --seed-15m "..."` with backtest timestamps
+3. Verify WebSocket streamer connects and candle data flows
+4. Verify marks appear correctly on 15m close
+5. Run for 1 week → daily parity check vs backtest
+6. If parity OK → paper trade for 1 month → GO/NO-GO for real money
+
+**Or:** test the seed API via Postman:
+```
+POST http://localhost:8003/api/btc/seed
+Body: {"1h": "2026-09-09 15:00:00", "15m": "2026-09-10 04:30:00"}
+```

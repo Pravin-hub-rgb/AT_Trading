@@ -29,3 +29,4 @@ frontend/*.log
 # misc
 .DS_Store
 *.pkl
+live_stuff/.env.example

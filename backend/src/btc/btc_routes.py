@@ -10,7 +10,7 @@ from typing import Optional
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from src.btc.btc_config import BTC_TFS, btc_csv_path, load_btc_df
+from src.btc.btc_config import BTC_TFS, SYMBOLS, btc_csv_path, load_btc_df
 from src.btc.btc_engine import simulate_btc_trades, trade_stats
 from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts
 from src.btc.btc_swing import compute_btc_flow, compute_btc_swings
@@ -125,15 +125,15 @@ router = APIRouter(prefix="/api/btc")
 _IDX_FIELDS = ("confirmed_at_idx", "fs_at_idx")
 
 
-def _load_window(tf: str, limit: int | None):
+def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT"):
     """Validated load of one timeframe window. Returns (candles, flow) or
     (None, JSONResponse-error)."""
     try:
-        df = load_btc_df(tf)
+        df = load_btc_df(tf, symbol)
     except FileNotFoundError:
         return None, JSONResponse(
             status_code=404,
-            content={"detail": f"BTC {tf} data missing in data/btc/ — copy the CSV first."},
+            content={"detail": f"{symbol} {tf} data missing — copy the CSV first."},
         )
     except ValueError as e:
         return None, JSONResponse(status_code=400, content={"detail": str(e)})
@@ -409,14 +409,14 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
     }
 
 
-def _load_fine_1m(t0: int, t1: int) -> list[dict]:
+def _load_fine_1m(t0: int, t1: int, symbol: str = "BTCUSDT") -> list[dict]:
     """1m candles for [t0, t1] from the 1m CSV — for 1m-precise exit fills.
 
     Returns [] when the 1m CSV is missing. Filters the frame BEFORE building
     dicts so a full-window backtest still only materialises the needed rows.
     """
     try:
-        df = load_btc_df("1m")
+        df = load_btc_df("1m", symbol)
     except FileNotFoundError:
         return []
     df = df[(df["ts"] >= t0) & (df["ts"] <= t1)]
@@ -471,16 +471,16 @@ def _streak_regime_gate(candles: list[dict]) -> dict[str, Optional[str]]:
 
 
 @router.get("/status")
-def btc_status():
+def btc_status(symbol: str = "BTCUSDT"):
     """Data presence per timeframe (rows + coverage)."""
     out: dict = {}
     for tf in BTC_TFS:
-        path = btc_csv_path(tf)
+        path = btc_csv_path(tf, symbol)
         if not path.exists():
             out[tf] = {"exists": False, "rows": 0, "first_ts": None, "last_ts": None}
             continue
         try:
-            df = load_btc_df(tf)
+            df = load_btc_df(tf, symbol)
         except Exception:  # malformed CSV etc.
             out[tf] = {"exists": False, "rows": 0, "first_ts": None, "last_ts": None}
             continue
@@ -490,7 +490,36 @@ def btc_status():
             "first_ts": df["timestamp"].iloc[0].strftime("%Y-%m-%d %H:%M:%S"),
             "last_ts": df["timestamp"].iloc[-1].strftime("%Y-%m-%d %H:%M:%S"),
         }
-    return {"tfs": out}
+    return {"tfs": out, "symbol": symbol}
+
+
+@router.get("/symbols")
+def btc_symbols():
+    """List available symbols for the chart dropdown."""
+    result = []
+    for sym, cfg in SYMBOLS.items():
+        # Check if data exists for this symbol (15m is the default tf)
+        try:
+            path = btc_csv_path("15m", sym)
+            exists = path.exists()
+            if exists:
+                df = load_btc_df("15m", sym)
+                rows = len(df)
+                first = df["timestamp"].iloc[0].strftime("%Y-%m-%d %H:%M:%S")
+                last = df["timestamp"].iloc[-1].strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                rows, first, last = 0, None, None
+        except Exception:
+            rows, first, last = 0, None, None
+        result.append({
+            "symbol": sym,
+            "label": cfg["label"],
+            "exists": exists,
+            "rows": rows,
+            "first_ts": first,
+            "last_ts": last,
+        })
+    return {"symbols": result}
 
 
 @router.get("/chart")
@@ -499,6 +528,7 @@ def btc_chart(
     mode: str = "continuous",
     limit: int | None = None,
     min_bars: int = 14,
+    symbol: str = "BTCUSDT",
 ):
     """Candles + REAL swing chain (B1/B2/FLIP/FS-SUS) for ONE window.
 
@@ -509,7 +539,12 @@ def btc_chart(
     err = _validate_tf_mode(tf, mode)
     if err:
         return err
-    win, err = _load_window(tf, limit)
+    if symbol not in SYMBOLS:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": f"symbol must be one of {sorted(SYMBOLS)}"},
+        )
+    win, err = _load_window(tf, limit, symbol)
     if err:
         return err
     candles, flow = win
@@ -517,13 +552,12 @@ def btc_chart(
     return {
         "tf": tf,
         "mode": mode,
+        "symbol": symbol,
         "count": len(candles),
         "first_ts": candles[0]["date"] if candles else None,
         "last_ts": candles[-1]["date"] if candles else None,
         "candles": candles,
         "swings": _compute_swings(flow, mode, min_bars=min_bars),
-        # white walker path — continuous chains across midnight (24/7),
-        # daily re-seeds per calendar day
         "flow": compute_btc_flow(flow, mode),
     }
 
@@ -552,6 +586,7 @@ def btc_backtest(
     htf_ltf: str = "off",
     htf_ltf_ver: str = "v1",
     cooldown_bars: int = 0,
+    symbol: str = "BTCUSDT",
 ):
     """Position engine over the swing chain: entries on swing breaks,
     swing/pct SL, fixed R target, breakeven-R and trailing.
@@ -607,7 +642,7 @@ def btc_backtest(
     if htf_ltf_ver not in ("v1", "v3", "v5", "v6", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19"):
         return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3 | v5 | v6 | v11 | v12 | v13 | v15 | v16 | v17"})
 
-    win, err = _load_window(tf, limit)
+    win, err = _load_window(tf, limit, symbol)
     if err:
         return err
     candles, flow = win
@@ -618,7 +653,7 @@ def btc_backtest(
     # the signal TF's bars (no hidden intrabar stops). tf=1m already exact.
     fine: Optional[list[dict]] = None
     if fill_tf == "1m" and tf != "1m":
-        fine = _load_fine_1m(candles[0]["ts"], candles[-1]["ts"])
+        fine = _load_fine_1m(candles[0]["ts"], candles[-1]["ts"], symbol)
         if not fine:
             return JSONResponse(
                 status_code=400,
@@ -635,7 +670,7 @@ def btc_backtest(
     bias_applied = False
     bias_timeline: list[tuple[int, str]] | None = None
     if bias == "15m" and tf in ("1m", "5m"):
-        htf, htf_err = _load_window("15m", None)
+        htf, htf_err = _load_window("15m", None, symbol)
         if htf_err is None:
             htf_candles, htf_flow = htf
             htf_swings = _compute_swings(htf_flow, mode)
@@ -680,8 +715,8 @@ def btc_backtest(
         htf_tf = "1h"
         ltf_tf = htf_ltf
         # Load HTF window (full)
-        htf_win, htf_err = _load_window(htf_tf, None)
-        ltf_win, ltf_err = _load_window(ltf_tf, limit)  # use same limit as chart window for LTF
+        htf_win, htf_err = _load_window(htf_tf, None, symbol)
+        ltf_win, ltf_err = _load_window(ltf_tf, limit, symbol)  # use same limit as chart window for LTF
         if htf_err is None and ltf_err is None and htf_win is not None and ltf_win is not None:
             htf_candles, htf_flow = htf_win  # type: ignore
             ltf_candles, ltf_flow = ltf_win  # type: ignore
@@ -835,43 +870,74 @@ def btc_backtest(
                 # v18 = v12+cd20 + streak halt at 5L: halt trading after 5
                 # consecutive losses, resume on next winner. Research: +322R net
                 # vs +265R without halt (streak analysis test_streak_analysis.py).
+                #
+                # Per-instrument tuning (2026-09-11, 1m fills):
+                #   BTC Spot:     chop=61.8 cd=20 slbuf=0.25 → +331.1R  DD 9.7R
+                #   Binance Perp: chop=61.8 cd=5  slbuf=0.15 → +311.7R  DD 11.6R
+                #   Bybit Perp:   chop=58.0 cd=0  slbuf=0.20 → +307.8R  DD 9.2R
+                if symbol == "BTCUSDT_BYBIT":
+                    _chop = 58.0
+                    _cd = 0
+                    _slbuf = 0.20
+                elif symbol == "BTCUSDT_PERP":
+                    _chop = 61.8
+                    _cd = 5
+                    _slbuf = 0.15
+                else:
+                    _chop = 61.8
+                    _cd = 20
+                    _slbuf = 0.25
                 nested = simulate_htf_ltf_streak_halt(
                     candles_htf=htf_candles,
                     swings_htf=htf_swings,
                     candles_ltf=ltf_candles,
                     swings_ltf=ltf_swings,
                     fine_ltf=ltf_fine,
-                    sl_buf_atr=0.25,
+                    sl_buf_atr=_slbuf,
                     ext_stop_r=1.5,
                     mode="b2_vs_flip_chop",
-                    cooldown_bars=20,
+                    chop_thresh=_chop,
+                    cooldown_bars=_cd,
                     max_consecutive_losses=5,
                 )
                 params["ext_stop_r"] = 1.5
-                params["sl_buf_atr"] = 0.25
-                params["cooldown_bars"] = 20
+                params["sl_buf_atr"] = _slbuf
+                params["cooldown_bars"] = _cd
                 params["max_consecutive_losses"] = 5
             elif htf_ltf_ver == "v19" and simulate_htf_ltf_streak_halt is not None:
                 # v19 = v18 with HTF window ending at first touch of 1.5R (r_touch)
                 # instead of the HTF trade's exit. Research 2026-09-08 (fix/research_v19.md):
                 # 242t +200.6R DD8.5 PF2.51 vs v18 330t +331.1R DD9.7 — REJECTED as default
                 # (removed 88 trades avg +1.48R = pullback winners), kept for comparison.
+                if symbol == "BTCUSDT_BYBIT":
+                    _chop = 58.0
+                    _cd = 0
+                    _slbuf = 0.20
+                elif symbol == "BTCUSDT_PERP":
+                    _chop = 61.8
+                    _cd = 5
+                    _slbuf = 0.15
+                else:
+                    _chop = 61.8
+                    _cd = 20
+                    _slbuf = 0.25
                 nested = simulate_htf_ltf_streak_halt(
                     candles_htf=htf_candles,
                     swings_htf=htf_swings,
                     candles_ltf=ltf_candles,
                     swings_ltf=ltf_swings,
                     fine_ltf=ltf_fine,
-                    sl_buf_atr=0.25,
+                    sl_buf_atr=_slbuf,
                     ext_stop_r=1.5,
                     mode="b2_vs_flip_chop",
-                    cooldown_bars=20,
+                    chop_thresh=_chop,
+                    cooldown_bars=_cd,
                     max_consecutive_losses=5,
                     window_end="r_touch",
                 )
                 params["ext_stop_r"] = 1.5
-                params["sl_buf_atr"] = 0.25
-                params["cooldown_bars"] = 20
+                params["sl_buf_atr"] = _slbuf
+                params["cooldown_bars"] = _cd
                 params["max_consecutive_losses"] = 5
                 params["window_end"] = "r_touch"
             else:
@@ -989,7 +1055,7 @@ def btc_backtest(
         htf_swings = None
         htf_ts = None
         try:
-            htf_win, htf_err = _load_window("1h", None)
+            htf_win, htf_err = _load_window("1h", None, symbol)
             if htf_err is None and htf_win is not None:
                 htf_candles, htf_flow = htf_win  # type: ignore
                 htf_swings = _compute_swings(htf_flow, mode, min_bars=min_bars)
@@ -1196,6 +1262,7 @@ def btc_summary(
     slippage_pts: float = 2.0,
     entry_selection: str = "stream",
     version: str = "v1",
+    symbol: str = "BTCUSDT",
 ):
     """\'Konsi best hai\' table - every master preset on its OWN reference TF.
 
@@ -1220,7 +1287,7 @@ def btc_summary(
 
     rows = []
     for ptf, presets in by_tf.items():
-        win_p, err_p = _load_window(ptf, None)
+        win_p, err_p = _load_window(ptf, None, symbol)
         if err_p:
             continue
         candles_p, flow_p = win_p
@@ -1228,7 +1295,7 @@ def btc_summary(
         # 15m bias timeline (only for presets on lower TFs)
         bias_timeline = None
         if ptf in ("1m", "5m"):
-            htf, htf_err = _load_window("15m", None)
+            htf, htf_err = _load_window("15m", None, symbol)
             if htf_err is None:
                 htf_candles, htf_flow = htf
                 htf_swings = _compute_swings(htf_flow, mode)
@@ -1306,3 +1373,191 @@ def btc_fetch_status():
     for tf in BTC_TFS:
         out[tf] = {"last_ts": btc_last_ts(tf)}
     return out
+
+
+@router.post("/seed")
+def btc_seed(body: dict):
+    """Seed the live engine from known backtest timestamps.
+
+    Body: {"1h": "2026-09-09 15:00:00", "15m": "2026-09-10 04:30:00"}
+
+    Timestamps are IST wall-clock (matching CSV convention).
+    Engine downloads candles from Binance spot starting BEFORE those timestamps
+    (warmup: 50 bars for 15m, 34 bars for 1h) and replays through SwingEngine.
+    """
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+
+    IST_OFF = _td(hours=5, minutes=30)
+    ts_1h = body.get("1h")
+    ts_15m = body.get("15m")
+    if not ts_1h or not ts_15m:
+        return JSONResponse(status_code=400, content={"detail": "Both '1h' and '15m' timestamps required. Format: 'YYYY-MM-DD HH:MM:SS'"})
+
+    # Validate timestamps (IST wall-clock -> UTC epoch ms)
+    try:
+        dt_1h_naive = _dt.strptime(ts_1h, "%Y-%m-%d %H:%M:%S")
+        dt_15m_naive = _dt.strptime(ts_15m, "%Y-%m-%d %H:%M:%S")
+        dt_1h = (dt_1h_naive - IST_OFF).replace(tzinfo=_tz.utc)
+        dt_15m = (dt_15m_naive - IST_OFF).replace(tzinfo=_tz.utc)
+    except ValueError:
+        return JSONResponse(status_code=400, content={"detail": "Invalid timestamp format. Use 'YYYY-MM-DD HH:MM:SS'"})
+
+    import time as _time
+
+    # 15m: fetch from (seed - 50*15min) to now
+    warmup_15m_ms = 50 * 15 * 60 * 1000  # 50 bars * 15min
+    start_15m_ms = int(dt_15m.timestamp() * 1000) - warmup_15m_ms
+    # 1h: fetch from (seed - 34*1h) to now
+    warmup_1h_ms = 34 * 3600 * 1000  # 34 bars * 1h
+    start_1h_ms = int(dt_1h.timestamp() * 1000) - warmup_1h_ms
+
+    # Fetch candles from Binance REST
+    import urllib.request as _urllib
+    import json as _json
+
+    def _fetch(symbol, interval, start_ms, limit=1000):
+        url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&startTime={start_ms}&limit={limit}"
+        req = _urllib.Request(url)
+        req.add_header("User-Agent", "Backbencher/SeedAPI/1.0")
+        with _urllib.urlopen(req, timeout=30) as resp:
+            data = _json.loads(resp.read().decode())
+        candles = []
+        for k in data:
+            candles.append({
+                "open_time": int(k[0]),
+                "close_time": int(k[6]),
+                "open": float(k[1]),
+                "high": float(k[2]),
+                "low": float(k[3]),
+                "close": float(k[4]),
+                "volume": float(k[5]),
+                "is_closed": True,
+            })
+        return candles
+
+    result = {}
+
+    # Fetch 15m
+    try:
+        raw_15m = _fetch(SYMBOL, "15m", start_15m_ms, limit=1000)
+        candles_15m = []
+        for c in raw_15m:
+            ts = int(c["close_time"]) // 1000
+            utc_dt = _dt.fromtimestamp(int(c["open_time"]) // 1000, tz=_tz.utc)
+            ist_dt = utc_dt + IST_OFF
+            date = ist_dt.strftime("%Y-%m-%d %H:%M:%S")
+            candles_15m.append({
+                "date": date, "ts": ts,
+                "open": c["open"], "high": c["high"],
+                "low": c["low"], "close": c["close"],
+            })
+        candles_15m.sort(key=lambda x: x["ts"])
+
+        from src.firstswing import SwingEngine
+        eng_15m = SwingEngine({"minBars": 50})
+        swings_15m = []
+        for i, c in enumerate(candles_15m):
+            fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+            eng_15m.process_bar(fc, i)
+            if eng_15m.declared:
+                src_kind = "SUS" if eng_15m.confirm_source == "sustain" else "FS"
+                decisive = eng_15m.break_marks[-1] if eng_15m.break_marks else None
+                bk = decisive.kind if decisive else None
+                swings_15m.append({
+                    "swing_index": len(swings_15m),
+                    "seg": {"dir": "B" if eng_15m.dir == "up" else "S",
+                            "start_idx": eng_15m.start_idx, "start_px": eng_15m.start_px,
+                            "end_idx": eng_15m.end_idx, "end_px": eng_15m.end_px},
+                    "dir": eng_15m.dir,
+                    "break_kind": bk,
+                    "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                               for b in eng_15m.break_marks],
+                    "confirmed_at_idx": eng_15m.confirmed_at_idx,
+                    "confirmed_at_time": eng_15m.confirmed_at_time,
+                })
+                # Reset engine for next swing
+                eng_15m = SwingEngine({"minBars": 50})
+                eng_15m.defer_same_bar_arm = True
+                eng_15m.seed_idx = eng_15m.end_idx + 1 if eng_15m.end_idx >= 0 else i + 1
+
+        # Open swing
+        open_15m = None
+        if eng_15m.dir and not eng_15m.declared:
+            open_15m = {
+                "swing_index": len(swings_15m),
+                "dir": eng_15m.dir,
+                "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                           for b in eng_15m.break_marks],
+            }
+
+        result["15m"] = {
+            "candles": len(candles_15m),
+            "swings": len(swings_15m),
+            "open": {"dir": open_15m["dir"], "breaks": len(open_15m.get("breaks", []))} if open_15m else None,
+            "swings_data": swings_15m,
+            "open_data": open_15m,
+        }
+    except Exception as e:
+        result["15m"] = {"error": str(e)}
+
+    # Fetch 1h
+    try:
+        raw_1h = _fetch(SYMBOL, "1h", start_1h_ms, limit=500)
+        candles_1h = []
+        for c in raw_1h:
+            ts = int(c["close_time"]) // 1000
+            utc_dt = _dt.fromtimestamp(int(c["open_time"]) // 1000, tz=_tz.utc)
+            ist_dt = utc_dt + IST_OFF
+            date = ist_dt.strftime("%Y-%m-%d %H:%M:%S")
+            candles_1h.append({
+                "date": date, "ts": ts,
+                "open": c["open"], "high": c["high"],
+                "low": c["low"], "close": c["close"],
+            })
+        candles_1h.sort(key=lambda x: x["ts"])
+
+        eng_1h = SwingEngine({"minBars": 20})
+        swings_1h = []
+        for i, c in enumerate(candles_1h):
+            fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+            eng_1h.process_bar(fc, i)
+            if eng_1h.declared:
+                src_kind = "SUS" if eng_1h.confirm_source == "sustain" else "FS"
+                decisive = eng_1h.break_marks[-1] if eng_1h.break_marks else None
+                bk = decisive.kind if decisive else None
+                swings_1h.append({
+                    "swing_index": len(swings_1h),
+                    "seg": {"dir": "B" if eng_1h.dir == "up" else "S",
+                            "start_idx": eng_1h.start_idx, "start_px": eng_1h.start_px,
+                            "end_idx": eng_1h.end_idx, "end_px": eng_1h.end_px},
+                    "dir": eng_1h.dir,
+                    "break_kind": bk,
+                    "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                               for b in eng_1h.break_marks],
+                    "confirmed_at_idx": eng_1h.confirmed_at_idx,
+                    "confirmed_at_time": eng_1h.confirmed_at_time,
+                })
+                eng_1h = SwingEngine({"minBars": 20})
+                eng_1h.defer_same_bar_arm = True
+                eng_1h.seed_idx = eng_1h.end_idx + 1 if eng_1h.end_idx >= 0 else i + 1
+
+        open_1h = None
+        if eng_1h.dir and not eng_1h.declared:
+            open_1h = {
+                "swing_index": len(swings_1h),
+                "dir": eng_1h.dir,
+                "breaks": [{"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                           for b in eng_1h.break_marks],
+            }
+
+        result["1h"] = {
+            "candles": len(candles_1h),
+            "swings": len(swings_1h),
+            "open": {"dir": open_1h["dir"], "breaks": len(open_1h.get("breaks", []))} if open_1h else None,
+            "swings_data": swings_1h,
+            "open_data": open_1h,
+        }
+    except Exception as e:
+        result["1h"] = {"error": str(e)}
+
+    return {"status": "ready", "seed_1h": ts_1h, "seed_15m": ts_15m, **result}

@@ -1,4 +1,4 @@
-"""BTC data config — reads CSVs from <repo>/data/btc/.
+"""BTC/ETH data config — reads CSVs from <repo>/data/btc/, data/btc-fut/, data/eth-fut/.
 
 CSV format: timestamp,open,high,low,close,x,y
     - timestamps are raw IST wall-clock strings (e.g. 2025-01-01 05:30:00),
@@ -18,11 +18,15 @@ BTC_DATA_DIR = ROOT_DIR / "data" / "btc"
 
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60  # 19800
 
-# One dataset, one CSV per timeframe. The CSVs hold the FULL merged series:
-# 2023-01-01 -> now (1.93M x1m, 32259 x1h as of 2026-09-06), backfilled
-# 2023-2024 + 2025 in-sample. Old snapshots preserved in
-# data/btc/backup_pre2023/ (2025-01-01->now) and backup_insample/ (2025-01-01->2025-10-01).
-# Refresh new candles with: python debug/_btc_fetch_update.py --tf 5m
+# Supported symbols — maps to data directory and CSV prefix
+SYMBOLS: dict[str, dict] = {
+    "BTCUSDT": {"dir": ROOT_DIR / "data" / "btc", "label": "BTC Spot"},
+    "BTCUSDT_PERP": {"dir": ROOT_DIR / "data" / "btc-fut", "label": "BTC Perp (Binance)"},
+    "ETHUSDT_PERP": {"dir": ROOT_DIR / "data" / "eth-fut", "label": "ETH Perp (Binance)"},
+    "BTCUSDT_BYBIT": {"dir": ROOT_DIR / "data" / "bybit", "label": "BTC Perp (Bybit)"},
+}
+
+# Default symbols for backward compat
 BTC_TFS: dict[str, str] = {
     "1m": "BTCUSDT_1m.csv",
     "5m": "BTCUSDT_5m.csv",
@@ -32,23 +36,32 @@ BTC_TFS: dict[str, str] = {
 }
 
 
-def btc_csv_path(tf: str) -> Path:
+def btc_csv_path(tf: str, symbol: str = "BTCUSDT") -> Path:
     if tf not in BTC_TFS:
         raise ValueError(f"tf must be one of {sorted(BTC_TFS)}")
-    return BTC_DATA_DIR / BTC_TFS[tf]
+    sym_cfg = SYMBOLS.get(symbol, SYMBOLS["BTCUSDT"])
+    data_dir = sym_cfg["dir"]
+    # Map symbol to CSV filename:
+    # BTCUSDT -> BTCUSDT_{tf}.csv (spot)
+    # BTCUSDT_PERP -> BTCUSDT_{tf}.csv (Binance perp, same prefix as spot)
+    # ETHUSDT_PERP -> ETHUSDT_{tf}.csv
+    # BTCUSDT_BYBIT -> BTCUSDT_{tf}.csv (Bybit perp, same prefix as spot)
+    csv_prefix = symbol.replace("_PERP", "").replace("_BYBIT", "")
+    csv_name = f"{csv_prefix}_{tf}.csv"
+    return data_dir / csv_name
 
 
 # mtime-keyed frame cache — CSVs are static; re-parse only when the file changes
 _df_cache: dict[tuple, pd.DataFrame] = {}
-_DF_CACHE_MAX = 3
+_DF_CACHE_MAX = 5
 
 
-def load_btc_df(tf: str) -> pd.DataFrame:
-    """Load one BTC timeframe CSV (sorted/deduped, derived `ts` epoch s)."""
-    path = btc_csv_path(tf)
+def load_btc_df(tf: str, symbol: str = "BTCUSDT") -> pd.DataFrame:
+    """Load one BTC/ETH timeframe CSV (sorted/deduped, derived `ts` epoch s)."""
+    path = btc_csv_path(tf, symbol)
     if not path.exists():
-        raise FileNotFoundError(f"BTC data file missing: {path}")
-    key = (tf, path.stat().st_mtime_ns)
+        raise FileNotFoundError(f"{symbol} {tf} data missing: {path}")
+    key = (symbol, tf, path.stat().st_mtime_ns)
     cached = _df_cache.get(key)
     if cached is not None:
         return cached

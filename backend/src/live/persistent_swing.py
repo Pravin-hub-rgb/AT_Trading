@@ -48,7 +48,19 @@ class PersistentSwingEngine:
                 e.bars_seen = state.get("bars_seen", 0)
                 e.defer_same_bar_arm = state.get("defer_same_bar_arm", False)
                 e._pending_arm = state.get("_pending_arm", False)
-                e.break_marks = state.get("break_marks", [])
+                raw_marks = state.get("break_marks", [])
+                # Restore FsBreakMark dataclass list from serialized dicts
+                try:
+                    from src.firstswing import FsBreakMark as _FBM
+                    restored = []
+                    for m in raw_marks:
+                        if isinstance(m, dict):
+                            restored.append(_FBM(idx=int(m["idx"]), time=str(m["time"]), kind=m["kind"], dir=m["dir"], px=float(m["px"])))
+                        else:
+                            restored.append(m)
+                    e.break_marks = restored
+                except Exception:
+                    e.break_marks = raw_marks if isinstance(raw_marks, list) else []
                 e.seed_idx = state.get("seed_idx", -1)
                 print(f"[swing] {self.tf}: restored (swing_index={self.swing_index}, armed={e.armed}, dir={e.dir})")
         except Exception as e:
@@ -59,6 +71,15 @@ class PersistentSwingEngine:
             return
         try:
             e = self.eng
+            # Serialize FsBreakMark dataclasses to plain dicts for JSON
+            ser_marks = []
+            for m in (e.break_marks or []):
+                try:
+                    ser_marks.append({"idx": int(m.idx), "time": str(m.time), "kind": str(m.kind), "dir": str(m.dir), "px": float(m.px)})
+                except Exception:
+                    # Already a dict (from restored state)
+                    if isinstance(m, dict):
+                        ser_marks.append(m)
             state = {
                 "swing_index": self.swing_index,
                 "next_start_pos": self.next_start_pos,
@@ -74,7 +95,7 @@ class PersistentSwingEngine:
                 "bars_seen": e.bars_seen,
                 "defer_same_bar_arm": e.defer_same_bar_arm,
                 "_pending_arm": e._pending_arm,
-                "break_marks": e.break_marks,
+                "break_marks": ser_marks,
                 "seed_idx": e.seed_idx,
             }
             with self.db.transaction() as conn:

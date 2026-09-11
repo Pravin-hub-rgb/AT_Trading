@@ -4,9 +4,7 @@
 import asyncio
 import json
 import logging
-import sys
-import time
-from datetime import datetime, timezone
+from datetime import timezone
 from typing import Optional
 
 import websockets
@@ -19,12 +17,10 @@ logging.basicConfig(
 logging.getLogger("websockets").setLevel(logging.WARNING)
 
 SYMBOL = "BTCUSDT"
-BASE_URL = "wss://fstream.binance.com/ws"
+BASE_URL = "wss://stream.binance.com/ws"
 
 
 class BinanceStreamer:
-    """Streams real-time tick + kline data from Binance Futures."""
-
     def __init__(self, on_tick, on_15m_close, on_1h_close):
         self.on_tick = on_tick
         self.on_15m_close = on_15m_close
@@ -69,7 +65,7 @@ class BinanceStreamer:
                         ts_ms = int(data["T"])
                         await self.tick_queue.put((price, ts_ms))
             except Exception as e:
-                logging.error(f"Tick stream error: {e}")
+                logging.error(f"Tick error: {e}")
                 await asyncio.sleep(5)
 
     async def _stream_klines(self, interval, queue):
@@ -99,35 +95,6 @@ class BinanceStreamer:
 
     async def _tick_worker(self):
         while self.running:
-
-async def backfill_klines(symbol: str, interval: str, limit: int = 100) -> list[dict]:
-    """Fetch historical klines via REST (for initial alignment)."""
-    import urllib.request
-
-    url = (
-        f"https://fapi.binance.com/fapi/v1/klines"
-        f"?symbol={symbol}&interval={interval}&limit={limit}"
-    )
-    req = urllib.request.Request(url)
-    req.add_header("User-Agent", "Backbencher/1.0")
-
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        data = json.loads(resp.read().decode())
-
-    candles = []
-    for k in data:
-        candles.append({
-            "open_time": int(k[0]),
-            "close_time": int(k[6]),
-            "open": float(k[1]),
-            "high": float(k[2]),
-            "low": float(k[3]),
-            "close": float(k[4]),
-            "volume": float(k[5]),
-            "is_closed": True,
-        })
-    return candles
-
             try:
                 price, ts_ms = await asyncio.wait_for(self.tick_queue.get(), timeout=1.0)
                 if self.on_tick:
@@ -156,3 +123,48 @@ async def backfill_klines(symbol: str, interval: str, limit: int = 100) -> list[
                         self.on_1h_close(candle)
             except asyncio.TimeoutError:
                 continue
+
+
+async def backfill_klines(symbol: str, interval: str, limit: int = 100) -> list[dict]:
+    import urllib.request
+    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
+    req = urllib.request.Request(url)
+    req.add_header("User-Agent", "Backbencher/1.0")
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read().decode())
+    candles = []
+    for k in data:
+        candles.append({
+            "open_time": int(k[0]),
+            "close_time": int(k[6]),
+            "open": float(k[1]),
+            "high": float(k[2]),
+            "low": float(k[3]),
+            "close": float(k[4]),
+            "volume": float(k[5]),
+            "is_closed": True,
+        })
+    return candles
+
+
+async def fetch_klines_from(symbol: str, interval: str, start_ms: int, limit: int = 500) -> list[dict]:
+    """Fetch klines starting from a specific timestamp (ms)."""
+    import urllib.request
+    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&startTime={start_ms}&limit={limit}"
+    req = urllib.request.Request(url)
+    req.add_header("User-Agent", "Backbencher/1.0")
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read().decode())
+    candles = []
+    for k in data:
+        candles.append({
+            "open_time": int(k[0]),
+            "close_time": int(k[6]),
+            "open": float(k[1]),
+            "high": float(k[2]),
+            "low": float(k[3]),
+            "close": float(k[4]),
+            "volume": float(k[5]),
+            "is_closed": True,
+        })
+    return candles

@@ -76,13 +76,14 @@ def _collect_signals(
             continue
         sdir = 1 if s.get("dir") == "up" else -1
         seg_start = float(s["seg"]["start_px"])
-        seg_end = float(s["seg"]["end_px"])
+        # Phase 1 fix: open swing has end_px=None — guard float(None) crash
+        _end_px = s["seg"].get("end_px")
+        seg_end = float(_end_px) if _end_px is not None else float("nan")
         prev_start = (
             float(swings[si - 1]["seg"]["start_px"]) if si > 0 else None
         )
-        prev_end = (
-            float(swings[si - 1]["seg"]["end_px"]) if si > 0 else None
-        )
+        _prev_end_px = swings[si - 1]["seg"].get("end_px") if si > 0 else None
+        prev_end = float(_prev_end_px) if _prev_end_px is not None else None
         start_idx = int(s["seg"]["start_idx"])
         prev_start_idx = (
             int(swings[si - 1]["seg"]["start_idx"]) if si > 0 else -1

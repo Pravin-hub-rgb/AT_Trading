@@ -1,3 +1,4 @@
+
 # Live Trading Doc — Backbencher (v18 paper trader)
 
 Backbencher — okay, that's genuinely perfect. Better than all of mine, because the metaphor isn't just sarcastic, it's structurally exact:
@@ -36,23 +37,38 @@ that imports only the 7 shared parity-tested modules (see
 Nothing that happens in research can break live, and vice versa; the daily
 parity compare is the bridge between the two worlds.
 
-### D2 — Data: not whole years, not "just the latest swing" — rolling window
-The tempting design (bootstrap with only the current swings + marks, engine
-figures out the rest) is the "proper" live state design, but it has a
-bootstrap-correctness risk: SL = extreme-since-prev-leg-end, and if the
-current leg's origin lies before the bootstrap point, SLs come out wrong.
-The boring design is provably safe and still tiny:
+### D2 — Data: seed by timestamp, then rolling window
 
-- **Boot:** REST-fetch a rolling window from Binance — last 30 days of 15m
-  (~2,900 candles) + last 20 days of 1h (~500 candles). A few MB, 3 API
-  calls, no pre-existing data needed on the VPS.
-- **Every 15m/1h close:** recompute the full chains over the rolling window
-  and re-run the v18 gate for the newest bar. No hand-maintained state.
-- **Why safe:** every decision is determined by (a) the chains (causal) and
-  (b) trade state (entry/SL/cooldown/halt) in the journal. `cap_days=16`
-  bounds any HTF trade's life → a 20-day 1h window reconstructs every
-  still-relevant window; cooldown 20 bars fits easily in 30 days of 15m.
+**Initial deploy (seed):** the engine needs candles starting from a known
+backtest timestamp so it sees the SAME candles as the backtest. Different
+starting candle → different first walker seal → different swing chain.
+
+How it works:
+1. Run backtest locally, note the last confirmed swing's end timestamp for each TF
+2. POST to `POST /api/btc/seed` with `{"1h": "timestamp", "15m": "timestamp"}` — or use CLI args `--seed-1h` / `--seed-15m`
+3. Timestamps are IST wall-clock (matching CSV convention, e.g. "2026-09-09 15:00:00")
+4. Engine fetches from Binance spot API (`api.binance.com`) starting BEFORE the timestamps (warmup: 50 bars for 15m walker/minBars, 34 bars for 1h walker/chop)
+5. Replays through PersistentSwingEngine → same swings as backtest
+6. Saves state to SQLite → bot is aligned from day one
+
+**Normal restart:** SQLite has state → restore engines → backfill only new candles since last processed. No seed file needed.
+
+**Rolling window:** 30d of 15m (~2,900 candles) + 20d of 1h (~500 candles). A few MB, no pre-existing data needed on the VPS.
+
+- **Every 15m/1h close:** recompute the full chains over the rolling window and re-run the v18 gate for the newest bar.
+- **Why safe:** every decision is determined by (a) the chains (causal) and (b) trade state (entry/SL/cooldown/halt) in the journal. `cap_days=16` bounds any HTF trade's life.
 - **The full-year CSVs stay on the laptop** — ground truth for the compare.
+
+**Warmup details:**
+- 15m: 50 bars × 15min = 12.5 hours before seed timestamp (minBars warmup)
+- 1h: 20 bars (minBars) + 14 bars (chop lookback) = 34 hours before seed timestamp
+
+### D2b — Seed file (legacy, not recommended)
+
+The old `docs/seed_marks.json` approach (pre-computed swings + open swing state) is
+superseded by seed-by-timestamp. It still works but is harder to maintain: the file
+must be regenerated every time the backtest window changes. Seed-by-timestamp is
+simpler — just two numbers from the backtest.
 
 ### D3 — Dead code clarified (the user's actual point)
 The concern was never v18 itself: the SHARED modules (btc_engine.py,
@@ -106,6 +122,44 @@ the port is broken.
 Exchange = UTC epoch ms. `data/btc` CSVs = IST wall-clock strings with
 `ts = epoch − 19800s` (btc_config). The feeder/journal MUST convert
 identically or the daily compare drowns in phantom mismatches.
+
+### D7 — Seed by timestamp (initial deploy method)
+
+**Problem:** if the live engine starts from a different candle than the
+backtest, the first walker seal is different → different swing chain →
+B1/B2/FLIP don't match. "A big first candle can take 10 bars to breach,
+completely changing the chain."
+
+**Solution:** tell the engine exactly where the backtest's last confirmed
+swing ended. It fetches candles from Binance spot API (`api.binance.com`)
+starting from that point forward (with warmup before it) and replays through
+SwingEngine. Same candles → same swings.
+
+**Key convention:** all timestamps are IST wall-clock (matching CSV convention).
+Internally converted to UTC epoch for Binance API. The engine also uses IST
+for candle date strings to match the backtest's break timestamps.
+
+**Warmup rationale:**
+- 15m: SwingEngine needs minBars=50 to declare the first swing, plus
+  walker state builds from sealed pivots. 50 bars = 12.5 hours.
+- 1h: SwingEngine needs minBars=20 + chop formula needs lb=14 bars of
+  history. 20+14 = 34 bars = 34 hours.
+
+**API:**
+```
+POST /api/btc/seed
+Body: {"1h": "2026-09-09 15:00:00", "15m": "2026-09-10 04:30:00"}
+Response: {status, 1h: {candles, swings, open}, 15m: {candles, swings, open}}
+```
+
+**CLI:**
+```
+python main.py --seed-1h "2026-09-09 15:00:00" --seed-15m "2026-09-10 04:30:00" 120
+```
+
+**How to get timestamps:** run backtest locally, look at last confirmed
+swing's end time in each timeframe. The backtest prints this if you add
+a `--seed` flag, or just read from the swing chart.
 
 ## Architecture
 
@@ -234,3 +288,17 @@ kline stream, IST timestamp conversion, no API keys for paper. Details in
    engine (only the called functions), verified by running it vs the original
    over the full 4-year backtest — 100% trade-identical before it replaces
    the imports. Only after the paper month proves parity.
+
+
+
+Bybit results are in. All years positive, strategy works on Bybit too.
+Dataset	Trades	Gross R	Net R	Win%	PF
+Binance Spot	331	+330R	+286R	37%	2.5
+Binance Perp	320	+265R	+218R	37%	2.5
+Bybit Perp	343	+248R	+194R	34%	2.2
+Key takeaways:
+- Bybit gives slightly fewer net R (194 vs 218 on Binance) — expected, different wicks/liquidity
+- All 4 years positive (2023: +55R, 2024: +64R, 2025: +81R, 2026: +48R)
+- Max DD only 9.3R — very controlled
+- 343 trades over 3.7 years = ~93 trades/year = ~1.8/week
++194R net on Bybit is your realistic live expectation. That's the number to plan around.

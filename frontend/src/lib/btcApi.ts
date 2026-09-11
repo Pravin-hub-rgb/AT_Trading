@@ -59,6 +59,7 @@ export interface BtcFlowSegment {
 export interface BtcChartResponse {
   tf: BtcTf;
   mode: BtcMode;
+  symbol?: string;
   count: number;
   first_ts: string | null;
   last_ts: string | null;
@@ -69,13 +70,24 @@ export interface BtcChartResponse {
 
 export const BTC_TFS: BtcTf[] = ["1m", "5m", "15m", "1h", "4h"];
 
+export const BTC_SYMBOLS = ["BTCUSDT", "BTCUSDT_PERP", "ETHUSDT_PERP", "BTCUSDT_BYBIT"] as const;
+export type BtcSymbol = (typeof BTC_SYMBOLS)[number];
+
+export const BTC_SYMBOL_LABELS: Record<BtcSymbol, string> = {
+  BTCUSDT: "BTC Spot",
+  BTCUSDT_PERP: "BTC Perp (Binance)",
+  ETHUSDT_PERP: "ETH Perp (Binance)",
+  BTCUSDT_BYBIT: "BTC Perp (Bybit)",
+};
+
 export async function getBtcChart(
   tf: BtcTf,
   mode: BtcMode,
   limit: number | null,
   minBars?: number,
+  symbol: BtcSymbol = "BTCUSDT",
 ): Promise<BtcChartResponse> {
-  const params = new URLSearchParams({ tf, mode });
+  const params = new URLSearchParams({ tf, mode, symbol });
   if (limit && limit > 0) params.set("limit", String(limit));
   if (minBars && minBars >= 2) params.set("min_bars", String(minBars));
   const res = await fetch(`${API_BASE}/api/btc/chart?${params.toString()}`, {
@@ -251,10 +263,12 @@ export async function getBtcBacktest(
   version: BtcVersion = "v1",
   htfLtf: HtfLtfMode = "off",
   htfLtfVer: HtfLtfVer = "v1",
+  symbol: BtcSymbol = "BTCUSDT",
 ): Promise<BtcBacktestResponse> {
   const q = new URLSearchParams({
     tf,
     mode,
+    symbol,
     fee_pct: String(p.feePct),
     slippage_pts: String(p.slippagePts),
     entry_break: p.entryBreak,
@@ -297,10 +311,20 @@ export interface BtcStatusTf {
 
 export interface BtcStatusResponse {
   tfs: Record<string, BtcStatusTf>;
+  symbol?: string;
 }
 
-export async function getBtcStatus(): Promise<BtcStatusResponse> {
-  const res = await fetch(`${API_BASE}/api/btc/status`, {
+export interface BtcSymbolInfo {
+  symbol: BtcSymbol;
+  label: string;
+  exists: boolean;
+  rows: number;
+  first_ts: string | null;
+  last_ts: string | null;
+}
+
+export async function getBtcStatus(symbol: BtcSymbol = "BTCUSDT"): Promise<BtcStatusResponse> {
+  const res = await fetch(`${API_BASE}/api/btc/status?symbol=${symbol}`, {
     headers: { "Content-Type": "application/json" },
   });
   if (!res.ok) {
@@ -312,6 +336,21 @@ export async function getBtcStatus(): Promise<BtcStatusResponse> {
     throw new Error(detail);
   }
   return res.json() as Promise<BtcStatusResponse>;
+}
+
+export async function getBtcSymbols(): Promise<{ symbols: BtcSymbolInfo[] }> {
+  const res = await fetch(`${API_BASE}/api/btc/symbols`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? JSON.stringify(body);
+    } catch {}
+    throw new Error(detail);
+  }
+  return res.json() as Promise<{ symbols: BtcSymbolInfo[] }>;
 }
 
 export async function getBtcVersions(): Promise<{ versions: BtcVersion[]; labels: Record<string, string>; default: BtcVersion }> {
