@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse
 
 from src.btc.btc_config import BTC_TFS, SYMBOLS, btc_csv_path, load_btc_df
 from src.btc.btc_engine import simulate_btc_trades, trade_stats
-from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts
+from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts, EXCHANGES
 from src.btc.btc_swing import compute_btc_flow, compute_btc_swings
 from src.walker import FlowCandle
 
@@ -213,22 +213,39 @@ def _validate_tf_mode(tf: str, mode: str):
     return None
 
 
-def _trade_costs(trades: list[dict], fee_pct: float, slip_pts: float) -> tuple[float, float]:
+def _trade_costs(trades: list[dict], fee_pct: float, slip_pts: float,
+                 entry_slip_pct: float = 0.0, exit_slip_pct: float = 0.0) -> tuple[float, float]:
     """Per-trade cost (in R) of round-trip fees + slippage, and total.
 
-    fee_pct: % of notional per side (e.g. 0.05 = Binance taker).
-    slip_pts: adverse price points on the exit (beyond the bar-gap fill).
-    Fee model: 2 * fee_pct% * price / risk  +  slip_pts / risk per trade.
+    fee_pct: taker fee % per side (e.g. 0.055 = Bybit taker).
+    slip_pts: flat adverse price points (fallback when entry/exit_slip_pct == 0).
+    entry_slip_pct: % slippage on entry (e.g. 0.001 = 1bp). If > 0, overrides slip_pts for entry.
+    exit_slip_pct: % slippage on exit (e.g. 0.003 = 3bp). If > 0, overrides slip_pts for exit.
+
+    Peer model: entry is orderly (signal candle close), exit is adverse (trailing SL during fast move).
+    Fee model: (entry * fee% + exit * fee%) / risk  +  slippage_in_R.
     """
     total = 0.0
     count = 0
+    fee_rate = max(0.0, float(fee_pct)) / 100.0
     for t in trades:
         risk = abs(float(t["entry_price"]) - float(t["sl"]))
         if risk <= 0:
             continue
-        cost_r = (2.0 * max(0.0, float(fee_pct)) * abs(float(t["entry_price"])) / 100.0
-                  + max(0.0, float(slip_pts))) / risk
+        entry_px = abs(float(t["entry_price"]))
+        exit_px = abs(float(t.get("exit_price", t["entry_price"])))
+        # Fee cost
+        fee_r = (entry_px * fee_rate + exit_px * fee_rate) / risk
+        # Slippage cost (peer model: % of price, asymmetric)
+        if entry_slip_pct > 0 or exit_slip_pct > 0:
+            slip_r = (entry_px * entry_slip_pct / 100.0
+                      + exit_px * exit_slip_pct / 100.0) / risk
+        else:
+            slip_r = max(0.0, float(slip_pts)) / risk
+        cost_r = fee_r + slip_r
         t["cost_r"] = round(cost_r, 4)
+        t["fee_r"] = round(fee_r, 4)
+        t["slip_r"] = round(slip_r, 4)
         total += cost_r
         count += 1
     return round(total, 4), count
@@ -311,7 +328,8 @@ _MASTER_PRESETS: list[dict] = [
 def _run_preset(candles: list[dict], swings: list[dict], p: dict,
                 fee_pct: float, slip_pts: float,
                 bias_timeline=None, day_gate=None, fine=None,
-                entry_selection: str = "stream", version: str = "v1") -> dict:
+                entry_selection: str = "stream", version: str = "v1",
+                entry_slip_pct: float = 0.005, exit_slip_pct: float = 0.010) -> dict:
     """Run one master preset and return a summary row. Versioned — v1 default never disturbed."""
     # v1 flip1h20 is now cap 16d default (old cap 0 removed) — use v7 engine for this preset when version v1
     if p.get("key") == "flip1h20" and version == "v1" and simulate_btc_trades_v7 is not None:
@@ -326,7 +344,7 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
         closed = [t for t in tr if t["outcome"] != "open"]
         base = sum(t["r_multiple"] for t in closed)
         wins = sum(1 for t in closed if t["r_multiple"] > 0)
-        _trade_costs(tr, fee_pct, slip_pts)
+        _trade_costs(tr, fee_pct, slip_pts, entry_slip_pct, exit_slip_pct)
         costs = sum(float(t.get("cost_r", 0.0)) for t in closed)
         return {
             "key": p["key"], "label": p["label"],
@@ -394,7 +412,7 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
     closed = [t for t in tr if t["outcome"] != "open"]
     base = sum(t["r_multiple"] for t in closed)
     wins = sum(1 for t in closed if t["r_multiple"] > 0)
-    _trade_costs(tr, fee_pct, slip_pts)
+    _trade_costs(tr, fee_pct, slip_pts, entry_slip_pct, exit_slip_pct)
     costs = sum(float(t.get("cost_r", 0.0)) for t in closed)
     return {
         "key": p["key"], "label": p["label"],
@@ -569,6 +587,8 @@ def btc_backtest(
     limit: int | None = None,
     fee_pct: float = 0.0,
     slippage_pts: float = 0.0,
+    entry_slip_pct: float = 0.005,
+    exit_slip_pct: float = 0.010,
     entry_break: str = "decisive",
     sl_mode: str = "swing",
     sl_pct: float = 0.5,
@@ -690,6 +710,8 @@ def btc_backtest(
         "limit": limit,
         "fee_pct": float(fee_pct),
         "slippage_pts": float(slippage_pts),
+        "entry_slip_pct": float(entry_slip_pct),
+        "exit_slip_pct": float(exit_slip_pct),
         "entry_break": entry_break,
         "sl_mode": sl_mode,
         "sl_pct": float(sl_pct),
@@ -726,8 +748,8 @@ def btc_backtest(
             ltf_min = 50 if ltf_tf == "15m" else 14
             ltf_swings = _compute_swings(ltf_flow, mode, min_bars=ltf_min)
             # HTF fine for 1h
-            htf_fine = _load_fine_1m(htf_candles[0]["ts"], htf_candles[-1]["ts"])
-            ltf_fine = _load_fine_1m(ltf_candles[0]["ts"], ltf_candles[-1]["ts"])
+            htf_fine = _load_fine_1m(htf_candles[0]["ts"], htf_candles[-1]["ts"], symbol)
+            ltf_fine = _load_fine_1m(ltf_candles[0]["ts"], ltf_candles[-1]["ts"], symbol)
             # Use HTF-LTF engine
             if htf_ltf_ver == "v3" and simulate_htf_ltf_ext_stop is not None:
                 # v3 Extension Stop: block fresh same-dir LTF entries once the
@@ -953,8 +975,8 @@ def btc_backtest(
             htf_trades = nested.get("htf_trades", [])
             # Use LTF trades for main chart, but also include HTF for stats
             # For now, return LTF trades as primary, with HTF count in params
-            _trade_costs(ltf_trades, fee_pct, slippage_pts)
-            _trade_costs(htf_trades, fee_pct, slippage_pts)
+            _trade_costs(ltf_trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct)
+            _trade_costs(htf_trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct)
             stats_ltf = trade_stats(ltf_trades)
             stats_ltf = _net_stats(stats_ltf, ltf_trades)
             # Also compute HTF stats for reference
@@ -1236,7 +1258,7 @@ def btc_backtest(
 
     # cost model: round-trip fees (% notional, both sides) + slippage points,
     # expressed in R against each trade's own risk -> honest NET R stats.
-    _trade_costs(trades, fee_pct, slippage_pts)
+    _trade_costs(trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct)
     stats = _net_stats(trade_stats(trades), trades)
 
     return {
@@ -1258,8 +1280,10 @@ def btc_summary(
     tf: str = "5m",
     mode: str = "continuous",
     limit: int | None = None,
-    fee_pct: float = 0.05,
+    fee_pct: float = 0.055,
     slippage_pts: float = 2.0,
+    entry_slip_pct: float = 0.005,
+    exit_slip_pct: float = 0.010,
     entry_selection: str = "stream",
     version: str = "v1",
     symbol: str = "BTCUSDT",
@@ -1311,7 +1335,7 @@ def btc_summary(
         # 1m-precise exit fills
         fine = None
         if ptf != "1m":
-            fine = _load_fine_1m(candles_p[0]["ts"], candles_p[-1]["ts"]) or None
+            fine = _load_fine_1m(candles_p[0]["ts"], candles_p[-1]["ts"], symbol) or None
 
         for p in presets:
             sw_p = _compute_swings(flow_p, mode, min_bars=p["min_bars"])
@@ -1322,6 +1346,8 @@ def btc_summary(
                 fine=fine,
                 entry_selection=entry_selection,
                 version=version,
+                entry_slip_pct=entry_slip_pct,
+                exit_slip_pct=exit_slip_pct,
             )
             row["tf"] = ptf
             rows.append(row)
@@ -1333,6 +1359,8 @@ def btc_summary(
     return {
         "fee_pct": float(fee_pct),
         "slippage_pts": float(slippage_pts),
+        "entry_slip_pct": float(entry_slip_pct),
+        "exit_slip_pct": float(exit_slip_pct),
         "entry_selection": entry_selection,
         "version": version,
         "rows": rows,
@@ -1340,38 +1368,52 @@ def btc_summary(
     }
 
 
-# ── data fetch (append new Binance candles to CSVs) ──────────────────────
+# ── data fetch (append new candles to CSVs) — all exchanges ──────────────
 
 
 @router.post("/fetch")
 def btc_fetch(body: dict | None = None):
-    """Fetch new Binance candles and append to the CSVs.
+    """Fetch new candles and append to the CSVs.
 
-    Optional JSON body: {"tfs": ["15m","1h"]} — if omitted, refreshes all TFs.
+    Optional JSON body: {"exchange": "spot"|"perp"|"bybit", "tfs": ["15m","1h"]}
+    If omitted, defaults to exchange="spot", refreshes all TFs.
     Idempotent: only appends timestamps not already in the CSV.
     """
+    exchange = "spot"
     targets = None
-    if body and body.get("tfs"):
-        tfs = body["tfs"]
-        bad = [t for t in tfs if t not in BTC_TFS]
-        if bad:
+    if body:
+        exchange = body.get("exchange", "spot")
+        if exchange not in EXCHANGES:
             return JSONResponse(
                 status_code=400,
-                content={"detail": f"unknown tf(s): {bad}. must be in {sorted(BTC_TFS)}"},
+                content={"detail": f"unknown exchange: {exchange}. must be in {sorted(EXCHANGES)}"},
             )
-        targets = tfs
+        if body.get("tfs"):
+            tfs = body["tfs"]
+            bad = [t for t in tfs if t not in BTC_TFS]
+            if bad:
+                return JSONResponse(
+                    status_code=400,
+                    content={"detail": f"unknown tf(s): {bad}. must be in {sorted(BTC_TFS)}"},
+                )
+            targets = tfs
     try:
-        return refresh_all(targets)
+        return refresh_all(exchange, targets)
     except Exception as e:
         return JSONResponse(status_code=500, content={"detail": str(e)})
 
 
 @router.get("/fetch/status")
-def btc_fetch_status():
+def btc_fetch_status(exchange: str = "spot"):
     """Current last timestamp per TF — see what the button would append."""
+    if exchange not in EXCHANGES:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": f"unknown exchange: {exchange}"},
+        )
     out = {}
     for tf in BTC_TFS:
-        out[tf] = {"last_ts": btc_last_ts(tf)}
+        out[tf] = {"last_ts": btc_last_ts(exchange, tf)}
     return out
 
 

@@ -64,15 +64,16 @@
 
 ---
 
-## Phase 7: Seed Pipeline (Timestamp-Based) — ✅ DONE (2026-09-10)
+## Phase 7: Seed Pipeline (Timestamp-Based) — ✅ DONE (2026-09-10) (superseded by Phase 9)
 
 - [x] 7.1 Add `fetch_klines_from()` to `data_streamer.py` — async function that fetches Binance klines from a specific `startTime` (ms), supporting the seed API
-- [x] 7.2 Add `_seed_from_timestamps(ts_1h, ts_15m)` to `live_loop.py` — parses timestamps, calculates warmup (50 bars 15m, 34 bars 1h), fetches from Binance, replays through PersistentSwingEngine, saves state to SQLite, runs v18 simulation prime
+- [x] 7.2 Add `_seed_from_timestamps(ts_1h, ts_15m)` to `live_loop.py` — parses timestamps, fetches from exchange, replays through PersistentSwingEngine, saves state to SQLite, runs v18 simulation prime
 - [x] 7.3 Add `_fetch_klines_from_sync()` to `live_loop.py` — async/sync bridge for the fetch (mock-friendly, same pattern as `_fetch_backfill_sync`)
 - [x] 7.4 Add `POST /api/btc/seed` endpoint to `btc_routes.py` — takes `{"1h": "timestamp", "15m": "timestamp"}`, runs SwingEngine on both TFs, returns candle/swing/open summary
 - [x] 7.5 Update `main.py` — accept `--seed-1h` / `--seed-15m` CLI args, run `_seed_from_timestamps()` instead of `_seed_from_binance()` when provided
-- [x] 7.6 Update `live_trading_doc.md` — D2 rewritten (seed by timestamp + rolling window), D7 added (seed API docs + warmup rationale)
+- [x] 7.6 Update `live_trading_doc.md` — D2 rewritten (seed by timestamp + rolling window), D7 added (seed API docs)
 - [x] **TEST**: `_seed_from_timestamps("2026-09-09 15:00:00", "2026-09-10 04:30:00")` → 15m: 79 candles 1 confirmed swing open with 4 breaks, 1h: 55 candles 1 confirmed swing open with 2 breaks, engine state saved to SQLite, v18 simulation runs, backtest still 330t +331.1R PASS
+- **NOTE:** Phase 7 used warmup lookback (fetch `timestamp - 50bars`). Phase 9 replaced this with no-lookback architecture (timestamp IS the first candle).
 
 ## Phase 8: IST + Spot API Fix — ✅ DONE (2026-09-10)
 
@@ -86,6 +87,135 @@ Spot vs futures OHLC differ ~$30+, causing completely different swing chains.
 - [x] 8.4 Fix `_to_ms()` in `_seed_from_timestamps()` — parse user timestamps as IST, subtract IST offset for UTC epoch ms
 - [x] 8.5 Fix `POST /api/btc/seed` in `btc_routes.py` — same 3 fixes (spot API, IST dates, IST timestamp parsing)
 - [x] **VERIFY**: Spot API data matches CSV exactly (806/816 candles match; 10 minor rounding diffs ~$10-50). Backtest Sept 9 marks (FLIP@07:30, B1@11:45, B2@12:30, FLIP@16:30) match seed engine marks exactly.
+
+---
+
+## Phase 9: Seed Architecture Fix + Live Candle Filter — ✅ DONE (2026-09-11)
+
+Two bugs fixed:
+
+**Bug 1: Seed was looking BACK from timestamp instead of starting FROM it.**
+- Old: `_seed_from_timestamps` fetched `seed - 50bars` (12.5h before) and engine needed 50 bars warmup before first mark
+- Fix: 15m timestamp IS the first candle, no lookback. 1h fetches only 14 bars before for chop calculation.
+- Result: User gives `15m="2026-09-11 05:00:00"` → first mark at 05:15 (B1 down), 05:30 (FLIP up) — matches chart exactly
+
+**Bug 2: Live/incomplete candle included in backfill.**
+- Old: `backfill_klines` and `backfill_klines_bybit` returned all candles including the currently-open one (e.g., 18:15 candle at 18:17 with partial OHLC)
+- Fix: Filter `close_time > now_ms` in `backfill_klines()`, `backfill_klines_bybit()`, and `_seed_from_timestamps()`
+- Result: Only completed candles used for mark detection
+
+- [x] 9.1 Rewrite `_seed_from_timestamps()`: 15m start = timestamp (no warmup lookback), 1h start = timestamp - 14 bars (chop only)
+- [x] 9.2 Add live candle filter to `backfill_klines_bybit()` — `close_time <= now_ms`
+- [x] 9.3 Add live candle filter to `backfill_klines()` (Binance) — same logic
+- [x] 9.4 Add live candle filter in `_seed_from_timestamps()` — double-safe, filters after fetch
+- [x] 9.5 Fix `_fetch_klines_from_sync()` interval format — Bybit needs "15" not "15m" (interval mapping)
+- [x] 9.6 Add positional CLI args to `main.py` — `python main.py "15m_time" "1h_time" --exchange bybit` (arg1=15m, arg2=1h)
+- [x] **TEST**: Bybit seed `"2026-09-11 05:00:00" "2026-09-09 14:30:00"` → 15m first candle at 05:00, marks at 05:15 B1 down + 05:30 FLIP up (matches user chart), 1h first candle at 00:30 (14 bars before 14:30 for chop), live candle filtered
+
+---
+
+## Phase 10: Order Execution — ✅ DONE (2026-09-11)
+
+Wired BybitTrader into live_loop for real order execution on Bybit demo.
+
+- [x] 10.1 `_execute_entry()` — places market order with SL/TP when new open trade detected in `_journal_trades()`
+- [x] 10.2 `_execute_exit()` — closes position on Bybit when SL/TP/cap hit in `on_tick()`
+- [x] 10.3 `_calculate_qty()` — position sizing: $50 USDT risk / (stop_distance + fee_buffer), rounded to 0.001 BTC precision, balance-checked
+- [x] 10.4 `paper_mode` flag — `LiveLoop(paper_mode=True)` skips trader init; `--paper` in CLI (default)
+- [x] 10.5 Fixed `get_wallet_balance()` — use `walletBalance` field (demo accounts have empty `availableToWithdraw`)
+- [x] **TEST**: Paper mode: trader=None. Live mode: trader connects, balance=50000, qty calc works (0.085 BTC for $500 stop, 0.268 BTC for $100 stop)
+
+---
+
+## Phase 11: Backend 1m Data Bug — ✅ FIXED (2026-09-11)
+
+- [x] 11.1 Identify bug — `btc_routes.py:729-730` calls `_load_fine_1m()` without `symbol` parameter, defaults to BTCUSDT (spot) for all HTF-LTF backtests
+- [x] 11.2 Fix lines 729-730 — added `symbol` parameter to both `htf_fine` and `ltf_fine` calls
+- [x] 11.3 Fix line 1314 — added `symbol` parameter to preset sweep `_load_fine_1m()` call
+- [x] 11.4 Verify — Bybit perp: 346 trades, +351.0R (was 350 trades, +367.1R with spot 1m data). BTC Spot unchanged: 330 trades, +331.1R
+- [x] **TEST**: Comparison script `compare_1m_sources.py` confirms fix — avg $13.75 price diff between spot/Bybit 1m candles, -16.1R impact from bug
+
+---
+
+## Phase 12: B2/FLIP Before FS — Live Signal Filtering — ✅ DONE (2026-09-11)
+
+- [x] 12.1 Document the issue — `live_trading_doc.md` D8: B2/FLIP signals from open swing fire before FS confirmation, can't be reliably traded live
+- [x] 12.2 Sweep analysis (corrected) — `sweep_pref_fs.py`: BTC Spot: 92/330 trades (28%) pre-FS, +10.1R. Bybit Perp: 102/346 trades (30%) pre-FS, -8.1R. 1h: 14.5% pre-FS signals.
+- [x] 12.3 Filter pre-FS signals in `_collect_signals` — `filter_pre_fs=True` default, rejects B2/FLIP where `bar < prev_swing.confirmed_at_idx`. Bybit: 335 trades, +385.8R, PF 3.02 (+34.8R). Spot: 313 trades, +289.9R, PF 2.75.
+- [x] 12.4 Exclude open swing from `_run_v18_simulation` — removed open15/open1h append (lines 902-910 in live_loop.py)
+- [x] 12.6 Update v18 engine default params — filter applied via `_collect_signals` default, all engines inherit it
+- [x] 12.5 Rolling window tracking — superseded by Phase 14/15 (swing endpoints + full state persistence). `_recover_from_crash()` handles backfill from last swing endpoint. No separate tracking needed.
+
+---
+
+## Phase 13: WebSocket Resilience — ✅ DONE (2026-09-12)
+
+Production-grade WebSocket with full resilience for live trading Bybit streams.
+
+- [x] 13.1 Ping every 20s — sends `{"op": "ping"}` (Bybit requirement, connection drops without it)
+- [x] 13.2 Pong timeout — if no pong in 15s → treat connection as dead
+- [x] 13.3 Last-message timeout — no message for 60s → force reconnect (half-open detection)
+- [x] 13.4 Exponential backoff + jitter — 1s → 2s → 4s → ... → 60s max (prevents hammering Bybit)
+- [x] 13.5 Circuit breaker — >20 reconnects in 10min → pause 5min (prevents infinite retry loops)
+- [x] 13.6 Force reconnect every 22h — proactively reconnect (Bybit sometimes does silent 24h disconnects)
+- [x] 13.7 Gap detection + REST backfill — after reconnect, fetch missing candles from last known timestamp
+- [x] 13.8 Deduplication — by open_time (Bybit sometimes sends duplicate confirm=True candles)
+- [x] 13.9 Queue size limits — maxsize=1000 (ticks), 100 (klines), drop-oldest on full
+- [x] 13.10 Connection state tracking — `get_status()` returns health metrics for monitoring
+- [x] 13.11 Health monitor task — runs every 10s, checks last message age, forces reconnect if dead
+- [x] 13.12 Documentation — `live_trading_doc.md` updated with resilience features, monitoring, alerting thresholds
+- [x] **TEST**: `bybit_streamer.py` imports cleanly, `get_status()` returns expected fields, backfill_klines_bybit still works
+
+---
+
+## Phase 14: Crash Recovery — Rolling Swing Endpoints — ✅ DONE (2026-09-12)
+
+Rolling swing endpoint tracking for automatic crash recovery. No user input needed on restart.
+
+- [x] 14.1 Add `end_time` to result dict in `persistent_swing.py` — timestamp string of swing extreme (line 132)
+- [x] 14.2 Add `get_last_swing_end()` / `set_last_swing_end()` to `state_store.py` — rolling pair storage in `meta` table
+- [x] 14.3 Call `set_last_swing_end` in `_on_15m_close()` — saves endpoint when 15m swing completes (line 430-435)
+- [x] 14.4 Call `set_last_swing_end` in `_on_1h_close()` — saves endpoint when 1h swing completes (line 465-470)
+- [x] 14.5 Add `_recover_from_crash()` to `live_loop.py` — reads endpoints from DB, fetches missing candles, replays engine, re-runs simulation
+- [x] 14.6 Update `main.py` startup — try `_recover_from_crash()` when no timestamps provided
+- [x] 14.7 Remove old `_seed_from_exchange()` (500+200 approach) — no longer needed
+- [x] 14.8 Remove old `run()` method — replaced by direct `_start_streaming()` in `main.py`
+- [x] 14.9 Remove `SEED_15M`/`SEED_1H` constants — no longer needed
+- [x] 14.10 Documentation — `live_trading_doc.md` updated with crash recovery flow, functions, CLI usage
+- [x] **TEST**: `live_loop.py` imports cleanly, `_recover_from_crash` returns False when no DB state
+
+---
+
+## Phase 15: Crash Recovery — Full State Persistence + Speed — ✅ DONE (2026-09-12)
+
+Store the full HTF matrix and LTF trade cache for instant crash recovery. No backfill needed for critical state.
+
+- [x] 15.1 Add `sl_price`, `hrisk`, `lvl_1_5r`, `lvl_3r` to `htf_windows` table in `database.py` + ALTER TABLE migration
+- [x] 15.2 Update `open_htf_window()` in `trade_store.py` to accept and store full matrix
+- [x] 15.3 Update `_track_htf_windows()` in `live_loop.py` to pass full matrix on window open
+- [x] 15.4 Update `_restore_htf_state()` in `live_loop.py` to read full matrix from DB (instant)
+- [x] 15.5 Add LTF trade cache (`self._open_ltf_trade`) — loaded from DB on startup, updated on open/close/trail
+- [x] 15.6 Update `on_tick()` to use cached trade (no DB reads on every tick)
+- [x] 15.7 Update `_trail_sl()` to use cached trade and update cache on trail
+- [x] 15.8 Update `_print_status()` to use cached trade
+- [x] 15.9 Add `_reconcile_bybit_position()` — compare DB vs Bybit on startup, handle mismatches
+- [x] 15.10 Documentation — `live_trading_doc.md` updated with Phase 15 flow, priority order, recovery table
+- [x] **TEST**: Syntax check passes, smoke test (313 trades, +289.9R), cost test passes
+
+---
+
+## Risk Limits — INTENTIONALLY EXCLUDED (2026-09-12)
+
+v18's built-in protections are sufficient:
+- **Streak halt (5)** — stops after 5 consecutive losses
+- **20-bar cooldown** — forced pause after every loss
+- **16-day HTF cap** — time-based exit on stale windows
+
+Adding max drawdown halt or daily loss cap would hurt performance:
+- 1.7 trades/week → daily cap is meaningless
+- 35% win rate → drawdown IS the strategy; halting early risks missing recovery trades
+
+If something goes catastrophically wrong (exchange bug, data feed corruption), operator kills the bot manually.
 
 ---
 

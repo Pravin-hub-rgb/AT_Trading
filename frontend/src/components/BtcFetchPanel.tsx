@@ -4,17 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { API_BASE } from "@/lib/api";
 
+type Exchange = "spot" | "perp" | "bybit";
+
 interface TfStatus {
   last_ts: string;
 }
 
-interface FetchStatus {
-  "1m": TfStatus;
-  "5m": TfStatus;
-  "15m": TfStatus;
-  "1h": TfStatus;
-  "4h": TfStatus;
-}
+type FetchStatus = Record<string, TfStatus>;
 
 interface FetchResult {
   tf: string;
@@ -36,7 +32,14 @@ const tfLabels: Record<TfKey, string> = {
   "4h": "4-Hour",
 };
 
-export default function BtcFetchPanel() {
+const EXCHANGE_INFO: Record<Exchange, { label: string; sub: string; color: string; linkColor: string }> = {
+  spot: { label: "BTC / USDT", sub: "Binance Spot OHLCV · appends only new candles · idempotent", color: "#f59e0b", linkColor: "#6366f1" },
+  perp: { label: "BTC / USDT PERP", sub: "Binance Futures OHLCV · appends only new candles · idempotent", color: "#ef4444", linkColor: "#ef4444" },
+  bybit: { label: "BTC / USDT BYBIT", sub: "Bybit Perpetual OHLCV · appends only new candles · idempotent", color: "#10b981", linkColor: "#10b981" },
+};
+
+export default function BtcFetchPanel({ exchange = "spot" }: { exchange?: Exchange }) {
+  const info = EXCHANGE_INFO[exchange];
   const [status, setStatus] = useState<FetchStatus | null>(null);
   const [busy, setBusy] = useState(false);
   const [selected, setSelected] = useState<Set<TfKey>>(new Set(["15m", "1h"]));
@@ -45,12 +48,12 @@ export default function BtcFetchPanel() {
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/btc/fetch/status`);
+      const res = await fetch(`${API_BASE}/api/btc/fetch/status?exchange=${exchange}`);
       if (res.ok) setStatus(await res.json());
     } catch {
       /* ignore */
     }
-  }, []);
+  }, [exchange]);
 
   useEffect(() => {
     refresh();
@@ -75,7 +78,7 @@ export default function BtcFetchPanel() {
       const res = await fetch(`${API_BASE}/api/btc/fetch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tfs: Array.from(selected) }),
+        body: JSON.stringify({ exchange, tfs: Array.from(selected) }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -97,7 +100,7 @@ export default function BtcFetchPanel() {
       const res = await fetch(`${API_BASE}/api/btc/fetch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tfs: Array.from(ALL_TFS) }),
+        body: JSON.stringify({ exchange, tfs: Array.from(ALL_TFS) }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
@@ -116,22 +119,22 @@ export default function BtcFetchPanel() {
     <div className="rounded-lg border border-[#21262d] bg-[#161b22] p-4">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold text-[#e6edf3]">BTC / USDT</h2>
-          <p className="text-xs text-[#8b949e]">
-            Binance spot OHLCV · appends only new candles · idempotent
-          </p>
+          <h2 className="text-base font-semibold text-[#e6edf3]">{info.label}</h2>
+          <p className="text-xs text-[#8b949e]">{info.sub}</p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/btc"
-            className="rounded-md border border-[#6366f1] bg-[#6366f1]/10 px-3 py-1.5 text-xs font-medium text-[#6366f1] hover:bg-[#6366f1]/20"
+            className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-opacity-20"
+            style={{ borderColor: info.linkColor, color: info.linkColor, backgroundColor: `${info.linkColor}10` }}
           >
             Go to BTC Chart →
           </Link>
           <button
             onClick={handleFetchAll}
             disabled={busy}
-            className="rounded-md border border-[#f59e0b] bg-[#f59e0b]/10 px-3 py-1.5 text-xs font-medium text-[#f59e0b] hover:bg-[#f59e0b]/20 disabled:opacity-50"
+            className="rounded-md border px-3 py-1.5 text-xs font-medium hover:bg-opacity-20 disabled:opacity-50"
+            style={{ borderColor: info.color, color: info.color, backgroundColor: `${info.color}10` }}
           >
             {busy ? "Fetching..." : "Fetch All"}
           </button>

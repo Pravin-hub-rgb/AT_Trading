@@ -4,6 +4,7 @@
 import asyncio
 import json
 import logging
+import time
 from datetime import timezone
 from typing import Optional
 
@@ -133,10 +134,14 @@ async def backfill_klines(symbol: str, interval: str, limit: int = 100) -> list[
     with urllib.request.urlopen(req, timeout=30) as resp:
         data = json.loads(resp.read().decode())
     candles = []
+    now_ms = int(time.time() * 1000)
     for k in data:
+        ct = int(k[6])
+        if ct > now_ms:
+            continue  # skip live/incomplete candle
         candles.append({
             "open_time": int(k[0]),
-            "close_time": int(k[6]),
+            "close_time": ct,
             "open": float(k[1]),
             "high": float(k[2]),
             "low": float(k[3]),

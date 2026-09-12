@@ -63,12 +63,18 @@ const BT_DEFAULTS: BtcBacktestParams = {
   regime: "off",
   feePct: 0.05,
   slippagePts: 2,
+  entrySlipPct: 0.005,
+  exitSlipPct: 0.010,
 };
 
 /** Bybit-optimized v18 parameters — tuned for Bybit's volatility profile. */
 const BT_BYBIT_DEFAULTS: BtcBacktestParams = {
   ...BT_DEFAULTS,
   minBars: 50,
+  feePct: 0.055,
+  slippagePts: 2,
+  entrySlipPct: 0.005,
+  exitSlipPct: 0.010,
 };
 
 /** Bybit v18 engine overrides — different chop/slbuf/cooldown from Binance defaults. */
@@ -225,6 +231,8 @@ export default function BtcPage() {
     const masterM = modeM ?? BTC_MASTER_MODES.find((x) => x.value === BTC_MASTER_DEFAULT)!;
     setMaster(masterM.value);
     const next = { ...BT_DEFAULTS, ...masterM.preset } as BtcBacktestParams;
+    // Auto-correct feePct based on saved symbol
+    if (savedSymbol === "BTCUSDT_BYBIT") next.feePct = 0.055;
     setBtParams(next);
     window.localStorage.setItem(MASTER_KEY, masterM.value);
     window.localStorage.setItem(BT_KEY, JSON.stringify(next));
@@ -313,6 +321,13 @@ export default function BtcPage() {
   const changeSymbol = (v: BtcSymbol) => {
     window.localStorage.setItem(SYMBOL_KEY, v);
     setSymbol(v);
+    // Auto-switch fee rate per exchange
+    const bybitFee = v === "BTCUSDT_BYBIT" ? 0.055 : 0.05;
+    setBtParams((prev) => {
+      const next = { ...prev, feePct: bybitFee };
+      window.localStorage.setItem(BT_KEY, JSON.stringify(next));
+      return next;
+    });
   };
 
   // ── position engine ──
@@ -391,7 +406,7 @@ export default function BtcPage() {
     // instant restore from cache on tab switch
     const cached = getCachedSummary(cacheKey);
     if (cached && !cancelled) setSummaryData(cached);
-    getBtcSummary(tf, mode, limit, btParams.feePct, btParams.slippagePts, version)
+    getBtcSummary(tf, mode, limit, btParams.feePct, btParams.slippagePts, btParams.entrySlipPct, btParams.exitSlipPct, version)
       .then((res) => {
         if (!cancelled) {
           setSummaryData(res);
@@ -431,6 +446,8 @@ export default function BtcPage() {
     // count matches the summary card / dropdown ref numbers exactly
     changeLimit(null);
     const next = { ...BT_DEFAULTS, ...mode.preset } as BtcBacktestParams;
+    // Preserve Bybit fee when switching master presets
+    if (symbol === "BTCUSDT_BYBIT") next.feePct = 0.055;
     setBtParams(next);
     window.localStorage.setItem(BT_KEY, JSON.stringify(next));
     // master exists to show its trades — turn the position engine on
@@ -527,7 +544,7 @@ export default function BtcPage() {
     const isHtf = p.htf_ltf && p.htf_ltf !== "off";
     L.push(`=== BTC ${isHtf ? `HTF-LTF 1h->${p.htf_ltf} ${p.htf_ltf_ver ?? "v1"}` : `${p.tf} ${p.entry_break} mb${p.min_bars}`} | ${p.mode} ===`);
     L.push(`SL: ${p.sl_buf_atr ? `pivot+${p.sl_buf_atr}ATR` : p.sl_hhll_n ? `hhll-${p.sl_hhll_n}` : "swing-start pivot"} | ext-stop: ${p.ext_stop_r ?? "off"} | RR 1:${p.rr_target} | trail ${p.trailing} | BE ${p.breakeven_r}`);
-    L.push(`fees ${p.fee_pct}%/side + ${p.slippage_pts}pt slip | 1m fills | stream | one-swing-one-trade`);
+    L.push(`fees ${p.fee_pct}%/side + ${p.entry_slip_pct ?? 0}%/${p.exit_slip_pct ?? 0}% slip | 1m fills | stream | one-swing-one-trade`);
     L.push(`trades     ${String(s.closed).padStart(8)}   (long ${s.longs} / short ${s.shorts})`);
     L.push(`win rate    ${s.win_rate}%   (${s.wins}W / ${s.losses}L)`);
     L.push(`net R       ${fmt(s.net_total_r)}   (base ${fmt(s.total_r)} | costs -${s.total_costs_r ?? 0})`);
@@ -1015,15 +1032,26 @@ export default function BtcPage() {
             </span>
             <input
               type="number"
-              step="1"
+              step="0.001"
               min="0"
-              value={btParams.slippagePts}
+              value={btParams.entrySlipPct}
               onChange={(e) =>
-                setBt("slippagePts", Number(e.target.value) >= 0 ? Number(e.target.value) : 0)
+                setBt("entrySlipPct", Number(e.target.value) >= 0 ? Number(e.target.value) : 0)
               }
               className="w-16 rounded border border-[#30363d] bg-[#161b22] px-1.5 py-1 text-sm text-[#e6edf3]"
             />
-            <span className="text-[10px] text-[#6e7681]">pts</span>
+            <span className="text-[10px] text-[#6e7681]">/</span>
+            <input
+              type="number"
+              step="0.001"
+              min="0"
+              value={btParams.exitSlipPct}
+              onChange={(e) =>
+                setBt("exitSlipPct", Number(e.target.value) >= 0 ? Number(e.target.value) : 0)
+              }
+              className="w-16 rounded border border-[#30363d] bg-[#161b22] px-1.5 py-1 text-sm text-[#e6edf3]"
+            />
+            <span className="text-[10px] text-[#6e7681]">% in/out</span>
           </label>
         </div>
       ) : null}
@@ -1046,7 +1074,7 @@ export default function BtcPage() {
                 ? `executions on ${btData.params.tf}`
                 : `${btData.params.tf}`} ·{" "}
               {btData.params.mode === "continuous" ? "24/7 continuous" : "day reset"} ·{" "}
-              fees {btData.params.fee_pct}%/side + {btData.params.slippage_pts}pt slip ·{" "}
+              fees {btData.params.fee_pct}%/side + {btData.params.entry_slip_pct ?? 0}%/{btData.params.exit_slip_pct ?? 0}% slip ·{" "}
               {btData.params.fill_tf === "1m" ? "1m-precise fills · " : ""}
               window {btData.count} bars · {btData.swings_used} swings ·{" "}
               <span className="text-[#facc15]">
@@ -1091,9 +1119,16 @@ export default function BtcPage() {
             />
             {(btData.stats.total_costs_r ?? 0) > 0 ? (
               <Stat
-                label={`Net R (after ${(btData.params.fee_pct ?? 0)}%+${btData.params.slippage_pts ?? 0}pt)`}
+                label={`Net R (${(btData.params.fee_pct ?? 0)}% fee + ${(btData.params.entry_slip_pct ?? 0)}%/${(btData.params.exit_slip_pct ?? 0)}% slip)`}
                 value={`${(btData.stats.net_total_r ?? 0) >= 0 ? "+" : ""}${(btData.stats.net_total_r ?? 0).toFixed(2)}`}
                 accent={(btData.stats.net_total_r ?? 0) >= 0 ? "#10b981" : "#ef4444"}
+              />
+            ) : null}
+            {(btData.stats.total_costs_r ?? 0) > 0 ? (
+              <Stat
+                label="Total Cost R"
+                value={`-${(btData.stats.total_costs_r ?? 0).toFixed(1)}`}
+                accent="#f97316"
               />
             ) : null}
             <Stat
@@ -1292,7 +1327,7 @@ export default function BtcPage() {
               </span>
               <span className="text-xs text-[#8b949e]">
                 each preset on its OWN reference TF · full data window · ranked by NET R after{" "}
-                {btParams.feePct}%/side fees + {btParams.slippagePts}pt slippage — click a row to load its trades
+                {btParams.feePct}%/side fees + {btParams.entrySlipPct}%/{btParams.exitSlipPct}% slip — click a row to load its trades
               </span>
             </div>
             {summaryData?.best ? (

@@ -27,7 +27,11 @@ CREATE TABLE IF NOT EXISTS htf_windows (
     cap_ts INTEGER NOT NULL,
     status TEXT NOT NULL CHECK (status IN ('open','closed')),
     close_ts INTEGER,
-    close_reason TEXT
+    close_reason TEXT,
+    sl_price REAL DEFAULT 0,
+    hrisk REAL DEFAULT 0,
+    lvl_1_5r REAL DEFAULT 0,
+    lvl_3r REAL DEFAULT 0
 );
 
 -- LTF trades: opened by 15m marks, closed by SL/TP/cap
@@ -119,7 +123,22 @@ class Database:
         if not self._conn:
             raise RuntimeError("Not connected. Call connect() first.")
         self._conn.executescript(DB_SCHEMA)
+        self._migrate_htf_windows()
         self._conn.commit()
+
+    def _migrate_htf_windows(self):
+        """Add new columns to htf_windows if missing (safe for existing DBs)."""
+        cursor = self._conn.execute("PRAGMA table_info(htf_windows)")
+        existing = {row[1] for row in cursor.fetchall()}
+        migrations = [
+            ("sl_price", "REAL DEFAULT 0"),
+            ("hrisk", "REAL DEFAULT 0"),
+            ("lvl_1_5r", "REAL DEFAULT 0"),
+            ("lvl_3r", "REAL DEFAULT 0"),
+        ]
+        for col, typedef in migrations:
+            if col not in existing:
+                self._conn.execute(f"ALTER TABLE htf_windows ADD COLUMN {col} {typedef}")
 
     @contextmanager
     def transaction(self):

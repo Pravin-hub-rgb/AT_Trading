@@ -36,6 +36,7 @@ def _collect_signals(
     skip_first: bool = True,
     selection: str = "stream",
     candles: Optional[list[dict]] = None,
+    filter_pre_fs: bool = True,
 ) -> list[dict]:
     """Entry signals from swing break marks.
 
@@ -60,6 +61,11 @@ def _collect_signals(
         reproduce the old sweep numbers.
 
     skip_first=True: the first swing of the chain only establishes structure.
+
+    filter_pre_fs=True: reject B2/FLIP marks that fire BEFORE the previous
+        swing's FS (confirmed_at_idx). In live, we can't know the direction
+        until the previous swing is declared — signals from undeclared swings
+        are unreliable and often losers (Bybit: -8.1R, 20.6% WR).
     """
     tradeable = {
         "decisive": ("B2", "FLIP"),
@@ -159,6 +165,11 @@ def _collect_signals(
                                         sl = cand  # highest high since prev_end (e.g. 10:30 high for 11:30)
                         except Exception:
                             pass
+            # Pre-FS filter: reject signals that fire before previous swing's FS
+            if filter_pre_fs and si > 0:
+                prev_confirmed = int(swings[si - 1].get("confirmed_at_idx", -1))
+                if prev_confirmed >= 0 and bidx < prev_confirmed:
+                    continue  # signal fires before previous swing's FS — can't trade live
             key = (bidx, b["kind"], b["dir"], round(float(b["px"]), 6))
             if key in seen:
                 continue

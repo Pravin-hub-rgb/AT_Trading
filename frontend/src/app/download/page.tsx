@@ -12,8 +12,14 @@ export default function DownloadPage() {
         </p>
       </div>
 
-      {/* BTC / USDT — Binance */}
-      <BtcFetchPanel />
+      {/* BTC / USDT — Binance Spot */}
+      <BtcFetchPanel exchange="spot" />
+
+      {/* BTC / USDT PERP — Binance Futures */}
+      <BtcFetchPanel exchange="perp" />
+
+      {/* BTC / USDT — Bybit Perpetual */}
+      <BtcFetchPanel exchange="bybit" />
 
       {/* Nifty 50 — Upstox */}
       <div>

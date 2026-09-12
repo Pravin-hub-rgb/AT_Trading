@@ -10,17 +10,34 @@ from .database import Database
 
 # --- HTF Windows ---
 
-def open_htf_window(db: Database, direction: str, entry_ts: int, entry_price: float, cap_ts: int) -> int:
-    """Open a new HTF window.
+def open_htf_window(
+    db: Database,
+    direction: str,
+    entry_ts: int,
+    entry_price: float,
+    cap_ts: int,
+    sl_price: float = 0.0,
+    hrisk: float = 0.0,
+    lvl_1_5r: float = 0.0,
+    lvl_3r: float = 0.0,
+) -> int:
+    """Open a new HTF window with full matrix.
+    
+    Stores everything at entry time:
+      - sl_price: HTF stop loss
+      - hrisk: risk per unit (abs(entry - sl))
+      - lvl_1_5r: 1.5R gate price
+      - lvl_3r: 3R target price
     
     Returns:
         The window id
     """
     with db.transaction() as conn:
         cursor = conn.execute(
-            """INSERT INTO htf_windows (direction, entry_ts, entry_price, cap_ts, status)
-               VALUES (?, ?, ?, ?, 'open')""",
-            (direction, entry_ts, entry_price, cap_ts),
+            """INSERT INTO htf_windows 
+               (direction, entry_ts, entry_price, cap_ts, status, sl_price, hrisk, lvl_1_5r, lvl_3r)
+               VALUES (?, ?, ?, ?, 'open', ?, ?, ?, ?)""",
+            (direction, entry_ts, entry_price, cap_ts, sl_price, hrisk, lvl_1_5r, lvl_3r),
         )
         return cursor.lastrowid
 

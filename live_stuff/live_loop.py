@@ -1,9 +1,10 @@
 """Live loop - FULL v18 simulation on rolling windows.
 
 Runs the EXACT same simulate_htf_ltf_streak_halt that the backtest uses,
-on rolling windows of Binance data. Produces identical trades.
+on rolling windows of Binance or Bybit data. Produces identical trades.
 """
 
+import os
 import sys
 import time
 import asyncio
@@ -18,12 +19,13 @@ from src.btc.engines.htf_ltf.v18_streak_halt import simulate_htf_ltf_streak_halt
 from src.walker import FlowCandle
 from src.live.persistent_swing import PersistentSwingEngine
 from src.live.data_streamer import BinanceStreamer, backfill_klines
+from bybit_streamer import BybitStreamer, backfill_klines_bybit
 
-from engine.v18_params import V18, V18_ENGINE, SWING
+from engine.v18_params import V18, V18_ENGINE, SWING, get_v18_params, SYMBOL_PARAMS
 from persistence.database import Database
 from persistence.mark_store import get_marks
 from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
-from persistence.state_store import get_trading_state, save_trading_state
+from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end
 
 logger = logging.getLogger("live_loop")
 if not logger.handlers:
@@ -32,11 +34,13 @@ if not logger.handlers:
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
 
+# Exchange routing
+EXCHANGE_BINANCE = "binance"
+EXCHANGE_BYBIT = "bybit"
+
 SYMBOL = "BTCUSDT"
 WINDOW_DAYS_15M = 30
 WINDOW_DAYS_1H = 20
-SEED_15M = 500   # candles to fetch for 15m seeding (~5 days)
-SEED_1H = 200    # candles to fetch for 1h seeding (~8 days)
 CAP_DAYS = 16
 IST = timedelta(hours=5, minutes=30)
 
@@ -44,12 +48,25 @@ IST = timedelta(hours=5, minutes=30)
 class LiveLoop:
     """Full v18 live trading loop."""
 
-    def __init__(self, db: Database):
+    def __init__(self, db: Database, exchange: str = EXCHANGE_BINANCE, symbol: str = SYMBOL, paper_mode: bool = True):
         self.db = db
         self._running = False
+        self.exchange = exchange
+        self.symbol = symbol
+        self.paper_mode = paper_mode
         self.window_15m: list[dict] = []
         self.window_1h: list[dict] = []
         self.trading_state = get_trading_state(db)
+        # Per-symbol v18 params
+        self.v18 = get_v18_params(symbol)
+        self._chop_thresh = self.v18.get("chop_thresh", 61.8)
+        # Cost model (peer model: asymmetric % slippage)
+        self._fee_pct = self.v18.get("fee_pct", 0.055)
+        self._entry_slip_pct = self.v18.get("entry_slip_pct", 0.005)
+        self._exit_slip_pct = self.v18.get("exit_slip_pct", 0.010)
+        self._cum_cost_r = 0.0
+        self._cum_net_r = 0.0
+        self._trade_count = 0
         # Persistent swing engines — use actual SwingEngine logic (same as backtest)
         self.swing_15m = PersistentSwingEngine("15m", db, {"minBars": SWING["min_bars_15m"]})
         self.swing_1h = PersistentSwingEngine("1h", db, {"minBars": SWING["min_bars_1h"]})
@@ -66,39 +83,33 @@ class LiveLoop:
         self.htf_hrisk = 0.0                # abs(entry - sl) for R calc
         self.chop_index = 50.0              # current 1h chop (last value)
         self.atr_14 = 0.0                   # current 15m ATR(14) in price units
-        self.regime = 'flip'                # 'flip' or 'b2' (chop >61.8 ? b2 : flip)
+        self.regime = 'flip'                # 'flip' or 'b2' (chop > thresh ? b2 : flip)
         # Dedup for open-swing mark printing (Phase 1.6)
         self._printed_marks: set = set()
         # Dedup for filter diagnostics (Phase 3)
         self._logged_filter_keys: set = set()
         # Seed file flag — when True, _journal_marks suppresses bulk historical print
         self._seeding = False
-        # Restore persisted HTF window if any (Phase 2.5)
+        # Order execution (Bybit demo/live)
+        self.trader = None
+        if exchange == EXCHANGE_BYBIT and not paper_mode:
+            try:
+                from bybit_order import BybitTrader
+                self.trader = BybitTrader()
+                if self.trader.is_connected:
+                    logger.info(f"Bybit trader connected — demo={self.trader.demo}")
+                else:
+                    logger.warning("Bybit trader init failed — order execution disabled")
+            except Exception as e:
+                logger.warning(f"BybitTrader import failed: {e}")
+        # Phase 15: Cached LTF trade (in-memory, no DB reads on every tick)
+        self._open_ltf_trade: dict | None = None
+        # Restore persisted HTF window if any (Phase 2.5 + Phase 15: full matrix)
         self._restore_htf_state()
-
-    def run(self, max_seconds: float = 0):
-        self._running = True
-        started = time.time()
-        self._seed_from_binance()
-        print("[live] Backbencher v18 - FULL simulation (WebSocket streams)")
-        print(f"[live] 15m window: {WINDOW_DAYS_15M}d | 1h window: {WINDOW_DAYS_1H}d")
-        print(f"[live] params: mode={V18['mode']} rr={V18_ENGINE['rr_target']} cd={V18['cooldown_bars']} halt={V18['max_consecutive_losses']}")
-
-        # Start WebSocket streamer
-        self.streamer = BinanceStreamer(
-            on_tick=self._on_tick,
-            on_15m_close=self._on_15m_close,
-            on_1h_close=self._on_1h_close,
-        )
-
-        # Run asyncio event loop
-        try:
-            asyncio.run(self._run_loop(max_seconds, started))
-        except KeyboardInterrupt:
-            print("\n[live] Interrupted")
-        finally:
-            self._running = False
-            print("[live] Loop stopped")
+        # Phase 15: Load cached LTF trade from DB
+        self._restore_ltf_trade()
+        # Phase 15: Reconcile with Bybit position on startup
+        self._reconcile_bybit_position()
 
     async def _run_loop(self, max_seconds: float, started: float):
         """Main async loop — runs streamer and handles shutdown."""
@@ -181,9 +192,8 @@ class LiveLoop:
             self.atr_14 = self._compute_atr_14()
         except Exception:
             self.atr_14 = 0.0
-        # Regime from V18: b2_vs_flip_chop -> chop>61.8 ? b2 : flip
-        thresh = V18_ENGINE.get("chop_thresh", 61.8)
-        self.regime = "b2" if self.chop_index > thresh else "flip"
+        # Regime from V18: b2_vs_flip_chop -> chop>thresh ? b2 : flip
+        self.regime = "b2" if self.chop_index > self._chop_thresh else "flip"
         # Unrealized R of the 1h leg
         if self.htf_window_open and self.htf_hrisk > 1e-9:
             if price is None:
@@ -194,7 +204,7 @@ class LiveLoop:
             self.htf_current_r = 0.0
 
     def _restore_htf_state(self):
-        """Restore persisted HTF window on boot (Phase 2.5)."""
+        """Restore persisted HTF window on boot (Phase 2.5 + Phase 15: full matrix)."""
         try:
             from persistence.trade_store import get_open_htf_window
             row = get_open_htf_window(self.db)
@@ -204,11 +214,109 @@ class LiveLoop:
                 self.htf_window_start_ts = int(row["entry_ts"])
                 self.htf_window_id = int(row["id"])
                 self.htf_entry_px = float(row["entry_price"])
-                # sl not stored in htf_windows table — derive hrisk will be set on next _track
-                # Keep placeholder until simulation overwrites
-                print(f"[htf] Restored open window from DB: {self.htf_window_dir} @ {self.htf_entry_px:.2f} (id={self.htf_window_id})")
+                # Phase 15: read full matrix from DB (instant, no backfill needed)
+                self.htf_sl = float(row["sl_price"])
+                self.htf_hrisk = float(row["hrisk"])
+                self._update_htf_metrics()
+                print(f"[htf] Restored open window from DB: {self.htf_window_dir} @ {self.htf_entry_px:.2f} SL={self.htf_sl:.2f} hrisk={self.htf_hrisk:.2f} R={self.htf_current_r:+.2f} (id={self.htf_window_id})")
         except Exception as e:
             print(f"[htf] restore failed: {e}")
+
+    def _restore_ltf_trade(self):
+        """Phase 15: Load cached LTF trade from DB on boot.
+        
+        Called once at startup. Subsequent reads use self._open_ltf_trade (instant).
+        Cache is updated when trades open/close — no DB reads on every tick.
+        """
+        try:
+            row = get_open_ltf_trade(self.db)
+            self._open_ltf_trade = row
+            if row:
+                print(f"[ltf] Restored open trade from DB: {row['direction']} @ {row['entry_price']:.2f} SL={row['sl_current']:.2f} TP={row['tp_price']:.2f} (id={row['id']})")
+        except Exception as e:
+            print(f"[ltf] restore failed: {e}")
+
+    def _cache_ltf_trade_open(self, trade_id: int, direction: str, entry_ts: int,
+                               entry_price: float, sl_initial: float, tp_price: float,
+                               cap_ts: int, htf_window_id: int):
+        """Phase 15: Update cache when trade opens."""
+        self._open_ltf_trade = {
+            "id": trade_id,
+            "direction": direction,
+            "entry_ts": entry_ts,
+            "entry_price": entry_price,
+            "sl_initial": sl_initial,
+            "sl_current": sl_initial,
+            "tp_price": tp_price,
+            "cap_ts": cap_ts,
+            "htf_window_id": htf_window_id,
+            "status": "open",
+        }
+
+    def _cache_ltf_trade_close(self):
+        """Phase 15: Clear cache when trade closes."""
+        self._open_ltf_trade = None
+
+    def _cache_ltf_trade_update_sl(self, new_sl: float):
+        """Phase 15: Update cached SL when trailing."""
+        if self._open_ltf_trade:
+            self._open_ltf_trade["sl_current"] = new_sl
+
+    def _reconcile_bybit_position(self):
+        """Phase 15: Reconcile DB trade state with Bybit exchange position on startup.
+        
+        Handles 4 cases:
+          DB open + Bybit has position -> resume (OK)
+          DB open + Bybit flat -> Bybit SL/TP hit during crash -> close DB record
+          DB flat + Bybit has position -> orphan position -> close on Bybit
+          DB flat + Bybit flat -> OK
+        """
+        if not self.trader or not self.trader.is_connected:
+            return
+
+        try:
+            exchange_pos = self.trader.get_position()
+        except Exception as e:
+            print(f"[reconcile] Bybit position query failed: {e}")
+            return
+
+        db_trade = self._open_ltf_trade
+
+        if db_trade and exchange_pos:
+            # Both have positions — verify direction matches
+            db_dir = db_trade["direction"]
+            ex_dir = "long" if exchange_pos["side"] == "Buy" else "short"
+            if db_dir == ex_dir:
+                print(f"[reconcile] OK — DB and Bybit both have {db_dir} position")
+            else:
+                print(f"[reconcile] MISMATCH — DB={db_dir} but Bybit={ex_dir}. Closing DB record.")
+                close_ltf_trade(
+                    self.db, db_trade["id"], int(time.time()),
+                    float(db_trade["sl_current"]), "reconcile", 0.0,
+                )
+                self._cache_ltf_trade_close()
+
+        elif db_trade and not exchange_pos:
+            # DB says open but Bybit is flat — SL/TP hit during crash
+            print(f"[reconcile] DB has open trade but Bybit is flat. Closing DB record.")
+            close_ltf_trade(
+                self.db, db_trade["id"], int(time.time()),
+                float(db_trade["sl_current"]), "reconcile", 0.0,
+            )
+            self._cache_ltf_trade_close()
+
+        elif not db_trade and exchange_pos:
+            # Orphan position on Bybit — close it
+            ex_dir = "long" if exchange_pos["side"] == "Buy" else "short"
+            print(f"[reconcile] Bybit has orphan {ex_dir} position (size={exchange_pos['size']}). Closing.")
+            try:
+                self.trader.close_position()
+            except Exception as e:
+                print(f"[reconcile] Failed to close orphan position: {e}")
+
+        else:
+            # Both flat — OK
+            pass
 
     def _log_signal_diagnostics(self, sw15: list[dict], c15: list[dict], ltf_trades: list[dict]):
         """Phase 3: per-signal filter diagnostics — WHY each signal was skipped/taken.
@@ -221,7 +329,7 @@ class LiveLoop:
             from src.btc.btc_engine import _collect_signals
         except Exception:
             return
-        # Raw signals from _collect_signals (same as v18 uses before filtering)
+        # Filtered signals from _collect_signals (filter_pre_fs=True by default)
         try:
             raw_sigs = _collect_signals(sw15, "decisive", skip_first=True, selection="stream", candles=c15)
         except Exception as e:
@@ -275,9 +383,9 @@ class LiveLoop:
             elif sdir != self.htf_window_dir:
                 outcome = "REJECT"
                 reason = f"dir mismatch (sig {sdir} vs HTF {self.htf_window_dir})"
-            elif ext_r_val is not None and ext_r_val > V18["ext_stop_r"]:
+            elif ext_r_val is not None and ext_r_val > self.v18["ext_stop_r"]:
                 outcome = "REJECT"
-                reason = f"ext_stop {ext_r_str} > {V18['ext_stop_r']}R (late)"
+                reason = f"ext_stop {ext_r_str} > {self.v18['ext_stop_r']}R (late)"
             elif cd_rem > 0:
                 # Cooldown: need to check per-signal bar distance, but for live we show remaining
                 # We approximate: if cooldown >0, next signals are blocked
@@ -326,7 +434,7 @@ class LiveLoop:
         else:
             htf_str = f"HTF: NO BIAS | CHOP={self.chop_index:.1f} REGIME={self.regime.upper()} ATR={self.atr_14:.1f}"
 
-        open_trade = get_open_ltf_trade(self.db)
+        open_trade = self._open_ltf_trade
         if open_trade:
             pos_str = f"POS: {open_trade['direction']} @ {open_trade['entry_price']:.2f} SL={open_trade['sl_current']:.2f} TP={open_trade['tp_price']:.2f}"
         else:
@@ -339,6 +447,9 @@ class LiveLoop:
         if self.htf_window_open:
             gate = "BLOCKED (>1.5R)" if self.htf_current_r > 1.5 else "OPEN"
             print(f"[gate] ext_stop 1.5R: {gate} (current {self.htf_current_r:+.2f}R)")
+        # Cost summary
+        if self._trade_count > 0:
+            print(f"[cost] {self._trade_count} trades | cum cost: {self._cum_cost_r:.2f}R | cum net: {self._cum_net_r:+.2f}R | avg cost: {self._cum_cost_r/self._trade_count:.3f}R")
 
     # ------------------------------------------------------------------
     # WebSocket callbacks
@@ -381,6 +492,14 @@ class LiveLoop:
             result = self.swing_15m.process_bar(fc, len(self.window_15m) - 1)
             if result:
                 self.all_swings_15m.append(result)
+                # Save swing endpoint (rolling pair) for crash recovery
+                try:
+                    end_idx = result["seg"]["end_idx"]
+                    if 0 <= end_idx < len(self.window_15m):
+                        end_ts = self.window_15m[end_idx]["ts"]
+                        set_last_swing_end(self.db, "15m", end_ts)
+                except Exception:
+                    pass
                 for b in result.get("breaks", []):
                     print(f"[mark] 15m {b['kind']} {b['dir']} sw{b['swing_no']} @ {b['px']:.2f} ({b['time']})")
             # Phase 1.6: print new marks from the open (unconfirmed) swing instantly
@@ -406,6 +525,14 @@ class LiveLoop:
             result = self.swing_1h.process_bar(fc, len(self.window_1h) - 1)
             if result:
                 self.all_swings_1h.append(result)
+                # Save swing endpoint (rolling pair) for crash recovery
+                try:
+                    end_idx = result["seg"]["end_idx"]
+                    if 0 <= end_idx < len(self.window_1h):
+                        end_ts = self.window_1h[end_idx]["ts"]
+                        set_last_swing_end(self.db, "1h", end_ts)
+                except Exception:
+                    pass
                 for b in result.get("breaks", []):
                     print(f"[mark]  1h {b['kind']} {b['dir']} sw{b['swing_no']} @ {b['px']:.2f} ({b['time']})")
             self._print_open_marks("1h", self.swing_1h)
@@ -458,26 +585,6 @@ class LiveLoop:
         # Ensure sorted ascending
         candles.sort(key=lambda x: x["ts"])
         return candles
-
-    def _fetch_backfill_sync(self, symbol: str, interval: str, limit: int) -> list[dict]:
-        """Call backfill_klines regardless of whether it is async or sync (mock-friendly)."""
-        import inspect as _inspect
-        import asyncio as _asyncio
-        res = backfill_klines(symbol, interval, limit=limit)
-        if _inspect.isawaitable(res):
-            try:
-                loop = _asyncio.get_event_loop()
-                if loop.is_running():
-                    # Already inside an event loop — run in new loop via thread
-                    import concurrent.futures as _cf
-                    with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
-                        fut = _pool.submit(_asyncio.run, res)
-                        return fut.result(timeout=30)
-                else:
-                    return loop.run_until_complete(res)
-            except RuntimeError:
-                return _asyncio.run(res)
-        return res
 
     def _try_load_seed_file(self) -> bool:
         """Load seed marks from docs/seed_marks.json if present.
@@ -540,124 +647,20 @@ class LiveLoop:
             print(f"[seed] file load skipped: {e}")
             return False
 
-    def _seed_from_binance(self):
-        """Seed swing engines from Binance Futures REST API — VPS-friendly.
 
-        Fetches last SEED_15M / SEED_1H closed candles and replays them
-        through PersistentSwingEngine so walker/extremes are correct on boot.
-        If docs/seed_marks.json exists, its swings are used as file-truth and
-        engine is still replayed for active open-swing tracking (file says where it ends, live starts after).
-        Falls back to empty windows if REST is unavailable (first boot offline).
-        """
-        print(f"[live] Seeding swing engines from Binance REST (15m={SEED_15M}, 1h={SEED_1H})...")
-        self._seeding = True
-        # Reset engines to clean slate — Binance is source of truth, not stale SQLite state
-        # (Walker/internal state has 40+ fields that _load_state cannot fully restore)
-        try:
-            from src.firstswing import SwingEngine as _SE
-            # Clear persisted state so next boot also seeds fresh
-            try:
-                with self.db.transaction() as _conn:
-                    _conn.execute("DELETE FROM meta WHERE key IN ('swing_state_15m','swing_state_1h')")
-            except Exception:
-                pass
-            self.swing_15m.eng = _SE(self.swing_15m.opts)
-            self.swing_15m.swing_index = 0
-            self.swing_15m.next_start_pos = 0
-            self.swing_1h.eng = _SE(self.swing_1h.opts)
-            self.swing_1h.swing_index = 0
-            self.swing_1h.next_start_pos = 0
-            self.all_swings_15m = []
-            self.all_swings_1h = []
-            self._printed_marks = set()
-            self._logged_filter_keys = set()
-        except Exception as _e:
-            print(f"[live] engine reset warning: {_e}")
-
-        # Try file seed first — file says 'these are marks, this is where it ends, now fetch till now and be active'
-        self._seed_cutoff_ts = 0
-        file_used = self._try_load_seed_file()
-        if file_used:
-            print(f"[seed] File truth kept as history — engine will be replayed FULL 500/200 for active open swing (file's cutoff is for display, engine is source of truth for live)")
-
-        # 15m
-        try:
-            raw_15m = self._fetch_backfill_sync(SYMBOL, "15m", SEED_15M)
-            candles_15m = self._normalize_candles(raw_15m)
-            # Keep at most WINDOW_DAYS_15M for the rolling window
-            cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
-            self.window_15m = [c for c in candles_15m if c["ts"] >= cutoff] or candles_15m
-            for i, c in enumerate(candles_15m):
-                fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
-                result = self.swing_15m.process_bar(fc, i)
-                if result and not file_used:
-                    self.all_swings_15m.append(result)
-            self._show_recent_marks(self.all_swings_15m, candles_15m, "15m")
-            # Prime open-swing dedup so we don't re-print seeded marks
-            open15 = self.swing_15m.get_open_swing()
-            if open15:
-                for b in open15.get("breaks", []):
-                    key = ("15m", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open15.get("swing_index", -1))
-                    self._printed_marks.add(key)
-                print(f"[swing] 15m open: sw{open15['swing_index']} dir={open15['dir']} breaks={len(open15.get('breaks',[]))}")
-            print(f"[live] Seeded 15m: {len(candles_15m)} candles, {len(self.all_swings_15m)} swings")
-        except Exception as e:
-            import traceback
-            print(f"[live] 15m seeding failed: {e}")
-            traceback.print_exc()
-
-        # 1h
-        try:
-            raw_1h = self._fetch_backfill_sync(SYMBOL, "1h", SEED_1H)
-            candles_1h = self._normalize_candles(raw_1h)
-            cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
-            self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
-            for i, c in enumerate(candles_1h):
-                fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
-                result = self.swing_1h.process_bar(fc, i)
-                if result and not file_used:
-                    self.all_swings_1h.append(result)
-            self._show_recent_marks(self.all_swings_1h, candles_1h, "1h")
-            open1h = self.swing_1h.get_open_swing()
-            if open1h:
-                for b in open1h.get("breaks", []):
-                    key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
-                    self._printed_marks.add(key)
-                print(f"[swing]  1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
-            print(f"[live] Seeded  1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
-        except Exception as e:
-            import traceback
-            print(f"[live]  1h seeding failed: {e}")
-            traceback.print_exc()
-
-        print(f"[live] Seeded total: {len(self.all_swings_15m)} 15m swings, {len(self.all_swings_1h)} 1h swings")
-        if file_used:
-            print(f"[live] Seed file active — live tracking starts AFTER cutoff. Next break will be LIVE [OPEN], not backtest wait.")
-        # Phase 2: prime rolling metrics + initial HTF window without waiting for next candle
-        try:
-            self._update_htf_metrics()
-            if len(self.window_15m) >= SWING["min_bars_15m"] + 5 and len(self.window_1h) >= SWING["min_bars_1h"] + 5:
-                # During this initial prime, suppress bulk journal blast
-                self._seeding = True
-                try:
-                    self._run_v18_simulation()
-                finally:
-                    self._seeding = False
-        except Exception as _e:
-            print(f"[live] post-seed prime warning: {_e}")
-            self._seeding = False
 
     def _seed_from_timestamps(self, ts_1h: str, ts_15m: str) -> dict:
-        """Seed swing engines from known backtest timestamps.
+        """Seed swing engines from user-provided timestamps.
 
-        Fetches candles from Binance starting BEFORE the given timestamps
-        (warmup: 50 bars for 15m walker/minBars, 34 bars for 1h walker/chop)
-        and replays through PersistentSwingEngine. Ensures live engine sees
-        the same candles as backtest from the seed point forward.
+        Design:
+        - 15m: timestamp IS the first candle. No lookback. Fetch forward to now.
+        - 1h:  timestamp IS the first candle for swing engine. But fetch 14 bars
+              BEFORE it for chop calculation (14-bar Dreiss formula needs history).
+        - Filter out live/incomplete candles (close_time > now).
 
         Returns summary dict with per-TF candle/swing counts.
         """
-        print(f"[seed] Seeding from timestamps: 1h={ts_1h}, 15m={ts_15m}")
+        print(f"[seed] Seeding: 1h={ts_1h}, 15m={ts_15m}")
         self._seeding = True
 
         # Reset engines to clean slate
@@ -683,12 +686,18 @@ class LiveLoop:
 
         result = {}
 
-        # Parse timestamps to ms — CSV timestamps are IST wall-clock,
-        # so we subtract IST offset to get the real UTC epoch for Binance.
+        # Parse timestamps to ms — IST wall-clock → UTC epoch
         def _to_ms(ts_str: str) -> int:
             dt_naive = datetime.strptime(ts_str, "%Y-%m-%d %H:%M:%S")
             dt_utc = dt_naive - IST
             return int(dt_utc.replace(tzinfo=timezone.utc).timestamp() * 1000)
+
+        def _to_ist_str(ms: int) -> str:
+            """Convert epoch ms to IST display string."""
+            from datetime import datetime as _dt
+            utc_dt = _dt.fromtimestamp(ms / 1000, tz=timezone.utc)
+            ist_dt = utc_dt + IST
+            return ist_dt.strftime("%Y-%m-%d %H:%M:%S")
 
         try:
             seed_15m_ms = _to_ms(ts_15m)
@@ -698,59 +707,80 @@ class LiveLoop:
             self._seeding = False
             return {"error": str(e)}
 
-        # 15m: fetch from (seed - 50*15min) to now
-        warmup_15m_ms = SWING["min_bars_15m"] * 15 * 60 * 1000  # 50 * 15min in ms
-        start_15m_ms = seed_15m_ms - warmup_15m_ms
+        now_ms = int(time.time() * 1000)
+
+        # --- 15m: timestamp IS the first candle, no lookback ---
         try:
-            from data_streamer import fetch_klines_from as _fkf
-            raw_15m = self._fetch_klines_from_sync(SYMBOL, "15m", start_15m_ms, limit=1000)
+            print(f"[seed] 15m: first candle = {_to_ist_str(seed_15m_ms)} (no lookback)")
+            raw_15m = self._fetch_klines_from_sync(self.symbol, "15m", seed_15m_ms, limit=2000)
+            # Filter out live/incomplete candle (close_time > now)
+            raw_15m = [c for c in raw_15m if c.get("close_time", c.get("open_time", 0)) <= now_ms]
+            print(f"[seed] 15m: {len(raw_15m)} candles (filtered live)")
             candles_15m = self._normalize_candles(raw_15m)
-            cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
-            self.window_15m = [c for c in candles_15m if c["ts"] >= cutoff] or candles_15m
-            for i, c in enumerate(candles_15m):
-                fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
-                result_15m = self.swing_15m.process_bar(fc, i)
-                if result_15m:
-                    self.all_swings_15m.append(result_15m)
-            self._show_recent_marks(self.all_swings_15m, candles_15m, "15m")
-            open15 = self.swing_15m.get_open_swing()
-            if open15:
-                for b in open15.get("breaks", []):
-                    key = ("15m", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open15.get("swing_index", -1))
-                    self._printed_marks.add(key)
-                print(f"[swing] 15m open: sw{open15['swing_index']} dir={open15['dir']} breaks={len(open15.get('breaks',[]))}")
-            print(f"[seed] 15m: {len(candles_15m)} candles, {len(self.all_swings_15m)} swings")
-            result["15m"] = {"candles": len(candles_15m), "swings": len(self.all_swings_15m),
-                             "open": {"dir": open15["dir"], "breaks": len(open15.get("breaks", []))} if open15 else None}
+            if not candles_15m:
+                print("[seed] 15m: NO candles returned — check exchange/time range")
+                result["15m"] = {"error": "no candles"}
+            else:
+                first_ist = candles_15m[0].get("date", "?")
+                last_ist = candles_15m[-1].get("date", "?")
+                print(f"[seed] 15m range: {first_ist} -> {last_ist}")
+                cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
+                self.window_15m = [c for c in candles_15m if c["ts"] >= cutoff] or candles_15m
+                for i, c in enumerate(candles_15m):
+                    fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+                    result_15m = self.swing_15m.process_bar(fc, i)
+                    if result_15m:
+                        self.all_swings_15m.append(result_15m)
+                self._show_recent_marks(self.all_swings_15m, candles_15m, "15m")
+                open15 = self.swing_15m.get_open_swing()
+                if open15:
+                    for b in open15.get("breaks", []):
+                        key = ("15m", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open15.get("swing_index", -1))
+                        self._printed_marks.add(key)
+                    print(f"[swing] 15m open: sw{open15['swing_index']} dir={open15['dir']} breaks={len(open15.get('breaks',[]))}")
+                print(f"[seed] 15m: {len(candles_15m)} candles, {len(self.all_swings_15m)} swings")
+                result["15m"] = {"candles": len(candles_15m), "swings": len(self.all_swings_15m),
+                                 "open": {"dir": open15["dir"], "breaks": len(open15.get("breaks", []))} if open15 else None}
         except Exception as e:
             import traceback
             print(f"[seed] 15m seeding failed: {e}")
             traceback.print_exc()
             result["15m"] = {"error": str(e)}
 
-        # 1h: fetch from (seed - 34*1h) to now
-        warmup_1h_ms = 34 * 3600 * 1000  # 34 hours in ms (20 minBars + 14 chop)
-        start_1h_ms = seed_1h_ms - warmup_1h_ms
+        # --- 1h: fetch 14 bars BEFORE timestamp for chop, then process from there ---
+        chop_lookback_ms = 14 * 3600 * 1000  # 14 bars × 1h
+        start_1h_ms = seed_1h_ms - chop_lookback_ms
         try:
-            raw_1h = self._fetch_klines_from_sync(SYMBOL, "1h", start_1h_ms, limit=500)
+            print(f"[seed] 1h: chop lookback = {_to_ist_str(start_1h_ms)} -> seed = {_to_ist_str(seed_1h_ms)}")
+            raw_1h = self._fetch_klines_from_sync(self.symbol, "1h", start_1h_ms, limit=500)
+            # Filter out live/incomplete candle
+            raw_1h = [c for c in raw_1h if c.get("close_time", c.get("open_time", 0)) <= now_ms]
+            print(f"[seed] 1h: {len(raw_1h)} candles (filtered live)")
             candles_1h = self._normalize_candles(raw_1h)
-            cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
-            self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
-            for i, c in enumerate(candles_1h):
-                fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
-                result_1h = self.swing_1h.process_bar(fc, i)
-                if result_1h:
-                    self.all_swings_1h.append(result_1h)
-            self._show_recent_marks(self.all_swings_1h, candles_1h, "1h")
-            open1h = self.swing_1h.get_open_swing()
-            if open1h:
-                for b in open1h.get("breaks", []):
-                    key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
-                    self._printed_marks.add(key)
-                print(f"[swing]  1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
-            print(f"[seed]  1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
-            result["1h"] = {"candles": len(candles_1h), "swings": len(self.all_swings_1h),
-                            "open": {"dir": open1h["dir"], "breaks": len(open1h.get("breaks", []))} if open1h else None}
+            if not candles_1h:
+                print("[seed] 1h: NO candles returned")
+                result["1h"] = {"error": "no candles"}
+            else:
+                first_ist = candles_1h[0].get("date", "?")
+                last_ist = candles_1h[-1].get("date", "?")
+                print(f"[seed] 1h range: {first_ist} -> {last_ist}")
+                cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
+                self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
+                for i, c in enumerate(candles_1h):
+                    fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+                    result_1h = self.swing_1h.process_bar(fc, i)
+                    if result_1h:
+                        self.all_swings_1h.append(result_1h)
+                self._show_recent_marks(self.all_swings_1h, candles_1h, "1h")
+                open1h = self.swing_1h.get_open_swing()
+                if open1h:
+                    for b in open1h.get("breaks", []):
+                        key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
+                        self._printed_marks.add(key)
+                    print(f"[swing]  1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
+                print(f"[seed]  1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
+                result["1h"] = {"candles": len(candles_1h), "swings": len(self.all_swings_1h),
+                                "open": {"dir": open1h["dir"], "breaks": len(open1h.get("breaks", []))} if open1h else None}
         except Exception as e:
             import traceback
             print(f"[seed]  1h seeding failed: {e}")
@@ -775,25 +805,161 @@ class LiveLoop:
 
         return result
 
-    def _fetch_klines_from_sync(self, symbol: str, interval: str, start_ms: int, limit: int = 500) -> list[dict]:
-        """Call fetch_klines_from regardless of whether it is async or sync."""
-        from data_streamer import fetch_klines_from
-        import inspect as _inspect
-        import asyncio as _asyncio
-        res = fetch_klines_from(symbol, interval, start_ms, limit=limit)
-        if _inspect.isawaitable(res):
+    def _recover_from_crash(self) -> bool:
+        """Recover state after crash by backfilling from last swing endpoint.
+
+        Reads the rolling swing endpoint pair from DB (last_15m_swing_1/2 and
+        last_1h_swing_1/2). Fetches candles from end_ts + 1 bar to now,
+        replays through swing engine, re-runs v18 simulation.
+
+        Returns True if recovery succeeded, False if no previous state exists.
+        """
+        last_15m_ts, prev_15m_ts = get_last_swing_end(self.db, "15m")
+        last_1h_ts, prev_1h_ts = get_last_swing_end(self.db, "1h")
+
+        if last_15m_ts == 0 and last_1h_ts == 0:
+            return False  # No previous state — need timestamps from user
+
+        print(f"[recover] Last swing endpoints: 15m={last_15m_ts} 1h={last_1h_ts}")
+        if last_15m_ts == 0 and prev_15m_ts > 0:
+            print(f"[recover] 15m: using backup swing_2 = {prev_15m_ts}")
+            last_15m_ts = prev_15m_ts
+        if last_1h_ts == 0 and prev_1h_ts > 0:
+            print(f"[recover] 1h: using backup swing_2 = {prev_1h_ts}")
+            last_1h_ts = prev_1h_ts
+
+        self._seeding = True
+        now_ms = int(time.time() * 1000)
+
+        # Reset engines to clean slate
+        try:
+            from src.firstswing import SwingEngine as _SE
             try:
-                loop = _asyncio.get_event_loop()
-                if loop.is_running():
-                    import concurrent.futures as _cf
-                    with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
-                        fut = _pool.submit(_asyncio.run, res)
-                        return fut.result(timeout=30)
-                else:
-                    return loop.run_until_complete(res)
-            except RuntimeError:
-                return _asyncio.run(res)
-        return res
+                with self.db.transaction() as _conn:
+                    _conn.execute("DELETE FROM meta WHERE key IN ('swing_state_15m','swing_state_1h')")
+            except Exception:
+                pass
+            self.swing_15m.eng = _SE(self.swing_15m.opts)
+            self.swing_15m.swing_index = 0
+            self.swing_15m.next_start_pos = 0
+            self.swing_1h.eng = _SE(self.swing_1h.opts)
+            self.swing_1h.swing_index = 0
+            self.swing_1h.next_start_pos = 0
+            self.all_swings_15m = []
+            self.all_swings_1h = []
+            self._printed_marks = set()
+            self._logged_filter_keys = set()
+        except Exception as _e:
+            print(f"[recover] engine reset warning: {_e}")
+
+        # --- 15m: fetch from swing_end + 1 bar to now ---
+        if last_15m_ts > 0:
+            try:
+                step_ms = 900000  # 15 min
+                start_15m_ms = (last_15m_ts * 1000) + step_ms
+                ist_start = datetime.fromtimestamp(start_15m_ms / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+                print(f"[recover] 15m: fetching from {ist_start} (swing_end + 1 bar) to now")
+                raw_15m = self._fetch_klines_from_sync(self.symbol, "15m", start_15m_ms, limit=2000)
+                raw_15m = [c for c in raw_15m if c.get("close_time", c.get("open_time", 0)) <= now_ms]
+                print(f"[recover] 15m: {len(raw_15m)} candles (filtered live)")
+                candles_15m = self._normalize_candles(raw_15m)
+                if candles_15m:
+                    cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
+                    self.window_15m = [c for c in candles_15m if c["ts"] >= cutoff] or candles_15m
+                    for i, c in enumerate(candles_15m):
+                        fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+                        result = self.swing_15m.process_bar(fc, i)
+                        if result:
+                            self.all_swings_15m.append(result)
+                    open15 = self.swing_15m.get_open_swing()
+                    if open15:
+                        for b in open15.get("breaks", []):
+                            key = ("15m", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open15.get("swing_index", -1))
+                            self._printed_marks.add(key)
+                        print(f"[recover] 15m open: sw{open15['swing_index']} dir={open15['dir']} breaks={len(open15.get('breaks',[]))}")
+                    print(f"[recover] 15m: {len(candles_15m)} candles, {len(self.all_swings_15m)} swings")
+            except Exception as e:
+                import traceback
+                print(f"[recover] 15m recovery failed: {e}")
+                traceback.print_exc()
+
+        # --- 1h: fetch from swing_end + 1 bar to now ---
+        if last_1h_ts > 0:
+            try:
+                step_ms = 3600000  # 1 hour
+                start_1h_ms = (last_1h_ts * 1000) + step_ms
+                ist_start = datetime.fromtimestamp(start_1h_ms / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+                print(f"[recover] 1h: fetching from {ist_start} (swing_end + 1 bar) to now")
+                raw_1h = self._fetch_klines_from_sync(self.symbol, "1h", start_1h_ms, limit=500)
+                raw_1h = [c for c in raw_1h if c.get("close_time", c.get("open_time", 0)) <= now_ms]
+                print(f"[recover] 1h: {len(raw_1h)} candles (filtered live)")
+                candles_1h = self._normalize_candles(raw_1h)
+                if candles_1h:
+                    cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
+                    self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
+                    for i, c in enumerate(candles_1h):
+                        fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+                        result = self.swing_1h.process_bar(fc, i)
+                        if result:
+                            self.all_swings_1h.append(result)
+                    open1h = self.swing_1h.get_open_swing()
+                    if open1h:
+                        for b in open1h.get("breaks", []):
+                            key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
+                            self._printed_marks.add(key)
+                        print(f"[recover]  1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
+                    print(f"[recover]  1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
+            except Exception as e:
+                import traceback
+                print(f"[recover] 1h recovery failed: {e}")
+                traceback.print_exc()
+
+        self._seeding = False
+        print(f"[recover] Seeded total: {len(self.all_swings_15m)} 15m swings, {len(self.all_swings_1h)} 1h swings")
+
+        # Prime rolling metrics + initial v18 simulation
+        try:
+            self._update_htf_metrics()
+            if len(self.window_15m) >= SWING["min_bars_15m"] + 5 and len(self.window_1h) >= SWING["min_bars_1h"] + 5:
+                self._seeding = True
+                try:
+                    self._run_v18_simulation()
+                finally:
+                    self._seeding = False
+        except Exception as _e:
+            print(f"[recover] post-recover prime warning: {_e}")
+            self._seeding = False
+
+        return True
+
+    def _fetch_klines_from_sync(self, symbol: str, interval: str, start_ms: int, limit: int = 500) -> list[dict]:
+        """Fetch klines from the configured exchange, starting from start_ms.
+
+        Routes to Bybit or Binance based on self.exchange.
+        """
+        if self.exchange == EXCHANGE_BYBIT:
+            from bybit_streamer import backfill_klines_bybit
+            tf_map = {"1m": "1", "5m": "5", "15m": "15", "1h": "60", "4h": "240"}
+            bybit_interval = tf_map.get(interval, interval)
+            return backfill_klines_bybit(symbol, bybit_interval, limit=limit, demo=True, start_ms=start_ms)
+        else:
+            from data_streamer import fetch_klines_from
+            import inspect as _inspect
+            import asyncio as _asyncio
+            res = fetch_klines_from(symbol, interval, start_ms, limit=limit)
+            if _inspect.isawaitable(res):
+                try:
+                    loop = _asyncio.get_event_loop()
+                    if loop.is_running():
+                        import concurrent.futures as _cf
+                        with _cf.ThreadPoolExecutor(max_workers=1) as _pool:
+                            fut = _pool.submit(_asyncio.run, res)
+                            return fut.result(timeout=30)
+                    else:
+                        return loop.run_until_complete(res)
+                except RuntimeError:
+                    return _asyncio.run(res)
+            return res
 
     def _show_recent_marks(self, swings: list[dict], candles: list[dict], tf: str):
         """Show the most recent marks from seeding."""
@@ -827,14 +993,7 @@ class LiveLoop:
             return
 
         sw15 = list(self.all_swings_15m)
-        open15 = self.swing_15m.get_open_swing()
-        if open15:
-            sw15.append(open15)
-
         sw1h = list(self.all_swings_1h)
-        open1h = self.swing_1h.get_open_swing()
-        if open1h:
-            sw1h.append(open1h)
 
         c15 = self.window_15m
         c1h = self.window_1h
@@ -843,11 +1002,11 @@ class LiveLoop:
             result = simulate_htf_ltf_streak_halt(
                 c1h, sw1h, c15, sw15,
                 fine_ltf=[],
-                sl_buf_atr=V18["sl_buf_atr"],
-                ext_stop_r=V18["ext_stop_r"],
-                mode=V18["mode"],
-                cooldown_bars=V18["cooldown_bars"],
-                max_consecutive_losses=V18["max_consecutive_losses"],
+                sl_buf_atr=self.v18["sl_buf_atr"],
+                ext_stop_r=self.v18["ext_stop_r"],
+                mode=self.v18["mode"],
+                cooldown_bars=self.v18["cooldown_bars"],
+                max_consecutive_losses=self.v18["max_consecutive_losses"],
             )
         except Exception as e:
             import traceback
@@ -946,17 +1105,21 @@ class LiveLoop:
             self.htf_entry_px = entry_px
             self.htf_sl = sl_px
             self.htf_hrisk = hrisk
-            # Persist open window (Phase 2.4)
+            d = 1 if self.htf_window_dir == "long" else -1
+            lvl_15 = entry_px + 1.5 * hrisk * d if hrisk else 0.0
+            lvl_3r = entry_px + 3.0 * hrisk * d if hrisk else 0.0
+            # Persist open window with full matrix (Phase 15)
             try:
                 from persistence.trade_store import open_htf_window
                 cap_ts = entry_ts + CAP_DAYS * 86400
-                self.htf_window_id = open_htf_window(self.db, self.htf_window_dir, entry_ts, entry_px, cap_ts)
+                self.htf_window_id = open_htf_window(
+                    self.db, self.htf_window_dir, entry_ts, entry_px, cap_ts,
+                    sl_price=sl_px, hrisk=hrisk, lvl_1_5r=lvl_15, lvl_3r=lvl_3r,
+                )
             except Exception as e:
                 print(f"[htf] persist open failed: {e}")
             # Compute metrics right after open
             self._update_htf_metrics()
-            lvl_15 = entry_px + 1.5 * hrisk * (1 if self.htf_window_dir == "long" else -1) if hrisk else 0.0
-            lvl_3r = entry_px + 3.0 * hrisk * (1 if self.htf_window_dir == "long" else -1) if hrisk else 0.0
             print(f"[htf] Window OPENED: {self.htf_window_dir} @ {entry_px:.2f} SL={sl_px:.2f} (-1R) 1.5R={lvl_15:.2f} 3R={lvl_3r:.2f} ({entry_date}) CHOP={self.chop_index:.1f} {self.regime.upper()}")
         elif htf_status != "open" and self.htf_window_open:
             exit_ts = int(latest_htf.get("exit_ts", 0))
@@ -1038,11 +1201,113 @@ class LiveLoop:
                     exit_reason=t["outcome"],
                     r_multiple=float(t["r_multiple"]),
                 )
-                print(f"[trade] {t['dir']} sw{t['swing_no']} @ {t['entry_price']:.2f} -> {t['exit_price']:.2f} ({t['outcome']}, {t['r_multiple']:+.2f}R)")
+                # Cost calculation (peer model: asymmetric % slippage)
+                r_mult = float(t["r_multiple"])
+                risk = abs(float(t["entry_price"]) - float(t["sl"]))
+                if risk > 0:
+                    fee_rate = self._fee_pct / 100.0
+                    entry_px = abs(float(t["entry_price"]))
+                    exit_px = abs(float(t["exit_price"]))
+                    fee_r = (entry_px * fee_rate + exit_px * fee_rate) / risk
+                    slip_r = (entry_px * self._entry_slip_pct / 100.0
+                              + exit_px * self._exit_slip_pct / 100.0) / risk
+                    cost_r = fee_r + slip_r
+                else:
+                    cost_r = 0.0
+                net_r = r_mult - cost_r
+                self._cum_cost_r += cost_r
+                self._cum_net_r += net_r
+                self._trade_count += 1
+                print(f"[trade] {t['dir']} sw{t['swing_no']} @ {t['entry_price']:.2f} -> {t['exit_price']:.2f} ({t['outcome']}, {r_mult:+.2f}R, cost {cost_r:.2f}R, net {net_r:+.2f}R)")
             else:
                 print(f"[trade] {t['dir']} sw{t['swing_no']} @ {t['entry_price']:.2f} OPEN (SL={t['sl']:.2f} TP={t['target']:.2f})")
+                # Phase 15: Cache the open trade (instant, no DB reads on every tick)
+                self._cache_ltf_trade_open(
+                    trade_id=trade_id,
+                    direction=t["dir"],
+                    entry_ts=int(t["entry_ts"]),
+                    entry_price=float(t["entry_price"]),
+                    sl_initial=float(t["sl"]),
+                    tp_price=float(t["target"]),
+                    cap_ts=cap_ts,
+                    htf_window_id=htf_id,
+                )
+                # --- LIVE ORDER EXECUTION ---
+                if self.trader and self.trader.is_connected:
+                    self._execute_entry(t, trade_id)
 
-    def _get_existing_marks_set(self, tf: str) -> set:
+    def _execute_entry(self, trade: dict, trade_id: int):
+        """Place market order on Bybit for a new open trade."""
+        try:
+            direction = trade["dir"]
+            side = "Buy" if direction == "long" else "Sell"
+            entry_price = float(trade["entry_price"])
+            sl_price = float(trade["sl"])
+            tp_price = float(trade["target"])
+
+            # Position sizing: risk INR -> USDT -> qty
+            qty = self._calculate_qty(entry_price, sl_price)
+            if qty <= 0:
+                print(f"[order] SKIPPED — qty={qty} (check balance/risk)")
+                return
+
+            # Format SL/TP to 2 decimal places for Bybit
+            sl_str = f"{sl_price:.2f}"
+            tp_str = f"{tp_price:.2f}"
+            qty_str = f"{qty:.3f}"
+
+            print(f"[order] PLACING: {side} {qty_str} BTC @ ~{entry_price:.2f} SL={sl_str} TP={tp_str}")
+            resp = self.trader.place_market_order(side, qty_str, stop_loss=sl_str, take_profit=tp_str)
+
+            if resp.get("retCode") == 0:
+                order_id = resp["result"]["orderId"]
+                print(f"[order] FILLED: {side} {qty_str} BTC id={order_id}")
+            else:
+                print(f"[order] FAILED: {resp.get('retMsg', 'unknown')}")
+        except Exception as e:
+            print(f"[order] ERROR: {e}")
+
+    def _execute_exit(self, reason: str, fill_price: float):
+        """Close position on Bybit when SL/TP/cap hit."""
+        try:
+            print(f"[order] CLOSING: reason={reason} @ {fill_price:.2f}")
+            resp = self.trader.close_position()
+            if resp.get("retCode") == 0:
+                print(f"[order] CLOSED: {reason}")
+            else:
+                print(f"[order] CLOSE FAILED: {resp.get('retMsg', 'unknown')}")
+        except Exception as e:
+            print(f"[order] CLOSE ERROR: {e}")
+
+    def _calculate_qty(self, entry_price: float, sl_price: float) -> float:
+        """Calculate BTC quantity based on risk.
+
+        Formula: qty = risk_usdt / (|entry - sl| + fee_buffer)
+        Where fee_buffer accounts for taker fees (0.055% per side on Bybit).
+        Max position capped at available balance.
+        """
+        risk_usdt = 50.0  # Fixed risk per trade in USDT
+        stop_distance = abs(entry_price - sl_price)
+        if stop_distance <= 0:
+            return 0.0
+
+        # Fee buffer: 0.055% taker * 2 sides * entry price
+        fee_buffer = entry_price * 0.00055 * 2
+        qty = risk_usdt / (stop_distance + fee_buffer)
+
+        # Round to Bybit BTCUSDT precision (0.001)
+        qty = max(0.001, round(qty, 3))
+
+        # Check available balance
+        if self.trader and self.trader.is_connected:
+            balance = self.trader.get_wallet_balance()
+            available = balance.get("available", 0)
+            required = qty * entry_price
+            if required > available * 0.95:  # 95% safety margin
+                qty = max(0.001, round(available * 0.9 / entry_price, 3))
+                print(f"[order] Position sized down: balance={available:.2f} USDT, qty={qty}")
+
+        return qty
         marks = get_marks(self.db, tf)
         return {(m.ts, m.kind, m.direction, m.swing_no) for m in marks}
 
@@ -1060,11 +1325,9 @@ class LiveLoop:
     def _trail_sl(self, sw15: list[dict]):
         """Trail SL using _trail_events — mirrors v18_streak_halt.py:234-267.
 
-        v18 walks forward from entry+1, activating events when conf_idx <= j
-        and only ratchets if pivot is between current SL and bar's extreme.
-        This matches the backtest exactly (backtest-precise).
+        Phase 15: Uses cached trade (instant). Updates cache on trail.
         """
-        open_trade = get_open_ltf_trade(self.db)
+        open_trade = self._open_ltf_trade
         if not open_trade or not self.window_15m:
             return
 
@@ -1114,6 +1377,7 @@ class LiveLoop:
         if new_sl != sl_current:
             from persistence.trade_store import update_trade_sl
             update_trade_sl(self.db, open_trade["id"], new_sl)
+            self._cache_ltf_trade_update_sl(new_sl)
             # Classify with ATR-scaled tolerance (4.3) for log consistency
             tol = max(0.01, self.atr_14 * 0.05, abs(sl_initial - new_sl) * 0.001) if self.atr_14 else max(0.01, abs(sl_initial - new_sl) * 0.001)
             moved = abs(new_sl - sl_initial) > tol
@@ -1123,11 +1387,10 @@ class LiveLoop:
     def on_tick(self, price: float, ts: int):
         """Process a price tick. Check SL/TP/cap for open trades.
 
-        Conservative fill: gap beyond SL fills at SL (min for long, max for short),
-        mirroring v18's min(sl, open) / max(sl, open) intrabar fill. Trail vs SL
-        classification uses ATR-scaled tolerance, not fixed 0.01.
+        Phase 15: Uses cached trade (instant, no DB reads on every tick).
+        Cache is updated on trade open/close/trail from DB writes.
         """
-        open_trade = get_open_ltf_trade(self.db)
+        open_trade = self._open_ltf_trade
         if not open_trade:
             return
 
@@ -1151,7 +1414,10 @@ class LiveLoop:
             # Cap: fill at current price (time exit)
             r = self._calc_r(direction, entry_price, price, risk)
             close_ltf_trade(self.db, open_trade["id"], ts, price, "cap", r)
+            self._cache_ltf_trade_close()
             print(f"[trade] Cap hit: {price:.2f} ({r:+.2f}R)")
+            if self.trader and self.trader.is_connected:
+                self._execute_exit("cap", price)
             try:
                 self._persist_streak_state()
             except Exception:
@@ -1170,10 +1436,12 @@ class LiveLoop:
             tol = max(0.01, self.atr_14 * 0.05, risk * 0.002) if self.atr_14 else max(0.01, risk * 0.002)
             reason = "trail" if abs(sl_current - sl_initial) > tol else "sl"
             close_ltf_trade(self.db, open_trade["id"], ts, fill, reason, r)
+            self._cache_ltf_trade_close()
             print(f"[trade] {reason.upper()} hit: {fill:.2f} (tick {price:.2f}, {r:+.2f}R)")
+            if self.trader and self.trader.is_connected:
+                self._execute_exit(reason, fill)
             try:
                 self._persist_streak_state()
-                # Decay cooldown on close via next bar, but also handle immediate halt
             except Exception:
                 pass
             return
@@ -1181,7 +1449,10 @@ class LiveLoop:
         tp_hit = (direction == "long" and price >= tp_price) or (direction == "short" and price <= tp_price)
         if tp_hit:
             close_ltf_trade(self.db, open_trade["id"], ts, price, "tp", 3.0)
+            self._cache_ltf_trade_close()
             print(f"[trade] TP hit: {price:.2f} (+3.0R)")
+            if self.trader and self.trader.is_connected:
+                self._execute_exit("tp", price)
             try:
                 self._persist_streak_state()
             except Exception:

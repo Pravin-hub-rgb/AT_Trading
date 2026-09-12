@@ -112,7 +112,7 @@ Cross-check: `backend/debug/_chop_sweep_results.txt` — thresh=61.8, lb=14 → 
 | `persistence/` (database, state_store, trade_store) | **DONE** — SQLite WAL, atomic transactions, append-only marks, HTF window CRUD, streak halt persistence |
 | `data_streamer.py` | **DONE** — spot API (`api.binance.com`), `backfill_klines()` + `fetch_klines_from()`, mock-friendly |
 | `live_loop.py` | **DONE** — 8 phases: foundation, HTF window tracker, signal filter, trade execution, streak halt, cleanup, seed pipeline, IST+spot fix |
-| `main.py` | **DONE** — CLI with `--seed-1h` / `--seed-15m` args, normal Binance seed fallback |
+| `main.py` | **DONE** — CLI with positional timestamp args (arg1=15m, arg2=1h), normal Binance seed fallback |
 | `docs/CHECKLIST.md` | **DONE** — all 8 phases marked with tests |
 | `docs/live_trading_doc.md` | **DONE** — D1-D7 decisions, architecture, seed-by-timestamp (IST convention, spot API) |
 
@@ -128,9 +128,11 @@ Cross-check: `backend/debug/_chop_sweep_results.txt` — thresh=61.8, lb=14 → 
 
 ### Phase 7: Seed Pipeline (new)
 - `POST /api/btc/seed` — takes `{"1h": "timestamp", "15m": "timestamp"}`
-- `python main.py --seed-1h "..." --seed-15m "..."` — CLI equivalent
+- `python main.py "15m_time" "1h_time" --exchange bybit` — positional CLI (arg1=15m, arg2=1h)
 - Timestamps are IST wall-clock (matching CSV convention)
-- Warmup: 50 bars 15m (12.5h), 34 bars 1h (20 minBars + 14 chop)
+- **15m: timestamp IS the first candle** — no lookback. Engine fetches forward from timestamp to now.
+- **1h: timestamp IS the first candle for swings** — but fetches 14 bars before for chop calculation.
+- Live/incomplete candles filtered out (close_time > now).
 - Engine state saved to SQLite, v18 simulation primed on boot
 
 ### Phase 8: IST + Spot API Fix
@@ -199,13 +201,13 @@ Cross-check: `backend/debug/_chop_sweep_results.txt` — thresh=61.8, lb=14 → 
 **Phase 7 done.** Seed pipeline is built and tested:
 - `POST /api/btc/seed` endpoint works
 - `_seed_from_timestamps()` method works (tested with real Binance data)
-- CLI args `--seed-1h` / `--seed-15m` work
+- CLI positional args (arg1=15m, arg2=1h) work
 - Backtest still passes (330t +331.1R)
 
 **Next: Deploy to VPS and test live.**
 
 1. Deploy `live_stuff/` + `backend/` to VPS
-2. Run `python main.py --seed-1h "..." --seed-15m "..."` with backtest timestamps
+2. Run `python main.py "15m_time" "1h_time" --exchange bybit` with backtest timestamps
 3. Verify WebSocket streamer connects and candle data flows
 4. Verify marks appear correctly on 15m close
 5. Run for 1 week → daily parity check vs backtest

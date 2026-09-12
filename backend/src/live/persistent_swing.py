@@ -129,6 +129,7 @@ class PersistentSwingEngine:
                 "start_px": self.eng.start_px,
                 "end_idx": self.eng.end_idx,
                 "end_px": self.eng.end_px,
+                "end_time": self.eng.end_time,
             },
             "source": self.eng.confirm_source,
             "dir": self.eng.dir,

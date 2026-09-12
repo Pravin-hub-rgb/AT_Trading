@@ -5,7 +5,8 @@ Uses the ACTUAL backend functions (compute_btc_swings, simulate_htf_ltf_streak_h
 NOT a toy reimplementation.
 
 Run: python live_stuff/tests/test_smoke.py
-Pass criteria: 330 trades, +331.1R (+-0.2), all years positive.
+Pass criteria: 313 trades, +289.9R (+-0.2), all years positive.
+(BTC Spot with pre-FS filter applied)
 """
 import sys
 from pathlib import Path
@@ -65,8 +66,8 @@ def main():
     print("=" * 72)
     print("BACKBENCHER SMOKE TEST -- REAL v18 ENGINE")
     print("=" * 72)
-    print(f"  trades: {n}  -> {'PASS' if n == 330 else 'FAIL'}")
-    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 331.1):.2f})  -> {'PASS' if abs(tot - 331.1) < 0.2 else 'FAIL'}")
+    print(f"  trades: {n}  -> {'PASS' if n == 313 else 'FAIL'}")
+    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 289.9):.2f})  -> {'PASS' if abs(tot - 289.9) < 0.2 else 'FAIL'}")
     print(f"  win rate: {wr:.1f}%  ({len(wins)}W/{len(losses)}L)")
     print(f"  PF: {pf:.2f}")
     for y, v in sorted(years.items()):
@@ -74,8 +75,8 @@ def main():
     print(f"  all years positive: {'PASS' if allyes else 'FAIL'}")
     print("=" * 72)
 
-    assert n == 330, f"Expected 330 trades, got {n}"
-    assert abs(tot - 331.1) < 0.2, f"Expected +331.1R, got {tot:+.1f}R"
+    assert n == 313, f"Expected 313 trades, got {n}"
+    assert abs(tot - 289.9) < 0.2, f"Expected +289.9R, got {tot:+.1f}R"
     assert allyes, "Not all years positive"
     print("ALL CHECKS PASSED")
 

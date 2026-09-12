@@ -200,8 +200,12 @@ export interface BtcBacktestParams {
   regime: RegimeMode;
   /** fee % per side (e.g. 0.05 = Binance taker) — 0 shows the raw backtest. */
   feePct: number;
-  /** adverse exit slippage in price points. */
+  /** adverse exit slippage in price points (legacy, overridden by entrySlipPct/exitSlipPct). */
   slippagePts: number;
+  /** % slippage on entry (e.g. 0.001 = 1bp). Asymmetric peer model. */
+  entrySlipPct: number;
+  /** % slippage on exit (e.g. 0.003 = 3bp). Asymmetric peer model. */
+  exitSlipPct: number;
 }
 
 export interface BtcBacktestResponseParams {
@@ -210,6 +214,8 @@ export interface BtcBacktestResponseParams {
   limit: number | null;
   fee_pct: number;
   slippage_pts: number;
+  entry_slip_pct: number;
+  exit_slip_pct: number;
   /** "1m" = exits resolved on 1-minute candles (precise fills). */
   fill_tf: string;
   entry_break: EntryBreak;
@@ -271,6 +277,8 @@ export async function getBtcBacktest(
     symbol,
     fee_pct: String(p.feePct),
     slippage_pts: String(p.slippagePts),
+    entry_slip_pct: String(p.entrySlipPct),
+    exit_slip_pct: String(p.exitSlipPct),
     entry_break: p.entryBreak,
     sl_mode: p.slMode,
     sl_pct: String(p.slPct),
@@ -397,6 +405,8 @@ export interface BtcSummaryResponse {
   count: number;
   fee_pct: number;
   slippage_pts: number;
+  entry_slip_pct: number;
+  exit_slip_pct: number;
   version: BtcVersion;
   rows: BtcSummaryRow[];
   best: string | null;
@@ -442,6 +452,8 @@ export async function getBtcSummary(
   limit: number | null,
   feePct: number,
   slippagePts: number,
+  entrySlipPct: number = 0.005,
+  exitSlipPct: number = 0.010,
   version: BtcVersion = "v1",
 ): Promise<BtcSummaryResponse> {
   const q = new URLSearchParams({
@@ -449,6 +461,8 @@ export async function getBtcSummary(
     mode,
     fee_pct: String(feePct),
     slippage_pts: String(slippagePts),
+    entry_slip_pct: String(entrySlipPct),
+    exit_slip_pct: String(exitSlipPct),
     version,
   });
   if (limit && limit > 0) q.set("limit", String(limit));
