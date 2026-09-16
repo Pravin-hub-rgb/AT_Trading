@@ -338,6 +338,6 @@
 | M6 | Extend window or marks-only signals | `live_loop.py` | ~10 lines |
 | M7 | Increase boundary timeout | `live_loop.py` | ~1 line |
 | M8 | Unified cooldown mechanism | Both files | ~10 lines |
-| M9 | Async rate fetch | `rate_manager.py` | ~20 lines |
+| M9 | Async rate fetch | `rate_manager.py` | ~20 lines | **FIXED 2026-09-15 — `update()` moved off tick path into `_session_watch` via `asyncio.to_thread`; `_calculate_qty` sizes from cache + warns when stale (`is_stale()`/`age_min()` added)** |
 | M10 | Reject when qty < min | `_calculate_qty` | ~5 lines | **FIXED 2026-09-15 — both paths (risk-sized + balance-sized); rejects return 0.0 → caller skips** |
 | M11 | Query actual price on mismatch | `live_loop.py` | ~5 lines |

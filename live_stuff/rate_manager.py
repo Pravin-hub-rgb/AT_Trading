@@ -125,6 +125,14 @@ class RateManager:
             self.usdt_inr_rate = config.EMERGENCY_RATE
             self.rate_last_updated = time.time()
 
+    def age_min(self) -> float:
+        """Minutes since the cached rate was last refreshed."""
+        return (time.time() - self.rate_last_updated) / 60.0
+
+    def is_stale(self) -> bool:
+        """True if the cached rate is older than RATE_UPDATE_INTERVAL."""
+        return (time.time() - self.rate_last_updated) >= config.RATE_UPDATE_INTERVAL
+
     def get_rate(self) -> float:
         """Get cached rate instantly (0ms, no network). Call update() first if needed."""
         return self.usdt_inr_rate

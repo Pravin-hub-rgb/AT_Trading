@@ -27,6 +27,12 @@ class FakeTrader:
 
 
 class FakeRate:
+    def is_stale(self):
+        return False
+
+    def age_min(self):
+        return 0.0
+
     def update(self):
         pass
 

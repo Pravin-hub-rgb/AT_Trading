@@ -188,6 +188,13 @@ class LiveLoop:
             if not self.trader:
                 continue
             try:
+                # M9: refresh the INR/USDT rate OFF the event loop. update()
+                # does blocking HTTP (worst case ~20s for both sources) —
+                # to_thread keeps the tick path responsive.
+                await asyncio.to_thread(self.rate_manager.update)
+            except Exception as e:
+                logger.error(f"Rate refresh error: {e}")
+            try:
                 if not self.trader._probe():
                     if not self._session_dead_flag:
                         self._session_dead_flag = True
@@ -1881,7 +1888,13 @@ class LiveLoop:
         Rejects trade if implied leverage > MAX_LEVERAGE.
         """
         risk_inr = read_risk_inr()
-        self.rate_manager.update()
+        # M9: update() does blocking requests.get (up to ~20s across both rate
+        # sources) — it must NEVER run on the tick/entry path. _session_watch
+        # refreshes it off-loop every 30s (asyncio.to_thread). Here we size
+        # with the cached rate and warn if it is stale.
+        if self.rate_manager.is_stale():
+            print(f"[order] WARNING: rate cache stale ({self.rate_manager.age_min():.0f} min) — "
+                  f"sizing with cached INR {self.rate_manager.get_rate():.2f}/USDT")
         inr_usdt = self.rate_manager.get_rate()
         risk_usdt = risk_inr / inr_usdt
 
