@@ -332,7 +332,7 @@
 |---|-----|-------|--------|
 | M1 | Use NULL for missing window id | `live_loop.py` | ~3 lines |
 | M2 | Add `AND status='open'` guard | `trade_store.py` | ~2 lines | **RETIRED 2026-09-15 - merged into C4** |
-| M3 | Close stale windows on startup | `live_loop.py` | ~5 lines |
+| M3 | Close stale windows on startup | `live_loop.py` | ~5 lines | **FIXED 2026-09-16 — root cause was the tracker's missing branch: sim-latest open + our window open with a DIFFERENT entry_ts silently kept the dead window (and never persisted the new one). Now: old window closed with real sim exit data (matched by entry_ts) or stale_cap when its lifecycle fell outside the sim slice; boot sweep closes any open window whose 16d cap passed while down** |
 | M4 | DB indexes | `database.py` | ~5 lines |
 | M5 | Pass SL on close order | `bybit_order.py` | ~5 lines |
 | M6 | Extend window or marks-only signals | `live_loop.py` | ~10 lines |

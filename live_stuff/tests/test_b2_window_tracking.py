@@ -12,6 +12,7 @@ Run: python live_stuff/tests/test_b2_window_tracking.py
 """
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # live_stuff/
@@ -133,7 +134,12 @@ def main():
     assert get_open_htf_window(db, regime="b2") is not None
     print("PASS 3: flip close leaves b2 window open")
 
-    # 4. boot restore � b2 window comes back from DB
+    # 4. boot restore - b2 window comes back from DB
+    # (M3 boot sweep: refresh entry_ts to within the 16d cap first - a
+    #  2023-dated window is correctly stale-capped and must NOT restore)
+    with db.transaction() as conn:
+        conn.execute("UPDATE htf_windows SET entry_ts = ? WHERE id = ?",
+                     (int(time.time()) - 2 * 86400, b2_id))
     ll2 = make_stub()
     ll2.db = db
     ll2._restore_htf_state()

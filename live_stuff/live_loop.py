@@ -365,6 +365,16 @@ class LiveLoop:
                 if not row:
                     continue
                 sfx = "" if regime == "flip" else "_b2"
+                # M3: a window whose 16d cap passed while we were down cannot
+                # still be alive — close it in the DB, never restore it.
+                if time.time() > int(row["entry_ts"]) + CAP_DAYS * 86400:
+                    from persistence.trade_store import close_htf_window
+                    close_htf_window(self.db, int(row["id"]),
+                                     int(row["entry_ts"]) + CAP_DAYS * 86400, "stale_cap")
+                    print(f"[htf] {regime.upper()} window id={int(row['id'])} STALE-CAP at boot "
+                          f"(started {self._to_ist_short(int(row['entry_ts']))}, 16d cap passed "
+                          f"while down) — closed, not restored")
+                    continue
                 setattr(self, f"htf_window_open{sfx}", True)
                 setattr(self, f"htf_window_dir{sfx}", row["direction"])
                 setattr(self, f"htf_window_start_ts{sfx}", int(row["entry_ts"]))
@@ -1534,13 +1544,71 @@ class LiveLoop:
             setattr(self, f"htf_window_id{sfx}", None)
             setattr(self, f"htf_current_r{sfx}", 0.0)
         elif open_flag:
-            # Already open — refresh entry/sl/hrisk (in case SL drift, but v18 SL is fixed) and metrics
-            setattr(self, f"htf_entry_px{sfx}", entry_px)
-            setattr(self, f"htf_sl{sfx}", sl_px)
-            setattr(self, f"htf_hrisk{sfx}", hrisk)
-            self._update_htf_metrics()
-            # No duplicate OPEN log here — status line already shows it
-            pass
+            # Both the sim and our state show an open window. If it is the SAME
+            # window (entry_ts matches), just refresh metrics. If the entry_ts
+            # differs, our window ended while we were away (crash/reseed close+
+            # reopen) and a NEW window opened — close the old one with real sim
+            # exit data where available, then adopt the new window (M3).
+            if entry_ts == getattr(self, f"htf_window_start_ts{sfx}"):
+                # Same window — refresh entry/sl/hrisk (in case SL drift, but v18 SL is fixed) and metrics
+                setattr(self, f"htf_entry_px{sfx}", entry_px)
+                setattr(self, f"htf_sl{sfx}", sl_px)
+                setattr(self, f"htf_hrisk{sfx}", hrisk)
+                self._update_htf_metrics()
+                # No duplicate OPEN log here — status line already shows it
+            else:
+                old_start = getattr(self, f"htf_window_start_ts{sfx}")
+                # (a) try to find the old window's close in the sim list — real exit data
+                old_close = next(
+                    (t for t in htf_trades
+                     if int(t.get("entry_ts", 0)) == old_start and t.get("outcome") != "open"),
+                    None,
+                )
+                try:
+                    from persistence.trade_store import close_htf_window
+                    if old_close is not None:
+                        close_htf_window(
+                            self.db, win_id,
+                            int(old_close.get("exit_ts", 0)) or int(time.time()),
+                            old_close.get("outcome", "closed"),
+                        )
+                        print(f"[htf] {regime.upper()} OLD Window CLOSED (sim): "
+                              f"{old_close.get('outcome')} @ {float(old_close.get('exit_price', 0)):.2f} "
+                              f"({float(old_close.get('r_multiple', 0)):+.2f}R) — replaced by newer window")
+                    else:
+                        # (b) old window's lifecycle fell outside the sim's 1h
+                        # slice (started >20d ago) — the 16d cap provably fired
+                        cap_ts = old_start + CAP_DAYS * 86400
+                        close_htf_window(self.db, win_id, min(cap_ts, int(time.time())), "stale_cap")
+                        print(f"[htf] {regime.upper()} OLD Window STALE-CAP (outside sim slice) — "
+                              f"closed, replaced by newer window")
+                except Exception as e:
+                    print(f"[htf] persist old-window close failed: {e}")
+                # adopt the new window — same fields the open branch sets
+                d = 1 if latest_htf.get("dir") == "long" else -1
+                lvl_15 = entry_px + 1.5 * hrisk * d if hrisk else 0.0
+                lvl_3r = entry_px + 3.0 * hrisk * d if hrisk else 0.0
+                setattr(self, f"htf_window_dir{sfx}", latest_htf.get("dir"))
+                setattr(self, f"htf_window_start_ts{sfx}", entry_ts)
+                setattr(self, f"htf_entry_px{sfx}", entry_px)
+                setattr(self, f"htf_sl{sfx}", sl_px)
+                setattr(self, f"htf_hrisk{sfx}", hrisk)
+                try:
+                    from persistence.trade_store import open_htf_window
+                    cap_ts = entry_ts + CAP_DAYS * 86400
+                    new_id = open_htf_window(
+                        self.db, latest_htf.get("dir"), entry_ts, entry_px, cap_ts,
+                        sl_price=sl_px, hrisk=hrisk, lvl_1_5r=lvl_15, lvl_3r=lvl_3r,
+                        regime=regime,
+                    )
+                    setattr(self, f"htf_window_id{sfx}", new_id)
+                except Exception as e:
+                    print(f"[htf] persist new-window open failed: {e}")
+                self._chop_stale = True
+                self._update_htf_metrics()
+                print(f"[htf] {regime.upper()} Window REPLACED: new {latest_htf.get('dir')} @ {entry_px:.2f} "
+                      f"SL={sl_px:.2f} 1.5R={lvl_15:.2f} 3R={lvl_3r:.2f} ({entry_date}) — "
+                      f"id {win_id} -> {getattr(self, f'htf_window_id{sfx}')}")
         else:
             # No window for this regime — refresh metrics (chop/regime)
             self._update_htf_metrics()
