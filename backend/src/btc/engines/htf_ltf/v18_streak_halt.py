@@ -83,6 +83,7 @@ def simulate_htf_ltf_streak_halt(
     mode="chop",  # chop, atr_low, atr_both, chop_or_atr
     cooldown_bars=0,
     max_consecutive_losses=0,  # 0 = no halt, N = halt after N consecutive losses
+    htf_rr=3.0,  # HTF (1h) fixed R target — controls when window closes
     window_end="exit",  # "exit" = HTF trade exit (SL/target/16-day cap) [default, +331R];
                         # "r_touch" = first touch of ext_stop_r 1.5R [tested: +200.6R, -130R vs exit]
 ):
@@ -90,9 +91,9 @@ def simulate_htf_ltf_streak_halt(
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
     import bisect as bs
     # Build HTF intervals for both flip and decisive
-    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=3.0, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
-    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=3.0, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
-    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=3.0, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
+    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
+    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
+    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     def to_intervals(trades):
         # Window end: "exit" = HTF trade exit (SL/target/cap) — default, best R.
@@ -135,10 +136,14 @@ def simulate_htf_ltf_streak_halt(
         if j>=0 and j < len(chop):
             chop_per_ltf[i]=chop[max(0,j)]
     # LTF signals (decisive)
+    from src.btc.btc_engine import CandleStore
+    ltf_store = CandleStore(candles_ltf)
     ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf)
     filtered=[]
     for sig in ltf_sigs:
-        bar=sig["bar"]
+        bar_time=sig["bar"]  # datetime string
+        bar=ltf_store.pos(bar_time)  # position via timestamp lookup
+        if bar < 0 or bar >= len(candles_ltf): continue
         bar_ts=candle_ts_ltf[bar]
         # regime at bar
         ch=chop_per_ltf[bar] if bar < len(chop_per_ltf) else 50.0
@@ -185,7 +190,8 @@ def simulate_htf_ltf_streak_halt(
     # Now simulate LTF with filtered signals (same as v1_15m LTF walk, swing trail)
     n=len(candles_ltf)
     if n==0:
-        return {"htf_trades": htf_trades_flip, "ltf_trades": [], "intervals": intervals_flip}
+        return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,
+                "ltf_trades": [], "intervals": intervals_flip}
     candle_ts=candle_ts_ltf
     # ATR for SL buffer
     tr_l=[0.0]*n
@@ -201,15 +207,17 @@ def simulate_htf_ltf_streak_halt(
         atr15[_i]=sum(tr_l[_lo:_i+1])/(_i-_lo+1)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     ltf_trades=[]
-    busy_until=-1
+    busy_until=""  # datetime string — timestamp-based, not index
     last_loss_bar=-999999
     consecutive_losses=0
     halted=False
     from src.btc.btc_engine import _trail_events as _te
     import bisect
     for sig, use in filtered:
-        i=sig["bar"]
-        if i <= busy_until or i>=n-1: continue
+        bar_time=sig["bar"]  # datetime string
+        i=ltf_store.pos(bar_time)  # position via timestamp lookup
+        if i < 0 or i>=n-1: continue
+        if busy_until and bar_time <= busy_until: continue
         if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue
         # Streak halt: if halted, only resume on a winner
         # We need to process the trade first to know if it's a winner
@@ -231,7 +239,19 @@ def simulate_htf_ltf_streak_halt(
             if risk<0.0005*entry: continue
             target=entry-3.0*risk
         sl0=sl; sl_cur=sl; best=entry
-        events=_te(swings_ltf, direction)
+        # Trail events: timestamp-based (confirmed_at_time → position via store)
+        want_dir = "up" if direction == 1 else "down"
+        events = []
+        for s in swings_ltf:
+            if s.get("dir") != want_dir:
+                continue
+            ct = s.get("confirmed_at_time", "")
+            if not ct:
+                continue
+            cidx = ltf_store.pos(ct)
+            if cidx >= 0:
+                events.append((cidx, float(s["seg"]["start_px"])))
+        events.sort(key=lambda x: x[0])
         ev_idx=-1
         exit_idx=None; exit_px=None; outcome="open"; exit_ts=None; exit_date=None
         for j in range(i+1, n if not fine_ltf else i+1):
@@ -354,8 +374,43 @@ def simulate_htf_ltf_streak_halt(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,
         })
-        busy_until=exit_idx
+        busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
         if cooldown_bars > 0 and r_multiple < 0:
             last_loss_bar = exit_idx
-    # HTF trades for stats: we return flip as reference, but intervals are mixed
-    return {"htf_trades": htf_trades_flip, "ltf_trades": ltf_trades, "intervals": intervals_flip}
+    # For each LTF trade, find its parent HTF interval.
+    # Pass 1: flip intervals (direction-matched). Pass 2: b2 intervals as-is
+    # for trades not covered by a flip. No trimming — b2 fills the gaps.
+    _parent_ivs = {}
+    _flip_starts = [s for s,_,_,_,_ in intervals_flip]
+    _b2_starts = [s for s,_,_,_,_ in intervals_b2]
+    # Pass 1: flip intervals for trades inside a same-direction flip
+    for t in ltf_trades:
+        ts = t["entry_ts"]
+        td = 1 if t["dir"] == "long" else -1
+        idx = bs.bisect_right(_flip_starts, ts) - 1
+        if idx >= 0:
+            iv = intervals_flip[idx]
+            if iv[0] < ts <= iv[1] and iv[2] == td:
+                key = (iv[0], iv[1], iv[2])
+                if key not in _parent_ivs:
+                    _parent_ivs[key] = iv
+    # Pass 2: b2 intervals for trades not yet covered, no trimming.
+    # B2 fills the gaps between flip windows. Some overlap with flip is OK.
+    for t in ltf_trades:
+        ts = t["entry_ts"]
+        td = 1 if t["dir"] == "long" else -1
+        regime = t.get("htf_regime", "flip")
+        if regime == "b2" and intervals_b2:
+            if any(iv[0] < ts <= iv[1] for iv in _parent_ivs.values()):
+                continue
+            idx = bs.bisect_right(_b2_starts, ts) - 1
+            if idx >= 0:
+                iv = intervals_b2[idx]
+                if iv[0] < ts <= iv[1] and iv[2] == td:
+                    key = (iv[0], iv[1], iv[2])
+                    if key not in _parent_ivs:
+                        _parent_ivs[key] = iv
+    parent_intervals = sorted(_parent_ivs.values(), key=lambda x: x[0])
+
+    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,
+            "ltf_trades": ltf_trades, "intervals": parent_intervals}

@@ -2,7 +2,7 @@
 from __future__ import annotations
 from typing import Optional
 import bisect
-from src.btc.btc_engine import _collect_signals
+from src.btc.btc_engine import _collect_signals, CandleStore
 
 def _adx_series(candles: list[dict], period: int=14) -> list[float]:
     # Wilder ADX
@@ -63,12 +63,14 @@ def simulate_btc_trades_v6(
     bias_ptr=-1
     bias_now=None
     trades=[]
-    busy_until=-1
+    store = CandleStore(candles)
+    busy_until=""
     from src.btc.btc_engine import _trail_events, _exit_on_fine
     for sig in signals:
-        i=sig["bar"]
-        if i <= busy_until or i >= n-1:
-            continue
+        i=store.pos(sig["bar"])
+        if i < 0 or i >= n-1: continue
+        bar_ts_loop = sig["bar"]
+        if busy_until and bar_ts_loop <= busy_until: continue
         # ADX gate at entry bar
         if adx[i] < adx_threshold:
             continue
@@ -196,5 +198,5 @@ def simulate_btc_trades_v6(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,  # type: ignore
         })
-        busy_until=exit_idx  # type: ignore
+        busy_until=candles[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
     return trades

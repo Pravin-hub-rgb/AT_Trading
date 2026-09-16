@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from persistence.database import Database
 from live_loop import LiveLoop, EXCHANGE_BINANCE, EXCHANGE_BYBIT
+import config
 
 DB_PATH = "backbencher.db"
 
@@ -87,6 +88,17 @@ def main():
     if seed_1h and seed_15m:
         print(f"Seed 15m:  {seed_15m} IST")
         print(f"Seed 1h:   {seed_1h} IST")
+    # Risk config
+    from live_loop import read_risk_inr
+    from rate_manager import RateManager
+    rm = RateManager()
+    rm.update()
+    risk_inr = read_risk_inr()
+    rate = rm.get_rate()
+    risk_usdt = risk_inr / rate
+    print(f"Risk:      INR {risk_inr:.0f} = ${risk_usdt:.2f} USDT (rate INR {rate:.2f}/USDT)")
+    print(f"Risk file: risk_inr.txt (edit to change, no restart)")
+    print(f"Max lev:   {config.MAX_LEVERAGE}x")
     print("=" * 60)
 
     # Initialize database
@@ -96,6 +108,64 @@ def main():
 
     # Create live loop (uses REAL v18 engine on rolling windows)
     loop = LiveLoop(db, exchange=exchange, symbol=symbol, paper_mode=paper_mode)
+
+    # Set leverage + margin mode on exchange (if connected)
+    if loop.trader and loop.trader.is_connected:
+        loop.trader.set_leverage()
+        loop.trader.set_margin_mode()
+        print(f"[main] Exchange setup: {config.MAX_LEVERAGE}x leverage, {config.MARGIN_MODE.upper()} margin")
+
+    def _graceful_shutdown(loop):
+        """Flatten position + cancel orders on Ctrl+C.
+
+        Creates a fresh pybit session so shutdown isn't affected by the
+        main session's state after asyncio.run() tears down the event loop.
+        """
+        try:
+            from pybit.unified_trading import HTTP
+            from dotenv import load_dotenv
+            import os
+            load_dotenv(Path(__file__).resolve().parent / ".env")
+            api_key = os.getenv("BYBIT_API_KEY", "")
+            api_secret = os.getenv("BYBIT_API_SECRET", "")
+            demo = os.getenv("BYBIT_DEMO", "true").lower() == "true"
+            if not api_key or not api_secret:
+                print("[shutdown] No API keys — skipping flatten")
+                return
+            session = HTTP(
+                api_key=api_key, api_secret=api_secret,
+                demo=demo, testnet=False,
+            )
+            symbol = os.getenv("BYBIT_SYMBOL", "BTCUSDT")
+            # Check position
+            resp = session.get_positions(category="linear", symbol=symbol)
+            pos = None
+            for p in resp["result"]["list"]:
+                if p["symbol"] == symbol and float(p.get("size", 0)) > 0:
+                    pos = p
+                    break
+            if pos:
+                side = "Sell" if pos["side"] == "Buy" else "Buy"
+                qty = pos["size"]
+                print(f"[shutdown] Flattening {pos['side']} {qty} BTC...")
+                close_resp = session.place_order(
+                    category="linear", symbol=symbol, side=side,
+                    orderType="Market", qty=qty, positionIdx=0,
+                )
+                if close_resp.get("retCode") == 0:
+                    print("[shutdown] Position flattened")
+                else:
+                    print(f"[shutdown] Flatten failed: {close_resp.get('retMsg', 'unknown')}")
+            else:
+                print("[shutdown] No open position")
+            # Cancel all open orders
+            try:
+                session.cancel_all_orders(category="linear", symbol=symbol)
+                print("[shutdown] Orders cancelled")
+            except Exception as e:
+                print(f"[shutdown] Cancel error: {e}")
+        except Exception as e:
+            print(f"[shutdown] Flatten error: {e}")
 
     def _start_streaming():
         """Start WebSocket streamer and run the event loop."""
@@ -119,7 +189,7 @@ def main():
             )
         print(f"[live] Backbencher v18 - {exchange.upper()} {symbol}")
         print(f"[live] 15m window: 30d | 1h window: 20d")
-        print(f"[live] mode={loop.v18['mode']} rr={loop.v18['rr_ratio']} cd={loop.v18['cooldown_bars']} halt={loop.v18['max_consecutive_losses']}")
+        print(f"[live] mode={loop.v18['mode']} ext_stop={loop.v18['ext_stop_r']} cd={loop.v18['cooldown_bars']} halt={loop.v18['max_consecutive_losses']}")
         if exchange == EXCHANGE_BYBIT:
             if paper_mode:
                 print(f"[live] Bybit PAPER mode — no live orders")
@@ -129,7 +199,8 @@ def main():
             import asyncio
             asyncio.run(loop._run_loop(max_seconds, started))
         except KeyboardInterrupt:
-            print("\n[live] Interrupted")
+            print("\n[live] Interrupted — flattening position...")
+            _graceful_shutdown(loop)
         finally:
             loop._running = False
             print("[live] Loop stopped")

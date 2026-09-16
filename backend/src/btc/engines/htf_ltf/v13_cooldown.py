@@ -99,7 +99,7 @@ def simulate_htf_ltf_cooldown(
     pullback traps).
     """
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
-    from src.btc.btc_engine import simulate_btc_trades, trade_stats, _collect_signals
+    from src.btc.btc_engine import simulate_btc_trades, trade_stats, _collect_signals, CandleStore
 
     # HTF trades / intervals — support FS and FS-opposite (trade opposite to swing, FS chop is opposite to swing)
     if htf_entry_break in ("fs", "fs_opposite"):
@@ -221,7 +221,8 @@ def simulate_htf_ltf_cooldown(
     # Simplify: call simulate_btc_trades with a hack — temporarily replace swings_ltf breaks to only include filtered? Instead we run manual loop
     # Manual loop similar to simulate_btc_trades but using filtered_sigs
     ltf_trades = []
-    busy_until = -1
+    store = CandleStore(candles_ltf)
+    busy_until = ""
     last_loss_bar = -10**9  # v13 cooldown: bar index of the last losing exit
     # Need trail events etc — we will just call simulate_btc_trades on filtered swings that only contain filtered signals?
     # Alternative: run simulate_btc_trades but it will re-collect signals; to force filtered, we can create a fake swings list that only has those signals?
@@ -232,9 +233,10 @@ def simulate_htf_ltf_cooldown(
 
     # For LTF, we need to handle bias/day_gate/fine etc — for now ignore bias/day_gate for LTF (HTF already gates)
     for sig in filtered_sigs:
-        i = sig["bar"]
-        if i <= busy_until or i >= n-1:
-            continue
+        i = store.pos(sig["bar"])
+        if i < 0 or i >= n-1: continue
+        bar_ts_loop = sig["bar"]
+        if busy_until and bar_ts_loop <= busy_until: continue
         if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars:
             continue  # v13: still in loss cooldown, skip this signal
         if ltf_entry_gate is not None and not ltf_entry_gate(i):
@@ -451,7 +453,7 @@ def simulate_htf_ltf_cooldown(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,  # type: ignore
         })
-        busy_until=exit_idx  # type: ignore
+        busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
         if cooldown_bars > 0 and float(r_multiple) < 0:
             last_loss_bar = exit_idx  # type: ignore  # v13: start cooldown after a loss
 

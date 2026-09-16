@@ -93,6 +93,7 @@ class SwingEngine:
         self.g_idx: int = -1
         self.hi: float = float("nan")
         self.lo: float = float("nan")
+        self.ts_map: dict[int, str] = {}  # counter→datetime (for live counter-based g_idx)
 
         # Same-bar arm guard (swings after the first): a Walker seal emitted
         # during the CURRENT bar must not arm the engine for THAT bar � otherwise
@@ -182,9 +183,10 @@ class SwingEngine:
             return
         self.bars_seen += 1
         self.g_idx = g_idx
-        self.t = c.date[11:16] if len(c.date) >= 16 else ""
+        self.t = c.date if len(c.date) >= 16 else ""
         self.hi = c.high
         self.lo = c.low
+        self.ts_map[g_idx] = c.date
 
         self.just_fired_b2 = False
 
@@ -584,7 +586,7 @@ class SwingEngine:
         return
 
     def _confirm(self, src: Literal["chop", "sustain"], trig: Optional[dict] = None) -> None:
-        if self.t < self.time_cap:
+        if self.t[11:16] < self.time_cap:
             return
         if self.bars_seen < self.min_bars:
             return
@@ -684,11 +686,12 @@ class SwingEngine:
         self.last_chop_cross_time = ""
         self._chop_cross_active = False
         self.break_marks.clear()
+        self.ts_map.clear()
 
     def reset_with_candle(self, c: FlowCandle, g_idx: int) -> None:
         self.walker = WalkerEngine()
         self.bars_seen = 1
-        self.t = c.date[11:16] if len(c.date) >= 16 else ""
+        self.t = c.date if len(c.date) >= 16 else ""
         self.g_idx = g_idx
         self.hi = float("nan")
         self.lo = float("nan")
@@ -751,6 +754,7 @@ class SwingEngine:
         self.last_chop_cross_time = ""
         self._chop_cross_active = False
         self.break_marks.clear()
+        self.ts_map.clear()
 
 
 # -- batch helpers ----------------------------------------------------------
@@ -841,7 +845,7 @@ def compute_swing_results(
                 if eng.confirmed_at_idx >= 0:
                     for _gi, _cc in items:
                         if _gi == eng.confirmed_at_idx:
-                            _conf_time = _cc.date[11:16] if len(_cc.date) >= 16 else ""
+                            _conf_time = _cc.date if len(_cc.date) >= 16 else ""
                             break
 
                 fs_at_idx = eng.confirmed_at_idx

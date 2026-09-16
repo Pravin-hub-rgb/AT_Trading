@@ -9,26 +9,37 @@ from .database import Database
 
 
 def get_trading_state(db: Database) -> dict:
-    """Get the current trading state (cooldown, streak halt)."""
+    """Get the current trading state (cooldown, streak halt, daily P&L)."""
     row = db.conn.execute(
-        "SELECT cooldown_remaining, consecutive_losses, halted, last_loss_bar FROM trading_state WHERE id = 1"
+        "SELECT cooldown_remaining, consecutive_losses, halted, last_loss_bar, "
+        "daily_pnl_r, daily_halted, last_trade_date FROM trading_state WHERE id = 1"
     ).fetchone()
     if row is None:
-        return {"cooldown_remaining": 0, "consecutive_losses": 0, "halted": False, "last_loss_bar": None}
+        return {"cooldown_remaining": 0, "consecutive_losses": 0, "halted": False,
+                "last_loss_bar": None, "daily_pnl_r": 0.0, "daily_halted": False,
+                "last_trade_date": ""}
     return {
         "cooldown_remaining": row["cooldown_remaining"],
         "consecutive_losses": row["consecutive_losses"],
         "halted": bool(row["halted"]),
         "last_loss_bar": row["last_loss_bar"],
+        "daily_pnl_r": float(row["daily_pnl_r"]),
+        "daily_halted": bool(row["daily_halted"]),
+        "last_trade_date": row["last_trade_date"] or "",
     }
 
 
 def save_trading_state(db: Database, state: dict):
-    """Save trading state (cooldown, streak halt)."""
+    """Save trading state (cooldown, streak halt, daily P&L)."""
     with db.transaction() as conn:
         conn.execute(
-            "INSERT OR REPLACE INTO trading_state (id, cooldown_remaining, consecutive_losses, halted, last_loss_bar) VALUES (1, ?, ?, ?, ?)",
-            (state["cooldown_remaining"], state["consecutive_losses"], state["halted"], state.get("last_loss_bar")),
+            "INSERT OR REPLACE INTO trading_state "
+            "(id, cooldown_remaining, consecutive_losses, halted, last_loss_bar, "
+            "daily_pnl_r, daily_halted, last_trade_date) "
+            "VALUES (1, ?, ?, ?, ?, ?, ?, ?)",
+            (state["cooldown_remaining"], state["consecutive_losses"], state["halted"],
+             state.get("last_loss_bar"), state.get("daily_pnl_r", 0.0),
+             state.get("daily_halted", False), state.get("last_trade_date", "")),
         )
 
 

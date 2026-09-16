@@ -1,0 +1,319 @@
+# New Bugs — Deep Audit (Pre-Production)
+
+**Date:** 2026-09-15
+**Status:** OPEN — must fix before real money
+**Scope:** Full live execution path audit (trade execution, backtest-live gaps, persistence, order management)
+
+---
+
+## CRITICAL — Must Fix Before Real Money
+
+### C1. Exit orders have ZERO retry (stuck position risk)
+- **Files:** `bybit_order.py:290-303`, `live_loop.py:1655`
+- **Bug:** `close_position()` calls `place_market_order()` (single attempt), NOT `place_market_order_retry()`. If a transient network error, rate limit, or 10006 error hits during exit, the close fails. The DB trade is already closed (line 1870), the cache is cleared, but the Bybit position stays open with no SL monitoring.
+- **Impact:** Stuck position with no protection. If a new signal arrives, bot enters a NEW trade while the old position is still live → DOUBLE position with only one trade tracked.
+- **Fix:** Add retry loop to `close_position()` matching `place_market_order_retry()` (3 attempts, exponential backoff + jitter). On failure, do NOT close DB trade or clear cache.
+
+### C2. Exit failure = permanent DB/Exchange desync
+- **Files:** `live_loop.py:1870-1880`
+- **Bug:** DB trade is ALWAYS closed BEFORE the exchange close is attempted. If `close_position()` fails, DB says "closed" but Bybit says "open". Next tick sees no open trade in cache. If a new signal arrives, bot enters a NEW trade while the old position is still live.
+- **Impact:** Double position with no proper risk tracking. Worst case: 2x leverage, only 1x tracked.
+- **Fix:** Reverse the order — attempt exchange close FIRST, only close DB on success. On failure, keep trade "open" in DB/cache and retry on next tick.
+
+### C3. Stale-entry execution on first boot / fresh DB
+- **Files:** `live_loop.py:1536` (`_journal_trades`)
+- **Bug:** `_journal_trades` executes ANY new sim trade with `outcome=="open"` — no seeding guard, no recency check. On fresh deploy or crash recovery, the sim produces historically-open trades. These are "new" to the DB → `_execute_entry` fires a REAL market order at CURRENT price with SL/TP computed from an entry hours ago. If price moved 2R+ since sim entry, you enter a trade the engine would never take (past the 1.5R ext_stop), with R-accounting anchored to a stale price.
+- **Impact:** Bad entry at wrong price, wrong R-accounting, potential loss.
+- **Fix:** Skip execution when `_seeding` OR trade `entry_ts` older than 2 LTF bars. Journal as DB-only (`exit_reason="stale_skip"` or leave open-paper).
+
+### C4. Stale `_open_ltf_trade` cache causes double-close in DB
+- **Files:** `live_loop.py:1492-1533`
+- **Bug:** When v18 simulation detects a trade is closed (cap/SL), `_journal_trades` closes it in DB. But `_open_ltf_trade` cache is NOT cleared for simulation-closed trades. Next tick, `on_tick` sees the stale cache, checks SL/TP/cap again, and closes the DB trade a SECOND time with potentially different exit values.
+- **Impact:** Wrong R-multiple recorded. Streak/halt calculations corrupted. Daily PnL wrong.
+- **Fix:** After `_journal_trades` processes a closed trade, clear the cache: `if self._open_ltf_trade and self._open_ltf_trade["id"] == trade_id: self._cache_ltf_trade_close()`
+
+### C5. Daily halt reset is event-driven, not time-driven
+- **Files:** `live_loop.py:1318-1322`
+- **Bug:** `_daily_halted = False` only resets when `_check_daily_loss_limit()` is called, which only happens on trade close. If no trade closes after midnight IST, the bot stays halted ALL NEXT DAY. The first trade opportunity after midnight is incorrectly blocked until the next trade closes.
+- **Impact:** Missed trades for potentially hours after midnight. Lost profits.
+- **Fix:** Add time-based reset at top of `_on_tick` or `_on_15m_close`: `if current_ist_date != self._last_trade_date: self._daily_halted = False; self._daily_pnl_r = 0.0`
+
+### C6. IST/UTC epoch mismatch in `_trail_events_ts` — trail delayed ~5.5 hours
+- **Files:** `btc_engine.py:310`
+- **Bug:** `_trail_events_ts()` converts IST wall-clock strings to epoch by treating them as UTC:
+  ```python
+  ts = int(datetime.strptime(conf_time, "%Y-%m-%d %H:%M:%S")
+              .replace(tzinfo=timezone.utc).timestamp())
+  ```
+  The event epoch is ~5.5 hours (19800s) AHEAD of reality. In `_trail_sl`, pivot activation is delayed because `event_epoch > bar_epoch` for the same moment.
+- **Impact:** Trail SL ratchets late. Long trades: SL stays at lower level too long. Short trades: SL stays at higher level too long. Estimated 0.1-0.5R per trailed trade, compounding over hundreds of trades. This is the single largest source of live underperformance vs backtest.
+- **Fix:** Parse IST string as IST, not UTC:
+  ```python
+  from zoneinfo import ZoneInfo
+  IST = ZoneInfo("Asia/Kolkata")
+  ts = int(datetime.strptime(conf_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=IST).timestamp())
+  ```
+- **Verified:** 2026-09-15, empirically — swing `confirmed_at_time="2025-01-01 12:00:00"` → `_trail_events_ts` returns epoch 1735732800; the live candle for that same moment has ts 1735713000; **diff = 19800s = exactly 5.5h**. Backtest trail is index-based (immune) and the v18-sim rebuild inside live uses string→position lookup (immune) — only `_trail_sl` is affected.
+
+### C7. Duplicate-orderLinkId retry → orphan live position with no DB trade
+- **Files:** `bybit_order.py:245-288`, `live_loop.py` `_execute_entry`
+- **Bug:** `place_market_order_retry()` reuses ONE `orderLinkId` across retries (correct for idempotency). But if the FIRST attempt **lands on the exchange** while its HTTP response is lost (timeout / connection reset → `retCode: -1, retMsg: exception string`), the retry is rejected by Bybit as a duplicate orderLinkId → `retCode != 0` → `_execute_entry` treats it as failure → closes the DB trade as `order_failed`. The real market order already filled → **live exchange position exists with NO DB trade and NO cached trade**. `on_tick` ignores it (no cached trade), no SL monitoring beyond the exchange-attached SL, and the next signal can stack exposure on top.
+- **Impact:** Untracked live position. Books wrong until restart (`_reconcile_bybit_position` fixes it only at boot).
+- **Fix:** In `_execute_entry`, on order failure: query Bybit for the order by `orderLinkId` (`session.get_open_orders` / order history) or poll position — if filled, ADOPT the position (keep DB trade, record real fill); only close as `order_failed` when confirmed the order never landed. Related to H4 (fill polling) but distinct: H4 handles slow fills, C7 handles lost-response retries.
+- **Status:** FIXED 2026-09-15 - `get_order_by_link_id()` + `verify_entry_order()` added in `bybit_order.py` (position-first, order-history tie-breaker, side-mismatch -> unknown). `place_market_order_retry` accepts/returns `order_link_id`. `_execute_entry` failure path: verify -> ADOPT (qty update + alert) / confirm-flat (order_failed) / unknown (DB held open + loud alert, bounded by exchange SL). Success path: 3x position poll (H4 folded). Tests: `live_stuff/tests/test_entry_verify.py` (7 checks).
+
+### C8. Live attaches 3R TP to every LTF order — caps winners at 3R, backtest rides to +5.02R
+- **Files:** `live_loop.py:1647,1676`
+- **Bug:** `_execute_entry` passes `take_profit=tp_str` (3R target) to Bybit. But v18's LTF uses `trailing="swing"` → the sim NEVER exits at target. Zero target exits in backtest. Winners ride the MB50 trail to avg +5.02R (186 trail exits, 0 target exits). The live exchange TP caps every winner at +3R, chopping 33% of runner edge.
+- **Impact:** Every runner — the trades that make the strategy's entire edge — gets capped at 3R on live while backtest rides them to +5R+. Direct, massive divergence from the +470.5R deploying on. Also: if TP fires during downtime, reconcile books exit at `sl_current` (~-1R) instead of +3R, causing false streak halt.
+- **Fix:** Remove `take_profit=tp_str` → pass `None`. SL stays attached (downtime protection unchanged). Winners ride the trail. DB `tp_price` field stays for audit context only. Reconcile concern dissolves (exchange SL is the only exit → `sl_current` is correct by construction).
+- **Status:** FIXED 2026-09-15 - `take_profit=None` in `_execute_entry` (SL stays
+  attached for downtime protection; DB `tp_price` kept for audit). Regression test
+  asserts no TP on LTF orders (`test_entry_verify.py` PASS 4). With TP gone, the C8
+  reconcile scenario dissolves: the only exchange-side exit is the SL, so the
+  reconcile `sl_current` assumption is correct by construction.
+
+
+---
+
+## HIGH — Should Fix Before Live
+
+### H1. ~~Streak-halt never enforced on executor~~ **FALSE POSITIVE — DROPPED**
+- **Reason:** v18 streak halt has resume-on-winner semantics: the sim deliberately produces the resume trade (processes it hypothetically; if it wins, halt lifts and the trade IS taken). A `trading_state["halted"]` gate in `_execute_entry` would block the resume trade → PERMANENT streak halt with no escape.
+- **Status:** Never a bug. The sim already handles streak halt correctly. Adding a gate would break it.
+
+- **Files:** `live_loop.py:1287, 1541`
+- **Bug:** `trading_state["halted"]` is computed and persisted but never read as an entry gate. `_execute_entry` checks only `_daily_halted`. Currently safe because the sim applies halt within its rolling window, but if the streak ever straddles the window edge (or state diverges), a trade executes that the strategy says shouldn't.
+- **Impact:** Safety net missing. Maintenance trap.
+- **Fix:** Add gate in `_execute_entry`: `if self.trading_state.get("halted"): print("..."); return`
+
+### H2. `_execute_exit` has no retry
+- **Files:** `live_loop.py:1638-1665`
+- **Bug:** `close_position()` called with zero retries. If it fails, prints "EXIT FAILED" and sends a Telegram error (`self._tg.error(f"EXIT FAILED: ...")` — alert IS present, earlier audit claim of "no alert" was wrong), but takes no corrective action. No DB reversion. No retry. Compare to `_execute_entry` which has proper error handling.
+- **Impact:** Silent-ish failure on the most critical operation (exiting a losing trade). Operator gets one Telegram ping but the position stays live while the DB says closed.
+- **Fix:** Wrap in retry loop (3 attempts). On all retries failed, do NOT clear cache; keep alerting on next tick.
+
+### H3. Bybit SL sync failure leaves exchange SL stale
+- **Files:** `live_loop.py:1791-1810`
+- **Bug:** When trailing SL, DB is updated first, then synced to Bybit. If both Bybit sync attempts fail, DB is updated but exchange SL stays at old level. Log says "DB only" but no retry beyond 2 attempts, no alarm, no halt.
+- **Impact:** Exchange SL could be at initial level while DB SL is trailed to breakeven+. If Bybit's SL is hit, actual fill is worse than bot expects.
+- **Fix:** Increase retry count to 5 with exponential backoff. Add Telegram alert on sync failure. Periodic reconciliation comparing DB `sl_current` with Bybit's actual conditional SL.
+- **Status:** FIXED 2026-09-15 — retries increased from 2 to 5 with exponential backoff (0.5s→8s), Telegram alert on final failure.
+
+### H4. Fill verification uses `sleep(0.3)` — false order_failed
+- **Files:** `live_loop.py:1582-1586`
+- **Bug:** After placing order, sleeps 0.3s then queries position. If Bybit hasn't processed fill in 300ms (network latency, exchange load), `actual_qty` = 0 → triggers false "order_failed" → DB trade closed → orphan position on Bybit.
+- **Impact:** Good entry reported as failed, position orphaned.
+- **Fix:** Replace `sleep(0.3)` with polling loop: query position every 100ms for up to 2 seconds, break as soon as `actual_qty > 0`.
+
+### H5. `qty` column never set for full fills
+- **Files:** `live_loop.py:1608-1609`
+- **Bug:** `update_trade_qty()` only called for partial fills. For normal happy path (full fill), `qty` stays at default 0 forever.
+- **Impact:** Any post-trade analysis or P&L calculation using `qty` sees zero.
+- **Fix:** Add `update_trade_qty(self.db, trade_id, actual_qty)` after full fill confirmation.
+- **Status:** FIXED 2026-09-15 — `update_trade_qty` called unconditionally on both partial and full fill paths, including the C7 adopt path.
+
+### H6. No session health monitoring — dead session reports connected
+- **Files:** `bybit_order.py:152`
+- **Bug:** `is_connected` returns `self.session is not None`. Session object exists even if TCP connection is dead. No heartbeat check, no periodic reconnect, no health monitoring.
+- **Impact:** All order operations fail with exceptions. Trade in bad state.
+- **Fix:** Add periodic health check (e.g., `get_wallet_balance()` every 5 min). On failure, reconnect session.
+- **Status:** FIXED 2026-09-15 — `_probe()` / `_reconnect()` methods in BybitTrader, per-order self-heal in `place_market_order_retry`, `_session_watch()` background task (30s probe + Telegram alert), `self.logger` → `logger` bug fixed. Tests: `test_session_health.py` (7 checks).
+
+### H7. No DB backup, WAL checkpoint, or integrity check
+- **Files:** `database.py`
+- **Bug:** Zero backup mechanisms. No `PRAGMA wal_checkpoint()`. No `PRAGMA integrity_check`. WAL file grows unbounded. If DB corrupts (power loss, disk full), total loss.
+- **Fix:** On startup: `PRAGMA wal_checkpoint(TRUNCATE)` + `PRAGMA integrity_check`. Add backup mechanism (copy DB daily).
+- **Status:** FIXED 2026-09-15 — WAL checkpoint(TRUNCATE) + integrity_check added to `Database.connect()`. Non-critical errors logged, do not block startup.
+
+### H8. `close_position` succeeds when `get_position` fails
+- **Files:** `bybit_order.py:290-303`
+- **Bug:** If `get_position()` fails (network error), returns `None`. `close_position()` interprets this as "no position" → returns `retCode: 0` (SUCCESS). Caller thinks position was closed when it's still open.
+- **Impact:** False "position closed" state.
+- **Fix:** Distinguish between "no position" (empty result) and "query failed" (exception). Return different sentinel values.
+- **Status:** FIXED 2026-09-15 — `close_position_retry()` (C1/C2 fix) uses `get_position_checked()` which returns `(False, None)` on query failure. Caller keeps retrying until genuinely flat.
+
+### H9. Funding rate not tracked anywhere
+- **Files:** N/A — not implemented
+- **Bug:** Bybit charges/receives funding every 8h (0.01%/8h typical). Live system has NO funding tracking. R-multiples overestimated. Cost summary underestimates true cost.
+- **Impact:** 0.01-0.05R per trade on multi-day holds. Compounds over hundreds of trades.
+- **Fix:** New module or add to cost tracking. Deduct funding from R on each settlement.
+
+---
+
+## MEDIUM — Should Fix Eventually
+
+### M1. `htf_window_id = 0` stored when no window is open
+- **Files:** `live_loop.py:1480-1481`
+- **Bug:** When both HTF windows are closed, `htf_id` defaults to `0`. Since `htf_windows.id` starts at 1 (AUTOINCREMENT), `0` is an invalid FK. Reporting queries joining on this field miss these trades.
+- **Fix:** Use NULL instead of 0, or handle in queries.
+
+### M2. `close_ltf_trade` lacks `AND status='open'` guard  [RETIRED - merged into C4]
+- **Files:** `trade_store.py:139-144`
+- **Bug:** No guard against double-close. Calling `close_ltf_trade` on an already-closed trade silently overwrites exit values.
+- **Fix:** Add `AND status = 'open'` to WHERE clause.
+
+### M3. Multiple open windows for same regime — `LIMIT 1` abandons older
+- **Files:** `trade_store.py:66-75`
+- **Bug:** If crash occurs after `open_htf_window` but before `close_htf_window`, and then a NEW window opens for same regime, there are two open windows. `LIMIT 1` returns only newest. Older window leaks forever.
+- **Fix:** On startup, close any stale open windows for a regime before opening new one.
+
+### M4. Missing indexes on frequently-queried columns
+- **Files:** `database.py:22-57`
+- **Bug:** No indexes on `htf_windows(status, regime)`, `ltf_trades(status)`, `marks(tf, ts)`. Full table scans on every 15m candle close.
+- **Fix:** Add indexes.
+
+### M5. `_execute_exit` bare market close — no SL/TP protection during close
+- **Files:** `bybit_order.py:290-303`
+- **Bug:** `close_position()` places bare market close without SL/TP. If close accepted but not filled instantly (extreme volatility, wide spreads), position briefly exposed.
+- **Impact:** Brief exposure window during close.
+- **Fix:** Pass current SL as conditional stop on close order.
+
+### M6. Window trimming loses signals near boundary
+- **Files:** `live_loop.py:621-622`
+- **Bug:** When `window_15m` is trimmed (30 days), break marks referencing trimmed candles cause signals to be skipped in `_collect_signals`. Backtest has no window trimming.
+- **Impact:** Live systematically misses signals near window boundary.
+- **Fix:** Extend window or use marks-only signal detection.
+
+### M7. Boundary sync timeout can cause stale chop
+- **Files:** `live_loop.py:561-592`
+- **Bug:** 2.5s timeout forces simulation even if 1h candle is delayed. Chop index and regime can be wrong for one cycle.
+- **Impact:** Wrong regime for one simulation cycle.
+- **Fix:** Increase timeout or skip simulation when 1h data is stale.
+
+### M8. Cooldown bar count discrepancy (backtest vs live)
+- **Files:** `v18_streak_halt.py:221`, `live_loop.py:624-629`
+- **Bug:** Backtest uses bar INDEX distance. Live uses COUNTDOWN. Equivalent only if every 15m bar fires a simulation. Boundary sync can skip bars, making live cooldown effectively longer.
+- **Impact:** Live cooldown slightly longer than backtest.
+- **Fix:** Use same mechanism (index-based or countdown, pick one).
+
+### M9. Rate manager blocks event loop during entry
+- **Files:** `live_loop.py:1677`, `rate_manager.py:100-127`
+- **Bug:** `rate_manager.update()` makes synchronous HTTP calls (10s timeout each) to CoinGecko + ExchangeRate-API. Happens during `_calculate_qty` → `_execute_entry` → `_journal_trades` → `_on_15m_close`. Blocks event loop up to 20s.
+- **Impact:** Missed ticks, WebSocket disconnect during entry.
+- **Fix:** Make rate fetch async, or pre-fetch in background.
+
+### M10. `min_qty` can silently exceed risk
+- **Files:** `live_loop.py:1692`
+- **Bug:** `qty = max(min_qty, computed)` — when computed qty < exchange minimum, risk becomes `min_qty × stop_distance`, possibly several × your `risk_inr`.
+- **Impact:** Forced over-risk on tight SL distances.
+- **Fix:** Reject instead of force. Log actual risk.
+
+### M11. Reconciliation uses 0.0R for direction mismatches
+- **Files:** `live_loop.py:384-389`
+- **Bug:** On direction mismatch (DB=long, Bybit=short), DB closed with `r_multiple=0.0`. Actual PnL unknown.
+- **Impact:** Incorrect PnL recording affects streak/halt calculations.
+- **Fix:** Query actual position price from Bybit if possible.
+
+---
+
+## LOW — Nice to Fix
+
+### L1. Dead columns in `ltf_trades`
+- **Files:** `database.py:54-56`
+- `trail_next_pivot`, `trail_activation_idx`, `trail_confirmed` never used.
+
+### L2. `_get_existing_marks_set` loads ALL marks into memory
+- **Files:** `live_loop.py:1717-1720`
+- No time filter. Grows unbounded.
+
+### L3. `_get_existing_trades_set` loads ALL trades into memory
+- **Files:** `live_loop.py:1714`
+- No time filter. Grows unbounded.
+
+### L4. Dedup key `(entry_ts, direction)` missing `htf_window_id`
+- **Files:** `live_loop.py:1713-1715`
+- Two trades at same bar from different HTF windows would collide. Unlikely but possible with b2+flip coexistence.
+
+### L5. SL/TP price format hardcoded to 2dp
+- **Files:** `live_loop.py:1559-1560`
+- Works for BTCUSDT but not instrument-portable.
+
+### L6. Kill switch has minimal retry (2 attempts, no backoff)
+- **Files:** `kill_switch.py:70-91`
+- Emergency tool. Operator can retry manually.
+
+### L7. No tick-level TP monitoring
+- **Files:** `live_loop.py:1819-1880`
+- TP handled by Bybit server-side + sim on candle close. Brief desync window (up to 15 min).
+
+### L8. Uses `walletBalance` instead of `availableBalance`
+- **Files:** `bybit_order.py:164-165`
+- Slight over-sizing possible with unrealized loss.
+
+---
+
+## Verified Safe (confirmed by both audits)
+
+- ✅ All 261 trades execute — no window gate blocks them
+- ✅ v18 engine logic — backtest matches live
+- ✅ Swing detection — same engines, same params
+- ✅ Cooldown/streak — survives restart via DB
+- ✅ Dedup — works correctly
+- ✅ B2 bookkeeping fix — zero execution-path changes
+- ✅ on_tick SL/cap fills mirror v18's conservative fills
+- ✅ Retry idempotency via orderLinkId
+- ✅ Partial-fill handling
+- ✅ Balance-safety + leverage cap in `_calculate_qty`
+- ✅ Crash reconcile on boot
+- ✅ Paper mode correctly gates the trader object
+
+---
+
+## Pre-Flight Ritual (before real money)
+
+1. Fix C1-C8 + H2-H9 (H1 dropped - see above) — **DONE 2026-09-15 except H2 & H9**
+2. Paper mode for ≥2 weeks with daily backtest-parity diff
+3. One full live cycle at minimum risk (entry → SL sync → trail → exit → Telegram)
+4. Kill-9 mid-position restart drill
+5. Confirm one-way mode / `positionIdx=0` on Bybit account
+6. Verify Telegram alerts work for: entry, exit, error, kill switch
+
+---
+
+## Fix Plan (merged from both audits — every item code-verified 2026-09-15)
+
+### CRITICAL (C1-C7) — ~75 lines across 4 files
+
+| # | Fix | Where | Effort | Status |
+|---|-----|-------|--------|--------|
+| C1 | Exit retry + DB/Exchange order reversal | `_execute_exit`, `bybit_order.py:close_position` | ~40 lines | **FIXED 2026-09-15** |
+| C2 | (included in C1 — reverse order) | `live_loop.py:1870-1880` | — | **FIXED 2026-09-15** |
+| C3 | Stale-entry guard (in-trade + seeding + recency, streak skip-list, boot SL sync) | `_journal_trades`, `_is_stale_entry`, `_persist_streak_state`, `_boot_sync_sl` | ~25 lines | **FIXED 2026-09-15** |
+| C4 | Close guard: status-filter + rowcount + cache sync + no double accounting | `trade_store.py:close_ltf_trade`, `_journal_trades`, `on_tick` | ~15 lines | **FIXED 2026-09-15 (merges M2)** |
+| C5 | Daily halt time-based reset + halted_skip journaling (no phantoms) | `_maybe_reset_daily` (boot + 15m/1h close), `_journal_trades`, `_persist_streak_state` | ~35 lines | **FIXED 2026-09-15** |
+| C6 | IST/UTC epoch fix | `btc_engine.py:310` | ~5 lines + test | ✅ FIXED |
+| C7 | Adopt-or-verify on duplicate orderLinkId | `_execute_entry` + `bybit_order.py` | ~70 lines + test | **FIXED 2026-09-15** |
+| C8 | Remove 3R exchange TP from LTF orders (caps runners; sim is trail-only) |
+|      `_execute_entry` take_profit=None | ~1 line + test | **FIXED 2026-09-15** |
+| C8 | Remove 3R TP attachment from LTF orders (live→backtest parity) | `live_loop.py:1676` | ~1 line | OPEN |
+
+### HIGH (H1-H9) — ~50 lines across 5 files
+
+| # | Fix | Where | Effort |
+|---|-----|-------|--------|
+| H1 | ~~Streak-halt executor gate~~ FALSE POSITIVE | ~~`_execute_entry`~~ | ~~3~~ | **DROPPED — never a bug** |
+| H2 | Exit retry (alert already present) | `_execute_exit` | ~15 lines | OPEN |
+| H3 | Trail SL sync retry + alert | `_trail_sl` | ~10 lines | **FIXED 2026-09-15** |
+| H4 | Fill verification polling | `_execute_entry` | ~10 lines | **FIXED - folded into C7** |
+| H5 | Set qty on full fill | `_execute_entry` | ~2 lines | **FIXED 2026-09-15** |
+| H6 | Session health check | `bybit_order.py` | ~10 lines | **FIXED 2026-09-15** |
+| H7 | WAL checkpoint + integrity check | `database.py` | ~5 lines | **FIXED 2026-09-15** |
+| H8 | Distinguish no-position vs query-fail | `bybit_order.py` | ~5 lines | **FIXED 2026-09-15** |
+| H9 | Funding rate tracking | New module | ~50 lines (defer) |
+
+### MEDIUM (M1-M11) — ~80 lines across 6 files
+
+| # | Fix | Where | Effort |
+|---|-----|-------|--------|
+| M1 | Use NULL for missing window id | `live_loop.py` | ~3 lines |
+| M2 | Add `AND status='open'` guard | `trade_store.py` | ~2 lines | **RETIRED 2026-09-15 - merged into C4** |
+| M3 | Close stale windows on startup | `live_loop.py` | ~5 lines |
+| M4 | DB indexes | `database.py` | ~5 lines |
+| M5 | Pass SL on close order | `bybit_order.py` | ~5 lines |
+| M6 | Extend window or marks-only signals | `live_loop.py` | ~10 lines |
+| M7 | Increase boundary timeout | `live_loop.py` | ~1 line |
+| M8 | Unified cooldown mechanism | Both files | ~10 lines |
+| M9 | Async rate fetch | `rate_manager.py` | ~20 lines |
+| M10 | Reject when qty < min | `_calculate_qty` | ~5 lines |
+| M11 | Query actual price on mismatch | `live_loop.py` | ~5 lines |

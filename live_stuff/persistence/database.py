@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS htf_windows (
     sl_price REAL DEFAULT 0,
     hrisk REAL DEFAULT 0,
     lvl_1_5r REAL DEFAULT 0,
-    lvl_3r REAL DEFAULT 0
+    lvl_3r REAL DEFAULT 0,
+    regime TEXT NOT NULL DEFAULT 'flip'
 );
 
 -- LTF trades: opened by 15m marks, closed by SL/TP/cap
@@ -110,6 +111,18 @@ class Database:
         self._conn.execute("PRAGMA journal_mode=WAL")
         self._conn.execute("PRAGMA foreign_keys=ON")
         self._conn.row_factory = sqlite3.Row
+        # H7: WAL checkpoint + integrity check on startup
+        try:
+            self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        except Exception:
+            pass  # non-critical, WAL will compact eventually
+        try:
+            result = self._conn.execute("PRAGMA integrity_check").fetchone()
+            if result and result[0] != "ok":
+                import logging
+                logging.getLogger("database").error(f"DB integrity check failed: {result[0]}")
+        except Exception:
+            pass  # non-critical
         return self._conn
 
     def close(self):
@@ -124,6 +137,8 @@ class Database:
             raise RuntimeError("Not connected. Call connect() first.")
         self._conn.executescript(DB_SCHEMA)
         self._migrate_htf_windows()
+        self._migrate_trading_state()
+        self._migrate_ltf_trades()
         self._conn.commit()
 
     def _migrate_htf_windows(self):
@@ -135,10 +150,31 @@ class Database:
             ("hrisk", "REAL DEFAULT 0"),
             ("lvl_1_5r", "REAL DEFAULT 0"),
             ("lvl_3r", "REAL DEFAULT 0"),
+            ("regime", "TEXT NOT NULL DEFAULT 'flip'"),
         ]
         for col, typedef in migrations:
             if col not in existing:
                 self._conn.execute(f"ALTER TABLE htf_windows ADD COLUMN {col} {typedef}")
+
+    def _migrate_trading_state(self):
+        """Add daily P&L columns to trading_state if missing (safe for existing DBs)."""
+        cursor = self._conn.execute("PRAGMA table_info(trading_state)")
+        existing = {row[1] for row in cursor.fetchall()}
+        migrations = [
+            ("daily_pnl_r", "REAL DEFAULT 0"),
+            ("daily_halted", "BOOLEAN DEFAULT 0"),
+            ("last_trade_date", "TEXT DEFAULT ''"),
+        ]
+        for col, typedef in migrations:
+            if col not in existing:
+                self._conn.execute(f"ALTER TABLE trading_state ADD COLUMN {col} {typedef}")
+
+    def _migrate_ltf_trades(self):
+        """Add qty column to ltf_trades if missing (safe for existing DBs)."""
+        cursor = self._conn.execute("PRAGMA table_info(ltf_trades)")
+        existing = {row[1] for row in cursor.fetchall()}
+        if "qty" not in existing:
+            self._conn.execute("ALTER TABLE ltf_trades ADD COLUMN qty REAL DEFAULT 0")
 
     @contextmanager
     def transaction(self):

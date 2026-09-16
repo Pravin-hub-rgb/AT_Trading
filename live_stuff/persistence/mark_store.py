@@ -4,6 +4,7 @@ Single responsibility: insert and query marks.
 Marks are NEVER updated or deleted once written.
 """
 
+import sqlite3
 import time
 from typing import Optional
 from .database import Database
@@ -52,7 +53,7 @@ def insert_mark_safe(db: Database, mark: Mark) -> Optional[int]:
         mark_id = insert_mark(db, mark)
         mark.id = mark_id
         return mark_id
-    except Exception:
+    except sqlite3.IntegrityError:
         return None
 
 

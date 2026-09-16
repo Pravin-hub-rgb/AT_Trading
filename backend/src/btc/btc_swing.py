@@ -85,7 +85,7 @@ def compute_btc_swings(
 
             conf_time = ""
             if 0 <= eng.confirmed_at_idx < len(candles):
-                conf_time = candles[eng.confirmed_at_idx].date[11:16]
+                conf_time = candles[eng.confirmed_at_idx].date
 
             # FS marker = the opposing pivot-break that COMPLETED the swing.
             # A pre-final-extreme chop cross is stale (gate-blocked by minBars,

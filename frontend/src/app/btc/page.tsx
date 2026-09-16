@@ -7,6 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import StockChart, { type StockChartHandle } from "@/components/StockChart";
 import type { WholeDaySwingPoint } from "@/components/WholeDaySwingPrimitive";
 import type { TradeBox } from "@/components/PositionPrimitive";
+import type { HTFWindowRect } from "@/components/HTFWindowPrimitive";
 import type { FlowSegment } from "@/lib/flowline";
 import {
   BTC_TFS,
@@ -65,6 +66,7 @@ const BT_DEFAULTS: BtcBacktestParams = {
   slippagePts: 2,
   entrySlipPct: 0.005,
   exitSlipPct: 0.010,
+  fundingRatePct: 0.0,
 };
 
 /** Bybit-optimized v18 parameters — tuned for Bybit's volatility profile. */
@@ -534,6 +536,19 @@ export default function BtcPage() {
     [btData, snapTs, finerChart, ltfBarSec],
   );
 
+  // HTF window background tint rectangles
+  const htfWindows: HTFWindowRect[] = useMemo(
+    () =>
+      (btData?.htf_trades ?? []).map((t) => ({
+        startTime: t.entry_ts,
+        endTime: t.exit_ts,
+        isLong: t.dir === "long",
+        entryPrice: t.entry_price,
+        slPrice: t.sl,
+      })),
+    [btData],
+  );
+
   // Copyable text report of the active backtest
   const statsReport = useMemo(() => {
     const s = btData?.stats;
@@ -544,10 +559,10 @@ export default function BtcPage() {
     const isHtf = p.htf_ltf && p.htf_ltf !== "off";
     L.push(`=== BTC ${isHtf ? `HTF-LTF 1h->${p.htf_ltf} ${p.htf_ltf_ver ?? "v1"}` : `${p.tf} ${p.entry_break} mb${p.min_bars}`} | ${p.mode} ===`);
     L.push(`SL: ${p.sl_buf_atr ? `pivot+${p.sl_buf_atr}ATR` : p.sl_hhll_n ? `hhll-${p.sl_hhll_n}` : "swing-start pivot"} | ext-stop: ${p.ext_stop_r ?? "off"} | RR 1:${p.rr_target} | trail ${p.trailing} | BE ${p.breakeven_r}`);
-    L.push(`fees ${p.fee_pct}%/side + ${p.entry_slip_pct ?? 0}%/${p.exit_slip_pct ?? 0}% slip | 1m fills | stream | one-swing-one-trade`);
+    L.push(`fees ${p.fee_pct}%/side + ${p.entry_slip_pct ?? 0}%/${p.exit_slip_pct ?? 0}% slip${(p.funding_rate_pct ?? 0) > 0 ? ` + ${p.funding_rate_pct}%/8h fund` : ""} | 1m fills | stream | one-swing-one-trade`);
     L.push(`trades     ${String(s.closed).padStart(8)}   (long ${s.longs} / short ${s.shorts})`);
     L.push(`win rate    ${s.win_rate}%   (${s.wins}W / ${s.losses}L)`);
-    L.push(`net R       ${fmt(s.net_total_r)}   (base ${fmt(s.total_r)} | costs -${s.total_costs_r ?? 0})`);
+    L.push(`net R       ${fmt(s.net_total_r)}   (base ${fmt(s.total_r)} | costs -${s.total_costs_r ?? 0}${(s.total_funding_r ?? 0) > 0 ? ` | funding -${(s.total_funding_r ?? 0).toFixed(1)}` : ""})`);
     L.push(`median R    ${fmt(s.median_r, 3)}`);
     L.push(`avg winner  ${fmt(s.avg_win_r, 3)} | avg loser ${fmt(s.avg_loss_r, 3)} | expectancy(net) ${fmt(s.net_avg_r, 3)}`);
     L.push(`PF          ${s.profit_factor}   | max DD ${s.max_drawdown_r}R (dur ${s.max_drawdown_duration_trades}tr)`);
@@ -901,9 +916,49 @@ export default function BtcPage() {
         wholeDaySwings={swings}
         swingMarkers
         trades={tradesOn ? tradeBoxes : undefined}
+        htfWindows={tradesOn && htfWindows.length > 0 ? htfWindows : null}
         algoFlowLine={flowOn && flowSegs.length > 0 ? flowSegs : null}
         height={720}
       />
+
+      {/* HTF window legend */}
+      {tradesOn && htfWindows.length > 0 && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-[#6e7681] mt-1">
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t-2" style={{ borderColor: "rgba(59, 130, 246, 1.0)" }} />
+            Long open
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(255, 255, 255, 0.9)" }} />
+            Long close
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t-2" style={{ borderColor: "rgba(239, 68, 68, 1.0)" }} />
+            Short open
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(252, 165, 165, 0.8)" }} />
+            Short close
+          </span>
+          <span className="text-[#6e7681]/60">▸ arrows = close off-screen</span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(255, 255, 255, 0.8)" }} />
+            Entry
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(239, 68, 68, 0.85)" }} />
+            SL (-1R)
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(34, 197, 94, 0.8)" }} />
+            +1.5R
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(234, 179, 8, 0.75)" }} />
+            +3R
+          </span>
+        </div>
+      )}
 
       {/* ── position engine filters (below chart, like Nifty's IntradayPanel) ── */}
       {tradesOn ? (
@@ -1053,6 +1108,17 @@ export default function BtcPage() {
             />
             <span className="text-[10px] text-[#6e7681]">% in/out</span>
           </label>
+
+          <button
+            onClick={() => setBt("fundingRatePct", btParams.fundingRatePct > 0 ? 0 : 0.01)}
+            className={`rounded border px-2 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors ${
+              btParams.fundingRatePct > 0
+                ? "border-[#f97316]/60 bg-[#f97316]/20 text-[#f97316]"
+                : "border-[#30363d] bg-[#161b22] text-[#6e7681] hover:text-[#8b949e]"
+            }`}
+          >
+            Fund {btParams.fundingRatePct > 0 ? "ON" : "OFF"}
+          </button>
         </div>
       ) : null}
 
@@ -1119,7 +1185,7 @@ export default function BtcPage() {
             />
             {(btData.stats.total_costs_r ?? 0) > 0 ? (
               <Stat
-                label={`Net R (${(btData.params.fee_pct ?? 0)}% fee + ${(btData.params.entry_slip_pct ?? 0)}%/${(btData.params.exit_slip_pct ?? 0)}% slip)`}
+                label={`Net R (${(btData.params.fee_pct ?? 0)}% fee + ${(btData.params.entry_slip_pct ?? 0)}%/${(btData.params.exit_slip_pct ?? 0)}% slip${(btData.params.funding_rate_pct ?? 0) > 0 ? ` + ${(btData.params.funding_rate_pct ?? 0)}%/8h fund` : ""})`}
                 value={`${(btData.stats.net_total_r ?? 0) >= 0 ? "+" : ""}${(btData.stats.net_total_r ?? 0).toFixed(2)}`}
                 accent={(btData.stats.net_total_r ?? 0) >= 0 ? "#10b981" : "#ef4444"}
               />
@@ -1127,7 +1193,7 @@ export default function BtcPage() {
             {(btData.stats.total_costs_r ?? 0) > 0 ? (
               <Stat
                 label="Total Cost R"
-                value={`-${(btData.stats.total_costs_r ?? 0).toFixed(1)}`}
+                value={`-${(btData.stats.total_costs_r ?? 0).toFixed(1)}${(btData.stats.total_funding_r ?? 0) > 0 ? ` (fund: -${(btData.stats.total_funding_r ?? 0).toFixed(1)})` : ""}`}
                 accent="#f97316"
               />
             ) : null}
@@ -1284,6 +1350,9 @@ export default function BtcPage() {
                 <th className="py-1.5 text-right">Entry px</th>
                 <th className="py-1.5 text-right">Exit px</th>
                 <th className="py-1.5 text-right">R</th>
+                {(btData?.params.funding_rate_pct ?? 0) > 0 ? (
+                  <th className="py-1.5 text-right">Fund R</th>
+                ) : null}
                 <th className="py-1.5">Outcome</th>
               </tr>
             </thead>
@@ -1307,6 +1376,15 @@ export default function BtcPage() {
                     {t.r_multiple > 0 ? "+" : ""}
                     {t.r_multiple.toFixed(2)}
                   </td>
+                  {(btData?.params.funding_rate_pct ?? 0) > 0 ? (
+                    <td
+                      className={`py-1 text-right text-[10px] ${
+                        (t.funding_r ?? 0) > 0 ? "text-[#f97316]" : "text-[#6e7681]"
+                      }`}
+                    >
+                      {(t.funding_r ?? 0) !== 0 ? `${(t.funding_r ?? 0) > 0 ? "+" : ""}${(t.funding_r ?? 0).toFixed(3)}` : "—"}
+                    </td>
+                  ) : null}
                   <td className="py-1">
                     <OutcomeChip outcome={t.outcome} />
                   </td>

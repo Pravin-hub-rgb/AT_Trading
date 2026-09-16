@@ -28,6 +28,68 @@ from __future__ import annotations
 
 import bisect
 from typing import Optional
+from datetime import datetime, timezone
+
+# C6: candle `date` strings (backtest CSVs AND live streams) are IST
+# wall-clock, while `ts` fields are true UTC epochs — the loaders subtract
+# this offset at load time (IST = UTC+5:30). Any string->epoch conversion
+# MUST subtract it back out. See _trail_events_ts.
+IST_OFFSET_S = 5 * 3600 + 30 * 60  # 19800
+
+
+class CandleStore:
+    """O(1) candle lookup by epoch timestamp or datetime string.
+
+    Eliminates index-based lookups entirely. Consumers identify candles by
+    their natural keys (epoch seconds or datetime string) — both are
+    invariant across window trims.
+    """
+
+    def __init__(self, candles: list[dict]):
+        self.candles = candles
+        self.n = len(candles)
+        self._by_ts: dict[int, dict] = {int(c["ts"]): c for c in candles}
+        self._by_date: dict[str, dict] = {c["date"]: c for c in candles}
+        self._date_to_pos: dict[str, int] = {c["date"]: i for i, c in enumerate(candles)}
+        self._ts_to_pos: dict[int, int] = {int(c["ts"]): i for i, c in enumerate(candles)}
+
+    def by_ts(self, ts: int | float) -> Optional[dict]:
+        """Look up candle by epoch seconds."""
+        return self._by_ts.get(int(ts))
+
+    def by_date(self, date: str) -> Optional[dict]:
+        """Look up candle by datetime string (e.g. '2025-01-15 14:30:00')."""
+        return self._by_date.get(date)
+
+    def pos(self, date: str) -> int:
+        """Position in candle list (for walk-loop iteration). Returns -1 if not found."""
+        return self._date_to_pos.get(date, -1)
+
+    def pos_by_ts(self, ts: int | float) -> int:
+        """Position by epoch seconds."""
+        return self._ts_to_pos.get(int(ts), -1)
+
+    def price_range(self, since_date: str, until_date: str) -> tuple[float, float]:
+        """Min low and max high between since_date (exclusive) and until_date (inclusive).
+
+        Returns (min_low, max_high). Both inf/-inf if no candles in range.
+        """
+        lo, hi = float("inf"), float("-inf")
+        for c in self.candles:
+            if since_date < c["date"] <= until_date:
+                lo = min(lo, float(c["low"]))
+                hi = max(hi, float(c["high"]))
+        return lo, hi
+
+    @staticmethod
+    def epoch(date_str: str) -> int:
+        """Convert datetime string to epoch seconds.
+
+        C6: `date_str` follows the codebase convention — IST wall clock.
+        Parse as UTC, then subtract IST_OFFSET_S for the true UTC epoch.
+        """
+        return int(datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S")
+                   .replace(tzinfo=timezone.utc).timestamp()) - IST_OFFSET_S
 
 
 def _collect_signals(
@@ -66,6 +128,10 @@ def _collect_signals(
         swing's FS (confirmed_at_idx). In live, we can't know the direction
         until the previous swing is declared — signals from undeclared swings
         are unreliable and often losers (Bybit: -8.1R, 20.6% WR).
+
+    All candle lookups use timestamps (datetime strings / epoch seconds) —
+    never indices. The CandleStore provides O(1) lookups and price-range
+    queries that are immune to window trimming.
     """
     tradeable = {
         "decisive": ("B2", "FLIP"),
@@ -74,6 +140,8 @@ def _collect_signals(
     }.get(entry_break, ("B2", "FLIP"))
     out: list[dict] = []
     seen: set = set()
+    store = CandleStore(candles) if candles is not None else None
+
     for si, s in enumerate(swings):
         if skip_first and int(s.get("swing_index", 0)) < 1:
             continue
@@ -82,7 +150,6 @@ def _collect_signals(
             continue
         sdir = 1 if s.get("dir") == "up" else -1
         seg_start = float(s["seg"]["start_px"])
-        # Phase 1 fix: open swing has end_px=None — guard float(None) crash
         _end_px = s["seg"].get("end_px")
         seg_end = float(_end_px) if _end_px is not None else float("nan")
         prev_start = (
@@ -90,93 +157,123 @@ def _collect_signals(
         )
         _prev_end_px = swings[si - 1]["seg"].get("end_px") if si > 0 else None
         prev_end = float(_prev_end_px) if _prev_end_px is not None else None
-        start_idx = int(s["seg"]["start_idx"])
-        prev_start_idx = (
-            int(swings[si - 1]["seg"]["start_idx"]) if si > 0 else -1
-        )
-        prev_end_idx = (
-            int(swings[si - 1]["seg"]["end_idx"]) if si > 0 else -1
-        )
-        # ONE SWING ONE TRADE (14 Jan 21:30 fix): we already took B2 at 17:30 from this swing,
-        # so 19:00 FLIP + 21:30 FLIP from SAME swing must be ignored — otherwise same swing gives 3 trades.
-        # Keep only the earliest chronological tradeable mark per swing (live: you trade the first B2/FLIP you see).
+
+        # Timestamp-based swing boundaries
+        start_time = s["seg"].get("start_time", "")  # live swings have this
+        prev_end_time = swings[si - 1]["seg"].get("end_time", "") if si > 0 else ""
+        prev_confirmed_time = swings[si - 1].get("confirmed_at_time", "") if si > 0 else ""
+        # Backtest fallback: index-based (backtest swings lack start_time/end_time)
+        start_idx_fb = int(s["seg"]["start_idx"])
+        prev_end_idx_fb = int(swings[si - 1]["seg"]["end_idx"]) if si > 0 else -1
+        prev_confirmed_idx_fb = int(swings[si - 1].get("confirmed_at_idx", -1)) if si > 0 else -1
+
         first_added_for_this_swing = False
         for b in brks:
             if first_added_for_this_swing:
-                break  # one swing one trade — ignore later marks from same swing
+                break
             if b["kind"] not in tradeable:
                 continue
             bdir = 1 if b["dir"] == "up" else -1
-            bidx = int(b["idx"])
+            b_time = b.get("time", "")
+            if not b_time:
+                continue
+
+            # Skip if break candle trimmed from window
+            if store and not store.by_date(b_time):
+                continue
+
             if selection == "final":
-                # legacy: only the mark matching the swing's FINAL break_kind
                 if b["kind"] != s.get("break_kind"):
                     continue
                 sl = seg_start
             else:
-                # live-faithful: trade the mark in its own direction
                 if bdir == sdir:
-                    if bidx < start_idx:
-                        # pre-start churn mark. The mark is a REAL live signal
-                        # only when we can pin its stop to the leg it broke:
-                        # the LOW since the previous swing's end (LONG) or the
-                        # HIGH since the previous swing's end (SHORT).
-                        if candles is None or si == 0 or prev_end_idx < 0:
+                    # Pre-start churn: mark fires before swing's start
+                    _before_start = False
+                    if start_time and b_time < start_time:
+                        _before_start = True
+                    elif not start_time and store:
+                        # Backtest: no start_time — use position comparison
+                        b_pos = store.pos(b_time)
+                        if b_pos >= 0 and b_pos < start_idx_fb:
+                            _before_start = True
+
+                    if _before_start:
+                        if store is None or si == 0:
                             continue
-                        lo_seg = [float(c["low"]) for c in candles[prev_end_idx + 1 : bidx + 1]]
-                        hi_seg = [float(c["high"]) for c in candles[prev_end_idx + 1 : bidx + 1]]
+                        # Use prev_end to compute price range
+                        _pe_idx = prev_end_idx_fb if prev_end_idx_fb >= 0 else -1
+                        _b_idx = store.pos(b_time)
+                        if _pe_idx < 0 or _b_idx < 0:
+                            continue
+                        lo_seg = [float(c["low"]) for c in candles[_pe_idx + 1 : _b_idx + 1]]
+                        hi_seg = [float(c["high"]) for c in candles[_pe_idx + 1 : _b_idx + 1]]
                         if not lo_seg or not hi_seg:
                             continue
-                        entry_px = float(candles[bidx]["close"])
-                        if bdir == 1:  # LONG: SL = lowest low since prev end
+                        entry_candle = store.by_date(b_time)
+                        if not entry_candle:
+                            continue
+                        entry_px = float(entry_candle["close"])
+                        if bdir == 1:
                             sl = min(lo_seg)
                             if sl >= entry_px:
-                                continue  # degenerate — can't stop below entry
-                        else:  # SHORT: SL = highest high since prev end
+                                continue
+                        else:
                             sl = max(hi_seg)
                             if sl <= entry_px:
-                                continue  # degenerate — can't stop above entry
+                                continue
                     else:
                         sl = seg_start
                 else:
-                    # opposite-direction break: we are fading the PREVIOUS leg.
-                    # User's live logic: SL = highest high / lowest low SINCE the
-                    # leg started (e.g. 14 Jan 11:30 short: from 08:00 to 11:30 the
-                    # highest is 10:30 high 95465, not 07:45 high 95281). So we use
-                    # touchable extreme since prev_end (max high for SHORT / min low
-                    # for LONG) — same as pre-start churn. This fixes both 13 Jan
-                    # 20:00 repaint and 14 Jan 11:30 SL.
-                    if prev_end is None or bidx < prev_end_idx:
-                        continue  # churn before the opposite leg's end pivot
+                    # Opposite-direction break: fade the PREVIOUS leg
+                    if not prev_end:
+                        continue
+                    # Churn before the opposite leg's end pivot
+                    if prev_end_time and b_time < prev_end_time:
+                        continue
+                    elif not prev_end_time and store:
+                        b_pos = store.pos(b_time)
+                        if b_pos >= 0 and prev_end_idx_fb >= 0 and b_pos < prev_end_idx_fb:
+                            continue
                     sl = prev_end
-                    if candles is not None and prev_end_idx >= 0:
+                    if store and prev_end_idx_fb >= 0:
                         try:
-                            entry_px_chk = float(candles[bidx]["close"])
-                            lo_seg = [float(c["low"]) for c in candles[prev_end_idx + 1 : bidx + 1]]
-                            hi_seg = [float(c["high"]) for c in candles[prev_end_idx + 1 : bidx + 1]]
-                            if lo_seg and hi_seg:
-                                if bdir == 1:  # LONG needs sl < entry
-                                    cand = min(lo_seg)
-                                    if cand < entry_px_chk:
-                                        sl = cand  # touchable low since prev_end (live)
-                                else:  # SHORT needs sl > entry
-                                    cand = max(hi_seg)
-                                    if cand > entry_px_chk:
-                                        sl = cand  # highest high since prev_end (e.g. 10:30 high for 11:30)
+                            entry_candle = store.by_date(b_time)
+                            if not entry_candle:
+                                continue
+                            entry_px_chk = float(entry_candle["close"])
+                            _pe_idx = prev_end_idx_fb
+                            _b_idx = store.pos(b_time)
+                            if _b_idx >= 0:
+                                lo_seg = [float(c["low"]) for c in candles[_pe_idx + 1 : _b_idx + 1]]
+                                hi_seg = [float(c["high"]) for c in candles[_pe_idx + 1 : _b_idx + 1]]
+                                if lo_seg and hi_seg:
+                                    if bdir == 1:
+                                        if min(lo_seg) < entry_px_chk:
+                                            sl = min(lo_seg)
+                                    else:
+                                        if max(hi_seg) > entry_px_chk:
+                                            sl = max(hi_seg)
                         except Exception:
                             pass
-            # Pre-FS filter: reject signals that fire before previous swing's FS
-            if filter_pre_fs and si > 0:
-                prev_confirmed = int(swings[si - 1].get("confirmed_at_idx", -1))
-                if prev_confirmed >= 0 and bidx < prev_confirmed:
-                    continue  # signal fires before previous swing's FS — can't trade live
-            key = (bidx, b["kind"], b["dir"], round(float(b["px"]), 6))
+
+            # Pre-FS filter: reject signals before previous swing's FS
+            if filter_pre_fs:
+                if prev_confirmed_time and b_time < prev_confirmed_time:
+                    continue
+                elif not prev_confirmed_time and prev_confirmed_idx_fb >= 0:
+                    b_pos = store.pos(b_time) if store else -1
+                    if b_pos >= 0 and b_pos < prev_confirmed_idx_fb:
+                        continue
+
+            # Dedup by (timestamp, kind, dir, px) — timestamp replaces idx
+            key = (b_time, b["kind"], b["dir"], round(float(b["px"]), 6))
             if key in seen:
                 continue
             seen.add(key)
             out.append(
                 {
-                    "bar": int(b["idx"]),
+                    "bar": b_time,  # datetime string (timestamp-based, not index)
                     "dir": bdir,
                     "swing_start_px": sl,
                     "swing_no": int(s.get("swing_index", si)),
@@ -200,6 +297,38 @@ def _trail_events(swings: list[dict], direction: int) -> list[tuple[int, float]]
         for s in swings
         if s.get("dir") == want_dir and int(s.get("confirmed_at_idx", -1)) >= 0
     ]
+    ev.sort(key=lambda x: x[0])
+    return ev
+
+
+def _trail_events_ts(swings: list[dict], direction: int) -> list[tuple[int, float]]:
+    """Timestamp-based version of _trail_events for live use.
+
+    Returns (confirmed_at_epoch_s, pivot_px) instead of (idx, px).
+    Safe across window trims — timestamps never shift, only indices do.
+
+    C6: `confirmed_at_time` strings are IST wall-clock (both backtest CSVs
+    and live streams use that convention — see _normalize_candles), while
+    bar `ts` fields are true UTC epochs. Parsing the string as UTC births
+    the event 19800s (5.5h) in the future -> trail ratchets 5.5h late.
+    Subtract IST_OFFSET_S to get the true UTC epoch of the confirm bar's
+    OPEN — activation then fires at the confirm bar itself, exactly
+    mirroring the backtest's `confirmed_at_idx` semantics.
+    """
+    from datetime import datetime, timezone
+    want_dir = "up" if direction == 1 else "down"
+    ev = []
+    for s in swings:
+        if s.get("dir") != want_dir:
+            continue
+        conf_time = s.get("confirmed_at_time", "")
+        if not conf_time:
+            continue
+        try:
+            ts = int(datetime.strptime(conf_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp()) - IST_OFFSET_S
+        except Exception:
+            continue
+        ev.append((ts, float(s["seg"]["start_px"])))
     ev.sort(key=lambda x: x[0])
     return ev
 
@@ -336,12 +465,16 @@ def simulate_btc_trades(
     bias_now: Optional[str] = None
 
     trades: list[dict] = []
-    busy_until = -1  # a signal at bar <= busy_until lands inside an open trade
+    busy_until = ""  # datetime string — timestamp-based
 
+    store = CandleStore(candles)
     for sig in signals:
-        i = sig["bar"]
-        if i <= busy_until or i >= n - 1:
-            continue  # in-position signal, or no forward bars to manage
+        bar_time = sig["bar"]  # datetime string
+        i = store.pos(bar_time)
+        if i < 0 or i >= n - 1:
+            continue
+        if busy_until and bar_time <= busy_until:
+            continue
 
         direction: int = sig["dir"]
         if day_gate is not None:
@@ -541,7 +674,7 @@ def simulate_btc_trades(
                 "bars_held": exit_idx - i,
             }
         )
-        busy_until = exit_idx
+        busy_until = exit_date if exit_date else ""
 
     return trades
 

@@ -1,30 +1,20 @@
-"""Bybit WebSocket streamer + REST backfill — production-grade with resilience.
+"""Bybit WebSocket streamer + REST backfill — single-connection, production-grade.
 
-Public streams (no auth):
-  - kline_stream: 15m/1h candles with confirm flag
-  - ticker_stream: real-time price
-  - trade_stream: tick-level trades (like Binance @trade)
-
-Private streams (auth needed for orders):
-  - order stream, position stream
+Architecture:
+  - ONE WebSocket connection to Bybit public endpoint
+  - Subscribes to all 3 topics: publicTrade, kline.15, kline.60
+  - Routes messages to queues by topic prefix
+  - Ping every 20s (Bybit requirement)
+  - 60s no-message timeout (half-open detection)
+  - Exponential backoff + jitter on reconnect
+  - Gap detection + REST backfill after reconnect
+  - Circuit breaker (max reconnects in window)
 
 Bybit WebSocket: wss://stream.bybit.com/v5/public/linear (public)
-                 wss://stream.bybit.com/v5/private (private)
-Demo:            wss://stream-demo.bybit.com/v5/public/linear
-
 REST:            https://api.bybit.com/v5/market/kline
-Demo REST:       https://api-demo.bybit.com/v5/market/kline
 
 NOTE: Bybit endpoints may be geo-blocked in some regions (e.g. India).
       Use a VPN if WebSocket or REST connections fail.
-
-Resilience features:
-  - Ping every 20s (Bybit requirement)
-  - Exponential backoff + jitter on reconnect
-  - Gap detection + REST backfill after reconnect
-  - Last-message timeout (60s) for half-open connections
-  - Queue size limits with drop-oldest
-  - Connection state tracking + logging
 """
 
 import asyncio
@@ -34,6 +24,7 @@ import os
 import random
 import time
 import urllib.request
+import websockets
 from datetime import datetime, timezone, timedelta
 from typing import Optional
 
@@ -58,7 +49,6 @@ REST_BASE_DEMO = "https://api-demo.bybit.com"
 
 # Resilience constants
 PING_INTERVAL = 20          # Bybit requires ping every 20s
-PONG_TIMEOUT = 15           # Wait 15s for pong before treating dead
 LAST_MSG_TIMEOUT = 60       # No message for 60s = half-open connection
 MAX_BACKOFF = 60            # Max reconnect delay in seconds
 INITIAL_BACKOFF = 1         # Start with 1s delay
@@ -68,7 +58,7 @@ FORCE_RECONNECT_SEC = 22 * 3600  # Force reconnect every ~22 hours
 
 
 class BybitStreamer:
-    """Bybit WebSocket streamer — production-grade with resilience.
+    """Bybit WebSocket streamer — single connection, all topics.
 
     on_tick(price, ts_ms)           — real-time trade price
     on_15m_close(candle)            — closed 15m candle (dict with is_closed=True)
@@ -83,10 +73,10 @@ class BybitStreamer:
         self.symbol = symbol
         self.running = False
 
-        # Queues with maxsize
+        # Queues — unbounded for klines (backfill can be large), bounded for ticks
         self.tick_queue = asyncio.Queue(maxsize=1000)
-        self.kline_15m_queue = asyncio.Queue(maxsize=100)
-        self.kline_1h_queue = asyncio.Queue(maxsize=100)
+        self.kline_15m_queue = asyncio.Queue()
+        self.kline_1h_queue = asyncio.Queue()
 
         self.last_closed_15m = None
         self.last_closed_1h = None
@@ -130,7 +120,6 @@ class BybitStreamer:
     def _should_reconnect(self):
         """Check circuit breaker — too many reconnects in short window."""
         now = time.time()
-        # Clean old entries
         self._reconnect_times = [t for t in self._reconnect_times if now - t < RECONNECT_WINDOW]
         return len(self._reconnect_times) < MAX_RECONNECT_ATTEMPTS
 
@@ -161,54 +150,108 @@ class BybitStreamer:
             asyncio.create_task(self._tick_worker()),
             asyncio.create_task(self._kline_15m_worker()),
             asyncio.create_task(self._kline_1h_worker()),
-            asyncio.create_task(self._health_monitor()),
         ]
-        await asyncio.gather(
-            self._stream_trades(),
-            self._stream_klines("15", self.kline_15m_queue),
-            self._stream_klines("60", self.kline_1h_queue),
-        )
+        await self._stream_public()
 
     async def stop(self):
         self.running = False
         for task in self._worker_tasks:
             task.cancel()
 
-    async def _health_monitor(self):
-        """Monitor connection health — force reconnect if dead."""
+    # ====================== SINGLE CONNECTION STREAM ======================
+
+    async def _stream_public(self):
+        """Single WebSocket connection — subscribes to all 3 topics."""
+        topics = [
+            f"publicTrade.{self.symbol}",
+            f"kline.15.{self.symbol}",
+            f"kline.60.{self.symbol}",
+        ]
+        step_ms_map = {"15": 900000, "60": 3600000}
+
         while self.running:
-            await asyncio.sleep(10)
+            if not self._should_reconnect():
+                logger.error("Circuit breaker: too many reconnects. Waiting 5 minutes.")
+                await asyncio.sleep(300)
+                self._reconnect_times.clear()
+                continue
+
             try:
-                now = time.time()
+                async with websockets.connect(
+                    self._public_ws_url,
+                    ping_interval=None,  # We handle pings manually
+                ) as ws:
+                    self._ws = ws
+                    self._last_msg_time = time.time()
+                    self._reset_backoff()
 
-                # Check last message timeout
-                if self._last_msg_time > 0 and (now - self._last_msg_time) > LAST_MSG_TIMEOUT:
-                    logger.warning(f"No message for {now - self._last_msg_time:.0f}s — forcing reconnect")
-                    if self._ws:
-                        await self._ws.close()
-                    continue
+                    # Subscribe to all topics
+                    await ws.send(json.dumps({"op": "subscribe", "args": topics}))
+                    self._log_status(f"Connected — subscribed to {len(topics)} topics")
 
-                # Check force reconnect interval
-                if now > self._force_reconnect_at and self._ws:
-                    logger.info(f"Force reconnect after {FORCE_RECONNECT_SEC // 3600}h")
-                    await self._ws.close()
-                    self._force_reconnect_at = now + FORCE_RECONNECT_SEC
-                    continue
+                    # Backfill gaps on reconnect (for klines)
+                    for interval, q in [("15", self.kline_15m_queue), ("60", self.kline_1h_queue)]:
+                        await self._backfill_gap(interval, q, step_ms_map[interval])
 
-                # Log status periodically
-                if int(now) % 60 == 0:
-                    age = now - self._last_msg_time if self._last_msg_time > 0 else 0
-                    logger.debug(f"Health: last_msg={age:.0f}s ago | reconnects={self._total_reconnects} | gaps_filled={self._gap_filled_count}")
+                    # Ping task
+                    ping_task = asyncio.create_task(self._send_ping(ws))
 
+                    try:
+                        async for msg in ws:
+                            if not self.running:
+                                break
+                            now = time.time()
+                            self._last_msg_time = now
+                            data = json.loads(msg)
+
+                            # Handle pong
+                            if data.get("op") == "pong":
+                                continue
+
+                            # Watchdog: force reconnect after 22h or if unhealthy
+                            if now >= self._force_reconnect_at:
+                                logger.warning("Force reconnect: 22h elapsed")
+                                break
+                            if self._last_msg_time > 0 and (now - self._last_msg_time) > LAST_MSG_TIMEOUT:
+                                logger.warning(f"Force reconnect: no message for {now - self._last_msg_time:.0f}s")
+                                break
+
+                            # Handle subscription confirmation
+                            if data.get("op") == "subscribe":
+                                self._log_status(f"Subscription: {data.get('ret_msg', 'ok')}")
+                                continue
+
+                            # Route by topic prefix
+                            topic = data.get("topic", "")
+                            try:
+                                if topic.startswith("publicTrade"):
+                                    await self._handle_trade(data)
+                                elif topic.startswith("kline.15"):
+                                    await self._handle_kline("15", self.kline_15m_queue, data)
+                                elif topic.startswith("kline.60"):
+                                    await self._handle_kline("60", self.kline_1h_queue, data)
+                            except asyncio.QueueFull:
+                                logger.warning(f"Queue full for {topic} — dropped message")
+
+                    finally:
+                        ping_task.cancel()
+
+            except websockets.ConnectionClosed as e:
+                logger.warning(f"WS closed: code={e.code} reason={e.reason}")
+            except OSError as e:
+                logger.error(f"WS OS error: {e}")
             except Exception as e:
-                logger.error(f"Health monitor error: {e}")
+                logger.error(f"WS error: {type(e).__name__}: {e}")
+
+            self._record_reconnect()
+            await self._backoff_sleep()
 
     async def _send_ping(self, ws):
         """Send ping every 20s — Bybit requirement."""
         while self.running:
             try:
                 await asyncio.sleep(PING_INTERVAL)
-                if ws.closed:
+                if ws.close_code is not None:
                     break
                 await ws.send(json.dumps({"op": "ping"}))
                 self._last_ping_time = time.time()
@@ -217,135 +260,47 @@ class BybitStreamer:
                 logger.warning(f"Ping failed: {e}")
                 break
 
-    async def _stream_trades(self):
-        """Stream real-time trades with resilience."""
-        while self.running:
-            if not self._should_reconnect():
-                logger.error("Circuit breaker: too many reconnects. Waiting 5 minutes.")
-                await asyncio.sleep(300)
-                self._reconnect_times.clear()
-                continue
+    # ====================== MESSAGE HANDLERS ======================
 
+    async def _handle_trade(self, data):
+        """Route trade data to tick queue."""
+        for trade in data.get("data", []):
+            price = float(trade["p"])
+            ts_ms = int(trade["T"])
             try:
-                async with asyncio.timeout(LAST_MSG_TIMEOUT + 10):
-                    async with websockets.connect(self._public_ws_url) as ws:
-                        self._ws = ws
-                        self._last_msg_time = time.time()
-                        self._reset_backoff()
+                self.tick_queue.put_nowait((price, ts_ms))
+            except asyncio.QueueFull:
+                try:
+                    self.tick_queue.get_nowait()
+                except asyncio.QueueEmpty:
+                    pass
+                self.tick_queue.put_nowait((price, ts_ms))
+                logger.warning("Tick queue full — dropped oldest")
 
-                        # Subscribe
-                        topic = f"publicTrade.{self.symbol}"
-                        await ws.send(json.dumps({"op": "subscribe", "args": [topic]}))
-                        self._log_status(f"Connected to {topic}")
-
-                        # Start ping task
-                        ping_task = asyncio.create_task(self._send_ping(ws))
-
-                        try:
-                            async for msg in ws:
-                                if not self.running:
-                                    break
-                                self._last_msg_time = time.time()
-                                data = json.loads(msg)
-
-                                # Handle pong
-                                if data.get("op") == "pong":
-                                    continue
-
-                                if data.get("topic") != topic:
-                                    continue
-
-                                for trade in data.get("data", []):
-                                    price = float(trade["p"])
-                                    ts_ms = int(trade["T"])
-                                    try:
-                                        self.tick_queue.put_nowait((price, ts_ms))
-                                    except asyncio.QueueFull:
-                                        # Drop oldest
-                                        try:
-                                            self.tick_queue.get_nowait()
-                                        except asyncio.QueueEmpty:
-                                            pass
-                                        self.tick_queue.put_nowait((price, ts_ms))
-                                        logger.warning("Tick queue full — dropped oldest")
-                        finally:
-                            ping_task.cancel()
-
-            except Exception as e:
-                logger.error(f"Trade stream error: {e}")
-                self._record_reconnect()
-                await self._backoff_sleep()
-
-    async def _stream_klines(self, interval: str, queue: asyncio.Queue):
-        """Stream kline/candle data with resilience + gap recovery."""
-        topic = f"kline.{interval}.{self.symbol}"
-        step_ms = {"1": 60000, "5": 300000, "15": 900000, "60": 3600000}.get(interval, 900000)
-
-        while self.running:
-            if not self._should_reconnect():
-                logger.error("Circuit breaker: too many reconnects. Waiting 5 minutes.")
-                await asyncio.sleep(300)
-                self._reconnect_times.clear()
-                continue
-
+    async def _handle_kline(self, interval, queue, data):
+        """Route kline data to appropriate queue."""
+        for k in data.get("data", []):
+            candle = {
+                "open_time": int(k["start"]),
+                "close_time": int(k["end"]),
+                "open": float(k["open"]),
+                "high": float(k["high"]),
+                "low": float(k["low"]),
+                "close": float(k["close"]),
+                "volume": float(k["volume"]),
+                "is_closed": k.get("confirm", False),
+            }
             try:
-                async with asyncio.timeout(LAST_MSG_TIMEOUT + 10):
-                    async with websockets.connect(self._public_ws_url) as ws:
-                        self._ws = ws
-                        self._last_msg_time = time.time()
-                        self._reset_backoff()
+                queue.put_nowait(candle)
+            except asyncio.QueueFull:
+                try:
+                    queue.get_nowait()
+                except asyncio.QueueEmpty:
+                    pass
+                queue.put_nowait(candle)
+                logger.warning(f"Kline {interval} queue full — dropped oldest")
 
-                        # Subscribe
-                        await ws.send(json.dumps({"op": "subscribe", "args": [topic]}))
-                        self._log_status(f"Connected to {topic}")
-
-                        # Gap detection: backfill missing candles
-                        await self._backfill_gap(interval, queue, step_ms)
-
-                        # Start ping task
-                        ping_task = asyncio.create_task(self._send_ping(ws))
-
-                        try:
-                            async for msg in ws:
-                                if not self.running:
-                                    break
-                                self._last_msg_time = time.time()
-                                data = json.loads(msg)
-
-                                # Handle pong
-                                if data.get("op") == "pong":
-                                    continue
-
-                                if data.get("topic") != topic:
-                                    continue
-
-                                for k in data.get("data", []):
-                                    candle = {
-                                        "open_time": int(k["start"]),
-                                        "close_time": int(k["end"]),
-                                        "open": float(k["open"]),
-                                        "high": float(k["high"]),
-                                        "low": float(k["low"]),
-                                        "close": float(k["close"]),
-                                        "volume": float(k["volume"]),
-                                        "is_closed": k.get("confirm", False),
-                                    }
-                                    try:
-                                        queue.put_nowait(candle)
-                                    except asyncio.QueueFull:
-                                        try:
-                                            queue.get_nowait()
-                                        except asyncio.QueueEmpty:
-                                            pass
-                                        queue.put_nowait(candle)
-                                        logger.warning(f"Kline {interval} queue full — dropped oldest")
-                        finally:
-                            ping_task.cancel()
-
-            except Exception as e:
-                logger.error(f"Kline {interval} stream error: {e}")
-                self._record_reconnect()
-                await self._backoff_sleep()
+    # ====================== GAP BACKFILL ======================
 
     async def _backfill_gap(self, interval: str, queue: asyncio.Queue, step_ms: int):
         """Backfill missing candles after reconnect using REST API."""
@@ -364,12 +319,10 @@ class BybitStreamer:
         logger.info(f"Gap detected: last closed {interval}m candle at {last_ts}, backfilling...")
 
         try:
-            # Fetch candles from REST
             missing = self._fetch_klines_rest(interval, start_ms=last_ts + step_ms)
             if not missing:
                 return
 
-            # Dedup and enqueue
             seen = set()
             added = 0
             for candle in missing:
@@ -381,7 +334,6 @@ class BybitStreamer:
                 except asyncio.QueueFull:
                     break
                 added += 1
-                # Update last closed
                 if candle["is_closed"]:
                     if interval == "15":
                         self.last_closed_15m = candle
@@ -438,14 +390,12 @@ class BybitStreamer:
                 break
             cur = nxt
 
-        # Bybit returns newest-first; we need oldest-first
         all_candles.reverse()
-
-        # Filter out live/incomplete candle
         now_ms = int(time.time() * 1000)
         all_candles = [c for c in all_candles if c["close_time"] <= now_ms]
-
         return all_candles
+
+    # ====================== WORKER TASKS ======================
 
     async def _tick_worker(self):
         while self.running:
@@ -549,11 +499,7 @@ def backfill_klines_bybit(symbol: str, interval: str, limit: int = 100,
         if len(all_candles) >= limit:
             break
 
-    # Bybit returns newest-first; we need oldest-first
     all_candles.reverse()
-
-    # Filter out live/incomplete candle (close_time > now)
     now_ms = int(time.time() * 1000)
     all_candles = [c for c in all_candles if c["close_time"] <= now_ms]
-
     return all_candles

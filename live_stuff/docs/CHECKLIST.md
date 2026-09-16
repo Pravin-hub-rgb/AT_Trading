@@ -120,7 +120,7 @@ Wired BybitTrader into live_loop for real order execution on Bybit demo.
 
 - [x] 10.1 `_execute_entry()` — places market order with SL/TP when new open trade detected in `_journal_trades()`
 - [x] 10.2 `_execute_exit()` — closes position on Bybit when SL/TP/cap hit in `on_tick()`
-- [x] 10.3 `_calculate_qty()` — position sizing: $50 USDT risk / (stop_distance + fee_buffer), rounded to 0.001 BTC precision, balance-checked
+- [x] 10.3 `_calculate_qty()` — position sizing: reads INR from `risk_inr.txt`, converts via live CoinGecko rate, `(risk_usdt) / (stop_distance + fee_buffer)`, rounded to 0.001 BTC precision, balance-checked
 - [x] 10.4 `paper_mode` flag — `LiveLoop(paper_mode=True)` skips trader init; `--paper` in CLI (default)
 - [x] 10.5 Fixed `get_wallet_balance()` — use `walletBalance` field (demo accounts have empty `availableToWithdraw`)
 - [x] **TEST**: Paper mode: trader=None. Live mode: trader connects, balance=50000, qty calc works (0.085 BTC for $500 stop, 0.268 BTC for $100 stop)
@@ -145,6 +145,7 @@ Wired BybitTrader into live_loop for real order execution on Bybit demo.
 - [x] 12.4 Exclude open swing from `_run_v18_simulation` — removed open15/open1h append (lines 902-910 in live_loop.py)
 - [x] 12.6 Update v18 engine default params — filter applied via `_collect_signals` default, all engines inherit it
 - [x] 12.5 Rolling window tracking — superseded by Phase 14/15 (swing endpoints + full state persistence). `_recover_from_crash()` handles backfill from last swing endpoint. No separate tracking needed.
+- [x] 12.7 skip_first=True investigation — verified harmless for live: user seeds 2-3 swings of history, first swing is always deep in past, no trades missed. `filter_pre_fs` already passes swing 0 (si>0 check). Leave as is. Documented in `live_trading_doc.md`.
 
 ---
 
@@ -204,6 +205,48 @@ Store the full HTF matrix and LTF trade cache for instant crash recovery. No bac
 
 ---
 
+## Phase 16: V18 Integrity Verification — ✅ DONE (2026-09-12)
+
+Full re-verification of v18 engine mechanics for live trading. Both BTC Spot and Bybit Perp pass all 10 checks.
+
+### BTC Spot Results
+
+| # | Check | Result | Detail |
+|---|-------|--------|--------|
+| 1 | No trade worse than -1R | ✅ PASS | Worst: -1.000R (exactly) |
+| 2 | Winners above 3R | ✅ PASS | Best: +29.34R, 42 trades > 3R, 10 trades > 10R |
+| 3 | Streak halt ≤ 5 | ✅ PASS | Max consecutive losses: 4 |
+| 4 | No duplicate trades | ✅ PASS | 313 unique trade keys |
+| 5 | Exit reasons valid | ✅ PASS | sl: 91, trail: 222 |
+| 6 | No overlapping trades | ✅ PASS | 0 overlaps |
+| 7 | Win rate + PF | ✅ PASS | WR 38.7%, PF 2.75 |
+| 8 | All years positive | ✅ PASS | 2023: +26.2R, 2024: +73.8R, 2025: +110.5R, 2026: +79.3R |
+| 9 | SL exits exactly -1R | ✅ PASS | All SL exits at -1.000R |
+| 10 | Cooldown respected | ✅ PASS | Bar-index-based, 19-bar tolerance |
+
+### Bybit Perp Results
+
+| # | Check | Result | Detail |
+|---|-------|--------|--------|
+| 1 | No trade worse than -1R | ✅ PASS | Worst: -1.000R (exactly) |
+| 2 | Winners above 3R | ✅ PASS | Best: +39.81R, 51 trades > 3R, 14 trades > 10R |
+| 3 | Streak halt ≤ 5 | ✅ PASS | Max consecutive losses: 4 |
+| 4 | No duplicate trades | ✅ PASS | 335 unique trade keys |
+| 5 | Exit reasons valid | ✅ PASS | sl: 115, trail: 220 |
+| 6 | No overlapping trades | ✅ PASS | 0 overlaps |
+| 7 | Win rate + PF | ✅ PASS | WR 35.2%, PF 3.02 |
+| 8 | All years positive | ✅ PASS | 2023: +83.3R, 2024: +140.4R, 2025: +79.4R, 2026: +82.7R |
+| 9 | SL exits exactly -1R | ✅ PASS | All SL exits at -1.000R |
+| 10 | Cooldown | ✅ PASS | Disabled (0 bars) — not applicable |
+
+- [x] 16.1 Create `tests/test_v18_integrity.py` — 10-point verification suite, supports `--bybit` flag
+- [x] 16.2 Run all checks on BTC Spot — ALL PASS
+- [x] 16.3 Run all checks on Bybit Perp — ALL PASS
+- [x] 16.4 Investigate cooldown borderline cases — 3 cases at 19.1-19.7 bars (false positive, bar-index vs timestamp)
+- [x] 16.5 Documentation — results documented in CHECKLIST
+
+---
+
 ## Risk Limits — INTENTIONALLY EXCLUDED (2026-09-12)
 
 v18's built-in protections are sufficient:
@@ -216,6 +259,336 @@ Adding max drawdown halt or daily loss cap would hurt performance:
 - 35% win rate → drawdown IS the strategy; halting early risks missing recovery trades
 
 If something goes catastrophically wrong (exchange bug, data feed corruption), operator kills the bot manually.
+
+---
+
+## Phase 17: Risk, Trail SL Sync, Kill Switch (2026-09-12)
+
+### 17.1 INR Risk + Live Conversion
+- [x] Created `risk_inr.txt` with `250` — edit file to change risk (no restart needed)
+- [x] Added `read_risk_inr()` — reads from `risk_inr.txt`
+- [x] Modified `_calculate_qty()` — reads INR from file, converts via live rate, logs per-trade
+- [x] Startup log shows risk in both INR and USDT with live rate
+
+### 17.2 Trail SL Sync to Bybit
+- [x] Added `BybitTrader.update_sl()` — calls `set_trading_stop()` on Bybit API
+- [x] Modified `_trail_sl()` — syncs new SL to Bybit exchange-side conditional order
+- [x] Bybit SL is Market order (Full mode only supports Market) — no fill risk
+
+### 17.3 Kill Switch
+- [x] Created `kill_switch.py` — standalone script, works independently from bot
+- [x] Added `_graceful_shutdown()` to `main.py` — Ctrl+C flattens position + cancels orders
+
+### 17.4 Verification
+- [x] Risk: INR 250 = $2.62 USDT at INR 95.58 rate
+- [x] Smoke test: ALL CHECKS PASSED (313t +289.9R)
+- [x] `kill_switch.py` imports OK
+- [x] `update_sl` method exists on BybitTrader
+
+---
+
+## Phase 18: Config Centralization + Rate Manager + Trade Logging (2026-09-12)
+
+### 18.1 Centralized Config (`config.py`)
+- [x] Created `config.py` — all trading params in one place
+- [x] Values: TAKER_FEE_RATE, BALANCE_SAFETY_MARGIN, SIZED_DOWN_FRACTION, QTY_PRECISION, MIN_BTC_QTY, RATE_UPDATE_INTERVAL, EMERGENCY_RATE, WINDOW sizes
+- [x] No hardcoded values in live_loop.py or bybit_order.py
+
+### 18.2 Rate Manager (`rate_manager.py`)
+- [x] Created singleton `RateManager` — loads from disk on startup (0ms)
+- [x] Fallback chain: CoinGecko -> ExchangeRate-API -> disk cache -> emergency 95.0
+- [x] Background refresh when stale (>15 min)
+- [x] Staleness guard: emergency rate after 24h no update
+- [x] Disk persistence via `last_rate.json`
+
+### 18.3 Trade Logging
+- [x] `_execute_entry()` logs: direction, entry, SL, TP, risk INR, risk USDT, rate, qty, notional, fee buffer
+- [x] `_execute_exit()` logs: reason, fill price, rate
+- [x] `_trail_sl()` logs: SL change, R gap, Bybit sync status (OK or DB only)
+
+### 18.4 Removed Hardcoded Values
+- [x] Fee rate `0.00055` -> `config.TAKER_FEE_RATE`
+- [x] Safety margin `0.95` -> `config.BALANCE_SAFETY_MARGIN`
+- [x] Sized-down fraction `0.9` -> `config.SIZED_DOWN_FRACTION`
+- [x] Qty precision `3` -> `config.QTY_PRECISION`
+- [x] Min BTC qty `0.001` -> `config.MIN_BTC_QTY`
+- [x] Window sizes `30/20/16` -> `config.WINDOW_DAYS_*`
+- [x] Removed old `get_usdt_inr_rate()` function (replaced by RateManager)
+- [x] Removed legacy `BybitTrader.calculate_qty()` (not used by live_loop)
+
+### 18.5 Verification
+- [x] Config imports: TAKER_FEE_RATE=0.00055
+- [x] RateManager loads from disk: INR 95.00 (emergency default)
+- [x] Smoke test: ALL CHECKS PASSED (313t +289.9R)
+- [x] kill_switch.py imports OK
+
+---
+
+## Phase 19: WebSocket Fix — Python 3.10 Compat + Single Connection (2026-09-12)
+
+### Root Cause
+- `asyncio.timeout()` was added in Python 3.11; our system runs Python 3.10 → `has no attribute 'timeout'`
+- `ws.closed` attribute removed in websockets 16.x → `'ClientConnection' object has no attribute 'closed'`
+- `import websockets` missing from `bybit_streamer.py` → latent bug only surfaced when code paths were hit
+- 3 separate WebSocket connections died at the exact same second (~68s) → Bybit recommends single connection + multiple topic subscriptions
+
+### 19.1 Python 3.10 Timeout Helper
+- [x] Created `_timeout()` async context manager (stdlib-only, no `asyncio.timeout`)
+- [x] Replaced both `asyncio.timeout()` calls in `_stream_trades` and `_stream_klines`
+
+### 19.2 websockets 16.x Compatibility
+- [x] Replaced `ws.closed` with `ws.close_code is not None` in `_send_ping`
+- [x] Added `import websockets` to `bybit_streamer.py`
+
+### 19.3 Single Connection Architecture
+- [x] Rewrote `BybitStreamer` from 3 separate connections → 1 connection + 3 topic subscriptions
+- [x] Topics: `publicTrade.{symbol}`, `kline.15.{symbol}`, `kline.60.{symbol}` on one WS
+- [x] Added `_handle_trade()` and `_handle_kline()` message routing by topic prefix
+- [x] Removed `_health_monitor` (was causing shared `self._ws` conflicts)
+- [x] Ping/pong + timeout-based half-open detection replaces health monitor
+- [x] Backfill gap detection preserved (runs after reconnect)
+
+### 19.4 Verification
+- [x] Raw WS test: 113 trades, 19 15m klines, 19 1h klines in 60s (single connection)
+- [x] Paper test: 5 minutes, zero errors, zero reconnects
+- [x] Full pipeline: connected → seeded → computed HTF bias → status logging → clean shutdown
+- [x] Smoke test: ALL CHECKS PASSED (313t +289.9R)
+
+### 19.5 Chop Lookback Fix
+- [x] `_seed_from_timestamps()` was fetching 14 bars before 1h timestamp for chop
+- [x] `_compute_chop()` needs `n >= 15` (14-bar Dreiss + 1 for TR prev close) → returned default 50.0
+- [x] Fixed: `chop_lookback_ms = 15 * 3600 * 1000` (was 14)
+- [x] Verified: CHOP=49.9 (real value, not 50.0 default)
+
+### 19.6 Bybit Demo Order Test
+- [x] Market BUY 0.001 BTC @ $77,331.20 — filled instantly
+- [x] SL set @ $76,831.20 (~$500 below) — confirmed on exchange
+- [x] Position read back — side, size, entry, PnL all correct
+- [x] Close position (Market SELL) — filled at same price
+- [x] Fee: $0.043/side (0.055% taker) — matches config
+- [x] Verified on Bybit demo website — trade history shows both legs filled
+
+### 19.7 1-Minute Accelerated Test
+- [x] Built test harness — injects signals, runs trade management on real 1m Bybit candles
+- [x] Long trade: entry → trail SL ratchets up → exit at +4.17R (trail) ✓
+- [x] Short trade: entry → trail SL ratchets down → exit at +3.37R (trail) ✓
+- [x] SL hit: entry → SL hit at exactly -1.00R ✓
+- [x] All trade management logic verified: ATR-based SL, trail ratcheting, SL/trail classification
+- [x] 1-bar exits are expected on 1m (tiny ATR=$24 → risk=$2) — same mechanics on 15m (ATR=$300+)
+
+### 19.8 Core Production Hardening
+
+#### 19.8.1 Instrument Info from Bybit API
+- [x] Added `_fetch_instruments()` to BybitTrader — calls `get_instruments_info()` on init
+- [x] Extracts: tick_size, qty_step, min_qty, min_notional from Bybit API
+- [x] Derives qty_precision from qty_step (0.001 → 3 decimals)
+- [x] Fallback to config.py hardcoded values if API fails
+- [x] Logged on startup: `Instruments: tick=0.1 qty_step=0.001 min_qty=0.001 min_notional=5.0`
+
+#### 19.8.2 Max Leverage Cap
+- [x] Added `MAX_LEVERAGE = 3` to config.py
+- [x] Added `set_leverage()` method to BybitTrader — calls `session.set_leverage()`
+- [x] Called on startup in main.py after trader init
+- [x] Added implied leverage check in `_calculate_qty()` — rejects trade if `qty * entry / available > MAX_LEVERAGE`
+
+#### 19.8.3 Order Retry with Backoff
+- [x] Added `place_market_order_retry()` — exponential backoff + jitter, max 3 attempts
+- [x] Unique `orderLinkId` per attempt (UUID) for dedup
+- [x] Retries only on transient errors (network, rate limit)
+- [x] Does NOT retry on: insufficient margin, invalid qty, auth errors
+- [x] `_execute_entry()` now uses `place_market_order_retry()` instead of `place_market_order()`
+
+#### 19.8.4 Verification
+- [x] Instruments fetched from Bybit: tick=0.1, qty_step=0.001, min_qty=0.001
+- [x] Leverage set to 3x on Bybit demo
+- [x] Order with retry: filled, position shows lev=3
+- [x] Close position: filled
+- [x] Paper test: zero errors, CHOP=71.1, REGIME=B2, ATR=75.0
+
+### 19.9 Telegram Alerts
+- [x] Created `telegram_alert.py` — sends via Telegram Bot API (free, no paid service)
+- [x] `.env` updated with TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
+- [x] `trade_entry()` alert: direction, entry, SL, qty, risk INR/USDT, rate
+- [x] `trade_exit()` alert: reason, fill price, R multiple, direction, entry
+- [x] `error()` alert: any error message
+- [x] Integrated into `live_loop.py`: alerts on ENTRY FILLED, EXIT FILLED, errors
+- [x] Initialized in LiveLoop.__init__ (graceful fallback if no token)
+- [x] Verified: test entry + exit messages received on Telegram
+
+---
+
+## Phase 20: Deep Audit — Swing Engine Data Flow — ✅ DONE (2026-09-13)
+
+### 20.1 1h Swing Engine Lookback Bug (FIXED)
+- [x] **BUG FOUND**: During seeding, ALL 1h candles (including 15-bar chop lookback) were fed to the swing engine
+- [x] Engine started from bar 0 (04:30) instead of the seed point (19:30), building wrong swings
+- [x] Example: Sep 8 19:30 seed → engine detected B1@79435 (07:30) instead of B1@78955 (21:30 high)
+- [x] **FIX**: `live_loop.py:792-803` — engine starts from `engine_start` index (seed point), lookback bars only used for chop
+- [x] **VERIFIED**: Engine now produces correct swings matching chart analysis
+
+### 20.2 Deep Audit — 14 Findings Across 5 Investigation Tracks
+
+#### CRITICAL / HIGH — Must fix before live
+
+- [x] **#1 Double-processing last seeded bar** — **DISMISSED** — Tested live: Bybit WS sends only current in-progress candle (confirm=False) on first subscribe. Does NOT resend old closed candles. No duplicate possible.
+- [x] **#2 Trade dedup broken (no break_kind in DB)** — **FIXED** — `live_loop.py:1444-1446,1251` — Dedup key simplified to `(entry_ts, direction)`. Verified unique for all 313 trades. Old key used `break_kind` and `swing_no` which don't exist in DB schema → keys never matched → every simulation run re-inserted all trades.
+- [x] **#3 Order retry UUID not idempotent** — **FIXED** — `bybit_order.py:259-262` — Moved UUID generation outside retry loop. Single `link_id` reused across all attempts. Prevents 2x position on network timeout.
+- [x] **#4 Failed order leaves orphan DB record** — **FIXED** — `live_loop.py:1360-1370,1364-1372` — On order failure or exception, DB trade is closed with `exit_reason="order_failed"` or `"order_error"`. `_open_ltf_trade` cache cleared. Prevents SL/TP monitoring against non-existent position.
+- [x] **#5 Crash recovery missing 1h lookback** — **FIXED** — `live_loop.py:921-950` — Crash recovery now fetches 15 extra 1h bars before recovery point for chop. Lookback bars in `window_1h` for chop calculation, only post-recovery bars fed to swing engine. Same pattern as initial seeding fix.
+- [x] **#6 Daily P&L state not persisted** — **FIXED** — `database.py` + `state_store.py` + `live_loop.py:129-131,1163-1170` — Added `daily_pnl_r`, `daily_halted`, `last_trade_date` columns to `trading_state` table with migration. Loaded on init, saved on every `_check_daily_loss_limit()` call. Survives crash restart.
+
+#### MEDIUM — Should fix before live
+
+- [x] **#7 Window trim corrupts g_idx for diagnostics** — **FIXED** — `live_loop.py:1017-1031,1247-1259` — Changed `_show_recent_marks` and `_journal_marks` to look up candles by `time` string (stable datetime) instead of `idx` (window position). Built `date_to_candle` lookup dict once per call. Mark timestamps never change regardless of window trimming.
+- [x] **#8 Kline queue too small for backfill** — **FIXED** — `bybit_streamer.py:78-79` — Changed kline queues to unbounded (`asyncio.Queue()` without maxsize). Prevents dropping messages during large backfills after extended downtime.
+- [x] **#9 Failed SL sync not retried** — **FIXED** — `live_loop.py:1552-1573` — SL sync now retries once with 0.5s delay. If still fails, logs error and sends Telegram alert so user knows DB/exchange SL may differ.
+- [x] **#10 Partial fill not checked** — **FIXED** — `live_loop.py:1377-1406`, `persistence/trade_store.py:141-146` — After successful order placement, queries position via `get_position()` to verify actual fill. If 0 filled → closes DB trade as `"order_failed"`. If partial → updates DB qty via `update_trade_qty()`. Telegram alert on any mismatch.
+
+#### LOW — Nice to fix
+
+- [x] **#11 `fee_pct` mismatch** — **NOT A BUG** — Bybit entry in `v18_params.py:45` is `fee_pct: 0.055`, matches `config.py` `TAKER_FEE_PCT = 0.055`. Both 0.055%/side. The `fee_pct` field is only used by the backtest HTTP API's `_trade_costs()`, not the live loop. No mismatch for the instrument we're trading.
+- [x] **#12 Blocking `time.sleep` in retry** — **FIXED (reverted)** — `bybit_order.py:246-290` — Reverted to sync `time.sleep`. Async caused SyntaxError in caller chain. ~7s max block on rare network errors is acceptable.
+- [x] **#15 Trail SL fires at wrong bar after window trim** — **FIXED** — `btc_engine.py:207-228`, `live_loop.py:1523-1573` — Added `_trail_events_ts()` that returns `(confirmed_at_epoch, pivot_px)` instead of `(confirmed_at_idx, pivot_px)`. Updated `_trail_sl()` to compare timestamps against candle timestamps instead of window indices. Trail SL now immune to window trimming.
+- [x] **#16 SyntaxError: await in non-async def** — **FIXED** — Reverted `place_market_order_retry` to sync. `_execute_entry` no longer uses `await`.
+- [x] **#17 `_get_existing_marks_set()` undefined** — **FIXED** — `live_loop.py:1517-1520` — Added method that queries marks from DB by tf, returns set of `(ts, kind, direction, swing_no)`.
+- [x] **#18 `_trail_events_ts()` always returns empty** — **FIXED** — `firstswing.py:185,691,844`, `btc_swing.py:88` — Changed `self.t` from `c.date[11:16]` (HH:MM) to `c.date` (full datetime). Break marks now store full datetime. `_trail_events_ts()` can parse correctly.
+- [x] **#19 `_journal_marks()` never matches** — **FIXED** — Same root cause as #18. Break mark `time` is now full datetime, matches `date_to_candle` keys.
+- [x] **#20 `_show_recent_marks()` never shows** — **FIXED** — Same root cause as #18.
+- [x] **#21 Daily loss limit wrong units** — **FIXED** — `live_loop.py:1154-1156` — Changed `max_loss_r = -(risk_inr * DAILY_LOSS_MULTIPLIER)` to `max_loss_r = -float(DAILY_LOSS_MULTIPLIER)`. Now compares R against R.
+- [x] **#22 `update_trade_qty()` non-existent column** — **FIXED** — `database.py:157-162` — Added `_migrate_ltf_trades()` that adds `qty REAL` column if missing. Called in `create_tables()`.
+- [x] **#23 TP hardcodes R=3.0** — **FIXED** — `live_loop.py:1681-1692` — Now computes actual R from fill price using `_calc_r()`.
+- [x] **#24 `_execute_exit` reads after cache clear** — **FIXED** — `live_loop.py:1659-1695` — Swapped order: `_execute_exit` called BEFORE `_cache_ltf_trade_close()` in all exit paths (SL, TP, cap). Telegram gets correct data.
+- [x] **#25 Order failures count as losses** — **FIXED** — `live_loop.py:1099-1103` — `_persist_streak_state()` now skips trades with `exit_reason` in `("order_failed", "order_error")`.
+- [x] **#27-28 Half-open detection + force reconnect unused** — **FIXED** — `bybit_streamer.py:200-214` — Added watchdog in main WS loop: breaks connection if `_force_reconnect_at` elapsed (22h) or no message for `LAST_MSG_TIMEOUT` (60s).
+- [x] **#29 `timeInForce: GTC` on Market orders** — **FIXED** — `bybit_order.py:217-224` — Removed `timeInForce` from Market order params.
+- [x] **#30 `insert_mark_safe` catches all exceptions** — **FIXED** — `mark_store.py:45-56` — Changed to catch `sqlite3.IntegrityError` only.
+- [x] **#31 `_compute_chop` on every tick** — **FIXED** — `live_loop.py:210-240` — Added `_chop_stale` flag. Chop/ATR only recomputed when flag is True (set on candle close). Ticks only update unrealized R.
+- [x] **#34 Reconciliation uses sl_current + r=0** — **FIXED** — `live_loop.py:333-343` — Now calculates actual R from exit price using `_calc_r()`.
+- [x] **#35 Kill switch no retry** — **FIXED** — `kill_switch.py:69-89` — Added retry (2 attempts). Exits with code 2 on failure.
+
+#### LOW — Nice to fix
+
+- [x] **#11 `fee_pct` mismatch** — **NOT A BUG** — Bybit entry in `v18_params.py:45` is `fee_pct: 0.055`, matches `config.py` `TAKER_FEE_PCT = 0.055`. Both 0.055%/side. The `fee_pct` field is only used by the backtest HTTP API's `_trade_costs()`, not the live loop. No mismatch for the instrument we're trading.
+- [x] **#26 IST vs UTC date mismatch** — **FIXED** — All `date` strings in `live_loop.py` now use IST via `_to_ist_str()` / `_to_ist_short()` static methods. 8 UTC→IST conversions: 15m/1h candle dates, recovery logs, loss date, daily reset, HTF entry/exit. Seed already IST. `ts` (epoch) unchanged.
+
+### 20.3 Verified Correct (No Bugs Found)
+
+- [x] Chop calculation uses lookback correctly (`n >= 15` check)
+- [x] ATR calculation during seeding correct
+- [x] `_update_htf_metrics()` after seeding correct
+- [x] `_run_v18_simulation()` data paths correct (uses timestamps, not indices)
+- [x] `filter_pre_fs=True` applied correctly in both backtest and live
+- [x] `skip_first=True` applied correctly in both backtest and live
+- [x] v18 params per symbol match between backtest and live
+- [x] Same `SwingEngine` class used everywhere
+- [x] Same `minBars` per TF (50/20)
+- [x] Same signal collection (`_collect_signals`)
+- [x] Same streak halt / cooldown logic
+- [x] PersistentSwingEngine reset after declaration correct
+- [x] First bar after swing declaration correct (no off-by-one)
+- [x] WebSocket reconnection + gap backfill correct (subscribe before backfill prevents race)
+- [x] SQLite queries safe (parameterized, no injection)
+- [x] HTF window storage/loading correct
+- [x] State persistence atomic (SQLite transactions)
+
+---
+
+## Phase 21: VPS Deployment — ⬜ TODO
+
+### Timezone
+- [ ] VPS timezone set to UTC (`timedatectl set-timezone UTC`)
+- [ ] Confirm `datetime.now(timezone.utc)` matches VPS system clock
+- [ ] Confirm Bybit candle timestamps align with UTC (Bybit uses UTC natively)
+- [ ] Confirm IST conversions in live_loop.py (`IST_OFFSET`) work correctly on UTC host
+
+### SSH + Security
+- [ ] SSH key-based auth configured (disable password login)
+- [ ] UFW firewall enabled (allow SSH + nothing else)
+- [ ] Auto security updates enabled (`unattended-upgrades`)
+
+### Process Management
+- [ ] Systemd service file for backbencher (`/etc/systemd/system/backbencher.service`)
+- [ ] Auto-restart on crash (`Restart=always`)
+- [ ] Log rotation configured (`/var/log/backbencher/`)
+- [ ] `kill_switch.py` as separate systemd service (watches DB, kills if needed)
+
+### Data Persistence
+- [ ] SQLite DB backed up (daily cron `sqlite3 backbencher.db ".backup /backup/backbencher_$(date +\%F).db"`)
+- [ ] Old backups pruned (keep 30 days)
+- [ ] `.env` file permissions: `chmod 600 .env` (API keys)
+
+### Monitoring
+- [x] Telegram bot connected and receiving entry/exit/error alerts (already working)
+- [ ] `systemctl status backbencher` healthy
+- [ ] `htop` / memory usage < 100MB
+
+### Deployment Steps
+1. `scp -r live_stuff/ user@vps:/opt/backbencher/`
+2. `ssh user@vps`
+3. `cd /opt/backbencher && cp .env.example .env && nano .env` (fill API keys)
+4. `timedatectl set-timezone UTC`
+5. `pip install -r requirements.txt`
+6. `systemctl enable --now backbencher`
+7. Check logs: `journalctl -u backbencher -f`
+
+---
+
+## 22. Deep Architecture Audit — Live vs Backtest Discrepancies
+
+### CRITICAL
+
+- [x] **#36 TP check in `on_tick` for LTF trades** — **FIXED** — `live_loop.py:1705-1726` — Removed dead TP check block + unused `tp_price` variable. LTF trades trail only (no fixed R target). The 3R target is for HTF bias windows only, not LTF. Backtest engine was already correct (no TP in v18 walk loop).
+
+- [x] **#37 Double `_execute_exit` on TP** — **FIXED** — TP block removed from LTF trades in Bug #36 fix. No TP calls in `on_tick` or `_on_15m_close` anymore. LTF trades trail only (no fixed R target).
+
+- [x] **#38 Window trim breaks swing engine g_idx sequencing** — **FIXED** — Timestamp refactor: `ts_map` in SwingEngine maps counter→datetime. Live loop uses monotonic counters. No index-based inter-function communication.
+
+- [x] **#39 Window trim breaks `_collect_signals` candle lookup** — **FIXED** — CandleStore class: O(1) lookup by datetime string. Signal `bar` is datetime, position resolved locally via `store.pos()`. Trim-immune.
+
+### MEDIUM
+
+- [x] **#40 Double simulation on 1h boundary** — **FIXED** — `live_loop.py:507-543` — Added barrier pattern: `_got_15m_boundary` / `_got_1h_boundary` flags + `_BOUNDARY_TIMEOUT = 2.5s`. At 1h boundary (`ts % 3600 == 0`), both callbacks set their flag and call `_try_fire_boundary()`. Simulation runs only when BOTH flags are true (or timeout forces it). Ensures chop is computed from complete 1h data. Non-boundary candles still fire simulation immediately.
+
+- [x] **#41 Two exit systems running simultaneously** — **BY DESIGN** — `on_tick` checks SL on every tick (real-time exit). `_trail_sl` runs on candle close (ratchet SL when new pivot confirms). This is correct: trail can only update on candle close (swing engine needs bar data), SL hit detection needs tick-level granularity.
+
+- [x] **#42 Cooldown units mismatch** — **FIXED** — `_persist_streak_state()` (`live_loop.py:1183-1237`): (1) `last_loss_bar` now stores datetime string instead of epoch int (timestamps-only convention). (2) Cooldown properly armed on new loss: compares `consec > old_consec`, sets `cooldown_remaining = cooldown_bars` when a new loss is detected (was never armed before — only decremented, never set). (3) Clear docstring explaining v18 bar-index vs live countdown difference. Smoke test: 335t +385.7R PASS.
+
+### LOW
+
+- [x] **#43 Chop recomputed every 30s** — **FIXED** — `live_loop.py:460-467` — Removed `_chop_stale = True` from `_print_status()`. Chop now only recomputes on `_on_1h_close` (24x/day instead of 2880x/day). `_update_htf_metrics()` still runs for unrealized R.
+
+- [x] **#44 IST/UTC date format mix** — **FIXED** — Live now creates IST dates matching seed. `CandleStore.epoch()` / `_trail_events_ts()` in `btc_engine.py` unaffected (both sides use same IST convention, comparisons work). Old DB marks with UTC dates: harmless — `ts` (epoch) used for all logic.
+
+---
+
+## Phase 20: Engine Optimization Sweep (2026-09-14)
+
+### 20.1 Per-Year Sweep
+- [x] Swept htf_rr × ext_stop_r per year (2023-2026) — best combo varies by regime
+- [x] Swept chop_thresh × sl_buf_atr per year — sl_buf=0.10 wins 3/4 years
+- [x] Swept cooldown_bars × max_consecutive_losses per year — **halt=3 wins ALL years**
+- [x] Documented in `docs/SWEEP_ROADMAP.md`
+
+### 20.2 Key Findings
+- [x] `max_consecutive_losses=3` universally better than 5 for Bybit Perp (+87.7R)
+- [x] `sl_buf_atr=0.10` better than 0.20 in 3/4 years (tighter SL = less noise)
+- [x] Engine params (chop, sl_buf, halt) vary by instrument — each exchange has its own personality
+- [x] Price-level doesn't affect strategy (ATR scales automatically, chop is dimensionless)
+- [x] Market regime affects performance, not price level
+
+### 20.3 Applied to Backtest Engine
+- [x] `btc_routes.py` — Bybit Perp: `_slbuf=0.10`, `_halt=3`
+- [x] `v18_params.py` — BYBIT: `sl_buf_atr=0.10`, `max_consecutive_losses=3`
+- [x] `test_smoke.py` — pass criteria: 261t, +470.5R
+- [x] `test_v18_integrity.py` — BYBIT_PARAMS updated, streak <= 3, WR range 30-50%
+- [x] Smoke test: 261t +470.5R PF 4.71 — ALL CHECKS PASSED
+- [x] Integrity test: ALL 10 CHECKS PASSED
+
+### 20.4 Per-Instrument Tuning Principle
+- [x] Each instrument gets its own optimal params (chop, sl_buf, halt, cd)
+- [x] Do NOT copy Bybit params to other instruments — sweep each separately
+- [x] Binance Perp and Spot still need their own optimization sweeps
+- [x] Future instruments (ETH, SOL) need per-instrument sweep before going live
 
 ---
 

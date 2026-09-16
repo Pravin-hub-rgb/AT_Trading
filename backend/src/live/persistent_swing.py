@@ -18,6 +18,7 @@ class PersistentSwingEngine:
         self.eng = SwingEngine(self.opts)
         self.swing_index = 0
         self.next_start_pos = 0
+        self.ts_map: dict[int, str] = {}  # counter→datetime (persists across engine resets)
         self._load_state()
 
     def _state_key(self) -> str:
@@ -112,6 +113,7 @@ class PersistentSwingEngine:
             return None
 
         self.eng.process_bar(candle, g_idx)
+        self.ts_map[g_idx] = candle.date
 
         if not self.eng.declared or self.eng.start_idx < 0:
             self._save_state()
@@ -126,6 +128,7 @@ class PersistentSwingEngine:
             "seg": {
                 "dir": "B" if self.eng.dir == "up" else "S",
                 "start_idx": self.eng.start_idx,
+                "start_time": self.eng.start_time,
                 "start_px": self.eng.start_px,
                 "end_idx": self.eng.end_idx,
                 "end_px": self.eng.end_px,
@@ -153,9 +156,11 @@ class PersistentSwingEngine:
         self.swing_index += 1
         self.next_start_pos = self.eng.end_idx + 1 if self.eng.end_idx >= 0 else g_idx + 1
 
+        old_ts_map = self.eng.ts_map.copy()
         self.eng = SwingEngine(self.opts)
         self.eng.defer_same_bar_arm = True
         self.eng.seed_idx = self.next_start_pos
+        self.eng.ts_map = old_ts_map
 
         self._save_state()
         return result
@@ -170,6 +175,7 @@ class PersistentSwingEngine:
             "seg": {
                 "dir": "B" if e.dir == "up" else "S",
                 "start_idx": e.start_idx if e.start_idx >= 0 else None,
+                "start_time": e.start_time if e.start_idx >= 0 else None,
                 "start_px": e.start_px if e.start_idx >= 0 else None,
                 "end_idx": None,
                 "end_px": None,

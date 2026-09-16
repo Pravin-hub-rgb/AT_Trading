@@ -26,18 +26,20 @@ def simulate_btc_trades_v8(
     n=len(candles)
     if n==0:
         return []
-    from src.btc.btc_engine import _collect_signals, _trail_events, _exit_on_fine, trade_stats
+    from src.btc.btc_engine import _collect_signals, _trail_events, _exit_on_fine, trade_stats, CandleStore
     signals=_collect_signals(swings, entry_break, skip_first=skip_first, selection=entry_selection, candles=candles if entry_selection=="stream" else None)
     candle_ts=[int(c["ts"]) for c in candles]
     fine_ts=[int(c["ts"]) for c in fine] if fine else []
     bias_ptr=-1
     bias_now=None
     trades=[]
-    busy_until=-1
+    store = CandleStore(candles)
+    busy_until=""
     for sig in signals:
-        i=sig["bar"]
-        if i <= busy_until or i >= n-1:
-            continue
+        i=store.pos(sig["bar"])
+        if i < 0 or i >= n-1: continue
+        bar_ts_loop = sig["bar"]
+        if busy_until and bar_ts_loop <= busy_until: continue
         direction=int(sig["dir"])
         if day_gate is not None:
             g=day_gate.get(candles[i]["date"][:10])
@@ -226,5 +228,5 @@ def simulate_btc_trades_v8(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,  # type: ignore
         })
-        busy_until=exit_idx  # type: ignore
+        busy_until=candles[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
     return trades

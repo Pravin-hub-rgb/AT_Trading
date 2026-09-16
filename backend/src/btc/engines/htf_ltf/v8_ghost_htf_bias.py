@@ -115,7 +115,7 @@ def simulate_htf_ltf_ghost(
     ltf_entry_break: str = "decisive",
 ) -> dict:
     """Ghost HTF + LTF B2/FLIP. API compatible with v1_15m but HTF is ghost streak, not Flip."""
-    from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
+    from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats, CandleStore
     import bisect as bs
 
     # Ghost intervals on HTF (1h)
@@ -182,13 +182,15 @@ def simulate_htf_ltf_ghost(
             atr15[_i]=sum(tr_l[_lo:_i+1])/(_i-_lo+1)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     ltf_trades=[]
-    busy_until=-1
+    store = CandleStore(candles_ltf)
+    busy_until=""
     from src.btc.btc_engine import _trail_events as _te
     import bisect
     for sig in filtered:
-        i=sig["bar"]
-        if i <= busy_until or i >= n-1:
-            continue
+        i=store.pos(sig["bar"])
+        if i < 0 or i >= n-1: continue
+        bar_ts_loop = sig["bar"]
+        if busy_until and bar_ts_loop <= busy_until: continue
         direction=int(sig["dir"])
         entry=float(candles_ltf[i]["close"])
         sl_pivot=sig["swing_start_px"]
@@ -329,6 +331,6 @@ def simulate_htf_ltf_ghost(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,
         })
-        busy_until=exit_idx
+        busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
     # HTF trades not used for ghost, return empty but keep intervals for stats
     return {"htf_trades": [], "ltf_trades": ltf_trades, "intervals": ghost_intervals, "ghost_intervals": ghost_intervals}

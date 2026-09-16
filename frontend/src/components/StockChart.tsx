@@ -34,6 +34,7 @@ import { FlowLinePrimitive, FlowSegment } from "./FlowLinePrimitive";
 import { EnvelopePrimitive } from "./EnvelopePrimitive";
 import { SyncCrosshairPrimitive } from "./SyncCrosshairPrimitive";
 import { EMAPrimitive } from "./EMAPrimitive";
+import { HTFWindowPrimitive, type HTFWindowRect } from "./HTFWindowPrimitive";
 import type { EnvelopeViolation } from "@/lib/envelope";
 import type { EmaPoint } from "@/lib/ema";
 
@@ -101,6 +102,7 @@ interface Props {
   // (useCallback) if provided — read via ref, so it never rebuilds the chart.
   onHoverTime?: (sec: number | null) => void;
   emaLines?: Record<number, EmaPoint[]> | null;
+  htfWindows?: HTFWindowRect[] | null;
 }
 
 // Imperative API for crosshair sync between two StockChart instances.
@@ -234,6 +236,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     tradeMode,
     onHoverTime,
     emaLines,
+    htfWindows,
   }: Props,
   ref,
 ) {
@@ -242,6 +245,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const syncPrimRef = useRef<SyncCrosshairPrimitive | null>(null);
   const positionPrimRef = useRef<PositionPrimitive | null>(null);
+  const htfWindowPrimRef = useRef<HTFWindowPrimitive | null>(null);
   const wholeDayPrimRef = useRef<WholeDaySwingPrimitive | null>(null);
   const hoverCbRef = useRef(onHoverTime);
   useEffect(() => {
@@ -1030,6 +1034,30 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       } catch {}
     };
   }, [trades, intraday, candles]);
+
+  // ── overlay: HTF window background tint ──
+  useEffect(() => {
+    const chart = chartRef.current;
+    const ser = seriesRef.current;
+    if (!chart || !ser || !htfWindows || htfWindows.length === 0) return;
+
+    if (htfWindowPrimRef.current) {
+      try {
+        chart.panes()[0].detachPrimitive(htfWindowPrimRef.current);
+      } catch {}
+    }
+
+    const prim = new HTFWindowPrimitive(ser, htfWindows);
+    chart.panes()[0].attachPrimitive(prim);
+    htfWindowPrimRef.current = prim;
+
+    return () => {
+      htfWindowPrimRef.current = null;
+      try {
+        chart.panes()[0].detachPrimitive(prim);
+      } catch {}
+    };
+  }, [htfWindows, candles]);
 
   // ── overlay: session-break verticals ──
   useEffect(() => {

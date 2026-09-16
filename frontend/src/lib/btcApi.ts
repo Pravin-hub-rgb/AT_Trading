@@ -131,6 +131,8 @@ export interface BtcTrade {
   r_multiple: number;
   /** round-trip fee+slippage cost of this trade, in R (0 when fee_pct=0). */
   cost_r?: number;
+  /** funding cost of this trade, in R (0 when funding_rate_pct=0). */
+  funding_r?: number;
   bars_held: number;
 }
 
@@ -165,6 +167,7 @@ export interface BtcTradeStats {
   net_total_r?: number;
   net_avg_r?: number;
   total_costs_r?: number;
+  total_funding_r?: number;
   median_r?: number;
   top1_contribution_r?: number;
   top5_contribution_r?: number;
@@ -206,6 +209,8 @@ export interface BtcBacktestParams {
   entrySlipPct: number;
   /** % slippage on exit (e.g. 0.003 = 3bp). Asymmetric peer model. */
   exitSlipPct: number;
+  /** funding rate % per 8h interval (e.g. 0.01 = 0.01% per 8h). 0 = off. */
+  fundingRatePct: number;
 }
 
 export interface BtcBacktestResponseParams {
@@ -216,6 +221,8 @@ export interface BtcBacktestResponseParams {
   slippage_pts: number;
   entry_slip_pct: number;
   exit_slip_pct: number;
+  /** funding rate % per 8h interval (0 = off). */
+  funding_rate_pct?: number;
   /** "1m" = exits resolved on 1-minute candles (precise fills). */
   fill_tf: string;
   entry_break: EntryBreak;
@@ -279,6 +286,7 @@ export async function getBtcBacktest(
     slippage_pts: String(p.slippagePts),
     entry_slip_pct: String(p.entrySlipPct),
     exit_slip_pct: String(p.exitSlipPct),
+    funding_rate_pct: String(p.fundingRatePct),
     entry_break: p.entryBreak,
     sl_mode: p.slMode,
     sl_pct: String(p.slPct),

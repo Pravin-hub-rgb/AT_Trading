@@ -62,7 +62,7 @@ def simulate_htf_ltf_conditional(
     cooldown_bars=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
-    from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
+    from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats, CandleStore
     import bisect as bs
     # Build HTF intervals for both flip and decisive
     htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=3.0, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
@@ -161,13 +161,16 @@ def simulate_htf_ltf_conditional(
         atr15[_i]=sum(tr_l[_lo:_i+1])/(_i-_lo+1)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     ltf_trades=[]
-    busy_until=-1
+    store = CandleStore(candles_ltf)
+    busy_until=""
     last_loss_bar=-999999
     from src.btc.btc_engine import _trail_events as _te
     import bisect
     for sig in filtered:
-        i=sig["bar"]
-        if i <= busy_until or i>=n-1: continue
+        i=store.pos(sig["bar"])
+        if i < 0 or i >= n-1: continue
+        bar_ts_loop = sig["bar"]
+        if busy_until and bar_ts_loop <= busy_until: continue
         if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue
         direction=int(sig["dir"])
         entry=float(candles_ltf[i]["close"])
@@ -294,7 +297,7 @@ def simulate_htf_ltf_conditional(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,
         })
-        busy_until=exit_idx
+        busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
         if cooldown_bars > 0 and r_multiple < 0:
             last_loss_bar = exit_idx
     # HTF trades for stats: we return flip as reference, but intervals are mixed

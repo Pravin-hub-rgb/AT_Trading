@@ -2,7 +2,7 @@
 from __future__ import annotations
 import bisect
 from typing import Optional
-from src.btc.btc_engine import _collect_signals, trade_stats
+from src.btc.btc_engine import _collect_signals, trade_stats, CandleStore
 
 def simulate_btc_trades_v7(
     candles: list[dict],
@@ -25,6 +25,7 @@ def simulate_btc_trades_v7(
     n=len(candles)
     if n==0:
         return []
+    store=CandleStore(candles)
     signals=_collect_signals(swings, entry_break, skip_first=skip_first, selection=entry_selection, candles=candles if entry_selection=="stream" else None)
     candle_ts=[int(c["ts"]) for c in candles]
     fine_ts=[int(c["ts"]) for c in fine] if fine else []
@@ -37,11 +38,14 @@ def simulate_btc_trades_v7(
     bias_ptr=-1
     bias_now=None
     trades=[]
-    busy_until=-1
+    busy_until_ts=""  # timestamp-based busy_until
     from src.btc.btc_engine import _trail_events
     for sig in signals:
-        i=sig["bar"]
-        if i <= busy_until or i >= n-1:
+        bar_time=sig["bar"]  # datetime string
+        i=store.pos(bar_time)
+        if i < 0 or i >= n-1:
+            continue
+        if busy_until_ts and bar_time <= busy_until_ts:
             continue
         if entry_gate is not None and not entry_gate(i):
             continue
@@ -231,5 +235,5 @@ def simulate_btc_trades_v7(
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,  # type: ignore
         })
-        busy_until=exit_idx  # type: ignore
+        busy_until_ts=candles[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""  # type: ignore
     return trades

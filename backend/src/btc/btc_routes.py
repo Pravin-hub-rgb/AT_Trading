@@ -214,20 +214,24 @@ def _validate_tf_mode(tf: str, mode: str):
 
 
 def _trade_costs(trades: list[dict], fee_pct: float, slip_pts: float,
-                 entry_slip_pct: float = 0.0, exit_slip_pct: float = 0.0) -> tuple[float, float]:
+                 entry_slip_pct: float = 0.0, exit_slip_pct: float = 0.0,
+                 funding_rate_pct: float = 0.0) -> tuple[float, float]:
     """Per-trade cost (in R) of round-trip fees + slippage, and total.
 
     fee_pct: taker fee % per side (e.g. 0.055 = Bybit taker).
     slip_pts: flat adverse price points (fallback when entry/exit_slip_pct == 0).
     entry_slip_pct: % slippage on entry (e.g. 0.001 = 1bp). If > 0, overrides slip_pts for entry.
     exit_slip_pct: % slippage on exit (e.g. 0.003 = 3bp). If > 0, overrides slip_pts for exit.
+    funding_rate_pct: funding rate % per 8h interval (e.g. 0.01 = 0.01% per 8h). 0 = off.
 
     Peer model: entry is orderly (signal candle close), exit is adverse (trailing SL during fast move).
-    Fee model: (entry * fee% + exit * fee%) / risk  +  slippage_in_R.
+    Fee model: (entry * fee% + exit * fee%) / risk  +  slippage_in_R  +  funding_in_R.
     """
     total = 0.0
+    total_funding = 0.0
     count = 0
     fee_rate = max(0.0, float(fee_pct)) / 100.0
+    funding_per_bar = funding_rate_pct / 100.0 / 32.0  # 8h = 32 bars of 15m
     for t in trades:
         risk = abs(float(t["entry_price"]) - float(t["sl"]))
         if risk <= 0:
@@ -242,11 +246,17 @@ def _trade_costs(trades: list[dict], fee_pct: float, slip_pts: float,
                       + exit_px * exit_slip_pct / 100.0) / risk
         else:
             slip_r = max(0.0, float(slip_pts)) / risk
-        cost_r = fee_r + slip_r
+        # Funding cost: notional * rate_per_bar * bars_held / risk
+        bars = int(t.get("bars_held", 0))
+        notional = entry_px  # qty cancels: (qty*entry*rate*bars) / (qty*risk) = entry*rate*bars/risk
+        fund_r = (notional * funding_per_bar * bars) / risk if funding_rate_pct > 0 else 0.0
+        cost_r = fee_r + slip_r + fund_r
         t["cost_r"] = round(cost_r, 4)
         t["fee_r"] = round(fee_r, 4)
         t["slip_r"] = round(slip_r, 4)
+        t["funding_r"] = round(fund_r, 4)
         total += cost_r
+        total_funding += fund_r
         count += 1
     return round(total, 4), count
 
@@ -262,6 +272,7 @@ def _net_stats(stats: dict, trades: list[dict]) -> dict:
     out["net_total_r"] = round(net_r, 2)
     out["net_avg_r"] = round(net_r / len(closed), 3) if closed else 0.0
     out["total_costs_r"] = round(sum(float(t.get("cost_r", 0.0)) for t in closed), 2)
+    out["total_funding_r"] = round(sum(float(t.get("funding_r", 0.0)) for t in closed), 2)
     return out
 
 
@@ -329,7 +340,8 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
                 fee_pct: float, slip_pts: float,
                 bias_timeline=None, day_gate=None, fine=None,
                 entry_selection: str = "stream", version: str = "v1",
-                entry_slip_pct: float = 0.005, exit_slip_pct: float = 0.010) -> dict:
+                entry_slip_pct: float = 0.005, exit_slip_pct: float = 0.010,
+                funding_rate_pct: float = 0.0) -> dict:
     """Run one master preset and return a summary row. Versioned — v1 default never disturbed."""
     # v1 flip1h20 is now cap 16d default (old cap 0 removed) — use v7 engine for this preset when version v1
     if p.get("key") == "flip1h20" and version == "v1" and simulate_btc_trades_v7 is not None:
@@ -344,7 +356,7 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
         closed = [t for t in tr if t["outcome"] != "open"]
         base = sum(t["r_multiple"] for t in closed)
         wins = sum(1 for t in closed if t["r_multiple"] > 0)
-        _trade_costs(tr, fee_pct, slip_pts, entry_slip_pct, exit_slip_pct)
+        _trade_costs(tr, fee_pct, slip_pts, entry_slip_pct, exit_slip_pct, funding_rate_pct)
         costs = sum(float(t.get("cost_r", 0.0)) for t in closed)
         return {
             "key": p["key"], "label": p["label"],
@@ -412,7 +424,7 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
     closed = [t for t in tr if t["outcome"] != "open"]
     base = sum(t["r_multiple"] for t in closed)
     wins = sum(1 for t in closed if t["r_multiple"] > 0)
-    _trade_costs(tr, fee_pct, slip_pts, entry_slip_pct, exit_slip_pct)
+    _trade_costs(tr, fee_pct, slip_pts, entry_slip_pct, exit_slip_pct, funding_rate_pct)
     costs = sum(float(t.get("cost_r", 0.0)) for t in closed)
     return {
         "key": p["key"], "label": p["label"],
@@ -589,6 +601,7 @@ def btc_backtest(
     slippage_pts: float = 0.0,
     entry_slip_pct: float = 0.005,
     exit_slip_pct: float = 0.010,
+    funding_rate_pct: float = 0.0,
     entry_break: str = "decisive",
     sl_mode: str = "swing",
     sl_pct: float = 0.5,
@@ -712,6 +725,7 @@ def btc_backtest(
         "slippage_pts": float(slippage_pts),
         "entry_slip_pct": float(entry_slip_pct),
         "exit_slip_pct": float(exit_slip_pct),
+        "funding_rate_pct": float(funding_rate_pct),
         "entry_break": entry_break,
         "sl_mode": sl_mode,
         "sl_pct": float(sl_pct),
@@ -893,22 +907,25 @@ def btc_backtest(
                 # consecutive losses, resume on next winner. Research: +322R net
                 # vs +265R without halt (streak analysis test_streak_analysis.py).
                 #
-                # Per-instrument tuning (2026-09-11, 1m fills):
-                #   BTC Spot:     chop=61.8 cd=20 slbuf=0.25 → +331.1R  DD 9.7R
-                #   Binance Perp: chop=61.8 cd=5  slbuf=0.15 → +311.7R  DD 11.6R
-                #   Bybit Perp:   chop=58.0 cd=0  slbuf=0.20 → +307.8R  DD 9.2R
+                # Per-instrument tuning (2026-09-14, 1m fills + engine opt):
+                #   BTC Spot:     chop=61.8 cd=20 slbuf=0.25 halt=5 → +331.1R  DD 9.7R
+                #   Binance Perp: chop=61.8 cd=5  slbuf=0.15 halt=5 → +311.7R  DD 11.6R
+                #   Bybit Perp:   chop=58.0 cd=0  slbuf=0.10 halt=3 → +424.5R  DD ~7R
                 if symbol == "BTCUSDT_BYBIT":
                     _chop = 58.0
                     _cd = 0
-                    _slbuf = 0.20
+                    _slbuf = 0.10
+                    _halt = 3
                 elif symbol == "BTCUSDT_PERP":
                     _chop = 61.8
                     _cd = 5
                     _slbuf = 0.15
+                    _halt = 5
                 else:
                     _chop = 61.8
                     _cd = 20
                     _slbuf = 0.25
+                    _halt = 5
                 nested = simulate_htf_ltf_streak_halt(
                     candles_htf=htf_candles,
                     swings_htf=htf_swings,
@@ -920,12 +937,12 @@ def btc_backtest(
                     mode="b2_vs_flip_chop",
                     chop_thresh=_chop,
                     cooldown_bars=_cd,
-                    max_consecutive_losses=5,
+                    max_consecutive_losses=_halt,
                 )
                 params["ext_stop_r"] = 1.5
                 params["sl_buf_atr"] = _slbuf
                 params["cooldown_bars"] = _cd
-                params["max_consecutive_losses"] = 5
+                params["max_consecutive_losses"] = _halt
             elif htf_ltf_ver == "v19" and simulate_htf_ltf_streak_halt is not None:
                 # v19 = v18 with HTF window ending at first touch of 1.5R (r_touch)
                 # instead of the HTF trade's exit. Research 2026-09-08 (fix/research_v19.md):
@@ -973,10 +990,13 @@ def btc_backtest(
             # Combine for stats: LTF trades are the execution, HTF trades are regime
             ltf_trades = nested.get("ltf_trades", [])
             htf_trades = nested.get("htf_trades", [])
+            # Merged intervals from v18: union of flip + b2 + decisive.
+            # These are the actual windows the engine trades in — used for chart tinting.
+            merged_intervals = nested.get("intervals", [])
             # Use LTF trades for main chart, but also include HTF for stats
             # For now, return LTF trades as primary, with HTF count in params
-            _trade_costs(ltf_trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct)
-            _trade_costs(htf_trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct)
+            _trade_costs(ltf_trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct, funding_rate_pct)
+            _trade_costs(htf_trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct, funding_rate_pct)
             stats_ltf = trade_stats(ltf_trades)
             stats_ltf = _net_stats(stats_ltf, ltf_trades)
             # Also compute HTF stats for reference
@@ -1005,13 +1025,31 @@ def btc_backtest(
             params["htf_trades"] = len(htf_trades)
             params["htf_net"] = stats_htf.get("net_total_r")
             params["ltf_trades"] = len(ltf_trades)
+            # Build htf_windows from parent intervals — each LTF trade's parent
+            # HTF interval (flip or b2). Non-overlapping, covers every trade.
+            htf_windows = []
+            for iv in merged_intervals:
+                s, e, d = int(iv[0]), int(iv[1]), int(iv[2])
+                htf_windows.append({
+                    "entry_ts": s,
+                    "exit_ts": e,
+                    "dir": "long" if d == 1 else "short",
+                    "entry_price": float(iv[3]) if len(iv) > 3 else 0,
+                    "sl": float(iv[4]) if len(iv) > 4 else 0,
+                    "trade_no": len(htf_windows) + 1,
+                    "swing_no": 0, "break_kind": "interval",
+                    "entry_idx": 0, "entry_date": "",
+                    "exit_idx": 0, "exit_date": "",
+                    "exit_price": 0, "outcome": "window",
+                    "r_multiple": 0, "bars_held": 0,
+                })
             return {
                 "params": params,
                 "count": len(ltf_candles) if ltf_candles else len(candles),
                 "swings_used": len(ltf_swings) if ltf_swings else len(swings),
                 "trades": ltf_trades,
                 "stats": stats_ltf,
-                "htf_trades": htf_trades,
+                "htf_trades": htf_windows,
                 "htf_stats": stats_htf,
                 "combined_net": combined_net,
             }
@@ -1258,7 +1296,7 @@ def btc_backtest(
 
     # cost model: round-trip fees (% notional, both sides) + slippage points,
     # expressed in R against each trade's own risk -> honest NET R stats.
-    _trade_costs(trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct)
+    _trade_costs(trades, fee_pct, slippage_pts, entry_slip_pct, exit_slip_pct, funding_rate_pct)
     stats = _net_stats(trade_stats(trades), trades)
 
     return {

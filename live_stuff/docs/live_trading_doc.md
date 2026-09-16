@@ -179,6 +179,78 @@ VPS (live package)                       Laptop (research repo)
      cron: daily_fetch.py appends the day's klines to the dataset
 ```
 
+## Backtest vs Live — Fill Precision
+
+### The key difference
+
+| | Backtest | Live |
+|--|---------|------|
+| **Data source** | 15m + 1m CSV files | Real-time WebSocket ticks |
+| **SL check** | On each 1m candle close | On EVERY price tick (sub-second) |
+| **Fill price** | Exact 1m candle where SL is hit | Exact tick price where SL is hit |
+| **Resolution** | 1m (60 checks/hour) | Tick (hundreds/thousands per hour) |
+| **Precision** | Good | **Best** |
+
+### Why fine_ltf=[] in live
+
+The engine parameter `fine_ltf` is for **backtest only** — it simulates 1m fills
+using historical CSV data. In live:
+
+- We don't need `fine_ltf` because ticks ARE our "1m data" (actually faster)
+- `on_tick()` fires on every WebSocket tick, not on candle close
+- The engine just needs to know the current state (SL, TP, direction)
+- `on_tick()` handles the real-time SL/TP checking with tick precision
+
+### How it works
+
+```
+BACKTEST:
+  simulate_htf_ltf_streak_halt(c1h, sw1h, c15, sw15, fine_ltf=[1m candles])
+  → Engine walks through 1m bars to find exact SL hit
+  → Fill price = 1m candle where SL is hit
+  → Result: precise R values
+
+LIVE:
+  simulate_htf_ltf_streak_halt(c1h, sw1h, c15, sw15, fine_ltf=[])
+  → Engine runs WITHOUT 1m fills (just signals + state)
+  → Engine detects SL on 15m bars (for simulation output only)
+  → on_tick(price, ts) handles REAL-TIME SL/TP checking
+  → Fill price = exact tick price
+  → Result: even MORE precise than backtest (tick-level)
+```
+
+### The two layers
+
+| Layer | When | What it does |
+|-------|------|-------------|
+| **Engine** (15m close) | Every 15m candle close | Signal detection, trade journaling, trail SL |
+| **on_tick()** (every tick) | Every WebSocket tick | Real-time SL/TP monitoring, exit execution |
+
+### Why no conflict
+
+1. Tick hits SL → `on_tick()` closes trade → cache cleared
+2. 15m candle closes → engine detects SL on 15m bar
+3. `_journal_trades()` checks DB → trade already closed → skips
+
+The cache prevents double-processing. `on_tick()` always wins because it
+runs on every tick (faster than 15m candle close).
+
+### Why live is MORE precise than backtest
+
+- Backtest: 1m resolution (60 checks per hour)
+- Live: tick resolution (hundreds/thousands per hour)
+- Live fills are at exact market price, not interpolated to 1m boundary
+- If tick hits SL at 79800, fill is 79800 — not "somewhere in the 1m bar"
+
+### The 15m engine fallback (fine_ltf=[])
+
+When `fine_ltf=[]`, the engine detects SL on 15m candle boundaries:
+- Long: `if 15m_low <= sl_current → exit at min(sl, 15m_open)`
+- Short: `if 15m_high >= sl_current → exit at max(sl, 15m_open)`
+
+This is more conservative than tick-level (uses worst price in the bar).
+In live, `on_tick()` exits at the actual tick price (better fills).
+
 ## Build order
 
 1. `daily_fetch.py` — Binance REST klines → append to `data/btc` CSVs (IST convention)
@@ -512,6 +584,59 @@ other trade. Filter boundary (`<` not `<=`) is correct.
 
 ---
 
+## skip_first=True — Why It's Fine (No Change Needed)
+
+### What it does
+
+`skip_first=True` (hardcoded in `v18_streak_halt.py:93-95` for HTF, line 138 for LTF)
+skips swing_index=0 — the very first swing the engine produces on each timeframe.
+
+### Why it seems wrong (but isn't)
+
+**The concern:** "First swing has valid B2/FLIP marks. Why skip it?"
+
+**The answer:** In live, the user seeds 2-3 swings of historical data before going
+real-time. The "first swing" (swing_index=0) is deep in the past — it's already
+many bars old by the time live trading starts. We're never going to trade it.
+
+```
+Seed timestamp: 2026-09-01 00:00
+First swing:    2026-08-28 (3 days before seed, ~288 15m bars)
+                ↓
+                skip_first skips this — it's historical context only
+Live starts:    2026-09-01 00:00 (already on swing 4+)
+```
+
+### Why filter_pre_fs already handles swing 0 anyway
+
+```python
+# btc_engine.py:169
+if filter_pre_fs and si > 0:       # si=0 → condition is False → filter SKIPPED
+    prev_confirmed = ...
+    if bidx < prev_confirmed:
+        continue
+```
+
+`filter_pre_fs` already passes swing 0 (si=0 → si>0 is False → no filter).
+So `skip_first` is the only thing blocking swing 0 — and in live, it doesn't matter
+because swing 0 is always historical.
+
+### Live vs Backtest
+
+| | Live | Backtest |
+|---|------|----------|
+| First swing position | Deep in past (seeded) | First candle of dataset |
+| Trades on first swing? | Never (already past) | Could happen |
+| skip_first impact | None (harmless) | Safety measure |
+
+### Conclusion
+
+**Leave `skip_first=True` as is.** It's a harmless safety measure for backtest
+(arbitrary dataset start) and has zero impact on live (first swing is always
+historical context from seeding). No code change needed.
+
+---
+
 ## WebSocket Resilience (bybit_streamer.py)
 
 Production-grade WebSocket with full resilience for live trading.
@@ -822,3 +947,180 @@ def _recover_from_crash(self):
 | Cooldown / halt | `trading_state` table | Instant |
 | Bybit position | Exchange API | 1 API call |
 | Swing engine warmup | Backfill from endpoint | Background |
+
+---
+
+## Phase 17: INR Risk, Trail SL Sync, Kill Switch (2026-09-12)
+
+### Problem
+
+1. **Risk was hardcoded at $50 USDT** — should be ₹250 INR with live conversion
+2. **Trail SL never synced to Bybit** — `_trail_sl()` updated DB only; Bybit kept initial SL. If bot crashed, Bybit would fire SL at wrong price
+3. **No kill switch** — Ctrl+C just stopped the loop, didn't flatten position
+
+### Solution
+
+#### 17a: INR Risk + Live Conversion
+
+```
+risk_inr.txt          # contains "250" — edit to change, no restart needed
+     |
+     v
+read_risk_inr()       # reads file
+     |
+     v
+get_usdt_inr_rate()   # CoinGecko primary, ExchangeRate-API fallback, cached 5 min
+     |
+     v
+risk_usdt = 250 / 95.58 = $2.62 USDT
+     |
+     v
+Calculate qty based on SL distance + fee buffer
+```
+
+**Changing risk:** `echo 500 > risk_inr.txt` — picked up on next trade, no restart.
+
+#### 17b: Trail SL Sync to Bybit
+
+```python
+# In _trail_sl() — after updating DB:
+if self.trader and self.trader.is_connected:
+    resp = self.trader.update_sl(new_sl)
+    # Calls: session.set_trading_stop(category="linear", symbol=..., 
+    #         tpslMode="Full", positionIdx=0, stopLoss=f"{new_sl:.2f}")
+```
+
+**What this does:** Updates the exchange-side conditional SL order on Bybit's server. Even if bot crashes, Bybit fires the correct (trailed) SL, not the initial one.
+
+**SL type:** Market order — Bybit Full mode only supports Market execution for triggered SL. No fill risk.
+
+#### 17c: Kill Switch
+
+**Standalone script** (`kill_switch.py`):
+```bash
+python kill_switch.py           # flatten position + cancel all orders
+python kill_switch.py --status  # check position (no action)
+```
+
+**Graceful Ctrl+C** (`main.py`):
+```python
+# On Ctrl+C:
+_graceful_shutdown(loop)
+# -> close_position() -> cancel_all_orders() -> stop
+```
+
+### Flow Diagram
+
+```
+Entry:
+  place_market_order(side, qty, stopLoss="78000")
+  -> Bybit creates Market SL at 78000 (server-side)
+
+Trail (every 15m candle):
+  _trail_sl() detects new SL = 81000
+  -> update_trade_sl(db, 81000)        # DB update
+  -> trader.update_sl(81000)           # Bybit sync
+  -> Bybit now has Market SL at 81000
+
+Crash scenario:
+  Bot dies at 79000
+  -> Bybit SL at 81000 fires
+  -> Position closed at ~81000 (correct)
+  -> Without trail sync: would have closed at 78000 (wrong, extra 1R loss)
+
+Ctrl+C:
+  -> _graceful_shutdown()
+  -> close_position() at market
+  -> cancel_all_orders()
+  -> stop
+```
+
+---
+
+## Phase 18: Config Centralization + Rate Manager + Trade Logging (2026-09-12)
+
+### Problem
+
+1. **Hardcoded values everywhere** — fee rate `0.00055`, safety margin `0.95`, qty precision `3`, etc.
+2. **Rate fetched on every trade** — CoinGecko API call on each entry = slow
+3. **No fallback if CoinGecko fails** — trade blocked
+4. **Poor trade logging** — no entry/SL/rate/qty detail per trade
+
+### Solution
+
+#### 18a: Centralized Config (`config.py`)
+
+All values in one place:
+
+```python
+TAKER_FEE_RATE = 0.00055       # Bybit taker 0.055%/side
+BALANCE_SAFETY_MARGIN = 0.95   # Never use more than 95% of balance
+SIZED_DOWN_FRACTION = 0.9      # When sizing down, use 90%
+QTY_PRECISION = 3              # BTCUSDT: 0.001
+MIN_BTC_QTY = 0.001            # Bybit minimum
+RATE_UPDATE_INTERVAL = 900     # 15 minutes
+EMERGENCY_RATE = 95.0          # Fallback INR/USDT
+```
+
+#### 18b: Rate Manager (`rate_manager.py`)
+
+Singleton pattern (stolen from Ghoststreak):
+
+```
+Startup:
+  Load from last_rate.json (instant, 0ms)
+
+On trade entry:
+  If stale (>15 min) -> fetch from APIs
+  Fallback chain:
+    1. CoinGecko (live crypto market price)
+    2. ExchangeRate-API (USD/INR fiat, daily)
+    3. Disk cache (last good rate)
+    4. Emergency 95.0 (>24h no update)
+  Save to disk after each successful fetch
+
+get_rate() -> returns cached value (0ms, no network)
+```
+
+#### 18c: Trade Logging
+
+Every trade logs full detail:
+
+```
+[trade] ENTRY long sw15 @ 80000.00
+  SL=78000.00 TP=86000.00 dist=2000.00
+  Risk: INR 250 = $2.62 (rate INR 95.58)
+  Qty: 0.001 BTC (notional $80.00)
+  Fee buffer: $0.0880
+  Bybit PLACING: Buy 0.001 BTC SL=78000.00 TP=86000.00
+[trade] ENTRY FILLED: order_id_xxx
+
+[trail] SL 78000.00 -> 81000.00 (trail) 1.50R [Bybit OK]
+
+[trade] EXIT reason=trail @ 81000.00 (rate INR 95.58)
+[trade] EXIT FILLED: trail
+```
+
+### Files Created/Modified
+
+| File | Action | Purpose |
+|------|--------|---------|
+| `config.py` | Create | All trading params centralized |
+| `rate_manager.py` | Create | Singleton rate manager with disk cache |
+| `live_loop.py` | Modify | Use config, use RateManager, add trade logging |
+| `bybit_order.py` | Modify | Use config for qty_precision, remove legacy calculate_qty |
+| `main.py` | Modify | Use RateManager for startup log |
+
+### What Changed
+
+| Before | After |
+|--------|-------|
+| `0.00055` hardcoded in `_calculate_qty` | `config.TAKER_FEE_RATE` |
+| `0.95` hardcoded | `config.BALANCE_SAFETY_MARGIN` |
+| `0.9` hardcoded | `config.SIZED_DOWN_FRACTION` |
+| `0.001` hardcoded | `config.MIN_BTC_QTY` |
+| Rate fetched every trade (slow) | Background refresh, 0ms on trade |
+| No fallback if CoinGecko fails | DB cache + emergency 95.0 |
+| `[order] PLACING: Buy 0.001 BTC` | Full detail: risk, rate, qty, notional, fee buffer |
+| Legacy `BybitTrader.calculate_qty()` | Removed (not used by live_loop) |
+| Old `get_usdt_inr_rate()` function | Replaced by `RateManager` singleton |

@@ -20,6 +20,7 @@ def open_htf_window(
     hrisk: float = 0.0,
     lvl_1_5r: float = 0.0,
     lvl_3r: float = 0.0,
+    regime: str = "flip",
 ) -> int:
     """Open a new HTF window with full matrix.
     
@@ -28,6 +29,8 @@ def open_htf_window(
       - hrisk: risk per unit (abs(entry - sl))
       - lvl_1_5r: 1.5R gate price
       - lvl_3r: 3R target price
+      - regime: 'flip' or 'b2' — flip and b2 windows are independent v7 runs
+        and can be open simultaneously
     
     Returns:
         The window id
@@ -35,9 +38,9 @@ def open_htf_window(
     with db.transaction() as conn:
         cursor = conn.execute(
             """INSERT INTO htf_windows 
-               (direction, entry_ts, entry_price, cap_ts, status, sl_price, hrisk, lvl_1_5r, lvl_3r)
-               VALUES (?, ?, ?, ?, 'open', ?, ?, ?, ?)""",
-            (direction, entry_ts, entry_price, cap_ts, sl_price, hrisk, lvl_1_5r, lvl_3r),
+               (direction, entry_ts, entry_price, cap_ts, status, sl_price, hrisk, lvl_1_5r, lvl_3r, regime)
+               VALUES (?, ?, ?, ?, 'open', ?, ?, ?, ?, ?)""",
+            (direction, entry_ts, entry_price, cap_ts, sl_price, hrisk, lvl_1_5r, lvl_3r, regime),
         )
         return cursor.lastrowid
 
@@ -53,11 +56,23 @@ def close_htf_window(db: Database, window_id: int, close_ts: int, reason: str):
         )
 
 
-def get_open_htf_window(db: Database) -> Optional[dict]:
-    """Get the currently open HTF window, if any."""
-    row = db.conn.execute(
-        "SELECT * FROM htf_windows WHERE status = 'open' ORDER BY id DESC LIMIT 1"
-    ).fetchone()
+def get_open_htf_window(db: Database, regime: Optional[str] = None) -> Optional[dict]:
+    """Get the currently open HTF window, if any.
+
+    regime: 'flip' | 'b2' — filter to that regime's window. None (default)
+    keeps the legacy behavior: return the most recently opened open window
+    regardless of regime.
+    """
+    if regime is not None:
+        row = db.conn.execute(
+            """SELECT * FROM htf_windows WHERE status = 'open' AND regime = ?
+               ORDER BY id DESC LIMIT 1""",
+            (regime,),
+        ).fetchone()
+    else:
+        row = db.conn.execute(
+            "SELECT * FROM htf_windows WHERE status = 'open' ORDER BY id DESC LIMIT 1"
+        ).fetchone()
     
     if row is None:
         return None
@@ -118,15 +133,23 @@ def close_ltf_trade(
     exit_price: float,
     exit_reason: str,
     r_multiple: float,
-):
-    """Close an LTF trade."""
+) -> int:
+    """Close an LTF trade.
+
+    C4: guarded by status = 'open' — a second close attempt matches ZERO rows
+    and can never overwrite the first close's exit values.
+
+    Returns:
+        cursor.rowcount: 1 = closed now, 0 = already closed (no-op)
+    """
     with db.transaction() as conn:
-        conn.execute(
-            """UPDATE ltf_trades 
+        cursor = conn.execute(
+            """UPDATE ltf_trades
                SET status = 'closed', exit_ts = ?, exit_price = ?, exit_reason = ?, r_multiple = ?
-               WHERE id = ?""",
+               WHERE id = ? AND status = 'open'""",
             (exit_ts, exit_price, exit_reason, r_multiple, trade_id),
         )
+        return cursor.rowcount
 
 
 def update_trade_sl(db: Database, trade_id: int, new_sl: float):
@@ -135,6 +158,15 @@ def update_trade_sl(db: Database, trade_id: int, new_sl: float):
         conn.execute(
             "UPDATE ltf_trades SET sl_current = ? WHERE id = ?",
             (new_sl, trade_id),
+        )
+
+
+def update_trade_qty(db: Database, trade_id: int, actual_qty: float):
+    """Update the actual filled qty (partial fill correction)."""
+    with db.transaction() as conn:
+        conn.execute(
+            "UPDATE ltf_trades SET qty = ? WHERE id = ?",
+            (actual_qty, trade_id),
         )
 
 
