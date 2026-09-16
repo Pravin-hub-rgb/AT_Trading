@@ -308,9 +308,7 @@
 | C5 | Daily halt time-based reset + halted_skip journaling (no phantoms) | `_maybe_reset_daily` (boot + 15m/1h close), `_journal_trades`, `_persist_streak_state` | ~35 lines | **FIXED 2026-09-15** |
 | C6 | IST/UTC epoch fix | `btc_engine.py:310` | ~5 lines + test | ✅ FIXED |
 | C7 | Adopt-or-verify on duplicate orderLinkId | `_execute_entry` + `bybit_order.py` | ~70 lines + test | **FIXED 2026-09-15** |
-| C8 | Remove 3R exchange TP from LTF orders (caps runners; sim is trail-only) |
-|      `_execute_entry` take_profit=None | ~1 line + test | **FIXED 2026-09-15** |
-| C8 | Remove 3R TP attachment from LTF orders (live→backtest parity) | `live_loop.py:1676` | ~1 line | OPEN |
+| C8 | Remove 3R TP attachment from LTF orders (caps runners; sim is trail-only) | `_execute_entry` take_profit=None | ~1 line + test | **FIXED 2026-09-15** |
 
 ### HIGH (H1-H11) — ~50 lines across 5 files
 
@@ -341,5 +339,5 @@
 | M7 | Increase boundary timeout | `live_loop.py` | ~1 line |
 | M8 | Unified cooldown mechanism | Both files | ~10 lines |
 | M9 | Async rate fetch | `rate_manager.py` | ~20 lines |
-| M10 | Reject when qty < min | `_calculate_qty` | ~5 lines |
+| M10 | Reject when qty < min | `_calculate_qty` | ~5 lines | **FIXED 2026-09-15 — both paths (risk-sized + balance-sized); rejects return 0.0 → caller skips** |
 | M11 | Query actual price on mismatch | `live_loop.py` | ~5 lines |

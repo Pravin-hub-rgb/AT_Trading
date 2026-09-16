@@ -1896,7 +1896,16 @@ class LiveLoop:
         # Round to exchange qty_step precision
         qty_step = self.trader.qty_step if self.trader else 10 ** (-config.QTY_PRECISION)
         min_qty = self.trader.min_qty if self.trader else config.MIN_BTC_QTY
-        qty = max(min_qty, round(qty / qty_step) * qty_step)
+        qty = round(qty / qty_step) * qty_step
+        # M10: never force up to the exchange minimum — that silently multiplies
+        # real risk (min_qty / computed can be several x risk_usdt on wide stops).
+        # Reject instead; the caller skips the trade on qty <= 0.
+        if qty < min_qty:
+            forced_risk = min_qty * (stop_distance + fee_buffer)
+            mult = forced_risk / risk_usdt if risk_usdt > 0 else float("inf")
+            print(f"[order] REJECTED: computed qty {qty} < exchange min {min_qty} "
+                  f"— forcing min would risk ${forced_risk:.2f} vs planned ${risk_usdt:.2f} ({mult:.1f}x planned)")
+            return 0.0
 
         # Check available balance
         if self.trader and self.trader.is_connected:
@@ -1904,7 +1913,13 @@ class LiveLoop:
             available = balance.get("available", 0)
             required = qty * entry_price
             if required > available * config.BALANCE_SAFETY_MARGIN:
-                qty = max(min_qty, round(available * config.SIZED_DOWN_FRACTION / entry_price / qty_step) * qty_step)
+                qty = round(available * config.SIZED_DOWN_FRACTION / entry_price / qty_step) * qty_step
+                if qty < min_qty:
+                    # M10: balance-sized qty below exchange min — forcing min could
+                    # exceed available balance (margin rejection) and inflates risk.
+                    print(f"[order] REJECTED: balance-sized qty {qty} < exchange min {min_qty} "
+                          f"(available={available:.2f} USDT) — trade skipped")
+                    return 0.0
                 print(f"[order] Position sized down: balance={available:.2f} USDT, qty={qty}")
 
             # Implied leverage check

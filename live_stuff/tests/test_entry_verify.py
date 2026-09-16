@@ -145,7 +145,7 @@ def main():
     ll1._execute_entry(trade1, tid1)
     r1 = row(db1, tid1)
     assert r1["status"] == "open", f"adopted trade must stay OPEN: {r1['status']}"
-    assert r1["qty"] == 0.001, f"C8: adopted qty must be recorded: {r1['qty']}"
+    assert r1["qty"] == 0.001, f"H5: adopted qty must be recorded: {r1['qty']}"
     assert tr1.verify_calls == 1, "verification must run on failure"
     assert ll1._open_ltf_trade is not None, "cache must remain for monitoring"
     print("PASS 1: duplicate-rejection + landed -> ADOPTED, DB open, cache kept")
@@ -182,7 +182,7 @@ def main():
     assert tr4.verify_calls == 0, "success path must not need verification"
     assert tr4.last_tp is None, "C8: exchange TP must NOT be attached to LTF orders"
     assert row(db4, tid4)["status"] == "open"
-    assert row(db4, tid4)["qty"] == 0.001, "C8: normal fill qty must be recorded"
+    assert row(db4, tid4)["qty"] == 0.001, "H5: normal fill qty must be recorded"
     print("PASS 4: normal fill -> no verification, DB open")
 
     # 5. H4: success resp but slow fill -> poll adopts (no false order_failed)
@@ -200,7 +200,7 @@ def main():
     ll5._execute_entry(trade5, tid5)
     assert state["n"] == 3, f"poll should run 3 times, ran {state['n']}"
     assert row(db5, tid5)["status"] == "open", "slow fill must NOT false-fail"
-    assert row(db5, tid5)["qty"] == 0.001, "C8: slow fill qty must be recorded"
+    assert row(db5, tid5)["qty"] == 0.001, "H5: slow fill qty must be recorded"
     print("PASS 5: H4 slow fill -> poll adopts, no false order_failed")
 
     # 6. H4 extreme: 3 polls all empty + verify flat -> order_failed
