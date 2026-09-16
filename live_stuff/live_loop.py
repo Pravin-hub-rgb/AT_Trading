@@ -2055,7 +2055,10 @@ class LiveLoop:
             # C1/C2: close the EXCHANGE position first; record the exit in DB
             # only after the close is confirmed. On failure, keep the trade
             # open in DB/cache — on_tick retries on the next tick.
-            if self.trader and self.trader.is_connected:
+            # H10: guard on `self.trader` only — not `is_connected` (which
+            # was a live probe). If session is dead, _execute_exit returns
+            # False via close_position_retry → caller retries next tick.
+            if self.trader:
                 if not self._execute_exit("cap", price):
                     print("[trade] Cap exit pending: exchange close failed — will retry next tick")
                     return
@@ -2087,7 +2090,8 @@ class LiveLoop:
             # C1/C2: close the EXCHANGE position first; record the exit in DB
             # only after the close is confirmed. On failure, keep the trade
             # open in DB/cache — on_tick retries on the next tick.
-            if self.trader and self.trader.is_connected:
+            # H10: same as cap guard — always attempt exchange close.
+            if self.trader:
                 if not self._execute_exit(reason, fill):
                     print(f"[trade] {reason.upper()} exit pending: exchange close failed — will retry next tick")
                     return

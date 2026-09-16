@@ -87,11 +87,10 @@
 - **Impact:** Safety net missing. Maintenance trap.
 - **Fix:** Add gate in `_execute_entry`: `if self.trading_state.get("halted"): print("..."); return`
 
-### H2. `_execute_exit` has no retry
-- **Files:** `live_loop.py:1638-1665`
-- **Bug:** `close_position()` called with zero retries. If it fails, prints "EXIT FAILED" and sends a Telegram error (`self._tg.error(f"EXIT FAILED: ...")` — alert IS present, earlier audit claim of "no alert" was wrong), but takes no corrective action. No DB reversion. No retry. Compare to `_execute_entry` which has proper error handling.
-- **Impact:** Silent-ish failure on the most critical operation (exiting a losing trade). Operator gets one Telegram ping but the position stays live while the DB says closed.
-- **Fix:** Wrap in retry loop (3 attempts). On all retries failed, do NOT clear cache; keep alerting on next tick.
+### H2. ~~`_execute_exit` has no retry~~ **FIXED by C1/C2** (doc entry was stale)
+- **Files:** `live_loop.py:1829`
+- **Bug:** (originally) `close_position()` called with zero retries.
+- **Status:** FIXED — C1/C2 replaced `close_position()` with `close_position_retry()` (3×3 retries, position re-checked each attempt). `_execute_exit` returns bool; callers keep DB open + retry on next tick. This doc entry was stale.
 
 ### H3. Bybit SL sync failure leaves exchange SL stale
 - **Files:** `live_loop.py:1791-1810`
@@ -138,6 +137,20 @@
 - **Bug:** Bybit charges/receives funding every 8h (0.01%/8h typical). Live system has NO funding tracking. R-multiples overestimated. Cost summary underestimates true cost.
 - **Impact:** 0.01-0.05R per trade on multi-day holds. Compounds over hundreds of trades.
 - **Fix:** New module or add to cost tracking. Deduct funding from R on each settlement.
+
+### H10. `is_connected` probe at exit time re-introduces C2 desync **[CRITICAL]**
+- **Files:** `bybit_order.py:152`, `live_loop.py:2058, 2090`
+- **Bug:** H6 changed `is_connected` from `self.session is not None` to `self._probe()` (real HTTP `get_wallet_balance()` call). Exit guards in `on_tick` used `if self.trader and self.trader.is_connected:` — a transient probe failure (network blip, rate-limit, wallet endpoint hiccup) makes the guard False → `_execute_exit` never runs → `close_ltf_trade` fires → DB says closed, exchange position stays open with no bot-side monitoring. This is C2 re-introduced through a new door.
+- **Impact:** Untracked live position during SL/cap event. Rate-limited probe = money-losing path.
+- **Fix:** Revert `is_connected` to cheap local check (`self.session is not None`). Add `_healthy()` property returning cached probe result (updated by `_session_watch` every 30s). Exit guards changed to `if self.trader:` (no network-dependent skip). Live `_probe()` kept only in low-frequency paths: `place_market_order_retry`, `close_position_retry`, `_session_watch`.
+- **Status:** FIXED 2026-09-15
+
+### H11. `is_connected` probe-per-call = API storm + blocking tick thread **[HIGH]**
+- **Files:** `bybit_order.py:152`, `live_loop.py` (7 sites), `bybit_order.py` (11 sites)
+- **Bug:** `is_connected` making synchronous HTTP request on every call. Called on every trade print (tick handler), plus nested inside `get_position_checked()`, `place_market_order_retry()`, `close_position_retry()`. Consequences: Bybit rate-limit exposure (retCode 10006 → temporary ban), blocking HTTP call inside tick handler (tick backlog while streaming), `_execute_exit` becomes slow right when you need it fast.
+- **Impact:** Rate-limit risk, tick handler latency, possible WebSocket disconnect.
+- **Fix:** Same as H10 — `is_connected` reverted to cheap check. `_probe()` only called in low-frequency paths (retry loops, session watch). `_healthy()` provides liveness signal without per-call cost.
+- **Status:** FIXED 2026-09-15 (merged with H10 fix)
 
 ---
 
@@ -260,9 +273,20 @@
 
 ---
 
+## Key Design Rule (established by H10/H11)
+
+**Guards use cheap state; only retry/submit/watch paths may probe.**
+
+- `is_connected` = `self.session is not None` (local, no network)
+- `_healthy` = cached probe result (updated by `_session_watch` every 30s)
+- `_probe()` = live HTTP call (only in low-frequency paths: retry loops, session watch)
+- Exit guards use `if self.trader:` (never skip exchange close based on network state)
+
+---
+
 ## Pre-Flight Ritual (before real money)
 
-1. Fix C1-C8 + H2-H9 (H1 dropped - see above) — **DONE 2026-09-15 except H2 & H9**
+1. Fix C1-C8 + H2-H11 (H1 dropped, H2 fixed by C1/C2) — **DONE 2026-09-15 except H9 (deferred)**
 2. Paper mode for ≥2 weeks with daily backtest-parity diff
 3. One full live cycle at minimum risk (entry → SL sync → trail → exit → Telegram)
 4. Kill-9 mid-position restart drill
@@ -288,19 +312,21 @@
 |      `_execute_entry` take_profit=None | ~1 line + test | **FIXED 2026-09-15** |
 | C8 | Remove 3R TP attachment from LTF orders (live→backtest parity) | `live_loop.py:1676` | ~1 line | OPEN |
 
-### HIGH (H1-H9) — ~50 lines across 5 files
+### HIGH (H1-H11) — ~50 lines across 5 files
 
-| # | Fix | Where | Effort |
-|---|-----|-------|--------|
+| # | Fix | Where | Effort | Status |
+|---|-----|-------|--------|--------|
 | H1 | ~~Streak-halt executor gate~~ FALSE POSITIVE | ~~`_execute_entry`~~ | ~~3~~ | **DROPPED — never a bug** |
-| H2 | Exit retry (alert already present) | `_execute_exit` | ~15 lines | OPEN |
+| H2 | ~~Exit retry~~ FIXED by C1/C2 | `_execute_exit` | ~15 lines | **FIXED by C1/C2** |
 | H3 | Trail SL sync retry + alert | `_trail_sl` | ~10 lines | **FIXED 2026-09-15** |
 | H4 | Fill verification polling | `_execute_entry` | ~10 lines | **FIXED - folded into C7** |
 | H5 | Set qty on full fill | `_execute_entry` | ~2 lines | **FIXED 2026-09-15** |
 | H6 | Session health check | `bybit_order.py` | ~10 lines | **FIXED 2026-09-15** |
 | H7 | WAL checkpoint + integrity check | `database.py` | ~5 lines | **FIXED 2026-09-15** |
 | H8 | Distinguish no-position vs query-fail | `bybit_order.py` | ~5 lines | **FIXED 2026-09-15** |
-| H9 | Funding rate tracking | New module | ~50 lines (defer) |
+| H9 | Funding rate tracking | New module | ~50 lines | DEFERRED |
+| H10 | is_connected probe at exit = C2 desync | `bybit_order.py`, `live_loop.py` | ~10 lines | **FIXED 2026-09-15** |
+| H11 | is_connected probe-per-call = API storm | `bybit_order.py`, `live_loop.py` | merged w/ H10 | **FIXED 2026-09-15** |
 
 ### MEDIUM (M1-M11) — ~80 lines across 6 files
 

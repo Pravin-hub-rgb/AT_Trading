@@ -150,29 +150,45 @@ class BybitTrader:
             return {"retCode": -1, "retMsg": str(e)}
 
     @property
-    def is_connected(self) -> bool | None:
-        """True if a real API call succeeds (not just "object exists").
+    def is_connected(self) -> bool:
+        """Cheap local check — True if session object exists.
 
-        Returns None when probed and failed (distinguishes "unreachable" from
-        "genuinely not initialised").  Callers treat None as "definitely NOT
-        connected" so they never assume the exchange is reachable.
+        Does NOT make a network call. Use _healthy() for liveness.
+        Guards must never depend on live network state (H10 fix).
         """
-        return self._probe()
+        return self.session is not None
+
+    @property
+    def _healthy(self) -> bool:
+        """Cached liveness probe — True if last _probe() succeeded.
+
+        Updated by _session_watch every 30s. Do NOT call on hot paths.
+        """
+        return getattr(self, "_last_probe_ok", self.session is not None)
+
+    def _set_probe_result(self, ok: bool):
+        """Called by _session_watch and _probe in low-frequency paths."""
+        self._last_probe_ok = ok
 
     def _probe(self) -> bool | None:
         """Ping the exchange via the cheapest real API call.
 
         Returns True if the API responds, False on a clean exception, and None
         if no session object exists at all.
+        Also caches result for _healthy property.
         """
         if self.session is None:
+            self._set_probe_result(False)
             return None
         try:
             resp = self.session.get_wallet_balance(accountType="UNIFIED")
             code = resp.get("retCode", -1)
-            return code == 0
+            ok = code == 0
+            self._set_probe_result(ok)
+            return ok
         except Exception as exc:  # noqa: BLE001 — library can raise on network/auth
             logger.debug("Session probe failed: %s", exc)
+            self._set_probe_result(False)
             return False
 
     def _reconnect(self) -> bool:
