@@ -109,10 +109,13 @@ def open_ltf_trade(
     sl_initial: float,
     tp_price: float,
     cap_ts: int,
-    htf_window_id: int,
+    htf_window_id: Optional[int],
 ) -> int:
     """Open a new LTF trade.
-    
+
+    M1: htf_window_id is nullable — NULL means "taken while no window of the
+    trade's regime was open" (never the 0 sentinel).
+
     Returns:
         The trade id
     """

@@ -330,11 +330,11 @@
 
 | # | Fix | Where | Effort |
 |---|-----|-------|--------|
-| M1 | Use NULL for missing window id | `live_loop.py` | ~3 lines |
+| M1 | Use NULL for missing window id | `live_loop.py` | ~3 lines | **FIXED 2026-09-16 — journal writes NULL (not 0); schema migration rebuilds ltf_trades to drop the NOT NULL on htf_window_id (transactional, idempotent)** |
 | M2 | Add `AND status='open'` guard | `trade_store.py` | ~2 lines | **RETIRED 2026-09-15 - merged into C4** |
 | M3 | Close stale windows on startup | `live_loop.py` | ~5 lines | **FIXED 2026-09-16 — root cause was the tracker's missing branch: sim-latest open + our window open with a DIFFERENT entry_ts silently kept the dead window (and never persisted the new one). Now: old window closed with real sim exit data (matched by entry_ts) or stale_cap when its lifecycle fell outside the sim slice; boot sweep closes any open window whose 16d cap passed while down** |
-| M4 | DB indexes | `database.py` | ~5 lines |
-| M5 | Pass SL on close order | `bybit_order.py` | ~5 lines |
+| M4 | DB indexes | `database.py` | ~5 lines | **FIXED 2026-09-16 — idx_ltf_entry_ts, idx_ltf_status_entry, idx_htf_status_regime, idx_marks_tf_ts (created post-migration)** |
+| M5 | Pass SL on close order | `bybit_order.py` | ~5 lines | **FIXED 2026-09-16 — close orders re-attach the position's exchange SL; unprotected orphans get a wide panic SL at ±PANIC_SL_PCT (5%) from entry; get_position now exposes stop_loss** |
 | M6 | Extend window or marks-only signals | `live_loop.py` | ~10 lines |
 | M7 | Increase boundary timeout | `live_loop.py` | ~1 line |
 | M8 | Unified cooldown mechanism | Both files | ~10 lines |

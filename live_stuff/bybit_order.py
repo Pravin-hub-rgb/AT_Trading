@@ -266,6 +266,10 @@ class BybitTrader:
                         "unrealised_pnl": float(p.get("unrealisedPnl", 0)),
                         "leverage": p.get("leverage", "1"),
                         "liq_price": float(p["liqPrice"]) if p.get("liqPrice") else None,
+                        # M5: the position's exchange-side SL — re-attached to
+                        # close orders so the position is never naked between
+                        # close-order placement and fill.
+                        "stop_loss": float(p.get("stopLoss", 0) or 0),
                     }
             return True, None
         except Exception as e:
@@ -424,7 +428,10 @@ class BybitTrader:
                 return {"retCode": 0, "retMsg": "no position", "closed": False}
             else:
                 close_side = "Sell" if pos["side"] == "Buy" else "Buy"
-                resp = self.place_market_order_retry(close_side, str(pos["size"]))
+                # M5: attach SL to the close order (position's own SL, or a
+                # wide panic SL for unprotected orphans) — never naked to fill.
+                resp = self.place_market_order_retry(close_side, str(pos["size"]),
+                                                     stop_loss=self._close_sl(pos))
                 if resp.get("retCode") == 0:
                     return {"retCode": 0, "retMsg": "closed", "closed": True}
                 last_err = resp.get("retMsg", "close order failed")
@@ -436,6 +443,27 @@ class BybitTrader:
 
         logger.error(f"close_position_retry FAILED after {max_attempts} attempts: {last_err}")
         return {"retCode": -1, "retMsg": f"close failed after {max_attempts} attempts: {last_err}"}
+
+    def _close_sl(self, pos: dict) -> str | None:
+        """M5: SL for a close order.
+
+        Normal exits: the position already carries the exchange-side SL —
+        re-attach it to the close order (no-op protection; the SL must survive
+        until the fill lands).
+        Orphan/force-closes with no exchange SL: attach a wide panic SL at
+        ±PANIC_SL_PCT from entry — an unprotected position is never naked
+        between order placement and fill.
+        """
+        sl = float(pos.get("stop_loss", 0) or 0)
+        if sl > 0:
+            return f"{sl:.1f}"
+        entry = float(pos.get("entry_price", 0) or 0)
+        if entry <= 0:
+            return None
+        import config
+        if pos.get("side") == "Buy":
+            return f"{entry * (1 - config.PANIC_SL_PCT / 100.0):.1f}"
+        return f"{entry * (1 + config.PANIC_SL_PCT / 100.0):.1f}"
 
     def close_position(self, side: str = None) -> dict:
         """Close current position at market.
@@ -454,7 +482,7 @@ class BybitTrader:
         close_side = "Sell" if pos["side"] == "Buy" else "Buy"
         qty = str(pos["size"])
 
-        return self.place_market_order(close_side, qty)
+        return self.place_market_order(close_side, qty, stop_loss=self._close_sl(pos))
 
     def get_order_by_link_id(self, order_link_id: str) -> tuple[bool, Optional[dict]]:
         """C7: query open orders + order history for an orderLinkId.

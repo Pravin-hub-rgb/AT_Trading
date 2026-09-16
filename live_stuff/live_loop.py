@@ -1660,7 +1660,7 @@ class LiveLoop:
             # between signal and journal.
             trade_regime = t.get("htf_regime", "flip")
             wid = self.htf_window_id_b2 if trade_regime == "b2" else self.htf_window_id
-            htf_id = int(wid) if wid is not None else 0
+            htf_id = int(wid) if wid is not None else None  # M1: NULL, not 0 sentinel
             trade_id = open_ltf_trade(
                 self.db,
                 direction=t["dir"],

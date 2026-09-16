@@ -39,6 +39,7 @@ BALANCE_SAFETY_MARGIN = 0.95
 
 # When position is sized down, use this fraction of available
 SIZED_DOWN_FRACTION = 0.9
+PANIC_SL_PCT = 5.0   # M5: wide disaster SL attached to orphan/force close orders
 
 # Margin mode: 'isolated' (each position has own margin) or 'cross' (shared margin pool)
 # Isolated = safer, only that position's margin at risk on liquidation

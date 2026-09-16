@@ -3,6 +3,7 @@
 Single responsibility: create tables, manage connections, handle transactions.
 """
 
+import logging
 import sqlite3
 from pathlib import Path
 from typing import Optional
@@ -139,6 +140,7 @@ class Database:
         self._migrate_htf_windows()
         self._migrate_trading_state()
         self._migrate_ltf_trades()
+        self._create_indexes()  # M4 — after migrations (rebuild drops ltf indexes)
         self._conn.commit()
 
     def _migrate_htf_windows(self):
@@ -170,11 +172,63 @@ class Database:
                 self._conn.execute(f"ALTER TABLE trading_state ADD COLUMN {col} {typedef}")
 
     def _migrate_ltf_trades(self):
-        """Add qty column to ltf_trades if missing (safe for existing DBs)."""
+        """Add qty column + M1: make htf_window_id nullable (table rebuild).
+
+        SQLite cannot drop a NOT NULL constraint in place — rebuild the table
+        with the current schema (htf_window_id INTEGER, no NOT NULL, incl. the
+        qty column) and copy all rows. Transactional DDL: all-or-nothing.
+        Idempotent: only rebuilds while the constraint exists.
+        """
         cursor = self._conn.execute("PRAGMA table_info(ltf_trades)")
-        existing = {row[1] for row in cursor.fetchall()}
-        if "qty" not in existing:
+        cols = {row[1]: row for row in cursor.fetchall()}
+        if "qty" not in cols:
             self._conn.execute("ALTER TABLE ltf_trades ADD COLUMN qty REAL DEFAULT 0")
+        if cols.get("htf_window_id") is not None and cols["htf_window_id"][3]:  # notnull flag
+            self._conn.execute("""CREATE TABLE ltf_trades_rebuild (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                direction TEXT NOT NULL,
+                entry_ts INTEGER NOT NULL,
+                entry_price REAL NOT NULL,
+                sl_initial REAL NOT NULL,
+                sl_current REAL NOT NULL,
+                tp_price REAL NOT NULL,
+                cap_ts INTEGER NOT NULL,
+                htf_window_id INTEGER,
+                status TEXT NOT NULL CHECK (status IN ('open','closed')),
+                exit_ts INTEGER,
+                exit_price REAL,
+                exit_reason TEXT,
+                r_multiple REAL,
+                trail_next_pivot REAL,
+                trail_activation_idx INTEGER,
+                trail_confirmed BOOLEAN,
+                qty REAL DEFAULT 0
+            )""")
+            self._conn.execute("""INSERT INTO ltf_trades_rebuild
+                (id, direction, entry_ts, entry_price, sl_initial, sl_current,
+                 tp_price, cap_ts, htf_window_id, status, exit_ts, exit_price,
+                 exit_reason, r_multiple, trail_next_pivot, trail_activation_idx,
+                 trail_confirmed, qty)
+                SELECT id, direction, entry_ts, entry_price, sl_initial, sl_current,
+                       tp_price, cap_ts, htf_window_id, status, exit_ts, exit_price,
+                       exit_reason, r_multiple, trail_next_pivot, trail_activation_idx,
+                       trail_confirmed, qty
+                FROM ltf_trades""")
+            self._conn.execute("DROP TABLE ltf_trades")
+            self._conn.execute("ALTER TABLE ltf_trades_rebuild RENAME TO ltf_trades")
+            logging.getLogger("database").info(
+                "M1: ltf_trades rebuilt — htf_window_id is now nullable")
+
+    def _create_indexes(self):
+        """M4: query-path indexes. Created AFTER migrations because the M1
+        table rebuild drops ltf_trades' indexes (DROP TABLE drops them)."""
+        for stmt in [
+            "CREATE INDEX IF NOT EXISTS idx_ltf_entry_ts ON ltf_trades(entry_ts)",
+            "CREATE INDEX IF NOT EXISTS idx_ltf_status_entry ON ltf_trades(status, entry_ts)",
+            "CREATE INDEX IF NOT EXISTS idx_htf_status_regime ON htf_windows(status, regime)",
+            "CREATE INDEX IF NOT EXISTS idx_marks_tf_ts ON marks(tf, ts)",
+        ]:
+            self._conn.execute(stmt)
 
     @contextmanager
     def transaction(self):
