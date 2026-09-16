@@ -76,11 +76,19 @@ def main():
         exchange = EXCHANGE_BYBIT
         symbol = symbol.replace("_BYBIT", "")
 
+    # C9: v18 params are keyed by INSTRUMENT (the dataset they were tuned on).
+    # Bybit perp trading must bind BTCUSDT_BYBIT (chop 58, cooldown 0,
+    # sl_buf 0.10, halt 3 — the validated 261-trade config); binding the bare
+    # spot symbol silently ran different params (chop 61.8, cooldown 20,
+    # sl_buf 0.25, halt 5).
+    v18_instrument = f"{symbol}_BYBIT" if exchange == EXCHANGE_BYBIT else symbol
+
     print("=" * 60)
     print("Backbencher v18 - Live Trading Engine")
     print("=" * 60)
     print(f"Exchange:  {exchange.upper()}")
     print(f"Symbol:    {symbol}")
+    print(f"Instrument: {v18_instrument} (v18 params)")
     print(f"Mode:      {'PAPER' if paper_mode else 'LIVE'}")
     print(f"Database:  {DB_PATH}")
     if max_seconds:
@@ -107,7 +115,8 @@ def main():
     db.create_tables()
 
     # Create live loop (uses REAL v18 engine on rolling windows)
-    loop = LiveLoop(db, exchange=exchange, symbol=symbol, paper_mode=paper_mode)
+    loop = LiveLoop(db, exchange=exchange, symbol=symbol, paper_mode=paper_mode,
+                    v18_instrument=v18_instrument)
 
     # Set leverage + margin mode on exchange (if connected)
     if loop.trader and loop.trader.is_connected:

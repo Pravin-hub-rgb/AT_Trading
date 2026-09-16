@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS ltf_trades (
     sl_current REAL NOT NULL,
     tp_price REAL NOT NULL,
     cap_ts INTEGER NOT NULL,
-    htf_window_id INTEGER NOT NULL,
+    htf_window_id INTEGER,  -- M1: nullable (NULL = taken while no window open)
     status TEXT NOT NULL CHECK (status IN ('open','closed')),
     exit_ts INTEGER,
     exit_price REAL,

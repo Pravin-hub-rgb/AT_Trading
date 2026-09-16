@@ -65,18 +65,28 @@ IST = timedelta(hours=5, minutes=30)
 class LiveLoop:
     """Full v18 live trading loop."""
 
-    def __init__(self, db: Database, exchange: str = EXCHANGE_BINANCE, symbol: str = SYMBOL, paper_mode: bool = True):
+    def __init__(self, db: Database, exchange: str = EXCHANGE_BINANCE, symbol: str = SYMBOL,
+                 paper_mode: bool = True, v18_instrument: str = None):
         self.db = db
         self._running = False
         self.exchange = exchange
         self.symbol = symbol
+        self.v18_instrument = v18_instrument or symbol
         self.paper_mode = paper_mode
         self.window_15m: list[dict] = []
         self.window_1h: list[dict] = []
         self.trading_state = get_trading_state(db)
-        # Per-symbol v18 params
-        self.v18 = get_v18_params(symbol)
+        # C9: v18 params are keyed by INSTRUMENT (the dataset they were tuned
+        # on), NOT the exchange trading symbol. Bybit perp trading must bind
+        # BTCUSDT_BYBIT (chop 58, cooldown 0, sl_buf 0.10, halt 3 — the
+        # validated 261-trade config); binding the bare "BTCUSDT" silently ran
+        # spot params (chop 61.8, cooldown 20, sl_buf 0.25, halt 5) — a
+        # completely different strategy than the backtest.
+        self.v18 = get_v18_params(self.v18_instrument)
         self._chop_thresh = self.v18.get("chop_thresh", 61.8)
+        print(f"[live] v18 params: instrument={self.v18_instrument} "
+              f"chop={self._chop_thresh} cooldown={self.v18.get('cooldown_bars')} "
+              f"sl_buf={self.v18.get('sl_buf_atr')} halt={self.v18.get('max_consecutive_losses')}")
         self._cum_cost_r = 0.0
         self._cum_net_r = 0.0
         self._trade_count = 0
