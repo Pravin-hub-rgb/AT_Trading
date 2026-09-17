@@ -430,3 +430,37 @@ Group-1/2/3 lists derived by diffing the pad=2 miss list (44) against the pad=12
 - The causal chain's earlier trades differ slightly from the retro chain (different busy_until/cooldown/streak sequence). Occasionally a signal falls inside a busy window causally but was free retroactively. Small count; resolves only via the sequential one-pass study.
 
 Trade #17 note: signal, window, regime, direction all correct; only the walk's busy state differed. This is why Group 1 trades keep their exact R when recovered.
+
+### C12. STREAK SEMANTICS — the engine's streak rule uses outcome-lookahead (measured 2026-09-17, `reexam.py` + `user_streak_r.py`)
+
+- **The rule as coded** (`v18_streak_halt.py:344-356`): simulate the trade first, get its R, count it into `consecutive_losses`, and if it lands as the Nth consecutive loss → **delete the trade itself** (`skip_trade`). Two impossible-in-live behaviors: (a) the decision needs the trade's OUTCOME before entry; (b) at slice edges an OPEN trade's provisional R is counted as a loss.
+- **User's rule (spec):** count CLOSED trades only (the walk is sequential so prior trades are always closed at the next signal). After 3 consecutive CLOSED losses → **take the 3rd loss, book it, then skip exactly the NEXT signal, then resume.** Fully causal.
+
+**Measured, full history (same engine otherwise, net of Bybit costs):**
+
+| Streak semantics | Trades | Gross | Net | W/L |
+|---|---|---|---|---|
+| Engine as-is (lookahead) | 261 | +445.6R | **+399.6R** | — |
+| No streak at all (`max_consecutive_losses=0`) | 407 | +313.8R | **+235.2R** | 119/288 |
+| **User rule exactly (closed-only, skip-one)** | **333** | +216.1R | **+152.0R** | 97/236 (29%) |
+
+**Diff decomposition of the engine's 147 lookahead deletions (reexam.py):**
+- **43 trades had closedStreak==2** at entry → user rule says TAKE (book the 3rd loss). Engine deleted them all. Group total: **-37.13R** (they're losses — the engine's advantage was never booking them).
+- **104 trades had closedStreak>=3** → user rule skips these anyway (skip-one) → engine deletion roughly aligned with the user design.
+- Reverse violations (engine KEPT a trade the user rule would skip): **1 only** — 2024-12-24 19:00 long, closedStreak=3, +1.497R (the engine kept it because lookahead saw a winner; a causal rule skips it).
+- Correction of earlier claims: earlier "Type A = 45" was wrong (real count: 1); earlier example timestamps quoted from slice runs (00:45/12:30 IST) were artifacts of the fresh-PSE chain mismatch — the full-history continuous chain's trades (02:00 timestamps) are the authoritative ones.
+- Worked examples (full-history chain): 2023-03-31 02:00 LONG @ 28093.2 (B2-up first tradeable mark of swing#185, regime=flip, closedStreak=2 → user: TAKE, book -0.959R; engine deleted). 2023-02-01 02:00 SHORT @ 23089.5 (swing#60, closedStreak=2 → user: TAKE; engine deleted; but see C13 — under the abandon-swing rule this swing yields no trade anyway).
+
+### C13. FCFS / ABANDON-SWING — engine takes later marks from a swing whose first tradeable mark was filtered out (measured, `reexam.py` section [6])
+
+- **Engine behavior** (`btc_engine.py:170-283` signal collection): `first_added_for_this_swing` is set ONLY when a mark passes ALL filters. A mark rejected by the HTF window-direction filter does NOT consume the swing's first-come slot → a LATER mark on the same swing (opposite direction, matching the window) still gets traded.
+- **User's design:** the first tradeable mark (B2/FLIP) decides the swing's fate — if it mismatches the HTF bias, the swing is abandoned; later marks from the same swing are NOT traded.
+- **Correction of the other bot's claim:** it said the flag blocks the flip after a window-mismatched B2 ("live and backtest agree, no trade"). Wrong mechanism — the flag never fires on filtered marks; the streak-OFF run DID trade the 02:00 flip short on swing#60. But its conclusion is right **for the user's design**: swing#60 yields no trade under abandon-swing.
+- **Measured impact (streak-OFF run):** **93 of 407 trades (+26.06R)** come from swings where an EARLIER tradeable mark existed (and was filtered out). Under abandon-swing these would not be taken. Caveat: the earlier mark may have failed ext_stop or cooldown rather than window-mismatch — user must rule whether ANY failed first mark abandons the swing, or only window-mismatch.
+- **Spec question (user):** (a) abandon on window-mismatch only, or on any failed first tradeable mark? (b) does a filtered B1 (arm-only, not tradeable) count toward abandonment? (Default assumption: B1 never abandons — it is not an entry signal.)
+
+### C12/C13 STATUS: OPEN — to be fixed one at a time (user directive). Fix order proposal:
+1. **C12**: rewrite the streak block to the user rule (closed-only + skip_pending). ~10 lines, causal, plus regression test (3-loss sequence → 3rd booked, next signal skipped, resume after).
+2. **C13**: abandon-swing rule in signal collection (pending user's ruling on scope). ~15 lines.
+3. Re-measure the full-history net-R with both rules + L1, then rebuild the sequential one-pass study for the final live-expected number.
+
