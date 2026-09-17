@@ -465,10 +465,10 @@ Trade #17 note: signal, window, regime, direction all correct; only the walk's b
 - **Measured impact (streak-OFF run):** **93 of 407 trades (+26.06R)** come from swings where an EARLIER tradeable mark existed (and was filtered out). Under abandon-swing these would not be taken. Caveat: the earlier mark may have failed ext_stop or cooldown rather than window-mismatch — user must rule whether ANY failed first mark abandons the swing, or only window-mismatch.
 - **Spec question (user):** (a) abandon on window-mismatch only, or on any failed first tradeable mark? (b) does a filtered B1 (arm-only, not tradeable) count toward abandonment? (Default assumption: B1 never abandons — it is not an entry signal.)
 
-### C12/C13 STATUS: OPEN — to be fixed one at a time (user directive). Fix order proposal:
-1. **C12**: rewrite the streak block to the user rule (closed-only + skip_pending). ~10 lines, causal, plus regression test (3-loss sequence → 3rd booked, next signal skipped, resume after).
-2. **C13**: abandon-swing rule in signal collection (pending user's ruling on scope). ~15 lines.
-3. Re-measure the full-history net-R with both rules + L1, then rebuild the sequential one-pass study for the final live-expected number.
+### C12/C13 STATUS:
+- **C12**: ✅ FIXED (commit `375d9c4`). Every trade booked, including Nth loss. After N losses → `halt_skip_next=True`, skip next entry, reset. Verified: internal counter never exceeds halt. Smoke + integrity tests pass.
+- **C13**: OPEN — partially landed (`6b14494` for pre-FS skip). FCFS scope ruling still needed.
+- Re-measure the full-history net-R with C13 ruling + rebuild sequential one-pass study for final live-expected number.
 
 ---
 

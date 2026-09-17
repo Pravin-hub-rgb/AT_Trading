@@ -571,17 +571,17 @@ If something goes catastrophically wrong (exchange bug, data feed corruption), o
 
 ### 20.2 Key Findings
 - [x] `max_consecutive_losses=3` universally better than 5 for Bybit Perp (+87.7R)
-- [x] `sl_buf_atr=0.10` better than 0.20 in 3/4 years (tighter SL = less noise)
+- [x] `sl_buf_atr=0.01` sweep-optimized (was 0.10) — +27R net, same DD, 147 SL hits vs 215 at 0
 - [x] Engine params (chop, sl_buf, halt) vary by instrument — each exchange has its own personality
 - [x] Price-level doesn't affect strategy (ATR scales automatically, chop is dimensionless)
 - [x] Market regime affects performance, not price level
 
 ### 20.3 Applied to Backtest Engine
-- [x] `btc_routes.py` — Bybit Perp: `_slbuf=0.10`, `_halt=3`, `_cd=10`
-- [x] `v18_params.py` — BYBIT: `sl_buf_atr=0.10`, `max_consecutive_losses=3`, `cooldown_bars=10`
-- [x] `test_smoke.py` — pass criteria: 301t, +292.6R gross, PF 2.55
-- [x] `test_v18_integrity.py` — BYBIT_PARAMS updated, streak <= 3, WR range 25-40%
-- [x] Smoke test: 301t +292.6R gross PF 2.55 — ALL CHECKS PASSED
+- [x] `btc_routes.py` — Bybit Perp: `_slbuf=0.01`, `_halt=3`, `_cd=10`
+- [x] `v18_params.py` — BYBIT: `sl_buf_atr=0.01`, `max_consecutive_losses=3`, `cooldown_bars=10`
+- [x] `test_smoke.py` — pass criteria: 367t, +365.7R gross, PF 2.56
+- [x] `test_v18_integrity.py` — BYBIT_PARAMS updated, streak <= 3, WR range 28-50%
+- [x] Smoke test: 367t +365.7R gross PF 2.56 — ALL CHECKS PASSED
 - [x] Integrity test: ALL 10 CHECKS PASSED
 
 ### 20.4 Per-Instrument Tuning Principle
