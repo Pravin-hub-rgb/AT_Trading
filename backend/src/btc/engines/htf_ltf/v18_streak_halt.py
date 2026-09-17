@@ -349,6 +349,8 @@ def simulate_htf_ltf_streak_halt(
                 if consecutive_losses >= max_consecutive_losses:
                     halt_skip_next = True  # skip the NEXT entry
                     consecutive_losses = 0  # reset after halt
+                else:
+                    pass
             else:
                 consecutive_losses = 0
         ltf_trades.append({

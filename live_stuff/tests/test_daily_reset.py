@@ -179,7 +179,35 @@ def main():
     assert ll7._daily_halted is False and ll7._daily_pnl_r == 0.0, "date-change reset must fire"
     print("PASS 7: _check_daily_loss_limit date-change reset intact")
 
-    for d in (db1, db4):
+    # 8. Cooldown armed EVEN when the streak halt is active (parity with backtest)
+    #    Backtest engine sets last_loss_bar on every loss regardless of halt state.
+    #    Live used to guard with `and not halted` -> cooldown silently skipped during
+    #    the halt. Fix 8570d5e removed the guard; this test locks it in.
+    db8 = Database(str(tmp / "t8.db")); db8.connect(); db8.create_tables()
+    ll8 = make_stub(db8, halted=False, pnl=0.0, last_date=ist_today())
+    ll8.v18["cooldown_bars"] = 10
+    for k in range(4):
+        t = sim_trade(now - 3600 + k * 60, "long", "sl")
+        t["r_multiple"] = -1.0
+        ll8._journal_trades([t])
+    # State as it was after the 3rd loss was persisted (halt active, 4th not yet)
+    ll8.trading_state["consecutive_losses"] = 3
+    ll8.trading_state["halted"] = True
+    ll8.trading_state["cooldown_remaining"] = 0
+    ll8._persist_streak_state()
+    assert ll8.trading_state["consecutive_losses"] == 4,         "4 booked losses must count"
+    assert ll8.trading_state["halted"] is True, "streak halt must be active at 4 losses"
+    assert ll8.trading_state["cooldown_remaining"] == 10,         "FIX 8570d5e: cooldown MUST arm during streak halt"
+    persisted8 = get_trading_state(db8)
+    assert int(persisted8.get("cooldown_remaining", 0) or 0) == 10,         "arming must persist to DB"
+    print("PASS 8: cooldown armed during streak halt (parity with backtest)")
+
+    # 9. Control: no NEW loss -> no re-arm (arm fires only on consec > old_consec)
+    ll8._persist_streak_state()
+    assert ll8.trading_state["cooldown_remaining"] == 10,         "re-persist without a new loss must not touch the countdown"
+    print("PASS 9: no new loss -> cooldown untouched")
+
+    for d in (db1, db4, db8):
         d.close()
     print("=" * 60)
     print("ALL DAILY RESET CHECKS PASSED")
