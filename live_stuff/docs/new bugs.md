@@ -498,3 +498,41 @@ Trade #17 note: signal, window, regime, direction all correct; only the walk's b
 - **Smoke test:** All checks pass (375t/+305.5R assertions)
 - **Commit:** `375d9c4`
 
+---
+
+## NEW OPEN ISSUES FROM C13 FCFS REVIEW (2026-09-17 — code review of the abandon-swing implementation)
+
+**C13 implementation status:** landed in working tree (uncommitted) — `btc_engine.py` `_collect_signals`: `first_added_for_this_swing` → `swing_done`, set on EVERY exit path of a tradeable mark (pass or fail). B1 never abandons. Smoke updated: **301t / +292.6R gross (fine fills, cd=10), PF 2.55, WR 29.9%, all years positive — PASS.** Mechanics verified correct for: window-mismatch FCFS (1-Feb swing#60 case now yields no trade ✓), dedup-consumed marks ✓, B1 exemption ✓, HTF windows unaffected (v7/v18 use `selection="stream"`) ✓.
+
+### C13a. Pre-FS first mark abandons the swing — mixed case (B2 pre-FS, FLIP post-FS) under-trades vs live — OPEN, needs USER RULING
+
+- **The implementation** abandons the swing when the FIRST tradeable mark fails ANY check — including the pre-FS filter (`b_time < prev_confirmed_time` → `swing_done=True`).
+- **The problem:** per the user's own strict rule ("each trade only when prev swing FS is there"), a mark that fires BEFORE prev-FS is not tradeable live — but if the FS confirms in between, a LATER mark on the same swing (post-FS) IS tradeable live. The implementation kills the whole swing at the pre-FS mark → the engine skips FLIPs the user could actually have taken live.
+- **User's literal words only cover both-before-FS:** "if b2 and flip are before fs of prev swing then we don't trade the opportunity is already gone... we skip that swing." The mixed case (B2 pre-FS, FLIP post-FS) is unstated.
+- **Cost measured:** the FCFS removal set is net **+45.9R** (365→301 trades, +338.5→+292.6R gross on the cd=10 fine-fill chain) — the rule as implemented COSTS R; it is design-fidelity, not profit. If pre-FS should only SKIP the mark (not abandon), some of that comes back.
+- **RULING NEEDED:** does a pre-FS first tradeable mark (a) abandon the swing (current impl), or (b) just be skipped, swing stays alive for post-FS marks?
+
+### C13b. Data-infrastructure failures also abandon the swing — OPEN (minor)
+
+- `not b_time`, trimmed-candle `store.by_date()` miss, missing store data → `swing_done=True`. These are data artifacts, not trading decisions.
+- Impact ≈ 0 on the full-history baseline (data complete, store holds everything). BUT the replay/parity slices (rolling 30d windows) will over-abandon at window edges — the parity harness must not inherit this behavior blindly.
+- **Action when we get to it:** in slice/replay contexts, only abandon on real filter failures; treat store-miss as "cannot evaluate" (skip mark, keep swing alive) or pre-pad windows.
+
+### C13c. Legacy `selection="final"` breaks under abandon — OPEN (legacy-only)
+
+- For `selection="final"`, marks whose kind ≠ the swing's final break_kind are rejected → now they ABANDON the swing → the swing's intended final mark is never collected. That inversion breaks "final" selection entirely.
+- **Our pipeline is unaffected** (v18 line 141 and v7 line 29 both use `selection="stream"`; v7's `entry_selection` defaults to "stream"). Only legacy engines (v1–v13 with `entry_selection="final"`) would break if ever reused.
+- **Action when we get to it:** for `selection="final"`, non-matching-kind marks should `continue` WITHOUT setting swing_done (restore old behavior for that branch only).
+
+### P1. cooldown_bars 0→10 committed as a strategy param change — OPEN, needs USER RATIFICATION
+
+- Commit `d25113f` ("feat: Bybit Perp cooldown_bars=10 (+33R improvement)") changed the user's tuned Bybit param set (cd=0 → cd=10) in `v18_params.py` + `btc_routes.py`, based on the bot's own sweep (`sweep_halt_cooldown.py`, untracked).
+- The user's tuned set had cd=0 (explicitly swept earlier). A param change of this size is a strategy decision — verify the sweep was run on the baseline chain (`_compute_swings continuous`, same as smoke) and ratify explicitly, or revert to the tuned set.
+- Note: cd also interacts with the LIVE loop's own cooldown logic (LIVE-1) — both must move together.
+
+### P2. Process hygiene — OPEN
+
+- Untracked files to review/clean before the next commit: `sweep_halt_cooldown.py`, `verify_abandon.py`, `.kilo/plans/1789638356895-v18-streak-repainting-fix.md`.
+- The C13a/C13b/C13c/P1 resolutions must land with regression tests (abandon-reason attribution test — which filter killed which swing — currently missing from `verify_abandon.py`, which only counts multi-mark swings).
+- After rulings: re-measure full history (fine fills) → new baseline → re-run causal/parity measurement against it → sequential one-pass study → final live-expected number.
+
