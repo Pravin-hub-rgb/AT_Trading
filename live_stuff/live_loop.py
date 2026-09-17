@@ -91,8 +91,8 @@ class LiveLoop:
         self._cum_net_r = 0.0
         self._trade_count = 0
         # Persistent swing engines — use actual SwingEngine logic (same as backtest)
-        self.swing_15m = PersistentSwingEngine("15m", db, {"minBars": SWING["min_bars_15m"]})
-        self.swing_1h = PersistentSwingEngine("1h", db, {"minBars": SWING["min_bars_1h"]})
+        self.swing_15m = PersistentSwingEngine("15m", db, {"minBars": SWING["min_bars_15m"], "timeCap": "00:00"})
+        self.swing_1h = PersistentSwingEngine("1h", db, {"minBars": SWING["min_bars_1h"], "timeCap": "00:00"})
         self.all_swings_15m: list[dict] = []
         self.all_swings_1h: list[dict] = []
         # HTF window tracking — rolling record (Phase 2)

@@ -74,7 +74,7 @@ def build_swings(candles: list, tf: str, min_bars: int) -> list:
     state_db = Database(os.path.join(tempfile.mkdtemp(prefix="parity_swing_"), "state.db"))
     state_db.connect()
     state_db.create_tables()
-    pse = PersistentSwingEngine(tf, state_db, {"minBars": min_bars})
+    pse = PersistentSwingEngine(tf, state_db, {"minBars": min_bars, "timeCap": "00:00"})
     swings = []
     for g_idx, c in enumerate(candles):
         fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"],
