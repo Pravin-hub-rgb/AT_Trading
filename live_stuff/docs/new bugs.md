@@ -396,3 +396,17 @@ C10 is not one bug — it is a STACK of five independent layers, each verified b
 - Baseline sanity: causal engine on FULL history = 261/261 exact match (patch touches only the open-window line).
 - Remaining ~9% (23 trades) blocked even at 12h discovery — dominated by HTF window timing (1h flip candle closes up to 1h after the mark — user's candle-close point) and chop-regime timing at the gate. These are the honest live gaps to quantify next.
 - R/outcome parity of reproduced trades not yet compared (entry bar + direction matched only). Next step: net-R comparison of the causal pipeline vs +470.5R.
+
+### C10 NET-R MEASURED (2026-09-17, `causal_net_r.py`, same-fill convention fine_ltf=[], Bybit costs 0.055% + 5bp/10bp slip)
+
+| Pipeline | Trades | Gross R | Net R |
+|----------|--------|---------|-------|
+| Baseline (retro, full history) | 261 | +445.60R | **+399.57R** |
+| Causal pipeline (2-bar discovery, fixes L1-L5) | 209 | +338.79R | **+301.03R** |
+| Delta | -52 | | **-98.53R (-24.6%)** |
+
+- All 209 matched at dts=0 (same entry bar) -> their R is EXACT (walk for a given entry bar depends only on that bar's close + global trail events, not on other trades).
+- 44 backtest trades are NOT taken causally (the honest live gap).
+- IMPORTANT FINDING: the causal slices also produce **304 unique EXTRA entries not in the backtest** (causal chain state differs -> different signals fire). These are excluded from the +301R above. Whether they add or subtract R requires the single sequential causal pass (the true live pipeline study). The honest live expectation is therefore BETWEEN +301R (extras ignored) and higher (extras included) — must be measured with a one-pass sequential simulation before going live.
+- W/L: causal 85/124 vs baseline 119/142.
+- Next: (1) sequential one-pass causal simulator for the true trade set incl. extras; (2) code fixes L1-L5 + C11 (all now specified with proofs); (3) parity_report integration.
