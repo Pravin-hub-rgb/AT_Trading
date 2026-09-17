@@ -524,6 +524,17 @@ Trade #17 note: signal, window, regime, direction all correct; only the walk's b
 - **Our pipeline is unaffected** (v18 line 141 and v7 line 29 both use `selection="stream"`; v7's `entry_selection` defaults to "stream"). Only legacy engines (v1–v13 with `entry_selection="final"`) would break if ever reused.
 - **Action when we get to it:** for `selection="final"`, non-matching-kind marks should `continue` WITHOUT setting swing_done (restore old behavior for that branch only).
 
+### C14. ext_stop_r uses future HTF entry price (backtest only) — OPEN (minor)
+
+- **File:** `v18_streak_halt.py:184-188`
+- **Bug:** `ext_stop_r` check compares 15m bar close against `pe` (1h bar's close price). For 15m bars within the same 1h bar as the HTF entry, the 1h close hasn't happened yet — it's future data. v7_timecap uses the 1h bar's `close` as `entry_price` (v7:65), which is the 1h close. 15m bars inside that same 1h window trade on this unknowable value.
+- **Impact:** Low. Affects first 3-4 fifteen-minute bars after an HTF entry fires. The ext_stop is a filter (skips signals), not a trade trigger. The 1h intrabar move is small relative to 1.5R threshold. Measured: ~0.5-2% of 15m bars affected per HTF entry.
+- **Fix options:**
+  1. Shift interval start to next 1h bar (like v13 does) — most conservative
+  2. Use `candles_htf[j]["open"]` as proxy for HTF entry at signal time
+  3. Accept as negligible (current behavior — consistent across 7+ engine versions)
+- **Severity:** Low — doesn't change trade outcomes in any measurable way.
+
 ### P1. cooldown_bars 0→10 committed as a strategy param change — OPEN, needs USER RATIFICATION
 
 - Commit `d25113f` ("feat: Bybit Perp cooldown_bars=10 (+33R improvement)") changed the user's tuned Bybit param set (cd=0 → cd=10) in `v18_params.py` + `btc_routes.py`, based on the bot's own sweep (`sweep_halt_cooldown.py`, untracked).
@@ -536,3 +547,32 @@ Trade #17 note: signal, window, regime, direction all correct; only the walk's b
 - The C13a/C13b/C13c/P1 resolutions must land with regression tests (abandon-reason attribution test — which filter killed which swing — currently missing from `verify_abandon.py`, which only counts multi-mark swings).
 - After rulings: re-measure full history (fine fills) → new baseline → re-run causal/parity measurement against it → sequential one-pass study → final live-expected number.
 
+
+---
+
+## DEEP-DIVE AUDIT FINDINGS #2 (2026-09-17, full gate-path lookahead hunt) — ALL OPEN
+
+Audit scope: every place the backtest touches data. Verified CAUSAL (clean): LTF walk (SL-before-ratchet ordering, gap fills at bar open), trail events (activate at confirmed_at_idx/time, pivot known at confirm), fine 1m fills (chronological, conservative intra-bar rules, gap realism), ATR (trailing window), entry price (signal bar close), v7 HTF walk, pre-FS filter, dedup, streak fix. The three findings below are all in the HTF GATE path.
+
+### C14. Chop regime gate looks ahead up to 45 minutes — OPEN
+
+- **Code:** `v18_streak_halt.py:134-137` — `j = bisect_right(candle_ts_htf, ts) - 1` where `ts` is the LTF bar's OPEN label; candle labels are bar OPEN times (flip at 18:30 is knowable at 19:30).
+- **Bug:** the selected 1h bar may still be RUNNING at the LTF entry instant. `_chop_series_1h` computes chop[i] from bar i's FULL OHLC — knowable only at its close (label + 60 min). For LTF bars in the first 45 min of each hour, the regime gate (flip vs b2) uses the running 1h candle's FINAL chop = up to 45 min of future data. Only the last 15m bar of each hour has a completed 1h candle.
+- **Fix:** bisect on 1h CLOSE times (open + 3600) against the LTF bar's close instant (ts + 900).
+- **Measured (full history, fine fills, slbuf=0.01):** retro gate 367t gross +340.0R / net +265.5R (coarse cost model) vs C14-fixed 361t / gross +368.4R / **net +296.3R** — the fix is +30.8R net AND causal (the retro gate was misclassifying the regime at hour boundaries and taking bad trades). Pure win — adopt unconditionally.
+
+### C15. HTF window gate looks ahead up to 60 minutes — OPEN
+
+- **Code:** `to_intervals` builds windows `[entry_ts, exit_ts]` where `entry_ts` = the HTF flip bar's OPEN label; the LTF gate (`if not (s < bar_ts <= e): continue`) admits LTF bars inside the flip candle's own hour — but the flip is only knowable at that candle's CLOSE (entry_ts + 60 min for 1h).
+- **Fix (measured):** gate in knowable-instant space — window covers LTF bars whose CLOSE instant is within [flip_close, exit_close]: `if not (s + 2700 < bar_ts <= e + 2700): continue` (2700 = 3600 - 900).
+- **Measured (slbuf=0.01):** C14+C15 = **335t / gross +285.3R / net +216.3R (coarse cost model)** vs C14-only 361t / +296.3R net. The causal window-availability rule costs ~80R net — this is the honest price of the user's design (window opens at the flip candle close; signals inside the flip hour are genuinely not takeable live; user anticipated: "so many trades we might not take them").
+- **Note:** the window END is causal already (the HTF trade's exit happens in real time). Only the start was retro.
+
+### L1 re-measured: open-window drop has ZERO impact on the batch backtest — note (no action)
+
+- The `to_intervals` open-window drop (line 106) was re-tested on the full-history continuous chain: results IDENTICAL to the current engine (the 1-Feb 02:00 case is gated by a CLOSED window on this chain — the 31-Jan 00:30 short exits 02-01 03:30; the earlier slice-based finding was a fresh-PSE chain artifact).
+- The open-window = active-bias rule (user's model) still matters for the CAUSAL/sequential pipeline (live walk-state differs) — keep it in the sequential-study spec, no batch change.
+
+### New honest baseline (pending C14+C15 adoption, slbuf=0.01): ~335t / +285.3R gross / ~+216.3R net (coarse) / ~+240R net (fine-fill estimate)
+- sl_buf_atr=0.01 confirmed already applied in committed params (v18 default A-run = 0.01 signature).
+- Decision recorded: adopt C14 (pure win) + C15 (causality cost accepted) - PENDING user go-ahead to land the code.
