@@ -278,6 +278,25 @@
 **Guards use cheap state; only retry/submit/watch paths may probe.**
 
 - `is_connected` = `self.session is not None` (local, no network)
+
+### C10 (refined 2026-09-17). HTF window state gates LTF entries on engine DECLARATIONS, not on the real-time flip marks — live rejects trades the backtest takes
+
+- **Files:** `backend/src/btc/engines/htf_ltf/v18_streak_halt.py` (LTF filter consumes HTF intervals), `backend/src/btc/engines/v7_timecap.py` (HTF walk builds windows from DECLARED swings), `backend/src/live/persistent_swing.py` (live hands only declared swings to the sim)
+- **Bug:** The v18 LTF filter requires the entry bar to sit inside an HTF window (flip/b2) whose direction matches the signal. Those HTF windows are built from swings as the ENGINE declares them — i.e. only after the chop/sustain confirmation completes (`confirmed_at_time`), which can lag the actual flip/B1 mark by hours. The backtest, running over full history, sees all swings as already declared and therefore treats the window as open from the flip candle (retro). Live, running causally, cannot see a swing that has not declared yet — so during the declaration gap live keeps the OLD window (possibly opposite direction) and rejects the signal ("signal dir != window dir").
+- **Worked example — trade #31 of 261 (09-Jun-2023, LONG):**
+  | Time (IST) | Event |
+  |---|---|
+  | 09-Jun 07:00 | 1h up-structure level broken (B1 @ 26393) |
+  | 09-Jun 18:15 | 1h candle breaks UP through 26718 → FLIP mark. Per the design rule (FS and flip/b2 may share a candle) the HTF flips to LONG here |
+  | 09-Jun 18:45 | 15m FLIP long signal, bar closes ~26672 → backtest books trade #31 LONG |
+  | 10-Jun 06:00 | The 1h swing finally DECLARES (engine chop/sustain) — ~11.75h after the flip |
+  At 18:45 the causal state was: chop(1h)=73.1 → b2 regime → the covering b2 window was the OLD SHORT (opened 31-May) → **long signal rejected, dir mismatch**. The backtest allowed it only because swing #151 was retro-declared and its flip had already opened a long b2 window.
+- **Measured declaration lag (1h swings, correct TZ):** median ~1.25h after the break mark, fat tail up to ~40h. Most entries would shift ~1h in a causal run; tail cases are blocked/misdirected exactly as above.
+- **Impact:** With causal (live-faithful) evaluation the replay is 0/32 vs baseline 261/261. The +470.5R backtest assumes knowledge of HTF window flips up to ~40h before the engine would confirm them in real time.
+- **A/B proof so far:** C11 timeCap fix alone does NOT resolve it (replay with `--timecap 00:00` still 0/32). The blocker is the HTF window availability, not the LTF timeCap.
+- **Fix direction (not yet implemented):** live must flip HTF windows on the real-time flip/B2 mark of the forming swing (same candle as FS allowed — the established design rule), not wait for the engine declaration. Then replay the full 3.8y history through this causal rule to get the honest live-expected numbers (they will differ from +470.5R).
+- **Status:** OPEN — root cause diagnosed & verified by gate-by-gate trace (2026-09-17). Fix pending decision on causal HTF window design.
+
 - `_healthy` = cached probe result (updated by `_session_watch` every 30s)
 - `_probe()` = live HTTP call (only in low-frequency paths: retry loops, session watch)
 - Exit guards use `if self.trader:` (never skip exchange close based on network state)
