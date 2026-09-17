@@ -167,23 +167,26 @@ def _collect_signals(
         prev_end_idx_fb = int(swings[si - 1]["seg"]["end_idx"]) if si > 0 else -1
         prev_confirmed_idx_fb = int(swings[si - 1].get("confirmed_at_idx", -1)) if si > 0 else -1
 
-        first_added_for_this_swing = False
+        swing_done = False  # FCFS: first tradeable mark decides — pass or fail
         for b in brks:
-            if first_added_for_this_swing:
+            if swing_done:
                 break
             if b["kind"] not in tradeable:
-                continue
+                continue  # B1 never abandons
             bdir = 1 if b["dir"] == "up" else -1
             b_time = b.get("time", "")
             if not b_time:
+                swing_done = True
                 continue
 
             # Skip if break candle trimmed from window
             if store and not store.by_date(b_time):
+                swing_done = True
                 continue
 
             if selection == "final":
                 if b["kind"] != s.get("break_kind"):
+                    swing_done = True
                     continue
                 sl = seg_start
             else:
@@ -200,46 +203,56 @@ def _collect_signals(
 
                     if _before_start:
                         if store is None or si == 0:
+                            swing_done = True
                             continue
                         # Use prev_end to compute price range
                         _pe_idx = prev_end_idx_fb if prev_end_idx_fb >= 0 else -1
                         _b_idx = store.pos(b_time)
                         if _pe_idx < 0 or _b_idx < 0:
+                            swing_done = True
                             continue
                         lo_seg = [float(c["low"]) for c in candles[_pe_idx + 1 : _b_idx + 1]]
                         hi_seg = [float(c["high"]) for c in candles[_pe_idx + 1 : _b_idx + 1]]
                         if not lo_seg or not hi_seg:
+                            swing_done = True
                             continue
                         entry_candle = store.by_date(b_time)
                         if not entry_candle:
+                            swing_done = True
                             continue
                         entry_px = float(entry_candle["close"])
                         if bdir == 1:
                             sl = min(lo_seg)
                             if sl >= entry_px:
+                                swing_done = True
                                 continue
                         else:
                             sl = max(hi_seg)
                             if sl <= entry_px:
+                                swing_done = True
                                 continue
                     else:
                         sl = seg_start
                 else:
                     # Opposite-direction break: fade the PREVIOUS leg
                     if not prev_end:
+                        swing_done = True
                         continue
                     # Churn before the opposite leg's end pivot
                     if prev_end_time and b_time < prev_end_time:
+                        swing_done = True
                         continue
                     elif not prev_end_time and store:
                         b_pos = store.pos(b_time)
                         if b_pos >= 0 and prev_end_idx_fb >= 0 and b_pos < prev_end_idx_fb:
+                            swing_done = True
                             continue
                     sl = prev_end
                     if store and prev_end_idx_fb >= 0:
                         try:
                             entry_candle = store.by_date(b_time)
                             if not entry_candle:
+                                swing_done = True
                                 continue
                             entry_px_chk = float(entry_candle["close"])
                             _pe_idx = prev_end_idx_fb
@@ -260,15 +273,18 @@ def _collect_signals(
             # Pre-FS filter: reject signals before previous swing's FS
             if filter_pre_fs:
                 if prev_confirmed_time and b_time < prev_confirmed_time:
+                    swing_done = True
                     continue
                 elif not prev_confirmed_time and prev_confirmed_idx_fb >= 0:
                     b_pos = store.pos(b_time) if store else -1
                     if b_pos >= 0 and b_pos < prev_confirmed_idx_fb:
+                        swing_done = True
                         continue
 
             # Dedup by (timestamp, kind, dir, px) — timestamp replaces idx
             key = (b_time, b["kind"], b["dir"], round(float(b["px"]), 6))
             if key in seen:
+                swing_done = True
                 continue
             seen.add(key)
             out.append(
@@ -280,7 +296,7 @@ def _collect_signals(
                     "kind": b["kind"],
                 }
             )
-            first_added_for_this_swing = True
+            swing_done = True
     out.sort(key=lambda x: x["bar"])
     return out
 

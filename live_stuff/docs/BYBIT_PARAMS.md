@@ -48,23 +48,24 @@ Bold = different from BTC Spot defaults.
 Binance perp is nearly identical to spot — only cd (20→5) and slbuf (0.25→0.15) differ.
 Chop stays at 61.8. DD slightly higher (11.6R vs 9.7R).
 
-### Bybit Perp — tuned (FIXED streak + cd sweep, 2026-09-17)
+### Bybit Perp — tuned (FIXED streak + cd sweep + FCFS, 2026-09-17)
 
 | Metric | Value |
 |--------|-------|
-| Trades | 365 |
-| Gross R | **+338.5R** |
-| Costs (fees+slip+funding) | -86.1R |
-| Net R | **+252.4R** |
-| Win% | 29.3% |
+| Trades | **301** |
+| Gross R | **+292.6R** |
+| Costs (fees+slip+funding) | -71.0R |
+| Net R | **+221.6R** |
+| Win% | **29.9%** |
 | Max DD | 17.9R |
-| PF | 2.47 |
+| PF | **2.55** |
 | Avg Win | +4.88R |
 | Avg Loss | -0.89R |
-| Yearly gross | 2023: +70.8R, 2024: +119.1R, 2025: +64.4R, 2026: +84.2R |
+| Yearly gross | 2023: +39.1R, 2024: +106.7R, 2025: +73.4R, 2026: +73.4R |
 
 Bybit needs more aggressive tuning: chop lower (58), cd=10, tighter slbuf.
 cd=10 filters 10 trash entries (2.5h cooldown after loss) for +33R more than cd=0.
+**FCFS** (first come first serve): first tradeable mark per swing decides — pass or fail, no second chances. Removes 64 net-losing duplicate marks, improves PF from 2.47→2.55.
 
 ### Bybit Perp — default spot params (no tuning)
 

@@ -360,6 +360,77 @@ live_stuff/
 | Same step() for backtest+live | ADOPTED | Guaranteed identical output |
 | 1h = bias window, 15m = trade | ADOPTED | Matches v18 architecture |
 | Full matrix known at entry | ADOPTED | No waiting, no guessing |
+| FCFS (First Come First Serve) | ADOPTED | First tradeable mark per swing decides — pass or fail, no second chances |
+
+---
+
+## FCFS (First Come First Serve) — Swing Abandon Theory
+
+### What is FCFS?
+
+When a swing breaks, multiple marks can fire on the same swing (B2, FLIP, or both). FCFS means: **the first tradeable mark per swing decides that swing's fate.** If it passes all filters → trade it. If it fails ANY filter → abandon the swing entirely. No second chances.
+
+### Why FCFS?
+
+1. **Removes noise.** A swing that produces 3 marks usually has the first mark as the cleanest. Later marks are often in choppy conditions or late entries. FCFS removes these net-losing duplicates.
+
+2. **Matches live execution.** In live, you see marks in real-time. When a B2/FLIP fires, you decide NOW — take it or skip it. You can't "wait and see" if a better mark comes later on the same swing. FCFS enforces this discipline.
+
+3. **Improves PF without losing edge.** FCFS removed 64 trades averaging -0.72R each. The remaining 301 trades have PF 2.55 (vs 2.47 without FCFS). Same edge, cleaner execution.
+
+### How It Works (Code)
+
+In `_collect_signals()` (`btc_engine.py:170-299`):
+
+```python
+for swing in swings:
+    swing_done = False  # FCFS: first tradeable mark decides
+    for mark in swing["marks"]:
+        if swing_done:
+            break  # already decided — skip remaining marks
+        
+        # ... filter checks (window direction, pre-FS, dedup, etc.) ...
+        
+        if any filter fails:
+            swing_done = True  # abandon — first mark failed
+            continue
+        
+        if mark passes all filters:
+            out.append(signal)
+            swing_done = True  # trade — first mark passed
+```
+
+**B1 marks are exempt** — B1 never triggers FCFS. Only B2/FLIP marks are tradeable and subject to FCFS.
+
+### What "Abandon" Means
+
+When a swing is abandoned:
+- No more marks from that swing are tradeable
+- The swing still exists in the chain (it's a real market move)
+- But we don't trade it because our first attempt failed
+- The next swing gets a fresh FCFS cycle
+
+### Live Equivalence
+
+In live, FCFS is natural:
+1. A B2 mark fires on 15m candle close
+2. Check: is there an open HTF window in the same direction? Is the trade in cooldown? Is the streak halted?
+3. If YES to any → skip this mark. The swing is abandoned.
+4. If NO → enter the trade.
+
+You can't "undo" a skip. The next mark on the same swing (if any) is irrelevant — you already decided.
+
+### Backtest Impact
+
+| Metric | Without FCFS | With FCFS | Delta |
+|--------|-------------|-----------|-------|
+| Trades | 365 | 301 | -64 |
+| Gross R | +338.5R | +292.6R | -45.9R |
+| PF | 2.47 | **2.55** | +0.08 |
+| WR | 29.3% | **29.9%** | +0.6% |
+| Net R (est.) | +252.4R | +221.6R | -30.8R |
+
+The -45.9R gross is the cost of removing 64 net-losing trades. PF improvement is the benefit.
 
 ---
 

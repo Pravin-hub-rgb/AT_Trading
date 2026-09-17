@@ -577,11 +577,11 @@ If something goes catastrophically wrong (exchange bug, data feed corruption), o
 - [x] Market regime affects performance, not price level
 
 ### 20.3 Applied to Backtest Engine
-- [x] `btc_routes.py` — Bybit Perp: `_slbuf=0.10`, `_halt=3`
-- [x] `v18_params.py` — BYBIT: `sl_buf_atr=0.10`, `max_consecutive_losses=3`
-- [x] `test_smoke.py` — pass criteria: 375t, +305.5R gross
+- [x] `btc_routes.py` — Bybit Perp: `_slbuf=0.10`, `_halt=3`, `_cd=10`
+- [x] `v18_params.py` — BYBIT: `sl_buf_atr=0.10`, `max_consecutive_losses=3`, `cooldown_bars=10`
+- [x] `test_smoke.py` — pass criteria: 301t, +292.6R gross, PF 2.55
 - [x] `test_v18_integrity.py` — BYBIT_PARAMS updated, streak <= 3, WR range 25-40%
-- [x] Smoke test: 375t +305.5R gross PF 2.29 — ALL CHECKS PASSED
+- [x] Smoke test: 301t +292.6R gross PF 2.55 — ALL CHECKS PASSED
 - [x] Integrity test: ALL 10 CHECKS PASSED
 
 ### 20.4 Per-Instrument Tuning Principle

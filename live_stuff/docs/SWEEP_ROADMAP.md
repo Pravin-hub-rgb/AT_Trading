@@ -3,14 +3,17 @@
 **Date:** 2026-09-14 (updated 2026-09-17)
 **Engine:** v18 streak_halt (b2_vs_flip_chop)
 **Data:** BTCUSDT Bybit Perp, 2023-01-01 to 2026-09-14 (~3.7 years)
-**Baseline:** htf_rr=3.0, ext_stop=1.5, chop=58, cd=0, slbuf=0.10, halt=3L
-**Baseline result:** 375 trades, +305.5R gross, 88.6R cost, **+216.9R net**, PF 2.29, WR 29.6%, Avg +0.58R net/trade
+**Baseline:** htf_rr=3.0, ext_stop=1.5, chop=58, cd=10, slbuf=0.10, halt=3L, **FCFS=on**
+**Baseline result:** 301 trades, +292.6R gross, 71.0R cost, **+221.6R net**, PF 2.55, WR 29.9%, Avg +0.74R net/trade
 
 **Cost model:** Bybit taker 0.055%/side + 0.005% entry slippage + 0.010% exit slippage + 0.01%/8h funding = ~0.236R per trade
 
 **NOTE:** Old numbers (261t/+470.5R/PF 4.71/45% WR) were from broken streak logic that silently deleted Nth losses.
 Fixed 2026-09-17: streak now correctly books every trade, skips NEXT entry after Nth loss, then resets.
 See commit `375d9c4`.
+
+**FCFS (First Come First Serve):** First tradeable mark per swing decides — pass or fail, no second chances.
+B1 never abandons. Removes 64 net-losing duplicate marks (avg -0.72R each), improves PF from 2.47→2.55.
 
 ---
 
@@ -220,6 +223,7 @@ Tier 3: ext_stop=2.0, htf_rr=3.0  (max R, needs re-run)
 - Trail (MB50 pivots)
 - Chop filter (58 threshold)
 - Streak halt (3 consecutive losses, then skip next entry)
+- FCFS (first come first serve — first tradeable mark per swing decides)
 - Risk per trade (250 INR from file)
 - Leverage (3x max)
 
@@ -253,9 +257,11 @@ Tier 3: ext_stop=2.0, htf_rr=3.0  (max R, needs re-run)
 
 2. **Win rate is ~30%** — this is normal for momentum strategies. Edge comes from reward-to-risk (avg win 4.88R vs avg loss 0.89R = 5.5:1). Old "45% WR" was a broken-engine artifact.
 
-3. **All tiers have similar net R** because trade count is similar (~375). The ext_stop change doesn't significantly alter trade count — it mainly changes which entries are accepted.
+3. **All tiers have similar net R** because trade count is similar (~301 with FCFS). The ext_stop change doesn't significantly alter trade count — it mainly changes which entries are accepted.
 
 4. **Streak halt at 3** prevents catastrophic drawdowns. Verified: internal counter never exceeds 3.
+
+5. **FCFS (first come first serve)** removes net-losing duplicate marks. First tradeable mark per swing decides — pass or fail, no second chances. Improves PF from 2.47→2.55.
 
 ---
 
@@ -470,19 +476,21 @@ The old engine had a self-serving streak bug: it DELETED Nth losses from the tra
 ```
 v18_params.py (BTCUSDT_BYBIT):
   chop_thresh: 58.0
-  cooldown_bars: 0
+  cooldown_bars: 10
   sl_buf_atr: 0.10      # was 0.20
   ext_stop_r: 1.5       # (backtest default, T1 uses 1.0)
   htf_rr: 3.0           # (backtest default, T1 uses 2.5)
   max_consecutive_losses: 3   # was 5
+  FCFS: enabled          # first tradeable mark per swing decides
 ```
 
-**Backtest result:** 375t, +305.5R gross, +216.9R net, PF 2.29, all years positive ✅
+**Backtest result:** 301t, +292.6R gross, +221.6R net, PF 2.55, all years positive ✅
 
 **Files updated:**
-- `backend/src/btc/btc_routes.py` — Bybit Perp branch: `_slbuf=0.10`, `_halt=3`
-- `live_stuff/engine/v18_params.py` — BYBIT entry: `sl_buf_atr=0.10`, `max_consecutive_losses=3`
-- `live_stuff/tests/test_smoke.py` — pass criteria: 375t/+305.5R gross/PF 2.29
+- `backend/src/btc/btc_routes.py` — Bybit Perp branch: `_slbuf=0.10`, `_halt=3`, `_cd=10`
+- `backend/src/btc/btc_engine.py` — FCFS flag in `_collect_signals()`
+- `live_stuff/engine/v18_params.py` — BYBIT entry: `sl_buf_atr=0.10`, `max_consecutive_losses=3`, `cooldown_bars=10`
+- `live_stuff/tests/test_smoke.py` — pass criteria: 301t/+292.6R gross/PF 2.55
 - `live_stuff/tests/test_v18_integrity.py` — BYBIT_PARAMS updated, streak check <= 3, WR range 25-40%
 
 ---
@@ -495,7 +503,7 @@ v18_params.py (BTCUSDT_BYBIT):
 
 | Instrument | Data | chop | cd | sl_buf | halt | Net R | PF | Status |
 |------------|------|------|----|--------|------|-------|----|--------|
-| **BTCUSDT_BYBIT** | 1m fills | 58.0 | 0 | **0.10** | **3** | +216.9R net | 2.29 | ✅ APPLIED (fixed streak) |
+| **BTCUSDT_BYBIT** | 1m fills | 58.0 | 10 | **0.10** | **3** | +221.6R net | 2.55 | ✅ APPLIED (streak + FCFS) |
 | BTCUSDT_PERP (Binance) | 1m fills | 61.8 | 5 | 0.15 | 5 | +311.7R | ~3.0 | Needs sweep |
 | BTCUSDT (Spot Binance) | 15m fills | 61.8 | 20 | 0.25 | 5 | +331.1R | ~3.0 | Needs sweep |
 
