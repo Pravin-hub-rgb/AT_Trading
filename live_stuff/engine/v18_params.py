@@ -40,7 +40,7 @@ SYMBOL_PARAMS = {
     },
     "BTCUSDT_BYBIT": {
         "chop_thresh": 58.0,
-        "cooldown_bars": 0,
+        "cooldown_bars": 10,
         "sl_buf_atr": 0.10,
         "max_consecutive_losses": 3,
         "fee_pct": 0.055,             # Bybit taker 0.055%/side
