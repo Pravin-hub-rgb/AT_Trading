@@ -4,7 +4,7 @@
 **Engine:** v18 streak_halt (b2_vs_flip_chop)
 **Data:** BTCUSDT Bybit Perp, 2023-01-01 to 2026-09-14 (~3.7 years)
 **Baseline:** htf_rr=3.0, ext_stop=1.5, chop=58, cd=10, slbuf=0.10, halt=3L, **FCFS=on**
-**Baseline result:** 301 trades, +292.6R gross, 71.0R cost, **+221.6R net**, PF 2.55, WR 29.9%, Avg +0.74R net/trade
+**Baseline result:** 365 trades, +338.5R gross, 71.4R cost, **+267.1R net**, PF 2.47, WR 29.3%, Avg +0.73R net/trade
 
 **Cost model:** Bybit taker 0.055%/side + 0.005% entry slippage + 0.010% exit slippage + 0.01%/8h funding = ~0.236R per trade
 

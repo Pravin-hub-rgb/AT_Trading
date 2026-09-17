@@ -370,13 +370,15 @@ live_stuff/
 
 When a swing breaks, multiple marks can fire on the same swing (B2, FLIP, or both). FCFS means: **the first tradeable mark per swing decides that swing's fate.** If it passes all filters → trade it. If it fails ANY filter → abandon the swing entirely. No second chances.
 
+Note: pre-FS marks (before previous swing's confirmed_at_time) are NOT tradeable — they skip without killing the swing. The FCFS decision moves to the first after-FS mark.
+
 ### Why FCFS?
 
-1. **Removes noise.** A swing that produces 3 marks usually has the first mark as the cleanest. Later marks are often in choppy conditions or late entries. FCFS removes these net-losing duplicates.
+1. **Removes noise.** A swing that produces multiple marks usually has the first tradeable mark as the cleanest. Later marks are often in choppy conditions or late entries. FCFS removes these net-losing duplicates.
 
 2. **Matches live execution.** In live, you see marks in real-time. When a B2/FLIP fires, you decide NOW — take it or skip it. You can't "wait and see" if a better mark comes later on the same swing. FCFS enforces this discipline.
 
-3. **Improves PF without losing edge.** FCFS removed 64 trades averaging -0.72R each. The remaining 301 trades have PF 2.55 (vs 2.47 without FCFS). Same edge, cleaner execution.
+3. **Improves PF without losing edge.** FCFS + pre-FS skip: 365 trades, PF 2.47, +338.5R gross. Clean execution matching live behavior.
 
 ### How It Works (Code)
 
@@ -410,6 +412,8 @@ When a swing is abandoned:
 - But we don't trade it because our first attempt failed
 - The next swing gets a fresh FCFS cycle
 
+Note: pre-FS rejection does NOT abandon the swing — it only skips the mark. Abandon only happens when a tradeable (post-FS) mark fails another filter.
+
 ### Live Equivalence
 
 In live, FCFS is natural:
@@ -422,15 +426,15 @@ You can't "undo" a skip. The next mark on the same swing (if any) is irrelevant 
 
 ### Backtest Impact
 
-| Metric | Without FCFS | With FCFS | Delta |
-|--------|-------------|-----------|-------|
-| Trades | 365 | 301 | -64 |
-| Gross R | +338.5R | +292.6R | -45.9R |
-| PF | 2.47 | **2.55** | +0.08 |
-| WR | 29.3% | **29.9%** | +0.6% |
-| Net R (est.) | +252.4R | +221.6R | -30.8R |
+| Metric | Pre-FCFS | FCFS + pre-FS skip | Delta |
+|--------|----------|-------------------|-------|
+| Trades | 399 | 365 | -34 |
+| Gross R | +372.8R | +338.5R | -34.3R |
+| PF | 2.47 | 2.47 | 0 |
+| WR | 29.3% | 29.3% | 0 |
+| Net R (est.) | +301.4R | +267.1R | -34.3R |
 
-The -45.9R gross is the cost of removing 64 net-losing trades. PF improvement is the benefit.
+FCFS removes 34 net-losing duplicate marks (first tradeable mark per swing decides). Pre-FS skip ensures pre-FS marks don't kill the swing — the FCFS decision moves to the first after-FS mark.
 
 ---
 

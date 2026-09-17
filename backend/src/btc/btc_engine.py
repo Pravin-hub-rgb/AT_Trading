@@ -270,15 +270,15 @@ def _collect_signals(
                         except Exception:
                             pass
 
-            # Pre-FS filter: reject signals before previous swing's FS
+            # Pre-FS filter: reject signals before previous swing's FS.
+            # Skip the mark (don't kill the swing) — the swing stays alive
+            # for post-FS marks that are fully tradeable.
             if filter_pre_fs:
                 if prev_confirmed_time and b_time < prev_confirmed_time:
-                    swing_done = True
                     continue
                 elif not prev_confirmed_time and prev_confirmed_idx_fb >= 0:
                     b_pos = store.pos(b_time) if store else -1
                     if b_pos >= 0 and b_pos < prev_confirmed_idx_fb:
-                        swing_done = True
                         continue
 
             # Dedup by (timestamp, kind, dir, px) — timestamp replaces idx
