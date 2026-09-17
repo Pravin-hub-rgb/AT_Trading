@@ -341,3 +341,10 @@
 | M9 | Async rate fetch | `rate_manager.py` | ~20 lines | **FIXED 2026-09-15 — `update()` moved off tick path into `_session_watch` via `asyncio.to_thread`; `_calculate_qty` sizes from cache + warns when stale (`is_stale()`/`age_min()` added)** |
 | M10 | Reject when qty < min | `_calculate_qty` | ~5 lines | **FIXED 2026-09-15 — both paths (risk-sized + balance-sized); rejects return 0.0 → caller skips** |
 | M11 | Query actual price on mismatch | `live_loop.py` | ~5 lines |
+
+### C11. Live swing engine inherits the Nifty session gate (`timeCap="09:29"`) — BTC declarations blocked before 09:29 IST
+
+- **Files:** `backend/src/firstswing.py:73` (default), `backend/src/live/persistent_swing.py:17` (live passes no timeCap), `backend/src/btc/btc_swing.py:54` (backtest forces "00:00")
+- **Bug:** `SwingEngine` defaults `timeCap="09:29"` — a Nifty (Indian market hours) session gate. The backtest overrides it to `"00:00"` for 24/7 BTC. The live `PersistentSwingEngine` does NOT override it, so live inherits "09:29": `_confirm` returns early (`firstswing.py:589` — `if self.t[11:16] < self.time_cap`) → **no swing can declare between 00:00 and 09:28 IST in live**.
+- **Impact:** Live's entire swing chain diverges from the backtest's (proof: replay harness 0/32 with live defaults vs baseline 261/261). Swings forming overnight never declare on time; every downstream mark/entry shifts.
+- **Fix:** Force `timeCap="00:00"` in `PersistentSwingEngine` opts (match the backtest). Test first: replay harness A/B (`--timecap 00:00` vs default).

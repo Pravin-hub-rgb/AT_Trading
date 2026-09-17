@@ -75,12 +75,20 @@ def load_candles():
     return out["15m"], out["1h"]
 
 
-def build_swings(candles, tf, min_bars):
-    """Fresh PersistentSwingEngine over a candle list (throwaway state DB)."""
+def build_swings(candles, tf, min_bars, time_cap=None):
+    """Fresh PersistentSwingEngine over a candle list (throwaway state DB).
+
+    time_cap=None keeps CURRENT live behavior (timeCap default 09:29 — Nifty
+    session-gate leftover, C11). Pass "00:00" to test the backtest's 24/7
+    behavior.
+    """
     state_db = Database(os.path.join(tempfile.mkdtemp(prefix="replay_sw_"), "s.db"))
     state_db.connect()
     state_db.create_tables()
-    pse = PersistentSwingEngine(tf, state_db, {"minBars": min_bars})
+    opts = {"minBars": min_bars}
+    if time_cap:
+        opts["timeCap"] = time_cap
+    pse = PersistentSwingEngine(tf, state_db, opts)
     swings = []
     for g_idx, c in enumerate(candles):
         r = pse.process_bar(FlowCandle(date=c["date"], open=c["open"], high=c["high"],
@@ -106,6 +114,7 @@ def main():
     global COOLDOWN_BARS
     ap = argparse.ArgumentParser(description="Live-window replay harness")
     ap.add_argument("--sample", type=int, default=0, help="replay only first N trades")
+    ap.add_argument("--timecap", default=None, help="C11 test: '00:00' = backtest 24/7 behavior; default = live's 09:29 leftover")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -121,6 +130,7 @@ def main():
     out("=" * 78)
     out(f"REPLAY HARNESS — all backtest trades through the live window pipeline")
     out(f"  instrument: {INSTRUMENT}  (C9: same params live must bind)")
+    out(f"  timeCap: {args.timecap or '09:29 (live default, C11)'}")
     out(f"  start: {time.strftime('%Y-%m-%d %H:%M:%S')}  sample={args.sample or 'ALL'}")
     out("=" * 78)
 
@@ -159,8 +169,8 @@ def main():
         if not f15 or not f1h:
             misses.append((E, d, "no-data"))
             continue
-        sw15 = build_swings(f15, "15m", SWING["min_bars_15m"])
-        sw1h = build_swings(f1h, "1h", SWING["min_bars_1h"])
+        sw15 = build_swings(f15, "15m", SWING["min_bars_15m"], time_cap=args.timecap)
+        sw1h = build_swings(f1h, "1h", SWING["min_bars_1h"], time_cap=args.timecap)
         c15 = [c for c in f15 if c["ts"] >= E - 30 * DAY]
         c1h = [c for c in f1h if c["ts"] >= E - 20 * DAY]
         sim_trades = run_sim(c15, sw15, c1h, sw1h, v18)
