@@ -34,7 +34,7 @@ LABEL = "BTC Spot" if SPOT else "Bybit Perp"
 BYBIT_PARAMS = {
     "chop_thresh": 58.0,
     "cooldown_bars": 10,
-    "sl_buf_atr": 0.10,
+    "sl_buf_atr": 0.01,
     "max_consecutive_losses": 3,
 }
 SPOT_PARAMS = {

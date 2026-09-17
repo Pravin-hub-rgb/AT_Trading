@@ -910,11 +910,11 @@ def btc_backtest(
                 # Per-instrument tuning (2026-09-17, corrected streak + cd sweep):
                 #   BTC Spot:     chop=61.8 cd=20 slbuf=0.25 halt=5 → +331.1R  DD 9.7R
                 #   Binance Perp: chop=61.8 cd=5  slbuf=0.15 halt=5 → +311.7R  DD 11.6R
-                #   Bybit Perp:   chop=58.0 cd=10 slbuf=0.10 halt=3 → +338.5R  DD 17.9R
+                # Bybit Perp:   chop=58.0 cd=10 slbuf=0.01 halt=3 → +365.7R  DD 17.9R
                 if symbol == "BTCUSDT_BYBIT":
                     _chop = 58.0
                     _cd = 10
-                    _slbuf = 0.10
+                    _slbuf = 0.01
                     _halt = 3
                 elif symbol == "BTCUSDT_PERP":
                     _chop = 61.8

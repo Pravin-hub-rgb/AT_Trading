@@ -41,7 +41,7 @@ SYMBOL_PARAMS = {
     "BTCUSDT_BYBIT": {
         "chop_thresh": 58.0,
         "cooldown_bars": 10,
-        "sl_buf_atr": 0.10,
+        "sl_buf_atr": 0.01,              # sweep-optimized: +27R over 0.10, same DD
         "max_consecutive_losses": 3,
         "fee_pct": 0.055,             # Bybit taker 0.055%/side
         "entry_slip_pct": 0.005,      # 5bp entry slip (very conservative)

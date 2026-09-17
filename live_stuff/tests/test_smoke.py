@@ -4,8 +4,8 @@ Uses the ACTUAL backend functions (compute_btc_swings, simulate_htf_ltf_streak_h
 NOT a toy reimplementation.
 
 Run: python live_stuff/tests/test_smoke.py
-Pass criteria: 365 trades, +338.5R (+-0.5), all years positive.
-(Bybit Perp with pre-FS filter applied, per-symbol v18 params: halt=3, sl_buf=0.10, cd=10)
+Pass criteria: 367 trades, +365.7R (+-0.5), all years positive.
+(Bybit Perp with pre-FS filter applied, per-symbol v18 params: halt=3, sl_buf=0.01, cd=10)
 FCFS: first tradeable mark per swing decides — pass or fail, no second chances.
 B1 never abandons. Pre-FS marks skip (don't kill swing) — swing stays alive for post-FS marks.
 """
@@ -20,7 +20,7 @@ from src.btc.engines.htf_ltf.v18_streak_halt import simulate_htf_ltf_streak_halt
 from src.walker import FlowCandle
 
 SYMBOL = "BTCUSDT_BYBIT"
-PARAMS = {"sl_buf_atr": 0.10, "chop_thresh": 58.0, "cooldown_bars": 10,
+PARAMS = {"sl_buf_atr": 0.01, "chop_thresh": 58.0, "cooldown_bars": 10,
           "max_consecutive_losses": 3}
 
 
@@ -73,8 +73,8 @@ def main():
     print("=" * 72)
     print("BACKBENCHER SMOKE TEST -- BYBIT PERP -- REAL v18 ENGINE")
     print("=" * 72)
-    print(f"  trades: {n}  -> {'PASS' if n == 365 else 'FAIL'}")
-    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 338.5):.2f})  -> {'PASS' if abs(tot - 338.5) < 0.5 else 'FAIL'}")
+    print(f"  trades: {n}  -> {'PASS' if n == 367 else 'FAIL'}")
+    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 365.7):.2f})  -> {'PASS' if abs(tot - 365.7) < 0.5 else 'FAIL'}")
     print(f"  win rate: {wr:.1f}%  ({len(wins)}W/{len(losses)}L)")
     print(f"  PF: {pf:.2f}")
     for y, v in sorted(years.items()):
@@ -82,8 +82,8 @@ def main():
     print(f"  all years positive: {'PASS' if allyes else 'FAIL'}")
     print("=" * 72)
 
-    assert n == 365, f"Expected 365 trades, got {n}"
-    assert abs(tot - 338.5) < 0.5, f"Expected +338.5R, got {tot:+.1f}R"
+    assert n == 367, f"Expected 367 trades, got {n}"
+    assert abs(tot - 365.7) < 0.5, f"Expected +365.7R, got {tot:+.1f}R"
     assert allyes, "Not all years positive"
     print("ALL CHECKS PASSED")
 

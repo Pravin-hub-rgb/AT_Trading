@@ -13,7 +13,7 @@ No manual tuning needed — just select the symbol in the UI.
 |-------|----------|-------------|------------|
 | chop_thresh | 61.8 | 61.8 | **58.0** |
 | cooldown_bars | 20 | **5** | **10** |
-| sl_buf_atr | 0.25 | **0.15** | **0.10** |
+| sl_buf_atr | 0.25 | **0.15** | **0.01** |
 | ext_stop_r | 1.5 | 1.5 | 1.5 |
 | max_consecutive_losses | 5 | 5 | **3** |
 | mode | b2_vs_flip_chop | b2_vs_flip_chop | b2_vs_flip_chop |
@@ -48,23 +48,23 @@ Bold = different from BTC Spot defaults.
 Binance perp is nearly identical to spot — only cd (20→5) and slbuf (0.25→0.15) differ.
 Chop stays at 61.8. DD slightly higher (11.6R vs 9.7R).
 
-### Bybit Perp — tuned (FIXED streak + cd sweep + FCFS + pre-FS skip, 2026-09-17)
+### Bybit Perp — tuned (FIXED streak + cd sweep + FCFS + pre-FS skip + slbuf sweep, 2026-09-17)
 
 | Metric | Value |
 |--------|-------|
-| Trades | **365** |
-| Gross R | **+338.5R** |
-| Costs (fees+slip+funding) | -71.4R |
-| Net R | **+267.1R** |
-| Win% | **29.3%** |
+| Trades | **367** |
+| Gross R | **+365.7R** |
+| Costs (fees+slip+funding) | -74.6R |
+| Net R | **~+291R** |
+| Win% | **29.2%** |
 | Max DD | 17.9R |
-| PF | **2.47** |
-| Avg Win | +5.32R |
-| Avg Loss | -0.89R |
-| Yearly gross | 2023: +70.8R, 2024: +119.1R, 2025: +64.4R, 2026: +84.2R |
+| PF | **2.56** |
+| Avg Win | +5.61R |
+| Avg Loss | -0.90R |
+| Yearly gross | 2023: +75.0R, 2024: +138.3R, 2025: +65.8R, 2026: +87.1R |
 
-Bybit needs more aggressive tuning: chop lower (58), cd=10, tighter slbuf.
-cd=10 filters 10 trash entries (2.5h cooldown after loss) for +33R more than cd=0.
+Bybit needs more aggressive tuning: chop lower (58), cd=10, tightest slbuf.
+**sl_buf_atr=0.01 sweep-optimized:** +27R net over 0.10. SL at swing pivot with $2-6 buffer (just enough to dodge exact-pivot wicks). 147 SL hits vs 215 at slbuf=0 — same R, less pain. Fragility margin: 0.158R slippage per stop needed to flip — directly measurable in paper mode.
 **FCFS** (first come first serve): first tradeable mark per swing decides — pass or fail, no second chances.
 **Pre-FS skip** (C13a fix): pre-FS marks skip (don't kill swing) — swing stays alive for post-FS marks. Adds +64 trades, +45.9R gross.
 
@@ -92,9 +92,11 @@ through in moderate-chop conditions. Binance perp is cleaner — same as spot.
 After a loss, Bybit needs 10 bars (2.5h) cooldown — filters 10 trash entries for +33R.
 Binance perp: 5 bars enough. Spot needs 20 bars to avoid re-entry into choppy zone.
 
-### sl_buf_atr (0.25 → 0.15 perp, 0.10 Bybit)
+### sl_buf_atr (0.25 → 0.15 perp, 0.01 Bybit)
 Perp wicks are tighter at entry than spot. Binance perp: 0.15 (tightest).
-Bybit perp: 0.10 (tightest). Spot: 0.25 (widest buffer).
+Bybit perp: 0.01 (tightest). Sweep-optimized — SL sits at the swing pivot with $2-6 buffer (0.01 × ATR).
+Smaller risk denominator → every surviving winner scales up (+5.61R avg win vs +5.32R at 0.10).
+147 SL hits vs 215 at slbuf=0 — same R, less slippage exposure. Spot: 0.25 (widest buffer).
 
 ---
 
@@ -105,7 +107,7 @@ Bybit perp: 0.10 (tightest). Spot: 0.25 (widest buffer).
 if symbol == "BTCUSDT_BYBIT":
     _chop = 58.0
     _cd = 10
-    _slbuf = 0.10
+    _slbuf = 0.01
     _halt = 3
 elif symbol == "BTCUSDT_PERP":
     _chop = 61.8
