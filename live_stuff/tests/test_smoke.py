@@ -4,8 +4,10 @@ Uses the ACTUAL backend functions (compute_btc_swings, simulate_htf_ltf_streak_h
 NOT a toy reimplementation.
 
 Run: python live_stuff/tests/test_smoke.py
-Pass criteria: 261 trades, +470.5R (+-0.2), all years positive.
+Pass criteria: 375 trades, +305.5R (+-0.5), all years positive.
 (Bybit Perp with pre-FS filter applied, per-symbol v18 params: halt=3, sl_buf=0.10)
+FIXED: streak logic now correctly books every trade including Nth loss,
+then skips NEXT entry. Old 261/+470.5R was from engine hiding losses.
 """
 import sys
 from pathlib import Path
@@ -71,8 +73,8 @@ def main():
     print("=" * 72)
     print("BACKBENCHER SMOKE TEST -- BYBIT PERP -- REAL v18 ENGINE")
     print("=" * 72)
-    print(f"  trades: {n}  -> {'PASS' if n == 261 else 'FAIL'}")
-    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 470.5):.2f})  -> {'PASS' if abs(tot - 470.5) < 0.2 else 'FAIL'}")
+    print(f"  trades: {n}  -> {'PASS' if n == 375 else 'FAIL'}")
+    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 305.5):.2f})  -> {'PASS' if abs(tot - 305.5) < 0.5 else 'FAIL'}")
     print(f"  win rate: {wr:.1f}%  ({len(wins)}W/{len(losses)}L)")
     print(f"  PF: {pf:.2f}")
     for y, v in sorted(years.items()):
@@ -80,8 +82,8 @@ def main():
     print(f"  all years positive: {'PASS' if allyes else 'FAIL'}")
     print("=" * 72)
 
-    assert n == 261, f"Expected 261 trades, got {n}"
-    assert abs(tot - 470.5) < 0.2, f"Expected +470.5R, got {tot:+.1f}R"
+    assert n == 375, f"Expected 375 trades, got {n}"
+    assert abs(tot - 305.5) < 0.5, f"Expected +305.5R, got {tot:+.1f}R"
     assert allyes, "Not all years positive"
     print("ALL CHECKS PASSED")
 

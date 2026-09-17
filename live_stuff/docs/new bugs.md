@@ -464,3 +464,30 @@ Trade #17 note: signal, window, regime, direction all correct; only the walk's b
 2. **C13**: abandon-swing rule in signal collection (pending user's ruling on scope). ~15 lines.
 3. Re-measure the full-history net-R with both rules + L1, then rebuild the sequential one-pass study for the final live-expected number.
 
+---
+
+## LIVE_STUFF PENDING CHANGES (do AFTER backtest is fully fixed)
+
+**Date:** 2026-09-17
+
+### LIVE-1: Streak halt logic (backtest fix DONE, live needs update)
+
+- **Backtest fix applied:** `v18_streak_halt.py` — streak logic now correctly: (a) BOOKS every trade including Nth loss, (b) sets `halt_skip_next=True` after Nth loss, (c) skips NEXT entry before resetting. Internal `consecutive_losses` never exceeds halt. Verified with assertion test.
+- **Live params need update:** `live_stuff/engine/v18_params.py` line 45 — `max_consecutive_losses: 3` for BYBIT. Sweep shows **halt=5 gives +128.1R vs +114.1R with halt=0 (best PF 1.29)**. Change after backtest is final.
+- **Live_loop.py:** the streak logic in `live_loop.py` is separate from `v18_streak_halt.py`. The live loop does NOT use `v18_streak_halt.py` directly — it has its own trade tracking. Need to check if live_loop has the same bug. (Deferred.)
+
+### LIVE-2: timeCap="09:29" Nifty leftover in PersistentSwingEngine
+
+- **Bug:** `backend/src/firstswing.py:73` defaults `timeCap="09:29"` (Nifty session gate). BTC is 24/7.
+- **Backtest override:** `btc_swing.py:54` forces `timeCap="00:00"` — backtest is correct.
+- **Live does NOT override:** `live_loop.py:94-95` creates PersistentSwingEngine without `timeCap` → gets "09:29" → blocks swing declarations before 09:29 IST.
+- **Fix needed in live_stuff:** pass `"timeCap": "00:00"` in opts dict for PersistentSwingEngine.
+- **Also affected:** `parity_report.py:77` (same missing override).
+
+### LIVE-3: Backtest numbers changed with streak fix
+
+- **Old numbers (broken streak):** halt=0 → 261t +470.5R, PF 4.71 (smoke test was wrong)
+- **New numbers (fixed streak):** halt=0 → 749t +114.1R, PF 1.25 (5000 swings)
+- **Old halt=3 appeared to give +355R** — was hiding 288 losses. Real: +84.2R.
+- **All prior performance claims based on broken streak logic are INVALID.** Sweep with fixed logic needed before any live deployment.
+

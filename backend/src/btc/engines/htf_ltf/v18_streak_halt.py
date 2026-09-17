@@ -210,7 +210,7 @@ def simulate_htf_ltf_streak_halt(
     busy_until=""  # datetime string — timestamp-based, not index
     last_loss_bar=-999999
     consecutive_losses=0
-    halted=False
+    halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
     from src.btc.btc_engine import _trail_events as _te
     import bisect
     for sig, use in filtered:
@@ -219,10 +219,11 @@ def simulate_htf_ltf_streak_halt(
         if i < 0 or i>=n-1: continue
         if busy_until and bar_time <= busy_until: continue
         if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue
-        # Streak halt: if halted, only resume on a winner
-        # We need to process the trade first to know if it's a winner
-        # If halted and this trade is a winner, we resume and add it
-        # If halted and this trade is a loser, we skip it (don't add to list)
+        # Streak halt (causal): after N consecutive losses BOOKED, skip NEXT entry
+        if halt_skip_next:
+            halt_skip_next=False
+            consecutive_losses=0
+            continue
         direction=int(sig["dir"])
         entry=float(candles_ltf[i]["close"])
         sl_pivot=sig["swing_start_px"]
@@ -341,19 +342,15 @@ def simulate_htf_ltf_streak_halt(
             exit_date=candles_ltf[exit_idx]["date"]
         move=(exit_px-entry) if direction==1 else (entry-exit_px)
         r_multiple=move/risk if risk>0 else 0
-        # Streak halt logic: check BEFORE adding to list
-        skip_trade = False
+        # Streak halt (causal): book EVERY trade, then check streak
         if max_consecutive_losses > 0:
             if r_multiple <= 0:
                 consecutive_losses += 1
                 if consecutive_losses >= max_consecutive_losses:
-                    halted = True
-                    skip_trade = True  # Skip this trade (it's the Nth consecutive loss)
+                    halt_skip_next = True  # skip the NEXT entry
+                    consecutive_losses = 0  # reset after halt
             else:
                 consecutive_losses = 0
-                halted = False
-        if skip_trade:
-            continue
         ltf_trades.append({
             "trade_no": len(ltf_trades)+1,
             "dir": "long" if direction==1 else "short",
