@@ -367,3 +367,32 @@
 - **Bug:** `SwingEngine` defaults `timeCap="09:29"` — a Nifty (Indian market hours) session gate. The backtest overrides it to `"00:00"` for 24/7 BTC. The live `PersistentSwingEngine` does NOT override it, so live inherits "09:29": `_confirm` returns early (`firstswing.py:589` — `if self.t[11:16] < self.time_cap`) → **no swing can declare between 00:00 and 09:28 IST in live**.
 - **Impact:** Live's entire swing chain diverges from the backtest's (proof: replay harness 0/32 with live defaults vs baseline 261/261). Swings forming overnight never declare on time; every downstream mark/entry shifts.
 - **Fix:** Force `timeCap="00:00"` in `PersistentSwingEngine` opts (match the backtest). Test first: replay harness A/B (`--timecap 00:00` vs default).
+
+### C10 FINAL ROOT-CAUSE STACK + MEASURED RESULTS (2026-09-17, causal replay test `causal_replay.py`)
+
+C10 is not one bug — it is a STACK of five independent layers, each verified by A/B replay of the 261-trade baseline through truncated (causal, live-style) windows:
+
+| # | Layer | Where | Proof |
+|---|-------|-------|-------|
+| L1 | Still-open HTF windows are DROPPED from the LTF gate | `v18_streak_halt.py:106` `to_intervals()`: `if t["outcome"]=="open": continue` | Every baseline trade sits INSIDE its governing HTF window by construction; a truncated slice always ends with that window open -> dropped -> no covering window -> gate rejects. Fix (open window = active bias, end=+inf) restores it. User rule confirmed: window closes only on -1R / 3R / 16d cap; new window never opens while the previous is alive (verified per-track: flip and b2 tracks are each strictly sequential, they run in PARALLEL) |
+| L2 | Live PSE chains swings FORWARD-ONLY; the backtest re-chains from the previous swing's END EXTREME | `persistent_swing.py:157-163` vs `btc_swing.py:148-154` | On identical data, live PSE 1h chain diverges from the backtest `continuous` chain from swing #1 onward (20 vs 27 swings, different pivots/marks). FIX VERIFIED: on each declaration, replay the overlap candles `[end_idx+1..now]` into the fresh engine (recursively) -> chain becomes 27/27 IDENTICAL (0 diffs). ReplayPSE vs continuous over the full 261 replay: IDENTICAL results (209/253 both) |
+| L3 | INDEX-SPACE MISMATCH: swings carry indices from one candle list, the sim gets a DIFFERENT (trimmed) list | LIVE: `live_loop.py:_run_v18_simulation` passes `c15 = self.window_15m` (trimmed, positions restart) with `sw15 = self.all_swings_15m` (g_idx = monotonic counters, never reset). HARNESS: same pattern (swings over 35d/25d warmup fetch, sim on 30d/20d trim) | With mismatched lists: `_collect_signals` index fallbacks (`store.pos(b_time)` vs `start_idx_fb` / `prev_confirmed_idx_fb` / `candles[_pe_idx.._b_idx]` slices) compare two spaces -> ALL signals silently dropped -> 0 LTF signals, 0 HTF walk trades on EVERY window. Fix: sim candles must be the SAME list the swings were built on |
+| L4 | Signal at the slice's LAST bar is dropped | engine walk: `if i >= n-1: continue` | The entry bar E is the last candle of a `[..E]` slice -> trade never taken in that rerun; live discovers it on the NEXT sim rerun (15m later). Replay must pad the slice (+2 bars = next rerun) |
+| L5 | FORMING swing's real-time marks are invisible to the batch chain (user's original hypothesis — CONFIRMED) | batch `compute_btc_swings` attaches marks only to DECLARED swings; live PSE exposes them via `get_open_swing()` | Worked example trade #10 (06-Apr-2023 00:45 IST LONG B2): truncated chain's swing 77 marks end 19:30; the 00:45 B2-up mark belongs to the still-forming swing -> batch list has no such signal. Fix: append the forming swing's marks (the live-open swing) to the chain before `_collect_signals` |
+| C11 | timeCap 09:29 (separate, already documented) | `persistent_swing.py` | Real bug, orthogonal — include in the fix |
+
+**MEASURED CAUSAL REPLAY (all 261 baseline trades, live-style truncated windows, causal engine + fixes):**
+
+| Setup | Reproduced |
+|-------|-----------|
+| Harness as-is (current live procedure) | 0/32 |
+| L1 only (causal engine, mismatched lists) | 0/253 |
+| L1 + L3 (consistent) | 0/253 (walk stops early) |
+| L1 + L3 + L4 (pad 2) + L5 (open-swing marks) | **209/253 (82.6%)** within 2 bars |
+| same + pad 12 (3h discovery) | 219/253 (86.6%) |
+| same + pad 48 (12h discovery) | 230/253 (90.9%) |
+
+- ReplayPSE (L2 fix) vs continuous chain: **identical 209/253** — the live chain fix is validated.
+- Baseline sanity: causal engine on FULL history = 261/261 exact match (patch touches only the open-window line).
+- Remaining ~9% (23 trades) blocked even at 12h discovery — dominated by HTF window timing (1h flip candle closes up to 1h after the mark — user's candle-close point) and chop-regime timing at the gate. These are the honest live gaps to quantify next.
+- R/outcome parity of reproduced trades not yet compared (entry bar + direction matched only). Next step: net-R comparison of the causal pipeline vs +470.5R.
