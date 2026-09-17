@@ -1,7 +1,8 @@
 # Multi-Instrument Backtest Results (v18)
 
-**Date:** 2026-09-10
-**Strategy:** v18 streak_halt (mode=b2_vs_flip_chop, rr=3.0, cooldown=20, halt=5L, ext_stop=1.5R)
+**Date:** 2026-09-10 (updated 2026-09-17)
+**Strategy:** v18 streak_halt (mode=b2_vs_flip_chop, rr=3.0, cooldown=0, halt=3L, ext_stop=1.5R)
+**Note:** BTCUSDT BYBIT results use corrected streak engine (commit 375d9c4). Other instruments used old broken engine.
 **Period:** 2023-01-01 to 2026-09-10 (futures data from fapi.binance.com)
 
 ## Tier 1 — Top Performers

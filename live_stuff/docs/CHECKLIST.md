@@ -579,9 +579,9 @@ If something goes catastrophically wrong (exchange bug, data feed corruption), o
 ### 20.3 Applied to Backtest Engine
 - [x] `btc_routes.py` — Bybit Perp: `_slbuf=0.10`, `_halt=3`
 - [x] `v18_params.py` — BYBIT: `sl_buf_atr=0.10`, `max_consecutive_losses=3`
-- [x] `test_smoke.py` — pass criteria: 261t, +470.5R
-- [x] `test_v18_integrity.py` — BYBIT_PARAMS updated, streak <= 3, WR range 30-50%
-- [x] Smoke test: 261t +470.5R PF 4.71 — ALL CHECKS PASSED
+- [x] `test_smoke.py` — pass criteria: 375t, +305.5R gross
+- [x] `test_v18_integrity.py` — BYBIT_PARAMS updated, streak <= 3, WR range 25-40%
+- [x] Smoke test: 375t +305.5R gross PF 2.29 — ALL CHECKS PASSED
 - [x] Integrity test: ALL 10 CHECKS PASSED
 
 ### 20.4 Per-Instrument Tuning Principle

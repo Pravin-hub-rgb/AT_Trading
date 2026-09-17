@@ -13,9 +13,9 @@ No manual tuning needed — just select the symbol in the UI.
 |-------|----------|-------------|------------|
 | chop_thresh | 61.8 | 61.8 | **58.0** |
 | cooldown_bars | 20 | **5** | **0** |
-| sl_buf_atr | 0.25 | **0.15** | **0.20** |
+| sl_buf_atr | 0.25 | **0.15** | **0.10** |
 | ext_stop_r | 1.5 | 1.5 | 1.5 |
-| max_consecutive_losses | 5 | 5 | 5 |
+| max_consecutive_losses | 5 | 5 | **3** |
 | mode | b2_vs_flip_chop | b2_vs_flip_chop | b2_vs_flip_chop |
 
 Bold = different from BTC Spot defaults.
@@ -48,19 +48,26 @@ Bold = different from BTC Spot defaults.
 Binance perp is nearly identical to spot — only cd (20→5) and slbuf (0.25→0.15) differ.
 Chop stays at 61.8. DD slightly higher (11.6R vs 9.7R).
 
-### Bybit Perp — tuned
+### Bybit Perp — tuned (FIXED streak logic, 2026-09-17)
 
 | Metric | Value |
 |--------|-------|
-| Trades | 357 |
-| Net R | **+307.8R** |
-| Win% | 33.6% |
-| Max DD | 9.2R |
-| PF | 2.44 |
-| Yearly | 2023: +54.5R, 2024: +94.9R, 2025: +88.1R, 2026: +77.4R |
+| Trades | 375 |
+| Gross R | **+305.5R** |
+| Costs (fees+slip+funding) | -88.6R |
+| Net R | **+216.9R** |
+| Win% | 29.6% |
+| Max DD | 16.0R |
+| PF | 2.29 |
+| Avg Win | +4.88R |
+| Avg Loss | -0.89R |
+| Yearly gross | 2023: +69.7R, 2024: +87.1R, 2025: +65.5R, 2026: +83.2R |
+| Yearly net | 2023: +48.4R, 2024: +63.4R, 2025: +38.8R, 2026: +66.3R |
 
 Bybit needs more aggressive tuning: chop lower (58), no cooldown, tighter slbuf.
-DD actually lower than spot (9.2R vs 9.7R).
+Win rate ~30% is normal for this momentum strategy — edge is avg win (4.88R) being
+5.5x avg loss (0.89R). Old "45% win rate" claim was from broken streak logic that
+deleted losses.
 
 ### Bybit Perp — default spot params (no tuning)
 
@@ -87,9 +94,9 @@ After a loss, perp recovers faster than spot. Binance perp: 5 bars enough.
 Bybit perp: 0 bars (immediate re-entry). Spot needs 20 bars to avoid re-entry
 into the same choppy zone.
 
-### sl_buf_atr (0.25 → 0.15 perp, 0.20 Bybit)
+### sl_buf_atr (0.25 → 0.15 perp, 0.10 Bybit)
 Perp wicks are tighter at entry than spot. Binance perp: 0.15 (tightest).
-Bybit perp: 0.20 (middle). Spot: 0.25 (widest buffer).
+Bybit perp: 0.10 (tightest). Spot: 0.25 (widest buffer).
 
 ---
 
@@ -100,15 +107,18 @@ Bybit perp: 0.20 (middle). Spot: 0.25 (widest buffer).
 if symbol == "BTCUSDT_BYBIT":
     _chop = 58.0
     _cd = 0
-    _slbuf = 0.20
+    _slbuf = 0.10
+    _halt = 3
 elif symbol == "BTCUSDT_PERP":
     _chop = 61.8
     _cd = 5
     _slbuf = 0.15
+    _halt = 5
 else:  # BTCUSDT spot
     _chop = 61.8
     _cd = 20
     _slbuf = 0.25
+    _halt = 5
 ```
 
 Applied to both v18 and v19 engine variants.

@@ -1,8 +1,14 @@
 # New Bugs — Deep Audit (Pre-Production)
 
-**Date:** 2026-09-15
-**Status:** OPEN — must fix before real money
+**Date:** 2026-09-15 (updated 2026-09-17)
+**Status:** OPEN — must fix before real money (streak bug FIXED)
 **Scope:** Full live execution path audit (trade execution, backtest-live gaps, persistence, order management)
+
+### STREAK FIX APPLIED (2026-09-17)
+- **Commit:** `375d9c4` — streak halt books every trade, skips NEXT entry after Nth loss
+- **Verified:** Smoke test 375t/+305.5R gross/+216.9R net/PF 2.29/29.6% WR
+- **Old numbers (261t/+470.5R/PF 4.71/45% WR) are INVALID** — from broken engine that deleted losses
+- **C10 analysis below uses old baseline** — diagnostic only, not current live numbers
 
 ---
 
@@ -484,10 +490,11 @@ Trade #17 note: signal, window, regime, direction all correct; only the walk's b
 - **Fix needed in live_stuff:** pass `"timeCap": "00:00"` in opts dict for PersistentSwingEngine.
 - **Also affected:** `parity_report.py:77` (same missing override).
 
-### LIVE-3: Backtest numbers changed with streak fix
+### LIVE-3: Backtest numbers changed with streak fix ✅ FIXED (2026-09-17)
 
-- **Old numbers (broken streak):** halt=0 → 261t +470.5R, PF 4.71 (smoke test was wrong)
-- **New numbers (fixed streak):** halt=0 → 749t +114.1R, PF 1.25 (5000 swings)
-- **Old halt=3 appeared to give +355R** — was hiding 288 losses. Real: +84.2R.
-- **All prior performance claims based on broken streak logic are INVALID.** Sweep with fixed logic needed before any live deployment.
+- **Verified numbers (fixed streak, halt=3, slbuf=0.10):** 375t, +305.5R gross, +216.9R net (after costs), PF 2.29, 29.6% WR
+- **Per year:** 2023: +48.4R net, 2024: +63.4R net, 2025: +38.8R net, 2026: +66.3R net
+- **Old numbers (broken streak):** halt=0 → 261t +470.5R, PF 4.71 (INVALID — deleted losses)
+- **Smoke test:** All checks pass (375t/+305.5R assertions)
+- **Commit:** `375d9c4`
 

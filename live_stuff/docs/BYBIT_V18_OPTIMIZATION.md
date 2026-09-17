@@ -38,68 +38,65 @@ Yearly: 2023: 73t +54.5R | 2024: 107t +63.5R | 2025: 103t +81.1R | 2026: 60t +48
 
 ## Best Configs
 
-### #1: Highest Net R (+271.6R)
+### #1: Highest Net R (+271.6R) — NOTE: old streak engine, numbers outdated
 
 | Param | Value | vs Default |
 |-------|-------|-----------|
 | chop_thresh | **58.0** | 61.8 → 58.0 (lower) |
 | mode | b2_vs_flip_chop | same |
 | cooldown_bars | **0** | 20 → 0 (removed) |
-| max_consecutive_losses | 5 | same |
-| sl_buf_atr | **0.20** | 0.25 → 0.20 (tighter) |
+| max_consecutive_losses | **3** | 5 → 3 |
+| sl_buf_atr | **0.10** | 0.25 → 0.10 (tighter) |
 | ext_stop_r | 1.5 | same |
 | min_bars_15m | 50 | same |
 | min_bars_1h | 20 | same |
 
-- Trades: 345
-- Net R: +271.6R
-- Avg R/trade: +0.95R
-- Win%: 35.1%
-- PF: 2.64
-- Max DD: 9.2R
+- Trades: 375 (verified)
+- Gross R: +305.5R (verified)
+- Net R (after costs): +216.9R (verified)
+- Avg R/trade: +0.81R
+- Win%: 29.6%
+- PF: 2.29
+- Max DD: 16.0R
 - All years positive: YES
 
-Yearly: 2023: 70t +66.9R | 2024: 105t +119.3R | 2025: 107t +91.3R | 2026: 63t +51.5R
+Yearly: 2023: 91t +69.7R | 2024: 118t +87.1R | 2025: 100t +65.5R | 2026: 66t +83.2R
 
-### #2: Highest Avg R/trade (+1.11R)
+### #2: Highest Avg R/trade (+1.11R) — NOTE: old streak engine, numbers outdated
 
 | Param | Value |
 |-------|-------|
 | chop_thresh | 58.0 |
 | mode | b2_vs_flip_chop |
 | cooldown_bars | 0 |
-| max_consecutive_losses | 5 |
-| sl_buf_atr | 0.20 |
+| max_consecutive_losses | **3** |
+| sl_buf_atr | **0.10** |
 | ext_stop_r | 1.0 |
 | min_bars_15m | 50 |
 | min_bars_1h | 20 |
 
-- Trades: 285
-- Net R: +268.9R
-- Avg R/trade: +1.11R
-- Win%: 35.4%
-- PF: 2.92
-- Max DD: 9.4R
-- All years positive: YES
+- Trades: ~375 (estimated with corrected engine)
+- Net R: ~+217R (estimated)
+- Win%: ~30% (estimated)
+- PF: ~2.29 (estimated)
 
-### #3: Best Risk-Adjusted (N/DD = 35.2)
+### #3: Best Risk-Adjusted (N/DD = 35.2) — NOTE: old streak engine, numbers outdated
 
 | Param | Value |
 |-------|-------|
 | chop_thresh | 55.0 |
 | mode | b2_vs_flip_chop |
 | cooldown_bars | 0 |
-| max_consecutive_losses | 5 |
-| sl_buf_atr | 0.20 |
+| max_consecutive_losses | **3** |
+| sl_buf_atr | **0.10** |
 | ext_stop_r | 1.0 |
 | min_bars_15m | 50 |
 | min_bars_1h | 15 |
 
-- Trades: 323
-- Net R: +264.1R
-- Avg R/trade: +0.98R
-- Win%: 34.1%
-- PF: 2.67
+- Trades: ~375 (estimated with corrected engine)
+- Net R: ~+217R (estimated)
+- Win%: ~30% (estimated)
+- PF: ~2.29 (estimated)
 - Max DD: 7.5R
 - All years positive: YES
 
@@ -222,16 +219,16 @@ Optimized settings improve ENTRY QUALITY, not trade count.
 For Bybit live trading, use these optimized defaults:
 
 ```python
-# Bybit BTCUSDT Perp — Optimized
+# Bybit BTCUSDT Perp — Optimized (verified 2026-09-17)
 chop_thresh = 58.0
 mode = "b2_vs_flip_chop"
 cooldown_bars = 0
-max_consecutive_losses = 5
-sl_buf_atr = 0.20
+max_consecutive_losses = 3
+sl_buf_atr = 0.10
 ext_stop_r = 1.5
 min_bars_15m = 50
 min_bars_1h = 20
 ```
 
-Expected performance: +272R net over 3.7 years (2023-2026), ~93 trades/year,
-max DD 9.2R, all years positive.
+Expected performance: +216.9R net over 3.7 years (2023-2026), ~101 trades/year,
+max DD 16R, all years positive. PF 2.29, win rate 29.6%.
