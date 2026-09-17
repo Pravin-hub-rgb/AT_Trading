@@ -410,3 +410,23 @@ C10 is not one bug — it is a STACK of five independent layers, each verified b
 - IMPORTANT FINDING: the causal slices also produce **304 unique EXTRA entries not in the backtest** (causal chain state differs -> different signals fire). These are excluded from the +301R above. Whether they add or subtract R requires the single sequential causal pass (the true live pipeline study). The honest live expectation is therefore BETWEEN +301R (extras ignored) and higher (extras included) — must be measured with a one-pass sequential simulation before going live.
 - W/L: causal 85/124 vs baseline 119/142.
 - Next: (1) sequential one-pass causal simulator for the true trade set incl. extras; (2) code fixes L1-L5 + C11 (all now specified with proofs); (3) parity_report integration.
+
+### C10 BLOCKER GROUPS (2026-09-17) — why 44 of 261 trades are not taken causally
+
+Group-1/2/3 lists derived by diffing the pad=2 miss list (44) against the pad=12 miss list (34):
+
+**GROUP 1 — Walk-state latency: 16 trades** `#17, 23, 61, 68, 72, 75, 92, 112, 115, 133, 141, 147, 184, 215, 220, 227`
+- Signal EXISTS at the entry bar (forming-swing mark fired, window + regime + direction all correct). The blocker is the LTF walk itself: the PREVIOUS trade is still open / its trail exit lands within bars of the new entry bar, so `busy_until` blocks the new signal.
+- Worked example — REF trade #17 (16-May-2023 00:45 IST SHORT B2 @ 27380.8):
+  - pad=2: signal present (B2-down 00:45 from forming swing 78: B1 23:45, B2 00:45); chop 59.7 -> b2 regime; b2 window SHORT open since 10-May covering the bar. NOT taken — the 14-May short (FLIP, r=-0.981, trail) was still unwinding; its trail exit lands at/after the entry bar -> busy_until blocks.
+  - pad=12 (3h discovery): taken. dts=0, entry price 27380.8 == baseline entry price EXACTLY -> R parity holds.
+- Live handling: these are taken a few bars late (sim rerun discovers them once the previous trade unwinds). Entry price identical to baseline in this sample, so R is not lost — only the execution is later. Current live stale guard (2 bars) must be reviewed against this class.
+
+**GROUP 2 — HTF candle-close timing: the hard core of the remaining 34**
+- A 1h flip/B2 mark is stamped at the mark candle, but the window legitimately opens when the 1h candle CLOSES (up to 1h later). Same for the chop-regime value at the LTF gate (the containing 1h bar finalizes only at its close). The retro backtest uses the final values; live at the entry bar may still see the OLD window/regime -> direction or regime check fails.
+- This is the designed cost of trading on a candle-close basis (user flagged it upfront). Partial recovery is possible by entering when the 1h candle closes (late entry, slightly different price); the rest is genuinely untakeable in real time.
+
+**GROUP 3 — Walk-state divergence (minor, overlaps Group 2's remainder)**
+- The causal chain's earlier trades differ slightly from the retro chain (different busy_until/cooldown/streak sequence). Occasionally a signal falls inside a busy window causally but was free retroactively. Small count; resolves only via the sequential one-pass study.
+
+Trade #17 note: signal, window, regime, direction all correct; only the walk's busy state differed. This is why Group 1 trades keep their exact R when recovered.
