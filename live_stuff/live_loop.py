@@ -1386,7 +1386,8 @@ class LiveLoop:
             if consec:
                 self.trading_state["last_loss_bar"] = last_loss_dt
             # Arm cooldown on new loss (not already counting this loss)
-            if consec > old_consec and not halted:
+            # Always arm — backtest engine sets last_loss_bar on every loss regardless of halt state
+            if consec > old_consec:
                 cd_bars = int(self.v18.get("cooldown_bars", 0) or 0)
                 if cd_bars > 0:
                     self.trading_state["cooldown_remaining"] = cd_bars
