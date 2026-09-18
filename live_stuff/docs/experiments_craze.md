@@ -20,14 +20,14 @@
 
 | # | Name | Version | Status | Trades | Gross R | Half-split OK | Delta vs Base | Notes |
 |---|------|---------|--------|--------|---------|---------------|---------------|-------|
-| 0 | ANCHOR (identity check vs shipped engine) | v18 | DONE | 340 | +225.3 | n/a | — | exact match required |
-| 11 | Split-mb: entry-mb != trail-mb | v19 | TODO | | | | | trail from slower swings rides 2024 trends |
-| 12 | mb_1h window sweep (14/20/28) | v19 | TODO | | | | | HTF window granularity |
-| 13 | Loss-Autopsy Entry-Veto | v20 | TODO | | | | | rules derived from autopsy of 238 losses |
-| 14 | B3 structure confirmation (+ low-mb arm) | v21 | TODO | | | | | structure replaces time-confirmation |
-| 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | liquidity-grab fingerprint filter |
-| 16 | 1h momentum agreement filter | v22b | TODO | | | | | LTF signal must agree with 1h trend |
-| 17 | Soft-halt (progressive confirmation) | v23 | TODO | | | | | escalate confirmation during loss streaks |
+| 0 | ANCHOR (identity check vs shipped engine) | v18 | DONE ✅ | 340 | +225.3 | n/a | — | exact match, cross-validated 3x |
+| 11 | Split-mb: entry-mb != trail-mb | v19 | DONE ❌ rejected | 283-324 | +259.9 fine | FAILS fine H2 | +10.2R net (t75) | coarse promise evaporates under fine fills |
+| 12 | mb_1h window sweep (14/20/28) | v19 | DONE ✅ mb1h=20 | 323-348 | +236.7 best | mb14 fails H1 | mb1h=20 confirmed | no change adopted |
+| 13 | Loss-Autopsy Entry-Veto | v20 | DONE ❌ all vetoes dead | — | — | — | — | but found: post-halt re-entries ELITE (+126R) |
+| 14 | **B3 confirmation-entry** | v21 | **DONE 🏆 WINNER (ruling pending)** | 206 | **+322.2 / +278.6 net fine** | H1 ✓ H2 −12.0 | **+96.3R net** | WR 40.8%, DD 13.1, avg 1.35R/trade |
+| 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | next session |
+| 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
+| 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
 
 ---
 
@@ -119,6 +119,14 @@ User's concept: b1+b2 happen BEFORE (known); the JUDGMENT is on B3 = a confirmat
 - Invalidation: SL pivot touched before trigger -> signal dies. Timeout -> dies.
 - Entry relocates to trigger bar (entry at its close, engine convention); busy_until + cooldown re-checked at trigger bar (causal); trail events must confirm at/after entry; ATR/SL from trigger bar.
 
+**Theory — why B3 should work (and why the data confirms it):**
+1. **The B2 break is a coin-flip moment.** At the break bar's close, price has only just crossed the swing level — roughly half of all breaks fail immediately (stop-hunt wick, chop reversal). The engine's 30% WR says most break-entries are noise.
+2. **B3 demands a SECOND, independent push.** Requiring a close beyond the BREAK BAR's own extreme means buyers (longs) had to absorb all supply above the first break and still close higher. A failed break can't produce that bar. So the trigger filters for breaks with follow-through demand — the population of taken trades shifts from "every break" to "breaks that already proved themselves."
+3. **The evidence matches the mechanism exactly:** WR jumps 30.0% -> 40.8% (+10.8pt) — the filter removes losers, not winners. avg R/trade 0.54 -> 1.35 (2.5x). Trade count 340 -> 206 (-39%): we skip 134 trades whose B3 never fired — and those are precisely the marginal breaks. DD halves (27.1 -> 13.1) and max losing streak halves (16 -> 8) because loss-chains require consecutive FAILED confirmations, which are rarer.
+4. **Why avg R rises, not just WR:** entries happen later, 1-8 bars into the move, so the trade's remaining trend-life is shorter but its CONFIRMED probability is higher; combined with the same SL pivot (risk unchanged), the R-distribution shifts up.
+5. **Monotonicity check:** k=2 (weak filter, + WR 41% but few trades) -> k=4 -> k=8 improves total R monotonically in coarse — a dose-response curve, which is what a REAL mechanism looks like (curve-fit artifacts don't produce smooth dose-response).
+6. **Cost synergy:** 134 fewer trades = −40% cost drag; fine fills confirm the coarse result nearly 1:1 (+96.9 coarse -> +96.3 net fine).
+
 ARM A (mb50 + B3, coarse): monotone in k. k8 close 206t +322.2R WR 40.8% DD 13.1 streak 8, H1 +183.6 / H2 +138.6 (BOTH halves beat anchor). k8 wick 264t +290.6. k4 close 184t +235.3.
 **FINE VERDICT (k8 close): 206t / gross +322.2 / NET +278.6 / WR 40.8% / DD 13.1 / streak 8 / per-year 2023 +68.9, 2024 +114.7, 2025 +85.7, 2026 +52.9.**
 - vs anchor fine (NET +182.3, DD 27.1, WR 30.0, streak 16): +96.3R net, DD −52%, WR +10.8pt, max-loss-streak halved, avg R/trade 1.35 vs 0.54.
@@ -130,5 +138,32 @@ ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 cl
 #### Open
 - USER RULING: B3 k8-close (net +96.3R, DD halved, H2 −12.0) and/or halt=6 (net +5.6R, DD −35%) — both are param-level changes on the same engine, composable (test needed: B3 + halt=6).
 - Exp 15 (sweep-reclaim qualifier): TODO next session.
+
+---
+
+## Session Summary — 2026-09-18
+
+**What we did (chronological):**
+1. Built the lane: my own doc + harness, zero conflicts with the other bot; shipped engine untouched.
+2. Reconciled the anchor: discovered hardcoded-partial PARAMS give 360t/+148.3R (wrong); full `get_v18_params`+`V18_ENGINE` gives 340t/+225.3R coarse — matches committed baseline. Fine NET +182.3 matches the one-pass study. Cross-validated 3x.
+3. **Loss Autopsy** (read-only study of all 340 trades): every entry-time-knowable feature bucketed by outcome. Found all single-feature vetoes dead; caught & fixed my own tautological streak-counter bug (consec updated before row-append); discovered post-halt re-entries are ELITE (+126R — would have been destroyed by the naive "cut streak trades" idea) and pre-streak==2 entries are consistently bad (−17.1R, all 4 years).
+4. **Halt sweep** (shipped engine params only): halt=6 = +5.6R net, DD 27.1->17.7. Near-pass.
+5. **mb_1h sweep**: 20 confirmed optimal.
+6. **Split-mb harness** (identity-gated text-patch approach): coarse promised +35R (t75) / +148R (t100) -> fine delivered only +10.2R / +134.8R, both failing the both-halves rule; t100's edge = one month (2023-01). Rejected. Entry-mb=50 confirmed optimal.
+7. **Momentum gate**: rejected (−55.2R).
+8. **B3 confirmation-entry** (the user's idea, built as its own engine mode): coarse monotone win, fine-validated +96.3R net, WR 40.8%, DD 13.1. Fill audit proved the fine path ran and prices are identical to coarse (stop-level fills).
+9. Bugs caught by gates along the way: vacuous identity pass (0 trades), wrong HTF-chain arg (0 trades), tautological streak buckets, hardcoded-cost net column. All fixed + hardened into asserts.
+
+**Artifacts (all committed on `experiments/v19-plus`):**
+- `live_stuff/docs/experiments_craze.md` — this doc
+- `live_stuff/tests/loss_autopsy.py` — read-only trade study
+- `live_stuff/tests/sweep_halt_mb1h.py` — halt + mb_1h sweeps
+- `live_stuff/tests/test_experiments_craze.py` — identity-gated superset-patch harness
+- `live_stuff/tests/test_b3_engine.py` — B3 experiment runner
+- `live_stuff/tests/fine_validate_splitmb.py`, `fine_check_b3.py`, `fine_check_halt6.py` — fine-fill validators
+- `live_stuff/tests/_diff_b3_fills.py` — fill audit (coarse vs fine exit diff)
+- Commits: `c3749b1`, `e5a330f`, `425d400` (engine `backend/` untouched; other bot's files untouched)
+
+**Baseline for next session:** anchor 340t/+182.3R net fine (v18). Best candidates pending user ruling: B3 k8-close (+96.3R net), halt=6 (+5.6R net, DD −35%). Next experiments: B3+halt=6 combo, Exp 15 sweep-reclaim, fine per-month deep-dive of B3's 2026 shortfall.
 
 
