@@ -60,7 +60,9 @@ def build_module():
                   '    b3_k=0,\n'
                   '    b3_mode="close",\n'
                   '    exp18_arm=None,\n'
-                  '    exp22_conv=False,\n')
+                  '    exp22_conv=False,\n'
+                  '    exp_persist=0,\n'
+                  '    exp_mltf=False,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -151,6 +153,23 @@ def build_module():
         '                    if i<_b2i:\n'
         '                        events.append((_b2i,float(_s2["seg"]["start_px"])))\n'
         '            events.sort(key=lambda x: x[0])\n')
+    # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
+    t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
+    assert s.count(t8) == 1, "chop init"
+    s = s.replace(t8, t8 + '    _rg_s=None; _rg_c=0\n')
+    t9 = '        # pick intervals\n'
+    assert s.count(t9) == 1, "pick intervals"
+    s = s.replace(t9,
+        '        if exp_persist>0:\n'
+        '            if _rg_s is None: _rg_s=use\n'
+        '            if use!=_rg_s:\n'
+        '                _rg_c+=1\n'
+        '                if _rg_c>=exp_persist: _rg_s=use; _rg_c=0\n'
+        '            else: _rg_c=0\n'
+        '            use=_rg_s\n' + t9)
+    t10 = '        if busy_until and bar_time <= busy_until: continue\n'
+    assert s.count(t10) == 1, "busy gate"
+    s = s.replace(t10, '        if (not exp_mltf) and busy_until and bar_time <= busy_until: continue\n')
     # 4) B3 relocation (no-op when b3_k=0): entry AFTER confirmation of the break.
     #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
     #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;
