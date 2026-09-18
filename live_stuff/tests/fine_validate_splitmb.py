@@ -48,7 +48,7 @@ def main():
                          max(c1h[-1]["ts"], c15[-1]["ts"]),
                          symbol=INSTRUMENT)
     print("  %d fine bars" % len(fine))
-    sim_mb = build_module(split_mb=True)
+    sim_mb = build_module()
 
     print("\n=== FINE-FILL VALIDATION ===")
     runs = [("anchor e50/t50", sw15, sw15), ("e50/t75", sw15, sw75),
