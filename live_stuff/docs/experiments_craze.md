@@ -25,7 +25,7 @@
 | 12 | mb_1h window sweep (14/20/28) | v19 | DONE ✅ mb1h=20 | 323-348 | +236.7 best | mb14 fails H1 | mb1h=20 confirmed | no change adopted |
 | 13 | Loss-Autopsy Entry-Veto | v20 | DONE ❌ all vetoes dead | — | — | — | — | but found: post-halt re-entries ELITE (+126R) |
 | 14 | **B3 confirmation-entry** | v21 | **DONE 🏆 POTENTIAL BASE (user ruled)** | 206 | **+322.2 / +278.6 net fine** | H1 ✓ H2 −12.0 | **+96.3R net** | WR 40.8%, DD 13.1, avg 1.35R/trade; 2026 partial year |
-| 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | next session |
+| 15 | Sweep-and-Reclaim qualifier | v22 | DONE ❌ Phase-1 refuted | 41-186 | +40.3 to +133.7 | — | all below v18 base | per-trade up (+0.98) but volume destroyed; zero loss-predictive power |
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass — decision deferred to end (user) | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | risk-profile win; combo with B3 = Exp 23 |
 | 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | DONE ❌ all 4 arms rejected | 8-134 | +0.1 to +120.9 | — | all below v18 base | Arm D salvage: +0.90R/trade, DD 14.4 (flip exception); price-confirmation > structure-confirmation |
@@ -68,6 +68,23 @@ Derive veto rules that remove strongly-negative R buckets. Re-implement on trunc
 ### Exp 15: Sweep-and-Reclaim qualifier
 **Hypothesis:** preceding down-swing low swept and reclaimed fast (wick below prior low, close back above within <=2 bars) is a stop-hunt fingerprint that precedes real moves. Long entries require it (and mirror for shorts).
 **Expected:** higher WR on remaining trades.
+**Phase 1 RESULT — DONE (exp15_sweep.py, causal, coarse):** sweep-reclaim does NOT separate outcomes in the needed direction.
+
+| Bucket (W = lookback bars) | Trades | Total R | avg R/trade | WR |
+|---|---|---|---|---|
+| sweep=YES, W=3 | 41 | +40.3 | **+0.98** | 24.4% |
+| sweep=NO, W=3 | 299 | +185.0 | +0.62 | 30.8% |
+| sweep=YES, W=6 | 104 | +101.4 | **+0.98** | 26.9% |
+| sweep=NO, W=6 | 236 | +123.8 | +0.52 | 31.4% |
+| sweep=YES, W=10 | 186 | +133.7 | +0.72 | 28.5% |
+| sweep=NO, W=10 | 154 | +91.5 | +0.59 | 31.8% |
+
+**Findings:**
+- Sweep-at-entry trades DO have better avg R/trade (+0.98 vs +0.52-0.62) — the stop-hunt fingerprint carries *some* per-trade signal — but they are home-run-or-die: LOWER WR (24-27% vs 31%).
+- Requiring the sweep slashes volume 3-7x: W=3 -> 41 trades/+40.3R total, W=6 -> 104/+101.4 — both far below the +225.3 anchor. **No configuration beats the base on total R.**
+- Vetoing no-sweep entries removes +91 to +185R of positive R — worse.
+- Deep losses (r<=-0.95, n=206): 66 (32%) had a sweep at entry ≈ baseline presence (31% at W=6) — **zero loss-predictive power**.
+**VERDICT: REJECTED — the qualifier fails as an entry filter in both directions. Per-trade quality up, volume destroyed; not exploitable on this engine.**
 
 ### Exp 16: 1h momentum agreement
 **Hypothesis:** LTF counter-trend signals inside windows underperform. Require last closed 1h close > 3-bar 1h MA for longs (mirror for shorts), evaluated at the C14-aligned (close-known) 1h bar.
