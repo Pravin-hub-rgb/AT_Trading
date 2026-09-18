@@ -4,10 +4,9 @@ Uses the ACTUAL backend functions (compute_btc_swings, simulate_htf_ltf_streak_h
 NOT a toy reimplementation.
 
 Run: python live_stuff/tests/test_smoke.py
-Pass criteria: 367 trades, +365.7R (+-0.5), all years positive.
-(Bybit Perp with pre-FS filter applied, per-symbol v18 params: halt=3, sl_buf=0.01, cd=10)
-FCFS: first tradeable mark per swing decides — pass or fail, no second chances.
-B1 never abandons. Pre-FS marks skip (don't kill swing) — swing stays alive for post-FS marks.
+Pass criteria: 351 trades, +238.0R (+-0.5), all years positive.
+(Bybit Perp with C14+C15 causal fixes applied + pre-FS filter, per-symbol v18 params)
+FCFS: first tradeable mark per swing decides -- pass or fail, no second chances.
 """
 import sys
 from pathlib import Path
@@ -73,8 +72,8 @@ def main():
     print("=" * 72)
     print("BACKBENCHER SMOKE TEST -- BYBIT PERP -- REAL v18 ENGINE")
     print("=" * 72)
-    print(f"  trades: {n}  -> {'PASS' if n == 367 else 'FAIL'}")
-    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 365.7):.2f})  -> {'PASS' if abs(tot - 365.7) < 0.5 else 'FAIL'}")
+    print(f"  trades: {n}  -> {'PASS' if n == 351 else 'FAIL'}")
+    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 238.0):.2f})  -> {'PASS' if abs(tot - 238.0) < 0.5 else 'FAIL'}")
     print(f"  win rate: {wr:.1f}%  ({len(wins)}W/{len(losses)}L)")
     print(f"  PF: {pf:.2f}")
     for y, v in sorted(years.items()):
@@ -82,8 +81,8 @@ def main():
     print(f"  all years positive: {'PASS' if allyes else 'FAIL'}")
     print("=" * 72)
 
-    assert n == 367, f"Expected 367 trades, got {n}"
-    assert abs(tot - 365.7) < 0.5, f"Expected +365.7R, got {tot:+.1f}R"
+    assert n == 351, f"Expected 351 trades, got {n}"
+    assert abs(tot - 238.0) < 0.5, f"Expected +238.0R, got {tot:+.1f}R"
     assert allyes, "Not all years positive"
     print("ALL CHECKS PASSED")
 
