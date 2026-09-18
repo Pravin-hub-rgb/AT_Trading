@@ -44,39 +44,70 @@ def _load_module(text, name):
     return m, p
 
 
-def build_module(split_mb=False, momentum=False):
-    """Return sim fn = shipped source + asserted patches for requested flags."""
+def build_module():
+    """Shipped source + ONE super-set patch; every experiment is a runtime kwarg.
+
+    All patches are no-ops at default kwargs, and main()'s identity gate proves
+    defaults == shipped engine exactly.
+    """
     s = SRC
-    if split_mb:
-        t1 = "    *,\n    sl_buf_atr=0.25"
-        assert s.count(t1) == 1, "sig token A"
-        s = s.replace(t1, "    *,\n    swings_trail=None,\n    sl_buf_atr=0.25")
-        t2 = "    import bisect as bs\n"
-        assert s.count(t2) == 1, "sig token B"
-        s = s.replace(t2, t2 + "    if swings_trail is None: swings_trail=swings_ltf\n")
-        t3 = "        for s in swings_ltf:\n"
-        assert s.count(t3) == 1, "trail loop token"
-        s = s.replace(t3, "        for s in swings_trail:\n")
-    if momentum:
-        t4 = 'candle_ts_htf=[int(c["ts"]) for c in candles_htf]\n'
-        assert s.count(t4) == 1, "htf ts token"
-        s = s.replace(t4, t4 +
-                      '    candle_ts_htf_close=[t+3600 for t in candle_ts_htf]\n'
-                      '    closes_htf=[float(c["close"]) for c in candles_htf]\n')
-        t5 = '    if sig["dir"] != d: continue\n'
-        assert s.count(t5) == 1, "gate token"
-        s = s.replace(t5, t5 +
-                      '        if exp_momentum:\n'
-                      '            _j=bs.bisect_right(candle_ts_htf_close, bar_ts+900)-1\n'
-                      '            if _j>=2:\n'
-                      '                _ma=(closes_htf[_j-2]+closes_htf[_j-1]+closes_htf[_j])/3.0\n'
-                      '                if sig["dir"]==1 and closes_htf[_j]<_ma: continue\n'
-                      '                if sig["dir"]==-1 and closes_htf[_j]>_ma: continue\n')
-        t1 = "    *,\n    sl_buf_atr=0.25"
-        assert s.count(t1) == 1, "sig token A (mom)"
-        s = s.replace(t1, "    *,\n    exp_momentum=False,\n    sl_buf_atr=0.25")
-    tag = "x".join(k for k, v in [("mb", split_mb), ("mo", momentum)] if v) or "id"
-    m, p = _load_module(s, "craze_%s" % tag)
+    # 1) extra kwargs (default-off)
+    t1 = "    *,\n"
+    assert s.count(t1) == 1, "sig star"
+    s = s.replace(t1, t1 +
+                  '    swings_trail=None,\n'
+                  '    exp_momentum=False,\n'
+                  '    b3_k=0,\n'
+                  '    b3_mode="close",\n')
+    # 2) split-mb: trail events from an optional second chain
+    t2 = "    import bisect as bs\n"
+    assert s.count(t2) == 1, "bisect"
+    s = s.replace(t2, t2 + "    if swings_trail is None: swings_trail=swings_ltf\n")
+    t3 = "        for s in swings_ltf:\n"
+    assert s.count(t3) == 1, "trail loop"
+    s = s.replace(t3, "        for s in swings_trail:\n")
+    # 3) momentum gate (C14-aligned 1h close vs 3-bar MA)
+    t4 = 'candle_ts_htf=[int(c["ts"]) for c in candles_htf]\n'
+    assert s.count(t4) == 1, "htf ts"
+    s = s.replace(t4, t4 +
+                  '    candle_ts_htf_close=[t+3600 for t in candle_ts_htf]\n'
+                  '    closes_htf=[float(c["close"]) for c in candles_htf]\n')
+    t5 = '    if sig["dir"] != d: continue\n'
+    assert s.count(t5) == 1, "gate"
+    s = s.replace(t5, t5 +
+                  '        if exp_momentum:\n'
+                  '            _j=bs.bisect_right(candle_ts_htf_close, bar_ts+900)-1\n'
+                  '            if _j>=2:\n'
+                  '                _ma=(closes_htf[_j-2]+closes_htf[_j-1]+closes_htf[_j])/3.0\n'
+                  '                if sig["dir"]==1 and closes_htf[_j]<_ma: continue\n'
+                  '                if sig["dir"]==-1 and closes_htf[_j]>_ma: continue\n')
+    # 4) B3 relocation (no-op when b3_k=0): entry AFTER confirmation of the break.
+    #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
+    #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;
+    #    busy + cooldown re-checked there (causal — known at trigger close).
+    t6 = '        sl_pivot=sig["swing_start_px"]\n'
+    assert s.count(t6) == 1, "sl pivot"
+    s = s.replace(t6, t6 +
+                  '        if b3_k>0:\n'
+                  '            _lv=float(candles_ltf[i]["high"]) if direction==1 else float(candles_ltf[i]["low"])\n'
+                  '            _jj=None\n'
+                  '            for _k in range(i+1, min(i+1+b3_k, n-1)):\n'
+                  '                _hi=float(candles_ltf[_k]["high"]); _lo=float(candles_ltf[_k]["low"])\n'
+                  '                if direction==1 and _lo<=sl_pivot: break\n'
+                  '                if direction==-1 and _hi>=sl_pivot: break\n'
+                  '                _cl=float(candles_ltf[_k]["close"])\n'
+                  '                if b3_mode=="wick":\n'
+                  '                    _hit=(_hi>_lv) if direction==1 else (_lo<_lv)\n'
+                  '                else:\n'
+                  '                    _hit=(_cl>_lv) if direction==1 else (_cl<_lv)\n'
+                  '                if _hit:\n'
+                  '                    _jj=_k; break\n'
+                  '            if _jj is None: continue\n'
+                  '            i=_jj\n'
+                  '            bar_time=candles_ltf[i]["date"]\n'
+                  '            if busy_until and bar_time<=busy_until: continue\n'
+                  '            if cooldown_bars>0 and i-last_loss_bar<cooldown_bars: continue\n')
+    m, p = _load_module(s, "craze_superset")
     try:
         p.unlink()
     except OSError:
@@ -129,15 +160,18 @@ def main():
     show("shipped", s_ship)
     assert s_ship["n"] == 340 and abs(s_ship["gross"] - 225.3) < 0.1, \
         "ANCHOR MISMATCH — aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
-    for flags in [dict(), dict(split_mb=True), dict(momentum=True)]:
-        sim = build_module(**flags)
-        r = sim(c1h, sw1h, c15, sw15, fine_ltf=[], **BASE)
+    for flags in [dict(), dict(b3_k=4), dict(exp_momentum=True),
+                  dict(b3_k=4, exp_momentum=True)]:
+        sim = build_module()
+        r = sim(c1h, sw1h, c15, sw15, fine_ltf=[], **{**BASE, **flags})
         t = r["ltf_trades"] if isinstance(r, dict) else r
         s = stats(t)
         ok = (s["n"] == s_ship["n"] and s["rs"] == s_ship["rs"])
-        print("  flags=%-22s n=%d gross=%+.2f  IDENTICAL=%s" %
-              (str(flags), s["n"], s["gross"], ok))
-        assert ok, "IDENTITY GATE FAILED for %s" % flags
+        print("  flags=%-40s n=%d gross=%+.2f  IDENTICAL=%s%s" %
+              (str(flags), s["n"], s["gross"], ok,
+               "" if not flags else "  (expected: changed)"))
+        if not flags:
+            assert ok, "IDENTITY GATE FAILED: all-off must equal shipped"
 
     # ---------- Exp 11: split-mb ----------
     print("\n=== EXP 11 split-mb (entry-mb -> trail-mb) ===")

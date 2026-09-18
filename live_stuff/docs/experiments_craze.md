@@ -113,7 +113,22 @@ Coarse grid (entry-mb -> trail-mb): e40/e65 ALL worse (entry-mb=50 confirmed opt
 #### Exp 16 momentum gate (1h close vs 3-bar MA, C14-aligned) — REJECTED
 - 273t / +170.1R coarse (−55.2 vs anchor) despite DD 12.0. Gross down; rejected per goal (higher avg R).
 
+#### Exp 14 B3 — entry AFTER structural confirmation of the break (test_b3_engine.py) — 🏆 WINNER
+User's concept: b1+b2 happen BEFORE (known); the JUDGMENT is on B3 = a confirmation event after the break. Implementation (identity-gated harness patch):
+- After a B2/flip signal at bar i, do NOT enter. Scan bars i+1..i+b3_k for a trigger: close beyond the signal bar's extreme (mode="close") or wick touch (mode="wick").
+- Invalidation: SL pivot touched before trigger -> signal dies. Timeout -> dies.
+- Entry relocates to trigger bar (entry at its close, engine convention); busy_until + cooldown re-checked at trigger bar (causal); trail events must confirm at/after entry; ATR/SL from trigger bar.
+
+ARM A (mb50 + B3, coarse): monotone in k. k8 close 206t +322.2R WR 40.8% DD 13.1 streak 8, H1 +183.6 / H2 +138.6 (BOTH halves beat anchor). k8 wick 264t +290.6. k4 close 184t +235.3.
+**FINE VERDICT (k8 close): 206t / gross +322.2 / NET +278.6 / WR 40.8% / DD 13.1 / streak 8 / per-year 2023 +68.9, 2024 +114.7, 2025 +85.7, 2026 +52.9.**
+- vs anchor fine (NET +182.3, DD 27.1, WR 30.0, streak 16): +96.3R net, DD −52%, WR +10.8pt, max-loss-streak halved, avg R/trade 1.35 vs 0.54.
+- Fill audit (_diff_b3_fills.py): 194/206 trades differ ONLY in exit timestamp (1m vs 15m label); ALL exit prices and R identical (stop-level fills; 1m opens tile 15m opens). Fine referee confirms the coarse result — unlike split-mb, nothing evaporates.
+- Strict-rule status: H1 +82.6 better; H2 −12.0 (2026 −37.3, 2025 +25.3 partially offsets). 3 of 4 years better. NEAR-PASS like halt=6 but 10x the magnitude — USER RULING REQUIRED.
+
+ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 close = 307t +212.3R DD 22.0 (B3 rescues fast swings but still below anchor). mb40+k4 = +192.1. Structure-confirmation does NOT fully replace time-confirmation here — mb50 entry chain stays.
+
 #### Open
-- Exp 14 (B3 hold/retest + low-mb arm) and Exp 15 (sweep-reclaim): TODO — need deeper walk patches (next session).
-- Ruling needed from user: halt=6 adoption (risk-adjusted win, strict-rule near-miss).
+- USER RULING: B3 k8-close (net +96.3R, DD halved, H2 −12.0) and/or halt=6 (net +5.6R, DD −35%) — both are param-level changes on the same engine, composable (test needed: B3 + halt=6).
+- Exp 15 (sweep-reclaim qualifier): TODO next session.
+
 
