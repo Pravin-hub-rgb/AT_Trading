@@ -29,6 +29,7 @@
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
 | 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | 📋 DOCUMENTED — queued | | | | | see full spec below; run after variants are all listed |
+| 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | 📋 DOCUMENTED — queued (metrics phase first) | | | | | see full spec below |
 
 ---
 
@@ -187,6 +188,45 @@ ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 cl
 
 #### Results
 - (queued — not yet run; waiting for user to finish listing variants)
+
+---
+
+### Exp 19: Skip-First-Swing Entry — observe the first break, enter on the NEXT same-direction swing (v25)
+**Status: DOCUMENTED — QUEUED. Phase 1 (metrics research) runs before the experiment. Per user: no experiments until the full variant list is done.**
+
+#### The theory (user's)
+- v18 baseline: we enter directly at the FIRST B2 — e.g. for a long, the break of a **buying swing**.
+- The SL research hypothesis: when v18 hits its SL, the swing whose extreme got taken out is the swing we entered on — and it gets broken by the **NEXT swing that forms after entry** (for a long: the opposite **selling swing** forming after our buying swing; its formation IS the event that breaks our pivot low). Mirror for shorts (enter selling swing, the next buying swing kills it).
+- So: the first same-direction swing is a *probe*. Instead of trading the probe, **observe** it. If the market makes ANOTHER same-direction swing after it (the market re-proves the direction), THAT second same-direction swing is where the real move lives — enter on that one instead.
+- Skipping rule: if the next swing that forms is the OPPOSITE direction, the original signal is dead — which is exactly the loss case v18 would have taken.
+
+#### Phase 1 — METRICS RESEARCH (read-only, autopsy-style, runs first)
+**SL-swing attribution study.** For every v18 SL loss (132 of them at −1R) plus trail losses:
+- identify the swing whose extreme = the SL level (`sl_pivot` of the trade) and its direction vs the trade direction;
+- determine whether the SL break coincided with the formation/confirmation of the NEXT OPPOSITE swing (the selling swing forming after our long entry);
+- measure: what % of SL losses are "SL hit = next opposite swing confirmed";
+- also measure the counterfactual: for each loss, did a same-direction swing form AFTER the entry signal but BEFORE the SL hit? (If yes, the skip-first rule would have moved the entry there — where would that entry's SL have been, and would it have survived?)
+- Output table: bucketed by year + half-split, with the % of the loss book this rule would remove, and the counterfactual R of "second-swing entries" for the SAME setups.
+
+**This phase decides whether Phase 2 is worth running** — if the metrics say most SL hits are NOT next-opposite-swing events, the theory needs revision before coding.
+
+#### Phase 2 — EXPERIMENT ARMS (only if Phase 1 supports the theory)
+- **A. Base rule:** at v18's qualifying entry signal (B2/flip of a buying swing for long), do NOT enter. Wait for the NEXT swing. If it is same-direction (a new buying swing) and produces its own qualifying mark (its flip/B2 break) → **enter at that mark** (entry at mark's close, engine convention; SL = the NEW swing's pivot — more recent structure). If the next swing is opposite-direction → signal dead, no trade.
+- **B. Observation-swing mb sweep (user's "quicker information" idea):** the second swing can be detected on a FASTER chain — mb ∈ {30, 40, 50}. Lower mb = the next swing confirms sooner = earlier second entry. Trade-off: faster swings = more noise in what counts as "the next swing."
+- **C. Optional stack:** Phase-2-A entry + Exp 14's k8-close price confirmation on the second swing's mark.
+- **D. Timeout question (define before coding):** does the observation state expire, or does it live until EITHER an opposite swing kills it OR a same-direction swing triggers? User's framing suggests: lives until one of the two happens (no time expiry) — that's the default; a timeout variant can be an arm if Phase 1 shows stale observations hurt.
+
+#### Causal notes
+- Every observation/decision uses only marks + candles known at that bar's close. The second swing's mark is knowable when the walker emits it. Entry at mark's close, next candle open — shipped convention.
+- The observation state must be walk-sequential (one pending observation at a time, like the engine's busy_until logic) — defined in implementation.
+- Mark-stream prerequisite (shared with Exp 18): dump and verify the actual B1/B2/FLIP attribution from `_collect_signals`/walker before building.
+
+#### Acceptance
+- Identity gate vs shipped (rule-off = identical), truncated-data discipline, per-year + half-splits, fine 1m validation for survivors, results logged below.
+
+#### Results
+- (queued — Phase 1 metrics not yet run; waiting for user to finish listing variants)
+
 
 
 ---
