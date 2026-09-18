@@ -59,7 +59,8 @@ def build_module():
                   '    exp_momentum=False,\n'
                   '    b3_k=0,\n'
                   '    b3_mode="close",\n'
-                  '    exp18_arm=None,\n')
+                  '    exp18_arm=None,\n'
+                  '    exp22_conv=False,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -134,6 +135,22 @@ def build_module():
         '                            "dir":_tdir,"swing_start_px":_piv,\n'
         '                            "swing_no":_si,"kind":_mkind})\n'
         '                _seq=[]\n')
+    # 3c) Exp 22: conviction trail — ratchet each same-dir swing's trail level
+    # at its B2 MARK (break) instead of its confirmation (which lags ~mb bars).
+    # Same pivot, earlier activation; ratchet conditions still gate it.
+    t6b = '        events.sort(key=lambda x: x[0])\n'
+    assert s.count(t6b) == 1, "events sort"
+    s = s.replace(t6b, t6b +
+        '        if exp22_conv:\n'
+        '            for _s2 in swings_trail:\n'
+        '                if _s2.get("dir") != want_dir: continue\n'
+        '                for _b2 in _s2.get("breaks",[]):\n'
+        '                    if _b2.get("kind")!="B2": continue\n'
+        '                    if (1 if _b2["dir"]=="up" else -1)!=direction: continue\n'
+        '                    _b2i=int(_b2["idx"])\n'
+        '                    if i<_b2i:\n'
+        '                        events.append((_b2i,float(_s2["seg"]["start_px"])))\n'
+        '            events.sort(key=lambda x: x[0])\n')
     # 4) B3 relocation (no-op when b3_k=0): entry AFTER confirmation of the break.
     #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
     #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;

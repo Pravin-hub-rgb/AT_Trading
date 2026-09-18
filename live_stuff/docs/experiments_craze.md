@@ -32,7 +32,7 @@
 | 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | DONE ❌ refuted by Phase-1 metrics | — | — | — | **−189.2R rough net** | mechanism CONFIRMED (97%), remedy rejected; salvage → Exp 18 flip branches |
 | 20 | **Close-Confirmed Initial SL** (56% of SL deaths are wick-only) | v26 | DONE ❌ Phase-1 refuted | — | — | — | **−6.3R rough net** | wick gain eaten by worse close-through fills + killed winners |
 | 21 | **Mark-History Entry Autopsy** (entry-time mark features → quality filter) | v27 | DONE ⚠ no actionable bucket | — | — | — | — | FLIP entries 3.7× per-trade vs B2; flip-proximity edge → Exp 18 prioritized |
-| 22 | **Second-Swing Conviction Trail** (accelerate trail at 2nd same-swing B2) | v28 | 📋 DOCUMENTED — queued | | | | | 74% of winners get a 2nd same-swing; losers never do (die first) |
+| 22 | **Second-Swing Conviction Trail** (accelerate trail at 2nd same-swing B2) | v28 | DONE ❌ refuted (walk) | 347 | +161.7 | — | **−63.6R** | mb50 confirmation lag is PROTECTIVE — filters shake-outs; slowness is a feature |
 | 23 | **COMBO: B3 k8-close + halt=6** | v29 | 📋 DOCUMENTED — running now | | | | | both param-level, composable; vs v18 anchor, B3 alone, halt6 alone |
 
 ---
@@ -298,8 +298,12 @@ Population: 340 trades → **132 direct SL losses (−1R book)**, 102 winners.
 
 ### Exp 22: Second-Swing Conviction Trail (v28) — from the M2' asymmetry
 **Source:** Exp 19 M2' asymmetry: 74% of winners had a 2nd same-direction swing's B2 mark before exit; losers NEVER do (they die before the market can re-prove).
-**Theory:** the 2nd same-swing B2 mark is a *conviction event* — the market re-proved the direction. Once it fires, tighten the trail faster (e.g., trail pivot from the NEW swing instead of waiting for its mb50 confirmation), or ratchet the stop to the 2nd swing's origin pivot.
-**Status:** queued — needs a Phase-1 study of where the 2nd same-swing B2 fires relative to the trail ratchet on winners (was the trail already past it?), then a harness walk. Deferred until 18/20/21 verdicts.
+**Theory:** the 2nd same-swing B2 mark is a *conviction event* — the market re-proved the direction. Once it fires, tighten the trail faster (ratchet the stop to the new swing's origin pivot at its B2 MARK instead of waiting for its mb50 confirmation).
+**Implementation (identity-gated harness):** trail events for same-dir swings activate at their B2 mark bar instead of confirmed_at bar. Same pivots, earlier activation; all ratchet conditions (`sl_cur < cand < low`) still gate.
+**RESULT — DONE (exp22_conv.py, coarse walk):**
+- Conviction trail: **347t / +161.7R / WR 27.4% / DD 27.1** vs anchor 340t / +225.3R / WR 30.0% / DD 27.1 → **−63.6R, every year worse** (2023 19.6 vs 28.4, 2024 66.5 vs 72.5, 2025 47.1 vs 60.4, 2026 28.5 vs 63.9).
+**VERDICT: REJECTED.** The mb50 confirmation lag is not a defect — it is PROTECTIVE: between a swing's break-mark and its confirmation, price wobbles, and ratcheting the stop to the young swing's origin during that wobble shakes the trade out of dips it would otherwise survive. Waiting for confirmation filters shake-outs. (Fits the earlier finding: the variant's trail confirmed the same pivots — the lag IS the edge.)
+**Research meta-lesson (3 of 3):** every "make the trail/reactiveness tighter or earlier" idea tested (ATR-chandelier, end_px, conviction-mark ratchet) lost to the patient mb50 confirmation trail. The engine's slowness is a feature.
 
 
 
