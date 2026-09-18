@@ -1,0 +1,164 @@
+"""CRAZE harness — runs the SHIPPED engine source with minimal asserted patches.
+
+Safety model (no retyped engine, no look-ahead):
+- We load backend/src/btc/engines/htf_ltf/v18_streak_halt.py SOURCE TEXT.
+- With no experiment flags, we exec the unmodified text -> byte-identical engine.
+- Each experiment is a tiny, assertion-checked text patch (token counts asserted).
+- Identity gate: patched-with-flags-off MUST reproduce the shipped engine's
+  trade list exactly (same n, same R list) before any experiment result is shown.
+
+Experiments:
+  split_mb   : trail events from a slower/faster 15m swing chain (Exp 11)
+  momentum   : 1h close vs 3-bar 1h MA agreement gate at entry (Exp 16)
+"""
+import sys, time, importlib.util
+from pathlib import Path
+from collections import defaultdict
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "live_stuff"))
+sys.path.insert(0, str(ROOT / "backend"))
+
+ENGINE = ROOT / "backend/src/btc/engines/htf_ltf/v18_streak_halt.py"
+SRC = ENGINE.read_text(encoding="utf-8")
+
+from replay_harness import load_candles, INSTRUMENT
+from engine.v18_params import SWING, get_v18_params, V18_ENGINE
+from src.btc.btc_routes import _compute_swings
+import src.btc.engines.htf_ltf.v18_streak_halt as shipped_mod
+
+_P = dict(get_v18_params(INSTRUMENT)); _P.update(V18_ENGINE)
+BASE = {k: _P[k] for k in ["sl_buf_atr", "ext_stop_r", "chop_thresh",
+                           "atr_low_thresh", "atr_high_thresh", "mode",
+                           "cooldown_bars", "max_consecutive_losses",
+                           "htf_rr", "window_end"] if k in _P}
+MB15 = SWING["min_bars_15m"]
+
+
+def _load_module(text, name):
+    p = Path(ROOT / "live_stuff/tests/_craze_tmp.py")
+    p.write_text(text, encoding="utf-8")
+    spec = importlib.util.spec_from_file_location(name, str(p))
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m, p
+
+
+def build_module(split_mb=False, momentum=False):
+    """Return sim fn = shipped source + asserted patches for requested flags."""
+    s = SRC
+    if split_mb:
+        t1 = "    *,\n    sl_buf_atr=0.25"
+        assert s.count(t1) == 1, "sig token A"
+        s = s.replace(t1, "    *,\n    swings_trail=None,\n    sl_buf_atr=0.25")
+        t2 = "    import bisect as bs\n"
+        assert s.count(t2) == 1, "sig token B"
+        s = s.replace(t2, t2 + "    if swings_trail is None: swings_trail=swings_ltf\n")
+        t3 = "        for s in swings_ltf:\n"
+        assert s.count(t3) == 1, "trail loop token"
+        s = s.replace(t3, "        for s in swings_trail:\n")
+    if momentum:
+        t4 = 'candle_ts_htf=[int(c["ts"]) for c in candles_htf]\n'
+        assert s.count(t4) == 1, "htf ts token"
+        s = s.replace(t4, t4 +
+                      '    candle_ts_htf_close=[t+3600 for t in candle_ts_htf]\n'
+                      '    closes_htf=[float(c["close"]) for c in candles_htf]\n')
+        t5 = '    if sig["dir"] != d: continue\n'
+        assert s.count(t5) == 1, "gate token"
+        s = s.replace(t5, t5 +
+                      '        if exp_momentum:\n'
+                      '            _j=bs.bisect_right(candle_ts_htf_close, bar_ts+900)-1\n'
+                      '            if _j>=2:\n'
+                      '                _ma=(closes_htf[_j-2]+closes_htf[_j-1]+closes_htf[_j])/3.0\n'
+                      '                if sig["dir"]==1 and closes_htf[_j]<_ma: continue\n'
+                      '                if sig["dir"]==-1 and closes_htf[_j]>_ma: continue\n')
+        t1 = "    *,\n    sl_buf_atr=0.25"
+        assert s.count(t1) == 1, "sig token A (mom)"
+        s = s.replace(t1, "    *,\n    exp_momentum=False,\n    sl_buf_atr=0.25")
+    tag = "x".join(k for k, v in [("mb", split_mb), ("mo", momentum)] if v) or "id"
+    m, p = _load_module(s, "craze_%s" % tag)
+    try:
+        p.unlink()
+    except OSError:
+        pass
+    return m.simulate_htf_ltf_streak_halt
+
+
+def stats(tr):
+    rs = [float(t["r_multiple"]) for t in tr]
+    g = sum(rs)
+    peak = 0.0; cum = 0.0; dd = 0.0; cur = 0; mx = 0
+    for x in rs:
+        cum += x; peak = max(peak, cum); dd = max(dd, peak - cum)
+        if x < 0: cur += 1; mx = max(mx, cur)
+        else: cur = 0
+    py = defaultdict(float)
+    for t in tr:
+        d = t.get("exit_date") or t.get("entry_date") or ""
+        py[d[:4]] += float(t["r_multiple"])
+    return {"n": len(tr), "gross": g, "rs": rs,
+            "wr": 100.0 * len([x for x in rs if x > 0]) / max(len(rs), 1),
+            "dd": dd, "mx": mx,
+            "h1": py.get("2023", 0.0) + py.get("2024", 0.0),
+            "h2": py.get("2025", 0.0) + py.get("2026", 0.0),
+            "py": dict(py)}
+
+
+def show(tag, s):
+    print("  %-22s %4dt %+8.1fR  WR %4.1f%%  DD %5.1f  streak %2d  H1 %+7.1f H2 %+7.1f  %s"
+          % (tag, s["n"], s["gross"], s["wr"], s["dd"], s["mx"], s["h1"], s["h2"],
+             {k: round(v, 1) for k, v in sorted(s["py"].items())}))
+
+
+def main():
+    t0 = time.time()
+    (c15, f15), (c1h, f1h) = load_candles()
+    sw15 = _compute_swings(f15, "continuous", min_bars=MB15)
+    sw1h = _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"])
+    chains = {}
+    for mb in (35, 40, 50, 65, 75, 100):
+        chains[mb] = _compute_swings(f15, "continuous", min_bars=mb)
+    print("swing chains ready (15m mb35..100 + 1h mb20) (%0.0fs)" % (time.time() - t0))
+
+    # ---------- IDENTITY GATE ----------
+    print("\n=== IDENTITY GATE (patched-off vs shipped, must be exact) ===")
+    r_ship = shipped_mod.simulate_htf_ltf_streak_halt(c1h, sw1h, c15, sw15,
+                                                      fine_ltf=[], **BASE)
+    t_ship = r_ship["ltf_trades"] if isinstance(r_ship, dict) else r_ship
+    s_ship = stats(t_ship)
+    show("shipped", s_ship)
+    assert s_ship["n"] == 340 and abs(s_ship["gross"] - 225.3) < 0.1, \
+        "ANCHOR MISMATCH — aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
+    for flags in [dict(), dict(split_mb=True), dict(momentum=True)]:
+        sim = build_module(**flags)
+        r = sim(c1h, sw1h, c15, sw15, fine_ltf=[], **BASE)
+        t = r["ltf_trades"] if isinstance(r, dict) else r
+        s = stats(t)
+        ok = (s["n"] == s_ship["n"] and s["rs"] == s_ship["rs"])
+        print("  flags=%-22s n=%d gross=%+.2f  IDENTICAL=%s" %
+              (str(flags), s["n"], s["gross"], ok))
+        assert ok, "IDENTITY GATE FAILED for %s" % flags
+
+    # ---------- Exp 11: split-mb ----------
+    print("\n=== EXP 11 split-mb (entry-mb -> trail-mb) ===")
+    sim_mb = build_module(split_mb=True)
+    grid = [(50, 50), (50, 35), (50, 75), (50, 100),
+            (40, 50), (65, 50), (40, 75), (65, 100)]
+    for e, tmb in grid:
+        r = sim_mb(c1h, sw1h, c15, chains[e], fine_ltf=[],
+                   swings_trail=chains[tmb], **BASE)
+        show("e=%d trail=%d" % (e, tmb),
+             stats(r["ltf_trades"] if isinstance(r, dict) else r))
+
+    # ---------- Exp 16: 1h momentum gate ----------
+    print("\n=== EXP 16 momentum gate ===")
+    sim_mo = build_module(momentum=True)
+    r = sim_mo(c1h, sw1h, c15, sw15, fine_ltf=[], exp_momentum=True, **BASE)
+    show("momentum ON", stats(r["ltf_trades"] if isinstance(r, dict) else r))
+    show("anchor (off)", s_ship)
+
+    print("\n(harness done %.0fs)" % (time.time() - t0))
+
+
+if __name__ == "__main__":
+    main()
