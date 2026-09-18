@@ -1,0 +1,158 @@
+{
+  "combos": {
+    "Multi-LTF+Persist=5 (cd=10, mb1h=20)": {
+      "name": "Multi-LTF+Persist=5 (cd=10, mb1h=20)",
+      "trades": 336,
+      "total_r": 256.2,
+      "delta_r": 18.2,
+      "wr": 28.9,
+      "pf": 2.15,
+      "avg_win_r": 4.93,
+      "avg_loss_r": -0.93,
+      "max_dd_r": 30.2,
+      "max_win_streak": 4,
+      "max_loss_streak": 11,
+      "trades_per_month": 7545.0
+    },
+    "Multi-LTF+Persist=3 (cd=10, mb1h=20)": {
+      "name": "Multi-LTF+Persist=3 (cd=10, mb1h=20)",
+      "trades": 340,
+      "total_r": 249.9,
+      "delta_r": 11.9,
+      "wr": 28.8,
+      "pf": 2.11,
+      "avg_win_r": 4.84,
+      "avg_loss_r": -0.93,
+      "max_dd_r": 30.2,
+      "max_win_streak": 4,
+      "max_loss_streak": 11,
+      "trades_per_month": 7598.0
+    },
+    "Multi-LTF+Persist=5 (cd=10, mb1h=10)": {
+      "name": "Multi-LTF+Persist=5 (cd=10, mb1h=10)",
+      "trades": 352,
+      "total_r": 282.6,
+      "delta_r": 44.6,
+      "wr": 26.4,
+      "pf": 2.2,
+      "avg_win_r": 5.58,
+      "avg_loss_r": -0.91,
+      "max_dd_r": 27.6,
+      "max_win_streak": 4,
+      "max_loss_streak": 12,
+      "trades_per_month": 7855.0
+    },
+    "OPTIMAL cd=0 sl=0.01": {
+      "name": "OPTIMAL cd=0 sl=0.01",
+      "trades": 515,
+      "total_r": 456.2,
+      "delta_r": 218.2,
+      "wr": 28.0,
+      "pf": 2.33,
+      "avg_win_r": 5.55,
+      "avg_loss_r": -0.92,
+      "max_dd_r": 23.3,
+      "max_win_streak": 5,
+      "max_loss_streak": 19,
+      "trades_per_month": 11509.0
+    },
+    "OPTIMAL cd=0 sl=0.001": {
+      "name": "OPTIMAL cd=0 sl=0.001",
+      "trades": 515,
+      "total_r": 456.2,
+      "delta_r": 218.2,
+      "wr": 28.0,
+      "pf": 2.33,
+      "avg_win_r": 5.55,
+      "avg_loss_r": -0.92,
+      "max_dd_r": 23.3,
+      "max_win_streak": 5,
+      "max_loss_streak": 19,
+      "trades_per_month": 11509.0
+    },
+    "MIDDLE cd=5 sl=0.01": {
+      "name": "MIDDLE cd=5 sl=0.01",
+      "trades": 376,
+      "total_r": 244.4,
+      "delta_r": 6.4,
+      "wr": 26.1,
+      "pf": 1.96,
+      "avg_win_r": 5.09,
+      "avg_loss_r": -0.92,
+      "max_dd_r": 28.6,
+      "max_win_streak": 4,
+      "max_loss_streak": 13,
+      "trades_per_month": 8391.0
+    }
+  },
+  "walk_forward": {
+    "BASELINE": [
+      {
+        "window": 1,
+        "period": "2023-01-01 to 2023-12-05",
+        "trades": 79,
+        "r": 30.6,
+        "wr": 20.3,
+        "max_dd": 23.4
+      },
+      {
+        "window": 2,
+        "period": "2023-12-05 to 2024-11-06",
+        "trades": 105,
+        "r": 45.2,
+        "wr": 24.8,
+        "max_dd": 14.3
+      },
+      {
+        "window": 3,
+        "period": "2024-11-06 to 2025-10-10",
+        "trades": 84,
+        "r": 49.6,
+        "wr": 27.4,
+        "max_dd": 12.2
+      },
+      {
+        "window": 4,
+        "period": "2025-10-10 to 2026-09-13",
+        "trades": 84,
+        "r": 108.4,
+        "wr": 39.3,
+        "max_dd": 7.5
+      }
+    ],
+    "OPTIMAL-cd0": [
+      {
+        "window": 1,
+        "period": "2023-01-01 to 2023-12-05",
+        "trades": 110,
+        "r": 74.3,
+        "wr": 25.5,
+        "max_dd": 20.4
+      },
+      {
+        "window": 2,
+        "period": "2023-12-05 to 2024-11-06",
+        "trades": 145,
+        "r": 106.7,
+        "wr": 22.1,
+        "max_dd": 14.7
+      },
+      {
+        "window": 3,
+        "period": "2024-11-06 to 2025-10-10",
+        "trades": 135,
+        "r": 84.0,
+        "wr": 28.1,
+        "max_dd": 23.3
+      },
+      {
+        "window": 4,
+        "period": "2025-10-10 to 2026-09-13",
+        "trades": 128,
+        "r": 174.1,
+        "wr": 36.7,
+        "max_dd": 14.0
+      }
+    ]
+  }
+}

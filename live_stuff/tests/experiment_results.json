@@ -1,0 +1,467 @@
+[
+  {
+    "name": "v18 BASELINE (mb1h=20, mb15=50, chop=58, sl=0.01, cd=10, mcl=3, es=1.5)",
+    "trades": 351,
+    "total_r": 238.0,
+    "delta_r": 0.0,
+    "wr": 27.6,
+    "pf": 2.02,
+    "avg_win_r": 4.86,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.678,
+    "max_dd_r": 23.4,
+    "max_win_streak": 5,
+    "max_loss_streak": 27,
+    "avg_risk_usd": 647.0,
+    "trades_per_month": 7855.0,
+    "r_distribution": {
+      "[-1,-0)": 230,
+      "[-0,+0)": 24,
+      "[+0,+0)": 14,
+      "[+0,+1)": 11,
+      "[+1,+2)": 20,
+      "[+2,+3)": 13,
+      "[+3,+5)": 14,
+      "[+5,+10)": 13,
+      "[+10,+99)": 12
+    },
+    "outcomes": {
+      "sl": 148,
+      "trail": 203
+    }
+  },
+  {
+    "name": "Multi-LTF cd=0 (mb1h=20, chop=58)",
+    "trades": 471,
+    "total_r": 310.8,
+    "delta_r": 72.8,
+    "wr": 28.9,
+    "pf": 2.0,
+    "avg_win_r": 4.56,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.66,
+    "max_dd_r": 24.1,
+    "max_win_streak": 9,
+    "max_loss_streak": 15,
+    "avg_risk_usd": 662.0,
+    "trades_per_month": 10540.0,
+    "r_distribution": {
+      "[-1,-0)": 307,
+      "[-0,+0)": 28,
+      "[+0,+0)": 19,
+      "[+0,+1)": 18,
+      "[+1,+2)": 28,
+      "[+2,+3)": 14,
+      "[+3,+5)": 19,
+      "[+5,+10)": 24,
+      "[+10,+99)": 14
+    },
+    "outcomes": {
+      "sl": 192,
+      "trail": 279
+    }
+  },
+  {
+    "name": "Multi-LTF cd=5 (mb1h=20, chop=58)",
+    "trades": 359,
+    "total_r": 254.2,
+    "delta_r": 16.2,
+    "wr": 28.1,
+    "pf": 2.07,
+    "avg_win_r": 4.88,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.708,
+    "max_dd_r": 23.4,
+    "max_win_streak": 5,
+    "max_loss_streak": 27,
+    "avg_risk_usd": 652.0,
+    "trades_per_month": 8034.0,
+    "r_distribution": {
+      "[-1,-0)": 236,
+      "[-0,+0)": 22,
+      "[+0,+0)": 14,
+      "[+0,+1)": 12,
+      "[+1,+2)": 21,
+      "[+2,+3)": 12,
+      "[+3,+5)": 14,
+      "[+5,+10)": 16,
+      "[+10,+99)": 12
+    },
+    "outcomes": {
+      "sl": 151,
+      "trail": 208
+    }
+  },
+  {
+    "name": "Persist=5 (mb1h=20, chop=58, cd=10)",
+    "trades": 339,
+    "total_r": 261.3,
+    "delta_r": 23.3,
+    "wr": 28.9,
+    "pf": 2.17,
+    "avg_win_r": 4.95,
+    "avg_loss_r": -0.93,
+    "avg_r_per_trade": 0.771,
+    "max_dd_r": 31.2,
+    "max_win_streak": 5,
+    "max_loss_streak": 11,
+    "avg_risk_usd": 641.0,
+    "trades_per_month": 7613.0,
+    "r_distribution": {
+      "[-1,-0)": 221,
+      "[-0,+0)": 20,
+      "[+0,+0)": 14,
+      "[+0,+1)": 11,
+      "[+1,+2)": 21,
+      "[+2,+3)": 11,
+      "[+3,+5)": 14,
+      "[+5,+10)": 15,
+      "[+10,+99)": 12
+    },
+    "outcomes": {
+      "sl": 138,
+      "trail": 201
+    }
+  },
+  {
+    "name": "Multi-LTF + Persist=5, cd=10 (mb1h=20, chop=58)",
+    "trades": 336,
+    "total_r": 256.2,
+    "delta_r": 18.2,
+    "wr": 28.9,
+    "pf": 2.15,
+    "avg_win_r": 4.93,
+    "avg_loss_r": -0.93,
+    "avg_r_per_trade": 0.762,
+    "max_dd_r": 30.2,
+    "max_win_streak": 4,
+    "max_loss_streak": 11,
+    "avg_risk_usd": 645.0,
+    "trades_per_month": 7545.0,
+    "r_distribution": {
+      "[-1,-0)": 219,
+      "[-0,+0)": 20,
+      "[+0,+0)": 15,
+      "[+0,+1)": 11,
+      "[+1,+2)": 20,
+      "[+2,+3)": 11,
+      "[+3,+5)": 14,
+      "[+5,+10)": 14,
+      "[+10,+99)": 12
+    },
+    "outcomes": {
+      "sl": 139,
+      "trail": 197
+    }
+  },
+  {
+    "name": "mb1h=10 only (rest=baseline)",
+    "trades": 369,
+    "total_r": 196.4,
+    "delta_r": -41.6,
+    "wr": 25.7,
+    "pf": 1.78,
+    "avg_win_r": 4.72,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.532,
+    "max_dd_r": 36.1,
+    "max_win_streak": 5,
+    "max_loss_streak": 17,
+    "avg_risk_usd": 705.0,
+    "trades_per_month": 8257.0,
+    "r_distribution": {
+      "[-1,-0)": 249,
+      "[-0,+0)": 25,
+      "[+0,+0)": 20,
+      "[+0,+1)": 13,
+      "[+1,+2)": 16,
+      "[+2,+3)": 12,
+      "[+3,+5)": 11,
+      "[+5,+10)": 11,
+      "[+10,+99)": 12
+    },
+    "outcomes": {
+      "sl": 144,
+      "trail": 225
+    }
+  },
+  {
+    "name": "mb1h=10 + chop=55 (rest=baseline)",
+    "trades": 377,
+    "total_r": 273.8,
+    "delta_r": 35.8,
+    "wr": 27.6,
+    "pf": 2.11,
+    "avg_win_r": 5.01,
+    "avg_loss_r": -0.91,
+    "avg_r_per_trade": 0.726,
+    "max_dd_r": 34.2,
+    "max_win_streak": 4,
+    "max_loss_streak": 17,
+    "avg_risk_usd": 704.0,
+    "trades_per_month": 8436.0,
+    "r_distribution": {
+      "[-1,-0)": 242,
+      "[-0,+0)": 31,
+      "[+0,+0)": 25,
+      "[+0,+1)": 15,
+      "[+1,+2)": 16,
+      "[+2,+3)": 9,
+      "[+3,+5)": 10,
+      "[+5,+10)": 16,
+      "[+10,+99)": 13
+    },
+    "outcomes": {
+      "sl": 146,
+      "trail": 231
+    }
+  },
+  {
+    "name": "mb1h=10 + chop=55 + persist=2 (rest=baseline)",
+    "trades": 368,
+    "total_r": 267.3,
+    "delta_r": 29.3,
+    "wr": 25.0,
+    "pf": 2.07,
+    "avg_win_r": 5.62,
+    "avg_loss_r": -0.91,
+    "avg_r_per_trade": 0.726,
+    "max_dd_r": 30.0,
+    "max_win_streak": 4,
+    "max_loss_streak": 13,
+    "avg_risk_usd": 731.0,
+    "trades_per_month": 8213.0,
+    "r_distribution": {
+      "[-1,-0)": 246,
+      "[-0,+0)": 30,
+      "[+0,+0)": 25,
+      "[+0,+1)": 10,
+      "[+1,+2)": 17,
+      "[+2,+3)": 6,
+      "[+3,+5)": 9,
+      "[+5,+10)": 12,
+      "[+10,+99)": 13
+    },
+    "outcomes": {
+      "sl": 142,
+      "trail": 226
+    }
+  },
+  {
+    "name": "SAFE: mb1h=10, chop=55, persist=2, cd=10",
+    "trades": 368,
+    "total_r": 267.3,
+    "delta_r": 29.3,
+    "wr": 25.0,
+    "pf": 2.07,
+    "avg_win_r": 5.62,
+    "avg_loss_r": -0.91,
+    "avg_r_per_trade": 0.726,
+    "max_dd_r": 30.0,
+    "max_win_streak": 4,
+    "max_loss_streak": 13,
+    "avg_risk_usd": 731.0,
+    "trades_per_month": 8213.0,
+    "r_distribution": {
+      "[-1,-0)": 246,
+      "[-0,+0)": 30,
+      "[+0,+0)": 25,
+      "[+0,+1)": 10,
+      "[+1,+2)": 17,
+      "[+2,+3)": 6,
+      "[+3,+5)": 9,
+      "[+5,+10)": 12,
+      "[+10,+99)": 13
+    },
+    "outcomes": {
+      "sl": 142,
+      "trail": 226
+    }
+  },
+  {
+    "name": "OPTIMAL: mb1h=10, chop=55, persist=2, cd=0, sl=0.01",
+    "trades": 515,
+    "total_r": 456.2,
+    "delta_r": 218.2,
+    "wr": 28.0,
+    "pf": 2.33,
+    "avg_win_r": 5.55,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.886,
+    "max_dd_r": 23.3,
+    "max_win_streak": 5,
+    "max_loss_streak": 19,
+    "avg_risk_usd": 709.0,
+    "trades_per_month": 11509.0,
+    "r_distribution": {
+      "[-1,-0)": 339,
+      "[-0,+0)": 32,
+      "[+0,+0)": 30,
+      "[+0,+1)": 20,
+      "[+1,+2)": 24,
+      "[+2,+3)": 11,
+      "[+3,+5)": 15,
+      "[+5,+10)": 23,
+      "[+10,+99)": 21
+    },
+    "outcomes": {
+      "sl": 204,
+      "trail": 311
+    }
+  },
+  {
+    "name": "MAX R: mb1h=10, chop=55, persist=2, cd=0, sl=0.001",
+    "trades": 515,
+    "total_r": 460.8,
+    "delta_r": 222.8,
+    "wr": 28.0,
+    "pf": 2.34,
+    "avg_win_r": 5.58,
+    "avg_loss_r": -0.93,
+    "avg_r_per_trade": 0.895,
+    "max_dd_r": 23.3,
+    "max_win_streak": 5,
+    "max_loss_streak": 19,
+    "avg_risk_usd": 707.0,
+    "trades_per_month": 11509.0,
+    "r_distribution": {
+      "[-1,-0)": 339,
+      "[-0,+0)": 32,
+      "[+0,+0)": 30,
+      "[+0,+1)": 20,
+      "[+1,+2)": 24,
+      "[+2,+3)": 11,
+      "[+3,+5)": 15,
+      "[+5,+10)": 23,
+      "[+10,+99)": 21
+    },
+    "outcomes": {
+      "sl": 204,
+      "trail": 311
+    }
+  },
+  {
+    "name": "MIDDLE: mb1h=10, chop=55, persist=2, cd=5, sl=0.01",
+    "trades": 376,
+    "total_r": 244.4,
+    "delta_r": 6.4,
+    "wr": 26.1,
+    "pf": 1.96,
+    "avg_win_r": 5.09,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.65,
+    "max_dd_r": 28.6,
+    "max_win_streak": 4,
+    "max_loss_streak": 13,
+    "avg_risk_usd": 723.0,
+    "trades_per_month": 8391.0,
+    "r_distribution": {
+      "[-1,-0)": 251,
+      "[-0,+0)": 27,
+      "[+0,+0)": 25,
+      "[+0,+1)": 13,
+      "[+1,+2)": 17,
+      "[+2,+3)": 6,
+      "[+3,+5)": 9,
+      "[+5,+10)": 14,
+      "[+10,+99)": 14
+    },
+    "outcomes": {
+      "sl": 148,
+      "trail": 228
+    }
+  },
+  {
+    "name": "Dual-active windows (mb1h=20, chop=58)",
+    "trades": 520,
+    "total_r": 274.7,
+    "delta_r": 36.7,
+    "wr": 28.3,
+    "pf": 1.8,
+    "avg_win_r": 4.2,
+    "avg_loss_r": -0.92,
+    "avg_r_per_trade": 0.528,
+    "max_dd_r": 32.7,
+    "max_win_streak": 5,
+    "max_loss_streak": 14,
+    "avg_risk_usd": 707.0,
+    "trades_per_month": 11590.0,
+    "r_distribution": {
+      "[-1,-0)": 340,
+      "[-0,+0)": 33,
+      "[+0,+0)": 32,
+      "[+0,+1)": 22,
+      "[+1,+2)": 25,
+      "[+2,+3)": 11,
+      "[+3,+5)": 19,
+      "[+5,+10)": 26,
+      "[+10,+99)": 12
+    },
+    "outcomes": {
+      "sl": 214,
+      "trail": 306
+    }
+  },
+  {
+    "name": "Adaptive halt (mb1h=20, chop=58)",
+    "trades": 367,
+    "total_r": 237.3,
+    "delta_r": -0.7,
+    "wr": 27.2,
+    "pf": 1.97,
+    "avg_win_r": 4.82,
+    "avg_loss_r": -0.91,
+    "avg_r_per_trade": 0.646,
+    "max_dd_r": 27.4,
+    "max_win_streak": 5,
+    "max_loss_streak": 31,
+    "avg_risk_usd": 647.0,
+    "trades_per_month": 8213.0,
+    "r_distribution": {
+      "[-1,-0)": 240,
+      "[-0,+0)": 27,
+      "[+0,+0)": 15,
+      "[+0,+1)": 11,
+      "[+1,+2)": 19,
+      "[+2,+3)": 13,
+      "[+3,+5)": 13,
+      "[+5,+10)": 18,
+      "[+10,+99)": 11
+    },
+    "outcomes": {
+      "sl": 155,
+      "trail": 212
+    }
+  },
+  {
+    "name": "TOD filter 00-04 (mb1h=20, chop=58)",
+    "trades": 317,
+    "total_r": 210.3,
+    "delta_r": -27.7,
+    "wr": 26.8,
+    "pf": 1.97,
+    "avg_win_r": 5.02,
+    "avg_loss_r": -0.93,
+    "avg_r_per_trade": 0.663,
+    "max_dd_r": 21.1,
+    "max_win_streak": 5,
+    "max_loss_streak": 11,
+    "avg_risk_usd": 623.0,
+    "trades_per_month": 7094.0,
+    "r_distribution": {
+      "[-1,-0)": 213,
+      "[-0,+0)": 19,
+      "[+0,+0)": 12,
+      "[+0,+1)": 14,
+      "[+1,+2)": 17,
+      "[+2,+3)": 6,
+      "[+3,+5)": 10,
+      "[+5,+10)": 15,
+      "[+10,+99)": 11
+    },
+    "outcomes": {
+      "sl": 139,
+      "trail": 178
+    }
+  }
+]
