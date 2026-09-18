@@ -24,7 +24,7 @@
 | 11 | Split-mb: entry-mb != trail-mb | v19 | DONE ❌ rejected | 283-324 | +259.9 fine | FAILS fine H2 | +10.2R net (t75) | coarse promise evaporates under fine fills |
 | 12 | mb_1h window sweep (14/20/28) | v19 | DONE ✅ mb1h=20 | 323-348 | +236.7 best | mb14 fails H1 | mb1h=20 confirmed | no change adopted |
 | 13 | Loss-Autopsy Entry-Veto | v20 | DONE ❌ all vetoes dead | — | — | — | — | but found: post-halt re-entries ELITE (+126R) |
-| 14 | **B3 confirmation-entry** | v21 | **DONE 🏆 WINNER (ruling pending)** | 206 | **+322.2 / +278.6 net fine** | H1 ✓ H2 −12.0 | **+96.3R net** | WR 40.8%, DD 13.1, avg 1.35R/trade |
+| 14 | **B3 confirmation-entry** | v21 | **DONE 🏆 POTENTIAL BASE (user ruled)** | 206 | **+322.2 / +278.6 net fine** | H1 ✓ H2 −12.0 | **+96.3R net** | WR 40.8%, DD 13.1, avg 1.35R/trade; 2026 partial year |
 | 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | next session |
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
@@ -137,6 +137,7 @@ ARM A (mb50 + B3, coarse): monotone in k. k8 close 206t +322.2R WR 40.8% DD 13.1
 - vs anchor fine (NET +182.3, DD 27.1, WR 30.0, streak 16): +96.3R net, DD −52%, WR +10.8pt, max-loss-streak halved, avg R/trade 1.35 vs 0.54.
 - Fill audit (_diff_b3_fills.py): 194/206 trades differ ONLY in exit timestamp (1m vs 15m label); ALL exit prices and R identical (stop-level fills; 1m opens tile 15m opens). Fine referee confirms the coarse result — unlike split-mb, nothing evaporates.
 - Strict-rule status: H1 +82.6 better; H2 −12.0 (2026 −37.3, 2025 +25.3 partially offsets). 3 of 4 years better. NEAR-PASS like halt=6 but 10x the magnitude — USER RULING REQUIRED.
+- **USER RULING (2026-09-18): B3 k8-close = POTENTIAL BASE.** Marked as a good experiment and the potential new baseline. Research continues (week-long); all new experiments report against BOTH the v18 anchor AND the B3 potential base until final adoption. Note: 2026 data is partial (through early Oct) — user projects 2026 closes the −37.3 gap as the year completes.
 
 ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 close = 307t +212.3R DD 22.0 (B3 rescues fast swings but still below anchor). mb40+k4 = +192.1. Structure-confirmation does NOT fully replace time-confirmation here — mb50 entry chain stays.
 
@@ -297,6 +298,6 @@ Population: 340 trades → **132 direct SL losses (−1R book)**, 102 winners.
 - `live_stuff/tests/_diff_b3_fills.py` — fill audit (coarse vs fine exit diff)
 - Commits: `c3749b1`, `e5a330f`, `425d400` (engine `backend/` untouched; other bot's files untouched)
 
-**Baseline for next session:** anchor 340t/+182.3R net fine (v18). Best candidates pending user ruling: B3 k8-close (+96.3R net), halt=6 (+5.6R net, DD −35%). Next experiments: B3+halt=6 combo, Exp 15 sweep-reclaim, fine per-month deep-dive of B3's 2026 shortfall.
+**Baselines for next session:** v18 anchor 340t/+182.3R net fine AND **B3 potential base** 206t/+278.6R net fine (user-ruled; experiments report vs both). Best remaining candidate: halt=6 (+5.6R net, DD −35% — ruling pending, composable with B3). Next experiments: B3+halt=6 combo, Exp 18 3-Mark Judgment (mark stream verified), Exp 15 sweep-reclaim, fine per-month deep-dive of B3's 2026 shortfall.
 
 
