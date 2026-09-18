@@ -29,7 +29,7 @@
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
 | 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | 📋 DOCUMENTED — queued | | | | | see full spec below; run after variants are all listed |
-| 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | 📋 DOCUMENTED — queued (metrics phase first) | | | | | see full spec below |
+| 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | DONE ❌ refuted by Phase-1 metrics | — | — | — | **−189.2R rough net** | mechanism CONFIRMED (97%), remedy rejected; salvage → Exp 18 flip branches |
 
 ---
 
@@ -225,7 +225,24 @@ ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 cl
 - Identity gate vs shipped (rule-off = identical), truncated-data discipline, per-year + half-splits, fine 1m validation for survivors, results logged below.
 
 #### Results
-- (queued — Phase 1 metrics not yet run; waiting for user to finish listing variants)
+**Phase 1 METRICS — DONE (exp19_metrics2.py, mark-based, causal pivot checks):**
+
+Population: 340 trades → **132 direct SL losses (−1R book)**, 102 winners.
+
+| Metric | Result | Meaning |
+|---|---|---|
+| **M3' — SL hit = next opposite swing's mark** | **128/132 (97%)** | ✅ **USER'S MECHANISM CONFIRMED** — the SL is broken almost exactly when the opposite swing forms (mark within ±2 bars of death) |
+| M1 — death quality | 58/132 (44%) close-beyond-SL; **74 (56%) wick-only** | most SL deaths are wick spikes, not structural closes |
+| M2' — same-dir NEW-swing B2 between entry and death | **0/132 (0%)** | the "second buying swing" the rule wants to enter on NEVER forms before the trade dies |
+
+**Counterfactual of the skip-first rule (marks-based, causal):**
+- Loss book: all 132 losses have NO second same-swing before death → the rule **skips all 132** → **+132.0R**
+- Win book: 75/102 winners DO get a second same-swing → moved: only 34 still win, **41 turn into losses**; 27 winners skipped entirely → **−321.2R**
+- **ROUGH NET: −189.2R → PHASE 2 AS SPECIFIED IS REFUTED.**
+
+**Verdict:** the theory's *diagnosis* is right (97% — SL hits ARE the next opposite swing forming), but the *remedy* (enter on the next same-direction swing) enters too late — by the time the second swing's B2 marks, the move is already spent; 41 of 75 moved winners die. The edge lives in the FIRST-swing entry.
+**Salvage:** the correct exploitation of the 97% finding is Exp 18's flip branches (P2/P3/P4/P5) — "what does the opposite swing's formation mean" is exactly the flip-logic already queued. Also noted: 56% wick-only deaths (stop-buffer territory, tested before — sl_buf variations are structural, not free).
+**Phase 2 arms A/B/C: NOT built (refuted by Phase 1). Arm D (no-timeout observation) is subsumed by Exp 18.**
 
 
 
