@@ -33,7 +33,8 @@
 | 20 | **Close-Confirmed Initial SL** (56% of SL deaths are wick-only) | v26 | DONE ❌ Phase-1 refuted | — | — | — | **−6.3R rough net** | wick gain eaten by worse close-through fills + killed winners |
 | 21 | **Mark-History Entry Autopsy** (entry-time mark features → quality filter) | v27 | DONE ⚠ no actionable bucket | — | — | — | — | FLIP entries 3.7× per-trade vs B2; flip-proximity edge → Exp 18 prioritized |
 | 22 | **Second-Swing Conviction Trail** (accelerate trail at 2nd same-swing B2) | v28 | DONE ❌ refuted (walk) | 347 | +161.7 | — | **−63.6R** | mb50 confirmation lag is PROTECTIVE — filters shake-outs; slowness is a feature |
-| 23 | **COMBO: B3 k8-close + halt=6** | v29 | 📋 DOCUMENTED — running now | | | | | both param-level, composable; vs v18 anchor, B3 alone, halt6 alone |
+| 23 | **COMBO: B3 k8-close + halt=6** | v29 | DONE 🏆 logged (decision deferred) | 215 | +328.7 / **+283.4 net** | H1 ✓ H2 −2.8 | **+101.1R net** | best combo before their-lane audit |
+| 24 | **AUDIT: their-lane OPTIMAL combo verified on shipped engine** | v30 | DONE ✅ **VERIFIED REAL — pending live-risk design** | 515 | +456.2 / **+348.0 net** | H1 ✓ H2 ✓ | **+165.7R net** | multi-LTF alone = +99.9R net; concurrent-position caveat quantified |
 
 ---
 
@@ -321,6 +322,37 @@ Population: 340 trades → **132 direct SL losses (−1R book)**, 102 winners.
 Combo per-year (fine): 2023 +66.9, 2024 +114.1, 2025 +91.2, 2026 +56.6 — all positive.
 **Read:** the combo adds +4.8R net over B3 alone and nearly closes the H2 gap vs v18 (+147.8 vs +150.6 → only −2.8 short now; B3 alone was −12.0). DD 14.1 vs B3's 13.1 (marginal give-back for the H2 repair). All years positive. Best net figure of the entire research program so far.
 **Status: DONE — logged. Decision deferred until all experiments complete (per user).**
+
+---
+
+### Exp 24: AUDIT of the other lane's results + OPTIMAL combo verification (v30)
+**Task:** their docs (EXPERIMENT_RESULTS.md / EXPERIMENTS.md) claim baseline 351t/+238.0R and an OPTIMAL combo (mb1h=10, chop=55, persist=2, cd=0, multi-LTF) at 515t/+456.2R gross/+322.5R net (+174.6R delta). User asked: legit numbers, or bugs hiding?
+
+#### Audit finding 1 — their harness is a PARALLEL ENGINE, not v18
+- Their baseline (their exact invocation, fine fills): **351t / +238.03R** — reproduces their doc, BUT the shipped engine gives **340t / +251.6R** on the same data.
+- Trade-by-trade diff: **256 common entries with IDENTICAL R** (walk math identical) + **84 shipped-only vs 95 their-only trades** — the SIGNAL SELECTION diverges from Jan 2023. Their "code audit: all simulation logic identical" claim is wrong at the selection level.
+- Their harness's no-fine path is degenerate (returns 1 trade at +1048R — an open trade run to end-of-data on a micro-risk SL). All their numbers came from the fine path.
+
+#### Audit finding 2 — the OPTIMAL combo SURVIVES on the shipped engine (ported via identity-gated patches: persist hysteresis + multi-LTF/no-busy)
+| Config | Trades | Gross (coarse) | NET (fine) | WR | DD | vs v18 net |
+|---|---|---|---|---|---|---|
+| v18 anchor | 340 | +225.3 | +182.3 | 30.0% | 27.1 | — |
+| multi-LTF alone (cd=10 kept) | 410 | +340.7 | **+282.2** | 31.5% | 28.8 | **+99.9R** |
+| SAFE (mb1h10+chop55+persist2) | 367 | +241.4 | +194.0 | 25.0% | 30.0 | +11.7R |
+| **OPTIMAL (SAFE + cd0 + mltf)** | **515** | **+456.2** | **+348.0** | 28.0% | 23.3 | **+165.7R** |
+- Per-year OPTIMAL (fine): 2023 +94.4, 2024 +135.0, 2025 +84.4, 2026 +142.3 — all positive, all above the anchor's year. **Both halves crush the anchor (H1 +229.4 vs +101.0; H2 +226.7 vs +150.6)** — passes the strict rule B3 failed.
+- Piece-by-piece on shipped: multi-LTF alone +115.4R coarse (**the biggest single lever found anywhere**); persist2 +7.8R; chop55 alone −43.2R; cd0 alone −1.4R; mb1h10 alone −36.8R — the combo's edge is mostly multi-LTF, with the rest as modifiers.
+
+#### Audit finding 3 — the live-risk caveat, quantified
+Multi-LTF removes the one-trade-at-a-time barrier (v18's design) → **concurrent positions**:
+- multi-LTF alone: max 5 concurrent; 87.6% of bars at ≤1 position, 11.2% at 2-3, ~1.1% at 4-5
+- OPTIMAL: max 5 concurrent; 80.7% at ≤1, 17.9% at 2-3, 1.4% at 4-5
+- R-accounting treats each trade as independent 1R — with 2-5 open positions the REAL dollar risk multiplies during overlaps. R-DD understates dollar-DD in those windows.
+**Pending design work (Phase 2):** concurrency cap (e.g. max 2-3 open trades) to capture most of the edge with bounded exposure; live re-entry latency effects (their own doc flags this); cd=0 live-validity (rapid re-entry after SL).
+
+#### Status
+- VERIFIED REAL on the shipped engine, fine fills, both halves. Decision deferred with the rest.
+- Next: concurrency-capped variant (cap=2, cap=3) to find the exposure/edge trade-off.
 
 ---
 
