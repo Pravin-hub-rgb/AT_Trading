@@ -30,6 +30,9 @@
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
 | 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | 📋 DOCUMENTED — queued | | | | | see full spec below; run after variants are all listed |
 | 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | DONE ❌ refuted by Phase-1 metrics | — | — | — | **−189.2R rough net** | mechanism CONFIRMED (97%), remedy rejected; salvage → Exp 18 flip branches |
+| 20 | **Close-Confirmed Initial SL** (56% of SL deaths are wick-only) | v26 | DONE ❌ Phase-1 refuted | — | — | — | **−6.3R rough net** | wick gain eaten by worse close-through fills + killed winners |
+| 21 | **Mark-History Entry Autopsy** (entry-time mark features → quality filter) | v27 | DONE ⚠ no actionable bucket | — | — | — | — | FLIP entries 3.7× per-trade vs B2; flip-proximity edge → Exp 18 prioritized |
+| 22 | **Second-Swing Conviction Trail** (accelerate trail at 2nd same-swing B2) | v28 | 📋 DOCUMENTED — queued | | | | | 74% of winners get a 2nd same-swing; losers never do (die first) |
 
 ---
 
@@ -243,6 +246,29 @@ Population: 340 trades → **132 direct SL losses (−1R book)**, 102 winners.
 **Verdict:** the theory's *diagnosis* is right (97% — SL hits ARE the next opposite swing forming), but the *remedy* (enter on the next same-direction swing) enters too late — by the time the second swing's B2 marks, the move is already spent; 41 of 75 moved winners die. The edge lives in the FIRST-swing entry.
 **Salvage:** the correct exploitation of the 97% finding is Exp 18's flip branches (P2/P3/P4/P5) — "what does the opposite swing's formation mean" is exactly the flip-logic already queued. Also noted: 56% wick-only deaths (stop-buffer territory, tested before — sl_buf variations are structural, not free).
 **Phase 2 arms A/B/C: NOT built (refuted by Phase 1). Arm D (no-timeout observation) is subsumed by Exp 18.**
+
+---
+
+### Exp 20: Close-Confirmed Initial SL (v26) — from the M1 death-quality metric
+**Phase 1 RESULT — DONE (exp20_close_sl.py, sign bug caught & fixed pre-verdict):**
+- SL losses (132): only **7 saved** (+36.6R window R); **125 close-through** at −161.5R total (avg −1.29R — each close-through fill is WORSE than the −1R touch fill).
+- Winners/trail-negs: 35 killed early (−47.2R) — and this is an UPPER BOUND on kills (ignores trail ratchet).
+- **ROUGH NET: −6.3R** (2023 −6.4, 2024 −1.8, 2025 +1.3, 2026 +0.7 — mixed, mildly negative).
+**VERDICT: REJECTED.** The wick-survival gain (+36.6R) is eaten by worse close-through fills (+29.5R extra loss on the 125) and early-killed winners. The wick deaths are the price of touch-stops, not free money.
+
+### Exp 21: Mark-History Entry Autopsy (v27) — from the mark-stream discovery
+**Phase 1 RESULT — DONE (exp21_mark_autopsy.py):**
+- **Entry kind: FLIP entries avg +1.09R/trade (n=159, +173.2R) vs B2 entries avg +0.29R/trade (n=181, +52.1R)** — flip entries 3.7x better per trade. BUT B2 entries are net-positive → vetoing them LOSES 52.1R. Not actionable as a veto; it PRIORITIZES Exp 18's flip branches (P2/P4/P5) — flip marks carry the edge.
+- Depth gradient: depth=1 (fresh after flip) avg +0.98R vs depth=2 avg +0.27R; depth>=4 veto = −0.9R total, halves mixed → not actionable.
+- bsf 24-49 (mid-age flip) veto: −13.3R total but H1 −22.4 / H2 +9.1 → FAILS half-consistency → not actionable.
+- reclaim feature: no discrimination (328/340 have it — definition too loose).
+**VERDICT: NO clean actionable bucket. Phase-1 diagnostic value: flip-proximity edge confirmed → Exp 18 flip branches move to the front of the queue.**
+
+### Exp 22: Second-Swing Conviction Trail (v28) — from the M2' asymmetry
+**Source:** Exp 19 M2' asymmetry: 74% of winners had a 2nd same-direction swing's B2 mark before exit; losers NEVER do (they die before the market can re-prove).
+**Theory:** the 2nd same-swing B2 mark is a *conviction event* — the market re-proved the direction. Once it fires, tighten the trail faster (e.g., trail pivot from the NEW swing instead of waiting for its mb50 confirmation), or ratchet the stop to the 2nd swing's origin pivot.
+**Status:** queued — needs a Phase-1 study of where the 2nd same-swing B2 fires relative to the trail ratchet on winners (was the trail already past it?), then a harness walk. Deferred until 18/20/21 verdicts.
+
 
 
 
