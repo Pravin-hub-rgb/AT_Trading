@@ -28,6 +28,7 @@
 | 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | next session |
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
+| 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | 📋 DOCUMENTED — queued | | | | | see full spec below; run after variants are all listed |
 
 ---
 
@@ -138,6 +139,55 @@ ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 cl
 #### Open
 - USER RULING: B3 k8-close (net +96.3R, DD halved, H2 −12.0) and/or halt=6 (net +5.6R, DD −35%) — both are param-level changes on the same engine, composable (test needed: B3 + halt=6).
 - Exp 15 (sweep-reclaim qualifier): TODO next session.
+
+---
+
+### Exp 18: The 3-Mark Judgment System — B3 as a THIRD PIVOT BREAK (v24)
+**Status: DOCUMENTED — QUEUED. Per user: list ALL variants first, then run experiments one by one, logging results. DO NOT RUN until user says the variant list is complete.**
+
+#### The marks (exact definitions)
+- **Mark = a swing pivot/extreme break** emitted by the swing chain (the walker's B-marks).
+- **B1** = the FIRST extreme break in a direction (e.g. up). Marks the start of a bias.
+- **B2** = a SECOND consecutive extreme break in the SAME direction (breaks the next extreme of that direction's swing).
+- **FLIP** = an extreme break in the OPPOSITE direction of the current bias.
+- Current v18 behavior: it TRADES ON THE 2ND MARK (the B2 break itself, or a flip). Exp 14's B3 k8-close added a candle-level confirmation AFTER that 2nd mark. Neither of those is this experiment.
+
+#### The core principle (user's theory)
+**The first two marks are CONTEXT ONLY — no trading decision on them. The decision is the THIRD mark.** The third mark can be:
+- a **B3** = a THIRD extreme break in the same direction (B1↑ B2↑ B3↑ → trade ↑), or
+- a **flip-branch** (see the combination table below).
+
+**Crucial distinction vs Exp 14:** Exp 14's B3 was a CANDLE rule (close beyond the break bar's extreme within k bars). Exp 18's B3 is a STRUCTURAL rule — the 3rd mark must be another genuine PIVOT BREAK from the swing chain. B1 = 1st extreme break, B2 = 2nd extreme break, B3 = 3rd extreme break. "We have so much income" — the marks are free information the walker already produces.
+
+#### Combination table (all branches, B1↑ shown; mirror for down)
+| # | Marks 1-2 (context, NO action) | 3rd mark | Interpretation | Action variant |
+|---|---|---|---|---|
+| P1 | B1↑, B2↑ | **B3↑** (3rd same-dir extreme break) | continuation confirmed by 3rd break | **trade ↑** at B3 mark's close |
+| P2 | B1↑, B2↑ | **FLIP↓** (opposite break) | the up-move failed after two breaks — flip overcame TWO marks | V2a: **trade ↓** (flip has power) / V2b: skip / V2c: no action, wait for 4th mark |
+| P3 | B1↑, FLIP↓ | **B2↑** (break back in B1's direction) | the flip failed; original direction re-proven | **trade ↑** |
+| P4 | B1↑, FLIP↓ | **FLIP↓ again** (new extreme in flip direction) | double-flip — reversal confirmed | **trade ↓** |
+| P5 (EXCEPTION) | B1↑, FLIP↓ | *(the flip itself is enough)* | "a flip itself is telling: I have too much power, I'm flipping B1's direction — go with it" | **trade ↓ immediately on the 1st flip** (2-mark judgment, flips ONLY) |
+
+**State machine:** track the last two marks (kind1, dir1, kind2, dir2). When mark 3 arrives, classify by the table. After any trade decision (or skipped 3rd mark), the state resets/rolls forward (new B1 basis). Edge cases to define at implementation: which mark resets the counter after a flip; whether a 4th mark can act if the 3rd was a no-action flip (V2c); timeouts on stale marks.
+
+#### Research arms (each run SEPARATELY against the anchor; half-split + fine rules apply)
+- **A. Pure 3rd-break:** trade ONLY on P1 (B1↑B2↑B3↑ → ↑). P2/P3/P4/P5 = no trade. Isolates "is the 3rd extreme break alone better than v18's 2nd-mark entry?"
+- **B. Full table:** P1 trade ↑, P3 trade ↑, P4 trade ↓, P2 per chosen variant (V2a/b/c).
+- **C. Flip-exception:** P5 rule added on top (1st flip after B1 = immediate trade ↓) — plus B on top of it.
+- **D. Stacked:** 3rd pivot break (this exp) AND Exp 14's k8-close price confirmation both required. Two independent confirmations.
+- **E. Low-mb arm:** with 3-mark structural confirmation, retry faster entry chains (mb 30/40) — "might not need minbar at all" (structure confirmation replacing time confirmation, round 2).
+
+#### Causal notes
+- The 3rd mark's decision happens at that mark's bar close (pivot break known at close); entry next candle open — same convention as shipped.
+- The mark stream must come from the walker's real-time emission (marks are known when emitted) — no re-walking history.
+- Data prerequisite BEFORE coding: dump the actual mark stream from `_collect_signals`/walker (kind, direction, bar, price) and verify B1/B2/FLIP attribution matches the definitions above, incl. how flips re-baseline the bias.
+
+#### Acceptance
+- Same as all experiments: identity gate vs shipped (marks-off = identical), truncated-data discipline, per-year + half-splits, fine 1m validation for survivors, results logged below.
+
+#### Results
+- (queued — not yet run; waiting for user to finish listing variants)
+
 
 ---
 
