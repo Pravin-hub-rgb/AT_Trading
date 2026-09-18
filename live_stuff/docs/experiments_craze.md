@@ -27,12 +27,13 @@
 | 14 | **B3 confirmation-entry** | v21 | **DONE 🏆 POTENTIAL BASE (user ruled)** | 206 | **+322.2 / +278.6 net fine** | H1 ✓ H2 −12.0 | **+96.3R net** | WR 40.8%, DD 13.1, avg 1.35R/trade; 2026 partial year |
 | 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | next session |
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
-| 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | ruling pending |
+| 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass — decision deferred to end (user) | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | risk-profile win; combo with B3 = Exp 23 |
 | 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | 📋 DOCUMENTED — queued | | | | | see full spec below; run after variants are all listed |
 | 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | DONE ❌ refuted by Phase-1 metrics | — | — | — | **−189.2R rough net** | mechanism CONFIRMED (97%), remedy rejected; salvage → Exp 18 flip branches |
 | 20 | **Close-Confirmed Initial SL** (56% of SL deaths are wick-only) | v26 | DONE ❌ Phase-1 refuted | — | — | — | **−6.3R rough net** | wick gain eaten by worse close-through fills + killed winners |
 | 21 | **Mark-History Entry Autopsy** (entry-time mark features → quality filter) | v27 | DONE ⚠ no actionable bucket | — | — | — | — | FLIP entries 3.7× per-trade vs B2; flip-proximity edge → Exp 18 prioritized |
 | 22 | **Second-Swing Conviction Trail** (accelerate trail at 2nd same-swing B2) | v28 | 📋 DOCUMENTED — queued | | | | | 74% of winners get a 2nd same-swing; losers never do (die first) |
+| 23 | **COMBO: B3 k8-close + halt=6** | v29 | 📋 DOCUMENTED — running now | | | | | both param-level, composable; vs v18 anchor, B3 alone, halt6 alone |
 
 ---
 
@@ -272,6 +273,20 @@ Population: 340 trades → **132 direct SL losses (−1R book)**, 102 winners.
 
 
 
+
+### Exp 23: COMBO — B3 k8-close + halt=6 (v29) — both param-level, composable
+**Rationale:** B3 (Exp 14) and halt=6 (Exp 17) are independent near-passes on different mechanisms (entry confirmation vs streak tolerance). User instruction: document findings, defer all pick-decisions until ALL experiments are done; run this combo now.
+
+| Config | Trades | Gross | NET (fine) | WR | DD | streak | H1 | H2 |
+|---|---|---|---|---|---|---|---|---|
+| v18 anchor | 340 | +225.3 (coarse) | +182.3 | 30.0% | 27.1 | 16 | +101.0 | +150.6 |
+| B3 k8-close alone | 206 | +322.2 | +278.6 | 40.8% | 13.1 | 8 | +183.6 | +138.6 |
+| halt=6 alone | 369 | +235.1 | +187.9 | 28.2% | 17.7 | 14 | +117.1 | +144.3 |
+| **COMBO** | **215** | **+328.7** | **+283.4** | **40.9%** | **14.1** | **8** | **+181.0** | **+147.8** |
+
+Combo per-year (fine): 2023 +66.9, 2024 +114.1, 2025 +91.2, 2026 +56.6 — all positive.
+**Read:** the combo adds +4.8R net over B3 alone and nearly closes the H2 gap vs v18 (+147.8 vs +150.6 → only −2.8 short now; B3 alone was −12.0). DD 14.1 vs B3's 13.1 (marginal give-back for the H2 repair). All years positive. Best net figure of the entire research program so far.
+**Status: DONE — logged. Decision deferred until all experiments complete (per user).**
 
 ---
 
