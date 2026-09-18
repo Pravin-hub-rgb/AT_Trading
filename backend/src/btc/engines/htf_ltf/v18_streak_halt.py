@@ -127,12 +127,14 @@ def simulate_htf_ltf_streak_halt(
     atr_pct=_atr_pct_15m(candles_ltf)
     candle_ts_ltf=[int(c["ts"]) for c in candles_ltf]
     candle_ts_htf=[int(c["ts"]) for c in candles_htf]
-    # For fast bisect per LTF bar, we need chop at LTF bar time: find 1h bar containing LTF bar
-    # Build chop per LTF bar via bisect on HTF ts
-    # Precompute chop per LTF bar
+    # C14: regime gate at the ENTRY INSTANT (signal bar close = next candle open).
+    # Only 1h candles that CLOSED by the entry instant may set the regime -
+    # the running 1h candle's final chop is future data (up to 45 min lookahead).
+    # Precompute chop per LTF bar from the last 1h bar CLOSED by ts+900.
+    candle_ts_htf_close=[t+3600 for t in candle_ts_htf]
     chop_per_ltf=[50.0]*len(candles_ltf)
     for i,ts in enumerate(candle_ts_ltf):
-        j=bs.bisect_right(candle_ts_htf, ts)-1
+        j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
         if j>=0 and j < len(chop):
             chop_per_ltf[i]=chop[max(0,j)]
     # LTF signals (decisive)
@@ -179,7 +181,9 @@ def simulate_htf_ltf_streak_halt(
         idx=bs.bisect_right(starts, bar_ts)-1
         if idx<0: continue
         s,e,d,pe,psl=intervals[idx]
-        if not (s < bar_ts <= e): continue
+        # C15: the window is knowable from the flip candle CLOSE (entry_ts + 3600);
+        # the LTF entry instant is bar_ts + 900. Gate in knowable-instant space.
+        if not (s + 2700 < bar_ts <= e + 2700): continue
         if sig["dir"] != d: continue
         if ext_stop_r>0:
             hrisk=abs(pe-psl)
