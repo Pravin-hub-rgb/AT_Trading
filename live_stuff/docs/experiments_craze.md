@@ -28,7 +28,7 @@
 | 15 | Sweep-and-Reclaim qualifier | v22 | TODO | | | | | next session |
 | 16 | 1h momentum agreement filter | v22b | DONE ❌ rejected | 273 | +170.1 | — | −55.2R | DD better but gross down |
 | 17 | Soft-halt / halt sweep | v23 | DONE ⚠ near-pass — decision deferred to end (user) | 369 | +235.1 (halt=6) | H2 −6.3 | +5.6R net, DD −35% | risk-profile win; combo with B3 = Exp 23 |
-| 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | 📋 DOCUMENTED — queued | | | | | see full spec below; run after variants are all listed |
+| 18 | **3-Mark Judgment System** (B3 = 3rd PIVOT BREAK + flip branches) | v24 | DONE ❌ all 4 arms rejected | 8-134 | +0.1 to +120.9 | — | all below v18 base | Arm D salvage: +0.90R/trade, DD 14.4 (flip exception); price-confirmation > structure-confirmation |
 | 19 | **Skip-First-Swing Entry** (observe 1st break, enter on NEXT same-direction swing) | v25 | DONE ❌ refuted by Phase-1 metrics | — | — | — | **−189.2R rough net** | mechanism CONFIRMED (97%), remedy rejected; salvage → Exp 18 flip branches |
 | 20 | **Close-Confirmed Initial SL** (56% of SL deaths are wick-only) | v26 | DONE ❌ Phase-1 refuted | — | — | — | **−6.3R rough net** | wick gain eaten by worse close-through fills + killed winners |
 | 21 | **Mark-History Entry Autopsy** (entry-time mark features → quality filter) | v27 | DONE ⚠ no actionable bucket | — | — | — | — | FLIP entries 3.7× per-trade vs B2; flip-proximity edge → Exp 18 prioritized |
@@ -192,7 +192,20 @@ ARM B (low-mb + B3, coarse): mb30 alone = 444t +170.9R DD 35.6 (bad); mb30+k8 cl
 - Same as all experiments: identity gate vs shipped (marks-off = identical), truncated-data discipline, per-year + half-splits, fine 1m validation for survivors, results logged below.
 
 #### Results
-- (queued — not yet run; waiting for user to finish listing variants)
+**Phase 1 — ALL ARMS RUN (exp18_marks.py, mark-stream state machine, identity-gated, coarse):**
+
+| Arm | Trades | Gross | WR | DD | streak | H1 | H2 | Verdict |
+|---|---|---|---|---|---|---|---|---|
+| v18 anchor | 340 | +225.3 | 30.0% | 27.1 | 16 | +101.0 | +124.3 | base |
+| P1 (pure 3rd-break: B1↑B2↑B3↑) | **8** | −0.1R | 12.5% | 5.2 | 6 | +2.9 | −3.0 | ❌ structurally RARE — 3 consecutive same-dir breaks without an opposite mark in between almost never happen (8 in 3.7 yrs); the 3rd mark is usually B1-kind of the next swing |
+| full (every 3-mark resolution trades 3rd mark: P1+P2+P3+P4) | 101 | +59.9 | 27.7% | 17.0 | 9 | +23.1 | +36.8 | ❌ per-trade +0.59 < anchor's +0.66 |
+| P2b (full minus pure-reversal P2) | 40 | +22.0 | 30.0% | 7.6 | 6 | +11.4 | +10.6 | ❌ too few trades |
+| D (flip exception: trade 1st flip after B1 immediately; + P1; P2-flips trade) | 134 | **+120.9** | 29.9% | **14.4** | 11 | +50.6 | +70.3 | ❌ on net R (all 134 trades are FLIP marks) — BUT per-trade +0.90 > anchor's +0.66 and DD halved: a quality-over-quantity profile |
+
+**VERDICT: ALL FOUR ARMS FAIL vs the v18 base on net R. The 3rd-mark judgment as a REPLACEMENT for v18's 2nd-mark entry does not work.**
+- Why P1 is empty: the retrace between swings almost always breaks an opposite pivot (emitting a FLIP mark) before a 3rd same-dir break fires — sequences die at mark 2-3 and reset. Structural rarity, not a bug (mark stream verified: 7,752 marks, identity gate passed).
+- Arm D is the salvage: trading the FIRST flip after B1 (the user's "flip has too much power" exception) produces fewer-but-better trades (+0.90/trade, DD halved) — a candidate for a low-frequency overlay, not a base replacement.
+- **Research insight (important):** confirmation via PRICE (Exp 14's candle close beyond the break extreme, +96.3R net) works; confirmation via STRUCTURE (waiting for a 3rd pivot break) is too slow — the market's retrace breaks an opposite pivot first. Price-confirmation beats structure-confirmation on this engine.
 
 ---
 

@@ -58,7 +58,8 @@ def build_module():
                   '    swings_trail=None,\n'
                   '    exp_momentum=False,\n'
                   '    b3_k=0,\n'
-                  '    b3_mode="close",\n')
+                  '    b3_mode="close",\n'
+                  '    exp18_arm=None,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -81,6 +82,58 @@ def build_module():
                   '                _ma=(closes_htf[_j-2]+closes_htf[_j-1]+closes_htf[_j])/3.0\n'
                   '                if sig["dir"]==1 and closes_htf[_j]<_ma: continue\n'
                   '                if sig["dir"]==-1 and closes_htf[_j]>_ma: continue\n')
+    # 3b) Exp 18: 3-Mark Judgment System — signals from the breaks mark stream.
+    # B1-anchored sequences resolve at the 3rd mark (arm "D": 2-mark flips).
+    # SL attribution mirrors _collect_signals: same-dir mark -> swing start_px,
+    # opposite-dir mark -> prev swing end_px, pre-start churn -> touchable
+    # extreme since prev_end. filter_pre_fs honored. B1 decisions resolve
+    # silently (B1s are not tradeable in v18 semantics).
+    t6 = '    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf)\n'
+    assert s.count(t6) == 1, "collect sigs"
+    s = s.replace(t6, t6 +
+        '    if exp18_arm:\n'
+        '        _mk=[]\n'
+        '        for _si,_s in enumerate(swings_ltf):\n'
+        '            for _b in _s.get("breaks",[]):\n'
+        '                if _b.get("time"):\n'
+        '                    _mk.append((int(_b["idx"]),_si,_b["kind"],\n'
+        '                        1 if _b["dir"]=="up" else -1))\n'
+        '        _mk.sort(key=lambda z:(z[0],z[1]))\n'
+        '        _seq=[]; ltf_sigs=[]\n'
+        '        for _mi,_si,_mkind,_md in _mk:\n'
+        '            _s=swings_ltf[_si]\n'
+        '            _sdir=1 if _s.get("dir")=="up" else -1\n'
+        '            _prev=swings_ltf[_si-1] if _si>0 else None\n'
+        '            if int(_s.get("swing_index",_si))<1 or _prev is None:\n'
+        '                _seq=[]; continue\n'
+        '            _pfs=int(_prev.get("confirmed_at_idx",-1))\n'
+        '            if _pfs>=0 and _mi<_pfs:\n'
+        '                _seq=[]; continue\n'
+        '            _res=False; _tdir=0\n'
+        '            if not _seq:\n'
+        '                if _mkind=="B1": _seq=[_md]\n'
+        '            else:\n'
+        '                _seq.append(_md)\n'
+        '                if len(_seq)==2 and exp18_arm=="D" and _seq[0]!=_seq[1]:\n'
+        '                    _tdir=_md; _res=True\n'
+        '                elif len(_seq)>=3:\n'
+        '                    _a,_b2,_c=_seq[0],_seq[1],_seq[2]\n'
+        '                    if exp18_arm=="full": _tdir=_c\n'
+        '                    elif exp18_arm=="P1": _tdir=_c if (_a==_b2==_c) else 0\n'
+        '                    elif exp18_arm=="P2b": _tdir=(0 if (_a==_b2!=_c) else _c)\n'
+        '                    elif exp18_arm=="D": _tdir=_c\n'
+        '                    _res=True\n'
+        '            if _res:\n'
+        '                if _tdir!=0:\n'
+        '                    _pe=int(_prev["seg"]["end_idx"]) if _prev is not None else 0\n'
+        '                    _rng=range(max(0,_pe),min(_mi,len(candles_ltf)-1)+1)\n'
+        '                    _piv=(min(float(candles_ltf[k]["low"]) for k in _rng) if _tdir==1\n'
+        '                          else max(float(candles_ltf[k]["high"]) for k in _rng))\n'
+        '                    if _piv>0:\n'
+        '                        ltf_sigs.append({"bar":candles_ltf[_mi]["date"],\n'
+        '                            "dir":_tdir,"swing_start_px":_piv,\n'
+        '                            "swing_no":_si,"kind":_mkind})\n'
+        '                _seq=[]\n')
     # 4) B3 relocation (no-op when b3_k=0): entry AFTER confirmation of the break.
     #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
     #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;
