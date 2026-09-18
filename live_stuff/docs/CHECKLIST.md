@@ -592,6 +592,74 @@ If something goes catastrophically wrong (exchange bug, data feed corruption), o
 
 ---
 
+## Phase 22: Causal Fixes — C14 + C15 — ✅ DONE (2026-09-18)
+
+Removed two forward-looking biases from the v18 engine. All identified causal issues (C12, C14, C15) now fixed.
+
+### C14: Chop Lookahead Fix
+- [x] **BUG**: `bisect_right(candle_ts_htf, ts) - 1` mapped LTF bar to the 1h bar *containing* it — but that 1h bar's chop is computed from data up to 45 min *after* the LTF signal bar's close
+- [x] **FIX**: `bisect_right(candle_ts_htf_close, ts+900) - 1` — maps to last 1h bar whose CLOSE <= LTF entry instant
+- [x] **VERIFIED**: Mathematical analysis confirms correct behavior at all edge cases (exact-close, first-bar, mid-bar)
+
+### C15: Window Gate Timing Fix
+- [x] **BUG**: `s < bar_ts <= e` allowed LTF entries up to 45 min *before* the 1h bias was knowable (entry at bar open, but bias from 1h bar not established until its close)
+- [x] **FIX**: `s + 2700 < bar_ts <= e + 2700` — equivalent to `entry_close > htf_entry_close` and `entry_close <= htf_exit_close`
+- [x] **VERIFIED**: Both bounds shifted consistently, window width preserved
+
+### Results
+- Old (retro): 367t / +365.7R / WR 29.2% / PF 2.56
+- New (causal): 351t / +238.0R / WR 27.6% / PF 2.02
+- Delta: -16t / -127.7R — the honest live-proximate number
+
+### Open Items (Not Affecting Batch Backtest)
+
+- [ ] **C13b: Infra-fail abandon** (`btc_engine.py:_collect_signals`) — If a swing break mark fails to fire due to infrastructure issues (data feed gap, API timeout), it's lost forever. In live, `_recover_from_crash()` handles full crashes, but transient gaps within a single bar are inherently unrecoverable. No clean fix — known limitation of real-time systems.
+- [ ] **C14 minor: ext_stop_r signal bar close** (`v18_streak_halt.py:188-192`) — ext_stop gate uses signal bar's CLOSE instead of next bar's OPEN. In 24/7 crypto these are essentially identical (max $140 diff on $77k BTC). After C15, the gate is causally sound — only the close-vs-open micro-difference remains. Not worth fixing.
+
+---
+
+## Phase 23: Post-Causal Param Sweep — ✅ DONE (2026-09-18)
+
+Re-optimized all parameters with C14+C15 active. The causal engine shifted the optimal point.
+
+### Single-Variable Sweeps (C14+C15 active)
+
+| Variable | Old | Best | Delta |
+|----------|-----|------|-------|
+| sl_buf_atr | 0.01 | 0.001 | +2.6R |
+| chop_thresh | 58 | **70** | **+25.8R** |
+| cooldown_bars | 10 | 0 | +7.8R |
+| max_consecutive_losses | 3 | off | **+25.9R** |
+| ext_stop_r | 1.5 | 1.5 | same |
+
+### Focused Grid (288 combos)
+
+Best risk-adjusted (preserves halt=3 safety):
+
+| | Old (causal) | New | Delta |
+|---|---|---|---|
+| Config | sl=0.01, chop=58, cd=10, halt=3 | **sl=0.005, chop=70, cd=10, halt=3** | |
+| Trades | 351 | 338 | -13 |
+| Gross R | +238.0 | **+265.2** | **+27.2R** |
+| WR | 27.6% | **29.3%** | +1.7pp |
+| PF | 2.02 | **2.19** | +0.17 |
+| All years | OK | OK | |
+
+### Key Insights
+- `chop_thresh=70` routes more signals to FLIP windows (more reliable reversals) — biggest single improvement
+- `sl_buf_atr=0.005` barely beats 0.01 (+2.6R) — not worth the wick risk
+- Removing streak halt entirely (+25.9R) is too risky for live — keeps halt=3
+- `cd=0` adds 7.8R but removes loss-recovery cooling — keeps cd=10
+- `ext_stop_r=1.5` is clearly optimal across all combos
+
+### Status
+- [ ] Sweep results documented (this section)
+- [ ] Apply new params to btc_routes.py, v18_params.py — ⬜ TODO
+- [ ] Update test assertions — ⬜ TODO
+- [ ] Update docs with new baseline numbers — ⬜ TODO
+
+---
+
 ## Status Legend
 
 - `[ ]` todo — not started

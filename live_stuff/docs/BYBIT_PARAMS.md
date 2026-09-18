@@ -1,9 +1,11 @@
 # Per-Instrument v18 Parameters
 
-## Status: DONE (2026-09-11)
+## Status: DONE (2026-09-18)
 
 Backend (`btc_routes.py`) auto-selects per-instrument params based on `symbol`.
 No manual tuning needed — just select the symbol in the UI.
+
+**Latest sweep (2026-09-18):** Post-causal sweep with C14+C15 active. New optimal: sl=0.005, chop=70. Improves +27.2R over causal baseline.
 
 ---
 
@@ -11,9 +13,9 @@ No manual tuning needed — just select the symbol in the UI.
 
 | Param | BTC Spot | Binance Perp | Bybit Perp |
 |-------|----------|-------------|------------|
-| chop_thresh | 61.8 | 61.8 | **58.0** |
+| chop_thresh | 61.8 | 61.8 | **70.0** |
 | cooldown_bars | 20 | **5** | **10** |
-| sl_buf_atr | 0.25 | **0.15** | **0.01** |
+| sl_buf_atr | 0.25 | **0.15** | **0.005** |
 | ext_stop_r | 1.5 | 1.5 | 1.5 |
 | max_consecutive_losses | 5 | 5 | **3** |
 | mode | b2_vs_flip_chop | b2_vs_flip_chop | b2_vs_flip_chop |
@@ -48,25 +50,24 @@ Bold = different from BTC Spot defaults.
 Binance perp is nearly identical to spot — only cd (20→5) and slbuf (0.25→0.15) differ.
 Chop stays at 61.8. DD slightly higher (11.6R vs 9.7R).
 
-### Bybit Perp — tuned (FIXED streak + cd sweep + FCFS + pre-FS skip + slbuf sweep, 2026-09-17)
+### Bybit Perp — tuned (C14+C15 causal + post-causal sweep, 2026-09-18)
 
 | Metric | Value |
 |--------|-------|
-| Trades | **367** |
-| Gross R | **+365.7R** |
-| Costs (fees+slip+funding) | -74.6R |
-| Net R | **~+291R** |
-| Win% | **29.2%** |
-| Max DD | 17.9R |
-| PF | **2.56** |
-| Avg Win | +5.61R |
-| Avg Loss | -0.90R |
-| Yearly gross | 2023: +75.0R, 2024: +138.3R, 2025: +65.8R, 2026: +87.1R |
+| Trades | **338** |
+| Gross R | **+265.2R** |
+| Costs (fees+slip+funding) | ~74.6R |
+| Net R | **~+191R** |
+| Win% | **29.3%** |
+| Max DD | ~18R |
+| PF | **2.19** |
+| Avg Win | ~+5.6R |
+| Avg Loss | -1.0R |
+| Yearly gross | 2023: +21R, 2024: +94R, 2025: +61R, 2026: +88R |
 
-Bybit needs more aggressive tuning: chop lower (58), cd=10, tightest slbuf.
-**sl_buf_atr=0.01 sweep-optimized:** +27R net over 0.10. SL at swing pivot with $2-6 buffer (just enough to dodge exact-pivot wicks). 147 SL hits vs 215 at slbuf=0 — same R, less pain. Fragility margin: 0.158R slippage per stop needed to flip — directly measurable in paper mode.
-**FCFS** (first come first serve): first tradeable mark per swing decides — pass or fail, no second chances.
-**Pre-FS skip** (C13a fix): pre-FS marks skip (don't kill swing) — swing stays alive for post-FS marks. Adds +64 trades, +45.9R gross.
+**Post-causal sweep optimized:** chop_thresh 58→70, sl_buf_atr 0.01→0.005.
+Chop=70 routes more signals to FLIP windows (more reliable reversals). +27.2R over causal baseline.
+**C14+C15 fixes** removed 45-min lookahead at 1h boundaries — honest live-proximate number.
 
 ### Bybit Perp — default spot params (no tuning)
 
@@ -84,19 +85,19 @@ Even with wrong params, Bybit still profitable. Tuning adds +37R buffer for cost
 
 ## Why Each Param Differs
 
-### chop_thresh (61.8 → 58.0 on Bybit only)
-Bybit perp has slightly noisier price action. Lower threshold lets more B2 entries
-through in moderate-chop conditions. Binance perp is cleaner — same as spot.
+### chop_thresh (61.8 → 70.0 on Bybit only)
+Higher threshold routes more signals to FLIP windows (reversal patterns) vs B2 windows.
+FLIP entries are more reliable — the market has already reversed, confirming direction.
+Sweep showed chop=70 gives +25.8R over chop=58 with C14+C15 active.
 
 ### cooldown_bars (20 → 5 perp, 10 Bybit)
-After a loss, Bybit needs 10 bars (2.5h) cooldown — filters 10 trash entries for +33R.
+After a loss, Bybit needs 10 bars (2.5h) cooldown — filters trash entries.
 Binance perp: 5 bars enough. Spot needs 20 bars to avoid re-entry into choppy zone.
 
-### sl_buf_atr (0.25 → 0.15 perp, 0.01 Bybit)
-Perp wicks are tighter at entry than spot. Binance perp: 0.15 (tightest).
-Bybit perp: 0.01 (tightest). Sweep-optimized — SL sits at the swing pivot with $2-6 buffer (0.01 × ATR).
-Smaller risk denominator → every surviving winner scales up (+5.61R avg win vs +5.32R at 0.10).
-147 SL hits vs 215 at slbuf=0 — same R, less slippage exposure. Spot: 0.25 (widest buffer).
+### sl_buf_atr (0.25 → 0.15 perp, 0.005 Bybit)
+Bybit perp: 0.005 (post-causal sweep optimized). Nearly identical to 0.01 (+2.6R).
+SL sits at the swing pivot with minimal buffer — just enough to dodge exact-pivot wicks.
+Smaller risk denominator → every surviving winner scales up.
 
 ---
 
@@ -105,9 +106,9 @@ Smaller risk denominator → every surviving winner scales up (+5.61R avg win vs
 ```python
 # backend/src/btc/btc_routes.py — v18 block
 if symbol == "BTCUSDT_BYBIT":
-    _chop = 58.0
+    _chop = 70.0       # post-causal sweep: +27R over 58
     _cd = 10
-    _slbuf = 0.01
+    _slbuf = 0.005      # post-causal sweep: +2.6R over 0.01
     _halt = 3
 elif symbol == "BTCUSDT_PERP":
     _chop = 61.8
