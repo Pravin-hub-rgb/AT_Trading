@@ -11,25 +11,26 @@ L.append("# All Combined Experiment Trade Metrics (v31)\n")
 L.append("**Every viable config from BOTH lanes, run on the SHIPPED engine "
          "(identity-gated), production params (chop=58, cd=10, halt=3, "
          "sl_buf=0.01, ext_stop=1.5, mode b2_vs_flip_chop), FINE 1m fills, "
-         "2023-01 -> 2026-09 (3.7y). NET = gross - modeled costs "
-         "(fee+entry slip+exit slip from production route), distributed "
-         "uniformly per trade for per-trade/per-year/DD metrics. DD on net "
-         "equity. Generated %s. Source: tests/exp29_final_metrics.py.\n"
+         "2023-01 -> 2026-09 (3.7y). CONVENTION (same as every session "
+         "readout): WR, AvgWin/AvgLoss, Payoff, PF, MaxDD, per-year are all "
+         "computed on RAW trade R (gross), no cost adjustment. "
+         "NET = Gross - Costs (production fee+entry slip+exit slip), its own "
+         "column. Generated %s. Source: tests/exp29_final_metrics.py.\n"
          % time.strftime("%Y-%m-%d"))
 
 L.append("## Main table (sorted by NET)\n")
-hdr = ("| Config | Trades | Tr/yr | Gross R | **NET R** | NET/trd | Gross/trd |"
-       " WR% | AvgWin | AvgLoss | Payoff | PF | MaxDD(net) | DD dur (trd/days) |"
+hdr = ("| Config | Trades | Tr/yr | Gross R | Costs | **NET R** | NET/trd |"
+       " WR% | AvgWin | AvgLoss | Payoff | PF | MaxDD | DD dur (trd/days) |"
        " MaxConsecL | AvgHold(h) |")
 L.append(hdr)
 L.append("|" + "---|" * 16)
 for m in results:
-    L.append("| %s | %d | %.0f | %+.1f | **%+.1f** | %+.3f | %+.3f | %.1f | %+.2f | %+.2f | %.2f | %.2f | %.1f | %d / %.0f | %d | %.1f |"
-             % (m["tag"], m["n"], m["tpy"], m["gross"], m["net"], m["npt"],
-                m["gpt"], m["wr"], m["aw"], m["al"], m["payo"], m["pf"],
+    L.append("| %s | %d | %.0f | %+.1f | %.1f | **%+.1f** | %+.3f | %.1f | %+.2f | %+.2f | %.2f | %.2f | %.1f | %d / %.0f | %d | %.1f |"
+             % (m["tag"], m["n"], m["tpy"], m["gross"], m["cost"], m["net"],
+                m["npt"], m["wr"], m["aw"], m["al"], m["payo"], m["pf"],
                 m["dd"], m["ddt"], m["ddd"], m["mc"], m["hold_h"]))
 
-L.append("\n## Per-year NET + halves (strict both-halves rule)\n")
+L.append("\n## Per-year R + halves (strict both-halves rule, raw R)\n")
 L.append("| Config | 2023 | 2024 | 2025 | 2026 (9mo) | H1 | H2 | both>0? |")
 L.append("|" + "---|" * 8)
 for m in results:

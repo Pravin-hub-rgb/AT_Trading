@@ -50,12 +50,12 @@ CONFIGS = [
 
 
 def metrics(tr, c2):
+    """All outcome metrics (WR, PF, DD, per-year...) on RAW trade R (gross) —
+    same convention as every session readout. NET reported separately."""
     n = len(tr)
-    rs_g = [float(t["r_multiple"]) for t in tr]
-    cpt = c2 / n if n else 0.0
-    rs = [r - cpt for r in rs_g]  # net per trade
-    gross = sum(rs_g)
-    net = sum(rs)
+    rs = [float(t["r_multiple"]) for t in tr]
+    gross = sum(rs)
+    net = gross - c2
     wins = [r for r in rs if r > 0]
     losses = [r for r in rs if r <= 0]
     aw = sum(wins) / len(wins) if wins else 0.0
@@ -85,7 +85,7 @@ def metrics(tr, c2):
         py[d] += r
     hold = sum(int(t.get("bars_held") or 0) for t in tr) / n if n else 0.0
     span_days = (int(tr[-1].get("exit_ts") or 0) - int(tr[0].get("entry_ts") or 0)) / 86400.0
-    return dict(n=n, gross=gross, net=net, npt=net / n if n else 0,
+    return dict(n=n, gross=gross, net=net, cost=c2, npt=net / n if n else 0,
                 gpt=gross / n if n else 0,
                 wr=100.0 * len(wins) / n if n else 0,
                 aw=aw, al=al, payo=aw / abs(al) if al else 0, pf=pf,
