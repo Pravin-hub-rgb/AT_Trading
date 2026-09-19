@@ -235,6 +235,7 @@ def build_module():
                   '            if _jj is None: continue\n'
                   '            i=_jj\n'
                   '            bar_time=candles_ltf[i]["date"]\n'
+                  '            entry=float(candles_ltf[i]["close"])\n'
                   '            if busy_until and bar_time<=busy_until: continue\n'
                   '            if cooldown_bars>0 and i-last_loss_bar<cooldown_bars: continue\n')
     m, p = _load_module(s, "craze_superset")

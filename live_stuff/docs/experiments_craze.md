@@ -598,6 +598,40 @@ Scripts: `exp32_final_tuning.py`, `exp32b_trail_fine.py`. Base: B3-OPT+halt6 cd1
 
 ---
 
+### Exp 34/35: 🚨 B3 STALE-FILL BUG — every B3 number in BOTH lanes was inflated; caught by the live-feasibility audit (v35)
+
+**⚠️ ALL PRE-FIX B3 RESULTS IN THIS DOC ARE SUPERSEDED. The non-B3 results (anchor, OPTIMAL family, mltf family) are unaffected — they fill at the signal-bar close, which is executable live (fill drift measured: median 0.000%).**
+
+**Root cause (found by exp34 late-entry repricing):** the B3 relocation patch set `i=_jj` (trigger bar) but the engine had already captured `entry=float(candles_ltf[i]["close"])` from the **signal bar** — up to 8 bars BEFORE the actual entry moment. On breakouts the signal-bar close is far below (longs) / above (shorts) the trigger price, so every B3 trade got a systematically favorable stale fill. Example trade: recorded entry 21303.5, executable price at the trigger close was 21486 — an instant ~182-pt gift, R recorded +29.0R.
+
+**Detection:** exp34's same-instant repricing (fill at next bar open == trigger close instant) should have equaled base exactly; instead it showed +63.0 vs +301.9 — the mismatch exposed the bug. (A first version of the test ALSO had a bug — a 3R winner cap that faked a collapse — caught and fixed before drawing conclusions.)
+
+**Fix:** one line in the harness B3 patch: re-capture `entry=float(candles_ltf[i]["close"])` AFTER relocation; SL/risk/target re-base automatically (ATR from trigger bar). Identity gate unaffected (b3_k=0 → no-op; 351t exact verified post-fix).
+
+**Post-fix self-validation (exp34):** same-instant repricing now equals base EXACTLY (+85.9 == +85.9; +146.1 == +146.1; fill drift median 0.000%). Slippage ×10 costs −11.8R (fine). 15-min-late execution: king +69.9 (−16R, still positive) — automation required but tolerant. Bootstrap: king CI [−0.02, +0.86] (P>0 = 96.8% — NOT 95%-significant); AGGR CI [+0.15, +1.18] (99.6%).
+
+**Exp 35 re-sweep (fine, funding-inclusive, post-fix) — the honest B3 family:**
+
+| Config (post-fix) | Trades | NET | npt | WR | PF | DD | per-year |
+|---|---|---|---|---|---|---|---|
+| their-OPTIMAL (no B3, ref) | 515 | **+322.5** | +0.626 | 28.0 | 2.33 | 23.3 | all pos |
+| **B3 k4 h3 lb14 p0 (best honest B3)** | 202 | **+109.1** | +0.540 | 34.7 | 2.32 | 9.4 | all pos |
+| B3 k4 h3 lb50 p2 | 184 | +96.6 | +0.525 | 34.2 | 2.25 | 9.1 | all pos |
+| B3-OPT lb50 halt6 (was "king" +365.4) | 217 | **+85.9** | +0.396 | 32.3 | 2.01 | 11.0 | all pos |
+| B3 k8 h6 lb50 p0 | 223 | +90.0 | +0.403 | 33.2 | 2.03 | 11.6 | all pos |
+| B3-OPT lb50 halt6 cd0 | 224 | +79.0 | +0.353 | 31.7 | 1.92 | 11.0 | all pos |
+| v18 anchor (ref, mb20) | 351 | +148.0 | +0.422 | 27.6 | 2.02 | 23.4 | all pos |
+
+**The brutal conclusions:**
+1. **Every B3 config post-fix (+70 to +109) underperforms the plain anchor (+148.0).** B3's entire measured edge was the fill bug. The idea "wait for close confirmation" — the user's own concept, the program's flagship — does not survive honest fills in this form.
+2. **The parameter landscape flipped:** k4 now beats k8 (k8 was tuned to inflated fills); lb50 ≈ lb14; persist ≈ irrelevant. All B3-era sweep conclusions are void.
+3. **The real leader is their-OPTIMAL (+322.5, no B3)** — with its known caveats (multi-position, cd0). Second: S9 (+312.2, mltf). The multi-LTF family was always honest — it never used B3.
+4. **What survives of the whole program:** the anchor (+148.0) is real; the mltf/OPTIMAL improvements are real (+174.5 over anchor); lb/persist/trail/halt findings are void for B3 (untested on non-B3 stacks — lb especially was B3-specific: it HURT the anchor per the other lane's own verification).
+5. Possible salvage (not run): B3 with a LIMIT order at the signal close level instead of market-at-trigger (the stale fill becomes a limit fill — some of those may genuinely execute as price retraces). That would be a new experiment with real live constraints (may never fill).
+**Status: DONE — the program's biggest lesson: validate the fill before believing the trade.**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**
