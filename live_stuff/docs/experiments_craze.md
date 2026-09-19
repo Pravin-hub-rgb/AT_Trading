@@ -444,6 +444,59 @@ deferred until all experiments done (user process).**
 
 ---
 
+### Exp 27: Opposite-Mark Stop Accelerator (audit Q7 — trail-side exploit of the 97% finding)
+**Premise (Exp 19):** 97% of SL deaths coincide with the next opposite swing forming. Instead of an entry filter, exit/tighten when the opposite mark confirms while in a trade.
+**Arms (coarse, production params):** `all` = exit at close of first opposite-dir break-mark bar; `loss` = only if unrealized R < 0; `fliploss` = FLIP-kind only + R < 0.
+
+| Base | all | loss | fliploss | Base ref |
+|---|---|---|---|---|
+| anchor | 472t +138.9 | 381t +183.3 | 365t +174.9 | 351t +211.7 |
+| B3 | 267t +236.9 | 219t +267.7 | 213t +295.8 | 207t +303.7 |
+
+**REFUTED on every arm, both bases.** `all` exits 465/472 anchor trades at the first opposite mark — the mark stream fires far too early on eventual winners. Even the most conservative arm (fliploss on B3) loses −7.9R. This is the **4th independent confirmation** of the Exp 22 meta-lesson: early/tighter exits destroy more winner-R than they save in loser-R. The 97% finding is diagnostic (why trades die), not actionable (when to exit).
+**Status: DONE — refuted, strengthens design constraint below.**
+
+---
+
+### Exp 28: Audit Response — other bot's 10-question audit, answered with runs (v31)
+All runs identity-gated, production params (chop=58). Scripts: `exp28_audit.py` (coarse), `exp28_fine.py`, `exp28c_cd.py`.
+
+**Q1 — Is S15 really "B3 stacked on multi-LTF"? NO — renamed.**
+B3+chop55+mb1h10+persist2+cd0 **without mltf**: 242t / +361.3 coarse / **NET +307.2 fine / DD 12.0** — vs S15 (with mltf): 247t / +355.4 / +300.4 / 12.0. mltf adds ~nothing (+5 trades, −6.8R net). **The edge is the params, not multi-LTF.** S15 renamed **"B3-OPT"** (B3 with OPTIMAL params). Bonus: B3-OPT is **single-position** — no concurrency design needed at all. (Concurrency caveat now applies ONLY to mltf-carrying configs.)
+
+**Q2 — cd0 inside the stack: real, not curve-fit, but context-dependent.**
+OPTIMAL with cd=10: 453t / NET +282.2 / DD 32.7 vs cd=0: 515t / +348.0 / 23.3. cd0 is worth **+65.8R net in-stack** (and cuts DD). Mechanism: mb1h10+chop55 produce denser entry opportunities; cooldown=10 blocks profitable immediate re-entries. It hurt OUR stacks (S7/S14) because those entry streams are sparser. cd0 is the least-independent knob in the stack — its value is conditional on the dense-entry regime.
+**B3-OPT exception (exp28c):** cd0 vs cd=10 is a wash — NET +307.2 vs +306.6, DD 12.0 both. **B3-OPT does NOT need cd0** → production cooldown stays, and the cd0 live-risk question does not apply to B3-OPT.
+
+**Q3 — The "82R coarse→fine drop" was a gross/net comparison error. There is NO fill-sensitivity drop.**
+Trade-level reconciliation: OPTIMAL coarse +429.8 vs fine **+456.2 GROSS** — 515/515 trades matched, zero vanished, per-trade drift +26.3R total (fine granularity HELPS this engine). The apparent "drop" = 108.2R of costs across 515 trades (≈0.21R/trade, same rate as every config). B3 reconciles identically (247/247 matched, drift 0.0). No live-fill red flag beyond the already-modeled costs.
+
+**Q4 — Temporal stability at 3 cuts (50/66/75%; fixed config, NOT re-optimized walk-forward — honest limitation):**
+OPTIMAL is the most balanced: seg2 positive at every cut (+231.8/+201.2/+147.8) vs seg1 (+198.1/+228.6/+282.0). B3-OPT passes all cuts but front-loaded (+207.9→+147.5 at 50%; +276.8→+78.6 at 75%). Anchor weakest (seg2 +81.1 at 75%). True re-optimizing walk-forward still NOT run on any config — open item.
+
+**Q5 — halt sweep: production halt=3 already optimal for OPTIMAL.**
+OPTIMAL: halt3 +429.8 > halt5 +411.1 > halt6 +397.2 > halt4 +310.4 (cliff at 4 = single-halt fragility note). B3-OPT/S15: halt6 +385.9 > halt3 +355.4 but NON-MONOTONE (halt5 +301.8) → the halt6 gain is noise. Keep halt=3 everywhere.
+
+**Q6 — persist2 vs persist5 head-to-head in-stack: persist2 wins.**
+OPTIMAL persist5: 475t +332.7 vs persist2: 515t +429.8. Original choice survives; persist5 only helps in sparse configs (S6 mltf alone).
+
+**Q7 — see Exp 27: refuted (all arms, both bases).**
+
+**Q9 — B3 2026 monthly: diffuse drift, not a structural break.**
+Jan–Sep: +5.8, +19.9, +20.4, −1.0, −0.2, +8.7, +0.8, +1.3, +0.6 — no catastrophic month; worst is −1.0R. Low activity (45 trades) with small edges = noise, not regime break.
+
+**Q10 — S15/B3-OPT max-DD window: shallow grind, not a blowup.**
+12.0R over **23 trades / 113 days** (anchor: 23.4R over 27 trades / 118.7 days). Comparable duration, half the depth. Not a 3-trade blip; fill-quality sensitivity is not elevated.
+
+**Q8 — DESIGN CONSTRAINT (permanent, applies to all future experiments):**
+> **"Slowness is a feature."** The mb50 trail-confirmation lag is protective. Four independent refutations now: ATR-chandelier, end_px window, conviction-mark ratchet (Exp 22), opposite-mark accelerator (Exp 27). ANY modification that makes exits earlier/tighter must argue against this prior before it earns a fine run. Losing trades dying at −1R is the cost of winners running; the autopsy numbers (post-halt re-entries +126R) depend on it.
+
+**Updated decision menu after audit (fine NET):** v18 +163.7 | B3 +258.3 | B3+halt6 +278.1 | mltf +217.0 | mltf+persist5 +307.2 | **B3-OPT +307.2 (single-position, DD 12.0)** | mltf+mb1h10+chop55 +335.6 | their-OPTIMAL +348.0 (concurrency). B3-OPT now matches mltf+persist5 NET with half the DD and no concurrency complexity.
+
+**Status: DONE — all 10 audit items answered with runs. Remaining open: true re-optimizing walk-forward (Q4 limitation).**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**

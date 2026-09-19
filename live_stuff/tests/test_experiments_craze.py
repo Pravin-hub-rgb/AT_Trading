@@ -62,7 +62,8 @@ def build_module():
                   '    exp18_arm=None,\n'
                   '    exp22_conv=False,\n'
                   '    exp_persist=0,\n'
-                  '    exp_mltf=False,\n')
+                  '    exp_mltf=False,\n'
+                  '    exp27_mode=None,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -153,6 +154,40 @@ def build_module():
         '                    if i<_b2i:\n'
         '                        events.append((_b2i,float(_s2["seg"]["start_px"])))\n'
         '            events.sort(key=lambda x: x[0])\n')
+    # 3e) Exp 27: opposite-mark stop accelerator (audit Q7). While in a trade,
+    # exit at the close of the bar where the first OPPOSITE-dir swing break
+    # mark confirms. Modes: "all" = any opposite mark; "loss" = only if
+    # unrealized R < 0 at that bar; "fliploss" = FLIP-kind only + R < 0.
+    # Coarse loop only (marks are 15m bars; fine promotion later if it earns it).
+    t6c = '        ev_idx=-1\n'
+    assert s.count(t6c) == 1, "ev init"
+    s = s.replace(t6c, t6c +
+        '        opp_events=[]\n'
+        '        if exp27_mode:\n'
+        '            for _s9 in swings_ltf:\n'
+        '                for _b9 in _s9.get("breaks",[]):\n'
+        '                    if _b9.get("time") and (1 if _b9["dir"]=="up" else -1)==-direction:\n'
+        '                        opp_events.append((int(_b9["idx"]), _b9.get("kind","")))\n'
+        '            opp_events.sort(key=lambda z: z[0])\n'
+        '            opp_ev_idx=-1\n'
+        '            while opp_ev_idx+1 < len(opp_events) and opp_events[opp_ev_idx+1][0] <= i:\n'
+        '                opp_ev_idx += 1\n')
+    t6d = ('        for j in range(i+1, n if not fine_ltf else i+1):\n'
+           '            c=candles_ltf[j]\n'
+           '            hi=float(c["high"]); lo=float(c["low"])\n')
+    assert s.count(t6d) == 1, "coarse loop"
+    s = s.replace(t6d, t6d +
+        '            if exp27_mode and opp_ev_idx+1 < len(opp_events) and opp_events[opp_ev_idx+1][0] <= j:\n'
+        '                opp_ev_idx += 1\n'
+        '                _eok = True\n'
+        '                if exp27_mode in ("loss", "fliploss"):\n'
+        '                    _cl = float(c["close"])\n'
+        '                    _cr = ((_cl - entry) / risk) if direction == 1 else ((entry - _cl) / risk)\n'
+        '                    if _cr >= 0.0: _eok = False\n'
+        '                if exp27_mode == "fliploss" and opp_events[opp_ev_idx][1] != "FLIP": _eok = False\n'
+        '                if _eok:\n'
+        '                    exit_idx, exit_px, outcome = j, float(c["close"]), "accel27"\n'
+        '                    break\n')
     # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t8) == 1, "chop init"
