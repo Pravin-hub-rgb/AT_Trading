@@ -356,6 +356,43 @@ Multi-LTF removes the one-trade-at-a-time barrier (v18's design) → **concurren
 
 ---
 
+### Exp 25: RECONCILIATION — the 351t vs 340t mystery SOLVED (production params restored)
+**The other bot was RIGHT.** Root cause found: my scripts' param construction
+`_p = get_v18_params(INSTRUMENT); _p.update(V18_ENGINE)` let `V18_ENGINE["chop_thresh"]=61.8`
+**clobber** the Bybit production `chop_thresh=58.0` (btc_routes.py:914-918). Every session
+experiment before Exp 25 ran at chop 61.8 — a valid variant, but NOT the production param set.
+His audit output (351 common trades, zero divergence, identical R) is correct once both sides
+run at production params.
+
+**Production anchor (chop=58, btc_routes 914-941 params): 351t / +238.03R fine gross / +163.7R NET / WR 27.6% / DD 23.4**
+(per-year fine: 2023 +38.8, 2024 +81.1, 2025 +37.6, 2026 +80.5 — matches his numbers exactly; audit v4 + his audit agree.)
+
+**Key experiments RE-RUN at production params (coarse deltas / fine NETs):**
+
+| Config | Trades | Gross coarse | NET fine | vs anchor NET (+163.7) | H1/H2 vs anchor |
+|---|---|---|---|---|---|
+| v18 anchor | 351 | +211.7 | +163.7 | — | — |
+| B3 k8-close | 207 | +303.7 | **+258.3** | **+94.6** | H1 +57.6 ✓ / H2 +8.0 ✓ **(strict rule now PASSES)** |
+| COMBO B3+halt6 | 216 | +325.2 | **+278.1** | **+114.4** | H1 +63.2 ✓ / H2 +24.0 ✓ **(PASSES)** |
+| multi-LTF alone (cd=10) | 421 | +280.2 | +217.0 | +53.3 | H1 +51.7 ✓ / H2 +16.8 ✓ **(PASSES)** |
+| their OPTIMAL (chop55+mb1h10+persist2+cd0+mltf) | 515 | +429.8 | **+348.0** | **+184.3** | H1 +109.5 ✓ / H2 +108.6 ✓ **(PASSES)** |
+
+**MAJOR: at production params, the former near-passes become FULL passes** — B3, the B3+halt6
+combo, multi-LTF, and their OPTIMAL all beat the anchor on BOTH halves. The earlier H2
+shortfalls were partly artifacts of comparing against the chop-61.8 anchor.
+**Corrections to the record:**
+- Exp 24 "Audit finding 1" is WITHDRAWN: their harness is NOT a parallel engine — the
+  divergence was my chop-61.8 params. Their harness == shipped engine at production params.
+- All pre-Exp-25 craze-lane numbers (B3 +96.3 net, combo +283.4, multi-LTF +282.2, OPTIMAL
+  +348.0-vs-182.3) were measured at chop 61.8 and are superseded by this table. Directional
+  conclusions unchanged; the new decision menu uses the production table above.
+- The regression test anchor (340t/+225.3) was chop-61.8 — updated to production (351t) below.
+**Decision menu (production, fine NET): v18 +163.7 | B3 +258.3 | B3+halt6 combo +278.1 |
+multi-LTF +217.0 | their OPTIMAL +348.0 (concurrent-position caveat applies). Final pick
+deferred until all experiments done (user process).**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**

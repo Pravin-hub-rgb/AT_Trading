@@ -19,7 +19,9 @@ def _src():
 
 
 def _bp():
-    p = dict(get_v18_params(INSTRUMENT)); p.update(V18_ENGINE); return p
+    p = dict(get_v18_params(INSTRUMENT)); p.update(V18_ENGINE)
+    p["chop_thresh"] = 58.0  # PRODUCTION (btc_routes 914-918); V18_ENGINE's 61.8 default must not clobber it
+    return p
 
 
 def _run(fine=False):
@@ -72,8 +74,8 @@ def test_c14_c15_gates_present():
 
 def test_c15_count_band():
     p, tr = _run(fine=False)
-    assert 335 <= len(tr) <= 345, "count outside C14+C15 band"
-    print("PASS: trade count %d within [335,345]" % len(tr))
+    assert 346 <= len(tr) <= 356, "count outside production band"
+    print("PASS: trade count %d within [346,356]" % len(tr))
 
 
 def test_baseline():
@@ -84,8 +86,8 @@ def test_baseline():
     for t in tr:
         yrs[str((t.get("exit_date") or t.get("entry_date") or "")[:4])] += float(t["r_multiple"])
     assert all(v >= 0 for v in yrs.values())
-    assert 335 <= len(tr) <= 345
-    assert n >= 180.0
+    assert 346 <= len(tr) <= 356
+    assert n >= 150.0
     pf = sum(x for x in rs if x > 0) / abs(sum(x for x in rs if x < 0)) if l else 9.0
     assert pf >= 2.0
     print("PASS: %dt gross %+.1f net %+.1f WR %.1f%% PF %.2f %s" % (len(tr), g, n, 100*w/len(tr), pf, dict(yrs)))
