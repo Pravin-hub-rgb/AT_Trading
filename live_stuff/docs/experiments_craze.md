@@ -393,6 +393,57 @@ deferred until all experiments done (user process).**
 
 ---
 
+### Exp 26: GRAND SWEEP — their levers x our levers at production params (v31)
+**All 20 configs, coarse (identity-gated shipped engine), top candidates fine-validated. Base: v18 351t / +211.7 coarse / +163.7 NET fine.**
+
+#### Coarse sweep (full grid)
+
+| # | Config | Trades | Gross | DD | Note |
+|---|---|---|---|---|---|
+| S0 | anchor | 351 | +211.7 | 23.4 | — |
+| S1 | mltf | 421 | +280.2 | 23.4 | +68.5 |
+| S2 | mltf+cd0 | 471 | +284.4 | 24.1 | |
+| S3 | mltf+cd5 | 429 | +298.5 | 23.4 | |
+| S5 | mltf+persist2 | 420 | +300.7 | 33.0 | |
+| **S6** | **mltf+persist5** | **409** | **+362.8** | 33.4 | fine NET **+307.2** |
+| S7 | mltf+cd0+persist5 | 460 | +262.5 | 32.4 | cd0 hurts with persist5 |
+| S8 | mltf+mb1h10 | 442 | +303.4 | 39.3 | DD spike |
+| **S9** | **mltf+mb1h10+chop55** | **460** | **+405.8** | **38.2** | fine NET **+335.6** |
+| S10 | mltf+persist2+mb1h10+chop55 | 452 | +347.0 | 32.7 | |
+| **S11** | **their-OPTIMAL** | **515** | **+429.8** | **23.3** | fine NET **+348.0** |
+| S12 | B3 k8 alone | 207 | +303.7 | 15.5 | |
+| S13 | B3+mltf | 207 | +303.7 | 15.5 | **identical to S12 — mltf adds NOTHING on B3** |
+| S14 | B3+mltf+cd0 | 212 | +298.8 | 17.5 | cd0 hurts B3 |
+| **S15** | **B3+their-OPTIMAL** | **247** | **+355.4** | **12.0** | fine NET **+300.4** — **R/DD king (25.0)** |
+| S16 | B3+mltf+persist5 | 202 | +299.7 | 24.8 | |
+| S17 | B3+halt6+mltf (=Exp25 combo+mltf) | 216 | +325.2 | 17.5 | mltf adds nothing on combo either |
+| S19 | their-OPTIMAL+halt6 | 573 | +397.2 | 31.5 | halt6 HURTS their combo; fine +301.1 |
+
+#### Fine NET (production params) — the decision menu
+
+| Config | Trades | NET fine | DD | NET/DD | vs anchor |
+|---|---|---|---|---|---|
+| v18 anchor | 351 | +163.7 | 23.4 | 7.0 | — |
+| B3 k8 alone | 207 | +258.3 | 15.5 | 16.7 | +94.6 |
+| COMBO B3+halt6 | 216 | +278.1 | 17.5 | 15.9 | +114.4 |
+| mltf alone | 410 | +217.0 | 23.4 | 9.3 | +53.3 |
+| mltf+persist5 | 409 | +307.2 | 33.4 | 9.2 | +143.5 |
+| mltf+mb1h10+chop55 | 460 | +335.6 | 38.2 | 8.8 | +171.9 |
+| **their-OPTIMAL** | 515 | **+348.0** | 23.3 | 14.9 | **+184.3** |
+| OPTIMAL+halt6 | 574 | +301.1 | 31.5 | 9.6 | +137.4 |
+| **S15 B3+OPTIMAL** | 248 | **+300.4** | **12.0** | **25.0** | +136.7 |
+
+**Findings:**
+1. **their-OPTIMAL stays the NET king (+348.0)** — but S15 (B3 stacked on it) is the **risk-adjusted king**: +300.4 net with DD 12.0 (NET/DD 25.0 vs OPTIMAL's 14.9), WR 34.3%, only 248 trades (lower concurrency exposure than OPTIMAL's 515).
+2. **B3 absorbs mltf completely** (S13 == S12 identical) — B3's delayed entries already consume the re-entry space; multi-LTF adds nothing on top of B3.
+3. **cd0 hurts everything it touches** in our stacks (S7, S14) — its value only shows inside their-OPTIMAL's specific stack.
+4. **halt6 hurts their-OPTIMAL** (S19 −55R net vs OPTIMAL) but helped B3 stacks — context-dependent.
+5. persist5 is a real modifier on mltf (+82.6 coarse over mltf alone).
+6. All multi-LTF configs carry the concurrent-position caveat (Exp 24: max 5 open, mostly 1).
+**Status: DONE — logged. All decisions deferred until experiment list exhausted (user process).**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**
