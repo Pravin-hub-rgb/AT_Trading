@@ -49,16 +49,31 @@ CONFIGS = [
      dict(chop_thresh=55.0, max_consecutive_losses=6), "sw1h10"),
     ("B3+mltf+persist5 (S16, WR champion)",
      {**B3, "exp_mltf": True, "exp_persist": 5}, {}, "sw1h"),
+    ("(52,60,trail65) aggressive",
+     {**B3, "exp_persist": 2, "exp31_lb": 60},
+     dict(chop_thresh=52.0, max_consecutive_losses=6), "sw1h10", 65),
 ]
 
 
-def metrics(tr, c2):
+def metrics(tr, c2, funding=True):
     """All outcome metrics (WR, PF, DD, per-year...) on RAW trade R (gross) —
-    same convention as every session readout. NET reported separately."""
+    same convention as every session readout. NET = gross - trading costs
+    - funding (0.01%/8h on notional, hold-time weighted, leverage-adjusted)."""
     n = len(tr)
     rs = [float(t["r_multiple"]) for t in tr]
+    fr_total = 0.0
+    if funding:
+        for t in tr:
+            try:
+                entry = float(t["entry_price"]); sl = float(t["sl"])
+                risk = abs(entry - sl)
+                if risk > 0 and entry > 0:
+                    lev = entry / risk  # notional / risk-units
+                    fr_total += (int(t.get("bars_held") or 0) * 0.25 / 8.0) * 0.0001 * lev
+            except (TypeError, ValueError):
+                pass
     gross = sum(rs)
-    net = gross - c2
+    net = gross - c2 - fr_total
     wins = [r for r in rs if r > 0]
     losses = [r for r in rs if r <= 0]
     aw = sum(wins) / len(wins) if wins else 0.0
@@ -88,7 +103,8 @@ def metrics(tr, c2):
         py[d] += r
     hold = sum(int(t.get("bars_held") or 0) for t in tr) / n if n else 0.0
     span_days = (int(tr[-1].get("exit_ts") or 0) - int(tr[0].get("entry_ts") or 0)) / 86400.0
-    return dict(n=n, gross=gross, net=net, cost=c2, npt=net / n if n else 0,
+    return dict(n=n, gross=gross, net=net, cost=c2, fund=fr_total,
+                npt=net / n if n else 0,
                 gpt=gross / n if n else 0,
                 wr=100.0 * len(wins) / n if n else 0,
                 aw=aw, al=al, payo=aw / abs(al) if al else 0, pf=pf,
@@ -105,6 +121,8 @@ def main():
     sw15 = _compute_swings(f15, "continuous", min_bars=MB15)
     chains = {"sw1h": _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"]),
               "sw1h10": _compute_swings(f1h, "continuous", min_bars=MB10)}
+    tchains = {SWING["min_bars_15m"]: _compute_swings(f15, "continuous", min_bars=SWING["min_bars_15m"]),
+               65: _compute_swings(f15, "continuous", min_bars=65)}
     sim = build_module()
     print("chains ready (%0.0fs); loading fine..." % (time.time() - t0))
     fine = _load_fine_1m(min(c1h[0]["ts"], c15[0]["ts"]),
@@ -121,9 +139,11 @@ def main():
     print("IDENTITY GATE OK (351t exact)\n")
 
     results = []
-    for tag, hflags, pover, chain in CONFIGS:
+    for cfg in CONFIGS:
+        tag, hflags, pover, chain = cfg[0], cfg[1], cfg[2], cfg[3]
+        extra = {"swings_trail": tchains[cfg[4]]} if len(cfg) > 4 else {}
         r = sim(c1h, chains[chain], c15, sw15, fine_ltf=fine,
-                **{**BP, **pover, **hflags})
+                **{**BP, **pover, **hflags, **extra})
         tr = r["ltf_trades"] if isinstance(r, dict) else r
         c2, _ = _trade_costs(tr, FEE[0], 0.0, FEE[1], FEE[2])
         m = metrics(tr, c2)
