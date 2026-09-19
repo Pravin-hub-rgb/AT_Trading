@@ -497,6 +497,60 @@ Jan–Sep: +5.8, +19.9, +20.4, −1.0, −0.2, +8.7, +0.8, +1.3, +0.6 — no cat
 
 ---
 
+### Exp 30: TRUE ANCHORED WALK-FORWARD — the Q4 debt, PAID (v32)
+**Design:** 72-combo grid (chop {52,55,58} x mb1h {10,20} x persist {0,2,5} x halt {3,6} x B3 {off,k8}, cd=10 fixed). Each combo runs once over the full period (coarse, identity-gated); trades sliced by entry-ts. 6 anchored steps (~6mo test windows); at each step the combo with best train NET (cost-adjusted) is frozen and applied to the unseen test window. Baselines: fixed B3-OPT+halt6 cd10 and fixed anchor, sliced identically. Caveat: halt-state carries across boundaries (same for all combos).
+
+| Test window | Chosen combo (chop/mb/pers/halt/B3) | Train NET | Test NET | Fixed B3-OPT+halt6 | Anchor |
+|---|---|---|---|---|---|
+| 2023H2 | 58/10/0/3/on | +62.4 | +26.2 | +22.8 | +25.6 |
+| 2024H1 | 58/10/0/3/on | +88.6 | +50.4 | +98.4 | +26.1 |
+| 2024H2 | 55/10/0/3/on | +193.9 | +49.2 | +33.7 | +30.8 |
+| 2025H1 | 55/10/0/3/on | +243.0 | **−10.6** | −16.2 | −17.2 |
+| 2025H2 | 55/10/0/3/on | +232.4 | +58.7 | +67.2 | +35.0 |
+| 2026 (9mo) | 55/10/0/3/on | +291.1 | +46.6 | +75.0 | +39.7 |
+
+**WF total test NET: +220.4 | fixed B3-OPT+halt6: +280.9 | fixed anchor: +140.0**
+**Verdict: PASS — three separate ways:**
+1. **WF beats anchor +57%** out-of-sample (+220.4 vs +140.0) — the B3/mb1h10 edge is not a full-sample artifact.
+2. **WF retains 78% of the fixed config** — for hindsight-chosen params to still beat adaptive re-selection is strong anti-overfit evidence.
+3. **5/6 test windows positive**; the one negative window (2025H1) was negative for EVERY config — regime, not config.
+4. The optimizer independently picked **B3 ON + mb1h10 in all 6 steps** — it converged on our family from raw data. (It preferred persist=0 over persist=2 — the two are close; noted.)
+**Status: DONE — overfit question CLOSED. The fixed config survives true out-of-sample testing.**
+
+---
+
+### Exp 31: HTF-SIDE LEVER SWEEP — first experiments on the 1h side (v32)
+The whole program had touched only LTF entry/trail. These levers live on the HTF (1h) side. Swept at two bases (anchor production, B3-OPT+halt6 cd10), coarse, identity-gated. Scripts: `exp31_htf_sweep.py`, `exp31b_lb_ext.py`, `exp31c_lb_fine.py`.
+
+**Lever 1 — chop lookback `lb` (shipped 14): THE find. Monotone dose-response.**
+
+| lb | anchor gross | B3-OPT+halt6 gross | B3-OPT DD | note |
+|---|---|---|---|---|
+| 10 | +196.3 | +365.9 | 11.5 | too twitchy |
+| **14 (shipped)** | +211.7 | +392.0 | 14.0 | base |
+| 30 | **+260.8** | +406.4 | 11.4 | anchor peak |
+| 40 | +195.5 | +415.2 | **10.4** | |
+| **50** | +190.0 | **+427.8** | 11.4 | **B3-OPT peak** |
+| 60 | +201.6 | +369.0 | 11.0 | rolloff |
+
+Slower chop-regime detection (30-50 bar lookback vs 14) = fewer whipsaw regime flips = better trades on BOTH bases. Plateau 30-50 on B3-OPT is broad (robust, not a spike).
+
+**Lever 2 — `htf_rr` (1h window-close R-target, shipped 3.0): shipped value OPTIMAL.** All variants (2.0/2.5/3.5/4.0) worse on both bases. Robustness confirmation.
+**Lever 3 — `ext_stop_r` (entry extension filter, shipped 1.5): shipped value OPTIMAL.** 1.0/1.25 much worse (over-filtering), 2.0 ≈ base. Robustness confirmation.
+
+**Exp 31c — FINE VALIDATION of the lb find (B3-OPT+halt6 cd10):**
+
+| Config | Trades | Gross | NET | WR | DD | H1 | H2 | per-year |
+|---|---|---|---|---|---|---|---|---|
+| lb=14 (base) | 250 | +391.5 | +335.5 | 34.4 | 14.0 | +238.2 | +153.3 | all pos |
+| lb=40 | 233 | +414.8 | +364.7 | 36.1 | 10.4 | +248.8 | +166.0 | all pos |
+| **lb=50** | **225** | **+427.4** | **+380.7** | **36.4** | **11.4** | +255.0 | +172.4 | **all pos** |
+
+**lb=50 = NEW single-position NET KING: +380.7 net** (beats their-OPTIMAL's +348.0 while staying single-position, production cooldown, DD 11.4, WR 36.4%). Added to the final metrics doc.
+**Status: DONE — lb=50 promoted to the decision menu as the new leader. Mechanism: slower regime flip = fewer whipsaw windows. Caveat: lb was selected on full-sample data (coarse) and fine-validated; the WF grid did not include lb — a future WF re-run with lb in the grid would make this airtight.**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**

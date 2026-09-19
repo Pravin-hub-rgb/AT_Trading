@@ -63,7 +63,8 @@ def build_module():
                   '    exp22_conv=False,\n'
                   '    exp_persist=0,\n'
                   '    exp_mltf=False,\n'
-                  '    exp27_mode=None,\n')
+                  '    exp27_mode=None,\n'
+                  '    exp31_lb=0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -188,6 +189,11 @@ def build_module():
         '                if _eok:\n'
         '                    exit_idx, exit_px, outcome = j, float(c["close"]), "accel27"\n'
         '                    break\n')
+    # 3f) Exp 31: HTF chop lookback (lb) sweep — regime-detection responsiveness.
+    # Shipped default 14. exp31_lb=0 keeps shipped (identity).
+    t6e = '    chop=_chop_series_1h(candles_htf, lb=14)\n'
+    assert s.count(t6e) == 1, "chop lb call"
+    s = s.replace(t6e, '    chop=_chop_series_1h(candles_htf, lb=(exp31_lb or 14))\n')
     # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t8) == 1, "chop init"
