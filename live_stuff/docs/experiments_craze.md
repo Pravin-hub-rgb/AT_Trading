@@ -577,6 +577,27 @@ Scripts: `exp32_final_tuning.py`, `exp32b_trail_fine.py`. Base: B3-OPT+halt6 cd1
 
 ---
 
+### Exp 33: VERIFY the other lane's updated menu — one row WRONG, the rest confirmed (v34)
+**Their published menu claims (EXPERIMENT_RESULTS.md §16):** config 2 "B3-OPT lb14 halt3 cd10 = 215t / +350.9 net / DD 9.6 / NET-DD 36.5" AND "B3-OPT lb50 halt3 cd10 = IDENTICAL numbers". Neither config had been run in our lane.
+
+**Our verification (identity-gated, fine fills, production base, script `exp33_verify_halt3.py`):**
+
+| Config | Trades | NET | DD | DD dur | H1 | H2 | both-halves |
+|---|---|---|---|---|---|---|---|
+| B3-OPT halt3 cd10 lb14 | 222 | **+262.6** | 12.1 | 15t/70d | +188.2 | +123.2 | PASS |
+| B3-OPT halt3 cd10 lb50 | 213 | **+310.1** | 10.0 | 14t/70d | +226.7 | +130.7 | PASS |
+| (ref) B3-OPT lb50 **halt6** cd10 | 225 | +380.7 | 11.4 | 25t/113d | +255.0 | +172.4 | PASS |
+
+**Findings:**
+1. **Their config-2 row is WRONG on the shipped engine.** Claimed 215t/+350.9/DD 9.6 for both lb14 and lb50 halt3. Actual: lb14 +262.6 (DD 12.1), lb50 +310.1 (DD 10.0) — and the two trade lists are **NOT identical (166 differing trades)**, so the "identical" presentation is impossible. They should re-check their harness for this variant (their other rows all match us to the decimal — this one looks like a copy/paste or a variant mislabel on their side).
+2. **halt6 vs halt3 at lb50: +380.7 vs +310.1 — halt6 wins by +70.6R net.** The halt6 upgrade is even more valuable at lb50 than at lb14.
+3. **The "400ish" number is REAL and verified by both lanes:** (52,60,trail65) = 228t / +400.4 net / DD 13.1 — zero coarse-to-fine drift on our side, exact match on theirs. It remains the aggressive 3-knob variant, front-loaded (their verdict "weaker", ours "overfit risk flagged"), no WF yet.
+4. **Their lb50 walk-forward extension (test_wf_lb50.py): "lb=50 beats lb=14 at every test split, CI entirely above zero"** — consistent with every lb comparison we've run; a positive cross-check that closes the WF-with-lb debt from their side.
+5. All other menu rows (anchor, OPTIMAL, B3-OPT cd0, halt6 lb50, (52,60,trail65)) match our numbers exactly — the two lanes remain in full agreement except config 2.
+**Status: DONE — menu corrected on our side: the true lowest-DD row is B3-OPT lb50 halt3 (+310.1 / DD 10.0 / NET-DD 31), and the leader is still B3-OPT lb50 halt6 (+380.7 / DD 11.4).**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**
