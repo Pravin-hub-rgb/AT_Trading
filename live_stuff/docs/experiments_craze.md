@@ -551,6 +551,32 @@ Slower chop-regime detection (30-50 bar lookback vs 14) = fewer whipsaw regime f
 
 ---
 
+### Exp 32: FINAL INTERACTION SWEEPS — closing the param story before freezing (v33)
+Scripts: `exp32_final_tuning.py`, `exp32b_trail_fine.py`. Base: B3-OPT+halt6 cd10 (chop55, lb50, trail mb50 = +427.8 coarse / +380.7 net). Identity gate enforced (351t exact — note: the gate initially ran at chop61.8 due to a BASE-default clobber in the script; fixed and re-verified).
+
+**A — chop x lb 2D interaction (coarse):** the surface is a ridge, no revolution. (55,50)=+427.8 and (52,60)=+428.0 are tied at the top; chop58/lb30=+408. Our pick sits on the ridge. **chop55 and lb50 are NOT redundant but their optimum is flat** — no interaction surprise.
+
+**B — persist re-check at (52,60):** persist2 (+428.0) > persist0 (+398.3) > persist5 (+316.1). **persist=2 confirmed at the new operating point** — the WF optimizer's persist=0 preference was an lb=14-era artifact; at lb=50 the hysteresis earns its keep.
+
+**C — LTF trail-mb re-check (Exp 11's decoupling, revisited at the new stack):**
+| trail-mb | coarse @ (52,60) | note |
+|---|---|---|
+| 50 (shipped) | +428.0 | base |
+| **65** | **+447.8** | local peak |
+| 80 | +418.8 | rolloff |
+
+**Fine validation:**
+| Config | Trades | Gross | NET | WR | DD | H1 | H2 | per-year |
+|---|---|---|---|---|---|---|---|---|
+| (55,50,trail50) = current pick | 225 | +427.4 | **+380.7** | 36.4 | 11.4 | +255.0 | +172.4 | all pos |
+| (55,50,trail65) | 217 | +404.0 | +357.6 | 34.6 | 11.4 | +290.5 | +113.5 | all pos |
+| **(52,60,trail65)** | **228** | **+447.8** | **+400.4** | 36.0 | 13.1 | +315.6 | +132.2 | all pos |
+
+**Reading (important):** (52,60,trail65) is the new paper king (+400.4 net) with ZERO coarse-to-fine drift — but it changes **three parameters at once** vs the WF-validated family (chop 52, lb 60, trail65) and carries two red flags: (1) 2025 is its weakest year (+41.1 vs our pick's +72.5) — more front-loaded than the current pick; (2) trail65's gain *evaporates* at (55,50) (+357.6), meaning it only pays in the slower-regime corner — a real interaction, but also exactly the shape curve-fitting takes. The current pick (55,50,trail50) is the conservative, plateau-dwelling choice; (52,60,trail65) is the aggressive one. **Decision deferred to user per process.**
+**Status: DONE — param story complete. Every lever now swept: entry (b3_k, mode), regime (chop, lb, persist), windows (mb1h, htf_rr, ext), risk (halt), cadence (cd), trail (mb, via split-mb machinery). Remaining validation: WF grid extension with lb+trail65 (optional).**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**
