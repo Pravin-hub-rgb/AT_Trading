@@ -44,6 +44,8 @@ CONFIGS = [
      dict(chop_thresh=55.0), "sw1h10"),
     ("B3-OPT+halt6 cd10", {**B3, "exp_persist": 2},
      dict(chop_thresh=55.0, max_consecutive_losses=6), "sw1h10"),
+    ("B3+mltf+persist5 (S16, WR champion)",
+     {**B3, "exp_mltf": True, "exp_persist": 5}, {}, "sw1h"),
 ]
 
 
