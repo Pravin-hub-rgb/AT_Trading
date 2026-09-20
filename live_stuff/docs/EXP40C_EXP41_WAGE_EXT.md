@@ -1,6 +1,6 @@
-# EXP 40c + 41 + 42 — wage gate (w24) × ext_stop: full record, theory, harnesses, results
+# EXP 40c / 41 / 42 / 43 / 44 / 45 / 46 / 47 / 48 / 49 — wage gate (w24) × ext_stop: full record, theory, harnesses, results
 
-Experiment dates: 2026-09-19 (40c/41) and 2026-09-20 (42). Branch: `experiments/v19-plus`.
+Experiment dates: 2026-09-19 (40c/41) and 2026-09-20 (42–48). Branch: `experiments/v19-plus`.
 Engine (all rows): `backend/src/btc/engines/htf_ltf/v18_streak_halt.py`, mode `b2_vs_flip_chop`.
 Instrument: `BTCUSDT_BYBIT` (15m LTF + 1h HTF candles via `load_candles()`, 1m fine data via `_load_fine_1m`). Data span ~1350 days (6 WF segments of ~225d).
 
@@ -80,6 +80,13 @@ verification lane, documented in the table).
 | `live_stuff/tests/_exp41_results.json` | Full exp41 output (cells + WF), machine-readable. | output |
 | `live_stuff/tests/_exp41_out.txt` / `_exp41_err.txt` | exp41 console log / stderr (err empty on final run). | output |
 | `live_stuff/tests/_exp42_results.json` | Full exp42 output (sweep + WF), machine-readable. | output |
+| `live_stuff/tests/exp43_loss_autopsy.py`, `_exp43_out.txt`, `_exp43_results.json` | **Exp43 harness** — loss autopsy: w24 decomposition (removal vs chain-shift), runner amputation, parent-window inheritance. Gates: identity + matrix + 8 fine pins. | ✅ RUNNABLE — keep |
+| `live_stuff/tests/exp44_curfew_gate.py`, `_exp44_out.txt`, `_exp44_results.json` | **Exp44 harness** — curfew gate (skip 6–24h band, keep 0–6h + ≥24h), 4 lanes × 4 variants + WF. Gates: identity + matrix + 8 fine pins + canary. §14. | ✅ RUNNABLE — keep |
+| `live_stuff/tests/exp45_curfew_plateau.py`, `_exp45_out.txt`, `_exp45_results.json` | **Exp45 harness** — curfew edge-plateau grid (lb30) + curf×ext combo + A4 edges + WF. Gates: identity + matrix + 6 fine pins + canaries. §15. | ✅ RUNNABLE — keep |
+| `live_stuff/tests/exp46_defer_entry.py`, `_exp46_out.txt`, `_exp46_results.json` | **Exp46 harness** — deferred entry (requeue young signals to the defer bar if window alive + SL pivot untouched + ext passes), 3 lanes × 5 variants + WF. Gates: identity + matrix + 6 fine pins + canaries. §16. | ✅ RUNNABLE — keep |
+| `live_stuff/tests/exp47_yearly_stats.py`, `_exp47_out.txt`, `_exp47_results.json` | **Exp47 harness** — stats board: gross/net/avgR/DD/WR + per-year NET + delta vs anchor, 9 configs. Gates: identity + matrix + 5 fine pins. §17. | ✅ RUNNABLE — keep |
+| `live_stuff/tests/exp49_partial_champion.py`, `_exp49_out.txt`, `_exp49_results.json` | **Exp49 harness** - partial exits (exp_partial_r) + champion reproduction (sw10/sw20) + seg6 WF. Gates: identity + matrix + 4 fine pins + canaries. Section 20. | OK RUNNABLE - keep |
+| `live_stuff/tests/exp48_leg_progress.py`, `_exp48_out.txt`, `_exp48_results.json` | **Exp48 harness (v2)** — price-space autopsy (bimodal legs) + leg-progress gate (REJECTED). Gates: identity + matrix + 4 fine pins + canaries. §18. | ✅ RUNNABLE — keep |
 | `live_stuff/tests/_exp42_out.txt` / `_exp42_err.txt` | exp42 console log / stderr (err empty). | output |
 | `live_stuff/tests/_exp40b_out.txt`, `_exp40b_err.txt`, `_exp40b_results.json` | Stale exp40b legacy outputs (from before the current gate). | record only |
 | `live_stuff/tests/test_verify_wage.py` | Second verification lane's script that produced §10's numbers — **DELETED by that lane** after running (violation of §12 rule 6). Its numbers were cross-checked against `_exp40c_out.txt` Phase C and match to the decimal. Do not delete replacements. | ❌ deleted by second lane — documented |
@@ -652,3 +659,336 @@ Argmax: lb30 = **0h**; A4 / OPT-cd10 / lb14 = **24h**.
 * lb14 added to the validated lane set (previously it existed only in the
   dead N5 doc rows).
 * lb30 verdict stands: no wage gate at ext1.5; ext2.5 is lb30's edge.
+
+---
+
+## 14. Exp 44 — curfew gate: skip only 6–24h, keep 0–6h + ≥24h (2026-09-20)
+
+**Origin:** exp43's age profile (EXP43_LOSS_AUTOPSY.md §2.3): the LTF loss
+pocket is the **6–24h** band; w24 is a blunt tool that also cuts lb30's good
+0–6h pocket (+3.1R/31t, avgR +0.10). New knob `exp_curfew_a/b` in the craze
+patcher — skips only `a ≤ age < b` (no-op when b=0; identity-gated).
+
+**Harness:** `live_stuff/tests/exp44_curfew_gate.py` → `_exp44_out.txt` /
+`_exp44_results.json` (≈75s). Gates: identity + user coarse matrix + 8 fine
+pins (all passed); curfew canary: **0 in-band violations** on all runs.
+Run: `python live_stuff/tests/exp44_curfew_gate.py 1> live_stuff/tests/_exp44_out.txt 2> live_stuff/tests/_exp44_err.txt`
+
+### 14.1 Results (fine NET, ext1.5)
+
+| variant | lb30 | A4 | lb14 | OPT-cd10 |
+|---|---|---|---|---|
+| w0 | +196.3 (DD 23.6) | +203.3 (DD 24.8) | +148.0 | +259.4 (DD 32.7) |
+| w24 | +185.0 (DD 19.4) | **+223.1** (DD 19.8) | **+193.7** (DD 15.7) | **+337.7** (DD 19.2) |
+| **curf6-24** | **+217.4** (296t, DD 26.8) | +198.8 (DD 19.0) | +188.7 (DD 17.1) | +302.6 (DD 25.0) |
+| curf6-30 | +163.9 (DD 32.8) | +202.4 (DD 16.1) | +160.9 | +273.9 |
+
+### 14.2 Verdicts
+
+1. **Curfew wins exactly where the U-curve predicted — lb30 only:**
+   +217.4 = +21.1 over w0 and +32.3 over w24. New best lb30-based single,
+   WITHOUT touching ext (and it keeps the first-6h entries). DD caveat:
+   26.8 vs w0's 23.6 — it buys NET with slightly deeper DD.
+2. **On A4 / lb14 / OPT-cd10 plain w24 stays best** — the overall champion
+   (OPT-cd10 + w24 + ext1.5, +337.7) is unchanged. The age structure the
+   curfew exploits is lane-shaped, as exp43 said.
+3. **Band edge confirmed:** curf6-30 is worse everywhere → the 24–30h band
+   earns its keep; 24h is the right lower edge. On A4, curf6-30 (+202.4,
+   DD 16.1, worst seg +3.9) ≈ ties A4-w36h as a robust alternative.
+4. **WF:** lb30 curf6-24 worst seg −28.1 (still bleeds the oldest data, but
+   H1 improves +69.0 → +85.9 vs w0). lb14/OPT curfew variants are dominated
+   by w24 in both NET and WF.
+5. **Canary:** 0 in-band violations on all 8 curfew runs — knob verified.
+
+**Single-position board update:** lb30+curf6-24 slots in at #3 by NET
+(+217.4), still behind A4+w24 (+223.1) on risk-adjustment and A4-w36h on
+consistency. Champion (multi) unchanged.
+
+---
+
+## 15. Exp 45 — curfew edge-plateau map + curf×ext combo (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp45_curfew_plateau.py` → `_exp45_out.txt` /
+`_exp45_results.json` (≈80s). Gates: identity + user coarse matrix + 6 fine
+pins (incl. lb30 w0/w24 at BOTH ext values); canary 0 in-band violations on
+all 9 curfew cells.
+Run: `python live_stuff/tests/exp45_curfew_plateau.py 1> live_stuff/tests/_exp45_out.txt 2> live_stuff/tests/_exp45_err.txt`
+
+### 15.1 lb30 edge grid (fine NET, 296t-scale cells)
+
+| lower \ upper | skip→24 | skip→30 | skip→36 |
+|---|---|---|---|
+| skip from 4 | +172.0 (DD 21.8) | — | — |
+| skip from 6 | **+217.4** (DD 26.8) | +163.9 | +161.9 |
+| skip from 8 | **+219.4** (DD 28.6) | — | — |
+| (w0 / w24 refs) | +196.3 / +185.0 | | |
+
+### 15.2 The combo — killed
+
+lb30 c6-24 + ext2.5 = **+215.0** < lb30 w0 + ext2.5 = +231.1 (−16.1).
+**The two lb30 edges do not stack** — consistent with exp43's mechanism
+finding: both act through entry re-timing, and their chain effects conflict.
+
+### 15.3 Verdicts
+
+1. **Lower edge has a small plateau: 6–8h** (c6-24 +217.4, c8-24 +219.4 —
+   statistically indistinguishable). c4-24 collapses (+172.0) — the 4–6h
+   trades are real money.
+2. **Upper edge is pinned at 24h by mechanism, not tuning:** widening the
+   band to 30/36 costs ~−54R because the ≥24h bucket is where the good
+   trades live (exp43 age profile: avgR +1.16/+1.23). Same structure as the
+   ext ceiling (2.5 optimal, 3.0 adds nothing): the parameter is bounded by
+   the measured age profile, not picked off a spike.
+3. **A4:** c4-24 is bad (+166.9, seg3 −41.4, H1 −7.1); A4's best remains
+   w24 (+223.1). c6-30 (+202.4, DD 16.1, worst seg +3.9) confirmed as the
+   A4 robustness alternative alongside w36h.
+4. **Combo killed** — do not combine curfew with ext2.5 on lb30.
+5. **Single board after exp45:** A4+w24 (+223.1/DD 19.8) balanced king;
+   lb30+w0+ext2.5 (+231.1) raw king; lb30+c6-24 (+217.4) third — all three
+   remain in-sample-selected (§7.2 caveat stands).
+
+---
+
+## 16. Exp 46 — deferred entry: requeue young signals instead of dropping (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp46_defer_entry.py` → `_exp46_out.txt` /
+`_exp46_results.json` (≈86s). Gates: identity + user coarse matrix + 6 fine
+pins (all passed); defer canary: 0 age<horizon violations on all 9 defer runs.
+Run: `python live_stuff/tests/exp46_defer_entry.py 1> live_stuff/tests/_exp46_out.txt 2> live_stuff/tests/_exp46_err.txt`
+(Audit note: first launch crashed on an `exp_stop_r` typo in the emitted
+patch — fixed, relaunched clean; both runs are in `_exp46_err.txt` history.)
+
+**Mechanism (new knob `exp_defer_h` in the craze patcher):** a signal with
+window-age < horizon is NOT dropped — it is requeued to the first 15m bar at
+/after `s + horizon` provided, all known at the defer bar (causal): the SAME
+window is still open, the original SL pivot was never touched between signal
+and defer bar (setup survived), and ext still passes. Entry at the defer-bar
+close; busy/cooldown/halt apply there. `filtered` is re-sorted by final bar
+so the ledger stays causal (no-op when off; identity-gated).
+
+### 16.1 Results (fine NET, ext1.5)
+
+| variant | lb30 | A4 | lb14 |
+|---|---|---|---|
+| w0 | +196.3 (DD 23.6) | +203.3 (DD 24.8) | +148.0 |
+| w24 | +185.0 (DD 19.4) | **+223.1** (DD 19.8) | **+193.7** (DD 15.7) |
+| defer6 | +183.8 | +209.0 (worst seg **+7.7**) | +151.7 |
+| defer12 | +198.6 | +206.5 (worst +7.0) | +145.9 |
+| **defer24** | **+203.1** (DD 21.6) | +183.1 (DD 29.4) | +181.6 (DD 17.6) |
+| (refs from exp44: curf6-24) | +217.4 | +198.8 | +188.7 |
+
+### 16.2 Verdicts
+
+1. **defer24 beats w24 by +18.1R on lb30 (+203.1 vs +185.0) at the SAME
+   24h horizon** — the RQ2 answer: "wait a day, enter if the setup is still
+   alive" > "drop everything young". This directly confirms exp43's
+   mechanism finding: the gate's value is timing, not removal; deferral
+   keeps the trigger AND buys the timing.
+2. lb30 timing-config ranking now: **curf6-24 (+217.4) > defer24 (+203.1) >
+   w0 (+196.3) > w24 (+185.0)**. lb30-d24's WF worst seg (−20.3) is the best
+   of the lb30 timing variants (w0 −29.6, w24 −22.5).
+3. **A4: w24 stays king (+223.1)** — deferral is a consistency tool there:
+   A4-d6 (+209.0, worst seg **+7.7**) is the best worst-segment of ANY A4
+   variant so far (w0 +4.3, w24 −1.1), at lower NET.
+4. **lb14: w24 stays king** (+193.7); defer24 (+181.6) below it.
+5. **Canary 0 violations everywhere** — the requeue mechanism is internally
+   consistent; no trade sits below its horizon.
+6. Champion (multi, OPT-cd10+w24+ext1.5, +337.7) unchanged. The two new
+   knobs (curfew, defer) are lane-shaped tools, consistent with everything
+   since exp43: entry-timing structure is real but lane-specific.
+
+---
+
+## 17. Exp 47 — full stats board: gross/net/avgR/DD/WR + per-year NET + delta vs anchor (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp47_yearly_stats.py` → `_exp47_out.txt` /
+`_exp47_results.json` (≈60s). Gates: identity + user coarse matrix + 5 fine
+pins (all passed). Run: `python live_stuff/tests/exp47_yearly_stats.py 1> live_stuff/tests/_exp47_out.txt 2> live_stuff/tests/_exp47_err.txt`
+
+| Config | n | gross | cost | NET | npt | DD | WR | 2023 | 2024 | 2025 | 2026 | d(anchor) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| ANCHOR lb30 w0 e1.5 | 349 | +287.1 | 90.8 | +196.3 | 0.563 | 23.6 | 29.8% | +22.6 | +121.4 | +52.1 | +91.0 | — |
+| lb30 curf6-24 e1.5 | 296 | +295.7 | 78.2 | +217.4 | 0.735 | 26.8 | 32.1% | +26.7 | +130.4 | +57.2 | +81.2 | +21.1 |
+| lb30 defer24 e1.5 | 286 | +280.1 | 77.0 | +203.1 | 0.710 | 21.6 | 31.1% | +14.2 | +120.3 | +59.7 | +85.4 | +6.8 |
+| lb30 w0 ext2.5 | 377 | +323.3 | 92.1 | +231.1 | 0.613 | 24.6 | 31.0% | +22.7 | +146.3 | +69.3 | +84.9 | +34.8 |
+| A4 w24 e1.5 | 261 | +297.7 | 74.6 | +223.1 | 0.855 | 19.8 | 27.6% | +41.3 | +76.4 | +54.0 | +126.2 | +26.8 |
+| A4 curf6-30 e1.5 | 277 | +277.5 | 75.1 | +202.4 | 0.731 | 16.1 | 26.4% | +46.6 | +55.8 | +55.9 | +119.1 | +6.0 |
+| A4 defer6 e1.5 | 347 | +297.1 | 88.1 | +209.0 | 0.602 | 23.3 | 25.9% | +56.8 | +75.2 | +51.0 | +113.9 | +12.7 |
+| lb14 w24 e1.5 | 272 | +268.8 | 75.1 | +193.7 | 0.712 | 15.7 | 31.6% | +40.1 | +85.5 | +59.0 | +84.1 | −2.7 |
+| OPTcd10 w24 e1.5 (multi) | 326 | +423.5 | 85.8 | +337.7 | 1.036 | 19.2 | 32.5% | +100.3 | +124.7 | +79.7 | +119.1 | +141.3 |
+
+cost = fee + slip + funding. Year = calendar year of trade ENTRY.
+
+**Per-year reading (the advisor's "classify the environment" test):**
+* **lb30 family is 2024-dependent:** anchor gets 43% of its NET from 2024;
+  ext2.5 pushes that further (+146.3 in 2024). 2023 is its weak year (+22.6).
+* **curf6-24/defer24 keep the lb30 shape** (2024-heavy) — they fix the entry
+  pocket, not the regime dependence.
+* **A4 family is the balanced one:** A4-w24's biggest year is 2026 (+126.2),
+  not 2024; A4-curf6-30 is almost flat 2023–25 (46.6/55.8/55.9); A4-defer6
+  has the strongest 2023 of the board (+56.8).
+* **lb14-w24 is the most even of all** (min year +40.1, max +85.5).
+* **The multi champion is balanced AND big** (+100.3/+124.7/+79.7/+119.1 —
+  min year +79.7 beats most configs' max) — that consistency is a large part
+  of why it's the overall king.
+
+---
+
+## 18. Exp 48 — price-space autopsy + leg-progress gate (2026-09-20)
+
+**Origin:** user hypothesis — everything so far gates on TIME from window
+start (wage/curfew/defer); 2023 (~20k BTC) vs 2024 (~100k) suggests testing
+the PRICE-space axis instead. Definitions (all causal): leg anchor = first
+window of the current same-direction streak (all past windows); leg progress
+R = (signal close − leg anchor)·d ÷ current window risk; pullback = distance
+off the leg extreme at entry, in the same units.
+
+**Harness:** `live_stuff/tests/exp48_leg_progress.py` → `_exp48_out.txt` /
+`_exp48_results.json` (≈83s; v2 — v1 had a nested-loop bug, documented below).
+Gates: identity + user coarse matrix + 4 fine pins (all passed); legskip
+canary 0 violations on all 10 cells.
+Run: `python live_stuff/tests/exp48_leg_progress.py 1> live_stuff/tests/_exp48_out.txt 2> live_stuff/tests/_exp48_err.txt`
+
+### 18.1 Autopsy (RQ1) — the price-space map is BIMODAL
+
+| leg progress | lb30 n / avgR | A4 n / avgR |
+|---|---|---|
+| < −1R (leg fighting) | 200t / **+0.75** | 193t / **+1.20** |
+| −1R … +20R | **EMPTY** | **EMPTY** |
+| ≥ 20R (leg ran) | 148t / **+0.92** | 165t / +0.39 |
+
+Pullback (A4): off leg high 0.5–1.5R → avgR **+2.46** (86t); 1.5–3R →
+**−0.54** (24t); <0.5R → +0.34. lb30: 0.5–1.5R → +1.19; 1.5–3R → +0.12.
+
+**Leg progress has NO middle** — legs either collapse against their direction
+(and the windows keep re-printing that dir at lower/higher prices → those
+entries still average +0.75/+1.20) or they run ≥20 window-risks. There is no
+"moderately late leg" population to filter.
+
+### 18.2 Gate cells (RQ2) — legskip is DEAD
+
+All five thresholds (4/6/8/10/12) produce IDENTICAL ledgers (the bimodality
+made them so): lb30 209t +93.6 (vs w0 +196.3 = **−102.7R**); A4 198t +78.7
+(vs w0 +203.3 = **−124.6R**). Skipping ≥20R-leg entries removes the RIDE —
+in a trend-following system, late legs ARE the profit engine. The exact
+opposite of the time-space curfew, which worked because the 6–24h band is
+decision noise.
+
+### 18.3 Verdicts
+
+1. **legskip: REJECTED on both lanes.** Price-space lateness is the edge,
+   not the enemy. (Also empirically: threshold within 4–12 is irrelevant —
+   further evidence of bimodality, not of a tuning surface.)
+2. **New structural fact:** same-dir window streaks are bimodal in
+   price-space (fighting vs running), with zero middle. Any future price-
+   relative gate must target the pullback axis, not the progress axis.
+3. **Untested follow-up candidate (causal):** an A4 pullback gate — skip
+   entries 1.5–3R off the leg extreme (the no-man's land, avgR −0.54, only
+   24t). Small n; needs the same pre-fill + WF discipline before any claim.
+4. **Process note:** v1 of this harness had a nested-loop bug (autopsy
+   re-binned its own output in an infinite loop); caught by watching the
+   output grow, process killed, harness rewritten (v2), bug documented here.
+
+### 18.4 How to run
+
+```powershell
+python live_stuff/tests/exp48_leg_progress.py 1> live_stuff/tests/_exp48_out.txt 2> live_stuff/tests/_exp48_err.txt
+```
+
+---
+
+## 19. Cross-lane audit reconciliation (2026-09-20, second engine lane)
+
+The second lane ran a 12-check deep audit of its own harness (`exp_final_matrix.py`,
+its own engine variant WITH partial exits - a knob our engine does not have)
+against this lane's craze patcher. Outcome:
+
+* **Their `_build_full()` was missing 4 patches** from `test_experiments_craze.py`:
+  `exp_wage_h`, `exp_curfew_a/b`, `exp_legskip_r`, and the post-filter
+  `filtered.sort()`. Every w24/curfew config in their matrix was silently wrong
+  (wage gate never applied - 127 extra trades on the OPT config).
+* **Our numbers CONFIRMED by them:** they ran our exact `build_module()` and
+  reproduced 326t / +337.7 for OPT-cd10 + w24 + ext1.5. Our pins hold on their
+  environment too.
+* Their own champions (atr_high + p7.5 + ext3 + cd8 single +261.5; mltf+persist7
+  multi +465.1) do NOT use wage/curfew - unaffected by their bug. NOTE: those
+  configs run on their engine variant (partial exits, atr_high mode, ext3) -
+  numbers between the two engine variants are NOT directly comparable until the
+  engines are unified.
+* Their audit of shared mechanics agrees with ours: identity, partial-exit math,
+  mltf concurrency, persist causality, ext causality, fine-fill timing - all PASS.
+
+**Decision (coordination):** single source of truth for the shared patcher =
+`test_experiments_craze.py::build_module()`. The second lane imports it instead
+of maintaining a drifting copy (their copy had silently diverged - exactly the
+failure mode SS12 rule 5 exists for). Lane-unique knobs (partial exits etc.) get
+ported into the craze patch list as asserted patches so ONE identity gate covers
+ALL knobs. Cross-lane rule: before comparing any number, both lanes must match
+on the identity baseline (n + R-list) AND the data snapshot.
+
+---
+
+## 20. Exp 49 - partial exits ported + champions reproduced + WF verdict (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp49_partial_champion.py` -> `_exp49_out.txt` /
+`_exp49_results.json` (~38s). The second lane's engine variant has partial
+exits; ported verbatim into the craze patcher as `exp_partial_r` (default 0.0,
+identity-gated): 50% off at exact level fill when best-R reaches the threshold
+(coarse AND fine loops - with fine fills the coarse loop is empty, the fine
+check is the live one); remainder runs the SAME swing trail half-weighted:
+`r = partial_r + (total_move/risk)*0.5` (total move from ENTRY, per their
+clarification). Per-trade state init added on our side (their spec omitted it -
+without it `_partial_taken` leaks between trades).
+
+Gates all passed: identity n=351 (no-op proof), user coarse matrix 4/4
+(incl. two NEWLY measured coarse cells: A4 w24 ext1.5 = 250t/+207.1, ext3.0 =
+285t/+218.8), R-formula canary 0 failures on 104 partial trades.
+
+### 20.1 Champions on OUR data - exact reproduction of their claims
+
+| Config | n | NET | npt | DD | partials | worst6 | years (23/24/25/26) |
+|---|---|---|---|---|---|---|---|
+| champion single sw20 | 371 | +261.5 | 0.705 | 29.3 | 42 | **-23.9** | 32.5/87.5/133.6/98.8 |
+| champion single sw10 | 395 | +238.4 | 0.604 | 16.0 | 38 | -3.2 | 40.8/90.8/94.6/109.0 |
+| **champion multi sw20** | 487 | +465.1 | 0.955 | 21.9 | 62 | **+1.9** | 127.8/139.5/185.7/127.0 |
+| **champion multi sw10** | 501 | **+472.9** | 0.944 | **14.5** | 60 | **+22.7** | 136.2/121.2/191.7/144.4 |
+| baseline (no partial) sw20 | 371 | +148.2 | 0.400 | 37.3 | 0 | - | 14.6/78.8/66.6/79.0 |
+| baseline (no partial) sw10 | 394 | +163.6 | 0.415 | 29.2 | 0 | - | 33.2/106.0/46.9/73.1 |
+
+Engine unification CONFIRMED: their +261.5/+465.1 claims reproduce to the
+decimal on our data + our patcher. The 340t-vs-351t identity difference is
+their BASE params (their env), not data drift - the champion configs converge
+exactly.
+
+### 20.2 Verdicts
+
+1. **Partial exits are the biggest single edge found in the entire program:**
+   +113.3R (single) / +309.3R (multi sw10) over the no-partial baseline of
+   the same config - by harvesting 7.5R+ runners at half-size instead of
+   trailing them back.
+2. **NEW OVERALL KING: champion multi sw10** (+472.9 / DD 14.5 / worst seg
+   +22.7 / min year +121.2) - beats the old champion (OPT-cd10+w24+ext1.5,
+   +337.7 / DD 19.2 / worst +13.6) on every metric simultaneously.
+3. **NEW single king (risk-adjusted): champion single sw10** (+238.4 / DD
+   16.0 / worst -3.2 / NET+DD 14.9) - beats A4+w24 (+223.1/DD 19.8, ratio
+   11.3) and lb30+ext2.5 (+231.1) on both NET and stability. sw20 variant is
+   the raw king (+261.5) but bleeds seg1 (-23.9).
+4. **sw answer (their Q2):** sw20 for raw single (+23.1 over sw10), sw10 for
+   multi (+7.8) and for stability (worst segs -3.2/+22.7 vs -23.9/+1.9).
+5. **Caveats:** (a) partial second-fill fee+slip not yet in `_trade_costs`
+   (~0.02R per partial trade, ~1R total - champion NETs slightly generous);
+   (b) partial trades book r>0 by construction -> halt3 never fires on them
+   (intended behavior of the ported formula, now documented); (c) all
+   in-sample, single instrument - the standing caveats.
+
+### 20.3 How to run
+
+```bash
+# Via new registry (recommended):
+python live_stuff/tests/run_experiment.py champion_multi_sw10
+python live_stuff/tests/run_experiment.py --group champions
+python live_stuff/tests/run_experiment.py --all
+
+# Direct (legacy):
+python live_stuff/tests/exp49_partial_champion.py
+```
