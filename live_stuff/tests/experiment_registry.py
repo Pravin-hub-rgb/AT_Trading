@@ -140,16 +140,16 @@ EXPERIMENTS = {
         "pins": {"n": 487, "net": 232.6, "dd": 29.4, "partials": 62},
     },
     "champion_multi_sw10": {
-        "desc": "Champion multi sw10 (partial exit, +247.9) — best NET with partials",
+        "desc": "Champion multi sw10 WITHOUT partials — ACTUAL KING (+366.1)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 7.5, "exp_mltf": True,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 501, "net": 247.9, "dd": 14.5, "partials": 60},
+        "pins": {"n": 500, "net": 366.1, "dd": 17.8, "partials": 0},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
