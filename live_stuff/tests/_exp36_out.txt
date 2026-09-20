@@ -1,0 +1,7 @@
+  (a) anchor lb30 fine          349t gross   +287.1 fees   73.6 fund  17.2 NET   +196.3
+  (ref) anchor lb14 fine        351t gross   +238.0 fees   74.4 fund  15.7 NET   +148.0
+  (b) mltf cd10 (mb20)          421t gross   +306.5 fees   89.5 fund  19.4 NET   +197.6
+     concurrent positions: max=5 ; trades=421
+     mltf cd10 (mb10+chop55 = S9): max concurrent=4 ; trades=460
+        S9 fine                 460t gross   +432.1 fees   96.5 fund  23.4 NET   +312.2
+  (c) B3-OPT lb50 halt3 fine    214t gross   +157.3 fees   31.8 fund  10.2 NET   +115.4

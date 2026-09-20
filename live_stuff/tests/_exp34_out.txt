@@ -1,0 +1,20 @@
+=== KING lb50 halt6: 217t gross +128.5 fees 32.8 funding 9.8 NET +85.9 ===
+  LATE-ENTRY same-instant (bot acts on close): 217t (skip 0, target-already-gone 0) NET    +85.9  npt +0.396  (base npt +0.396)
+  LATE-ENTRY ONE BAR LATE (15min delay)    : 215t (skip 2, target-already-gone 0) NET    +69.9  npt +0.325  (base npt +0.396)
+  fill drift (next open vs trigger close, % of price): median 0.000%  p90 0.000%  p99 0.000%
+  slip x1 : NET    +85.9  npt +0.396
+  slip x2 : NET    +84.6  npt +0.390
+  slip x5 : NET    +80.7  npt +0.372
+  slip x10: NET    +74.1  npt +0.341
+  BOOTSTRAP npt: mean +0.396  95% CI [-0.024, +0.859]  P(mean>0)=0.968
+=== AGGR (52,60,tr65): 229t gross +192.7 fees 34.3 funding 12.2 NET +146.1 ===
+  LATE-ENTRY same-instant (bot acts on close): 229t (skip 0, target-already-gone 0) NET   +146.1  npt +0.638  (base npt +0.638)
+  LATE-ENTRY ONE BAR LATE (15min delay)    : 228t (skip 1, target-already-gone 0) NET   +136.3  npt +0.598  (base npt +0.638)
+  fill drift (next open vs trigger close, % of price): median 0.000%  p90 0.000%  p99 0.000%
+  slip x1 : NET   +146.1  npt +0.638
+  slip x2 : NET   +144.7  npt +0.632
+  slip x5 : NET   +140.6  npt +0.614
+  slip x10: NET   +133.8  npt +0.584
+  BOOTSTRAP npt: mean +0.638  95% CI [+0.149, +1.182]  P(mean>0)=0.996
+
+(exp34 stress battery done)

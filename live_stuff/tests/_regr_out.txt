@@ -1,0 +1,12 @@
+Running v18 causal-integrity backtest regressions...
+[test_streak_books_losses_and_skips_next]
+PASS: 5 losers booked, 6th skipped, winner resumes
+[test_c14_c15_gates_present]
+PASS: C14+2700 gates present in source
+[test_c15_count_band]
+PASS: trade count 351 within [346,356]
+[test_baseline]
+PASS: 351t gross +238.0 net +163.7 WR 27.6% PF 2.02 {'2023': 38.79, '2024': 81.10500000000002, '2025': 37.61800000000001, '2026': 80.516}
+[test_no_deleted_losses]
+PASS: sl=147 trail=204 WR=27.6% (broken was 45%)
+ALL v18 BACKTEST INTEGRITY TESTS PASSED.

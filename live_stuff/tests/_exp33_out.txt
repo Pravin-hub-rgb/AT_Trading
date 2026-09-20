@@ -1,0 +1,7 @@
+  B3-OPT halt3 cd10 lb14:  222t gross   +311.4  NET   +262.6  WR 36.0%  DD  12.1  DDdur 15t/70d  H1  +188.2 H2  +123.2
+      per-year: {'2023': 86.4, '2024': 101.9, '2025': 71.3, '2026': 51.8} | both-halves: PASS
+  B3-OPT halt3 cd10 lb50:  213t gross   +357.4  NET   +310.1  WR 36.2%  DD  10.0  DDdur 14t/70d  H1  +226.7 H2  +130.7
+      per-year: {'2023': 85.2, '2024': 141.5, '2025': 71.7, '2026': 59.0} | both-halves: PASS
+
+  lb14 vs lb50 trade lists IDENTICAL: False
+  differing trades: 166 of 222/213

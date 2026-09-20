@@ -1,0 +1,21 @@
+#  | Config | Tr | GrossR | WR | PF | AvgW | AvgL | R/tr | MaxDD | WStr | LStr | Tr/mo | NET(fine)
+S0 anchor                        351t   +211.7R  WR 27.6%  PF 1.91  avgW +4.59  avgL -0.92  R/t 0.603  DD  23.4  WSt  5  LSt 27    7.8/mo  NET +163.7
+S1 mltf                          421t   +280.2R  WR 29.5%  PF 2.03  avgW +4.46  avgL -0.92  R/t 0.666  DD  23.4  WSt  9  LSt 27    9.4/mo  NET +217.0
+S2 mltf+cd0                      471t   +284.4R  WR 28.9%  PF 1.92  avgW +4.37  avgL -0.92  R/t 0.604  DD  24.1  WSt  9  LSt 15   10.5/mo  NET -
+S3 mltf+cd5                      429t   +298.5R  WR 30.3%  PF 2.09  avgW +4.41  avgL -0.92  R/t 0.696  DD  23.4  WSt  9  LSt 27    9.5/mo  NET -
+S4 mltf+cd15                     419t   +281.5R  WR 29.6%  PF 2.04  avgW +4.46  avgL -0.92  R/t 0.672  DD  23.4  WSt  9  LSt 27    9.3/mo  NET -
+S5 mltf+persist2                 420t   +300.7R  WR 32.4%  PF 2.16  avgW +4.12  avgL -0.91  R/t 0.716  DD  33.0  WSt  6  LSt 11    9.3/mo  NET -
+S6 mltf+persist5                 409t   +362.8R  WR 32.0%  PF 2.41  avgW +4.73  avgL -0.92  R/t 0.887  DD  33.4  WSt  6  LSt 11    9.1/mo  NET +307.2
+S7 mltf+cd0+persist5             460t   +262.5R  WR 29.1%  PF 1.87  avgW +4.21  avgL -0.93  R/t 0.571  DD  32.4  WSt  6  LSt 12   10.2/mo  NET -
+S8 mltf+mb1h10                   442t   +303.4R  WR 26.9%  PF 2.02  avgW +5.05  avgL -0.92  R/t 0.686  DD  39.3  WSt  5  LSt 17    9.8/mo  NET -
+S9 mltf+mb1h10+chop55            460t   +405.8R  WR 28.7%  PF 2.35  avgW +5.35  avgL -0.91  R/t 0.882  DD  38.2  WSt  5  LSt 17   10.2/mo  NET +335.6
+S10 mltf+persist2+mb1h10+chop55  452t   +347.0R  WR 28.5%  PF 2.17  avgW +4.98  avgL -0.92  R/t 0.768  DD  32.7  WSt  5  LSt 16   10.0/mo  NET -
+S11 their-OPTIMAL                515t   +429.8R  WR 28.0%  PF 2.25  avgW +5.37  avgL -0.92  R/t 0.835  DD  23.3  WSt  5  LSt 19   11.4/mo  NET +348.0
+S12 B3 k8 alone                  207t   +303.7R  WR 39.1%  PF 3.69  avgW +5.14  avgL -0.90  R/t 1.467  DD  15.5  WSt  4  LSt 15    4.6/mo  NET +258.3
+S13 B3+mltf                      207t   +303.7R  WR 39.1%  PF 3.69  avgW +5.14  avgL -0.90  R/t 1.467  DD  15.5  WSt  4  LSt 15    4.6/mo  NET -
+S14 B3+mltf+cd0                  212t   +298.8R  WR 38.2%  PF 3.53  avgW +5.14  avgL -0.90  R/t 1.409  DD  17.5  WSt  4  LSt 16    4.7/mo  NET -
+S15 B3+their-OPTIMAL             247t   +355.4R  WR 34.4%  PF 3.47  avgW +5.87  avgL -0.89  R/t 1.439  DD  12.0  WSt  7  LSt  9    5.5/mo  NET +300.4
+S16 B3+mltf+persist5             202t   +299.7R  WR 40.1%  PF 3.75  avgW +5.05  avgL -0.90  R/t 1.484  DD  24.8  WSt  6  LSt 12    4.6/mo  NET -
+S17 B3+halt6+mltf                216t   +325.2R  WR 39.8%  PF 3.81  avgW +5.13  avgL -0.89  R/t 1.506  DD  17.5  WSt  5  LSt 16    4.8/mo  NET -
+S18 B3+halt6+mltf+cd0            220t   +323.6R  WR 39.5%  PF 3.72  avgW +5.09  avgL -0.89  R/t 1.471  DD  17.5  WSt  5  LSt 16    4.9/mo  NET -
+S19 their-OPTIMAL+halt6          573t   +397.2R  WR 26.9%  PF 2.03  avgW +5.09  avgL -0.92  R/t 0.693  DD  31.5  WSt  5  LSt 18   12.7/mo  NET -

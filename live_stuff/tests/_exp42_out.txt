@@ -1,0 +1,64 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+MATRIX GATE - user lb30 w24 coarse matrix (ext sweep)
+  w24 ext1.5 coarse 265t g +231.6   OK (exp 265t +231.6)
+  w24 ext2.0 coarse 294t g +248.2   OK (exp 294t +248.2)
+  w24 ext2.5 coarse 304t g +231.7   OK (exp 304t +231.7)
+  w24 ext3.0 coarse 307t g +222.4   OK (exp 307t +222.4)
+
+PHASE 1 - wage sweep ext1.5 (fine NET: 1m fills+fee+slip+funding)
+  lb30      w 0h 349t NET   +196.3 npt+0.563 DD 23.6   OK (exp40c pin 349t +196.3)
+  lb30      w12h 305t NET   +147.6 npt+0.484 DD 27.1
+  lb30      w18h 282t NET   +160.4 npt+0.569 DD 22.3
+  lb30      w24h 265t NET   +185.0 npt+0.698 DD 19.4   OK (exp40c pin 265t +185.0)
+  lb30      w36h 234t NET   +166.7 npt+0.712 DD 21.8
+  lb30      w48h 194t NET   +181.6 npt+0.936 DD 17.1
+  -> lb30 argmax wage = 0h
+  A4        w 0h 359t NET   +203.3 npt+0.566 DD 24.8   OK (exp40c pin 359t +203.3)
+  A4        w12h 302t NET   +110.1 npt+0.365 DD 36.7
+  A4        w18h 282t NET   +217.8 npt+0.772 DD 19.5
+  A4        w24h 261t NET   +223.1 npt+0.855 DD 19.8   OK (exp40c pin 261t +223.1)
+  A4        w36h 225t NET   +203.3 npt+0.904 DD 16.5
+  A4        w48h 206t NET   +201.9 npt+0.980 DD 15.1
+  -> A4 argmax wage = 24h
+  OPT-cd10  w 0h 453t NET   +259.4 npt+0.573 DD 32.7   OK (exp40c pin 453t +259.4)
+  OPT-cd10  w12h 395t NET   +324.9 npt+0.823 DD 26.4
+  OPT-cd10  w18h 354t NET   +265.3 npt+0.750 DD 24.8
+  OPT-cd10  w24h 326t NET   +337.7 npt+1.036 DD 19.2   OK (exp40c pin 326t +337.7)
+  OPT-cd10  w36h 292t NET   +329.4 npt+1.128 DD 18.4
+  OPT-cd10  w48h 249t NET   +271.0 npt+1.088 DD 19.7
+  -> OPT-cd10 argmax wage = 24h
+  lb14      w 0h 351t NET   +148.0 npt+0.422 DD 23.4
+  lb14      w12h 310t NET   +151.2 npt+0.488 DD 18.8
+  lb14      w18h 290t NET   +160.5 npt+0.554 DD 17.4
+  lb14      w24h 272t NET   +193.7 npt+0.712 DD 15.7
+  lb14      w36h 240t NET   +187.7 npt+0.782 DD 15.8
+  lb14      w48h 202t NET   +146.3 npt+0.724 DD 28.4
+  -> lb14 argmax wage = 24h
+
+PHASE 2 - walk-forward on sweep ledgers (6 segs ~225d, fixed configs, fine NET)
+  lb30      w 0h 349t NET   +196.3 | segs  -29.6  +76.7  +18.6  +20.8  +50.7  +59.2 | worst  -29.6 | H1/H2   +69.0/ +127.4
+  lb30      w12h 305t NET   +147.6 | segs  -21.8  +62.1  -26.7  +24.5  +44.2  +65.3 | worst  -26.7 | H1/H2   +17.8/ +129.8
+  lb30      w18h 282t NET   +160.4 | segs  -22.8  +66.5  -23.9  +27.7  +52.0  +60.9 | worst  -23.9 | H1/H2   +24.3/ +136.1
+  lb30      w24h 265t NET   +185.0 | segs  -22.5  +87.7  -19.6  +28.1  +44.9  +66.4 | worst  -22.5 | H1/H2   +50.1/ +134.9
+  lb30      w36h 234t NET   +166.7 | segs  -21.4  +34.9  +22.9  +25.5  +48.6  +56.2 | worst  -21.4 | H1/H2   +39.7/ +127.0
+  lb30      w48h 194t NET   +181.6 | segs  -19.2  +21.9  +30.6  +30.8  +57.9  +59.6 | worst  -19.2 | H1/H2   +33.3/ +148.3
+  A4        w 0h 359t NET   +203.3 | segs  +17.8  +16.0  +19.5   +4.3  +41.6 +104.2 | worst   +4.3 | H1/H2   +57.4/ +145.9
+  A4        w12h 302t NET   +110.1 | segs  -37.2   +8.6  -30.5   +9.4  +52.6 +107.3 | worst  -37.2 | H1/H2   -54.9/ +165.1
+  A4        w18h 282t NET   +217.8 | segs   -4.7  +28.3  +12.4  +19.5  +59.0 +103.3 | worst   -4.7 | H1/H2   +37.9/ +179.8
+  A4        w24h 261t NET   +223.1 | segs   -1.1  +23.7  +22.0  +13.4  +56.0 +109.1 | worst   -1.1 | H1/H2   +46.6/ +176.5
+  A4        w36h 225t NET   +203.3 | segs   +3.3  +19.9  +25.9  +18.4  +64.8  +70.9 | worst   +3.3 | H1/H2   +53.5/ +149.9
+  A4        w48h 206t NET   +201.9 | segs   +9.4   +9.0  +32.9  +16.7  +65.6  +68.3 | worst   +9.0 | H1/H2   +52.6/ +149.3
+  OPT-cd10  w 0h 453t NET   +259.4 | segs   -4.9  +91.5  -17.1  +19.7  +77.7  +92.5 | worst  -17.1 | H1/H2  +108.5/ +150.9
+  OPT-cd10  w12h 395t NET   +324.9 | segs   +2.4  +94.2  +28.9  +26.5  +68.3 +104.7 | worst   +2.4 | H1/H2  +165.6/ +159.3
+  OPT-cd10  w18h 354t NET   +265.3 | segs  +32.6  +43.4  -25.7  +32.0  +76.6 +106.5 | worst  -25.7 | H1/H2   +90.4/ +175.0
+  OPT-cd10  w24h 326t NET   +337.7 | segs  +13.6  +91.9  +37.5  +21.4  +65.7 +107.6 | worst  +13.6 | H1/H2  +183.0/ +154.6
+  OPT-cd10  w36h 292t NET   +329.4 | segs  +17.3  +52.8  +36.8  +30.2  +76.4 +116.0 | worst  +17.3 | H1/H2  +147.0/ +182.4
+  OPT-cd10  w48h 249t NET   +271.0 | segs   +3.2  +33.2  +10.4  +25.1  +77.9 +121.3 | worst   +3.2 | H1/H2   +84.9/ +186.2
+  lb14      w 0h 351t NET   +148.0 | segs  -19.2  +34.8  +21.4  +21.9  +31.8  +57.3 | worst  -19.2 | H1/H2   +40.6/ +107.4
+  lb14      w12h 310t NET   +151.2 | segs   -8.3  +26.7  +13.2  +30.1  +27.2  +62.4 | worst   -8.3 | H1/H2   +34.0/ +117.2
+  lb14      w18h 290t NET   +160.5 | segs  -16.2  +32.4  +21.8  +28.1  +39.9  +54.5 | worst  -16.2 | H1/H2   +40.2/ +120.3
+  lb14      w24h 272t NET   +193.7 | segs   -8.4  +31.4  +24.8  +41.4  +37.3  +67.2 | worst   -8.4 | H1/H2   +51.8/ +141.9
+  lb14      w36h 240t NET   +187.7 | segs   -2.2  +36.2  +20.0  +42.8  +37.0  +54.0 | worst   -2.2 | H1/H2   +57.3/ +130.4
+  lb14      w48h 202t NET   +146.3 | segs  -26.9  +25.5  +22.0  +44.0  +36.0  +45.7 | worst  -26.9 | H1/H2   +22.4/ +124.0
+
+(exp42 done 106s)

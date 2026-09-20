@@ -57,6 +57,7 @@ def simulate_v18_experiments(
     exp_window_quality=0.0,      # Exp 8: skip bottom N% by swing magnitude
     exp_trail_mode="swing",      # Exp 9: "swing" / "mb20" / "atr" / "chandelier"
     exp_regime_for_halt=False,   # Exp 3 alt: also track regime per trade for adaptive
+    chop_lb=14,                  # HTF chop lookback (shipped=14, Exp 31 sweep: 50 best)
 ):
     """Modified v18 engine with experiment flags."""
     import bisect as bs
@@ -90,7 +91,7 @@ def simulate_v18_experiments(
     starts_b2 = [s for s, _, _, _, _ in intervals_b2]
 
     # --- Chop + ATR per LTF bar (C14 correct) ---
-    chop = _chop_series_1h(candles_htf, lb=14)
+    chop = _chop_series_1h(candles_htf, lb=chop_lb)
     atr_pct = _atr_pct_15m(candles_ltf)
     candle_ts_ltf = [int(c["ts"]) for c in candles_ltf]
     candle_ts_htf = [int(c["ts"]) for c in candles_htf]

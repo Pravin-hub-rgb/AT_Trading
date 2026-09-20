@@ -1,0 +1,15 @@
+loading fine 1m...
+=== Q2: cd0 inside OPTIMAL stack — OPTIMAL vs cd=10 variant (fine NET) ===
+  OPTIMAL cd0    515t NET   +348.0  WR 28.0%  DD  23.3  H1  +229.4 H2  +226.7
+  OPTIMAL cd10   453t NET   +282.2  WR 28.5%  DD  32.7  H1  +156.4 H2  +216.5
+
+=== Q1 fine: B3+params WITHOUT mltf (NET) ===
+  Q1-no-mltf  243t NET   +307.2  WR 35.0%  DD  12.0
+
+=== Q3: coarse->fine trade reconciliation (which trades eat the drop) ===
+  OPTIMAL   coarse 515t   +429.8 | fine 515t   +456.2
+            matched 515: R drift   +26.3 | vanished    +0.0 ({}) | added    +0.0
+  S15       coarse 247t   +355.4 | fine 248t   +355.0
+            matched 247: R drift    +0.0 | vanished    +0.0 ({}) | added    -0.4
+
+(exp28 fine done 36s)

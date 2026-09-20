@@ -1,0 +1,12 @@
+loading fine 1m...
+=== FINE NETs (production params) ===
+  references: anchor 351t NET +163.7 | their-OPTIMAL 515t NET +348.0
+  S15 B3+OPTIMAL        248t gross   +355.0  NET   +300.4  WR 34.3%  DD  12.0  H1  +245.1 H2  +109.9
+      per-year: {'2023': 96.2, '2024': 148.9, '2025': 66.1, '2026': 43.8}
+  S6 mltf+persist5      409t gross   +389.1  NET   +307.2  WR 32.0%  DD  33.4  H1  +202.8 H2  +186.3
+      per-year: {'2023': 92.6, '2024': 110.1, '2025': 90.8, '2026': 95.6}
+  S9 mltf+mb1h10+chop55  460t gross   +432.1  NET   +335.6  WR 28.7%  DD  38.2  H1  +249.6 H2  +182.5
+      per-year: {'2023': 81.6, '2024': 168.0, '2025': 71.3, '2026': 111.2}
+  S19 OPTIMAL+halt6     574t gross   +423.1  NET   +301.1  WR 26.8%  DD  31.5  H1  +211.1 H2  +212.0
+      per-year: {'2023': 95.2, '2024': 115.9, '2025': 77.2, '2026': 134.8}
+(exp26 fine done)

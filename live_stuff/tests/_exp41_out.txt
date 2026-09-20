@@ -1,0 +1,20 @@
+PHASE 1 - OPT-cd10 ext sweep incl missing 2.0 (coarse + fine)
+  OPT-cd10 w0  ext1.5 coarse 452t g +347.0 | fine 453t NET   +259.4 npt+0.573 DD 32.7
+  OPT-cd10 w0  ext2.0 coarse 475t g +362.4 | fine 476t NET   +269.2 npt+0.565 DD 27.1
+  OPT-cd10 w0  ext2.5 coarse 511t g +375.6 | fine 512t NET   +291.4 npt+0.569 DD 27.1
+  OPT-cd10 w24 ext1.5 coarse 325t g +397.6 | fine 326t NET   +337.7 npt+1.036 DD 19.2
+  OPT-cd10 w24 ext2.0 coarse 349t g +392.6 | fine 350t NET   +329.8 npt+0.942 DD 23.2
+  OPT-cd10 w24 ext2.5 coarse 382t g +371.9 | fine 383t NET   +315.5 npt+0.824 DD 22.2
+
+PHASE 2 - walk-forward: 6 equal segments, fixed configs (fine NET)
+  seg span ~225 days
+  lb30 w0 e1.5      349t NET   +196.3 | segs  -29.6  +76.7  +18.6  +20.8  +50.7  +59.2 | worst  -29.6 | DDs 17.5 10.7 11.7 19.1 10.1  6.5 | H1/H2   +69.0/ +127.4
+  lb30 w0 e2.5      377t NET   +231.1 | segs  -31.1 +100.1  +24.0  +16.0  +70.4  +51.6 | worst  -31.1 | DDs 18.5  8.6 13.3 22.9  5.2 10.9 | H1/H2   +95.2/ +135.9
+  lb30 w24 e2.5     303t NET   +179.1 | segs  -22.5  +86.0  -14.6  +17.5  +56.3  +56.4 | worst  -22.5 | DDs 16.5  8.3 23.6 11.7  5.2  7.5 | H1/H2   +50.0/ +129.1
+  A4 w24 e1.5       261t NET   +223.1 | segs   -1.1  +23.7  +22.0  +13.4  +56.0 +109.1 | worst   -1.1 | DDs 17.5 10.1 19.5 14.6  8.2  6.2 | H1/H2   +46.6/ +176.5
+  OPTcd0 w0 e1.5    515t NET   +322.5 | segs   +9.6 +109.3  +15.1  +10.5  +68.5 +109.5 | worst   +9.6 | DDs 20.4  9.9 14.7 18.9 14.0 10.5 | H1/H2  +174.1/ +148.4
+  OPTcd0 w24 e1.5   364t NET   +301.6 | segs   -0.3  +83.4  +24.3  +15.1  +62.3 +116.7 | worst   -0.3 | DDs 22.4  9.4 18.8 18.3 11.2  7.6 | H1/H2  +147.5/ +154.1
+  OPTcd10 w24 e1.5  326t NET   +337.7 | segs  +13.6  +91.9  +37.5  +21.4  +65.7 +107.6 | worst  +13.6 | DDs 16.2  8.5 17.3 15.4 10.2  6.4 | H1/H2  +183.0/ +154.6
+  OPTcd10 w24 e2.0  350t NET   +329.8 | segs   +9.7  +87.4  +32.7  +16.5  +71.9 +111.6 | worst   +9.7 | DDs 20.2  8.5 16.6 20.6  9.9 10.5 | H1/H2  +168.6/ +161.3
+
+(exp41 done 77s)

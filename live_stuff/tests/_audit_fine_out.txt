@@ -1,0 +1,11 @@
+loading fine 1m...
+  1945711 fine bars
+=== FINE: their pieces on shipped engine ===
+  references: v18 340t NET +182.3 | their claims: OPTIMAL 515t NET +322.5
+  OPTIMAL combo     515t gross   +456.2  NET   +348.0  WR 28.0%  DD  23.3  H1  +229.4 H2  +226.7
+      per-year: {'2023': 94.4, '2024': 135.0, '2025': 84.4, '2026': 142.3}
+  multi-LTF alone   410t gross   +367.0  NET   +282.2  WR 31.5%  DD  28.8  H1  +186.3 H2  +180.7
+      per-year: {'2023': 107.0, '2024': 79.4, '2025': 88.7, '2026': 92.0}
+  SAFE combo        368t gross   +267.3  NET   +194.0  WR 25.0%  DD  30.0  H1  +110.6 H2  +156.7
+      per-year: {'2023': 58.6, '2024': 52.1, '2025': 38.4, '2026': 118.3}
+(fine audit done)

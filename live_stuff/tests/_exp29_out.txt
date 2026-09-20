@@ -1,0 +1,17 @@
+chains ready (6s); loading fine...
+IDENTITY GATE OK (351t exact)
+
+  v18 anchor (production)                        351t NET   +148.0  npt +0.422  WR 27.6%  PF 2.02  DD  23.4
+  their-OPTIMAL (mltf+persist2+cd0+chop55+mb1h10)  515t NET   +322.5  npt +0.626  WR 28.0%  PF 2.33  DD  23.3
+  mltf+mb1h10+chop55 (S9)                        460t NET   +312.2  npt +0.679  WR 28.7%  PF 2.44  DD  38.2
+  multi-LTF+persist5                             409t NET   +287.5  npt +0.703  WR 32.0%  PF 2.52  DD  33.4
+  OPTIMAL+halt6 (S19)                            574t NET   +273.7  npt +0.477  WR 26.8%  PF 2.09  DD  31.5
+  multi-LTF alone                                421t NET   +197.6  npt +0.469  WR 29.5%  PF 2.12  DD  23.4
+  B3 k8-close (post-fix)                         206t NET    +59.6  npt +0.289  WR 36.4%  PF 1.85  DD  19.6
+  B3+halt6 combo (post-fix)                      213t NET    +73.2  npt +0.343  WR 37.6%  PF 1.97  DD  20.6
+  B3-OPT lb50 halt6 cd10 (post-fix)              226t NET   +112.5  npt +0.498  WR 33.6%  PF 2.21  DD  12.2
+  (52,60,trail65) aggressive (post-fix)          229t NET   +146.1  npt +0.638  WR 32.8%  PF 2.42  DD  13.9
+  B3 k4 h3 lb14 p0 (post-fix best B3)            202t NET   +109.1  npt +0.540  WR 34.7%  PF 2.32  DD   9.4
+  S16 B3+mltf+persist5 (post-fix)                200t NET    +55.9  npt +0.279  WR 37.0%  PF 1.85  DD  26.6
+
+(exp29 done 61s — results saved)

@@ -1,0 +1,67 @@
+======================================================================
+V18 INTEGRITY VERIFICATION — BYBIT PERP — REAL MONEY CHECKS
+======================================================================
+
+[1/10] Running v18 engine...
+  Total trades: 351
+  Total R: +238.0
+
+[2/11] R lower bound (no trade worse than -1R)...
+  Worst trade: -1.000R
+  Trades < -1R: 0
+  PASS: No trade worse than -1R
+
+[3/11] R upper bound (winners above 3R)...
+  Best trade: 43.56R
+  Trades > 3R: 39
+  Trades > 10R: 12
+  Top runners: ['43.6R', '37.0R', '31.8R', '31.4R', '18.7R']
+  INFO: Winners above 3R expected (MB50 trail, no cap on LTF)
+
+[4/11] Streak halt mechanism (skip-entry verification)...
+  halt=0 trades: 390
+  halt=3 trades: 351
+  Skipped entries: 39
+  Losses without halt: 280
+  Losses with halt: 254
+  Losses removed: 26
+  PASS: Streak halt working (39 entries skipped, 26 losses removed)
+
+[5/11] No duplicate trades...
+  Unique trade keys: 351
+  Duplicates: 0
+  PASS: No duplicate trades
+
+[6/11] Exit reasons (sl/trail/tp/cap only)...
+  Open trades at end: 0
+  Exit reasons: {'sl': 148, 'trail': 203}
+  PASS: All exit reasons valid
+
+[7/11] No overlapping trades...
+  Overlapping trades: 0
+  PASS: No overlapping trades
+
+[8/11] Win rate and profit factor...
+  Win rate: 27.6% (97W/254L)
+  PF: 2.02
+  Gross: +471.4R / -233.4R
+  PASS: Win rate and PF in expected range
+
+[9/11] All years positive...
+  Per-year R:
+    2023: +38.8R [PASS]
+    2024: +81.1R [PASS]
+    2025: +38.7R [PASS]
+    2026: +79.4R [PASS]
+  PASS: All years positive
+
+[10/11] SL exits exactly -1R...
+  PASS: SL exits all exactly -1R
+
+[11/11] Cooldown gaps (20 bars after loss)...
+  Cooldown violations (< 9 bars): 0
+  PASS: Cooldown respected (bar-index-based, 9-bar tolerance)
+
+======================================================================
+ALL 10 CHECKS PASSED — V18 INTEGRITY VERIFIED
+======================================================================

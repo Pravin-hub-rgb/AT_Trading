@@ -1,0 +1,63 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+
+PHASE A - prefill wage validation (user matrix, lb30 w24 ext sweep)
+  lb30       ext1.5 coarse 349t gross   +260.8
+  lb30       ext2.0 coarse 370t gross   +284.1
+  lb30       ext2.5 coarse 378t gross   +297.0
+  lb30       ext3.0 coarse 382t gross   +299.3
+  lb30+w24   ext1.5 coarse 265t gross   +231.6   OK (exp 265t +231.6)
+  lb30+w24   ext2.0 coarse 294t gross   +248.2   OK (exp 294t +248.2)
+  lb30+w24   ext2.5 coarse 304t gross   +231.7   OK (exp 304t +231.7)
+  lb30+w24   ext3.0 coarse 307t gross   +222.4   OK (exp 307t +222.4)
+  A4         ext1.5 coarse 357t gross   +272.4
+  A4         ext2.5 coarse 387t gross   +213.6
+  A4+w24     ext1.5 coarse 259t gross   +272.8
+  A4+w24     ext2.5 coarse 289t gross   +266.6
+
+PHASE B - wage x ext off-diagonals (coarse, gross)
+  lb30      w0  ext1.5 349t gross   +260.8
+  lb30      w0  ext2.0 370t gross   +284.1
+  lb30      w0  ext2.5 378t gross   +297.0
+  lb30      w24 ext1.5 265t gross   +231.6
+  lb30      w24 ext2.0 294t gross   +248.2
+  lb30      w24 ext2.5 304t gross   +231.7
+
+  A4        w0  ext1.5 357t gross   +272.4
+  A4        w0  ext2.5 387t gross   +213.6
+  A4        w24 ext1.5 259t gross   +272.8
+  A4        w24 ext2.5 289t gross   +266.6
+
+  OPT-cd0   w0  ext1.5 515t gross   +429.8
+  OPT-cd0   w0  ext2.5 583t gross   +396.6
+  OPT-cd0   w24 ext1.5 363t gross   +372.0
+  OPT-cd0   w24 ext2.5 425t gross   +372.0
+
+  OPT-cd10  w0  ext1.5 452t gross   +347.0
+  OPT-cd10  w0  ext2.5 511t gross   +375.6
+  OPT-cd10  w24 ext1.5 325t gross   +397.6
+  OPT-cd10  w24 ext2.5 382t gross   +371.9
+
+PHASE C - fine (1m fills, funding-inclusive NET)
+  lb30      w0  ext1.5 349t NET   +196.3 npt+0.563 DD 23.6
+  lb30      w0  ext2.0 369t NET   +218.2 npt+0.591 DD 24.6
+  lb30      w0  ext2.5 377t NET   +231.1 npt+0.613 DD 24.6
+  lb30      w24 ext1.5 265t NET   +185.0 npt+0.698 DD 19.4
+  lb30      w24 ext2.0 293t NET   +197.2 npt+0.673 DD 23.6
+  lb30      w24 ext2.5 303t NET   +179.1 npt+0.591 DD 23.6
+
+  A4        w0  ext1.5 359t NET   +203.3 npt+0.566 DD 24.8
+  A4        w0  ext2.5 390t NET   +141.3 npt+0.362 DD 28.4
+  A4        w24 ext1.5 261t NET   +223.1 npt+0.855 DD 19.8
+  A4        w24 ext2.5 292t NET   +212.6 npt+0.728 DD 21.8
+
+  OPT-cd0   w0  ext1.5 515t NET   +322.5 npt+0.626 DD 23.3
+  OPT-cd0   w0  ext2.5 585t NET   +290.0 npt+0.496 DD 25.0
+  OPT-cd0   w24 ext1.5 364t NET   +301.6 npt+0.828 DD 27.7
+  OPT-cd0   w24 ext2.5 426t NET   +302.6 npt+0.710 DD 25.2
+
+  OPT-cd10  w0  ext1.5 453t NET   +259.4 npt+0.573 DD 32.7
+  OPT-cd10  w0  ext2.5 512t NET   +291.4 npt+0.569 DD 27.1
+  OPT-cd10  w24 ext1.5 326t NET   +337.7 npt+1.036 DD 19.2
+  OPT-cd10  w24 ext2.5 383t NET   +315.5 npt+0.824 DD 22.2
+
+(exp40c done 139s)

@@ -64,7 +64,8 @@ def build_module():
                   '    exp_persist=0,\n'
                   '    exp_mltf=False,\n'
                   '    exp27_mode=None,\n'
-                  '    exp31_lb=0,\n')
+                  '    exp31_lb=0,\n'
+                  '    exp_wage_h=0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -194,6 +195,20 @@ def build_module():
     t6e = '    chop=_chop_series_1h(candles_htf, lb=14)\n'
     assert s.count(t6e) == 1, "chop lb call"
     s = s.replace(t6e, '    chop=_chop_series_1h(candles_htf, lb=(exp31_lb or 14))\n')
+    # 3g) N5/N6 wage gate: skip entries inside HTF windows younger than
+    #     exp_wage_h hours. Age = signal-bar ts - RAW window start ts (the
+    #     window's flip/b2 1h entry-bar OPEN; no +2700 shift). This is the
+    #     FINAL convention: validated 4/4 exact vs the user's coarse matrix
+    #     (265/294/304/307t) and 4/4 vs the user's fine table (196.3/
+    #     231.1/197.2/179.1). See docs/EXP40C_EXP41_WAGE_EXT.md sections
+    #     3.1 and 4.3. The deleted Exp40/41 harness's N5 rows (275t/+224.5
+    #     etc.) used an unrecoverable convention and are non-authoritative;
+    #     earlier +2700, closed-candle, canonical-parent and leg-anchor
+    #     variants were all tested and rejected (audit trail: doc sec 4.3).
+    t6f = '        if not (s + 2700 < bar_ts <= e + 2700): continue\n'
+    assert s.count(t6f) == 1, "window membership"
+    s = s.replace(t6f, t6f +
+                  '        if exp_wage_h>0 and (bar_ts-s)/3600.0 < exp_wage_h: continue\n')
     # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t8) == 1, "chop init"

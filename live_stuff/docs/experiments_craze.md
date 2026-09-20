@@ -632,6 +632,32 @@ Scripts: `exp32_final_tuning.py`, `exp32b_trail_fine.py`. Base: B3-OPT+halt6 cd1
 
 ---
 
+### Exp 36: Reconcile the other lane's audit — 2 claims confirmed EXACTLY, 1 REFUTED (v36)
+Script: `exp36_reconcile.py` (fine fills, funding-inclusive).
+
+**(a) anchor lb=30 fine: NET +196.3 — CONFIRMED, exact match with their claim.** 349t, gross +287.1, fees 73.6, funding 17.2, DD 23.6. **This is a NEW verified single-position leader: the shipped engine + ONE parameter (lb 14→30), no B3, no mltf, cd10 — +196.3 net vs anchor-lb14's +148.0 (+48.3 from the single lb change, fine-validated on both lanes).**
+**(c) B3-OPT lb50 halt3 fine: NET +115.4 — CONFIRMED, exact match.** (Note: exp35's grid accidentally ran at chop58 — its halt3-lb50 row (+78.0) was chop58, not chop55. At chop55 the post-fix number is +115.4. Labeling bug in exp35, now documented.)
+**(b) their "mltf cd=10: ZERO overlapping positions, identical to single" — REFUTED on our harness.** Measured concurrent positions: **mltf cd10 (mb20): max 5 open; S9 (mb10+chop55): max 4 open.** And mltf-cd10 (421t) != anchor (351t) — not identical. The concurrency caveat is NOT moot for cd10 — it applies to ALL mltf configs. Concurrency design (or caps) remains mandatory before live.
+
+**Updated honest leaderboard (fine, funding-inclusive, post-fix):**
+| # | Config | NET | DD | Position |
+|---|---|---|---|---|
+| 1 | their-OPTIMAL | +322.5 | 23.3 | multi (≤5), cd0 |
+| 2 | S9 (mltf+mb1h10+chop55) | +312.2 | 38.2 | multi (≤4), cd10 |
+| 3 | multi-LTF+persist5 | +287.5 | 33.4 | multi |
+| 4 | OPTIMAL+halt6 | +273.7 | 31.5 | multi, cd0 |
+| 5 | multi-LTF alone | +197.6 | 23.4 | multi (≤5), cd10 |
+| **6** | **anchor lb30 (shipped + lb 14→30)** | **+196.3** | 23.6 | **single, cd10 — best no-mltf, no-B3** |
+| 7 | anchor lb14 (production) | +148.0 | 23.4 | single |
+| 8 | (52,60,trail65) | +146.1 | 13.9 | single |
+| 9 | B3-OPT lb50 halt3 | +115.4 | 10.2 | single |
+| 10 | B3-OPT lb50 halt6 | +112.5 | 12.2 | single |
+
+**Remaining before final pick:** (i) stress battery + per-year/both-halves verification for anchor-lb30 (now the leading single-position candidate); (ii) concurrency-cap design for the mltf leaders; (iii) cd0 latency validation for OPTIMAL. The B3 limit-order salvage idea stays logged.
+**Status: DONE.**
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**
@@ -656,5 +682,17 @@ Scripts: `exp32_final_tuning.py`, `exp32b_trail_fine.py`. Base: B3-OPT+halt6 cd1
 - Commits: `c3749b1`, `e5a330f`, `425d400` (engine `backend/` untouched; other bot's files untouched)
 
 **Baselines for next session:** v18 anchor 340t/+182.3R net fine AND **B3 potential base** 206t/+278.6R net fine (user-ruled; experiments report vs both). Best remaining candidate: halt=6 (+5.6R net, DD −35% — ruling pending, composable with B3). Next experiments: B3+halt=6 combo, Exp 18 3-Mark Judgment (mark stream verified), Exp 15 sweep-reclaim, fine per-month deep-dive of B3's 2026 shortfall.
+
+---
+
+## Cross-references: Other Lane Experiments
+
+> The following experiments were run by the other lane (not CRAZE). Listed here
+> for completeness; full records live in their own docs.
+
+### Exp N5/N6: Wage Gate + ext_stop Matrix (other lane)
+- **Full record:** [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md)
+- **Key findings:** w24 is base-dependent (hurts lb30 −11.3R, helps A4 +19.8R). ext2.5 adopted on lb30 (+34.8R) and OPT-cd10 (+32.0R). Anti-synergy: w0 → wide ext, w24 → tight ext. Never mix.
+- **Status:** Validated rebuild confirmed coarse 4/4 + fine 5/5. N5 deleted-harness numbers non-authoritative.
 
 

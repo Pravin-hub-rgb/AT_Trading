@@ -1,0 +1,15 @@
+loading fine 1m...
+  1945711 fine bars
+=== FINE NETs at PRODUCTION params (chop=58) ===
+  references: v18 production fine gross +238.03 (351t)
+  v18 anchor        351t gross   +238.0  NET   +163.7  WR 27.6%  DD  23.4  H1  +119.9 H2  +118.1
+      per-year: {'2023': 38.8, '2024': 81.1, '2025': 37.6, '2026': 80.5}
+  B3 k8-close       207t gross   +303.7  NET   +258.3  WR 39.1%  DD  15.5  H1  +177.5 H2  +126.1
+      per-year: {'2023': 64.7, '2024': 112.8, '2025': 69.9, '2026': 56.3}
+  COMBO B3+halt6    216t gross   +325.2  NET   +278.1  WR 39.8%  DD  17.5  H1  +183.1 H2  +142.1
+      per-year: {'2023': 61.7, '2024': 121.4, '2025': 83.0, '2026': 59.1}
+  multi-LTF alone   421t gross   +306.5  NET   +217.0  WR 29.5%  DD  23.4  H1  +171.6 H2  +134.9
+      per-year: {'2023': 91.1, '2024': 80.5, '2025': 67.3, '2026': 67.5}
+  their OPTIMAL     515t gross   +456.2  NET   +348.0  WR 28.0%  DD  23.3  H1  +229.4 H2  +226.7
+      per-year: {'2023': 94.4, '2024': 135.0, '2025': 84.4, '2026': 142.3}
+(exp25 fine done)

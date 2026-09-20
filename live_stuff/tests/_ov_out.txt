@@ -1,0 +1,3 @@
+multi-LTF alone (cd10): n=410 | max concurrent=5 | bars-at-concurrency: {0: 40.2, 1: 47.4, 2: 8.9, 3: 2.3, 4: 0.9, 5: 0.2}
+OPTIMAL (cd0+mltf+mb1h10+chop55+persist2): n=515 | max concurrent=5 | bars-at-concurrency: {0: 35.1, 1: 45.6, 2: 13.7, 3: 4.2, 4: 1.2, 5: 0.2}
+(overlap audit done)
