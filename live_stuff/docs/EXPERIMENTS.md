@@ -6,7 +6,11 @@
 **Params:** sl_buf=0.01, chop=58.0, cd=10, halt=3, ext_stop=1.5
 **Costs:** Bybit taker 0.055%/side, entry slip 0.005%, exit slip 0.01%, funding 0.01%/8h
 **Reconciled:** Both lanes confirmed identical anchor (351t/+238.0R gross)
-**⚠️ B3 BUG FIXED:** Entry price used signal bar close instead of trigger bar close. All pre-fix B3 numbers inflated ~3-4x. See [EXPERIMENT_RESULTS.md §17](EXPERIMENT_RESULTS.md#17-post-fix-results-b3-entry-price-bug-fixed).
+
+> **Run any experiment:** `python live_stuff/tests/run_experiment.py <key>`
+> **List all:** `python live_stuff/tests/run_experiment.py --list`
+> **All results:** `python live_stuff/tests/run_experiment.py --all`
+> **Configs:** `live_stuff/tests/experiment_registry.py`
 
 > **Full results doc:** [EXPERIMENT_RESULTS.md](EXPERIMENT_RESULTS.md)
 
@@ -18,29 +22,34 @@
 
 | # | Config | Tr | Gross | NET | WR | avgW | avgL | PF | DD | maxLs | avgR | H1 | H2 | 2023 | 2024 | 2025 | 2026 | Cap |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **their-OPTIMAL+cap3** | 503 | +456.7 | **+326.8** | 28.0% | +5.61 | -0.92 | 2.36 | 21.8 | 18 | +0.91 | +228.9 | +227.8 | 93.9 | 135.0 | 87.8 | 140.0 | 3 |
-| 2 | their-OPTIMAL (no cap) | 515 | +456.2 | +322.5 | 28.0% | +5.55 | -0.92 | 2.33 | 23.3 | 19 | +0.89 | +229.4 | +226.7 | 94.4 | 135.0 | 84.4 | 142.3 | - |
-| 3 | **S9 mltf+mb10+chop55** | 460 | +432.1 | **+312.2** | 28.7% | +5.55 | -0.91 | 2.44 | 38.2 | 17 | +0.94 | +249.6 | +182.5 | 81.6 | 168.0 | 71.3 | 111.2 | - |
-| 4 | mltf+persist5 cd10 | 409 | +389.1 | +287.5 | 32.0% | +4.93 | -0.92 | 2.52 | 33.4 | 11 | +0.95 | +202.8 | +186.3 | 92.6 | 110.1 | 90.8 | 95.6 | - |
-| 5 | OPTIMAL+halt6 (S19) | 574 | +423.1 | +273.7 | 26.8% | — | — | — | 31.5 | — | — | — | — | — | — | — | — | - |
-| 6 | lb30+mltf+chop55+mb10+cd10 | 427 | +373.4 | +264.2 | 29.5% | — | — | — | 27.5 | — | — | — | — | — | — | — | — | - |
-| 7 | S7 mltf+pers5+cd0 | 477 | +357.6 | +236.1 | 27.0% | — | — | — | 26.4 | — | — | — | — | — | — | — | — | - |
-| 8 | mltf alone (mb20+chop58) | 421 | +306.5 | +197.6 | 29.5% | — | — | — | 23.4 | — | — | — | — | — | — | — | — | - |
-| 9 | **anchor lb=30 + ext2.5 (NEW single-best)** | 377 | +323.3 | **+231.1** | 31.0% | — | — | — | 24.6 | — | — | +169.0 | +154.3 | 22.9 | 146.1 | 69.4 | 84.9 | - |
-| 10 | **anchor lb=30** | 349 | +287.1 | **+196.3** | 29.8% | +4.97 | -0.94 | 2.25 | 23.6 | 11 | +0.82 | +143.9 | +143.2 | 22.7 | 121.2 | 52.2 | 91.0 | - |
-| 11 | A4 lb30+pers2+chop55+mb10 | 359 | +297.3 | +203.3 | 26.2% | +5.74 | -0.92 | 2.23 | 24.8 | 17 | +0.83 | +131.3 | +166.0 | 65.2 | 66.1 | 50.3 | 115.6 | - |
-| 12 | anchor lb=14 (production) | 351 | +238.0 | +148.0 | 27.6% | +4.86 | -0.92 | 2.02 | 23.4 | 27 | +0.68 | +119.9 | +118.1 | 38.8 | 81.1 | 37.6 | 80.5 | - |
-| 13 | **(52,60,tr65) aggressive** | 239 | +163.0 | **+116.1** | 34.3% | +3.61 | -0.84 | 2.23 | 13.9 | 14 | +0.68 | +100.1 | +62.9 | 38.0 | 62.2 | 29.7 | 33.2 | - |
-| 14 | B3-OPT lb50 halt3 | 214 | +157.3 | +115.4 | 35.0% | +3.69 | -0.86 | 2.32 | 10.2 | 10 | +0.74 | +80.6 | +76.7 | 35.7 | 44.9 | 43.7 | 33.0 | - |
-| 15 | B3-OPT lb50 halt6 | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
-| 16 | (55,50,tr50) conservative | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
-| 17 | B3-OPT lb14 halt3 | 238 | +125.2 | +80.0 | 35.0% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
-| 18 | B3-OPT lb14 halt6 | 249 | +124.3 | +76.0 | 33.6% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
-| 19 | S15 B3+mltf+pers2+cd0 | 245 | +114.2 | +66.8 | 29.8% | +3.58 | -0.86 | 1.78 | 14.6 | 12 | +0.47 | +73.8 | +40.4 | 28.5 | 45.4 | 29.7 | 10.7 | - |
+| 1 | **OPT-cd10 + w24 + ext1.5** | 326 | — | **+337.7** | — | — | — | — | 19.2 | — | — | — | — | — | — | — | — | - |
+| 2 | **their-OPTIMAL+cap3** | 503 | +456.7 | **+326.8** | 28.0% | +5.61 | -0.92 | 2.36 | 21.8 | 18 | +0.91 | +228.9 | +227.8 | 93.9 | 135.0 | 87.8 | 140.0 | 3 |
+| 3 | their-OPTIMAL (no cap) | 515 | +456.2 | +322.5 | 28.0% | +5.55 | -0.92 | 2.33 | 23.3 | 19 | +0.89 | +229.4 | +226.7 | 94.4 | 135.0 | 84.4 | 142.3 | - |
+| 4 | **S9 mltf+mb10+chop55** | 460 | +432.1 | **+312.2** | 28.7% | +5.55 | -0.91 | 2.44 | 38.2 | 17 | +0.94 | +249.6 | +182.5 | 81.6 | 168.0 | 71.3 | 111.2 | - |
+| 5 | mltf+persist5 cd10 | 409 | +389.1 | +287.5 | 32.0% | +4.93 | -0.92 | 2.52 | 33.4 | 11 | +0.95 | +202.8 | +186.3 | 92.6 | 110.1 | 90.8 | 95.6 | - |
+| 6 | OPTIMAL+halt6 (S19) | 574 | +423.1 | +273.7 | 26.8% | — | — | — | 31.5 | — | — | — | — | — | — | — | — | - |
+| 7 | lb30+mltf+chop55+mb10+cd10 | 427 | +373.4 | +264.2 | 29.5% | — | — | — | 27.5 | — | — | — | — | — | — | — | — | - |
+| 8 | S7 mltf+pers5+cd0 | 477 | +357.6 | +236.1 | 27.0% | — | — | — | 26.4 | — | — | — | — | — | — | — | — | - |
+| 9 | **anchor lb=30 + ext2.5 (single-position best)** | 377 | +323.3 | **+231.1** | 31.0% | — | — | — | 24.6 | — | — | +169.0 | +154.3 | 22.9 | 146.1 | 69.4 | 84.9 | - |
+| 10 | mltf alone (mb20+chop58) | 421 | +306.5 | +197.6 | 29.5% | — | — | — | 23.4 | — | — | — | — | — | — | — | — | - |
+| 11 | **anchor lb=30** | 349 | +287.1 | **+196.3** | 29.8% | +4.97 | -0.94 | 2.25 | 23.6 | 11 | +0.82 | +143.9 | +143.2 | 22.7 | 121.2 | 52.2 | 91.0 | - |
+| 12 | A4 lb30+pers2+chop55+mb10 | 359 | +297.3 | +203.3 | 26.2% | +5.74 | -0.92 | 2.23 | 24.8 | 17 | +0.83 | +131.3 | +166.0 | 65.2 | 66.1 | 50.3 | 115.6 | - |
+| 13 | anchor lb=14 (production) | 351 | +238.0 | +148.0 | 27.6% | +4.86 | -0.92 | 2.02 | 23.4 | 27 | +0.68 | +119.9 | +118.1 | 38.8 | 81.1 | 37.6 | 80.5 | - |
+| 14 | **(52,60,tr65) aggressive** | 239 | +163.0 | **+116.1** | 34.3% | +3.61 | -0.84 | 2.23 | 13.9 | 14 | +0.68 | +100.1 | +62.9 | 38.0 | 62.2 | 29.7 | 33.2 | - |
+| 15 | B3-OPT lb50 halt3 | 214 | +157.3 | +115.4 | 35.0% | +3.69 | -0.86 | 2.32 | 10.2 | 10 | +0.74 | +80.6 | +76.7 | 35.7 | 44.9 | 43.7 | 33.0 | - |
+| 16 | B3-OPT lb50 halt6 | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
+| 17 | (55,50,tr50) conservative | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
+| 18 | B3-OPT lb14 halt3 | 238 | +125.2 | +80.0 | 35.0% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
+| 19 | B3-OPT lb14 halt6 | 249 | +124.3 | +76.0 | 33.6% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
+| 20 | S15 B3+mltf+pers2+cd0 | 245 | +114.2 | +66.8 | 29.8% | +3.58 | -0.86 | 1.78 | 14.6 | 12 | +0.47 | +73.8 | +40.4 | 28.5 | 45.4 | 29.7 | 10.7 | - |
+| 21 | **A4 + w24 + ext1.5 (single risk-adjusted best)** | 261 | +257.0g | **+223.1** | 33.0% | — | — | — | 19.8 | — | — | — | — | — | — | — | — | - |
+| 22 | **lb14 + w24 + ext1.5 (sleep-well)** | 272 | — | **+193.7** | — | — | — | — | 15.7 | — | — | — | — | — | — | — | — | - |
+
+> Row 1 is multi-position (mltf, needs concurrency cap). Rows 21-22 are single-position wage-gated variants from exp40c/42. Full wage × ext_stop matrix in [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md).
 
 ### Key Post-Fix Findings
 
-1. **FINAL ANSWER: their-OPTIMAL + cap3 = +326.8 / DD 21.8 / NET/DD 15.0** — both lanes signed
+1. **FINAL ANSWER: OPT-cd10 + w24 + ext1.5 = +337.7 / DD 19.2** — multi-position, needs concurrency cap; see row 1
 2. **Multi-LTF configs are the real leaders** — their-OPTIMAL (+322.5 uncapped) and S9 (+312.2) never used B3, unaffected by the fix
 3. **B3 doesn't help anything** — best B3 (aggressive +116.1) still loses to anchor lb=30 (+196.3) by 80R
 4. **S15 (B3+multi-LTF) collapsed** — from +300.4 to +66.8. B3 + multi-LTF is dead
@@ -49,8 +58,9 @@
 7. **chop veto REJECTED** — helps anchor (+9.8R) but hurts OPTIMAL (-77.5R)
 8. **atrpct veto DEAD** — zero trades filtered on lb14 base
 9. **Edge is real but modest** — ~0.5-0.6R/trade across all configs
-10. **wage>=24h gate SUPERSEDED (N5)** — worked at ext1.5 (+25 to +54R on all 3 bases) but was a workaround for a too-tight ext gate, not an edge by itself
+10. **wage gate is base-dependent** — helps A4 (+19.8R at w24) and OPT-cd10 (+78.3R at w24), hurts lb30 (−11.3R at w24). Not a universal filter
 11. **ext_stop 1.5→2.5 ADOPTED (N6)** — new single-best lb30+ext2.5 = +231.1 / DD 24.6 (+34.8 over stock). w24 + wide ext is anti-synergistic (buying the top)
+12. **OPT-cd10 + w24 + ext1.5 is the overall champion** — +337.7 / DD 19.2, zero losing WF segments. Multi-position, needs concurrency cap. See row 1
 
 ### Multi-LTF Caveats
 
@@ -71,8 +81,9 @@
 | 2 | Regime Persistence=5 | 339 | +261.3 | +172.4 | 28.9% | +24.4R | 31.2R | Good |
 | 8 | min_bars 1h=10 + chop=55 | 377 | +273.8 | +179.6 | 27.6% | +31.6R | 34.2R | Good |
 | 14 | B3 k8 confirmation | 206 | +322.2 | ~+80 | 40.8% | ~-68R | 15.5R | B3 bug inflated pre-fix |
-| 24 | **their-OPTIMAL (multi-LTF)** | 515 | +456.2 | **+322.5** | 28.0% | +174.5R | 23.3R | **#1 NET (concurrency caveat)** |
-| 24c | **their-OPTIMAL + cap3** | 503 | +456.7 | **+326.8** | 28.0% | +178.8R | 21.8R | **FINAL ANSWER** |
+| 24 | **their-OPTIMAL (multi-LTF)** | 515 | +456.2 | **+322.5** | 28.0% | +174.5R | 23.3R | #2 NET (concurrency caveat) |
+| 25 | **OPT-cd10 + w24 + ext1.5** | 326 | — | **+337.7** | — | — | 19.2R | **#1 OVERALL CHAMPION** (multi, needs cap) |
+| 24c | **their-OPTIMAL + cap3** | 503 | +456.7 | **+326.8** | 28.0% | +178.8R | 21.8R | **#2 multi (needs cap)** |
 | 24b | S9 (mltf+mb10+chop55) | 460 | +432.1 | **+312.2** | 28.7% | +164.2R | 38.2R | #2 NET (concurrency caveat) |
 | 31 | B3-OPT lb50 halt3 | 214 | +157.3 | **+115.4** | 35.0% | -32.6R | 10.2R | Best single B3 |
 | 32 | (52,60,trail65) aggressive | 239 | +163.0 | **+116.1** | 34.3% | -32.0R | 13.9R | Best B3 variant |

@@ -362,94 +362,93 @@ cd=0 adds ~3,600 trades/year. At 0.055% taker fee x 2 sides = 0.11% per trade. O
 
 ## 8. Test File Reference
 
-| File | Purpose | Key Output |
-|---|---|---|
-| `tests/test_experiments.py` | Core experiment harness (v18 engine with experiment flags) | Individual experiment results |
-| `tests/test_combos.py` | Combo experiment runner | Multi-flag combination results |
-| `tests/test_sweep.py` | 5-variable single param sweep | Single-param sensitivity |
-| `tests/test_sweep2.py` | 288-combo focused grid sweep | Grid search results |
-| `tests/test_deepdive.py` | Multi-LTF + Persist + min_bars sweep | Full matrix sweep results |
-| `tests/test_mb_sweep.py` | Full min_bars 15m x 1h matrix (40 combos) | min_bars optimal values |
-| `tests/test_final_sweep.py` | 5-phase chained param sweep | Optimal param discovery |
-| `tests/test_optimal.py` | True optimal combo (chained params) | Final optimal R |
-| `tests/test_diagnose.py` | sl_buf inflation + signal filtering audit | R-inflation check |
-| `tests/test_diagnose2.py` | R-inflation USD check + walk-forward | Walk-forward results |
-| `tests/test_diagnose3.py` | Rolling WF + Bootstrap CI + trade audit | Robustness validation |
-| `tests/test_wf3.py` | Expanding-window WF + chop/mb sensitivity | Sensitivity analysis |
-| `tests/test_full_stats.py` | Comprehensive stats for all 15 configs | Full stats table |
-| `tests/test_combo_wf_stats.py` | Combo + rolling WF stats | Combo validation |
+### Active Files
 
-### Experiment Harness Architecture
+| File | Purpose |
+|---|---|
+| `run_experiment.py` | **Single entry point** — run any experiment by key |
+| `experiment_registry.py` | All experiment configs as data dicts (no code) |
+| `test_experiments_craze.py` | Engine patcher (source of truth for all experiment flags) |
+| `exp_deep_audit.py` | Full pre-live audit (9 test categories, run via `--audit`) |
+| `exp43_loss_autopsy.py` | Loss mechanism analysis |
+| `exp48_leg_progress.py` | Leg-progress gate (price-space investigation) |
+| `exp49_partial_champion.py` | Partial exit champion reproduction |
+| `exp40c_wage_gate.py` | Wage gate harness (has `run_coarse`, `fund` helpers) |
+| `exp_la*.py` | Loss autopsy series (trail, partial, recover, entry, modes, atr, combos) |
 
-`test_experiments.py` contains `simulate_v18_experiments()` which wraps the v18 engine with pluggable experiment flags:
+### Archived Files
 
-| Flag | Default | Effect |
-|---|---|---|
-| `exp_dual_active` | False | Allow both FLIP and B2 windows simultaneously |
-| `exp_regime_persist` | 0 | Persist regime decision for N LTF bars |
-| `exp_adaptive_halt` | False | Reset loss counter on regime change |
-| `exp_tod_filter` | False | Skip entries at night (00-04 IST) |
-| `exp_multi_ltf` | False | Remove busy_until, use cooldown for re-entry |
-| `exp_multi_ltf_cd` | 10 | Cooldown bars for multi-LTF re-entry |
-| `exp_partial_exit` | False | Exit 50% at 1.5R, trail rest |
-| `exp_pullback_ma` | 0 | Wait for MA pullback before entry |
-| `exp_trail_mode` | "engine" | Trail logic variant |
+48 experiment files moved to `_archive/` — all simple sweep/tune scripts superseded by the registry.
+Archived files are preserved for reference but no longer maintained.
 
 ---
 
 ## 9. How to Reproduce
 
-### Quick Reproduction
+### Single Entry Point
+
+All experiments are registry-driven. Run from the repo root:
 
 ```bash
-cd live_stuff/tests
+# List all registered experiments
+python live_stuff/tests/run_experiment.py --list
 
-# Baseline
-python -c "
-import sys; sys.path.insert(0, '..')
-from test_experiments import *
-c1h,f1h=load_window('1h'); c15,f15=load_window('15m')
-sw1h=from src.btc.btc_routes import _compute_swings(f1h,'continuous',min_bars=20)
-..."
+# Run one experiment
+python live_stuff/tests/run_experiment.py champion_multi_sw10
 
-# Or run full stats for all configs:
-python test_full_stats.py
+# Run all experiments (takes ~60s)
+python live_stuff/tests/run_experiment.py --all
 
-# Combo + walk-forward stats:
-python test_combo_wf_stats.py
+# Run a named group
+python live_stuff/tests/run_experiment.py --group champions
+python live_stuff/tests/run_experiment.py --group coarse_matrix
+python live_stuff/tests/run_experiment.py --group baselines
 
-# Full min_bars matrix (takes ~5 min):
-python test_mb_sweep.py
+# Compare two experiments
+python live_stuff/tests/run_experiment.py --diff baseline_no_partial_sw20 champion_multi_sw20
 
-# Expanding walk-forward + sensitivity:
-python test_wf3.py
-
-# Trade-by-trade diagnosis:
-python test_diagnose3.py
+# Run full pre-live audit
+python live_stuff/tests/run_experiment.py --audit
 ```
 
-### Prerequisites
+### Registry
 
-```bash
-# From AT_Trading root:
-pip install pandas numpy
+All experiment configs live in `live_stuff/tests/experiment_registry.py`.
+Each experiment is a dict: description, params, swing chain, fine toggle, pins.
+To add a new experiment: add a dict to the registry. No new file needed.
 
-# Data files required:
-# data/bybit/BTCUSDT_15m.csv
-# data/bybit/BTCUSDT_1h.csv
-# data/bybit/BTCUSDT_1m.csv
-```
+### Available Experiments
+
+| Key | Description | NET | DD |
+|---|---|---|---|
+| `champion_multi_sw10` | **NEW KING** — multi sw10 | +472.9 | 14.5 |
+| `champion_multi_sw20` | Multi sw20 | +465.1 | 21.9 |
+| `champion_single_sw20` | Single sw20 (raw king) | +261.5 | 29.3 |
+| `champion_single_sw10` | Single sw10 (best DD ratio) | +238.4 | 16.0 |
+| `baseline_no_partial_sw20` | No-partial baseline sw20 | +148.2 | 37.3 |
+| `baseline_no_partial_sw10` | No-partial baseline sw10 | +163.6 | 29.2 |
+| `lb30_w24_ext1.5` | lb30 w24 ext1.5 (coarse) | +231.6g | — |
+| `lb30_w24_ext2.0` | lb30 w24 ext2.0 (coarse) | +248.2g | — |
+| `lb30_w24_ext2.5` | lb30 w24 ext2.5 (coarse) | +231.7g | — |
+| `lb30_w24_ext3.0` | lb30 w24 ext3.0 (coarse) | +222.4g | — |
+| `a4_w24_ext1.5` | A4 w24 ext1.5 (coarse) | +207.1g | — |
+| `a4_w24_ext3.0` | A4 w24 ext3.0 (coarse) | +218.8g | — |
+| `opt_cd10_w24` | OPT cd10 w24 ext1.5 | +216.5g | — |
 
 ### Execution Time
 
-| Script | Time | What it does |
+| Command | Time | What it does |
 |---|---|---|
-| `test_full_stats.py` | ~2 min | Runs 15 configs, prints full table |
-| `test_combo_wf_stats.py` | ~3 min | 6 combos + 8 walk-forward windows |
-| `test_mb_sweep.py` | ~5 min | 40 min_bars combos |
-| `test_wf3.py` | ~8 min | Expanding WF + sensitivity |
-| `test_diagnose3.py` | ~4 min | Rolling WF + bootstrap + audit |
-| `test_final_sweep.py` | ~10 min | 5-phase chained sweep |
+| `--list` | <1s | Show all experiments |
+| `<key>` | ~5s | Run one experiment + validate pins |
+| `--all` | ~60s | Run all 13 experiments |
+| `--group champions` | ~20s | Run 4 champion configs |
+| `--audit` | ~120s | Full pre-live audit (9 test categories) |
+
+### Output
+
+Each run writes `_exp_{key}_results.json` with full trade list, params, and validation.
+`--all` writes `_exp_all_results.json` with all results combined.
 
 ---
 
@@ -917,34 +916,32 @@ Walk-forward: conservative beats aggressive in every test segment. Aggressive is
 
 | # | Config | Tr | Gross | NET | WR | avgW | avgL | PF | DD | maxLs | avgR | H1 | H2 | 2023 | 2024 | 2025 | 2026 | Cap |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | **their-OPTIMAL+cap3** | 503 | +456.7 | **+326.8** | 28.0% | +5.61 | -0.92 | 2.36 | 21.8 | 18 | +0.91 | +228.9 | +227.8 | 93.9 | 135.0 | 87.8 | 140.0 | 3 |
-| 2 | their-OPTIMAL (no cap) | 515 | +456.2 | +322.5 | 28.0% | +5.55 | -0.92 | 2.33 | 23.3 | 19 | +0.89 | +229.4 | +226.7 | 94.4 | 135.0 | 84.4 | 142.3 | - |
-| 3 | **S9 mltf+mb10+chop55** | 460 | +432.1 | **+312.2** | 28.7% | +5.55 | -0.91 | 2.44 | 38.2 | 17 | +0.94 | +249.6 | +182.5 | 81.6 | 168.0 | 71.3 | 111.2 | - |
-| 4 | mltf+persist5 cd10 | 409 | +389.1 | +287.5 | 32.0% | +4.93 | -0.92 | 2.52 | 33.4 | 11 | +0.95 | +202.8 | +186.3 | 92.6 | 110.1 | 90.8 | 95.6 | - |
-| 5 | OPTIMAL+halt6 (S19) | 574 | +423.1 | +273.7 | 26.8% | — | — | — | 31.5 | — | — | — | — | — | — | — | — | - |
-| 6 | lb30+mltf+chop55+mb10+cd10 | 427 | +373.4 | +264.2 | 29.5% | — | — | — | 27.5 | — | — | — | — | — | — | — | — | - |
-| 7 | S7 mltf+pers5+cd0 | 477 | +357.6 | +236.1 | 27.0% | — | — | — | 26.4 | — | — | — | — | — | — | — | — | - |
-| 8 | mltf alone (mb20+chop58) | 421 | +306.5 | +197.6 | 29.5% | — | — | — | 23.4 | — | — | — | — | — | — | — | — | - |
-| 9 | **anchor lb=30 + ext2.5 (NEW single-best)** | 377 | +323.3 | **+231.1** | 31.0% | — | — | — | 24.6 | — | — | +169.0 | +154.3 | 22.9 | 146.1 | 69.4 | 84.9 | - |
+| 1 | **OPT-cd10 + w24 + ext1.5** | 326 | — | **+337.7** | — | — | — | — | 19.2 | — | — | — | — | — | — | — | — | - |
+| 2 | **their-OPTIMAL+cap3** | 503 | +456.7 | **+326.8** | 28.0% | +5.61 | -0.92 | 2.36 | 21.8 | 18 | +0.91 | +228.9 | +227.8 | 93.9 | 135.0 | 87.8 | 140.0 | 3 |
+| 3 | their-OPTIMAL (no cap) | 515 | +456.2 | +322.5 | 28.0% | +5.55 | -0.92 | 2.33 | 23.3 | 19 | +0.89 | +229.4 | +226.7 | 94.4 | 135.0 | 84.4 | 142.3 | - |
+| 4 | **S9 mltf+mb10+chop55** | 460 | +432.1 | **+312.2** | 28.7% | +5.55 | -0.91 | 2.44 | 38.2 | 17 | +0.94 | +249.6 | +182.5 | 81.6 | 168.0 | 71.3 | 111.2 | - |
+| 5 | mltf+persist5 cd10 | 409 | +389.1 | +287.5 | 32.0% | +4.93 | -0.92 | 2.52 | 33.4 | 11 | +0.95 | +202.8 | +186.3 | 92.6 | 110.1 | 90.8 | 95.6 | - |
+| 6 | OPTIMAL+halt6 (S19) | 574 | +423.1 | +273.7 | 26.8% | — | — | — | 31.5 | — | — | — | — | — | — | — | — | - |
+| 7 | lb30+mltf+chop55+mb10+cd10 | 427 | +373.4 | +264.2 | 29.5% | — | — | — | 27.5 | — | — | — | — | — | — | — | — | - |
+| 8 | S7 mltf+pers5+cd0 | 477 | +357.6 | +236.1 | 27.0% | — | — | — | 26.4 | — | — | — | — | — | — | — | — | - |
+| 9 | **anchor lb=30 + ext2.5 (single-position best)** | 377 | +323.3 | **+231.1** | 31.0% | — | — | — | 24.6 | — | — | +169.0 | +154.3 | 22.9 | 146.1 | 69.4 | 84.9 | - |
+| 10 | mltf alone (mb20+chop58) | 421 | +306.5 | +197.6 | 29.5% | — | — | — | 23.4 | — | — | — | — | — | — | — | — | - |
 
-> **How the engine produces these rows:** HTF = 1h flip/B2/decisive trade-windows (3R, 16d cap); regime = 1h chop vs thresh selects the window set; LTF = 15m decisive mb50 entries inside the window, same-dir, ext-gated, cd/halt-gated; exits = 15m swing trail. All NET = fine (1m fills, Bybit taker 0.055%/side, slip 0.005/0.010%, funding 0.01%/8h). N5/N6 change ENTRY gates only — no exit rule ever changes.
-| 10 | **anchor lb=30** | 349 | +287.1 | **+196.3** | 29.8% | +4.97 | -0.94 | 2.25 | 23.6 | 11 | +0.82 | +143.9 | +143.2 | 22.7 | 121.2 | 52.2 | 91.0 | - |
-| 11 | A4 lb30+pers2+chop55+mb10 | 359 | +297.3 | +203.3 | 26.2% | +5.74 | -0.92 | 2.23 | 24.8 | 17 | +0.83 | +131.3 | +166.0 | 65.2 | 66.1 | 50.3 | 115.6 | - |
-| 12 | v18 anchor lb=14 | 351 | +238.0 | +148.0 | 27.6% | +4.86 | -0.92 | 2.02 | 23.4 | 27 | +0.68 | +119.9 | +118.1 | 38.8 | 81.1 | 37.6 | 80.5 | - |
-| 13 | **(52,60,trail65) aggressive** | 239 | +163.0 | **+116.1** | 34.3% | +3.61 | -0.84 | 2.23 | 13.9 | 14 | +0.68 | +100.1 | +62.9 | 38.0 | 62.2 | 29.7 | 33.2 | - |
-| 14 | B3-OPT lb50 halt3 cd10 | 214 | +157.3 | +115.4 | 35.0% | +3.69 | -0.86 | 2.32 | 10.2 | 10 | +0.74 | +80.6 | +76.7 | 35.7 | 44.9 | 43.7 | 33.0 | - |
-| 15 | B3-OPT lb50 halt6 cd10 | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
-| 16 | (55,50,trail50) conservative | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
-| 17 | B3-OPT lb14 halt3 cd10 | 238 | +125.2 | +80.0 | 35.0% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
-| 18 | B3-OPT lb14 halt6 cd10 | 249 | +124.3 | +76.0 | 33.6% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
-| 19 | S15 B3+mltf+pers2+cd0 | 245 | +114.2 | +66.8 | 29.8% | +3.58 | -0.86 | 1.78 | 14.6 | 12 | +0.47 | +73.8 | +40.4 | 28.5 | 45.4 | 29.7 | 10.7 | - |
-| N5 wage>=24h gate (NON-AUTHORITATIVE — deleted harness, see EXP40C doc §10.3) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-| N5a lb30+w24 (ext1.5) OLD/deleted | ~~265~~ | ~~coarse +231.6g~~ | — | — | — | — | — | ~~19.4~~ | — | — | — | — | — | — | — | — | — |
-| N5a lb30+w24 (ext1.5) VALIDATED REBUILD | 265 | +257.9g | **+185.0** | 32.1% | — | — | — | 19.4 | 9 | — | +118.4 | +113.2 | 25.9 | 92.5 | 54.6 | 58.6 | - |
-| N5b lb14+w24 (ext1.5) | 281 | fine **+201.9** | — | — | — | — | — | 15.8 | — | — | — | — | — | — | — | — | - |
-| N5c A4+w24 (ext1.5) VALIDATED REBUILD | 261 | +257.0g | **+223.1** | 33.0% | — | — | — | 19.8 | — | — | — | — | — | — | — | — | - |
-| N6 wage x ext_stop matrix (Exp40c/41 — see [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md)) | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — |
-| N6 w0-ext2.5 (ADOPTED) | 377 | +323.3 | **+231.1** | 31.0% | — | — | — | 24.6 | — | — | +169.0 | +154.3 | 22.9 | 146.1 | 69.4 | 84.9 | - |
+> **How the engine produces these rows:** HTF = 1h flip/B2/decisive trade-windows (3R, 16d cap); regime = 1h chop vs thresh selects the window set; LTF = 15m decisive mb50 entries inside the window, same-dir, ext-gated, cd/halt-gated; exits = 15m swing trail. All NET = fine (1m fills, Bybit taker 0.055%/side, slip 0.005/0.010%, funding 0.01%/8h). N5/N6 change ENTRY gates only — no exit rule ever changes. Row 1 is multi-position (mltf, needs concurrency cap).
+| 11 | **anchor lb=30** | 349 | +287.1 | **+196.3** | 29.8% | +4.97 | -0.94 | 2.25 | 23.6 | 11 | +0.82 | +143.9 | +143.2 | 22.7 | 121.2 | 52.2 | 91.0 | - |
+| 12 | A4 lb30+pers2+chop55+mb10 | 359 | +297.3 | +203.3 | 26.2% | +5.74 | -0.92 | 2.23 | 24.8 | 17 | +0.83 | +131.3 | +166.0 | 65.2 | 66.1 | 50.3 | 115.6 | - |
+| 13 | v18 anchor lb=14 | 351 | +238.0 | +148.0 | 27.6% | +4.86 | -0.92 | 2.02 | 23.4 | 27 | +0.68 | +119.9 | +118.1 | 38.8 | 81.1 | 37.6 | 80.5 | - |
+| 14 | **(52,60,trail65) aggressive** | 239 | +163.0 | **+116.1** | 34.3% | +3.61 | -0.84 | 2.23 | 13.9 | 14 | +0.68 | +100.1 | +62.9 | 38.0 | 62.2 | 29.7 | 33.2 | - |
+| 15 | B3-OPT lb50 halt3 cd10 | 214 | +157.3 | +115.4 | 35.0% | +3.69 | -0.86 | 2.32 | 10.2 | 10 | +0.74 | +80.6 | +76.7 | 35.7 | 44.9 | 43.7 | 33.0 | - |
+| 16 | B3-OPT lb50 halt6 cd10 | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
+| 17 | (55,50,trail50) conservative | 226 | +157.0 | +112.5 | 33.6% | +3.77 | -0.86 | 2.21 | 12.2 | 10 | +0.69 | +81.7 | +75.3 | 33.7 | 48.0 | 35.8 | 39.5 | - |
+| 18 | B3-OPT lb14 halt3 cd10 | 238 | +125.2 | +80.0 | 35.0% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
+| 19 | B3-OPT lb14 halt6 cd10 | 249 | +124.3 | +76.0 | 33.6% | — | — | — | 12.8 | — | — | — | — | — | — | — | — | - |
+| 20 | S15 B3+mltf+pers2+cd0 | 245 | +114.2 | +66.8 | 29.8% | +3.58 | -0.86 | 1.78 | 14.6 | 12 | +0.47 | +73.8 | +40.4 | 28.5 | 45.4 | 29.7 | 10.7 | - |
+| 21 | **A4 + w24 + ext1.5 (single risk-adjusted best)** | 261 | +257.0g | **+223.1** | 33.0% | — | — | — | 19.8 | — | — | — | — | — | — | — | — | - |
+| 22 | **lb14 + w24 + ext1.5 (sleep-well)** | 272 | — | **+193.7** | — | — | — | — | 15.7 | — | — | — | — | — | — | — | — | - |
+| 23 | lb30 + w24 + ext1.5 (VALIDATED REBUILD) | 265 | +257.9g | **+185.0** | 32.1% | — | — | — | 19.4 | 9 | — | +118.4 | +113.2 | 25.9 | 92.5 | 54.6 | 58.6 | - |
+| — | N6 wage × ext_stop matrix — see [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) for full matrix | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | - |
 
 ### Post-Fix Walk-Forward (B3-OPT lb50, expanding window, fine)
 
@@ -1207,13 +1204,75 @@ Downgrade path for live: ext needs HTF entry_price + risk per active window (alr
 
 **Verdict:** "kill w24" is lb30-only (argmax 0h there). 24h is argmax on 3/4 lanes but ±70R noisy between neighbors — adopt the **18–36h band**, not the point. DD/npt improve monotonically with wage on every lane. 12h ruled out everywhere except OPT-cd10. lb14-w24 revalidated under the rebuilt gate (272t +193.7 DD 15.7 — the old DD-king lane is real). Robustness picks: OPT-cd10+w36h (+329.4, worst seg +17.3), A4+w36h (+203.3 = w0's NET at DD 16.5, all-positive segs). Full record: [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) §13.
 
+#### Exp 43: loss autopsy + runner preservation + parent-window diagnostics (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp43_loss_autopsy.py` — gates: identity + user coarse matrix + 8 fine pins (aborts on mismatch). Decomposes each lane's w24 effect into **removal** vs **chain re-timing**, checks runner amputation (≥3/4/5/10R in the removed bucket), R-by-year of removed trades, and parent-HTF-window inheritance. Raw output: `_exp43_out.txt` / `_exp43_results.json`. Full record: [EXP43_LOSS_AUTOPSY.md](EXP43_LOSS_AUTOPSY.md).
+
+Key results (fine NET, all gates passed, RQ1 join canary clean = no bugs):
+* **Mechanism corrected:** the w24 gate is a timing intervention, not just a quality filter. Champion OPT-cd10: +78.3 total = **+25.6 removal + 52.7 chain re-timing**. lb30: removal is genuinely good (+35.7, systematic across years) but chain-shift is **−47.0**, flipping the sign — that is the lb30 mystery solved.
+* **Runner amputation:** removed young buckets contain real runners (OPT-cd10: 6×≥4R + one ≥10R = 136R amputated; lb30: 5×≥4R = +31.2). The champion still nets +78 because delayed entries recapture runners elsewhere.
+* **Cleanest case lb14:** removal negative in all 4 years (−16.3/−14.4/−5.2/−0.9), WR 15.5% removed — most systematic; matches its DD-king status. A4 caveat: +20.7 of its removal gain sits in 2023 alone (cluster flavor).
+* **HTF side:** parent-window fate strongly predicts LTF R (won-parent avgR +3.1 vs lost-parent −0.6) but is non-causal; causal age profile is U-curved on lb30 (0–6h fine, 6–24h bad) and rising on OPT-cd10 → next-experiment candidate: a **curfew gate** (skip only 6–24h), tested pre-fill.
+
+#### Exp 44: curfew gate — skip only 6–24h (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp44_curfew_gate.py` — new knob `exp_curfew_a/b` in the craze patcher (skips only a ≤ age < b; no-op when b=0, identity-gated). Variants w0 / w24 / curf6-24 / curf6-30 × 4 lanes, ext1.5, fine NET + segmented WF. Gates: identity + user coarse matrix + 8 fine pins + curfew canary (0 in-band violations). Raw output: `_exp44_out.txt` / `_exp44_results.json`. Full record: [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) §14.
+
+| variant | lb30 | A4 | lb14 | OPT-cd10 |
+|---|---|---|---|---|
+| w0 | +196.3 | +203.3 | +148.0 | +259.4 |
+| w24 | +185.0 | **+223.1** | **+193.7** | **+337.7** |
+| curf6-24 | **+217.4** | +198.8 | +188.7 | +302.6 |
+| curf6-30 | +163.9 | +202.4 (DD 16.1) | +160.9 | +273.9 |
+
+**Verdict:** the curfew wins **only on lb30** (+217.4 = +21.1 over w0, +32.3 over w24) — exactly where exp43's U-curve predicted; new best lb30-based single without touching ext (DD caveat: 26.8 vs 23.6). On A4/lb14/OPT-cd10 plain w24 stays best — **overall champion unchanged** (OPT-cd10 + w24 + ext1.5 = +337.7 / DD 19.2). Band edge: curf6-30 worse everywhere → 24h is the right lower edge; A4 curf6-30 (+202.4, DD 16.1, worst seg +3.9) ties A4-w36h as a robust alternative.
+
+#### Exp 45: curfew edge-plateau map + curf×ext combo (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp45_curfew_plateau.py` — lb30 edge grid (lower {4,6,8} × upper {24,30,36}), the curf6-24×ext2.5 combo cell, A4 edge checks, + segmented WF. Gates: identity + user coarse matrix + 6 fine pins + canaries (0 violations). Raw output: `_exp45_out.txt` / `_exp45_results.json`. Full record: [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) §15.
+
+| lb30 (ext1.5) | skip→24 | skip→30 | skip→36 |
+|---|---|---|---|
+| skip from 4 | +172.0 | — | — |
+| skip from 6 | **+217.4** | +163.9 | +161.9 |
+| skip from 8 | **+219.4** | — | — |
+
+**Verdict:** lower edge has a small plateau (6–8h, +217–219); upper edge is pinned at 24h by mechanism (the ≥24h bucket is where the good trades live — widening costs ~−54R), same structure as the ext ceiling. **Combo killed:** lb30 curf6-24 + ext2.5 = +215.0 < ext2.5 alone (+231.1) — the two lb30 edges don't stack (both act via entry re-timing, per exp43). A4: c4-24 bad (+166.9, seg3 −41.4); w24 stays A4 king (+223.1); c6-30 confirmed as A4 robustness alt. Single board unchanged: A4+w24 balanced king, lb30+ext2.5 raw king, lb30+c6-24 third.
+
+#### Exp 46: deferred entry — requeue young signals (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp46_defer_entry.py` — new knob `exp_defer_h` in the craze patcher: a too-young signal is requeued to the first 15m bar at/after `s + horizon` provided the SAME window is still open, the original SL pivot was never touched meanwhile, and ext still passes at the defer bar (all causal, known at entry time). `filtered` re-sorted by final bar (causal ledger; no-op when off). Variants w0/w24/defer{6,12,24} × 3 lanes, ext1.5, fine NET + WF. Gates: identity + user coarse matrix + 6 fine pins + defer canary (0 age<horizon violations). Raw output: `_exp46_out.txt` / `_exp46_results.json`. Full record: [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) §16.
+
+| variant | lb30 | A4 | lb14 |
+|---|---|---|---|
+| w0 | +196.3 | +203.3 | +148.0 |
+| w24 | +185.0 | **+223.1** | **+193.7** |
+| defer6 | +183.8 | +209.0 (worst seg **+7.7**) | +151.7 |
+| defer12 | +198.6 | +206.5 | +145.9 |
+| **defer24** | **+203.1** (DD 21.6) | +183.1 | +181.6 |
+
+**Verdict:** **defer24 beats w24 by +18.1R on lb30** (+203.1 vs +185.0) at the same horizon — "wait a day, enter if the setup is still alive" > "drop everything young", directly confirming exp43's mechanism finding (the gate's value is timing, not removal). lb30 timing ranking: curf6-24 (+217.4) > defer24 (+203.1) > w0 > w24. A4: w24 stays king; A4-d6 (+209.0, worst seg +7.7) is the best worst-segment of any A4 variant. lb14: w24 stays king. Champion (multi) unchanged (+337.7).
+
+#### Exp 47: full stats board + per-year NET (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp47_yearly_stats.py` — gross/net/avgR/DD/WR + calendar-year NET (2023–26) + delta vs anchor for 9 configs (all singles on the board + multi champion reference). Gates: identity + matrix + 5 fine pins. Raw output: `_exp47_out.txt` / `_exp47_results.json`. Full record: [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) §17.
+
+Key per-year finding: **lb30 family is 2024-dependent** (anchor 43% of NET from 2024; ext2.5 +146.3 in 2024), **A4/lb14 families are balanced** (A4-w24's best year is 2026 +126.2; lb14-w24 min year +40.1), and the **multi champion is balanced AND big** (min year +79.7). Confirms: entry-timing fixes don't change regime dependence.
+
+#### Exp 48: price-space autopsy + leg-progress gate (2026-09-20)
+
+**Harness:** `live_stuff/tests/exp48_leg_progress.py` (v2) — the "relative to price" family: leg anchor = first window of the current same-dir streak; progress = (close − anchor)·d ÷ window risk. Phase A autopsy (progress/pullback buckets), Phase B legskip gate {4,6,8,10,12} on lb30+A4, Phase C WF. Gates: identity + matrix + 4 fine pins + canaries. Raw output: `_exp48_out.txt` / `_exp48_results.json`. Full record: [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) §18.
+
+**Verdict:** **legskip REJECTED on both lanes** (lb30 −102.7R vs w0; A4 −124.6R): legs are BIMODAL in price-space — either fighting (prog < −1R, avgR +0.75/+1.20, still profitable) or ran ≥20R (avgR +0.92/+0.39) — with an EMPTY middle, so every threshold removes exactly the profitable ride bucket. In a trend-following system, late legs ARE the edge. New structural fact + follow-up candidate: A4 pullback gate (skip entries 1.5–3R off the leg extreme, avgR −0.54, n=24 — needs pre-fill + WF discipline first). Process note: v1 harness had a nested-loop bug (documented in §18.3).
+
 ### Honest Assessment
 
 The B3 entry price bug inflated all B3 results by ~3-4x. Multi-LTF configs were unaffected (no B3).
 
 **FINAL ANSWER (both lanes signed):**
-- **their-OPTIMAL + cap3 = +326.8R / DD 21.8 / NET/DD 15.0** — the winner
-- their-OPTIMAL alone = +322.5R / DD 23.3 / NET/DD 13.8
+- **OPT-cd10 + w24 + ext1.5 = +337.7R / DD 19.2** — overall champion (multi-position, needs concurrency cap; see row 1)
+- their-OPTIMAL + cap3 = +326.8R / DD 21.8 — second-best multi-position
+- their-OPTIMAL alone = +322.5R / DD 23.3
 
 **Update 2026-09-20 (post N5/N6b validation — see EXP40C_EXP41_WAGE_EXT.md §11/§13):** these rankings predate the wage-gate validation. Current champion: **OPT-cd10 + w24(wage≥24h) + ext1.5 = +337.7 / DD 19.2**, zero losing WF segments; robustness alternate OPT-cd10 + w36h = +329.4 / DD 18.4. The lb30+ext2.5 "+231.1 single-best" line below is now third-tier.
 
@@ -1235,3 +1294,90 @@ The B3 entry price bug inflated all B3 results by ~3-4x. Multi-LTF configs were 
 - **cd=0**: their-OPTIMAL has no loss cooldown — needs live-latency validation.
 - **Not single-position**: Cannot run with the same simplicity as anchor/B3-OPT.
 - **Cap3 recommended**: +4.3R over no cap, -1.5R DD. Pure improvement.
+
+---
+
+## 13. LA Experiments — Single Position, Corrected Costs (2026-09-20)
+
+> All harnesses in `live_stuff/tests/`. Single position only. Costs include split exit fees for partial trades.
+
+### Champion: ATR_HIGH + partR=7.5 + ext=3.0 + cd=8
+
+**Harness:** `exp_final_single.py`
+
+```
+Config:  mode=atr_high, ext_stop_r=3.0, cooldown_bars=8, exp_partial_r=7.5
+Trades:  371 | Gross: +352.4R | Costs: -90.9R | NET: +261.5R
+WR: 28.8% | Avg win: +5.58R | Avg loss: -0.93R | PF: 2.44
+Max DD: 29.3R | Max loss streak: 14 | Monsters (>10R): 27
+```
+
+| Year | Trades | NET | WR | PF | Avg Entry |
+|---|---|---|---|---|---|
+| 2023 | 86 | +32.5R | 24.4% | 1.53 | $28,024 |
+| 2024 | 119 | +87.5R | 22.7% | 2.03 | $64,816 |
+| 2025 | 95 | +133.6R | 34.7% | 3.35 | $102,491 |
+| 2026 | 71 | +98.8R | 36.6% | 3.37 | $70,784 |
+
+### Progression
+
+| Config | NET | Delta | File |
+|---|---|---|---|
+| Shipped baseline | +166.7R | — | (engine default) |
+| + partR=5.0 | +230.7R | +64.0R | exp_la5_partial.py |
+| + atr_high mode | +208.3R | -22.4R | exp_la8_modes.py |
+| + partR=7.5 + ext=3.0 + cd=8 | **+261.5R** | **+94.8R** | exp_final_single.py |
+
+### Experiment Table
+
+| # | Experiment | Verdict | Delta | File |
+|---|---|---|---|---|
+| LA4 | Trail tightening | REJECTED | -112.6R | exp_la4_trail_tighten.py |
+| LA5 | Partial exits (50% at X R) | ACCEPTED | +64.0R | exp_la5_partial.py |
+| LA6 | Post-loss 1R recovery | REJECTED | -153R | exp_la6_recover.py |
+| LA7 | Entry distance gate | REJECTED | -6.2R | exp_la7_entry_dist.py |
+| LA8 | Mode variations | MIXED | +10.2R/+38.6R | exp_la8_modes.py |
+| LA9 | ATR trail + delay | REJECTED | -257R | exp_la9_atr_trail.py |
+| LA10 | Partial x Mode combos | ACCEPTED | +123.5R opt | exp_la10_combos.py |
+| LA11 | Extensions sweep | ACCEPTED | wage rejected | exp_la11_extensions.py |
+| LA12 | Ultra-optimize | ACCEPTED | +55.4R/+26.0R | exp_la12_ultra.py |
+| LA13 | Validation + overfit | ACCEPTED | partR=7.5 opt | exp_la13_validate.py |
+| FINAL | Corrected costs | ACCEPTED | +261.5R NET | exp_final_single.py |
+| LA14 | Deferred entry (requeue) | REJECTED | -28.0R defer24 | exp_la14_defer.py |
+
+### Price-Level / Regime Analysis (from exp_final_single.py)
+
+- Pearson r (price vs R) = 0.108 (weak)
+- <30k: -3.6R (68t, 17.6% WR, PF 0.93) — choppy regime, not price
+- >100k: +103.6R (58t, 43.1% WR, PF 4.57)
+- Regime matters more: 2023-Q2 choppy (-7.8R) vs 2023-Q4 trending (+38.6R, PF 3.90)
+- All years profitable. No price-level edge to exploit.
+- w24 has ZERO effect on atr_high (identical to w0). Atr_high is self-cleaning.
+- Deferred entry (requeue) hurts on atr_high (-28.0R). No timing gate needed.
+
+### Combined Comparison Matrix (Both Lanes, Consistent Costs)
+
+Source: `exp_final_matrix.py`. All configs: v18 engine, 0.055% fee/side + 0.005%/0.010% slip + 0.01%/8h funding.
+
+**Single Position:**
+
+| Config | Trades | NET R | Cost | Win Rate | Profit Factor | Max Drawdown | Max Loss Streak | 2023 | 2024 | 2025 | 2026 | H1 | H2 | Big Wins |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Shipped baseline | 340 | +166.7R | 84.9R | 30.0% | 2.15 | 27.1R | 16 | +28R | +72R | +60R | +90R | +101R | +151R | 10 |
+| **Our champion (atr_high+p7.5+ext3+cd8)** | 371 | **+261.5R** | 90.9R | 28.8% | 2.44 | 29.3R | 14 | +32R | +88R | +134R | +99R | +120R | **+232R** | **27** |
+| Their A4 w24 ext1.5 | 341 | +159.2R | 86.7R | 28.7% | 2.09 | 20.3R | 14 | +43R | +63R | +59R | +80R | +106R | +140R | 10 |
+| **Their A4 w24 ext1.5 + partR=7.5** | 341 | **+245.4R** | 86.6R | 28.7% | 2.47 | **16.0R** | 14 | +61R | +68R | +113R | +91R | +129R | +204R | 26 |
+| Their lb30 ext2.5 | 364 | +174.3R | 86.8R | 30.8% | 2.11 | 27.7R | 12 | +22R | +85R | +71R | +83R | +107R | +154R | 12 |
+
+**Multi Position:**
+
+| Config | Trades | NET R | Cost | Win Rate | Profit Factor | Max Drawdown | Max Loss Streak | 2023 | 2024 | 2025 | 2026 | H1 | H2 | Big Wins |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| OPT-cd10 w24 ext1.5 (theirs) | 408 | +215.7R | 101.9R | 30.9% | 2.22 | 24.2R | 15 | +63R | +78R | +96R | +81R | +140R | +177R | 12 |
+| **Our atr_high+p7.5+ext3+cd8+mltf+persist7** | 487 | **+465.1R** | 114.9R | 31.8% | **2.92** | 21.9R | 14 | **+128R** | **+140R** | **+186R** | **+127R** | **+267R** | **+313R** | **42** |
+
+### Recommendation
+
+**Phase 1 (months 1-6):** Start with our champion SINGLE (atr_high+p7.5+ext3+cd8) — +261.5R NET, smoothest equity curve, all 4 years profitable, H2 +232R. Single position = 1 risk unit, easiest to manage.
+
+**Phase 2 (after buffer):** Switch to MULTI (atr_high+p7.5+ext3+cd8+mltf+persist7) — +465.1R NET, PF 2.92, 42 big wins. Requires ~2x capital. Switch after 3-6 months live data confirms backtest.

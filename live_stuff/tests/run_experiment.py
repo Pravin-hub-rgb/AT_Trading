@@ -1,0 +1,357 @@
+"""Single entry point for all experiments.
+
+Usage:
+    python run_experiment.py <key>          run one experiment
+    python run_experiment.py --all          run all visible experiments
+    python run_experiment.py --group <name> run a named group
+    python run_experiment.py --list         show all experiments
+    python run_experiment.py --audit        run full pre-live audit
+    python run_experiment.py --diff <a> <b> compare two experiments
+"""
+import sys, time, json, argparse
+from pathlib import Path
+from collections import defaultdict
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "live_stuff/tests"))
+sys.path.insert(0, str(ROOT / "live_stuff"))
+sys.path.insert(0, str(ROOT / "backend"))
+
+from experiment_registry import EXPERIMENTS, GROUPS, BP, ENGINE_DEFAULTS
+from test_experiments_craze import (
+    build_module, load_candles, _compute_swings,
+    SWING, MB15, INSTRUMENT, stats,
+)
+from engine.v18_params import get_v18_params as _gvp
+from src.btc.btc_routes import _trade_costs
+import src.btc.engines.htf_ltf.v18_streak_halt as shipped_mod
+
+_g = _gvp(INSTRUMENT)
+
+
+# ---------------------------------------------------------------------------
+# Cost model (matches exp40c/exp49 convention)
+# ---------------------------------------------------------------------------
+def fund(tr):
+    f = 0.0
+    for t in tr:
+        e, sl = float(t["entry_price"]), float(t["sl"])
+        rk = abs(e - sl)
+        if rk > 0 and e > 0:
+            f += (int(t.get("bars_held") or 0) * 0.25 / 8.0) * 0.0001 * (e / rk)
+    return f
+
+
+def net_r(tr):
+    rs = [float(t["r_multiple"]) for t in tr]
+    c2, _ = _trade_costs(tr, _g["fee_pct"], 0.0, _g["entry_slip_pct"], _g["exit_slip_pct"])
+    return sum(rs) - c2 - fund(tr)
+
+
+# ---------------------------------------------------------------------------
+# Cached data loading
+# ---------------------------------------------------------------------------
+_cache = {}
+
+
+def get_data():
+    if "loaded" in _cache:
+        return _cache["loaded"]
+    t0 = time.time()
+    (c15, f15), (c1h, f1h) = load_candles()
+    sw15 = _compute_swings(f15, "continuous", min_bars=MB15)
+    sw20 = _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"])
+    sw10 = _compute_swings(f1h, "continuous", min_bars=10)
+    fine = _load_fine_1m(
+        min(c1h[0]["ts"], c15[0]["ts"]),
+        max(c1h[-1]["ts"], c15[-1]["ts"]),
+        symbol=INSTRUMENT,
+    )
+    _cache["loaded"] = {
+        "c15": c15, "f15": f15, "c1h": c1h, "f1h": f1h,
+        "sw15": sw15, "sw20": sw20, "sw10": sw10, "fine": fine,
+    }
+    print("data loaded (%.0fs)" % (time.time() - t0), flush=True)
+    return _cache["loaded"]
+
+
+def _load_fine_1m(ts_start, ts_end, symbol="BTCUSDT"):
+    try:
+        from src.btc.btc_routes import _load_fine_1m as _lf
+        return _lf(ts_start, ts_end, symbol=symbol)
+    except Exception:
+        return []
+
+
+def get_swings(data, key):
+    if key == "sw20":
+        return data["sw20"]
+    elif key == "sw10":
+        return data["sw10"]
+    elif key == "sw15":
+        return data["sw15"]
+    raise ValueError("unknown swing key: %s" % key)
+
+
+# ---------------------------------------------------------------------------
+# Run a single experiment
+# ---------------------------------------------------------------------------
+def run_one(key, data=None, sim=None):
+    cfg = EXPERIMENTS[key]
+    if data is None:
+        data = get_data()
+    if sim is None:
+        sim = build_module()
+
+    base = BP if cfg.get("use_bp", True) else ENGINE_DEFAULTS
+    params = {**base, **cfg["params"]}
+    sw = get_swings(data, cfg["swing"])
+    fine = data["fine"] if cfg.get("fine", False) else []
+
+    t0 = time.time()
+    if cfg["engine"] == "shipped":
+        r = shipped_mod.simulate_htf_ltf_streak_halt(
+            data["c1h"], sw, data["c15"], data["sw15"], fine_ltf=fine, **params
+        )
+    else:
+        r = sim(data["c1h"], sw, data["c15"], data["sw15"], fine_ltf=fine, **params)
+
+    tr = r["ltf_trades"] if isinstance(r, dict) else r
+    elapsed = time.time() - t0
+    return tr, elapsed
+
+
+def evaluate(key, tr):
+    cfg = EXPERIMENTS[key]
+    s = stats(tr)
+    n = s["n"]
+    gross = s["gross"]
+    nt = net_r(tr)
+    pins = cfg.get("pins", {})
+    partials = sum(1 for t in tr if t.get("partial_exit_price", 0.0) > 0)
+
+    # Yearly breakdown
+    py = defaultdict(float)
+    for t in tr:
+        yr = (t.get("exit_date") or t.get("entry_date") or "")[:4]
+        py[yr] += float(t["r_multiple"])
+
+    # 6-segment WF (each ~60 trades)
+    wf = []
+    if n >= 60:
+        seg_size = max(n // 6, 1)
+        for seg in range(6):
+            start = seg * seg_size
+            end = min(start + seg_size, n)
+            if start >= n:
+                break
+            seg_rs = [float(tr[i]["r_multiple"]) for i in range(start, end)]
+            wf.append(sum(seg_rs))
+    else:
+        wf.append(gross)
+
+    # Validate pins
+    pin_ok = True
+    pin_detail = ""
+    if pins:
+        checks = []
+        if "n" in pins:
+            checks.append(("n", n, pins["n"], n == pins["n"]))
+        if "gross" in pins:
+            checks.append(("gross", gross, pins["gross"], abs(gross - pins["gross"]) < 0.5))
+        if "net" in pins:
+            checks.append(("net", nt, pins["net"], abs(nt - pins["net"]) < 0.5))
+        if "dd" in pins:
+            checks.append(("dd", s["dd"], pins["dd"], abs(s["dd"] - pins["dd"]) < 0.5))
+        for name, actual, expected, ok in checks:
+            if not ok:
+                pin_ok = False
+                pin_detail += " %s=%.1f(expected %.1f)" % (name, actual, expected)
+
+    return {
+        "key": key,
+        "desc": cfg["desc"],
+        "n": n,
+        "gross": gross,
+        "net": nt,
+        "wr": s["wr"],
+        "dd": s["dd"],
+        "mx": s["mx"],
+        "partials": partials,
+        "wf": wf,
+        "worst_seg": min(wf) if wf else 0,
+        "yearly": dict(py),
+        "min_year": min(py.values()) if py else 0,
+        "pin_ok": pin_ok,
+        "pin_detail": pin_detail,
+    }
+
+
+def format_row(r, show_pins=True):
+    pin_mark = "OK" if r["pin_ok"] else "FAIL" + r["pin_detail"]
+    wf_str = " ".join(["%+.0f" % w for w in r["wf"]])
+    return (
+        "  %-30s %4dt G %+8.1f  NET %+8.1f  WR %4.1f%%  DD %5.1f  "
+        "streak %2d  part %2d  worst6 %+7.1f  minY %+7.1f  %s  [%s]"
+        % (
+            r["key"], r["n"], r["gross"], r["net"], r["wr"], r["dd"],
+            r["mx"], r["partials"], r["worst_seg"], r["min_year"],
+            pin_mark if show_pins else "—",
+            wf_str,
+        )
+    )
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+def cmd_list():
+    print("\nRegistered experiments:")
+    print("-" * 80)
+    for key, cfg in sorted(EXPERIMENTS.items()):
+        if key.startswith("_"):
+            continue
+        pin_str = ""
+        if cfg.get("pins"):
+            p = cfg["pins"]
+            if "net" in p:
+                pin_str = "  NET pin: %+.1f" % p["net"]
+            elif "gross" in p:
+                pin_str = "  gross pin: %+.1f" % p["gross"]
+        print("  %-30s %s%s" % (key, cfg["desc"], pin_str))
+    print("\nGroups:")
+    for gname, gkeys in sorted(GROUPS.items()):
+        if gkeys is None:
+            print("  %-20s all visible experiments" % gname)
+        else:
+            print("  %-20s %s" % (gname, ", ".join(gkeys)))
+
+
+def cmd_run(key):
+    data = get_data()
+    sim = build_module()
+    cfg = EXPERIMENTS[key]
+    print("\n=== %s ===" % cfg["desc"])
+    tr, elapsed = run_one(key, data, sim)
+    r = evaluate(key, tr)
+    print(format_row(r))
+    print("  time: %.1fs" % elapsed)
+
+    # Write JSON
+    out = {
+        "key": key,
+        "desc": cfg["desc"],
+        "params": {**BP, **cfg["params"]} if cfg.get("use_bp", True) else cfg["params"],
+        "swing": cfg["swing"],
+        "fine": cfg.get("fine", False),
+        "results": r,
+        "trades": [
+            {
+                "entry_date": t.get("entry_date"),
+                "exit_date": t.get("exit_date"),
+                "dir": t.get("dir"),
+                "entry_price": t.get("entry_price"),
+                "exit_price": t.get("exit_price"),
+                "sl": t.get("sl"),
+                "r_multiple": t.get("r_multiple"),
+                "outcome": t.get("outcome"),
+                "bars_held": t.get("bars_held"),
+                "partial_exit_price": t.get("partial_exit_price", 0.0),
+            }
+            for t in tr
+        ],
+    }
+    json_path = ROOT / "live_stuff" / "tests" / ("_exp_%s_results.json" % key)
+    json_path.write_text(json.dumps(out, indent=2, default=str), encoding="utf-8")
+    print("  results -> %s" % json_path.name)
+    return r
+
+
+def cmd_all():
+    data = get_data()
+    sim = build_module()
+    results = []
+    print("\n" + "=" * 100)
+    print("RUNNING ALL EXPERIMENTS")
+    print("=" * 100)
+    for key in sorted(EXPERIMENTS.keys()):
+        if key.startswith("_"):
+            continue
+        tr, elapsed = run_one(key, data, sim)
+        r = evaluate(key, tr)
+        print(format_row(r))
+        results.append(r)
+    # Summary
+    print("\n" + "-" * 100)
+    print("SUMMARY (sorted by NET)")
+    print("-" * 100)
+    for r in sorted(results, key=lambda x: x["net"], reverse=True):
+        print(format_row(r, show_pins=False))
+    # Write combined JSON
+    json_path = ROOT / "live_stuff" / "tests" / "_exp_all_results.json"
+    json_path.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
+    print("\n  combined results -> %s" % json_path.name)
+
+
+def cmd_group(name):
+    keys = GROUPS.get(name)
+    if keys is None:
+        cmd_all()
+        return
+    data = get_data()
+    sim = build_module()
+    print("\n=== GROUP: %s ===" % name)
+    for key in keys:
+        tr, elapsed = run_one(key, data, sim)
+        r = evaluate(key, tr)
+        print(format_row(r))
+
+
+def cmd_diff(key_a, key_b):
+    data = get_data()
+    sim = build_module()
+    tr_a, _ = run_one(key_a, data, sim)
+    tr_b, _ = run_one(key_b, data, sim)
+    ra = evaluate(key_a, tr_a)
+    rb = evaluate(key_b, tr_b)
+    print("\n=== DIFF: %s vs %s ===" % (key_a, key_b))
+    print(format_row(ra))
+    print(format_row(rb))
+    print("\n  Delta: NET %+.1f  DD %+.1f  worst6 %+.1f" % (
+        rb["net"] - ra["net"], rb["dd"] - ra["dd"], rb["worst_seg"] - ra["worst_seg"]))
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Experiment runner")
+    parser.add_argument("key", nargs="?", help="Experiment key")
+    parser.add_argument("--all", action="store_true", help="Run all experiments")
+    parser.add_argument("--group", help="Run a named group")
+    parser.add_argument("--list", action="store_true", help="List experiments")
+    parser.add_argument("--audit", action="store_true", help="Run deep audit")
+    parser.add_argument("--diff", nargs=2, metavar="KEY", help="Compare two experiments")
+    args = parser.parse_args()
+
+    if args.list:
+        cmd_list()
+    elif args.all:
+        cmd_all()
+    elif args.group:
+        cmd_group(args.group)
+    elif args.audit:
+        print("Running deep audit...")
+        from exp_deep_audit import main as audit_main
+        audit_main()
+    elif args.diff:
+        cmd_diff(args.diff[0], args.diff[1])
+    elif args.key:
+        if args.key not in EXPERIMENTS:
+            print("Unknown experiment: %s" % args.key)
+            print("Available: %s" % ", ".join(k for k in sorted(EXPERIMENTS) if not k.startswith("_")))
+            raise SystemExit(1)
+        cmd_run(args.key)
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

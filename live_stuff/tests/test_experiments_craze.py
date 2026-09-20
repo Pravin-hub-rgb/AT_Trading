@@ -65,7 +65,12 @@ def build_module():
                   '    exp_mltf=False,\n'
                   '    exp27_mode=None,\n'
                   '    exp31_lb=0,\n'
-                  '    exp_wage_h=0,\n')
+                  '    exp_wage_h=0,\n'
+                  '    exp_curfew_a=0.0,\n'
+                  '    exp_curfew_b=0.0,\n'
+                  '    exp_defer_h=0.0,\n'
+                  '    exp_legskip_r=0.0,\n'
+                  '    exp_partial_r=0.0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -208,7 +213,51 @@ def build_module():
     t6f = '        if not (s + 2700 < bar_ts <= e + 2700): continue\n'
     assert s.count(t6f) == 1, "window membership"
     s = s.replace(t6f, t6f +
-                  '        if exp_wage_h>0 and (bar_ts-s)/3600.0 < exp_wage_h: continue\n')
+                  '        if exp_wage_h>0 and (bar_ts-s)/3600.0 < exp_wage_h: continue\n'
+                  '        if exp_curfew_b>0 and exp_curfew_a<=(bar_ts-s)/3600.0<exp_curfew_b: continue\n'
+                  '        if exp_legskip_r>0:\n'
+                  '            _j2=idx\n'
+                  '            while _j2>0 and intervals[_j2-1][2]==d: _j2-=1\n'
+                  '            _anc=intervals[_j2][0]\n'
+                  '            _li=bs.bisect_right(candle_ts_htf,_anc); _hi2=bs.bisect_right(candle_ts_htf,bar_ts)\n'
+                  '            _hr=abs(pe-psl)\n'
+                  '            if _hr>0 and _hi2>_li:\n'
+                  '                _prog=(float(candles_ltf[bar]["close"])-_anc)*d/_hr\n'
+                  '                if _prog>exp_legskip_r: continue\n')
+    # 3h) deferred entry: a too-young signal is NOT dropped - it is requeued to
+    #     the first 15m bar at/after s+defer_h*3600 (window still open, original
+    #     SL pivot untouched meanwhile, ext re-checked at the defer bar). The
+    #     ledger stays causal: filtered is re-sorted by FINAL bar after the
+    #     loop (no-op when no deferral). Entry at the defer bar close; the
+    #     walk's busy/cooldown/halt all apply there (entry-time data only).
+    t6g = '        if sig["dir"] != d: continue\n'
+    assert s.count(t6g) == 1, "dir gate"
+    s = s.replace(t6g, t6g +
+                  '        if exp_defer_h>0:\n'
+                  '            _age=(bar_ts-s)/3600.0\n'
+                  '            if _age < exp_defer_h:\n'
+                  '                _tsd=int(s)+int(exp_defer_h*3600)\n'
+                  '                _k=bs.bisect_left(candle_ts_ltf,_tsd)\n'
+                  '                if _k<len(candles_ltf) and candle_ts_ltf[_k]<=e+2700 and _k>bar:\n'
+                  '                    _slp=float(sig["swing_start_px"])\n'
+                  '                    _dead=False\n'
+                  '                    for _q in range(bar+1,_k+1):\n'
+                  '                        if d==1 and float(candles_ltf[_q]["low"])<=_slp:_dead=True;break\n'
+                  '                        if d==-1 and float(candles_ltf[_q]["high"])>=_slp:_dead=True;break\n'
+                  '                    if not _dead:\n'
+                  '                        _ok=True\n'
+                  '                        _hr=abs(pe-psl)\n'
+                  '                        if ext_stop_r>0 and _hr>0:\n'
+                  '                            _ex2=(float(candles_ltf[_k]["close"])-pe)*d/_hr\n'
+                  '                            if _ex2>ext_stop_r:_ok=False\n'
+                  '                        if _ok:\n'
+                  '                            _ns=dict(sig);_ns["bar"]=candles_ltf[_k]["date"]\n'
+                  '                            filtered.append((_ns,use))\n'
+                  '                continue\n')
+    t6h = '        filtered.append((sig, use))\n'
+    assert s.count(t6h) == 1, "filtered append"
+    s = s.replace(t6h, t6h +
+                  '    filtered.sort(key=lambda z: ltf_store.pos(z[0]["bar"]))\n')
     # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t8) == 1, "chop init"
@@ -232,6 +281,54 @@ def build_module():
     #    busy + cooldown re-checked there (causal — known at trigger close).
     t6 = '        sl_pivot=sig["swing_start_px"]\n'
     assert s.count(t6) == 1, "sl pivot"
+    # 5) Partial exit (exp_partial_r): 50% sold at level, remaining runs half-weighted.
+    #    Per-trade state init (after sl0/best init, before trail events)
+    t_pe_init = '        sl0=sl; sl_cur=sl; best=entry\n'
+    assert s.count(t_pe_init) == 1, "pe init"
+    s = s.replace(t_pe_init, t_pe_init +
+                  '        _partial_taken=False; _partial_r=0.0\n')
+    #    Coarse partial check: AFTER best-update, BEFORE SL check
+    t_pe_coarse = ('            if direction==1:\n'
+                   '                if hi>best: best=hi\n'
+                   '            else:\n'
+                   '                if lo<best: best=lo\n')
+    assert s.count(t_pe_coarse) == 1, "pe coarse"
+    s = s.replace(t_pe_coarse, t_pe_coarse +
+                  '            if exp_partial_r>0 and not _partial_taken and risk>0:\n'
+                  '                _cur_r=(best-entry)*direction/risk\n'
+                  '                if _cur_r>=exp_partial_r:\n'
+                  '                    _partial_taken=True; _partial_r=exp_partial_r\n')
+    #    Fine partial check: AFTER best_f-update, BEFORE fine SL check
+    t_pe_fine = ('                if direction==1:\n'
+                 '                    if hi>best_f: best_f=hi\n'
+                 '                else:\n'
+                 '                    if lo<best_f: best_f=lo\n')
+    assert s.count(t_pe_fine) == 1, "pe fine"
+    s = s.replace(t_pe_fine, t_pe_fine +
+                  '                if exp_partial_r>0 and not _partial_taken and risk>0:\n'
+                  '                    _cur_rf=(best_f-entry)*direction/risk\n'
+                  '                    if _cur_rf>=exp_partial_r:\n'
+                  '                        _partial_taken=True; _partial_r=exp_partial_r\n')
+    #    R calculation: partial_r + (total_move/risk)*0.5
+    t_r = ('        move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
+            '        r_multiple=move/risk if risk>0 else 0\n')
+    assert s.count(t_r) == 1, "r calc"
+    s = s.replace(t_r,
+                  '        move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
+                  '        _partial_exit_price=0.0\n'
+                  '        if _partial_taken and risk>0:\n'
+                  '            _partial_exit_price=entry+direction*_partial_r*risk\n'
+                  '            _rem_move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
+                  '            r_multiple=_partial_r+(_rem_move/risk)*0.5\n'
+                  '        else:\n'
+                  '            r_multiple=move/risk if risk>0 else 0\n')
+    #    Trade dict: add partial_exit_price field
+    t_dict = '            "bars_held": exit_idx - i,\n        })'
+    assert s.count(t_dict) == 1, "trade dict"
+    s = s.replace(t_dict,
+                  '            "bars_held": exit_idx - i,\n'
+                  '            "partial_exit_price": round(_partial_exit_price, 2) if _partial_exit_price > 0 else 0.0,\n'
+                  '        })')
     s = s.replace(t6, t6 +
                   '        if b3_k>0:\n'
                   '            _lv=float(candles_ltf[i]["high"]) if direction==1 else float(candles_ltf[i]["low"])\n'
