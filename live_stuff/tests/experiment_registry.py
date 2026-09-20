@@ -42,73 +42,73 @@ BP = {**ENGINE_DEFAULTS, "chop_thresh": 58.0}
 
 EXPERIMENTS = {
 
-    # ===== COARSE MATRIX (no fine fills, gross R) =====
+    # ===== LB30 SWEPT EXT (fine fills) =====
 
     "lb30_w24_ext1.5": {
-        "desc": "lb30 w24 ext1.5 (coarse gross)",
+        "desc": "lb30 w24 ext1.5 (fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 1.5},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 265, "gross": 231.6},
+        "fine": True,
+        "pins": {},
     },
     "lb30_w24_ext2.0": {
-        "desc": "lb30 w24 ext2.0 (coarse gross)",
+        "desc": "lb30 w24 ext2.0 (fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 2.0},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 294, "gross": 248.2},
+        "fine": True,
+        "pins": {},
     },
     "lb30_w24_ext2.5": {
-        "desc": "lb30 w24 ext2.5 (coarse gross)",
+        "desc": "lb30 w24 ext2.5 (fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 2.5},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 304, "gross": 231.7},
+        "fine": True,
+        "pins": {},
     },
     "lb30_w24_ext3.0": {
-        "desc": "lb30 w24 ext3.0 (coarse gross)",
+        "desc": "lb30 w24 ext3.0 (fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 3.0},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 307, "gross": 222.4},
+        "fine": True,
+        "pins": {},
     },
 
-    # ===== A4 FINE PINS =====
+    # ===== A4 (fine fills) =====
 
     "a4_w24_ext1.5": {
-        "desc": "A4 w24 ext1.5 (coarse, on sw20)",
+        "desc": "A4 w24 ext1.5 (fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "chop_thresh": 55.0, "exp_persist": 2,
                     "exp_wage_h": 24, "ext_stop_r": 1.5},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 250, "gross": 207.1},
+        "fine": True,
+        "pins": {},
     },
     "a4_w24_ext3.0": {
-        "desc": "A4 w24 ext3.0 (coarse, on sw20)",
+        "desc": "A4 w24 ext3.0 (fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "chop_thresh": 55.0, "exp_persist": 2,
                     "exp_wage_h": 24, "ext_stop_r": 3.0},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 285, "gross": 218.8},
+        "fine": True,
+        "pins": {},
     },
 
-    # ===== OPT MULTI (their champion) =====
+    # ===== OPT MULTI (their champion, fine fills) =====
 
     "opt_cd10_w24": {
-        "desc": "OPT cd10 w24 ext1.5 (their champion multi, coarse)",
+        "desc": "OPT cd10 w24 ext1.5 (their champion multi, fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "chop_thresh": 55.0, "exp_persist": 2,
                     "exp_wage_h": 24, "cooldown_bars": 10, "exp_mltf": True,
                     "ext_stop_r": 1.5},
         "swing": "sw20",
-        "fine": False,
-        "pins": {"n": 300, "gross": 216.5},
+        "fine": True,
+        "pins": {},
     },
 
     # ===== OUR CHAMPIONS (partial exits) =====
