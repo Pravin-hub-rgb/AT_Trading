@@ -149,7 +149,7 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 500, "net": 366.1, "dd": 17.8, "partials": 0},
+        "pins": {"n": 500, "net": 366.1, "dd": 17.8, "dd_net": 27.7, "partials": 0},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
