@@ -35,7 +35,6 @@ BP = {**ENGINE_DEFAULTS, "chop_thresh": 58.0}
 #   params     : overrides merged onto BASE (or BP if use_bp=True)
 #   use_bp     : if True, merge onto BP (chop=58); if False, merge onto ENGINE_DEFAULTS
 #   swing      : "sw20" (min_bars_1h) or "sw10" (fast 1h chain)
-#   fine       : use 1m fine fills for exit precision
 #   pins       : expected results for validation (optional)
 #   htf_rr     : override htf_rr if needed (default 3.0)
 # ---------------------------------------------------------------------------
@@ -49,7 +48,6 @@ EXPERIMENTS = {
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 1.5},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
     "lb30_w24_ext2.0": {
@@ -57,7 +55,6 @@ EXPERIMENTS = {
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 2.0},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
     "lb30_w24_ext2.5": {
@@ -65,7 +62,6 @@ EXPERIMENTS = {
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 2.5},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
     "lb30_w24_ext3.0": {
@@ -73,7 +69,6 @@ EXPERIMENTS = {
         "engine": "patched",
         "params": {"exp31_lb": 30, "exp_wage_h": 24, "ext_stop_r": 3.0},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
 
@@ -85,7 +80,6 @@ EXPERIMENTS = {
         "params": {"exp31_lb": 30, "chop_thresh": 55.0, "exp_persist": 2,
                     "exp_wage_h": 24, "ext_stop_r": 1.5},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
     "a4_w24_ext3.0": {
@@ -94,7 +88,6 @@ EXPERIMENTS = {
         "params": {"exp31_lb": 30, "chop_thresh": 55.0, "exp_persist": 2,
                     "exp_wage_h": 24, "ext_stop_r": 3.0},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
 
@@ -107,7 +100,6 @@ EXPERIMENTS = {
                     "exp_wage_h": 24, "cooldown_bars": 10, "exp_mltf": True,
                     "ext_stop_r": 1.5},
         "swing": "sw20",
-        "fine": True,
         "pins": {},
     },
 
@@ -122,7 +114,6 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw20",
-        "fine": True,
         "pins": {"n": 371, "net": 261.5, "dd": 29.3, "partials": 42},
     },
     "champion_single_sw10": {
@@ -134,7 +125,6 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw10",
-        "fine": True,
         "pins": {"n": 395, "net": 238.4, "dd": 16.0, "partials": 38},
     },
     "champion_multi_sw20": {
@@ -147,7 +137,6 @@ EXPERIMENTS = {
                     "exp_partial_r": 7.5, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw20",
-        "fine": True,
         "pins": {"n": 487, "net": 465.1, "dd": 21.9, "partials": 62},
     },
     "champion_multi_sw10": {
@@ -160,7 +149,6 @@ EXPERIMENTS = {
                     "exp_partial_r": 7.5, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "fine": True,
         "pins": {"n": 501, "net": 472.9, "dd": 14.5, "partials": 60},
     },
 
@@ -175,7 +163,6 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "window_end": "exit"},
         "swing": "sw20",
-        "fine": True,
         "pins": {"n": 371, "net": 148.2, "dd": 37.3},
     },
     "baseline_no_partial_sw10": {
@@ -187,7 +174,6 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "window_end": "exit"},
         "swing": "sw10",
-        "fine": True,
         "pins": {"n": 394, "net": 163.6, "dd": 29.2},
     },
 
@@ -199,7 +185,6 @@ EXPERIMENTS = {
         "params": {},
         "use_bp": True,
         "swing": "sw20",
-        "fine": False,
         "pins": {"n": 351, "gross": 225.3},
     },
     "_shipped_sw15": {
@@ -208,7 +193,6 @@ EXPERIMENTS = {
         "params": {},
         "use_bp": True,
         "swing": "sw15",
-        "fine": False,
         "pins": {"n": 340, "gross": 225.3},
     },
 }

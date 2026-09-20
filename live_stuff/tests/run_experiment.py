@@ -106,7 +106,7 @@ def run_one(key, data=None, sim=None):
     base = BP if cfg.get("use_bp", True) else ENGINE_DEFAULTS
     params = {**base, **cfg["params"]}
     sw = get_swings(data, cfg["swing"])
-    fine = data["fine"] if cfg.get("fine", False) else []
+    fine = data["fine"]
 
     t0 = time.time()
     if cfg["engine"] == "shipped":
@@ -243,7 +243,6 @@ def cmd_run(key):
         "desc": cfg["desc"],
         "params": {**BP, **cfg["params"]} if cfg.get("use_bp", True) else cfg["params"],
         "swing": cfg["swing"],
-        "fine": cfg.get("fine", False),
         "results": r,
         "trades": [
             {
