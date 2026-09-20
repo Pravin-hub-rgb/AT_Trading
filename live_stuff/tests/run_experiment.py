@@ -321,14 +321,48 @@ def cmd_diff(key_a, key_b):
         rb["net"] - ra["net"], rb["dd"] - ra["dd"], rb["worst_seg"] - ra["worst_seg"]))
 
 
+def cmd_archive(name):
+    """Run an archived experiment script with correct paths."""
+    archive_dir = ROOT / "live_stuff" / "tests" / "_archive"
+    if name.endswith(".py"):
+        name = name[:-3]
+    script = archive_dir / ("%s.py" % name)
+    if not script.exists():
+        # List available
+        available = sorted([f.stem for f in archive_dir.glob("exp*.py")])
+        print("Unknown archive: %s" % name)
+        print("Available: %s" % ", ".join(available))
+        raise SystemExit(1)
+    import subprocess
+    env = dict(__import__("os").environ)
+    test_dir = str(ROOT / "live_stuff" / "tests")
+    env["PYTHONPATH"] = test_dir + ";" + env.get("PYTHONPATH", "")
+    result = subprocess.run(
+        [sys.executable, str(script)],
+        cwd=str(ROOT / "live_stuff" / "tests"),
+        env=env,
+        capture_output=False,
+    )
+    raise SystemExit(result.returncode)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Experiment runner")
-    parser.add_argument("key", nargs="?", help="Experiment key")
+    parser = argparse.ArgumentParser(
+        description="Experiment runner",
+        epilog="Examples:\n"
+               "  python run_experiment.py champion_multi_sw10\n"
+               "  python run_experiment.py --all\n"
+               "  python run_experiment.py --archive exp47_yearly_stats\n"
+               "  python run_experiment.py --list",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("key", nargs="?", help="Experiment key (see --list)")
     parser.add_argument("--all", action="store_true", help="Run all experiments")
     parser.add_argument("--group", help="Run a named group")
     parser.add_argument("--list", action="store_true", help="List experiments")
     parser.add_argument("--audit", action="store_true", help="Run deep audit")
     parser.add_argument("--diff", nargs=2, metavar="KEY", help="Compare two experiments")
+    parser.add_argument("--archive", metavar="NAME", help="Run an archived experiment script")
     args = parser.parse_args()
 
     if args.list:
@@ -343,6 +377,8 @@ def main():
         audit_main()
     elif args.diff:
         cmd_diff(args.diff[0], args.diff[1])
+    elif args.archive:
+        cmd_archive(args.archive)
     elif args.key:
         if args.key not in EXPERIMENTS:
             print("Unknown experiment: %s" % args.key)
