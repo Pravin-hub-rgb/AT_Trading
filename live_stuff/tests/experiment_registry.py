@@ -106,7 +106,7 @@ EXPERIMENTS = {
     # ===== OUR CHAMPIONS (partial exits) =====
 
     "champion_single_sw20": {
-        "desc": "Champion single sw20 (raw NET king, +261.5)",
+        "desc": "Champion single sw20 (partial exit, +104.0)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -114,10 +114,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 371, "net": 261.5, "dd": 29.3, "partials": 42},
+        "pins": {"n": 371, "net": 104.0, "dd": 33.7, "partials": 42},
     },
     "champion_single_sw10": {
-        "desc": "Champion single sw10 (best NET/DD ratio, +238.4)",
+        "desc": "Champion single sw10 (partial exit, +95.9)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -125,10 +125,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 395, "net": 238.4, "dd": 16.0, "partials": 38},
+        "pins": {"n": 395, "net": 95.9, "dd": 22.0, "partials": 38},
     },
     "champion_multi_sw20": {
-        "desc": "Champion multi sw20 (+465.1)",
+        "desc": "Champion multi sw20 (partial exit, +232.6)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -137,10 +137,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 7.5, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 487, "net": 465.1, "dd": 21.9, "partials": 62},
+        "pins": {"n": 487, "net": 232.6, "dd": 29.4, "partials": 62},
     },
     "champion_multi_sw10": {
-        "desc": "Champion multi sw10 — NEW OVERALL KING (+472.9)",
+        "desc": "Champion multi sw10 (partial exit, +247.9) — best NET with partials",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -149,7 +149,7 @@ EXPERIMENTS = {
                     "exp_partial_r": 7.5, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 501, "net": 472.9, "dd": 14.5, "partials": 60},
+        "pins": {"n": 501, "net": 247.9, "dd": 14.5, "partials": 60},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====

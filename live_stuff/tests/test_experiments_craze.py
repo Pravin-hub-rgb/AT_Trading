@@ -309,7 +309,7 @@ def build_module():
                   '                    _cur_rf=(best_f-entry)*direction/risk\n'
                   '                    if _cur_rf>=exp_partial_r:\n'
                   '                        _partial_taken=True; _partial_r=exp_partial_r\n')
-    #    R calculation: partial_r + (total_move/risk)*0.5
+    #    R calculation: 0.5*partial_r + (total_move/risk)*0.5  (50% sold at partial_r)
     t_r = ('        move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
             '        r_multiple=move/risk if risk>0 else 0\n')
     assert s.count(t_r) == 1, "r calc"
@@ -319,7 +319,7 @@ def build_module():
                   '        if _partial_taken and risk>0:\n'
                   '            _partial_exit_price=entry+direction*_partial_r*risk\n'
                   '            _rem_move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
-                  '            r_multiple=_partial_r+(_rem_move/risk)*0.5\n'
+                  '            r_multiple=(_partial_r*0.5)+(_rem_move/risk)*0.5\n'
                   '        else:\n'
                   '            r_multiple=move/risk if risk>0 else 0\n')
     #    Trade dict: add partial_exit_price field

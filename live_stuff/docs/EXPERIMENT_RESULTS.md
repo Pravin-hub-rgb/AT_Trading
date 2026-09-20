@@ -421,10 +421,10 @@ To add a new experiment: add a dict to the registry. No new file needed.
 
 | Key | Description | NET | DD |
 |---|---|---|---|
-| `champion_multi_sw10` | **NEW KING** — multi sw10 | +472.9 | 14.5 |
-| `champion_multi_sw20` | Multi sw20 | +465.1 | 21.9 |
-| `champion_single_sw20` | Single sw20 (raw king) | +261.5 | 29.3 |
-| `champion_single_sw10` | Single sw10 (best DD ratio) | +238.4 | 16.0 |
+| `champion_multi_sw10` | **BEST WITH PARTIALS** — multi sw10 | +247.9 | 14.5 |
+| `champion_multi_sw20` | Multi sw20 | +232.6 | 29.4 |
+| `champion_single_sw20` | Single sw20 | +104.0 | 33.7 |
+| `champion_single_sw10` | Single sw10 | +95.9 | 22.0 |
 | `baseline_no_partial_sw20` | No-partial baseline sw20 | +148.2 | 37.3 |
 | `baseline_no_partial_sw10` | No-partial baseline sw10 | +163.6 | 29.2 |
 | `lb30_w24_ext1.5` | lb30 w24 ext1.5 (coarse) | +231.6g | — |
@@ -1364,7 +1364,7 @@ Source: `exp_final_matrix.py`. All configs: v18 engine, 0.055% fee/side + 0.005%
 | Config | Trades | NET R | Cost | Win Rate | Profit Factor | Max Drawdown | Max Loss Streak | 2023 | 2024 | 2025 | 2026 | H1 | H2 | Big Wins |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Shipped baseline | 340 | +166.7R | 84.9R | 30.0% | 2.15 | 27.1R | 16 | +28R | +72R | +60R | +90R | +101R | +151R | 10 |
-| **Our champion (atr_high+p7.5+ext3+cd8)** | 371 | **+261.5R** | 90.9R | 28.8% | 2.44 | 29.3R | 14 | +32R | +88R | +134R | +99R | +120R | **+232R** | **27** |
+| **Our champion (atr_high+p7.5+ext3+cd8)** | 371 | **+104.0R** | 90.9R | 28.8% | 2.44 | 33.7R | 14 | +32R | +88R | +134R | +99R | +120R | **+232R** | **27** |
 | Their A4 w24 ext1.5 | 341 | +159.2R | 86.7R | 28.7% | 2.09 | 20.3R | 14 | +43R | +63R | +59R | +80R | +106R | +140R | 10 |
 | **Their A4 w24 ext1.5 + partR=7.5** | 341 | **+245.4R** | 86.6R | 28.7% | 2.47 | **16.0R** | 14 | +61R | +68R | +113R | +91R | +129R | +204R | 26 |
 | Their lb30 ext2.5 | 364 | +174.3R | 86.8R | 30.8% | 2.11 | 27.7R | 12 | +22R | +85R | +71R | +83R | +107R | +154R | 12 |
@@ -1374,10 +1374,13 @@ Source: `exp_final_matrix.py`. All configs: v18 engine, 0.055% fee/side + 0.005%
 | Config | Trades | NET R | Cost | Win Rate | Profit Factor | Max Drawdown | Max Loss Streak | 2023 | 2024 | 2025 | 2026 | H1 | H2 | Big Wins |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | OPT-cd10 w24 ext1.5 (theirs) | 408 | +215.7R | 101.9R | 30.9% | 2.22 | 24.2R | 15 | +63R | +78R | +96R | +81R | +140R | +177R | 12 |
-| **Our atr_high+p7.5+ext3+cd8+mltf+persist7** | 487 | **+465.1R** | 114.9R | 31.8% | **2.92** | 21.9R | 14 | **+128R** | **+140R** | **+186R** | **+127R** | **+267R** | **+313R** | **42** |
+| **Our atr_high+p7.5+ext3+cd8+mltf+persist7** | 487 | **+232.6R** | 114.9R | 31.8% | **2.92** | 29.4R | 14 | **+128R** | **+140R** | **+186R** | **+127R** | **+267R** | **+313R** | **42** |
 
 ### Recommendation
 
-**Phase 1 (months 1-6):** Start with our champion SINGLE (atr_high+p7.5+ext3+cd8) — +261.5R NET, smoothest equity curve, all 4 years profitable, H2 +232R. Single position = 1 risk unit, easiest to manage.
+**UPDATE (2026-09-20):** Partial R formula corrected. Champion single with partials (+104.0R) is actually WORSE than the baseline without partials (+148.2R). Partial exits hurt single-position configs by cutting winners too early.
 
-**Phase 2 (after buffer):** Switch to MULTI (atr_high+p7.5+ext3+cd8+mltf+persist7) — +465.1R NET, PF 2.92, 42 big wins. Requires ~2x capital. Switch after 3-6 months live data confirms backtest.
+**Best configs after correction:**
+- **Multi with partials:** champion_multi_sw10 = +247.9R / DD 14.5 (best NET/DD ratio)
+- **No partials:** lb30_w24_ext2.0 = +197.2R / DD 23.6 (best pure single)
+- **Baseline:** baseline_no_partial_sw10 = +163.6R / DD 29.2

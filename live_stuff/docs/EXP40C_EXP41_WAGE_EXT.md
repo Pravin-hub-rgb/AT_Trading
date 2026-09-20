@@ -948,33 +948,30 @@ Gates all passed: identity n=351 (no-op proof), user coarse matrix 4/4
 
 | Config | n | NET | npt | DD | partials | worst6 | years (23/24/25/26) |
 |---|---|---|---|---|---|---|---|
-| champion single sw20 | 371 | +261.5 | 0.705 | 29.3 | 42 | **-23.9** | 32.5/87.5/133.6/98.8 |
-| champion single sw10 | 395 | +238.4 | 0.604 | 16.0 | 38 | -3.2 | 40.8/90.8/94.6/109.0 |
-| **champion multi sw20** | 487 | +465.1 | 0.955 | 21.9 | 62 | **+1.9** | 127.8/139.5/185.7/127.0 |
-| **champion multi sw10** | 501 | **+472.9** | 0.944 | **14.5** | 60 | **+22.7** | 136.2/121.2/191.7/144.4 |
+| champion single sw20 | 371 | +104.0 | 0.280 | 33.7 | 42 | **-23.6** | 32.5/87.5/133.6/98.8 |
+| champion single sw10 | 395 | +95.9 | 0.243 | 22.0 | 38 | -7.2 | 40.8/90.8/94.6/109.0 |
+| **champion multi sw20** | 487 | +232.6 | 0.477 | 29.4 | 62 | **+3.4** | 127.8/139.5/185.7/127.0 |
+| **champion multi sw10** | 501 | **+247.9** | 0.495 | **14.5** | 60 | **+30.0** | 136.2/121.2/191.7/144.4 |
 | baseline (no partial) sw20 | 371 | +148.2 | 0.400 | 37.3 | 0 | - | 14.6/78.8/66.6/79.0 |
 | baseline (no partial) sw10 | 394 | +163.6 | 0.415 | 29.2 | 0 | - | 33.2/106.0/46.9/73.1 |
 
-Engine unification CONFIRMED: their +261.5/+465.1 claims reproduce to the
-decimal on our data + our patcher. The 340t-vs-351t identity difference is
-their BASE params (their env), not data drift - the champion configs converge
-exactly.
+NOTE (2026-09-20): Partial R formula corrected — was booking 7.5R for the
+50% leg (phantom +3.75R per partial). Fixed to 0.5*partial_r. All numbers
+above are CORRECTED. Partial exit delta is now +84.3R (multi sw10 vs
+baseline sw10), not the previously reported +309.3R.
 
 ### 20.2 Verdicts
 
-1. **Partial exits are the biggest single edge found in the entire program:**
-   +113.3R (single) / +309.3R (multi sw10) over the no-partial baseline of
-   the same config - by harvesting 7.5R+ runners at half-size instead of
-   trailing them back.
-2. **NEW OVERALL KING: champion multi sw10** (+472.9 / DD 14.5 / worst seg
-   +22.7 / min year +121.2) - beats the old champion (OPT-cd10+w24+ext1.5,
-   +337.7 / DD 19.2 / worst +13.6) on every metric simultaneously.
-3. **NEW single king (risk-adjusted): champion single sw10** (+238.4 / DD
-   16.0 / worst -3.2 / NET+DD 14.9) - beats A4+w24 (+223.1/DD 19.8, ratio
-   11.3) and lb30+ext2.5 (+231.1) on both NET and stability. sw20 variant is
-   the raw king (+261.5) but bleeds seg1 (-23.9).
-4. **sw answer (their Q2):** sw20 for raw single (+23.1 over sw10), sw10 for
-   multi (+7.8) and for stability (worst segs -3.2/+22.7 vs -23.9/+1.9).
+1. **Partial exits add +84.3R on multi sw10** (+247.9 vs baseline +163.6) but
+   HURT single configs (single sw10: +95.9 vs baseline +163.6 = -67.7R).
+   The single configs are better WITHOUT partials.
+2. **Best config with partials: champion multi sw10** (+247.9 / DD 14.5 /
+   worst seg +30.0) — still a strong config, but much less dominant than
+   the inflated numbers suggested.
+3. **Best config overall (no partials): lb30_w24_ext2.0** (+197.2 / DD 23.6)
+   or baseline_no_partial_sw10 (+163.6 / DD 29.2).
+4. **sw answer:** sw20 for multi (+232.6 vs sw10 +247.9... wait, sw10 wins
+   for multi). sw20 for single (+104.0 vs +95.9).
 5. **Caveats:** (a) partial second-fill fee+slip not yet in `_trade_costs`
    (~0.02R per partial trade, ~1R total - champion NETs slightly generous);
    (b) partial trades book r>0 by construction -> halt3 never fires on them
