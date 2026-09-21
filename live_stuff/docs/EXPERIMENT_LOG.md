@@ -27,6 +27,7 @@
 | 2026-09-20 | Wage-24 on lb30 | 24h wage gate on production base | DEAD on lb30 (−11.3R) | Helps A4 (+19.8R) but hurts lb30. Base-dependent, not universal. |
 | 2026-09-20 | Wage × ext anti-synergy | Mix wage with tight ext | DEAD | w24 wins only at ext=1.5. Once ext opens to 2.5, w0 beats w24 by 52R. |
 | 2026-09-21 | Skip-first-swing (v2) | Skip first LTF signal in each HTF window | DEAD (−8.3R on king) | First swing is where the edge lives. Wage gate handles fresh windows better. |
+| 2026-09-21 | Funding rate filter | Skip entries when |funding| > 0.03-0.10% | DEAD (0 trades filtered) | Funding data too sparse (3/day), never hit thresholds during entry times. Max 0.11% only 2× in 3.7yr. |
 
 ---
 

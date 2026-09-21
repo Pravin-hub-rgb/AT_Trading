@@ -1095,6 +1095,7 @@ EXPERIMENTS = {
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
     },
+    # === FUNDING RATE FILTER: DEAD (data too sparse, 0 trades filtered) ===
 }
 
 # Groups for batch runs
@@ -1144,5 +1145,6 @@ GROUPS = {
         "partial4_multi_sw10", "partial5_multi_sw10",
     ],
     # "skipfirst": DEAD
+    # "funding": DEAD (data too sparse, 0 trades filtered)
     "all": None,  # None = run everything except hidden
 }
