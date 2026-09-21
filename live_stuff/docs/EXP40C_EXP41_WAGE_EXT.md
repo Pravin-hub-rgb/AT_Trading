@@ -913,6 +913,7 @@ against this lane's craze patcher. Outcome:
 * Their own champions (atr_high + p7.5 + ext3 + cd8 single +261.5; mltf+persist7
   multi +465.1) do NOT use wage/curfew - unaffected by their bug. NOTE: those
   configs run on their engine variant (partial exits, atr_high mode, ext3) -
+  **[LEGACY: these are pre partial-R-fix numbers. Post-fix: single +90.1R, multi +208.4R. No-partial multi sw10 = +325.8R.]**
   numbers between the two engine variants are NOT directly comparable until the
   engines are unified.
 * Their audit of shared mechanics agrees with ours: identity, partial-exit math,

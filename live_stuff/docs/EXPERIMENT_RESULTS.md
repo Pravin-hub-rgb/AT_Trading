@@ -1305,9 +1305,14 @@ The B3 entry price bug inflated all B3 results by ~3-4x. Multi-LTF configs were 
 
 **Harness:** `exp_final_single.py`
 
+> **⚠️ LEGACY NUMBERS (pre-fix):** These results used the old partial R formula
+> (booked 7.5R for 50% leg) and old trail-event ordering. Current corrected
+> numbers: champion_single_sw20 = +90.1R NET (372t), champion_single_sw10 =
+> +82.0R NET (396t). See `run_experiment.py --all` for authoritative numbers.
+
 ```
 Config:  mode=atr_high, ext_stop_r=3.0, cooldown_bars=8, exp_partial_r=7.5
-Trades:  371 | Gross: +352.4R | Costs: -90.9R | NET: +261.5R
+Trades:  371 | Gross: +352.4R | Costs: -90.9R | NET: +261.5R  [LEGACY]
 WR: 28.8% | Avg win: +5.58R | Avg loss: -0.93R | PF: 2.44
 Max DD: 29.3R | Max loss streak: 14 | Monsters (>10R): 27
 ```
@@ -1359,6 +1364,10 @@ Max DD: 29.3R | Max loss streak: 14 | Monsters (>10R): 27
 
 Source: `exp_final_matrix.py`. All configs: v18 engine, 0.055% fee/side + 0.005%/0.010% slip + 0.01%/8h funding.
 
+> **⚠️ LEGACY (pre trail-fix):** These numbers used old trail-event ordering.
+> Post trail-fix: champion_single = +90.1R, champion_multi = +208.4R.
+> No-partial multi sw10 = +325.8R (actual king). Run `--all` for current.
+
 **Single Position:**
 
 | Config | Trades | NET R | Cost | Win Rate | Profit Factor | Max Drawdown | Max Loss Streak | 2023 | 2024 | 2025 | 2026 | H1 | H2 | Big Wins |
@@ -1378,9 +1387,11 @@ Source: `exp_final_matrix.py`. All configs: v18 engine, 0.055% fee/side + 0.005%
 
 ### Recommendation
 
-**UPDATE (2026-09-20):** Partial R formula corrected. Champion single with partials (+104.0R) is actually WORSE than the baseline without partials (+148.2R). Partial exits hurt single-position configs by cutting winners too early.
+**UPDATE (2026-09-20):** Two fixes applied: (1) partial R formula corrected, (2) trail-event ordering fixed (ratchet before SL check). All numbers below are POST-FIX.
 
-**Best configs after correction:**
-- **Multi with partials:** champion_multi_sw10 = +247.9R / DD 14.5 (best NET/DD ratio)
-- **No partials:** lb30_w24_ext2.0 = +197.2R / DD 23.6 (best pure single)
-- **Baseline:** baseline_no_partial_sw10 = +163.6R / DD 29.2
+**Best configs (final corrected):**
+- **KING: champion_multi_sw10** = +325.8R / DD 17.8 / NET/DD 18.3 — multi, no partials, sw10
+- **Best single no-partial:** lb30_w24_ext2.0 = +171.3R / DD 23.6
+- **Baseline no-partial:** baseline_no_partial_sw10 = +137.7R / DD 29.2
+
+**Key insight:** partial exits hurt ALL configs. Partials are dead weight.
