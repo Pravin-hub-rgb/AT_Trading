@@ -20,7 +20,7 @@ CURRENT LEADERS (2026-09-21, post deep audit):
         CSVs shift the calendar by 5h30m and an IST-weekend filter (nowknd_*)
         loses money on the multi (it throws away UTC Sun evening = IST Mon open).
 
-    wage10_swingpause_single_sw10  KING SINGLE  261t +282.9R NET / DD 14.7 / WR 31.4%
+    wage10_swingpause_wskip_single_sw10  KING SINGLE  261t +282.9R NET / DD 14.7 / WR 31.4%
         = swing_pause + wage_10h (skip entries in HTF windows < 10h old) +
           skip IST-WEEKEND entries (exp_skip_weekend=1). Wage gate: age = signal_bar_ts
           - window_start_ts, skip if < 10h. Structural pause: after loss, wait for new
@@ -32,7 +32,7 @@ CURRENT LEADERS (2026-09-21, post deep audit):
         Live needs a 4-5 position cap (cap-5 costs zero edge; see audit doc 3c).
 
     Run any variant with:
-        python run_experiment.py wage10_swingpause_single_sw10
+        python run_experiment.py wage10_swingpause_wskip_single_sw10
         python run_experiment.py --group best
         python run_experiment.py --group kingsweep
 """

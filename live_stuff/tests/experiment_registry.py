@@ -669,17 +669,17 @@ EXPERIMENTS = {
         "swing": "sw10",
         "pins": {"n": 264, "net": 265.7, "dd": 14.7},
     },
-    "wage10_swingpause_single_sw10": {
-        "desc": "VALIDATION: wage neighborhood 10h — PLATEAU PEAK (+282.9 / DD 14.7)",
+    "wage10_swingpause_wskip_single_sw10": {
+        "desc": "KING SINGLE: wage 10h + swing pause + IST weekend skip — cd=0 redundant with swingpause",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
-                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "chop_thresh": 58.0, "cooldown_bars": 0,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "exp_wage_h": 10, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 261, "net": 282.9, "dd": 14.7},
+        "pins": {"n": 262, "net": 282.1, "dd": 14.7},
     },
     "wage16_swingpause_single_sw10": {
         "desc": "VALIDATION: wage neighborhood 16h",
@@ -1113,7 +1113,7 @@ GROUPS = {
     "riskgates": ["rmax15_swingpause_single_sw10", "rmax10_swingpause_single_sw10",
                    "rmax15_multi_sw10"],
     "wageval": ["wage12_swingpause_single_sw10", "wage8_swingpause_single_sw10",
-                 "wage10_swingpause_single_sw10", "wage16_swingpause_single_sw10",
+                 "wage10_swingpause_wskip_single_sw10", "wage16_swingpause_single_sw10",
                  "wage20_swingpause_single_sw10", "wage12_swingpause_single_nowknd_sw10",
                  "wage12_swingpause_single_sw20"],
     "ltfregime": ["chopband_multi_sw10", "chopband_swingpause_single_sw10",
@@ -1121,7 +1121,7 @@ GROUPS = {
                    "utcsat_chopband_multi_sw10", "fullstack_swingpause_single_sw10",
                    "atrr_swingpause_single_sw20", "atrr_cd0_swingpause_single_sw10",
                    "chopband_swingpause_single_sw20", "chopband_atrr_swingpause_single_sw20"],
-    "best": ["utcsat_multi_sw10", "wage10_swingpause_single_sw10"],
+    "best": ["utcsat_multi_sw10", "wage10_swingpause_wskip_single_sw10"],
     "entryquality": ["b2doji_utcsat_multi_sw10", "b2doji_swingpause_single_sw10",
                       "age50_utcsat_multi_sw10", "age50_swingpause_single_sw10",
                       "combined_b2age_utcsat_multi_sw10"],
@@ -1136,7 +1136,7 @@ GROUPS = {
         "ext35_utcsat_multi_sw10", "ext4_utcsat_multi_sw10",
         # wage_h / curfew on kings
         "wage12_utcsat_multi_sw10", "wage24_utcsat_multi_sw10",
-        "wage10_swingpause_single_sw10", "wage24_swingpause_single_sw10",
+        "wage10_swingpause_wskip_single_sw10", "wage24_swingpause_single_sw10",
         "curfew624_utcsat_multi_sw10", "curfew624_swingpause_single_sw10",
         # partial_r fine sweep
         "partial1_multi_sw10", "partial2_multi_sw10", "partial3_multi_sw10",

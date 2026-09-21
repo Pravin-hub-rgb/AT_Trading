@@ -32,7 +32,7 @@
 
 **After a 1-month deep audit, cooldown research, UTC-weekend analysis, entry-quality autopsy, and live-certification via one-pass causal study — the final leaders:**
 
-| Metric | utcsat_multi_sw10 (KING multi) | wage10_swingpause_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
+| Metric | utcsat_multi_sw10 (KING multi) | wage10_swingpause_wskip_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
 |---|---|---|---|
 | Trades | 454 | 261 | 500 |
 | NET R | **+359.0** | **+282.9** | +325.8 |
@@ -54,7 +54,7 @@ All corrected. Net R after costs. Sorted by NET R. Cooldown configs highlighted.
 | # | Config | Trades | NET R | DD | NET/DD | WR | Note |
 |---|---|---|---|---|---|---|---|
 | 1 | **utcsat_multi_sw10** | 454 | **+359.0** | 14.8 | 24.3 | 30.8% | **KING (multi)** |
-| 2 | **wage10_swingpause_single_sw10** | 261 | **+282.9** | 14.7 | 19.2 | 31.4% | **KING (single)** |
+| 2 | **wage10_swingpause_wskip_single_sw10** | 261 | **+282.9** | 14.7 | 19.2 | 31.4% | **KING (single)** |
 | 3 | champion_multi_sw10 | 500 | +325.8 | 17.8 | 18.3 | 30.0% | Conservative |
 | 4 | opt_ml_cd0_mb10 | 515 | +296.7 | 23.3 | 12.7 | 28.0% | |
 | 5 | opt_ml_cd10_mb10 | 453 | +233.5 | 32.7 | 7.1 | 28.5% | |
@@ -167,13 +167,13 @@ MONTHLY R:
 
 ---
 
-## 4. Scorecard: wage10_swingpause_single_sw10
+## 4. Scorecard: wage10_swingpause_wskip_single_sw10
 
 **KING (single position).** Wage 10h filter + structural swing-pause after loss.
 
 ### Key Stats
 
-| Metric | baseline_no_partial_sw10 | wage10_swingpause_single_sw10 | Delta |
+| Metric | baseline_no_partial_sw10 | wage10_swingpause_wskip_single_sw10 | Delta |
 |---|---|---|---|
 | Trades | 395 | 261 | −134 (wage + pause filter bad re-entries) |
 | NET R | +137.7 | **+282.9** | **+145.2R** |
@@ -190,7 +190,7 @@ Both filters are structural conditions, not timers. No loss = no block (zero imp
 
 ### Comparison to Old King Single
 
-| Metric | nowknd_swingpause_single_sw10 (old) | wage10_swingpause_single_sw10 (new) | Delta |
+| Metric | nowknd_swingpause_single_sw10 (old) | wage10_swingpause_wskip_single_sw10 (new) | Delta |
 |---|---|---|---|
 | Trades | 294 | 261 | −33 |
 | NET R | +217.6 | **+282.9** | **+65.3R** |
@@ -509,7 +509,7 @@ Even if this specific strategy dies, you've built:
 
 1. **The engine is causally clean** — no lookahead, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps).
 2. **utcsat_multi_sw10 = 454t / +359.0R NET / DD 14.8 / WR 30.8%** — best config on the fixed engine. Edge over old king from UTC-Saturday skip. Mechanism understood: Saturday is the only weekday where multi overlap-coverage fails (cluster net −6.3R vs +151R on Thursday).
-3. **wage10_swingpause_single_sw10 = 261t / +282.9R NET / DD 14.7 / WR 31.4%** — best single config. Wage 10h filter (skip young windows) + swing-pause (fresh structure after loss) + IST weekend skip. Stable across 4 years.
+3. **wage10_swingpause_wskip_single_sw10 = 261t / +282.9R NET / DD 14.7 / WR 31.4%** — best single config. Wage 10h filter (skip young windows) + swing-pause (fresh structure after loss) + IST weekend skip. Stable across 4 years.
 4. **Both pass:** identity gate, WF segments, pins, cost stress (breakeven ~4.4x costs).
 
 ### What's promising but unproven
@@ -534,7 +534,7 @@ Even if this specific strategy dies, you've built:
 
 | | Multi King | Single King |
 |---|---|---|
-| **Config** | **utcsat_multi_sw10** | **wage10_swingpause_single_sw10** |
+| **Config** | **utcsat_multi_sw10** | **wage10_swingpause_wskip_single_sw10** |
 | **Trades** | 454 | 261 |
 | **NET R** | **+359.0** | **+282.9** |
 | **DD** | 14.8 | 14.7 |

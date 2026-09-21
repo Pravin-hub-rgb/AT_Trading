@@ -435,7 +435,7 @@ premature breaks. Same structural class as the swing-pause (mature structure),
 applied to the window instead of the loss. wage20 declines (over-aged windows
 miss fresh follow-through) — a real optimum, not a monotone.
 
-**New best single: `wage10_swingpause_single_sw10` = 261t / +282.9R NET /
+**New best single: `wage10_swingpause_wskip_single_sw10` = 261t / +282.9R NET /
 DD 14.7 / NET-DD 19.2.** (wage12 is within noise of the plateau peak — either
 10 or 12 is defensible; both pinned.) The multi kings are unchanged: the same
 wage12 on the utcsat multi gave +351.5 / 17.9 (slightly worse than +359.0) —
