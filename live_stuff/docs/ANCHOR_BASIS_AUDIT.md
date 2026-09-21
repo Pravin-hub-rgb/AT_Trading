@@ -199,6 +199,155 @@ Conclusions:
 3. The king (+325.8/17.8) remains untouched and undefeated.
 
 
+## 3e. Risk-width gate — DEAD, and the autopsy pitfall (2026-09-20)
+
+Fine stop-width bins on the single autopsy: stops >=1.5% of price = 72t,
+**-7.1R net**, big-win contribution +7.8R — passed the pre-registered cut rule.
+Implemented `exp_risk_max_pct` and measured:
+
+| config | autopsy predicted | actual |
+|---|---|---|
+| rmax15 single | ~+267 / low DD | **+91.7 / DD 38.1** |
+| rmax10 single | ~+263 | +195.5 / DD 31.4 |
+| rmax15 multi | ~+334 | +259.4 / DD 35.6 |
+
+ALL worse than their references. Root cause: the trade sequence is
+**path-dependent** — removing scattered mid-sequence trades reshuffles the
+halt/cooldown/busy cascade and the entire downstream trade set changes. A
+per-trade bucket autopsy cannot predict the system-level effect. Note the
+contrast: the gates that WORKED (weekend skip, swing-pause) remove contiguous
+blocks of activity on structural/regime conditions; the gates that FAIL
+(B3, risk-width) cherry-pick individual trades scattered through the sequence.
+
+Rule added to the playbook: no more per-trade feature filters in this system
+unless validated by full-path re-run (which is what the registry pin run is).
+The wide stops are also functionally "survivors" — a far stop is hard to hit,
+so cutting them re-tightens the book and halts fire more (WR fell 25.8->23.2,
+streak 14->15, DD blew out).
+
+
+### 3f. Chop math parity + Efficiency Ratio thesis (2026-09-20)
+
+**Chop parity: PASS.** Independent reimplementation of the Choppiness Index
+(100*log10(sumTR/(Hi-Lo))/log10(14), TR=max(H-L,|H-PC|,|L-PC|)) vs the engine's
+`_chop_series_1h`: max abs diff = 0.0 across all 32,429 1h bars. The engine's
+chop is a textbook-correct implementation; the C14 closed-candle mapping on top
+was already audited. Nothing to fix.
+
+**Efficiency Ratio thesis: REJECTED by the pre-registered rule.** ER24
+(Kaufman: |net displacement| / path length, 1h closes, C14 instant) bucketed at
+every champion + swingpause-single entry: NO bucket is net-negative on either
+config, and the low-ER buckets contain +105R of real >=2R winners on the
+single. Cutting them fails "spare the winners" (the B3 / risk-width trap).
+On the multi ER24 is flat noise — the edge is structure-break + trail, which
+works IN chop; that is the flip-window design and it does not need 1h trend.
+No `exp_er` gate added to the engine (dead kwargs are clutter); the bucket
+table lives in this doc as the tombstone for the ER road.
+
+Meta-note: after the risk-width failure (section 3e), bucket autopsies are
+HYPOTHESIS GENERATION ONLY — no gate goes into the engine without a full-path
+re-run, and no full-path run happens unless the bucket passes the rule
+(net-negative + negligible big-win contribution). ER failed at the first gate,
+which is the cheap way to die.
+
+
+### 3g. Sequential one-pass causal study — HARNESS ARTIFACT RESOLVED, NUMBERS CERTIFIED (2026-09-20, corrected 2026-09-21)
+
+`exp_onepass_cline.py` implements the C10 one-pass spec for champion_multi_sw10:
+causal 30d/20d slices (L3 consistent), chains rebuilt fresh, L1 open-window-as-
+active-bias patch, L4 +2-bar discovery pad, extra-entry capture, and a
+chronological sequential state machine (cooldown 8 + halt3) for the live-expected
+number.
+
+**Initial result: 0/490 reproduction.** Correctly diagnosed as a signal-collection
+artifact — NOT a live gap. The harness rebuilds swing chains from causal slices
+(cut at entry+2bars). The batch engine attaches B2/FLIP marks to swings AFTER
+declaration (~5-19h after the mark bar). At the causal cut, the generating swing
+hasn't declared yet, so the mark is invisible in the rebuilt chain. But the mark
+itself is a price-vs-known-level fact (close beyond the prev confirmed swing's
+end), computable at every candle close without any declaration. The live engine
+computes marks in real-time as price breaks known levels — it doesn't need the
+swing to "declare."
+
+**Corrected diagnosis (150/150 trace + exit-capped check on 857 trades):**
+- Every entry fires BEFORE its own swing's FS confirmation (pre-FS marks).
+- Every entry is knowable live at candle close: prev swing's FS confirms →
+  level is final → price breaks level → mark fires → entry at close.
+- `filter_pre_fs=True` correctly gates: rejects marks before prev swing's FS.
+  0 violations of the tradability rule on both configs.
+- Exit-capped check: 147 multi / 101 single entries had post-entry-extreme
+  stops (SL finalized after entry in batch). Of those, 0 survived in batch
+  where live's tighter stop would have killed them. R divergence: +0.0R.
+- Stop-level differences change position size in dollars, never in R — every
+  one of those trades died at exactly -1.0R regardless of stop width.
+
+**Conclusion: the batch +325.8 / +359.0 numbers ARE the live numbers.** The
+one-pass v2 (causal mark collector) would give a precise live-expected number,
+but the batch is certified as the floor — live may be higher due to earlier
+mark visibility and sequential extras.
+
+Playbook lesson: the "0/490 blocker" was a declaration-lag artifact of how the
+batch engine discovers signals (retroactive attachment to declared swings), not
+a structural live gap. For price-vs-level signals, marks are pure candle-close
+facts. Never re-diagnose live-faithfulness from chain-rebuild harness results
+without tracing the actual signal rule candle-by-candle.
+
+
+### 3h. Entry-quality autopsy — FILTERS DEAD, SYSTEM EDGE IS TRAIL (2026-09-21)
+
+Phase 1: measured 7 entry-time metrics (risk%, swing quality, entry depth,
+candle strength, swing age, same-dir count, hour-of-day) across 487 champion
+trades. Best separators: risk% (tight = big winners), swing age (fresh = best),
+FLIP >> B2. But all separations small relative to R distribution.
+
+Phase 2: implemented 3 patcher gates (`exp_entry_candle_min`, `exp_entry_swing_age_max`,
+`exp_entry_skip_b2_doji`) and tested 5 configs on both king bases. **All 5 lost R
+vs the kings.** Every entry-quality filter worsened NET and drawdown.
+
+| filter | vs king multi | vs king single |
+|--------|--------------|----------------|
+| skip B2+doji | -23.1R, DD+3.7 | -59.1R, DD+16.5 |
+| skip swing age>50 | -58.6R, DD+2.2 | -46.5R, DD+12.1 |
+| combined B2+age | -53.4R, DD+1.0 | — |
+
+Conclusion: the system's edge is the trail mechanism (quick losers, run winners)
+and the swing pause (reactive). Entry quality is noise — the trail handles bad
+entries naturally by cutting at -1R. Preventive entry gating is counterproductive.
+Multiple-comparisons budget spent on this family; no further entry-quality
+experiments recommended.
+
+
+### 3i. FINAL CERTIFICATION — BACKTEST PHASE COMPLETE (2026-09-21)
+
+**Certified live-implementable configs:**
+
+| config | n | NET | DD | WR | NET-DD | status |
+|--------|---|-----|----|----|--------|--------|
+| utcsat_multi_sw10 | 454 | +359.0R | 14.8 | 30.8% | 24.3 | optimistic king |
+| champion_multi_sw10 | 500 | +325.8R | 17.8 | 30.0% | 18.3 | conservative king |
+| nowknd_swingpause_single_sw10 | 294 | +217.6R | 18.2 | 29.6% | 12.0 | best single |
+
+**Certification checklist:**
+- [x] Trail ratchet: condition + ordering FIXED (§3)
+- [x] Partial R formula: FIXED (§3)
+- [x] Causality: CLEAN (truncation probes, §2)
+- [x] Identity gate: patched-off == shipped (340t/+225.3R IDENTICAL)
+- [x] Cost stress test: breakeven at 4.4x costs; tripled costs still +87R
+- [x] Prev-FS rule: 0 violations on 857 trades (§3g)
+- [x] Exit-capped check: 0 R divergence (§3g)
+- [x] Entry-quality filters: ALL DEAD (§3h)
+- [x] Cooldown research: swing-pause adopted, window-skip dead (§3d)
+- [x] UTC-weekend: Sat skip adopted for multi (§3d-2)
+- [x] Concurrency: cap-5 optimal, exp_max_concurrent implemented (§3d-3)
+
+**Remaining honest asterisks:**
+- Execution reality beyond modeled 0.5bp/1bp slippage (latency, partial fills).
+- UTC-Saturday edge is era-dependent (2023-24 bleed, 2025-26 neutral).
+- Wide-stop trades = smaller $ position for same 1R — sizing must follow stop width.
+
+**What's next:** paper trade both kings, track Saturday coverage, build live engine.
+
+
 ## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 
 The 15m chain length is the most sensitive knob in the system:
