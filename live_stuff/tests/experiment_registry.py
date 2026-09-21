@@ -681,6 +681,7 @@ EXPERIMENTS = {
         "swing": "sw10",
         "pins": {"n": 262, "net": 282.1, "dd": 14.7},
     },
+    # === SKIP-FIRST-SWING: DEAD — first swing is where the edge lives (Exp 19 confirmed) ===
     "wage16_swingpause_single_sw10": {
         "desc": "VALIDATION: wage neighborhood 16h",
         "engine": "patched",
@@ -1142,5 +1143,6 @@ GROUPS = {
         "partial1_multi_sw10", "partial2_multi_sw10", "partial3_multi_sw10",
         "partial4_multi_sw10", "partial5_multi_sw10",
     ],
+    # "skipfirst": DEAD
     "all": None,  # None = run everything except hidden
 }
