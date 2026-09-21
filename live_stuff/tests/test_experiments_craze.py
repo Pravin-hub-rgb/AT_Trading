@@ -78,7 +78,11 @@ def build_module():
                   '    exp_kinds="",\n'
                   '    exp_skip_utc_sat=0,\n'
                   '    exp_skip_utc_sun=0,\n'
-                  '    exp_max_concurrent=0,\n')
+                  '    exp_risk_max_pct=0.0,\n'
+                  '    exp_max_concurrent=0,\n'
+                  '    exp_entry_candle_min=0.0,\n'
+                  '    exp_entry_swing_age_max=0,\n'
+                  '    exp_entry_skip_b2_doji=0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -448,6 +452,26 @@ def build_module():
                    '                _now_ts2=candle_ts[i]\n'
                    '                _open_now2=sum(1 for _t in ltf_trades if int(_t["exit_ts"])>_now_ts2)\n'
                    '                if _open_now2>=exp_max_concurrent: continue\n')
+    # 3f) D3 risk-width gate: skip entries whose LTF stop is wider than
+    #     exp_risk_max_pct % of price (stale/stretched breaks: net-negative
+    #     bucket, negligible big-win contribution on the single autopsy).
+    t_c7 = '            if risk<0.0005*entry: continue\n'
+    assert s.count(t_c7) == 2, "risk filter x2"
+    s = s.replace(t_c7, t_c7 +
+                  '            if exp_risk_max_pct>0 and risk/entry*100.0>exp_risk_max_pct: continue\n'
+                  '            if exp_entry_candle_min>0:\n'
+                  '                _cb=abs(float(candles_ltf[i]["close"])-float(candles_ltf[i]["open"]))\n'
+                  '                _crng=float(candles_ltf[i]["high"])-float(candles_ltf[i]["low"])\n'
+                  '                if _crng>0 and _cb/_crng<exp_entry_candle_min: continue\n'
+                  '            if exp_entry_swing_age_max>0 and sig.get("swing_no") is not None:\n'
+                  '                _sag=int(sig["swing_no"])\n'
+                  '                if 0<=_sag<len(swings_ltf):\n'
+                  '                    _ssi=swings_ltf[_sag].get("seg",{}).get("start_idx",-1)\n'
+                  '                    if _ssi>=0 and (i-int(_ssi))>exp_entry_swing_age_max: continue\n'
+                  '            if exp_entry_skip_b2_doji>0 and sig.get("kind","")=="B2":\n'
+                  '                _cb2=abs(float(candles_ltf[i]["close"])-float(candles_ltf[i]["open"]))\n'
+                  '                _cr2=float(candles_ltf[i]["high"])-float(candles_ltf[i]["low"])\n'
+                  '                if _cr2>0 and _cb2/_cr2<0.3: continue\n')
     m, p = _load_module(s, "craze_superset")
     try:
         p.unlink()

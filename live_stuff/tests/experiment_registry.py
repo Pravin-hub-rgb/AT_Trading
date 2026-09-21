@@ -472,6 +472,45 @@ EXPERIMENTS = {
         "pins": {"n": 286, "net": 150.0, "dd": 23.1},
     },
 
+    # ===== D3 RISK-WIDTH FAMILY (skip stale/stretched breaks) =====
+
+    "rmax15_swingpause_single_sw10": {
+        "desc": "swingpause single + skip entries with stop width over 1.5% of price — DEAD (cascade)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_risk_max_pct": 1.5, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 310, "net": 91.7, "dd": 38.1},
+    },
+    "rmax10_swingpause_single_sw10": {
+        "desc": "swingpause single + skip entries with stop width over 1.0% of price — DEAD",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_risk_max_pct": 1.0, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 255, "net": 195.5, "dd": 31.4},
+    },
+    "rmax15_multi_sw10": {
+        "desc": "king + skip entries with stop width over 1.5% of price — DEAD (cascade)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_risk_max_pct": 1.5, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 406, "net": 259.4, "dd": 35.6},
+    },
+
     # ===== SHIPPED BASELINE (identity gate reference) =====
     # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
     # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is
@@ -500,6 +539,71 @@ EXPERIMENTS = {
     # and cfg["swing"] selects only the HTF window chain, so a sw15 row is not
     # expressible and _shipped_coarse_618 IS the craze identity twin (verified:
     # 340t / +225.3R, IDENTICAL to test_experiments_craze.main() gate output).
+
+    # ===== ENTRY-QUALITY FILTERS (Phase 2: skip bad setups before they happen) =====
+    # Based on entry autopsy (Phase 1b): B2+doji is worst combo (48t, 18.8% WR,
+    # +0.11 avgR). Swing age >50 bars = 0% WR. Candle strength <0.3 has best
+    # separation but tiny sample. Each filter tested on both king configs.
+
+    "b2doji_utcsat_multi_sw10": {
+        "desc": "king multi + skip B2 entries with doji candle (body/range < 0.3)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_entry_skip_b2_doji": 1, "window_end": "exit"},
+        "swing": "sw10",
+    },
+    "b2doji_swingpause_single_sw10": {
+        "desc": "king single + skip B2 entries with doji candle (body/range < 0.3)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_entry_skip_b2_doji": 1, "window_end": "exit"},
+        "swing": "sw10",
+    },
+    "age50_utcsat_multi_sw10": {
+        "desc": "king multi + skip entries on swings older than 50 bars",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_entry_swing_age_max": 50, "window_end": "exit"},
+        "swing": "sw10",
+    },
+    "age50_swingpause_single_sw10": {
+        "desc": "king single + skip entries on swings older than 50 bars",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_entry_swing_age_max": 50, "window_end": "exit"},
+        "swing": "sw10",
+    },
+    "combined_b2age_utcsat_multi_sw10": {
+        "desc": "king multi + B2+doji skip + swing age 50 skip (combined entry quality)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_entry_skip_b2_doji": 1,
+                    "exp_entry_swing_age_max": 50, "window_end": "exit"},
+        "swing": "sw10",
+    },
 }
 
 # Groups for batch runs
@@ -516,6 +620,11 @@ GROUPS = {
                   "fliponly_multi_sw10", "fliponly_swingpause_single_sw10",
                   "wage24_multi_sw10", "legskip2_multi_sw10",
                   "utcsat_multi_sw10", "utcsat_swingpause_single_sw10"],
+    "riskgates": ["rmax15_swingpause_single_sw10", "rmax10_swingpause_single_sw10",
+                   "rmax15_multi_sw10"],
     "best": ["utcsat_multi_sw10", "nowknd_swingpause_single_sw10"],
+    "entryquality": ["b2doji_utcsat_multi_sw10", "b2doji_swingpause_single_sw10",
+                      "age50_utcsat_multi_sw10", "age50_swingpause_single_sw10",
+                      "combined_b2age_utcsat_multi_sw10"],
     "all": None,  # None = run everything except hidden
 }
