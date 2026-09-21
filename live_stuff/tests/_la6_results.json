@@ -1,0 +1,14 @@
+{
+ "anchor": {
+  "baseline_net": 166.7,
+  "recover_net": 13.8,
+  "delta": -152.9,
+  "recover_trades": 113
+ },
+ "optimal": {
+  "baseline_net": 226.0,
+  "recover_net": 86.2,
+  "delta": -139.8,
+  "recover_trades": 100
+ }
+}

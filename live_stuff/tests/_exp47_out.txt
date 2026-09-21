@@ -1,0 +1,25 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+  MATRIX w24 ext1.5 coarse 265t g +231.6   OK
+  MATRIX w24 ext2.0 coarse 294t g +248.2   OK
+  MATRIX w24 ext2.5 coarse 304t g +231.7   OK
+  MATRIX w24 ext3.0 coarse 307t g +222.4   OK
+  ANCHOR lb30 w0 e1.5        349t gross  +287.1 cost  90.8 NET  +196.3 npt+0.563 DD 23.6 WR29.8%   OK (pin 349t +196.3)
+      ext1.5  years: 2023:  +22.6  2024: +121.4  2025:  +52.1  2026:  +91.0
+  lb30 curf6-24 e1.5         296t gross  +295.7 cost  78.2 NET  +217.4 npt+0.735 DD 26.8 WR32.1%
+      ext1.5  years: 2023:  +26.7  2024: +130.4  2025:  +57.2  2026:  +81.2 | d(anchor)  +21.1
+  lb30 defer24 e1.5          286t gross  +280.1 cost  77.0 NET  +203.1 npt+0.710 DD 21.6 WR31.1%
+      ext1.5  years: 2023:  +14.2  2024: +120.3  2025:  +59.7  2026:  +85.4 | d(anchor)   +6.8
+  lb30 w0 ext2.5             377t gross  +323.3 cost  92.1 NET  +231.1 npt+0.613 DD 24.6 WR31.0%   OK (pin 377t +231.1)
+      ext2.5  years: 2023:  +22.7  2024: +146.3  2025:  +69.3  2026:  +84.9 | d(anchor)  +34.8
+  A4 w24 e1.5                261t gross  +297.7 cost  74.6 NET  +223.1 npt+0.855 DD 19.8 WR27.6%   OK (pin 261t +223.1)
+      ext1.5  years: 2023:  +41.3  2024:  +76.4  2025:  +54.0  2026: +126.2 | d(anchor)  +26.8
+  A4 curf6-30 e1.5           277t gross  +277.5 cost  75.1 NET  +202.4 npt+0.731 DD 16.1 WR26.4%
+      ext1.5  years: 2023:  +46.6  2024:  +55.8  2025:  +55.9  2026: +119.1 | d(anchor)   +6.0
+  A4 defer6 e1.5             347t gross  +297.1 cost  88.1 NET  +209.0 npt+0.602 DD 23.3 WR25.9%
+      ext1.5  years: 2023:  +56.8  2024:  +75.2  2025:  +51.0  2026: +113.9 | d(anchor)  +12.7
+  lb14 w24 e1.5              272t gross  +268.8 cost  75.1 NET  +193.7 npt+0.712 DD 15.7 WR31.6%   OK (pin 272t +193.7)
+      ext1.5  years: 2023:  +40.1  2024:  +85.5  2025:  +59.0  2026:  +84.1 | d(anchor)   -2.7
+  OPTcd10 w24 e1.5 (multi)   326t gross  +423.5 cost  85.8 NET  +337.7 npt+1.036 DD 19.2 WR32.5%   OK (pin 326t +337.7)
+      ext1.5  years: 2023: +100.3  2024: +124.7  2025:  +79.7  2026: +119.1 | d(anchor) +141.3
+
+(exp47 done 60s)

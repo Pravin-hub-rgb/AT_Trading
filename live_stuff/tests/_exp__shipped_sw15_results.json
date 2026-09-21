@@ -1,0 +1,27 @@
+{
+  "key": "_shipped_sw15",
+  "desc": "Shipped engine, flags off, sw15 mb50, coarse + chop 61.8 (craze identity twin)",
+  "params": {},
+  "swing": "sw15",
+  "results": {
+    "key": "_shipped_sw15",
+    "desc": "Shipped engine, flags off, sw15 mb50, coarse + chop 61.8 (craze identity twin)",
+    "n": 0,
+    "gross": 0,
+    "net": 0.0,
+    "wr": 0.0,
+    "dd": 0.0,
+    "mx": 0,
+    "partials": 0,
+    "wf": [
+      0
+    ],
+    "worst_seg": 0,
+    "yearly": {},
+    "min_year": 0,
+    "pin_ok": false,
+    "pin_detail": " n=0.0(expected 340.0) gross=0.0(expected 225.3)",
+    "basis": "coarse/c61.8"
+  },
+  "trades": []
+}

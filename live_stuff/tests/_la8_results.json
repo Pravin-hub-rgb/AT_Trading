@@ -1,0 +1,152 @@
+{
+ "anchor": {
+  "baseline_net": 166.7,
+  "results": [
+   {
+    "mode": "chop (default)",
+    "n": 340,
+    "net": 166.7,
+    "delta": 0.0,
+    "wr": 30.0,
+    "dd": 27.1,
+    "pf": 2.15,
+    "gross": 251.6
+   },
+   {
+    "mode": "b2_vs_flip_chop",
+    "n": 340,
+    "net": 166.7,
+    "delta": 0.0,
+    "wr": 30.0,
+    "dd": 27.1,
+    "pf": 2.15,
+    "gross": 251.6
+   },
+   {
+    "mode": "decisive_vs_flip_chop",
+    "n": 344,
+    "net": 145.9,
+    "delta": -20.7,
+    "wr": 27.3,
+    "dd": 28.0,
+    "pf": 2.02,
+    "gross": 234.6
+   },
+   {
+    "mode": "atr_low",
+    "n": 402,
+    "net": 153.8,
+    "delta": -12.9,
+    "wr": 27.1,
+    "dd": 27.3,
+    "pf": 1.92,
+    "gross": 250.6
+   },
+   {
+    "mode": "atr_high",
+    "n": 340,
+    "net": 164.6,
+    "delta": -2.1,
+    "wr": 28.8,
+    "dd": 35.9,
+    "pf": 2.12,
+    "gross": 252.5
+   },
+   {
+    "mode": "chop_or_atr_low",
+    "n": 402,
+    "net": 130.9,
+    "delta": -35.8,
+    "wr": 26.1,
+    "dd": 27.3,
+    "pf": 1.83,
+    "gross": 226.8
+   },
+   {
+    "mode": "chop_and_atr_low",
+    "n": 345,
+    "net": 176.9,
+    "delta": 10.2,
+    "wr": 29.3,
+    "dd": 27.9,
+    "pf": 2.18,
+    "gross": 266.6
+   }
+  ]
+ },
+ "optimal": {
+  "baseline_net": 226.0,
+  "results": [
+   {
+    "mode": "chop (default)",
+    "n": 314,
+    "net": 226.0,
+    "delta": 0.0,
+    "wr": 34.7,
+    "dd": 20.9,
+    "pf": 2.62,
+    "gross": 309.2
+   },
+   {
+    "mode": "b2_vs_flip_chop",
+    "n": 314,
+    "net": 226.0,
+    "delta": 0.0,
+    "wr": 34.7,
+    "dd": 20.9,
+    "pf": 2.62,
+    "gross": 309.2
+   },
+   {
+    "mode": "decisive_vs_flip_chop",
+    "n": 318,
+    "net": 173.3,
+    "delta": -52.8,
+    "wr": 32.4,
+    "dd": 20.9,
+    "pf": 2.28,
+    "gross": 255.6
+   },
+   {
+    "mode": "atr_low",
+    "n": 422,
+    "net": 261.4,
+    "delta": 35.3,
+    "wr": 32.9,
+    "dd": 27.6,
+    "pf": 2.4,
+    "gross": 364.1
+   },
+   {
+    "mode": "atr_high",
+    "n": 303,
+    "net": 264.6,
+    "delta": 38.6,
+    "wr": 35.3,
+    "dd": 21.1,
+    "pf": 2.88,
+    "gross": 340.9
+   },
+   {
+    "mode": "chop_or_atr_low",
+    "n": 423,
+    "net": 257.3,
+    "delta": 31.2,
+    "wr": 32.2,
+    "dd": 34.2,
+    "pf": 2.36,
+    "gross": 359.5
+   },
+   {
+    "mode": "chop_and_atr_low",
+    "n": 317,
+    "net": 201.9,
+    "delta": -24.1,
+    "wr": 33.1,
+    "dd": 23.5,
+    "pf": 2.45,
+    "gross": 283.9
+   }
+  ]
+ }
+}

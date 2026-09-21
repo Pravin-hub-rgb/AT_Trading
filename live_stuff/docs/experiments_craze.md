@@ -421,6 +421,8 @@ deferred until all experiments done (user process).**
 
 #### Fine NET (production params) — the decision menu
 
+> **⚠️ PRE-FIX NUMBERS:** These results use an older cost model and pre-B3-fix values. Post-fix authoritative numbers are in [EXPERIMENT_RESULTS.md §17](EXPERIMENT_RESULTS.md#17-post-fix-results-b3-entry-price-bug-fixed) and [EXPERIMENTS.md](EXPERIMENTS.md).
+
 | Config | Trades | NET fine | DD | NET/DD | vs anchor |
 |---|---|---|---|---|---|
 | v18 anchor | 351 | +163.7 | 23.4 | 7.0 | — |
@@ -432,6 +434,8 @@ deferred until all experiments done (user process).**
 | **their-OPTIMAL** | 515 | **+348.0** | 23.3 | 14.9 | **+184.3** |
 | OPTIMAL+halt6 | 574 | +301.1 | 31.5 | 9.6 | +137.4 |
 | **S15 B3+OPTIMAL** | 248 | **+300.4** | **12.0** | **25.0** | +136.7 |
+
+> **Post-fix authoritative champion:** OPT-cd10 + w24 + ext1.5 = **+337.7** / DD 19.2 (multi-position, needs concurrency cap). See [EXPERIMENTS.md](EXPERIMENTS.md) row 1.
 
 **Findings:**
 1. **their-OPTIMAL stays the NET king (+348.0)** — but S15 (B3 stacked on it) is the **risk-adjusted king**: +300.4 net with DD 12.0 (NET/DD 25.0 vs OPTIMAL's 14.9), WR 34.3%, only 248 trades (lower concurrency exposure than OPTIMAL's 515).

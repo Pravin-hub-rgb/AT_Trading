@@ -1,0 +1,190 @@
+{
+ "baseline": {
+  "n": 340,
+  "net": 166.7,
+  "gross": 251.6,
+  "wr": 30.0
+ },
+ "filters": [
+  {
+   "experiment": "LA1",
+   "label": "skip <12h",
+   "kept": 276,
+   "removed": 64,
+   "net": 161.4,
+   "removed_r": 18.0,
+   "removed_wr": 28.1,
+   "delta": -5.3
+  },
+  {
+   "experiment": "LA1",
+   "label": "skip 12-24h",
+   "kept": 300,
+   "removed": 40,
+   "net": 203.0,
+   "removed_r": -27.0,
+   "removed_wr": 10.0,
+   "delta": 36.3
+  },
+  {
+   "experiment": "LA1",
+   "label": "skip <24h (w24)",
+   "kept": 236,
+   "removed": 104,
+   "net": 197.6,
+   "removed_r": -9.0,
+   "removed_wr": 21.2,
+   "delta": 30.9
+  },
+  {
+   "experiment": "LA1",
+   "label": "skip 24-48h",
+   "kept": 270,
+   "removed": 70,
+   "net": 150.2,
+   "removed_r": 35.2,
+   "removed_wr": 31.4,
+   "delta": -16.5
+  },
+  {
+   "experiment": "LA1",
+   "label": "keep only 0-6h",
+   "kept": 38,
+   "removed": 302,
+   "net": 7.6,
+   "removed_r": 237.9,
+   "removed_wr": 29.5,
+   "delta": -159.1
+  },
+  {
+   "experiment": "LA1",
+   "label": "keep only 48h+",
+   "kept": 166,
+   "removed": 174,
+   "net": 181.1,
+   "removed_r": 26.2,
+   "removed_wr": 25.3,
+   "delta": 14.4
+  },
+  {
+   "experiment": "LA2",
+   "label": "keep only flip regime",
+   "kept": 298,
+   "removed": 42,
+   "net": 153.5,
+   "removed_r": 22.3,
+   "removed_wr": 33.3,
+   "delta": -13.2
+  },
+  {
+   "experiment": "LA2",
+   "label": "keep only b2 regime",
+   "kept": 42,
+   "removed": 298,
+   "net": 13.2,
+   "removed_r": 229.3,
+   "removed_wr": 29.5,
+   "delta": -153.5
+  },
+  {
+   "experiment": "LA2",
+   "label": "skip B2 signals",
+   "kept": 159,
+   "removed": 181,
+   "net": 156.6,
+   "removed_r": 52.1,
+   "removed_wr": 27.6,
+   "delta": -10.1
+  },
+  {
+   "experiment": "LA2",
+   "label": "skip FLIP signals",
+   "kept": 181,
+   "removed": 159,
+   "net": 10.1,
+   "removed_r": 199.5,
+   "removed_wr": 32.7,
+   "delta": -156.6
+  },
+  {
+   "experiment": "LA3",
+   "label": "skip <5 bars",
+   "kept": 307,
+   "removed": 33,
+   "net": 211.8,
+   "removed_r": -33.0,
+   "removed_wr": 0.0,
+   "delta": 45.1
+  },
+  {
+   "experiment": "LA3",
+   "label": "skip <8 bars",
+   "kept": 285,
+   "removed": 55,
+   "net": 241.3,
+   "removed_r": -55.0,
+   "removed_wr": 0.0,
+   "delta": 74.6
+  },
+  {
+   "experiment": "LA3",
+   "label": "skip <12 bars",
+   "kept": 265,
+   "removed": 75,
+   "net": 267.5,
+   "removed_r": -75.0,
+   "removed_wr": 0.0,
+   "delta": 100.8
+  },
+  {
+   "experiment": "LA3",
+   "label": "skip >192 bars (very slow losers)",
+   "kept": 333,
+   "removed": 7,
+   "net": 170.2,
+   "removed_r": -2.5,
+   "removed_wr": 0.0,
+   "delta": 3.5
+  },
+  {
+   "experiment": "LA4",
+   "label": "skip 12-24h + skip B2",
+   "kept": 265,
+   "removed": 75,
+   "net": 183.9,
+   "removed_r": -0.5,
+   "removed_wr": 22.7,
+   "delta": 17.2
+  },
+  {
+   "experiment": "LA4",
+   "label": "skip 12-24h + skip <8 bars",
+   "kept": 254,
+   "removed": 86,
+   "net": 265.4,
+   "removed_r": -73.0,
+   "removed_wr": 4.7,
+   "delta": 98.7
+  },
+  {
+   "experiment": "LA4",
+   "label": "w24 + skip B2",
+   "kept": 207,
+   "removed": 133,
+   "net": 200.3,
+   "removed_r": -5.1,
+   "removed_wr": 23.3,
+   "delta": 33.6
+  },
+  {
+   "experiment": "LA4",
+   "label": "skip 12-24h + skip B2 + skip <8 bars",
+   "kept": 223,
+   "removed": 117,
+   "net": 240.9,
+   "removed_r": -42.5,
+   "removed_wr": 14.5,
+   "delta": 74.2
+  }
+ ]
+}

@@ -1,0 +1,334 @@
+{
+ "champion_baseline": {
+  "net": 379.3,
+  "n": 413,
+  "wr": 32.7,
+  "dd": 24.2,
+  "pf": 2.88
+ },
+ "results": {
+  "wage_gate": [
+   {
+    "name": "w20",
+    "overrides": {
+     "exp_wage_h": 20
+    },
+    "n": 319,
+    "net": 345.2,
+    "delta": -34.0,
+    "wr": 35.4,
+    "dd": 14.8,
+    "pf": 3.23,
+    "gross": 425.1
+   },
+   {
+    "name": "w24",
+    "overrides": {
+     "exp_wage_h": 24
+    },
+    "n": 304,
+    "net": 349.5,
+    "delta": -29.7,
+    "wr": 36.5,
+    "dd": 14.8,
+    "pf": 3.4,
+    "gross": 425.9
+   },
+   {
+    "name": "w28",
+    "overrides": {
+     "exp_wage_h": 28
+    },
+    "n": 279,
+    "net": 316.5,
+    "delta": -62.8,
+    "wr": 35.8,
+    "dd": 20.8,
+    "pf": 3.35,
+    "gross": 385.2
+   },
+   {
+    "name": "w32",
+    "overrides": {
+     "exp_wage_h": 32
+    },
+    "n": 266,
+    "net": 321.0,
+    "delta": -58.3,
+    "wr": 36.5,
+    "dd": 19.2,
+    "pf": 3.53,
+    "gross": 386.3
+   }
+  ],
+  "b3": [
+   {
+    "name": "b3_k=2",
+    "overrides": {
+     "b3_k": 2
+    },
+    "n": 145,
+    "net": 101.0,
+    "delta": -278.3,
+    "wr": 37.9,
+    "dd": 19.3,
+    "pf": 2.6,
+    "gross": 128.4
+   },
+   {
+    "name": "b3_k=4",
+    "overrides": {
+     "b3_k": 4
+    },
+    "n": 180,
+    "net": 115.6,
+    "delta": -263.7,
+    "wr": 37.8,
+    "dd": 27.9,
+    "pf": 2.45,
+    "gross": 151.4
+   },
+   {
+    "name": "b3_k=6",
+    "overrides": {
+     "b3_k": 6
+    },
+    "n": 190,
+    "net": 129.4,
+    "delta": -249.8,
+    "wr": 38.4,
+    "dd": 25.4,
+    "pf": 2.57,
+    "gross": 166.4
+   },
+   {
+    "name": "b3_k=8",
+    "overrides": {
+     "b3_k": 8
+    },
+    "n": 199,
+    "net": 131.8,
+    "delta": -247.5,
+    "wr": 38.2,
+    "dd": 26.6,
+    "pf": 2.55,
+    "gross": 170.0
+   },
+   {
+    "name": "b3_k=10",
+    "overrides": {
+     "b3_k": 10
+    },
+    "n": 215,
+    "net": 136.1,
+    "delta": -243.2,
+    "wr": 36.7,
+    "dd": 31.6,
+    "pf": 2.46,
+    "gross": 176.6
+   }
+  ],
+  "curfew": [
+   {
+    "name": "curfew 0-8",
+    "overrides": {
+     "exp_curfew_a": 0.0,
+     "exp_curfew_b": 8.0
+    },
+    "n": 364,
+    "net": 334.5,
+    "delta": -44.8,
+    "wr": 33.2,
+    "dd": 19.8,
+    "pf": 2.91,
+    "gross": 424.7
+   },
+   {
+    "name": "curfew 0-4",
+    "overrides": {
+     "exp_curfew_a": 0.0,
+     "exp_curfew_b": 4.0
+    },
+    "n": 386,
+    "net": 349.2,
+    "delta": -30.1,
+    "wr": 32.1,
+    "dd": 23.2,
+    "pf": 2.84,
+    "gross": 447.2
+   },
+   {
+    "name": "curfew 4-8",
+    "overrides": {
+     "exp_curfew_a": 4.0,
+     "exp_curfew_b": 8.0
+    },
+    "n": 389,
+    "net": 347.8,
+    "delta": -31.5,
+    "wr": 32.9,
+    "dd": 21.7,
+    "pf": 2.85,
+    "gross": 442.5
+   },
+   {
+    "name": "curfew 16-20",
+    "overrides": {
+     "exp_curfew_a": 16.0,
+     "exp_curfew_b": 20.0
+    },
+    "n": 396,
+    "net": 354.4,
+    "delta": -24.9,
+    "wr": 32.6,
+    "dd": 22.7,
+    "pf": 2.83,
+    "gross": 453.8
+   }
+  ],
+  "persist": [
+   {
+    "name": "persist=1",
+    "overrides": {
+     "exp_persist": 1,
+     "exp_mltf": true
+    },
+    "n": 414,
+    "net": 367.2,
+    "delta": -12.1,
+    "wr": 32.6,
+    "dd": 27.4,
+    "pf": 2.82,
+    "gross": 469.7
+   },
+   {
+    "name": "persist=2",
+    "overrides": {
+     "exp_persist": 2,
+     "exp_mltf": true
+    },
+    "n": 413,
+    "net": 379.3,
+    "delta": 0.0,
+    "wr": 32.7,
+    "dd": 24.2,
+    "pf": 2.88,
+    "gross": 481.9
+   },
+   {
+    "name": "persist=3",
+    "overrides": {
+     "exp_persist": 3,
+     "exp_mltf": true
+    },
+    "n": 414,
+    "net": 374.8,
+    "delta": -4.5,
+    "wr": 32.6,
+    "dd": 24.2,
+    "pf": 2.86,
+    "gross": 477.3
+   },
+   {
+    "name": "persist=5",
+    "overrides": {
+     "exp_persist": 5,
+     "exp_mltf": true
+    },
+    "n": 413,
+    "net": 372.1,
+    "delta": -7.2,
+    "wr": 32.9,
+    "dd": 23.2,
+    "pf": 2.86,
+    "gross": 474.4
+   }
+  ],
+  "cooldown": [
+   {
+    "name": "cd=5",
+    "overrides": {
+     "cooldown_bars": 5
+    },
+    "n": 422,
+    "net": 371.4,
+    "delta": -7.8,
+    "wr": 32.2,
+    "dd": 25.2,
+    "pf": 2.8,
+    "gross": 476.4
+   },
+   {
+    "name": "cd=10",
+    "overrides": {
+     "cooldown_bars": 10
+    },
+    "n": 413,
+    "net": 379.3,
+    "delta": 0.0,
+    "wr": 32.7,
+    "dd": 24.2,
+    "pf": 2.88,
+    "gross": 481.9
+   },
+   {
+    "name": "cd=15",
+    "overrides": {
+     "cooldown_bars": 15
+    },
+    "n": 408,
+    "net": 371.3,
+    "delta": -8.0,
+    "wr": 32.6,
+    "dd": 24.2,
+    "pf": 2.86,
+    "gross": 472.7
+   },
+   {
+    "name": "cd=20",
+    "overrides": {
+     "cooldown_bars": 20
+    },
+    "n": 404,
+    "net": 354.4,
+    "delta": -24.9,
+    "wr": 32.7,
+    "dd": 23.3,
+    "pf": 2.81,
+    "gross": 454.5
+   }
+  ]
+ },
+ "top5": [
+  {
+   "name": "persist=2",
+   "section": "persist",
+   "net": 379.3,
+   "delta": 0.0
+  },
+  {
+   "name": "cd=10",
+   "section": "cooldown",
+   "net": 379.3,
+   "delta": 0.0
+  },
+  {
+   "name": "persist=3",
+   "section": "persist",
+   "net": 374.8,
+   "delta": -4.5
+  },
+  {
+   "name": "persist=5",
+   "section": "persist",
+   "net": 372.1,
+   "delta": -7.2
+  },
+  {
+   "name": "cd=5",
+   "section": "cooldown",
+   "net": 371.4,
+   "delta": -7.8
+  }
+ ]
+}

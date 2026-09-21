@@ -1,0 +1,51 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+  MATRIX w24 ext1.5 coarse 265t g +231.6   OK
+  MATRIX w24 ext2.0 coarse 294t g +248.2   OK
+  MATRIX w24 ext2.5 coarse 304t g +231.7   OK
+  MATRIX w24 ext3.0 coarse 307t g +222.4   OK
+  lb30      w0        349t NET   +196.3 npt+0.563 DD 23.6   OK (pin 349t +196.3)
+  lb30      w24       265t NET   +185.0 npt+0.698 DD 19.4   OK (pin 265t +185.0)
+  lb30      curf6-24  296t NET   +217.4 npt+0.735 DD 26.8
+  lb30      curf6-30  273t NET   +163.9 npt+0.600 DD 32.8
+  A4        w0        359t NET   +203.3 npt+0.566 DD 24.8   OK (pin 359t +203.3)
+  A4        w24       261t NET   +223.1 npt+0.855 DD 19.8   OK (pin 261t +223.1)
+  A4        curf6-24  300t NET   +198.8 npt+0.663 DD 19.0
+  A4        curf6-30  277t NET   +202.4 npt+0.731 DD 16.1
+  lb14      w0        351t NET   +148.0 npt+0.422 DD 23.4   OK (pin 351t +148.0)
+  lb14      w24       272t NET   +193.7 npt+0.712 DD 15.7   OK (pin 272t +193.7)
+  lb14      curf6-24  303t NET   +188.7 npt+0.623 DD 17.1
+  lb14      curf6-30  275t NET   +160.9 npt+0.585 DD 17.2
+  OPT-cd10  w0        453t NET   +259.4 npt+0.573 DD 32.7   OK (pin 453t +259.4)
+  OPT-cd10  w24       326t NET   +337.7 npt+1.036 DD 19.2   OK (pin 326t +337.7)
+  OPT-cd10  curf6-24  366t NET   +302.6 npt+0.827 DD 25.0
+  OPT-cd10  curf6-30  343t NET   +273.9 npt+0.798 DD 21.6
+
+PHASE A - curfew canary: recomputed age of every curfew-run trade (must be <a or >=b)
+  lb30      curf6-24  296t | in-band violations: 0
+  lb30      curf6-30  273t | in-band violations: 0
+  A4        curf6-24  300t | in-band violations: 0
+  A4        curf6-30  277t | in-band violations: 0
+  lb14      curf6-24  303t | in-band violations: 0
+  lb14      curf6-30  275t | in-band violations: 0
+  OPT-cd10  curf6-24  366t | in-band violations: 0
+  OPT-cd10  curf6-30  343t | in-band violations: 0
+
+PHASE B - walk-forward (6 segs ~225d, fixed configs, fine NET)
+  lb30      w0        349t NET   +196.3 | segs  -29.6  +76.7  +18.6  +20.8  +50.7  +59.2 | worst  -29.6 | H1/H2   +69.0/ +127.4
+  lb30      w24       265t NET   +185.0 | segs  -22.5  +87.7  -19.6  +28.1  +44.9  +66.4 | worst  -22.5 | H1/H2   +50.1/ +134.9
+  lb30      curf6-24  296t NET   +217.4 | segs  -28.1  +88.9  +21.9  +20.7  +52.9  +61.2 | worst  -28.1 | H1/H2   +85.9/ +131.5
+  lb30      curf6-30  273t NET   +163.9 | segs  -31.3  +38.6  +28.0  +25.7  +49.7  +53.2 | worst  -31.3 | H1/H2   +38.6/ +125.3
+  A4        w0        359t NET   +203.3 | segs  +17.8  +16.0  +19.5   +4.3  +41.6 +104.2 | worst   +4.3 | H1/H2   +57.4/ +145.9
+  A4        w24       261t NET   +223.1 | segs   -1.1  +23.7  +22.0  +13.4  +56.0 +109.1 | worst   -1.1 | H1/H2   +46.6/ +176.5
+  A4        curf6-24  300t NET   +198.8 | segs   +0.0  +27.3   +9.4  +10.3  +46.5 +105.3 | worst   +0.0 | H1/H2   +39.9/ +158.9
+  A4        curf6-30  277t NET   +202.4 | segs   +3.9  +24.1   +4.6  +13.6  +44.6 +111.6 | worst   +3.9 | H1/H2   +34.5/ +167.9
+  lb14      w0        351t NET   +148.0 | segs  -19.2  +34.8  +21.4  +21.9  +31.8  +57.3 | worst  -19.2 | H1/H2   +40.6/ +107.4
+  lb14      w24       272t NET   +193.7 | segs   -8.4  +31.4  +24.8  +41.4  +37.3  +67.2 | worst   -8.4 | H1/H2   +51.8/ +141.9
+  lb14      curf6-24  303t NET   +188.7 | segs  -13.8  +50.4  +13.3  +34.8  +35.0  +68.9 | worst  -13.8 | H1/H2   +54.7/ +134.0
+  lb14      curf6-30  275t NET   +160.9 | segs   -7.4  +30.1   +8.0  +43.6  +29.6  +57.1 | worst   -7.4 | H1/H2   +34.3/ +126.6
+  OPT-cd10  w0        453t NET   +259.4 | segs   -4.9  +91.5  -17.1  +19.7  +77.7  +92.5 | worst  -17.1 | H1/H2  +108.5/ +150.9
+  OPT-cd10  w24       326t NET   +337.7 | segs  +13.6  +91.9  +37.5  +21.4  +65.7 +107.6 | worst  +13.6 | H1/H2  +183.0/ +154.6
+  OPT-cd10  curf6-24  366t NET   +302.6 | segs   +5.5  +89.1  +25.5  +21.1  +60.2 +101.1 | worst   +5.5 | H1/H2  +160.3/ +142.3
+  OPT-cd10  curf6-30  343t NET   +273.9 | segs  +12.6  +56.4  +28.3  +25.7  +59.8  +91.1 | worst  +12.6 | H1/H2  +137.5/ +136.4
+
+(exp44 done 75s)

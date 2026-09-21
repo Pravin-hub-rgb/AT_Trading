@@ -1,0 +1,49 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+  MATRIX w24 ext1.5 coarse 265t g +231.6   OK
+  MATRIX w24 ext2.0 coarse 294t g +248.2   OK
+  MATRIX w24 ext2.5 coarse 304t g +231.7   OK
+  MATRIX w24 ext3.0 coarse 307t g +222.4   OK
+  lb30      w0    349t NET   +196.3 DD 23.6   OK (pin 349t +196.3)
+  lb30      w24   265t NET   +185.0 DD 19.4   OK (pin 265t +185.0)
+  A4        w0    359t NET   +203.3 DD 24.8   OK (pin 359t +203.3)
+  A4        w24   261t NET   +223.1 DD 19.8   OK (pin 261t +223.1)
+  lb14      w0    351t NET   +148.0 DD 23.4   OK (pin 351t +148.0)
+  lb14      w24   272t NET   +193.7 DD 15.7   OK (pin 272t +193.7)
+  OPT-cd10  w0    453t NET   +259.4 DD 32.7   OK (pin 453t +259.4)
+  OPT-cd10  w24   326t NET   +337.7 DD 19.2   OK (pin 326t +337.7)
+
+PHASE A - RQ1 join canary: recomputed age of every w24-ledger trade (must all be >=24h)
+  lb30      w24 ledger 265t | aged 264 (tagged-in-trade 265) | age<24h violations: 0
+  A4        w24 ledger 261t | aged 260 (tagged-in-trade 261) | age<24h violations: 0
+  lb14      w24 ledger 272t | aged 271 (tagged-in-trade 272) | age<24h violations: 0
+  OPT-cd10  w24 ledger 326t | aged 325 (tagged-in-trade 326) | age<24h violations: 0
+
+PHASE B - RQ2/RQ3: w24 decomposition (post-hoc partition of the w0 ledger)
+  lb30      w0 349t net +196.3 | w24-run net +185.0 (d_act  -11.3) | removed<24h:  99t g  -15.8 net  -35.7 WR23.2% med-1.00 | d_removal  +35.7 -> chain-shift  -47.0
+            removed tails: >=2R:9(+42.7)  >=3R:7(+37.6)  >=4R:5(+31.2)  >=5R:5(+31.2)  >=10R:0(+0.0)
+            removed R by year: 2023:   -5.3  2024:   -9.4  2025:   -4.0  2026:   +3.2
+  A4        w0 359t net +203.3 | w24-run net +223.1 (d_act  +19.8) | removed<24h: 109t g   +6.6 net  -15.4 WR23.9% med-1.00 | d_removal  +15.4 -> chain-shift   +4.4
+            removed tails: >=2R:11(+73.0)  >=3R:10(+70.2)  >=4R:5(+53.1)  >=5R:5(+53.1)  >=10R:1(+27.0)
+            removed R by year: 2023:  +20.7  2024:   -9.5  2025:   -0.8  2026:   -3.7
+  lb14      w0 351t net +148.0 | w24-run net +193.7 (d_act  +45.7) | removed<24h:  97t g  -36.7 net  -56.2 WR15.5% med-1.00 | d_removal  +56.2 -> chain-shift  -10.5
+            removed tails: >=2R:7(+32.4)  >=3R:5(+27.2)  >=4R:3(+20.9)  >=5R:3(+20.9)  >=10R:0(+0.0)
+            removed R by year: 2023:  -16.3  2024:  -14.4  2025:   -5.2  2026:   -0.9
+  OPT-cd10  w0 453t net +259.4 | w24-run net +337.7 (d_act  +78.3) | removed<24h: 135t g   +3.6 net  -25.6 WR18.5% med-1.00 | d_removal  +25.6 -> chain-shift  +52.7
+            removed tails: >=2R:9(+94.3)  >=3R:8(+91.6)  >=4R:6(+85.5)  >=5R:6(+85.5)  >=10R:1(+50.9)
+            removed R by year: 2023:  -15.2  2024:  +27.6  2025:   +6.6  2026:  -15.4
+
+PHASE C - RQ5: parent-window inheritance on w0 ledgers (lb30 + champion OPT-cd10)
+  lb30      parent HTF won (r>=2):  93t avgR+3.09 sum  +287.0 | parent HTF lost: 173t avgR-0.60 sum  -104.4 | other:  83t
+    age 0-6h      31t sumR    +3.1 avgR+0.10 WR32.3%
+    age 6-12h     23t sumR   -14.1 avgR-0.61 WR13.0%
+    age 12-24h    45t sumR    -4.7 avgR-0.11 WR22.2%
+    age 24-48h    74t sumR   +85.7 avgR+1.16 WR36.5%
+    age >=48h    175t sumR  +215.8 avgR+1.23 WR30.3%
+  OPT-cd10  parent HTF won (r>=2): 119t avgR+3.12 sum  +371.3 | parent HTF lost: 221t avgR-0.68 sum  -150.3 | other: 113t
+    age 0-6h      42t sumR   -18.4 avgR-0.44 WR16.7%
+    age 6-12h     30t sumR   -13.5 avgR-0.45 WR13.3%
+    age 12-24h    63t sumR   +35.5 avgR+0.56 WR22.2%
+    age 24-48h    74t sumR   +15.9 avgR+0.22 WR29.7%
+    age >=48h    243t sumR  +352.1 avgR+1.45 WR33.3%
+
+(exp43 done 54s)

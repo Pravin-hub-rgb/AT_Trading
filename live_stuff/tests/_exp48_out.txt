@@ -1,0 +1,50 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+  MATRIX w24 ext1.5 coarse 265t g +231.6   OK
+  MATRIX w24 ext2.0 coarse 294t g +248.2   OK
+  MATRIX w24 ext2.5 coarse 304t g +231.7   OK
+  MATRIX w24 ext3.0 coarse 307t g +222.4   OK
+  lb30  w0 349t NET   +196.3 DD 23.6   OK (pin 349t +196.3)
+  A4    w0 359t NET   +203.3 DD 24.8   OK (pin 359t +203.3)
+PHASE A - price-space autopsy: avgR by leg-progress bucket (w0 ledgers)
+  lb30  (1 unjoinable)
+    prog <-1R      200t avgR+0.75 sum  +149.5 WR28.5%
+    prog >=20R     148t avgR+0.92 sum  +136.3 WR31.1%
+    pull off<0.5R  215t avgR+0.83 sum  +177.8 WR32.6%
+    pull off0.5-1.5R  79t avgR+1.19 sum   +94.0 WR24.1%
+    pull off1.5-3R  32t avgR+0.12 sum    +3.7 WR21.9%
+    pull off>=3R    22t avgR+0.47 sum   +10.4 WR31.8%
+  A4    (1 unjoinable)
+    prog <-1R      193t avgR+1.20 sum  +231.3 WR25.9%
+    prog >=20R     165t avgR+0.39 sum   +64.7 WR26.1%
+    pull off<0.5R  228t avgR+0.34 sum   +78.0 WR25.4%
+    pull off0.5-1.5R  86t avgR+2.46 sum  +211.7 WR29.1%
+    pull off1.5-3R  24t avgR-0.54 sum   -12.9 WR16.7%
+    pull off>=3R    20t avgR+0.96 sum   +19.1 WR30.0%
+
+PHASE B - legskip gate cells (skip if leg progress > X), ext1.5
+  lb30  legskip>4    209t NET    +93.6 npt+0.448 DD 22.3 | in-band violations: 0
+  lb30  legskip>6    209t NET    +93.6 npt+0.448 DD 22.3 | in-band violations: 0
+  lb30  legskip>8    209t NET    +93.6 npt+0.448 DD 22.3 | in-band violations: 0
+  lb30  legskip>10   209t NET    +93.6 npt+0.448 DD 22.3 | in-band violations: 0
+  lb30  legskip>12   209t NET    +93.6 npt+0.448 DD 22.3 | in-band violations: 0
+  lb30  w24(ref)   265t NET   +185.0 npt+0.698 DD 19.4
+  A4    legskip>4    198t NET    +78.7 npt+0.397 DD 19.8 | in-band violations: 0
+  A4    legskip>6    198t NET    +78.7 npt+0.397 DD 19.8 | in-band violations: 0
+  A4    legskip>8    198t NET    +78.7 npt+0.397 DD 19.8 | in-band violations: 0
+  A4    legskip>10   198t NET    +78.7 npt+0.397 DD 19.8 | in-band violations: 0
+  A4    legskip>12   198t NET    +78.7 npt+0.397 DD 19.8 | in-band violations: 0
+  A4    w24(ref)   261t NET   +223.1 npt+0.855 DD 19.8
+
+PHASE C - walk-forward (6 segs ~225d, fixed configs, fine NET)
+  lb30  legskip>4    209t NET    +93.6 | segs  -19.4  +27.3  +32.6  +19.6  +20.2  +13.3 | worst  -19.4
+  lb30  legskip>6    209t NET    +93.6 | segs  -19.4  +27.3  +32.6  +19.6  +20.2  +13.3 | worst  -19.4
+  lb30  legskip>8    209t NET    +93.6 | segs  -19.4  +27.3  +32.6  +19.6  +20.2  +13.3 | worst  -19.4
+  lb30  legskip>10   209t NET    +93.6 | segs  -19.4  +27.3  +32.6  +19.6  +20.2  +13.3 | worst  -19.4
+  lb30  legskip>12   209t NET    +93.6 | segs  -19.4  +27.3  +32.6  +19.6  +20.2  +13.3 | worst  -19.4
+  A4    legskip>4    198t NET    +78.7 | segs  -19.5  +24.1  +27.4  +18.2  +11.7  +16.8 | worst  -19.5
+  A4    legskip>6    198t NET    +78.7 | segs  -19.5  +24.1  +27.4  +18.2  +11.7  +16.8 | worst  -19.5
+  A4    legskip>8    198t NET    +78.7 | segs  -19.5  +24.1  +27.4  +18.2  +11.7  +16.8 | worst  -19.5
+  A4    legskip>10   198t NET    +78.7 | segs  -19.5  +24.1  +27.4  +18.2  +11.7  +16.8 | worst  -19.5
+  A4    legskip>12   198t NET    +78.7 | segs  -19.5  +24.1  +27.4  +18.2  +11.7  +16.8 | worst  -19.5
+
+(exp48 done 83s)

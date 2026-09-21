@@ -1,0 +1,50 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+  MATRIX w24 ext1.5 coarse 265t g +231.6   OK
+  MATRIX w24 ext2.0 coarse 294t g +248.2   OK
+  MATRIX w24 ext2.5 coarse 304t g +231.7   OK
+  MATRIX w24 ext3.0 coarse 307t g +222.4   OK
+  lb30  w0         ext1.5 349t NET   +196.3 npt+0.563 DD 23.6   OK (pin 349t +196.3)
+  lb30  w24        ext1.5 265t NET   +185.0 npt+0.698 DD 19.4   OK (pin 265t +185.0)
+  lb30  c4-24      ext1.5 288t NET   +172.0 npt+0.597 DD 21.8
+  lb30  c6-24      ext1.5 296t NET   +217.4 npt+0.735 DD 26.8
+  lb30  c8-24      ext1.5 302t NET   +219.4 npt+0.726 DD 28.6
+  lb30  c6-30      ext1.5 273t NET   +163.9 npt+0.600 DD 32.8
+  lb30  c6-36      ext1.5 268t NET   +161.9 npt+0.604 DD 32.8
+  lb30  w0+e25     ext2.5 377t NET   +231.1 npt+0.613 DD 24.6   OK (pin 377t +231.1)
+  lb30  w24+e25    ext2.5 303t NET   +179.1 npt+0.591 DD 23.6   OK (pin 303t +179.1)
+  lb30  c6-24+e25  ext2.5 331t NET   +215.0 npt+0.650 DD 27.2
+  A4    w0         ext1.5 359t NET   +203.3 npt+0.566 DD 24.8   OK (pin 359t +203.3)
+  A4    w24        ext1.5 261t NET   +223.1 npt+0.855 DD 19.8   OK (pin 261t +223.1)
+  A4    c4-24      ext1.5 284t NET   +166.9 npt+0.588 DD 34.4
+  A4    c6-24      ext1.5 300t NET   +198.8 npt+0.663 DD 19.0
+  A4    c6-30      ext1.5 277t NET   +202.4 npt+0.731 DD 16.1
+
+PHASE A - curfew canary
+  lb30  c4-24      288t | in-band violations: 0
+  lb30  c6-24      296t | in-band violations: 0
+  lb30  c8-24      302t | in-band violations: 0
+  lb30  c6-30      273t | in-band violations: 0
+  lb30  c6-36      268t | in-band violations: 0
+  lb30  c6-24+e25  331t | in-band violations: 0
+  A4    c4-24      284t | in-band violations: 0
+  A4    c6-24      300t | in-band violations: 0
+  A4    c6-30      277t | in-band violations: 0
+
+PHASE B - walk-forward (6 segs ~225d, fixed configs, fine NET)
+  lb30  w0         ext1.5 349t NET   +196.3 | segs  -29.6  +76.7  +18.6  +20.8  +50.7  +59.2 | worst  -29.6 | H1/H2   +69.0/ +127.4
+  lb30  w24        ext1.5 265t NET   +185.0 | segs  -22.5  +87.7  -19.6  +28.1  +44.9  +66.4 | worst  -22.5 | H1/H2   +50.1/ +134.9
+  lb30  c4-24      ext1.5 288t NET   +172.0 | segs  -23.3  +78.7  -20.5  +19.9  +53.4  +63.8 | worst  -23.3 | H1/H2   +37.8/ +134.1
+  lb30  c6-24      ext1.5 296t NET   +217.4 | segs  -28.1  +88.9  +21.9  +20.7  +52.9  +61.2 | worst  -28.1 | H1/H2   +85.9/ +131.5
+  lb30  c8-24      ext1.5 302t NET   +219.4 | segs  -31.4  +86.8  +21.9  +19.6  +61.3  +61.2 | worst  -31.4 | H1/H2   +79.5/ +139.9
+  lb30  c6-30      ext1.5 273t NET   +163.9 | segs  -31.3  +38.6  +28.0  +25.7  +49.7  +53.2 | worst  -31.3 | H1/H2   +38.6/ +125.3
+  lb30  c6-36      ext1.5 268t NET   +161.9 | segs  -31.3  +35.5  +29.2  +19.5  +55.3  +53.7 | worst  -31.3 | H1/H2   +38.6/ +123.3
+  lb30  w0+e25     ext2.5 377t NET   +231.1 | segs  -31.1 +100.1  +24.0  +16.0  +70.4  +51.6 | worst  -31.1 | H1/H2   +95.2/ +135.9
+  lb30  w24+e25    ext2.5 303t NET   +179.1 | segs  -22.5  +86.0  -14.6  +17.5  +56.3  +56.4 | worst  -22.5 | H1/H2   +50.0/ +129.1
+  lb30  c6-24+e25  ext2.5 331t NET   +215.0 | segs  -28.1  +87.9  +23.0  +21.7  +56.8  +53.7 | worst  -28.1 | H1/H2   +83.9/ +131.1
+  A4    w0         ext1.5 359t NET   +203.3 | segs  +17.8  +16.0  +19.5   +4.3  +41.6 +104.2 | worst   +4.3 | H1/H2   +57.4/ +145.9
+  A4    w24        ext1.5 261t NET   +223.1 | segs   -1.1  +23.7  +22.0  +13.4  +56.0 +109.1 | worst   -1.1 | H1/H2   +46.6/ +176.5
+  A4    c4-24      ext1.5 284t NET   +166.9 | segs   +2.1  +26.8  -41.4  +17.3  +57.0 +105.2 | worst  -41.4 | H1/H2    -7.1/ +174.0
+  A4    c6-24      ext1.5 300t NET   +198.8 | segs   +0.0  +27.3   +9.4  +10.3  +46.5 +105.3 | worst   +0.0 | H1/H2   +39.9/ +158.9
+  A4    c6-30      ext1.5 277t NET   +202.4 | segs   +3.9  +24.1   +4.6  +13.6  +44.6 +111.6 | worst   +3.9 | H1/H2   +34.5/ +167.9
+
+(exp45 done 80s)

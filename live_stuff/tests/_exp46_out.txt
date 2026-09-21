@@ -1,0 +1,50 @@
+IDENTITY GATE OK (flags-off == shipped, n=351)
+  MATRIX w24 ext1.5 coarse 265t g +231.6   OK
+  MATRIX w24 ext2.0 coarse 294t g +248.2   OK
+  MATRIX w24 ext2.5 coarse 304t g +231.7   OK
+  MATRIX w24 ext3.0 coarse 307t g +222.4   OK
+  lb30  w0   349t NET   +196.3 npt+0.563 DD 23.6   OK (pin 349t +196.3)
+  lb30  w24  265t NET   +185.0 npt+0.698 DD 19.4   OK (pin 265t +185.0)
+  lb30  d6   340t NET   +183.8 npt+0.541 DD 22.6
+  lb30  d12  324t NET   +198.6 npt+0.613 DD 20.5
+  lb30  d24  286t NET   +203.1 npt+0.710 DD 21.6
+  A4    w0   359t NET   +203.3 npt+0.566 DD 24.8   OK (pin 359t +203.3)
+  A4    w24  261t NET   +223.1 npt+0.855 DD 19.8   OK (pin 261t +223.1)
+  A4    d6   347t NET   +209.0 npt+0.602 DD 23.3
+  A4    d12  330t NET   +206.5 npt+0.626 DD 23.3
+  A4    d24  287t NET   +183.1 npt+0.638 DD 29.4
+  lb14  w0   351t NET   +148.0 npt+0.422 DD 23.4   OK (pin 351t +148.0)
+  lb14  w24  272t NET   +193.7 npt+0.712 DD 15.7   OK (pin 272t +193.7)
+  lb14  d6   344t NET   +151.7 npt+0.441 DD 22.2
+  lb14  d12  329t NET   +145.9 npt+0.443 DD 22.0
+  lb14  d24  295t NET   +181.6 npt+0.616 DD 17.6
+
+PHASE A - defer canary: recomputed age of every defer-run trade (must be >= defer_h)
+  lb30  d6   340t | age<6h violations: 0
+  lb30  d12  324t | age<12h violations: 0
+  lb30  d24  286t | age<24h violations: 0
+  A4    d6   347t | age<6h violations: 0
+  A4    d12  330t | age<12h violations: 0
+  A4    d24  287t | age<24h violations: 0
+  lb14  d6   344t | age<6h violations: 0
+  lb14  d12  329t | age<12h violations: 0
+  lb14  d24  295t | age<24h violations: 0
+
+PHASE B - walk-forward (6 segs ~225d, fixed configs, fine NET)
+  lb30  w0   349t NET   +196.3 | segs  -29.6  +76.7  +18.6  +20.8  +50.7  +59.2 | worst  -29.6 | H1/H2   +69.0/ +127.4
+  lb30  w24  265t NET   +185.0 | segs  -22.5  +87.7  -19.6  +28.1  +44.9  +66.4 | worst  -22.5 | H1/H2   +50.1/ +134.9
+  lb30  d6   340t NET   +183.8 | segs  -28.4  +68.2  +19.4  +19.8  +45.3  +59.5 | worst  -28.4 | H1/H2   +61.4/ +122.5
+  lb30  d12  324t NET   +198.6 | segs  -23.8  +70.2  +20.1  +21.6  +48.3  +62.2 | worst  -23.8 | H1/H2   +69.5/ +129.1
+  lb30  d24  286t NET   +203.1 | segs  -20.3  +57.7  +24.2  +28.6  +51.4  +61.5 | worst  -20.3 | H1/H2   +66.1/ +137.1
+  A4    w0   359t NET   +203.3 | segs  +17.8  +16.0  +19.5   +4.3  +41.6 +104.2 | worst   +4.3 | H1/H2   +57.4/ +145.9
+  A4    w24  261t NET   +223.1 | segs   -1.1  +23.7  +22.0  +13.4  +56.0 +109.1 | worst   -1.1 | H1/H2   +46.6/ +176.5
+  A4    d6   347t NET   +209.0 | segs  +19.9   +8.3  +25.3   +7.7  +44.1 +103.7 | worst   +7.7 | H1/H2   +53.9/ +155.1
+  A4    d12  330t NET   +206.5 | segs  +17.5  +13.3  +17.3   +7.0  +49.6 +101.7 | worst   +7.0 | H1/H2   +54.8/ +151.7
+  A4    d24  287t NET   +183.1 | segs   -8.5   +5.6  +26.0  +10.1  +54.4  +95.5 | worst   -8.5 | H1/H2   +26.3/ +156.8
+  lb14  w0   351t NET   +148.0 | segs  -19.2  +34.8  +21.4  +21.9  +31.8  +57.3 | worst  -19.2 | H1/H2   +40.6/ +107.4
+  lb14  w24  272t NET   +193.7 | segs   -8.4  +31.4  +24.8  +41.4  +37.3  +67.2 | worst   -8.4 | H1/H2   +51.8/ +141.9
+  lb14  d6   344t NET   +151.7 | segs  -15.0  +24.7  +28.7  +20.9  +33.1  +59.3 | worst  -15.0 | H1/H2   +41.2/ +110.5
+  lb14  d12  329t NET   +145.9 | segs  -19.8  +23.7  +28.1  +21.1  +26.5  +66.3 | worst  -19.8 | H1/H2   +35.6/ +110.3
+  lb14  d24  295t NET   +181.6 | segs  -13.0  +28.9  +33.4  +31.4  +39.1  +61.7 | worst  -13.0 | H1/H2   +51.6/ +130.0
+
+(exp46 done 86s)

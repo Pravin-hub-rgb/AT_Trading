@@ -1,0 +1,22 @@
+=== IDENTITY GATE ===
+  flags=off  n=351  IDENTICAL=True
+
+=== USER COARSE MATRIX (w24) ===
+  lb30  w24 ext1.5  265t NET   +231.6  OK (pin 265t +231.6)
+  lb30  w24 ext3.0  307t NET   +222.4  OK (pin 307t +222.4)
+  A4    w24 ext1.5  250t NET   +207.1  OK (pin 250t +207.1)
+  A4    w24 ext3.0  285t NET   +218.8  OK (pin 285t +218.8)
+
+=== CHAMPION SINGLE (partial 7.5R) ===
+  champion single sw20: 371t NET   +261.5  WR 28.8%  DD 29.3  partials=42 canary_fails=0  worst6=-23.9  years={'2023': 32.5, '2024': 87.5, '2025': 133.6, '2026': 98.8}
+  champion single sw10: 395t NET   +238.4  WR 26.1%  DD 16.0  partials=38 canary_fails=0  worst6=-3.2  years={'2023': 40.8, '2024': 90.8, '2025': 94.6, '2026': 109.0}
+
+=== CHAMPION MULTI (partial 7.5R + mltf + persist7) ===
+  champion multi  sw20: 487t NET   +465.1  WR 31.8%  DD 21.9  partials=62 canary_fails=0  worst6=+1.9  years={'2023': 127.8, '2024': 139.5, '2025': 185.7, '2026': 127.0}
+  champion multi  sw10: 501t NET   +472.9  WR 30.1%  DD 14.5  partials=60 canary_fails=0  worst6=+22.7  years={'2023': 136.2, '2024': 121.2, '2025': 191.7, '2026': 144.4}
+
+=== CHAMPION NO-PARTIAL (exp_partial_r=0, baseline) ===
+  baseline      sw20: 371t NET   +148.2  WR 28.8%  DD 37.3  WF={'2023': 14.6, '2024': 78.8, '2025': 66.6, '2026': 79.0}
+  baseline      sw10: 394t NET   +163.6  WR 25.6%  DD 29.2  WF={'2023': 33.2, '2024': 106.0, '2025': 46.9, '2026': 73.1}
+
+=== DONE (38s) ===
