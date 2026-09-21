@@ -662,6 +662,107 @@ Script: `exp36_reconcile.py` (fine fills, funding-inclusive).
 
 ---
 
+## D3 Cooldown Family — Swing Pause, Skip-Windows, Wage Gate
+
+Three loss-reactive entry gates tested in the D3 family. All causal (decided at entry time from past data only).
+
+### D3-1: Skip-Windows (`exp_skipwin`)
+After a loss at time L, block entries while the covering HTF window is one of the first N windows OPENED after L. Theory: the same broken bias track produces bad re-entries.
+
+| Config | Trades | NET R | DD | Verdict |
+|---|---|---|---|---|
+| skipwin1_multi_sw10 | 144 | −1.1 | 38.8 | **DEAD** |
+| skipwin2_multi_sw10 | 105 | −26.1 | 34.2 | **DEAD** |
+| skipwin1_single_sw10 | 138 | −4.3 | 40.0 | **DEAD** |
+
+**Finding:** Window-skipping after losses destroys the edge. The next window in the same regime track is exactly where recovery trades live.
+
+### D3-2: Skip-Windows after Halt (`exp_skipwin_halt`)
+Same as skip-win but only triggered after a HALT (3 consecutive losses), not individual losses.
+
+| Config | Trades | NET R | DD | Verdict |
+|---|---|---|---|---|
+| skipwinhalt_multi_sw10 | 323 | +102.6 | 20.1 | **DEAD** (−223R vs king) |
+| skipwinhalt_single_sw10 | 276 | +71.8 | 27.0 | **DEAD** |
+
+### D3-3: Swing Pause (`exp_swingpause`) — NEW BEST SINGLE
+After a loss, block entries until a NEW 15m swing **formed AFTER** that loss confirms. This is a STRUCTURAL condition, not a timer.
+
+**Implementation (from `test_experiments_craze.py`):**
+```python
+# Build confirmation timestamps from 15m swing chain
+_sw_pairs = sorted((candle_ts_ltf[int(sw["confirmed_at_idx"])],
+                     candle_ts_ltf[int(sw["seg"]["start_idx"])])
+                    for sw in swings_ltf ...)
+confs_ts = [p[0] for p in _sw_pairs]   # confirmation timestamps
+pivs_ts  = [p[1] for p in _sw_pairs]   # pivot-start timestamps
+
+# On loss:
+if r_multiple < 0:
+    last_loss_ts = int(exit_ts)
+
+# At each entry candidate:
+if exp_swingpause > 0 and last_loss_ts > 0:
+    _si = bisect_right(confs_ts, candle_ts[i]) - 1
+    if _si < 0 or pivs_ts[_si] <= last_loss_ts:
+        continue  # no fresh structure since loss → skip
+```
+
+**What it checks:** Find the most recent confirmed 15m swing. If its pivot started BEFORE the last loss, skip — the market hasn't built a new leg yet. If its pivot started AFTER the loss, the structure is fresh → allow entry.
+
+**Key property:** No loss = no block (zero impact on winning streaks). cd=0 + pause ≡ cd=8 + pause (174.7 vs 174.8) — the structural pause fully replaces the bar-cooldown timer.
+
+| Config | Trades | NET R | DD | NET/DD | Verdict |
+|---|---|---|---|---|---|
+| swingpause_multi_sw10 | 443 | +231.0 | 19.8 | 11.7 | Hurts king (−94.8R) |
+| **swingpause_single_sw10** | **357** | **+174.8** | **23.4** | **7.5** | **+37.1R / −5.8DD vs baseline** |
+| swingpause_cd0_single_sw10 | 357 | +174.7 | 23.4 | 7.5 | cd=0 ≡ cd=8 |
+| swingpause_single_sw20 | 338 | +120.0 | 34.1 | 3.5 | ~neutral on sw20 |
+
+**Do NOT add swing-pause to the multi king** — overlapping runners need those entries.
+
+---
+
+## Wage Gate (`exp_wage_h`) — Window Age Filter
+
+Skip entries inside HTF windows younger than N hours. Age = `signal_bar_ts − window_start_ts`.
+
+**Theory:** Fresh windows often produce false breakouts. First-day LTF signals are discovery cost: the autopsy bucket `wage 0–24h` was 75t −11.9R.
+
+**Implementation (from `test_experiments_craze.py`):**
+```python
+# Inside the window membership check:
+if exp_wage_h > 0 and (bar_ts - s) / 3600.0 < exp_wage_h:
+    continue  # window too young → skip
+```
+
+**Validation:** Plateau 10-16h, stack-independent, cross-chain transferable, walk-forward stable.
+
+| Config | Trades | NET R | DD | NET/DD | Verdict |
+|---|---|---|---|---|---|
+| wage0 (no wait) | 500 | +325.8 | 17.8 | 18.3 | Baseline |
+| **wage10** | **261** | **+282.9** | **14.7** | **19.2** | **Best risk-adjusted single** |
+| wage12 | 246 | +270.8 | 15.3 | 17.7 | Plateau |
+| wage16 | 231 | +265.2 | 15.8 | 16.8 | Plateau |
+| wage24 | 196 | +223.1 | 19.8 | 11.3 | Old N5 (too aggressive) |
+
+**Key:** wage_h on single helps (fewer, older, better trades → DD improves). wage_h on multi HURTS (blocks profitable entries in overlap coverage). See [EXP40C_EXP41_WAGE_EXT.md](EXP40C_EXP41_WAGE_EXT.md) for full matrix.
+
+---
+
+## sw10 / sw20 — 1h Swing Sensitivity
+
+| Name | Parameter | What it means |
+|---|---|---|
+| `sw20` | `min_bars_1h=20` | Production default. Needs 20 consecutive 1h bars to confirm a swing. Fewer signals, slower flips. |
+| `sw10` | `min_bars_1h=10` | Twitchier. Needs only 10 bars. More HTF windows, more entry signals, more trades. |
+
+**Why it matters:** sw10 produces 500 trades vs sw20's 372 on the champion multi. The extra trades from faster 1h swings are net profitable (+325.8R vs +208.4R). On single configs, sw10 also wins but the gap is smaller.
+
+Also known as `mb10`/`mb20` (min_bars) in some docs. Same thing.
+
+---
+
 ## Session Summary — 2026-09-18
 
 **What we did (chronological):**

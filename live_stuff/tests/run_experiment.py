@@ -8,15 +8,11 @@ Usage:
     python run_experiment.py --audit        run full pre-live audit
     python run_experiment.py --diff <a> <b> compare two experiments
 
-CURRENT LEADERS (2026-09-20, post D3 audit — see docs/ANCHOR_BASIS_AUDIT.md):
+CURRENT LEADERS (2026-09-21, post deep audit):
 
     python run_experiment.py --group best      # the two leaders, one shot
 
-    champion_multi_sw10      KING         500t +325.8R NET / DD 17.8 / WR 30.0%
-        multi-position (exp_mltf) king on the 1h sw10 window chain, NO partials.
-        Live needs a 4-5 position cap (cap-5 costs zero edge; see audit doc 3c).
-
-    utcsat_multi_sw10        NEW KING     454t +359.0R NET / DD 14.8 / WR 30.8%
+    utcsat_multi_sw10              KING MULTI    454t +359.0R NET / DD 14.8 / WR 30.8%
         = champion_multi_sw10 + skip UTC-SATURDAY entries (exp_skip_utc_sat=1).
         The whole bleed is UTC-Saturday (-24R @ 91% loss on the single autopsy);
         UTC Sunday is PROFITABLE (+52R single / +124R multi) and is KEPT.
@@ -24,25 +20,21 @@ CURRENT LEADERS (2026-09-20, post D3 audit — see docs/ANCHOR_BASIS_AUDIT.md):
         CSVs shift the calendar by 5h30m and an IST-weekend filter (nowknd_*)
         loses money on the multi (it throws away UTC Sun evening = IST Mon open).
 
-    nowknd_swingpause_single_sw10  BEST SINGLE  294t +217.6R NET / DD 18.2 / WR 29.6%
-        Single-position config: structural swing-pause (exp_swingpause) + skip
-        IST-weekend entries (exp_skip_weekend). On the single the IST-aligned
-        weekend skip measured BEST (vs UTC-Sat-only +166.3 / UTC Sat+Sun +150.0)
-        — cascade effects differ per config; both are pinned for comparison.
-        Fully causal / live-implementable. Baseline was +137.7 / DD 29.2.
+    wage10_swingpause_single_sw10  KING SINGLE  261t +282.9R NET / DD 14.7 / WR 31.4%
+        = swing_pause + wage_10h (skip entries in HTF windows < 10h old) +
+          skip IST-WEEKEND entries (exp_skip_weekend=1). Wage gate: age = signal_bar_ts
+          - window_start_ts, skip if < 10h. Structural pause: after loss, wait for new
+          15m swing to confirm. Plateau 10-16h, stack-independent, cross-chain, WF-stable.
+        Baseline: +137.7 / DD 29.2 / NET/DD 4.7 → now +282.9 / 14.7 / 19.2.
 
-    swingpause_single_sw10   BEST SINGLE  357t +174.8R NET / DD 23.4 / WR 25.8%
-        Single-position config whose loss gate is STRUCTURAL: after a loss, no
-        re-entry until a 15m swing FORMED AFTER that loss confirms (fresh
-        structure). cooldown_bars=8 is redundant with it (cd0 == cd8; run
-        swingpause_cd0_single_sw10 to verify). Fully causal / live-implementable:
-        at entry time you need only your last loss time + your swing chain's
-        last confirmed pivot time. Beats every previous single config on R, DD
-        and NET/DD (baseline single: +137.7 / DD 29.2 / 4.7 -> 174.8 / 23.4 / 7.5).
+    champion_multi_sw10            CONSERVATIVE  500t +325.8R NET / DD 17.8 / WR 30.0%
+        multi-position (exp_mltf) king on the 1h sw10 window chain, NO partials.
+        Live needs a 4-5 position cap (cap-5 costs zero edge; see audit doc 3c).
 
     Run any variant with:
-        python run_experiment.py swingpause_single_sw10
-        python run_experiment.py --group cooldown   # the full cooldown family
+        python run_experiment.py wage10_swingpause_single_sw10
+        python run_experiment.py --group best
+        python run_experiment.py --group kingsweep
 """
 import sys, time, json, argparse
 from pathlib import Path

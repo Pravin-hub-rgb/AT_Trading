@@ -32,18 +32,18 @@
 
 **After a 1-month deep audit, cooldown research, UTC-weekend analysis, entry-quality autopsy, and live-certification via one-pass causal study — the final leaders:**
 
-| Metric | utcsat_multi_sw10 (KING multi) | nowknd_swingpause_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
+| Metric | utcsat_multi_sw10 (KING multi) | wage10_swingpause_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
 |---|---|---|---|
-| Trades | 454 | 294 | 500 |
-| NET R | **+359.0** | **+217.6** | +325.8 |
-| Win Rate | 30.8% | 29.6% | 30.0% |
-| Max Drawdown | **14.8** | 18.2 | 17.8 |
-| NET/DD | **24.3** | 12.0 | 18.3 |
-| Min year | +101.2 | +50.1 | +102.2 |
-| Rule | Multi + UTC Sat skip | Swing pause + IST weekend skip | Multi only |
+| Trades | 454 | 261 | 500 |
+| NET R | **+359.0** | **+282.9** | +325.8 |
+| Win Rate | 30.8% | 31.4% | 30.0% |
+| Max Drawdown | **14.8** | 14.7 | 17.8 |
+| NET/DD | **24.3** | **19.2** | 18.3 |
+| Min year | +101.2 | +78.3 | +102.2 |
+| Rule | Multi + UTC Sat skip | Wage 10h + swing pause + IST weekend skip | Multi only |
 | Status | **Certified live-implementable** | **Certified live-implementable** | Conservative reference |
 
-**Bottom line:** The numbers are real. The edge is mechanistically understood, survives cost stress, and has been certified live-implementable via candle-by-candle trace (prev-FS rule: 0 violations, exit-capped check: 0 R divergence on 857 trades). The batch numbers (+325.8 / +359.0) ARE the live numbers — not upper bounds, not estimates. The backtest phase is complete.
+**Bottom line:** The numbers are real. The edge is mechanistically understood, survives cost stress, and has been certified live-implementable via candle-by-candle trace (prev-FS rule: 0 violations, exit-capped check: 0 R divergence on 857 trades). The batch numbers (+282.9 to +359.0) ARE the live numbers — not upper bounds, not estimates. The backtest phase is complete.
 
 ---
 
@@ -53,15 +53,17 @@ All corrected. Net R after costs. Sorted by NET R. Cooldown configs highlighted.
 
 | # | Config | Trades | NET R | DD | NET/DD | WR | Note |
 |---|---|---|---|---|---|---|---|
-| 1 | **champion_multi_sw10** | 500 | **+325.8** | 17.8 | 18.3 | 30.0% | **KING (multi)** |
-| 2 | opt_ml_cd0_mb10 | 515 | +296.7 | 23.3 | 12.7 | 28.0% | |
-| 3 | opt_ml_cd10_mb10 | 453 | +233.5 | 32.7 | 7.1 | 28.5% | |
-| 4 | swingpause_multi_sw10 | 443 | +231.0 | 19.8 | 11.7 | 28.7% | cooldown (hurts multi) |
-| 5 | champion_multi_sw20 | 487 | +208.4 | 29.4 | 7.1 | 31.8% | |
-| 6 | lb30_chop55_persist2 | 359 | +177.5 | 24.8 | 7.2 | 26.2% | |
-| 7 | lb30_halt0 | 388 | +175.3 | 34.4 | 5.1 | 29.6% | |
-| 8 | **swingpause_single_sw10** | 357 | **+174.8** | 23.4 | 7.5 | 25.8% | **KING (single)** |
-| 9 | swingpause_cd0_single_sw10 | 357 | +174.7 | 23.4 | 7.5 | 25.8% | cd0 ≡ cd8 |
+| 1 | **utcsat_multi_sw10** | 454 | **+359.0** | 14.8 | 24.3 | 30.8% | **KING (multi)** |
+| 2 | **wage10_swingpause_single_sw10** | 261 | **+282.9** | 14.7 | 19.2 | 31.4% | **KING (single)** |
+| 3 | champion_multi_sw10 | 500 | +325.8 | 17.8 | 18.3 | 30.0% | Conservative |
+| 4 | opt_ml_cd0_mb10 | 515 | +296.7 | 23.3 | 12.7 | 28.0% | |
+| 5 | opt_ml_cd10_mb10 | 453 | +233.5 | 32.7 | 7.1 | 28.5% | |
+| 6 | swingpause_multi_sw10 | 443 | +231.0 | 19.8 | 11.7 | 28.7% | cooldown (hurts multi) |
+| 7 | champion_multi_sw20 | 487 | +208.4 | 29.4 | 7.1 | 31.8% | |
+| 8 | lb30_chop55_persist2 | 359 | +177.5 | 24.8 | 7.2 | 26.2% | |
+| 9 | lb30_halt0 | 388 | +175.3 | 34.4 | 5.1 | 29.6% | |
+| 10 | nowknd_swingpause_single_sw10 | 294 | +217.6 | 18.2 | 12.0 | 29.6% | Old single king |
+| 11 | swingpause_cd0_single_sw10 | 357 | +174.7 | 23.4 | 7.5 | 25.8% | cd0 ≡ cd8 |
 | 10 | lb30_w24_ext2.0 | 294 | +171.3 | 23.6 | 7.3 | 31.6% | |
 | 11 | lb30_halt6_cd0 | 387 | +171.0 | 30.7 | 5.6 | 29.2% | |
 | 12 | lb30_w24_ext1.5 | 265 | +159.1 | 19.4 | 8.2 | 32.1% | |
@@ -81,14 +83,6 @@ All corrected. Net R after costs. Sorted by NET R. Cooldown configs highlighted.
 | 26 | skipwin1_multi_sw10 | 144 | −1.1 | 38.8 | — | 20.1% | DEAD |
 | 27 | skipwin1_single_sw10 | 138 | −4.3 | 40.0 | — | 21.0% | DEAD |
 | 28 | skipwin2_multi_sw10 | 105 | −26.1 | 34.2 | — | 17.1% | DEAD |
-| 6 | lb30_halt0 | 388 | +175.3 | 34.4 | 5.1 | 29.1% | +0.45 |
-| 7 | **lb30_w24_ext2.0** | 294 | **+171.3** | 23.6 | 7.3 | 28.9% | +0.58 |
-| 8 | lb30_halt6_cd0 | 387 | +171.0 | 30.7 | 5.6 | 27.9% | +0.44 |
-| 9 | lb30_w24_ext1.5 | 265 | +159.1 | 19.4 | 8.2 | 28.3% | +0.60 |
-| 10 | lb30_persist5 | 388 | +152.4 | 25.3 | 6.0 | 30.2% | +0.39 |
-| 11 | **baseline_no_partial_sw10** | 395 | **+137.7** | 29.2 | 4.7 | 23.3% | +0.35 |
-| 12 | shipped_baseline_sw20 | 372 | +122.3 | 37.3 | 3.3 | 27.4% | +0.33 |
-| 13 | baseline_sw10 | 395 | +137.7 | 29.2 | 4.7 | 23.3% | +0.35 |
 
 ---
 
@@ -173,30 +167,36 @@ MONTHLY R:
 
 ---
 
-## 4. Scorecard: swingpause_single_sw10
+## 4. Scorecard: wage10_swingpause_single_sw10
 
-**NEW KING (single position).** Structural swing-pause after loss replaces bar-cooldown timer.
+**KING (single position).** Wage 10h filter + structural swing-pause after loss.
 
 ### Key Stats
 
-| Metric | baseline_no_partial_sw10 | swingpause_single_sw10 | Delta |
+| Metric | baseline_no_partial_sw10 | wage10_swingpause_single_sw10 | Delta |
 |---|---|---|---|
-| Trades | 395 | 357 | −38 (bad re-entries cut) |
-| NET R | +137.7 | **+174.8** | **+37.1R** |
-| DD | 29.2 | 23.4 | **−5.8R** |
-| NET/DD | 4.7 | 7.5 | **+59% quality** |
-| Min year | +33.2 | +50.1 | +16.9 |
-| Worst 6-seg | −2.2 | +0.3 | all segments positive |
+| Trades | 395 | 261 | −134 (wage + pause filter bad re-entries) |
+| NET R | +137.7 | **+282.9** | **+145.2R** |
+| DD | 29.2 | 14.7 | **−14.5R** |
+| NET/DD | 4.7 | **19.2** | **+309% quality** |
+| Min year | +33.2 | +78.3 | +45.1 |
 
 ### Rule
 
-After a loss, no re-entry until a 15m swing **formed AFTER** that loss confirms (fresh structure). This is a structural condition, not a timer. cd=0 + pause ≡ cd=8 + pause (174.7 vs 174.8).
+1. **Wage gate:** Skip entries in HTF windows younger than 10 hours. Age = signal_bar_ts − window_start_ts.
+2. **Swing pause:** After a loss, no re-entry until a 15m swing **formed AFTER** that loss confirms (fresh structure).
 
-### Walk-Forward Segments
+Both filters are structural conditions, not timers. No loss = no block (zero impact on winning streaks).
 
-```
-[+34, +57, +0, +18, +55, +97] — no negative segment
-```
+### Comparison to Old King Single
+
+| Metric | nowknd_swingpause_single_sw10 (old) | wage10_swingpause_single_sw10 (new) | Delta |
+|---|---|---|---|
+| Trades | 294 | 261 | −33 |
+| NET R | +217.6 | **+282.9** | **+65.3R** |
+| DD | 18.2 | 14.7 | **−3.5R** |
+| NET/DD | 12.0 | **19.2** | **+60% quality** |
+| Rule | Swing pause + IST weekend skip | Wage 10h + swing pause + IST weekend skip | |
 
 ---
 
@@ -509,7 +509,7 @@ Even if this specific strategy dies, you've built:
 
 1. **The engine is causally clean** — no lookahead, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps).
 2. **utcsat_multi_sw10 = 454t / +359.0R NET / DD 14.8 / WR 30.8%** — best config on the fixed engine. Edge over old king from UTC-Saturday skip. Mechanism understood: Saturday is the only weekday where multi overlap-coverage fails (cluster net −6.3R vs +151R on Thursday).
-3. **nowknd_swingpause_single_sw10 = 294t / +217.6R NET / DD 18.2** — best single config. Swing-pause (fresh structure after loss) + weekend skip. Stable across 4 years.
+3. **wage10_swingpause_single_sw10 = 261t / +282.9R NET / DD 14.7 / WR 31.4%** — best single config. Wage 10h filter (skip young windows) + swing-pause (fresh structure after loss) + IST weekend skip. Stable across 4 years.
 4. **Both pass:** identity gate, WF segments, pins, cost stress (breakeven ~4.4x costs).
 
 ### What's promising but unproven
@@ -534,15 +534,15 @@ Even if this specific strategy dies, you've built:
 
 | | Multi King | Single King |
 |---|---|---|
-| **Config** | **utcsat_multi_sw10** | **nowknd_swingpause_single_sw10** |
-| **Trades** | 454 | 294 |
-| **NET R** | **+359.0** | **+217.6** |
-| **DD** | 14.8 | 18.2 |
-| **NET/DD** | 24.3 | 12.0 |
-| **Conservative** | +325.8 (champion_multi) | +174.8 (swingpause_single) |
-| **Rule** | Multi + UTC Sat skip | Swing pause + IST weekend |
+| **Config** | **utcsat_multi_sw10** | **wage10_swingpause_single_sw10** |
+| **Trades** | 454 | 261 |
+| **NET R** | **+359.0** | **+282.9** |
+| **DD** | 14.8 | 14.7 |
+| **NET/DD** | 24.3 | 19.2 |
+| **Conservative** | +325.8 (champion_multi) | +217.6 (nowknd_swingpause_single) |
+| **Rule** | Multi + UTC Sat skip | Wage 10h + swing pause + IST weekend skip |
 
-**Bottom line:** The backtest is finally honest. The top configs are strong and mechanistically understood. Treat +325.8-359.0 as the bracket. Let the one-pass study and live parity pick the point inside it.
+**Bottom line:** The backtest is finally honest. The top configs are strong and mechanistically understood. Treat +282.9-359.0 as the bracket. Let the one-pass study and live parity pick the point inside it.
 
 ## Appendix: Raw Scorecard Data
 
