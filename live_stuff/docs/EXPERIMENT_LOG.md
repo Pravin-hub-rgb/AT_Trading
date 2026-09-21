@@ -29,6 +29,9 @@
 | 2026-09-21 | Skip-first-swing (v2) | Skip first LTF signal in each HTF window | DEAD (−8.3R on king) | First swing is where the edge lives. Wage gate handles fresh windows better. |
 | 2026-09-21 | Funding rate filter | Skip entries when |funding| > 0.03-0.10% | DEAD (0 trades filtered) | Funding data too sparse (3/day), never hit thresholds during entry times. Max 0.11% only 2× in 3.7yr. |
 | 2026-09-21 | LTF regime filter (fullstack) | chop15 band (55-61) + ATR ratio (≥1.4) + wage10 + swingpause + cd=0 | **ALIVE — NEW KING SINGLE** | +310.7R / DD 11.2 / NET/DD 27.7. Beats old king by +28.6R and −3.5DD. |
+| 2026-09-21 | Trail tighten (exp_la4) | Tighten trail after MFE (1.5-5R) to 40-60% of peak | DEAD (delta −0.2R best) | All 15 configs flat. Swing trail already optimal. |
+| 2026-09-21 | ATR trail (exp_la9) | Replace swing trail with ATR×k trail (k=1.0-3.0) | DEAD (−43R to −271R) | ALL configs catastrophically negative. Swing trail kills ATR trail. |
+| 2026-09-21 | Volatility SL buffer | sl_buf_atr is already ATR-scaled; ext_stop_r swept in kingsweep | DEAD (already optimal) | sl_buf_atr=0.01×ATR14 IS volatility-adjusted. ext_stop_r=3.0 confirmed optimal. |
 
 ---
 
