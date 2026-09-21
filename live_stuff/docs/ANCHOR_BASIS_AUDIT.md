@@ -348,6 +348,74 @@ experiments recommended.
 **What's next:** paper trade both kings, track Saturday coverage, build live engine.
 
 
+### 3h. LTF regime gates — chop15 band + ATR blow-off (2026-09-20) — STRONG PASS
+
+Autopsy on king + swingpause single found a **band** effect (non-monotone, the
+realness signature): 15m-chop (28-bar Choppiness on the 15m series) in the
+transition zone [55, 61) is a kill zone on BOTH configs (multi 100t -21.9R @ 81%;
+single 62t -23.2R @ 88.7%) while chop < 55 is strongly positive and >= 61
+recovers. Also: 15m ATR5/ATR20 >= 1.4 (vol blow-off) kills the single
+(77t -27.9R, bigWin +10.6) but is ~neutral on the multi. Cadence was degenerate
+(skipped). Implemented as two causal gates (`exp_chop15_lo/hi` band,
+`exp_atr_ratio_max`) and measured FULL-PATH:
+
+| config | n | NET | DD | NET/DD | verdict |
+|---|---|---|---|---|---|
+| chopband multi | 432 | +350.7 | 17.6 | 19.9 | beats unfiltered king (+24.9R) |
+| **utcsat_chopband multi (stack)** | 392 | +362.2 | 18.1 | 19.9 | ties utcsat NET (+3.2R, +3.3DD — wash on quality) |
+| chopband swingpause single | 317 | +227.6 | 20.0 | 11.4 | +52.8R vs swingpause single |
+| atrr swingpause single | 316 | +182.2 | 21.2 | 8.6 | mild (+7.4R, -2.2DD) |
+| **fullstack single (weekend+pause+band+atrr)** | **225** | **+282.9** | **12.5** | **22.6** | **BEST QUALITY PROFILE OF THE SESSION** |
+
+Notes: full-path EXCEEDED the autopsy predictions (chopband single predicted
+~+198, delivered +227.6) — the cascade effects were favourable here, unlike the
+risk-width case. All six pins locked. The chop15 band is NOT the same gate as
+the HTF chop track-selection (chop_thresh 58): it is the SAME formula applied to
+the 15m series, measuring micro-structure choppiness at the entry bar, and its
+effect is a band with recovery on both sides — the transition-zone signature.
+
+Overfitting discipline: this is the 4th stacked filter family on one dataset.
+The fullstack single (+282.9/12.5) and utcsat_chopband multi (+362.2/18.1) get
+the validation batch (sw20 / cd0 / threshold neighbourhood) before either
+replaces a pinned leader, and the sequential one-pass study (after L5) remains
+the final arbiter.
+
+**VALIDATION RESULT (same day, full-path): CHOP BAND REJECTED, ATR GATE NEUTRAL.**
+
+Temporal split of the chop15 [55,61) bleed on the swingpause single:
+2023 -6.3R (n=7), **2024 -22.8R (n=26, 96.2% loss)**, 2025 -7.9R, 2026 +13.8R
+(POSITIVE). The band's entire edge is 2024 — same era-dependence as the multi's
+Saturday. Neighbour bands [50,55) = +39.1R and [61,66) = +3.2R are positive —
+sharp edges that align suspiciously with my own autopsy bucket boundaries.
+
+Full-path validation on the sw20 chain (the cross-config test):
+- chopband_swingpause_single_sw20: 309t **+86.3 / DD 31.0** vs swingpause sw20
+  +120.0 / 34.1 -> **-33.7R, WORSE. The chop band does not transfer.**
+- chopband_atrr sw20: +107.8 / 27.1 -> -12.2R, still worse.
+- atrr_swingpause_single_sw20: +116.7 / 33.0 vs +120.0 / 34.1 -> NEUTRAL
+  (-3.3R, -1.1DD). The ATR gate is temporally stable (4/4 years negative:
+  -10.1/-10.4/-3.6/-3.8) but does not transfer across chains either.
+- atrr_cd0_single: +180.4 / 21.2 -> consistent with cd8 (+182.2).
+
+VERDICTS:
+- `exp_chop15_lo/hi` band: REJECTED — sw10+2024-specific, fails cross-chain and
+  temporal validation. Kept in the engine default-off with pinned negative
+  results; do not stack into any default config.
+- `exp_atr_ratio_max`: OPTIONAL/NEUTRAL — temporally stable but chain-neutral;
+  keep default-off. A defensible "risk hygiene" gate, not an edge.
+- `fullstack_swingpause_single_sw10` (+282.9/12.5): its extra +65R over
+  nowknd_swingpause_single comes substantially from the rejected chop band —
+  DISCOUNT IT. The validated single leader remains
+  `nowknd_swingpause_single_sw10` (+217.6 / 18.2).
+
+Playbook rule (final form): the only filters that ever survived full validation
+in this system are STRUCTURAL and PERIOD-LEVEL (weekend calendar, fresh-structure
+pause, UTC-Saturday liquidity). Every per-trade or per-bar indicator gate tested
+(B3, risk-width, ER, chop15 band, ATR-ratio) either fails validation or is
+neutral. The edge is in WHEN the market is tradeable, not in entry feature
+conditions.
+
+
 ## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 
 The 15m chain length is the most sensitive knob in the system:

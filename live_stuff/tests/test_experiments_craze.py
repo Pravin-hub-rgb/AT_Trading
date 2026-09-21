@@ -79,6 +79,9 @@ def build_module():
                   '    exp_skip_utc_sat=0,\n'
                   '    exp_skip_utc_sun=0,\n'
                   '    exp_risk_max_pct=0.0,\n'
+                  '    exp_chop15_lo=0.0,\n'
+                  '    exp_chop15_hi=0.0,\n'
+                  '    exp_atr_ratio_max=0.0,\n'
                   '    exp_max_concurrent=0,\n'
                   '    exp_entry_candle_min=0.0,\n'
                   '    exp_entry_swing_age_max=0,\n'
@@ -452,6 +455,33 @@ def build_module():
                    '                _now_ts2=candle_ts[i]\n'
                    '                _open_now2=sum(1 for _t in ltf_trades if int(_t["exit_ts"])>_now_ts2)\n'
                    '                if _open_now2>=exp_max_concurrent: continue\n')
+    # 3g-2) D3 LTF regime gates (autopsy-derived, band-style): skip entries in the
+    #     chop15 transition zone [lo,hi) and/or when 15m vol is blowing off
+    #     (ATR5/ATR20 above max). Both causal (closed 15m bars at entry).
+    t_c10 = '    atr_pct=_atr_pct_15m(candles_ltf)\n'
+    assert s.count(t_c10) == 1, "atr_pct anchor"
+    s = s.replace(t_c10, t_c10 +
+                  '    chop15_ser=_chop_series_1h(candles_ltf, lb=28)\n'
+                  '    _tr15=[0.0]*len(candles_ltf)\n'
+                  '    for _i, _c in enumerate(candles_ltf):\n'
+                  '        _h, _l = float(_c["high"]), float(_c["low"])\n'
+                  '        _pc = float(candles_ltf[_i-1]["close"]) if _i else _h\n'
+                  '        _tr15[_i] = max(_h-_l, abs(_h-_pc), abs(_l-_pc))\n'
+                  '    _a5 = [0.0]*len(candles_ltf); _a20 = [0.0]*len(candles_ltf); _ar15 = [1.0]*len(candles_ltf)\n'
+                  '    for _i in range(len(candles_ltf)):\n'
+                  '        _a5[_i] = sum(_tr15[max(0, _i-4):_i+1]) / min(5, _i+1)\n'
+                  '        _a20[_i] = sum(_tr15[max(0, _i-19):_i+1]) / min(20, _i+1)\n'
+                  '        _px = float(candles_ltf[_i]["close"])\n'
+                  '        if _a20[_i] > 0:\n'
+                  '            _ar15[_i] = _a5[_i] / _a20[_i]\n')
+    t_c11 = '        direction=int(sig["dir"])\n'
+    assert s.count(t_c11) == 1, "walk dir4"
+    s = s.replace(t_c11,
+                  '        if exp_chop15_hi > 0 and exp_chop15_lo <= chop15_ser[i] < exp_chop15_hi:\n'
+                  '            continue\n'
+                  '        if exp_atr_ratio_max > 0 and _ar15[i] > exp_atr_ratio_max:\n'
+                  '            continue\n'
+                  + t_c11)
     # 3f) D3 risk-width gate: skip entries whose LTF stop is wider than
     #     exp_risk_max_pct % of price (stale/stretched breaks: net-negative
     #     bucket, negligible big-win contribution on the single autopsy).
