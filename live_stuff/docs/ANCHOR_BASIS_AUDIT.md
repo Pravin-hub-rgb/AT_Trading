@@ -416,6 +416,32 @@ neutral. The edge is in WHEN the market is tradeable, not in entry feature
 conditions.
 
 
+### 3i-2. WAGE12/10 validation — STRONG PASS, new best single (2026-09-21)
+
+The other bot's kingsweep flagged wage_h=12 on the best single (+278.6 vs
++217.6). Full validation battery (all full-path, all pinned):
+
+| test | result | verdict |
+|---|---|---|
+| replication (wage12, weekend+pause base) | 259t +278.6 / 16.6 | matches his sweep exactly |
+| neighbourhood 8/10/12/16/20 | +265.7 / **+282.9** / +278.6 / +270.8 / +212.6 (DD 14.7-15.3) | **SMOOTH PLATEAU over 10-16h** — not a spike |
+| stack interaction (wage12, no weekend skip) | +235.7 / 21.7 vs pause-only +174.8 / 23.4 | +60.9R INDEPENDENT of the weekend filter |
+| cross-chain (wage12, sw20) | +144.5 / 29.2 vs pause-only sw20 +120.0 / 34.1 | +24.5R, -4.9DD — TRANSFERS |
+| WF segments | all wage 8-16 variants: every segment positive, minY >= +47 | stable |
+
+Mechanism: skip entries inside HTF windows younger than N hours — a fresh flip
+is an unproven bias; requiring ~10-16h of window age before LTF entries filters
+premature breaks. Same structural class as the swing-pause (mature structure),
+applied to the window instead of the loss. wage20 declines (over-aged windows
+miss fresh follow-through) — a real optimum, not a monotone.
+
+**New best single: `wage10_swingpause_single_sw10` = 261t / +282.9R NET /
+DD 14.7 / NET-DD 19.2.** (wage12 is within noise of the plateau peak — either
+10 or 12 is defensible; both pinned.) The multi kings are unchanged: the same
+wage12 on the utcsat multi gave +351.5 / 17.9 (slightly worse than +359.0) —
+the multi's overlapping entries already cover young-window trades.
+
+
 ## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 
 The 15m chain length is the most sensitive knob in the system:
