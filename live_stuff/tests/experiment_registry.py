@@ -106,7 +106,7 @@ EXPERIMENTS = {
     # ===== OUR CHAMPIONS (partial exits) =====
 
     "champion_single_sw20": {
-        "desc": "Champion single sw20 (partial exit, +104.0)",
+        "desc": "Champion single sw20 (partial exit, +90.1 post trail-fix)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -114,10 +114,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 371, "net": 104.0, "dd": 33.7, "partials": 42},
+        "pins": {"n": 372, "net": 90.1, "dd": 33.7, "partials": 41},
     },
     "champion_single_sw10": {
-        "desc": "Champion single sw10 (partial exit, +95.9)",
+        "desc": "Champion single sw10 (partial exit, +82.0 post trail-fix)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -125,10 +125,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 395, "net": 95.9, "dd": 22.0, "partials": 38},
+        "pins": {"n": 396, "net": 82.0, "dd": 22.0, "partials": 37},
     },
     "champion_multi_sw20": {
-        "desc": "Champion multi sw20 (partial exit, +232.6)",
+        "desc": "Champion multi sw20 (partial exit, +208.4 post trail-fix)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -137,10 +137,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 7.5, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 487, "net": 232.6, "dd": 29.4, "partials": 62},
+        "pins": {"n": 487, "net": 208.4, "dd": 29.4, "partials": 60},
     },
     "champion_multi_sw10": {
-        "desc": "Champion multi sw10 WITHOUT partials — ACTUAL KING (+366.1)",
+        "desc": "Champion multi sw10 WITHOUT partials — ACTUAL KING (+325.8, trail-fix)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -149,13 +149,13 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 500, "net": 366.1, "dd": 17.8, "dd_net": 27.7, "partials": 0},
+        "pins": {"n": 500, "net": 325.8, "dd": 17.8, "partials": 0},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
 
     "baseline_no_partial_sw20": {
-        "desc": "Champion config without partial exits sw20 (baseline, +148.2)",
+        "desc": "Champion config without partial exits sw20 (baseline, +122.3 post trail-fix)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -163,10 +163,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 371, "net": 148.2, "dd": 37.3},
+        "pins": {"n": 372, "net": 122.3, "dd": 37.3},
     },
     "baseline_no_partial_sw10": {
-        "desc": "Champion config without partial exits sw10 (baseline, +163.6)",
+        "desc": "Champion config without partial exits sw10 (baseline, +137.7 post trail-fix)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -174,27 +174,37 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 394, "net": 163.6, "dd": 29.2},
+        "pins": {"n": 395, "net": 137.7, "dd": 29.2},
     },
 
     # ===== SHIPPED BASELINE (identity gate reference) =====
+    # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
+    # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is
+    # +238.0), gross came from the coarse+chop61.8 run (n there is 340).
+    # Split into two exact reference rows, one per basis. See docs/ANCHOR_BASIS_AUDIT.md.
 
-    "_shipped_sw20": {
-        "desc": "Shipped engine, all flags off, sw20 (identity reference)",
+    "_shipped_coarse_618": {
+        "desc": "Shipped engine, flags off, sw20, COARSE 15m fills + chop 61.8 (identity-gate basis)",
+        "engine": "shipped",
+        "params": {},
+        "use_bp": False,
+        "swing": "sw20",
+        "basis": "coarse",
+        "pins": {"n": 340, "gross": 225.3},
+    },
+    "_shipped_fine_58": {
+        "desc": "Shipped engine, flags off, sw20, FINE 1m fills + chop 58 (production basis)",
         "engine": "shipped",
         "params": {},
         "use_bp": True,
         "swing": "sw20",
-        "pins": {"n": 351, "gross": 225.3},
+        "basis": "fine",
+        "pins": {"n": 351, "gross": 238.0},
     },
-    "_shipped_sw15": {
-        "desc": "Shipped engine, all flags off, sw15 (craze identity)",
-        "engine": "shipped",
-        "params": {},
-        "use_bp": True,
-        "swing": "sw15",
-        "pins": {"n": 340, "gross": 225.3},
-    },
+    # NOTE: no separate "sw15" row — run_one fixes the LTF chain at sw15 (mb50)
+    # and cfg["swing"] selects only the HTF window chain, so a sw15 row is not
+    # expressible and _shipped_coarse_618 IS the craze identity twin (verified:
+    # 340t / +225.3R, IDENTICAL to test_experiments_craze.main() gate output).
 }
 
 # Groups for batch runs

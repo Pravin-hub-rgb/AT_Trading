@@ -267,29 +267,33 @@ def simulate_htf_ltf_streak_halt(
             else:
                 if lo<best: best=lo
             if direction==1:
+                # D3 ordering fix 2026-09-20: the ratchet applies BEFORE the SL
+                # check — the stop is armed the instant the swing confirms (bar
+                # open), so this same bar is enforced against the new level.
+                while ev_idx+1 < len(events) and events[ev_idx+1][0] <= j:
+                    ev_idx+=1
+                    if events[ev_idx][0] < i: continue
+                    cand=events[ev_idx][1]
+                    if sl_cur < cand:
+                        sl_cur=cand
                 if lo <= sl_cur:
                     fill=min(sl_cur, float(c["open"]))
                     exit_idx,exit_px=j,fill
                     outcome="sl" if sl_cur <= sl0 else "trail"
                     break
+            else:
+                # D3 ordering fix 2026-09-20 (short mirror): see long-side comment.
                 while ev_idx+1 < len(events) and events[ev_idx+1][0] <= j:
                     ev_idx+=1
                     if events[ev_idx][0] < i: continue
                     cand=events[ev_idx][1]
-                    if sl_cur < cand < lo:
+                    if cand < sl_cur:
                         sl_cur=cand
-            else:
                 if hi >= sl_cur:
                     fill=max(sl_cur, float(c["open"]))
                     exit_idx,exit_px=j,fill
                     outcome="sl" if sl_cur >= sl0 else "trail"
                     break
-                while ev_idx+1 < len(events) and events[ev_idx+1][0] <= j:
-                    ev_idx+=1
-                    if events[ev_idx][0] < i: continue
-                    cand=events[ev_idx][1]
-                    if hi < cand < sl_cur:
-                        sl_cur=cand
         if fine_ltf:
             bar_ts=int(candles_ltf[i]["ts"])
             events_ts=[(candle_ts[min(e+1,n-1)], px) for e,px in events if candle_ts[min(e+1,n-1)] > bar_ts]
@@ -303,25 +307,31 @@ def simulate_htf_ltf_streak_halt(
                 else:
                     if lo<best_f: best_f=lo
                 if direction==1:
+                    # D3 ordering fix 2026-09-20: ratchet BEFORE the SL check —
+                    # the stop is armed at the activation instant (bar open), so
+                    # this same 1m bar is enforced against the new level. Combined
+                    # with the unconditional ratchet this is the full live-faithful
+                    # semantics: armed at confirmation, enforced immediately.
+                    while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
+                        ev_idx_f+=1
+                        cand=events_ts[ev_idx_f][1]
+                        if sl_cur_f < cand:
+                            sl_cur_f=cand
                     if lo <= sl_cur_f:
                         fill=min(sl_cur_f, float(c["open"]))
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f <= sl0 else "trail")
                         break
+                else:
+                    # D3 ordering fix 2026-09-20 (short mirror): see long-side comment.
                     while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
                         ev_idx_f+=1
                         cand=events_ts[ev_idx_f][1]
-                        if sl_cur_f < cand < lo:
+                        if cand < sl_cur_f:
                             sl_cur_f=cand
-                else:
                     if hi >= sl_cur_f:
                         fill=max(sl_cur_f, float(c["open"]))
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f >= sl0 else "trail")
                         break
-                    while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
-                        ev_idx_f+=1
-                        cand=events_ts[ev_idx_f][1]
-                        if hi < cand < sl_cur_f:
-                            sl_cur_f=cand
             if fk is None:
                 outcome="open"
                 exit_idx=n-1
