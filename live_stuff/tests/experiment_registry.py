@@ -41,6 +41,55 @@ BP = {**ENGINE_DEFAULTS, "chop_thresh": 58.0}
 
 EXPERIMENTS = {
 
+    # ===== OPTIMAL LANES (from exp37, fine fills, corrected engine) =====
+
+    "opt_ml_cd0_mb10": {
+        "desc": "OPT mltf cd0 chop55 persist2 mb10 (exp37 C1, their OPTIMAL)",
+        "engine": "patched",
+        "params": {"chop_thresh": 55.0, "exp_persist": 2,
+                    "cooldown_bars": 0, "exp_mltf": True},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "opt_ml_cd10_mb10": {
+        "desc": "OPT mltf cd10 chop55 persist2 mb10 (exp37 C2)",
+        "engine": "patched",
+        "params": {"chop_thresh": 55.0, "exp_persist": 2,
+                    "cooldown_bars": 10, "exp_mltf": True},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "lb30_chop55_persist2": {
+        "desc": "lb30 chop55 persist2 mb10 (exp37 A4)",
+        "engine": "patched",
+        "params": {"exp31_lb": 30, "chop_thresh": 55.0,
+                    "exp_persist": 2},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "lb30_persist5": {
+        "desc": "lb30 persist5 mb20 (exp37 A3/A5)",
+        "engine": "patched",
+        "params": {"exp31_lb": 30, "exp_persist": 5},
+        "swing": "sw20",
+        "pins": {},
+    },
+    "lb30_halt0": {
+        "desc": "lb30 no halt (exp37 B0)",
+        "engine": "patched",
+        "params": {"exp31_lb": 30, "max_consecutive_losses": 0},
+        "swing": "sw20",
+        "pins": {},
+    },
+    "lb30_halt6_cd0": {
+        "desc": "lb30 halt6 cd0 (exp37 B3)",
+        "engine": "patched",
+        "params": {"exp31_lb": 30, "max_consecutive_losses": 6,
+                    "cooldown_bars": 0},
+        "swing": "sw20",
+        "pins": {},
+    },
+
     # ===== LB30 SWEPT EXT (fine fills) =====
 
     "lb30_w24_ext1.5": {
