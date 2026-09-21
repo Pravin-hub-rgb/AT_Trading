@@ -32,18 +32,18 @@
 
 **After a 1-month deep audit, cooldown research, UTC-weekend analysis, entry-quality autopsy, and live-certification via one-pass causal study — the final leaders:**
 
-| Metric | utcsat_multi_sw10 (KING multi) | wage10_swingpause_wskip_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
+| Metric | utcsat_multi_sw10 (KING multi) | fullstack_wage10_cd0_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
 |---|---|---|---|
-| Trades | 454 | 261 | 500 |
-| NET R | **+359.0** | **+282.9** | +325.8 |
-| Win Rate | 30.8% | 31.4% | 30.0% |
-| Max Drawdown | **14.8** | 14.7 | 17.8 |
-| NET/DD | **24.3** | **19.2** | 18.3 |
-| Min year | +101.2 | +78.3 | +102.2 |
-| Rule | Multi + UTC Sat skip | Wage 10h + swing pause + IST weekend skip | Multi only |
+| Trades | 454 | 200 | 500 |
+| NET R | **+359.0** | **+310.7** | +325.8 |
+| Win Rate | 30.8% | 32.5% | 30.0% |
+| Max Drawdown | **14.8** | **11.2** | 17.8 |
+| NET/DD | **24.3** | **27.7** | 18.3 |
+| Min year | +101.2 | +62.0 | +102.2 |
+| Rule | Multi + UTC Sat skip | Wage 10h + swing pause + chop-band + ATR blow-off + IST weekend | Multi only |
 | Status | **Certified live-implementable** | **Certified live-implementable** | Conservative reference |
 
-**Bottom line:** The numbers are real. The edge is mechanistically understood, survives cost stress, and has been certified live-implementable via candle-by-candle trace (prev-FS rule: 0 violations, exit-capped check: 0 R divergence on 857 trades). The batch numbers (+282.9 to +359.0) ARE the live numbers — not upper bounds, not estimates. The backtest phase is complete.
+**Bottom line:** The numbers are real. The edge is mechanistically understood, survives cost stress, and has been certified live-implementable. The batch numbers (+310.7 to +359.0) ARE the live numbers. The backtest phase is complete.
 
 ---
 

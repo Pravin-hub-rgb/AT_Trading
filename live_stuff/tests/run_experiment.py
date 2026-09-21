@@ -20,12 +20,13 @@ CURRENT LEADERS (2026-09-21, post deep audit):
         CSVs shift the calendar by 5h30m and an IST-weekend filter (nowknd_*)
         loses money on the multi (it throws away UTC Sun evening = IST Mon open).
 
-    wage10_swingpause_wskip_single_sw10  KING SINGLE  261t +282.9R NET / DD 14.7 / WR 31.4%
-        = swing_pause + wage_10h (skip entries in HTF windows < 10h old) +
-          skip IST-WEEKEND entries (exp_skip_weekend=1). Wage gate: age = signal_bar_ts
-          - window_start_ts, skip if < 10h. Structural pause: after loss, wait for new
-          15m swing to confirm. Plateau 10-16h, stack-independent, cross-chain, WF-stable.
-        Baseline: +137.7 / DD 29.2 / NET/DD 4.7 → now +282.9 / 14.7 / 19.2.
+    fullstack_wage10_cd0_single_sw10  KING SINGLE  200t +310.7R NET / DD 11.2 / WR 32.5%
+        = swing_pause + wage_10h + IST-weekend skip + chop15 band (55-61) +
+          ATR blow-off (≥1.4) + cd=0. Five stacked filters, all structural:
+          chop-band removes choppy entries, ATR blow-off removes late trend entries,
+          wage gate removes young windows, swingpause blocks after losses,
+          weekend skip removes low-liquidity periods.
+        Baseline: +137.7 / DD 29.2 / NET/DD 4.7 → now +310.7 / 11.2 / 27.7.
 
     champion_multi_sw10            CONSERVATIVE  500t +325.8R NET / DD 17.8 / WR 30.0%
         multi-position (exp_mltf) king on the 1h sw10 window chain, NO partials.
