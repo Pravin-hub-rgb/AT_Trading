@@ -1,6 +1,6 @@
 # Strategy Scorecard & Honest Assessment
 
-> Generated: 2026-09-20 (updated with cooldown research)
+> Generated: 2026-09-20 (final — post UTC-weekend + cooldown research)
 > Branch: `experiments/v19-plus`
 > Engine: v18 streak_halt (corrected — partial R formula fixed, trail-event ordering fixed)
 > Data: Bybit Perp BTCUSDT (15m, 1h, 1m fine)
@@ -30,21 +30,20 @@
 
 ## 1. Executive Summary
 
-**After a 1-month deep audit + cooldown research, the corrected strategy has TWO kings:**
+**After a 1-month deep audit, cooldown research, and UTC-weekend analysis, the final leaders:**
 
-| Metric | champion_multi_sw10 (KING multi) | swingpause_single_sw10 (KING single) | baseline_no_partial_sw10 |
+| Metric | utcsat_multi_sw10 (KING multi) | nowknd_swingpause_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
 |---|---|---|---|
-| Trades | 500 | 357 | 395 |
-| NET R | **+325.8** | **+174.8** | +137.7 |
-| Win Rate | 30.0% | 25.8% | 25.8% |
-| Avg R/Trade | +0.65 | +0.49 | +0.35 |
-| Max Drawdown | 17.8R | 23.4R | 29.2R |
-| NET/DD | **18.3** | **7.5** | 4.7 |
-| Min year | +102.2R | +50.1R | +33.2R |
-| Green months | 53% (24/45) | — | 49% (22/45) |
-| Max consec losing months | 3 | — | 4 |
+| Trades | 454 | 294 | 500 |
+| NET R | **+359.0** | **+217.6** | +325.8 |
+| Win Rate | 30.8% | 29.6% | 30.0% |
+| Max Drawdown | **14.8** | 18.2 | 17.8 |
+| NET/DD | **24.3** | 12.0 | 18.3 |
+| Min year | +101.2 | +50.1 | +102.2 |
+| Rule | Multi + UTC Sat skip | Swing pause + IST weekend skip | Multi only |
+| Status | Optimistic (Sat edge era-dependent) | Best single ever | Conservative reference |
 
-**Bottom line:** There IS a signal. It's a low-WR, right-tailed trend-following system. The edge is real but concentrated in a small number of large winners. The multi king is for max performance; the single king is for simplicity + live-friendliness.
+**Bottom line:** The edge is real, mechanistically understood, and survives cost stress. The multi's Saturday skip (+33R) is regime-dependent — conservative live expectation is +325.8–359.0 bracket. The single's weekend effect is stable across 4 years.
 
 ---
 
@@ -508,6 +507,47 @@ Even if this specific strategy dies, you've built:
 
 ---
 
+## 15. Final Conclusion (2026-09-21)
+
+### What's real and verified (bankable)
+
+1. **The engine is causally clean** — no lookahead, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps).
+2. **utcsat_multi_sw10 = 454t / +359.0R NET / DD 14.8 / WR 30.8%** — best config on the fixed engine. Edge over old king from UTC-Saturday skip. Mechanism understood: Saturday is the only weekday where multi overlap-coverage fails (cluster net −6.3R vs +151R on Thursday).
+3. **nowknd_swingpause_single_sw10 = 294t / +217.6R NET / DD 18.2** — best single config. Swing-pause (fresh structure after loss) + weekend skip. Stable across 4 years.
+4. **Both pass:** identity gate, WF segments, pins, cost stress (breakeven ~4.4x costs).
+
+### What's promising but unproven
+
+- The +33R from Saturday skip is **era-dependent** — driven by 2023-24 Saturdays. Since 2025, Saturday clusters turned positive (+8.9R, coverage 7%→14%). Conservative live expectation: +325.8-359.0 bracket.
+- The single's Saturday effect is more stable (4/4 years, passes Bonferroni), but cascade interactions differ per config.
+
+### What's dead (stop revisiting)
+
+- HTF window-skipping after losses/halts
+- B2-only on multi
+- Hour-of-day filters
+- Wage-24 gates
+
+### The discipline from here
+
+1. **No more day-bucket fishing.** Every new scan on this same dataset widens the multiple-comparisons hole.
+2. **The sequential one-pass causal study** is the next real milestone — the honest bridge between batch-backtest and live.
+3. **Live Saturday monitoring:** paper-trade with both configs; track UTC-Saturday loss-rate and cluster coverage monthly.
+
+### The two kings for live
+
+| | Multi King | Single King |
+|---|---|---|
+| **Config** | **utcsat_multi_sw10** | **nowknd_swingpause_single_sw10** |
+| **Trades** | 454 | 294 |
+| **NET R** | **+359.0** | **+217.6** |
+| **DD** | 14.8 | 18.2 |
+| **NET/DD** | 24.3 | 12.0 |
+| **Conservative** | +325.8 (champion_multi) | +174.8 (swingpause_single) |
+| **Rule** | Multi + UTC Sat skip | Swing pause + IST weekend |
+
+**Bottom line:** The backtest is finally honest. The top configs are strong and mechanistically understood. Treat +325.8-359.0 as the bracket. Let the one-pass study and live parity pick the point inside it.
+
 ## Appendix: Raw Scorecard Data
 
 ### champion_multi_sw10 — Complete Monthly R
@@ -564,4 +604,7 @@ Even if this specific strategy dies, you've built:
 
 > **Status:** RESEARCH BASELINE — NOT LIVE — NOT INVESTABLE YET
 >
-> **Next:** Freeze strategy → collect 2027 OOS data → paper trade live → validate
+> **Final conclusion:** The backtest is honest, the top configs are strong and mechanistically understood.
+> Treat +325.8–359.0 as the bracket. Let the sequential one-pass study and live parity pick the point inside it.
+>
+> **Next:** Freeze → paper trade both configs → track Saturday coverage → collect 2027 OOS data → validate
