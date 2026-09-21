@@ -6,6 +6,12 @@
 **Params:** sl_buf=0.01, chop=58.0, cd=10, halt=3, ext_stop=1.5
 **Costs:** Bybit taker 0.055%/side, entry slip 0.005%, exit slip 0.01%, funding 0.01%/8h
 **Reconciled:** Both lanes confirmed identical anchor (351t/+238.0R gross)
+> **D3 anchor basis audit (2026-09-20):** see `ANCHOR_BASIS_AUDIT.md` — the two
+> valid anchor bases (coarse+61.8 = 340t/+225.3 identity; fine+58 = 351t/+238.0
+> production), the trail ratchet FIX (ADOPTED: condition + ordering — champion
+> multi sw10 re-pinned +366.1 -> **+325.8R NET / DD 17.8**), truncation causality
+> probes (CLEAN post-fix), robustness probes (gapless 1m data, cost stress,
+> concurrency-cap cost), and the bookkeeping fixes.
 
 > **Run any experiment:** `python live_stuff/tests/run_experiment.py <key>`
 > **List all:** `python live_stuff/tests/run_experiment.py --list`

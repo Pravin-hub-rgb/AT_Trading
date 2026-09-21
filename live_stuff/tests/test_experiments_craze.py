@@ -418,7 +418,7 @@ def main():
 
     # ---------- Exp 11: split-mb ----------
     print("\n=== EXP 11 split-mb (entry-mb -> trail-mb) ===")
-    sim_mb = build_module(split_mb=True)
+    sim_mb = build_module()
     grid = [(50, 50), (50, 35), (50, 75), (50, 100),
             (40, 50), (65, 50), (40, 75), (65, 100)]
     for e, tmb in grid:
@@ -429,7 +429,7 @@ def main():
 
     # ---------- Exp 16: 1h momentum gate ----------
     print("\n=== EXP 16 momentum gate ===")
-    sim_mo = build_module(momentum=True)
+    sim_mo = build_module()
     r = sim_mo(c1h, sw1h, c15, sw15, fine_ltf=[], exp_momentum=True, **BASE)
     show("momentum ON", stats(r["ltf_trades"] if isinstance(r, dict) else r))
     show("anchor (off)", s_ship)

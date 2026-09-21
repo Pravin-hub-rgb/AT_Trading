@@ -20,13 +20,60 @@ sys.path.insert(0, str(ROOT / "backend"))
 from experiment_registry import EXPERIMENTS, GROUPS, BP, ENGINE_DEFAULTS
 from test_experiments_craze import (
     build_module, load_candles, _compute_swings,
-    SWING, MB15, INSTRUMENT, stats,
+    SWING, MB15, INSTRUMENT, stats, BASE,
 )
 from engine.v18_params import get_v18_params as _gvp
 from src.btc.btc_routes import _trade_costs
 import src.btc.engines.htf_ltf.v18_streak_halt as shipped_mod
 
 _g = _gvp(INSTRUMENT)
+
+
+# ---------------------------------------------------------------------------
+# Identity gate (structural, D3 2026-09-20): the patched engine with ALL flags
+# off must reproduce the shipped engine's trade list EXACTLY, else nothing
+# downstream is trustworthy. Basis: coarse 15m fills + chop 61.8 (the craze
+# identity basis — this is what test_experiments_craze.main() asserts, 340t/+225.3).
+# Runs once per process, before any experiment. Cheap (two sims, data cached).
+# ---------------------------------------------------------------------------
+_id_gate = {"done": False}
+
+
+def identity_gate(data=None, sim=None):
+    if _id_gate["done"]:
+        return
+    if data is None:
+        data = get_data()
+    if sim is None:
+        sim = build_module()
+    r_ship = shipped_mod.simulate_htf_ltf_streak_halt(
+        data["c1h"], data["sw20"], data["c15"], data["sw15"], fine_ltf=[], **dict(BASE))
+    r_patch = sim(data["c1h"], data["sw20"], data["c15"], data["sw15"], fine_ltf=[], **dict(BASE))
+    ts_, tp_ = r_ship["ltf_trades"], r_patch["ltf_trades"]
+    ok = (len(ts_) == len(tp_)
+          and [t["r_multiple"] for t in ts_] == [t["r_multiple"] for t in tp_])
+    g_ship = sum(float(t["r_multiple"]) for t in ts_)
+    g_patch = sum(float(t["r_multiple"]) for t in tp_)
+    print("[identity-gate] shipped %dt/%+.1fR vs patched-off %dt/%+.1fR -> %s" %
+          (len(ts_), g_ship, len(tp_), g_patch, "IDENTICAL" if ok else "DIVERGED"))
+    if abs(len(ts_) - 340) > 1 or abs(g_ship - 225.3) > 0.5:
+        print("[identity-gate] WARNING: shipped anchor drifted from 340t/+225.3R "
+              "(coarse+chop61.8) — reference pins may be stale")
+    if not ok:
+        raise SystemExit("IDENTITY GATE FAILED — patched engine no longer matches shipped; "
+                         "all experiment results are untrustworthy until fixed")
+    _id_gate["done"] = True
+
+# ---------------------------------------------------------------------------
+# D3 anchor audit (2026-09-20): load-bearing production constants — fail fast.
+# min_bars_15m=50 is REQUIRED: the 15m chain length is the single most
+# sensitive knob in the system (mb35 -> 437t / +58.3R vs mb50 -> 351t / +238.0R
+# on the production basis). Docs/spec once claimed 35; production is 50.
+# ---------------------------------------------------------------------------
+assert SWING.get("min_bars_15m") == 50, \
+    "min_bars_15m drifted to %r (production=50; mb35 collapses the anchor to +58R)" % SWING.get("min_bars_15m")
+assert SWING.get("min_bars_1h") == 20, \
+    "min_bars_1h drifted to %r (production=20)" % SWING.get("min_bars_1h")
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +153,9 @@ def run_one(key, data=None, sim=None):
     base = BP if cfg.get("use_bp", True) else ENGINE_DEFAULTS
     params = {**base, **cfg["params"]}
     sw = get_swings(data, cfg["swing"])
-    fine = data["fine"]
+    # Fill basis: "fine" (default, 1m exits) or "coarse" (15m-bar exits).
+    # The identity-gate reference rows run coarse; every strategy experiment runs fine.
+    fine = data["fine"] if cfg.get("basis", "fine") == "fine" else []
 
     t0 = time.time()
     if cfg["engine"] == "shipped":
@@ -184,6 +233,10 @@ def evaluate(key, tr):
         "min_year": min(py.values()) if py else 0,
         "pin_ok": pin_ok,
         "pin_detail": pin_detail,
+        # D3: basis label — fills basis + effective chop threshold
+        "basis": "%s/c%.1f" % (cfg.get("basis", "fine"),
+                               {**(BP if cfg.get("use_bp", True) else ENGINE_DEFAULTS),
+                                **cfg.get("params", {})}["chop_thresh"]),
     }
 
 
@@ -192,11 +245,12 @@ def format_row(r, show_pins=True):
     wf_str = " ".join(["%+.0f" % w for w in r["wf"]])
     return (
         "  %-30s %4dt G %+8.1f  NET %+8.1f  WR %4.1f%%  DD %5.1f  "
-        "streak %2d  part %2d  worst6 %+7.1f  minY %+7.1f  %s  [%s]"
+        "streak %2d  part %2d  worst6 %+7.1f  minY %+7.1f  %s  %s  [%s]"
         % (
             r["key"], r["n"], r["gross"], r["net"], r["wr"], r["dd"],
             r["mx"], r["partials"], r["worst_seg"], r["min_year"],
             pin_mark if show_pins else "—",
+            r.get("basis", ""),
             wf_str,
         )
     )
@@ -230,6 +284,7 @@ def cmd_list():
 def cmd_run(key):
     data = get_data()
     sim = build_module()
+    identity_gate(data, sim)
     cfg = EXPERIMENTS[key]
     print("\n=== %s ===" % cfg["desc"])
     tr, elapsed = run_one(key, data, sim)
@@ -269,6 +324,7 @@ def cmd_run(key):
 def cmd_all():
     data = get_data()
     sim = build_module()
+    identity_gate(data, sim)
     results = []
     print("\n" + "=" * 100)
     print("RUNNING ALL EXPERIMENTS")
@@ -299,6 +355,7 @@ def cmd_group(name):
         return
     data = get_data()
     sim = build_module()
+    identity_gate(data, sim)
     print("\n=== GROUP: %s ===" % name)
     for key in keys:
         tr, elapsed = run_one(key, data, sim)
@@ -309,6 +366,7 @@ def cmd_group(name):
 def cmd_diff(key_a, key_b):
     data = get_data()
     sim = build_module()
+    identity_gate(data, sim)
     tr_a, _ = run_one(key_a, data, sim)
     tr_b, _ = run_one(key_b, data, sim)
     ra = evaluate(key_a, tr_a)
