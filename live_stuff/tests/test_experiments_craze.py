@@ -70,7 +70,15 @@ def build_module():
                   '    exp_curfew_b=0.0,\n'
                   '    exp_defer_h=0.0,\n'
                   '    exp_legskip_r=0.0,\n'
-                  '    exp_partial_r=0.0,\n')
+                  '    exp_partial_r=0.0,\n'
+                  '    exp_skipwin=0,\n'
+                  '    exp_swingpause=0,\n'
+                  '    exp_skipwin_halt=0,\n'
+                  '    exp_skip_weekend=0,\n'
+                  '    exp_kinds="",\n'
+                  '    exp_skip_utc_sat=0,\n'
+                  '    exp_skip_utc_sun=0,\n'
+                  '    exp_max_concurrent=0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -262,6 +270,92 @@ def build_module():
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t8) == 1, "chop init"
     s = s.replace(t8, t8 + '    _rg_s=None; _rg_c=0\n')
+    # 3d-2) D3 cooldown family: loss-triggered HTF-window skip + swing-confirm pause.
+    #   exp_skipwin=N   : after a LOSS at exit time L, entries are blocked while
+    #                     the covering HTF window is one of the first N windows
+    #                     OPENED after L (skip the same broken bias track).
+    #   exp_swingpause  : after a LOSS, block entries until at least one NEW 15m
+    #                     swing has CONFIRMED after L (fresh structure exists).
+    #   Both are causal: decided at entry time from past data only.
+    t_c1 = '    candle_ts_ltf=[int(c["ts"]) for c in candles_ltf]\n'
+    assert s.count(t_c1) == 1, "candle_ts_ltf"
+    s = s.replace(t_c1, t_c1 +
+                  '    _sw_pairs=sorted((candle_ts_ltf[int(sw["confirmed_at_idx"])], candle_ts_ltf[int(sw["seg"]["start_idx"])]) for sw in swings_ltf if sw.get("confirmed_at_idx") is not None and 0 <= int(sw["confirmed_at_idx"]) < len(candle_ts_ltf) and sw.get("seg") is not None and 0 <= int(sw["seg"].get("start_idx", -1)) < len(candle_ts_ltf))\n'
+                  '    confs_ts=[p[0] for p in _sw_pairs]\n'
+                  '    pivs_ts=[p[1] for p in _sw_pairs]\n')
+    t_c2 = '    last_loss_bar=-999999\n'
+    assert s.count(t_c2) == 1, "last_loss_bar"
+    s = s.replace(t_c2, t_c2 + '    last_loss_ts=0\n    halt_ts=0\n    _open_count=0\n')
+    t_c3 = '        if cooldown_bars > 0 and r_multiple < 0:\n            last_loss_bar = exit_idx\n'
+    assert s.count(t_c3) == 1, "loss hook"
+    s = s.replace(t_c3, t_c3 +
+                  '        if r_multiple < 0:\n            last_loss_ts=int(exit_ts)\n')
+    t_c3b = '                    halt_skip_next = True  # skip the NEXT entry\n'
+    assert s.count(t_c3b) == 1, "halt hook"
+    s = s.replace(t_c3b, t_c3b +
+                  '                    if exp_skipwin_halt > 0:\n                        halt_ts = int(exit_ts)\n')
+    t_c4 = '        direction=int(sig["dir"])\n'
+    assert s.count(t_c4) == 1, "walk dir"
+    s = s.replace(t_c4,
+                  '        if exp_skipwin > 0 and last_loss_ts > 0:\n'
+                  '            if use == "flip":\n'
+                  '                _starts = starts_flip\n'
+                  '            elif use == "b2":\n'
+                  '                _starts = starts_b2\n'
+                  '            else:\n'
+                  '                _starts = starts_decisive\n'
+                  '            _idx = bs.bisect_right(_starts, candle_ts[i]) - 1\n'
+                  '            if _idx >= 0 and _idx - bs.bisect_right(_starts, last_loss_ts) + 1 <= exp_skipwin:\n'
+                  '                continue\n'
+                  '        if exp_skipwin_halt > 0 and halt_ts > 0:\n'
+                  '            if use == "flip":\n'
+                  '                _starts2 = starts_flip\n'
+                  '            elif use == "b2":\n'
+                  '                _starts2 = starts_b2\n'
+                  '            else:\n'
+                  '                _starts2 = starts_decisive\n'
+                  '            _idx2 = bs.bisect_right(_starts2, candle_ts[i]) - 1\n'
+                  '            if _idx2 >= 0 and _idx2 - bs.bisect_right(_starts2, halt_ts) + 1 <= exp_skipwin_halt:\n'
+                  '                continue\n'
+                   '        if exp_swingpause > 0 and last_loss_ts > 0:\n'
+                   '            _si = bs.bisect_right(confs_ts, candle_ts[i]) - 1\n'
+                   '            if _si < 0 or pivs_ts[_si] <= last_loss_ts:\n'
+                   '                continue\n'
+                  '        if exp_max_concurrent > 0:\n'
+                  '            _now_ts = candle_ts[i]\n'
+                  '            _open_now = sum(1 for _t in ltf_trades if int(_t["exit_ts"]) > _now_ts)\n'
+                  '            if _open_now >= exp_max_concurrent:\n'
+                  '                continue\n'
+                  + t_c4)
+    # 3d-3) D3 pattern gates from the loss autopsy: weekend skip + entry-kind filter.
+    t_c5 = '    halt_ts=0\n'
+    assert s.count(t_c5) == 1, "halt_ts init"
+    s = s.replace(t_c5, t_c5 +
+                  '    _wd_cache={}\n'
+                  '    def _is_weekend(dstr):\n'
+                  '        _d = dstr[:10]\n'
+                  '        _w = _wd_cache.get(_d)\n'
+                  '        if _w is None:\n'
+                  '            import datetime as _dt\n'
+                  '            _w = _dt.date(int(_d[:4]), int(_d[5:7]), int(_d[8:10])).weekday()\n'
+                  '            _wd_cache[_d] = _w\n'
+                  '        return _w\n'
+                  '    def _utc_wd(dstr):\n'
+                  '        import datetime as _dt\n'
+                  '        _p = _dt.datetime.strptime(dstr[:16], "%Y-%m-%d %H:%M")\n'
+                  '        return (_p - _dt.timedelta(hours=5, minutes=30)).weekday()\n')
+    t_c6 = '        direction=int(sig["dir"])\n'
+    assert s.count(t_c6) == 1, "walk dir2"
+    s = s.replace(t_c6,
+                  '        if exp_skip_weekend and _is_weekend(candles_ltf[i]["date"]) >= 5:\n'
+                  '            continue\n'
+                  '        if exp_skip_utc_sat and _utc_wd(candles_ltf[i]["date"]) == 5:\n'
+                  '            continue\n'
+                  '        if exp_skip_utc_sun and _utc_wd(candles_ltf[i]["date"]) == 6:\n'
+                  '            continue\n'
+                  '        if exp_kinds and sig["kind"] != exp_kinds:\n'
+                  '            continue\n'
+                  + t_c6)
     t9 = '        # pick intervals\n'
     assert s.count(t9) == 1, "pick intervals"
     s = s.replace(t9,
@@ -348,8 +442,12 @@ def build_module():
                   '            i=_jj\n'
                   '            bar_time=candles_ltf[i]["date"]\n'
                   '            entry=float(candles_ltf[i]["close"])\n'
-                  '            if busy_until and bar_time<=busy_until: continue\n'
-                  '            if cooldown_bars>0 and i-last_loss_bar<cooldown_bars: continue\n')
+                   '            if busy_until and bar_time<=busy_until: continue\n'
+                   '            if cooldown_bars>0 and i-last_loss_bar<cooldown_bars: continue\n'
+                   '            if exp_max_concurrent>0:\n'
+                   '                _now_ts2=candle_ts[i]\n'
+                   '                _open_now2=sum(1 for _t in ltf_trades if int(_t["exit_ts"])>_now_ts2)\n'
+                   '                if _open_now2>=exp_max_concurrent: continue\n')
     m, p = _load_module(s, "craze_superset")
     try:
         p.unlink()

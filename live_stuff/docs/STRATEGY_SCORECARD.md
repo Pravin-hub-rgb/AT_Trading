@@ -1,6 +1,6 @@
 # Strategy Scorecard & Honest Assessment
 
-> Generated: 2026-09-20
+> Generated: 2026-09-20 (updated with cooldown research)
 > Branch: `experiments/v19-plus`
 > Engine: v18 streak_halt (corrected — partial R formula fixed, trail-event ordering fixed)
 > Data: Bybit Perp BTCUSDT (15m, 1h, 1m fine)
@@ -12,52 +12,76 @@
 ## Table of Contents
 
 1. [Executive Summary](#1-executive-summary)
-2. [Full Leaderboard (19 Experiments)](#2-full-leaderboard-19-experiments)
+2. [Full Leaderboard (28 Experiments)](#2-full-leaderboard-28-experiments)
 3. [Scorecard: champion_multi_sw10](#3-scorecard-champion_multi_sw10)
-4. [Scorecard: baseline_no_partial_sw10](#4-scorecard-baseline_no_partial_sw10)
-5. [Scorecard: lb30_w24_ext2.0](#5-scorecard-lb30_w24_ext20)
-6. [Tail Dependence Analysis](#6-tail-dependence-analysis)
-7. [Cost Stress Test](#7-cost-stress-test)
-8. [Concurrency Cap Analysis](#8-concurrency-cap-analysis)
-9. [Bugs Found & Fixed (This Audit)](#9-bugs-found--fixed-this-audit)
-10. [Verified Clean](#10-verified-clean)
-11. [Honest Assessment](#11-honest-assessment)
-12. [Validation Strategy](#12-validation-strategy)
+4. [Scorecard: swingpause_single_sw10](#4-scorecard-swingpause_single_sw10)
+5. [Scorecard: baseline_no_partial_sw10](#5-scorecard-baseline_no_partial_sw10)
+6. [Scorecard: lb30_w24_ext2.0](#6-scorecard-lb30_w24_ext20)
+7. [Cooldown-Family Research](#7-cooldown-family-research)
+8. [Tail Dependence Analysis](#8-tail-dependence-analysis)
+9. [Cost Stress Test](#9-cost-stress-test)
+10. [Concurrency Cap Analysis](#10-concurrency-cap-analysis)
+11. [Bugs Found & Fixed (This Audit)](#11-bugs-found--fixed-this-audit)
+12. [Verified Clean](#12-verified-clean)
+13. [Honest Assessment](#13-honest-assessment)
+14. [Validation Strategy](#14-validation-strategy)
 
 ---
 
 ## 1. Executive Summary
 
-**After a 1-month deep audit, the corrected strategy shows:**
+**After a 1-month deep audit + cooldown research, the corrected strategy has TWO kings:**
 
-| Metric | champion_multi_sw10 | baseline_no_partial_sw10 | lb30_w24_ext2.0 |
+| Metric | champion_multi_sw10 (KING multi) | swingpause_single_sw10 (KING single) | baseline_no_partial_sw10 |
 |---|---|---|---|
-| Trades | 500 | 395 | 294 |
-| NET R | **+325.8** | +137.7 | +171.3 |
-| Win Rate | 27.8% | 23.3% | 28.9% |
-| Avg R/Trade | +0.65 | +0.35 | +0.58 |
-| Max Drawdown | 17.8R | 29.2R | 23.6R |
-| NET/DD | **18.3** | 4.7 | 7.3 |
-| Yearly R (avg) | **+85R/yr** | +36R/yr | +45R/yr |
-| Worst 12-mo rolling | +1.7R | −15.0R | −22.5R |
-| Green months | 53% (24/45) | 49% (22/45) | 57% (25/44) |
-| Max consec losing months | 3 | 4 | 5 |
+| Trades | 500 | 357 | 395 |
+| NET R | **+325.8** | **+174.8** | +137.7 |
+| Win Rate | 30.0% | 25.8% | 25.8% |
+| Avg R/Trade | +0.65 | +0.49 | +0.35 |
+| Max Drawdown | 17.8R | 23.4R | 29.2R |
+| NET/DD | **18.3** | **7.5** | 4.7 |
+| Min year | +102.2R | +50.1R | +33.2R |
+| Green months | 53% (24/45) | — | 49% (22/45) |
+| Max consec losing months | 3 | — | 4 |
 
-**Bottom line:** There IS a signal. It's a low-WR, right-tailed trend-following system. The edge is real but concentrated in a small number of large winners.
+**Bottom line:** There IS a signal. It's a low-WR, right-tailed trend-following system. The edge is real but concentrated in a small number of large winners. The multi king is for max performance; the single king is for simplicity + live-friendliness.
 
 ---
 
-## 2. Full Leaderboard (19 Experiments)
+## 2. Full Leaderboard (28 Experiments)
 
-All corrected. Net R after costs. Sorted by NET R.
+All corrected. Net R after costs. Sorted by NET R. Cooldown configs highlighted.
 
-| # | Config | Trades | NET R | DD | NET/DD | WR | Avg R |
+| # | Config | Trades | NET R | DD | NET/DD | WR | Note |
 |---|---|---|---|---|---|---|---|
-| 1 | **champion_multi_sw10** | 500 | **+325.8** | 17.8 | 18.3 | 27.8% | +0.65 |
-| 2 | opt_ml_cd0_mb10 | 515 | +296.7 | 23.3 | 12.7 | 30.5% | +0.58 |
-| 3 | opt_ml_cd10_mb10 | 453 | +233.5 | 32.7 | 7.1 | 28.0% | +0.52 |
-| 4 | champion_multi_sw20 | 487 | +208.4 | 29.4 | 7.1 | 31.8% | +0.43 |
-| 5 | lb30_chop55_persist2 | 359 | +177.5 | 24.8 | 7.2 | 29.0% | +0.49 |
+| 1 | **champion_multi_sw10** | 500 | **+325.8** | 17.8 | 18.3 | 30.0% | **KING (multi)** |
+| 2 | opt_ml_cd0_mb10 | 515 | +296.7 | 23.3 | 12.7 | 28.0% | |
+| 3 | opt_ml_cd10_mb10 | 453 | +233.5 | 32.7 | 7.1 | 28.5% | |
+| 4 | swingpause_multi_sw10 | 443 | +231.0 | 19.8 | 11.7 | 28.7% | cooldown (hurts multi) |
+| 5 | champion_multi_sw20 | 487 | +208.4 | 29.4 | 7.1 | 31.8% | |
+| 6 | lb30_chop55_persist2 | 359 | +177.5 | 24.8 | 7.2 | 26.2% | |
+| 7 | lb30_halt0 | 388 | +175.3 | 34.4 | 5.1 | 29.6% | |
+| 8 | **swingpause_single_sw10** | 357 | **+174.8** | 23.4 | 7.5 | 25.8% | **KING (single)** |
+| 9 | swingpause_cd0_single_sw10 | 357 | +174.7 | 23.4 | 7.5 | 25.8% | cd0 ≡ cd8 |
+| 10 | lb30_w24_ext2.0 | 294 | +171.3 | 23.6 | 7.3 | 31.6% | |
+| 11 | lb30_halt6_cd0 | 387 | +171.0 | 30.7 | 5.6 | 29.2% | |
+| 12 | lb30_w24_ext1.5 | 265 | +159.1 | 19.4 | 8.2 | 32.1% | |
+| 13 | lb30_w24_ext2.5 | 304 | +153.2 | 23.6 | 6.5 | 31.2% | |
+| 14 | lb30_persist5 | 339 | +146.5 | 31.2 | 4.7 | 28.9% | |
+| 15 | lb30_w24_ext3.0 | 307 | +143.6 | 23.6 | 6.1 | 30.6% | |
+| 16 | a4_w24_ext3.0 | 285 | +141.3 | 24.3 | 5.8 | 29.1% | |
+| 17 | baseline_no_partial_sw10 | 395 | +137.7 | 29.2 | 4.7 | 25.8% | old baseline |
+| 18 | opt_cd10_w24 | 300 | +136.3 | 30.7 | 4.4 | 31.3% | |
+| 19 | a4_w24_ext1.5 | 250 | +134.9 | 23.8 | 5.7 | 28.8% | |
+| 20 | baseline_no_partial_sw20 | 372 | +122.3 | 37.3 | 3.3 | 29.0% | |
+| 21 | swingpause_single_sw20 | 338 | +120.0 | 34.1 | 3.5 | 30.8% | cooldown |
+| 22 | skipwinhalt_multi_sw10 | 323 | +102.6 | 20.1 | 5.1 | 26.9% | cooldown |
+| 23 | champion_single_sw20 | 372 | +90.1 | 33.7 | 2.7 | 29.0% | |
+| 24 | champion_single_sw10 | 396 | +82.0 | 22.0 | 3.7 | 26.3% | |
+| 25 | skipwinhalt_single_sw10 | 276 | +71.8 | 27.0 | 2.7 | 24.6% | cooldown |
+| 26 | skipwin1_multi_sw10 | 144 | −1.1 | 38.8 | — | 20.1% | DEAD |
+| 27 | skipwin1_single_sw10 | 138 | −4.3 | 40.0 | — | 21.0% | DEAD |
+| 28 | skipwin2_multi_sw10 | 105 | −26.1 | 34.2 | — | 17.1% | DEAD |
 | 6 | lb30_halt0 | 388 | +175.3 | 34.4 | 5.1 | 29.1% | +0.45 |
 | 7 | **lb30_w24_ext2.0** | 294 | **+171.3** | 23.6 | 7.3 | 28.9% | +0.58 |
 | 8 | lb30_halt6_cd0 | 387 | +171.0 | 30.7 | 5.6 | 27.9% | +0.44 |
@@ -150,7 +174,34 @@ MONTHLY R:
 
 ---
 
-## 4. Scorecard: baseline_no_partial_sw10
+## 4. Scorecard: swingpause_single_sw10
+
+**NEW KING (single position).** Structural swing-pause after loss replaces bar-cooldown timer.
+
+### Key Stats
+
+| Metric | baseline_no_partial_sw10 | swingpause_single_sw10 | Delta |
+|---|---|---|---|
+| Trades | 395 | 357 | −38 (bad re-entries cut) |
+| NET R | +137.7 | **+174.8** | **+37.1R** |
+| DD | 29.2 | 23.4 | **−5.8R** |
+| NET/DD | 4.7 | 7.5 | **+59% quality** |
+| Min year | +33.2 | +50.1 | +16.9 |
+| Worst 6-seg | −2.2 | +0.3 | all segments positive |
+
+### Rule
+
+After a loss, no re-entry until a 15m swing **formed AFTER** that loss confirms (fresh structure). This is a structural condition, not a timer. cd=0 + pause ≡ cd=8 + pause (174.7 vs 174.8).
+
+### Walk-Forward Segments
+
+```
+[+34, +57, +0, +18, +55, +97] — no negative segment
+```
+
+---
+
+## 5. Scorecard: baseline_no_partial_sw10
 
 ### Yearly Performance
 
@@ -181,7 +232,7 @@ Remove top 5 trades:   −46.3R   (NEGATIVE)
 
 ---
 
-## 5. Scorecard: lb30_w24_ext2.0
+## 6. Scorecard: lb30_w24_ext2.0
 
 ### Yearly Performance
 
@@ -213,7 +264,39 @@ Remove top 10:         −50.7R   (NEGATIVE)
 
 ---
 
-## 6. Tail Dependence Analysis
+## 7. Cooldown-Family Research
+
+Three new loss-reactive gates tested (all causal, decided at entry time from past data):
+
+| Gate | Rule | Verdict |
+|---|---|---|
+| `exp_skipwin` | Skip first N HTF windows opened after a loss | **DEAD** in every variant |
+| `exp_skipwin_halt` | Same but only after a HALT (3 straight losses) | DEAD |
+| `exp_swingpause` | Block entries until a swing **formed AFTER** the loss confirms | **NEW best single** |
+
+### Full Results
+
+| Config | Trades | NET R | DD | NET/DD | Verdict |
+|---|---|---|---|---|---|
+| skipwin1_multi | 144 | −1.1 | 38.8 | — | DEAD |
+| skipwin2_multi | 105 | −26.1 | 34.2 | — | DEAD |
+| swingpause_multi | 443 | +231.0 | 19.8 | 11.7 | Hurts the king (−94.8R) |
+| skipwinhalt_multi | 323 | +102.6 | 20.1 | 5.1 | DEAD |
+| skipwinhalt_single | 276 | +71.8 | 27.0 | 2.7 | DEAD |
+| **swingpause_single** | **357** | **+174.8** | **23.4** | **7.5** | **NEW best single (+37R, −5.8DD)** |
+| swingpause_cd0_single | 357 | +174.7 | 23.4 | 7.5 | cd=0 ≡ cd=8 (pause replaces timer) |
+| swingpause_single_sw20 | 338 | +120.0 | 34.1 | 3.5 | ~neutral |
+| skipwin1_single | 138 | −4.3 | 40.0 | — | DEAD |
+
+### Key Findings
+
+1. **Window-skipping after losses destroys the edge** — the next window in the same regime track is exactly where recovery trades live
+2. **The structural pause fully replaces the bar-cooldown timer** — "no trade until the market has built a new leg after your loss" instead of "wait 2 hours"
+3. **Do NOT add swing-pause to the multi king** — overlapping runners need those entries
+
+---
+
+## 8. Tail Dependence Analysis
 
 The critical question: **how much of the profit comes from a few big winners?**
 
@@ -246,7 +329,7 @@ Answer: **Yes.** Every year is positive. The runners appear in every year:
 
 ---
 
-## 7. Cost Stress Test
+## 9. Cost Stress Test
 
 How much can costs increase before the strategy dies?
 
@@ -268,7 +351,7 @@ Your real costs on Bybit will be higher than the model (latency, partial fills, 
 
 ---
 
-## 8. Concurrency Cap Analysis
+## 10. Concurrency Cap Analysis
 
 How many positions should the live bot run simultaneously?
 
@@ -292,7 +375,7 @@ Each position risks ~1% of account (1R). With cap-5:
 
 ---
 
-## 9. Bugs Found & Fixed (This Audit)
+## 11. Bugs Found & Fixed (This Audit)
 
 | # | Bug | Impact | Status |
 |---|---|---|---|
@@ -305,7 +388,7 @@ Each position risks ~1% of account (1R). With cap-5:
 
 ---
 
-## 10. Verified Clean
+## 12. Verified Clean
 
 | Test | Result |
 |---|---|
@@ -322,7 +405,7 @@ Each position risks ~1% of account (1R). With cap-5:
 
 ---
 
-## 11. Honest Assessment
+## 13. Honest Assessment
 
 ### What we have
 
@@ -362,7 +445,7 @@ Then a runner hits +15R to +47R and you're back.
 
 ---
 
-## 12. Validation Strategy
+## 14. Validation Strategy
 
 ### The 3 levels of proof
 

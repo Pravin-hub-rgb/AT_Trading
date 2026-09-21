@@ -108,6 +108,97 @@ change those legacy numbers. Do not enable v7 trailing without auditing this.
 - **No stale trades**: outcomes = {sl:187, trail:313}; last trade closes
   2026-09-09, before data end (2026-09-13).
 
+## 3d. Pattern family from the loss autopsy (2026-09-20)
+
+Autopsy on the king + swingpause single (hour/weekday/kind/direction/bars):
+
+- **Weekend bleed**: on the swingpause single, Sat = 37t **-16.1R @ 89.2% loss
+  rate**, Sun = 40t **-14.6R @ 80.0%** — 77 trades for -30.7R. On the multi,
+  ~neutral (110t for -1.9R).
+- **Entry kinds**: on the swingpause single, B2 = 178t for **-0.6R** while FLIP
+  carries everything (+260.7R). On the multi, B2 is +82.4R (keep it there).
+- Longs dominate on both (multi: +339.5 long vs +105.7 short); shorts positive —
+  not cut. Hour-of-day patterns look strong (19:00 worst) but are data-mining
+  bait — not pursued.
+- Bars-held profile confirms the trail-runner shape: trades <96 bars = -277R
+  (multi), trades >=96 bars = +722R; top-10 trades = 74% of gross.
+
+Experiments (7 configs, all pinned; references: king +325.8/17.8/18.3,
+swingpause single +174.8/23.4/7.5):
+
+| config | n | NET | DD | NET/DD | verdict |
+|---|---|---|---|---|---|
+| **nowknd_swingpause_single** | **294** | **+217.6** | **18.2** | **12.0** | **NEW BEST SINGLE** (+42.8R, -5.2DD vs swingpause single) |
+| legskip2 multi | 269 | +267.3 | 17.2 | 15.5 | near-king quality at 46% fewer trades (minY +57 vs +102) |
+| fliponly swingpause single | 237 | +179.7 | 21.9 | 8.2 | mild upgrade over swingpause single |
+| wage24 multi | 362 | +243.9 | 23.1 | 10.6 | DEAD — young windows carry the edge (-82R) |
+| nowknd multi | 400 | +307.8 | 17.1 | 17.9 | ~neutral on king (weekend bleed is a single-config effect) |
+| fliponly multi | 285 | +242.7 | 24.3 | 10.0 | worse (B2 earns its keep on multi) |
+| nowknd single (no pause) | 320 | +113.9 | 30.5 | 3.7 | WORSE — weekend skip only works ON TOP OF the swingpause |
+
+### 3d-2. TIMEZONE ALIGNMENT of the weekend filter (2026-09-20) — user caught it
+
+The CSV date strings are IST (ts are true UTC epochs; date = ts+5:30 — verified:
+1m bar "2026-05-28 23:15" = gmtime 17:45 UTC; data starts 05:30 IST = UTC midnight).
+So the first "weekend skip" skipped IST-Sat/Sun — NOT the true UTC weekend.
+Dual-convention autopsy on the swingpause single:
+
+| weekday | by IST date | by TRUE UTC |
+|---|---|---|
+| Sat | -16.1R @ 89.2% | **-23.9R @ 90.7%** |
+| Sun | -14.6R @ 80.0% | **+51.7R @ 70.2%** (UTC Sun evening = IST Mon open, the best session) |
+
+The bleed is a **UTC-SATURDAY** effect, not a generic weekend effect. Measured
+(both lane variants consolidated: `utcsat_multi_sw10` / `utcsat_swingpause_single`):
+
+| config | n | NET | DD | verdict |
+|---|---|---|---|---|
+| **utcsat_multi (UTC-Sat skip)** | **454** | **+359.0** | **14.8** | **NEW KING** (+33.2R, -3.0DD vs old king; NET-DD 24.3) |
+| utc_wknd_swingpause single (UTC Sat+Sun) | 286 | +150.0 | 23.1 | worse — UTC Sun is profitable, keep it |
+| utcsat_swingpause single (UTC-Sat only) | 325 | +166.3 | 23.3 | mild (-8.5 vs IST variant) |
+| nowknd_swingpause single (IST Sat+Sun) | 294 | +217.6 | 18.2 | still best SINGLE (cascade effects differ per config) |
+
+Lesson: on this dataset, ALWAYS derive calendar features from ts (UTC), never
+from the IST date strings — an innocent-looking 5h30m offset flipped "weekend"
+from a -31R filter into a +33R one on the multi.
+
+Caveat: 7 configs tested against autopsy-derived patterns = multiple-comparison
+risk. nowknd_swingpause_single needs a sw20/param-neighborhood validation before
+it replaces the swingpause single as the default single config.
+
+## 7. Cooldown-family experiments (2026-09-20) — swing-pause adopted for singles
+
+New loss-reactive gates added to the patcher (all causal, decided at entry time):
+`exp_skipwin` (skip the first N HTF windows opened after a loss),
+`exp_skipwin_halt` (same but only after a HALT fires),
+`exp_swingpause` (block entries until the most recent confirmed 15m swing has a
+pivot AFTER the loss — i.e. fresh structure exists).
+
+Results (fine/c58 basis, pins locked in registry; king = +325.8/17.8, baseline
+single = +137.7/29.2):
+
+| config | n | NET | DD | NET/DD | verdict |
+|---|---|---|---|---|---|
+| skipwin1 multi | 144 | -1.1 | 38.8 | — | DEAD (per-loss window skip amputates winners) |
+| skipwin2 multi | 105 | -26.1 | 34.2 | — | DEAD |
+| swingpause multi | 443 | +231.0 | 19.8 | 11.7 | hurts the king (-94.8R; overlapping runners need those entries) |
+| skipwinhalt multi | 323 | +102.6 | 20.1 | 5.1 | DEAD (worse than halt3's own next-entry skip) |
+| skipwinhalt single | 276 | +71.8 | 27.0 | 2.7 | DEAD |
+| **swingpause single** | **357** | **+174.8** | **23.4** | **7.5** | **NEW best single config** (+37.1R, -5.8DD vs baseline; NET/DD 4.7->7.5) |
+| swingpause cd0 single | 357 | +174.7 | 23.4 | 7.5 | pause fully SUBSUMES the bar-cooldown (cd8==cd0) |
+| swingpause single sw20 | 338 | +120.0 | 34.1 | 3.5 | ~neutral (vs +122.3/37.3) |
+| skipwin1 single | 138 | -4.3 | 40.0 | — | DEAD |
+
+Conclusions:
+1. Window-skipping after losses destroys the edge in every variant — the regime
+   track's next window is exactly where the recovery trades live.
+2. The structural pause ("no re-entry until a swing formed AFTER the loss
+   confirms") is the right loss-reactive gate FOR SINGLE-POSITION configs:
+   better R, better DD, and it replaces the bar-cooldown timer entirely (a
+   cleaner rule to implement live). Do NOT add it to the multi king.
+3. The king (+325.8/17.8) remains untouched and undefeated.
+
+
 ## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 
 The 15m chain length is the most sensitive knob in the system:

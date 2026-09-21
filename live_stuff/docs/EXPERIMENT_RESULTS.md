@@ -1385,13 +1385,38 @@ Source: `exp_final_matrix.py`. All configs: v18 engine, 0.055% fee/side + 0.005%
 | OPT-cd10 w24 ext1.5 (theirs) | 408 | +215.7R | 101.9R | 30.9% | 2.22 | 24.2R | 15 | +63R | +78R | +96R | +81R | +140R | +177R | 12 |
 | **Our atr_high+p7.5+ext3+cd8+mltf+persist7** | 487 | **+232.6R** | 114.9R | 31.8% | **2.92** | 29.4R | 14 | **+128R** | **+140R** | **+186R** | **+127R** | **+267R** | **+313R** | **42** |
 
+**Cooldown-Family Experiments (2026-09-20, see ANCHOR_BASIS_AUDIT.md §7):**
+
+| Config | Trades | NET R | DD | NET/DD | Verdict |
+|---|---|---|---|---|---|
+| **swingpause_single_sw10** | **357** | **+174.8R** | **23.4** | **7.5** | **NEW best single (+37R, −5.8DD vs baseline)** |
+| swingpause_cd0_single_sw10 | 357 | +174.7R | 23.4 | 7.5 | cd=0 ≡ cd=8 (pause replaces timer) |
+| swingpause_single_sw20 | 338 | +120.0R | 34.1 | 3.5 | ~neutral on sw20 |
+| swingpause_multi_sw10 | 443 | +231.0R | 19.8 | 11.7 | hurts the king (−94.8R) |
+| skipwinhalt_multi_sw10 | 323 | +102.6R | 20.1 | 5.1 | DEAD |
+| skipwinhalt_single_sw10 | 276 | +71.8R | 27.0 | 2.7 | DEAD |
+| skipwin1_multi_sw10 | 144 | −1.1R | 38.8 | — | DEAD |
+| skipwin2_multi_sw10 | 105 | −26.1R | 34.2 | — | DEAD |
+| skipwin1_single_sw10 | 138 | −4.3R | 40.0 | — | DEAD |
+| skip1pause_multi_sw10 | 144 | −1.1R | 38.8 | — | DEAD |
+
 ### Recommendation
 
-**UPDATE (2026-09-20):** Two fixes applied: (1) partial R formula corrected, (2) trail-event ordering fixed (ratchet before SL check). All numbers below are POST-FIX.
+**UPDATE (2026-09-20):** Three fixes applied: (1) partial R formula corrected, (2) trail-event ordering fixed (ratchet before SL check), (3) cooldown-family research complete. All numbers below are POST-FIX.
 
-**Best configs (final corrected):**
-- **KING: champion_multi_sw10** = +325.8R / DD 17.8 / NET/DD 18.3 — multi, no partials, sw10
-- **Best single no-partial:** lb30_w24_ext2.0 = +171.3R / DD 23.6
-- **Baseline no-partial:** baseline_no_partial_sw10 = +137.7R / DD 29.2
+**Two kings (final corrected):**
+- **KING (multi): champion_multi_sw10** = +325.8R / DD 17.8 / NET/DD 18.3 — multi (cap 4-5 positions), no partials, sw10
+- **KING (single): swingpause_single_sw10** = +174.8R / DD 23.4 / NET/DD 7.5 — single position, structural swing-pause after loss (replaces bar-cooldown timer)
+
+**Cooldown-family research (see ANCHOR_BASIS_AUDIT.md §7):**
+- HTF window skip after losses = DEAD in every variant
+- Swing-pause ("no re-entry until a swing formed AFTER the loss confirms") = new best single
+- cd=0 + pause ≡ cd=8 + pause (174.7 vs 174.8 — pause fully replaces timer)
+- Do NOT add swing-pause to the multi king (overlapping runners need those entries; −94.8R)
+
+**Other strong configs:**
+- opt_ml_cd0_mb10 = +296.7R / DD 23.3 (old "OPTIMAL", single)
+- lb30_w24_ext2.0 = +171.3R / DD 23.6 (best single without pause)
+- baseline_no_partial_sw10 = +137.7R / DD 29.2 (old baseline)
 
 **Key insight:** partial exits hurt ALL configs. Partials are dead weight.

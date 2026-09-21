@@ -12,6 +12,15 @@
 > multi sw10 re-pinned +366.1 -> **+325.8R NET / DD 17.8**), truncation causality
 > probes (CLEAN post-fix), robustness probes (gapless 1m data, cost stress,
 > concurrency-cap cost), and the bookkeeping fixes.
+>
+> **Cooldown-family experiments (2026-09-20, see audit doc §7):** HTF window
+> skip after losses = DEAD in all variants. The winner is the STRUCTURAL
+> swing-pause: after a loss, no re-entry until a 15m swing formed AFTER that
+> loss confirms. On singles it REPLACES the bar-cooldown and is the new best
+> single config: `swingpause_single_sw10` = **357t / +174.8R NET / DD 23.4 /
+> NET-DD 7.5** (baseline was +137.7 / 29.2 / 4.7). Run via
+> `python live_stuff/tests/run_experiment.py --group best` (both leaders) or
+> `--group cooldown` (the whole family). The multi king is unchanged.
 
 > **Run any experiment:** `python live_stuff/tests/run_experiment.py <key>`
 > **List all:** `python live_stuff/tests/run_experiment.py --list`
