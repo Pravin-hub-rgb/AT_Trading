@@ -85,7 +85,8 @@ def build_module():
                   '    exp_max_concurrent=0,\n'
                   '    exp_entry_candle_min=0.0,\n'
                   '    exp_entry_swing_age_max=0,\n'
-                  '    exp_entry_skip_b2_doji=0,\n')
+                  '    exp_entry_skip_b2_doji=0,\n'
+                  '    exp_bias_momentum_min=0.0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
