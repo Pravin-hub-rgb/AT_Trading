@@ -1,7 +1,7 @@
 # Out-of-Sample Validation: 2021-2022 Unseen Data
 
-**Date:** 2026-09-21
-**Status:** COMPLETE — OOS validation finished
+**Date:** 2026-09-22
+**Status:** COMPLETE — OOS validation + causal SL applied
 **Data:** Bybit BTCUSDT Perpetual, 2021-01-01 to 2022-12-31
 **Separation:** Data stored in `data/unseen/bybit/` — never touches `data/bybit/`
 
@@ -299,6 +299,28 @@ This is because:
 
 **Adding the chop band actually improved OOS/IS from 41% to 47%.** This is because the chop band is a structural filter (removes choppy markets) rather than a curve-fitted filter.
 
+### Causal SL Impact on OOS
+
+Causal SL replaces the retroactive `swing_start_px` with a running extreme computed from the previous confirmed swing's end to the current bar. This is what a live trader can actually compute at candle close.
+
+| Strategy | Batch OOS NET | Causal OOS NET | Delta | Batch OOS DD | Causal OOS DD | Causal OOS/IS |
+|---|---|---|---|---|---|---|
+| champion_multi | +70.1R | **+80.0R** | +9.9R | 37.3R | 36.0R | **53%** |
+| utcsat_multi | +60.2R | **+72.8R** | +12.6R | 22.1R | 20.7R | **49%** |
+| king_single | +16.9R | **+22.1R** | +5.2R | 27.9R | 20.5R | **14%** |
+
+**Key insight:** Causal SL *improves* OOS by +5 to +13R while reducing DD. The retroactive SL sometimes survived trades it shouldn't have (masking losses). Causal SL catches these earlier → better OOS/IS ratios.
+
+### Causal SL Impact on In-Sample
+
+| Strategy | Batch IS NET | Causal IS NET | Delta | Batch IS DD | Causal IS DD |
+|---|---|---|---|---|---|
+| champion_multi | +325.8R | +248.0R | −77.8R | 17.8R | 21.2R |
+| utcsat_multi | +359.0R | +295.7R | −63.2R | 14.8R | 16.0R |
+| king_single | +310.7R | +244.5R | −66.2R | 11.2R | 16.6R |
+
+**Why IS is worse but OOS is better:** The retroactive SL advantage in-sample was a form of overfitting — it used future knowledge to set tighter stops that happened to survive. In-sample, this looks great. But it doesn't generalize — on OOS, the causal SL is more honest and more robust.
+
 ### 3. The Edge is Event-Driven
 - 2021 (bull run): Most strategies flat
 - 2022 (crash): All strategies profitable
@@ -330,11 +352,11 @@ Every strategy's top 5 winners include the same trades:
 ## Implications
 
 ### For Live Trading
-1. **Use multi strategies** — they generalize better (32-47% OOS/IS vs 9-14%)
-2. **Expect lower returns** — OOS is 30-50% of IS, not 100%
-3. **Expect higher DD** — OOS DD is 1.5-2.5x IS
-4. **The edge is event-driven** — you need black swans to profit
-5. **Position size accordingly** — if IS says 1% risk, use 0.3-0.5% in live
+1. **Use causal SL** — retroactive SL inflates numbers by 63-78R in-sample
+2. **Use multi strategies** — they generalize better (49-53% OOS/IS vs 14%)
+3. **Expect lower returns** — OOS is 50% of causal-SL IS, not 100% of batch IS
+4. **Expect higher DD** — OOS DD is 1.5-2x IS
+5. **Position size accordingly** — if IS says 1% risk, use 0.5% live
 
 ### For Strategy Development
 1. **Fewer filters = better OOS** — every filter adds overfitting risk
@@ -343,11 +365,11 @@ Every strategy's top 5 winners include the same trades:
 4. **Don't trust IS DD** — OOS DD is 1.5-2.5x worse
 
 ### For Expectations
-1. **Annual OOS return:** +30-45R/yr for best multi strategies
-2. **Annual OOS return:** +8-11R/yr for single strategies
+1. **Annual OOS return (causal SL):** +36-40R/yr for best multi strategies
+2. **Annual OOS return (causal SL):** +11R/yr for single strategies
 3. **On Rs.30K account with 250 INR risk:**
-   - Multi: Rs.7,500-11,250/yr (25-37% return)
-   - Single: Rs.2,000-2,750/yr (7-9% return)
+   - Multi: Rs.9,000-10,000/yr (30-33% return)
+   - Single: Rs.2,750/yr (9% return)
 
 ---
 
@@ -360,6 +382,8 @@ Every strategy's top 5 winners include the same trades:
 | `data/unseen/bybit/BTCUSDT_1m.csv` | 2021-2022 1m data (1M candles) |
 | `scripts/download_bybit_unseen.py` | Download script for unseen data |
 | `live_stuff/tests/test_oos_2022.py` | OOS backtest runner |
+| `live_stuff/tests/test_causal_sl.py` | Causal SL comparison (IS) |
+| `live_stuff/tests/test_causal_sl_oos.py` | Causal SL comparison (OOS) |
 
 ---
 

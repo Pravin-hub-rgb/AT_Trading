@@ -455,9 +455,54 @@ def build_module():
                    '                _now_ts2=candle_ts[i]\n'
                    '                _open_now2=sum(1 for _t in ltf_trades if int(_t["exit_ts"])>_now_ts2)\n'
                    '                if _open_now2>=exp_max_concurrent: continue\n')
-    # 3g-2) D3 LTF regime gates (autopsy-derived, band-style): skip entries in the
-    #     chop15 transition zone [lo,hi) and/or when 15m vol is blowing off
-    #     (ATR5/ATR20 above max). Both causal (closed 15m bars at entry).
+    # 3g-3) D3 CAUSAL SL — the user's fix: SL = running extreme from the last
+    #     confirmed swing's END to the entry bar (inclusive). This is what a
+    #     live trader computes at candle close without any declaration lag.
+    #     Replaces the retroactive swing_start_px for SL computation.
+    t_c12 = '    last_loss_bar=-999999\n'
+    assert s.count(t_c12) == 1, "last_loss_bar anchor"
+    s = s.replace(t_c12, t_c12 +
+                  '    _csl = [0.0]*len(candles_ltf)\n'
+                  '    _csh = [0.0]*len(candles_ltf)\n'
+                  '    _conf_evs = []\n'
+                  '    for _s in swings_ltf:\n'
+                  '        _ca = _s.get("confirmed_at_idx")\n'
+                  '        if _ca is not None and int(_ca) >= 0:\n'
+                  '            _e = _s.get("seg", {}).get("end_idx", -1)\n'
+                  '            if _e is not None and int(_e) >= 0:\n'
+                  '                _conf_evs.append((int(_ca), int(_e)))\n'
+                  '    _conf_evs.sort()\n'
+                  '    _cref = 0\n'
+                  '    _clo = float(candles_ltf[0]["low"])\n'
+                  '    _chi = float(candles_ltf[0]["high"])\n'
+                  '    _cei = 0\n'
+                  '    for _ci in range(len(candles_ltf)):\n'
+                  '        while _cei < len(_conf_evs) and _conf_evs[_cei][0] <= _ci:\n'
+                  '            _cref = _conf_evs[_cei][1]\n'
+                  '            _cei += 1\n'
+                  '            if _cref < len(candles_ltf):\n'
+                  '                _clo = float(candles_ltf[_cref]["low"])\n'
+                  '                _chi = float(candles_ltf[_cref]["high"])\n'
+                  '        _cl = float(candles_ltf[_ci]["low"])\n'
+                  '        _ch2 = float(candles_ltf[_ci]["high"])\n'
+                  '        if _cl < _clo: _clo = _cl\n'
+                  '        if _ch2 > _chi: _chi = _ch2\n'
+                  '        _csl[_ci] = _clo\n'
+                  '        _csh[_ci] = _chi\n')
+    t_c13 = '        sl_pivot=sig["swing_start_px"]\n'
+    assert s.count(t_c13) == 1, "sl pivot anchor"
+    s = s.replace(t_c13,
+                  '        if exp_causal_sl:\n'
+                  '            if direction == 1:\n'
+                  '                sl_pivot = _csl[i]\n'
+                  '            else:\n'
+                  '                sl_pivot = _csh[i]\n'
+                  '        else:\n'
+                  '            sl_pivot = sig["swing_start_px"]\n')
+    t_c13b = '    exp_risk_max_pct=0.0,\n'
+    assert t_c13b in s, "kwargs anchor for causal_sl"
+    s = s.replace(t_c13b, t_c13b + '    exp_causal_sl=0,\n')
+
     t_c10 = '    atr_pct=_atr_pct_15m(candles_ltf)\n'
     assert s.count(t_c10) == 1, "atr_pct anchor"
     s = s.replace(t_c10, t_c10 +

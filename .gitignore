@@ -30,3 +30,5 @@ frontend/*.log
 .DS_Store
 *.pkl
 live_stuff/.env.example
+
+data/unseen/

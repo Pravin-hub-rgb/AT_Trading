@@ -46,6 +46,7 @@
 | 2026-09-20 | UTC-Saturday skip (multi) | Skip UTC Saturday entries on multi | +33.2R | utcsat_multi_sw10 |
 | 2026-09-21 | sw10 (min_bars_1h=10) | Twitchier 1h swings, more signals | +117.4R vs sw20 on multi | All kings |
 | 2026-09-21 | cd=0 with swingpause | Drop cooldown_bars (redundant) | 0.1R difference, cleaner config | wage10_swingpause_wskip_single_sw10 |
+| 2026-09-22 | Causal SL | Replace retroactive swing_start_px with running extreme | −69R IS avg, +9R OOS avg (more honest) | All configs via `exp_causal_sl=1` |
 
 ---
 

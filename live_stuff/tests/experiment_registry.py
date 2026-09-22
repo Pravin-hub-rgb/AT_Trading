@@ -189,7 +189,7 @@ EXPERIMENTS = {
         "pins": {"n": 487, "net": 208.4, "dd": 29.4, "partials": 60},
     },
     "champion_multi_sw10": {
-        "desc": "Champion multi sw10 WITHOUT partials — ACTUAL KING (+325.8, trail-fix)",
+        "desc": "Champion multi sw10 — causal SL (live-honest)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -198,7 +198,7 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 500, "net": 325.8, "dd": 17.8, "partials": 0},
+        "pins": {"n": 494, "net": 248.0, "dd": 21.2, "partials": 0},  # causal SL
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
@@ -432,7 +432,7 @@ EXPERIMENTS = {
     },
 
     "utcsat_multi_sw10": {
-        "desc": "king + SKIP UTC-SATURDAY only (UTC Sun = +124.2R is KEPT) — NEW KING (+359.0 / DD 14.8)",
+        "desc": "king multi + SKIP UTC-SATURDAY — causal SL (live-honest)",
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -441,7 +441,7 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 454, "net": 359.0, "dd": 14.8},
+        "pins": {"n": 449, "net": 295.7, "dd": 16.0},  # causal SL
     },
     "utcsat_swingpause_single_sw10": {
         "desc": "swingpause single + SKIP UTC-SATURDAY only (UTC Sun = +51.7R is KEPT)",
@@ -669,7 +669,7 @@ EXPERIMENTS = {
                     "exp_chop15_hi": 61.0, "exp_atr_ratio_max": 1.4,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 200, "net": 310.7, "dd": 11.2},
+        "pins": {"n": 194, "net": 244.5, "dd": 16.6},  # causal SL (live-honest)
     },
 
     # ===== D3 WAGE VALIDATION FAMILY (other bot's sweep finding: wage12 on single +61R) =====
@@ -758,6 +758,46 @@ EXPERIMENTS = {
                     "exp_wage_h": 12, "window_end": "exit"},
         "swing": "sw20",
         "pins": {"n": 302, "net": 144.5, "dd": 29.2},
+    },
+
+    # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
+
+    "causalsl_multi_sw10": {
+        "desc": "king + causal SL (running extreme, not retroactive pivot)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_causal_sl": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "causalsl_swingpause_single_sw10": {
+        "desc": "swingpause single + causal SL",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_causal_sl": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "causalsl_utcsat_multi_sw10": {
+        "desc": "utcsat king + causal SL",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_causal_sl": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
     },
 
     # ===== SHIPPED BASELINE (identity gate reference) =====

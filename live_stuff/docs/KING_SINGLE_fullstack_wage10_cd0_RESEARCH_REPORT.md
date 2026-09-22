@@ -1,9 +1,19 @@
 # KING SINGLE: fullstack_wage10_cd0_single_sw10 — Full Research Report
 
 **Config:** `fullstack_wage10_cd0_single_sw10`
-**Version:** v1.0 — RESEARCH FREEZE
-**Date:** 2026-09-21
-**Status:** Frozen candidate — no further rule changes from this dataset
+**Version:** v1.1 — CAUSAL SL APPLIED
+**Date:** 2026-09-22
+**Status:** Frozen candidate with honest live numbers
+
+---
+
+## ⚠️ Causal SL Disclaimer (Added 2026-09-22)
+
+**All numbers in this report have been updated to use causal SL (`exp_causal_sl=1`).**
+
+The batch SL used `sig["swing_start_px"]` — a retroactive value from the final swing chain that can change after B2 fires due to FLIPs. The causal SL uses a running extreme from the previous confirmed swing's end to the current bar — what a live trader can actually compute at candle close.
+
+**Impact on this strategy:** −66.2R in-sample (from +310.7R to +244.5R), but OOS improves by +5.2R (from +16.9R to +22.1R). The retroactive SL was overfitting.
 
 ---
 
@@ -38,12 +48,12 @@ A BTC perp trend-following strategy using 15m LTF entries triggered by HTF (1h) 
 
 **Key principle:** Study the losers and block the situations that disproportionately produce losers, while keeping the winners running.
 
-**Core stats:**
-- 200 trades over 3.7 years (Jan 2023 — Sep 2026)
+**Core stats (causal SL):**
+- 194 trades over 3.7 years (Jan 2023 — Sep 2026)
 - 32.5% win rate
-- +1.80R average per trade
-- Profit factor 3.84
-- Max drawdown 11.2R
+- +1.26R average per trade
+- Profit factor 2.4
+- Max drawdown 16.6R
 - Zero losses beyond -1R
 
 ---

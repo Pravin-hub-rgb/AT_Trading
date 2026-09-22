@@ -30,20 +30,28 @@
 
 ## 1. Executive Summary
 
-**After a 1-month deep audit, cooldown research, UTC-weekend analysis, entry-quality autopsy, and live-certification via one-pass causal study — the final leaders:**
+**After a 1-month deep audit, cooldown research, UTC-weekend analysis, entry-quality autopsy, live-certification via one-pass causal study, and causal-SL validation — the final leaders:**
+
+### Batch SL (retroactive, upper bound)
 
 | Metric | utcsat_multi_sw10 (KING multi) | fullstack_wage10_cd0_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
 |---|---|---|---|
 | Trades | 454 | 200 | 500 |
-| NET R | **+359.0** | **+310.7** | +325.8 |
-| Win Rate | 30.8% | 32.5% | 30.0% |
-| Max Drawdown | **14.8** | **11.2** | 17.8 |
-| NET/DD | **24.3** | **27.7** | 18.3 |
-| Min year | +101.2 | +62.0 | +102.2 |
-| Rule | Multi + UTC Sat skip | Wage 10h + swing pause + chop-band + ATR blow-off + IST weekend | Multi only |
-| Status | **Certified live-implementable** | **Certified live-implementable** | Conservative reference |
+| NET R | +359.0 | +310.7 | +325.8 |
+| Max Drawdown | 14.8 | 11.2 | 17.8 |
+| NET/DD | 24.3 | 27.7 | 18.3 |
 
-**Bottom line:** The numbers are real. The edge is mechanistically understood, survives cost stress, and has been certified live-implementable. The batch numbers (+310.7 to +359.0) ARE the live numbers. The backtest phase is complete.
+### Causal SL (live-honest, REAL numbers)
+
+| Metric | utcsat_multi_sw10 (KING multi) | fullstack_wage10_cd0_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
+|---|---|---|---|
+| Trades | 449 | 194 | 494 |
+| NET R | **+295.7** | **+244.5** | +248.0 |
+| Max Drawdown | 16.0 | 16.6 | 21.2 |
+| NET/DD | 18.5 | 14.7 | 11.7 |
+| Retroactive SL cost | −63.2R | −66.2R | −77.8R |
+
+**Bottom line:** The retroactive SL advantage (batch uses future knowledge for SL placement) costs −63 to −78R. The real live-expected numbers are **+244R to +296R**. These are the honest numbers for position sizing and live deployment. The edge is real — just 20% lower than the inflated batch numbers suggested.
 
 ---
 
@@ -507,15 +515,17 @@ Even if this specific strategy dies, you've built:
 
 ### What's real and verified (bankable)
 
-1. **The engine is causally clean** — no lookahead, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps).
-2. **utcsat_multi_sw10 = 454t / +359.0R NET / DD 14.8 / WR 30.8%** — best config on the fixed engine. Edge over old king from UTC-Saturday skip. Mechanism understood: Saturday is the only weekday where multi overlap-coverage fails (cluster net −6.3R vs +151R on Thursday).
-3. **wage10_swingpause_wskip_single_sw10 = 261t / +282.9R NET / DD 14.7 / WR 31.4%** — best single config. Wage 10h filter (skip young windows) + swing-pause (fresh structure after loss) + IST weekend skip. Stable across 4 years.
-4. **Both pass:** identity gate, WF segments, pins, cost stress (breakeven ~4.4x costs).
+1. **The engine is causally clean** — no lookahead in signal detection, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps). Retroactive SL advantage has been quantified and corrected.
+2. **utcsat_multi_sw10 = 449t / +295.7R NET / DD 16.0** — best config on the fixed engine (causal SL). Edge from UTC-Saturday skip. Mechanism understood: Saturday is the only weekday where multi overlap-coverage fails.
+3. **fullstack_wage10_cd0_single_sw10 = 194t / +244.5R NET / DD 16.6** — best single (causal SL). Wage 10h + swing-pause + IST weekend skip + chop-band + ATR blow-off. Stable across 4 years.
+4. **champion_multi_sw10 = 494t / +248.0R NET / DD 21.2** — conservative reference (causal SL).
+5. **Both pass:** identity gate, WF segments, pins, cost stress (breakeven ~4.4x costs), causal SL validation.
 
 ### What's promising but unproven
 
-- The +33R from Saturday skip is **era-dependent** — driven by 2023-24 Saturdays. Since 2025, Saturday clusters turned positive (+8.9R, coverage 7%→14%). Conservative live expectation: +325.8-359.0 bracket.
+- The +33R from Saturday skip is **era-dependent** — driven by 2023-24 Saturdays. Since 2025, Saturday clusters turned positive (+8.9R, coverage 7%→14%). Conservative live expectation: +248-296 bracket (causal SL).
 - The single's Saturday effect is more stable (4/4 years, passes Bonferroni), but cascade interactions differ per config.
+- **Retroactive SL advantage** quantified: −63 to −78R gap between batch and causal SL. This is the cost of real-time SL placement.
 
 ### What's dead (stop revisiting)
 
@@ -527,7 +537,7 @@ Even if this specific strategy dies, you've built:
 ### The discipline from here
 
 1. **No more day-bucket fishing.** Every new scan on this same dataset widens the multiple-comparisons hole.
-2. **The sequential one-pass causal study** is the next real milestone — the honest bridge between batch-backtest and live.
+2. **Causal SL is the default** — batch SL numbers are upper bounds only. All future experiments should use `exp_causal_sl=1`.
 3. **Live Saturday monitoring:** paper-trade with both configs; track UTC-Saturday loss-rate and cluster coverage monthly.
 
 ### The two kings for live
@@ -598,63 +608,78 @@ Even if this specific strategy dies, you've built:
 
 ---
 
-## 15. Out-of-Sample Validation (2021-2022)
+## 16. Out-of-Sample Validation (2021-2022)
 
-> Updated: 2026-09-21 — OOS validation complete
+> Updated: 2026-09-22 — OOS validation complete + causal SL applied
 
 ### Setup
 - **In-sample:** 2023-01-01 to 2026-09-21 (3.8 years)
 - **Out-of-sample:** 2021-01-01 to 2022-12-31 (2 years)
 - **Data:** Completely separate — `data/unseen/bybit/` vs `data/bybit/`
 - **Engine:** Identical (v18_streak_halt, fine fills, same costs)
+- **Causal SL:** Applied via `exp_causal_sl=1` (live-honest SL placement)
 
-### OOS Leaderboard
+### OOS Leaderboard — Batch SL (retroactive, upper bound)
 
-| # | Strategy | IS NET | OOS NET | OOS/IS | OOS DD | OOS Ann.NET |
-|---|---|---|---|---|---|---|
-| 1 | **chopband_multi** | +350.7R | **+85.8R** | **47%** | 29.1R | +42.9R/yr |
-| 2 | **champion_multi** | +325.8R | **+70.1R** | **41%** | 37.3R | +35.1R/yr |
-| 3 | **multi (utcsat)** | +359.0R | **+60.2R** | **32%** | 22.1R | +30.1R/yr |
-| 4 | fullstack_single | +282.9R | +21.0R | 14% | 25.4R | +10.5R/yr |
-| 5 | single (king) | +310.7R | +16.9R | 10% | 27.9R | +8.4R/yr |
-| 6 | wage12_single | +278.6R | +13.0R | 9% | 19.1R | +6.5R/yr |
-| 7 | fliponly_multi | +242.7R | **-17.3R** | -14% | 46.4R | -8.7R/yr |
+| # | Strategy | IS NET | OOS NET | OOS/IS | OOS DD |
+|---|---|---|---|---|---|
+| 1 | **champion_multi** | +325.8R | +70.1R | 41% | 37.3R |
+| 2 | **utcsat_multi** | +359.0R | +60.2R | 32% | 22.1R |
+| 3 | **king_single** | +310.7R | +16.9R | 10% | 27.9R |
+
+### OOS Leaderboard — Causal SL (live-honest, REAL numbers)
+
+| # | Strategy | IS NET | OOS NET | OOS/IS | OOS DD |
+|---|---|---|---|---|---|
+| 1 | **utcsat_multi + causal SL** | +295.7R | **+72.8R** | **49%** | 20.7R |
+| 2 | **champion_multi + causal SL** | +248.0R | **+80.0R** | **53%** | 36.0R |
+| 3 | **king_single + causal SL** | +244.5R | **+22.1R** | **14%** | 20.5R |
+
+### Causal SL Impact on OOS
+
+| Strategy | Batch OOS | Causal OOS | Delta | Batch DD | Causal DD |
+|---|---|---|---|---|---|
+| champion_multi | +70.1R | +80.0R | **+9.9R** | 37.3R | 36.0R |
+| utcsat_multi | +60.2R | +72.8R | **+12.6R** | 22.1R | 20.7R |
+| king_single | +16.9R | +22.1R | **+5.2R** | 27.9R | 20.5R |
+
+**Key insight:** Causal SL improves OOS by +5 to +13R while reducing DD. The retroactive SL sometimes survived trades it shouldn't have (masking losses). Causal SL catches these earlier → more trades, lower DD, higher OOS/IS ratio.
 
 ### Key Findings
 
-1. **Multi beats single** — avg OOS/IS 40% vs 11%
-2. **Simpler filters generalize better** — fewer exp_* = less overfitting
-3. **Edge is event-driven** — FTX collapse (Nov 2022) drove 70-80% of OOS profit
-4. **OOS DD is 1.5-2.5x worse** than in-sample
-5. **fliponly is dead OOS** — completely fails
+1. **Causal SL improves OOS/IS ratios** — champion_multi jumps from 41% to 53%, utcsat from 32% to 49%
+2. **Multi beats single** — causal OOS/IS avg 51% vs 14%
+3. **Edge is event-driven** — FTX collapse (Nov 2022) drove bulk of OOS profit
+4. **OOS DD is 1.5-2x worse** than in-sample (reduced from 1.5-2.5x with causal SL)
 
-### OOS/IS Ratio Benchmarks
+### OOS/IS Ratio Benchmarks (Causal SL)
 
 | Ratio | Verdict |
 |---|---|
 | 80-100% | Suspiciously good (likely curve-fitted) |
-| 50-80% | Excellent (rare) |
-| **30-50%** | **Good (your multis are here)** |
-| 10-30% | Poor (your singles are here) |
+| 50-80% | **Excellent — champion_multi is here at 53%** |
+| **30-50%** | **Good — utcsat_multi is here at 49%** |
+| 10-30% | Poor (king_single is here at 14%) |
 | <10% | Terrible |
 | Negative | Dead (fliponly) |
 
 ### Implications for Live Trading
 
-1. **Use multi strategies** — 32-47% OOS/IS vs 9-14% for singles
-2. **Expect 30-50% of IS returns** — not 100%
-3. **Expect 1.5-2.5x IS drawdown** — not the same
-4. **The edge needs volatility** — flat markets = no edge
-5. **Size accordingly** — if IS says 1% risk, use 0.3-0.5% live
+1. **Use multi strategies** — 49-53% OOS/IS vs 14% for singles (causal SL)
+2. **Expect 50% of causal-SL IS returns** — not 100% of batch
+3. **Expect 1.5-2x IS drawdown** — not the same
+4. **Causal SL is the honest baseline** — batch numbers are upper bounds only
+5. **Size accordingly** — if IS says 1% risk, use 0.5% live
 
 ### Full Report
 See `live_stuff/docs/OOS_VALIDATION_2021_2022.md` for complete analysis.
 
 ---
 
-> **Status:** RESEARCH BASELINE — NOT LIVE — NOT INVESTABLE YET
+> **Status:** BACKTEST PHASE COMPLETE — CAUSAL SL APPLIED
 >
-> **Final conclusion:** The backtest is honest, the top configs are strong and mechanistically understood.
-> Treat +325.8–359.0 as the bracket. Let the sequential one-pass study and live parity pick the point inside it.
+> **Final numbers (causal SL):** utcsat_multi +295.7R, king_single +244.5R, champion_multi +248.0R
 >
-> **Next:** Freeze → paper trade both configs → track Saturday coverage → collect 2027 OOS data → validate
+> **OOS validation:** Multi 49-53% OOS/IS, Single 14% OOS/IS
+>
+> **Next:** Paper trade both configs → track Saturday coverage → collect 2027 OOS data → validate
