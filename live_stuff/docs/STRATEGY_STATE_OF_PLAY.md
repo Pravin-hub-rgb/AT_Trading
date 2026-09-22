@@ -207,31 +207,89 @@ The current ct=61.8 routes FLIP into chop<61.8 — but FLIP **loses -18.3R** whe
 
 The regime split between B2 and FLIP is the **core edge at the mode level**. The direction (B2 in chop, FLIP in trend) is correct and structural. The threshold (58 vs 61.8) is parameter tuning, but the regime classification itself is the mechanism that makes the engine work.
 
+## 7B. Five New Mode Ideas — Tested
+
+The other bot proposed 5 ideas for mode-level alternatives. All 5 were tested on the shipped engine (1h→15m pipeline):
+
+### Idea 1: `htf_dir` — 1h swing direction selects B2/FLIP
+- When 1h chain confirms UP-swing → B2 windows. DOWN-swing → FLIP windows.
+- **Result: OOS -52.2R (raw). DEAD.** Correlated with trend, overtrades in wrong direction.
+
+### Idea 2: `union` — BOTH B2 and FLIP windows simultaneously
+- Every 15m signal checked against both window sets. More entries, validated by two window types.
+- **Result: OOS -12.0R (raw). DEAD raw, but NEW WINNER with filters.**
+
+### Idea 3: `htf_mag` — 1h swing magnitude selects B2/FLIP
+- Large 1h swing (>0.5%) → B2 windows (strong bias, continuation). Small → FLIP windows.
+- **Result: OOS -13.9R (raw). DEAD** at default threshold. Needs sweep.
+
+### Idea 4: `ltf_dir` — 15m swing direction selects B2/FLIP
+- Uses LTF structure instead of HTF. Too noisy.
+- **Result: OOS -29.3R (raw). DEAD.**
+
+### Idea 5: `dynamic_chop` — Rolling percentile of chop selects B2/FLIP
+- Instead of fixed chop threshold, use adaptive percentile. When chop is at 84th percentile of recent distribution → B2.
+- **Result: OOS +50.8R (raw), +49.2R (mag3+wknd+bm05). WINNER.**
+
+### Full Results Table (raw base, no filters)
+
+| Mode | IS | OOS | OOS DD | OOS N/D | Verdict |
+|---|---|---|---|---|---|
+| htf_dir | +250.2R | -52.2R | 63.9 | -0.82 | DEAD |
+| union | +300.9R | -12.0R | 43.4 | -0.28 | DEAD raw |
+| htf_mag | +215.5R | -13.9R | 41.8 | -0.33 | DEAD |
+| ltf_dir | +121.7R | -29.3R | 42.3 | -0.69 | DEAD |
+| dynamic_chop pct>84 | +207.6R | +50.8R | 19.2 | 2.65 | **WINNER** |
+
+### Why Ideas 1-4 Fail
+
+They use **signal properties** (direction, magnitude) to select the mode. The edge is specifically about the **market regime** (choppiness), not the signal itself. The chop indicator captures something about market structure that direction and magnitude don't.
+
+### Why Union + Filters Works
+
+The union mode allows entries in BOTH B2 and FLIP HTF windows. The mag3 filter then selects the high-conviction trades from both pools. There are profitable B2 trades inside FLIP windows and vice versa — the original mode was throwing them away.
+
+### Why Dynamic Chop Works
+
+The adaptive percentile threshold adjusts to the current chop regime. When chop is at the 84th percentile of its recent distribution (relatively choppy), B2 windows are used. This captures the same structural edge as the fixed threshold but adapts automatically.
+
 ## 8. Baseline to Beat
 
-**mag3 + weekend skip** = current best for live:
-- IS: 96t, +196.3R, DD=6.0, NET/DD=32.73
-- OOS: 39t, +45.6R, DD=4.0, NET/DD=11.41
-- 2021: +22.8R | 2022: +22.9R
-- IS/OOS ratio: 4.3x
-
-**With bm05:**
+### Previous Best: b2_vs_flip_chop + mag3+wknd+bm05
 - IS: 94t, +196.4R, DD=6.0, NET/DD=32.74
 - OOS: 37t, +47.6R, DD=4.0, NET/DD=11.91
 - 2021: +23.8R | 2022: +23.9R
 - IS/OOS ratio: 4.1x
 
-Any new concept must beat +47.6R OOS with similar or better DD to be adopted.
+### NEW KING: union + mag3+wknd+bm05
+- IS: 124t, +288.4R, DD=7.5, NET/DD=38.31
+- OOS: 55t, **+63.2R**, DD=6.0, NET/DD=10.53
+- 2021: +51.2R | 2022: +12.0R
+- IS/OOS ratio: 4.6x
+- **+15.6R over previous best OOS**
 
-## 8. Checklist Status
+### Runner-up: dynamic_chop pct>83 + mag3+wknd+bm05
+- IS: 79t, +187.3R, DD=6.0, NET/DD=31.22
+- OOS: 33t, +49.2R, DD=4.0, NET/DD=12.30
+- 2021: +28.2R | 2022: +21.0R
+- IS/OOS ratio: 3.8x
+- **+1.6R over previous best, more balanced years**
+
+Any new concept must beat +63.2R OOS with similar or better DD to be adopted.
+
+## 9. Checklist Status
 
 - [x] Trail ratchet bug fixed (commit ee574f9)
 - [x] mag_ratio filter implemented in patcher
 - [x] IS + OOS validation complete
 - [x] Wick reject tested and rejected (false positive from post-hoc bias)
 - [x] Docs updated with corrected numbers
-- [x] All changes committed (36e843c, a041d33, 4206ffe)
+- [x] All changes committed (36e843c, a041d33, 4206ffe, d160243)
 - [x] Mode-level sweep complete — b2_vs_flip_chop ct=58 is best OOS
 - [x] B2 vs FLIP regime decomposition — B2 robust, FLIP curve-fitted
+- [x] 5 new mode ideas tested — union + filters is new king (+63.2R OOS)
+- [x] dynamic_chop adaptive percentile tested — +49.2R OOS with filters
+- [ ] #2 FLIP quality gate (prev swing magnitude filter on FLIP signals)
+- [ ] #5 htf_mag threshold sweep with configurable threshold
 - [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
 - [ ] Volume data re-fetch (btc_fetch.py modified, refetch script ready)
