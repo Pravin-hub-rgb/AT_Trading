@@ -920,6 +920,29 @@ EXPERIMENTS = {
         "pins": {},
     },
 
+    # ===== D3 UNION DUAL-QUALIFICATION (2x2 autopsy: FLIP-only window = fragile cell) =====
+
+    "dualunion_multi": {
+        "desc": "union + filters + DUAL-QUALIFIED only (skip FLIP-window-only matches)",
+        "engine": "patched",
+        "params": {"mode": "union", "ext_stop_r": 1.5, "chop_thresh": 61.8,
+                    "cooldown_bars": 10, "exp_skip_weekend": 1,
+                    "exp_min_swing_ratio": 3.0, "exp_bias_momentum_min": 0.5,
+                    "exp_union_dual_only": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "union_multi": {
+        "desc": "union + filters (no dual gate) — reference for dual comparison",
+        "engine": "patched",
+        "params": {"mode": "union", "ext_stop_r": 1.5, "chop_thresh": 61.8,
+                    "cooldown_bars": 10, "exp_skip_weekend": 1,
+                    "exp_min_swing_ratio": 3.0, "exp_bias_momentum_min": 0.5,
+                    "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+
     # ===== SHIPPED BASELINE (identity gate reference) =====
     # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
     # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is
@@ -1336,6 +1359,7 @@ GROUPS = {
     "biasmomentum": ["bm05_multi_sw10", "bm08_multi_sw10",
                       "bm05_utcsat_multi_sw10", "bm08_utcsat_multi_sw10",
                       "bm05_swingpause_single_sw10", "bm05_multi_sw20"],
+    "dualunion": ["union_multi", "dualunion_multi"],
     # "skipfirst": DEAD
     # "funding": DEAD (data too sparse, 0 trades filtered)
     "all": None,  # None = run everything except hidden

@@ -442,8 +442,54 @@ wage12 on the utcsat multi gave +351.5 / 17.9 (slightly worse than +359.0) —
 the multi's overlapping entries already cover young-window trades.
 
 
-## 4. min_bars_15m = 50 (docs once said 35 — wrong)
+### 3j. UNION DUAL-QUALIFICATION — the OOS-robust configuration (2026-09-22)
 
+**Background:** the other bot's mode sweep found `mode=union` (entries gated by
+B2 AND FLIP windows simultaneously) as the new king with filters. Independently,
+the B2/FLIP IS/OOS split showed B2 marks are OOS-robust (+14.7 IS / +38.8 OOS)
+while FLIP marks are curve-fitted (+193.6 IS / -18.4 OOS).
+
+**The 2x2 autopsy** (mark kind x window type, union+filters, IS=2023-24, OOS=2025+):
+
+| (mark, window) | IS | OOS |
+|---|---|---|
+| B2 + FLIPwin | 1R/10t | 8R/10t |
+| B2 + B2win | 30R/12t | 7R/12t |
+| **B2 + BOTH** | 9R/2t | **36R/7t** |
+| **FLIP + FLIPwin** | **79R/16t** | **-2R/11t** ← fragile cell |
+| FLIP + B2win | 25R/11t | 14R/11t |
+| FLIP + BOTH | 99R/13t | 6R/5t |
+
+Marginals: dual-qualified (BOTH windows) = best in both eras (+7.19 IS avg,
++3.48 OOS avg). FLIP-window-only = fades badly (+3.08 -> +0.28).
+
+**Implementation:** `exp_union_dual_only` (patcher, default-off) — in union mode,
+tracks which window type matched (B2 / FLIP / both); when ON, skips
+FLIP-window-only matches (the fragile cell).
+
+**Results (full-path, registry group `dualunion`):**
+
+| config | full n | IS | OOS | IS/OOS |
+|---|---|---|---|---|
+| union_multi | 120 | 64t +186.5/8.7 | 57t +44.4/5.2 | 4.2x |
+| dualunion_multi | 78 | 40t +125.7/6.4 | 38t +46.0/6.0 | **2.7x** |
+
+The dual gate gives up -68.5R of IS profit (fragile trades) but delivers
++1.6R more OOS, +8pp WR (50% vs 42%), and cuts the IS/OOS degradation ratio
+from 4.2x to 2.7x — the most era-consistent config of the session.
+
+**Files / how to run:**
+- Patch: `live_stuff/tests/test_experiments_craze.py` (section 3g-5, `exp_union_dual_only`)
+- Configs: `experiment_registry.py` keys `union_multi`, `dualunion_multi` (group `dualunion`)
+- Run: `python live_stuff/tests/run_experiment.py --group dualunion`
+- IS/OOS split script: `%TEMP%/dual_oos.py` pattern in this session's log (split at 2025-01-01)
+
+**Status: dualunion_multi = OOS king (46.0R/6.0DD @ 50% WR). Full-history king
+remains bm05_utcsat_multi (+370.6). The two measure different things: batch NET
+vs era-robustness. For live, OOS consistency is the more important property.**
+
+
+## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 The 15m chain length is the most sensitive knob in the system:
 mb35 -> 437t / +58.3R (collapse) vs mb50 -> 351t / +238.0R (production).
 Guard added in run_experiment.py (hard assert on drift).

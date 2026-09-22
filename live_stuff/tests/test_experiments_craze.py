@@ -537,6 +537,44 @@ def build_module():
                   '            if _bmbt: _bm_breaks.append((_bmbt[:19],_bm_ratio))\n'
                   '    _bm_breaks.sort(key=lambda z:z[0])\n'
                   '    _bm_times=[z[0] for z in _bm_breaks]\n')
+    # 3g-5) D3 UNION DUAL-QUALIFICATION: track which window type matched
+    #     (B2, FLIP, or BOTH) and optionally skip FLIP-only matches (the
+    #     fragile cell from the 2x2 autopsy: FLIP-mark-in-FLIP-window is
+    #     IS +79R but OOS -2R). exp_union_dual_only skips FLIP-only matches.
+    t_u1 = '    exp_bias_momentum_min=0.0,\n'
+    assert t_u1 in s, "bm kwarg anchor"
+    s = s.replace(t_u1, t_u1 + '    exp_union_dual_only=0,\n')
+    t_u2 = ('            _union_matched=False\n'
+            '            for _iv,_st in [(intervals_b2,starts_b2),(intervals_flip,starts_flip)]:\n'
+            '                if not _iv: continue\n'
+            '                _idx=bs.bisect_right(_st,bar_ts)-1\n'
+            '                if _idx<0: continue\n'
+            '                _s,_e,_d,_pe,_psl=_iv[_idx]\n'
+            '                if (_s+2700<bar_ts<=_e+2700) and sig["dir"]==_d:\n'
+            '                    _union_matched=True\n'
+            '                    # keep _pe,_psl for extension check\n'
+            '                    pe=_pe; psl=_psl; d=_d\n'
+            '                    break\n'
+            '            if not _union_matched: continue\n')
+    assert s.count(t_u2) == 1, "union gate anchor"
+    t_u2_new = ('            _union_matched = False\n'
+                '            _matched_b2 = False\n'
+                '            _matched_flip = False\n'
+                '            for _iv,_st,_typ in [(intervals_b2,starts_b2,"b2"),(intervals_flip,starts_flip,"flip")]:\n'
+                '                if not _iv: continue\n'
+                '                _idx=bs.bisect_right(_st,bar_ts)-1\n'
+                '                if _idx<0: continue\n'
+                '                _s,_e,_d,_pe,_psl=_iv[_idx]\n'
+                '                if (_s+2700<bar_ts<=_e+2700) and sig["dir"]==_d:\n'
+                '                    _union_matched=True\n'
+                '                    if _typ=="b2": _matched_b2=True\n'
+                '                    else: _matched_flip=True\n'
+                '                    pe=_pe; psl=_psl; d=_d\n'
+                '            if not _union_matched: continue\n'
+                '            if exp_union_dual_only and _matched_flip and not _matched_b2:\n'
+                '                continue\n')
+    s = s.replace(t_u2, t_u2_new)
+
     t_c11 = '        direction=int(sig["dir"])\n'
     assert s.count(t_c11) == 1, "walk dir4"
     s = s.replace(t_c11,
