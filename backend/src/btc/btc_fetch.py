@@ -133,7 +133,8 @@ def fetch_tf(exchange: str, tf: str, since_ms: int) -> dict[str, tuple[float, fl
             open_time_ms = int(k[0])
             utc = datetime.fromtimestamp(open_time_ms / 1000.0, tz=timezone.utc)
             ist = (utc + IST).strftime("%Y-%m-%d %H:%M:%S")
-            out[ist] = (float(k[1]), float(k[2]), float(k[3]), float(k[4]))
+            out[ist] = (float(k[1]), float(k[2]), float(k[3]), float(k[4]),
+                       float(k[5]) if len(k) > 5 else 0.0)
 
         nxt = int(rows[-1][0]) + step_ms
         if nxt <= cur:
@@ -143,12 +144,11 @@ def fetch_tf(exchange: str, tf: str, since_ms: int) -> dict[str, tuple[float, fl
 
 
 def merge_csv(exchange: str, tf: str,
-              new_rows: dict[str, tuple[float, float, float, float]],
-              seed: bool = False) -> int:
+              new_rows: dict[str, tuple], seed: bool = False) -> int:
     """Append new timestamps to the main CSV; returns rows written."""
     path = _data_dir(exchange) / f"BTCUSDT_{tf}.csv"
     existing: dict[str, str] = {}
-    header = "timestamp,open,high,low,close,x,y\n"
+    header = "timestamp,open,high,low,close,volume,x,y\n"
     if path.exists() and not seed:
         with open(path, encoding="utf-8") as f:
             header = f.readline()
@@ -160,8 +160,10 @@ def merge_csv(exchange: str, tf: str,
     for k in new_rows:
         if k in existing:
             continue
-        o, h, l, c = new_rows[k]
-        existing[k] = f"{k},{o},{h},{l},{c},0,0\n"
+        vals = new_rows[k]
+        o, h, l, c = vals[0], vals[1], vals[2], vals[3]
+        vol = vals[4] if len(vals) > 4 else 0.0
+        existing[k] = f"{k},{o},{h},{l},{c},{vol},0,0\n"
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(header)

@@ -880,6 +880,46 @@ EXPERIMENTS = {
         "pins": {},
     },
 
+    # ===== D3 TRAIL QUALITY (skip far trail levels) =====
+
+    "trail10_swingpause_single": {
+        "desc": "swingpause single + skip trail levels > 1.0% from entry",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_trail_max_dist": 1.0, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "trail06_swingpause_single": {
+        "desc": "swingpause single + skip trail levels > 0.6% from entry",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_trail_max_dist": 0.6, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "trail10_multi": {
+        "desc": "king + skip trail levels > 1.0% from entry",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_trail_max_dist": 1.0,
+                    "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+
     # ===== SHIPPED BASELINE (identity gate reference) =====
     # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
     # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is

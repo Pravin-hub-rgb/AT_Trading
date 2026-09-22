@@ -57,6 +57,7 @@ Use this checklist when building the live bot. Each item has severity, location,
 - **File:** `live_loop.py:2093`
 - **Issue:** Live requires `pivot < lo` (pivot below bar low) for ratchet. Backtester unconditionally ratchets.
 - **Fix:** Align live ratchet logic to match backtester: ratchet FIRST, then check SL.
+- **Status:** **FIXED** in backtester (commit ee574f9). Live still needs alignment.
 
 ### 10. Rolling 30-day window causes trade loss
 - **File:** `live_loop.py:716` (`WINDOW_DAYS_15M=30`)

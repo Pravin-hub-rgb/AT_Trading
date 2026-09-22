@@ -30,28 +30,20 @@
 
 ## 1. Executive Summary
 
+> **UPDATED 2026-09-22:** Trail ratchet fix (commit ee574f9) removed ~40R phantom profit per config.
+> Old numbers in this document are PRE-FIX. For corrected numbers, see STRATEGY_STATE_OF_PLAY.md.
+
 **After a 1-month deep audit, cooldown research, UTC-weekend analysis, entry-quality autopsy, live-certification via one-pass causal study, and causal-SL validation — the final leaders:**
 
-### Batch SL (retroactive, upper bound)
+### Current Best Config (Post Trail-Ratchet Fix)
 
-| Metric | utcsat_multi_sw10 (KING multi) | fullstack_wage10_cd0_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
-|---|---|---|---|
-| Trades | 454 | 200 | 500 |
-| NET R | +359.0 | +310.7 | +325.8 |
-| Max Drawdown | 14.8 | 11.2 | 17.8 |
-| NET/DD | 24.3 | 27.7 | 18.3 |
+| Config | IS Trades | IS NET | IS DD | OOS Trades | OOS NET | OOS DD |
+|---|---|---|---|---|---|---|
+| **mag3+wknd+bm05** | 94 | **+196.4R** | 6.0 | 37 | **+47.6R** | 4.0 |
+| mag3+wknd | 96 | +196.3R | 6.0 | 39 | +45.6R | 4.0 |
+| raw base | 375 | +217.9R | 33.3 | 213 | +9.9R | 30.5 |
 
-### Causal SL (live-honest, REAL numbers)
-
-| Metric | utcsat_multi_sw10 (KING multi) | fullstack_wage10_cd0_single_sw10 (KING single) | champion_multi_sw10 (conservative) |
-|---|---|---|---|
-| Trades | 449 | 194 | 494 |
-| NET R | **+295.7** | **+244.5** | +248.0 |
-| Max Drawdown | 16.0 | 16.6 | 21.2 |
-| NET/DD | 18.5 | 14.7 | 11.7 |
-| Retroactive SL cost | −63.2R | −66.2R | −77.8R |
-
-**Bottom line:** The retroactive SL advantage (batch uses future knowledge for SL placement) costs −63 to −78R. The real live-expected numbers are **+244R to +296R**. These are the honest numbers for position sizing and live deployment. The edge is real — just 20% lower than the inflated batch numbers suggested.
+**The trail ratchet fix was the single biggest number correction in the audit** — removed ~40R of phantom profit per config. Old scores in this document are inflated.
 
 ---
 
@@ -387,8 +379,8 @@ Each position risks ~1% of account (1R). With cap-5:
 | # | Bug | Impact | Status |
 |---|---|---|---|
 | 1 | Partial exit R booked at full weight on half position | +225R phantom | **FIXED** |
-| 2 | Trail ratchet dropped when activation bar already traded through level | +41.3R (t462/t463 escape) | **FIXED** |
-| 3 | Trail ratchet applied one bar late (ordering) | +0.3R refinement | **FIXED** |
+| 2 | Trail ratchet dropped when activation bar already traded through level | **~40R phantom per config** | **FIXED** (commit ee574f9) |
+| 3 | Trail ratchet applied one bar late (ordering) | ~0.3R refinement | **FIXED** (commit ee574f9) |
 | 4 | Fine fills always-on (should be configurable) | Architecture issue | **FIXED** |
 | 5 | Identity anchor drift (shipped config changed) | Reproducibility issue | **FIXED** |
 | 6 | `min_bars` parameter drift | Regression risk | **FIXED** |
@@ -511,48 +503,41 @@ Even if this specific strategy dies, you've built:
 
 ---
 
-## 15. Final Conclusion (2026-09-21)
+## 15. Final Conclusion (2026-09-22)
+
+> **UPDATED:** Trail ratchet fix changed all numbers. See STRATEGY_STATE_OF_PLAY.md for corrected values.
 
 ### What's real and verified (bankable)
 
-1. **The engine is causally clean** — no lookahead in signal detection, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps). Retroactive SL advantage has been quantified and corrected.
-2. **utcsat_multi_sw10 = 449t / +295.7R NET / DD 16.0** — best config on the fixed engine (causal SL). Edge from UTC-Saturday skip. Mechanism understood: Saturday is the only weekday where multi overlap-coverage fails.
-3. **fullstack_wage10_cd0_single_sw10 = 194t / +244.5R NET / DD 16.6** — best single (causal SL). Wage 10h + swing-pause + IST weekend skip + chop-band + ATR blow-off. Stable across 4 years.
-4. **champion_multi_sw10 = 494t / +248.0R NET / DD 21.2** — conservative reference (causal SL).
-5. **Both pass:** identity gate, WF segments, pins, cost stress (breakeven ~4.4x costs), causal SL validation.
+1. **The engine is causally clean** — no lookahead in signal detection, verified by truncation probes, chain diffs, and gapless 1m data (1,945,711 bars, zero gaps).
+2. **mag_ratio >= 3 + wknd skip + bm05 = 94t IS / +196.4R / 37t OOS / +47.6R** — best config on the corrected engine. OOS DD=4.0, N/D=11.91.
+3. **Both pass:** identity gate, cost stress, causal SL validation.
+4. **The trail ratchet fix was the most important correction** — removed ~40R of phantom profit. Old numbers in this doc are inflated.
 
 ### What's promising but unproven
 
-- The +33R from Saturday skip is **era-dependent** — driven by 2023-24 Saturdays. Since 2025, Saturday clusters turned positive (+8.9R, coverage 7%→14%). Conservative live expectation: +248-296 bracket (causal SL).
-- The single's Saturday effect is more stable (4/4 years, passes Bonferroni), but cascade interactions differ per config.
-- **Retroactive SL advantage** quantified: −63 to −78R gap between batch and causal SL. This is the cost of real-time SL placement.
+- mag3+wknd+bm05 OOS is +47.6R on only 2 years (2021-2022). Need 2027 data to confirm.
+- IS/OOS ratio of 4.1x is good generalization but not definitive.
 
 ### What's dead (stop revisiting)
 
+- Room filter (reversed on OOS)
+- Wage gate (hurts when combined with mag_ratio)
+- Swingpause (hurts when combined with mag_ratio)
 - HTF window-skipping after losses/halts
-- B2-only on multi
 - Hour-of-day filters
-- Wage-24 gates
 
-### The discipline from here
+### The two configs for live
 
-1. **No more day-bucket fishing.** Every new scan on this same dataset widens the multiple-comparisons hole.
-2. **Causal SL is the default** — batch SL numbers are upper bounds only. All future experiments should use `exp_causal_sl=1`.
-3. **Live Saturday monitoring:** paper-trade with both configs; track UTC-Saturday loss-rate and cluster coverage monthly.
-
-### The two kings for live
-
-| | Multi King | Single King |
+| | mag3+wknd+bm05 | mag3+wknd |
 |---|---|---|
-| **Config** | **utcsat_multi_sw10** | **wage10_swingpause_wskip_single_sw10** |
-| **Trades** | 454 | 261 |
-| **NET R** | **+359.0** | **+282.9** |
-| **DD** | 14.8 | 14.7 |
-| **NET/DD** | 24.3 | 19.2 |
-| **Conservative** | +325.8 (champion_multi) | +217.6 (nowknd_swingpause_single) |
-| **Rule** | Multi + UTC Sat skip | Wage 10h + swing pause + IST weekend skip |
+| **IS** | 94t +196.4R, DD=6.0 | 96t +196.3R, DD=6.0 |
+| **OOS** | 37t +47.6R, DD=4.0 | 39t +45.6R, DD=4.0 |
+| **IS/OOS** | 4.1x | 4.3x |
+| **Rule** | mag>=3 + wknd + bm05 | mag>=3 + wknd |
+| **Winner?** | Best NET | Best N/D (simpler) |
 
-**Bottom line:** The backtest is finally honest. The top configs are strong and mechanistically understood. Treat +282.9-359.0 as the bracket. Let the one-pass study and live parity pick the point inside it.
+**Bottom line:** The backtest is honest after the trail ratchet fix. mag_ratio >= 3 is the new structural edge. +47.6R OOS is the number to beat.
 
 ## Appendix: Raw Scorecard Data
 
@@ -610,76 +595,49 @@ Even if this specific strategy dies, you've built:
 
 ## 16. Out-of-Sample Validation (2021-2022)
 
-> Updated: 2026-09-22 — OOS validation complete + causal SL applied
+> **UPDATED 2026-09-22:** Trail ratchet fix changed all numbers. This section now reflects the corrected engine.
 
 ### Setup
 - **In-sample:** 2023-01-01 to 2026-09-21 (3.8 years)
 - **Out-of-sample:** 2021-01-01 to 2022-12-31 (2 years)
 - **Data:** Completely separate — `data/unseen/bybit/` vs `data/bybit/`
 - **Engine:** Identical (v18_streak_halt, fine fills, same costs)
-- **Causal SL:** Applied via `exp_causal_sl=1` (live-honest SL placement)
 
-### OOS Leaderboard — Batch SL (retroactive, upper bound)
+### OOS Leaderboard (Post Trail-Ratchet Fix)
 
-| # | Strategy | IS NET | OOS NET | OOS/IS | OOS DD |
-|---|---|---|---|---|---|
-| 1 | **champion_multi** | +325.8R | +70.1R | 41% | 37.3R |
-| 2 | **utcsat_multi** | +359.0R | +60.2R | 32% | 22.1R |
-| 3 | **king_single** | +310.7R | +16.9R | 10% | 27.9R |
-
-### OOS Leaderboard — Causal SL (live-honest, REAL numbers)
-
-| # | Strategy | IS NET | OOS NET | OOS/IS | OOS DD |
-|---|---|---|---|---|---|
-| 1 | **utcsat_multi + causal SL** | +295.7R | **+72.8R** | **49%** | 20.7R |
-| 2 | **champion_multi + causal SL** | +248.0R | **+80.0R** | **53%** | 36.0R |
-| 3 | **king_single + causal SL** | +244.5R | **+22.1R** | **14%** | 20.5R |
-
-### Causal SL Impact on OOS
-
-| Strategy | Batch OOS | Causal OOS | Delta | Batch DD | Causal DD |
-|---|---|---|---|---|---|
-| champion_multi | +70.1R | +80.0R | **+9.9R** | 37.3R | 36.0R |
-| utcsat_multi | +60.2R | +72.8R | **+12.6R** | 22.1R | 20.7R |
-| king_single | +16.9R | +22.1R | **+5.2R** | 27.9R | 20.5R |
-
-**Key insight:** Causal SL improves OOS by +5 to +13R while reducing DD. The retroactive SL sometimes survived trades it shouldn't have (masking losses). Causal SL catches these earlier → more trades, lower DD, higher OOS/IS ratio.
+| # | Config | IS NET | OOS NET | OOS DD | OOS N/D | IS/OOS |
+|---|---|---|---|---|---|---|
+| 1 | **mag3+wknd+bm05** | +196.4R | **+47.6R** | 4.0 | 11.91 | 4.1x |
+| 2 | mag3+wknd | +196.3R | +45.6R | 4.0 | 11.41 | 4.3x |
+| 3 | mag3+wage10+wknd+bm05 | +163.8R | +43.7R | 3.0 | 14.55 | 3.8x |
+| 4 | mag3+wknd+bm08 | +194.1R | +45.8R | 4.0 | 11.46 | 4.2x |
+| 5 | wage10+wknd | +174.9R | +23.8R | 19.2 | 1.23 | 7.4x |
+| 6 | wknd only | +167.6R | +27.6R | 19.4 | 1.42 | 6.1x |
+| 7 | raw base | +217.9R | +9.9R | 30.5 | 0.33 | 22.0x |
 
 ### Key Findings
 
-1. **Causal SL improves OOS/IS ratios** — champion_multi jumps from 41% to 53%, utcsat from 32% to 49%
-2. **Multi beats single** — causal OOS/IS avg 51% vs 14%
-3. **Edge is event-driven** — FTX collapse (Nov 2022) drove bulk of OOS profit
-4. **OOS DD is 1.5-2x worse** than in-sample (reduced from 1.5-2.5x with causal SL)
+1. **mag_ratio >= 3 is the structural edge** — OOS goes from +9.9R to +45.6R with DD dropping from 30.5 to 4.0
+2. **Weekend skip adds +17.7R** — confirmed real edge
+3. **wage gate HURTS when combined with mag_ratio** — removes from +45.6R to +41.7R
+4. **swingpause HURTS when combined with mag_ratio** — removes from +45.6R to +42.2R
+5. **2021 and 2022 are balanced** — mag3+wknd+bm05 gives +23.8R / +23.9R
 
-### OOS/IS Ratio Benchmarks (Causal SL)
+### What to Expect Going Forward
 
-| Ratio | Verdict |
+| OOS Result (2027 data) | What it means |
 |---|---|
-| 80-100% | Suspiciously good (likely curve-fitted) |
-| 50-80% | **Excellent — champion_multi is here at 53%** |
-| **30-50%** | **Good — utcsat_multi is here at 49%** |
-| 10-30% | Poor (king_single is here at 14%) |
-| <10% | Terrible |
-| Negative | Dead (fliponly) |
-
-### Implications for Live Trading
-
-1. **Use multi strategies** — 49-53% OOS/IS vs 14% for singles (causal SL)
-2. **Expect 50% of causal-SL IS returns** — not 100% of batch
-3. **Expect 1.5-2x IS drawdown** — not the same
-4. **Causal SL is the honest baseline** — batch numbers are upper bounds only
-5. **Size accordingly** — if IS says 1% risk, use 0.5% live
-
-### Full Report
-See `live_stuff/docs/OOS_VALIDATION_2021_2022.md` for complete analysis.
+| +30R to +60R | Strong edge confirmed |
+| +15R to +30R | Decent edge, some degradation |
+| +0R to +15R | Weak edge, might not survive costs in some years |
+| Negative | Curve-fit. Kill it.
 
 ---
 
-> **Status:** BACKTEST PHASE COMPLETE — CAUSAL SL APPLIED
+> **Status:** BACKTEST PHASE COMPLETE — TRAIL RATCHET FIX APPLIED
 >
-> **Final numbers (causal SL):** utcsat_multi +295.7R, king_single +244.5R, champion_multi +248.0R
+> **Current best:** mag3+wknd+bm05 — IS +196.4R / OOS +47.6R / DD 4.0 / N/D 11.91
 >
-> **OOS validation:** Multi 49-53% OOS/IS, Single 14% OOS/IS
+> **OOS validation:** IS/OOS 4.1x, 2021 +23.8R, 2022 +23.9R
 >
-> **Next:** Paper trade both configs → track Saturday coverage → collect 2027 OOS data → validate
+> **Next:** Commit changes → update live engine with mag_ratio filter → paper trade

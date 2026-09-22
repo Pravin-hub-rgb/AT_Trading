@@ -1,4 +1,4 @@
-"""CRAZE harness — runs the SHIPPED engine source with minimal asserted patches.
+﻿"""CRAZE harness â€” runs the SHIPPED engine source with minimal asserted patches.
 
 Safety model (no retyped engine, no look-ahead):
 - We load backend/src/btc/engines/htf_ltf/v18_streak_halt.py SOURCE TEXT.
@@ -85,8 +85,10 @@ def build_module():
                   '    exp_max_concurrent=0,\n'
                   '    exp_entry_candle_min=0.0,\n'
                   '    exp_entry_swing_age_max=0,\n'
-                  '    exp_entry_skip_b2_doji=0,\n'
-                  '    exp_bias_momentum_min=0.0,\n')
+    '    exp_entry_skip_b2_doji=0,\n'
+    '    exp_bias_momentum_min=0.0,\n'
+    '    exp_min_swing_ratio=0.0,\n'
+    '    exp_wick_reject=0.0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -109,7 +111,7 @@ def build_module():
                   '                _ma=(closes_htf[_j-2]+closes_htf[_j-1]+closes_htf[_j])/3.0\n'
                   '                if sig["dir"]==1 and closes_htf[_j]<_ma: continue\n'
                   '                if sig["dir"]==-1 and closes_htf[_j]>_ma: continue\n')
-    # 3b) Exp 18: 3-Mark Judgment System — signals from the breaks mark stream.
+    # 3b) Exp 18: 3-Mark Judgment System â€” signals from the breaks mark stream.
     # B1-anchored sequences resolve at the 3rd mark (arm "D": 2-mark flips).
     # SL attribution mirrors _collect_signals: same-dir mark -> swing start_px,
     # opposite-dir mark -> prev swing end_px, pre-start churn -> touchable
@@ -161,7 +163,7 @@ def build_module():
         '                            "dir":_tdir,"swing_start_px":_piv,\n'
         '                            "swing_no":_si,"kind":_mkind})\n'
         '                _seq=[]\n')
-    # 3c) Exp 22: conviction trail — ratchet each same-dir swing's trail level
+    # 3c) Exp 22: conviction trail â€” ratchet each same-dir swing's trail level
     # at its B2 MARK (break) instead of its confirmation (which lags ~mb bars).
     # Same pivot, earlier activation; ratchet conditions still gate it.
     t6b = '        events.sort(key=lambda x: x[0])\n'
@@ -211,7 +213,7 @@ def build_module():
         '                if _eok:\n'
         '                    exit_idx, exit_px, outcome = j, float(c["close"]), "accel27"\n'
         '                    break\n')
-    # 3f) Exp 31: HTF chop lookback (lb) sweep — regime-detection responsiveness.
+    # 3f) Exp 31: HTF chop lookback (lb) sweep â€” regime-detection responsiveness.
     # Shipped default 14. exp31_lb=0 keeps shipped (identity).
     t6e = '    chop=_chop_series_1h(candles_htf, lb=14)\n'
     assert s.count(t6e) == 1, "chop lb call"
@@ -380,7 +382,7 @@ def build_module():
     # 4) B3 relocation (no-op when b3_k=0): entry AFTER confirmation of the break.
     #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
     #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;
-    #    busy + cooldown re-checked there (causal — known at trigger close).
+    #    busy + cooldown re-checked there (causal â€” known at trigger close).
     t6 = '        sl_pivot=sig["swing_start_px"]\n'
     assert s.count(t6) == 1, "sl pivot"
     # 5) Partial exit (exp_partial_r): 50% sold at level, remaining runs half-weighted.
@@ -456,7 +458,7 @@ def build_module():
                    '                _now_ts2=candle_ts[i]\n'
                    '                _open_now2=sum(1 for _t in ltf_trades if int(_t["exit_ts"])>_now_ts2)\n'
                    '                if _open_now2>=exp_max_concurrent: continue\n')
-    # 3g-3) D3 CAUSAL SL — the user's fix: SL = running extreme from the last
+    # 3g-3) D3 CAUSAL SL â€” the user's fix: SL = running extreme from the last
     #     confirmed swing's END to the entry bar (inclusive). This is what a
     #     live trader computes at candle close without any declaration lag.
     #     Replaces the retroactive swing_start_px for SL computation.
@@ -502,7 +504,7 @@ def build_module():
                   '            sl_pivot = sig["swing_start_px"]\n')
     t_c13b = '    exp_risk_max_pct=0.0,\n'
     assert t_c13b in s, "kwargs anchor for causal_sl"
-    s = s.replace(t_c13b, t_c13b + '    exp_causal_sl=0,\n')
+    s = s.replace(t_c13b, t_c13b + '    exp_causal_sl=0,\n    exp_trail_max_dist=0.0,\n')
 
     t_c10 = '    atr_pct=_atr_pct_15m(candles_ltf)\n'
     assert s.count(t_c10) == 1, "atr_pct anchor"
@@ -546,7 +548,21 @@ def build_module():
                   '            _bm_idx = bs.bisect_right(_bm_times, sig["bar"][:19]) - 1\n'
                   '            if _bm_idx >= 0 and _bm_breaks[_bm_idx][1] < exp_bias_momentum_min:\n'
                   '                continue\n'
-                  + t_c11)
+                  '        if exp_min_swing_ratio > 0 and sig.get("swing_no") is not None:\n'
+                  '            _sni = int(sig["swing_no"])\n'
+                  '            if 0 <= _sni < len(swings_ltf):\n'
+                  '                _sw = swings_ltf[_sni]\n'
+                  '                _seg = _sw.get("seg", {})\n'
+                  '                _spx = float(_seg.get("start_px", 0) or 0)\n'
+                  '                _epx = float(_seg.get("end_px", 0) or 0)\n'
+                  '                _swing_mag = abs(_epx - _spx)\n'
+                  '                _atr_s = max(0, i - 19)\n'
+                  '                _atr_h = max(float(candles_ltf[j]["high"]) for j in range(_atr_s, i + 1))\n'
+                  '                _atr_l = min(float(candles_ltf[j]["low"]) for j in range(_atr_s, i + 1))\n'
+                  '                _atr = _atr_h - _atr_l if _atr_h > _atr_l else 1.0\n'
+                   '                if _atr > 0 and _swing_mag / _atr < exp_min_swing_ratio:\n'
+                   '                    continue\n'
+                   + t_c11)
     # 3f) D3 risk-width gate: skip entries whose LTF stop is wider than
     #     exp_risk_max_pct % of price (stale/stretched breaks: net-negative
     #     bucket, negligible big-win contribution on the single autopsy).
@@ -567,6 +583,15 @@ def build_module():
                   '                _cb2=abs(float(candles_ltf[i]["close"])-float(candles_ltf[i]["open"]))\n'
                   '                _cr2=float(candles_ltf[i]["high"])-float(candles_ltf[i]["low"])\n'
                   '                if _cr2>0 and _cb2/_cr2<0.3: continue\n')
+    # 3g-4) D3 TRAIL QUALITY: skip trail levels too far from entry
+    t_trail = '                events.append((cidx, float(s["seg"]["start_px"])))\n'
+    assert s.count(t_trail) == 1, "trail event anchor"
+    s = s.replace(t_trail,
+                  '                _tl = float(s["seg"]["start_px"])\n'
+                  '                _td = abs(entry - _tl) / entry * 100.0\n'
+                  '                if exp_trail_max_dist > 0 and _td > exp_trail_max_dist:\n'
+                  '                    continue\n'
+                  '                events.append((cidx, _tl))\n')
     m, p = _load_module(s, "craze_superset")
     try:
         p.unlink()
@@ -619,7 +644,7 @@ def main():
     s_ship = stats(t_ship)
     show("shipped", s_ship)
     assert s_ship["n"] == 340 and abs(s_ship["gross"] - 225.3) < 0.1, \
-        "ANCHOR MISMATCH — aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
+        "ANCHOR MISMATCH â€” aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
     for flags in [dict(), dict(b3_k=4), dict(exp_momentum=True),
                   dict(b3_k=4, exp_momentum=True)]:
         sim = build_module()
