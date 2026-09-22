@@ -174,6 +174,76 @@ def simulate_htf_ltf_streak_halt(
             if _w:
                 _cur=chop[j]; _below=sum(1 for c in _w if c<_cur)
                 chop_pct_per_ltf[i]=_below/len(_w)*100.0
+    # --- Session per LTF bar (Idea H): 0=Asia(0-7), 1=London(7-14), 2=NY(14-21), 3=Night(21-24) ---
+    session_per_ltf=[0]*len(candles_ltf)
+    import datetime as _dts
+    for i,ts in enumerate(candle_ts_ltf):
+        _hr=_dts.datetime.utcfromtimestamp(ts).hour
+        if _hr<7: session_per_ltf[i]=0      # Asia: range→B2
+        elif _hr<14: session_per_ltf[i]=1   # London: trend→FLIP
+        elif _hr<21: session_per_ltf[i]=2   # NY: trend→FLIP
+        else: session_per_ltf[i]=3           # Night: range→B2
+    # --- Rolling entropy of 1h returns (Idea L) --- computed per HTF bar, mapped to LTF
+    import math
+    _ret_1h=[]
+    for i in range(1,len(candles_htf)):
+        p0=float(candles_htf[i-1]["close"]); p1=float(candles_htf[i]["close"])
+        _ret_1h.append((p1-p0)/p0 if p0>0 else 0.0)
+    _ent_lb=96  # 4 days — compute per HTF bar (not per LTF bar) for speed
+    _ent_htf=[50.0]*len(candles_htf)
+    _nhtf=len(candles_htf)
+    for i in range(_ent_lb, len(_ret_1h)):
+        _wins=_ret_1h[i-_ent_lb:i]
+        if not _wins: continue
+        _nbins=min(15,max(5,int(math.sqrt(len(_wins)))))
+        _mn=min(_wins); _mx=max(_wins); _rng=_mx-_mn
+        if _rng<=0: continue
+        _bins=[0]*_nbins
+        for v in _wins:
+            bi=min(int((v-_mn)/_rng*_nbins), _nbins-1)
+            _bins[bi]+=1
+        _tot=float(len(_wins)); _ent=0.0
+        for c in _bins:
+            if c>0:
+                p=c/_tot; _ent -= p*math.log2(p)
+        _max_ent=math.log2(_nbins) if _nbins>1 else 1.0
+        _ei=i+1
+        if _ei<_nhtf:
+            _ent_htf[_ei]=(_ent/_max_ent)*100.0 if _max_ent>0 else 50.0
+    entropy_per_ltf=[50.0]*len(candles_ltf)
+    for i,ts in enumerate(candle_ts_ltf):
+        j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
+        if j>=0 and j<len(_ent_htf):
+            entropy_per_ltf[i]=_ent_htf[j]
+    # --- Rolling fractal dimension of 1h candles (Idea K) --- computed per HTF bar, mapped
+    fd_per_ltf=[50.0]*len(candles_ltf)
+    _fd_lb=48  # 2 days — reduced for speed
+    _fd_htf=[50.0]*len(candles_htf)
+    for i in range(_fd_lb, len(candles_htf)):
+        _cl=[float(candles_htf[k]["close"]) for k in range(i-_fd_lb, i+1)]
+        if len(_cl)<4: continue
+        _mn=min(_cl); _mx=max(_cl); _rng2=_mx-_mn
+        if _rng2<=0: continue
+        _ds=[]; _ps=[]
+        for _step in (1,2,4):
+            _sum=0.0; _cnt=0
+            for _k in range(_step, len(_cl)):
+                _sum+=abs(_cl[_k]-_cl[_k-_step]); _cnt+=1
+            if _cnt>0 and _rng2>0:
+                _ds.append(math.log(_sum/_cnt/_rng2+1e-12))
+                _ps.append(math.log(1.0/_step))
+        if len(_ds)>=2:
+            _ss=sum(_ds); _sps=sum(_ps)
+            _sps2=sum(p*p for p in _ps); _ssp=sum(d*p for d,p in zip(_ds,_ps))
+            _den=len(_ds)*_sps2-_sps*_sps
+            if abs(_den)>1e-15:
+                _slope=(len(_ds)*_ssp-_ss*_sps)/_den
+                fd=1.0-abs(_slope)
+                _fd_htf[i]=max(0.0,min(100.0,(1.0-fd)*100.0))
+    for i,ts in enumerate(candle_ts_ltf):
+        j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
+        if j>=0 and j<len(_fd_htf):
+            fd_per_ltf[i]=_fd_htf[j]
     # LTF signals (decisive)
     from src.btc.btc_engine import CandleStore
     ltf_store = CandleStore(candles_ltf)
@@ -220,6 +290,24 @@ def simulate_htf_ltf_streak_halt(
             use="b2" if chop_pct_per_ltf[bar]>chop_thresh else "flip"
         elif mode=="union":
             use="union"
+        elif mode=="session":
+            # Idea H: Asia(0,3)=range→B2, London/NY(1,2)=trend→flip
+            _s=session_per_ltf[bar]
+            use="b2" if _s in (0,3) else "flip"
+        elif mode=="session_flip":
+            # Inverted: Asia→flip, London/NY→B2
+            _s=session_per_ltf[bar]
+            use="flip" if _s in (0,3) else "b2"
+        elif mode=="entropy":
+            # Idea L: low entropy=range→B2, high entropy=trend→flip
+            use="b2" if entropy_per_ltf[bar]<chop_thresh else "flip"
+        elif mode=="entropy_inv":
+            use="flip" if entropy_per_ltf[bar]<chop_thresh else "b2"
+        elif mode=="fd":
+            # Idea K: low FD=trend→flip, high FD=range→B2
+            use="b2" if fd_per_ltf[bar]>chop_thresh else "flip"
+        elif mode=="fd_inv":
+            use="flip" if fd_per_ltf[bar]>chop_thresh else "b2"
         else:
             use="flip"
         # pick intervals
