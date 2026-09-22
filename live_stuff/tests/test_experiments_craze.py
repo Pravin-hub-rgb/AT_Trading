@@ -519,7 +519,22 @@ def build_module():
                   '        _a20[_i] = sum(_tr15[max(0, _i-19):_i+1]) / min(20, _i+1)\n'
                   '        _px = float(candles_ltf[_i]["close"])\n'
                   '        if _a20[_i] > 0:\n'
-                  '            _ar15[_i] = _a5[_i] / _a20[_i]\n')
+                  '            _ar15[_i] = _a5[_i] / _a20[_i]\n'
+                  '    _bm_mags=[]\n'
+                  '    for _bm_s in swings_htf:\n'
+                  '        _bm_seg=_bm_s.get("seg") or {}\n'
+                  '        _bm_spx=float(_bm_seg.get("start_px",0) or 0)\n'
+                  '        _bm_epx=float(_bm_seg.get("end_px",0) or 0)\n'
+                  '        _bm_mags.append(abs(_bm_epx-_bm_spx))\n'
+                  '    _bm_breaks=[]\n'
+                  '    for _bmi in range(len(swings_htf)):\n'
+                  '        if _bmi<1 or _bm_mags[_bmi-1]<=0: continue\n'
+                  '        _bm_ratio=_bm_mags[_bmi]/_bm_mags[_bmi-1]\n'
+                  '        for _bmb in (swings_htf[_bmi].get("breaks") or []):\n'
+                  '            _bmbt=_bmb.get("time","")\n'
+                  '            if _bmbt: _bm_breaks.append((_bmbt[:19],_bm_ratio))\n'
+                  '    _bm_breaks.sort(key=lambda z:z[0])\n'
+                  '    _bm_times=[z[0] for z in _bm_breaks]\n')
     t_c11 = '        direction=int(sig["dir"])\n'
     assert s.count(t_c11) == 1, "walk dir4"
     s = s.replace(t_c11,
@@ -527,6 +542,10 @@ def build_module():
                   '            continue\n'
                   '        if exp_atr_ratio_max > 0 and _ar15[i] > exp_atr_ratio_max:\n'
                   '            continue\n'
+                  '        if exp_bias_momentum_min > 0 and _bm_breaks:\n'
+                  '            _bm_idx = bs.bisect_right(_bm_times, sig["bar"][:19]) - 1\n'
+                  '            if _bm_idx >= 0 and _bm_breaks[_bm_idx][1] < exp_bias_momentum_min:\n'
+                  '                continue\n'
                   + t_c11)
     # 3f) D3 risk-width gate: skip entries whose LTF stop is wider than
     #     exp_risk_max_pct % of price (stale/stretched breaks: net-negative

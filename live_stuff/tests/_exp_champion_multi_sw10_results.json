@@ -1,6 +1,6 @@
 {
   "key": "champion_multi_sw10",
-  "desc": "Champion multi sw10 WITHOUT partials \u2014 ACTUAL KING (+325.5, trail-fix)",
+  "desc": "Champion multi sw10 \u2014 causal SL (live-honest)",
   "params": {
     "sl_buf_atr": 0.01,
     "ext_stop_r": 3.0,
@@ -19,7 +19,7 @@
   "swing": "sw10",
   "results": {
     "key": "champion_multi_sw10",
-    "desc": "Champion multi sw10 WITHOUT partials \u2014 ACTUAL KING (+325.5, trail-fix)",
+    "desc": "Champion multi sw10 \u2014 causal SL (live-honest)",
     "n": 500,
     "gross": 445.22499999999957,
     "net": 325.78193456515777,
@@ -43,8 +43,8 @@
       "2026": 106.84999999999998
     },
     "min_year": 102.17,
-    "pin_ok": true,
-    "pin_detail": "",
+    "pin_ok": false,
+    "pin_detail": " n=500.0(expected 494.0) net=325.8(expected 248.0) dd=17.8(expected 21.2)",
     "basis": "fine/c58.0"
   },
   "trades": [
