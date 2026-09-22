@@ -117,6 +117,34 @@ The v18 streak_halt engine is well-built. The trail ratchet fix (commit ee574f9)
 | Structure Evolution | **DEFERRED** | Needs engine-level changes |
 | MTF Regime | **BROKEN** | Implementation produces 0 trades |
 
+### Wick Reject — DEAD (Contradicted by Patcher)
+
+The standalone post-hoc test (`test_wick_deepdive.py`) showed +69.3R OOS on raw base. This was a **false positive** — the standalone test filtered trades AFTER they were completed, using exit price to infer direction (survivorship bias).
+
+The inline patcher test (the correct test) shows wick_reject **hurts everywhere**:
+
+| Config | IS | OOS | OOS DD | OOS N/D |
+|---|---|---|---|---|
+| raw base | 340t +225.3R | 172t +19.4R | 14.8 | 1.31 |
+| raw + wick>0.35 | 323t +200.5R | 164t +0.6R | 23.8 | 0.02 |
+| mag3+wknd | 86t +196.9R | 33t +41.4R | 4.0 | 10.35 |
+| mag3+wknd+wick>0.35 | 80t +188.6R | 32t +40.2R | 4.0 | 10.05 |
+
+**Verdict: Wick reject is dead. Do not implement in live.**
+
+### EMA Alignment — Marginal
+
+| Config | IS | OOS | OOS DD | OOS N/D |
+|---|---|---|---|---|
+| raw base | 340t +225.3R | 172t +19.4R | 14.8 | 1.31 |
+| raw + EMA align | 340t +225.3R | 172t +36.8R | 3.0 | 12.28 |
+
+EMA alignment helps OOS (+17.4R) but DD is very low and trade count is unchanged. Needs deeper validation before adoption.
+
+### Mean Reversion / Compression Breakout — Exploratory
+
+Both tested via `test_new_paradigms.py`. Mean reversion shows promise (OOS +27.9R DD=1.0) but very few trades (5). Compression breakout shows no edge.
+
 ### mag_ratio Deep Dive
 
 | Threshold | IS | OOS | OOS DD | OOS N/D |
@@ -155,6 +183,8 @@ Any new concept must beat +47.6R OOS with similar or better DD to be adopted.
 - [x] Trail ratchet bug fixed (commit ee574f9)
 - [x] mag_ratio filter implemented in patcher
 - [x] IS + OOS validation complete
+- [x] Wick reject tested and rejected (false positive from post-hoc bias)
+- [x] Docs updated with corrected numbers
+- [x] All changes committed (36e843c, a041d33)
 - [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
-- [ ] Docs updated with corrected numbers
-- [ ] Commit pending changes
+- [ ] Volume data re-fetch (btc_fetch.py modified, refetch script ready)
