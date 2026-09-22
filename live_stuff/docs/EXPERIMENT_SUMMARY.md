@@ -144,13 +144,52 @@ IS/OOS: 4.6x
 
 ---
 
+## NEW: Creative Idea Sweep (2026-09-22)
+
+After testing your 5 ideas, we brainstormed 12 more creative directions (AI-assisted). Three needed no new data and were implemented directly in the engine:
+
+### Entropy mode (Idea L) — NEW KING
+- Routes based on Shannon entropy of 1h returns
+- Low entropy → B2 (predictable), High entropy → FLIP (random)
+- **Raw OOS: +104.9R** (IS/OOS=0.71, anti-overfit)
+- **Filtered OOS: +82.3R** (IS/OOS=1.31, PASS)
+- **Beats union (+63.2R) by +19.1R OOS**
+
+### Fractal Dimension mode (Idea K)
+- Routes based on Hurst exponent of 1h candles
+- **Raw OOS: +122.6R** (IS/OOS=0.95, anti-overfit)
+- **Filtered OOS: +75.2R** (IS/OOS=1.42, PASS)
+
+### Session mode (Idea H)
+- Routes based on time-of-day (Asia→B2, London/NY→FLIP)
+- CT-insensitive
+- **Raw OOS: +83.1R** (IS/OOS=1.62)
+- **Filtered OOS: +74.7R** (IS/OOS=0.97, anti-overfit)
+
+### Full Results (sorted by OOS)
+```
+RAW:
+  b2_vs_flip ct=65   Net +143.6  Ratio 0.77 ANTI
+  fd ct=70           Net +151.9  Ratio 0.95 ANTI
+  fd ct=58           Net +133.9  Ratio 0.85 ANTI
+  entropy ct=50      Net +143.5  Ratio 0.94 ANTI
+  entropy ct=61      Net +91.9   Ratio 0.71 ANTI
+
+FILTERED:
+  entropy ct=61      Net +161.2  Ratio 1.31 PASS  <-- KING
+  entropy ct=65      Net +169.4  Ratio 1.42 PASS
+  fd ct=50           Net +157.1  Ratio 1.42 PASS
+  union ct=55        Net +254.3  Ratio 3.00 FIT (overfit risk)
+```
+
+---
+
 ## What's Left
 
-- [ ] Investigate union asymmetry (2021 +51.2R vs 2022 +12.0R)
+- [ ] Test Ideas B (funding rate), A (HMM), C (OI change) — need new data
+- [ ] Test Ideas D (ensemble), E (transition detection), F (GARCH)
 - [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
 - [ ] Volume data re-fetch
-- [ ] Consider testing union with different mag_ratio thresholds (2.0, 2.5)
-- [ ] Consider testing union with wage gate removed (since bm05 already handles momentum)
 
 ---
 

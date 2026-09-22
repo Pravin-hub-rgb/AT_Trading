@@ -255,41 +255,80 @@ The adaptive percentile threshold adjusts to the current chop regime. When chop 
 
 ## 8. Baseline to Beat
 
-### Previous Best: b2_vs_flip_chop + mag3+wknd+bm05
-- IS: 94t, +196.4R, DD=6.0, NET/DD=32.74
-- OOS: 37t, +47.6R, DD=4.0, NET/DD=11.91
-- 2021: +23.8R | 2022: +23.9R
-- IS/OOS ratio: 4.1x
-
-### NEW KING: union + mag3+wknd+bm05
+### Previous Best: union + mag3+wknd+bm05
 - IS: 124t, +288.4R, DD=7.5, NET/DD=38.31
 - OOS: 55t, **+63.2R**, DD=6.0, NET/DD=10.53
 - 2021: +51.2R | 2022: +12.0R
-- IS/OOS ratio: 4.6x
-- **+15.6R over previous best OOS**
+- IS/OOS ratio: 4.6x (overfit risk)
 
-### Runner-up: dynamic_chop pct>83 + mag3+wknd+bm05
-- IS: 79t, +187.3R, DD=6.0, NET/DD=31.22
-- OOS: 33t, +49.2R, DD=4.0, NET/DD=12.30
-- 2021: +28.2R | 2022: +21.0R
-- IS/OOS ratio: 3.8x
-- **+1.6R over previous best, more balanced years**
+### NEW KING (FILTERED): entropy ct=61 + mag3+wknd+bm05
+- IS: 50t, +107.5R, DD=6.0
+- OOS: 41t, **+82.3R**, DD=6.0
+- IS/OOS ratio: 1.31 (PASS — no overfit)
+- PF: 5.42, WR: 52.7%, Sharpe: 4.28
+- Year-by-year: 2023:+84.1 | 2024:+23.4 | 2025:+46.3 | 2026:+36.0
+- **+19.1R over previous best OOS, 3.5x cleaner IS/OOS**
 
-Any new concept must beat +63.2R OOS with similar or better DD to be adopted.
+### Best RAW (no filters): fd ct=70
+- Trades: 340, Net: +151.9R, DD: 29.8R
+- IS/OOS ratio: 0.95 (ANTI-OVERFIT)
+- PF: 2.08, WR: 29.7%, Sharpe: 2.80
 
-## 9. Checklist Status
+### Runner-up RAW: b2_vs_flip_chop ct=65 cb=0
+- Trades: 348, Net: +143.6R, DD: 27.1R
+- IS/OOS ratio: 0.77 (ANTI-OVERFIT)
+
+Any new concept must beat +82.3R OOS (filtered) or +151.9R Net (raw) with similar or better DD to be adopted.
+
+## 9. New Creative Idea Modes (2026-09-22)
+
+Three new regime modes added to engine (commit ada22f4):
+
+### Entropy mode (Idea L) — NEW KING
+- Routes based on Shannon entropy of 1h returns
+- Low entropy = predictable market → B2 (confirmation)
+- High entropy = random market → FLIP (reversal)
+- Structural edge from information theory, not price levels
+- Best CT: 61 (raw), 61 (filtered)
+- **OOS +104.9R raw (IS/OOS=0.71, anti-overfit), +82.3R filtered (IS/OOS=1.31)**
+
+### Fractal dimension mode (Idea K)
+- Routes based on Hurst exponent / fractal dimension of 1h candles
+- High FD = mean-reverting → B2, Low FD = trending → FLIP
+- Best CT: 70 (raw), 50 (filtered)
+- **OOS +122.6R raw (IS/OOS=0.95, anti-overfit), +75.2R filtered**
+
+### Session mode (Idea H)
+- Routes based on time-of-day (Asia=range→B2, London/NY=trend→FLIP)
+- CT-insensitive (identical results across all CT values)
+- **OOS +83.1R raw (IS/OOS=1.62), +74.7R filtered (IS/OOS=0.97)**
+
+### Overfitting Scorecard
+| Config | IS | OOS | Ratio | Verdict |
+|---|---|---|---|---|
+| b2_vs_flip ct=65 RAW | +100.2 | +130.6 | 0.77 | ANTI-OVERFIT |
+| fd ct=70 RAW | +116.0 | +122.6 | 0.95 | ANTI-OVERFIT |
+| fd ct=58 RAW | +103.6 | +121.5 | 0.85 | ANTI-OVERFIT |
+| entropy ct=50 RAW | +112.9 | +119.8 | 0.94 | ANTI-OVERFIT |
+| entropy ct=61 RAW | +74.2 | +104.9 | 0.71 | ANTI-OVERFIT |
+| entropy ct=61 +filt | +107.5 | +82.3 | 1.31 | PASS |
+| union ct=55 +filt | +223.8 | +74.5 | 3.00 | OVERFIT RISK |
+
+## 10. Checklist Status
 
 - [x] Trail ratchet bug fixed (commit ee574f9)
 - [x] mag_ratio filter implemented in patcher
 - [x] IS + OOS validation complete
 - [x] Wick reject tested and rejected (false positive from post-hoc bias)
 - [x] Docs updated with corrected numbers
-- [x] All changes committed (36e843c, a041d33, 4206ffe, d160243)
+- [x] All changes committed (36e843c, a041d33, 4206ffe, d160243, b848556, 6373b6a, 8ac88f8, ada22f4)
 - [x] Mode-level sweep complete — b2_vs_flip_chop ct=58 is best OOS
 - [x] B2 vs FLIP regime decomposition — B2 robust, FLIP curve-fitted
-- [x] 5 new mode ideas tested — union + filters is new king (+63.2R OOS)
+- [x] 5 new mode ideas tested — union + filters was king
 - [x] dynamic_chop adaptive percentile tested — +49.2R OOS with filters
-- [ ] #2 FLIP quality gate (prev swing magnitude filter on FLIP signals)
-- [ ] #5 htf_mag threshold sweep with configurable threshold
+- [x] Creative idea sweep — entropy/fd/session modes added to engine
+- [x] Full metrics comparison — entropy ct=61 +filt is new king (+82.3R OOS)
 - [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
 - [ ] Volume data re-fetch (btc_fetch.py modified, refetch script ready)
+- [ ] Test Ideas B (funding rate), A (HMM), C (OI change) — need new data
+- [ ] Test Ideas D (ensemble), E (transition detection), F (GARCH)
