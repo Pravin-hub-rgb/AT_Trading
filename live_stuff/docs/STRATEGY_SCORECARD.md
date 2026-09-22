@@ -598,6 +598,60 @@ Even if this specific strategy dies, you've built:
 
 ---
 
+## 15. Out-of-Sample Validation (2021-2022)
+
+> Updated: 2026-09-21 — OOS validation complete
+
+### Setup
+- **In-sample:** 2023-01-01 to 2026-09-21 (3.8 years)
+- **Out-of-sample:** 2021-01-01 to 2022-12-31 (2 years)
+- **Data:** Completely separate — `data/unseen/bybit/` vs `data/bybit/`
+- **Engine:** Identical (v18_streak_halt, fine fills, same costs)
+
+### OOS Leaderboard
+
+| # | Strategy | IS NET | OOS NET | OOS/IS | OOS DD | OOS Ann.NET |
+|---|---|---|---|---|---|---|
+| 1 | **chopband_multi** | +350.7R | **+85.8R** | **47%** | 29.1R | +42.9R/yr |
+| 2 | **champion_multi** | +325.8R | **+70.1R** | **41%** | 37.3R | +35.1R/yr |
+| 3 | **multi (utcsat)** | +359.0R | **+60.2R** | **32%** | 22.1R | +30.1R/yr |
+| 4 | fullstack_single | +282.9R | +21.0R | 14% | 25.4R | +10.5R/yr |
+| 5 | single (king) | +310.7R | +16.9R | 10% | 27.9R | +8.4R/yr |
+| 6 | wage12_single | +278.6R | +13.0R | 9% | 19.1R | +6.5R/yr |
+| 7 | fliponly_multi | +242.7R | **-17.3R** | -14% | 46.4R | -8.7R/yr |
+
+### Key Findings
+
+1. **Multi beats single** — avg OOS/IS 40% vs 11%
+2. **Simpler filters generalize better** — fewer exp_* = less overfitting
+3. **Edge is event-driven** — FTX collapse (Nov 2022) drove 70-80% of OOS profit
+4. **OOS DD is 1.5-2.5x worse** than in-sample
+5. **fliponly is dead OOS** — completely fails
+
+### OOS/IS Ratio Benchmarks
+
+| Ratio | Verdict |
+|---|---|
+| 80-100% | Suspiciously good (likely curve-fitted) |
+| 50-80% | Excellent (rare) |
+| **30-50%** | **Good (your multis are here)** |
+| 10-30% | Poor (your singles are here) |
+| <10% | Terrible |
+| Negative | Dead (fliponly) |
+
+### Implications for Live Trading
+
+1. **Use multi strategies** — 32-47% OOS/IS vs 9-14% for singles
+2. **Expect 30-50% of IS returns** — not 100%
+3. **Expect 1.5-2.5x IS drawdown** — not the same
+4. **The edge needs volatility** — flat markets = no edge
+5. **Size accordingly** — if IS says 1% risk, use 0.3-0.5% live
+
+### Full Report
+See `live_stuff/docs/OOS_VALIDATION_2021_2022.md` for complete analysis.
+
+---
+
 > **Status:** RESEARCH BASELINE — NOT LIVE — NOT INVESTABLE YET
 >
 > **Final conclusion:** The backtest is honest, the top configs are strong and mechanistically understood.
