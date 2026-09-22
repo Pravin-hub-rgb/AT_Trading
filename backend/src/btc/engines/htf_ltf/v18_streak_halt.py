@@ -137,6 +137,43 @@ def simulate_htf_ltf_streak_halt(
         j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
         if j>=0 and j < len(chop):
             chop_per_ltf[i]=chop[max(0,j)]
+    # --- NEW MODE DATA: swing direction/magnitude per LTF bar ---
+    import datetime as _dt
+    def _sw_ts_dir_mag(swings):
+        tss,ds,ms=[],[],[]
+        for sw in swings:
+            t=sw.get("confirmed_at_time","")
+            if isinstance(t,str) and len(t)>=19:
+                try: ts=int(_dt.datetime.strptime(t[:19],"%Y-%m-%d %H:%M:%S").timestamp())
+                except: continue
+            elif isinstance(t,(int,float)): ts=int(t)
+            else: continue
+            d=1 if sw.get("dir")=="up" else -1
+            seg=sw.get("seg",{})
+            sp=float(seg.get("start_px",0)); ep=float(seg.get("end_px",0))
+            mag=abs(ep-sp)/sp if sp>0 else 0
+            tss.append(ts); ds.append(d); ms.append(mag)
+        return tss,ds,ms
+    htf_sw_ts,htf_sw_dir,htf_sw_mag=_sw_ts_dir_mag(swings_htf)
+    ltf_sw_ts,ltf_sw_dir,ltf_sw_mag=_sw_ts_dir_mag(swings_ltf)
+    htf_dir_per_ltf=[0]*len(candles_ltf)
+    htf_mag_per_ltf=[0.0]*len(candles_ltf)
+    ltf_dir_per_ltf=[0]*len(candles_ltf)
+    for i,ts in enumerate(candle_ts_ltf):
+        j=bs.bisect_right(htf_sw_ts, ts+900)-1
+        if j>=0: htf_dir_per_ltf[i]=htf_sw_dir[j]; htf_mag_per_ltf[i]=htf_sw_mag[j]
+        j2=bs.bisect_right(ltf_sw_ts, ts+900)-1
+        if j2>=0: ltf_dir_per_ltf[i]=ltf_sw_dir[j2]
+    # Rolling percentile of chop (for dynamic_chop mode)
+    chop_pct_per_ltf=[50.0]*len(candles_ltf)
+    _lookback=672
+    for i,ts in enumerate(candle_ts_ltf):
+        j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
+        if j>=0:
+            _s=max(0,j-_lookback); _w=chop[_s:j+1]
+            if _w:
+                _cur=chop[j]; _below=sum(1 for c in _w if c<_cur)
+                chop_pct_per_ltf[i]=_below/len(_w)*100.0
     # LTF signals (decisive)
     from src.btc.btc_engine import CandleStore
     ltf_store = CandleStore(candles_ltf)
@@ -167,10 +204,47 @@ def simulate_htf_ltf_streak_halt(
             use="b2" if ch > chop_thresh else "flip"
         elif mode=="decisive_vs_flip_chop":
             use="decisive" if ch > chop_thresh else "flip"
+        elif mode=="htf_dir":
+            use="b2" if htf_dir_per_ltf[bar]==1 else "flip"
+        elif mode=="htf_mag":
+            use="b2" if htf_mag_per_ltf[bar]>(chop_thresh/10000.0) else "flip"
+        elif mode=="htf_mag_inv":
+            use="flip" if htf_mag_per_ltf[bar]>(chop_thresh/10000.0) else "b2"
+        elif mode=="flip_quality":
+            use="b2" if ch > chop_thresh else "flip"
+            if use=="flip" and htf_mag_per_ltf[bar]<(chop_thresh/10000.0):
+                continue
+        elif mode=="ltf_dir":
+            use="b2" if ltf_dir_per_ltf[bar]==1 else "flip"
+        elif mode=="dynamic_chop":
+            use="b2" if chop_pct_per_ltf[bar]>chop_thresh else "flip"
+        elif mode=="union":
+            use="union"
         else:
             use="flip"
         # pick intervals
-        if use=="flip":
+        if use=="union":
+            # Idea 2: check BOTH B2 and FLIP intervals
+            _union_matched=False
+            for _iv,_st in [(intervals_b2,starts_b2),(intervals_flip,starts_flip)]:
+                if not _iv: continue
+                _idx=bs.bisect_right(_st,bar_ts)-1
+                if _idx<0: continue
+                _s,_e,_d,_pe,_psl=_iv[_idx]
+                if (_s+2700<bar_ts<=_e+2700) and sig["dir"]==_d:
+                    _union_matched=True
+                    # keep _pe,_psl for extension check
+                    pe=_pe; psl=_psl; d=_d
+                    break
+            if not _union_matched: continue
+            if ext_stop_r>0:
+                hrisk=abs(pe-psl)
+                if hrisk>0:
+                    ext=(float(candles_ltf[bar]["close"])-pe)*d/hrisk
+                    if ext>ext_stop_r: continue
+            filtered.append((sig,use))
+            continue
+        elif use=="flip":
             intervals=intervals_flip; starts=starts_flip
         elif use=="b2":
             intervals=intervals_b2; starts=starts_b2
