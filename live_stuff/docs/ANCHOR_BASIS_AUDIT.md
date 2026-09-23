@@ -536,6 +536,37 @@ All 6 WF segments positive on every config. Identity gate green. Pins locked.
 claim (125/125) has a strong prior (fighting live structure), but n=125 needs
 the cross-config check.
 
+**FILES & HOW TO RUN (for the other bot to verify):**
+
+1. Autopsy harness (reproduces all 7 feature tables + the 100%-loser finding):
+   ```
+   python live_stuff/tests/exp_alignment_autopsy.py
+   ```
+2. Full-path gate results (the 4 configs above):
+   ```
+   python live_stuff/tests/run_experiment.py --group alignment
+   ```
+3. Singles with alignment (the BEST EVER config):
+   ```
+   python live_stuff/tests/run_experiment.py age10_dirmatch_swingpause_single_sw10
+   # expect: 130t +435.7R DD 5.7 WR 53.8%
+   ```
+4. Engine gates: `test_experiments_craze.py` section 3g-6
+   (`exp_require_dir_match`, `exp_max_swing_age`, `exp_max_running_mag`,
+   all default-off, identity-gated).
+5. Pins: `experiment_registry.py` — `dirmatch_multi_sw10` (389/479.9/13.8),
+   `age25_dirmatch_multi_sw10` (249/386.7/9.8),
+   `age10_dirmatch_multi_sw10` (151/455.5/6.0),
+   `dirmatch_swingpause_single_sw10` (279/288.1/14.1),
+   `age10_dirmatch_swingpause_single_sw10` (130/435.7/5.7),
+   `dirmatch_single_sw10` (292/237.7/15.7).
+
+Note: the autopsy harness may show slightly different bucket counts than the
+original inline run (running-magnitude bins: 97/141/177/73/12 vs 86/129/177/92/16)
+— the generating-swing lookup picks the LAST swing with start_idx <= entry,
+which can differ by one swing when swings overlap. The dir-match finding
+(125/125 losers) is identical either way — that is the robust result.
+
 
 ## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 The 15m chain length is the most sensitive knob in the system:
