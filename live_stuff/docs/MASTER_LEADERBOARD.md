@@ -308,6 +308,114 @@ Less tail-dependent than champion (top-10 still +30R vs champion −3R).
 | wage + mag combo, swingpause + mag | Hurt OOS when stacked with mag3 |
 | htf_dir / htf_mag / ltf_dir modes | Dead raw; signal-property routing fails |
 | raw v18 base | 22x IS/OOS — curve-fit |
+| **halt_skip=2 / posthalt3 (engine path)** | Trade-list said +18/+11; full-path cascade **−3 IS / −7 OOS** (champion), **−45 IS** (utcsat). REJECTED |
+| **MAE surgery (BE / half-SL / dead-exit)** | All kill winners path-true; earlier +56R was path-logic bug |
+| **B2-stale age cut** | IS −21.9 / OOS +50.2 — does not transfer |
+| **pre-entry alignment (dir/age)** | Era-fit; already rejected as structural gate on multi |
+| **adaptive kind gates (K1/K2/K3)** | Fail absolute R both eras |
+| **first-of-window-streak cut** | Weak WR both eras despite high net on few trades |
+
+---
+
+## 7b. Deep Autopsy (2026-09-23) — path-true engine flags
+
+Trade-list filters are **not** path-true (skip cascades into busy/cooldown/concurrency).
+Engine flags tested full-path: `exp_halt_skip_n`, `exp_skip_decisive` (`exp_engine_filters.py`).
+
+### Results (gross R, full path)
+
+| Variant | champ IS | dIS | champ OOS | dOOS | utcsat IS | dIS | utcsat OOS | dOOS |
+|---|---|---|---|---|---|---|---|---|
+| baseline | +445.2 | — | +105.7 | — | +466.5 | — | +92.6 | — |
+| halt_skip=2 | +442.3 | −3.0 | +98.6 | −7.2 | +421.1 | **−45.3** | +111.3 | +18.6 |
+| **skip_decisive** | +445.2 | **0** | **+130.2** | **+24.5** | +466.5 | **0** | +104.9 | **+12.2** |
+| N3 (halt2+skip_dec) | +442.3 | −3.0 | +122.4 | +16.7 | +421.1 | −45.3 | +125.3 | +32.6 |
+| halt_skip=3 | +455.0 | +9.8 | +99.4 | −6.3 | +398.8 | −67.7 | +99.7 | +7.1 |
+
+### What `decisive` is (causal)
+
+- `mode=atr_high`: `use="decisive"` iff **15m ATR% > 0.65** at entry bar (`v18_streak_halt.py:266-267`)
+- Known at entry (ATR from closed bars only) — **no lookahead**
+- IS 2023-26: **0 decisive trades** (high-ATR windows never produce valid entries under multi+persist7)
+- OOS 2021-22: 58 decisive trades, **net −22.2R** (champion); 54t **−10.0R** (utcsat)
+- ATR%>0.65 bars: IS 6.5% of bars, OOS 22.6% — filter only fires in 2021-style vol
+
+### skip_decisive — the only BOTH_UP engine filter
+
+- **Pure filter vs engine:** nearly identical (path cascade adds only +2.3R champ / +2.2R utcsat OOS)
+- **Threshold sweep 0.55–0.85:** dOOS positive for **all** thresholds both configs (champ +7.7..+30.9, utcsat +6.5..+16.2) — **not knife-edge at 0.65**
+- **IS cost structurally zero** (regime never appears) — not "tested and got lucky"
+- **Caveat:** only validated on the era where it fires (2021-22). Insurance for high-vol regimes; no-op in 2023-26-like markets
+
+### skip_decisive — NET (after costs) + year-by-year
+
+Same cost model as leaderboard (fee 0.055%/side + slip + funding). Totals match §2 exactly on baseline.
+
+**champion_multi_sw10**
+
+| Period | Variant | n | GROSS | COST | **NET** | WR |
+|---|---|---:|---:|---:|---:|---:|
+| IS | baseline | 500 | +445.2 | 119.4 | **+325.8** | 30.0% |
+| IS | skip_decisive | 500 | +445.2 | 119.4 | **+325.8** | 30.0% |
+| OOS | baseline | 279 | +105.7 | 35.6 | **+70.1** | 28.0% |
+| OOS | **skip_decisive** | 222 | +130.2 | 30.9 | **+99.3** | 28.8% |
+
+IS yearly NET (unchanged — filter never fires):
+
+| 2023 | 2024 | 2025 | 2026 |
+|---:|---:|---:|---:|
+| +86.9 (107t) | +88.8 (161t) | +68.8 (130t) | +81.3 (102t) |
+
+OOS yearly NET:
+
+| Year | baseline | skip_decisive | Δ |
+|---|---:|---:|---:|
+| 2021 | −26.4 (152t) | **−1.6** (107t) | **+24.8** |
+| 2022 | +96.6 (127t) | **+100.9** (115t) | **+4.3** |
+| **Total** | **+70.1** | **+99.3** | **+29.2** |
+
+**utcsat_multi_sw10**
+
+| Period | Variant | n | GROSS | COST | **NET** | WR |
+|---|---|---:|---:|---:|---:|---:|
+| IS | baseline | 454 | +466.5 | 107.5 | **+359.0** | 30.8% |
+| IS | skip_decisive | 454 | +466.5 | 107.5 | **+359.0** | 30.8% |
+| OOS | baseline | 253 | +92.6 | 32.4 | **+60.2** | 29.6% |
+| OOS | **skip_decisive** | 200 | +104.9 | 28.0 | **+76.8** | 29.0% |
+
+IS yearly NET (unchanged):
+
+| 2023 | 2024 | 2025 | 2026 |
+|---:|---:|---:|---:|
+| +99.4 (103t) | +97.3 (141t) | +70.9 (119t) | +91.4 (91t) |
+
+OOS yearly NET:
+
+| Year | baseline | skip_decisive | Δ |
+|---|---:|---:|---:|
+| 2021 | −1.2 (137t) | **+11.1** (96t) | **+12.3** |
+| 2022 | +61.4 (116t) | **+65.7** (104t) | **+4.3** |
+| **Total** | **+60.2** | **+76.8** | **+16.6** |
+
+**Retention (OOS/IS, annualized like §1):** champion 41%→**~58%**; utcsat 32%→**~41%**. Both clear the 30% bar with room.
+
+**Verdict:** free NET upgrade — IS untouched, OOS +29R / +17R, 2021 bleed almost stops (champ −26→−2; utcsat −1→+11). Optional flag on the two frozen kings; not a new config.
+
+### halt_skip=2 — REJECTED
+
+Trade-list posthalt3 (+18.1/+11.2) was an artifact of non-sequential filtering.
+Full-path: skips shift busy/cooldown/concurrency and **amputate winners** after the halt window. utcsat IS collapses −45R. Do not ship.
+
+### Other structural findings (both eras unless noted)
+
+| Finding | IS | OOS | Verdict |
+|---|---|---|---|
+| conc=0 (first entries) weak | WR 26.6%, +293 | +14.9 | Confirmation stacks (conc≥1) carry edge |
+| conc≥1 strong | WR 40.5% | +90.8 of +105.7 | Structural — multi is the edge |
+| break_kind era-flip | FLIP +363 / B2 +82 | B2 +86 / FLIP +20 | Neither kind alone transfers |
+| regime age 8-15 stale | +7.6 | −1.3 | Dead |
+| E[R after win] > after loss | yes | yes | Meta only; causal gates fail |
+| window gap 2-8h | strong | strong, tiny n | Not tradeable sample |
 
 ---
 
@@ -322,6 +430,15 @@ python -m live_stuff.tests.exp_dualunion_true_oos
 
 # Filter ablation (where the 300+ trades go)
 python -m live_stuff.tests.exp_filter_ablation
+
+# Path-true engine filters: halt_skip_n / skip_decisive (IS + true OOS, gross)
+python -m live_stuff.tests.exp_engine_filters
+
+# Decisive regime deep-dive (threshold sweep, pure vs path)
+python -m live_stuff.tests.exp_decisive_deep
+
+# Full NET + yearly for kings (with optional skip_decisive via exp flags above)
+python -m live_stuff.tests.exp_master_metrics
 
 # Registry leaders
 python live_stuff/tests/run_experiment.py --group best
