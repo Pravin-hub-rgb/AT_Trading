@@ -1,0 +1,107 @@
+data loaded (20s)
+batch: 500 trades (champion_multi_sw10)
+leaky opposed label: 125 / 500
+opposed outcome: R=-125.0  WR=0.0%
+
+=== PART 1: CAUSAL FEATURES THAT LEAD TO THE OPPOSED LABEL ===
+feature            opposed mean   matched mean      AUC
+adv_drift5               -0.339         -0.536    0.653
+adv_drift10              -0.356         -0.579    0.613
+adv_drift20              -0.150         -0.690    0.714
+adv_frac5                 0.384          0.323    0.596
+adv_frac10                0.434          0.402    0.578
+adv_frac20                0.479          0.441    0.638
+chase10                   0.767          0.803    0.449
+er20                      0.065          0.231    0.283
+causal_mag                0.880          1.302    0.353
+causal_age                5.376         16.699    0.292
+
+-- break_kind x opposed-label x outcome (ALL causal at entry) --
+  B2     n= 249  opposed=  71 (29%)  R=   +82.4  avg=+0.331
+  FLIP   n= 251  opposed=  54 (22%)  R=  +362.8  avg=+1.445
+
+-- htf_regime x opposed-label x outcome --
+  flip     n= 500  opposed= 125 (25%)  R=  +445.2  avg=+0.890
+
+=== SALVAGE TEST: top causal features bucketed vs OUTCOME (all 500) ===
+  -- er20 (AUC=0.283) quartiles --
+     q1 n= 125 opposed=  60( 48%)  R=  +180.0  avg=+1.440  loss= 73%
+     q2 n= 125 opposed=  31( 25%)  R=   +81.8  avg=+0.654  loss= 70%
+     q3 n= 125 opposed=  22( 18%)  R=   +39.3  avg=+0.314  loss= 72%
+     q4 n= 125 opposed=  12( 10%)  R=  +144.2  avg=+1.153  loss= 65%
+
+  -- adv_drift20 (AUC=0.714) quartiles --
+     q1 n= 125 opposed=  13( 10%)  R=  +124.2  avg=+0.993  loss= 67%
+     q2 n= 125 opposed=  20( 16%)  R=   +45.3  avg=+0.363  loss= 70%
+     q3 n= 125 opposed=  34( 27%)  R=   +32.5  avg=+0.260  loss= 71%
+     q4 n= 125 opposed=  58( 46%)  R=  +243.2  avg=+1.946  loss= 72%
+
+  -- causal_age (AUC=0.292) quartiles --
+     q1 n= 373 opposed= 116( 31%)  R=  +389.7  avg=+1.045  loss= 72%
+     q2 n=  84 opposed=   8( 10%)  R=   +33.2  avg=+0.395  loss= 64%
+     q3 n=  25 opposed=   1(  4%)  R=    +9.1  avg=+0.365  loss= 68%
+     q4 n=  18 opposed=   0(  0%)  R=   +13.2  avg=+0.735  loss= 56%
+
+=== PART 2: BIAS-MOMENTUM LEAK AUDIT ===
+(gate attaches FINAL 1h swing mags to break times fired DURING formation)
+  using bm_min=0.50
+  entries with a bm break at/before entry: 500 / 500
+  owning 1h swing UNCONFIRMED at entry:    471 (94.2%)
+  owning swing END after entry:            380 (76.0%)
+  owning swing START rewritten after:      49 (9.8%)
+  owning swing FLIP break after entry:     100 (20.0%)
+  gate DECISION flips under causal recompute: 120 (24.0% of 500)
+  VERDICT: LEAKY
+batch: 500 trades (champion_multi_sw10)
+leaky opposed label: 125 / 500
+opposed outcome: R=-125.0  WR=0.0%
+
+=== PART 1: CAUSAL FEATURES THAT LEAD TO THE OPPOSED LABEL ===
+feature            opposed mean   matched mean      AUC
+adv_drift5               -0.339         -0.536    0.653
+adv_drift10              -0.356         -0.579    0.613
+adv_drift20              -0.150         -0.690    0.714
+adv_frac5                 0.384          0.323    0.596
+adv_frac10                0.434          0.402    0.578
+adv_frac20                0.479          0.441    0.638
+chase10                   0.767          0.803    0.449
+er20                      0.065          0.231    0.283
+causal_mag                0.880          1.302    0.353
+causal_age                5.376         16.699    0.292
+
+-- break_kind x opposed-label x outcome (ALL causal at entry) --
+  B2     n= 249  opposed=  71 (29%)  R=   +82.4  avg=+0.331
+  FLIP   n= 251  opposed=  54 (22%)  R=  +362.8  avg=+1.445
+
+-- htf_regime x opposed-label x outcome --
+  flip     n= 500  opposed= 125 (25%)  R=  +445.2  avg=+0.890
+
+=== SALVAGE TEST: top causal features bucketed vs OUTCOME (all 500) ===
+  -- er20 (AUC=0.283) quartiles --
+     q1 n= 125 opposed=  60( 48%)  R=  +180.0  avg=+1.440  loss= 73%
+     q2 n= 125 opposed=  31( 25%)  R=   +81.8  avg=+0.654  loss= 70%
+     q3 n= 125 opposed=  22( 18%)  R=   +39.3  avg=+0.314  loss= 72%
+     q4 n= 125 opposed=  12( 10%)  R=  +144.2  avg=+1.153  loss= 65%
+
+  -- adv_drift20 (AUC=0.714) quartiles --
+     q1 n= 125 opposed=  13( 10%)  R=  +124.2  avg=+0.993  loss= 67%
+     q2 n= 125 opposed=  20( 16%)  R=   +45.3  avg=+0.363  loss= 70%
+     q3 n= 125 opposed=  34( 27%)  R=   +32.5  avg=+0.260  loss= 71%
+     q4 n= 125 opposed=  58( 46%)  R=  +243.2  avg=+1.946  loss= 72%
+
+  -- causal_age (AUC=0.292) quartiles --
+     q1 n= 373 opposed= 116( 31%)  R=  +389.7  avg=+1.045  loss= 72%
+     q2 n=  84 opposed=   8( 10%)  R=   +33.2  avg=+0.395  loss= 64%
+     q3 n=  25 opposed=   1(  4%)  R=    +9.1  avg=+0.365  loss= 68%
+     q4 n=  18 opposed=   0(  0%)  R=   +13.2  avg=+0.735  loss= 56%
+
+=== PART 2: BIAS-MOMENTUM LEAK AUDIT ===
+(gate attaches FINAL 1h swing mags to break times fired DURING formation)
+  using bm_min=0.50
+  entries with a bm break at/before entry: 500 / 500
+  owning 1h swing UNCONFIRMED at entry:    471 (94.2%)
+  owning swing END after entry:            380 (76.0%)
+  owning swing START rewritten after:      49 (9.8%)
+  owning swing FLIP break after entry:     100 (20.0%)
+  gate DECISION flips under causal recompute: 120 (24.0% of 500)
+  VERDICT: LEAKY

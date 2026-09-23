@@ -244,11 +244,47 @@ works IN chop; that is the flip-window design and it does not need 1h trend.
 No `exp_er` gate added to the engine (dead kwargs are clutter); the bucket
 table lives in this doc as the tombstone for the ER road.
 
+**15m ER20 (other-bot F6) — ALSO REJECTED, path-true (2026-09-23).** Their
+claim (ER<0.10 → n=93 / −17.7R) does not reproduce on our champion trade-list:
+our ER<0.10 bucket is **n=99 / +107.3R / bigWin +162.5** (2nd-best bucket;
+best is 0.30–0.50 at +277R). Temporary `exp_er_min`/`exp_er_max` patch +
+`exp_causal_autopsy_path.py`:
+
+| variant | dIS | dOOS | swingpause dIS | king dIS |
+|---|---|---|---|---|
+| er_min=0.10 | **−199.2** | −35.1 | −107.8 | −201.9 |
+| band 0.10–0.50 | −182.6 | −49.7 | −118.4 | −205.1 |
+| F1 runmag=2.0 causal | −108.2 | −32.0 | +0.2 raw (leak) | — |
+| F7 risk_max=2.0 | −24.7 | −48.4 | −6.9 | — |
+
+Both ER roads (1h/24 and 15m/20) are dead. ER kwargs reverted from the
+patcher (clutter). Harness kept: `live_stuff/tests/exp_causal_autopsy_path.py`.
+
+**Live-snapshot runmag gate — LAST OPEN SALVAGE PATH, ALSO REJECTED (2026-09-23).**
+Trade-list under causal live labels: run mag 2%+ = −9.9R / bigW 2 (passes the
+playbook rule; every other live bucket is positive — live OPPOSED +147.7,
+live age 51+ +136.7). Implemented `exp_max_live_runmag` + precomputed
+`replay_live_state` start_idx (`exp_alignment_live_gate_path.py`):
+
+| config | live_runmag=2.0 dIS/dOOS | 3.0 | 4.0 | batch+causal ref |
+|---|---|---|---|---|
+| champion | **−24.2 / −36.4** | −6.1 / −3.6 | −3.0 / −4.9 | −108 / −32 |
+| swingpause single | −6.0 / −3.6 | +2.3 / −13.5 | −4.7 / +1.2 | −18.5 / +0.2 |
+| utcsat king | −41.2 / −7.0 | −7.5 / **+21.4** | −3.4 / +11.6 | −123.6 / −9.6 |
+
+2.0 hurts both sides on champion. 3.0/4.0 are noise (|d| < 8 with mixed signs).
+King 3.0's OOS +21 fails the both-sides rule (IS −7.5). The cut saves ~10R of
+losers on the trade-list but cascades −24R through halt/cooldown — same path
+trap as §3e. **No gate ships. The live-snapshot methodology (replay_live_state
++ path-true harness) is the salvage; the gates are not.** Kwargs reverted from
+the patcher. Harness kept: `live_stuff/tests/exp_alignment_live_gate_path.py`.
+
 Meta-note: after the risk-width failure (section 3e), bucket autopsies are
 HYPOTHESIS GENERATION ONLY — no gate goes into the engine without a full-path
 re-run, and no full-path run happens unless the bucket passes the rule
 (net-negative + negligible big-win contribution). ER failed at the first gate,
-which is the cheap way to die.
+which is the cheap way to die. Live-runmag passed the trade-list rule and still
+failed full-path — the playbook holds.
 
 
 ### 3g. Sequential one-pass causal study — HARNESS ARTIFACT RESOLVED, NUMBERS CERTIFIED (2026-09-20, corrected 2026-09-21)
@@ -492,7 +528,19 @@ vs era-robustness. For live, OOS consistency is the more important property.**
 ### 3k. STRUCTURAL ALIGNMENT — dir match + swing age (2026-09-22) — 💰 BIGGEST FIND OF THE SESSION
 
 **The pre-entry feature autopsy** on champion_multi_sw10 found three monotone
-relationships (all computed causally at entry bar from the forming swing):
+relationships (claimed as "all computed causally at entry bar from the forming swing"):
+
+> ## ⚠ REFUTED 2026-09-23 — LOOKAHEAD via final chain labels
+>
+> Hostile audit (`docs/D3_ALIGNMENT_LOOKAHEAD_AUDIT.md`): the selector reads
+> **final** `dir`/`start_idx` from the **full-history** `swings_ltf` without
+> `confirmed_at_idx <= i`. **353/500** picks confirm after entry; **194/500**
+> dir labels and **353/500** age labels differ vs chains recomputed on
+> `data[:i+1]`. Under entry-knowable labels the 125/125 becomes
+> **271 opposed / +250.7R / WR 30.3%**. Path-true gate (`exp_dir_causal=1`):
+> dirmatch NET **+479.9 → +75.0**; age10 configs → **0 trades**.
+> **Do not ship dirmatch/age10/age25_dirmatch.** Other bot's prefix-identical
+> proof used one date cut + min_bars=35 and compared swing *lists*, not the selector.
 
 | feature | bucket | n | avg R | WR | verdict |
 |---|---|---|---|---|---|
@@ -504,8 +552,7 @@ relationships (all computed causally at entry bar from the forming swing):
 | | 4%+ | 16 | −0.83 | 0.0% | chasing |
 
 **The 125 opposed-direction entries lost 125/125 times (−125R, zero winners in
-3.7 years).** These are entries going long while the forming 15m swing still
-points down (or short while it points up) — fighting live structure.
+3.7 years).** — **descriptive of full-history final labels only; not a live gate.**
 
 Implementation: `exp_require_dir_match`, `exp_max_swing_age`,
 `exp_max_running_mag` (patcher section 3g-6). Full-path results:
@@ -535,6 +582,11 @@ All 6 WF segments positive on every config. Identity gate green. Pins locked.
 (sw20), and OOS split — the same battery as every previous find. The 100%-loser
 claim (125/125) has a strong prior (fighting live structure), but n=125 needs
 the cross-config check.
+
+> **Update 2026-09-23:** temporal/OOS/sw20 all "passed" under the same
+> full-history labels — that battery **cannot** catch this leak. The missing
+> check was **per-entry truncated chain / `confirmed_at_idx <= i`**. See
+> `D3_ALIGNMENT_LOOKAHEAD_AUDIT.md`. Results above are **REFUTED for live use**.
 
 **FILES & HOW TO RUN (for the other bot to verify):**
 

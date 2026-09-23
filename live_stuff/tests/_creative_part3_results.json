@@ -1,0 +1,404 @@
+{
+ "craze_results": [
+  {
+   "label": "fd ct=45",
+   "mode": "fd",
+   "ct": 45,
+   "is_r": 53.3,
+   "oos_r": 57.5,
+   "n": 81,
+   "is_n": 40,
+   "oos_n": 41
+  },
+  {
+   "label": "fd ct=50",
+   "mode": "fd",
+   "ct": 50,
+   "is_r": 107.0,
+   "oos_r": 75.2,
+   "n": 82,
+   "is_n": 40,
+   "oos_n": 42
+  },
+  {
+   "label": "fd ct=55",
+   "mode": "fd",
+   "ct": 55,
+   "is_r": 153.1,
+   "oos_r": 73.3,
+   "n": 91,
+   "is_n": 50,
+   "oos_n": 41
+  },
+  {
+   "label": "fd ct=58",
+   "mode": "fd",
+   "ct": 58,
+   "is_r": 142.9,
+   "oos_r": 67.7,
+   "n": 91,
+   "is_n": 49,
+   "oos_n": 42
+  },
+  {
+   "label": "fd ct=61",
+   "mode": "fd",
+   "ct": 61,
+   "is_r": 141.9,
+   "oos_r": 69.4,
+   "n": 93,
+   "is_n": 50,
+   "oos_n": 43
+  },
+  {
+   "label": "fd ct=65",
+   "mode": "fd",
+   "ct": 65,
+   "is_r": 142.9,
+   "oos_r": 61.0,
+   "n": 90,
+   "is_n": 49,
+   "oos_n": 41
+  },
+  {
+   "label": "fd ct=70",
+   "mode": "fd",
+   "ct": 70,
+   "is_r": 142.9,
+   "oos_r": 63.7,
+   "n": 91,
+   "is_n": 49,
+   "oos_n": 42
+  },
+  {
+   "label": "entropy ct=45",
+   "mode": "entropy",
+   "ct": 45,
+   "is_r": 141.9,
+   "oos_r": 64.7,
+   "n": 91,
+   "is_n": 50,
+   "oos_n": 41
+  },
+  {
+   "label": "entropy ct=50",
+   "mode": "entropy",
+   "ct": 50,
+   "is_r": 154.1,
+   "oos_r": 65.4,
+   "n": 96,
+   "is_n": 53,
+   "oos_n": 43
+  },
+  {
+   "label": "entropy ct=55",
+   "mode": "entropy",
+   "ct": 55,
+   "is_r": 110.3,
+   "oos_r": 66.4,
+   "n": 90,
+   "is_n": 48,
+   "oos_n": 42
+  },
+  {
+   "label": "entropy ct=58",
+   "mode": "entropy",
+   "ct": 58,
+   "is_r": 116.7,
+   "oos_r": 68.4,
+   "n": 88,
+   "is_n": 48,
+   "oos_n": 40
+  },
+  {
+   "label": "entropy ct=61",
+   "mode": "entropy",
+   "ct": 61,
+   "is_r": 107.5,
+   "oos_r": 82.3,
+   "n": 91,
+   "is_n": 50,
+   "oos_n": 41
+  },
+  {
+   "label": "entropy ct=65",
+   "mode": "entropy",
+   "ct": 65,
+   "is_r": 116.0,
+   "oos_r": 81.5,
+   "n": 90,
+   "is_n": 49,
+   "oos_n": 41
+  },
+  {
+   "label": "entropy ct=70",
+   "mode": "entropy",
+   "ct": 70,
+   "is_r": 116.4,
+   "oos_r": 78.7,
+   "n": 88,
+   "is_n": 48,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=45",
+   "mode": "session",
+   "ct": 45,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=50",
+   "mode": "session",
+   "ct": 50,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=55",
+   "mode": "session",
+   "ct": 55,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=58",
+   "mode": "session",
+   "ct": 58,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=61",
+   "mode": "session",
+   "ct": 61,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=65",
+   "mode": "session",
+   "ct": 65,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "session ct=70",
+   "mode": "session",
+   "ct": 70,
+   "is_r": 72.2,
+   "oos_r": 74.7,
+   "n": 89,
+   "is_n": 49,
+   "oos_n": 40
+  },
+  {
+   "label": "fd_inv ct=45",
+   "mode": "fd_inv",
+   "ct": 45,
+   "is_r": 205.0,
+   "oos_r": 50.8,
+   "n": 91,
+   "is_n": 55,
+   "oos_n": 36
+  },
+  {
+   "label": "fd_inv ct=50",
+   "mode": "fd_inv",
+   "ct": 50,
+   "is_r": 150.3,
+   "oos_r": 32.6,
+   "n": 90,
+   "is_n": 56,
+   "oos_n": 34
+  },
+  {
+   "label": "fd_inv ct=55",
+   "mode": "fd_inv",
+   "ct": 55,
+   "is_r": 104.2,
+   "oos_r": 38.4,
+   "n": 81,
+   "is_n": 46,
+   "oos_n": 35
+  },
+  {
+   "label": "fd_inv ct=58",
+   "mode": "fd_inv",
+   "ct": 58,
+   "is_r": 114.4,
+   "oos_r": 41.9,
+   "n": 83,
+   "is_n": 47,
+   "oos_n": 36
+  },
+  {
+   "label": "fd_inv ct=61",
+   "mode": "fd_inv",
+   "ct": 61,
+   "is_r": 115.4,
+   "oos_r": 40.2,
+   "n": 81,
+   "is_n": 46,
+   "oos_n": 35
+  },
+  {
+   "label": "fd_inv ct=65",
+   "mode": "fd_inv",
+   "ct": 65,
+   "is_r": 114.4,
+   "oos_r": 48.7,
+   "n": 84,
+   "is_n": 47,
+   "oos_n": 37
+  },
+  {
+   "label": "fd_inv ct=70",
+   "mode": "fd_inv",
+   "ct": 70,
+   "is_r": 114.4,
+   "oos_r": 45.9,
+   "n": 83,
+   "is_n": 47,
+   "oos_n": 36
+  },
+  {
+   "label": "entropy_inv ct=45",
+   "mode": "entropy_inv",
+   "ct": 45,
+   "is_r": 115.4,
+   "oos_r": 44.9,
+   "n": 83,
+   "is_n": 46,
+   "oos_n": 37
+  },
+  {
+   "label": "entropy_inv ct=50",
+   "mode": "entropy_inv",
+   "ct": 50,
+   "is_r": 103.2,
+   "oos_r": 44.3,
+   "n": 78,
+   "is_n": 43,
+   "oos_n": 35
+  },
+  {
+   "label": "entropy_inv ct=55",
+   "mode": "entropy_inv",
+   "ct": 55,
+   "is_r": 147.0,
+   "oos_r": 43.3,
+   "n": 84,
+   "is_n": 48,
+   "oos_n": 36
+  },
+  {
+   "label": "entropy_inv ct=58",
+   "mode": "entropy_inv",
+   "ct": 58,
+   "is_r": 141.6,
+   "oos_r": 41.3,
+   "n": 85,
+   "is_n": 47,
+   "oos_n": 38
+  },
+  {
+   "label": "entropy_inv ct=61",
+   "mode": "entropy_inv",
+   "ct": 61,
+   "is_r": 150.8,
+   "oos_r": 28.3,
+   "n": 81,
+   "is_n": 45,
+   "oos_n": 36
+  },
+  {
+   "label": "entropy_inv ct=65",
+   "mode": "entropy_inv",
+   "ct": 65,
+   "is_r": 141.3,
+   "oos_r": 29.1,
+   "n": 83,
+   "is_n": 47,
+   "oos_n": 36
+  },
+  {
+   "label": "entropy_inv ct=70",
+   "mode": "entropy_inv",
+   "ct": 70,
+   "is_r": 140.9,
+   "oos_r": 30.9,
+   "n": 86,
+   "is_n": 48,
+   "oos_n": 38
+  },
+  {
+   "label": "union ct=50",
+   "mode": "union",
+   "ct": 50,
+   "is_r": 223.8,
+   "oos_r": 74.5,
+   "n": 139,
+   "is_n": 78,
+   "oos_n": 61
+  },
+  {
+   "label": "union ct=55",
+   "mode": "union",
+   "ct": 55,
+   "is_r": 223.8,
+   "oos_r": 74.5,
+   "n": 139,
+   "is_n": 78,
+   "oos_n": 61
+  },
+  {
+   "label": "union ct=58",
+   "mode": "union",
+   "ct": 58,
+   "is_r": 223.8,
+   "oos_r": 74.5,
+   "n": 139,
+   "is_n": 78,
+   "oos_n": 61
+  },
+  {
+   "label": "union ct=61",
+   "mode": "union",
+   "ct": 61,
+   "is_r": 223.8,
+   "oos_r": 74.5,
+   "n": 139,
+   "is_n": 78,
+   "oos_n": 61
+  },
+  {
+   "label": "union ct=65",
+   "mode": "union",
+   "ct": 65,
+   "is_r": 223.8,
+   "oos_r": 74.5,
+   "n": 139,
+   "is_n": 78,
+   "oos_n": 61
+  }
+ ]
+}

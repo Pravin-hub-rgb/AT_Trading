@@ -92,6 +92,7 @@ def build_module():
     '    exp_causal_sl=0,\n'
     '    exp_trail_max_dist=0.0,\n'
     '    exp_require_dir_match=0,\n'
+    '    exp_dir_causal=0,\n'
     '    exp_max_swing_age=0,\n'
     '    exp_max_running_mag=0.0,\n'
     '    exp_halt_skip_n=1,\n'
@@ -664,6 +665,10 @@ def build_module():
                   '        for _gs in swings_ltf:\n'
                   '            _gsi = int((_gs.get("seg") or {}).get("start_idx", -1))\n'
                   '            if 0 <= _gsi <= i:\n'
+                  '                if exp_dir_causal:\n'
+                  '                    _gconf = int(_gs.get("confirmed_at_idx", -1))\n'
+                  '                    if _gconf < 0 or _gconf > i:\n'
+                  '                        continue\n'
                   '                _gen_dir = 1 if _gs.get("dir") == "up" else -1\n'
                   '                _gen_start = _gsi\n'
                   '        if exp_require_dir_match and _gen_dir != 0 and _gen_dir != direction:\n'
@@ -677,9 +682,9 @@ def build_module():
                   '            else:\n'
                   '                _rmax = max(float(candles_ltf[_k]["high"]) for _k in range(max(0, _gen_start), i + 1))\n'
                   '                _rmag = (_rmax - float(candles_ltf[i]["close"])) / float(candles_ltf[i]["close"]) * 100.0\n'
-                  '            if _rmag > exp_max_running_mag:\n'
-                  '                continue\n'
-                  + t_alg1)
+        '            if _rmag > exp_max_running_mag:\n'
+        '                continue\n'
+        + t_alg1)
     # 3f) D3 risk-width gate: skip entries whose LTF stop is wider than
     #     exp_risk_max_pct % of price (stale/stretched breaks: net-negative
     #     bucket, negligible big-win contribution on the single autopsy).

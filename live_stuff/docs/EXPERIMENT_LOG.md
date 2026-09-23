@@ -47,6 +47,10 @@
 | 2026-09-21 | sw10 (min_bars_1h=10) | Twitchier 1h swings, more signals | +117.4R vs sw20 on multi | All kings |
 | 2026-09-21 | cd=0 with swingpause | Drop cooldown_bars (redundant) | 0.1R difference, cleaner config | wage10_swingpause_wskip_single_sw10 |
 | 2026-09-22 | Causal SL | Replace retroactive swing_start_px with running extreme | −69R IS avg, +9R OOS avg (more honest) | All configs via `exp_causal_sl=1` |
+| 2026-09-23 | F6 ER20 gate (15m) | Cut entries with Kaufman ER20 < 0.10 (or band 0.10–0.50) | DEAD (−180..−202 dIS, −7..−50 dOOS) | On OUR trade-list ER<0.10 is the #2 bucket (+107R, bigWin +163) — opposite of other-bot claim. Path-true kills champion/king/swingpause. §3f ER24-1h + this 15m/20 = both ER roads tombstoned. |
+| 2026-09-23 | F1 runmag ≥2% | Cap running magnitude at 2% of price | DEAD (causal −108 dIS / −32 dOOS) | Raw +18 dIS is the `_gen_start` leak; exp_dir_causal=1 collapses it. Single flat (+0.2/+6.1 = noise). |
+| 2026-09-23 | F7 stop width ≥2% | exp_risk_max_pct=2.0 | DEAD (−24.7 dIS / −48.4 dOOS) | Extends §3e risk-width family (1.0/1.5 already dead). Wide stops are survivors; cutting re-tightens the halt cascade. |
+| 2026-09-23 | Live-snapshot runmag gate | exp_max_live_runmag using replay_live_state start_idx (the last open salvage path) | DEAD (champion 2.0: −24.2 dIS / −36.4 dOOS; 3.0/4.0 = noise; king 3.0 OOS +21 but IS −7.5 fails both-sides rule) | Trade-list bucket was net-neg (2%+: −9.9R bigW=2) but path cascade loses more downstream than the cut saves. Batch+causal ref still −108 dIS. No salvage gate remains open. |
 
 ---
 
