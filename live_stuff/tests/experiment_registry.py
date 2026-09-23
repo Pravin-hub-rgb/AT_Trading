@@ -943,6 +943,61 @@ EXPERIMENTS = {
         "pins": {},
     },
 
+    # ===== D3 STRUCTURAL ALIGNMENT (dir match + swing age + running magnitude) =====
+
+    "dirmatch_multi_sw10": {
+        "desc": "king + REQUIRE forming swing direction match — +479.9R / DD 13.8 / WR 38.6%",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_require_dir_match": 1,
+                    "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 389, "net": 479.9, "dd": 13.8},
+    },
+    "age25_multi_sw10": {
+        "desc": "king + max swing age 25 bars",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_max_swing_age": 25,
+                    "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 295, "net": 355.6, "dd": 12.8},
+    },
+    "age25_dirmatch_multi_sw10": {
+        "desc": "king + dir match + age 25 — +386.7R / DD 9.8 / WR 43.8% (BEST quality)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_require_dir_match": 1,
+                    "exp_max_swing_age": 25, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 249, "net": 386.7, "dd": 9.8},
+    },
+    "age10_dirmatch_multi_sw10": {
+        "desc": "king + dir match + age 10 — +455.5R / DD 6.0 / WR 51.7% (MONSTER, 151t)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_require_dir_match": 1,
+                    "exp_max_swing_age": 10, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 151, "net": 455.5, "dd": 6.0},
+    },
+
     # ===== SHIPPED BASELINE (identity gate reference) =====
     # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
     # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is
@@ -1360,6 +1415,8 @@ GROUPS = {
                       "bm05_utcsat_multi_sw10", "bm08_utcsat_multi_sw10",
                       "bm05_swingpause_single_sw10", "bm05_multi_sw20"],
     "dualunion": ["union_multi", "dualunion_multi"],
+    "alignment": ["dirmatch_multi_sw10", "age25_multi_sw10",
+                   "age25_dirmatch_multi_sw10", "age10_dirmatch_multi_sw10"],
     # "skipfirst": DEAD
     # "funding": DEAD (data too sparse, 0 trades filtered)
     "all": None,  # None = run everything except hidden

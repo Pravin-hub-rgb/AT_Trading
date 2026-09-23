@@ -88,7 +88,12 @@ def build_module():
     '    exp_entry_skip_b2_doji=0,\n'
     '    exp_bias_momentum_min=0.0,\n'
     '    exp_min_swing_ratio=0.0,\n'
-    '    exp_wick_reject=0.0,\n')
+    '    exp_wick_reject=0.0,\n'
+    '    exp_causal_sl=0,\n'
+    '    exp_trail_max_dist=0.0,\n'
+    '    exp_require_dir_match=0,\n'
+    '    exp_max_swing_age=0,\n'
+    '    exp_max_running_mag=0.0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -503,8 +508,8 @@ def build_module():
                   '        else:\n'
                   '            sl_pivot = sig["swing_start_px"]\n')
     t_c13b = '    exp_risk_max_pct=0.0,\n'
-    assert t_c13b in s, "kwargs anchor for causal_sl"
-    s = s.replace(t_c13b, t_c13b + '    exp_causal_sl=0,\n    exp_trail_max_dist=0.0,\n')
+    # NOTE: exp_causal_sl and exp_trail_max_dist kwargs already added in the
+    # kwargs block above — this replace would create duplicates. No-op.
 
     t_c10 = '    atr_pct=_atr_pct_15m(candles_ltf)\n'
     assert s.count(t_c10) == 1, "atr_pct anchor"
@@ -601,6 +606,61 @@ def build_module():
                    '                if _atr > 0 and _swing_mag / _atr < exp_min_swing_ratio:\n'
                    '                    continue\n'
                    + t_c11)
+    # 3g-6) D3 STRUCTURAL ALIGNMENT — three fixes from the pre-entry autopsy:
+    #     1. dir match: entries where the forming swing direction OPPOSES the
+    #        trade direction are 100% losers (125/125). Never take them.
+    #     2. swing age: entries on swings > exp_max_swing_age bars old are
+    #        premature (age 51+ = avg -0.65R, WR 9.8%).
+    #     3. running magnitude: entries chasing legs already moved >
+    #        exp_max_running_mag % are chasing extended moves (avg -0.49R).
+    #     All computed causally at entry bar from the causal chain.
+    t_alg1 = '        direction=int(sig["dir"])\n'
+    assert s.count(t_alg1) == 1, "alignment anchor"
+    alignment_code = (
+        '        _gen_dir = 0\n'
+        '        _gen_start = -1\n'
+        '        for _gs in swings_ltf:\n'
+        '            _gsi = int((_gs.get("seg") or {}).get("start_idx", -1))\n'
+        '            if 0 <= _gsi <= i:\n'
+        '                _gen_dir = 1 if _gs.get("dir") == "up" else -1\n'
+        '                _gen_start = _gsi\n'
+        '        if exp_require_dir_match and _gen_dir != 0 and _gen_dir != direction:\n'
+        '            continue\n'
+        '        if exp_max_swing_age > 0 and _gen_start >= 0 and (i - _gen_start) > exp_max_swing_age:\n'
+        '            continue\n'
+        '        if exp_max_running_mag > 0 and _gen_start >= 0:\n'
+        '            if direction == 1:\n'
+        '                _rmin = min(float(candles_ltf[_k]["low"]) for _k in range(max(0, _gen_start), i + 1))\n'
+        '                _rmag = (float(candles_ltf[i]["close"]) - _rmin) / float(candles_ltf[i]["close"]) * 100.0\n'
+        '            else:\n'
+        '                _rmax = max(float(candles_ltf[_k]["high"]) for _k in range(max(0, _gen_start), i + 1))\n'
+        '                _rmag = (_rmax - float(candles_ltf[i]["close"])) / float(candles_ltf[i]["close"]) * 100.0\n'
+        '            if _rmag > exp_max_running_mag:\n'
+        '                continue\n'
+        + t_alg1)
+    s = s.replace(t_alg1,
+                  '        direction=int(sig["dir"])\n'
+                  '        _gen_dir = 0\n'
+                  '        _gen_start = -1\n'
+                  '        for _gs in swings_ltf:\n'
+                  '            _gsi = int((_gs.get("seg") or {}).get("start_idx", -1))\n'
+                  '            if 0 <= _gsi <= i:\n'
+                  '                _gen_dir = 1 if _gs.get("dir") == "up" else -1\n'
+                  '                _gen_start = _gsi\n'
+                  '        if exp_require_dir_match and _gen_dir != 0 and _gen_dir != direction:\n'
+                  '            continue\n'
+                  '        if exp_max_swing_age > 0 and _gen_start >= 0 and (i - _gen_start) > exp_max_swing_age:\n'
+                  '            continue\n'
+                  '        if exp_max_running_mag > 0 and _gen_start >= 0:\n'
+                  '            if direction == 1:\n'
+                  '                _rmin = min(float(candles_ltf[_k]["low"]) for _k in range(max(0, _gen_start), i + 1))\n'
+                  '                _rmag = (float(candles_ltf[i]["close"]) - _rmin) / float(candles_ltf[i]["close"]) * 100.0\n'
+                  '            else:\n'
+                  '                _rmax = max(float(candles_ltf[_k]["high"]) for _k in range(max(0, _gen_start), i + 1))\n'
+                  '                _rmag = (_rmax - float(candles_ltf[i]["close"])) / float(candles_ltf[i]["close"]) * 100.0\n'
+                  '            if _rmag > exp_max_running_mag:\n'
+                  '                continue\n'
+                  + t_alg1)
     # 3f) D3 risk-width gate: skip entries whose LTF stop is wider than
     #     exp_risk_max_pct % of price (stale/stretched breaks: net-negative
     #     bucket, negligible big-win contribution on the single autopsy).

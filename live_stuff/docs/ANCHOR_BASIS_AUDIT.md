@@ -489,6 +489,54 @@ remains bm05_utcsat_multi (+370.6). The two measure different things: batch NET
 vs era-robustness. For live, OOS consistency is the more important property.**
 
 
+### 3k. STRUCTURAL ALIGNMENT — dir match + swing age (2026-09-22) — 💰 BIGGEST FIND OF THE SESSION
+
+**The pre-entry feature autopsy** on champion_multi_sw10 found three monotone
+relationships (all computed causally at entry bar from the forming swing):
+
+| feature | bucket | n | avg R | WR | verdict |
+|---|---|---|---|---|---|
+| forming swing dir vs trade dir | MATCHES | 375 | +1.52 | 40.0% | keep |
+| | **OPPOSES** | **125** | **−1.00** | **0.0%** | **100% LOSERS** |
+| swing age at entry | 0-10 bars | 172 | **+2.72** | 43.6% | keep |
+| | 51+ bars | 112 | −0.65 | **9.8%** | stale |
+| running magnitude | <0.5% | 86 | **+3.51** | 29.1% | keep |
+| | 4%+ | 16 | −0.83 | 0.0% | chasing |
+
+**The 125 opposed-direction entries lost 125/125 times (−125R, zero winners in
+3.7 years).** These are entries going long while the forming 15m swing still
+points down (or short while it points up) — fighting live structure.
+
+Implementation: `exp_require_dir_match`, `exp_max_swing_age`,
+`exp_max_running_mag` (patcher section 3g-6). Full-path results:
+
+| config | n | NET | DD | WR | worst6 | minY | NET-DD |
+|---|---|---|---|---|---|---|---|
+| king (ref) | 500 | +325.8 | 17.8 | 30.0% | +46.2 | +102.2 | 18.3 |
+| **dirmatch only** | **389** | **+479.9** | **13.8** | **38.6%** | +41.8 | **+135.0** | **34.8** |
+| age25 only | 295 | +355.6 | 12.8 | 37.3% | +42.1 | +101.7 | 27.8 |
+| **dirmatch + age25** | 249 | **+386.7** | **9.8** | **43.8%** | **+48.2** | +81.9 | **39.5** |
+| 🔥 **dirmatch + age10** | **151** | **+455.5** | **6.0** | **51.7%** | +38.9 | +98.9 | **75.9** |
+
+Why it survives full-path (unlike per-trade filters): **removing 100%-losers
+cannot cascade into bad states.** The downstream cooldown/halt sequence can only
+improve when a guaranteed loser is removed. This is the first per-trade filter
+that passes the playbook — because it's not a *filter*, it's a *bug fix* (the
+engine should never have been taking counter-swing entries).
+
+**New kings:**
+- **Highest NET: `dirmatch_multi_sw10` = 389t / +479.9R / DD 13.8** (+154R over king)
+- **Best quality: `age25_dirmatch_multi_sw10` = 249t / +386.7R / DD 9.8** (NET-DD 39.5)
+- **Monster: `age10_dirmatch_multi_sw10` = 151t / +455.5R / DD 6.0 / WR 51.7%** (NET-DD 75.9)
+
+All 6 WF segments positive on every config. Identity gate green. Pins locked.
+
+**Validation needed before adoption:** temporal split (per-year), cross-chain
+(sw20), and OOS split — the same battery as every previous find. The 100%-loser
+claim (125/125) has a strong prior (fighting live structure), but n=125 needs
+the cross-config check.
+
+
 ## 4. min_bars_15m = 50 (docs once said 35 — wrong)
 The 15m chain length is the most sensitive knob in the system:
 mb35 -> 437t / +58.3R (collapse) vs mb50 -> 351t / +238.0R (production).
