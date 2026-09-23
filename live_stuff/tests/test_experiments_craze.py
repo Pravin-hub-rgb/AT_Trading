@@ -93,7 +93,9 @@ def build_module():
     '    exp_trail_max_dist=0.0,\n'
     '    exp_require_dir_match=0,\n'
     '    exp_max_swing_age=0,\n'
-    '    exp_max_running_mag=0.0,\n')
+    '    exp_max_running_mag=0.0,\n'
+    '    exp_halt_skip_n=1,\n'
+    '    exp_skip_decisive=0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -301,13 +303,30 @@ def build_module():
     t_c2 = '    last_loss_bar=-999999\n'
     assert s.count(t_c2) == 1, "last_loss_bar"
     s = s.replace(t_c2, t_c2 + '    last_loss_ts=0\n    halt_ts=0\n    _open_count=0\n')
+    # 3d-2b) halt_skip_n: skip N entries after max_consecutive_losses (default 1 = shipped)
+    t_hs_init = '    halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset\n'
+    assert s.count(t_hs_init) == 1, "halt init"
+    s = s.replace(t_hs_init, '    halt_skip_rem=0  # >0: skip this many more entries after N-loss halt\n')
+    t_hs_chk = ('        if halt_skip_next:\n'
+                '            halt_skip_next=False\n'
+                '            consecutive_losses=0\n'
+                '            continue\n')
+    assert s.count(t_hs_chk) == 1, "halt chk"
+    s = s.replace(t_hs_chk,
+                  '        if halt_skip_rem > 0:\n'
+                  '            halt_skip_rem-=1\n'
+                  '            consecutive_losses=0\n'
+                  '            continue\n'
+                  '        if exp_skip_decisive and use=="decisive":\n'
+                  '            continue\n')
     t_c3 = '        if cooldown_bars > 0 and r_multiple < 0:\n            last_loss_bar = exit_idx\n'
     assert s.count(t_c3) == 1, "loss hook"
     s = s.replace(t_c3, t_c3 +
                   '        if r_multiple < 0:\n            last_loss_ts=int(exit_ts)\n')
     t_c3b = '                    halt_skip_next = True  # skip the NEXT entry\n'
     assert s.count(t_c3b) == 1, "halt hook"
-    s = s.replace(t_c3b, t_c3b +
+    s = s.replace(t_c3b,
+                  '                    halt_skip_rem = exp_halt_skip_n  # skip next N entries\n'
                   '                    if exp_skipwin_halt > 0:\n                        halt_ts = int(exit_ts)\n')
     t_c4 = '        direction=int(sig["dir"])\n'
     assert s.count(t_c4) == 1, "walk dir"

@@ -998,6 +998,86 @@ EXPERIMENTS = {
         "pins": {"n": 151, "net": 455.5, "dd": 6.0},
     },
 
+    # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
+
+    "causalsl_multi_sw10": {
+        "desc": "king + causal SL (running extreme, not retroactive pivot)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_causal_sl": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "causalsl_swingpause_single_sw10": {
+        "desc": "swingpause single + causal SL",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_causal_sl": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+    "causalsl_utcsat_multi_sw10": {
+        "desc": "utcsat king + causal SL",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_causal_sl": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {},
+    },
+
+    # ===== D3 ALIGNMENT ON SINGLES =====
+
+    "dirmatch_swingpause_single_sw10": {
+        "desc": "swingpause single + dir match — +288.1R / DD 14.1 / WR 35.5%",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_require_dir_match": 1, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 279, "net": 288.1, "dd": 14.1},
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+        "desc": "swingpause single + dir match + age 10 — 🔥 BEST EVER: +435.7R / DD 5.7 / WR 53.8%",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_swingpause": 1,
+                    "exp_require_dir_match": 1,
+                    "exp_max_swing_age": 10, "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 130, "net": 435.7, "dd": 5.7},
+    },
+    "dirmatch_single_sw10": {
+        "desc": "baseline single (no swingpause) + dir match — +237.7R / DD 15.7",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_require_dir_match": 1,
+                    "window_end": "exit"},
+        "swing": "sw10",
+        "pins": {"n": 292, "net": 237.7, "dd": 15.7},
+    },
+
     # ===== SHIPPED BASELINE (identity gate reference) =====
     # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
     # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is
