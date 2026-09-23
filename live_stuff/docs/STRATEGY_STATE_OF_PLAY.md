@@ -314,21 +314,73 @@ Three new regime modes added to engine (commit ada22f4):
 | entropy ct=61 +filt | +107.5 | +82.3 | 1.31 | PASS |
 | union ct=55 +filt | +223.8 | +74.5 | 3.00 | OVERFIT RISK |
 
-## 10. Checklist Status
+## 10. True OOS Validation (2021-2022) — Dualunion Test
+
+The other bot tested dualunion on the SAME 2023-2026 data (IS/OOS split at 2025-01-01). We have SEPARATE 2021-2022 data in `data/unseen/bybit/` that was never touched during development. This is the true OOS test.
+
+### Test setup
+- IS: 2023-2026 (data/bybit/), 129,715 15m bars
+- True OOS: 2021-2022 (data/unseen/bybit/), 70,058 15m bars
+- Test: `exp_dualunion_true_oos.py` (commit pending)
+
+### True OOS Results (2021-2022)
+
+**Filtered configs (mag3+wknd+bm05):**
+| Config | OOS Net | 2021 | 2022 | IS/OOS Ratio | Verdict |
+|---|---|---|---|---|---|
+| union ct=55 | **+53.7R** | +52.2 | +11.0 | 4.98 | BEST OOS |
+| entropy ct=55 | +38.3R | +24.8 | +19.0 | 3.89 | Most consistent |
+| entropy ct=61 | +31.4R | +23.8 | +12.8 | 5.14 | |
+| dualunion ct=55 | +29.7R | +36.2 | **-1.4** | 5.10 | NEGATIVE 2022! |
+| b2_vs_flip ct=58 | +19.5R | +18.1 | +6.8 | 5.46 | |
+
+**Raw configs (no filters):**
+| Config | OOS Net | 2021 | 2022 | Verdict |
+|---|---|---|---|---|
+| b2_vs_flip ct=58 | **+13.0R** | +1.0 | +37.2 | ONLY positive raw |
+| b2_vs_flip ct=65 | -2.3R | +13.7 | +5.8 | |
+| entropy ct=61 | -12.4R | +1.1 | +11.7 | |
+| union ct=55 | -63.1R | -19.3 | +1.2 | |
+| dualunion ct=55 | -74.2R | -37.8 | -6.7 | |
+
+### Key Findings
+
+1. **Dualunion claim does NOT hold on true OOS:**
+   - dualunion: +29.7R OOS, 2022 is -1.4R (negative)
+   - union (no dual gate): +53.7R OOS — beats dualunion by +24R
+   - The dual gate actually HURT on separate OOS data
+
+2. **Why the discrepancy?** The other bot's "OOS" was still the same 2023-2026 dataset, just split at 2025-01-01. Our 2021-2022 is completely separate.
+
+3. **All filtered configs have IS/OOS ratio > 3.0 on separate OOS.** The engine itself may be somewhat overfit to the 2023-2026 period.
+
+4. **Raw configs mostly fail on 2021-2022.** Only b2_vs_flip ct=58 is positive (+13.0R).
+
+5. **Bug check: PASS.** The dual gate does remove trades on both datasets (57 IS, 22 OOS removed).
+
+### Verdict
+- **Dualunion is NOT the OOS king on separate data.** Union beats it by +24R OOS.
+- **entropy ct=55 is most consistent on true OOS** (both years positive, ratio 3.89).
+- **b2_vs_flip ct=58 raw is the only positive raw config** on 2021-2022.
+- **True OOS validation reveals the engine has era-specific behavior.** 2021-2022 is structurally different from 2023-2026.
+
+## 11. Checklist Status
 
 - [x] Trail ratchet bug fixed (commit ee574f9)
 - [x] mag_ratio filter implemented in patcher
 - [x] IS + OOS validation complete
 - [x] Wick reject tested and rejected (false positive from post-hoc bias)
 - [x] Docs updated with corrected numbers
-- [x] All changes committed (36e843c, a041d33, 4206ffe, d160243, b848556, 6373b6a, 8ac88f8, ada22f4)
+- [x] All changes committed (36e843c, a041d33, 4206ffe, d160243, b848556, 6373b6a, 8ac88f8, ada22f4, a7fa0b9)
 - [x] Mode-level sweep complete — b2_vs_flip_chop ct=58 is best OOS
 - [x] B2 vs FLIP regime decomposition — B2 robust, FLIP curve-fitted
 - [x] 5 new mode ideas tested — union + filters was king
 - [x] dynamic_chop adaptive percentile tested — +49.2R OOS with filters
 - [x] Creative idea sweep — entropy/fd/session modes added to engine
 - [x] Full metrics comparison — entropy ct=61 +filt is new king (+82.3R OOS)
+- [x] True OOS validation (2021-2022) — dualunion claim REFUTED, union wins by +24R
 - [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
 - [ ] Volume data re-fetch (btc_fetch.py modified, refetch script ready)
 - [ ] Test Ideas B (funding rate), A (HMM), C (OI change) — need new data
 - [ ] Test Ideas D (ensemble), E (transition detection), F (GARCH)
+- [ ] Investigate era-specific behavior (why 2021-2022 differs from 2023-2026)
