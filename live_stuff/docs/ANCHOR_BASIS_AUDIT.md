@@ -287,6 +287,29 @@ which is the cheap way to die. Live-runmag passed the trade-list rule and still
 failed full-path — the playbook holds.
 
 
+### 3f-2. Old-engine ports — 5 lineage candidates path-true (2026-09-23)
+
+Five never-tested ideas recovered from the version lineage map (v6 ADX, E5
+session, 4h cousin, v9 conditional cap, v2 flip-break). All wired into the
+craze patcher as default-off kwargs, identity-gated (340t/+225.3 IDENTICAL),
+then run both-sides (IS champion/king/swingpause + OOS 2021-22) via
+`live_stuff/tests/exp_oldengines_path.py`. 4h swings synthesized from 1h
+(ts//14400): IS 8108 bars/392 swings, OOS 4379/240.
+
+| candidate | flag(s) | champion dIS/dOOS | king dIS/dOOS | swingpause dIS/dOOS | verdict |
+|---|---|---|---|---|---|
+| ADX≥20/25/30 (15m) | exp_adx_min | −137..−240 / −48..−113 | −162..−274 / −45..−102 | −60..−120 / +2..+23 | **DEAD** (fails both-sides every base) |
+| only/skip 16-20 UTC | exp_only/skip_hour | −132..−346 / −38..−115 | −157..−346 / −27..−62 | −74..−146 / −10..+33 | **DEAD** (extends curfew/hour-of-day family) |
+| 4h dir confirm | exp_htf4_confirm | −162 / −51 | −194 / −25 | −66 / +29 | **DEAD** (IS always bleeds) |
+| v9 cap 2R→30d | exp_htf_extend_r=2 | −6.2 / −3.1 | −21.3 / +7.7 | −13.9 / +5.3 | **DEAD** (noise, mixed signs) |
+| flip-break (LTF close vs pe) | exp_flip_break | −189 / +18 | −218 / +17 | **+7.6 / +8.3** | MARGINAL on single only; DEAD on multi |
+
+flip-break is the only both-sides pass (swingpause NET +29.6/+16.2) but ~8R/yr
+is below the +30R/yr ship bar; multi starves without FLIP overlaps. Flag KEPT
+for stack research. ADX/session/htf4/v9 kwargs REVERTED (dead = clutter).
+Harness kept: `live_stuff/tests/exp_oldengines_path.py`.
+
+
 ### 3g. Sequential one-pass causal study — HARNESS ARTIFACT RESOLVED, NUMBERS CERTIFIED (2026-09-20, corrected 2026-09-21)
 
 `exp_onepass_cline.py` implements the C10 one-pass spec for champion_multi_sw10:

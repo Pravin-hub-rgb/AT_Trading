@@ -32,6 +32,11 @@
 | 2026-09-21 | Trail tighten (exp_la4) | Tighten trail after MFE (1.5-5R) to 40-60% of peak | DEAD (delta −0.2R best) | All 15 configs flat. Swing trail already optimal. |
 | 2026-09-21 | ATR trail (exp_la9) | Replace swing trail with ATR×k trail (k=1.0-3.0) | DEAD (−43R to −271R) | ALL configs catastrophically negative. Swing trail kills ATR trail. |
 | 2026-09-21 | Volatility SL buffer | sl_buf_atr is already ATR-scaled; ext_stop_r swept in kingsweep | DEAD (already optimal) | sl_buf_atr=0.01×ATR14 IS volatility-adjusted. ext_stop_r=3.0 confirmed optimal. |
+| 2026-09-23 | ADX>25 on 15m LTF | exp_adx_min 20/25/30 on champion/king/swingpause, IS+OOS | DEAD (champion dIS −137..−240 / dOOS −48..−113; swingpause OOS +20 but IS −60..−120 fails both-sides) | Old-lane +90.5 was a different trade list. Path-true kills it on every base. |
+| 2026-09-23 | Session blocks 16-20 UTC | exp_only/skip_hour on champion/king/swingpause, IS+OOS | DEAD (only 16-20: dIS −145..−346; skip 16-20: dIS −74..−157; no both-sides pass) | Extends dead hour-of-day/curfew family. Period-level windows destroy coverage. |
+| 2026-09-23 | 4h swing confirmation | exp_htf4_confirm with 4h swings synthesized from 1h (IS 392 / OOS 240 swings) | DEAD (dIS −66..−194 all bases; swingpause OOS +28.5 but IS −65.5) | 4h dir gate too coarse — cuts winners with the chop. 1h-momentum cousin already DEAD (−55R). |
+| 2026-09-23 | v9 conditional HTF cap | exp_htf_extend_r=2.0 → v9 extend 16d→30d when HTF ≥2R at cut | DEAD (noise: champion dIS −6.2/dOOS −3.1; king −21.3/+7.7; swingpause −13.9/+5.3 — mixed signs) | Confirms old +0.5R noise. Never meaningful on v18 windows. |
+| 2026-09-23 | htf_ltf v2 flip-break | exp_flip_break: LTF close must break HTF entry pe in direction | MARGINAL on single only (swingpause dIS +7.6 / dOOS +8.3, NET +29.6/+16.2 both-sides); DEAD on multi (champion dIS −189, king dIS −218) | Only both-sides pass of the 5, but ~8R/yr — below +30R/yr ship bar. Multi needs FLIP overlaps; continuation-only entries starve it. Keep flag for stack research; does not ship alone. |
 
 ---
 
@@ -58,16 +63,21 @@
 
 | Priority | Idea | Theory | Status |
 |---|---|---|---|
-| HIGH | LTF regime filter (chop-band) | Skip entries when 15m is choppy (ATR5/ATR20 ratio, chop band) | Other bot testing |
 | HIGH | Rebuild backtester with PersistentSwingEngine | Fix swing engine mismatch (Issue #1 on audit checklist) | CRITICAL for live |
-| MED | Trailing stop acceleration | After X bars in profit, tighten trail faster | Not tested |
-| MED | Volatility-adjusted SL buffer | Wider SL in high-vol, tighter in low-vol | Not tested |
-| MED | Session-based trading | Only trade during high-volume hours (not hour-of-day filter, but session blocks) | Not tested |
-| LOW | Funding rate filter | Skip when funding is extreme (>0.1%) | Not tested |
-| LOW | Open interest filter | Skip when OI is spiking (distribution phase) | Not tested |
-| LOW | Correlation filter | Skip when BTC is highly correlated with equities | Not tested |
-| LOW | 4h confirmation | Require 4h swing agreement before entry | Not tested |
+| MED | Open interest filter | Skip when OI is spiking (distribution phase) | Not tested |
+| MED | Correlation filter | Skip when BTC is highly correlated with equities | Not tested |
 | LOW | Chart visualization | Plot HTF windows on chart for visual inspection | Not tested |
+
+**Old-engine ports 2026-09-23** (5 candidates from v6/v7-v10/E5/v2 lineage): all path-true tested
+IS+OOS on champion/king/swingpause — see DEAD rows above. flip-break MARGINAL on single only
+(both-sides +7.6/+8.3, below ship bar); ADX, session, 4h-confirm, v9-cap all DEAD.
+Harness: `live_stuff/tests/exp_oldengines_path.py`.
+
+**Stale rows removed 2026-09-23** (already DEAD, contradicted rows above):
+- LTF regime chop-band — REJECTED (ANCHOR_BASIS_AUDIT §3h; sw20 −33.7R)
+- Trailing stop acceleration — DEAD (exp_la4 −0.2R best; trail-tighten family)
+- Volatility-adjusted SL buffer — DEAD (sl_buf_atr already ATR-scaled)
+- Funding rate filter — DEAD (0 trades filtered)
 
 ---
 

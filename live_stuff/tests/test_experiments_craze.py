@@ -96,7 +96,8 @@ def build_module():
     '    exp_max_swing_age=0,\n'
     '    exp_max_running_mag=0.0,\n'
     '    exp_halt_skip_n=1,\n'
-    '    exp_skip_decisive=0,\n')
+    '    exp_skip_decisive=0,\n'
+    '    exp_flip_break=0,\n')
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -226,6 +227,8 @@ def build_module():
     t6e = '    chop=_chop_series_1h(candles_htf, lb=14)\n'
     assert s.count(t6e) == 1, "chop lb call"
     s = s.replace(t6e, '    chop=_chop_series_1h(candles_htf, lb=(exp31_lb or 14))\n')
+    # 3i) Old-engine ports 2026-09-23: only exp_flip_break KEPT (marginal
+    # both-sides on swingpause). ADX/session/htf4/v9 REVERTED (dead = clutter).
     # 3g) N5/N6 wage gate: skip entries inside HTF windows younger than
     #     exp_wage_h hours. Age = signal-bar ts - RAW window start ts (the
     #     window's flip/b2 1h entry-bar OPEN; no +2700 shift). This is the
@@ -282,7 +285,12 @@ def build_module():
                   '                continue\n')
     t6h = '        filtered.append((sig, use))\n'
     assert s.count(t6h) == 1, "filtered append"
-    s = s.replace(t6h, t6h +
+    s = s.replace(t6h,
+                  '        if exp_flip_break:\n'
+                  '            _cl_fb=float(candles_ltf[bar]["close"])\n'
+                  '            if int(sig["dir"])==1 and not (_cl_fb > pe): continue\n'
+                  '            if int(sig["dir"])==-1 and not (_cl_fb < pe): continue\n'
+                  + t6h +
                   '    filtered.sort(key=lambda z: ltf_store.pos(z[0]["bar"]))\n')
     # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
