@@ -1,0 +1,2872 @@
+{
+  "stage": 65,
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "is",
+  "purpose": "direct stacking of shipped loss-halt and completed-win N3 policies",
+  "policies": {
+    "pure_v18_single": {
+      "shipped_max_consecutive_losses": 3,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 352,
+              "sum_r": 188.063,
+              "avg_r": 0.53427,
+              "wins": 91,
+              "losses": 261,
+              "wr_pct": 25.852,
+              "avg_win": 4.636,
+              "avg_loss": -0.8959,
+              "payoff": 5.175,
+              "pf": 1.8043,
+              "max_dd": 27.906,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 4.512485,
+              "runners_3r": 35,
+              "runners_5r": 24,
+              "runners_10r": 10
+            },
+            "net": {
+              "n": 352,
+              "sum_r": 101.0798,
+              "avg_r": 0.287159,
+              "wins": 82,
+              "losses": 270,
+              "wr_pct": 23.295,
+              "avg_win": 4.8557,
+              "avg_loss": -1.1003,
+              "payoff": 4.413,
+              "pf": 1.3402,
+              "max_dd": 38.6431,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.106484,
+              "std": 4.434018,
+              "runners_3r": 34,
+              "runners_5r": 23,
+              "runners_10r": 10
+            },
+            "cost_and_funding": 86.9832,
+            "yearly_gross": {
+              "2023": 27.662999999999997,
+              "2024": 58.08800000000001,
+              "2025": 39.29300000000001,
+              "2026": 63.01900000000001
+            },
+            "yearly_net": {
+              "2023": 8.030992543722018,
+              "2024": 33.73849974740781,
+              "2025": 15.211815139863495,
+              "2026": 44.09853504640771
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 347,
+              "sum_r": 184.015,
+              "avg_r": 0.530303,
+              "wins": 87,
+              "losses": 260,
+              "wr_pct": 25.072,
+              "avg_win": 4.7912,
+              "avg_loss": -0.8955,
+              "payoff": 5.3506,
+              "pf": 1.7904,
+              "max_dd": 27.906,
+              "max_loss_streak": 16,
+              "max_win_streak": 4,
+              "median": -0.997,
+              "std": 4.541744,
+              "runners_3r": 34,
+              "runners_5r": 24,
+              "runners_10r": 10
+            },
+            "net": {
+              "n": 347,
+              "sum_r": 98.057,
+              "avg_r": 0.282585,
+              "wins": 77,
+              "losses": 270,
+              "wr_pct": 22.19,
+              "avg_win": 5.118,
+              "avg_loss": -1.0964,
+              "payoff": 4.668,
+              "pf": 1.3312,
+              "max_dd": 38.6431,
+              "max_loss_streak": 16,
+              "max_win_streak": 4,
+              "median": -1.107839,
+              "std": 4.462795,
+              "runners_3r": 33,
+              "runners_5r": 23,
+              "runners_10r": 10
+            },
+            "cost_and_funding": 85.958,
+            "yearly_gross": {
+              "2023": 27.848999999999997,
+              "2024": 57.48800000000001,
+              "2025": 38.92900000000001,
+              "2026": 59.749000000000024
+            },
+            "yearly_net": {
+              "2023": 8.675762799633052,
+              "2024": 33.31706535867566,
+              "2025": 15.015987063008973,
+              "2026": 41.048167448398445
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 4,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 352,
+              "sum_r": 188.063,
+              "avg_r": 0.53427,
+              "wins": 91,
+              "losses": 261,
+              "wr_pct": 25.852,
+              "avg_win": 4.636,
+              "avg_loss": -0.8959,
+              "payoff": 5.175,
+              "pf": 1.8043,
+              "max_dd": 27.906,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 4.512485,
+              "runners_3r": 35,
+              "runners_5r": 24,
+              "runners_10r": 10
+            },
+            "net": {
+              "n": 352,
+              "sum_r": 101.0798,
+              "avg_r": 0.287159,
+              "wins": 82,
+              "losses": 270,
+              "wr_pct": 23.295,
+              "avg_win": 4.8557,
+              "avg_loss": -1.1003,
+              "payoff": 4.413,
+              "pf": 1.3402,
+              "max_dd": 38.6431,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.106484,
+              "std": 4.434018,
+              "runners_3r": 34,
+              "runners_5r": 23,
+              "runners_10r": 10
+            },
+            "cost_and_funding": 86.9832,
+            "yearly_gross": {
+              "2023": 27.662999999999997,
+              "2024": 58.08800000000001,
+              "2025": 39.29300000000001,
+              "2026": 63.01900000000001
+            },
+            "yearly_net": {
+              "2023": 8.030992543722018,
+              "2024": 33.73849974740781,
+              "2025": 15.211815139863495,
+              "2026": 44.09853504640771
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 388,
+              "sum_r": 256.411,
+              "avg_r": 0.660853,
+              "wins": 100,
+              "losses": 288,
+              "wr_pct": 25.773,
+              "avg_win": 5.1639,
+              "avg_loss": -0.9027,
+              "payoff": 5.7205,
+              "pf": 1.9863,
+              "max_dd": 27.758,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.234846,
+              "runners_3r": 38,
+              "runners_5r": 28,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 388,
+              "sum_r": 162.486,
+              "avg_r": 0.418778,
+              "wins": 90,
+              "losses": 298,
+              "wr_pct": 23.196,
+              "avg_win": 5.4275,
+              "avg_loss": -1.0939,
+              "payoff": 4.9615,
+              "pf": 1.4984,
+              "max_dd": 39.4228,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.109031,
+              "std": 5.112821,
+              "runners_3r": 37,
+              "runners_5r": 27,
+              "runners_10r": 13
+            },
+            "cost_and_funding": 93.925,
+            "yearly_gross": {
+              "2023": 46.699000000000005,
+              "2024": 114.30799999999999,
+              "2025": 34.26400000000001,
+              "2026": 61.14000000000003
+            },
+            "yearly_net": {
+              "2023": 25.108951277544893,
+              "2024": 86.87198255585402,
+              "2025": 8.84639684019438,
+              "2026": 41.65869498402866
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 384,
+              "sum_r": 253.174,
+              "avg_r": 0.659307,
+              "wins": 97,
+              "losses": 287,
+              "wr_pct": 25.26,
+              "avg_win": 5.2799,
+              "avg_loss": -0.9024,
+              "payoff": 5.8512,
+              "pf": 1.9776,
+              "max_dd": 27.758,
+              "max_loss_streak": 15,
+              "max_win_streak": 4,
+              "median": -0.997,
+              "std": 5.259652,
+              "runners_3r": 37,
+              "runners_5r": 28,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 384,
+              "sum_r": 159.9462,
+              "avg_r": 0.416526,
+              "wins": 87,
+              "losses": 297,
+              "wr_pct": 22.656,
+              "avg_win": 5.5725,
+              "avg_loss": -1.0938,
+              "payoff": 5.0946,
+              "pf": 1.4924,
+              "max_dd": 39.4228,
+              "max_loss_streak": 15,
+              "max_win_streak": 4,
+              "median": -1.110547,
+              "std": 5.137007,
+              "runners_3r": 36,
+              "runners_5r": 27,
+              "runners_10r": 13
+            },
+            "cost_and_funding": 93.2278,
+            "yearly_gross": {
+              "2023": 47.696000000000005,
+              "2024": 113.708,
+              "2025": 33.900000000000006,
+              "2026": 57.87000000000002
+            },
+            "yearly_net": {
+              "2023": 26.23670676995538,
+              "2024": 86.45054816712188,
+              "2025": 8.650568763339862,
+              "2026": 38.60832738601938
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 4,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 388,
+              "sum_r": 256.411,
+              "avg_r": 0.660853,
+              "wins": 100,
+              "losses": 288,
+              "wr_pct": 25.773,
+              "avg_win": 5.1639,
+              "avg_loss": -0.9027,
+              "payoff": 5.7205,
+              "pf": 1.9863,
+              "max_dd": 27.758,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.234846,
+              "runners_3r": 38,
+              "runners_5r": 28,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 388,
+              "sum_r": 162.486,
+              "avg_r": 0.418778,
+              "wins": 90,
+              "losses": 298,
+              "wr_pct": 23.196,
+              "avg_win": 5.4275,
+              "avg_loss": -1.0939,
+              "payoff": 4.9615,
+              "pf": 1.4984,
+              "max_dd": 39.4228,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.109031,
+              "std": 5.112821,
+              "runners_3r": 37,
+              "runners_5r": 27,
+              "runners_10r": 13
+            },
+            "cost_and_funding": 93.925,
+            "yearly_gross": {
+              "2023": 46.699000000000005,
+              "2024": 114.30799999999999,
+              "2025": 34.26400000000001,
+              "2026": 61.14000000000003
+            },
+            "yearly_net": {
+              "2023": 25.108951277544893,
+              "2024": 86.87198255585402,
+              "2025": 8.84639684019438,
+              "2026": 41.65869498402866
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    },
+    "pure_v18_multi": {
+      "shipped_max_consecutive_losses": 3,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 419,
+              "sum_r": 380.032,
+              "avg_r": 0.906998,
+              "wins": 124,
+              "losses": 295,
+              "wr_pct": 29.594,
+              "avg_win": 5.2055,
+              "avg_loss": -0.8998,
+              "payoff": 5.7849,
+              "pf": 2.4316,
+              "max_dd": 26.986,
+              "max_loss_streak": 16,
+              "max_win_streak": 6,
+              "median": -0.997,
+              "std": 5.303041,
+              "runners_3r": 55,
+              "runners_5r": 40,
+              "runners_10r": 14
+            },
+            "net": {
+              "n": 419,
+              "sum_r": 272.5411,
+              "avg_r": 0.650456,
+              "wins": 112,
+              "losses": 307,
+              "wr_pct": 26.73,
+              "avg_win": 5.4594,
+              "avg_loss": -1.104,
+              "payoff": 4.9453,
+              "pf": 1.8042,
+              "max_dd": 36.3119,
+              "max_loss_streak": 16,
+              "max_win_streak": 6,
+              "median": -1.099444,
+              "std": 5.218342,
+              "runners_3r": 53,
+              "runners_5r": 37,
+              "runners_10r": 14
+            },
+            "cost_and_funding": 107.4909,
+            "yearly_gross": {
+              "2023": 104.74699999999999,
+              "2024": 76.629,
+              "2025": 97.171,
+              "2026": 101.485
+            },
+            "yearly_net": {
+              "2023": 82.28729083103457,
+              "2024": 47.27766735152076,
+              "2025": 63.54951793260498,
+              "2026": 79.42658738873284
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 399,
+              "sum_r": 346.62,
+              "avg_r": 0.868722,
+              "wins": 120,
+              "losses": 279,
+              "wr_pct": 30.075,
+              "avg_win": 4.9759,
+              "avg_loss": -0.8978,
+              "payoff": 5.5423,
+              "pf": 2.3838,
+              "max_dd": 26.986,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.289907,
+              "runners_3r": 50,
+              "runners_5r": 37,
+              "runners_10r": 11
+            },
+            "net": {
+              "n": 399,
+              "sum_r": 244.7812,
+              "avg_r": 0.613487,
+              "wins": 107,
+              "losses": 292,
+              "wr_pct": 26.817,
+              "avg_win": 5.2816,
+              "avg_loss": -1.0971,
+              "payoff": 4.8142,
+              "pf": 1.7641,
+              "max_dd": 36.3119,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.097466,
+              "std": 5.206122,
+              "runners_3r": 49,
+              "runners_5r": 34,
+              "runners_10r": 11
+            },
+            "cost_and_funding": 101.8388,
+            "yearly_gross": {
+              "2023": 87.41099999999999,
+              "2024": 82.14699999999999,
+              "2025": 96.75100000000002,
+              "2026": 80.31099999999999
+            },
+            "yearly_net": {
+              "2023": 66.85194343465528,
+              "2024": 53.68767859736154,
+              "2025": 64.43215975277792,
+              "2026": 59.80939651348747
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 12,
+            "blocked_entries": 26,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 417,
+              "sum_r": 376.303,
+              "avg_r": 0.902405,
+              "wins": 123,
+              "losses": 294,
+              "wr_pct": 29.496,
+              "avg_win": 5.2094,
+              "avg_loss": -0.8995,
+              "payoff": 5.7914,
+              "pf": 2.4229,
+              "max_dd": 26.986,
+              "max_loss_streak": 16,
+              "max_win_streak": 6,
+              "median": -0.997,
+              "std": 5.311624,
+              "runners_3r": 54,
+              "runners_5r": 40,
+              "runners_10r": 14
+            },
+            "net": {
+              "n": 417,
+              "sum_r": 269.1397,
+              "avg_r": 0.645419,
+              "wins": 111,
+              "losses": 306,
+              "wr_pct": 26.619,
+              "avg_win": 5.4677,
+              "avg_loss": -1.1038,
+              "payoff": 4.9533,
+              "pf": 1.7968,
+              "max_dd": 36.3119,
+              "max_loss_streak": 16,
+              "max_win_streak": 6,
+              "median": -1.099444,
+              "std": 5.226636,
+              "runners_3r": 52,
+              "runners_5r": 37,
+              "runners_10r": 14
+            },
+            "cost_and_funding": 107.1633,
+            "yearly_gross": {
+              "2023": 104.74699999999999,
+              "2024": 76.629,
+              "2025": 93.44200000000001,
+              "2026": 101.485
+            },
+            "yearly_net": {
+              "2023": 82.28729083103457,
+              "2024": 47.27766735152076,
+              "2025": 60.1481371899434,
+              "2026": 79.42658738873284
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 1,
+            "blocked_entries": 2,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 479,
+              "sum_r": 464.332,
+              "avg_r": 0.969378,
+              "wins": 142,
+              "losses": 337,
+              "wr_pct": 29.645,
+              "avg_win": 5.4121,
+              "avg_loss": -0.9026,
+              "payoff": 5.9959,
+              "pf": 2.5265,
+              "max_dd": 19.476,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -0.997,
+              "std": 5.695776,
+              "runners_3r": 61,
+              "runners_5r": 45,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 479,
+              "sum_r": 343.8056,
+              "avg_r": 0.717757,
+              "wins": 128,
+              "losses": 351,
+              "wr_pct": 26.722,
+              "avg_win": 5.6921,
+              "avg_loss": -1.0963,
+              "payoff": 5.1923,
+              "pf": 1.8935,
+              "max_dd": 31.512,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -1.097466,
+              "std": 5.582566,
+              "runners_3r": 59,
+              "runners_5r": 42,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 120.5264,
+            "yearly_gross": {
+              "2023": 123.45,
+              "2024": 127.53200000000001,
+              "2025": 93.01100000000001,
+              "2026": 120.339
+            },
+            "yearly_net": {
+              "2023": 97.22666553052784,
+              "2024": 94.49567872137938,
+              "2025": 57.37282434090488,
+              "2026": 94.71042790798963
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 452,
+              "sum_r": 458.189,
+              "avg_r": 1.013692,
+              "wins": 137,
+              "losses": 315,
+              "wr_pct": 30.31,
+              "avg_win": 5.4156,
+              "avg_loss": -0.9008,
+              "payoff": 6.0121,
+              "pf": 2.6148,
+              "max_dd": 19.172,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.803786,
+              "runners_3r": 58,
+              "runners_5r": 43,
+              "runners_10r": 16
+            },
+            "net": {
+              "n": 452,
+              "sum_r": 343.5786,
+              "avg_r": 0.76013,
+              "wins": 124,
+              "losses": 328,
+              "wr_pct": 27.434,
+              "avg_win": 5.6739,
+              "avg_loss": -1.0975,
+              "payoff": 5.1698,
+              "pf": 1.9544,
+              "max_dd": 30.2559,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.094595,
+              "std": 5.689939,
+              "runners_3r": 57,
+              "runners_5r": 40,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 114.6104,
+            "yearly_gross": {
+              "2023": 127.726,
+              "2024": 130.52700000000002,
+              "2025": 98.29700000000001,
+              "2026": 101.639
+            },
+            "yearly_net": {
+              "2023": 103.40607891464933,
+              "2024": 98.27572686600651,
+              "2025": 63.92346775122951,
+              "2026": 77.97333903683159
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 12,
+            "blocked_entries": 30,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 477,
+              "sum_r": 466.33,
+              "avg_r": 0.977631,
+              "wins": 142,
+              "losses": 335,
+              "wr_pct": 29.769,
+              "avg_win": 5.4121,
+              "avg_loss": -0.9021,
+              "payoff": 5.9998,
+              "pf": 2.5432,
+              "max_dd": 19.476,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -0.997,
+              "std": 5.706276,
+              "runners_3r": 61,
+              "runners_5r": 45,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 477,
+              "sum_r": 346.026,
+              "avg_r": 0.725421,
+              "wins": 128,
+              "losses": 349,
+              "wr_pct": 26.834,
+              "avg_win": 5.6921,
+              "avg_loss": -1.0962,
+              "payoff": 5.1927,
+              "pf": 1.9045,
+              "max_dd": 31.512,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -1.097466,
+              "std": 5.592999,
+              "runners_3r": 59,
+              "runners_5r": 42,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 120.304,
+            "yearly_gross": {
+              "2023": 123.45,
+              "2024": 127.53200000000001,
+              "2025": 95.00899999999999,
+              "2026": 120.339
+            },
+            "yearly_net": {
+              "2023": 97.22666553052784,
+              "2024": 94.49567872137938,
+              "2025": 59.59324286307606,
+              "2026": 94.71042790798963
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 1,
+            "blocked_entries": 2,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    },
+    "literal_v18_single": {
+      "shipped_max_consecutive_losses": 5,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 356,
+              "sum_r": 277.094,
+              "avg_r": 0.778354,
+              "wins": 98,
+              "losses": 258,
+              "wr_pct": 27.528,
+              "avg_win": 5.1287,
+              "avg_loss": -0.8741,
+              "payoff": 5.8674,
+              "pf": 2.2287,
+              "max_dd": 17.495,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.93,
+              "std": 5.399032,
+              "runners_3r": 36,
+              "runners_5r": 27,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 356,
+              "sum_r": 196.8052,
+              "avg_r": 0.552824,
+              "wins": 87,
+              "losses": 269,
+              "wr_pct": 24.438,
+              "avg_win": 5.4552,
+              "avg_loss": -1.0327,
+              "payoff": 5.2824,
+              "pf": 1.7084,
+              "max_dd": 22.1746,
+              "max_loss_streak": 14,
+              "max_win_streak": 5,
+              "median": -1.044849,
+              "std": 5.235639,
+              "runners_3r": 35,
+              "runners_5r": 27,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 80.2888,
+            "yearly_gross": {
+              "2023": 32.998000000000005,
+              "2024": 79.73899999999999,
+              "2025": 78.213,
+              "2026": 86.144
+            },
+            "yearly_net": {
+              "2023": 14.197438895142412,
+              "2024": 58.14295004024625,
+              "2025": 54.814418036646586,
+              "2026": 69.65043808034363
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 352,
+              "sum_r": 288.522,
+              "avg_r": 0.819665,
+              "wins": 97,
+              "losses": 255,
+              "wr_pct": 27.557,
+              "avg_win": 5.2704,
+              "avg_loss": -0.8734,
+              "payoff": 6.0346,
+              "pf": 2.2955,
+              "max_dd": 15.917,
+              "max_loss_streak": 13,
+              "max_win_streak": 4,
+              "median": -0.93,
+              "std": 5.441469,
+              "runners_3r": 38,
+              "runners_5r": 29,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 352,
+              "sum_r": 208.8423,
+              "avg_r": 0.593302,
+              "wins": 86,
+              "losses": 266,
+              "wr_pct": 24.432,
+              "avg_win": 5.6186,
+              "avg_loss": -1.0314,
+              "payoff": 5.4475,
+              "pf": 1.7612,
+              "max_dd": 22.1746,
+              "max_loss_streak": 13,
+              "max_win_streak": 4,
+              "median": -1.045497,
+              "std": 5.277228,
+              "runners_3r": 37,
+              "runners_5r": 29,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 79.6797,
+            "yearly_gross": {
+              "2023": 36.114000000000004,
+              "2024": 91.36700000000003,
+              "2025": 77.874,
+              "2026": 83.16700000000002
+            },
+            "yearly_net": {
+              "2023": 18.093147297428967,
+              "2024": 69.24370105402454,
+              "2025": 54.63214071981592,
+              "2026": 66.87334049327617
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 5,
+            "blocked_entries": 5,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 356,
+              "sum_r": 277.094,
+              "avg_r": 0.778354,
+              "wins": 98,
+              "losses": 258,
+              "wr_pct": 27.528,
+              "avg_win": 5.1287,
+              "avg_loss": -0.8741,
+              "payoff": 5.8674,
+              "pf": 2.2287,
+              "max_dd": 17.495,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.93,
+              "std": 5.399032,
+              "runners_3r": 36,
+              "runners_5r": 27,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 356,
+              "sum_r": 196.8052,
+              "avg_r": 0.552824,
+              "wins": 87,
+              "losses": 269,
+              "wr_pct": 24.438,
+              "avg_win": 5.4552,
+              "avg_loss": -1.0327,
+              "payoff": 5.2824,
+              "pf": 1.7084,
+              "max_dd": 22.1746,
+              "max_loss_streak": 14,
+              "max_win_streak": 5,
+              "median": -1.044849,
+              "std": 5.235639,
+              "runners_3r": 35,
+              "runners_5r": 27,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 80.2888,
+            "yearly_gross": {
+              "2023": 32.998000000000005,
+              "2024": 79.73899999999999,
+              "2025": 78.213,
+              "2026": 86.144
+            },
+            "yearly_net": {
+              "2023": 14.197438895142412,
+              "2024": 58.14295004024625,
+              "2025": 54.814418036646586,
+              "2026": 69.65043808034363
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 372,
+              "sum_r": 259.217,
+              "avg_r": 0.69682,
+              "wins": 102,
+              "losses": 270,
+              "wr_pct": 27.419,
+              "avg_win": 4.8439,
+              "avg_loss": -0.8698,
+              "payoff": 5.5687,
+              "pf": 2.1037,
+              "max_dd": 17.271,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.931,
+              "std": 4.824261,
+              "runners_3r": 39,
+              "runners_5r": 28,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 372,
+              "sum_r": 175.7041,
+              "avg_r": 0.472323,
+              "wins": 92,
+              "losses": 280,
+              "wr_pct": 24.731,
+              "avg_win": 5.0487,
+              "avg_loss": -1.0313,
+              "payoff": 4.8953,
+              "pf": 1.6084,
+              "max_dd": 24.1309,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.044183,
+              "std": 4.660565,
+              "runners_3r": 38,
+              "runners_5r": 28,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 83.5129,
+            "yearly_gross": {
+              "2023": 40.33800000000001,
+              "2024": 85.88200000000003,
+              "2025": 75.67499999999998,
+              "2026": 57.32200000000001
+            },
+            "yearly_net": {
+              "2023": 20.53348559364303,
+              "2024": 62.98622526693197,
+              "2025": 51.09619421666238,
+              "2026": 41.088152884283204
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 368,
+              "sum_r": 256.291,
+              "avg_r": 0.696443,
+              "wins": 99,
+              "losses": 269,
+              "wr_pct": 26.902,
+              "avg_win": 4.9517,
+              "avg_loss": -0.8696,
+              "payoff": 5.6942,
+              "pf": 2.0956,
+              "max_dd": 16.337,
+              "max_loss_streak": 15,
+              "max_win_streak": 4,
+              "median": -0.932,
+              "std": 4.848164,
+              "runners_3r": 39,
+              "runners_5r": 28,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 368,
+              "sum_r": 173.419,
+              "avg_r": 0.471247,
+              "wins": 89,
+              "losses": 279,
+              "wr_pct": 24.185,
+              "avg_win": 5.1813,
+              "avg_loss": -1.0312,
+              "payoff": 5.0243,
+              "pf": 1.6027,
+              "max_dd": 24.1309,
+              "max_loss_streak": 15,
+              "max_win_streak": 4,
+              "median": -1.044849,
+              "std": 4.68358,
+              "runners_3r": 38,
+              "runners_5r": 28,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 82.872,
+            "yearly_gross": {
+              "2023": 41.272000000000006,
+              "2024": 85.33800000000004,
+              "2025": 75.33599999999998,
+              "2026": 54.345000000000006
+            },
+            "yearly_net": {
+              "2023": 21.589944705578,
+              "2024": 62.60413200864805,
+              "2025": 50.91391689983172,
+              "2026": 38.31105529721575
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 4,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 372,
+              "sum_r": 259.217,
+              "avg_r": 0.69682,
+              "wins": 102,
+              "losses": 270,
+              "wr_pct": 27.419,
+              "avg_win": 4.8439,
+              "avg_loss": -0.8698,
+              "payoff": 5.5687,
+              "pf": 2.1037,
+              "max_dd": 17.271,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.931,
+              "std": 4.824261,
+              "runners_3r": 39,
+              "runners_5r": 28,
+              "runners_10r": 13
+            },
+            "net": {
+              "n": 372,
+              "sum_r": 175.7041,
+              "avg_r": 0.472323,
+              "wins": 92,
+              "losses": 280,
+              "wr_pct": 24.731,
+              "avg_win": 5.0487,
+              "avg_loss": -1.0313,
+              "payoff": 4.8953,
+              "pf": 1.6084,
+              "max_dd": 24.1309,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.044183,
+              "std": 4.660565,
+              "runners_3r": 38,
+              "runners_5r": 28,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 83.5129,
+            "yearly_gross": {
+              "2023": 40.33800000000001,
+              "2024": 85.88200000000003,
+              "2025": 75.67499999999998,
+              "2026": 57.32200000000001
+            },
+            "yearly_net": {
+              "2023": 20.53348559364303,
+              "2024": 62.98622526693197,
+              "2025": 51.09619421666238,
+              "2026": 41.088152884283204
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    },
+    "literal_v18_multi": {
+      "shipped_max_consecutive_losses": 5,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 443,
+              "sum_r": 379.31,
+              "avg_r": 0.85623,
+              "wins": 139,
+              "losses": 304,
+              "wr_pct": 31.377,
+              "avg_win": 4.6351,
+              "avg_loss": -0.8716,
+              "payoff": 5.3178,
+              "pf": 2.4315,
+              "max_dd": 24.589,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -0.913,
+              "std": 4.829318,
+              "runners_3r": 55,
+              "runners_5r": 38,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 443,
+              "sum_r": 279.4201,
+              "avg_r": 0.630745,
+              "wins": 124,
+              "losses": 319,
+              "wr_pct": 27.991,
+              "avg_win": 4.8963,
+              "avg_loss": -1.0273,
+              "payoff": 4.766,
+              "pf": 1.8526,
+              "max_dd": 34.7324,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -1.031791,
+              "std": 4.68921,
+              "runners_3r": 54,
+              "runners_5r": 38,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 99.8899,
+            "yearly_gross": {
+              "2023": 109.681,
+              "2024": 62.56200000000001,
+              "2025": 98.69800000000001,
+              "2026": 108.36900000000001
+            },
+            "yearly_net": {
+              "2023": 87.65196564027987,
+              "2024": 37.88273556919691,
+              "2025": 66.85834839118111,
+              "2026": 87.02709475080599
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 424,
+              "sum_r": 365.155,
+              "avg_r": 0.861215,
+              "wins": 136,
+              "losses": 288,
+              "wr_pct": 32.075,
+              "avg_win": 4.5264,
+              "avg_loss": -0.8696,
+              "payoff": 5.2053,
+              "pf": 2.4581,
+              "max_dd": 24.589,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.9095,
+              "std": 4.842124,
+              "runners_3r": 53,
+              "runners_5r": 36,
+              "runners_10r": 15
+            },
+            "net": {
+              "n": 424,
+              "sum_r": 269.5947,
+              "avg_r": 0.635836,
+              "wins": 121,
+              "losses": 303,
+              "wr_pct": 28.538,
+              "avg_win": 4.7922,
+              "avg_loss": -1.024,
+              "payoff": 4.6801,
+              "pf": 1.8689,
+              "max_dd": 31.6905,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -1.031188,
+              "std": 4.701669,
+              "runners_3r": 52,
+              "runners_5r": 36,
+              "runners_10r": 15
+            },
+            "cost_and_funding": 95.5603,
+            "yearly_gross": {
+              "2023": 95.21099999999998,
+              "2024": 71.16700000000002,
+              "2025": 108.20600000000002,
+              "2026": 90.571
+            },
+            "yearly_net": {
+              "2023": 74.75892172857994,
+              "2024": 46.893816332404654,
+              "2025": 77.35317043046598,
+              "2026": 70.58875465293505
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 12,
+            "blocked_entries": 26,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 441,
+              "sum_r": 381.251,
+              "avg_r": 0.864515,
+              "wins": 139,
+              "losses": 302,
+              "wr_pct": 31.519,
+              "avg_win": 4.635,
+              "avg_loss": -0.8709,
+              "payoff": 5.3221,
+              "pf": 2.4496,
+              "max_dd": 24.589,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -0.912,
+              "std": 4.838633,
+              "runners_3r": 55,
+              "runners_5r": 38,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 441,
+              "sum_r": 281.6572,
+              "avg_r": 0.638678,
+              "wins": 124,
+              "losses": 317,
+              "wr_pct": 28.118,
+              "avg_win": 4.8969,
+              "avg_loss": -1.027,
+              "payoff": 4.7682,
+              "pf": 1.8652,
+              "max_dd": 34.7324,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -1.031791,
+              "std": 4.69854,
+              "runners_3r": 54,
+              "runners_5r": 38,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 99.5938,
+            "yearly_gross": {
+              "2023": 109.681,
+              "2024": 62.56200000000001,
+              "2025": 105.02900000000002,
+              "2026": 103.97900000000001
+            },
+            "yearly_net": {
+              "2023": 87.65196564027987,
+              "2024": 37.88273556919691,
+              "2025": 73.21299196141017,
+              "2026": 82.90951699432858
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 2,
+            "blocked_entries": 3,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 466,
+              "sum_r": 415.539,
+              "avg_r": 0.891715,
+              "wins": 146,
+              "losses": 320,
+              "wr_pct": 31.33,
+              "avg_win": 4.7511,
+              "avg_loss": -0.8691,
+              "payoff": 5.4666,
+              "pf": 2.4941,
+              "max_dd": 17.506,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -0.9145,
+              "std": 4.950788,
+              "runners_3r": 59,
+              "runners_5r": 41,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 466,
+              "sum_r": 309.0492,
+              "avg_r": 0.663196,
+              "wins": 131,
+              "losses": 335,
+              "wr_pct": 28.112,
+              "avg_win": 4.9886,
+              "avg_loss": -1.0282,
+              "payoff": 4.8517,
+              "pf": 1.8972,
+              "max_dd": 22.2504,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -1.031949,
+              "std": 4.811036,
+              "runners_3r": 58,
+              "runners_5r": 41,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 106.4898,
+            "yearly_gross": {
+              "2023": 104.78099999999999,
+              "2024": 98.59200000000003,
+              "2025": 101.69500000000004,
+              "2026": 110.471
+            },
+            "yearly_net": {
+              "2023": 80.92452296565463,
+              "2024": 71.596554106639,
+              "2025": 67.98447253266285,
+              "2026": 88.5436801218599
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 441,
+              "sum_r": 407.421,
+              "avg_r": 0.923857,
+              "wins": 141,
+              "losses": 300,
+              "wr_pct": 31.973,
+              "avg_win": 4.7312,
+              "avg_loss": -0.8656,
+              "payoff": 5.4658,
+              "pf": 2.5689,
+              "max_dd": 17.506,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.912,
+              "std": 5.03718,
+              "runners_3r": 56,
+              "runners_5r": 39,
+              "runners_10r": 16
+            },
+            "net": {
+              "n": 441,
+              "sum_r": 306.2485,
+              "avg_r": 0.694441,
+              "wins": 126,
+              "losses": 315,
+              "wr_pct": 28.571,
+              "avg_win": 4.9883,
+              "avg_loss": -1.0231,
+              "payoff": 4.8757,
+              "pf": 1.9503,
+              "max_dd": 22.2504,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.031048,
+              "std": 4.894909,
+              "runners_3r": 55,
+              "runners_5r": 39,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 101.1725,
+            "yearly_gross": {
+              "2023": 108.995,
+              "2024": 101.47700000000003,
+              "2025": 106.83400000000002,
+              "2026": 90.11500000000001
+            },
+            "yearly_net": {
+              "2023": 86.87343548434288,
+              "2024": 75.16361779782375,
+              "2025": 74.28551631602178,
+              "2026": 69.92588804739444
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 13,
+            "blocked_entries": 27,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 463,
+              "sum_r": 413.111,
+              "avg_r": 0.892248,
+              "wins": 145,
+              "losses": 318,
+              "wr_pct": 31.317,
+              "avg_win": 4.7536,
+              "avg_loss": -0.8684,
+              "payoff": 5.4739,
+              "pf": 2.4959,
+              "max_dd": 17.506,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -0.914,
+              "std": 4.962613,
+              "runners_3r": 58,
+              "runners_5r": 41,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 463,
+              "sum_r": 307.0925,
+              "avg_r": 0.663267,
+              "wins": 130,
+              "losses": 333,
+              "wr_pct": 28.078,
+              "avg_win": 4.9953,
+              "avg_loss": -1.0279,
+              "payoff": 4.8597,
+              "pf": 1.8972,
+              "max_dd": 22.2504,
+              "max_loss_streak": 15,
+              "max_win_streak": 6,
+              "median": -1.032108,
+              "std": 4.822564,
+              "runners_3r": 57,
+              "runners_5r": 41,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 106.0185,
+            "yearly_gross": {
+              "2023": 104.78099999999999,
+              "2024": 98.59200000000003,
+              "2025": 103.65700000000002,
+              "2026": 106.08100000000002
+            },
+            "yearly_net": {
+              "2023": 80.92452296565463,
+              "2024": 71.596554106639,
+              "2025": 70.14533784696596,
+              "2026": 84.42610236538249
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 2,
+            "blocked_entries": 3,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    },
+    "fullstack_wage10_cd0_single_sw10": {
+      "shipped_max_consecutive_losses": 3,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 200,
+              "sum_r": 360.61,
+              "avg_r": 1.80305,
+              "wins": 65,
+              "losses": 135,
+              "wr_pct": 32.5,
+              "avg_win": 7.5006,
+              "avg_loss": -0.9402,
+              "payoff": 7.9777,
+              "pf": 3.8411,
+              "max_dd": 11.21,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -0.998,
+              "std": 8.044247,
+              "runners_3r": 31,
+              "runners_5r": 22,
+              "runners_10r": 12
+            },
+            "net": {
+              "n": 200,
+              "sum_r": 310.7042,
+              "avg_r": 1.553521,
+              "wins": 59,
+              "losses": 141,
+              "wr_pct": 29.5,
+              "avg_win": 7.9072,
+              "avg_loss": -1.1051,
+              "payoff": 7.155,
+              "pf": 2.994,
+              "max_dd": 14.0078,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -1.109857,
+              "std": 7.857236,
+              "runners_3r": 30,
+              "runners_5r": 20,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 49.9058,
+            "yearly_gross": {
+              "2023": 69.14699999999999,
+              "2024": 142.275,
+              "2025": 62.03200000000001,
+              "2026": 87.15599999999998
+            },
+            "yearly_net": {
+              "2023": 57.20010814985314,
+              "2024": 126.46573641401089,
+              "2025": 49.8609285671118,
+              "2026": 77.17738636961005
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 196,
+              "sum_r": 320.604,
+              "avg_r": 1.635735,
+              "wins": 62,
+              "losses": 134,
+              "wr_pct": 31.633,
+              "avg_win": 7.2021,
+              "avg_loss": -0.9397,
+              "payoff": 7.6639,
+              "pf": 3.546,
+              "max_dd": 11.21,
+              "max_loss_streak": 11,
+              "max_win_streak": 3,
+              "median": -0.998,
+              "std": 7.722146,
+              "runners_3r": 29,
+              "runners_5r": 21,
+              "runners_10r": 11
+            },
+            "net": {
+              "n": 196,
+              "sum_r": 272.5584,
+              "avg_r": 1.390604,
+              "wins": 56,
+              "losses": 140,
+              "wr_pct": 28.571,
+              "avg_win": 7.6278,
+              "avg_loss": -1.1043,
+              "payoff": 6.9076,
+              "pf": 2.763,
+              "max_dd": 14.0078,
+              "max_loss_streak": 11,
+              "max_win_streak": 3,
+              "median": -1.112017,
+              "std": 7.548271,
+              "runners_3r": 28,
+              "runners_5r": 19,
+              "runners_10r": 11
+            },
+            "cost_and_funding": 48.0456,
+            "yearly_gross": {
+              "2023": 69.14699999999999,
+              "2024": 106.302,
+              "2025": 62.03200000000001,
+              "2026": 83.12299999999999
+            },
+            "yearly_net": {
+              "2023": 57.20010814985314,
+              "2024": 92.03474807855923,
+              "2025": 49.8609285671118,
+              "2026": 73.46256733425669
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 5,
+            "blocked_entries": 18,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 200,
+              "sum_r": 360.61,
+              "avg_r": 1.80305,
+              "wins": 65,
+              "losses": 135,
+              "wr_pct": 32.5,
+              "avg_win": 7.5006,
+              "avg_loss": -0.9402,
+              "payoff": 7.9777,
+              "pf": 3.8411,
+              "max_dd": 11.21,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -0.998,
+              "std": 8.044247,
+              "runners_3r": 31,
+              "runners_5r": 22,
+              "runners_10r": 12
+            },
+            "net": {
+              "n": 200,
+              "sum_r": 310.7042,
+              "avg_r": 1.553521,
+              "wins": 59,
+              "losses": 141,
+              "wr_pct": 29.5,
+              "avg_win": 7.9072,
+              "avg_loss": -1.1051,
+              "payoff": 7.155,
+              "pf": 2.994,
+              "max_dd": 14.0078,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -1.109857,
+              "std": 7.857236,
+              "runners_3r": 30,
+              "runners_5r": 20,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 49.9058,
+            "yearly_gross": {
+              "2023": 69.14699999999999,
+              "2024": 142.275,
+              "2025": 62.03200000000001,
+              "2026": 87.15599999999998
+            },
+            "yearly_net": {
+              "2023": 57.20010814985314,
+              "2024": 126.46573641401089,
+              "2025": 49.8609285671118,
+              "2026": 77.17738636961005
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 204,
+              "sum_r": 358.315,
+              "avg_r": 1.756446,
+              "wins": 66,
+              "losses": 138,
+              "wr_pct": 32.353,
+              "avg_win": 7.393,
+              "avg_loss": -0.9393,
+              "payoff": 7.8708,
+              "pf": 3.7643,
+              "max_dd": 11.946,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -0.998,
+              "std": 7.972207,
+              "runners_3r": 31,
+              "runners_5r": 22,
+              "runners_10r": 12
+            },
+            "net": {
+              "n": 204,
+              "sum_r": 304.7817,
+              "avg_r": 1.494028,
+              "wins": 60,
+              "losses": 144,
+              "wr_pct": 29.412,
+              "avg_win": 7.7774,
+              "avg_loss": -1.1241,
+              "payoff": 6.9191,
+              "pf": 2.883,
+              "max_dd": 14.8881,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -1.109857,
+              "std": 7.793324,
+              "runners_3r": 30,
+              "runners_5r": 20,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 53.5333,
+            "yearly_gross": {
+              "2023": 67.411,
+              "2024": 142.275,
+              "2025": 61.442000000000014,
+              "2026": 87.18699999999997
+            },
+            "yearly_net": {
+              "2023": 54.33096300582819,
+              "2024": 126.46573641401089,
+              "2025": 48.79575281184245,
+              "2026": 75.18922268931475
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 200,
+              "sum_r": 318.309,
+              "avg_r": 1.591545,
+              "wins": 63,
+              "losses": 137,
+              "wr_pct": 31.5,
+              "avg_win": 7.0941,
+              "avg_loss": -0.9388,
+              "payoff": 7.5562,
+              "pf": 3.4748,
+              "max_dd": 11.946,
+              "max_loss_streak": 11,
+              "max_win_streak": 3,
+              "median": -0.998,
+              "std": 7.651217,
+              "runners_3r": 29,
+              "runners_5r": 21,
+              "runners_10r": 11
+            },
+            "net": {
+              "n": 200,
+              "sum_r": 266.6359,
+              "avg_r": 1.333179,
+              "wins": 57,
+              "losses": 143,
+              "wr_pct": 28.5,
+              "avg_win": 7.496,
+              "avg_loss": -1.1233,
+              "payoff": 6.673,
+              "pf": 2.6599,
+              "max_dd": 14.8881,
+              "max_loss_streak": 11,
+              "max_win_streak": 3,
+              "median": -1.112017,
+              "std": 7.485479,
+              "runners_3r": 28,
+              "runners_5r": 19,
+              "runners_10r": 11
+            },
+            "cost_and_funding": 51.6731,
+            "yearly_gross": {
+              "2023": 67.411,
+              "2024": 106.302,
+              "2025": 61.442000000000014,
+              "2026": 83.154
+            },
+            "yearly_net": {
+              "2023": 54.33096300582819,
+              "2024": 92.03474807855923,
+              "2025": 48.79575281184245,
+              "2026": 71.4744036539614
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 5,
+            "blocked_entries": 18,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 204,
+              "sum_r": 358.315,
+              "avg_r": 1.756446,
+              "wins": 66,
+              "losses": 138,
+              "wr_pct": 32.353,
+              "avg_win": 7.393,
+              "avg_loss": -0.9393,
+              "payoff": 7.8708,
+              "pf": 3.7643,
+              "max_dd": 11.946,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -0.998,
+              "std": 7.972207,
+              "runners_3r": 31,
+              "runners_5r": 22,
+              "runners_10r": 12
+            },
+            "net": {
+              "n": 204,
+              "sum_r": 304.7817,
+              "avg_r": 1.494028,
+              "wins": 60,
+              "losses": 144,
+              "wr_pct": 29.412,
+              "avg_win": 7.7774,
+              "avg_loss": -1.1241,
+              "payoff": 6.9191,
+              "pf": 2.883,
+              "max_dd": 14.8881,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -1.109857,
+              "std": 7.793324,
+              "runners_3r": 30,
+              "runners_5r": 20,
+              "runners_10r": 12
+            },
+            "cost_and_funding": 53.5333,
+            "yearly_gross": {
+              "2023": 67.411,
+              "2024": 142.275,
+              "2025": 61.442000000000014,
+              "2026": 87.18699999999997
+            },
+            "yearly_net": {
+              "2023": 54.33096300582819,
+              "2024": 126.46573641401089,
+              "2025": 48.79575281184245,
+              "2026": 75.18922268931475
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "shipped_max_consecutive_losses": 3,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 500,
+              "sum_r": 445.225,
+              "avg_r": 0.89045,
+              "wins": 150,
+              "losses": 350,
+              "wr_pct": 30.0,
+              "avg_win": 5.1136,
+              "avg_loss": -0.9195,
+              "payoff": 5.5615,
+              "pf": 2.3835,
+              "max_dd": 17.825,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.540877,
+              "runners_3r": 63,
+              "runners_5r": 45,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 500,
+              "sum_r": 325.7817,
+              "avg_r": 0.651563,
+              "wins": 139,
+              "losses": 361,
+              "wr_pct": 27.8,
+              "avg_win": 5.2204,
+              "avg_loss": -1.1076,
+              "payoff": 4.7131,
+              "pf": 1.8148,
+              "max_dd": 27.7242,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.098502,
+              "std": 5.424503,
+              "runners_3r": 61,
+              "runners_5r": 41,
+              "runners_10r": 17
+            },
+            "cost_and_funding": 119.4433,
+            "yearly_gross": {
+              "2023": 113.90700000000001,
+              "2024": 122.29799999999999,
+              "2025": 102.17,
+              "2026": 106.84999999999998
+            },
+            "yearly_net": {
+              "2023": 86.85381673874828,
+              "2024": 88.79231306956353,
+              "2025": 68.7981950230253,
+              "2026": 81.33740973382105
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 483,
+              "sum_r": 448.127,
+              "avg_r": 0.927799,
+              "wins": 148,
+              "losses": 335,
+              "wr_pct": 30.642,
+              "avg_win": 5.1083,
+              "avg_loss": -0.9191,
+              "payoff": 5.5579,
+              "pf": 2.4554,
+              "max_dd": 17.825,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.611321,
+              "runners_3r": 62,
+              "runners_5r": 44,
+              "runners_10r": 16
+            },
+            "net": {
+              "n": 483,
+              "sum_r": 331.6803,
+              "avg_r": 0.686709,
+              "wins": 136,
+              "losses": 347,
+              "wr_pct": 28.157,
+              "avg_win": 5.2588,
+              "avg_loss": -1.1052,
+              "payoff": 4.7581,
+              "pf": 1.8649,
+              "max_dd": 24.5841,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.093261,
+              "std": 5.493494,
+              "runners_3r": 60,
+              "runners_5r": 40,
+              "runners_10r": 16
+            },
+            "cost_and_funding": 116.4467,
+            "yearly_gross": {
+              "2023": 116.90700000000001,
+              "2024": 124.31900000000002,
+              "2025": 110.49900000000001,
+              "2026": 96.402
+            },
+            "yearly_net": {
+              "2023": 90.30378922197569,
+              "2024": 91.29427947919325,
+              "2025": 78.82929114659748,
+              "2026": 71.25297694956923
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 8,
+            "blocked_entries": 17,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 496,
+              "sum_r": 448.011,
+              "avg_r": 0.903248,
+              "wins": 149,
+              "losses": 347,
+              "wr_pct": 30.04,
+              "avg_win": 5.1462,
+              "avg_loss": -0.9187,
+              "payoff": 5.6019,
+              "pf": 2.4054,
+              "max_dd": 17.825,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.561119,
+              "runners_3r": 63,
+              "runners_5r": 45,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 496,
+              "sum_r": 328.9408,
+              "avg_r": 0.663187,
+              "wins": 138,
+              "losses": 358,
+              "wr_pct": 27.823,
+              "avg_win": 5.2569,
+              "avg_loss": -1.1076,
+              "payoff": 4.7463,
+              "pf": 1.8296,
+              "max_dd": 26.5754,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.098502,
+              "std": 5.444552,
+              "runners_3r": 61,
+              "runners_5r": 41,
+              "runners_10r": 17
+            },
+            "cost_and_funding": 119.0702,
+            "yearly_gross": {
+              "2023": 113.90700000000001,
+              "2024": 122.29799999999999,
+              "2025": 104.956,
+              "2026": 106.84999999999998
+            },
+            "yearly_net": {
+              "2023": 86.85381673874828,
+              "2024": 88.79231306956353,
+              "2025": 71.95728427299497,
+              "2026": 81.33740973382105
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 1,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 557,
+              "sum_r": 439.789,
+              "avg_r": 0.789567,
+              "wins": 163,
+              "losses": 394,
+              "wr_pct": 29.264,
+              "avg_win": 4.9039,
+              "avg_loss": -0.9125,
+              "payoff": 5.3739,
+              "pf": 2.2232,
+              "max_dd": 22.486,
+              "max_loss_streak": 19,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.317678,
+              "runners_3r": 66,
+              "runners_5r": 46,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 557,
+              "sum_r": 308.5046,
+              "avg_r": 0.553868,
+              "wins": 151,
+              "losses": 406,
+              "wr_pct": 27.11,
+              "avg_win": 5.0053,
+              "avg_loss": -1.1017,
+              "payoff": 4.5432,
+              "pf": 1.6897,
+              "max_dd": 32.5874,
+              "max_loss_streak": 19,
+              "max_win_streak": 5,
+              "median": -1.093261,
+              "std": 5.208962,
+              "runners_3r": 63,
+              "runners_5r": 42,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 131.2844,
+            "yearly_gross": {
+              "2023": 115.55300000000001,
+              "2024": 104.69500000000001,
+              "2025": 99.191,
+              "2026": 120.35000000000001
+            },
+            "yearly_net": {
+              "2023": 85.50437229901162,
+              "2024": 69.02582237147026,
+              "2025": 63.66922648608764,
+              "2026": 90.30513601315789
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 542,
+              "sum_r": 441.903,
+              "avg_r": 0.815319,
+              "wins": 162,
+              "losses": 380,
+              "wr_pct": 29.889,
+              "avg_win": 4.8682,
+              "avg_loss": -0.9125,
+              "payoff": 5.335,
+              "pf": 2.2744,
+              "max_dd": 21.703,
+              "max_loss_streak": 19,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.367633,
+              "runners_3r": 65,
+              "runners_5r": 45,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 542,
+              "sum_r": 313.3645,
+              "avg_r": 0.578163,
+              "wins": 149,
+              "losses": 393,
+              "wr_pct": 27.491,
+              "avg_win": 5.0036,
+              "avg_loss": -1.0997,
+              "payoff": 4.5501,
+              "pf": 1.7251,
+              "max_dd": 31.6576,
+              "max_loss_streak": 19,
+              "max_win_streak": 5,
+              "median": -1.09258,
+              "std": 5.257844,
+              "runners_3r": 62,
+              "runners_5r": 41,
+              "runners_10r": 17
+            },
+            "cost_and_funding": 128.5385,
+            "yearly_gross": {
+              "2023": 118.55300000000001,
+              "2024": 107.71400000000001,
+              "2025": 105.73400000000001,
+              "2026": 109.90200000000002
+            },
+            "yearly_net": {
+              "2023": 89.0955079583601,
+              "2024": 72.59238739904977,
+              "2025": 71.45590528862823,
+              "2026": 80.22070322890606
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 8,
+            "blocked_entries": 17,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 553,
+              "sum_r": 442.535,
+              "avg_r": 0.800244,
+              "wins": 162,
+              "losses": 391,
+              "wr_pct": 29.295,
+              "avg_win": 4.9326,
+              "avg_loss": -0.9119,
+              "payoff": 5.4092,
+              "pf": 2.2412,
+              "max_dd": 22.486,
+              "max_loss_streak": 19,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.335191,
+              "runners_3r": 66,
+              "runners_5r": 46,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 553,
+              "sum_r": 311.7202,
+              "avg_r": 0.563689,
+              "wins": 150,
+              "losses": 403,
+              "wr_pct": 27.125,
+              "avg_win": 5.0375,
+              "avg_loss": -1.1015,
+              "payoff": 4.5733,
+              "pf": 1.7022,
+              "max_dd": 32.5874,
+              "max_loss_streak": 19,
+              "max_win_streak": 5,
+              "median": -1.093261,
+              "std": 5.22626,
+              "runners_3r": 63,
+              "runners_5r": 42,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 130.8148,
+            "yearly_gross": {
+              "2023": 115.55300000000001,
+              "2024": 104.69500000000001,
+              "2025": 101.937,
+              "2026": 120.35000000000001
+            },
+            "yearly_net": {
+              "2023": 85.50437229901162,
+              "2024": 69.02582237147026,
+              "2025": 66.88490704302043,
+              "2026": 90.30513601315789
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 1,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "shipped_max_consecutive_losses": 3,
+      "variants": {
+        "shipped_default": {
+          "flags": {},
+          "metrics": {
+            "gross": {
+              "n": 454,
+              "sum_r": 466.476,
+              "avg_r": 1.02748,
+              "wins": 140,
+              "losses": 314,
+              "wr_pct": 30.837,
+              "avg_win": 5.3914,
+              "avg_loss": -0.9182,
+              "payoff": 5.8715,
+              "pf": 2.6179,
+              "max_dd": 14.821,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.806507,
+              "runners_3r": 62,
+              "runners_5r": 42,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 454,
+              "sum_r": 358.95,
+              "avg_r": 0.790639,
+              "wins": 132,
+              "losses": 322,
+              "wr_pct": 29.075,
+              "avg_win": 5.4183,
+              "avg_loss": -1.1064,
+              "payoff": 4.8972,
+              "pf": 2.0075,
+              "max_dd": 21.1764,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -1.090105,
+              "std": 5.684718,
+              "runners_3r": 59,
+              "runners_5r": 39,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 107.526,
+            "yearly_gross": {
+              "2023": 125.508,
+              "2024": 125.30100000000002,
+              "2025": 101.18499999999999,
+              "2026": 114.48200000000001
+            },
+            "yearly_net": {
+              "2023": 99.36830657282762,
+              "2024": 97.34129367379063,
+              "2025": 70.88886334145995,
+              "2026": 91.35151850686717
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_global_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 425,
+              "sum_r": 463.115,
+              "avg_r": 1.089682,
+              "wins": 132,
+              "losses": 293,
+              "wr_pct": 31.059,
+              "avg_win": 5.5529,
+              "avg_loss": -0.9211,
+              "payoff": 6.0288,
+              "pf": 2.7161,
+              "max_dd": 14.821,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.956424,
+              "runners_3r": 59,
+              "runners_5r": 41,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 425,
+              "sum_r": 360.4842,
+              "avg_r": 0.848198,
+              "wins": 124,
+              "losses": 301,
+              "wr_pct": 29.176,
+              "avg_win": 5.6075,
+              "avg_loss": -1.1124,
+              "payoff": 5.0407,
+              "pf": 2.0766,
+              "max_dd": 20.9496,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -1.09072,
+              "std": 5.833998,
+              "runners_3r": 56,
+              "runners_5r": 38,
+              "runners_10r": 17
+            },
+            "cost_and_funding": 102.6308,
+            "yearly_gross": {
+              "2023": 128.508,
+              "2024": 126.32000000000004,
+              "2025": 107.474,
+              "2026": 100.813
+            },
+            "yearly_net": {
+              "2023": 102.81827905605506,
+              "2024": 98.48839663645614,
+              "2025": 78.32971207350843,
+              "2026": 80.84785960400671
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 9,
+            "blocked_entries": 40,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "default_window_soft_n3": {
+          "flags": {
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 450,
+              "sum_r": 469.222,
+              "avg_r": 1.042716,
+              "wins": 139,
+              "losses": 311,
+              "wr_pct": 30.889,
+              "avg_win": 5.4284,
+              "avg_loss": -0.9175,
+              "payoff": 5.9168,
+              "pf": 2.6445,
+              "max_dd": 14.821,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.829776,
+              "runners_3r": 62,
+              "runners_5r": 42,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 450,
+              "sum_r": 362.1657,
+              "avg_r": 0.804813,
+              "wins": 131,
+              "losses": 319,
+              "wr_pct": 29.111,
+              "avg_win": 5.4583,
+              "avg_loss": -1.1062,
+              "payoff": 4.9343,
+              "pf": 2.0263,
+              "max_dd": 21.1764,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -1.090105,
+              "std": 5.707681,
+              "runners_3r": 59,
+              "runners_5r": 39,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 107.0563,
+            "yearly_gross": {
+              "2023": 125.508,
+              "2024": 125.30100000000002,
+              "2025": 103.93099999999998,
+              "2026": 114.48200000000001
+            },
+            "yearly_net": {
+              "2023": 99.36830657282762,
+              "2024": 97.34129367379063,
+              "2025": 74.10454389839276,
+              "2026": 91.35151850686717
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 1,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_builtin_halt": {
+          "flags": {
+            "max_consecutive_losses": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 506,
+              "sum_r": 440.836,
+              "avg_r": 0.871217,
+              "wins": 151,
+              "losses": 355,
+              "wr_pct": 29.842,
+              "avg_win": 5.0797,
+              "avg_loss": -0.9189,
+              "payoff": 5.5282,
+              "pf": 2.3514,
+              "max_dd": 20.489,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.535254,
+              "runners_3r": 63,
+              "runners_5r": 43,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 506,
+              "sum_r": 324.0722,
+              "avg_r": 0.640459,
+              "wins": 142,
+              "losses": 364,
+              "wr_pct": 28.063,
+              "avg_win": 5.1139,
+              "avg_loss": -1.1047,
+              "payoff": 4.6293,
+              "pf": 1.806,
+              "max_dd": 30.1107,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -1.091697,
+              "std": 5.419122,
+              "runners_3r": 60,
+              "runners_5r": 40,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 116.7638,
+            "yearly_gross": {
+              "2023": 122.37100000000001,
+              "2024": 115.85700000000001,
+              "2025": 92.81599999999999,
+              "2026": 109.792
+            },
+            "yearly_net": {
+              "2023": 95.79399860357596,
+              "2024": 83.69247204853659,
+              "2025": 59.78848429902055,
+              "2026": 84.7972365045457
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 0,
+            "blocked_entries": 0,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_global_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "global"
+          },
+          "metrics": {
+            "gross": {
+              "n": 476,
+              "sum_r": 437.038,
+              "avg_r": 0.918147,
+              "wins": 143,
+              "losses": 333,
+              "wr_pct": 30.042,
+              "avg_win": 5.2019,
+              "avg_loss": -0.9214,
+              "payoff": 5.6456,
+              "pf": 2.4244,
+              "max_dd": 19.706,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.665691,
+              "runners_3r": 60,
+              "runners_5r": 42,
+              "runners_10r": 17
+            },
+            "net": {
+              "n": 476,
+              "sum_r": 325.4429,
+              "avg_r": 0.683704,
+              "wins": 134,
+              "losses": 342,
+              "wr_pct": 28.151,
+              "avg_win": 5.2602,
+              "avg_loss": -1.1094,
+              "payoff": 4.7414,
+              "pf": 1.8577,
+              "max_dd": 29.1809,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -1.091697,
+              "std": 5.548899,
+              "runners_3r": 57,
+              "runners_5r": 39,
+              "runners_10r": 17
+            },
+            "cost_and_funding": 111.5951,
+            "yearly_gross": {
+              "2023": 125.37100000000001,
+              "2024": 117.87600000000002,
+              "2025": 98.361,
+              "2026": 95.42999999999999
+            },
+            "yearly_net": {
+              "2023": 99.38513426292441,
+              "2024": 85.96378323023285,
+              "2025": 66.22098224112175,
+              "2026": 73.87299479256185
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 9,
+            "blocked_entries": 40,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        },
+        "no_halt_window_soft_n3": {
+          "flags": {
+            "max_consecutive_losses": 0,
+            "exp_window_win_kill_n": 3,
+            "exp_window_win_kill_action": "soft",
+            "exp_window_win_kill_scope": "window"
+          },
+          "metrics": {
+            "gross": {
+              "n": 502,
+              "sum_r": 443.582,
+              "avg_r": 0.883629,
+              "wins": 150,
+              "losses": 352,
+              "wr_pct": 29.88,
+              "avg_win": 5.1119,
+              "avg_loss": -0.9182,
+              "payoff": 5.5673,
+              "pf": 2.3724,
+              "max_dd": 20.489,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.555301,
+              "runners_3r": 63,
+              "runners_5r": 43,
+              "runners_10r": 18
+            },
+            "net": {
+              "n": 502,
+              "sum_r": 327.2879,
+              "avg_r": 0.651968,
+              "wins": 141,
+              "losses": 361,
+              "wr_pct": 28.088,
+              "avg_win": 5.1489,
+              "avg_loss": -1.1045,
+              "payoff": 4.6619,
+              "pf": 1.8209,
+              "max_dd": 30.1107,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -1.091697,
+              "std": 5.438894,
+              "runners_3r": 60,
+              "runners_5r": 40,
+              "runners_10r": 18
+            },
+            "cost_and_funding": 116.2941,
+            "yearly_gross": {
+              "2023": 122.37100000000001,
+              "2024": 115.85700000000001,
+              "2025": 95.56199999999998,
+              "2026": 109.792
+            },
+            "yearly_net": {
+              "2023": 95.79399860357596,
+              "2024": 83.69247204853659,
+              "2025": 63.00416485595333,
+              "2026": 84.7972365045457
+            }
+          },
+          "win_streak_stats": {
+            "triggered": 1,
+            "blocked_entries": 4,
+            "hard_closed": 0,
+            "skipped": 0
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 691.07
+}

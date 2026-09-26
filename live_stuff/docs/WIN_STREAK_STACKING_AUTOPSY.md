@@ -106,3 +106,20 @@ Production change in this study:
 - IS: `C:\Users\Pravin\Desktop\main\AT_Trading\live_stuff\tests\_thesis_win_streak_stack_results_is.json`
 - OOS: `C:\Users\Pravin\Desktop\main\AT_Trading\live_stuff\tests\_thesis_win_streak_stack_results_oos.json`
 - Updated Stage 64 report: `C:\Users\Pravin\Desktop\main\AT_Trading\live_stuff\docs\WIN_STREAK_AUTOPSY.md`
+
+## Stack-book follow-up (2026-09-26, CHECKLIST 24.84)
+
+The remaining interaction from this study - N3 on the Stage-B candidate
+stack books (half+delay1+skipD) - was run as `exp_n3_stack.py`. Result: **the
+stage-64/65 endorsements do NOT transfer to the stack book (NOT ALL PASS).**
+champion `stack+global_soft_n3` FAIL: IS dNet -29.7 (the flat +5.9 flips
+sign) / OOS +24.5 (flat +19.8 grows); utcsat `stack+window_soft_n3` FAIL:
++1.2 IS with curve FALSE (DD unchanged, ulcer slightly worse) / +3.5 OOS
+curve TRUE - pair fails via IS. global_soft_n3 IS dNet turns negative
+on ALL three stack lanes (-29.7 / -34.7 / -27.9) and its IS blocks explode
+(champion 17 flat -> 56 stacked) - the policy's edge depends on the book's
+trade sequence, and the trail stack changes it. Flat-book controls
+reproduced Stage 65 exactly (8/8), so the flat endorsements above stand
+unchanged; only the stack interaction is rejected. Exploratory
+champion `stack+window_soft_n3` (+5.9/+4.6, curve 1/1) is post-hoc across
+exploratory arms - hypothesis at best, not a candidate.
