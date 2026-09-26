@@ -122,11 +122,44 @@ Notes:
   trade is placed - it is specifically that the swing **finishes** large. That
   is a real property of the backtest and a hard limit on live deployment.
 
-  **Net position: the entire queue is non-deployable as measured.** M2, ramp_mag,
-  sMZX, uMZX and count_linear all key off the same non-knowable read. This is
-  not a rounding or min-lot problem; it is a feature-definition problem, and the
-  next honest step would be a NEW feature designed to be send-time computable
-  from the start, then re-validated from zero.
+- **(a3) The M2-free causal combo was found and tested: ZC x X.** M2 was not the
+  only flag in the queue - `ZC` (vol7_prev7 <= 0.846) and `X` (parent risk_pct
+  < 1.0) also feed the combos, and **neither reads `seg.end_px`**: ZC is a
+  7-day-vs-prior-7-day volume ratio, X is a configured window risk value. But
+  every combo in `exp_sizing_combo.py` (uMZ, uMZX, sMZ, sMZX) *contains* M2, so
+  the causal pair had never been tested alone. `exp_zx_causal_combo.py` ->
+  `_zx_causal_combo_results.json` runs it, with a pre-registered 5-40% coverage
+  band and the same 6-cell rule:
+
+  | arm | causal? | 6/6 | champion dNet IS/OOS | note |
+  |---|---|---|---|---|
+  | `uZX` x1.5 on ZC or X | yes | **4/6** | +124.0 / +33.6 | age10 curve FALSE |
+  | `sZX` x1.5^count(ZC,X) | yes | **4/6** | +133.6 / +86.4 | age10 curve FALSE |
+
+  Both clear the rule on champion AND utcsat in BOTH eras - the first
+  send-time-computable sizing arm to do so anywhere in this queue. The single
+  failing cell is age10 OOS, and it fails on shape, not profit: dNet **+5.05**,
+  maxDD **-1.50** (better), but **ulcer -9.87** (worse) on 22 flagged trades.
+  The lever makes money there while making the curve rough.
+
+  This is NOT a pass, and NOT an adoption. Three reasons, all structural:
+  (1) 4/6 under the pre-registered rule; (2) ZC itself was already dropped as
+  a standalone for cross-venue portability (24.82 - a Bybit-volume threshold
+  that did not transfer to Binance), so any ZC-led arm needs a fresh
+  cross-venue run before it means anything; (3) the age10 OOS delta is +5R on
+  a 130-trade book - well inside noise.
+
+  What it does establish: the queue was never five levers, it was **one
+  forward-looking lever wearing five hats**. With M2 removed there is still
+  positive, reproducible, *live-computable* signal - it just does not yet clear
+  the same bar M2 was held to.
+
+  **Net position: the queue splits in two.** M2, ramp_mag, and the M2 component
+  of uMZX/sMZX/count_linear are non-deployable as measured (feature-definition
+  problem, not rounding). ZC/X are deployable and promising but unadopted at
+  4/6. Neither can be adopted anyway: the untouched forward gate is at 5/50
+  trades, net -3.83R.
+
 - **(b) Thin OOS margins on Binance perp (STRUCTURAL LIMIT - do not
   re-test):** champion OOS 286t +17.8R = +0.062 R/trade, utcsat 258t
   +7.6R = +0.029 R/trade - too thin to distinguish from zero. Recorded as a property of the venue transfer, not an
