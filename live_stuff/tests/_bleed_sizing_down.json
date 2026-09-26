@@ -1,0 +1,536 @@
+{
+  "stage": "bleed_sizing_down",
+  "instrument": "BTCUSDT_BYBIT",
+  "lens": "post-process sizing on the Stage B 4/4-negative cohorts; identity = same trade keys; cascade-free by construction",
+  "pre_registered": {
+    "pass_rule": "dNet>0 AND curve_better AND dDD not worse than +5.0% in ALL 4 cells",
+    "sizes": [
+      1.0,
+      0.75,
+      0.5
+    ],
+    "dd_tolerance_pct": 5.0,
+    "promotion": "candidate only if 4/4 cells pass"
+  },
+  "cohorts": [
+    "chain_r_so_far",
+    "chain_wl_streak",
+    "wick_atr12@short",
+    "flips96@short"
+  ],
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "cells": {
+    "is|champion": {
+      "n": 500,
+      "base_net": 325.78,
+      "arms": {
+        "chain_r_so_far@x1.0": {
+          "n_flagged": 82,
+          "identity_keys_same": true,
+          "dNet": 0.0,
+          "d_dd": 0.0,
+          "d_dd_pct": 0.0,
+          "d_calmar": 0.0,
+          "d_pf": 0.0,
+          "curve_better": false,
+          "pass": false
+        },
+        "chain_r_so_far@x0.75": {
+          "n_flagged": 82,
+          "identity_keys_same": true,
+          "dNet": 0.91,
+          "d_dd": 2.21,
+          "d_dd_pct": 8.0,
+          "d_calmar": 0.287,
+          "d_pf": 0.032,
+          "curve_better": true,
+          "pass": false
+        },
+        "chain_r_so_far@x0.5": {
+          "n_flagged": 82,
+          "identity_keys_same": true,
+          "dNet": 1.81,
+          "d_dd": 2.77,
+          "d_dd_pct": 10.0,
+          "d_calmar": 0.375,
+          "d_pf": 0.066,
+          "curve_better": true,
+          "pass": false
+        },
+        "chain_wl_streak@x0.75": {
+          "n_flagged": 73,
+          "identity_keys_same": true,
+          "dNet": -0.28,
+          "d_dd": 2.21,
+          "d_dd_pct": 8.0,
+          "d_calmar": 0.274,
+          "d_pf": 0.025,
+          "curve_better": false,
+          "pass": false
+        },
+        "chain_wl_streak@x0.5": {
+          "n_flagged": 73,
+          "identity_keys_same": true,
+          "dNet": -0.56,
+          "d_dd": 2.77,
+          "d_dd_pct": 10.0,
+          "d_calmar": 0.349,
+          "d_pf": 0.051,
+          "curve_better": false,
+          "pass": false
+        },
+        "wick_atr12@short@x0.75": {
+          "n_flagged": 75,
+          "identity_keys_same": true,
+          "dNet": 2.87,
+          "d_dd": 1.38,
+          "d_dd_pct": 5.0,
+          "d_calmar": 0.197,
+          "d_pf": 0.036,
+          "curve_better": true,
+          "pass": true
+        },
+        "wick_atr12@short@x0.5": {
+          "n_flagged": 75,
+          "identity_keys_same": true,
+          "dNet": 5.75,
+          "d_dd": 2.75,
+          "d_dd_pct": 9.9,
+          "d_calmar": 0.416,
+          "d_pf": 0.074,
+          "curve_better": true,
+          "pass": false
+        },
+        "flips96@short@x0.75": {
+          "n_flagged": 37,
+          "identity_keys_same": true,
+          "dNet": -0.36,
+          "d_dd": 0.5,
+          "d_dd_pct": 1.8,
+          "d_calmar": 0.055,
+          "d_pf": 0.012,
+          "curve_better": false,
+          "pass": false
+        },
+        "flips96@short@x0.5": {
+          "n_flagged": 37,
+          "identity_keys_same": true,
+          "dNet": -0.71,
+          "d_dd": 1.0,
+          "d_dd_pct": 3.6,
+          "d_calmar": 0.112,
+          "d_pf": 0.025,
+          "curve_better": false,
+          "pass": false
+        }
+      }
+    },
+    "is|utcsat": {
+      "n": 454,
+      "base_net": 358.95,
+      "arms": {
+        "chain_r_so_far@x1.0": {
+          "n_flagged": 57,
+          "identity_keys_same": true,
+          "dNet": 0.0,
+          "d_dd": 0.0,
+          "d_dd_pct": 0.0,
+          "d_calmar": 0.0,
+          "d_pf": 0.0,
+          "curve_better": false,
+          "pass": false
+        },
+        "chain_r_so_far@x0.75": {
+          "n_flagged": 57,
+          "identity_keys_same": true,
+          "dNet": 2.41,
+          "d_dd": 0.75,
+          "d_dd_pct": 3.5,
+          "d_calmar": 0.201,
+          "d_pf": 0.036,
+          "curve_better": true,
+          "pass": true
+        },
+        "chain_r_so_far@x0.5": {
+          "n_flagged": 57,
+          "identity_keys_same": true,
+          "dNet": 4.82,
+          "d_dd": -1.63,
+          "d_dd_pct": -7.7,
+          "d_calmar": -0.273,
+          "d_pf": 0.073,
+          "curve_better": false,
+          "pass": false
+        },
+        "chain_wl_streak@x0.75": {
+          "n_flagged": 52,
+          "identity_keys_same": true,
+          "dNet": 2.01,
+          "d_dd": 0.75,
+          "d_dd_pct": 3.5,
+          "d_calmar": 0.196,
+          "d_pf": 0.032,
+          "curve_better": true,
+          "pass": true
+        },
+        "chain_wl_streak@x0.5": {
+          "n_flagged": 52,
+          "identity_keys_same": true,
+          "dNet": 4.03,
+          "d_dd": -1.63,
+          "d_dd_pct": -7.7,
+          "d_calmar": -0.282,
+          "d_pf": 0.065,
+          "curve_better": false,
+          "pass": false
+        },
+        "wick_atr12@short@x0.75": {
+          "n_flagged": 63,
+          "identity_keys_same": true,
+          "dNet": 3.53,
+          "d_dd": 0.86,
+          "d_dd_pct": 4.1,
+          "d_calmar": 0.242,
+          "d_pf": 0.043,
+          "curve_better": true,
+          "pass": true
+        },
+        "wick_atr12@short@x0.5": {
+          "n_flagged": 63,
+          "identity_keys_same": true,
+          "dNet": 7.07,
+          "d_dd": 0.71,
+          "d_dd_pct": 3.4,
+          "d_calmar": 0.255,
+          "d_pf": 0.089,
+          "curve_better": true,
+          "pass": true
+        },
+        "flips96@short@x0.75": {
+          "n_flagged": 37,
+          "identity_keys_same": true,
+          "dNet": 1.26,
+          "d_dd": 0.5,
+          "d_dd_pct": 2.4,
+          "d_calmar": 0.128,
+          "d_pf": 0.022,
+          "curve_better": true,
+          "pass": true
+        },
+        "flips96@short@x0.5": {
+          "n_flagged": 37,
+          "identity_keys_same": true,
+          "dNet": 2.52,
+          "d_dd": 1.0,
+          "d_dd_pct": 4.7,
+          "d_calmar": 0.262,
+          "d_pf": 0.044,
+          "curve_better": true,
+          "pass": true
+        }
+      }
+    },
+    "oos|champion": {
+      "n": 279,
+      "base_net": 70.15,
+      "arms": {
+        "chain_r_so_far@x1.0": {
+          "n_flagged": 45,
+          "identity_keys_same": true,
+          "dNet": 0.0,
+          "d_dd": 0.0,
+          "d_dd_pct": 0.0,
+          "d_calmar": 0.0,
+          "d_pf": 0.0,
+          "curve_better": false,
+          "pass": false
+        },
+        "chain_r_so_far@x0.75": {
+          "n_flagged": 45,
+          "identity_keys_same": true,
+          "dNet": 2.83,
+          "d_dd": 2.63,
+          "d_dd_pct": 4.9,
+          "d_calmar": 0.062,
+          "d_pf": 0.029,
+          "curve_better": true,
+          "pass": true
+        },
+        "chain_r_so_far@x0.5": {
+          "n_flagged": 45,
+          "identity_keys_same": true,
+          "dNet": 5.67,
+          "d_dd": 5.26,
+          "d_dd_pct": 9.9,
+          "d_calmar": 0.131,
+          "d_pf": 0.06,
+          "curve_better": true,
+          "pass": false
+        },
+        "chain_wl_streak@x0.75": {
+          "n_flagged": 35,
+          "identity_keys_same": true,
+          "dNet": 1.89,
+          "d_dd": 2.07,
+          "d_dd_pct": 3.9,
+          "d_calmar": 0.045,
+          "d_pf": 0.021,
+          "curve_better": true,
+          "pass": true
+        },
+        "chain_wl_streak@x0.5": {
+          "n_flagged": 35,
+          "identity_keys_same": true,
+          "dNet": 3.79,
+          "d_dd": 4.15,
+          "d_dd_pct": 7.8,
+          "d_calmar": 0.094,
+          "d_pf": 0.043,
+          "curve_better": true,
+          "pass": false
+        },
+        "wick_atr12@short@x0.75": {
+          "n_flagged": 35,
+          "identity_keys_same": true,
+          "dNet": 3.87,
+          "d_dd": 3.67,
+          "d_dd_pct": 6.9,
+          "d_calmar": 0.088,
+          "d_pf": 0.032,
+          "curve_better": true,
+          "pass": false
+        },
+        "wick_atr12@short@x0.5": {
+          "n_flagged": 35,
+          "identity_keys_same": true,
+          "dNet": 7.73,
+          "d_dd": 7.34,
+          "d_dd_pct": 13.8,
+          "d_calmar": 0.19,
+          "d_pf": 0.065,
+          "curve_better": true,
+          "pass": false
+        },
+        "flips96@short@x0.75": {
+          "n_flagged": 17,
+          "identity_keys_same": true,
+          "dNet": 2.74,
+          "d_dd": 1.25,
+          "d_dd_pct": 2.3,
+          "d_calmar": 0.042,
+          "d_pf": 0.019,
+          "curve_better": true,
+          "pass": true
+        },
+        "flips96@short@x0.5": {
+          "n_flagged": 17,
+          "identity_keys_same": true,
+          "dNet": 5.49,
+          "d_dd": 2.5,
+          "d_dd_pct": 4.7,
+          "d_calmar": 0.087,
+          "d_pf": 0.039,
+          "curve_better": true,
+          "pass": true
+        }
+      }
+    },
+    "oos|utcsat": {
+      "n": 253,
+      "base_net": 60.21,
+      "arms": {
+        "chain_r_so_far@x1.0": {
+          "n_flagged": 34,
+          "identity_keys_same": true,
+          "dNet": 0.0,
+          "d_dd": 0.0,
+          "d_dd_pct": 0.0,
+          "d_calmar": 0.0,
+          "d_pf": 0.0,
+          "curve_better": false,
+          "pass": false
+        },
+        "chain_r_so_far@x0.75": {
+          "n_flagged": 34,
+          "identity_keys_same": true,
+          "dNet": 1.41,
+          "d_dd": 0.8,
+          "d_dd_pct": 2.7,
+          "d_calmar": 0.053,
+          "d_pf": 0.019,
+          "curve_better": true,
+          "pass": true
+        },
+        "chain_r_so_far@x0.5": {
+          "n_flagged": 34,
+          "identity_keys_same": true,
+          "dNet": 2.81,
+          "d_dd": 1.59,
+          "d_dd_pct": 5.4,
+          "d_calmar": 0.109,
+          "d_pf": 0.04,
+          "curve_better": true,
+          "pass": false
+        },
+        "chain_wl_streak@x0.75": {
+          "n_flagged": 29,
+          "identity_keys_same": true,
+          "dNet": 1.45,
+          "d_dd": 0.89,
+          "d_dd_pct": 3.0,
+          "d_calmar": 0.057,
+          "d_pf": 0.018,
+          "curve_better": true,
+          "pass": true
+        },
+        "chain_wl_streak@x0.5": {
+          "n_flagged": 29,
+          "identity_keys_same": true,
+          "dNet": 2.91,
+          "d_dd": 1.77,
+          "d_dd_pct": 6.0,
+          "d_calmar": 0.118,
+          "d_pf": 0.037,
+          "curve_better": true,
+          "pass": false
+        },
+        "wick_atr12@short@x0.75": {
+          "n_flagged": 36,
+          "identity_keys_same": true,
+          "dNet": 4.82,
+          "d_dd": 2.25,
+          "d_dd_pct": 7.7,
+          "d_calmar": 0.174,
+          "d_pf": 0.041,
+          "curve_better": true,
+          "pass": false
+        },
+        "wick_atr12@short@x0.5": {
+          "n_flagged": 36,
+          "identity_keys_same": true,
+          "dNet": 9.64,
+          "d_dd": 4.5,
+          "d_dd_pct": 15.3,
+          "d_calmar": 0.379,
+          "d_pf": 0.085,
+          "curve_better": true,
+          "pass": false
+        },
+        "flips96@short@x0.75": {
+          "n_flagged": 16,
+          "identity_keys_same": true,
+          "dNet": 2.49,
+          "d_dd": 1.0,
+          "d_dd_pct": 3.4,
+          "d_calmar": 0.08,
+          "d_pf": 0.019,
+          "curve_better": true,
+          "pass": true
+        },
+        "flips96@short@x0.5": {
+          "n_flagged": 16,
+          "identity_keys_same": true,
+          "dNet": 4.99,
+          "d_dd": 2.0,
+          "d_dd_pct": 6.8,
+          "d_calmar": 0.166,
+          "d_pf": 0.039,
+          "curve_better": true,
+          "pass": false
+        }
+      }
+    }
+  },
+  "rollup": {
+    "chain_r_so_far@x0.5": {
+      "cohort": "chain_r_so_far",
+      "size": 0.5,
+      "cells": 4,
+      "cells_pass": 0,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "chain_r_so_far@x0.75": {
+      "cohort": "chain_r_so_far",
+      "size": 0.75,
+      "cells": 4,
+      "cells_pass": 3,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "chain_r_so_far@x1.0": {
+      "cohort": "chain_r_so_far",
+      "size": 1.0,
+      "cells": 4,
+      "cells_pass": 0,
+      "is_control": true,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "chain_wl_streak@x0.5": {
+      "cohort": "chain_wl_streak",
+      "size": 0.5,
+      "cells": 4,
+      "cells_pass": 0,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "chain_wl_streak@x0.75": {
+      "cohort": "chain_wl_streak",
+      "size": 0.75,
+      "cells": 4,
+      "cells_pass": 3,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "flips96@short@x0.5": {
+      "cohort": "flips96@short",
+      "size": 0.5,
+      "cells": 4,
+      "cells_pass": 2,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "flips96@short@x0.75": {
+      "cohort": "flips96@short",
+      "size": 0.75,
+      "cells": 4,
+      "cells_pass": 3,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "wick_atr12@short@x0.5": {
+      "cohort": "wick_atr12@short",
+      "size": 0.5,
+      "cells": 4,
+      "cells_pass": 1,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    },
+    "wick_atr12@short@x0.75": {
+      "cohort": "wick_atr12@short",
+      "size": 0.75,
+      "cells": 4,
+      "cells_pass": 2,
+      "is_control": false,
+      "identity_ok_all": true,
+      "passes_4of4": false
+    }
+  },
+  "result": {
+    "candidate_arms": [],
+    "n_candidates": 0,
+    "verdict": "NO 4/4 CANDIDATE. Sizing down the 4/4-negative cohorts does not clear the pre-registered bar. This does NOT contradict the sizing exemption: the exemption says sizing measurements are VALID post-process, not that every cohort is worth sizing."
+  },
+  "elapsed_sec": 67.48
+}
