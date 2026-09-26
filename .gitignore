@@ -36,3 +36,6 @@ data/unseen/
 # run logs from research harnesses (transient console capture, not artifacts)
 *.out.txt
 *.err.txt
+
+# scratch module written by the patch-injection harnesses (regenerated per run)
+live_stuff/tests/_wick_tmp.py

@@ -1,0 +1,127 @@
+{
+  "stage": "cascade_tax_test",
+  "hypothesis": "cascade comes from exp_mltf / cooldown / loss-streak",
+  "pre_registered": {
+    "converge_pct": 5.0,
+    "min_converged_cells": 3,
+    "worst_tolerance_pct": 10.0,
+    "rule": "CONFIRMED iff gate-off |pp-pt|/|pp| < 5% in >=3 of 4 cells AND gate-off pt not worse than gate-on pt by >10% in any cell."
+  },
+  "carriers": [
+    "exp_mltf",
+    "cooldown_bars",
+    "max_consecutive_losses"
+  ],
+  "gate_on": {
+    "exp_mltf": true,
+    "cooldown_bars": 8,
+    "max_consecutive_losses": 3
+  },
+  "gate_off": {
+    "exp_mltf": false,
+    "cooldown_bars": 0,
+    "max_consecutive_losses": 0
+  },
+  "diagnostic_only": true,
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "cells": {
+    "is|champion": {
+      "gate_on": {
+        "n_base": 500,
+        "n_filt": 389,
+        "base_net": 325.78,
+        "filt_net": 275.23,
+        "n_flagged": 107,
+        "dNet_path_true": -50.55,
+        "dNet_postproc": 8.43,
+        "converge_pct": 699.7
+      },
+      "gate_off": {
+        "n_base": 432,
+        "n_filt": 362,
+        "base_net": 126.82,
+        "filt_net": 132.43,
+        "n_flagged": 92,
+        "dNet_path_true": 5.61,
+        "dNet_postproc": 19.63,
+        "converge_pct": 71.4
+      }
+    },
+    "is|utcsat": {
+      "gate_on": {
+        "n_base": 454,
+        "n_filt": 362,
+        "base_net": 358.95,
+        "filt_net": 304.41,
+        "n_flagged": 92,
+        "dNet_path_true": -54.54,
+        "dNet_postproc": 7.39,
+        "converge_pct": 838.1
+      },
+      "gate_off": {
+        "n_base": 398,
+        "n_filt": 333,
+        "base_net": 161.52,
+        "filt_net": 170.12,
+        "n_flagged": 82,
+        "dNet_path_true": 8.6,
+        "dNet_postproc": 18.57,
+        "converge_pct": 53.7
+      }
+    },
+    "oos|champion": {
+      "gate_on": {
+        "n_base": 279,
+        "n_filt": 216,
+        "base_net": 70.15,
+        "filt_net": -7.81,
+        "n_flagged": 63,
+        "dNet_path_true": -77.96,
+        "dNet_postproc": -75.12,
+        "converge_pct": 3.8
+      },
+      "gate_off": {
+        "n_base": 250,
+        "n_filt": 207,
+        "base_net": -33.2,
+        "filt_net": -39.79,
+        "n_flagged": 58,
+        "dNet_path_true": -6.59,
+        "dNet_postproc": -8.66,
+        "converge_pct": 23.8
+      }
+    },
+    "oos|utcsat": {
+      "gate_on": {
+        "n_base": 253,
+        "n_filt": 198,
+        "base_net": 60.21,
+        "filt_net": 0.59,
+        "n_flagged": 58,
+        "dNet_path_true": -59.61,
+        "dNet_postproc": -75.17,
+        "converge_pct": 20.7
+      },
+      "gate_off": {
+        "n_base": 228,
+        "n_filt": 188,
+        "base_net": -8.82,
+        "filt_net": -26.67,
+        "n_flagged": 52,
+        "dNet_path_true": -17.85,
+        "dNet_postproc": -21.83,
+        "converge_pct": 18.2
+      }
+    }
+  },
+  "result": {
+    "converged_cells": 0,
+    "total_cells": 4,
+    "worst_gateoff_regress_pct": 0.0,
+    "h2_confirms": false
+  },
+  "elapsed_sec": 183.87
+}
