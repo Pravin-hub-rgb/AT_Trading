@@ -9,8 +9,10 @@
 ## 1. The Gate (non-negotiable, applies to EVERY candidate)
 
 - **Forward n >= 50 pre-registered trades before ANY candidate is adopted.**
-  Current forward slice: 0/50. Nothing is adopted, partially adopted, or
-  'adopted with a caveat'.
+  Current forward slice: **5/50 scored** (CHECKLIST 24.70: 5 trades, net
+  -3.83R, PF 0.22). Nothing is adopted, partially adopted, or
+  'adopted with a caveat'. At the realised ~12 trades/month, n >= 50 needs
+  roughly 4 more months.
 - Backtest IS/OOS + cross-instrument results are QUEUE evidence only -
   they order the queue, they never clear it.
 - No live sizing of any kind before the order-time sizing bridge (section 4a)
@@ -48,7 +50,7 @@ Notes:
   NOT mean live lot sizing is correct.
 - **Order-time sizing bridge: NOT BUILT** (section 4a). This is the single
   hard engineering precondition, and it applies before forward n counts.
-- **Forward n >= 50**: 0/50.
+- **Forward n >= 50**: 5/50 scored.
 
 **Per candidate:**
 
@@ -87,6 +89,13 @@ Notes:
   rougher (ulcer). Do not quote 'edge transfers' without that qualifier.
 - **(e) Study-2 weak-OOS-baseline luck caveat (24.77)** applies to every OOS
   delta in this document.
+- **(f) The 5 forward trades scored so far LOST money** (net -3.83R, PF 0.22,
+  all 5 shorts into a rising market, 24.70). n=5 is far too small to conclude
+  anything in either direction - that is exactly why the contract fixes n >= 50
+  and pre-registered R5 = "NO VERDICT at n<50". Recorded here so this number is
+  not later mistaken for evidence against the queue: it is not, and it is not
+  evidence for it either. **Do not tune anything in response to it** - the
+  contract forbids that at any n.
 
 ## 5. Tested and FAILED - do not re-run (records, not candidates)
 
