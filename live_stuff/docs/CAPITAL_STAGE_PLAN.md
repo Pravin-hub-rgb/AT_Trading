@@ -149,6 +149,32 @@ Notes:
   needs a fresh cross-venue run before it means anything; (3) the age10 OOS
   delta is +5R on a 130-trade book - well inside noise.
 
+- **(a4) The cross-venue run REFUTES the portability objection but not the
+  curve problem.** `exp_zx_cross_venue.py` -> `_zx_cross_venue_results.json`
+  re-ran ZC / X / uZX / sZX on Binance perp (24.82 data, era windows mirrored,
+  threshold **not** re-derived - that would defeat the point of a transfer
+  test). Bybit control passed: base ledgers and the uZX dNet reproduce 24.85
+  exactly, so the harness is not the problem.
+
+  | arm | Binance 6/6 | champion dNet IS/OOS | note |
+  |---|---|---|---|
+  | `uZX` | **no** | +52.2 / +23.7 | dNet positive, curve FALSE on IS |
+  | `sZX` | **no** | +64.7 / +23.7 | same shape |
+
+  The finding is more specific than "it does not transfer". **dNet is positive
+  in 22 of 24 Binance cells** - the profit effect is real and venue-robust. What
+  fails is exclusively `curve_better`, and it fails on the two large IS books
+  (champion and utcsat, 187 and 169 flagged trades) while the small age10 book
+  passes on all four arms. So 24.82's "ZC does not transfer" was measuring curve
+  degradation, not the absence of profit.
+
+  That does **not** rescue the lever. The rule is the rule: 6/6 was
+  pre-registered, ZCX is not 6/6 on either venue, and it is not 6/6 on Binance
+  either. What the run does establish is that the failure is a **shape** problem
+  in one consistent direction, not noise - which is the profile a future
+  size-cap or capped-add variant could attack, and not the profile of a dead
+  idea.
+
   What it does establish: the queue was never five levers, it was **one
   forward-looking lever wearing five hats**. With M2 removed there is still
   positive, reproducible, *live-computable* signal - it just does not yet clear
