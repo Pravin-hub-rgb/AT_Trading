@@ -449,8 +449,20 @@ Verdicts:
   bigger than the edge being removed. flips96 retracted by extension (same lever). Do not
   re-test.
 
-Cross-cutting: (1) combinations (M2 + ONE Z flag + X/Y) are UNTESTED - any combo needs its own
-pre-registered run; (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
+- **Combination matrix (Stage Combo, 24.79) - ALL 4 COMBO ARMS PASS 6/6.**
+  M2 x ZC(vol7_prev7<=0.846) x X on the flat books, union vs stacked modes,
+  pre-registered same rule (dNet>0 AND curve_better all 6 cells). Strongest
+  sMZX (x1.5^count): champion +346.5/+130.4 dNet IS/OOS (book 325.8->672.3,
+  70.2->200.5), utcsat +341.2/+146.6 (358.9->700.1, 60.2->206.8), age10
+  +270.3/+29.9 (435.7->706.0, 43.2->73.2). Union uMZX milder (+165.5/+49.5
+  champion). Raw maxDD deeper in 3 stack cells (champion OOS 53.2->56.2) but
+  ulcer/calmar/sortino improve in all 18 combo cells. Singles re-scored: M2
+  6/6; ZC age10-OOS curve FAIL; X age10-OOS no-op (nAff=0), X n=7/9 caveat
+  travels into combos. Recorded, NOT adopted (RESEARCH_POLICY).
+
+Cross-cutting: (1) combinations (M2 + ONE Z flag + X/Y) were UNTESTED at
+24.77 - NOW RUN (24.79: all 4 combo arms PASS 6/6, see the combination-
+matrix bullet above); (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
 (3) all survivors are post-process R-unit sizing - live implementation is order-time lot
 sizing, no entry feedback either way; (4) exploratory labels travel with every number.
 **Nothing adopted - adoption decisions are the user's (RESEARCH_POLICY: no automatic gate).**
