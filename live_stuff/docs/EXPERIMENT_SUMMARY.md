@@ -408,7 +408,7 @@ the artifacts named under each candidate. dNet = arm net minus baseline net on t
 
 | rank | candidate (flag) | flag share | dNet IS c/u | dNet OOS c/u | curve record | DD cost | OOS flagged n | exposure |
 |---|---|---|---|---|---|---|---|---|
-| 1 | **M2 bigleg** cur_mag_atr>=3.0 | 16-29% | **+153.5 / +131.0** | **+31.5 / +30.8** | **6/6 TRUE** (age10 +117.1/+18.8) | dDD -2.1..+0.45; ulcer DOWN all 6 | 41 / 38 (age10 5) | 1.1-1.2x |
+| 1 | **M2 bigleg** cur_mag_atr>=3.0 | 16-29% | **+153.5 / +131.0** (flat +152.7 / +147.5) | **+31.5 / +30.8** (flat +29.1 / +31.3) | **6/6 TRUE** stack AND flat (age10 +117.1/+18.8; flat +113.0/+21.3) | dDD -2.1..+0.45 stack; flat deeper only u IS | 41 / 38 stack, **48 / 47 flat** (age10 5 / 12) | 1.1-1.2x |
 | 2 | **Z-C** vol7_prev7<=0.846 | ~33% | +106.5 / +112.3 | **+32.2 / +40.4** | TRUE x4 | maxDD deeper x4 (OOS c 53.2->61.8) | 81 / 76 | 1.1-1.2x, ONE Z flag only |
 | 2 | **Z-A** er50<=0.0767 | ~33% | **+110.3 / +110.5** | +17.3 / +23.4 | TRUE x4 | maxDD deeper x4 (IS u 21.2->26.7) | 84 / 81 | same |
 | 2 | **Z-B** wick_gt3x_pct12>33.3 | ~24% | +74.1 / +71.9 | +18.3 / +23.4 | TRUE x4 | maxDD deeper x4 | 70 / 62 | same |
@@ -418,13 +418,18 @@ the artifacts named under each candidate. dNet = arm net minus baseline net on t
 
 Verdicts:
 
-- **M2 = front-runner, unchanged.** Largest edge; the only candidate whose raw maxDD never
+- **M2 = front-runner, flat-confirmed.** Largest edge; the only candidate whose raw maxDD never
   deepens (dDD -2.1..+0.45) while ulcer/sortino/PF improve in all 6 cells - flag enrichment
   means the larger size lands on higher-avgR trades. Healthy OOS flagged n (41/38), 100% row
   coverage. BOOK NOTE: Stage O measured M2 on the Stage-B stack book (half+delay1
   [+skip_decisive OOS]), not flat: 466/428/94t at +429.6/+411.1/+489.3 IS, 217/194/50t at
-  +110.5/+94.6/+65.8 OOS. A flat-book M2 number does not exist - adopting M2 on the flat book
-  needs one confirming run first. age10 OOS rests on 5 flagged trades (lane-level small-n).
+  +110.5/+94.6/+65.8 OOS. FLAT-BOOK CONFIRMING RUN (checklist 24.78, log 83):
+  PRE-REGISTERED PASS 6/6 - flat dNet +152.7/+147.5/+113.0 IS, +29.1/+31.3/+21.3 OOS
+  (champion/utcsat/age10), ledger assertions 4/4, identity IDENTICAL, ulcer down 6/6,
+  raw DD improved in 3 cells, unchanged in 2, deeper only utcsat IS (21.2->23.0); OOS
+  flagged n 48/47/12 - larger than the stack book's 41/38/5. The edge reproduces
+  book-independently (champion gap <= 2.4R; utcsat flat IS is +16.5 BETTER); age10
+  OOS flagged n = 5 stack / 12 flat (lane small-n either way).
   User note stands: 1x present capital; the 1.5x-on-bigleg lever is pre-approved for when
   capital has grown.
 - **Z = strong second, pick ONE.** All three flags PASS 4/4 with healthy n (62-167); Z-C has
