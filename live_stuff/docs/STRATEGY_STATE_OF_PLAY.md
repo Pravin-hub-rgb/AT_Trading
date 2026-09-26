@@ -119,8 +119,8 @@ The v18 streak_halt engine is well-built. The trail ratchet fix (commit ee574f9)
 |---|---|---|
 | Room Filter | **DEAD** | HURTS OOS at every threshold |
 | Leg Quality Score (mag_ratio) | **WINNER** | mag3: +45.6R OOS (vs +27.6R wknd only) |
-| Structure Evolution | **DEFERRED** | Needs engine-level changes |
-| MTF Regime | **BROKEN** | Implementation produces 0 trades |
+| Structure Evolution | **DEAD 2026-09-24** | Path-true `exp_struct_mag_min` 0.80/1.00 kills IS (swingpause dIS −60/−122, multi worse); `exp_struct_freq_max` is a no-op (freq formula ≪4 always). Kwargs KEPT default-off. |
+| MTF Regime | **DEAD 2026-09-24** | Path-true `exp_mtf_mode` 1/2 (1h swing dir confirm, causal at t_e): multi OOS up but IS collapses; swingpause mode=1 dIS −18.0 / dOOS +67.9 fails both-sides. Old 0-trade bug fixed via t_e injection. Kwargs KEPT default-off. |
 
 ### Wick Reject — DEAD (Contradicted by Patcher)
 
@@ -146,9 +146,9 @@ The inline patcher test (the correct test) shows wick_reject **hurts everywhere*
 
 EMA alignment helps OOS (+17.4R) but DD is very low and trade count is unchanged. Needs deeper validation before adoption.
 
-### Mean Reversion / Compression Breakout — Exploratory
+### Mean Reversion / Compression Breakout — CLOSED (2026-09-24)
 
-Both tested via `test_new_paradigms.py`. Mean reversion shows promise (OOS +27.9R DD=1.0) but very few trades (5). Compression breakout shows no edge.
+Both tested via `test_new_paradigms.py`. Mean reversion shows OOS +27.9R DD=1.0 but only 5 trades — and the MR filter uses `r_multiple` in its keep decision (lookahead-broken; cannot be trusted). Compression breakout shows no edge. Entry-quality budget (§3h) is closed; neither will be re-run path-true. **Status: CLOSED.**
 
 ### mag_ratio Deep Dive
 
@@ -379,8 +379,23 @@ The other bot tested dualunion on the SAME 2023-2026 data (IS/OOS split at 2025-
 - [x] Creative idea sweep — entropy/fd/session modes added to engine
 - [x] Full metrics comparison — entropy ct=61 +filt is new king (+82.3R OOS)
 - [x] True OOS validation (2021-2022) — dualunion claim REFUTED, union wins by +24R
-- [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
-- [ ] Volume data re-fetch (btc_fetch.py modified, refetch script ready)
-- [ ] Test Ideas B (funding rate), A (HMM), C (OI change) — need new data
-- [ ] Test Ideas D (ensemble), E (transition detection), F (GARCH)
-- [ ] Investigate era-specific behavior (why 2021-2022 differs from 2023-2026)
+- [x] Swing engine mismatch (#1 on checklist) — FIXED (PSE re-feed stitch; 87/87 + 118/118 PERFECT)
+- [x] Issue #10 rolling-window trade loss — FIXED (L1 open-HTF + L3 rebase + L5 open-swing; seed 20.8d = 100%, windowed sim 83.3%)
+- [x] Volume data re-fetch — DONE 2026-09-23 (Bybit 15m/1h/5m/4h/1m ~99.9% vol; identity + smoke green)
+- [x] Test Ideas B (funding rate), A (HMM) — DEAD
+- [ ] Test Ideas C (OI change) — DROPPED (no 2023 OI data)
+- [x] Test Ideas D (ensemble), E (transition detection), F (GARCH) — all DEAD
+- [x] Investigate era-specific behavior (why 2021-2022 differs from 2023-2026) — DONE 2026-09-24 (`exp_era_split_autopsy.py`): 2021 bleeds; OOS-ex-FTX flat; FLIP collapses / B2 holds; longs die OOS; ATR 1.6–2× higher. No era-hardcode gate.
+
+## 12. Equity-curve re-score (2026-09-24) — research comparison; no automatic adoption gate
+
+Classic +30R/yr is retained only as a historical reference point, not as a pass/fail or adoption threshold. Re-scored under equity quality (maxDD / ulcer / calmar / net non-worse both sides): **5/12 CURVE PASS BOTH, 3/12 OOS-only.**
+
+| Open curve candidate (default-off) | Raw P&L comparison | Equity | Notes |
+|---|---|---|---|
+| `exp_trail_half=1` + `exp_trail_delay_r=1.0` on multi | positive IS/OOS net-R delta | **PASS BOTH** | champ IS +104R, OOS +20R, 2021 gross flips +; utcsat OOS +27R, calmar↑ |
+| `exp_skip_decisive=1` on multi | positive OOS net-R delta; IS no-op | **OOS strong** | champ OOS ulcer 214→83, maxDD 53→34, net +70→+99; free insurance in high-vol eras |
+
+age10 stack: all arms FAIL equity. cohort sizing: fails by OOS net. Full tables: `EQUITY_CURVE_STUDY.md`.
+
+For new arms, report P&L and equity-curve changes separately. There is no fixed R/year ship bar, no automatic production gate, and no requirement that a variant beat an invented absolute threshold. Positive IS/OOS deltas plus improved drawdown, ulcer, Calmar, or recovery are evidence of potential; harm in any applicable period or configuration remains a research caveat. Baseline itself is not independently production-validated.

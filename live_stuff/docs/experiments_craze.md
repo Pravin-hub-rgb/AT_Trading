@@ -657,8 +657,13 @@ Script: `exp36_reconcile.py` (fine fills, funding-inclusive).
 | 9 | B3-OPT lb50 halt3 | +115.4 | 10.2 | single |
 | 10 | B3-OPT lb50 halt6 | +112.5 | 12.2 | single |
 
-**Remaining before final pick:** (i) stress battery + per-year/both-halves verification for anchor-lb30 (now the leading single-position candidate); (ii) concurrency-cap design for the mltf leaders; (iii) cd0 latency validation for OPTIMAL. The B3 limit-order salvage idea stays logged.
-**Status: DONE.**
+**Remaining before final pick — ALL CLOSED 2026-09-24:**
+- **(i) anchor-lb30 stress battery + per-year/both-halves — DONE** (`exp_closeout_battery.py`): lb30 w0 n=349 NET +170.5 WR 27.5% PF 1.59 PIN OK (pins re-baselined post-`ee574f9` trail-ordering fix, fine nets ~−26R). Per-year: 2023 −1.0 / 2024 +95.6 / 2025 +27.3 / 2026 +48.5 (all-years-positive FAIL — 2023 −1.0 ≈ breakeven not structural bleed). Both-halves PASS: H1 +69.0 / H2 +101.5. Cost stress PASS: ×1.5 +133.7 / ×2.0 +96.9 / ×3.0 +23.3.
+- **(ii) concurrency-cap design for the mltf leaders — DONE**: offline N4 cap3 on their-OPTIMAL +4.3R / −1.5R DD → +326.8 NET / DD 21.8 (removes breakeven/worse 2+ overlaps). Path-true `exp_maxconc_path.py`: cap=5 FREE (champion/king dIS +1.1 / dOOS 0.0), cap=4 near-free, cap=2/3 cost real R, single no-op. **Design pick: offline cap3 + path-true exp_max_concurrent=5 as live risk limit.**
+- **(iii) cd0 latency validation for OPTIMAL — DONE**: OPT-cd0 n=515 NET +296.7 — no latency collapse vs cd10.
+
+The B3 limit-order salvage idea was tested 2026-09-24 — DEAD (multi dIS −160/−173; swingpause both-sides +8.5/+14.4 ≈ 2R/yr ≪ ship; see EXPERIMENT_LOG). B3 family fully closed.
+**Status: DONE — all three remaining items closed 2026-09-24. Final pick ready.**
 
 ---
 

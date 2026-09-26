@@ -44,5 +44,5 @@
 - B3-OPT cd10 and B3-OPT+halt6 cd10 are fully production-parameter single-position configs (no concurrency, no cd0).
 - their-OPTIMAL fine gross (+456.2R) vs coarse (+429.8R): fine fills HELP this engine (Exp 28 Q3 reconciliation, 515/515 matched).
 - halt4 cliff on OPTIMAL (Exp 28 Q5): single-halt sensitivity exists; halt=3 is the shipped default.
-- NOT yet done: true re-optimizing walk-forward (fixed-config 3-cut stability passed for OPTIMAL/B3-OPT); cd=0 live latency validation; concurrency-cap variants (cap 2/3).
+- ~~NOT yet done~~ DONE 2026-09-24: true re-optimizing walk-forward (ALIVE — WF +247.8 vs fixed +238.9 = 104% retention, `exp_wfo_true.py`); cd=0 latency validation (OPT-cd0 n=515 NET +296.7, no collapse, `exp_closeout_battery.py`); concurrency-cap variants (offline cap3 +4.3R/−1.5DD → +326.8/21.8; path-true cap5 FREE, `exp_maxconc_path.py`).
 - Decisions DEFERRED until experiment list exhausted (user process).

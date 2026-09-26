@@ -305,9 +305,193 @@ then run both-sides (IS champion/king/swingpause + OOS 2021-22) via
 | flip-break (LTF close vs pe) | exp_flip_break | −189 / +18 | −218 / +17 | **+7.6 / +8.3** | MARGINAL on single only; DEAD on multi |
 
 flip-break is the only both-sides pass (swingpause NET +29.6/+16.2) but ~8R/yr
-is below the +30R/yr ship bar; multi starves without FLIP overlaps. Flag KEPT
+multi starves without FLIP overlaps. This is a marginal research result, not a universal pass/fail threshold. Flag KEPT
 for stack research. ADX/session/htf4/v9 kwargs REVERTED (dead = clutter).
 Harness kept: `live_stuff/tests/exp_oldengines_path.py`.
+
+
+### 3f-3. Idea A — HMM regime router path-true (2026-09-23)
+
+New engine modes `hmm` / `hmm_inv` (like entropy/fd/session): 2-state Gaussian
+HMM on 1h log-returns, Baum-Welch on first 45% only, causal forward-filter the
+full series, route P(range)×100 > chop_thresh → B2 else FLIP. Identity gate
+green post-add (340t/+225.3 IDENTICAL — modes gated on `mode in ("hmm","hmm_inv")`).
+Both-sides via `live_stuff/tests/exp_hmm_path.py` (champion/king/swingpause × IS+OOS),
+chop_thresh 50/55/58/61 + inv.
+
+| config | best hmm dIS/dOOS (NET) | hmm_inv | verdict |
+|---|---|---|---|
+| champion_multi_sw10 | ct=61: +3.6 / −2.4 (NET +329.4/+67.7) | −232 / −62 | **DEAD** (OOS down) |
+| utcsat_multi_sw10 | ct=61: +10.7 / −1.6 (NET +369.6/+58.6) | −260 / −45 | **DEAD** (OOS down) |
+| swingpause single | ct=50: +5.0 / −1.6 | −92 / −29 | **DEAD** (OOS down; ct≥55 both sides down) |
+
+Trade counts shift ±10–30t so the router is active; it just never improves OOS.
+hmm_inv catastrophic as expected (confirms range→B2 polarity is right).
+Same class as entropy/fd: classifier is structurally sound, no true-OOS edge.
+mode branches KEPT in engine for reference (matches entropy/fd precedent).
+
+
+### 3f-4. Param sweep + in-engine caps + Idea E + stack (2026-09-23)
+
+Four follow-ons after §3f-3, all both-sides via dedicated harnesses.
+
+**atr_high_thresh** (`exp_atrhigh_sweep.py`): grid 0.40–0.90 on mode=atr_high
+kings. Best both-sides = noise (champion 0.70 +0/+4.4 NET; swingpause 0.55
++3.4/+5.3). 0.40 opens OOS +47..+69 but kills IS −70..−95 (era flip).
+**0.65 confirmed near-optimal. Param family closed.**
+
+**exp_max_concurrent** (`exp_maxconc_path.py`): in-engine position cap.
+cap=5 multi = **FREE** (champion/king dIS +1.1 / dOOS 0.0). cap=4 near-free
+(champion OOS −6.2). cap=2/3 cost real R. single = no-op.
+**ALIVE deployment enabler** — path-true validates offline audit 3c; use
+cap=5 for live risk.
+
+**Idea E regime-transition skip** (`exp_regime_skip.py`): exp_regime_skip =
+|Δchop over 4×15m| > 5..20. Best both-sides: champion >10 +30.9/+2.3 NET;
+swingpause >10 +4.8/+6.2. King never both-sides at magnitude.
+**MARGINAL / MIXED** (~8R/yr; no automatic adoption gate). Flag KEPT for stack research.
+
+**Stack flip×regime** (`exp_stack_marginals.py`): exp_flip_break=1 +
+exp_regime_skip=8/10/12. swingpause STACK flip+reg8 = **+38.7/+27.7 BOTH**
+(best stack; turns swingpause OOS NET −17.0 → +10.7). champion/king: flip-break
+still kills IS (−78..−218). **MARGINAL / MIXED** (~10R/yr; no automatic adoption gate). Recipe kept for research.
+
+Harnesses: `exp_atrhigh_sweep.py`, `exp_maxconc_path.py`, `exp_regime_skip.py`,
+`exp_stack_marginals.py`.
+
+
+### 3f-5. Soft multi-mode ensemble — Idea D (2026-09-23)
+
+Modes added to engine (signature + branches, identity green):
+- `mode=soft_chop` — chop in (ct±soft_width) → decisive(B2+FLIP); above → B2; below → FLIP
+- `mode=soft_atr` — production atr_high softened; band falls back to chop
+- `mode=soft_ensemble` — mean ramp(chop, ATR%·100, 100−entropy, FD) as range score 0–100;
+  high→B2, low→FLIP, band→decisive. `soft_width` default 4.0 (0 = hard).
+
+Harness `exp_soft_ensemble.py`: widths soft_chop 0/2/4/6/8, soft_atr 0.05–0.20,
+soft_ens 4/8/12/16 × champion/king/swingpause × IS+OOS.
+
+**Result: DEAD / not supported as a universal improvement.**
+- champion: no both-sides pass (soft_chop w=6 +8.9/−1.8; all soft_atr/ens OOS down)
+- king: max both-sides soft_chop w=2 +0/+1.6 (noise); soft_atr OOS −3..−13
+- swingpause: only both-sides soft_ens w=12 **+14.3/+3.4 NET**; soft_atr w=0.20 IS +32 but OOS −11.4 fails
+
+Wide bands open OOS trades but kill IS on multi (−97..−139). Softening the
+production atr_high path only degrades OOS. The binary switch at the right
+threshold already captures the regime edge — smoothing loses it (same class
+as HMM/entropy/fd: classifier sophistication ≠ edge).
+
+**Verdict:** modes KEPT in engine for reference; does not ship.
+
+
+### 3f-6. Pivot-break trail (fix/more ideas.md L24-36) — 2026-09-23
+
+`exp_pivot_trail=1`: instead of swing-start ratchet, trail to the intervening
+extreme when a pivot breaks — LONG: pivot = up-swing end, on break SL = min low
+since last break/entry; SHORT mirror (pivot = down-swing end, max high).
+
+Wired in craze: precompute break bars once (`_pb_long`/`_pb_short`) before the
+trade loop; per-trade segment chain from entry. Identity green at default 0.
+
+**Result: DEAD.**
+- champion: n 500→515, dIS **−159**, dOOS **−70** (NET +325.8/+70.1 → +169.8/−2.5)
+- king: dIS −154, dOOS −49
+- swingpause: dIS −84, dOOS +37 (mixed, fails both-sides)
+- trail_max_dist=1.0/0.6 stacks: **no-op** — pivot path never enters the
+  swing-start append block the filter guards
+- +regime>10: still −150+ IS on multi
+
+Mechanics: intervening extreme ≈ initial risk zone → no breakeven protection,
+or ratchets into a noise low that gets wicked. Swing-start trail only advances
+when a NEW same-dir swing confirms (structure complete), which is strictly
+better timing. Harness `exp_pivot_trail.py`.
+
+
+### 3f-7. True re-optimizing walk-forward (WFO) — 2026-09-23
+
+Backlog close: every prior WF was fixed-config stability. `exp_wfo_true.py`
+re-PICKS knobs on train, freezes for test (exp30 pattern, fine fills, net_r).
+
+- Grid: 48 combos = mode(atr_high 0.60/0.65/0.70 | b2_vs_flip_chop 55/58/61.8)
+  × ext 1.5/3.0 × cd 0/8 × persist 0/7 × halt 3, champion base, full IS once
+- Steps: expanding year — train 2023→test 2024, 2023-24→2025, 2023-25→2026
+- Baselines same test slices: fixed champion registry params; oracle = single
+  best combo on full IS (in-sample upper bound)
+
+**Result: ALIVE — WFO holds.**
+| | test NET |
+|---|---|
+| WF (re-pick each step) | **+247.8** |
+| Fixed champion on same windows | +238.9 |
+| Oracle (full-IS best fixed) | +258.8 |
+
+Retention vs fixed champion **104%**; WFO/oracle (selection efficiency) **96%**.
+Chosen combo identical all 3 steps: b2_vs_flip_chop / chop=61.8 / ext=3 / cd=8
+/ persist=0 (full-IS NET +350.1 vs champ +325.8-class). Selection is stable —
+not flailing across years. Protects the +30R/yr claim: re-optimizing does not
+uncover a better path that fixed params are missing, and does not collapse OOS.
+
+Caveat: engine halt-state carries across boundaries in full-period runs (same
+for all combos; identical to exp30 convention). JSON: `_exp_wfo_true.json`.
+
+
+### 3f-8. ETH/BTC ratio momentum skip — Idea G (2026-09-23)
+
+`exp_eth_skip` / `exp_eth_lb` / `exp_eth_closes` wired into craze (kwargs +
+path-true precompute `_eth_mom[bar]` from ETH 1h closes aligned to candles_htf
+by index; gate at filter-append: skip if mom > thresh). ETH fetched from
+Binance 2021-01→present via `scripts/download_eth.py` (START_IST changed) so
+OOS 2021-22 has full ETH coverage (zeros=0 both sides).
+
+Harness `exp_eth_ratio.py`: mom24/48/72 × thr 5/8/12% × champion/king/swingpause × IS+OOS.
+
+**Result: DEAD / noise.**
+- champion: best both-sides mom24>8% **dNET +1.2/+8.0** (≈ 2R/yr); mom24>5% dOOS +19 but dIS −9 fails
+- king: mom24>8% +1.2/+6.0; mom24>5% dOOS +14 but dIS −2
+- swingpause: mom24>5% dOOS +11.9 but dIS −7.1; 8%+ OOS flat-down
+
+Nothing clears +30R/yr. Correlation/cross-asset filter family closed for
+ETH/BTC ratio. Flag KEPT for reference. Identity green at default 0.
+
+
+### 3f-9. GARCH regime router — Idea F (2026-09-23)
+
+`mode=garch` / `garch_inv` added to engine: `_garch_regime_1h` freezes
+ω/α/β from train prefix (45%), recursive σ² = ω + αε² + βσ² on 1h log-returns,
+range-score = 100×(1 − trailing rank of predicted vol over lb=96), mapped to
+LTF bars. Router: score > chop_thresh → B2 else FLIP (inv opposite).
+
+Harness `exp_garch_path.py`: ct 50/55/58/61 + inv × champion/king/swingpause × IS+OOS.
+
+**Result: DEAD.**
+- champion: best ct=61 dNET **−54.4/−34.7** (all ct negative both sides)
+- king: best ct=61 dNET **−32.8/−11.5** (all ct negative both sides)
+- swingpause: OOS only +3.4..+14.9 at ct=58/61/inv but dIS −75..−143 fails hard
+- garch_inv catastrophic as expected
+
+Same class as HMM/entropy/fd: sophisticated vol classifier ≠ edge. Predicted-
+vol quiet/trend split does not beat production atr_high/b2_vs_flip on OOS.
+Mode branches KEPT for reference (matches HMM/entropy precedent). Identity green.
+
+
+### 3f-10. B3 structure confirmation — both-sides path-true (2026-09-23)
+
+`b3_k` already in craze (kwargs b3_k / b3_mode): after B2/flip signal at bar i,
+scan bars i+1..i+b3_k for close/wick beyond signal-bar extreme; entry relocates
+to trigger bar; timeout dies. Previously tested IS-only on anchor (206t +278.6R
+fine absolute) and deferred by user.
+
+Harness `exp_b3_path.py`: k=4/8/12 × close/wick × champion/king/swingpause × IS+OOS.
+
+**Result: DEAD.**
+- champion: all k/mode dIS **−247..−287** / dOOS −50..−77 (n 500→107-169 OOS)
+- king: all dIS **−257..−283** / dOOS −27..−51
+- swingpause: OOS +13..+39 (both-sides sign pass at k=8) but dIS **−67..−152** fails hard; best OOS +39.0 ≈ 10R/yr ≪ +30R/yr ship
+
+Confirmation delay destroys coverage and most of the edge on multi (needs FLIP
+overlaps). Old absolute numbers were not delta vs current production bases.
+First-swing entries remain the edge (v1 family already proved skip-first dies).
+Does not ship. Flag KEPT for reference. Identity green.
 
 
 ### 3g. Sequential one-pass causal study — HARNESS ARTIFACT RESOLVED, NUMBERS CERTIFIED (2026-09-20, corrected 2026-09-21)

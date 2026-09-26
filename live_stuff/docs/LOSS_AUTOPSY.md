@@ -307,3 +307,100 @@ OPT-cd10 w24 ext1.5 (MULTI)                 +2R   +40R   +59R   +57R   +91R  +11
 16. **w24 has ZERO effect on atr_high** — identical trade count and NET to w0 (371t, +261.5R). The atr_high mode already handles the timing issue that w24 fixes on other lanes (lb30, A4). No timing gate needed.
 17. **Deferred entry HURTS on atr_high** — defer24 drops to 298t, -28.0R (DD improves to 18.8R, PF improves to 2.67). defer6/12 even worse. The requeue mechanism loses profitable trades that the wider ext_stop=3.0 already gives room to run.
 18. **atr_high is self-cleaning** — the combination of decisive signal routing + wider stops + partial exits makes timing gates (w24, defer, curfew) unnecessary. This is the cleanest finding from the other bot's transfer: we don't need what they need.
+
+---
+
+## Death-Path + Parent-State Autopsy (2026-09-24)
+
+**Date:** 2026-09-24  
+**Harness:** `live_stuff/tests/exp_deathpath_autopsy.py` (+ cross-lane sweep `_deathpath_crosslane_sweep.py`)  
+**Lanes:** champion_multi_sw10 (500t, NET +445.2 gross) + lb30 w0 (349t, NET +170.5)  
+**Dimensions:** death-path taxonomy, causal parent unrealized-R / dist-to-SL at LTF entry, in-window prior LTF losses, entry microstructure (body/wick/gap), cross-lane gate combos  
+
+### Death-path taxonomy (losses only)
+
+| Path | Champion n | NET | MFE avg | MAE avg | Hold med | tPeak% | Retest% |
+|---|---|---|---|---|---|---|---|
+| instant (MFE<0.25) | 99 | −97.3 | 0.12 | — | — | — | — |
+| fade (MFE<0.75) | 113 | −105.5 | 0.47 | — | — | — | — |
+| early-peak (tPeak<40%, MFE≥1) | 54 | −48.1 | — | — | — | 20% | 98% |
+| trail-giveback (else) | 84 | −70.9 | 1.88 | — | — | 56% | — |
+
+~40% of losses are givebacks from real MFE — but trail-tighten family already DEAD (kills monsters). No causal pre-entry predictor for path class found.
+
+### Key causal findings (refuted hypotheses)
+
+1. **parent_u ≡ ext_r exactly** (meanAbsDiff=0). Cut ext≥1.5 = +27.5R on champion only; lb30 has zero ≥1.5 trades; path-true ext=3.0 already beats 1.5 by +26R on atr_high. Post-hoc trap (RQ4-class), not a gate.
+2. **Parent underwater NOT a skip** — parent_u<−0.5 = +59.4 on champion (runners live there). All skip-if-underwater gates negative on both lanes.
+3. **In-window prior losses INVERSE** — more prior losses in same parent window = better subsequent trades (champ: 0 prior +87.2 → 1 +90.6 → 2+ +267.4; lb30: +44.1 → +81.8 → +134.9). Kills skip-after-in-window-loss before testing.
+4. **First-in-window × parent_u** — all first-in-window gates negative dNET (champ: ubin 0-0.5 −12.5, −0.5-0 −12.3, <−0.5 +57.3 but only 6t).
+5. **Microstructure** — body≥0.75 cut loses both lanes; upper wick≥0.6 flat (champ −3.8/44t, lb30 −4.6/34t); lower 0.4-0.6 slightly negative (champ −6.9/52t, lb30 −4.3/34t). Entry-quality family.
+
+### Cross-lane sweep (~100 combos) — crude "meaningful" cuts
+
+Only 4 passed both dNET≥5 + runners≤3 + monsters=0:
+
+| Gate | champ dNET | lb30 dNET | Family status |
+|---|---|---|---|
+| FIRST & wage[6,12) | +11.4 | +14.1 | Wage on multi HURTS; wage12 ruled out |
+| body≥0.9 (marubozu) | +11.6 | +6.9 | §3h entry-quality tombstoned |
+| wage[0,12) & kind=FLIP | +11.2 | +10.4 | Wage family dead on multi; FLIP-only already tested |
+| FIRST & upper≥0.5 | +17.9 | +12.8 | Entry microstructure / wick_reject dead |
+
+All map to already-dead families. Every other combo negative or noise on one lane.
+
+### Verdict
+
+**No path-true candidate.** Autopsy closes with:
+- Death-path taxonomy (descriptive)
+- 3 refuted hypotheses (parent-underwater skip, in-window-loss skip, microstructure cuts)
+- prior_loss-inverse finding (actionable negative: don't skip after in-window loss)
+- parent_u ≡ ext_r structural identity (explains ext≥1.5 trap)
+
+No production change authorized.
+
+---
+
+## Duration & Negative-Zone Forensic (2026-09-25) — Stages R + S
+
+**Harness:** `exp_duration_autopsy.py` (R, descriptive) + `exp_zone_timestop.py` (S, 7 pre-registered replay arms)
+**Lanes:** champion / utcsat / age10 candidate arms, IS + OOS. Identity gate IDENTICAL. Engine untouched.
+
+### Answers to the direct questions
+
+| Question | Answer (champion IS; OOS same shape) |
+|---|---|
+| Loss ki avg/median duration? | **median 7.1h** (OOS 7.4h); 79% of losses die within 24h (0-6h: 153, 6-12h: 62, 12-24h: 50 of 337) |
+| Winners 0R+ kab nikle? | **first-touch 0R median 0.17h**, +0.5R 1.78h, +1R 4.23h — positive in minutes, ride days (winner median hold 81h) |
+| Monster duration | median 172h (IS) / 169h (OOS) — 7+ days |
+| Zone [-1,0) residency | losses median 2.87h total, longest continuous stretch **0.88h**, below −0.5 median 0.45h; winners/monsters ≈ 0 |
+| Long-stuck trades | zone stretch ≥12h = **19/466**, ≥24h = **5/466**, ≥48h = 3/466 |
+
+### R5 — Stage-H massacre decomposition (the decisive table)
+
+Stage H OOS H12 cut-bucket final was +33.2R (champ) / +40.4R (utcsat). Split by level at cut:
+
+- **Band A (r ≤ −0.5): n = 0 on both multi lanes OOS** — the narrow negative-level gate would have cut nothing there.
+- **Band B (−0.5..+0.5): n = 30 / 26 — carries the ENTIRE massacre** (cut −4.2 vs final +33.2).
+
+Band-A deltas everywhere else: tiny (+1.8 best, n = 1–9). The dangerous money was never in the negative zone.
+
+### R6 — ceiling for the "cut sideways bleeders at −0.5" idea
+
+Full-SL trades stuck ≥24h below −0.5: **2 / 3 / 1** per era → max save **+1.0 / +1.5 / +0.5R**. Cost side (winners stuck ≥24h below −0.5): 2–3 trades, final +2.9/+7.6R.
+
+### Stage S — 7 arms verdict
+
+| Arm | champion dNet | utcsat dNet | age10 dNet | Verdict |
+|---|---|---|---|---|
+| S1 24h / r≤−0.5 | **+2.4 / +1.8** | −4.3 / +1.7 | +0.3 / 0.0 | best but NULL (~0.5–1R/yr); utcsat IS caught 1 monster |
+| S2 24h / −0.8 | +0.1 / 0.0 | +0.1 / 0.0 | 0 / 0 | no-op (≤1 cuts) |
+| S3 48h / −0.5 | −3.2 / +0.6 | −2.8 / +0.2 | 0 / 0 | negative IS |
+| S4 48h / −0.8 | 0 / 0 | 0 / 0 | 0 / 0 | no-op |
+| S5 2h / −0.6 fast-fail | −1.1 / **−10.0** | −3.7 / −9.9 | 0 / −5.7 | **DEAD** (cuts OOS winners + 1 monster) |
+| S6 48h stale-zero | −5.0 / +3.9 | −5.8 / +3.2 | +0.4 / 0 | era-flip |
+| S7 zone-residency 24h | −4.7 / −0.2 | −5.5 / +0.8 | 0 / 0 | negative IS |
+
+### Verdict
+
+**The "long sideways 0R→−1R bleed" trade barely exists in this engine.** Losses die fast (median 7h), winners go positive within minutes, zone stretches <1h, and the only long-stuck cohort (5/466) recovers more than it dies. The negative-zone time-stop is **safe (rarely cuts, rarely catches monsters) but valueless** — family CLOSED as gate. The durable insight is R5: *never let a time rule touch band B (−0.5..+0.5)* — that is where all the recovery money lives. No production change authorized.

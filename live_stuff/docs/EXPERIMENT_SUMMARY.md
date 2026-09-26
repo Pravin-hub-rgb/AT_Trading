@@ -186,11 +186,216 @@ FILTERED:
 
 ## What's Left
 
-- [ ] Test Ideas B (funding rate), A (HMM), C (OI change) — need new data
-- [ ] Test Ideas D (ensemble), E (transition detection), F (GARCH)
-- [ ] Swing engine mismatch (#1 on checklist) — blocks live deployment
-- [ ] Volume data re-fetch
+- [x] Test Ideas B (funding rate), A (HMM) — DEAD
+- [x] Test Ideas D (ensemble), E (transition detection), F (GARCH) — all DEAD as universal improvements (2026-09-23)
+- [x] Test Idea G (ETH/BTC ratio) — DEAD (2026-09-23)
+- [x] B3 structure confirmation — DEAD both-sides (2026-09-23)
+- [x] Swing engine mismatch (#1) — FIXED 2026-09-23 (PSE re-feed stitch = compute_btc_swings; 15m 87/87, 1h 118/118 PERFECT; identity green). Replay harness still 0/29 = Issue #10 (30d rolling window), not engine.
+- [x] Live 30d rolling window vs full-history chains (Issue #10) — FIXED 2026-09-23: L1 open-HTF kept in `to_intervals`, L3 `_rebase_swings_to_window` + L5 open-swing append in live_loop; seed depth 20.8d = 100% match, continuous PSE 99.9%, windowed sim 83.3% reproduction (was 0%); smoke 351t/+211.7R PASS. Harness `exp_issue10_window.py`.
+- [ ] Test Idea C (OI change) — DROPPED (user: no 2023 OI data)
+- [x] Volume data re-fetch — DONE 2026-09-23 (`refetch_with_volume.py`, Bybit linear): 15m/1h/5m/4h/1m all ~99.9% non-zero volume; loaders + smoke 351t/+211.7R + identity 340t/+225.3R all green
+- [x] Volume autopsy + path-true gates — DEAD 2026-09-24 (trade-list B2-low-rvol/pct-Q1 looked good; path-true fails both-sides on champion/king/swingpause; winners vs losers volume medians identical). OOS volume also re-fetched (unseen 15m/1h). Harnesses `exp_volume_autopsy.py` / `exp_volume_path.py`.
+- [x] Volume trail/exit + router (dry-hold exit/BE, no-spike abort, climax, quiet↔flip router) — DEAD 2026-09-24 (loss autopsy shows dry holds lose / flood holds win, but every path-true variant fails both-sides: router dIS −206, dry-exit dIS −93, nospk dIS −59; climax no-op on fine path). Smoke 351t/+211.7R PASS. Volume family fully closed. Harness `exp_volume_trail_path.py`.
+- [x] A4 pullback gate (skip 1.5–3R off leg extreme) — DEAD 2026-09-24 (autopsy avgR −0.54 n=24 looked good; path-true A4 dIS −67..−252 all thresholds, lb30 OOS +27 but dIS −62 fails both-sides). Price-space gates (legskip + pullback) both closed. Harness `exp_pullback_path.py`.
+- [x] Fast-death pre-entry proxy (LOSS_AUTOPSY §4) — DEAD 2026-09-24 (104 fast deaths all exactly −1R; best fast% bins are either already-dead families or have monster slow cohorts — no causal feature separates without killing runners; +100R ceiling remains theoretical). Harness `exp_fastdeath_autopsy.py`.
+- [x] Era-specific behavior investigation (State-of-Play §11) — DIAGNOSED 2026-09-24: 2021 is the bleed year (not 2022); OOS-ex-FTX ≈ flat (champ +8.1 / king −4.3) so OOS edge is crisis-alpha; FLIP avgR collapses −1.16 both bases while B2 holds; longs die OOS / shorts improve; market ATR 1.6–2× higher; mid-holds flip. No era-hardcode gate proposed (would kill IS longs). Harness `exp_era_split_autopsy.py`.
+- [x] HTF lb=20 granularity sweep (exp31_lb 14/20/30) — NO-OP 2026-09-24 (champion/king/swingpause all mode=atr_high; chop lookback does not affect ATR%-based routing; identical results all lb). lb family closed on production path. Harness `exp_remaining_ideas.py`.
+- [x] Structure Evolution path-true (swing mag/frequency gates) — DEAD 2026-09-24 (mag_min 0.80/1.00 kills IS −60..−122 on swingpause, worse on multi; freq_max no-op — formula yields ≪4). Kwargs `exp_struct_mag_min`/`exp_struct_freq_max` KEPT default-off.
+- [x] MTF Regime path-true (1h swing dir confirm, exp_mtf_mode 1/2) — DEAD 2026-09-24 (multi OOS up but IS collapses; swingpause mode=1 dIS −18 / dOOS +67.9 fails both-sides). Same family as 1h-momentum/htf4-confirm. Kwargs `exp_mtf_mode` KEPT default-off. Harnesses `exp_remaining_ideas.py` + `exp_remaining_finish.py`.
+- [x] Mean reversion / compression — CLOSED 2026-09-24 (entry-quality budget §3h; MR lookahead-broken in test_new_paradigms.py; compression no edge; not run path-true).
+- [x] B3 limit-order salvage (b3_mode=limit, retrace-to-signal-close) — DEAD 2026-09-24 (multi dIS −160/−173 all k; swingpause only both-sides pass +8.5/+14.4 ≈ 2R/yr ≪ +30R/yr ship, absolute OOS still −2.6; k=4/8/12 identical — fills cluster ≤4 bars). Closes B3 both-sides family. Kwargs `b3_mode` KEPT default-off. Harness `exp_remaining_finish.py`.
+- [x] (i) anchor-lb30 stress battery + per-year/both-halves — DONE 2026-09-24 (`exp_closeout_battery.py`): lb30 w0 n=349 NET +170.5 WR 27.5% PF 1.59 PIN OK; per-year 2023 −1.0 / 2024 +95.6 / 2025 +27.3 / 2026 +48.5 (all-years-positive FAIL — 2023 −1.0 ≈ breakeven); both-halves PASS H1 +69.0 / H2 +101.5; cost ×1.5 +133.7 / ×2.0 +96.9 / ×3.0 +23.3 all positive. Pins re-baselined post-`ee574f9` trail-ordering fix (fine nets ~−26R).
+- [x] (ii) concurrency-cap design for mltf leaders — DONE 2026-09-24: offline N4 cap3 on their-OPTIMAL +4.3R / −1.5R DD (+326.8 NET / DD 21.8) + path-true `exp_maxconc_path.py` cap5 FREE (champion/king dIS +1.1 / dOOS 0.0). Design pick: offline cap3 + path-true exp_max_concurrent=5 as live risk limit.
+- [x] (iii) cd0 latency validation for OPTIMAL — DONE 2026-09-24 (`exp_closeout_battery.py`): OPT-cd0 n=515 NET +296.7 — no latency collapse vs cd10.
 
 ---
 
+## Untested Families (backlog) — added 2026-09-25
+
+Entry-side re-entry/timing families are exhausted; these remain GENUINELY untested (position-sizing / add-on class):
+
+- [ ] **Pyramid / scale-in** — add to a WINNING open trade at causal add-triggers (e.g., new 15m swing confirm, +1R milestone). Zero experiments ever run; engine has no add mechanic (single fill per trade). Would need: add-fill path, split exits, per-add risk accounting.
+- [ ] **Revenge re-entry at the ORIGINAL entry level** — after SL, re-enter at the original entry price (Phase B limit-fill touched this on the WAIT side; entry-after-loss at same level with original SL not run standalone).
+- [x] **Same-window second entry AFTER a WIN** — **TESTED + CLOSED as gate 2026-09-25** (cohort study, era-flip: IS rewin = book engine (+282R), OOS rewin negative (−13R); drop-rewin helps OOS, destroys IS — no both-sides filter; age10 rewin + both eras but n=6+6; see checklist 24.61, log 54, harness `exp_rewin_cohort.py`).
+- [x] SL-candle reclaim re-entry (break of the SL-giving 15m candle) — **TESTED + DEAD 2026-09-25** (Phase 1 descriptive gate, 8/8 cells negative; see SL_RECLAIM_REENTRY.md, checklist 24.38, log row 32).
+- [x] Dip-then-reclaim confirmation entry — **TESTED + DEAD 2026-09-25** (checklist 24.34, log row 24).
+- [x] Retest limit-below-entry fill — OPEN CANDIDATE (exp_retest_fill=0.25, age10 lane only, default-off).
+
+---
+
+## M2 Bigleg Sizing — Deployment Note (added 2026-09-25)
+
+**Survivor:** entry-causal flag `cur_mag_atr >= 3` (swing magnitude ≥ 3 ATR at entry) → size ×1.5 on flagged trades (16–29% of the book). Post-process backtest (R-unit sizing, trade list byte-identical): **6/6 cells net+ both eras, curve_better TRUE all** — champion dNet +153.5/+31.5 (calmar 4.34→5.45 / 1.81→2.31), utcsat +131.0/+30.8, age10 +117.1/+18.8; ulcer down everywhere, DD never meaningfully worse. First surviving new-edge candidate of the 2026-09-25 session (checklist 24.60, log 53, harness `exp_m2_size_phase2.py`, JSON `_m2_size_phase2_results.json`).
+
+**USER NOTE (2026-09-25): this is a capital-scaling lever — apply WHEN CAPITAL HAS GROWN.** With present capital keep normal 1× sizing everywhere. Once the account justifies larger notionals, this is the pre-approved sizing rule: **1.5× lot on bigleg setups (swing ≥3 ATR), 1× on everything else** — flag is known at signal time, so it is live-implementable with no look-ahead; SL/trail/partial logic unchanged. Deployment = order-time sizing only; no engine change needed.
+
 *Document generated 2026-09-22. All numbers on post-trail-ratchet-fix engine.*
+
+---
+
+## Edge Sizing Candidates - Stage X / Stage Y / Stage Z Test Record (added 2026-09-25)
+
+Context: user-approved HTF research batch V -> W -> X -> Y (2026-09-25). From it, **two new
+entry-causal sizing flags were tested as edge candidates** (post-process x1.5 on flagged
+trades, trade list byte-identical, engine untouched). Both are recorded here as CANDIDATES.
+**The final "which is better" comparison (X vs Y vs Z vs M2 vs B bigleg, risk-adjusted) is DEFERRED to
+end-of-session per user.** Nothing adopted yet (RESEARCH_POLICY: no automatic gate).
+
+### Candidate X - parent-window risk_pct < 1.0%  (checklist 24.71, log 71)
+
+Flag: child trade's governing 1h window has stop distance < 1.0% of price (known causally at
+window open; parent-map coverage 99.8-100%). Flagged share: 9.2%/8.6% IS, **2.5%/3.6% OOS**.
+Origin: 1h break-quality study (5 measures), only this one did not era-flip.
+
+| cell | flag | net baseline -> arm (delta) | maxDD | ulcer | calmar | PF | curve |
+|---|---|---|---|---|---|---|---|
+| IS champion | 46/500 | 325.8 -> 349.6 (**+23.9**, +7.3%) | 27.7->29.7 (+2.0) | 14.62->11.59 | 3.202->3.205 | 1.81->1.85 | TRUE |
+| IS utcsat | 39/454 | 359.0 -> 382.3 (**+23.4**, +6.5%) | 21.2->22.2 (+1.0) | 11.55->9.06 | 4.619->4.698 | 2.01->2.04 | TRUE |
+| OOS champion | 7/279 | 70.2 -> 106.8 (**+36.6**, +52%) | 53.2->50.4 (-2.8) | 213.61->212.61 | 0.659->1.060 | 1.34->1.52 | TRUE |
+| OOS utcsat | 9/253 | 60.2 -> 99.7 (**+39.5**, +66%) | 29.4->28.3 (-1.1) | 110.29->100.05 | 1.025->1.762 | 1.33->1.54 | TRUE |
+
+**PASS 4/4 on the pre-registered rule (dNet>0 AND curve_better in all 4 multi cells) WITH the
+PRE-REGISTERED SMALL-N CAVEAT: OOS flag = 7 and 9 trades only.** IS side: net +6-7% but DD
+deepens 1-2R; OOS side: big uplift AND DD improves. Companion gates (skip risk_pct 1-2%, skip
+vol_ratio<0.75) both era-flipped -> closed. Harness `exp_htf_break_sizing.py` ->
+`_htf_break_sizing_results.json`.
+
+### Candidate Y - ema4h_bucket = pullback_toward_ema  (checklist 24.72, log 72)
+
+Flag: entry-causal 4h EMA20 extension state - price sitting between the EMA and -0.5 ATR
+below it (pulling back INTO the 4h EMA). Flagged share: 13-15% of the book, ALL cells
+(healthy n: 71/60/29 IS, 42/37/21 OOS). Origin: Stage 12 boundary/EMA autopsy open item
+("positive both eras all three, not adopted without pre-registered path-true test");
+Stage-12 descriptives reproduced EXACTLY (6/6) as pre-flight sanity.
+
+| cell | flag | net baseline -> arm (delta) | maxDD | ulcer | calmar | PF | curve |
+|---|---|---|---|---|---|---|---|
+| IS champion | 71/500 | 325.8 -> 384.5 (**+58.7**, +18.0%) | 27.7->30.0 (+2.3) | 14.62->15.02 | 3.202->3.486 | 1.81->1.91 | TRUE |
+| IS utcsat | 60/454 | 358.9 -> 419.1 (**+60.1**, +16.7%) | 21.2->24.9 (**+3.7**) | 11.55->11.83 | 4.619->4.592 (-0.027) | 2.01->2.12 | **FALSE** |
+| IS fullstack (ref) | 29/200 | 310.7 -> 362.7 (+52.0, +16.7%) | 14.0->14.5 (+0.5) | 11.22->11.42 | 6.044->6.812 | 2.99->3.20 | TRUE |
+| OOS champion | 42/279 | 70.2 -> 89.0 (**+18.9**, +26.9%) | 53.2->53.6 (+0.4) | 213.61->**145.46** | 0.659->0.831 | 1.34->1.41 | TRUE |
+| OOS utcsat | 37/253 | 60.2 -> 81.2 (**+21.0**, +34.9%) | 29.4->26.2 (-3.2) | 110.29->82.29 | 1.025->1.548 | 1.33->1.42 | TRUE |
+| OOS fullstack (ref) | 21/140 | 16.9 -> 30.7 (+13.8, +82%) | 37.3->39.7 (+2.4) | 60.05->52.66 | 0.226->0.387 | 1.15->1.25 | TRUE |
+
+**FAIL on the strict pre-registered rule (3/4 multi cells): IS utcsat curve_better = FALSE**
+(all three curve components marginally negative: maxDD +3.7R deeper, ulcer +0.28, calmar
+-0.027) even though **dNet>0 in ALL 6 cells**. Companion arms closed: skip aligned_far_extended
+(IS -66.5/-72.5 vs OOS +5.0/+14.6 = era-flip), skip opposite_ema (removal negative 4/4 multi -
+opposite_ema is path-true PROFITABLE; the Stage-12 "fade far from EMA" reading is CLOSED),
+A+B combo (IS bleed dominates). Harness `exp_ema4h_pullback_sizing.py` ->
+`_ema4h_pullback_sizing_results.json`.
+
+### Candidate Z - regime-structure flags A/B/C (checklist 24.73, log 75)
+
+Flag: three entry-causal 1h structure conditions from the 24-feature Z1 regime-structure
+autopsy (pre-registered survivor rule: same-sign 4/4 cells + monotone >=3/4 + n>=15; 3/24
+survived; tercile edges IS-pooled, applied unchanged to OOS):
+- **Z-A:** `er50 <= 0.0767` - 50-bar 1h Kaufman efficiency ratio, low = choppy tape. ~33% flagged.
+- **Z-B:** `wick_gt3x_pct12 > 33.3` - share of last 12 1h bars whose total wick > 3x body
+  (rejection-heavy / indecision tape). ~24% flagged.
+- **Z-C:** `vol7_prev7 <= 0.846` - rolling 7d volume below prior 7d (participation contracting).
+  ~33% flagged.
+
+| cell | flat net | Z-A delta (n) | Z-B delta (n) | Z-C delta (n) | curve A/B/C |
+|---|---|---|---|---|---|
+| IS champion | 325.8 | **+110.3** (167) | **+74.1** (121) | **+106.5** (166) | TRUE/TRUE/TRUE |
+| IS utcsat | 358.9 | **+110.5** (142) | **+71.9** (112) | **+112.3** (146) | TRUE/TRUE/TRUE |
+| OOS champion | 70.2 | **+17.3** (84) | **+18.3** (70) | **+32.2** (81) | TRUE/TRUE/TRUE |
+| OOS utcsat | 60.2 | **+23.4** (81) | **+23.4** (62) | **+40.4** (76) | TRUE/TRUE/TRUE |
+
+**PASS 4/4 on the pre-registered rule (dNet>0 AND curve_better in all 4 multi cells) for ALL
+THREE flags, no small-N (flagged n 62-167).** Equity nuance: maxDD is deeper in every one of
+the 12 cells (0.4-8.6R; worst: Z-C OOS champion 53.2->61.8, Z-A IS utcsat 21.2->26.7) - the
+curve passes via ulcer/calmar/sortino improvements (e.g. Z-A IS ulcer 14.62->12.38, Z-C OOS
+calmar 0.659->0.828), except Z-C IS champion ulcer mildly worse (14.62->15.62, calmar carries
+it). Companion gate D (skip vol7_prev7>1.064) FAILED era-flip as predicted (IS -71.5/-67.2
+curve False, OOS +10.8/+23.4) -> closed. Harness `exp_regime_structure_sizing.py` ->
+`_regime_structure_sizing_results.json`; full record `REGIME_STRUCTURE_AUTOPSY.md`.
+
+**Z3 trade-reduction gate (checklist 24.74, log 77):** user goal pre-registered (500 ->
+~400ish trades, avg R/trade same-or-better) tested as keep `vol7_prev7 <= thr` for 10
+thresholds x 4 cells (`exp_vol_threshold_gate.py` -> `_vol_threshold_gate_results.json`).
+**G-RULE (kept 70-90% AND avgNet/trade >= base AND maxDD <= base, all 4 cells) PASS at
+thr=1.15 and thr=1.20.** thr=1.20: n 398/360/216/196 (77-80% kept), avgNet/trade
++0.665/+0.829/+0.342/+0.386 vs flat +0.652/+0.791/+0.251/+0.238, maxDD
+27.0/19.7/38.2/20.8 vs 27.7/21.2/53.2/29.4, dNet -61.1/-60.5 IS but **+3.6/+15.5 OOS**.
+thr=1.15: 74-76% kept, avgNet + DD better 4/4, dNet -66.6/-56.6 IS, +0.8/+14.9 OOS.
+0.846-1.10 miss kept>=70%; 1.25/1.30 fail avgNet (IS champ dips below base). IS total
+net costs 17-19% at the passers (skipped tail net-positive IS, below average); all 10
+arms reported (exploratory threshold ranking).
+
+**Z3b flags A/B gate sweep (checklist 24.75, log 78):** same G-RULE applied to the
+other two survivors (`exp_ab_gate_sweep.py` -> `_ab_gate_sweep_results.json`).
+**G-RULE PASS: `er50 <= 0.20` ONLY - and EXPLORATORY/knife-edge** (added post-hoc
+after 0.1989 missed the 70% kept floor by 0.2pp; 0.205 fails utcsat IS DD by 0.2R):
+kept 73/71/72/76%, avgNet +0.722/+0.966/+0.293/+0.326 vs flat +0.652/+0.791/
++0.251/+0.238, maxDD 25.7/20.3/28.7/20.0 vs 27.7/21.2/53.2/29.4, dNet -60.7/-47.8
+IS, -11.6/+2.1 OOS (HIGH selection risk; OOS champion below flat). **wick>=25 FAIL**
+(only goal-zone arm; champ IS DD 27.7->29.9) - wick stays sizing-only. **Z3 volume
+gate (1.15/1.20) remains the recommended reduction gate** (pre-registered grid,
+better OOS net).
+
+### Candidate B - bleed removals (checklist 24.76, log 80)
+
+**Stage B "bleed autopsy" (user goal pre-registered): find a bucket with NET NEGATIVE R in
+all 4 cells (champion/utcsat x IS/OOS), remove it, baseline strictly better (net up, trades
+down, avg/trade up). FINAL AFTER CAUSALITY AUDIT: 2/4 removal PASS - the original "4/4 PASS"
+and chain headline are RETRACTED.** Phase-0: 74 Z1 buckets = ZERO 4/4-negative -> 30 new
+features (114 buckets) on the untouched HTF chain-state plane. Harness
+`exp_bleed_autopsy.py` -> `_bleed_autopsy_results.json`; FIND = n>=15 AND share<=35% AND
+sumNet<0 x4; REMOVAL PASS = dNet>0 AND avgNet>=base AND n<base AND curve_better x4 (both
+pre-registered). 4 qualifiers; post-audit results:
+
+| removal | dNet IS c/u | dNet OOS c/u | verdict |
+|---|---|---|---|
+| **wick_atr12@short <= 6.03 (HEADLINE)** | +28.1 / +25.7 | +19.8 / +23.8 | **PASS 4/4** - byte-identical pre/post audit; OOS DD 53.2->36.7 and 29.4->19.8, n 500->426/454->392/279->244/253->217 |
+| **flips96@short = 4-5** | +8.2 / +14.0 | +12.8 / +11.6 | **PASS 4/4** - byte-identical; n ->463/417/262/237 |
+| chain_r_so_far < 0 | +19.7 / +20.1 | +16.4 / +10.0 | **FAIL** - is\|utcsat DD 21.2->26.2, calmar 4.619->3.940, curve False (3/4 cells pass) |
+| chain_wl_streak = -1 | +12.9 / +17.2 | +11.7 / +9.5 | **FAIL** - same cell (calmar 4.619->3.910) |
+
+**Causality bug (post-run audit `verify_bleed_causality.py` -> `_bleed_autopsy_CLOSEDONLY.json`):**
+the original `enrich_sequential` folded each trade's final net R at ENTRY order; with
+exp_mltf concurrent positions still-open trades' outcomes leaked into chain/prev state
+(203 prior-open observations across 178 trades - same bug class the loss-streak work already
+fixed). Closed-only fix (`exit_ts <= cutoff`) applied to the harness in place; a fresh run
+reproduces the audit JSON byte-for-byte. Chain buckets remain 4/4-negative DESCRIPTIVELY
+after the fix (nets -19.7/-20.1/-16.4/-10.0) but their removals fail the equity rule - the
+leaky version was partly right by accident (the leak flattered the chain features). Masked
+candidates are pure market structure (z1_compute), no trade state -> PASS stands. Full
+record `BLEED_AUTOPSY.md` (incl. 9.9 audit).
+
+### Risk statement (user note, 2026-09-25)
+
+User: "utna delta aa raha hai toh kuch toh risk dega" - correct; each candidate's risk, in words:
+
+- **X:** OOS uplift rests on **7-9 trades** (one OOS monster can dominate the +36.6/+39.5);
+  IS side deepens DD 1-2R; flag band emerged after a 5-measure search where 4 measures
+  era-flipped -> selection risk non-zero. Small-n caveat is PRE-REGISTERED and must travel
+  with the flag wherever quoted.
+- **Y:** healthy flag share, but IS utcsat pays +3.7R DD for +60.1 net (up-sized pullback
+  losers land inside drawdown stretches); bucket is 1 of 5 EMA buckets (it was pre-flagged by
+  Stage 12 BEFORE this test, which limits - but does not eliminate - selection risk).
+- **Both:** post-process R-unit sizing (live implementation = order-time lot sizing; no entry
+  feedback either way); x1.5 on ~10-15% of the book = ~1.1-1.15x average exposure.
+- **Z:** the three flags are ONE correlated family (low ER, wick-heavy indecision, contracting volume all mark the same quiet tape; share overlap heavy) - stacking them would double/triple-size the same trades; deploy at most ONE flag or cap combined exposure. maxDD deeper in all 12 cells (0.4-8.6R) even where curve passes; OOS dNet (+17..+40) rides the weak OOS baseline that Study 2 (log 74) showed is luck-consistent. Descriptive + path-true done same session; edges IS-derived only (no OOS peeking).
+- **Z capital-scaling lever (Z3, M2-style):** present capital 1x everywhere; the A/B/C
+  1.5x flags are a FUTURE lever - when capital grows/flexible apply 1.5x lot on ONE
+  chosen flag (union of the three = 63-65% of book - do not stack), 1x on everything
+  else. When capital/risk-budget is tight: take only `vol7_prev7 <= 1.20` (~400/500
+  trades, avg/trade same-or-better, DD lower 4/4; 1.15 for a deeper cut). Sizing flag
+  + gate combined = UNTESTED.- **Stage B bleed removals (post-audit):** only the two masked short-side removals PASS;
+  the chain removals failed the pre-registered rule under corrected closed-only enrichment
+  (is|utcsat DD 21.2->26.2) and are retracted to descriptive-only. Remaining risks: 114
+  buckets x 4 cells scanned (4/4-negative FIND is strict but selection risk not zero);
+  the two PASSers likely overlap on the same short trades - combining UNTESTED; post-process
+  only (no chain re-timing); OOS lifts ride the weak OOS baseline (Study 2 luck caveat).
+  Meta-risk: one lookahead leak WAS caught post-run in this stage's own harness - any
+  chain/prev-state feature must go through the closed-only audit every time it appears.
+- **Both vs M2:** M2 bigleg is still the front-runner (6/6 strong pass, flag 16-29%, ulcer
+  down everywhere). These two are recorded candidates, NOT adopted.
+
+### Comparison - DEFERRED to end of session
+
+Final side-by-side (X vs Y vs Z vs M2 vs B): edge size, flag share, DD cost per cell, curve_better
+record, OOS robustness (flag n), live implementability, exposure bump. Adoption decisions
+(user's call, RESEARCH_POLICY) happen there, not now.
