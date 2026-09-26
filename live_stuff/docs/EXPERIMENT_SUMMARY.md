@@ -214,7 +214,7 @@ FILTERED:
 
 Entry-side re-entry/timing families are exhausted; these remain GENUINELY untested (position-sizing / add-on class):
 
-- [ ] **Pyramid / scale-in** — add to a WINNING open trade at causal add-triggers (e.g., new 15m swing confirm, +1R milestone). Zero experiments ever run; engine has no add mechanic (single fill per trade). Would need: add-fill path, split exits, per-add risk accounting.
+- [x] **Pyramid / scale-in** - **Phase 1 RUN 2026-09-25 (checklist 24.43):** offline 1m walk, 1/6 cells pass (champion 0.5R IS +7.6 / OOS +10.1) but FRAGILE (best-trade-dependent; median add -0.55R). **Phase 2 (engine kwargs) designed 2026-09-26 - variant list frozen in `PYRAMID_PHASE2_DESIGN.md`, awaiting user go-ahead (engine edit = shared file).**
 - [ ] **Revenge re-entry at the ORIGINAL entry level** — after SL, re-enter at the original entry price (Phase B limit-fill touched this on the WAIT side; entry-after-loss at same level with original SL not run standalone).
 - [x] **Same-window second entry AFTER a WIN** — **TESTED + CLOSED as gate 2026-09-25** (cohort study, era-flip: IS rewin = book engine (+282R), OOS rewin negative (−13R); drop-rewin helps OOS, destroys IS — no both-sides filter; age10 rewin + both eras but n=6+6; see checklist 24.61, log 54, harness `exp_rewin_cohort.py`).
 - [x] SL-candle reclaim re-entry (break of the SL-giving 15m candle) — **TESTED + DEAD 2026-09-25** (Phase 1 descriptive gate, 8/8 cells negative; see SL_RECLAIM_REENTRY.md, checklist 24.38, log row 32).
