@@ -1,0 +1,281 @@
+{
+  "stage": "m2_sendtime_feature",
+  "goal": "redefine M2 so it is order-send-time computable, then re-validate",
+  "sendtime_computable": [
+    "mag_so_far",
+    "ramp_so_far"
+  ],
+  "reference_only": [
+    "M2_oracle (seg.end_px)"
+  ],
+  "pre_registered": {
+    "pass_rule": "dNet>0 AND curve_better AND dDD<=5.0% AND flagged 5.0-40.0% in ALL 6 cells"
+  },
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "cells": {
+    "is|champion": {
+      "n": 500,
+      "M2_oracle": {
+        "net": 478.44,
+        "dNet": 152.65,
+        "d_max_dd": 0.49,
+        "d_dd_pct": 1.8,
+        "d_calmar": 1.586,
+        "d_pf": 0.282,
+        "curve_better": true,
+        "flagged_pct": 25.6,
+        "avg_size_mult": 0.384,
+        "pass": true
+      },
+      "mag_so_far_bin": {
+        "net": 329.25,
+        "dNet": 3.47,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.034,
+        "d_pf": 0.004,
+        "curve_better": false,
+        "flagged_pct": 1.2,
+        "avg_size_mult": 0.018,
+        "pass": false
+      },
+      "ramp_so_far": {
+        "net": 328.05,
+        "dNet": 2.27,
+        "d_max_dd": -0.08,
+        "d_dd_pct": -0.3,
+        "d_calmar": 0.013,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 100.0,
+        "avg_size_mult": 1.007,
+        "pass": false
+      }
+    },
+    "is|utcsat": {
+      "n": 454,
+      "M2_oracle": {
+        "net": 506.43,
+        "dNet": 147.48,
+        "d_max_dd": -1.77,
+        "d_dd_pct": -8.4,
+        "d_calmar": 1.394,
+        "d_pf": 0.276,
+        "curve_better": true,
+        "flagged_pct": 29.3,
+        "avg_size_mult": 0.439,
+        "pass": true
+      },
+      "mag_so_far_bin": {
+        "net": 362.42,
+        "dNet": 3.47,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.045,
+        "d_pf": 0.004,
+        "curve_better": false,
+        "flagged_pct": 1.3,
+        "avg_size_mult": 0.02,
+        "pass": false
+      },
+      "ramp_so_far": {
+        "net": 361.19,
+        "dNet": 2.24,
+        "d_max_dd": -0.19,
+        "d_dd_pct": -0.9,
+        "d_calmar": -0.012,
+        "d_pf": -0.001,
+        "curve_better": false,
+        "flagged_pct": 100.0,
+        "avg_size_mult": 1.008,
+        "pass": false
+      }
+    },
+    "is|age10": {
+      "n": 130,
+      "M2_oracle": {
+        "net": 548.73,
+        "dNet": 113.01,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 3.529,
+        "d_pf": 1.352,
+        "curve_better": true,
+        "flagged_pct": 19.2,
+        "avg_size_mult": 0.288,
+        "pass": true
+      },
+      "mag_so_far_bin": {
+        "net": 435.72,
+        "dNet": 0.0,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.0,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 0.0,
+        "avg_size_mult": 0.0,
+        "pass": false
+      },
+      "ramp_so_far": {
+        "net": 435.72,
+        "dNet": 0.0,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.0,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 100.0,
+        "avg_size_mult": 1.0,
+        "pass": false
+      }
+    },
+    "oos|champion": {
+      "n": 279,
+      "M2_oracle": {
+        "net": 99.29,
+        "dNet": 29.14,
+        "d_max_dd": 3.17,
+        "d_dd_pct": 6.0,
+        "d_calmar": 0.333,
+        "d_pf": 0.112,
+        "curve_better": true,
+        "flagged_pct": 17.2,
+        "avg_size_mult": 0.258,
+        "pass": false
+      },
+      "mag_so_far_bin": {
+        "net": 70.15,
+        "dNet": -0.0,
+        "d_max_dd": -0.0,
+        "d_dd_pct": -0.0,
+        "d_calmar": -0.0,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 0.4,
+        "avg_size_mult": 0.005,
+        "pass": false
+      },
+      "ramp_so_far": {
+        "net": 69.84,
+        "dNet": -0.31,
+        "d_max_dd": -0.31,
+        "d_dd_pct": -0.6,
+        "d_calmar": -0.007,
+        "d_pf": -0.002,
+        "curve_better": false,
+        "flagged_pct": 100.0,
+        "avg_size_mult": 1.003,
+        "pass": false
+      }
+    },
+    "oos|utcsat": {
+      "n": 253,
+      "M2_oracle": {
+        "net": 91.48,
+        "dNet": 31.27,
+        "d_max_dd": 4.75,
+        "d_dd_pct": 16.2,
+        "d_calmar": 0.833,
+        "d_pf": 0.137,
+        "curve_better": true,
+        "flagged_pct": 18.6,
+        "avg_size_mult": 0.279,
+        "pass": false
+      },
+      "mag_so_far_bin": {
+        "net": 60.21,
+        "dNet": 0.0,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.0,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 0.0,
+        "avg_size_mult": 0.0,
+        "pass": false
+      },
+      "ramp_so_far": {
+        "net": 59.97,
+        "dNet": -0.24,
+        "d_max_dd": -0.24,
+        "d_dd_pct": -0.8,
+        "d_calmar": -0.012,
+        "d_pf": -0.002,
+        "curve_better": false,
+        "flagged_pct": 100.0,
+        "avg_size_mult": 1.001,
+        "pass": false
+      }
+    },
+    "oos|age10": {
+      "n": 76,
+      "M2_oracle": {
+        "net": 64.54,
+        "dNet": 21.31,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 1.243,
+        "d_pf": 0.419,
+        "curve_better": true,
+        "flagged_pct": 15.8,
+        "avg_size_mult": 0.237,
+        "pass": true
+      },
+      "mag_so_far_bin": {
+        "net": 43.22,
+        "dNet": 0.0,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.0,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 0.0,
+        "avg_size_mult": 0.0,
+        "pass": false
+      },
+      "ramp_so_far": {
+        "net": 43.22,
+        "dNet": 0.0,
+        "d_max_dd": 0.0,
+        "d_dd_pct": 0.0,
+        "d_calmar": 0.0,
+        "d_pf": 0.0,
+        "curve_better": false,
+        "flagged_pct": 100.0,
+        "avg_size_mult": 1.0,
+        "pass": false
+      }
+    }
+  },
+  "rollup": {
+    "mag_so_far_bin": {
+      "cells_passed": 0,
+      "total": 6,
+      "min_dNet": 0.0,
+      "all_pass": false,
+      "sendtime_computable": true
+    },
+    "ramp_so_far": {
+      "cells_passed": 0,
+      "total": 6,
+      "min_dNet": -0.31,
+      "all_pass": false,
+      "sendtime_computable": true
+    },
+    "M2_oracle": {
+      "cells_passed": 4,
+      "total": 6,
+      "sendtime_computable": false,
+      "note": "reference only - uses seg.end_px, not live-knowable"
+    }
+  },
+  "result": {
+    "replacements": [],
+    "verdict": "NO send-time replacement clears 6/6. The M2 neighbourhood has no deployable form among these candidates - a new feature would be needed, not a reparameterisation."
+  },
+  "elapsed_sec": 79.16
+}

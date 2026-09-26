@@ -86,32 +86,47 @@ Notes:
   hard engineering blocker and it does not clear.
 
   M2's feature is `cur_mag_atr = |seg.end_px - seg.start_px| / atr15`, where
-  `end_px` is the swing segment's END price. A live order is sent before that
-  segment is final, so a send-time reader cannot know it. Replacing it with the
-  last closed 15m close reproduces the backtest flag on only **46.5%** of
-  trades (worst cell 42.7%) - the pre-registered rule needed >=95% overall and
-  >=90% per cell.
+  `end_px` is the swing segment's END price. That end price is **confirmed to be
+  forward-looking**: `backend_check_wd_days.py:108` asserts `fs_at_idx >=
+  seg.end_idx`, i.e. a swing's FS/SUS confirmation happens at or AFTER the end
+  bar. A live process cannot know `end_px` when it sends the order.
 
-  | cell | n | backtest flag | send-time flag | agree | send dNet | lag-1 dNet |
-  |---|---|---|---|---|---|---|
-  | is\|champion | 500 | 128 | 289 | 47.0% | +61.1R | +15.1R |
-  | is\|utcsat | 454 | 133 | 265 | 47.1% | +67.2R | +18.9R |
-  | is\|age10 | 130 | 25 | 52 | 48.5% | +29.2R | +4.9R |
-  | oos\|champion | 279 | 48 | 158 | 42.7% | +38.2R | +7.6R |
-  | oos\|utcsat | 253 | 47 | 138 | 44.3% | +37.4R | +5.5R |
-  | oos\|age10 | 76 | 12 | 33 | 56.6% | +12.0R | +2.4R |
+  Replacing it with the last closed 15m close reproduces the backtest flag on
+  **77.5%** of trades (worst cell 72.0%) against a pre-registered bar of 95% /
+  90%. More decisive than the agreement: the send-time reader fires on only
+  **0-6 trades out of 76-500**, where the backtest flags 12-133. The signal
+  essentially vanishes.
 
-  The send-time reader flags roughly 2-3x more trades than the backtest does,
-  and scores about half the dNet. So **M2 as measured cannot be deployed as a
-  live lot size**: shipping it live would size a different trade set than the
-  one that produced +152.7R. Making it live-computable means redefining the
-  feature, which is a NEW pre-registered experiment, not a deployment detail.
+  | cell | n | backtest flag | send-time flag | agree | send dNet |
+  |---|---|---|---|---|---|
+  | is\|champion | 500 | 128 | 6 | 75.6% | +3.5R |
+  | is\|utcsat | 454 | 133 | 6 | 72.0% | +3.5R |
+  | is\|age10 | 130 | 25 | 0 | 80.8% | 0.0R |
+  | oos\|champion | 279 | 48 | 1 | 83.2% | 0.0R |
+  | oos\|utcsat | 253 | 47 | 0 | 81.4% | 0.0R |
+  | oos\|age10 | 76 | 12 | 0 | 84.2% | 0.0R |
 
-  The dNet stays positive in all 6 cells for both proxies, so there IS a
-  live-sizeable signal here - but it is not M2, and the +152.7R number does not
-  transfer to it. Reference flags were taken from the audited `trade_rows()`
-  (128 flags on champion IS, matching CHECKLIST 24.78 exactly) after an earlier
-  reimplementation produced 490 and was discarded.
+- **(a2) A send-time replacement for M2 was searched for and does not exist.**
+  `exp_m2_sendtime_feature.py` -> `_m2_sendtime_feature.json` tested two
+  redefinitions that read only send-time data, against the 6-cell rule plus a
+  flag-coverage band of 5-40% (below it there is no selection; above it, it is
+  the M1 leverage trap from 24.58):
+
+  | arm | send-time? | result | why |
+  |---|---|---|---|
+  | `M2_oracle` (seg.end_px) | no | 4/6 | reference only, not deployable |
+  | `mag_so_far` binary at 3.0 | yes | **0/6** | flags 0-1.3% - the threshold is unreachable mid-swing |
+  | `ramp_so_far` 0.25 slope | yes | **0/6** | flags 100% - pure leverage, the M1 trap |
+
+  So M2's edge is not "big swings are good" in any form computable before the
+  trade is placed - it is specifically that the swing **finishes** large. That
+  is a real property of the backtest and a hard limit on live deployment.
+
+  **Net position: the entire queue is non-deployable as measured.** M2, ramp_mag,
+  sMZX, uMZX and count_linear all key off the same non-knowable read. This is
+  not a rounding or min-lot problem; it is a feature-definition problem, and the
+  next honest step would be a NEW feature designed to be send-time computable
+  from the start, then re-validated from zero.
 - **(b) Thin OOS margins on Binance perp (STRUCTURAL LIMIT - do not
   re-test):** champion OOS 286t +17.8R = +0.062 R/trade, utcsat 258t
   +7.6R = +0.029 R/trade - too thin to distinguish from zero. Recorded as a property of the venue transfer, not an

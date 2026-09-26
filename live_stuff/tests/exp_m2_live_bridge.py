@@ -64,18 +64,21 @@ AGREE_MIN = 95.0
 AGREE_CELL_MIN = 90.0
 
 
-def atr_at(c15, idx, lb=14):
-    """ATR at a 15m bar index, matching the engine's convention."""
-    lo = max(0, idx - lb + 1)
+def atr_at(c15, idx, n=14):
+    """ATR proxy at a 15m bar index, DELEGATED to the audited atr_at().
+
+    CORRECTED 2026-09-26. The original version of this file used a
+    mean-true-range average and described it as "matching the engine's
+    convention". It does not: exp_thesis_swing_geometry_deep.atr_at is
+    max(high) - min(low) over the last 14 bars - a RANGE, not a true-range
+    mean. The wrong denominator inflated every send-time magnitude, so the
+    send-time flags in the first run of this harness (and the dNet figures
+    beside them) were not the intended measurement. This run supersedes it.
+    """
+    from exp_thesis_swing_geometry_deep import atr_at as _audited
     if idx <= 0:
         return None
-    trs = []
-    for i in range(lo, idx + 1):
-        o = float(c15[i]["open"]); h = float(c15[i]["high"])
-        lo_px = float(c15[i]["low"]); c = float(c15[i]["close"])
-        pc = float(c15[i - 1]["close"])
-        trs.append(max(h - lo_px, abs(h - pc), abs(lo_px - pc)))
-    return sum(trs) / len(trs) if trs else None
+    return _audited(c15, idx, n)
 
 
 def send_time_flag(trade, c15, ts15, sw15):

@@ -21,9 +21,9 @@
     "is|champion": {
       "n": 500,
       "n_backtest_flag": 128,
-      "n_sendtime_flag": 289,
-      "n_lag1_flag": 232,
-      "agreement_pct": 47.0,
+      "n_sendtime_flag": 6,
+      "n_lag1_flag": 7,
+      "agreement_pct": 75.6,
       "backtest_arm": {
         "n": 500,
         "n_flagged": 128,
@@ -34,27 +34,27 @@
       },
       "sendtime_arm": {
         "n": 500,
-        "n_flagged": 289,
-        "net": 386.91,
-        "dNet": 61.13,
-        "d_calmar": 0.062,
-        "curve_better": true
+        "n_flagged": 6,
+        "net": 329.25,
+        "dNet": 3.47,
+        "d_calmar": 0.034,
+        "curve_better": false
       },
       "lag1_arm": {
         "n": 500,
-        "n_flagged": 232,
-        "net": 340.91,
-        "dNet": 15.13,
-        "d_calmar": -0.351,
+        "n_flagged": 7,
+        "net": 328.75,
+        "dNet": 2.97,
+        "d_calmar": 0.029,
         "curve_better": false
       }
     },
     "is|utcsat": {
       "n": 454,
       "n_backtest_flag": 133,
-      "n_sendtime_flag": 265,
-      "n_lag1_flag": 216,
-      "agreement_pct": 47.1,
+      "n_sendtime_flag": 6,
+      "n_lag1_flag": 7,
+      "agreement_pct": 72.0,
       "backtest_arm": {
         "n": 454,
         "n_flagged": 133,
@@ -65,27 +65,27 @@
       },
       "sendtime_arm": {
         "n": 454,
-        "n_flagged": 265,
-        "net": 426.19,
-        "dNet": 67.24,
-        "d_calmar": 0.255,
-        "curve_better": true
+        "n_flagged": 6,
+        "net": 362.42,
+        "dNet": 3.47,
+        "d_calmar": 0.045,
+        "curve_better": false
       },
       "lag1_arm": {
         "n": 454,
-        "n_flagged": 216,
-        "net": 377.82,
-        "dNet": 18.88,
-        "d_calmar": -0.95,
+        "n_flagged": 7,
+        "net": 361.92,
+        "dNet": 2.97,
+        "d_calmar": 0.038,
         "curve_better": false
       }
     },
     "is|age10": {
       "n": 130,
       "n_backtest_flag": 25,
-      "n_sendtime_flag": 52,
-      "n_lag1_flag": 25,
-      "agreement_pct": 48.5,
+      "n_sendtime_flag": 0,
+      "n_lag1_flag": 0,
+      "agreement_pct": 80.8,
       "backtest_arm": {
         "n": 130,
         "n_flagged": 25,
@@ -96,27 +96,27 @@
       },
       "sendtime_arm": {
         "n": 130,
-        "n_flagged": 52,
-        "net": 464.98,
-        "dNet": 29.25,
-        "d_calmar": -0.576,
+        "n_flagged": 0,
+        "net": 435.72,
+        "dNet": 0.0,
+        "d_calmar": 0.0,
         "curve_better": false
       },
       "lag1_arm": {
         "n": 130,
-        "n_flagged": 25,
-        "net": 440.64,
-        "dNet": 4.92,
-        "d_calmar": -0.59,
+        "n_flagged": 0,
+        "net": 435.72,
+        "dNet": 0.0,
+        "d_calmar": 0.0,
         "curve_better": false
       }
     },
     "oos|champion": {
       "n": 279,
       "n_backtest_flag": 48,
-      "n_sendtime_flag": 158,
-      "n_lag1_flag": 107,
-      "agreement_pct": 42.7,
+      "n_sendtime_flag": 1,
+      "n_lag1_flag": 1,
+      "agreement_pct": 83.2,
       "backtest_arm": {
         "n": 279,
         "n_flagged": 48,
@@ -127,27 +127,27 @@
       },
       "sendtime_arm": {
         "n": 279,
-        "n_flagged": 158,
-        "net": 108.32,
-        "dNet": 38.17,
-        "d_calmar": 0.525,
-        "curve_better": true
+        "n_flagged": 1,
+        "net": 70.15,
+        "dNet": -0.0,
+        "d_calmar": -0.0,
+        "curve_better": false
       },
       "lag1_arm": {
         "n": 279,
-        "n_flagged": 107,
-        "net": 77.75,
-        "dNet": 7.6,
-        "d_calmar": -0.028,
-        "curve_better": true
+        "n_flagged": 1,
+        "net": 70.15,
+        "dNet": -0.0,
+        "d_calmar": -0.0,
+        "curve_better": false
       }
     },
     "oos|utcsat": {
       "n": 253,
       "n_backtest_flag": 47,
-      "n_sendtime_flag": 138,
-      "n_lag1_flag": 94,
-      "agreement_pct": 44.3,
+      "n_sendtime_flag": 0,
+      "n_lag1_flag": 0,
+      "agreement_pct": 81.4,
       "backtest_arm": {
         "n": 253,
         "n_flagged": 47,
@@ -158,27 +158,27 @@
       },
       "sendtime_arm": {
         "n": 253,
-        "n_flagged": 138,
-        "net": 97.58,
-        "dNet": 37.38,
-        "d_calmar": 0.51,
-        "curve_better": true
+        "n_flagged": 0,
+        "net": 60.21,
+        "dNet": 0.0,
+        "d_calmar": 0.0,
+        "curve_better": false
       },
       "lag1_arm": {
         "n": 253,
-        "n_flagged": 94,
-        "net": 65.68,
-        "dNet": 5.47,
-        "d_calmar": -0.102,
-        "curve_better": true
+        "n_flagged": 0,
+        "net": 60.21,
+        "dNet": 0.0,
+        "d_calmar": 0.0,
+        "curve_better": false
       }
     },
     "oos|age10": {
       "n": 76,
       "n_backtest_flag": 12,
-      "n_sendtime_flag": 33,
-      "n_lag1_flag": 15,
-      "agreement_pct": 56.6,
+      "n_sendtime_flag": 0,
+      "n_lag1_flag": 0,
+      "agreement_pct": 84.2,
       "backtest_arm": {
         "n": 76,
         "n_flagged": 12,
@@ -189,29 +189,29 @@
       },
       "sendtime_arm": {
         "n": 76,
-        "n_flagged": 33,
-        "net": 55.18,
-        "dNet": 11.96,
-        "d_calmar": -0.135,
+        "n_flagged": 0,
+        "net": 43.22,
+        "dNet": 0.0,
+        "d_calmar": 0.0,
         "curve_better": false
       },
       "lag1_arm": {
         "n": 76,
-        "n_flagged": 15,
-        "net": 45.57,
-        "dNet": 2.35,
-        "d_calmar": -0.14,
+        "n_flagged": 0,
+        "net": 43.22,
+        "dNet": 0.0,
+        "d_calmar": 0.0,
         "curve_better": false
       }
     }
   },
   "result": {
-    "agreement_overall_pct": 46.5,
-    "worst_cell_agreement_pct": 42.7,
-    "sendtime_dNet_positive_all_cells": true,
-    "lag1_dNet_positive_all_cells": true,
+    "agreement_overall_pct": 77.5,
+    "worst_cell_agreement_pct": 72.0,
+    "sendtime_dNet_positive_all_cells": false,
+    "lag1_dNet_positive_all_cells": false,
     "bridge_clean": false,
     "verdict": "BRIDGE BLOCKED - the flag is NOT reproducible from send-time state at the pre-registered threshold. M2 cannot be deployed as a live lot size without changing the feature definition, which would be a NEW pre-registered experiment."
   },
-  "elapsed_sec": 78.12
+  "elapsed_sec": 84.85
 }
