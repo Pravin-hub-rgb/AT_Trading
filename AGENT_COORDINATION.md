@@ -66,6 +66,25 @@ removed losers returned.
 **Rule:** no removal candidate is adoptable on a post-process ledger skip under
 `exp_mltf=True`. A post-process dNet is an UPPER BOUND. Rerun path-true first.
 
+**Magnitude of the trap (computed, never by hand).** Split each cell into
+direct effect and cascade: cascade = dNet_path_true - dNet_postproc, where
+dNet_postproc = -cohortR (removing a losing cohort *gains* R).
+| cell | cohort R | dNet post-proc | dNet path-true | cascade | cascade / direct |
+|---|---|---|---|---|---|
+| is\|champion | -28.1 | +28.1 | -50.5 | **-78.6** | 280% |
+| is\|utcsat | -25.7 | +25.7 | -54.5 | **-80.2** | 312% |
+| oos\|champion | -19.8 | +19.8 | -78.0 | **-97.7** | 494% |
+| oos\|utcsat | -23.8 | +23.8 | -59.6 | **-83.4** | 351% |
+The direct effect was **correct and positive in all 4 cells** - the cohorts
+really were losing money, so the descriptive FIND was sound. But the cascade is
+**3-5x the direct effect**: it does not merely eat the gain, it overwhelms it.
+Slot-blocking under exp_mltf is therefore not a tax on removals, it is larger
+than the edge being removed. That is the quantitative case for the sizing pivot
+below instead of more removal work.
+The signs here are easy to get wrong - a hand-typed version of this table put
+the cohort R into the dNet column and understated the cascade as 45-75% of the
+total instead of 125-156%. Derive these numbers in the harness.
+
 ## Causality rule (added after the Stage B retraction)
 
 Any feature built from **prior trade outcomes** must count a trade only when
@@ -75,6 +94,56 @@ lookahead whenever positions overlap (`exp_mltf=True`, `busy_until`).
 This exact bug shipped a false "4/4 PASS" once. See
 `verify_bleed_causality.py` and `BLEED_AUTOPSY.md` §9.9. Run a closed-only
 audit before trusting any chain- or streak-state feature.
+
+## Sizing exemption - post-process IS path-true here (added 2026-09-26)
+
+The removal rule above does **not** apply to position sizing. Sizing changes R
+*per trade*, never *which trades are taken*, so the trade list is identical and
+a post-process sizing number is a real measurement, not an upper bound. No
+engine rerun is needed to evaluate a sizing arm. Three conditions, all verified:
+
+1. **The loss streak counts losses, not R** - `v18_streak_halt.py:714` reads
+   `if r_multiple <= 0`. A positive size multiplier preserves every sign, so no
+   entry is added or dropped.
+2. **No R-aggregate gate is live in champion.** `window_r_cap` and
+   `campaign_require_marked_r` do not appear in `experiment_registry.py`.
+3. **The engine has no equity / size / notional state at all** - 0 hits for
+   `equity`, `position_size`, `notional`, `qty`, `size_mult` across all 782
+   lines of `v18_streak_halt.py`. There is no channel for a size change to feed
+   back into trade selection.
+
+**Caveat that voids the exemption:** `exp_campaign_require_marked_r` *exists* in
+the engine (`test_experiments_craze.py:839`) and is swept by six test-only arms
+in `exp_thesis_campaign_policy.py`. It is **default-off and not adopted**. If any
+R-aggregate gate is ever turned on, sizing starts feeding back into selection
+and every sizing result above must be re-run path-true.
+
+`CHECKLIST.md` 24.58 says "sizes ARE engine state" and asks for a path-true M2
+arm. That caution is superseded for the champion config by the three checks
+above; it would still apply to a config carrying an R-gate.
+
+## Sizing arms, re-read under the exemption (2026-09-26)
+
+Existing artifacts, no rerun. All are sizing, so all are valid as they stand.
+
+| arm | flag | dNet IS | dNet OOS | curve |
+|---|---|---|---|---|
+| **M2** `champion` | `cur_mag_atr >= 3` x1.5 | **+153.5** | **+31.5** | pass both |
+| **M2** `utcsat` | same | +131.0 | +30.8 | pass both |
+| **M2** `age10` | same | +117.1 | +18.8 | pass both |
+| Z `champion_C` | regime-structure C | +106.5 | +32.2 | pass both |
+| Z `utcsat_C` | regime-structure C | +112.3 | **+40.4** | pass both |
+| Z `champion_D` / `utcsat_D` | regime-structure D | -71.5 / -67.2 | +10.8 / +23.4 | IS FAIL |
+| htf-break A | - | +23.9 | +36.6 | pass both |
+
+M2 is the strongest and the only one that passes every lane and both eras.
+`regime_structure` arm C is second and passes both lanes. Arms D fail IS.
+**`monster_sizing` M1 is a LEVERAGE TRAP - do not adopt** (flags 71-88% of the
+book; its gain is 1.5x leverage, not selection - CHECKLIST 24.58).
+
+None of this is adopted. The forward verdict is still sample-size blocked
+(n >= 50 pre-registered, 5 trades untouched so far), and no sizing arm has
+been forward-tested.
 
 ## Message log
 
