@@ -53,6 +53,133 @@ def _atr_pct_15m(candles_15m):
     pct=[atr[i]/float(candles_15m[i]["close"])*100 if float(candles_15m[i]["close"])!=0 else 0 for i in range(n)]
     return pct
 
+def _hmm_regime_1h(candles_1h, train_frac=0.45, n_iter=40, seed=0):
+    """Idea A — 2-state Gaussian HMM on 1h log-returns. Range vs trend router.
+
+    Train Baum-Welch on the first train_frac only (rest never seen by params),
+    then causal forward-filter the WHOLE series with frozen params. numpy only.
+    Returns P(range)*100 per 1h bar (0..100). Range = state with lower
+    |mu|/sigma (less directional drift per unit vol).
+    """
+    import numpy as np
+    n = len(candles_1h)
+    if n < 80:
+        return [50.0] * n
+    cl = np.fromiter((float(c["close"]) for c in candles_1h), dtype=np.float64, count=n)
+    ret = np.zeros(n, dtype=np.float64)
+    np.log(cl[1:] / cl[:-1], out=ret[1:], where=cl[:-1] > 0)
+    n_train = max(60, int(n * train_frac))
+    x = ret[1:n_train]
+    T = len(x)
+    if T < 40:
+        return [50.0] * n
+    ax = np.abs(x)
+    z = (ax <= np.median(ax)).astype(np.int64)
+
+    def _mu_var(sel):
+        xs = x[sel]
+        if xs.size < 2:
+            return 0.0, 1e-4
+        m = float(xs.mean())
+        return m, float(xs.var()) + 1e-8
+
+    mu = np.array([_mu_var(z == 0)[0], _mu_var(z == 1)[0]])
+    var = np.array([_mu_var(z == 0)[1], _mu_var(z == 1)[1]])
+    A = np.array([[0.95, 0.05], [0.05, 0.95]], dtype=np.float64)
+    pi = np.array([0.5, 0.5], dtype=np.float64)
+
+    def log_gauss(v, m, s2):
+        return -0.5 * (np.log(2.0 * np.pi * s2) + (v - m) ** 2 / s2)
+
+    def fwd(logB, A_, pi_):
+        T_ = logB.shape[0]
+        la = np.empty((T_, 2), dtype=np.float64)
+        lA = np.log(A_ + 1e-300)
+        la[0] = np.log(pi_ + 1e-300) + logB[0]
+        for t in range(1, T_):
+            m = la[t - 1][:, None] + lA
+            mx = m.max(axis=0)
+            la[t] = logB[t] + mx + np.log(np.exp(m - mx).sum(axis=0) + 1e-300)
+        return la
+
+    def bwd(logB, A_):
+        T_ = logB.shape[0]
+        lb = np.zeros((T_, 2), dtype=np.float64)
+        lA = np.log(A_ + 1e-300)
+        for t in range(T_ - 2, -1, -1):
+            m = lA + (logB[t + 1] + lb[t + 1])[None, :]
+            row = m.max(axis=1)
+            lb[t] = row + np.log(np.exp(m - row[:, None]).sum(axis=1) + 1e-300)
+        return lb
+
+    logB = np.column_stack([log_gauss(x, mu[0], var[0]), log_gauss(x, mu[1], var[1])])
+    for _ in range(n_iter):
+        la = fwd(logB, A, pi)
+        lb = bwd(logB, A)
+        lg = la + lb
+        lg -= lg.max(axis=1, keepdims=True)
+        gam = np.exp(lg)
+        gam /= gam.sum(axis=1, keepdims=True) + 1e-300
+        lxi = (la[:-1, :, None] + np.log(A + 1e-300)[None, :, :]
+               + (logB[1:] + lb[1:])[:, None, :])
+        lxi -= lxi.max(axis=(1, 2), keepdims=True)
+        xi = np.exp(lxi)
+        xi /= xi.sum(axis=(1, 2), keepdims=True) + 1e-300
+        A = xi.sum(axis=0)
+        A /= A.sum(axis=1, keepdims=True) + 1e-300
+        pi = gam[0] / (gam[0].sum() + 1e-300)
+        for k in range(2):
+            w = gam[:, k]
+            ws = w.sum() + 1e-300
+            mu[k] = float((w * x).sum()) / ws
+            var[k] = float((w * (x - mu[k]) ** 2).sum()) / ws + 1e-8
+        logB = np.column_stack([log_gauss(x, mu[0], var[0]), log_gauss(x, mu[1], var[1])])
+    snr = np.abs(mu) / np.sqrt(var)
+    range_k = int(np.argmin(snr))
+    logBf = np.column_stack([log_gauss(ret[1:], mu[0], var[0]),
+                             log_gauss(ret[1:], mu[1], var[1])])
+    laf = fwd(logBf, A, pi)
+    out = [50.0] * n
+    for t in range(laf.shape[0]):
+        row = laf[t] - laf[t].max()
+        p = np.exp(row)
+        out[t + 1] = float(p[range_k] / (p.sum() + 1e-300) * 100.0)
+    return out
+
+
+def _garch_regime_1h(candles_1h, train_frac=0.45, a=0.1, b=0.85, lb=96):
+    """Idea F — GARCH(1,1) predicted-vol regime score on 1h closes.
+
+    omega/alpha/beta frozen from train prefix (path-true); recursive
+    sigma2 filter over full series. Returns range-score 0..100 per 1h bar
+    (high = low predicted vol = quiet/range), comparable to chop_thresh.
+    numpy-free.
+    """
+    n = len(candles_1h)
+    if n < 80:
+        return [50.0] * n
+    cl = [float(c["close"]) for c in candles_1h]
+    ret = [0.0] * n
+    for i in range(1, n):
+        ret[i] = (cl[i] - cl[i - 1]) / cl[i - 1] if cl[i - 1] > 0 else 0.0
+    n_train = max(60, int(n * train_frac))
+    x = ret[1:n_train]
+    if len(x) < 40:
+        return [50.0] * n
+    var = sum(v * v for v in x) / len(x)
+    omega = max(var * (1.0 - a - b), 1e-14)
+    sig2 = [var] * n
+    for i in range(1, n):
+        sig2[i] = omega + a * ret[i - 1] * ret[i - 1] + b * sig2[i - 1]
+    out = [50.0] * n
+    for i in range(lb, n):
+        w = sig2[i - lb:i + 1]
+        cur = sig2[i]
+        below = sum(1 for v in w if v < cur)
+        out[i] = 100.0 * (1.0 - below / float(len(w)))
+    return out
+
+
 def _r_touch_end(trade, fine_ltf, fine_ts, ext_r):
     """HTF window end = first ts price touches ext_r (1.5R) from HTF entry.
     'We reach 1.5R -> we are done, look for new bias.'
@@ -80,7 +207,8 @@ def simulate_htf_ltf_streak_halt(
     *,
     sl_buf_atr=0.25, ext_stop_r=1.5,
     chop_thresh=61.8, atr_low_thresh=0.35, atr_high_thresh=0.65,
-    mode="chop",  # chop, atr_low, atr_both, chop_or_atr
+    mode="chop",  # chop, atr_low, atr_both, chop_or_atr, soft_chop, soft_atr, soft_ensemble, garch, garch_inv
+    soft_width=4.0,  # Idea D: half-width of soft band (0 = hard switch)
     cooldown_bars=0,
     max_consecutive_losses=0,  # 0 = no halt, N = halt after N consecutive losses
     htf_rr=3.0,  # HTF (1h) fixed R target — controls when window closes
@@ -251,6 +379,22 @@ def simulate_htf_ltf_streak_halt(
         j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
         if j>=0 and j<len(_fd_htf):
             fd_per_ltf[i]=_fd_htf[j]
+    # --- HMM regime (Idea A): train prefix, forward-filter full series ---
+    hmm_per_ltf=[50.0]*len(candles_ltf)
+    if mode in ("hmm","hmm_inv"):
+        _hmm_htf=_hmm_regime_1h(candles_htf)
+        for i,ts in enumerate(candle_ts_ltf):
+            j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
+            if j>=0 and j<len(_hmm_htf):
+                hmm_per_ltf[i]=_hmm_htf[j]
+    # --- GARCH regime (Idea F): predicted-vol range score, train-frozen params ---
+    garch_per_ltf=[50.0]*len(candles_ltf)
+    if mode in ("garch","garch_inv"):
+        _garch_htf=_garch_regime_1h(candles_htf)
+        for i,ts in enumerate(candle_ts_ltf):
+            j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
+            if j>=0 and j<len(_garch_htf):
+                garch_per_ltf[i]=_garch_htf[j]
     # LTF signals (decisive)
     from src.btc.btc_engine import CandleStore
     ltf_store = CandleStore(candles_ltf)
@@ -315,6 +459,46 @@ def simulate_htf_ltf_streak_halt(
             use="b2" if fd_per_ltf[bar]>chop_thresh else "flip"
         elif mode=="fd_inv":
             use="flip" if fd_per_ltf[bar]>chop_thresh else "b2"
+        elif mode=="hmm":
+            # Idea A: P(range)*100 > chop_thresh → range → B2 else flip
+            use="b2" if hmm_per_ltf[bar]>chop_thresh else "flip"
+        elif mode=="hmm_inv":
+            use="flip" if hmm_per_ltf[bar]>chop_thresh else "b2"
+        elif mode=="garch":
+            # Idea F: low predicted vol (high range-score) → B2, high vol → flip
+            use="b2" if garch_per_ltf[bar]>chop_thresh else "flip"
+        elif mode=="garch_inv":
+            use="flip" if garch_per_ltf[bar]>chop_thresh else "b2"
+        elif mode=="soft_chop":
+            # Idea D: soft band around chop_thresh — uncertain zone uses both windows
+            _hw=max(float(soft_width),0.0)
+            if ch>chop_thresh+_hw: use="b2"
+            elif ch<chop_thresh-_hw: use="flip"
+            else: use="decisive"
+        elif mode=="soft_atr":
+            # Idea D soft on production atr_high path; band falls back to chop
+            _hw=max(float(soft_width),0.0)
+            if atrp>atr_high_thresh+_hw: use="decisive"
+            elif atrp<atr_high_thresh-_hw: use="flip"
+            else: use="decisive" if ch>chop_thresh else "flip"
+        elif mode=="soft_ensemble":
+            # Idea D: blend chop + ATR% + entropy + FD into one range score (0-100),
+            # soft-route: high→B2, low→FLIP, band→decisive (both).
+            _hw=max(float(soft_width),1e-6)
+            def _ramp(x,thr,half=1.0):
+                if half<=0: return 1.0 if x>thr else 0.0
+                if x>=thr+half: return 1.0
+                if x<=thr-half: return 0.0
+                return 0.5+0.5*(x-thr)/half
+            _p=0.25*(
+                _ramp(ch,chop_thresh,_hw)
+                + _ramp(atrp*100.0,atr_high_thresh*100.0,_hw)
+                + _ramp(100.0-entropy_per_ltf[bar],50.0,_hw)
+                + _ramp(fd_per_ltf[bar],50.0,_hw)
+            )*100.0
+            if _p>50.0+_hw: use="b2"
+            elif _p<50.0-_hw: use="flip"
+            else: use="decisive"
         else:
             use="flip"
         # pick intervals
