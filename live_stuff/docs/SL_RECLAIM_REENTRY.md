@@ -64,4 +64,4 @@ Harness `live_stuff/tests/exp_sl_reclaim_walk.py`; JSON `_sl_reclaim_walk_result
 
 ## Untested families (backlog)
 
-Position-sizing / add-on re-entries were the remaining untested class (see EXPERIMENT_SUMMARY.md §Untested Families): pyramid/scale-in had Phase 1 run 2026-09-25 (24.43, thin/fragile - Phase 2 designed in PYRAMID_PHASE2_DESIGN.md), same-window rewin tested+closed (24.61), revenge re-entry tested+dead (24.44).
+Position-sizing / add-on re-entries were the remaining untested class (see EXPERIMENT_SUMMARY.md §Untested Families): pyramid/scale-in Phase 1 run 2026-09-25 (24.43, thin/fragile) then Phase 2 run + CLOSED 2026-09-26 (24.87), same-window rewin tested+closed (24.61), revenge re-entry tested+dead (24.44).

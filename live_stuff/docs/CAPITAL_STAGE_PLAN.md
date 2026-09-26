@@ -153,7 +153,7 @@ Notes:
   curve problem.** `exp_zx_cross_venue.py` -> `_zx_cross_venue_results.json`
   re-ran ZC / X / uZX / sZX on Binance perp (24.82 data, era windows mirrored,
   threshold **not** re-derived - that would defeat the point of a transfer
-  test). Bybit control passed: base ledgers and the uZX dNet reproduce 24.85
+  test). Bybit control passed: base ledgers and the uZX dNet reproduce 24.86
   exactly, so the harness is not the problem.
 
   | arm | Binance 6/6 | champion dNet IS/OOS | note |

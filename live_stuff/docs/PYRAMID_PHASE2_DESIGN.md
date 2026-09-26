@@ -133,8 +133,9 @@ Phase-1 pre-frozen).
 Engine walk edits (child creation + child exit handling in the exit loop) =
 the bulk; harness mirrors `exp_n3_stack.py` structure (controls + arms +
 verdict). 5 arms x 3 lanes x 2 scopes = 30 engine runs (~5-10 min) plus
-identity/smoke. One commit, CHECKLIST 24.85 / LOG row 90 (next numbers at
-time of writing).
+identity/smoke. One commit, CHECKLIST 24.87 / LOG row 92 (numbering as
+assigned when the docs entries were written; at plan time 24.85/row 90 was
+the next free number).
 
 ## 6. Open questions for the user
 
