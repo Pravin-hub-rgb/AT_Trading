@@ -82,7 +82,24 @@ Notes:
 - **(c) age10 OOS anomaly - THE ONLY SANCTIONED RETEST:** bybit OOS 76t +43.2R vs binance OOS 78t +94.2R = 2.18x,
   while every other lane DECLINED (0.25x champion, 0.13x utcsat; IS ratios
   0.78/0.58/0.42). One lane doubling while the rest halve is more likely
-  luck - check whether a few trades drive it. Not yet done (deferred by user).
+  luck - check whether a few trades drive it.
+  **RESOLVED 2026-09-26 - CONCENTRATED, luck-shaped.** `exp_age10_anomaly.py`
+  -> `_age10_anomaly.json` (pre-registered rule, all cells reported):
+
+  | book | n | net | best | top-5 share | trades >=+3R | WR |
+  |---|---|---|---|---|---|---|
+  | oos bybit | 76 | +43.2R | +13.60 | 99.2% | 10 | 39.5% |
+  | oos binance | 78 | +94.2R | +22.21 | **71.8%** | 15 | 47.4% |
+  | is bybit | 130 | +435.7R | +55.73 | 50.2% | 34 | 53.8% |
+  | is binance | 118 | +182.6R | +56.69 | 75.7% | 21 | 43.2% |
+
+  Trigger fired: top 5 trades carry 71.8% of the binance OOS net. Dropping the
+  single best trade leaves +72.0R. Five of 78 trades produce most of a number
+  that is 2.18x the bybit reference - so **the 2.18x is a property of one
+  sample, not a venue property, and must not be quoted as "age10 transfers
+  well".** Note the bybit OOS book is even more concentrated (99.2%), so this
+  is a thin-sample property of the lane, not something Binance introduced.
+  Diagnostic only: it neither promotes nor demotes age10 or M2.
 - **(d) Cross-instrument base edge is weak overall.** Portability evidence
   applies to the SIZING FLAGS (M2/uMZX), not to edge magnitude: binance base
   net is 0.13-0.78x bybit on 5 of 6 lane/era cells (24.82), IS curve ~4-8x

@@ -1,0 +1,80 @@
+{
+  "stage": "age10_anomaly",
+  "question": "is the age10 OOS 2.18x transfer luck-shaped or structural?",
+  "lane": "age10_dirmatch_swingpause_single_sw10",
+  "bybit_oos_ref_net": 43.2,
+  "pre_registered": {
+    "concentrated_if_any": [
+      "top 5 trades > 50% of total net R",
+      "best trade removed leaves net < 20.0R",
+      "fewer than 10 trades with R >= +3.0R"
+    ]
+  },
+  "books": {
+    "is|bybit": {
+      "n": 130,
+      "net": 435.72,
+      "gross_pos": 527.45,
+      "gross_neg": -50.97,
+      "best": 55.73,
+      "worst": -1.0,
+      "top5_net": 218.94,
+      "top5_share_pct": 50.2,
+      "net_without_best": 380.0,
+      "n_R_ge_3": 34,
+      "win_rate_pct": 53.8,
+      "n_r_ge_5": 27
+    },
+    "is|binance": {
+      "n": 118,
+      "net": 182.63,
+      "gross_pos": 272.68,
+      "gross_neg": -57.4,
+      "best": 56.69,
+      "worst": -1.0,
+      "top5_net": 138.29,
+      "top5_share_pct": 75.7,
+      "net_without_best": 125.95,
+      "n_R_ge_3": 21,
+      "win_rate_pct": 43.2,
+      "n_r_ge_5": 15
+    },
+    "oos|bybit": {
+      "n": 76,
+      "net": 43.22,
+      "gross_pos": 95.12,
+      "gross_neg": -40.27,
+      "best": 13.6,
+      "worst": -1.0,
+      "top5_net": 42.88,
+      "top5_share_pct": 99.2,
+      "net_without_best": 29.62,
+      "n_R_ge_3": 10,
+      "win_rate_pct": 39.5,
+      "n_r_ge_5": 6
+    },
+    "oos|binance": {
+      "n": 78,
+      "net": 94.19,
+      "gross_pos": 139.3,
+      "gross_neg": -33.96,
+      "best": 22.21,
+      "worst": -1.0,
+      "top5_net": 67.61,
+      "top5_share_pct": 71.8,
+      "net_without_best": 71.98,
+      "n_R_ge_3": 15,
+      "win_rate_pct": 47.4,
+      "n_r_ge_5": 8
+    }
+  },
+  "result": {
+    "triggers": [
+      "top5 carry 71.8% of net"
+    ],
+    "concentration_max_of": "any trigger fires",
+    "verdict": "CONCENTRATED (luck-shaped)",
+    "interpretation": "If CONCENTRATED, the 2.18x is carried by few trades and should not be quoted as a venue property. It is a property of one sample, and it says nothing about M2 or the rest of the queue."
+  },
+  "elapsed_sec": 89.84
+}
