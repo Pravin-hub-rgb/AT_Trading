@@ -37,8 +37,7 @@ compile. Their owner confirms intent and stages them.
 - `flips96@short 4-5` also passes 4/4 but overlaps with the above (both
   short-side). Do not stack; combination untested. **Same lever, so the same
   fate is expected - not separately rerun.**
-- Worktrees for both agents have not been created yet. Until they are, assume
-  every working-tree change may belong to the other agent.
+- **RESOLVED 2026-09-26 - worktrees created.** See Worktrees below.
 
 ## Removal retractions - post-process PASS does not mean real
 
@@ -145,6 +144,30 @@ None of this is adopted. The forward verdict is still sample-size blocked
 (n >= 50 pre-registered, 5 trades untouched so far), and no sizing arm has
 been forward-tested.
 
+## Worktrees (created 2026-09-26)
+
+Two agents no longer share a working tree. Both start at 36fb506.
+
+| path | branch | owner |
+|---|---|---|
+| C:/Users/Pravin/Desktop/main/AT_Trading | experiments/v19-plus | integration only |
+| C:/Users/Pravin/Desktop/main/AT_Trading.worktrees/research | gents/research | research agent |
+| C:/Users/Pravin/Desktop/main/AT_Trading.worktrees/live-engine | gents/live-engine | live/production agent |
+
+**data/ and ackend/venv are gitignored**, so a fresh worktree has neither
+and every harness would fail on a missing CSV. Both are NTFS junctions into the
+main tree (no copy, no duplicate disk). Recreate them if a worktree is ever
+removed:
+
+    New-Item -ItemType Junction -Path <worktree>/data -Target <main>/data
+    New-Item -ItemType Junction -Path <worktree>/backend/venv -Target <main>/backend/venv
+
+Junctions are ignored, so they do not dirty git status.
+
+**How to work now.** Each agent commits on its own branch and never edits the
+other agent's worktree. Merge into experiments/v19-plus deliberately - not by
+editing files in the main tree. If you find yourself reading a file the other
+agent has uncommitted, that is the old workflow; stop and check the branch.
 ## Message log
 
 - 2026-09-26 — Found lookahead leak in `enrich_sequential` (203 prior-open
