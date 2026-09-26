@@ -192,8 +192,9 @@ then a post-process-vs-path-true gap).
   (both buckets still 4/4-negative) - recorded, NOT deployable.
 
 No gate/sizing engine change made; harness fixed in place (closed-only). Adoption =
-user's call (RESEARCH_POLICY). Comparison vs X/Y/Z/M2 sizing candidates: deferred to
-end-of-session side-by-side (they are sizing lifts, this is a removal - different lever).
+user's call (RESEARCH_POLICY). Comparison vs X/Y/Z/M2 sizing candidates: COMPLETED
+2026-09-26 (EXPERIMENT_SUMMARY.md Comparison section) - they are sizing lifts, this is a
+removal; removals die 0/4 path-true while sizing is exempt.
 
 ## 9. Harness reference (`live_stuff/tests/exp_bleed_autopsy.py`)
 

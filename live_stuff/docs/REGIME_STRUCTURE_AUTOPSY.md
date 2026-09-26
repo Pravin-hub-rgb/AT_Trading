@@ -88,8 +88,8 @@ era-flip prediction — gate CLOSED.
   inherit that caveat.
 - Small-N: none (all flagged n ≥ 62).
 - Tericile edges are IS-derived only (no OOS peek); bucket membership is fully causal.
-- Pre-registered comparisons X vs Y vs M2 vs Z sizing candidates: deferred to end-of-session
-  (user directive).
+- Pre-registered comparisons X vs Y vs M2 vs Z sizing candidates: COMPLETED 2026-09-26 -
+  side-by-side in `EXPERIMENT_SUMMARY.md` (Comparison section at end of file).
 
 ## Z3 - volume-reduction gate sweep (trade-count control; user goal pre-registered)
 

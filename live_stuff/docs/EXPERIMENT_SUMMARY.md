@@ -238,8 +238,8 @@ Entry-side re-entry/timing families are exhausted; these remain GENUINELY untest
 Context: user-approved HTF research batch V -> W -> X -> Y (2026-09-25). From it, **two new
 entry-causal sizing flags were tested as edge candidates** (post-process x1.5 on flagged
 trades, trade list byte-identical, engine untouched). Both are recorded here as CANDIDATES.
-**The final "which is better" comparison (X vs Y vs Z vs M2 vs B bigleg, risk-adjusted) is DEFERRED to
-end-of-session per user.** Nothing adopted yet (RESEARCH_POLICY: no automatic gate).
+**The final "which is better" comparison (X vs Y vs Z vs M2 vs B bigleg, risk-adjusted) COMPLETED 2026-09-26 - see the Comparison section at the end of
+this file.** Nothing adopted yet (RESEARCH_POLICY: no automatic gate).
 
 ### Candidate X - parent-window risk_pct < 1.0%  (checklist 24.71, log 71)
 
@@ -395,8 +395,57 @@ User: "utna delta aa raha hai toh kuch toh risk dega" - correct; each candidate'
 - **Both vs M2:** M2 bigleg is still the front-runner (6/6 strong pass, flag 16-29%, ulcer
   down everywhere). These two are recorded candidates, NOT adopted.
 
-### Comparison - DEFERRED to end of session
+### Comparison - X vs Y vs Z vs M2 vs B (completed 2026-09-26, end-of-session per user)
 
-Final side-by-side (X vs Y vs Z vs M2 vs B): edge size, flag share, DD cost per cell, curve_better
-record, OOS robustness (flag n), live implementability, exposure bump. Adoption decisions
-(user's call, RESEARCH_POLICY) happen there, not now.
+Basis: same instrument/eras (Bybit BTCUSDT; IS 2023-26, OOS 2021-22). Flat multi baseline where
+noted: champion 500t/+325.8/DD27.7 IS, 279t/+70.2/DD53.2 OOS; utcsat 454t/+358.9/DD21.2 IS,
+253t/+60.2/DD29.4 OOS. X/Y/Z/M2 are POST-PROCESS SIZING (x1.5 on flagged trades, trade list
+byte-identical): the numbers are real measurements under the sizing exemption (sizing never
+changes which trades fire, so post-process = path-true by construction; three verified
+conditions, AGENT_COORDINATION.md). B is a REMOVAL: only an engine path-true run counts - it
+scored 0/4 and is dead. No new runs were made for this comparison; every figure is re-read from
+the artifacts named under each candidate. dNet = arm net minus baseline net on the same book.
+
+| rank | candidate (flag) | flag share | dNet IS c/u | dNet OOS c/u | curve record | DD cost | OOS flagged n | exposure |
+|---|---|---|---|---|---|---|---|---|
+| 1 | **M2 bigleg** cur_mag_atr>=3.0 | 16-29% | **+153.5 / +131.0** | **+31.5 / +30.8** | **6/6 TRUE** (age10 +117.1/+18.8) | dDD -2.1..+0.45; ulcer DOWN all 6 | 41 / 38 (age10 5) | 1.1-1.2x |
+| 2 | **Z-C** vol7_prev7<=0.846 | ~33% | +106.5 / +112.3 | **+32.2 / +40.4** | TRUE x4 | maxDD deeper x4 (OOS c 53.2->61.8) | 81 / 76 | 1.1-1.2x, ONE Z flag only |
+| 2 | **Z-A** er50<=0.0767 | ~33% | **+110.3 / +110.5** | +17.3 / +23.4 | TRUE x4 | maxDD deeper x4 (IS u 21.2->26.7) | 84 / 81 | same |
+| 2 | **Z-B** wick_gt3x_pct12>33.3 | ~24% | +74.1 / +71.9 | +18.3 / +23.4 | TRUE x4 | maxDD deeper x4 | 70 / 62 | same |
+| 3 | **Y** ema4h pullback_toward_ema | 13-17% | +58.7 / +60.1 | +18.9 / +21.0 | **3/4 FAIL** (utcsat IS FALSE) | IS utcsat DD 21.2->24.9 (+3.7R) | 42 / 37 | ~1.08x |
+| 4 | **X** parent risk_pct<1.0 | 9.2/8.6% IS, 2.5/3.6% OOS | +23.9 / +23.4 | +36.6 / +39.5 | 4/4 TRUE | IS +1.0..+2.0R deeper; OOS improves | **7** | ~1.05x |
+| DEAD | **B** wick_atr12@short / flips96 REMOVAL | 14.8% / smaller | (pp only +28.1/+25.7) | (pp only +19.8/+23.8) | **0/4 path-true** | n/a - retracted | n/a | none (removal) |
+
+Verdicts:
+
+- **M2 = front-runner, unchanged.** Largest edge; the only candidate whose raw maxDD never
+  deepens (dDD -2.1..+0.45) while ulcer/sortino/PF improve in all 6 cells - flag enrichment
+  means the larger size lands on higher-avgR trades. Healthy OOS flagged n (41/38), 100% row
+  coverage. BOOK NOTE: Stage O measured M2 on the Stage-B stack book (half+delay1
+  [+skip_decisive OOS]), not flat: 466/428/94t at +429.6/+411.1/+489.3 IS, 217/194/50t at
+  +110.5/+94.6/+65.8 OOS. A flat-book M2 number does not exist - adopting M2 on the flat book
+  needs one confirming run first. age10 OOS rests on 5 flagged trades (lane-level small-n).
+  User note stands: 1x present capital; the 1.5x-on-bigleg lever is pre-approved for when
+  capital has grown.
+- **Z = strong second, pick ONE.** All three flags PASS 4/4 with healthy n (62-167); Z-C has
+  the best OOS deltas (+32.2/+40.4), Z-A the best IS (+110.3/+110.5), Z-B the smallest. Cost:
+  raw maxDD is deeper in all 12 cells (0.4-8.6R) - the curve passes via ulcer/calmar/sortino,
+  not raw DD. The three flags are ONE correlated family (same quiet tape; union 63-65%):
+  deploy at most ONE, never stack. Same M2-style capital lever documented (1.5x on one chosen
+  flag when capital grows).
+- **Y = near-miss, not promotable.** dNet>0 in all 6 cells (2nd-largest IS edge, healthy n
+  71/60/42/37) but the pre-registered rule failed on utcsat IS (maxDD +3.7R, ulcer +, calmar
+  -). Family closed for gates; arm A stays recorded-not-promoted.
+- **X = passes, weakest evidence.** 4/4 TRUE but the smallest edge, IS DD deepens 1-2R, and
+  the entire OOS lift rests on flagged n=7/9 (the pre-registered small-n caveat travels) after
+  4/5 sibling measures era-flipped.
+- **B = dead.** Engine path-true 0/4 (OOS champion net +70.2 -> -7.8); the descriptive buckets
+  were correct, but the slot-blocking cascade under exp_mltf is 280-494% of the direct effect -
+  bigger than the edge being removed. flips96 retracted by extension (same lever). Do not
+  re-test.
+
+Cross-cutting: (1) combinations (M2 + ONE Z flag + X/Y) are UNTESTED - any combo needs its own
+pre-registered run; (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
+(3) all survivors are post-process R-unit sizing - live implementation is order-time lot
+sizing, no entry feedback either way; (4) exploratory labels travel with every number.
+**Nothing adopted - adoption decisions are the user's (RESEARCH_POLICY: no automatic gate).**
