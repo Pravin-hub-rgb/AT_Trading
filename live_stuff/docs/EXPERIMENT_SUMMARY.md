@@ -323,6 +323,9 @@ thr=1.15: 74-76% kept, avgNet + DD better 4/4, dNet -66.6/-56.6 IS, +0.8/+14.9 O
 0.846-1.10 miss kept>=70%; 1.25/1.30 fail avgNet (IS champ dips below base). IS total
 net costs 17-19% at the passers (skipped tail net-positive IS, below average); all 10
 arms reported (exploratory threshold ranking).
+  **PATH-TRUE UPDATE (24.81): the thr=1.15/1.20 recommendation is RETRACTED
+  for adoption - the vol gate rerun path-true FAILS G-RULE 3/6 (champion OOS
+  sign flip +3.6->-4.6); see the GateSize bullet above.**
 
 **Z3b flags A/B gate sweep (checklist 24.75, log 78):** same G-RULE applied to the
 other two survivors (`exp_ab_gate_sweep.py` -> `_ab_gate_sweep_results.json`).
@@ -334,6 +337,9 @@ IS, -11.6/+2.1 OOS (HIGH selection risk; OOS champion below flat). **wick>=25 FA
 (only goal-zone arm; champ IS DD 27.7->29.9) - wick stays sizing-only. **Z3 volume
 gate (1.15/1.20) remains the recommended reduction gate** (pre-registered grid,
 better OOS net).
+  **PATH-TRUE UPDATE (24.81): RETRACTED - path-true G-RULE FAIL 3/6 (kept
+  ~79%, avg/DD worse in 3 cells, champion OOS sign flip); combined sizing+gate
+  also FAILS 4/6 vs flat. Only the M2-style SIZING flags survive (exempt).**
 
 ### Candidate B - bleed removals (checklist 24.76, log 80)
 
@@ -476,9 +482,29 @@ Verdicts:
   rule. Recorded, NOT adopted (RESEARCH_POLICY); ramp/count queued for the
   adoption checkpoint.
 
+- **Gate x size PATH-TRUE (Stage GateSize, 24.81) - gate FAILS path-true,
+  combined NOT adoptable, M2 marginal robust.**
+  vol7_prev7<=1.20 injected pre-state-mutation (identity IDENTICAL x6, formula
+  parity 0/1692, flat_M2 control = 24.78 x6). G-RULE on the gated book: FAIL
+  3/6 - kept 77.7-80.0% everywhere (band fine) but avgNet drops (champion IS
+  0.652->0.603, utcsat IS 0.791->0.752, age10 OOS 0.569->0.412) and champion
+  IS maxDD 27.7->42.6 (post-process had 27.7->27.0; ulcer 14.62->358.02).
+  CASCADE vs Z3 post-process dNet: champion IS -61.1->-87.4, champion OOS
+  +3.6->-4.6 SIGN FLIP, utcsat IS -60.5->-86.0, utcsat OOS +15.0->+10.8 -
+  **Z3 vol-gate recommendation RETRACTED (post-process = upper bound; SECOND
+  confirmation after Stage B wick 0/4).** COMBINED gate+M2 vs FLAT: FAIL 4/6
+  (champion IS +34.6 but curve False - DD 27.7->44.9; age10 OOS -12.7, M2
+  nAff 6 SMALL-N; passes utcsat IS +46.6, age10 IS +7.3, champion OOS +18.0,
+  utcsat OOS +33.9). MARGINAL M2 on the gated book: PASS 6/6 (+122.0/+132.6/
+  +98.5 IS, +22.6/+23.0/+6.6 OOS) - the sizing edge survives any book; the
+  gate's chain cascade is the sole failure. Recorded, NOT adopted
+  (RESEARCH_POLICY).
+
+
 Cross-cutting: (1) combinations (M2 + ONE Z flag + X/Y) were UNTESTED at
 24.77 - NOW RUN (24.79: all 4 combo arms PASS 6/6, see the combination-
 matrix bullet above; sizing-function SHAPE (binary threshold vs ramp vs vol-target vs flag-count) was UNTESTED - NOW RUN (24.80: ramp_mag + count_linear PASS 6/6, vol_target FAIL, see the shapes bullet above); (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
 (3) all survivors are post-process R-unit sizing - live implementation is order-time lot
-sizing, no entry feedback either way; (4) exploratory labels travel with every number.
+sizing, no entry feedback either way; path-true-removal confirmations now TWO
+(wick 0/4; vol gate G-RULE 3/6 - 24.81) (4) exploratory labels travel with every number.
 **Nothing adopted - adoption decisions are the user's (RESEARCH_POLICY: no automatic gate).**

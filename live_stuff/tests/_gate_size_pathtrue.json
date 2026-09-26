@@ -1,0 +1,265 @@
+{
+  "instrument": "BTCUSDT_BYBIT",
+  "stage": "gate_size_pathtrue",
+  "gate": "vol7_prev7 <= 1.2 (path-true, injected pre-state-mutation)",
+  "m2": "x1.5 on cur_mag_atr >= 3.0 (post-process on survivors)",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "pre_registered": {
+    "identity": "gate_off == flat all 6 cells (entry_ts seq + net)",
+    "formula_parity": "injected vol7_prev7 == compute_features on every flat trade",
+    "g_rule_gate_on": "kept 70-90% AND avgNet/trade>=flat AND maxDD<=flat, ALL 6 cells",
+    "combined_vs_flat": "dNet>0 AND curve_better all 6 cells",
+    "combined_vs_gated": "dNet>0 AND curve_better all 6 cells",
+    "control_flat_M2": "dNet within 1.0R of 24.78 (champion +152.7/+29.1, utcsat +147.5/+31.3, age10 +113.0/+21.3)"
+  },
+  "z3_postprocess_reference": {
+    "champion|is": {
+      "n": 398,
+      "kept": 0.8,
+      "dNet": -61.1
+    },
+    "utcsat|is": {
+      "n": 360,
+      "kept": 0.79,
+      "dNet": -60.5
+    },
+    "champion|oos": {
+      "n": 216,
+      "kept": 0.77,
+      "dNet": 3.6
+    },
+    "utcsat|oos": {
+      "n": 196,
+      "kept": 0.78,
+      "dNet": 15.0
+    }
+  },
+  "cells": {
+    "is|champion": {
+      "flat_n": 500,
+      "flat_net": 325.78,
+      "gate_n": 395,
+      "gate_net": 238.36,
+      "kept": 0.79,
+      "z3_postprocess_n": 398,
+      "z3_postprocess_dNet": -61.1,
+      "gate_dNet_vs_flat": -87.43,
+      "g_rule_cell": false,
+      "avg_flat": 0.6516,
+      "avg_gate": 0.6034,
+      "dd_flat": 27.7242,
+      "dd_gate": 42.5618,
+      "parity_mismatches": 0,
+      "identity": true,
+      "flat_M2_dNet": 152.65,
+      "flat_M2_control_ok": true,
+      "combined_vs_flat": {
+        "d_net": 34.6084,
+        "curve": false,
+        "pass": false
+      },
+      "combined_vs_gated": {
+        "d_net": 122.0345,
+        "curve": true,
+        "pass": true
+      },
+      "gate_M2_n_aff": 102,
+      "gate_M2_eq": {
+        "n": 395,
+        "net": 360.4,
+        "max_dd": 44.9008,
+        "calmar": 2.187
+      }
+    },
+    "is|utcsat": {
+      "flat_n": 454,
+      "flat_net": 358.95,
+      "gate_n": 363,
+      "gate_net": 272.91,
+      "kept": 0.7996,
+      "z3_postprocess_n": 360,
+      "z3_postprocess_dNet": -60.5,
+      "gate_dNet_vs_flat": -86.04,
+      "g_rule_cell": false,
+      "avg_flat": 0.7906,
+      "avg_gate": 0.7518,
+      "dd_flat": 21.1764,
+      "dd_gate": 18.844,
+      "parity_mismatches": 0,
+      "identity": true,
+      "flat_M2_dNet": 147.48,
+      "flat_M2_control_ok": true,
+      "combined_vs_flat": {
+        "d_net": 46.5631,
+        "curve": true,
+        "pass": true
+      },
+      "combined_vs_gated": {
+        "d_net": 132.6005,
+        "curve": true,
+        "pass": true
+      },
+      "gate_M2_n_aff": 102,
+      "gate_M2_eq": {
+        "n": 363,
+        "net": 405.5,
+        "max_dd": 20.039,
+        "calmar": 5.514
+      }
+    },
+    "is|age10": {
+      "flat_n": 130,
+      "flat_net": 435.72,
+      "gate_n": 101,
+      "gate_net": 344.54,
+      "kept": 0.7769,
+      "z3_postprocess_n": null,
+      "z3_postprocess_dNet": null,
+      "gate_dNet_vs_flat": -91.18,
+      "g_rule_cell": true,
+      "avg_flat": 3.3517,
+      "avg_gate": 3.4113,
+      "dd_flat": 8.7253,
+      "dd_gate": 8.7253,
+      "parity_mismatches": 0,
+      "identity": true,
+      "flat_M2_dNet": 113.01,
+      "flat_M2_control_ok": true,
+      "combined_vs_flat": {
+        "d_net": 7.3371,
+        "curve": true,
+        "pass": true
+      },
+      "combined_vs_gated": {
+        "d_net": 98.5195,
+        "curve": true,
+        "pass": true
+      },
+      "gate_M2_n_aff": 22,
+      "gate_M2_eq": {
+        "n": 101,
+        "net": 443.1,
+        "max_dd": 8.7253,
+        "calmar": 13.836
+      }
+    },
+    "oos|champion": {
+      "flat_n": 279,
+      "flat_net": 70.15,
+      "gate_n": 223,
+      "gate_net": 65.55,
+      "kept": 0.7993,
+      "z3_postprocess_n": 216,
+      "z3_postprocess_dNet": 3.6,
+      "gate_dNet_vs_flat": -4.6,
+      "g_rule_cell": true,
+      "avg_flat": 0.2514,
+      "avg_gate": 0.294,
+      "dd_flat": 53.1877,
+      "dd_gate": 42.2765,
+      "parity_mismatches": 0,
+      "identity": true,
+      "flat_M2_dNet": 29.14,
+      "flat_M2_control_ok": true,
+      "combined_vs_flat": {
+        "d_net": 18.0358,
+        "curve": true,
+        "pass": true
+      },
+      "combined_vs_gated": {
+        "d_net": 22.632,
+        "curve": true,
+        "pass": true
+      },
+      "gate_M2_n_aff": 43,
+      "gate_M2_eq": {
+        "n": 223,
+        "net": 88.2,
+        "max_dd": 40.8275,
+        "calmar": 1.08
+      }
+    },
+    "oos|utcsat": {
+      "flat_n": 253,
+      "flat_net": 60.21,
+      "gate_n": 198,
+      "gate_net": 71.04,
+      "kept": 0.7826,
+      "z3_postprocess_n": 196,
+      "z3_postprocess_dNet": 15.0,
+      "gate_dNet_vs_flat": 10.83,
+      "g_rule_cell": true,
+      "avg_flat": 0.238,
+      "avg_gate": 0.3588,
+      "dd_flat": 29.3814,
+      "dd_gate": 23.2467,
+      "parity_mismatches": 0,
+      "identity": true,
+      "flat_M2_dNet": 31.27,
+      "flat_M2_control_ok": true,
+      "combined_vs_flat": {
+        "d_net": 33.8692,
+        "curve": true,
+        "pass": true
+      },
+      "combined_vs_gated": {
+        "d_net": 23.039,
+        "curve": true,
+        "pass": true
+      },
+      "gate_M2_n_aff": 37,
+      "gate_M2_eq": {
+        "n": 198,
+        "net": 94.1,
+        "max_dd": 20.2537,
+        "calmar": 2.322
+      }
+    },
+    "oos|age10": {
+      "flat_n": 76,
+      "flat_net": 43.22,
+      "gate_n": 58,
+      "gate_net": 23.9,
+      "kept": 0.7632,
+      "z3_postprocess_n": null,
+      "z3_postprocess_dNet": null,
+      "gate_dNet_vs_flat": -19.32,
+      "g_rule_cell": false,
+      "avg_flat": 0.5687,
+      "avg_gate": 0.4121,
+      "dd_flat": 8.5699,
+      "dd_gate": 6.3878,
+      "parity_mismatches": 0,
+      "identity": true,
+      "flat_M2_dNet": 21.31,
+      "flat_M2_control_ok": true,
+      "combined_vs_flat": {
+        "d_net": -12.6799,
+        "curve": false,
+        "pass": false
+      },
+      "combined_vs_gated": {
+        "d_net": 6.643,
+        "curve": true,
+        "pass": true
+      },
+      "gate_M2_n_aff": 6,
+      "gate_M2_eq": {
+        "n": 58,
+        "net": 30.5,
+        "max_dd": 6.3878,
+        "calmar": 2.391
+      }
+    }
+  },
+  "identity_ok": true,
+  "parity_ok": true,
+  "flat_M2_control_ok": true,
+  "g_rule_pass_all_6": false,
+  "combined_vs_flat_pass_all_6": false,
+  "combined_vs_gated_pass_all_6": true,
+  "elapsed_sec": 165.36
+}

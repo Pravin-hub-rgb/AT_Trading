@@ -140,7 +140,10 @@ three is 63-65% of the book, stacking flags would over-expose), 1x on everything
 When capital/risk-budget is TIGHT (want fewer trades, shallower DD): **volume-reduction
 gate - take only trades with `vol7_prev7 <= 1.20`** (user goal: ~400/500 trades, avg
 R/trade same-or-better, maxDD lower in all 4 cells; thr 1.15 for a deeper cut).
-Sizing flag and gate can combine, but the combined effect is UNTESTED.
+Sizing flag and gate can combine; TESTED PATH-TRUE 2026-09-26 (checklist
+24.81, log 86): the gate FAILS G-RULE 3/6 path-true, gate+M2 vs flat FAILS 4/6,
+M2 marginal on the gated book PASSES 6/6 - combined lever NOT adoptable, and
+the vol gate itself is retracted for adoption (Z3 verdict update below).
 
 ## Z3b - gate sweep on flags A and B (er50, wick) - same user goal
 
@@ -173,3 +176,14 @@ the rule. Every other er50 arm fails kept% or maxDD in some cell (full table in 
 grid-derived passer and is strictly better on OOS net (er50|0.20 OOS champion -11.6
 vs vol|1.20 +3.6).** er50|0.20 recorded as exploratory near-pass; wick gate closed
 for reduction (stays sizing-only, flag B).
+
+**PATH-TRUE UPDATE (2026-09-26, checklist 24.81, log 86): the Z3 vol-gate
+recommendation is RETRACTED for adoption.** Rerun path-true (predicate injected
+pre-state-mutation; identity IDENTICAL x6; formula parity 0/1692): G-RULE FAIL
+3/6 - kept 77.7-80% everywhere, but avgNet drops in champion IS (0.652->0.603),
+utcsat IS (0.791->0.752) and age10 OOS (0.569->0.412), and champion IS maxDD
+goes 27.7->42.6 (post-process had 27.7->27.0). Cascade vs post-process dNet:
+champion IS -61.1->-87.4, champion OOS +3.6->-4.6 SIGN FLIP, utcsat IS
+-60.5->-86.0, utcsat OOS +15.0->+10.8. Same class as the Stage-B wick gate
+(0/4 path-true): post-process removal = UPPER BOUND, never adoptable
+(AGENT_COORDINATION rule). Only SIZING flags remain leverage candidates.
