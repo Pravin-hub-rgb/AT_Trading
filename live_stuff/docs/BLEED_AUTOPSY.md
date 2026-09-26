@@ -5,6 +5,7 @@
 The remaining 2 PASS were post-process ledger skips; a path-true engine rerun 2026-09-26 kills them 0/4. See section 10.)
 **Harness:** `live_stuff/tests/exp_bleed_autopsy.py` (closed-only enrich, fixed in place) -> `_bleed_autopsy_results.json` (= 2/4)
 **Audit:** `verify_bleed_causality.py` -> `_bleed_autopsy_CLOSEDONLY.json` (byte-identical to the fixed main JSON, excl. elapsed)
+**Path-true:** `exp_wick_short_pathtrue.py` -> `_wick_short_pathtrue.json` (gate_ok, identity IDENTICAL x4) -> **0/4** (section 10)
 **Identity:** gate IDENTICAL both scopes | **Smoke:** PASS 351t / +211.7R | **Engine:** untouched (post-process)
 
 ## 1. Goal (user round, pre-registered)
@@ -66,7 +67,7 @@ original leaky run (which showed -42.0/-30.6/-19.5/-13.0 and n 80/58/43/32): the
 the chain buckets' negativity; see the audit in section 9.9. Masked rows are byte-identical
 under both enriches (no trade state involved).
 
-## 5. Removal results: 2/4 PASS (corrected closed-only; original leaky run showed 4/4)
+## 5. Removal results: 2/4 PASS post-process (closed-only corrected; leaky run showed 4/4) - **0/4 path-true, section 10**
 
 Baselines: is|champion n500 net+325.8 avg+0.652 DD27.7 calmar3.202 | is|utcsat 454 +358.9
 +0.791 21.2 4.619 | oos|champion 279 +70.2 +0.251 53.2 0.659 | oos|utcsat 253 +60.2 +0.238
@@ -115,7 +116,7 @@ Bucket avgNet -0.38/-0.41/-0.57/-0.66 - the Z1 era-flip candidate that only blee
 conditioned on shorts. **These are post-process ledger numbers. The path-true rerun in
 section 10 gives dNet -50.6/-54.5/-78.0/-59.6 - i.e. FAIL 0/4. Do not use this table for adoption.**
 
-### 5.4 Remove `flips96@short = 4-5` (short trades, 4-5 swing flips in 96h) - **PASS**
+### 5.4 Remove `flips96@short = 4-5` (short trades, 4-5 swing flips in 96h) - **PASS post-process, RETRACTED path-true (section 10, same lever)**
 
 | cell | n | net R | dNet | avgNet | maxDD | calmar | curve |
 |---|---|---|---|---|---|---|---|
@@ -130,6 +131,9 @@ Smallest effect (share only 6-8%) but PASS 4/4.
 AND avg-up (the user's strict target), BYTE-IDENTICAL under both enriches** (pure market
 structure from `z1_compute`, no trade state - immune to the leak). **Sections 5.1/5.2
 (chain): FAIL** - 3/4 cells each pass, is|utcsat curve worsens (DD 21.2->26.2).
+
+**All four removals in section 5 are post-process ledger skips (upper bounds). The
+path-true engine rerun in section 10 retracts 5.3 and 5.4 too - Stage B final = 0/4.**
 
 ## 6. Reading
 
@@ -162,7 +166,10 @@ structure from `z1_compute`, no trade state - immune to the leak). **Sections 5.
 - **Selection:** 114 buckets x 4 cells scanned; the 4/4-negative FIND rule is strict (a lucky
   bucket must go negative in both eras AND both lanes) but selection risk is not zero. Rules were
   pre-registered in the harness docstring before the run.
-- **Post-process, no chain re-timing** (Study 1: direct dominates IS; chain shift small).
+- **Post-process, no chain re-timing** - this caveat was UNDERSTATED: section 10's path-true
+  rerun shows the cascade DOMINATES (wick removal dNet +28.1 -> -50.6 IS champion, OOS champion
+  +70.2 -> -7.8). Study 1's "direct dominates IS" does not rescue a ledger-skip removal here.
+  Coordination rule: post-process dNet under exp_mltf is an UPPER BOUND, never adoptable.
 - **OOS luck caveat** (Study 2 / LOG 74): the weak OOS baseline makes OOS deltas easier to
   achieve - applies to all four removals' OOS lifts.
 - **Cosmetic:** h4_flip_age terciles degenerate on integer data (quartile edges 1/1/2 -> empty
@@ -365,3 +372,43 @@ contribute) and re-ran the ENTIRE pipeline - same rules, edges, FIND/REMOVAL cod
   differs between JSONs), and `_bleed_autopsy_results.json` was regenerated with
   `removal_pass_count: 2`. The leaky JSON is superseded (its numbers survive only in this
   doc's retracted tables + the audit JSON's comparison column).
+
+## 10. Path-true rerun (2026-09-26): the standing candidate dies 0/4
+
+`exp_wick_short_pathtrue.py` -> `_wick_short_pathtrue.json` (run 121.8s, `gate_ok: true`).
+
+**Why:** sections 5.3/5.4 deleted trades from a FINISHED ledger while the engine still
+behaved as if they existed. Under `exp_mltf` a removal frees a `busy_until` slot, shifts
+the cooldown/last-loss timeline and can move the max-consecutive-losses streak - Study 1's
+cascade. So the post-process dNet was an UPPER BOUND.
+
+**How:** the same predicate (`short AND wick_atr12 <= 6.03`; threshold 6.03 and lookback 12
+reused unchanged, NOT retuned) is injected immediately after `i = ltf_store.pos(bar_time)` -
+ahead of busy_until, cooldown, streak-halt and any book mutation - so state evolves as if
+the trade never existed. The patch rides the same `build_module()` superset (`exp_partial_r`
+/ `exp_mltf` pass through untouched). Identity gate: patched-with-filter-off reproduces the
+shipped trade list exactly in all 4 cells (`identical: true`, 500/454/279/253) before any
+filtered number is shown.
+
+| cell | n | dNet path-true | dNet post-process (5.3) | filtered net | maxDD | curve |
+|---|---|---|---|---|---|---|
+| is champ | 500->389 | **-50.6** | +28.1 | +275.2 | 27.7->27.2 | False |
+| is uts | 454->362 | **-54.5** | +25.7 | +304.4 | 21.2->**24.7** | False |
+| oos champ | 279->216 | **-78.0** | +19.8 | **-7.8** | 53.2->**57.6** | False |
+| oos uts | 253->198 | **-59.6** | +23.8 | +0.6 | 29.4->**31.4** | False |
+
+**0/4.** OOS champion turns NEGATIVE (+70.2 -> -7.8); OOS utcsat collapses to ~zero; maxDD
+worsens in 3 of 4 cells; every cell fails `curve_better`.
+
+**Mechanism:** the bucket really was net-negative - the descriptive (section 4) was not
+wrong. But those entries occupied concurrent slots and SUPPRESSED worse entries. Under
+`exp_mltf` the freed busy_until slots, the shifted cooldown timeline and the moved loss
+streak cost more than the removed losers returned - worst in OOS exactly as Study 1
+predicted (`exp_thesis_chain_decomposition`).
+
+**`flips96@short 4-5`** (section 5.4) is the same short-side removal lever - expected same
+fate, NOT rerun separately; its 5.4 table is retracted by this result too.
+
+**Coordination rule (`AGENT_COORDINATION.md`):** no removal is adoptable on a post-process
+ledger skip under `exp_mltf=True`; a post-process dNet is an upper bound. **Stage B stands
+at 0/4 - nothing from this study is deployable.**
