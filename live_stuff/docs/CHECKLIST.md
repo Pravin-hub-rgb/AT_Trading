@@ -844,3 +844,45 @@ adoption = user's call.
 
 - [x] 24.79 **Stage Combo - sizing combination matrix (M2 x ZC x X):**
 **Bybit IS/OOS complete 2026-09-26; identity gate IDENTICAL; ledger assertions PASS 6/6 (champion 500t/+325.8 IS / 279t/+70.2 OOS, utcsat 454t/+358.9 / 253t/+60.2, age10 130t/+435.7 / 76t/+43.2 = all three flat references confirmed before scoring); rows 100%; post-process sizing on FLAT books, trade key sequence byte-identical on every arm (sizing exemption); ALL 8 arms reported, no best-of hiding.** Closes the 24.77 cross-cutting flag "combinations UNTESTED". Flags: M2 cur_mag_atr>=3.0 (24.78), ZC vol7_prev7<=0.846 (Z arm C), X parent risk_pct<1.0 (Stage X). Modes: union (x1.5 if any flag) vs stack (x1.5^count). PRE-REGISTERED in the harness docstring before the run: PASS per combo arm = dNet>0 AND curve_better TRUE in ALL 6 cells (3 lanes x 2 eras). **RESULT: ALL 4 COMBO ARMS PASS 6/6** - uMZ dNet IS/OOS champion +167.0/+48.0, utcsat +171.5/+55.6, age10 +143.6/+19.2; uMZX +165.5/+49.5, +171.3/+56.8, +145.9/+19.2; sMZ +305.2/+68.0, +303.9/+79.7, +243.7/+29.9; **sMZX strongest: champion +346.5/+130.4 (book 325.8->672.3 IS, 70.2->200.5 OOS), utcsat +341.2/+146.6 (358.9->700.1, 60.2->206.8), age10 +270.3/+29.9 (435.7->706.0, 43.2->73.2).** Singles re-scored in-run: M2 PASS 6/6 (matches 24.78 exactly); ZC FAIL 6/6 (age10 OOS curve FALSE: ulcer 31.6->41.4, dNet +5.1); X FAIL (age10 OOS no-op nAff=0; age10 IS nAff=7 SMALL-N). Flag counts: champion IS M2/ZC/X = 128/166/46 (count-hist 234/197/64/5 for 0/1/2/3 flags), OOS 48/81/7 (hist 164/96/17/2); age10 X ~0 hits (lane has no parent risk_pct<1.0 rows). Stack-mode cost: raw maxDD deeper in 3 cells (sMZX champion OOS 53.2->56.2, age10 IS 8.7->10.2, age10 OOS 8.6->10.1) while ulcer/sortino/calmar improve - curve_better True in all 18 combo cells; stack is multiplicative leverage on flagged rows (stakes up, not new edge). Caveats: X small-n (OOS 7/9) travels into every combo number; age10 X is a no-op; R-unit post-process (live = order-time lot sizing, no entry feedback); Study-2 OOS luck caveat; exploratory labels travel. Verdict: **combo candidates RECORDED, NOT adopted (RESEARCH_POLICY: user's call).** Harness `live_stuff/tests/exp_sizing_combo.py` -> `_sizing_combo_results.json`.
+
+- [x] 24.80 **Stage Shapes - sizing-function shape sweep (binary vs ramp vs vol-target vs flag-count):**
+**Bybit IS/OOS complete 2026-09-26; identity gate IDENTICAL; ledger assertions PASS 6/6 (all three flat
+references confirmed before scoring: champion 500t/+325.8 IS & 279t/+70.2 OOS, utcsat 454t/+358.9 &
+253t/+60.2, age10 130t/+435.7 & 76t/+43.2); rows 100%; post-process sizing on FLAT books, trade key
+sequence byte-identical on every arm (sizing exemption); ALL 6 arms reported, no best-of hiding; control
+reproduction check PASSED (M2_15 and uMZX re-run in the same harness match 24.78/24.79 dNet exactly,
+6/6, tolerance 1.0R).** Follow-up to 24.79: does the SHAPE of the multiplier matter, or only the flag?
+Arms: M2_15 (binary threshold control), **ramp_mag** threshold-free continuous
+`clamp(1 + 0.25*(cur_mag_atr - 2), 1.0, 2.0)` (mag 3->1.25, 4->1.5, >=6->2.0 cap, never downsizes),
+**vol_target** inverse-ATR risk parity `clamp(median_book_atrpct / trade_atrpct, 0.5, 2.0)` applied to
+EVERY trade (ATR% at entry 15m bar; normalizer = full-book median, pre-registered descriptive-caveat),
+**count_linear** `1 + 0.5*count(M2,ZC,X)` capped 2.0 (linear alternative to the 1.5^count stack),
+uMZX (union control). PRE-REGISTERED in the harness docstring before the run: PASS per tested arm
+(ramp_mag, vol_target, count_linear) = dNet>0 AND curve_better TRUE in ALL 6 cells (3 lanes x 2 eras).
+**RESULT: 2 of 3 tested arms PASS 6/6 - ramp_mag PASS, count_linear PASS, vol_target FAIL -> NOT ALL
+PASS (honest aggregate).** **ramp_mag: dNet IS/OOS champion +267.3/+54.1, utcsat +260.3/+53.6, age10
++201.0/+26.1 - BEATS the binary M2_15 control in EVERY cell (+152.7/+29.1, +147.5/+31.3, +113.0/+21.3):
+the threshold-free continuous ramp > binary threshold (shape matters, not just the flag).** Books:
+champion 325.8->593.1 IS / 70.2->124.2 OOS (calmar 3.202->5.728 / 0.659->1.294), utcsat 358.9->619.3 /
+60.2->113.8, age10 435.7->636.7 / 43.2->69.3. nAff IS/OOS 251/122 of 500, 243/107 of 454, 54/26 of 130
+(~half the book gets a partial boost: any cur_mag_atr>2 sized 1.25-1.5x). Raw maxDD OOS IMPROVES
+(champion 53.2->48.0, utcsat 29.4->24.3, age10 unchanged) but IS 0.1-2.9R deeper; ulcer improves in
+5/6 cells (age10 OOS 31.6->37.0 worse); curve_better 6/6. **count_linear: champion +276.8/+87.0,
+utcsat +280.2/+100.2, age10 +228.8/+26.4 - beats union uMZX (+165.5/+49.5, +171.3/+56.8, +145.9/+19.2)
+because cnt>=2 trades get 2.0x not 1.5x; still BELOW the multiplicative stack sMZX (+346.5/+130.4,
++341.2/+146.6, +270.3/+29.9) on net in all 6 cells.** Books: champion 325.8->602.6 / 70.2->157.1
+(calmar 0.659->1.357 OOS), utcsat ->639.2 / 160.4, age10 ->664.5 / 69.6. nAff = same any-flag set as
+uMZX (266/115, 246/109, 57/31); cap binds at cnt>=2 (champion IS cnt2/3 = 69 trades -> 2.0x); raw
+maxDD deeper in 5/6 cells (+0.1..+5.1R) while ulcer/calmar/sortino improve (curve 6/6) - same
+stakes-vs-curve trade-off family as the stack, milder leverage. **vol_target FAIL: net up in all 6
+cells (+84.3/+87.9, +113.2/+82.0, +121.3/+7.0) but curve_better FALSE in 3 of 6 (champion IS ulcer
+14.62->29.82 & raw DD 27.7->38.8 & calmar 3.202->2.878; utcsat IS DD 21.2->27.8; age10 OOS ulcer
+31.55->73.74 & DD 8.6->10.2): inverse-vol sizing UP the low-ATR trades degrades equity quality on the
+pre-registered rule - NOT adoptable, regardless of the positive net.** Caveats: ramp/count_linear are
+broad stake-ups (levered stakes, not new edges; champion IS exposure ~1.8x book - live implementation
+= order-time lot sizing, no entry feedback); vol_target normalizer = full-book median (descriptive
+constant - mild hindsight in the SCALE only, never in trade selection); age10 flagged n small (M2 25/12,
+X=0 OOS) so its cells are thin either way; Study-2 OOS luck caveat; exploratory labels travel. Verdict:
+**shape candidates RECORDED, NOT adopted (RESEARCH_POLICY: user's call); ramp_mag/count_linear queued
+into the adoption-decision checkpoint (planned slice 5) alongside M2/stack/combo.** Harness
+`live_stuff/tests/exp_sizing_shapes.py` -> `_sizing_shapes_results.json`.

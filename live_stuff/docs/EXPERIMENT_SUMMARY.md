@@ -460,9 +460,25 @@ Verdicts:
   6/6; ZC age10-OOS curve FAIL; X age10-OOS no-op (nAff=0), X n=7/9 caveat
   travels into combos. Recorded, NOT adopted (RESEARCH_POLICY).
 
+- **Sizing-function shapes (Stage Shapes, 24.80) - ramp_mag PASS 6/6,
+  count_linear PASS 6/6, vol_target FAIL (2 of 3 tested arms PASS).**
+  Same flat books; controls M2_15/uMZX reproduce 24.78/24.79 exactly (6/6).
+  Threshold-free ramp clamp(1+0.25*(cur_mag_atr-2),1,2) BEATS binary M2 in
+  all 6 cells: champion +267.3/+54.1 dNet IS/OOS (vs +152.7/+29.1), utcsat
+  +260.3/+53.6, age10 +201.0/+26.1; raw DD OOS improves (53.2->48.0 champ,
+  29.4->24.3 utcsat), IS <=2.9R deeper; sizes ~half the book (shape, not
+  flag; levered stakes). count_linear (1+0.5*count cap 2.0): +276.8/+87.0,
+  +280.2/+100.2, +228.8/+26.4 - beats union uMZX, still below the 1.5^count
+  stack sMZX on net 6/6; raw DD deeper 5/6 (+0.1..+5.1R), curve 6/6.
+  vol_target (inverse-ATR, book-median normalizer) net up 6/6 but curve
+  FALSE x3 (champ IS ulcer 14.62->29.82, DD 27.7->38.8; utcsat IS DD
+  21.2->27.8; age10 OOS ulcer 31.55->73.74) - FAIL on the pre-registered
+  rule. Recorded, NOT adopted (RESEARCH_POLICY); ramp/count queued for the
+  adoption checkpoint.
+
 Cross-cutting: (1) combinations (M2 + ONE Z flag + X/Y) were UNTESTED at
 24.77 - NOW RUN (24.79: all 4 combo arms PASS 6/6, see the combination-
-matrix bullet above); (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
+matrix bullet above; sizing-function SHAPE (binary threshold vs ramp vs vol-target vs flag-count) was UNTESTED - NOW RUN (24.80: ramp_mag + count_linear PASS 6/6, vol_target FAIL, see the shapes bullet above); (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
 (3) all survivors are post-process R-unit sizing - live implementation is order-time lot
 sizing, no entry feedback either way; (4) exploratory labels travel with every number.
 **Nothing adopted - adoption decisions are the user's (RESEARCH_POLICY: no automatic gate).**
