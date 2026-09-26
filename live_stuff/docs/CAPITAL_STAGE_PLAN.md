@@ -133,21 +133,21 @@ Notes:
 
   | arm | causal? | 6/6 | champion dNet IS/OOS | note |
   |---|---|---|---|---|
-  | `uZX` x1.5 on ZC or X | yes | **4/6** | +124.0 / +33.6 | age10 curve FALSE |
-  | `sZX` x1.5^count(ZC,X) | yes | **4/6** | +133.6 / +86.4 | age10 curve FALSE |
+  | `uZX` x1.5 on ZC or X | yes | **5/6** | +124.0 / +33.6 | age10 OOS curve FALSE |
+  | `sZX` x1.5^count(ZC,X) | yes | **5/6** | +133.6 / +86.4 | age10 OOS curve FALSE |
 
-  Both clear the rule on champion AND utcsat in BOTH eras - the first
-  send-time-computable sizing arm to do so anywhere in this queue. The single
-  failing cell is age10 OOS, and it fails on shape, not profit: dNet **+5.05**,
-  maxDD **-1.50** (better), but **ulcer -9.87** (worse) on 22 flagged trades.
-  The lever makes money there while making the curve rough.
+  Both clear the rule on champion AND utcsat in BOTH eras, and on age10 IS -
+  the first send-time-computable sizing arm to do so anywhere in this queue.
+  The single failing cell is age10 OOS, and it fails on shape, not profit:
+  dNet **+5.05**, maxDD **-1.50** (better), but **ulcer -9.87** (worse) on 22
+  flagged trades. The lever makes money there while making the curve rough.
 
   This is NOT a pass, and NOT an adoption. Three reasons, all structural:
-  (1) 4/6 under the pre-registered rule; (2) ZC itself was already dropped as
-  a standalone for cross-venue portability (24.82 - a Bybit-volume threshold
-  that did not transfer to Binance), so any ZC-led arm needs a fresh
-  cross-venue run before it means anything; (3) the age10 OOS delta is +5R on
-  a 130-trade book - well inside noise.
+  (1) 5/6 under the pre-registered rule - one cell short; (2) ZC itself was
+  already dropped as a standalone for cross-venue portability (24.82 - a
+  Bybit-volume threshold that did not transfer to Binance), so any ZC-led arm
+  needs a fresh cross-venue run before it means anything; (3) the age10 OOS
+  delta is +5R on a 130-trade book - well inside noise.
 
   What it does establish: the queue was never five levers, it was **one
   forward-looking lever wearing five hats**. With M2 removed there is still
@@ -157,7 +157,7 @@ Notes:
   **Net position: the queue splits in two.** M2, ramp_mag, and the M2 component
   of uMZX/sMZX/count_linear are non-deployable as measured (feature-definition
   problem, not rounding). ZC/X are deployable and promising but unadopted at
-  4/6. Neither can be adopted anyway: the untouched forward gate is at 5/50
+  5/6. Neither can be adopted anyway: the untouched forward gate is at 5/50
   trades, net -3.83R.
 
 - **(b) Thin OOS margins on Binance perp (STRUCTURAL LIMIT - do not
