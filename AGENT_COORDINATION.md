@@ -16,6 +16,11 @@ Created 2026-09-26 after two agents converged on one working tree.
   missed three `\a`/`\b`/`\v` escape bugs that ate branch and path names this
   session. A pure-ASCII check subsumes the control-char scan for ASCII files;
   files with non-ASCII text (like this one) need the explicit scan.
+  EOL companion check: match the file's COMMITTED style - inspect the HEAD blob's
+  bytes (this repo is mostly LF; some files are legitimately mixed), never the
+  working tree's: core.autocrlf=true smudges checkouts to CRLF, converts pure-EOL
+  files on add but skips mixed ones, and skips stat-clean files (stale index wins).
+  Measure bytes with a Python subprocess, never a PowerShell pipe (pipes rewrite CR).
 
 ## Ownership
 
