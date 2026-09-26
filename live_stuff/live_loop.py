@@ -1290,16 +1290,105 @@ class LiveLoop:
     # v18 simulation + journaling
     # ------------------------------------------------------------------
 
+    def _rebase_swings_to_window(self, swings: list[dict], window: list[dict]) -> list[dict]:
+        """L3: rebase swing indices from g_idx space into `window` positions.
+
+        all_swings_* carry monotonic g_idx (seed counters). window_* is a
+        trimmed rolling list whose positions restart on every trim. Passing
+        the two spaces into the sim silently drops every signal (C10 L3).
+        Times on PSE swings are the natural keys — remap idx fields via them.
+        """
+        if not window or not swings:
+            return list(swings or [])
+        date_to_pos = {c["date"]: i for i, c in enumerate(window)}
+        w0 = window[0]["date"]
+        w1 = window[-1]["date"]
+        n = len(window)
+        out: list[dict] = []
+        for s in swings:
+            s2 = dict(s)
+            seg = dict(s.get("seg") or {})
+
+            st = str(seg.get("start_time") or "")
+            if st:
+                if st in date_to_pos:
+                    seg["start_idx"] = date_to_pos[st]
+                elif st < w0:
+                    seg["start_idx"] = 0
+                elif st > w1:
+                    continue
+                else:
+                    seg["start_idx"] = 0
+
+            et = str(seg.get("end_time") or "")
+            if et:
+                if et in date_to_pos:
+                    seg["end_idx"] = date_to_pos[et]
+                elif et < w0:
+                    # ended before window — keep for prev_end/pre_fs context
+                    seg["end_idx"] = -1
+                elif et > w1:
+                    seg["end_idx"] = n - 1
+                else:
+                    seg["end_idx"] = n - 1
+            elif seg.get("end_idx") is None:
+                seg["end_idx"] = -1
+
+            if seg.get("start_idx") is None:
+                continue
+
+            ct = s.get("confirmed_at_time")
+            if ct:
+                ct = str(ct)
+                if ct in date_to_pos:
+                    s2["confirmed_at_idx"] = date_to_pos[ct]
+                elif ct < w0:
+                    s2["confirmed_at_idx"] = 0
+                elif ct > w1:
+                    s2["confirmed_at_idx"] = n - 1
+
+            ft = s.get("fs_at_time")
+            if ft:
+                ft = str(ft)
+                if ft in date_to_pos:
+                    s2["fs_at_idx"] = date_to_pos[ft]
+
+            nb = []
+            for b in s.get("breaks") or []:
+                bt = str(b.get("time") or "")
+                if bt and bt in date_to_pos:
+                    b2 = dict(b)
+                    b2["idx"] = date_to_pos[bt]
+                    nb.append(b2)
+            s2["breaks"] = nb
+            s2["seg"] = seg
+            out.append(s2)
+        return out
+
     def _run_v18_simulation(self):
         if len(self.window_15m) < SWING["min_bars_15m"] + 5 or len(self.window_1h) < SWING["min_bars_1h"] + 5:
             print(f"[live] windows too small: 15m={len(self.window_15m)} 1h={len(self.window_1h)}")
             return
 
-        sw15 = list(self.all_swings_15m)
-        sw1h = list(self.all_swings_1h)
-
         c15 = self.window_15m
         c1h = self.window_1h
+        # L3: indices must live in the same space as the trimmed windows
+        sw15 = self._rebase_swings_to_window(self.all_swings_15m, c15)
+        sw1h = self._rebase_swings_to_window(self.all_swings_1h, c1h)
+        # L5: forming swing's marks are invisible to the declared-only chain
+        try:
+            open15 = self.swing_15m.get_open_swing()
+            if open15 and open15.get("breaks"):
+                rebased_open = self._rebase_swings_to_window([open15], c15)
+                if rebased_open:
+                    sw15 = sw15 + rebased_open
+            open1h = self.swing_1h.get_open_swing()
+            if open1h and open1h.get("breaks"):
+                rebased_open1h = self._rebase_swings_to_window([open1h], c1h)
+                if rebased_open1h:
+                    sw1h = sw1h + rebased_open1h
+        except Exception as _oe:
+            print(f"[live] open-swing append warning: {_oe}")
 
         try:
             result = simulate_htf_ltf_streak_halt(

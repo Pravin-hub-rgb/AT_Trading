@@ -68,6 +68,7 @@ def load_candles():
                 "ts": int(row.ts),
                 "open": float(row.open), "high": float(row.high),
                 "low": float(row.low), "close": float(row.close),
+                "volume": float(getattr(row, "volume", 0.0) or 0.0),
             })
             flow.append(FlowCandle(date=date, open=float(row.open), high=float(row.high),
                                    low=float(row.low), close=float(row.close)))
