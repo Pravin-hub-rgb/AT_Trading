@@ -32,3 +32,7 @@ frontend/*.log
 live_stuff/.env.example
 
 data/unseen/
+
+# run logs from research harnesses (transient console capture, not artifacts)
+*.out.txt
+*.err.txt
