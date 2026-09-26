@@ -27,9 +27,17 @@
 > assertion passes.
 >
 > **CONCLUSION: no backtest lookahead bug remains. Do not report C12/C13a/C13b/C14/C15
-> as open.** The remaining OPEN items (C1, C2, C3, C4, C5, C7, C10, C11, H3–H11,
+> as open.** The remaining OPEN items (C1, C2, C3, C4, C5, C7, C11, H3–H11,
 > L1–L8, M1–M11, P1, P2) are **live-execution / operational** concerns. They carry
 > real capital risk but **zero effect on backtest numbers**.
+>
+> **C10 is CLOSED** (fixed 2026-09-23). The five-layer stack shipped: L1 keeps
+> open HTF windows in `to_intervals`, L2 is the PSE re-feed stitch, L3 is
+> `_rebase_swings_to_window`, L5 appends the forming swing's marks. Verified
+> 87/87 + 118/118 swing parity and 83.3% trade reproduction under a 30d window.
+> The C10 sections further down this file are kept as the original
+> 2026-09-17 root-cause analysis and use the old baseline — read them as history,
+> not as current status.
 >
 > **ENVIRONMENT NOTE (bites repeatedly):** the default `python` on PATH is
 > `C:\Program Files\Python310\python.exe` which has **no pandas**. Python 3.12

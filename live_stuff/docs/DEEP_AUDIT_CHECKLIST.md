@@ -12,8 +12,8 @@ Use this checklist when building the live bot. Each item has severity, location,
 - **Root cause:** After a swing declared, backtest starts the next engine at `end_idx+1` and RE-FEEDS every bar through the declaration bar; live jumped to `declaration_bar+1` and skipped that range. First divergence at swing 2 (56 bars skipped).
 - **Fix applied:** `persistent_swing.py` now buffers candles and replays `end_idx+1..current` through the new engine (same stitch as `compute_btc_swings`). Also forces `timeCap="00:00"` when not given (C11). Extra swings queued and drained one-per-`process_bar` call.
 - **Verified:** `exp_swing_parity_diag.py` — 15m 40d slice **87/87 PERFECT**, 1h 120d **118/118 PERFECT**. Identity gate green (340t/+225.3R).
-- **Note:** `replay_harness.py` still fails (0/29) — that is Issue #10 (30d rolling window builds different chains than full-history), NOT this engine bug. Engine parity is closed.
-- **Priority:** CLOSED for engine; Issue #10 remains for live windowing.
+- **Note:** `replay_harness.py` was failing (0/29) — that was Issue #10 (30d rolling window builds different chains than full-history), NOT this engine bug. Engine parity is closed. Issue #10 was subsequently FIXED 2026-09-23 (see #10 below); the replay harness now reproduces 83.3% of trades under a 30d window, not 100%. That residual is a known worst case, not an unfinished edit.
+- **Priority:** CLOSED for engine **and** for live windowing (L1/L2/L3/L5 shipped). Replay-harness 30d reproduction remains 83.3%.
 
 ### 2. No position recheck after reconnect
 - **File:** `live_loop.py:194-227` (`_session_watch`)
