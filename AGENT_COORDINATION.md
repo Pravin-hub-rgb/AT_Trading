@@ -65,7 +65,9 @@ removed losers returned.
 **Rule:** no removal candidate is adoptable on a post-process ledger skip under
 `exp_mltf=True`. A post-process dNet is an UPPER BOUND. Rerun path-true first.
 
-**Magnitude of the trap (computed, never by hand).** Split each cell into
+**Magnitude of the trap (computed, never by hand).**
+Derived by `exp_wick_cascade_decomposition.py` -> `_wick_cascade_decomposition.json`
+(no engine run; pure arithmetic over the two artifacts). Split each cell into
 direct effect and cascade: cascade = dNet_path_true - dNet_postproc, where
 dNet_postproc = -cohortR (removing a losing cohort *gains* R).
 | cell | cohort R | dNet post-proc | dNet path-true | cascade | cascade / direct |
@@ -146,15 +148,16 @@ been forward-tested.
 
 ## Worktrees (created 2026-09-26)
 
-Two agents no longer share a working tree. Both start at 36fb506.
+Two agents no longer share a working tree. Created at 36fb506 and
+fast-forwarded to the integration tip; re-sync with `git merge --ff-only`.
 
 | path | branch | owner |
 |---|---|---|
 | C:/Users/Pravin/Desktop/main/AT_Trading | experiments/v19-plus | integration only |
-| C:/Users/Pravin/Desktop/main/AT_Trading.worktrees/research | gents/research | research agent |
-| C:/Users/Pravin/Desktop/main/AT_Trading.worktrees/live-engine | gents/live-engine | live/production agent |
+| C:/Users/Pravin/Desktop/main/AT_Trading.worktrees/research | agents/research | research agent |
+| C:/Users/Pravin/Desktop/main/AT_Trading.worktrees/live-engine | agents/live-engine | live/production agent |
 
-**data/ and ackend/venv are gitignored**, so a fresh worktree has neither
+**data/ and backend/venv are gitignored**, so a fresh worktree has neither
 and every harness would fail on a missing CSV. Both are NTFS junctions into the
 main tree (no copy, no duplicate disk). Recreate them if a worktree is ever
 removed:
@@ -168,6 +171,7 @@ Junctions are ignored, so they do not dirty git status.
 other agent's worktree. Merge into experiments/v19-plus deliberately - not by
 editing files in the main tree. If you find yourself reading a file the other
 agent has uncommitted, that is the old workflow; stop and check the branch.
+
 ## Message log
 
 - 2026-09-26 — Found lookahead leak in `enrich_sequential` (203 prior-open
