@@ -87,9 +87,28 @@ def test_baseline():
         yrs[str((t.get("exit_date") or t.get("entry_date") or "")[:4])] += float(t["r_multiple"])
     assert all(v >= 0 for v in yrs.values())
     assert 346 <= len(tr) <= 356
-    assert n >= 150.0
+    # RE-ANCHORED 2026-09-26. BOTH bars below were calibrated 2026-09-19
+    # (a329ff3: 351t/+238.0 gross/+163.7 net) BEFORE the trail-ordering
+    # correctness fix ee574f9 (2026-09-21, "ratchet before SL check"). That fix
+    # costs ~26R on fine fills because the pre-fix trail gave a trade one extra
+    # bar of slack when its structural stop tightened - slack that does not exist
+    # live, where the stop is armed at the activation instant.
+    #
+    # Proof, pre-fix engine (ee574f9^) vs the current engine, both on today's
+    # identical data:
+    #   PRE-FIX   351t  gross +238.03  net +163.66  PF 2.020  WR 27.6%
+    #   POST-FIX  351t  gross +211.72  net +137.33  PF 1.907  WR 27.6%
+    # Same data, same trade count, -26.31R gross / -26.33R net, -0.113 PF.
+    # Note the old PF bar of 2.0 cleared the PRE-FIX 2.020 by only 0.02.
+    #
+    # So 150.0 and 2.0 were pre-fix leftovers, not regression alarms; the fix
+    # made the backtest more honest. 120.0 and 1.80 keep ~13% and ~5.6% headroom
+    # below the correct post-fix values so both still catch a real drop.
+    # Win rate is unchanged at 27.6% across the fix - only exit magnitude moved.
+    # See live_stuff/docs/new bugs.md -> REBASELINE NOTE (2026-09-26).
+    assert n >= 120.0
     pf = sum(x for x in rs if x > 0) / abs(sum(x for x in rs if x < 0)) if l else 9.0
-    assert pf >= 2.0
+    assert pf >= 1.80
     print("PASS: %dt gross %+.1f net %+.1f WR %.1f%% PF %.2f %s" % (len(tr), g, n, 100*w/len(tr), pf, dict(yrs)))
 
 
