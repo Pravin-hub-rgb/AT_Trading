@@ -23,7 +23,7 @@ asserted (500/+325.8, 454/+359.0, 130/+435.7, 279/+70.1, 253/+60.2, 76/+43.2).
 | V1 r_mile 0.5/1/2, add-SL 1R | 1/6 | 3/3 | +227.6 / +96.2 | age10 curve FALSE both eras |
 | V2 r_mile 0.5 only | **2/6** | 3/3 | +132.0 / +37.7 | best; fails only age10 |
 | V3 r_mile, add-SL none | 2/6 | 2/3 | +547.3 / +113.7 | age10 OOS dNet **-0.8**, not robust |
-| V4 swing_confirm | 1/6 | 3/3 | +227.6 / +96.2 | **INVALID - see caveat** |
+| V4 swing_confirm | **0/6** | 3/3 | **-111.3 / -87.3** | implemented; loss-making |
 
 V2 (Phase 1's only passer) is strongest and clears champion and utcsat in BOTH
 eras. It still misses the gate: on age10 the curve degrades in both eras while
@@ -31,12 +31,13 @@ dNet stays positive. V3 is the only arm that breaks the robustness gate - its
 age10 OOS dNet is -0.8 and removing the best trade moves it to +4.2, so the
 sign is not stable.
 
-**Caveat - V4 is not a real test.** `swing_confirm` was never implemented in the
-injected logic; the trigger string is not branched on, so V4 ran the default
-r_mile path and is byte-identical to V1 in all six cells (753/701/300 children,
-+227.6/+249.6/+242.2 IS). Its 1/6 re-measures V1; it says nothing about a
-swing-confirmation trigger. That arm remains genuinely unfinished, and its
-verdict must not be cited.
+**V4 was re-implemented and re-run** (the first pass never branched on the
+trigger string, so it silently re-measured V1 - that is fixed, and the corrected
+arm is in the table above). Adding on the Nth fresh swing confirmation is
+**actively harmful**: -111.3 / -87.8 dNet on champion, -87.8 / -89.0 on utcsat,
+0/6 cells, and the champion OOS book goes from +70.1R to -17.2R. Adding into
+new structure is adding into the part of the move that is about to become the
+trail. The trigger is refuted, not merely weak.
 
 The KILL criterion in section 4 therefore fires: **no arm passes both gates, so
 the pyramid / scale-in family is CLOSED.** No kwarg shipped, no default changed.

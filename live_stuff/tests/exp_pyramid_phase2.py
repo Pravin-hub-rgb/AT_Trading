@@ -106,17 +106,42 @@ PHASE1 = {"champion": {"0.5": (7.6, 10.1)}}
 _PYR_WALK = '''
                 if exp_pyr_trigger:
                     _lv_open = float(c["open"])
-                    for _lvx in exp_pyr_levels:
-                        if _lvx in pyr_done:
-                            continue
-                        if direction == 1:
-                            if hi >= entry + _lvx * risk:
-                                pyr_done.add(_lvx)
-                                pyr_fill[_lvx] = (_lv_open, k)
-                        else:
-                            if lo <= entry - _lvx * risk:
-                                pyr_done.add(_lvx)
-                                pyr_fill[_lvx] = (_lv_open, k)
+                    if exp_pyr_trigger == "swing_confirm":
+                        # A fresh swing in the TRADE direction confirms while the
+                        # parent is still open. `events_ts` is the engine's own
+                        # confirmed-at-timestamp trail list, already filtered to
+                        # want_dir and already restricted to timestamps after the
+                        # base entry - so "a new one fires" is just a fresh event
+                        # index becoming active on this 1m bar. The
+                        # pre-registered `exp_pyr_levels` tuple is reused as a
+                        # COUNT (1st / 2nd / 3rd add), matching "max 3 adds".
+                        # COUNT (1st / 2nd / 3rd add), matching max 3 adds.
+                        #
+                        # ev_idx_f is deliberately NOT advanced here: the engine
+                        # ratchet below owns that cursor and walks the same
+                        # confirmations, so advancing it here would double-count
+                        # and desync the trail. Use a local cursor instead.
+                        while ((_pyr_ev_cursor + 1) < len(events_ts)
+                               and events_ts[_pyr_ev_cursor + 1][0] <= ts):
+                            _pyr_ev_cursor += 1
+                            _pyr_n_conf += 1
+                            for _lvx in exp_pyr_levels:
+                                _lvn = int(_lvx)
+                                if _lvn == _pyr_n_conf and _lvn not in pyr_done:
+                                    pyr_done.add(_lvn)
+                                    pyr_fill[_lvn] = (_lv_open, k)
+                    else:
+                        for _lvx in exp_pyr_levels:
+                            if _lvx in pyr_done:
+                                continue
+                            if direction == 1:
+                                if hi >= entry + _lvx * risk:
+                                    pyr_done.add(_lvx)
+                                    pyr_fill[_lvx] = (_lv_open, k)
+                            else:
+                                if lo <= entry - _lvx * risk:
+                                    pyr_done.add(_lvx)
+                                    pyr_fill[_lvx] = (_lv_open, k)
                     for _lvx in exp_pyr_levels:
                         if _lvx in pyr_done and _lvx not in pyr_stop:
                             if exp_pyr_sl_mode == "none":
@@ -250,7 +275,9 @@ def build_pyr_module(name="exp_pyr_tmp"):
         # the exp_mltf second pass. Both start a base trade, so both need the
         # per-trade milestone state reset. Do not assert count == 1 here.
         assert s.count(t3) == 2, f"expected 2 base-trade heads, got {s.count(t3)}"
-        s = s.replace(t3, "        pyr_done=set(); pyr_fill={}; pyr_stop={}\n" + t3)
+        s = s.replace(t3,
+                      "        pyr_done=set(); pyr_fill={}; pyr_stop={}\n"
+                      "        _pyr_ev_cursor=-1; _pyr_n_conf=0\n" + t3)
 
         # TWO walk anchors, both required:
         # The fine 1m walk is the ONLY one that executes when fine_ltf is
@@ -296,9 +323,9 @@ ARMS = (
     ("V3", dict(exp_pyr_trigger="r_mile", exp_pyr_levels=(0.5, 1.0, 2.0),
                 exp_pyr_sl_mode="none", exp_pyr_max_adds=3),
      "r_mile, add-SL NONE (ride parent), 0.5/1/2"),
-    ("V4", dict(exp_pyr_trigger="swing_confirm", exp_pyr_levels=(0.5, 1.0, 2.0),
+    ("V4", dict(exp_pyr_trigger="swing_confirm", exp_pyr_levels=(1, 2, 3),
                 exp_pyr_sl_mode="fixed", exp_pyr_max_adds=3),
-     "swing_confirm trigger, add-SL 1R, max 3 adds"),
+     "swing_confirm trigger, add-SL 1R, max 3 adds (levels = add COUNT)"),
 )
 TESTED = ("V1", "V2", "V3", "V4")
 
