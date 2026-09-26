@@ -39,6 +39,12 @@ Notes:
   M2 in every cell (24.80) but has no cross-venue run yet.
 - Backtest magnitude context (champion dNet): sMZX +346.5/+130.4 vs M2 +152.7/+29.1 - the stack's larger number is NOT a reason to jump the queue
   (1.5^count = levered stakes; raw DD deeper in 3 stack cells, 24.79).
+- Stack-book validation (24.83): ALL 5 queue shapes also PASS 6/6 when
+  applied to the Stage-B candidate stack books (champ/uts half+delay1+skipD,
+  age10 retest_0.25); rank order unchanged (sMZX > count_linear > ramp_mag >
+  uMZX > M2 binary), so the flat-book ranking holds on both books. sMZX on
+  the champion stack book: 429.6->802.8 IS / 110.5->277.7 OOS. vol_target
+  fails on BOTH books (24.80 + 24.83) - closed (section 5).
 
 ## 3. Capital preconditions - what each candidate needs before deployment
 
@@ -120,7 +126,7 @@ Notes:
 |------|---------|----------|
 | **ZC** (vol7_prev7 <= 0.846 standalone) | Portability: bybit-volume-derived ratio threshold does NOT transfer (binance IS curve FALSE: ulcer 110 -> 134 champion); ALSO fails strict 6/6 on bybit via age10 OOS | 24.82 / 24.79 |
 | **X** (parent risk_pct < 1.0 standalone) | Thin everywhere: binance OOS champion dNet -1.0 cell False; bybit age10 OOS 0 flags / 0.0 | 24.82 / 24.79 |
-| **vol_target** (inverse-ATR sizing) | curve_better FALSE x3 (champ IS ulcer 14.62->29.82) despite net up 6/6 | 24.80 |
+| **vol_target** (inverse-ATR sizing) | curve_better FALSE x3 (champ IS ulcer 14.62->29.82) despite net up 6/6 - fails on the stack book too (24.83) | 24.80 / 24.83 |
 | **Z3 vol gate** (vol7_prev7 <= 1.20 path-true) | G-RULE FAIL 3/6; combined vs FLAT FAIL 4/6; post-process-removal upper-bound rule, 2nd confirmation (after Stage B wick 0/4). Z3 recommendation RETRACTED | 24.81 |
 | **Stage B removals** | 0/4 (post-process removal = upper bound under exp_mltf) | LOG row 81 |
 | **regime10** | Small (+0.9/+3.2), lane-shaped - SKIP for the capital queue; docs only | user ruling 2026-09-26 |
@@ -152,5 +158,6 @@ Notes:
 - `live_stuff/tests/_sizing_shapes_results.json` (24.80) - ramp_mag/vol_target/count_linear
 - `live_stuff/tests/_gate_size_pathtrue.json` (24.81) - Z3 gate G-RULE/combined/marginal
 - `live_stuff/tests/_cross_instrument_results.json` (24.82) - transfer, flags, age10 anomaly
-- CHECKLIST 24.78-24.82, LOG rows 84-87, EXPERIMENT_SUMMARY bullets
+- `live_stuff/tests/_shapes_stack_results.json` (24.83) - all 5 queue shapes re-scored on the stack books
+- CHECKLIST 24.78-24.83, LOG rows 84-88, EXPERIMENT_SUMMARY bullets
 - Generator: built by script with anchor asserts; regenerate rather than edit figures.
