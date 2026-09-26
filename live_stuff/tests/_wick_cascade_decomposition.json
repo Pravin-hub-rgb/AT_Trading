@@ -309,5 +309,5 @@
     "min_cascade_over_direct_pct": 280.2,
     "verdict": "Removal is structurally hopeless under exp_mltf: the cohorts were genuinely losing (direct effect positive everywhere) but the freed slots cost more than the removed losers returned. Pivot to sizing."
   },
-  "elapsed_sec": 0.01
+  "elapsed_sec": 0.0
 }

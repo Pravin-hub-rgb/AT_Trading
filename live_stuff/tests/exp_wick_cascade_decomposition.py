@@ -147,7 +147,10 @@ def main() -> int:
     }
     result["elapsed_sec"] = round(time.time() - t0, 2)
 
-    OUT.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    # Trailing newline: json.dumps does not add one, and every other artifact
+    # in this repo ends with one. Without this, a rerun leaves the file dirty
+    # against its own committed copy.
+    OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
 
     hdr = (
         f"{'cell':16s} {'n_coh':>5s} {'cohortR':>8s} {'dNet_pp':>8s} "
