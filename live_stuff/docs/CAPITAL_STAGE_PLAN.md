@@ -54,8 +54,12 @@ Notes:
   sizing exemption (sizing never changes which trades fire, so post-process
   == path-true) makes these numbers valid AS BACKTEST NUMBERS ONLY. It does
   NOT mean live lot sizing is correct.
-- **Order-time sizing bridge: NOT BUILT** (section 4a). This is the single
-  hard engineering precondition, and it applies before forward n counts.
+- **Order-time sizing bridge: BUILT AND TESTED - M2 BLOCKED** (section 4a).
+  The bridge test ran and M2's flag is NOT reproducible at send time (46.5%
+  agreement against a 95% bar). Every remaining queue candidate keys off
+  cur_mag_atr the same way, so **none of them is deployable as measured** until
+  the feature is redefined to be live-computable and re-validated. This applies
+  before forward n counts.
 - **Forward n >= 50**: 5/50 scored.
 
 **Per candidate:**
@@ -77,10 +81,37 @@ Notes:
 
 ## 4. Open risks
 
-- **(a) Order-time sizing bridge - never built, never tested.** How
-  cur_mag_atr is read at send time, what lot it maps to, rounding, min-lot:
-  none of it exists. Build + test BEFORE any live sizing, not after. This is
-  the only engineering item in this document.
+- **(a) Order-time sizing bridge - BUILT AND TESTED 2026-09-26, RESULT:
+  BLOCKED.** `exp_m2_live_bridge.py` -> `_m2_live_bridge.json`. This was the one
+  hard engineering blocker and it does not clear.
+
+  M2's feature is `cur_mag_atr = |seg.end_px - seg.start_px| / atr15`, where
+  `end_px` is the swing segment's END price. A live order is sent before that
+  segment is final, so a send-time reader cannot know it. Replacing it with the
+  last closed 15m close reproduces the backtest flag on only **46.5%** of
+  trades (worst cell 42.7%) - the pre-registered rule needed >=95% overall and
+  >=90% per cell.
+
+  | cell | n | backtest flag | send-time flag | agree | send dNet | lag-1 dNet |
+  |---|---|---|---|---|---|---|
+  | is\|champion | 500 | 128 | 289 | 47.0% | +61.1R | +15.1R |
+  | is\|utcsat | 454 | 133 | 265 | 47.1% | +67.2R | +18.9R |
+  | is\|age10 | 130 | 25 | 52 | 48.5% | +29.2R | +4.9R |
+  | oos\|champion | 279 | 48 | 158 | 42.7% | +38.2R | +7.6R |
+  | oos\|utcsat | 253 | 47 | 138 | 44.3% | +37.4R | +5.5R |
+  | oos\|age10 | 76 | 12 | 33 | 56.6% | +12.0R | +2.4R |
+
+  The send-time reader flags roughly 2-3x more trades than the backtest does,
+  and scores about half the dNet. So **M2 as measured cannot be deployed as a
+  live lot size**: shipping it live would size a different trade set than the
+  one that produced +152.7R. Making it live-computable means redefining the
+  feature, which is a NEW pre-registered experiment, not a deployment detail.
+
+  The dNet stays positive in all 6 cells for both proxies, so there IS a
+  live-sizeable signal here - but it is not M2, and the +152.7R number does not
+  transfer to it. Reference flags were taken from the audited `trade_rows()`
+  (128 flags on champion IS, matching CHECKLIST 24.78 exactly) after an earlier
+  reimplementation produced 490 and was discarded.
 - **(b) Thin OOS margins on Binance perp (STRUCTURAL LIMIT - do not
   re-test):** champion OOS 286t +17.8R = +0.062 R/trade, utcsat 258t
   +7.6R = +0.029 R/trade - too thin to distinguish from zero. Recorded as a property of the venue transfer, not an
