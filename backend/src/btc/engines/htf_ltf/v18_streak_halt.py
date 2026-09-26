@@ -102,8 +102,15 @@ def simulate_htf_ltf_streak_halt(
         # Tested 2026-09-08: 485t +368.6R vs exit 330t +331.1R (+37.5R) BUT added cohort t=1.21 (not significant),
         # 2026 worse (+55.1/DD7.3 vs +69.0/DD5.0), 2023 flat R at 85% more churn. net/DD 38.6 vs 34.0. NOT adopted.
         iv=[]
+        last_htf_ts=int(candles_htf[-1]["ts"]) if candles_htf else 0
         for t in trades:
-            if t["outcome"]=="open": continue
+            if t["outcome"]=="open":
+                # L1: still-open HTF window = active bias through end of slice.
+                # Truncated causal slices always end with the governing window
+                # open; dropping it zeroed every LTF gate (C10 L1).
+                iv.append([int(t["entry_ts"]), last_htf_ts + 3600,
+                           1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
+                continue
             wend = _r_touch_end(t, fine_ltf, fine_ts, ext_stop_r) if window_end=="r_touch" else int(t["exit_ts"])
             iv.append([int(t["entry_ts"]), wend, 1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
         iv.sort(key=lambda x: x[0])
