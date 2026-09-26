@@ -11,6 +11,11 @@ Created 2026-09-26 after two agents converged on one working tree.
 - Validate before committing (`py_compile`, `pytest`); `git diff --check` after.
 - Run research with **Python 3.12** — default `python` is 3.10 and lacks pandas:
   `C:\Users\Pravin\AppData\Local\Programs\Python\Python312\python.exe`
+- **Byte-scan every text file before commit** - check BOTH U+FFFD and control
+  chars `0x00-0x08, 0x0b-0x0c, 0x0e-0x1f, 0x7f` (exclude tab/LF/CR). FFFD-only
+  missed three `\a`/`\b`/`\v` escape bugs that ate branch and path names this
+  session. A pure-ASCII check subsumes the control-char scan for ASCII files;
+  files with non-ASCII text (like this one) need the explicit scan.
 
 ## Ownership
 
