@@ -500,11 +500,30 @@ Verdicts:
   gate's chain cascade is the sole failure. Recorded, NOT adopted
   (RESEARCH_POLICY).
 
+- **Cross-instrument transfer (Stage CrossInstrument, 24.82) - base edge
+  transfers WEAKLY (3/3 by rule), M2 + uMZX flags transfer frozen (6/6),
+  ZC + X do not.**
+  Frozen champion params on Binance BTCUSDT perp, same era windows as
+  bybit (data/btc-fut backfilled 2021-26 from fapi, 0 gaps, 1h volume
+  present; Bybit cost model both venues; bybit controls 12/12 exact).
+  Base: champion 490t/+255.4 IS (0.78x bybit) & 286t/+17.8 OOS (0.25x,
+  avg +0.06R/trade - thin), utcsat 451t/+208.1 & 258t/+7.6 (0.13x),
+  age10 118t/+182.6 & 78t/+94.2 (2.18x OOS - only lane beating bybit
+  OOS); trade counts within dn -12..+7 of bybit, but binance IS curve
+  much rougher (ulcer 110/103/10.9 vs 14.6/11.6/3.9, DD ~2x). Flags
+  on binance (6-cell rule): M2 PASS (+113.1/+31.7, +90.1/+31.4,
+  +32.5/+36.1), uMZX PASS (+122.6/+43.2, +95.1/+37.8, +54.8/+46.6);
+  ZC FAIL (champion/utcsat IS curve FALSE - bybit-volume-derived 0.846
+  ratio threshold not portable), X FAIL (OOS cells False, thin
+  everywhere). "Architecture universal" SUPPORTED for engine/structure
+  + M2/uMZX sizing, NOT for edge magnitude or ZC/X thresholds.
+  Recorded, NOT adopted (RESEARCH_POLICY); cross-instrument caveat
+  joins the slice-5 adoption checkpoint.
 
 Cross-cutting: (1) combinations (M2 + ONE Z flag + X/Y) were UNTESTED at
 24.77 - NOW RUN (24.79: all 4 combo arms PASS 6/6, see the combination-
 matrix bullet above; sizing-function SHAPE (binary threshold vs ramp vs vol-target vs flag-count) was UNTESTED - NOW RUN (24.80: ramp_mag + count_linear PASS 6/6, vol_target FAIL, see the shapes bullet above); (2) OOS deltas inherit the Study-2 weak-OOS-baseline luck caveat;
 (3) all survivors are post-process R-unit sizing - live implementation is order-time lot
 sizing, no entry feedback either way; path-true-removal confirmations now TWO
-(wick 0/4; vol gate G-RULE 3/6 - 24.81) (4) exploratory labels travel with every number.
+(wick 0/4; vol gate G-RULE 3/6 - 24.81) (4) exploratory labels travel with every number. (5) cross-instrument transfer now run (24.82): base edge positive on Binance perp 3/3 by rule but weak (0.13-0.78x bybit net, IS ulcer 4-8x); M2 + uMZX transfer 6/6 frozen, ZC/X thresholds do not.
 **Nothing adopted - adoption decisions are the user's (RESEARCH_POLICY: no automatic gate).**

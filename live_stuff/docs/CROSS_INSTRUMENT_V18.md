@@ -1,5 +1,17 @@
 # Cross-Instrument v18 Performance
 
+
+> **UPDATE 2026-09-26 (24.82): the single-period "defaults" claims below are
+> SUPERSEDED.** Frozen-champion IS/OOS run on Binance BTCUSDT perp (same
+> era windows as bybit, Bybit cost model, zero retune, bybit controls
+> 12/12 exact): base edge transfers WEAKLY - champion 490t/+255.4 IS
+> (0.78x bybit) & 286t/+17.8 OOS (0.25x), utcsat 451t/+208.1 & 258t/+7.6
+> (0.13x), age10 118t/+182.6 & 78t/+94.2 (2.18x OOS); binance IS curve
+> rough (ulcer ~4-8x bybit). Sizing flags: M2 + uMZX transfer 6/6;
+> ZC (bybit-volume ratio threshold) and X do NOT. "Architecture
+> universal" holds for engine/structure + M2/uMZX, not for edge
+> magnitude or ZC/X thresholds. Harness
+> `live_stuff/tests/exp_cross_instrument_transfer.py`.
 ## All Instruments — Same Engine, Tuned Parameters
 
 | Instrument | Trades | Net R | Avg R | Max DD | PF | Params |
