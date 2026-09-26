@@ -1,0 +1,428 @@
+{
+  "stage": "W",
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "is",
+  "pre_registered_by": "CHECKLIST 24.69",
+  "pass_rule": "same wage, dNet>0 vs w0 on ALL 4 cells (2 lanes x 2 eras), IS maxDD not worse by >2R",
+  "configs": {
+    "champion_multi_sw10": {
+      "arms": {
+        "0": {
+          "wage_h": 0,
+          "metrics": {
+            "gross": {
+              "n": 500,
+              "sum_r": 445.225,
+              "avg_r": 0.89045,
+              "wins": 150,
+              "win_rate_pct": 30.0,
+              "payoff": 5.5615,
+              "pf": 2.3835,
+              "max_dd": 17.825,
+              "max_loss_streak": 16,
+              "median": -0.997
+            },
+            "net": {
+              "n": 500,
+              "sum_r": 325.7817,
+              "avg_r": 0.651563,
+              "wins": 139,
+              "win_rate_pct": 27.8,
+              "payoff": 4.7131,
+              "pf": 1.8148,
+              "max_dd": 27.7242,
+              "max_loss_streak": 16,
+              "median": -1.098502
+            },
+            "runners3": 63,
+            "monsters10": 17
+          },
+          "vs_w0": {
+            "removed_n": 0,
+            "removed_gross_r": 0,
+            "removed_avg": null,
+            "removed_win_pct": null,
+            "removed_runners3": 0,
+            "added_n": 0,
+            "added_gross_r": 0,
+            "common_entries": 500
+          }
+        },
+        "6": {
+          "wage_h": 6,
+          "metrics": {
+            "gross": {
+              "n": 454,
+              "sum_r": 404.748,
+              "avg_r": 0.891515,
+              "wins": 138,
+              "win_rate_pct": 30.396,
+              "payoff": 5.4981,
+              "pf": 2.4011,
+              "max_dd": 25.406,
+              "max_loss_streak": 17,
+              "median": -0.997
+            },
+            "net": {
+              "n": 454,
+              "sum_r": 297.6725,
+              "avg_r": 0.655666,
+              "wins": 128,
+              "win_rate_pct": 28.194,
+              "payoff": 4.6644,
+              "pf": 1.8314,
+              "max_dd": 36.539,
+              "max_loss_streak": 23,
+              "median": -1.091697
+            },
+            "runners3": 56,
+            "monsters10": 16
+          },
+          "vs_w0": {
+            "removed_n": 75,
+            "removed_gross_r": 28.119,
+            "removed_avg": 0.37492,
+            "removed_win_pct": 21.333,
+            "removed_runners3": 8,
+            "added_n": 29,
+            "added_gross_r": -12.358,
+            "common_entries": 425
+          }
+        },
+        "10": {
+          "wage_h": 10,
+          "metrics": {
+            "gross": {
+              "n": 439,
+              "sum_r": 414.521,
+              "avg_r": 0.944239,
+              "wins": 136,
+              "win_rate_pct": 30.979,
+              "payoff": 5.5585,
+              "pf": 2.4949,
+              "max_dd": 24.976,
+              "max_loss_streak": 16,
+              "median": -0.997
+            },
+            "net": {
+              "n": 439,
+              "sum_r": 308.6435,
+              "avg_r": 0.70306,
+              "wins": 126,
+              "win_rate_pct": 28.702,
+              "payoff": 4.7041,
+              "pf": 1.8937,
+              "max_dd": 36.0544,
+              "max_loss_streak": 22,
+              "median": -1.093261
+            },
+            "runners3": 56,
+            "monsters10": 16
+          },
+          "vs_w0": {
+            "removed_n": 92,
+            "removed_gross_r": 16.95,
+            "removed_avg": 0.184239,
+            "removed_win_pct": 19.565,
+            "removed_runners3": 8,
+            "added_n": 31,
+            "added_gross_r": -13.754,
+            "common_entries": 408
+          }
+        },
+        "12": {
+          "wage_h": 12,
+          "metrics": {
+            "gross": {
+              "n": 429,
+              "sum_r": 395.555,
+              "avg_r": 0.92204,
+              "wins": 130,
+              "win_rate_pct": 30.303,
+              "payoff": 5.5924,
+              "pf": 2.4315,
+              "max_dd": 24.976,
+              "max_loss_streak": 15,
+              "median": -0.997
+            },
+            "net": {
+              "n": 429,
+              "sum_r": 293.7287,
+              "avg_r": 0.684682,
+              "wins": 121,
+              "win_rate_pct": 28.205,
+              "payoff": 4.7326,
+              "pf": 1.8592,
+              "max_dd": 36.9561,
+              "max_loss_streak": 21,
+              "median": -1.100715
+            },
+            "runners3": 53,
+            "monsters10": 16
+          },
+          "vs_w0": {
+            "removed_n": 102,
+            "removed_gross_r": 28.256,
+            "removed_avg": 0.27702,
+            "removed_win_pct": 22.549,
+            "removed_runners3": 10,
+            "added_n": 31,
+            "added_gross_r": -21.414,
+            "common_entries": 398
+          }
+        },
+        "24": {
+          "wage_h": 24,
+          "metrics": {
+            "gross": {
+              "n": 362,
+              "sum_r": 328.277,
+              "avg_r": 0.906843,
+              "wins": 116,
+              "win_rate_pct": 32.044,
+              "payoff": 5.2362,
+              "pf": 2.4691,
+              "max_dd": 23.08,
+              "max_loss_streak": 13,
+              "median": -0.996
+            },
+            "net": {
+              "n": 362,
+              "sum_r": 243.8922,
+              "avg_r": 0.673735,
+              "wins": 107,
+              "win_rate_pct": 29.558,
+              "payoff": 4.4835,
+              "pf": 1.8813,
+              "max_dd": 31.9366,
+              "max_loss_streak": 19,
+              "median": -1.080964
+            },
+            "runners3": 48,
+            "monsters10": 13
+          },
+          "vs_w0": {
+            "removed_n": 173,
+            "removed_gross_r": 101.803,
+            "removed_avg": 0.588457,
+            "removed_win_pct": 22.543,
+            "removed_runners3": 17,
+            "added_n": 35,
+            "added_gross_r": -15.145,
+            "common_entries": 327
+          }
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "arms": {
+        "0": {
+          "wage_h": 0,
+          "metrics": {
+            "gross": {
+              "n": 454,
+              "sum_r": 466.476,
+              "avg_r": 1.02748,
+              "wins": 140,
+              "win_rate_pct": 30.837,
+              "payoff": 5.8715,
+              "pf": 2.6179,
+              "max_dd": 14.821,
+              "max_loss_streak": 13,
+              "median": -0.997
+            },
+            "net": {
+              "n": 454,
+              "sum_r": 358.95,
+              "avg_r": 0.790639,
+              "wins": 132,
+              "win_rate_pct": 29.075,
+              "payoff": 4.8972,
+              "pf": 2.0075,
+              "max_dd": 21.1764,
+              "max_loss_streak": 13,
+              "median": -1.090105
+            },
+            "runners3": 62,
+            "monsters10": 18
+          },
+          "vs_w0": {
+            "removed_n": 0,
+            "removed_gross_r": 0,
+            "removed_avg": null,
+            "removed_win_pct": null,
+            "removed_runners3": 0,
+            "added_n": 0,
+            "added_gross_r": 0,
+            "common_entries": 454
+          }
+        },
+        "6": {
+          "wage_h": 6,
+          "metrics": {
+            "gross": {
+              "n": 418,
+              "sum_r": 419.195,
+              "avg_r": 1.002859,
+              "wins": 129,
+              "win_rate_pct": 30.861,
+              "payoff": 5.7729,
+              "pf": 2.5768,
+              "max_dd": 19.949,
+              "max_loss_streak": 16,
+              "median": -0.997
+            },
+            "net": {
+              "n": 418,
+              "sum_r": 318.1068,
+              "avg_r": 0.761021,
+              "wins": 122,
+              "win_rate_pct": 29.187,
+              "payoff": 4.7596,
+              "pf": 1.9617,
+              "max_dd": 24.6363,
+              "max_loss_streak": 22,
+              "median": -1.090878
+            },
+            "runners3": 56,
+            "monsters10": 17
+          },
+          "vs_w0": {
+            "removed_n": 63,
+            "removed_gross_r": 33.472,
+            "removed_avg": 0.531302,
+            "removed_win_pct": 22.222,
+            "removed_runners3": 7,
+            "added_n": 27,
+            "added_gross_r": -13.809,
+            "common_entries": 391
+          }
+        },
+        "10": {
+          "wage_h": 10,
+          "metrics": {
+            "gross": {
+              "n": 399,
+              "sum_r": 432.257,
+              "avg_r": 1.083351,
+              "wins": 126,
+              "win_rate_pct": 31.579,
+              "payoff": 5.8964,
+              "pf": 2.7214,
+              "max_dd": 21.491,
+              "max_loss_streak": 15,
+              "median": -0.997
+            },
+            "net": {
+              "n": 399,
+              "sum_r": 334.0881,
+              "avg_r": 0.837314,
+              "wins": 119,
+              "win_rate_pct": 29.825,
+              "payoff": 4.86,
+              "pf": 2.0655,
+              "max_dd": 28.1891,
+              "max_loss_streak": 21,
+              "median": -1.091419
+            },
+            "runners3": 56,
+            "monsters10": 17
+          },
+          "vs_w0": {
+            "removed_n": 83,
+            "removed_gross_r": 27.071,
+            "removed_avg": 0.326157,
+            "removed_win_pct": 21.687,
+            "removed_runners3": 8,
+            "added_n": 28,
+            "added_gross_r": -7.148,
+            "common_entries": 371
+          }
+        },
+        "12": {
+          "wage_h": 12,
+          "metrics": {
+            "gross": {
+              "n": 393,
+              "sum_r": 446.651,
+              "avg_r": 1.136517,
+              "wins": 125,
+              "win_rate_pct": 31.807,
+              "payoff": 5.9975,
+              "pf": 2.7973,
+              "max_dd": 17.949,
+              "max_loss_streak": 14,
+              "median": -0.997
+            },
+            "net": {
+              "n": 393,
+              "sum_r": 351.507,
+              "avg_r": 0.89442,
+              "wins": 119,
+              "win_rate_pct": 30.28,
+              "payoff": 4.9334,
+              "pf": 2.1426,
+              "max_dd": 22.5063,
+              "max_loss_streak": 20,
+              "median": -1.091974
+            },
+            "runners3": 58,
+            "monsters10": 17
+          },
+          "vs_w0": {
+            "removed_n": 92,
+            "removed_gross_r": 9.619,
+            "removed_avg": 0.104554,
+            "removed_win_pct": 20.652,
+            "removed_runners3": 6,
+            "added_n": 31,
+            "added_gross_r": -10.206,
+            "common_entries": 362
+          }
+        },
+        "24": {
+          "wage_h": 24,
+          "metrics": {
+            "gross": {
+              "n": 332,
+              "sum_r": 356.549,
+              "avg_r": 1.073943,
+              "wins": 111,
+              "win_rate_pct": 33.434,
+              "payoff": 5.4746,
+              "pf": 2.7497,
+              "max_dd": 15.089,
+              "max_loss_streak": 11,
+              "median": -0.996
+            },
+            "net": {
+              "n": 332,
+              "sum_r": 276.8932,
+              "avg_r": 0.834016,
+              "wins": 105,
+              "win_rate_pct": 31.627,
+              "payoff": 4.5298,
+              "pf": 2.0953,
+              "max_dd": 21.7023,
+              "max_loss_streak": 17,
+              "median": -1.079392
+            },
+            "runners3": 48,
+            "monsters10": 14
+          },
+          "vs_w0": {
+            "removed_n": 155,
+            "removed_gross_r": 97.684,
+            "removed_avg": 0.630219,
+            "removed_win_pct": 21.29,
+            "removed_runners3": 16,
+            "added_n": 33,
+            "added_gross_r": -12.243,
+            "common_entries": 299
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 122.31
+}

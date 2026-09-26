@@ -1,0 +1,1276 @@
+{
+  "is": {
+    "scope": "is",
+    "configs": {
+      "champion_multi_sw10": {
+        "baseline": {
+          "n": 500,
+          "gross": 445.225,
+          "net": 325.7817,
+          "wr": 30.0,
+          "dd_net": 27.7242,
+          "yearly_gross": {
+            "2023": 113.907,
+            "2024": 122.298,
+            "2025": 102.17,
+            "2026": 106.85
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "delay_r_0.5": {
+          "n": 499,
+          "gross": 450.019,
+          "net": 332.3918,
+          "wr": 30.66,
+          "dd_net": 27.8865,
+          "yearly_gross": {
+            "2023": 118.87,
+            "2024": 123.626,
+            "2025": 101.203,
+            "2026": 106.32
+          },
+          "dNet": 6.6101,
+          "dNet_yr": 1.8011,
+          "flags": {
+            "exp_trail_delay_r": 0.5
+          }
+        },
+        "delay_r_1.0": {
+          "n": 502,
+          "gross": 469.867,
+          "net": 349.4612,
+          "wr": 31.87,
+          "dd_net": 27.9908,
+          "yearly_gross": {
+            "2023": 116.045,
+            "2024": 123.554,
+            "2025": 103.71,
+            "2026": 126.558
+          },
+          "dNet": 23.6795,
+          "dNet_yr": 6.4522,
+          "flags": {
+            "exp_trail_delay_r": 1.0
+          }
+        },
+        "delay_r_1.5": {
+          "n": 487,
+          "gross": 468.272,
+          "net": 351.4185,
+          "wr": 31.01,
+          "dd_net": 29.1179,
+          "yearly_gross": {
+            "2023": 116.682,
+            "2024": 125.818,
+            "2025": 100.832,
+            "2026": 124.94
+          },
+          "dNet": 25.6368,
+          "dNet_yr": 6.9855,
+          "flags": {
+            "exp_trail_delay_r": 1.5
+          }
+        },
+        "delay_r_2.0": {
+          "n": 463,
+          "gross": 436.816,
+          "net": 326.2711,
+          "wr": 29.59,
+          "dd_net": 39.5383,
+          "yearly_gross": {
+            "2023": 89.992,
+            "2024": 129.39,
+            "2025": 109.497,
+            "2026": 107.937
+          },
+          "dNet": 0.4894,
+          "dNet_yr": 0.1334,
+          "flags": {
+            "exp_trail_delay_r": 2.0
+          }
+        },
+        "skip_n_1": {
+          "n": 500,
+          "gross": 444.866,
+          "net": 325.4161,
+          "wr": 30.0,
+          "dd_net": 27.7919,
+          "yearly_gross": {
+            "2023": 113.832,
+            "2024": 122.21,
+            "2025": 102.078,
+            "2026": 106.746
+          },
+          "dNet": -0.3656,
+          "dNet_yr": -0.0996,
+          "flags": {
+            "exp_trail_skip_n": 1
+          }
+        },
+        "skip_n_2": {
+          "n": 477,
+          "gross": 391.282,
+          "net": 274.9641,
+          "wr": 27.88,
+          "dd_net": 48.4327,
+          "yearly_gross": {
+            "2023": 90.76,
+            "2024": 94.205,
+            "2025": 100.864,
+            "2026": 105.453
+          },
+          "dNet": -50.8176,
+          "dNet_yr": -13.8468,
+          "flags": {
+            "exp_trail_skip_n": 2
+          }
+        },
+        "skip_n_3": {
+          "n": 456,
+          "gross": 400.333,
+          "net": 285.817,
+          "wr": 25.22,
+          "dd_net": 42.7784,
+          "yearly_gross": {
+            "2023": 97.299,
+            "2024": 80.219,
+            "2025": 103.966,
+            "2026": 118.849
+          },
+          "dNet": -39.9647,
+          "dNet_yr": -10.8896,
+          "flags": {
+            "exp_trail_skip_n": 3
+          }
+        },
+        "half": {
+          "n": 469,
+          "gross": 554.137,
+          "net": 428.6383,
+          "wr": 27.29,
+          "dd_net": 30.5272,
+          "yearly_gross": {
+            "2023": 134.01,
+            "2024": 106.381,
+            "2025": 127.947,
+            "2026": 185.799
+          },
+          "dNet": 102.8566,
+          "dNet_yr": 28.0263,
+          "flags": {
+            "exp_trail_half": 1
+          }
+        },
+        "half+delay1": {
+          "n": 466,
+          "gross": 553.142,
+          "net": 429.6277,
+          "wr": 27.68,
+          "dd_net": 26.9888,
+          "yearly_gross": {
+            "2023": 133.431,
+            "2024": 107.386,
+            "2025": 125.993,
+            "2026": 186.332
+          },
+          "dNet": 103.846,
+          "dNet_yr": 28.2959,
+          "flags": {
+            "exp_trail_half": 1,
+            "exp_trail_delay_r": 1.0
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "baseline": {
+          "n": 454,
+          "gross": 466.476,
+          "net": 358.95,
+          "wr": 30.84,
+          "dd_net": 21.1764,
+          "yearly_gross": {
+            "2023": 125.508,
+            "2024": 125.301,
+            "2025": 101.185,
+            "2026": 114.482
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "delay_r_0.5": {
+          "n": 454,
+          "gross": 479.433,
+          "net": 372.1088,
+          "wr": 31.94,
+          "dd_net": 21.3307,
+          "yearly_gross": {
+            "2023": 125.879,
+            "2024": 139.382,
+            "2025": 100.22,
+            "2026": 113.952
+          },
+          "dNet": 13.1588,
+          "dNet_yr": 3.5855,
+          "flags": {
+            "exp_trail_delay_r": 0.5
+          }
+        },
+        "delay_r_1.0": {
+          "n": 453,
+          "gross": 482.915,
+          "net": 375.3391,
+          "wr": 32.67,
+          "dd_net": 21.3484,
+          "yearly_gross": {
+            "2023": 123.054,
+            "2024": 139.36,
+            "2025": 103.587,
+            "2026": 116.914
+          },
+          "dNet": 16.3891,
+          "dNet_yr": 4.4657,
+          "flags": {
+            "exp_trail_delay_r": 1.0
+          }
+        },
+        "delay_r_1.5": {
+          "n": 438,
+          "gross": 482.562,
+          "net": 378.511,
+          "wr": 31.96,
+          "dd_net": 23.9322,
+          "yearly_gross": {
+            "2023": 123.697,
+            "2024": 142.115,
+            "2025": 101.116,
+            "2026": 115.634
+          },
+          "dNet": 19.561,
+          "dNet_yr": 5.33,
+          "flags": {
+            "exp_trail_delay_r": 1.5
+          }
+        },
+        "delay_r_2.0": {
+          "n": 419,
+          "gross": 467.862,
+          "net": 368.9006,
+          "wr": 30.55,
+          "dd_net": 21.45,
+          "yearly_gross": {
+            "2023": 118.686,
+            "2024": 144.679,
+            "2025": 105.43,
+            "2026": 99.067
+          },
+          "dNet": 9.9506,
+          "dNet_yr": 2.7113,
+          "flags": {
+            "exp_trail_delay_r": 2.0
+          }
+        },
+        "skip_n_1": {
+          "n": 454,
+          "gross": 466.139,
+          "net": 358.6065,
+          "wr": 30.84,
+          "dd_net": 21.2281,
+          "yearly_gross": {
+            "2023": 125.439,
+            "2024": 125.218,
+            "2025": 101.099,
+            "2026": 114.383
+          },
+          "dNet": -0.3435,
+          "dNet_yr": -0.0936,
+          "flags": {
+            "exp_trail_skip_n": 1
+          }
+        },
+        "skip_n_2": {
+          "n": 439,
+          "gross": 436.511,
+          "net": 330.4303,
+          "wr": 29.16,
+          "dd_net": 23.093,
+          "yearly_gross": {
+            "2023": 127.154,
+            "2024": 99.967,
+            "2025": 101.123,
+            "2026": 108.267
+          },
+          "dNet": -28.5197,
+          "dNet_yr": -7.771,
+          "flags": {
+            "exp_trail_skip_n": 2
+          }
+        },
+        "skip_n_3": {
+          "n": 423,
+          "gross": 408.027,
+          "net": 302.3424,
+          "wr": 26.0,
+          "dd_net": 30.606,
+          "yearly_gross": {
+            "2023": 125.571,
+            "2024": 80.135,
+            "2025": 104.08,
+            "2026": 98.241
+          },
+          "dNet": -56.6076,
+          "dNet_yr": -15.4244,
+          "flags": {
+            "exp_trail_skip_n": 3
+          }
+        },
+        "half": {
+          "n": 431,
+          "gross": 513.429,
+          "net": 400.9558,
+          "wr": 28.07,
+          "dd_net": 26.781,
+          "yearly_gross": {
+            "2023": 138.021,
+            "2024": 101.717,
+            "2025": 121.124,
+            "2026": 152.567
+          },
+          "dNet": 42.0058,
+          "dNet_yr": 11.4457,
+          "flags": {
+            "exp_trail_half": 1
+          }
+        },
+        "half+delay1": {
+          "n": 428,
+          "gross": 523.219,
+          "net": 411.15,
+          "wr": 28.97,
+          "dd_net": 23.8979,
+          "yearly_gross": {
+            "2023": 139.466,
+            "2024": 110.812,
+            "2025": 119.601,
+            "2026": 153.34
+          },
+          "dNet": 52.2,
+          "dNet_yr": 14.2234,
+          "flags": {
+            "exp_trail_half": 1,
+            "exp_trail_delay_r": 1.0
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "baseline": {
+          "n": 130,
+          "gross": 476.481,
+          "net": 435.7239,
+          "wr": 53.85,
+          "dd_net": 8.7253,
+          "yearly_gross": {
+            "2023": 95.654,
+            "2024": 179.875,
+            "2025": 95.266,
+            "2026": 105.686
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "delay_r_0.5": {
+          "n": 130,
+          "gross": 479.22,
+          "net": 438.3617,
+          "wr": 54.62,
+          "dd_net": 8.7253,
+          "yearly_gross": {
+            "2023": 100.117,
+            "2024": 179.811,
+            "2025": 94.918,
+            "2026": 104.374
+          },
+          "dNet": 2.6378,
+          "dNet_yr": 0.7187,
+          "flags": {
+            "exp_trail_delay_r": 0.5
+          }
+        },
+        "delay_r_1.0": {
+          "n": 130,
+          "gross": 479.157,
+          "net": 438.233,
+          "wr": 54.62,
+          "dd_net": 8.7403,
+          "yearly_gross": {
+            "2023": 100.106,
+            "2024": 179.403,
+            "2025": 93.658,
+            "2026": 105.99
+          },
+          "dNet": 2.5091,
+          "dNet_yr": 0.6837,
+          "flags": {
+            "exp_trail_delay_r": 1.0
+          }
+        },
+        "delay_r_1.5": {
+          "n": 128,
+          "gross": 471.902,
+          "net": 431.3343,
+          "wr": 52.34,
+          "dd_net": 8.7403,
+          "yearly_gross": {
+            "2023": 98.678,
+            "2024": 182.44,
+            "2025": 86.483,
+            "2026": 104.301
+          },
+          "dNet": -4.3896,
+          "dNet_yr": -1.1961,
+          "flags": {
+            "exp_trail_delay_r": 1.5
+          }
+        },
+        "delay_r_2.0": {
+          "n": 125,
+          "gross": 443.947,
+          "net": 404.2142,
+          "wr": 48.8,
+          "dd_net": 8.7433,
+          "yearly_gross": {
+            "2023": 97.254,
+            "2024": 180.707,
+            "2025": 61.533,
+            "2026": 104.453
+          },
+          "dNet": -31.5097,
+          "dNet_yr": -8.5857,
+          "flags": {
+            "exp_trail_delay_r": 2.0
+          }
+        },
+        "skip_n_1": {
+          "n": 130,
+          "gross": 476.278,
+          "net": 435.5142,
+          "wr": 53.85,
+          "dd_net": 8.7743,
+          "yearly_gross": {
+            "2023": 95.621,
+            "2024": 179.832,
+            "2025": 95.21,
+            "2026": 105.615
+          },
+          "dNet": -0.2097,
+          "dNet_yr": -0.0571,
+          "flags": {
+            "exp_trail_skip_n": 1
+          }
+        },
+        "skip_n_2": {
+          "n": 127,
+          "gross": 461.808,
+          "net": 419.611,
+          "wr": 48.03,
+          "dd_net": 10.9704,
+          "yearly_gross": {
+            "2023": 104.327,
+            "2024": 191.317,
+            "2025": 69.734,
+            "2026": 96.43
+          },
+          "dNet": -16.1129,
+          "dNet_yr": -4.3904,
+          "flags": {
+            "exp_trail_skip_n": 2
+          }
+        },
+        "skip_n_3": {
+          "n": 122,
+          "gross": 443.075,
+          "net": 400.8126,
+          "wr": 40.98,
+          "dd_net": 12.1512,
+          "yearly_gross": {
+            "2023": 102.254,
+            "2024": 190.049,
+            "2025": 62.305,
+            "2026": 88.467
+          },
+          "dNet": -34.9113,
+          "dNet_yr": -9.5126,
+          "flags": {
+            "exp_trail_skip_n": 3
+          }
+        },
+        "half": {
+          "n": 118,
+          "gross": 462.223,
+          "net": 418.2005,
+          "wr": 44.07,
+          "dd_net": 9.9224,
+          "yearly_gross": {
+            "2023": 112.956,
+            "2024": 159.991,
+            "2025": 71.66,
+            "2026": 117.616
+          },
+          "dNet": -17.5234,
+          "dNet_yr": -4.7748,
+          "flags": {
+            "exp_trail_half": 1
+          }
+        },
+        "half+delay1": {
+          "n": 117,
+          "gross": 466.466,
+          "net": 422.6247,
+          "wr": 46.15,
+          "dd_net": 8.7573,
+          "yearly_gross": {
+            "2023": 117.99,
+            "2024": 159.705,
+            "2025": 70.806,
+            "2026": 117.965
+          },
+          "dNet": -13.0992,
+          "dNet_yr": -3.5693,
+          "flags": {
+            "exp_trail_half": 1,
+            "exp_trail_delay_r": 1.0
+          }
+        }
+      }
+    }
+  },
+  "oos": {
+    "scope": "oos",
+    "configs": {
+      "champion_multi_sw10": {
+        "baseline": {
+          "n": 279,
+          "gross": 105.725,
+          "net": 70.1505,
+          "wr": 27.96,
+          "dd_net": 53.1877,
+          "yearly_gross": {
+            "2021": -10.969,
+            "2022": 116.694
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "delay_r_0.5": {
+          "n": 281,
+          "gross": 101.439,
+          "net": 65.522,
+          "wr": 28.47,
+          "dd_net": 56.6011,
+          "yearly_gross": {
+            "2021": -11.832,
+            "2022": 113.271
+          },
+          "dNet": -4.6285,
+          "dNet_yr": -2.3142,
+          "flags": {
+            "exp_trail_delay_r": 0.5
+          }
+        },
+        "delay_r_1.0": {
+          "n": 278,
+          "gross": 102.023,
+          "net": 66.4662,
+          "wr": 28.06,
+          "dd_net": 57.5465,
+          "yearly_gross": {
+            "2021": -12.306,
+            "2022": 114.329
+          },
+          "dNet": -3.6843,
+          "dNet_yr": -1.8421,
+          "flags": {
+            "exp_trail_delay_r": 1.0
+          }
+        },
+        "delay_r_1.5": {
+          "n": 262,
+          "gross": 115.761,
+          "net": 81.0155,
+          "wr": 28.24,
+          "dd_net": 50.4,
+          "yearly_gross": {
+            "2021": -7.241,
+            "2022": 123.002
+          },
+          "dNet": 10.865,
+          "dNet_yr": 5.4325,
+          "flags": {
+            "exp_trail_delay_r": 1.5
+          }
+        },
+        "delay_r_2.0": {
+          "n": 243,
+          "gross": 116.736,
+          "net": 83.1653,
+          "wr": 27.16,
+          "dd_net": 49.9417,
+          "yearly_gross": {
+            "2021": -8.015,
+            "2022": 124.751
+          },
+          "dNet": 13.0148,
+          "dNet_yr": 6.5074,
+          "flags": {
+            "exp_trail_delay_r": 2.0
+          }
+        },
+        "skip_n_1": {
+          "n": 279,
+          "gross": 105.552,
+          "net": 69.9774,
+          "wr": 27.96,
+          "dd_net": 53.2647,
+          "yearly_gross": {
+            "2021": -11.047,
+            "2022": 116.599
+          },
+          "dNet": -0.1731,
+          "dNet_yr": -0.0865,
+          "flags": {
+            "exp_trail_skip_n": 1
+          }
+        },
+        "skip_n_2": {
+          "n": 268,
+          "gross": 101.017,
+          "net": 64.9379,
+          "wr": 26.12,
+          "dd_net": 58.5028,
+          "yearly_gross": {
+            "2021": -5.747,
+            "2022": 106.764
+          },
+          "dNet": -5.2126,
+          "dNet_yr": -2.6063,
+          "flags": {
+            "exp_trail_skip_n": 2
+          }
+        },
+        "skip_n_3": {
+          "n": 255,
+          "gross": 91.414,
+          "net": 56.7069,
+          "wr": 23.53,
+          "dd_net": 75.0299,
+          "yearly_gross": {
+            "2021": -11.484,
+            "2022": 102.898
+          },
+          "dNet": -13.4436,
+          "dNet_yr": -6.7218,
+          "flags": {
+            "exp_trail_skip_n": 3
+          }
+        },
+        "half": {
+          "n": 268,
+          "gross": 110.076,
+          "net": 72.764,
+          "wr": 24.63,
+          "dd_net": 46.6151,
+          "yearly_gross": {
+            "2021": 11.458,
+            "2022": 98.618
+          },
+          "dNet": 2.6135,
+          "dNet_yr": 1.3068,
+          "flags": {
+            "exp_trail_half": 1
+          }
+        },
+        "half+delay1": {
+          "n": 271,
+          "gross": 128.171,
+          "net": 89.7764,
+          "wr": 25.46,
+          "dd_net": 46.2541,
+          "yearly_gross": {
+            "2021": 11.117,
+            "2022": 117.054
+          },
+          "dNet": 19.6259,
+          "dNet_yr": 9.813,
+          "flags": {
+            "exp_trail_half": 1,
+            "exp_trail_delay_r": 1.0
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "baseline": {
+          "n": 253,
+          "gross": 92.641,
+          "net": 60.2062,
+          "wr": 29.64,
+          "dd_net": 29.3814,
+          "yearly_gross": {
+            "2021": 13.168,
+            "2022": 79.473
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "delay_r_0.5": {
+          "n": 253,
+          "gross": 93.063,
+          "net": 60.6421,
+          "wr": 30.43,
+          "dd_net": 28.9016,
+          "yearly_gross": {
+            "2021": 13.774,
+            "2022": 79.289
+          },
+          "dNet": 0.4359,
+          "dNet_yr": 0.2179,
+          "flags": {
+            "exp_trail_delay_r": 0.5
+          }
+        },
+        "delay_r_1.0": {
+          "n": 250,
+          "gross": 95.343,
+          "net": 63.3931,
+          "wr": 30.0,
+          "dd_net": 28.9126,
+          "yearly_gross": {
+            "2021": 13.368,
+            "2022": 81.975
+          },
+          "dNet": 3.1869,
+          "dNet_yr": 1.5934,
+          "flags": {
+            "exp_trail_delay_r": 1.0
+          }
+        },
+        "delay_r_1.5": {
+          "n": 250,
+          "gross": 105.742,
+          "net": 72.854,
+          "wr": 30.4,
+          "dd_net": 30.3169,
+          "yearly_gross": {
+            "2021": 11.799,
+            "2022": 93.943
+          },
+          "dNet": 12.6478,
+          "dNet_yr": 6.3239,
+          "flags": {
+            "exp_trail_delay_r": 1.5
+          }
+        },
+        "delay_r_2.0": {
+          "n": 231,
+          "gross": 105.539,
+          "net": 74.0937,
+          "wr": 29.0,
+          "dd_net": 29.888,
+          "yearly_gross": {
+            "2021": 4.247,
+            "2022": 101.292
+          },
+          "dNet": 13.8875,
+          "dNet_yr": 6.9437,
+          "flags": {
+            "exp_trail_delay_r": 2.0
+          }
+        },
+        "skip_n_1": {
+          "n": 253,
+          "gross": 92.488,
+          "net": 60.0531,
+          "wr": 29.64,
+          "dd_net": 29.4134,
+          "yearly_gross": {
+            "2021": 13.107,
+            "2022": 79.381
+          },
+          "dNet": -0.1531,
+          "dNet_yr": -0.0766,
+          "flags": {
+            "exp_trail_skip_n": 1
+          }
+        },
+        "skip_n_2": {
+          "n": 243,
+          "gross": 97.97,
+          "net": 64.769,
+          "wr": 27.98,
+          "dd_net": 28.5826,
+          "yearly_gross": {
+            "2021": 20.966,
+            "2022": 77.004
+          },
+          "dNet": 4.5628,
+          "dNet_yr": 2.2814,
+          "flags": {
+            "exp_trail_skip_n": 2
+          }
+        },
+        "skip_n_3": {
+          "n": 231,
+          "gross": 86.392,
+          "net": 54.5449,
+          "wr": 24.68,
+          "dd_net": 39.8691,
+          "yearly_gross": {
+            "2021": 13.125,
+            "2022": 73.267
+          },
+          "dNet": -5.6613,
+          "dNet_yr": -2.8307,
+          "flags": {
+            "exp_trail_skip_n": 3
+          }
+        },
+        "half": {
+          "n": 242,
+          "gross": 100.242,
+          "net": 66.2597,
+          "wr": 27.27,
+          "dd_net": 28.8724,
+          "yearly_gross": {
+            "2021": 40.389,
+            "2022": 59.853
+          },
+          "dNet": 6.0535,
+          "dNet_yr": 3.0267,
+          "flags": {
+            "exp_trail_half": 1
+          }
+        },
+        "half+delay1": {
+          "n": 244,
+          "gross": 121.78,
+          "net": 87.0679,
+          "wr": 28.28,
+          "dd_net": 29.4363,
+          "yearly_gross": {
+            "2021": 40.258,
+            "2022": 81.522
+          },
+          "dNet": 26.8617,
+          "dNet_yr": 13.4308,
+          "flags": {
+            "exp_trail_half": 1,
+            "exp_trail_delay_r": 1.0
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "baseline": {
+          "n": 76,
+          "gross": 54.856,
+          "net": 43.2236,
+          "wr": 39.47,
+          "dd_net": 8.5699,
+          "yearly_gross": {
+            "2021": 20.372,
+            "2022": 34.484
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "delay_r_0.5": {
+          "n": 76,
+          "gross": 54.831,
+          "net": 43.1985,
+          "wr": 39.47,
+          "dd_net": 8.5809,
+          "yearly_gross": {
+            "2021": 20.359,
+            "2022": 34.472
+          },
+          "dNet": -0.0251,
+          "dNet_yr": -0.0125,
+          "flags": {
+            "exp_trail_delay_r": 0.5
+          }
+        },
+        "delay_r_1.0": {
+          "n": 75,
+          "gross": 53.199,
+          "net": 41.6252,
+          "wr": 38.67,
+          "dd_net": 8.5869,
+          "yearly_gross": {
+            "2021": 19.129,
+            "2022": 34.07
+          },
+          "dNet": -1.5984,
+          "dNet_yr": -0.7992,
+          "flags": {
+            "exp_trail_delay_r": 1.0
+          }
+        },
+        "delay_r_1.5": {
+          "n": 75,
+          "gross": 52.76,
+          "net": 41.1854,
+          "wr": 38.67,
+          "dd_net": 8.5869,
+          "yearly_gross": {
+            "2021": 19.105,
+            "2022": 33.655
+          },
+          "dNet": -2.0382,
+          "dNet_yr": -1.0191,
+          "flags": {
+            "exp_trail_delay_r": 1.5
+          }
+        },
+        "delay_r_2.0": {
+          "n": 74,
+          "gross": 45.904,
+          "net": 34.4822,
+          "wr": 37.84,
+          "dd_net": 8.5929,
+          "yearly_gross": {
+            "2021": 12.271,
+            "2022": 33.633
+          },
+          "dNet": -8.7414,
+          "dNet_yr": -4.3707,
+          "flags": {
+            "exp_trail_delay_r": 2.0
+          }
+        },
+        "skip_n_1": {
+          "n": 76,
+          "gross": 54.706,
+          "net": 43.0735,
+          "wr": 39.47,
+          "dd_net": 8.5929,
+          "yearly_gross": {
+            "2021": 20.313,
+            "2022": 34.393
+          },
+          "dNet": -0.1501,
+          "dNet_yr": -0.075,
+          "flags": {
+            "exp_trail_skip_n": 1
+          }
+        },
+        "skip_n_2": {
+          "n": 73,
+          "gross": 48.191,
+          "net": 36.4624,
+          "wr": 32.88,
+          "dd_net": 9.8631,
+          "yearly_gross": {
+            "2021": 21.226,
+            "2022": 26.965
+          },
+          "dNet": -6.7612,
+          "dNet_yr": -3.3806,
+          "flags": {
+            "exp_trail_skip_n": 2
+          }
+        },
+        "skip_n_3": {
+          "n": 71,
+          "gross": 41.723,
+          "net": 30.0364,
+          "wr": 28.17,
+          "dd_net": 9.5047,
+          "yearly_gross": {
+            "2021": 27.379,
+            "2022": 14.344
+          },
+          "dNet": -13.1872,
+          "dNet_yr": -6.5936,
+          "flags": {
+            "exp_trail_skip_n": 3
+          }
+        },
+        "half": {
+          "n": 71,
+          "gross": 39.896,
+          "net": 28.0306,
+          "wr": 36.62,
+          "dd_net": 9.3808,
+          "yearly_gross": {
+            "2021": 21.656,
+            "2022": 18.24
+          },
+          "dNet": -15.193,
+          "dNet_yr": -7.5965,
+          "flags": {
+            "exp_trail_half": 1
+          }
+        },
+        "half+delay1": {
+          "n": 71,
+          "gross": 39.411,
+          "net": 27.5431,
+          "wr": 36.62,
+          "dd_net": 9.4579,
+          "yearly_gross": {
+            "2021": 21.45,
+            "2022": 17.961
+          },
+          "dNet": -15.6805,
+          "dNet_yr": -7.8402,
+          "flags": {
+            "exp_trail_half": 1,
+            "exp_trail_delay_r": 1.0
+          }
+        }
+      }
+    }
+  },
+  "instrument": "BTCUSDT_BYBIT",
+  "arms": [
+    {
+      "name": "baseline",
+      "flags": {}
+    },
+    {
+      "name": "delay_r_0.5",
+      "flags": {
+        "exp_trail_delay_r": 0.5
+      }
+    },
+    {
+      "name": "delay_r_1.0",
+      "flags": {
+        "exp_trail_delay_r": 1.0
+      }
+    },
+    {
+      "name": "delay_r_1.5",
+      "flags": {
+        "exp_trail_delay_r": 1.5
+      }
+    },
+    {
+      "name": "delay_r_2.0",
+      "flags": {
+        "exp_trail_delay_r": 2.0
+      }
+    },
+    {
+      "name": "skip_n_1",
+      "flags": {
+        "exp_trail_skip_n": 1
+      }
+    },
+    {
+      "name": "skip_n_2",
+      "flags": {
+        "exp_trail_skip_n": 2
+      }
+    },
+    {
+      "name": "skip_n_3",
+      "flags": {
+        "exp_trail_skip_n": 3
+      }
+    },
+    {
+      "name": "half",
+      "flags": {
+        "exp_trail_half": 1
+      }
+    },
+    {
+      "name": "half+delay1",
+      "flags": {
+        "exp_trail_half": 1,
+        "exp_trail_delay_r": 1.0
+      }
+    }
+  ],
+  "ship_bar": "dNet/yr >= +30 both sides",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "verdicts": {
+    "champion_multi_sw10": {
+      "delay_r_0.5": {
+        "dNet_yr_is": 1.8011,
+        "dNet_yr_oos": -2.3142,
+        "ship": false,
+        "reason": "OOS HURT"
+      },
+      "delay_r_1.0": {
+        "dNet_yr_is": 6.4522,
+        "dNet_yr_oos": -1.8421,
+        "ship": false,
+        "reason": "OOS HURT"
+      },
+      "delay_r_1.5": {
+        "dNet_yr_is": 6.9855,
+        "dNet_yr_oos": 5.4325,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "delay_r_2.0": {
+        "dNet_yr_is": 0.1334,
+        "dNet_yr_oos": 6.5074,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "skip_n_1": {
+        "dNet_yr_is": -0.0996,
+        "dNet_yr_oos": -0.0865,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "skip_n_2": {
+        "dNet_yr_is": -13.8468,
+        "dNet_yr_oos": -2.6063,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "skip_n_3": {
+        "dNet_yr_is": -10.8896,
+        "dNet_yr_oos": -6.7218,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "half": {
+        "dNet_yr_is": 28.0263,
+        "dNet_yr_oos": 1.3068,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "half+delay1": {
+        "dNet_yr_is": 28.2959,
+        "dNet_yr_oos": 9.813,
+        "ship": false,
+        "reason": "BELOW BAR"
+      }
+    },
+    "utcsat_multi_sw10": {
+      "delay_r_0.5": {
+        "dNet_yr_is": 3.5855,
+        "dNet_yr_oos": 0.2179,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "delay_r_1.0": {
+        "dNet_yr_is": 4.4657,
+        "dNet_yr_oos": 1.5934,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "delay_r_1.5": {
+        "dNet_yr_is": 5.33,
+        "dNet_yr_oos": 6.3239,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "delay_r_2.0": {
+        "dNet_yr_is": 2.7113,
+        "dNet_yr_oos": 6.9437,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "skip_n_1": {
+        "dNet_yr_is": -0.0936,
+        "dNet_yr_oos": -0.0766,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "skip_n_2": {
+        "dNet_yr_is": -7.771,
+        "dNet_yr_oos": 2.2814,
+        "ship": false,
+        "reason": "IS HURT"
+      },
+      "skip_n_3": {
+        "dNet_yr_is": -15.4244,
+        "dNet_yr_oos": -2.8307,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "half": {
+        "dNet_yr_is": 11.4457,
+        "dNet_yr_oos": 3.0267,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "half+delay1": {
+        "dNet_yr_is": 14.2234,
+        "dNet_yr_oos": 13.4308,
+        "ship": false,
+        "reason": "BELOW BAR"
+      }
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+      "delay_r_0.5": {
+        "dNet_yr_is": 0.7187,
+        "dNet_yr_oos": -0.0125,
+        "ship": false,
+        "reason": "OOS HURT"
+      },
+      "delay_r_1.0": {
+        "dNet_yr_is": 0.6837,
+        "dNet_yr_oos": -0.7992,
+        "ship": false,
+        "reason": "OOS HURT"
+      },
+      "delay_r_1.5": {
+        "dNet_yr_is": -1.1961,
+        "dNet_yr_oos": -1.0191,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "delay_r_2.0": {
+        "dNet_yr_is": -8.5857,
+        "dNet_yr_oos": -4.3707,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "skip_n_1": {
+        "dNet_yr_is": -0.0571,
+        "dNet_yr_oos": -0.075,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "skip_n_2": {
+        "dNet_yr_is": -4.3904,
+        "dNet_yr_oos": -3.3806,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "skip_n_3": {
+        "dNet_yr_is": -9.5126,
+        "dNet_yr_oos": -6.5936,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "half": {
+        "dNet_yr_is": -4.7748,
+        "dNet_yr_oos": -7.5965,
+        "ship": false,
+        "reason": "BOTH HURT"
+      },
+      "half+delay1": {
+        "dNet_yr_is": -3.5693,
+        "dNet_yr_oos": -7.8402,
+        "ship": false,
+        "reason": "BOTH HURT"
+      }
+    }
+  },
+  "elapsed_sec": 598.75
+}

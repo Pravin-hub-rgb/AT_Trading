@@ -1,0 +1,338 @@
+{
+  "is": {
+    "scope": "is",
+    "configs": {
+      "champion_multi_sw10": {
+        "baseline": {
+          "n": 500,
+          "gross": 445.225,
+          "net": 325.7817,
+          "wr": 30.0,
+          "dd_net": 27.7242,
+          "monsters": 17,
+          "yearly_gross": {
+            "2023": 113.907,
+            "2024": 122.298,
+            "2025": 102.17,
+            "2026": 106.85
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "filled": 0,
+          "miss": 0,
+          "monsters_captured": 17,
+          "monsters_missed": 0,
+          "flags": {}
+        },
+        "limit_0.10R": {
+          "n": 461,
+          "gross": 420.678,
+          "net": 299.8666,
+          "wr": 28.2,
+          "dd_net": 41.5624,
+          "monsters": 15,
+          "yearly_gross": {
+            "2023": 97.349,
+            "2024": 142.842,
+            "2025": 78.284,
+            "2026": 102.203
+          },
+          "dNet": -25.9151,
+          "dNet_yr": -7.0613,
+          "filled": 461,
+          "miss": 47,
+          "monsters_captured": 14,
+          "monsters_missed": 3,
+          "flags": {
+            "exp_retest_fill": 0.1,
+            "exp_retest_wait": 240
+          }
+        },
+        "limit_0.25R": {
+          "n": 399,
+          "gross": 322.853,
+          "net": 194.7817,
+          "wr": 22.81,
+          "dd_net": 44.7585,
+          "monsters": 14,
+          "yearly_gross": {
+            "2023": 102.927,
+            "2024": 90.397,
+            "2025": 4.208,
+            "2026": 125.321
+          },
+          "dNet": -131.0,
+          "dNet_yr": -35.6948,
+          "filled": 399,
+          "miss": 125,
+          "monsters_captured": 11,
+          "monsters_missed": 6,
+          "flags": {
+            "exp_retest_fill": 0.25,
+            "exp_retest_wait": 240
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "baseline": {
+          "n": 130,
+          "gross": 476.481,
+          "net": 435.7239,
+          "wr": 53.85,
+          "dd_net": 8.7253,
+          "monsters": 14,
+          "yearly_gross": {
+            "2023": 95.654,
+            "2024": 179.875,
+            "2025": 95.266,
+            "2026": 105.686
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "filled": 0,
+          "miss": 0,
+          "monsters_captured": 14,
+          "monsters_missed": 0,
+          "flags": {}
+        },
+        "limit_0.10R": {
+          "n": 118,
+          "gross": 472.296,
+          "net": 431.3593,
+          "wr": 53.39,
+          "dd_net": 10.3249,
+          "monsters": 13,
+          "yearly_gross": {
+            "2023": 77.047,
+            "2024": 195.882,
+            "2025": 78.406,
+            "2026": 120.961
+          },
+          "dNet": -4.3646,
+          "dNet_yr": -1.1893,
+          "filled": 118,
+          "miss": 15,
+          "monsters_captured": 12,
+          "monsters_missed": 2,
+          "flags": {
+            "exp_retest_fill": 0.1,
+            "exp_retest_wait": 240
+          }
+        },
+        "limit_0.25R": {
+          "n": 94,
+          "gross": 527.942,
+          "net": 489.3304,
+          "wr": 53.19,
+          "dd_net": 8.3525,
+          "monsters": 13,
+          "yearly_gross": {
+            "2023": 90.349,
+            "2024": 223.722,
+            "2025": 63.906,
+            "2026": 149.965
+          },
+          "dNet": 53.6065,
+          "dNet_yr": 14.6067,
+          "filled": 94,
+          "miss": 43,
+          "monsters_captured": 11,
+          "monsters_missed": 3,
+          "flags": {
+            "exp_retest_fill": 0.25,
+            "exp_retest_wait": 240
+          }
+        }
+      }
+    }
+  },
+  "oos": {
+    "scope": "oos",
+    "configs": {
+      "champion_multi_sw10": {
+        "baseline": {
+          "n": 279,
+          "gross": 105.725,
+          "net": 70.1505,
+          "wr": 27.96,
+          "dd_net": 53.1877,
+          "monsters": 6,
+          "yearly_gross": {
+            "2021": -10.969,
+            "2022": 116.694
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "filled": 0,
+          "miss": 0,
+          "monsters_captured": 6,
+          "monsters_missed": 0,
+          "flags": {}
+        },
+        "limit_0.10R": {
+          "n": 259,
+          "gross": 101.602,
+          "net": 63.4672,
+          "wr": 25.87,
+          "dd_net": 57.4611,
+          "monsters": 7,
+          "yearly_gross": {
+            "2021": -18.128,
+            "2022": 119.73
+          },
+          "dNet": -6.6833,
+          "dNet_yr": -3.3416,
+          "filled": 259,
+          "miss": 32,
+          "monsters_captured": 6,
+          "monsters_missed": 0,
+          "flags": {
+            "exp_retest_fill": 0.1,
+            "exp_retest_wait": 240
+          }
+        },
+        "limit_0.25R": {
+          "n": 235,
+          "gross": 92.212,
+          "net": 47.2818,
+          "wr": 21.7,
+          "dd_net": 53.408,
+          "monsters": 7,
+          "yearly_gross": {
+            "2021": 1.69,
+            "2022": 90.522
+          },
+          "dNet": -22.8687,
+          "dNet_yr": -11.4343,
+          "filled": 235,
+          "miss": 79,
+          "monsters_captured": 5,
+          "monsters_missed": 1,
+          "flags": {
+            "exp_retest_fill": 0.25,
+            "exp_retest_wait": 240
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "baseline": {
+          "n": 76,
+          "gross": 54.856,
+          "net": 43.2236,
+          "wr": 39.47,
+          "dd_net": 8.5699,
+          "monsters": 1,
+          "yearly_gross": {
+            "2021": 20.372,
+            "2022": 34.484
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "filled": 0,
+          "miss": 0,
+          "monsters_captured": 1,
+          "monsters_missed": 0,
+          "flags": {}
+        },
+        "limit_0.10R": {
+          "n": 66,
+          "gross": 69.193,
+          "net": 57.5718,
+          "wr": 42.42,
+          "dd_net": 8.6278,
+          "monsters": 1,
+          "yearly_gross": {
+            "2021": 23.307,
+            "2022": 45.886
+          },
+          "dNet": 14.3482,
+          "dNet_yr": 7.1741,
+          "filled": 66,
+          "miss": 14,
+          "monsters_captured": 1,
+          "monsters_missed": 0,
+          "flags": {
+            "exp_retest_fill": 0.1,
+            "exp_retest_wait": 240
+          }
+        },
+        "limit_0.25R": {
+          "n": 50,
+          "gross": 75.867,
+          "net": 65.7543,
+          "wr": 44.0,
+          "dd_net": 6.5351,
+          "monsters": 1,
+          "yearly_gross": {
+            "2021": 32.026,
+            "2022": 43.841
+          },
+          "dNet": 22.5307,
+          "dNet_yr": 11.2654,
+          "filled": 50,
+          "miss": 31,
+          "monsters_captured": 1,
+          "monsters_missed": 0,
+          "flags": {
+            "exp_retest_fill": 0.25,
+            "exp_retest_wait": 240
+          }
+        }
+      }
+    }
+  },
+  "instrument": "BTCUSDT_BYBIT",
+  "arms": [
+    {
+      "name": "baseline",
+      "flags": {}
+    },
+    {
+      "name": "limit_0.10R",
+      "flags": {
+        "exp_retest_fill": 0.1,
+        "exp_retest_wait": 240
+      }
+    },
+    {
+      "name": "limit_0.25R",
+      "flags": {
+        "exp_retest_fill": 0.25,
+        "exp_retest_wait": 240
+      }
+    }
+  ],
+  "monster_r": 10.0,
+  "research_policy": "No fixed R/year ship threshold; report raw deltas, coverage and equity separately.",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "verdicts": {
+    "champion_multi_sw10": {
+      "limit_0.10R": {
+        "dNet_yr_is": -7.0613,
+        "dNet_yr_oos": -3.3416,
+        "reason": "BOTH HURT"
+      },
+      "limit_0.25R": {
+        "dNet_yr_is": -35.6948,
+        "dNet_yr_oos": -11.4343,
+        "reason": "BOTH HURT"
+      }
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+      "limit_0.10R": {
+        "dNet_yr_is": -1.1893,
+        "dNet_yr_oos": 7.1741,
+        "reason": "IS HURT"
+      },
+      "limit_0.25R": {
+        "dNet_yr_is": 14.6067,
+        "dNet_yr_oos": 11.2654,
+        "reason": "POSITIVE BOTH"
+      }
+    }
+  },
+  "elapsed_sec": 111.75
+}

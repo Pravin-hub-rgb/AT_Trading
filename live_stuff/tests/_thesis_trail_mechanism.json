@@ -1,0 +1,186 @@
+{
+  "study": 3,
+  "name": "trail mechanism decomposition",
+  "instrument": "BTCUSDT_BYBIT",
+  "scopes": {
+    "oos": {
+      "champion_multi_sw10": {
+        "n_trades": 279,
+        "n_replayed": 279,
+        "replay_mismatch_gt_0p02R": 0,
+        "engine_gross_r": 105.725,
+        "replay_gross_r": 105.7327,
+        "mechanism_buckets": {
+          "1_sl_never_ratcheted": {
+            "n": 100,
+            "share_pct": 35.842,
+            "sum_r": -100.0,
+            "pct_of_total_r": -94.578,
+            "avg_r": -1.0,
+            "avg_locked_r": -1.0,
+            "avg_ratchets": 0.0,
+            "avg_bars": 174.3
+          },
+          "3_trail_exit_under_1R": {
+            "n": 126,
+            "share_pct": 45.161,
+            "sum_r": -68.3254,
+            "pct_of_total_r": -64.621,
+            "avg_r": -0.5423,
+            "avg_locked_r": -0.5423,
+            "avg_ratchets": 1.683,
+            "avg_bars": 1511.9
+          },
+          "4_trail_exit_1_to_3R": {
+            "n": 23,
+            "share_pct": 8.244,
+            "sum_r": 42.5705,
+            "pct_of_total_r": 40.262,
+            "avg_r": 1.8509,
+            "avg_locked_r": 1.8509,
+            "avg_ratchets": 3.391,
+            "avg_bars": 3113.6
+          },
+          "5_trail_exit_3_to_10R": {
+            "n": 24,
+            "share_pct": 8.602,
+            "sum_r": 126.4279,
+            "pct_of_total_r": 119.573,
+            "avg_r": 5.2678,
+            "avg_locked_r": 5.2678,
+            "avg_ratchets": 4.583,
+            "avg_bars": 4245.2
+          },
+          "6_trail_exit_10R_plus": {
+            "n": 6,
+            "share_pct": 2.151,
+            "sum_r": 105.0598,
+            "pct_of_total_r": 99.364,
+            "avg_r": 17.51,
+            "avg_locked_r": 17.51,
+            "avg_ratchets": 5.667,
+            "avg_bars": 6099.0
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "n_trades": 253,
+        "n_replayed": 253,
+        "replay_mismatch_gt_0p02R": 0,
+        "engine_gross_r": 92.641,
+        "replay_gross_r": 92.6466,
+        "mechanism_buckets": {
+          "1_sl_never_ratcheted": {
+            "n": 95,
+            "share_pct": 37.549,
+            "sum_r": -95.0,
+            "pct_of_total_r": -102.54,
+            "avg_r": -1.0,
+            "avg_locked_r": -1.0,
+            "avg_ratchets": 0.0,
+            "avg_bars": 163.9
+          },
+          "3_trail_exit_under_1R": {
+            "n": 107,
+            "share_pct": 42.292,
+            "sum_r": -55.9958,
+            "pct_of_total_r": -60.44,
+            "avg_r": -0.5233,
+            "avg_locked_r": -0.5233,
+            "avg_ratchets": 1.664,
+            "avg_bars": 1463.7
+          },
+          "4_trail_exit_1_to_3R": {
+            "n": 23,
+            "share_pct": 9.091,
+            "sum_r": 40.2801,
+            "pct_of_total_r": 43.477,
+            "avg_r": 1.7513,
+            "avg_locked_r": 1.7513,
+            "avg_ratchets": 3.087,
+            "avg_bars": 2813.5
+          },
+          "5_trail_exit_3_to_10R": {
+            "n": 24,
+            "share_pct": 9.486,
+            "sum_r": 121.9856,
+            "pct_of_total_r": 131.668,
+            "avg_r": 5.0827,
+            "avg_locked_r": 5.0827,
+            "avg_ratchets": 4.333,
+            "avg_bars": 4031.2
+          },
+          "6_trail_exit_10R_plus": {
+            "n": 4,
+            "share_pct": 1.581,
+            "sum_r": 81.3768,
+            "pct_of_total_r": 87.836,
+            "avg_r": 20.3442,
+            "avg_locked_r": 20.3442,
+            "avg_ratchets": 4.5,
+            "avg_bars": 5273.5
+          }
+        }
+      },
+      "fullstack_wage10_cd0_single_sw10": {
+        "n_trades": 140,
+        "n_replayed": 140,
+        "replay_mismatch_gt_0p02R": 0,
+        "engine_gross_r": 38.04,
+        "replay_gross_r": 38.0434,
+        "mechanism_buckets": {
+          "1_sl_never_ratcheted": {
+            "n": 68,
+            "share_pct": 48.571,
+            "sum_r": -68.0,
+            "pct_of_total_r": -178.743,
+            "avg_r": -1.0,
+            "avg_locked_r": -1.0,
+            "avg_ratchets": 0.0,
+            "avg_bars": 185.9
+          },
+          "3_trail_exit_under_1R": {
+            "n": 43,
+            "share_pct": 30.714,
+            "sum_r": -29.1695,
+            "pct_of_total_r": -76.674,
+            "avg_r": -0.6784,
+            "avg_locked_r": -0.6784,
+            "avg_ratchets": 1.628,
+            "avg_bars": 1483.7
+          },
+          "4_trail_exit_1_to_3R": {
+            "n": 15,
+            "share_pct": 10.714,
+            "sum_r": 29.2435,
+            "pct_of_total_r": 76.869,
+            "avg_r": 1.9496,
+            "avg_locked_r": 1.9496,
+            "avg_ratchets": 3.6,
+            "avg_bars": 3754.9
+          },
+          "5_trail_exit_3_to_10R": {
+            "n": 11,
+            "share_pct": 7.857,
+            "sum_r": 60.3852,
+            "pct_of_total_r": 158.727,
+            "avg_r": 5.4896,
+            "avg_locked_r": 5.4896,
+            "avg_ratchets": 3.818,
+            "avg_bars": 3704.4
+          },
+          "6_trail_exit_10R_plus": {
+            "n": 3,
+            "share_pct": 2.143,
+            "sum_r": 45.5842,
+            "pct_of_total_r": 119.822,
+            "avg_r": 15.1947,
+            "avg_locked_r": 15.1948,
+            "avg_ratchets": 5.667,
+            "avg_bars": 5921.0
+          }
+        }
+      }
+    }
+  }
+}

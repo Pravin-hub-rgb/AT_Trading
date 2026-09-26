@@ -1,0 +1,281 @@
+{
+  "instrument": "BTCUSDT_BYBIT",
+  "ship_bar": "ON >= OFF both sides annualized; OOS dNet/yr >= +30R",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "is": {
+    "stage": "skip_decisive_ship",
+    "scope": "is",
+    "ship_bar": "ON >= OFF both sides annualized; OOS dNET/yr >= +30",
+    "configs": {
+      "champion_multi_sw10": {
+        "OFF": {
+          "n": 500,
+          "gross": 445.225,
+          "net": 325.7817,
+          "wr": 30.0,
+          "dd_net": 27.7242,
+          "yearly_gross": {
+            "2023": 113.907,
+            "2024": 122.298,
+            "2025": 102.17,
+            "2026": 106.85
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "ON": {
+          "n": 500,
+          "gross": 445.225,
+          "net": 325.7817,
+          "wr": 30.0,
+          "dd_net": 27.7242,
+          "yearly_gross": {
+            "2023": 113.907,
+            "2024": 122.298,
+            "2025": 102.17,
+            "2026": 106.85
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "OFF": {
+          "n": 454,
+          "gross": 466.476,
+          "net": 358.95,
+          "wr": 30.84,
+          "dd_net": 21.1764,
+          "yearly_gross": {
+            "2023": 125.508,
+            "2024": 125.301,
+            "2025": 101.185,
+            "2026": 114.482
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "ON": {
+          "n": 454,
+          "gross": 466.476,
+          "net": 358.95,
+          "wr": 30.84,
+          "dd_net": 21.1764,
+          "yearly_gross": {
+            "2023": 125.508,
+            "2024": 125.301,
+            "2025": 101.185,
+            "2026": 114.482
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "OFF": {
+          "n": 130,
+          "gross": 476.481,
+          "net": 435.7239,
+          "wr": 53.85,
+          "dd_net": 8.7253,
+          "yearly_gross": {
+            "2023": 95.654,
+            "2024": 179.875,
+            "2025": 95.266,
+            "2026": 105.686
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "ON": {
+          "n": 119,
+          "gross": 464.611,
+          "net": 425.3081,
+          "wr": 53.78,
+          "dd_net": 8.7253,
+          "yearly_gross": {
+            "2023": 94.563,
+            "2024": 178.591,
+            "2025": 94.734,
+            "2026": 96.723
+          },
+          "dNet": -10.4158,
+          "dNet_yr": -2.8381,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        },
+        "ON_stack_age10": {
+          "n": 119,
+          "gross": 464.611,
+          "net": 425.3081,
+          "wr": 53.78,
+          "dd_net": 8.7253,
+          "yearly_gross": {
+            "2023": 94.563,
+            "2024": 178.591,
+            "2025": 94.734,
+            "2026": 96.723
+          },
+          "dNet": -10.4158,
+          "dNet_yr": -2.8381,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        }
+      }
+    }
+  },
+  "oos": {
+    "stage": "skip_decisive_ship",
+    "scope": "oos",
+    "ship_bar": "ON >= OFF both sides annualized; OOS dNET/yr >= +30",
+    "configs": {
+      "champion_multi_sw10": {
+        "OFF": {
+          "n": 279,
+          "gross": 105.725,
+          "net": 70.1505,
+          "wr": 27.96,
+          "dd_net": 53.1877,
+          "yearly_gross": {
+            "2021": -10.969,
+            "2022": 116.694
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "ON": {
+          "n": 222,
+          "gross": 130.202,
+          "net": 99.3056,
+          "wr": 28.83,
+          "dd_net": 33.8391,
+          "yearly_gross": {
+            "2021": 10.42,
+            "2022": 119.782
+          },
+          "dNet": 29.1551,
+          "dNet_yr": 14.5776,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "OFF": {
+          "n": 253,
+          "gross": 92.641,
+          "net": 60.2062,
+          "wr": 29.64,
+          "dd_net": 29.3814,
+          "yearly_gross": {
+            "2021": 13.168,
+            "2022": 79.473
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "ON": {
+          "n": 200,
+          "gross": 104.872,
+          "net": 76.8268,
+          "wr": 29.0,
+          "dd_net": 24.6373,
+          "yearly_gross": {
+            "2021": 22.311,
+            "2022": 82.561
+          },
+          "dNet": 16.6206,
+          "dNet_yr": 8.3103,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "OFF": {
+          "n": 76,
+          "gross": 54.856,
+          "net": 43.2236,
+          "wr": 39.47,
+          "dd_net": 8.5699,
+          "yearly_gross": {
+            "2021": 20.372,
+            "2022": 34.484
+          },
+          "dNet": 0.0,
+          "dNet_yr": 0.0,
+          "flags": {}
+        },
+        "ON": {
+          "n": 47,
+          "gross": 24.397,
+          "net": 15.979,
+          "wr": 34.04,
+          "dd_net": 10.1676,
+          "yearly_gross": {
+            "2021": 4.551,
+            "2022": 19.846
+          },
+          "dNet": -27.2446,
+          "dNet_yr": -13.6223,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        },
+        "ON_stack_age10": {
+          "n": 47,
+          "gross": 24.397,
+          "net": 15.979,
+          "wr": 34.04,
+          "dd_net": 10.1676,
+          "yearly_gross": {
+            "2021": 4.551,
+            "2022": 19.846
+          },
+          "dNet": -27.2446,
+          "dNet_yr": -13.6223,
+          "flags": {
+            "exp_skip_decisive": 1
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 201.56,
+  "verdicts": {
+    "champion_multi_sw10": {
+      "dNet_yr_is": 0.0,
+      "dNet_yr_oos": 14.5776,
+      "ship": false,
+      "reason": "BELOW OOS BAR"
+    },
+    "utcsat_multi_sw10": {
+      "dNet_yr_is": 0.0,
+      "dNet_yr_oos": 8.3103,
+      "ship": false,
+      "reason": "BELOW OOS BAR"
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+      "dNet_yr_is": -2.8381,
+      "dNet_yr_oos": -13.6223,
+      "ship": false,
+      "reason": "IS HURT"
+    }
+  }
+}

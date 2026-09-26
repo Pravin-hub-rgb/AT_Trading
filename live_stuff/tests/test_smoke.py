@@ -4,8 +4,9 @@ Uses the ACTUAL backend functions (compute_btc_swings, simulate_htf_ltf_streak_h
 NOT a toy reimplementation.
 
 Run: python live_stuff/tests/test_smoke.py
-Pass criteria: 351 trades, +238.0R (+-0.5), all years positive.
-(Bybit Perp with C14+C15 causal fixes applied + pre-FS filter, per-symbol v18 params)
+Pass criteria: 351 trades, +211.7R (+-0.5), all years positive.
+(Bybit Perp with C14+C15 causal fixes + trail ratchet fix 2026-09-20 + pre-FS filter.
+ Post-ratchet fine+58 anchor: 351t +211.6R gross — was +238.0 pre-fix; pin updated.)
 FCFS: first tradeable mark per swing decides -- pass or fail, no second chances.
 """
 import sys
@@ -73,7 +74,7 @@ def main():
     print("BACKBENCHER SMOKE TEST -- BYBIT PERP -- REAL v18 ENGINE")
     print("=" * 72)
     print(f"  trades: {n}  -> {'PASS' if n == 351 else 'FAIL'}")
-    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 238.0):.2f})  -> {'PASS' if abs(tot - 238.0) < 0.5 else 'FAIL'}")
+    print(f"  total R: {tot:+.1f}  (|delta| = {abs(tot - 211.7):.2f})  -> {'PASS' if abs(tot - 211.7) < 0.5 else 'FAIL'}")
     print(f"  win rate: {wr:.1f}%  ({len(wins)}W/{len(losses)}L)")
     print(f"  PF: {pf:.2f}")
     for y, v in sorted(years.items()):
@@ -82,7 +83,7 @@ def main():
     print("=" * 72)
 
     assert n == 351, f"Expected 351 trades, got {n}"
-    assert abs(tot - 238.0) < 0.5, f"Expected +238.0R, got {tot:+.1f}R"
+    assert abs(tot - 211.7) < 0.5, f"Expected +211.7R (post-ratchet fine+58), got {tot:+.1f}R"
     assert allyes, "Not all years positive"
     print("ALL CHECKS PASSED")
 

@@ -1100,7 +1100,7 @@ EXPERIMENTS = {
         "use_bp": True,
         "swing": "sw20",
         "basis": "fine",
-        "pins": {"n": 351, "gross": 238.0},
+        "pins": {"n": 351, "gross": 211.7},
     },
     # NOTE: no separate "sw15" row — run_one fixes the LTF chain at sw15 (mb50)
     # and cfg["swing"] selects only the HTF window chain, so a sw15 row is not

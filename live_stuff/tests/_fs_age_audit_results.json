@@ -1,0 +1,651 @@
+{
+  "stage": "A_fs_age_audit",
+  "is": {
+    "label": "champion_is",
+    "n": 500,
+    "none": 0,
+    "min": -99,
+    "max": -4,
+    "negatives": 500,
+    "hist": {
+      "neg": 500
+    },
+    "sample": [
+      {
+        "entry": "2023-01-03 03:15",
+        "i15": 203,
+        "fs_age": -23,
+        "swing_no": 5,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2023-01-03 11:00",
+        "i15": 234,
+        "fs_age": -30,
+        "swing_no": 6,
+        "mark_at_entry": "B1>FLIP"
+      },
+      {
+        "entry": "2023-01-04 01:15",
+        "i15": 291,
+        "fs_age": -46,
+        "swing_no": 8,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2023-01-06 21:00",
+        "i15": 562,
+        "fs_age": -43,
+        "swing_no": 11,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2023-01-16 06:30",
+        "i15": 1464,
+        "fs_age": -9,
+        "swing_no": 31,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2024-11-15 09:00",
+        "i15": 65698,
+        "fs_age": -40,
+        "swing_no": 1458,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2024-11-18 04:30",
+        "i15": 65968,
+        "fs_age": -49,
+        "swing_no": 1465,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2024-11-19 12:15",
+        "i15": 66095,
+        "fs_age": -5,
+        "swing_no": 1468,
+        "mark_at_entry": "B1"
+      }
+    ]
+  },
+  "oos": {
+    "label": "champion_oos",
+    "n": 279,
+    "none": 0,
+    "min": -72,
+    "max": -5,
+    "negatives": 279,
+    "hist": {
+      "neg": 279
+    },
+    "sample": [
+      {
+        "entry": "2021-01-07 06:00",
+        "i15": 598,
+        "fs_age": -66,
+        "swing_no": 15,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-01-07 22:45",
+        "i15": 665,
+        "fs_age": -54,
+        "swing_no": 16,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-01-08 12:45",
+        "i15": 721,
+        "fs_age": -42,
+        "swing_no": 17,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-01-09 16:45",
+        "i15": 833,
+        "fs_age": -36,
+        "swing_no": 20,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-01-12 02:30",
+        "i15": 1064,
+        "fs_age": -48,
+        "swing_no": 25,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-11-30 14:00",
+        "i15": 32022,
+        "fs_age": -47,
+        "swing_no": 748,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-12-03 19:45",
+        "i15": 32333,
+        "fs_age": -38,
+        "swing_no": 754,
+        "mark_at_entry": "B1"
+      },
+      {
+        "entry": "2021-12-04 06:30",
+        "i15": 32376,
+        "fs_age": -30,
+        "swing_no": 755,
+        "mark_at_entry": "B1"
+      }
+    ]
+  },
+  "stage25_prev_fs": {
+    "is": {
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/all/prev_fs_to_signal_bars": {
+        "n": 200,
+        "mean": 10.72,
+        "median": 5.0,
+        "q10": 0.0,
+        "q90": 27.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/all/prev_fs_to_cur_start_bars": {
+        "n": 200,
+        "mean": 4.26,
+        "median": 3.0,
+        "q10": -10.0,
+        "q90": 22.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/all/prev_final_to_signal_bars": {
+        "n": 200,
+        "mean": 39.575,
+        "median": 38.0,
+        "q10": 13.0,
+        "q90": 64.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/winners/prev_fs_to_signal_bars": {
+        "n": 65,
+        "mean": 16.1538,
+        "median": 6.0,
+        "q10": 0.0,
+        "q90": 40.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/winners/prev_fs_to_cur_start_bars": {
+        "n": 65,
+        "mean": -3.9385,
+        "median": -3.0,
+        "q10": -23.0,
+        "q90": 5.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/winners/prev_final_to_signal_bars": {
+        "n": 65,
+        "mean": 48.4308,
+        "median": 47.0,
+        "q10": 14.0,
+        "q90": 77.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/losses/prev_fs_to_signal_bars": {
+        "n": 135,
+        "mean": 8.1037,
+        "median": 4.0,
+        "q10": 0.0,
+        "q90": 24.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/losses/prev_fs_to_cur_start_bars": {
+        "n": 135,
+        "mean": 8.2074,
+        "median": 7.0,
+        "q10": -6.0,
+        "q90": 26.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/losses/prev_final_to_signal_bars": {
+        "n": 135,
+        "mean": 35.3111,
+        "median": 33.0,
+        "q10": 11.0,
+        "q90": 59.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/runners/prev_fs_to_signal_bars": {
+        "n": 31,
+        "mean": 14.0,
+        "median": 3.0,
+        "q10": 0.0,
+        "q90": 40.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/runners/prev_fs_to_cur_start_bars": {
+        "n": 31,
+        "mean": -2.129,
+        "median": -1.0,
+        "q10": -9.0,
+        "q90": 2.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/runners/prev_final_to_signal_bars": {
+        "n": 31,
+        "mean": 43.5161,
+        "median": 41.0,
+        "q10": 14.0,
+        "q90": 59.0
+      },
+      "/champion_multi_sw10/feature_distributions/all/prev_fs_to_signal_bars": {
+        "n": 500,
+        "mean": 13.204,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 30.0
+      },
+      "/champion_multi_sw10/feature_distributions/all/prev_fs_to_cur_start_bars": {
+        "n": 500,
+        "mean": 2.928,
+        "median": 2.0,
+        "q10": -14.0,
+        "q90": 21.0
+      },
+      "/champion_multi_sw10/feature_distributions/all/prev_final_to_signal_bars": {
+        "n": 500,
+        "mean": 42.244,
+        "median": 40.0,
+        "q10": 14.0,
+        "q90": 66.0
+      },
+      "/champion_multi_sw10/feature_distributions/winners/prev_fs_to_signal_bars": {
+        "n": 150,
+        "mean": 14.8467,
+        "median": 8.0,
+        "q10": 0.0,
+        "q90": 38.0
+      },
+      "/champion_multi_sw10/feature_distributions/winners/prev_fs_to_cur_start_bars": {
+        "n": 150,
+        "mean": -3.7533,
+        "median": -2.0,
+        "q10": -21.0,
+        "q90": 6.0
+      },
+      "/champion_multi_sw10/feature_distributions/winners/prev_final_to_signal_bars": {
+        "n": 150,
+        "mean": 45.1333,
+        "median": 42.5,
+        "q10": 14.0,
+        "q90": 77.0
+      },
+      "/champion_multi_sw10/feature_distributions/losses/prev_fs_to_signal_bars": {
+        "n": 350,
+        "mean": 12.5,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 29.0
+      },
+      "/champion_multi_sw10/feature_distributions/losses/prev_fs_to_cur_start_bars": {
+        "n": 350,
+        "mean": 5.7914,
+        "median": 5.0,
+        "q10": -12.0,
+        "q90": 24.0
+      },
+      "/champion_multi_sw10/feature_distributions/losses/prev_final_to_signal_bars": {
+        "n": 350,
+        "mean": 41.0057,
+        "median": 39.0,
+        "q10": 14.0,
+        "q90": 66.0
+      },
+      "/champion_multi_sw10/feature_distributions/runners/prev_fs_to_signal_bars": {
+        "n": 63,
+        "mean": 13.3016,
+        "median": 5.0,
+        "q10": 0.0,
+        "q90": 28.0
+      },
+      "/champion_multi_sw10/feature_distributions/runners/prev_fs_to_cur_start_bars": {
+        "n": 63,
+        "mean": -3.6825,
+        "median": -2.0,
+        "q10": -18.0,
+        "q90": 2.0
+      },
+      "/champion_multi_sw10/feature_distributions/runners/prev_final_to_signal_bars": {
+        "n": 63,
+        "mean": 43.4762,
+        "median": 42.0,
+        "q10": 13.0,
+        "q90": 66.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/all/prev_fs_to_signal_bars": {
+        "n": 454,
+        "mean": 13.9758,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 30.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/all/prev_fs_to_cur_start_bars": {
+        "n": 454,
+        "mean": 3.2687,
+        "median": 2.0,
+        "q10": -14.0,
+        "q90": 22.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/all/prev_final_to_signal_bars": {
+        "n": 454,
+        "mean": 43.0463,
+        "median": 40.0,
+        "q10": 14.0,
+        "q90": 67.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/winners/prev_fs_to_signal_bars": {
+        "n": 140,
+        "mean": 16.4143,
+        "median": 8.0,
+        "q10": 0.0,
+        "q90": 40.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/winners/prev_fs_to_cur_start_bars": {
+        "n": 140,
+        "mean": -3.3714,
+        "median": -2.0,
+        "q10": -18.0,
+        "q90": 6.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/winners/prev_final_to_signal_bars": {
+        "n": 140,
+        "mean": 46.9286,
+        "median": 43.0,
+        "q10": 14.0,
+        "q90": 78.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/losses/prev_fs_to_signal_bars": {
+        "n": 314,
+        "mean": 12.8885,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 30.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/losses/prev_fs_to_cur_start_bars": {
+        "n": 314,
+        "mean": 6.2293,
+        "median": 5.0,
+        "q10": -13.0,
+        "q90": 25.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/losses/prev_final_to_signal_bars": {
+        "n": 314,
+        "mean": 41.3153,
+        "median": 39.0,
+        "q10": 14.0,
+        "q90": 66.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/runners/prev_fs_to_signal_bars": {
+        "n": 62,
+        "mean": 16.9839,
+        "median": 5.0,
+        "q10": 0.0,
+        "q90": 36.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/runners/prev_fs_to_cur_start_bars": {
+        "n": 62,
+        "mean": -3.4839,
+        "median": -1.5,
+        "q10": -17.0,
+        "q90": 2.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/runners/prev_final_to_signal_bars": {
+        "n": 62,
+        "mean": 48.2097,
+        "median": 43.5,
+        "q10": 14.0,
+        "q90": 67.0
+      }
+    },
+    "oos": {
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/all/prev_fs_to_signal_bars": {
+        "n": 140,
+        "mean": 8.8357,
+        "median": 6.0,
+        "q10": 0.0,
+        "q90": 23.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/all/prev_fs_to_cur_start_bars": {
+        "n": 140,
+        "mean": 4.1786,
+        "median": 2.0,
+        "q10": -8.0,
+        "q90": 22.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/all/prev_final_to_signal_bars": {
+        "n": 140,
+        "mean": 38.8571,
+        "median": 40.5,
+        "q10": 11.0,
+        "q90": 62.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/winners/prev_fs_to_signal_bars": {
+        "n": 35,
+        "mean": 10.6,
+        "median": 8.0,
+        "q10": 0.0,
+        "q90": 25.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/winners/prev_fs_to_cur_start_bars": {
+        "n": 35,
+        "mean": -2.2857,
+        "median": -1.0,
+        "q10": -14.0,
+        "q90": 5.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/winners/prev_final_to_signal_bars": {
+        "n": 35,
+        "mean": 39.0,
+        "median": 38.0,
+        "q10": 13.0,
+        "q90": 66.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/losses/prev_fs_to_signal_bars": {
+        "n": 105,
+        "mean": 8.2476,
+        "median": 5.0,
+        "q10": 0.0,
+        "q90": 18.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/losses/prev_fs_to_cur_start_bars": {
+        "n": 105,
+        "mean": 6.3333,
+        "median": 5.0,
+        "q10": -9.0,
+        "q90": 24.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/losses/prev_final_to_signal_bars": {
+        "n": 105,
+        "mean": 38.8095,
+        "median": 41.0,
+        "q10": 9.0,
+        "q90": 61.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/runners/prev_fs_to_signal_bars": {
+        "n": 14,
+        "mean": 6.9286,
+        "median": 6.0,
+        "q10": -11.0,
+        "q90": 18.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/runners/prev_fs_to_cur_start_bars": {
+        "n": 14,
+        "mean": -1.1429,
+        "median": -1.0,
+        "q10": -15.0,
+        "q90": 5.0
+      },
+      "/fullstack_wage10_cd0_single_sw10/feature_distributions/runners/prev_final_to_signal_bars": {
+        "n": 14,
+        "mean": 30.2143,
+        "median": 21.5,
+        "q10": 8.0,
+        "q90": 56.0
+      },
+      "/champion_multi_sw10/feature_distributions/all/prev_fs_to_signal_bars": {
+        "n": 279,
+        "mean": 11.8638,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 25.0
+      },
+      "/champion_multi_sw10/feature_distributions/all/prev_fs_to_cur_start_bars": {
+        "n": 279,
+        "mean": 3.0072,
+        "median": 1.0,
+        "q10": -12.0,
+        "q90": 21.0
+      },
+      "/champion_multi_sw10/feature_distributions/all/prev_final_to_signal_bars": {
+        "n": 279,
+        "mean": 41.8387,
+        "median": 39.0,
+        "q10": 14.0,
+        "q90": 69.0
+      },
+      "/champion_multi_sw10/feature_distributions/winners/prev_fs_to_signal_bars": {
+        "n": 78,
+        "mean": 12.6154,
+        "median": 8.5,
+        "q10": 0.0,
+        "q90": 27.0
+      },
+      "/champion_multi_sw10/feature_distributions/winners/prev_fs_to_cur_start_bars": {
+        "n": 78,
+        "mean": -0.9872,
+        "median": -0.5,
+        "q10": -12.0,
+        "q90": 12.0
+      },
+      "/champion_multi_sw10/feature_distributions/winners/prev_final_to_signal_bars": {
+        "n": 78,
+        "mean": 40.3974,
+        "median": 38.0,
+        "q10": 13.0,
+        "q90": 70.0
+      },
+      "/champion_multi_sw10/feature_distributions/losses/prev_fs_to_signal_bars": {
+        "n": 201,
+        "mean": 11.5721,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 25.0
+      },
+      "/champion_multi_sw10/feature_distributions/losses/prev_fs_to_cur_start_bars": {
+        "n": 201,
+        "mean": 4.5572,
+        "median": 3.0,
+        "q10": -11.0,
+        "q90": 22.0
+      },
+      "/champion_multi_sw10/feature_distributions/losses/prev_final_to_signal_bars": {
+        "n": 201,
+        "mean": 42.398,
+        "median": 40.0,
+        "q10": 14.0,
+        "q90": 67.0
+      },
+      "/champion_multi_sw10/feature_distributions/runners/prev_fs_to_signal_bars": {
+        "n": 30,
+        "mean": 9.7,
+        "median": 8.0,
+        "q10": -11.0,
+        "q90": 27.0
+      },
+      "/champion_multi_sw10/feature_distributions/runners/prev_fs_to_cur_start_bars": {
+        "n": 30,
+        "mean": -0.2333,
+        "median": -1.0,
+        "q10": -12.0,
+        "q90": 16.0
+      },
+      "/champion_multi_sw10/feature_distributions/runners/prev_final_to_signal_bars": {
+        "n": 30,
+        "mean": 35.6333,
+        "median": 27.0,
+        "q10": 11.0,
+        "q90": 70.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/all/prev_fs_to_signal_bars": {
+        "n": 253,
+        "mean": 12.3439,
+        "median": 7.0,
+        "q10": 0.0,
+        "q90": 26.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/all/prev_fs_to_cur_start_bars": {
+        "n": 253,
+        "mean": 3.6877,
+        "median": 1.0,
+        "q10": -10.0,
+        "q90": 21.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/all/prev_final_to_signal_bars": {
+        "n": 253,
+        "mean": 41.3399,
+        "median": 39.0,
+        "q10": 14.0,
+        "q90": 67.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/winners/prev_fs_to_signal_bars": {
+        "n": 75,
+        "mean": 13.0133,
+        "median": 8.0,
+        "q10": 0.0,
+        "q90": 25.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/winners/prev_fs_to_cur_start_bars": {
+        "n": 75,
+        "mean": -1.32,
+        "median": -1.0,
+        "q10": -13.0,
+        "q90": 11.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/winners/prev_final_to_signal_bars": {
+        "n": 75,
+        "mean": 39.7067,
+        "median": 38.0,
+        "q10": 14.0,
+        "q90": 69.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/losses/prev_fs_to_signal_bars": {
+        "n": 178,
+        "mean": 12.0618,
+        "median": 6.0,
+        "q10": 0.0,
+        "q90": 30.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/losses/prev_fs_to_cur_start_bars": {
+        "n": 178,
+        "mean": 5.7978,
+        "median": 4.5,
+        "q10": -9.0,
+        "q90": 22.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/losses/prev_final_to_signal_bars": {
+        "n": 178,
+        "mean": 42.0281,
+        "median": 40.0,
+        "q10": 14.0,
+        "q90": 67.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/runners/prev_fs_to_signal_bars": {
+        "n": 28,
+        "mean": 9.0,
+        "median": 8.0,
+        "q10": -11.0,
+        "q90": 27.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/runners/prev_fs_to_cur_start_bars": {
+        "n": 28,
+        "mean": 0.0714,
+        "median": -1.0,
+        "q10": -15.0,
+        "q90": 19.0
+      },
+      "/utcsat_multi_sw10/feature_distributions/runners/prev_final_to_signal_bars": {
+        "n": 28,
+        "mean": 33.4286,
+        "median": 24.5,
+        "q10": 9.0,
+        "q90": 69.0
+      }
+    }
+  }
+}

@@ -1,0 +1,479 @@
+{
+  "scope": "is",
+  "instrument": "BTCUSDT_BYBIT",
+  "audit": "same-bar MFE eligibility vs previous-completed-bar MFE",
+  "configs": {
+    "champion_multi_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 500,
+            "sum": 445.225,
+            "avg": 0.89045,
+            "wins": 150,
+            "losses": 350,
+            "wr": 30.0,
+            "avg_win": 5.113553,
+            "avg_loss": -0.919451,
+            "pf": 2.383511,
+            "runners_2": 77,
+            "runners_3": 63,
+            "runners_5": 45,
+            "runners_10": 17
+          },
+          "net": {
+            "n": 500,
+            "sum": 325.781735,
+            "avg": 0.651563,
+            "wins": 139,
+            "losses": 361,
+            "wr": 27.8,
+            "avg_win": 5.220388,
+            "avg_loss": -1.107624,
+            "pf": 1.814756,
+            "runners_2": 74,
+            "runners_3": 61,
+            "runners_5": 41,
+            "runners_10": 17
+          },
+          "net_dd": 27.724224,
+          "yearly_gross": {
+            "2023": 113.90700000000001,
+            "2024": 122.29799999999999,
+            "2025": 102.17,
+            "2026": 106.84999999999998
+          },
+          "outcomes": {
+            "sl": 187,
+            "trail": 313
+          }
+        }
+      },
+      "half_delay1_original": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 466,
+            "sum": 553.142,
+            "avg": 1.187,
+            "wins": 129,
+            "losses": 337,
+            "wr": 27.6824,
+            "avg_win": 6.720488,
+            "avg_loss": -0.93116,
+            "pf": 2.762716,
+            "runners_2": 67,
+            "runners_3": 61,
+            "runners_5": 45,
+            "runners_10": 25
+          },
+          "net": {
+            "n": 466,
+            "sum": 429.627709,
+            "avg": 0.921948,
+            "wins": 121,
+            "losses": 345,
+            "wr": 25.9657,
+            "avg_win": 6.764253,
+            "avg_loss": -1.127092,
+            "pf": 2.104876,
+            "runners_2": 64,
+            "runners_3": 56,
+            "runners_5": 41,
+            "runners_10": 24
+          },
+          "net_dd": 26.988822,
+          "yearly_gross": {
+            "2023": 133.431,
+            "2024": 107.38599999999998,
+            "2025": 125.99300000000002,
+            "2026": 186.33199999999997
+          },
+          "outcomes": {
+            "sl": 260,
+            "trail": 206
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 107.917,
+          "net": 103.845974,
+          "n": -34
+        }
+      },
+      "half_delay1_strict_prevbar": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0,
+          "exp_trail_delay_prevbar": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 466,
+            "sum": 553.142,
+            "avg": 1.187,
+            "wins": 129,
+            "losses": 337,
+            "wr": 27.6824,
+            "avg_win": 6.720488,
+            "avg_loss": -0.93116,
+            "pf": 2.762716,
+            "runners_2": 67,
+            "runners_3": 61,
+            "runners_5": 45,
+            "runners_10": 25
+          },
+          "net": {
+            "n": 466,
+            "sum": 429.627709,
+            "avg": 0.921948,
+            "wins": 121,
+            "losses": 345,
+            "wr": 25.9657,
+            "avg_win": 6.764253,
+            "avg_loss": -1.127092,
+            "pf": 2.104876,
+            "runners_2": 64,
+            "runners_3": 56,
+            "runners_5": 41,
+            "runners_10": 24
+          },
+          "net_dd": 26.988822,
+          "yearly_gross": {
+            "2023": 133.431,
+            "2024": 107.38599999999998,
+            "2025": 125.99300000000002,
+            "2026": 186.33199999999997
+          },
+          "outcomes": {
+            "sl": 260,
+            "trail": 206
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 107.917,
+          "net": 103.845974,
+          "n": -34
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 454,
+            "sum": 466.476,
+            "avg": 1.02748,
+            "wins": 140,
+            "losses": 314,
+            "wr": 30.837,
+            "avg_win": 5.391436,
+            "avg_loss": -0.918232,
+            "pf": 2.617883,
+            "runners_2": 74,
+            "runners_3": 62,
+            "runners_5": 42,
+            "runners_10": 18
+          },
+          "net": {
+            "n": 454,
+            "sum": 358.949982,
+            "avg": 0.790639,
+            "wins": 132,
+            "losses": 322,
+            "wr": 29.0749,
+            "avg_win": 5.418301,
+            "avg_loss": -1.106416,
+            "pf": 2.007534,
+            "runners_2": 72,
+            "runners_3": 59,
+            "runners_5": 39,
+            "runners_10": 18
+          },
+          "net_dd": 21.176401,
+          "yearly_gross": {
+            "2023": 125.508,
+            "2024": 125.30100000000002,
+            "2025": 101.18499999999999,
+            "2026": 114.48200000000001
+          },
+          "outcomes": {
+            "sl": 165,
+            "trail": 289
+          }
+        }
+      },
+      "half_delay1_original": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 428,
+            "sum": 523.219,
+            "avg": 1.222474,
+            "wins": 124,
+            "losses": 304,
+            "wr": 28.972,
+            "avg_win": 6.525089,
+            "avg_loss": -0.940434,
+            "pf": 2.830128,
+            "runners_2": 66,
+            "runners_3": 59,
+            "runners_5": 40,
+            "runners_10": 22
+          },
+          "net": {
+            "n": 428,
+            "sum": 411.149999,
+            "avg": 0.960631,
+            "wins": 116,
+            "losses": 312,
+            "wr": 27.1028,
+            "avg_win": 6.577289,
+            "avg_loss": -1.127614,
+            "pf": 2.168652,
+            "runners_2": 63,
+            "runners_3": 54,
+            "runners_5": 36,
+            "runners_10": 21
+          },
+          "net_dd": 23.8979,
+          "yearly_gross": {
+            "2023": 139.466,
+            "2024": 110.812,
+            "2025": 119.601,
+            "2026": 153.34
+          },
+          "outcomes": {
+            "sl": 235,
+            "trail": 193
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 56.743,
+          "net": 52.200017,
+          "n": -26
+        }
+      },
+      "half_delay1_strict_prevbar": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0,
+          "exp_trail_delay_prevbar": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 428,
+            "sum": 523.219,
+            "avg": 1.222474,
+            "wins": 124,
+            "losses": 304,
+            "wr": 28.972,
+            "avg_win": 6.525089,
+            "avg_loss": -0.940434,
+            "pf": 2.830128,
+            "runners_2": 66,
+            "runners_3": 59,
+            "runners_5": 40,
+            "runners_10": 22
+          },
+          "net": {
+            "n": 428,
+            "sum": 411.149999,
+            "avg": 0.960631,
+            "wins": 116,
+            "losses": 312,
+            "wr": 27.1028,
+            "avg_win": 6.577289,
+            "avg_loss": -1.127614,
+            "pf": 2.168652,
+            "runners_2": 63,
+            "runners_3": 54,
+            "runners_5": 36,
+            "runners_10": 21
+          },
+          "net_dd": 23.8979,
+          "yearly_gross": {
+            "2023": 139.466,
+            "2024": 110.812,
+            "2025": 119.601,
+            "2026": 153.34
+          },
+          "outcomes": {
+            "sl": 235,
+            "trail": 193
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 56.743,
+          "net": 52.200017,
+          "n": -26
+        }
+      }
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 130,
+            "sum": 476.481,
+            "avg": 3.665238,
+            "wins": 70,
+            "losses": 60,
+            "wr": 53.8462,
+            "avg_win": 7.535043,
+            "avg_loss": -0.849533,
+            "pf": 10.347897,
+            "runners_2": 40,
+            "runners_3": 34,
+            "runners_5": 27,
+            "runners_10": 14
+          },
+          "net": {
+            "n": 130,
+            "sum": 435.723866,
+            "avg": 3.351722,
+            "wins": 64,
+            "losses": 66,
+            "wr": 49.2308,
+            "avg_win": 7.844585,
+            "avg_loss": -1.004994,
+            "pf": 7.569074,
+            "runners_2": 38,
+            "runners_3": 33,
+            "runners_5": 25,
+            "runners_10": 14
+          },
+          "net_dd": 8.725339,
+          "yearly_gross": {
+            "2023": 95.65399999999998,
+            "2024": 179.875,
+            "2025": 95.26599999999999,
+            "2026": 105.68599999999999
+          },
+          "outcomes": {
+            "sl": 1,
+            "trail": 129
+          }
+        }
+      },
+      "half_delay1_original": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 117,
+            "sum": 466.466,
+            "avg": 3.986889,
+            "wins": 54,
+            "losses": 63,
+            "wr": 46.1538,
+            "avg_win": 9.624204,
+            "avg_loss": -0.845095,
+            "pf": 9.761406,
+            "runners_2": 34,
+            "runners_3": 31,
+            "runners_5": 21,
+            "runners_10": 15
+          },
+          "net": {
+            "n": 117,
+            "sum": 422.624722,
+            "avg": 3.612177,
+            "wins": 49,
+            "losses": 68,
+            "wr": 41.8803,
+            "avg_win": 10.046801,
+            "avg_loss": -1.024537,
+            "pf": 7.06622,
+            "runners_2": 32,
+            "runners_3": 28,
+            "runners_5": 20,
+            "runners_10": 14
+          },
+          "net_dd": 8.757339,
+          "yearly_gross": {
+            "2023": 117.99000000000001,
+            "2024": 159.705,
+            "2025": 70.80600000000001,
+            "2026": 117.965
+          },
+          "outcomes": {
+            "sl": 21,
+            "trail": 96
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": -10.015,
+          "net": -13.099144,
+          "n": -13
+        }
+      },
+      "half_delay1_strict_prevbar": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0,
+          "exp_trail_delay_prevbar": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 117,
+            "sum": 466.466,
+            "avg": 3.986889,
+            "wins": 54,
+            "losses": 63,
+            "wr": 46.1538,
+            "avg_win": 9.624204,
+            "avg_loss": -0.845095,
+            "pf": 9.761406,
+            "runners_2": 34,
+            "runners_3": 31,
+            "runners_5": 21,
+            "runners_10": 15
+          },
+          "net": {
+            "n": 117,
+            "sum": 422.624722,
+            "avg": 3.612177,
+            "wins": 49,
+            "losses": 68,
+            "wr": 41.8803,
+            "avg_win": 10.046801,
+            "avg_loss": -1.024537,
+            "pf": 7.06622,
+            "runners_2": 32,
+            "runners_3": 28,
+            "runners_5": 20,
+            "runners_10": 14
+          },
+          "net_dd": 8.757339,
+          "yearly_gross": {
+            "2023": 117.99000000000001,
+            "2024": 159.705,
+            "2025": 70.80600000000001,
+            "2026": 117.965
+          },
+          "outcomes": {
+            "sl": 21,
+            "trail": 96
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": -10.015,
+          "net": -13.099144,
+          "n": -13
+        }
+      }
+    }
+  },
+  "elapsed_sec": 117.871
+}

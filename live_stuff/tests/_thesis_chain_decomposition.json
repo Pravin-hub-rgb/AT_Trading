@@ -1,0 +1,2057 @@
+{
+  "study": 1,
+  "name": "chain decomposition of closed filter families",
+  "instrument": "BTCUSDT_BYBIT",
+  "scopes": {
+    "is": {
+      "champion_multi_sw10": {
+        "baseline": {
+          "n": 500,
+          "gross": 445.225,
+          "net": 325.7817
+        },
+        "families": {
+          "weekly_acceptance": {
+            "skip_back_inside": {
+              "n": 364,
+              "gross": 350.253,
+              "net": 269.177,
+              "decomposition": {
+                "removed_n": 169,
+                "removed_r": 78.736,
+                "removed_avg": 0.4659,
+                "removed_runners3": 15,
+                "added_n": 33,
+                "added_r": -16.236,
+                "added_avg": -0.492,
+                "common_entries": 331,
+                "dR_direct": -78.736,
+                "dR_added_chain": -16.236,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -94.972,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -56.6047,
+                "dR_direct": -78.736,
+                "dR_chain": -16.236
+              }
+            },
+            "accepted_now_only": {
+              "n": 158,
+              "gross": 123.547,
+              "net": 86.8101,
+              "decomposition": {
+                "removed_n": 362,
+                "removed_r": 308.085,
+                "removed_avg": 0.8511,
+                "removed_runners3": 39,
+                "added_n": 20,
+                "added_r": -13.593,
+                "added_avg": -0.6797,
+                "common_entries": 138,
+                "dR_direct": -308.085,
+                "dR_added_chain": -13.593,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -321.678,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -238.9716,
+                "dR_direct": -308.085,
+                "dR_chain": -13.593
+              }
+            }
+          },
+          "wage_gate": {
+            "6": {
+              "n": 454,
+              "gross": 404.748,
+              "net": 297.6725,
+              "decomposition": {
+                "removed_n": 75,
+                "removed_r": 28.119,
+                "removed_avg": 0.3749,
+                "removed_runners3": 8,
+                "added_n": 29,
+                "added_r": -12.358,
+                "added_avg": -0.4261,
+                "common_entries": 425,
+                "dR_direct": -28.119,
+                "dR_added_chain": -12.358,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -40.477,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -28.1092,
+                "dR_direct": -28.119,
+                "dR_chain": -12.358
+              }
+            },
+            "10": {
+              "n": 439,
+              "gross": 414.521,
+              "net": 308.6435,
+              "decomposition": {
+                "removed_n": 92,
+                "removed_r": 16.95,
+                "removed_avg": 0.1842,
+                "removed_runners3": 8,
+                "added_n": 31,
+                "added_r": -13.754,
+                "added_avg": -0.4437,
+                "common_entries": 408,
+                "dR_direct": -16.95,
+                "dR_added_chain": -13.754,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -30.704,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -17.1382,
+                "dR_direct": -16.95,
+                "dR_chain": -13.754
+              }
+            },
+            "12": {
+              "n": 429,
+              "gross": 395.555,
+              "net": 293.7287,
+              "decomposition": {
+                "removed_n": 102,
+                "removed_r": 28.256,
+                "removed_avg": 0.277,
+                "removed_runners3": 10,
+                "added_n": 31,
+                "added_r": -21.414,
+                "added_avg": -0.6908,
+                "common_entries": 398,
+                "dR_direct": -28.256,
+                "dR_added_chain": -21.414,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -49.67,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -32.0531,
+                "dR_direct": -28.256,
+                "dR_chain": -21.414
+              }
+            },
+            "24": {
+              "n": 362,
+              "gross": 328.277,
+              "net": 243.8922,
+              "decomposition": {
+                "removed_n": 173,
+                "removed_r": 101.803,
+                "removed_avg": 0.5885,
+                "removed_runners3": 17,
+                "added_n": 35,
+                "added_r": -15.145,
+                "added_avg": -0.4327,
+                "common_entries": 327,
+                "dR_direct": -101.803,
+                "dR_added_chain": -15.145,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -116.948,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -81.8895,
+                "dR_direct": -101.803,
+                "dR_chain": -15.145
+              }
+            }
+          },
+          "loss_triggered_window_kill": {
+            "n2_soft": {
+              "n": 489,
+              "gross": 414.662,
+              "net": 298.1048,
+              "decomposition": {
+                "removed_n": 13,
+                "removed_r": 28.61,
+                "removed_avg": 2.2008,
+                "removed_runners3": 3,
+                "added_n": 2,
+                "added_r": -1.953,
+                "added_avg": -0.9765,
+                "common_entries": 487,
+                "dR_direct": -28.61,
+                "dR_added_chain": -1.953,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -30.563,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -27.6769,
+                "dR_direct": -28.61,
+                "dR_chain": -1.953
+              }
+            },
+            "n3_soft": {
+              "n": 496,
+              "gross": 448.011,
+              "net": 328.9408,
+              "decomposition": {
+                "removed_n": 5,
+                "removed_r": -3.744,
+                "removed_avg": -0.7488,
+                "removed_runners3": 0,
+                "added_n": 1,
+                "added_r": -0.958,
+                "added_avg": -0.958,
+                "common_entries": 495,
+                "dR_direct": 3.744,
+                "dR_added_chain": -0.958,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 2.786,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": 3.1591,
+                "dR_direct": 3.744,
+                "dR_chain": -0.958
+              }
+            },
+            "n3_hard": {
+              "n": 496,
+              "gross": 448.011,
+              "net": 328.9408,
+              "decomposition": {
+                "removed_n": 5,
+                "removed_r": -3.744,
+                "removed_avg": -0.7488,
+                "removed_runners3": 0,
+                "added_n": 1,
+                "added_r": -0.958,
+                "added_avg": -0.958,
+                "common_entries": 495,
+                "dR_direct": 3.744,
+                "dR_added_chain": -0.958,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 2.786,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": 3.1591,
+                "dR_direct": 3.744,
+                "dR_chain": -0.958
+              }
+            }
+          },
+          "htf_window_budget": {
+            "cap1": {
+              "n": 183,
+              "gross": 41.073,
+              "net": 1.3072,
+              "decomposition": {
+                "removed_n": 346,
+                "removed_r": 390.65,
+                "removed_avg": 1.129,
+                "removed_runners3": 49,
+                "added_n": 29,
+                "added_r": -13.502,
+                "added_avg": -0.4656,
+                "common_entries": 154,
+                "dR_direct": -390.65,
+                "dR_added_chain": -13.502,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -404.152,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -324.4745,
+                "dR_direct": -390.65,
+                "dR_chain": -13.502
+              }
+            },
+            "cap2": {
+              "n": 273,
+              "gross": 97.06,
+              "net": 32.4955,
+              "decomposition": {
+                "removed_n": 262,
+                "removed_r": 326.104,
+                "removed_avg": 1.2447,
+                "removed_runners3": 38,
+                "added_n": 35,
+                "added_r": -22.061,
+                "added_avg": -0.6303,
+                "common_entries": 238,
+                "dR_direct": -326.104,
+                "dR_added_chain": -22.061,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -348.165,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -293.2863,
+                "dR_direct": -326.104,
+                "dR_chain": -22.061
+              }
+            },
+            "cap3": {
+              "n": 332,
+              "gross": 185.721,
+              "net": 107.6625,
+              "decomposition": {
+                "removed_n": 194,
+                "removed_r": 244.38,
+                "removed_avg": 1.2597,
+                "removed_runners3": 27,
+                "added_n": 26,
+                "added_r": -15.124,
+                "added_avg": -0.5817,
+                "common_entries": 306,
+                "dR_direct": -244.38,
+                "dR_added_chain": -15.124,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -259.504,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -218.1192,
+                "dR_direct": -244.38,
+                "dR_chain": -15.124
+              }
+            }
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "baseline": {
+          "n": 454,
+          "gross": 466.476,
+          "net": 358.95
+        },
+        "families": {
+          "weekly_acceptance": {
+            "skip_back_inside": {
+              "n": 339,
+              "gross": 337.729,
+              "net": 259.242,
+              "decomposition": {
+                "removed_n": 147,
+                "removed_r": 112.647,
+                "removed_avg": 0.7663,
+                "removed_runners3": 17,
+                "added_n": 32,
+                "added_r": -16.1,
+                "added_avg": -0.5031,
+                "common_entries": 307,
+                "dR_direct": -112.647,
+                "dR_added_chain": -16.1,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -128.747,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -99.708,
+                "dR_direct": -112.647,
+                "dR_chain": -16.1
+              }
+            },
+            "accepted_now_only": {
+              "n": 144,
+              "gross": 108.731,
+              "net": 77.4815,
+              "decomposition": {
+                "removed_n": 327,
+                "removed_r": 342.041,
+                "removed_avg": 1.046,
+                "removed_runners3": 40,
+                "added_n": 17,
+                "added_r": -15.704,
+                "added_avg": -0.9238,
+                "common_entries": 127,
+                "dR_direct": -342.041,
+                "dR_added_chain": -15.704,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -357.745,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -281.4685,
+                "dR_direct": -342.041,
+                "dR_chain": -15.704
+              }
+            }
+          },
+          "wage_gate": {
+            "6": {
+              "n": 418,
+              "gross": 419.195,
+              "net": 318.1068,
+              "decomposition": {
+                "removed_n": 63,
+                "removed_r": 33.472,
+                "removed_avg": 0.5313,
+                "removed_runners3": 7,
+                "added_n": 27,
+                "added_r": -13.809,
+                "added_avg": -0.5114,
+                "common_entries": 391,
+                "dR_direct": -33.472,
+                "dR_added_chain": -13.809,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -47.281,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -40.8432,
+                "dR_direct": -33.472,
+                "dR_chain": -13.809
+              }
+            },
+            "10": {
+              "n": 399,
+              "gross": 432.257,
+              "net": 334.0881,
+              "decomposition": {
+                "removed_n": 83,
+                "removed_r": 27.071,
+                "removed_avg": 0.3262,
+                "removed_runners3": 8,
+                "added_n": 28,
+                "added_r": -7.148,
+                "added_avg": -0.2553,
+                "common_entries": 371,
+                "dR_direct": -27.071,
+                "dR_added_chain": -7.148,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -34.219,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -24.8618,
+                "dR_direct": -27.071,
+                "dR_chain": -7.148
+              }
+            },
+            "12": {
+              "n": 393,
+              "gross": 446.651,
+              "net": 351.507,
+              "decomposition": {
+                "removed_n": 92,
+                "removed_r": 9.619,
+                "removed_avg": 0.1046,
+                "removed_runners3": 6,
+                "added_n": 31,
+                "added_r": -10.206,
+                "added_avg": -0.3292,
+                "common_entries": 362,
+                "dR_direct": -9.619,
+                "dR_added_chain": -10.206,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -19.825,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -7.443,
+                "dR_direct": -9.619,
+                "dR_chain": -10.206
+              }
+            },
+            "24": {
+              "n": 332,
+              "gross": 356.549,
+              "net": 276.8932,
+              "decomposition": {
+                "removed_n": 155,
+                "removed_r": 97.684,
+                "removed_avg": 0.6302,
+                "removed_runners3": 16,
+                "added_n": 33,
+                "added_r": -12.243,
+                "added_avg": -0.371,
+                "common_entries": 299,
+                "dR_direct": -97.684,
+                "dR_added_chain": -12.243,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -109.927,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -82.0567,
+                "dR_direct": -97.684,
+                "dR_chain": -12.243
+              }
+            }
+          },
+          "loss_triggered_window_kill": {
+            "n2_soft": {
+              "n": 441,
+              "gross": 429.553,
+              "net": 325.6759,
+              "decomposition": {
+                "removed_n": 14,
+                "removed_r": 35.928,
+                "removed_avg": 2.5663,
+                "removed_runners3": 4,
+                "added_n": 1,
+                "added_r": -0.995,
+                "added_avg": -0.995,
+                "common_entries": 440,
+                "dR_direct": -35.928,
+                "dR_added_chain": -0.995,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -36.923,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -33.2741,
+                "dR_direct": -35.928,
+                "dR_chain": -0.995
+              }
+            },
+            "n3_soft": {
+              "n": 450,
+              "gross": 469.222,
+              "net": 362.1657,
+              "decomposition": {
+                "removed_n": 4,
+                "removed_r": -2.746,
+                "removed_avg": -0.6865,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 450,
+                "dR_direct": 2.746,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 2.746,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_is_real_low_cascade",
+                "action": "candidate (cascade is small)",
+                "dNet": 3.2157,
+                "dR_direct": 2.746,
+                "dR_chain": 0.0
+              }
+            },
+            "n3_hard": {
+              "n": 450,
+              "gross": 469.222,
+              "net": 362.1657,
+              "decomposition": {
+                "removed_n": 4,
+                "removed_r": -2.746,
+                "removed_avg": -0.6865,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 450,
+                "dR_direct": 2.746,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 2.746,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_is_real_low_cascade",
+                "action": "candidate (cascade is small)",
+                "dNet": 3.2157,
+                "dR_direct": 2.746,
+                "dR_chain": 0.0
+              }
+            }
+          },
+          "htf_window_budget": {
+            "cap1": {
+              "n": 177,
+              "gross": -6.075,
+              "net": -40.439,
+              "decomposition": {
+                "removed_n": 297,
+                "removed_r": 463.319,
+                "removed_avg": 1.56,
+                "removed_runners3": 48,
+                "added_n": 20,
+                "added_r": -9.232,
+                "added_avg": -0.4616,
+                "common_entries": 157,
+                "dR_direct": -463.319,
+                "dR_added_chain": -9.232,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -472.551,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -399.389,
+                "dR_direct": -463.319,
+                "dR_chain": -9.232
+              }
+            },
+            "cap2": {
+              "n": 263,
+              "gross": 109.642,
+              "net": 53.6641,
+              "decomposition": {
+                "removed_n": 216,
+                "removed_r": 349.844,
+                "removed_avg": 1.6196,
+                "removed_runners3": 38,
+                "added_n": 25,
+                "added_r": -6.99,
+                "added_avg": -0.2796,
+                "common_entries": 238,
+                "dR_direct": -349.844,
+                "dR_added_chain": -6.99,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -356.834,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -305.2858,
+                "dR_direct": -349.844,
+                "dR_chain": -6.99
+              }
+            },
+            "cap3": {
+              "n": 314,
+              "gross": 183.578,
+              "net": 111.1837,
+              "decomposition": {
+                "removed_n": 160,
+                "removed_r": 266.907,
+                "removed_avg": 1.6682,
+                "removed_runners3": 26,
+                "added_n": 20,
+                "added_r": -15.991,
+                "added_avg": -0.7995,
+                "common_entries": 294,
+                "dR_direct": -266.907,
+                "dR_added_chain": -15.991,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -282.898,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -247.7663,
+                "dR_direct": -266.907,
+                "dR_chain": -15.991
+              }
+            }
+          }
+        }
+      },
+      "fullstack_wage10_cd0_single_sw10": {
+        "baseline": {
+          "n": 200,
+          "gross": 360.61,
+          "net": 310.7042
+        },
+        "families": {
+          "weekly_acceptance": {
+            "skip_back_inside": {
+              "n": 153,
+              "gross": 288.652,
+              "net": 249.5406,
+              "decomposition": {
+                "removed_n": 52,
+                "removed_r": 68.312,
+                "removed_avg": 1.3137,
+                "removed_runners3": 6,
+                "added_n": 5,
+                "added_r": -3.646,
+                "added_avg": -0.7292,
+                "common_entries": 148,
+                "dR_direct": -68.312,
+                "dR_added_chain": -3.646,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -71.958,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -61.1636,
+                "dR_direct": -68.312,
+                "dR_chain": -3.646
+              }
+            },
+            "accepted_now_only": {
+              "n": 61,
+              "gross": 58.33,
+              "net": 44.6022,
+              "decomposition": {
+                "removed_n": 149,
+                "removed_r": 305.382,
+                "removed_avg": 2.0495,
+                "removed_runners3": 24,
+                "added_n": 10,
+                "added_r": 3.102,
+                "added_avg": 0.3102,
+                "common_entries": 51,
+                "dR_direct": -305.382,
+                "dR_added_chain": 3.102,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -302.28,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -266.1019,
+                "dR_direct": -305.382,
+                "dR_chain": 3.102
+              }
+            }
+          },
+          "wage_gate": {
+            "6": {
+              "n": 207,
+              "gross": 353.61,
+              "net": 301.75,
+              "decomposition": {
+                "removed_n": 1,
+                "removed_r": -1.0,
+                "removed_avg": -1.0,
+                "removed_runners3": 0,
+                "added_n": 8,
+                "added_r": -8.0,
+                "added_avg": -1.0,
+                "common_entries": 199,
+                "dR_direct": 1.0,
+                "dR_added_chain": -8.0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -7.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -8.9541,
+                "dR_direct": 1.0,
+                "dR_chain": -8.0
+              }
+            },
+            "10": {
+              "n": 200,
+              "gross": 360.61,
+              "net": 310.7042,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 200,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            },
+            "12": {
+              "n": 195,
+              "gross": 353.754,
+              "net": 305.0829,
+              "decomposition": {
+                "removed_n": 8,
+                "removed_r": 9.152,
+                "removed_avg": 1.144,
+                "removed_runners3": 1,
+                "added_n": 3,
+                "added_r": 2.296,
+                "added_avg": 0.7653,
+                "common_entries": 192,
+                "dR_direct": -9.152,
+                "dR_added_chain": 2.296,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -6.856,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -5.6212,
+                "dR_direct": -9.152,
+                "dR_chain": 2.296
+              }
+            },
+            "24": {
+              "n": 168,
+              "gross": 304.413,
+              "net": 262.336,
+              "decomposition": {
+                "removed_n": 44,
+                "removed_r": 56.615,
+                "removed_avg": 1.2867,
+                "removed_runners3": 4,
+                "added_n": 12,
+                "added_r": 0.418,
+                "added_avg": 0.0348,
+                "common_entries": 156,
+                "dR_direct": -56.615,
+                "dR_added_chain": 0.418,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -56.197,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -48.3682,
+                "dR_direct": -56.615,
+                "dR_chain": 0.418
+              }
+            }
+          },
+          "loss_triggered_window_kill": {
+            "n2_soft": {
+              "n": 195,
+              "gross": 365.61,
+              "net": 316.8497,
+              "decomposition": {
+                "removed_n": 5,
+                "removed_r": -5.0,
+                "removed_avg": -1.0,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 195,
+                "dR_direct": 5.0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 5.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "filter_is_real_low_cascade",
+                "action": "candidate (cascade is small)",
+                "dNet": 6.1456,
+                "dR_direct": 5.0,
+                "dR_chain": 0.0
+              }
+            },
+            "n3_soft": {
+              "n": 200,
+              "gross": 360.61,
+              "net": 310.7042,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 200,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            },
+            "n3_hard": {
+              "n": 200,
+              "gross": 360.61,
+              "net": 310.7042,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 200,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            }
+          },
+          "htf_window_budget": {
+            "cap1": {
+              "n": 115,
+              "gross": 73.268,
+              "net": 45.4545,
+              "decomposition": {
+                "removed_n": 92,
+                "removed_r": 282.397,
+                "removed_avg": 3.0695,
+                "removed_runners3": 18,
+                "added_n": 7,
+                "added_r": -4.945,
+                "added_avg": -0.7064,
+                "common_entries": 108,
+                "dR_direct": -282.397,
+                "dR_added_chain": -4.945,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -287.342,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -265.2496,
+                "dR_direct": -282.397,
+                "dR_chain": -4.945
+              }
+            },
+            "cap2": {
+              "n": 154,
+              "gross": 149.733,
+              "net": 114.8306,
+              "decomposition": {
+                "removed_n": 49,
+                "removed_r": 210.134,
+                "removed_avg": 4.2884,
+                "removed_runners3": 12,
+                "added_n": 3,
+                "added_r": -0.743,
+                "added_avg": -0.2477,
+                "common_entries": 151,
+                "dR_direct": -210.134,
+                "dR_added_chain": -0.743,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -210.877,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -195.8736,
+                "dR_direct": -210.134,
+                "dR_chain": -0.743
+              }
+            },
+            "cap3": {
+              "n": 174,
+              "gross": 246.098,
+              "net": 201.8477,
+              "decomposition": {
+                "removed_n": 28,
+                "removed_r": 113.39,
+                "removed_avg": 4.0496,
+                "removed_runners3": 5,
+                "added_n": 2,
+                "added_r": -1.122,
+                "added_avg": -0.561,
+                "common_entries": 172,
+                "dR_direct": -113.39,
+                "dR_added_chain": -1.122,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -114.512,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -108.8564,
+                "dR_direct": -113.39,
+                "dR_chain": -1.122
+              }
+            }
+          }
+        }
+      }
+    },
+    "oos": {
+      "champion_multi_sw10": {
+        "baseline": {
+          "n": 279,
+          "gross": 105.725,
+          "net": 70.1505
+        },
+        "families": {
+          "weekly_acceptance": {
+            "skip_back_inside": {
+              "n": 223,
+              "gross": 92.075,
+              "net": 62.4168,
+              "decomposition": {
+                "removed_n": 79,
+                "removed_r": -3.227,
+                "removed_avg": -0.0408,
+                "removed_runners3": 5,
+                "added_n": 23,
+                "added_r": -16.877,
+                "added_avg": -0.7338,
+                "common_entries": 200,
+                "dR_direct": 3.227,
+                "dR_added_chain": -16.877,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -13.65,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -7.7336,
+                "dR_direct": 3.227,
+                "dR_chain": -16.877
+              }
+            },
+            "accepted_now_only": {
+              "n": 84,
+              "gross": 93.12,
+              "net": 82.8061,
+              "decomposition": {
+                "removed_n": 201,
+                "removed_r": 9.747,
+                "removed_avg": 0.0485,
+                "removed_runners3": 18,
+                "added_n": 6,
+                "added_r": -2.858,
+                "added_avg": -0.4763,
+                "common_entries": 78,
+                "dR_direct": -9.747,
+                "dR_added_chain": -2.858,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -12.605,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": 12.6557,
+                "dR_direct": -9.747,
+                "dR_chain": -2.858
+              }
+            }
+          },
+          "wage_gate": {
+            "6": {
+              "n": 265,
+              "gross": 103.595,
+              "net": 68.3481,
+              "decomposition": {
+                "removed_n": 27,
+                "removed_r": -3.872,
+                "removed_avg": -0.1434,
+                "removed_runners3": 1,
+                "added_n": 13,
+                "added_r": -6.002,
+                "added_avg": -0.4617,
+                "common_entries": 252,
+                "dR_direct": 3.872,
+                "dR_added_chain": -6.002,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -2.13,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -1.8024,
+                "dR_direct": 3.872,
+                "dR_chain": -6.002
+              }
+            },
+            "10": {
+              "n": 248,
+              "gross": 94.03,
+              "net": 59.6928,
+              "decomposition": {
+                "removed_n": 52,
+                "removed_r": -8.041,
+                "removed_avg": -0.1546,
+                "removed_runners3": 4,
+                "added_n": 21,
+                "added_r": -19.736,
+                "added_avg": -0.9398,
+                "common_entries": 227,
+                "dR_direct": 8.041,
+                "dR_added_chain": -19.736,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -11.695,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -10.4577,
+                "dR_direct": 8.041,
+                "dR_chain": -19.736
+              }
+            },
+            "12": {
+              "n": 245,
+              "gross": 89.467,
+              "net": 55.2314,
+              "decomposition": {
+                "removed_n": 58,
+                "removed_r": -6.041,
+                "removed_avg": -0.1042,
+                "removed_runners3": 5,
+                "added_n": 24,
+                "added_r": -22.299,
+                "added_avg": -0.9291,
+                "common_entries": 221,
+                "dR_direct": 6.041,
+                "dR_added_chain": -22.299,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -16.258,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -14.9191,
+                "dR_direct": 6.041,
+                "dR_chain": -22.299
+              }
+            },
+            "24": {
+              "n": 217,
+              "gross": 98.315,
+              "net": 67.171,
+              "decomposition": {
+                "removed_n": 86,
+                "removed_r": -12.632,
+                "removed_avg": -0.1469,
+                "removed_runners3": 7,
+                "added_n": 24,
+                "added_r": -20.042,
+                "added_avg": -0.8351,
+                "common_entries": 193,
+                "dR_direct": 12.632,
+                "dR_added_chain": -20.042,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -7.41,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -2.9794,
+                "dR_direct": 12.632,
+                "dR_chain": -20.042
+              }
+            }
+          },
+          "loss_triggered_window_kill": {
+            "n2_soft": {
+              "n": 270,
+              "gross": 92.546,
+              "net": 57.879,
+              "decomposition": {
+                "removed_n": 10,
+                "removed_r": 12.179,
+                "removed_avg": 1.2179,
+                "removed_runners3": 2,
+                "added_n": 1,
+                "added_r": -1.0,
+                "added_avg": -1.0,
+                "common_entries": 269,
+                "dR_direct": -12.179,
+                "dR_added_chain": -1.0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -13.179,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -12.2714,
+                "dR_direct": -12.179,
+                "dR_chain": -1.0
+              }
+            },
+            "n3_soft": {
+              "n": 279,
+              "gross": 105.725,
+              "net": 70.1505,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 279,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            },
+            "n3_hard": {
+              "n": 279,
+              "gross": 105.725,
+              "net": 70.1505,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 279,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            }
+          },
+          "htf_window_budget": {
+            "cap1": {
+              "n": 96,
+              "gross": 35.234,
+              "net": 23.0339,
+              "decomposition": {
+                "removed_n": 199,
+                "removed_r": 72.742,
+                "removed_avg": 0.3655,
+                "removed_runners3": 19,
+                "added_n": 16,
+                "added_r": 2.251,
+                "added_avg": 0.1407,
+                "common_entries": 80,
+                "dR_direct": -72.742,
+                "dR_added_chain": 2.251,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -70.491,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -47.1166,
+                "dR_direct": -72.742,
+                "dR_chain": 2.251
+              }
+            },
+            "cap2": {
+              "n": 148,
+              "gross": 88.955,
+              "net": 69.1636,
+              "decomposition": {
+                "removed_n": 150,
+                "removed_r": 9.278,
+                "removed_avg": 0.0619,
+                "removed_runners3": 11,
+                "added_n": 19,
+                "added_r": -7.492,
+                "added_avg": -0.3943,
+                "common_entries": 129,
+                "dR_direct": -9.278,
+                "dR_added_chain": -7.492,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -16.77,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -0.9868,
+                "dR_direct": -9.278,
+                "dR_chain": -7.492
+              }
+            },
+            "cap3": {
+              "n": 186,
+              "gross": 120.801,
+              "net": 95.8168,
+              "decomposition": {
+                "removed_n": 111,
+                "removed_r": -26.438,
+                "removed_avg": -0.2382,
+                "removed_runners3": 5,
+                "added_n": 18,
+                "added_r": -11.362,
+                "added_avg": -0.6312,
+                "common_entries": 168,
+                "dR_direct": 26.438,
+                "dR_added_chain": -11.362,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 15.076,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": 25.6664,
+                "dR_direct": 26.438,
+                "dR_chain": -11.362
+              }
+            }
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "baseline": {
+          "n": 253,
+          "gross": 92.641,
+          "net": 60.2062
+        },
+        "families": {
+          "weekly_acceptance": {
+            "skip_back_inside": {
+              "n": 206,
+              "gross": 84.25,
+              "net": 55.2697,
+              "decomposition": {
+                "removed_n": 64,
+                "removed_r": -0.128,
+                "removed_avg": -0.002,
+                "removed_runners3": 4,
+                "added_n": 17,
+                "added_r": -8.519,
+                "added_avg": -0.5011,
+                "common_entries": 189,
+                "dR_direct": 0.128,
+                "dR_added_chain": -8.519,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -8.391,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": -4.9365,
+                "dR_direct": 0.128,
+                "dR_chain": -8.519
+              }
+            },
+            "accepted_now_only": {
+              "n": 70,
+              "gross": 78.814,
+              "net": 70.045,
+              "decomposition": {
+                "removed_n": 188,
+                "removed_r": 11.815,
+                "removed_avg": 0.0628,
+                "removed_runners3": 18,
+                "added_n": 5,
+                "added_r": -2.012,
+                "added_avg": -0.4024,
+                "common_entries": 65,
+                "dR_direct": -11.815,
+                "dR_added_chain": -2.012,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -13.827,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": 9.8388,
+                "dR_direct": -11.815,
+                "dR_chain": -2.012
+              }
+            }
+          },
+          "wage_gate": {
+            "6": {
+              "n": 240,
+              "gross": 101.504,
+              "net": 69.1703,
+              "decomposition": {
+                "removed_n": 21,
+                "removed_r": -5.313,
+                "removed_avg": -0.253,
+                "removed_runners3": 1,
+                "added_n": 8,
+                "added_r": 3.55,
+                "added_avg": 0.4438,
+                "common_entries": 232,
+                "dR_direct": 5.313,
+                "dR_added_chain": 3.55,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 8.863,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 8.9641,
+                "dR_direct": 5.313,
+                "dR_chain": 3.55
+              }
+            },
+            "10": {
+              "n": 227,
+              "gross": 112.947,
+              "net": 80.758,
+              "decomposition": {
+                "removed_n": 44,
+                "removed_r": -17.968,
+                "removed_avg": -0.4084,
+                "removed_runners3": 3,
+                "added_n": 18,
+                "added_r": 2.338,
+                "added_avg": 0.1299,
+                "common_entries": 209,
+                "dR_direct": 17.968,
+                "dR_added_chain": 2.338,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 20.306,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_is_real_low_cascade",
+                "action": "candidate (cascade is small)",
+                "dNet": 20.5518,
+                "dR_direct": 17.968,
+                "dR_chain": 2.338
+              }
+            },
+            "12": {
+              "n": 225,
+              "gross": 109.608,
+              "net": 77.5834,
+              "decomposition": {
+                "removed_n": 47,
+                "removed_r": -15.623,
+                "removed_avg": -0.3324,
+                "removed_runners3": 4,
+                "added_n": 19,
+                "added_r": 1.344,
+                "added_avg": 0.0707,
+                "common_entries": 206,
+                "dR_direct": 15.623,
+                "dR_added_chain": 1.344,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 16.967,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_is_real_low_cascade",
+                "action": "candidate (cascade is small)",
+                "dNet": 17.3772,
+                "dR_direct": 15.623,
+                "dR_chain": 1.344
+              }
+            },
+            "24": {
+              "n": 198,
+              "gross": 93.048,
+              "net": 65.004,
+              "decomposition": {
+                "removed_n": 74,
+                "removed_r": -2.106,
+                "removed_avg": -0.0285,
+                "removed_runners3": 8,
+                "added_n": 19,
+                "added_r": -1.699,
+                "added_avg": -0.0894,
+                "common_entries": 179,
+                "dR_direct": 2.106,
+                "dR_added_chain": -1.699,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.407,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": 4.7977,
+                "dR_direct": 2.106,
+                "dR_chain": -1.699
+              }
+            }
+          },
+          "loss_triggered_window_kill": {
+            "n2_soft": {
+              "n": 237,
+              "gross": 93.954,
+              "net": 62.9339,
+              "decomposition": {
+                "removed_n": 18,
+                "removed_r": -3.313,
+                "removed_avg": -0.1841,
+                "removed_runners3": 0,
+                "added_n": 2,
+                "added_r": -2.0,
+                "added_avg": -1.0,
+                "common_entries": 235,
+                "dR_direct": 3.313,
+                "dR_added_chain": -2.0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 1.313,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": 2.7277,
+                "dR_direct": 3.313,
+                "dR_chain": -2.0
+              }
+            },
+            "n3_soft": {
+              "n": 253,
+              "gross": 92.641,
+              "net": 60.2062,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 253,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            },
+            "n3_hard": {
+              "n": 253,
+              "gross": 92.641,
+              "net": 60.2062,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 253,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            }
+          },
+          "htf_window_budget": {
+            "cap1": {
+              "n": 91,
+              "gross": 38.912,
+              "net": 27.3155,
+              "decomposition": {
+                "removed_n": 171,
+                "removed_r": 69.654,
+                "removed_avg": 0.4073,
+                "removed_runners3": 16,
+                "added_n": 9,
+                "added_r": 15.925,
+                "added_avg": 1.7694,
+                "common_entries": 82,
+                "dR_direct": -69.654,
+                "dR_added_chain": 15.925,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -53.729,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -32.8907,
+                "dR_direct": -69.654,
+                "dR_chain": 15.925
+              }
+            },
+            "cap2": {
+              "n": 142,
+              "gross": 80.034,
+              "net": 61.3933,
+              "decomposition": {
+                "removed_n": 120,
+                "removed_r": 7.232,
+                "removed_avg": 0.0603,
+                "removed_runners3": 8,
+                "added_n": 9,
+                "added_r": -5.375,
+                "added_avg": -0.5972,
+                "common_entries": 133,
+                "dR_direct": -7.232,
+                "dR_added_chain": -5.375,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -12.607,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": 1.1871,
+                "dR_direct": -7.232,
+                "dR_chain": -5.375
+              }
+            },
+            "cap3": {
+              "n": 172,
+              "gross": 121.444,
+              "net": 98.4149,
+              "decomposition": {
+                "removed_n": 94,
+                "removed_r": -20.272,
+                "removed_avg": -0.2157,
+                "removed_runners3": 3,
+                "added_n": 13,
+                "added_r": 8.531,
+                "added_avg": 0.6562,
+                "common_entries": 159,
+                "dR_direct": 20.272,
+                "dR_added_chain": 8.531,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 28.803,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 38.2087,
+                "dR_direct": 20.272,
+                "dR_chain": 8.531
+              }
+            }
+          }
+        }
+      },
+      "fullstack_wage10_cd0_single_sw10": {
+        "baseline": {
+          "n": 140,
+          "gross": 38.04,
+          "net": 16.8978
+        },
+        "families": {
+          "weekly_acceptance": {
+            "skip_back_inside": {
+              "n": 115,
+              "gross": 23.276,
+              "net": 5.5269,
+              "decomposition": {
+                "removed_n": 31,
+                "removed_r": 22.25,
+                "removed_avg": 0.7177,
+                "removed_runners3": 4,
+                "added_n": 6,
+                "added_r": 7.486,
+                "added_avg": 1.2477,
+                "common_entries": 109,
+                "dR_direct": -22.25,
+                "dR_added_chain": 7.486,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -14.764,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -11.3709,
+                "dR_direct": -22.25,
+                "dR_chain": 7.486
+              }
+            },
+            "accepted_now_only": {
+              "n": 40,
+              "gross": 41.77,
+              "net": 36.7792,
+              "decomposition": {
+                "removed_n": 108,
+                "removed_r": -2.705,
+                "removed_avg": -0.025,
+                "removed_runners3": 9,
+                "added_n": 8,
+                "added_r": 1.025,
+                "added_avg": 0.1281,
+                "common_entries": 32,
+                "dR_direct": 2.705,
+                "dR_added_chain": 1.025,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 3.73,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 19.8814,
+                "dR_direct": 2.705,
+                "dR_chain": 1.025
+              }
+            }
+          },
+          "wage_gate": {
+            "6": {
+              "n": 143,
+              "gross": 41.428,
+              "net": 19.7566,
+              "decomposition": {
+                "removed_n": 7,
+                "removed_r": -5.841,
+                "removed_avg": -0.8344,
+                "removed_runners3": 0,
+                "added_n": 10,
+                "added_r": -2.453,
+                "added_avg": -0.2453,
+                "common_entries": 133,
+                "dR_direct": 5.841,
+                "dR_added_chain": -2.453,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 3.388,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "filter_real_but_cascades_hard",
+                "action": "candidate only if chain-aware re-test is cheap",
+                "dNet": 2.8588,
+                "dR_direct": 5.841,
+                "dR_chain": -2.453
+              }
+            },
+            "10": {
+              "n": 140,
+              "gross": 38.04,
+              "net": 16.8978,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 140,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            },
+            "12": {
+              "n": 137,
+              "gross": 30.862,
+              "net": 9.9391,
+              "decomposition": {
+                "removed_n": 4,
+                "removed_r": 6.183,
+                "removed_avg": 1.5457,
+                "removed_runners3": 1,
+                "added_n": 1,
+                "added_r": -0.995,
+                "added_avg": -0.995,
+                "common_entries": 136,
+                "dR_direct": -6.183,
+                "dR_added_chain": -0.995,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -7.178,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -6.9587,
+                "dR_direct": -6.183,
+                "dR_chain": -0.995
+              }
+            },
+            "24": {
+              "n": 118,
+              "gross": 43.655,
+              "net": 25.0448,
+              "decomposition": {
+                "removed_n": 28,
+                "removed_r": 0.029,
+                "removed_avg": 0.001,
+                "removed_runners3": 2,
+                "added_n": 6,
+                "added_r": 5.644,
+                "added_avg": 0.9407,
+                "common_entries": 112,
+                "dR_direct": -0.029,
+                "dR_added_chain": 5.644,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 5.615,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": 8.147,
+                "dR_direct": -0.029,
+                "dR_chain": 5.644
+              }
+            }
+          },
+          "loss_triggered_window_kill": {
+            "n2_soft": {
+              "n": 138,
+              "gross": 26.861,
+              "net": 6.2107,
+              "decomposition": {
+                "removed_n": 3,
+                "removed_r": 10.183,
+                "removed_avg": 3.3943,
+                "removed_runners3": 1,
+                "added_n": 1,
+                "added_r": -0.996,
+                "added_avg": -0.996,
+                "common_entries": 137,
+                "dR_direct": -10.183,
+                "dR_added_chain": -0.996,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -11.179,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -10.687,
+                "dR_direct": -10.183,
+                "dR_chain": -0.996
+              }
+            },
+            "n3_soft": {
+              "n": 140,
+              "gross": 38.04,
+              "net": 16.8978,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 140,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            },
+            "n3_hard": {
+              "n": 140,
+              "gross": 38.04,
+              "net": 16.8978,
+              "decomposition": {
+                "removed_n": 0,
+                "removed_r": 0,
+                "removed_avg": null,
+                "removed_runners3": 0,
+                "added_n": 0,
+                "added_r": 0,
+                "added_avg": null,
+                "common_entries": 140,
+                "dR_direct": 0,
+                "dR_added_chain": 0,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": 0.0,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "inconclusive",
+                "action": "needs more data",
+                "dNet": 0.0,
+                "dR_direct": 0,
+                "dR_chain": 0.0
+              }
+            }
+          },
+          "htf_window_budget": {
+            "cap1": {
+              "n": 80,
+              "gross": 27.663,
+              "net": 15.8171,
+              "decomposition": {
+                "removed_n": 65,
+                "removed_r": 11.054,
+                "removed_avg": 0.1701,
+                "removed_runners3": 6,
+                "added_n": 5,
+                "added_r": 0.677,
+                "added_avg": 0.1354,
+                "common_entries": 75,
+                "dR_direct": -11.054,
+                "dR_added_chain": 0.677,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -10.377,
+                "identity_check": -0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -1.0806,
+                "dR_direct": -11.054,
+                "dR_chain": 0.677
+              }
+            },
+            "cap2": {
+              "n": 112,
+              "gross": 29.607,
+              "net": 13.7438,
+              "decomposition": {
+                "removed_n": 32,
+                "removed_r": 8.764,
+                "removed_avg": 0.2739,
+                "removed_runners3": 3,
+                "added_n": 4,
+                "added_r": 0.331,
+                "added_avg": 0.0827,
+                "common_entries": 108,
+                "dR_direct": -8.764,
+                "dR_added_chain": 0.331,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -8.433,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": -3.154,
+                "dR_direct": -8.764,
+                "dR_chain": 0.331
+              }
+            },
+            "cap3": {
+              "n": 132,
+              "gross": 36.801,
+              "net": 17.1641,
+              "decomposition": {
+                "removed_n": 11,
+                "removed_r": 1.192,
+                "removed_avg": 0.1084,
+                "removed_runners3": 0,
+                "added_n": 3,
+                "added_r": -0.047,
+                "added_avg": -0.0157,
+                "common_entries": 129,
+                "dR_direct": -1.192,
+                "dR_added_chain": -0.047,
+                "dR_common_rerisked": 0.0,
+                "dR_total_gross": -1.239,
+                "identity_check": 0.0
+              },
+              "verdict": {
+                "class": "removed_bucket_already_negative",
+                "action": "CLOSE family permanently",
+                "dNet": 0.2663,
+                "dR_direct": -1.192,
+                "dR_chain": -0.047
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

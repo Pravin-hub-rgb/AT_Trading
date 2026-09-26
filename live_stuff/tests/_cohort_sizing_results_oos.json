@@ -1,0 +1,357 @@
+{
+  "is": {
+    "scope": "is",
+    "configs": {
+      "champion_multi_sw10": {
+        "flat": {
+          "n": 500,
+          "baseline_net": 325.7817,
+          "weighted_net": 325.7817,
+          "delta_net": 0.0,
+          "baseline_gross": 445.225,
+          "weighted_gross": 445.225,
+          "dNet_yr": 0.0,
+          "identity_ok": true,
+          "weights_hist": {
+            "1.0": 500
+          }
+        },
+        "elite_poison": {
+          "n": 500,
+          "baseline_net": 325.7817,
+          "weighted_net": 439.6316,
+          "delta_net": 113.8499,
+          "baseline_gross": 445.225,
+          "weighted_gross": 578.8435,
+          "dNet_yr": 31.0218,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 79,
+            "1.0": 192,
+            "1.5": 229
+          }
+        },
+        "full_map": {
+          "n": 500,
+          "baseline_net": 325.7817,
+          "weighted_net": 469.4253,
+          "delta_net": 143.6436,
+          "baseline_gross": 445.225,
+          "weighted_gross": 615.1535,
+          "dNet_yr": 39.1399,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 79,
+            "1.0": 135,
+            "1.5": 286
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "flat": {
+          "n": 454,
+          "baseline_net": 358.95,
+          "weighted_net": 358.95,
+          "delta_net": 0.0,
+          "baseline_gross": 466.476,
+          "weighted_gross": 466.476,
+          "dNet_yr": 0.0,
+          "identity_ok": true,
+          "weights_hist": {
+            "1.0": 454
+          }
+        },
+        "elite_poison": {
+          "n": 454,
+          "baseline_net": 358.95,
+          "weighted_net": 477.4775,
+          "delta_net": 118.5275,
+          "baseline_gross": 466.476,
+          "weighted_gross": 602.543,
+          "dNet_yr": 32.2963,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 76,
+            "1.0": 185,
+            "1.5": 193
+          }
+        },
+        "full_map": {
+          "n": 454,
+          "baseline_net": 358.95,
+          "weighted_net": 489.1682,
+          "delta_net": 130.2182,
+          "baseline_gross": 466.476,
+          "weighted_gross": 619.438,
+          "dNet_yr": 35.4818,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 76,
+            "1.0": 141,
+            "1.5": 237
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "flat": {
+          "n": 130,
+          "baseline_net": 435.7239,
+          "weighted_net": 435.7239,
+          "delta_net": 0.0,
+          "baseline_gross": 476.481,
+          "weighted_gross": 476.481,
+          "dNet_yr": 0.0,
+          "identity_ok": true,
+          "weights_hist": {
+            "1.0": 130
+          }
+        },
+        "elite_poison": {
+          "n": 130,
+          "baseline_net": 435.7239,
+          "weighted_net": 460.4868,
+          "delta_net": 24.7629,
+          "baseline_gross": 476.481,
+          "weighted_gross": 501.305,
+          "dNet_yr": 6.7474,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 17,
+            "1.0": 101,
+            "1.5": 12
+          }
+        },
+        "full_map": {
+          "n": 130,
+          "baseline_net": 435.7239,
+          "weighted_net": 460.4868,
+          "delta_net": 24.7629,
+          "baseline_gross": 476.481,
+          "weighted_gross": 501.305,
+          "dNet_yr": 6.7474,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 17,
+            "1.0": 101,
+            "1.5": 12
+          }
+        }
+      }
+    }
+  },
+  "oos": {
+    "scope": "oos",
+    "configs": {
+      "champion_multi_sw10": {
+        "flat": {
+          "n": 279,
+          "baseline_net": 70.1505,
+          "weighted_net": 70.1505,
+          "delta_net": 0.0,
+          "baseline_gross": 105.725,
+          "weighted_gross": 105.725,
+          "dNet_yr": 0.0,
+          "identity_ok": true,
+          "weights_hist": {
+            "1.0": 279
+          }
+        },
+        "elite_poison": {
+          "n": 279,
+          "baseline_net": 70.1505,
+          "weighted_net": 46.1521,
+          "delta_net": -23.9983,
+          "baseline_gross": 105.725,
+          "weighted_gross": 87.6795,
+          "dNet_yr": -11.9992,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 45,
+            "1.0": 92,
+            "1.5": 142
+          }
+        },
+        "full_map": {
+          "n": 279,
+          "baseline_net": 70.1505,
+          "weighted_net": 41.7716,
+          "delta_net": -28.3788,
+          "baseline_gross": 105.725,
+          "weighted_gross": 85.081,
+          "dNet_yr": -14.1894,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 45,
+            "1.0": 62,
+            "1.5": 172
+          }
+        }
+      },
+      "utcsat_multi_sw10": {
+        "flat": {
+          "n": 253,
+          "baseline_net": 60.2062,
+          "weighted_net": 60.2062,
+          "delta_net": 0.0,
+          "baseline_gross": 92.641,
+          "weighted_gross": 92.641,
+          "dNet_yr": 0.0,
+          "identity_ok": true,
+          "weights_hist": {
+            "1.0": 253
+          }
+        },
+        "elite_poison": {
+          "n": 253,
+          "baseline_net": 60.2062,
+          "weighted_net": 28.6318,
+          "delta_net": -31.5744,
+          "baseline_gross": 92.641,
+          "weighted_gross": 63.964,
+          "dNet_yr": -15.7872,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 42,
+            "1.0": 102,
+            "1.5": 109
+          }
+        },
+        "full_map": {
+          "n": 253,
+          "baseline_net": 60.2062,
+          "weighted_net": 24.7157,
+          "delta_net": -35.4905,
+          "baseline_gross": 92.641,
+          "weighted_gross": 61.9445,
+          "dNet_yr": -17.7452,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 42,
+            "1.0": 72,
+            "1.5": 139
+          }
+        }
+      },
+      "age10_dirmatch_swingpause_single_sw10": {
+        "flat": {
+          "n": 76,
+          "baseline_net": 43.2236,
+          "weighted_net": 43.2236,
+          "delta_net": 0.0,
+          "baseline_gross": 54.856,
+          "weighted_gross": 54.856,
+          "dNet_yr": 0.0,
+          "identity_ok": true,
+          "weights_hist": {
+            "1.0": 76
+          }
+        },
+        "elite_poison": {
+          "n": 76,
+          "baseline_net": 43.2236,
+          "weighted_net": 50.0995,
+          "delta_net": 6.8759,
+          "baseline_gross": 54.856,
+          "weighted_gross": 61.7125,
+          "dNet_yr": 3.4379,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 11,
+            "1.0": 52,
+            "1.5": 13
+          }
+        },
+        "full_map": {
+          "n": 76,
+          "baseline_net": 43.2236,
+          "weighted_net": 50.0995,
+          "delta_net": 6.8759,
+          "baseline_gross": 54.856,
+          "weighted_gross": 61.7125,
+          "dNet_yr": 3.4379,
+          "identity_ok": true,
+          "weights_hist": {
+            "0.5": 11,
+            "1.0": 52,
+            "1.5": 13
+          }
+        }
+      }
+    }
+  },
+  "instrument": "BTCUSDT_BYBIT",
+  "maps": [
+    "flat",
+    "elite_poison",
+    "full_map"
+  ],
+  "identity": "entry/exit/ts/r sequence identical to baseline",
+  "ship_bar": "dNet/yr >= +30 both sides",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "verdicts": {
+    "champion_multi_sw10": {
+      "flat": {
+        "dNet_yr_is": 0.0,
+        "dNet_yr_oos": 0.0,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "elite_poison": {
+        "dNet_yr_is": 31.0218,
+        "dNet_yr_oos": -11.9992,
+        "ship": false,
+        "reason": "OOS HURT"
+      },
+      "full_map": {
+        "dNet_yr_is": 39.1399,
+        "dNet_yr_oos": -14.1894,
+        "ship": false,
+        "reason": "OOS HURT"
+      }
+    },
+    "utcsat_multi_sw10": {
+      "flat": {
+        "dNet_yr_is": 0.0,
+        "dNet_yr_oos": 0.0,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "elite_poison": {
+        "dNet_yr_is": 32.2963,
+        "dNet_yr_oos": -15.7872,
+        "ship": false,
+        "reason": "OOS HURT"
+      },
+      "full_map": {
+        "dNet_yr_is": 35.4818,
+        "dNet_yr_oos": -17.7452,
+        "ship": false,
+        "reason": "OOS HURT"
+      }
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+      "flat": {
+        "dNet_yr_is": 0.0,
+        "dNet_yr_oos": 0.0,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "elite_poison": {
+        "dNet_yr_is": 6.7474,
+        "dNet_yr_oos": 3.4379,
+        "ship": false,
+        "reason": "BELOW BAR"
+      },
+      "full_map": {
+        "dNet_yr_is": 6.7474,
+        "dNet_yr_oos": 3.4379,
+        "ship": false,
+        "reason": "BELOW BAR"
+      }
+    }
+  },
+  "elapsed_sec": 127.5
+}

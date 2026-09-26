@@ -1,0 +1,484 @@
+{
+  "stage": 6,
+  "instrument": "BTCUSDT_BYBIT",
+  "blocks": [
+    60,
+    240,
+    1440
+  ],
+  "seeds": [
+    1701,
+    2701,
+    3701
+  ],
+  "scopes": {
+    "oos": {
+      "champion_multi_sw10": {
+        "real_summary": {
+          "n": 279,
+          "sum_r": 105.725,
+          "avg_r": 0.378943,
+          "wr": 27.957,
+          "wins": 78,
+          "losses": 201,
+          "avg_win": 3.6493,
+          "avg_loss": -0.8901,
+          "payoff": 4.0997,
+          "pf": 1.5909,
+          "dd": 37.342,
+          "max_loss_streak": 15,
+          "max_win_streak": 5,
+          "std": 3.369468,
+          "median": -0.997
+        },
+        "real_path_validation": {
+          "n_compared": 279,
+          "exact_count": 279,
+          "max_abs_error_r": 0.0007608218117525212,
+          "mean_abs_error_r": 0.00016766594017748437,
+          "real_replay_summary": {
+            "n": 279,
+            "sum_r": 105.7327,
+            "avg_r": 0.37897,
+            "wr": 27.957,
+            "wins": 78,
+            "losses": 201,
+            "avg_win": 3.6493,
+            "avg_loss": -0.8901,
+            "payoff": 4.0998,
+            "pf": 1.591,
+            "dd": 37.3385,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "std": 3.3695,
+            "median": -0.997221
+          }
+        },
+        "synthetic": [
+          {
+            "block_bars": 60,
+            "seed": 1701,
+            "summary": {
+              "n": 279,
+              "sum_r": -27.471,
+              "avg_r": -0.098463,
+              "wr": 40.143,
+              "wins": 112,
+              "losses": 167,
+              "avg_win": 0.4905,
+              "avg_loss": -0.4935,
+              "payoff": 0.994,
+              "pf": 0.6667,
+              "dd": 39.7198,
+              "max_loss_streak": 9,
+              "max_win_streak": 5,
+              "std": 1.082216,
+              "median": -0.09294
+            }
+          },
+          {
+            "block_bars": 60,
+            "seed": 2701,
+            "summary": {
+              "n": 279,
+              "sum_r": -50.5659,
+              "avg_r": -0.18124,
+              "wr": 35.484,
+              "wins": 99,
+              "losses": 180,
+              "avg_win": 0.3239,
+              "avg_loss": -0.4591,
+              "payoff": 0.7056,
+              "pf": 0.3881,
+              "dd": 50.7442,
+              "max_loss_streak": 9,
+              "max_win_streak": 6,
+              "std": 0.529978,
+              "median": -0.131542
+            }
+          },
+          {
+            "block_bars": 60,
+            "seed": 3701,
+            "summary": {
+              "n": 279,
+              "sum_r": -48.7008,
+              "avg_r": -0.174555,
+              "wr": 36.918,
+              "wins": 103,
+              "losses": 176,
+              "avg_win": 0.3054,
+              "avg_loss": -0.4555,
+              "payoff": 0.6706,
+              "pf": 0.3925,
+              "dd": 48.7678,
+              "max_loss_streak": 10,
+              "max_win_streak": 7,
+              "std": 0.526115,
+              "median": -0.086602
+            }
+          },
+          {
+            "block_bars": 240,
+            "seed": 1701,
+            "summary": {
+              "n": 279,
+              "sum_r": -82.7973,
+              "avg_r": -0.296764,
+              "wr": 32.258,
+              "wins": 90,
+              "losses": 189,
+              "avg_win": 0.5598,
+              "avg_loss": -0.7047,
+              "payoff": 0.7944,
+              "pf": 0.3783,
+              "dd": 85.1311,
+              "max_loss_streak": 15,
+              "max_win_streak": 4,
+              "std": 0.804973,
+              "median": -0.334896
+            }
+          },
+          {
+            "block_bars": 240,
+            "seed": 2701,
+            "summary": {
+              "n": 279,
+              "sum_r": -87.1312,
+              "avg_r": -0.312298,
+              "wr": 31.183,
+              "wins": 87,
+              "losses": 192,
+              "avg_win": 0.5313,
+              "avg_loss": -0.6946,
+              "payoff": 0.765,
+              "pf": 0.3466,
+              "dd": 87.4597,
+              "max_loss_streak": 22,
+              "max_win_streak": 4,
+              "std": 0.82241,
+              "median": -0.335429
+            }
+          },
+          {
+            "block_bars": 240,
+            "seed": 3701,
+            "summary": {
+              "n": 279,
+              "sum_r": -74.4728,
+              "avg_r": -0.266928,
+              "wr": 27.957,
+              "wins": 78,
+              "losses": 201,
+              "avg_win": 0.7674,
+              "avg_loss": -0.6683,
+              "payoff": 1.1483,
+              "pf": 0.4456,
+              "dd": 76.411,
+              "max_loss_streak": 19,
+              "max_win_streak": 4,
+              "std": 1.022931,
+              "median": -0.388191
+            }
+          },
+          {
+            "block_bars": 1440,
+            "seed": 1701,
+            "summary": {
+              "n": 279,
+              "sum_r": -46.3974,
+              "avg_r": -0.166299,
+              "wr": 24.014,
+              "wins": 67,
+              "losses": 212,
+              "avg_win": 2.1215,
+              "avg_loss": -0.8893,
+              "payoff": 2.3855,
+              "pf": 0.7539,
+              "dd": 54.7631,
+              "max_loss_streak": 13,
+              "max_win_streak": 3,
+              "std": 1.871581,
+              "median": -0.997221
+            }
+          },
+          {
+            "block_bars": 1440,
+            "seed": 2701,
+            "summary": {
+              "n": 279,
+              "sum_r": -31.2094,
+              "avg_r": -0.111862,
+              "wr": 25.448,
+              "wins": 71,
+              "losses": 208,
+              "avg_win": 2.2375,
+              "avg_loss": -0.9138,
+              "payoff": 2.4486,
+              "pf": 0.8358,
+              "dd": 61.3935,
+              "max_loss_streak": 14,
+              "max_win_streak": 4,
+              "std": 1.908933,
+              "median": -0.997503
+            }
+          },
+          {
+            "block_bars": 1440,
+            "seed": 3701,
+            "summary": {
+              "n": 279,
+              "sum_r": -62.3579,
+              "avg_r": -0.223505,
+              "wr": 24.373,
+              "wins": 68,
+              "losses": 211,
+              "avg_win": 1.8914,
+              "avg_loss": -0.9051,
+              "payoff": 2.0898,
+              "pf": 0.6735,
+              "dd": 71.0983,
+              "max_loss_streak": 13,
+              "max_win_streak": 3,
+              "std": 1.710194,
+              "median": -0.997602
+            }
+          }
+        ]
+      },
+      "utcsat_multi_sw10": {
+        "real_summary": {
+          "n": 253,
+          "sum_r": 92.641,
+          "avg_r": 0.36617,
+          "wr": 29.644,
+          "wins": 75,
+          "losses": 178,
+          "avg_win": 3.3806,
+          "avg_loss": -0.9039,
+          "payoff": 3.7398,
+          "pf": 1.5758,
+          "dd": 22.127,
+          "max_loss_streak": 9,
+          "max_win_streak": 3,
+          "std": 3.326125,
+          "median": -0.997
+        },
+        "real_path_validation": {
+          "n_compared": 253,
+          "exact_count": 253,
+          "max_abs_error_r": 0.0007608218117525212,
+          "mean_abs_error_r": 0.00016617759972208627,
+          "real_replay_summary": {
+            "n": 253,
+            "sum_r": 92.6466,
+            "avg_r": 0.366192,
+            "wr": 29.644,
+            "wins": 75,
+            "losses": 178,
+            "avg_win": 3.3806,
+            "avg_loss": -0.9039,
+            "payoff": 3.7399,
+            "pf": 1.5758,
+            "dd": 22.1257,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "std": 3.326159,
+            "median": -0.997484
+          }
+        },
+        "synthetic": [
+          {
+            "block_bars": 60,
+            "seed": 1701,
+            "summary": {
+              "n": 253,
+              "sum_r": -44.9589,
+              "avg_r": -0.177703,
+              "wr": 30.04,
+              "wins": 76,
+              "losses": 177,
+              "avg_win": 0.4311,
+              "avg_loss": -0.4391,
+              "payoff": 0.9817,
+              "pf": 0.4215,
+              "dd": 48.6543,
+              "max_loss_streak": 13,
+              "max_win_streak": 4,
+              "std": 0.668182,
+              "median": -0.14109
+            }
+          },
+          {
+            "block_bars": 60,
+            "seed": 2701,
+            "summary": {
+              "n": 253,
+              "sum_r": -52.172,
+              "avg_r": -0.206213,
+              "wr": 37.549,
+              "wins": 95,
+              "losses": 158,
+              "avg_win": 0.2592,
+              "avg_loss": -0.486,
+              "payoff": 0.5332,
+              "pf": 0.3206,
+              "dd": 52.4866,
+              "max_loss_streak": 9,
+              "max_win_streak": 4,
+              "std": 0.500761,
+              "median": -0.098113
+            }
+          },
+          {
+            "block_bars": 60,
+            "seed": 3701,
+            "summary": {
+              "n": 253,
+              "sum_r": -45.7912,
+              "avg_r": -0.180993,
+              "wr": 37.154,
+              "wins": 94,
+              "losses": 159,
+              "avg_win": 0.3045,
+              "avg_loss": -0.468,
+              "payoff": 0.6506,
+              "pf": 0.3846,
+              "dd": 47.1742,
+              "max_loss_streak": 10,
+              "max_win_streak": 5,
+              "std": 0.508258,
+              "median": -0.107935
+            }
+          },
+          {
+            "block_bars": 240,
+            "seed": 1701,
+            "summary": {
+              "n": 253,
+              "sum_r": -84.1258,
+              "avg_r": -0.332513,
+              "wr": 29.249,
+              "wins": 74,
+              "losses": 179,
+              "avg_win": 0.6114,
+              "avg_loss": -0.7227,
+              "payoff": 0.8459,
+              "pf": 0.3497,
+              "dd": 84.1258,
+              "max_loss_streak": 12,
+              "max_win_streak": 5,
+              "std": 0.818426,
+              "median": -0.44393
+            }
+          },
+          {
+            "block_bars": 240,
+            "seed": 2701,
+            "summary": {
+              "n": 253,
+              "sum_r": -52.5159,
+              "avg_r": -0.207573,
+              "wr": 26.482,
+              "wins": 67,
+              "losses": 186,
+              "avg_win": 1.0556,
+              "avg_loss": -0.6626,
+              "payoff": 1.5931,
+              "pf": 0.5739,
+              "dd": 65.7261,
+              "max_loss_streak": 16,
+              "max_win_streak": 4,
+              "std": 1.368363,
+              "median": -0.341765
+            }
+          },
+          {
+            "block_bars": 240,
+            "seed": 3701,
+            "summary": {
+              "n": 253,
+              "sum_r": -88.0264,
+              "avg_r": -0.34793,
+              "wr": 30.83,
+              "wins": 78,
+              "losses": 175,
+              "avg_win": 0.5326,
+              "avg_loss": -0.7404,
+              "payoff": 0.7193,
+              "pf": 0.3206,
+              "dd": 88.164,
+              "max_loss_streak": 9,
+              "max_win_streak": 4,
+              "std": 0.759977,
+              "median": -0.428379
+            }
+          },
+          {
+            "block_bars": 1440,
+            "seed": 1701,
+            "summary": {
+              "n": 253,
+              "sum_r": -48.0073,
+              "avg_r": -0.189752,
+              "wr": 25.296,
+              "wins": 64,
+              "losses": 189,
+              "avg_win": 1.9367,
+              "avg_loss": -0.9098,
+              "payoff": 2.1287,
+              "pf": 0.7208,
+              "dd": 59.1635,
+              "max_loss_streak": 12,
+              "max_win_streak": 3,
+              "std": 1.711512,
+              "median": -0.997602
+            }
+          },
+          {
+            "block_bars": 1440,
+            "seed": 2701,
+            "summary": {
+              "n": 253,
+              "sum_r": -84.0876,
+              "avg_r": -0.332362,
+              "wr": 21.344,
+              "wins": 54,
+              "losses": 199,
+              "avg_win": 1.748,
+              "avg_loss": -0.8969,
+              "payoff": 1.949,
+              "pf": 0.5289,
+              "dd": 89.4396,
+              "max_loss_streak": 16,
+              "max_win_streak": 3,
+              "std": 1.311283,
+              "median": -0.997871
+            }
+          },
+          {
+            "block_bars": 1440,
+            "seed": 3701,
+            "summary": {
+              "n": 253,
+              "sum_r": -10.44,
+              "avg_r": -0.041265,
+              "wr": 26.087,
+              "wins": 66,
+              "losses": 187,
+              "avg_win": 2.4251,
+              "avg_loss": -0.9118,
+              "payoff": 2.6598,
+              "pf": 0.9388,
+              "dd": 33.6318,
+              "max_loss_streak": 10,
+              "max_win_streak": 4,
+              "std": 1.981656,
+              "median": -0.997221
+            }
+          }
+        ]
+      }
+    }
+  }
+}

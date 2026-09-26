@@ -1,0 +1,1020 @@
+{
+  "stage": 18,
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "is",
+  "definition": "completed 15m close below/above SMA20/50/100; structural SL and structural trail remain active",
+  "pre_registered": true,
+  "arms": [
+    {
+      "name": "baseline",
+      "period": 0
+    },
+    {
+      "name": "sma20",
+      "period": 20
+    },
+    {
+      "name": "sma50",
+      "period": 50
+    },
+    {
+      "name": "sma100",
+      "period": 100
+    }
+  ],
+  "configs": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "description": "KING SINGLE: fullstack + wage10 + cd=0 \u2014 chop15 band + ATR blow-off",
+      "arms": {
+        "baseline": {
+          "flags": {
+            "exp_ma_trail_period": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 200,
+              "sum_r": 360.61,
+              "avg_r": 1.80305,
+              "wins": 65,
+              "losses": 135,
+              "win_rate_pct": 32.5,
+              "avg_win": 7.5006,
+              "avg_loss": -0.9402,
+              "payoff": 7.9777,
+              "pf": 3.8411,
+              "max_dd": 11.21,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -0.998,
+              "std": 8.044247
+            },
+            "net": {
+              "n": 200,
+              "sum_r": 310.7042,
+              "avg_r": 1.553521,
+              "wins": 59,
+              "losses": 141,
+              "win_rate_pct": 29.5,
+              "avg_win": 7.9072,
+              "avg_loss": -1.1051,
+              "payoff": 7.155,
+              "pf": 2.994,
+              "max_dd": 14.0078,
+              "max_loss_streak": 11,
+              "max_win_streak": 5,
+              "median": -1.109857,
+              "std": 7.857236
+            },
+            "cost_and_funding": 49.9058,
+            "yearly_gross": {
+              "2023": 69.14699999999999,
+              "2024": 142.275,
+              "2025": 62.03200000000001,
+              "2026": 87.15599999999998
+            },
+            "yearly_net": {
+              "2023": 57.20010814985314,
+              "2024": 126.46573641401089,
+              "2025": 49.8609285671118,
+              "2026": 77.17738636961005
+            },
+            "outcomes": {
+              "trail": 112,
+              "sl": 88
+            },
+            "runners": {
+              "2.0": {
+                "n": 38,
+                "r": 470.879
+              },
+              "3.0": {
+                "n": 31,
+                "r": 453.347
+              },
+              "5.0": {
+                "n": 22,
+                "r": 420.633
+              },
+              "10.0": {
+                "n": 12,
+                "r": 353.981
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": 0.0,
+            "net_r": 0.0,
+            "trade_count": 0
+          }
+        },
+        "sma20": {
+          "flags": {
+            "exp_ma_trail_period": 20
+          },
+          "metrics": {
+            "gross": {
+              "n": 249,
+              "sum_r": 69.387,
+              "avg_r": 0.278663,
+              "wins": 68,
+              "losses": 181,
+              "win_rate_pct": 27.309,
+              "avg_win": 1.8242,
+              "avg_loss": -0.302,
+              "payoff": 6.0409,
+              "pf": 2.2695,
+              "max_dd": 11.169,
+              "max_loss_streak": 10,
+              "max_win_streak": 3,
+              "median": -0.128,
+              "std": 2.201161
+            },
+            "net": {
+              "n": 249,
+              "sum_r": 16.8674,
+              "avg_r": 0.067741,
+              "wins": 55,
+              "losses": 194,
+              "win_rate_pct": 22.088,
+              "avg_win": 2.0137,
+              "avg_loss": -0.484,
+              "payoff": 4.161,
+              "pf": 1.1797,
+              "max_dd": 33.6878,
+              "max_loss_streak": 12,
+              "max_win_streak": 2,
+              "median": -0.329521,
+              "std": 2.171798
+            },
+            "cost_and_funding": 52.5196,
+            "yearly_gross": {
+              "2023": 51.53099999999999,
+              "2024": -3.5030000000000006,
+              "2025": 5.980000000000001,
+              "2026": 15.378999999999998
+            },
+            "yearly_net": {
+              "2023": 37.67878902562712,
+              "2024": -16.855929042556465,
+              "2025": -7.393428794253606,
+              "2026": 3.4379973226020226
+            },
+            "outcomes": {
+              "ma_trail": 240,
+              "sl": 9
+            },
+            "runners": {
+              "2.0": {
+                "n": 15,
+                "r": 89.083
+              },
+              "3.0": {
+                "n": 10,
+                "r": 76.356
+              },
+              "5.0": {
+                "n": 5,
+                "r": 58.406
+              },
+              "10.0": {
+                "n": 2,
+                "r": 42.022
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -291.223,
+            "net_r": -293.8368,
+            "trade_count": 49
+          }
+        },
+        "sma50": {
+          "flags": {
+            "exp_ma_trail_period": 50
+          },
+          "metrics": {
+            "gross": {
+              "n": 238,
+              "sum_r": 141.998,
+              "avg_r": 0.59663,
+              "wins": 54,
+              "losses": 184,
+              "win_rate_pct": 22.689,
+              "avg_win": 3.6587,
+              "avg_loss": -0.302,
+              "payoff": 12.1139,
+              "pf": 3.5552,
+              "max_dd": 6.616,
+              "max_loss_streak": 18,
+              "max_win_streak": 3,
+              "median": 0.0,
+              "std": 4.326385
+            },
+            "net": {
+              "n": 238,
+              "sum_r": 91.2936,
+              "avg_r": 0.383586,
+              "wins": 50,
+              "losses": 188,
+              "win_rate_pct": 21.008,
+              "avg_win": 3.7163,
+              "avg_loss": -0.5028,
+              "payoff": 7.3916,
+              "pf": 1.9659,
+              "max_dd": 18.4788,
+              "max_loss_streak": 18,
+              "max_win_streak": 3,
+              "median": -0.274253,
+              "std": 4.257761
+            },
+            "cost_and_funding": 50.7044,
+            "yearly_gross": {
+              "2023": 74.71100000000001,
+              "2024": 50.589000000000006,
+              "2025": 11.160999999999998,
+              "2026": 5.537000000000001
+            },
+            "yearly_net": {
+              "2023": 61.86533862708049,
+              "2024": 37.10643282415071,
+              "2025": -1.892842510006808,
+              "2026": -5.785360499438773
+            },
+            "outcomes": {
+              "ma_trail": 212,
+              "sl": 26
+            },
+            "runners": {
+              "2.0": {
+                "n": 18,
+                "r": 170.243
+              },
+              "3.0": {
+                "n": 11,
+                "r": 152.376
+              },
+              "5.0": {
+                "n": 6,
+                "r": 130.478
+              },
+              "10.0": {
+                "n": 3,
+                "r": 108.336
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -218.612,
+            "net_r": -219.4106,
+            "trade_count": 38
+          }
+        },
+        "sma100": {
+          "flags": {
+            "exp_ma_trail_period": 100
+          },
+          "metrics": {
+            "gross": {
+              "n": 231,
+              "sum_r": 118.723,
+              "avg_r": 0.513952,
+              "wins": 44,
+              "losses": 187,
+              "win_rate_pct": 19.048,
+              "avg_win": 4.096,
+              "avg_loss": -0.3289,
+              "payoff": 12.4544,
+              "pf": 2.9305,
+              "max_dd": 14.728,
+              "max_loss_streak": 20,
+              "max_win_streak": 3,
+              "median": 0.0,
+              "std": 4.123749
+            },
+            "net": {
+              "n": 231,
+              "sum_r": 68.8902,
+              "avg_r": 0.298226,
+              "wins": 40,
+              "losses": 191,
+              "win_rate_pct": 17.316,
+              "avg_win": 4.2895,
+              "avg_loss": -0.5376,
+              "payoff": 7.9783,
+              "pf": 1.6709,
+              "max_dd": 32.9926,
+              "max_loss_streak": 25,
+              "max_win_streak": 3,
+              "median": -0.276189,
+              "std": 4.056854
+            },
+            "cost_and_funding": 49.8328,
+            "yearly_gross": {
+              "2023": 63.03599999999998,
+              "2024": 41.38000000000001,
+              "2025": -2.409,
+              "2026": 16.715999999999998
+            },
+            "yearly_net": {
+              "2023": 49.40311010660647,
+              "2024": 28.450437645139807,
+              "2025": -13.847114108910898,
+              "2026": 4.883741876292814
+            },
+            "outcomes": {
+              "ma_trail": 189,
+              "sl": 34,
+              "trail": 8
+            },
+            "runners": {
+              "2.0": {
+                "n": 16,
+                "r": 163.156
+              },
+              "3.0": {
+                "n": 11,
+                "r": 150.771
+              },
+              "5.0": {
+                "n": 9,
+                "r": 142.105
+              },
+              "10.0": {
+                "n": 4,
+                "r": 114.53
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -241.887,
+            "net_r": -241.814,
+            "trade_count": 31
+          }
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "description": "Champion multi sw10 \u2014 causal SL (live-honest)",
+      "arms": {
+        "baseline": {
+          "flags": {
+            "exp_ma_trail_period": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 500,
+              "sum_r": 445.225,
+              "avg_r": 0.89045,
+              "wins": 150,
+              "losses": 350,
+              "win_rate_pct": 30.0,
+              "avg_win": 5.1136,
+              "avg_loss": -0.9195,
+              "payoff": 5.5615,
+              "pf": 2.3835,
+              "max_dd": 17.825,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.540877
+            },
+            "net": {
+              "n": 500,
+              "sum_r": 325.7817,
+              "avg_r": 0.651563,
+              "wins": 139,
+              "losses": 361,
+              "win_rate_pct": 27.8,
+              "avg_win": 5.2204,
+              "avg_loss": -1.1076,
+              "payoff": 4.7131,
+              "pf": 1.8148,
+              "max_dd": 27.7242,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -1.098502,
+              "std": 5.424503
+            },
+            "cost_and_funding": 119.4433,
+            "yearly_gross": {
+              "2023": 113.90700000000001,
+              "2024": 122.29799999999999,
+              "2025": 102.17,
+              "2026": 106.84999999999998
+            },
+            "yearly_net": {
+              "2023": 86.85381673874828,
+              "2024": 88.79231306956353,
+              "2025": 68.7981950230253,
+              "2026": 81.33740973382105
+            },
+            "outcomes": {
+              "sl": 187,
+              "trail": 313
+            },
+            "runners": {
+              "2.0": {
+                "n": 77,
+                "r": 709.32
+              },
+              "3.0": {
+                "n": 63,
+                "r": 674.337
+              },
+              "5.0": {
+                "n": 45,
+                "r": 606.687
+              },
+              "10.0": {
+                "n": 17,
+                "r": 421.088
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": 0.0,
+            "net_r": 0.0,
+            "trade_count": 0
+          }
+        },
+        "sma20": {
+          "flags": {
+            "exp_ma_trail_period": 20
+          },
+          "metrics": {
+            "gross": {
+              "n": 555,
+              "sum_r": 64.934,
+              "avg_r": 0.116998,
+              "wins": 154,
+              "losses": 401,
+              "win_rate_pct": 27.748,
+              "avg_win": 1.3252,
+              "avg_loss": -0.347,
+              "payoff": 3.819,
+              "pf": 1.4667,
+              "max_dd": 35.814,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.172,
+              "std": 1.625159
+            },
+            "net": {
+              "n": 555,
+              "sum_r": -48.9629,
+              "avg_r": -0.088221,
+              "wins": 127,
+              "losses": 428,
+              "win_rate_pct": 22.883,
+              "avg_win": 1.4054,
+              "avg_loss": -0.5314,
+              "payoff": 2.6446,
+              "pf": 0.7847,
+              "max_dd": 94.312,
+              "max_loss_streak": 15,
+              "max_win_streak": 3,
+              "median": -0.359296,
+              "std": 1.616775
+            },
+            "cost_and_funding": 113.8969,
+            "yearly_gross": {
+              "2023": 53.785999999999994,
+              "2024": -24.832000000000008,
+              "2025": 8.305000000000001,
+              "2026": 27.675
+            },
+            "yearly_net": {
+              "2023": 27.08891188640144,
+              "2024": -55.96233270525064,
+              "2025": -23.951924120182174,
+              "2026": 3.862425943561352
+            },
+            "outcomes": {
+              "ma_trail": 525,
+              "sl": 30
+            },
+            "runners": {
+              "2.0": {
+                "n": 23,
+                "r": 118.514
+              },
+              "3.0": {
+                "n": 15,
+                "r": 99.048
+              },
+              "5.0": {
+                "n": 6,
+                "r": 66.931
+              },
+              "10.0": {
+                "n": 2,
+                "r": 42.022
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -380.291,
+            "net_r": -374.7446,
+            "trade_count": 55
+          }
+        },
+        "sma50": {
+          "flags": {
+            "exp_ma_trail_period": 50
+          },
+          "metrics": {
+            "gross": {
+              "n": 539,
+              "sum_r": 107.18,
+              "avg_r": 0.19885,
+              "wins": 117,
+              "losses": 422,
+              "win_rate_pct": 21.707,
+              "avg_win": 2.2646,
+              "avg_loss": -0.3739,
+              "payoff": 6.057,
+              "pf": 1.6793,
+              "max_dd": 19.476,
+              "max_loss_streak": 19,
+              "max_win_streak": 3,
+              "median": -0.142,
+              "std": 2.845435
+            },
+            "net": {
+              "n": 539,
+              "sum_r": -6.9524,
+              "avg_r": -0.012899,
+              "wins": 110,
+              "losses": 429,
+              "win_rate_pct": 20.408,
+              "avg_win": 2.2117,
+              "avg_loss": -0.5833,
+              "payoff": 3.7916,
+              "pf": 0.9722,
+              "max_dd": 56.2181,
+              "max_loss_streak": 19,
+              "max_win_streak": 3,
+              "median": -0.374683,
+              "std": 2.806298
+            },
+            "cost_and_funding": 114.1324,
+            "yearly_gross": {
+              "2023": 43.26899999999999,
+              "2024": 38.877,
+              "2025": 6.983999999999998,
+              "2026": 18.049999999999997
+            },
+            "yearly_net": {
+              "2023": 16.994390578753475,
+              "2024": 5.879750323811266,
+              "2025": -24.32135110179281,
+              "2026": -5.505173225639231
+            },
+            "outcomes": {
+              "sl": 63,
+              "ma_trail": 473,
+              "trail": 3
+            },
+            "runners": {
+              "2.0": {
+                "n": 30,
+                "r": 204.702
+              },
+              "3.0": {
+                "n": 20,
+                "r": 179.159
+              },
+              "5.0": {
+                "n": 9,
+                "r": 134.18
+              },
+              "10.0": {
+                "n": 2,
+                "r": 84.53
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -338.045,
+            "net_r": -332.7341,
+            "trade_count": 39
+          }
+        },
+        "sma100": {
+          "flags": {
+            "exp_ma_trail_period": 100
+          },
+          "metrics": {
+            "gross": {
+              "n": 521,
+              "sum_r": 96.864,
+              "avg_r": 0.185919,
+              "wins": 92,
+              "losses": 429,
+              "win_rate_pct": 17.658,
+              "avg_win": 2.9089,
+              "avg_loss": -0.398,
+              "payoff": 7.3083,
+              "pf": 1.5673,
+              "max_dd": 30.329,
+              "max_loss_streak": 30,
+              "max_win_streak": 3,
+              "median": -0.079,
+              "std": 2.821094
+            },
+            "net": {
+              "n": 521,
+              "sum_r": -13.3064,
+              "avg_r": -0.02554,
+              "wins": 82,
+              "losses": 439,
+              "win_rate_pct": 15.739,
+              "avg_win": 3.0492,
+              "avg_loss": -0.5999,
+              "payoff": 5.0831,
+              "pf": 0.9495,
+              "max_dd": 69.9786,
+              "max_loss_streak": 30,
+              "max_win_streak": 3,
+              "median": -0.364609,
+              "std": 2.779262
+            },
+            "cost_and_funding": 110.1704,
+            "yearly_gross": {
+              "2023": 55.83800000000001,
+              "2024": 23.320999999999994,
+              "2025": -7.761999999999996,
+              "2026": 25.467
+            },
+            "yearly_net": {
+              "2023": 29.863161199304656,
+              "2024": -7.896989201362489,
+              "2025": -37.250736059191986,
+              "2026": 1.9781659316857905
+            },
+            "outcomes": {
+              "sl": 86,
+              "ma_trail": 410,
+              "trail": 25
+            },
+            "runners": {
+              "2.0": {
+                "n": 31,
+                "r": 222.5
+              },
+              "3.0": {
+                "n": 21,
+                "r": 197.289
+              },
+              "5.0": {
+                "n": 14,
+                "r": 169.082
+              },
+              "10.0": {
+                "n": 5,
+                "r": 115.442
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -348.361,
+            "net_r": -339.0881,
+            "trade_count": 21
+          }
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "description": "king multi + SKIP UTC-SATURDAY \u2014 causal SL (live-honest)",
+      "arms": {
+        "baseline": {
+          "flags": {
+            "exp_ma_trail_period": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 454,
+              "sum_r": 466.476,
+              "avg_r": 1.02748,
+              "wins": 140,
+              "losses": 314,
+              "win_rate_pct": 30.837,
+              "avg_win": 5.3914,
+              "avg_loss": -0.9182,
+              "payoff": 5.8715,
+              "pf": 2.6179,
+              "max_dd": 14.821,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 5.806507
+            },
+            "net": {
+              "n": 454,
+              "sum_r": 358.95,
+              "avg_r": 0.790639,
+              "wins": 132,
+              "losses": 322,
+              "win_rate_pct": 29.075,
+              "avg_win": 5.4183,
+              "avg_loss": -1.1064,
+              "payoff": 4.8972,
+              "pf": 2.0075,
+              "max_dd": 21.1764,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -1.090105,
+              "std": 5.684718
+            },
+            "cost_and_funding": 107.526,
+            "yearly_gross": {
+              "2023": 125.508,
+              "2024": 125.30100000000002,
+              "2025": 101.18499999999999,
+              "2026": 114.48200000000001
+            },
+            "yearly_net": {
+              "2023": 99.36830657282762,
+              "2024": 97.34129367379063,
+              "2025": 70.88886334145995,
+              "2026": 91.35151850686717
+            },
+            "outcomes": {
+              "sl": 165,
+              "trail": 289
+            },
+            "runners": {
+              "2.0": {
+                "n": 74,
+                "r": 699.673
+              },
+              "3.0": {
+                "n": 62,
+                "r": 669.223
+              },
+              "5.0": {
+                "n": 42,
+                "r": 593.742
+              },
+              "10.0": {
+                "n": 18,
+                "r": 437.769
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": 0.0,
+            "net_r": 0.0,
+            "trade_count": 0
+          }
+        },
+        "sma20": {
+          "flags": {
+            "exp_ma_trail_period": 20
+          },
+          "metrics": {
+            "gross": {
+              "n": 495,
+              "sum_r": 52.01,
+              "avg_r": 0.105071,
+              "wins": 134,
+              "losses": 361,
+              "win_rate_pct": 27.071,
+              "avg_win": 1.3424,
+              "avg_loss": -0.3542,
+              "payoff": 3.7898,
+              "pf": 1.4067,
+              "max_dd": 30.541,
+              "max_loss_streak": 16,
+              "max_win_streak": 5,
+              "median": -0.19,
+              "std": 1.662181
+            },
+            "net": {
+              "n": 495,
+              "sum_r": -46.2104,
+              "avg_r": -0.093354,
+              "wins": 112,
+              "losses": 383,
+              "win_rate_pct": 22.626,
+              "avg_win": 1.4125,
+              "avg_loss": -0.5337,
+              "payoff": 2.6466,
+              "pf": 0.7739,
+              "max_dd": 80.1938,
+              "max_loss_streak": 16,
+              "max_win_streak": 3,
+              "median": -0.359856,
+              "std": 1.654225
+            },
+            "cost_and_funding": 98.2204,
+            "yearly_gross": {
+              "2023": 54.032,
+              "2024": -22.398000000000003,
+              "2025": 9.907,
+              "2026": 10.469
+            },
+            "yearly_net": {
+              "2023": 29.6544759841094,
+              "2024": -47.73492617101578,
+              "2025": -18.32273258027748,
+              "2026": -9.80716987054079
+            },
+            "outcomes": {
+              "ma_trail": 469,
+              "sl": 26
+            },
+            "runners": {
+              "2.0": {
+                "n": 22,
+                "r": 109.989
+              },
+              "3.0": {
+                "n": 14,
+                "r": 90.523
+              },
+              "5.0": {
+                "n": 5,
+                "r": 58.406
+              },
+              "10.0": {
+                "n": 2,
+                "r": 42.022
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -414.466,
+            "net_r": -405.1604,
+            "trade_count": 41
+          }
+        },
+        "sma50": {
+          "flags": {
+            "exp_ma_trail_period": 50
+          },
+          "metrics": {
+            "gross": {
+              "n": 476,
+              "sum_r": 88.702,
+              "avg_r": 0.186349,
+              "wins": 99,
+              "losses": 377,
+              "win_rate_pct": 20.798,
+              "avg_win": 2.3256,
+              "avg_loss": -0.3754,
+              "payoff": 6.1947,
+              "pf": 1.6267,
+              "max_dd": 18.26,
+              "max_loss_streak": 18,
+              "max_win_streak": 3,
+              "median": -0.141,
+              "std": 2.972188
+            },
+            "net": {
+              "n": 476,
+              "sum_r": -7.9488,
+              "avg_r": -0.016699,
+              "wins": 92,
+              "losses": 384,
+              "win_rate_pct": 19.328,
+              "avg_win": 2.312,
+              "avg_loss": -0.5746,
+              "payoff": 4.0236,
+              "pf": 0.964,
+              "max_dd": 67.8613,
+              "max_loss_streak": 18,
+              "max_win_streak": 3,
+              "median": -0.372529,
+              "std": 2.928616
+            },
+            "cost_and_funding": 96.6508,
+            "yearly_gross": {
+              "2023": 45.288999999999994,
+              "2024": 40.98500000000002,
+              "2025": 3.360999999999999,
+              "2026": -0.933
+            },
+            "yearly_net": {
+              "2023": 21.773429151840773,
+              "2024": 14.881904313638987,
+              "2025": -23.403473241138556,
+              "2026": -21.200647528357067
+            },
+            "outcomes": {
+              "sl": 57,
+              "ma_trail": 416,
+              "trail": 3
+            },
+            "runners": {
+              "2.0": {
+                "n": 25,
+                "r": 179.089
+              },
+              "3.0": {
+                "n": 15,
+                "r": 152.891
+              },
+              "5.0": {
+                "n": 7,
+                "r": 120.537
+              },
+              "10.0": {
+                "n": 2,
+                "r": 84.53
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -377.774,
+            "net_r": -366.8988,
+            "trade_count": 22
+          }
+        },
+        "sma100": {
+          "flags": {
+            "exp_ma_trail_period": 100
+          },
+          "metrics": {
+            "gross": {
+              "n": 464,
+              "sum_r": 97.814,
+              "avg_r": 0.210806,
+              "wins": 85,
+              "losses": 379,
+              "win_rate_pct": 18.319,
+              "avg_win": 3.0056,
+              "avg_loss": -0.416,
+              "payoff": 7.225,
+              "pf": 1.6204,
+              "max_dd": 25.041,
+              "max_loss_streak": 23,
+              "max_win_streak": 3,
+              "median": -0.109,
+              "std": 3.053857
+            },
+            "net": {
+              "n": 464,
+              "sum_r": 1.2036,
+              "avg_r": 0.002594,
+              "wins": 77,
+              "losses": 387,
+              "win_rate_pct": 16.595,
+              "avg_win": 3.1183,
+              "avg_loss": -0.6173,
+              "payoff": 5.0513,
+              "pf": 1.005,
+              "max_dd": 64.8352,
+              "max_loss_streak": 28,
+              "max_win_streak": 3,
+              "median": -0.372529,
+              "std": 3.010122
+            },
+            "cost_and_funding": 96.6104,
+            "yearly_gross": {
+              "2023": 66.48400000000002,
+              "2024": 28.581,
+              "2025": -2.247999999999995,
+              "2026": 4.996999999999993
+            },
+            "yearly_net": {
+              "2023": 42.392297761967825,
+              "2024": 3.2405145616489968,
+              "2025": -29.37969827134041,
+              "2026": -15.049552128276861
+            },
+            "outcomes": {
+              "sl": 79,
+              "ma_trail": 360,
+              "trail": 25
+            },
+            "runners": {
+              "2.0": {
+                "n": 28,
+                "r": 212.968
+              },
+              "3.0": {
+                "n": 18,
+                "r": 188.041
+              },
+              "5.0": {
+                "n": 13,
+                "r": 168.237
+              },
+              "10.0": {
+                "n": 4,
+                "r": 114.53
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -368.662,
+            "net_r": -357.7464,
+            "trade_count": 10
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 141.69
+}

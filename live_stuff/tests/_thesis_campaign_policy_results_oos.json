@@ -1,0 +1,7413 @@
+{
+  "scope": "oos",
+  "instrument": "BTCUSDT_BYBIT",
+  "configs": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 38.04,
+            "avg_r": 0.271714,
+            "wins": 35,
+            "losses": 105,
+            "wr_pct": 25.0,
+            "avg_win": 3.9367,
+            "avg_loss": -0.9499,
+            "payoff": 4.1441,
+            "pf": 1.3814,
+            "max_dd": 27.909,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.972685
+          },
+          "net": {
+            "n": 140,
+            "sum_r": 16.8978,
+            "avg_r": 0.120698,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.9239,
+            "avg_loss": -1.0992,
+            "payoff": 3.5698,
+            "pf": 1.145,
+            "max_dd": 37.3124,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.088599,
+            "std": 2.969259
+          },
+          "cost_funding": 21.1422,
+          "yearly_gross": {
+            "2021": 12.931,
+            "2022": 25.109
+          },
+          "yearly_net": {
+            "2021": 2.7936,
+            "2022": 14.1047
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 38.04,
+            "avg_r": 0.271714,
+            "wins": 35,
+            "losses": 105,
+            "wr_pct": 25.0,
+            "avg_win": 3.9367,
+            "avg_loss": -0.9499,
+            "payoff": 4.1441,
+            "pf": 1.3814,
+            "max_dd": 27.909,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.972685
+          },
+          "net": {
+            "n": 140,
+            "sum_r": 16.8978,
+            "avg_r": 0.120698,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.9239,
+            "avg_loss": -1.0992,
+            "payoff": 3.5698,
+            "pf": 1.145,
+            "max_dd": 37.3124,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.088599,
+            "std": 2.969259
+          },
+          "cost_funding": 21.1422,
+          "yearly_gross": {
+            "2021": 12.931,
+            "2022": 25.109
+          },
+          "yearly_net": {
+            "2021": 2.7936,
+            "2022": 14.1047
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 38.04,
+            "avg_r": 0.271714,
+            "wins": 35,
+            "losses": 105,
+            "wr_pct": 25.0,
+            "avg_win": 3.9367,
+            "avg_loss": -0.9499,
+            "payoff": 4.1441,
+            "pf": 1.3814,
+            "max_dd": 27.909,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.972685
+          },
+          "net": {
+            "n": 140,
+            "sum_r": 16.8978,
+            "avg_r": 0.120698,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.9239,
+            "avg_loss": -1.0992,
+            "payoff": 3.5698,
+            "pf": 1.145,
+            "max_dd": 37.3124,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.088599,
+            "std": 2.969259
+          },
+          "cost_funding": 21.1422,
+          "yearly_gross": {
+            "2021": 12.931,
+            "2022": 25.109
+          },
+          "yearly_net": {
+            "2021": 2.7936,
+            "2022": 14.1047
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 38.04,
+            "avg_r": 0.271714,
+            "wins": 35,
+            "losses": 105,
+            "wr_pct": 25.0,
+            "avg_win": 3.9367,
+            "avg_loss": -0.9499,
+            "payoff": 4.1441,
+            "pf": 1.3814,
+            "max_dd": 27.909,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.972685
+          },
+          "net": {
+            "n": 140,
+            "sum_r": 16.8978,
+            "avg_r": 0.120698,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.9239,
+            "avg_loss": -1.0992,
+            "payoff": 3.5698,
+            "pf": 1.145,
+            "max_dd": 37.3124,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.088599,
+            "std": 2.969259
+          },
+          "cost_funding": 21.1422,
+          "yearly_gross": {
+            "2021": 12.931,
+            "2022": 25.109
+          },
+          "yearly_net": {
+            "2021": 2.7936,
+            "2022": 14.1047
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 80,
+            "sum_r": 27.663,
+            "avg_r": 0.345788,
+            "wins": 19,
+            "losses": 61,
+            "wr_pct": 23.75,
+            "avg_win": 4.535,
+            "avg_loss": -0.959,
+            "payoff": 4.7286,
+            "pf": 1.4729,
+            "max_dd": 18.468,
+            "max_loss_streak": 12,
+            "max_win_streak": 2,
+            "median": -0.998,
+            "std": 3.341971
+          },
+          "net": {
+            "n": 80,
+            "sum_r": 15.8171,
+            "avg_r": 0.197714,
+            "wins": 19,
+            "losses": 61,
+            "wr_pct": 23.75,
+            "avg_win": 4.4148,
+            "avg_loss": -1.1158,
+            "payoff": 3.9566,
+            "pf": 1.2324,
+            "max_dd": 24.7404,
+            "max_loss_streak": 12,
+            "max_win_streak": 2,
+            "median": -1.081193,
+            "std": 3.333258
+          },
+          "cost_funding": 11.8459,
+          "yearly_gross": {
+            "2021": -5.483,
+            "2022": 33.146
+          },
+          "yearly_net": {
+            "2021": -12.0147,
+            "2022": 27.8318
+          },
+          "runners": {
+            "3": 9,
+            "5": 6,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 147,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 112,
+            "sum_r": 29.607,
+            "avg_r": 0.264348,
+            "wins": 29,
+            "losses": 83,
+            "wr_pct": 25.893,
+            "avg_win": 3.7315,
+            "avg_loss": -0.9471,
+            "payoff": 3.9401,
+            "pf": 1.3767,
+            "max_dd": 20.316,
+            "max_loss_streak": 8,
+            "max_win_streak": 5,
+            "median": -0.998,
+            "std": 2.969445
+          },
+          "net": {
+            "n": 112,
+            "sum_r": 13.7438,
+            "avg_r": 0.122712,
+            "wins": 29,
+            "losses": 83,
+            "wr_pct": 25.893,
+            "avg_win": 3.6173,
+            "avg_loss": -1.0983,
+            "payoff": 3.2936,
+            "pf": 1.1508,
+            "max_dd": 28.6885,
+            "max_loss_streak": 8,
+            "max_win_streak": 5,
+            "median": -1.081879,
+            "std": 2.964457
+          },
+          "cost_funding": 15.8632,
+          "yearly_gross": {
+            "2021": 6.353,
+            "2022": 23.254
+          },
+          "yearly_net": {
+            "2021": -1.9432,
+            "2022": 15.6873
+          },
+          "runners": {
+            "3": 11,
+            "5": 7,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 66,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 132,
+            "sum_r": 36.801,
+            "avg_r": 0.278795,
+            "wins": 33,
+            "losses": 99,
+            "wr_pct": 25.0,
+            "avg_win": 3.9559,
+            "avg_loss": -0.9469,
+            "payoff": 4.1777,
+            "pf": 1.3926,
+            "max_dd": 26.248,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.032008
+          },
+          "net": {
+            "n": 132,
+            "sum_r": 17.1641,
+            "avg_r": 0.130031,
+            "wins": 32,
+            "losses": 100,
+            "wr_pct": 24.242,
+            "avg_win": 3.9555,
+            "avg_loss": -1.0941,
+            "payoff": 3.6152,
+            "pf": 1.1569,
+            "max_dd": 35.1249,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -1.083607,
+            "std": 3.028092
+          },
+          "cost_funding": 19.6369,
+          "yearly_gross": {
+            "2021": 14.592,
+            "2022": 22.209
+          },
+          "yearly_net": {
+            "2021": 4.9811,
+            "2022": 12.1834
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 26,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 137,
+            "sum_r": 42.253,
+            "avg_r": 0.308416,
+            "wins": 36,
+            "losses": 101,
+            "wr_pct": 26.277,
+            "avg_win": 3.8332,
+            "avg_loss": -0.948,
+            "payoff": 4.0437,
+            "pf": 1.4413,
+            "max_dd": 24.698,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.996972
+          },
+          "net": {
+            "n": 137,
+            "sum_r": 21.8678,
+            "avg_r": 0.159619,
+            "wins": 35,
+            "losses": 102,
+            "wr_pct": 25.547,
+            "avg_win": 3.8151,
+            "avg_loss": -1.0947,
+            "payoff": 3.485,
+            "pf": 1.1958,
+            "max_dd": 33.7913,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.082986,
+            "std": 2.992643
+          },
+          "cost_funding": 20.3852,
+          "yearly_gross": {
+            "2021": 16.142,
+            "2022": 26.111
+          },
+          "yearly_net": {
+            "2021": 6.3147,
+            "2022": 15.5536
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 9,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 112,
+            "sum_r": 29.607,
+            "avg_r": 0.264348,
+            "wins": 29,
+            "losses": 83,
+            "wr_pct": 25.893,
+            "avg_win": 3.7315,
+            "avg_loss": -0.9471,
+            "payoff": 3.9401,
+            "pf": 1.3767,
+            "max_dd": 20.316,
+            "max_loss_streak": 8,
+            "max_win_streak": 5,
+            "median": -0.998,
+            "std": 2.969445
+          },
+          "net": {
+            "n": 112,
+            "sum_r": 13.7438,
+            "avg_r": 0.122712,
+            "wins": 29,
+            "losses": 83,
+            "wr_pct": 25.893,
+            "avg_win": 3.6173,
+            "avg_loss": -1.0983,
+            "payoff": 3.2936,
+            "pf": 1.1508,
+            "max_dd": 28.6885,
+            "max_loss_streak": 8,
+            "max_win_streak": 5,
+            "median": -1.081879,
+            "std": 2.964457
+          },
+          "cost_funding": 15.8632,
+          "yearly_gross": {
+            "2021": 6.353,
+            "2022": 23.254
+          },
+          "yearly_net": {
+            "2021": -1.9432,
+            "2022": 15.6873
+          },
+          "runners": {
+            "3": 11,
+            "5": 7,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 66,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 132,
+            "sum_r": 36.801,
+            "avg_r": 0.278795,
+            "wins": 33,
+            "losses": 99,
+            "wr_pct": 25.0,
+            "avg_win": 3.9559,
+            "avg_loss": -0.9469,
+            "payoff": 4.1777,
+            "pf": 1.3926,
+            "max_dd": 26.248,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.032008
+          },
+          "net": {
+            "n": 132,
+            "sum_r": 17.1641,
+            "avg_r": 0.130031,
+            "wins": 32,
+            "losses": 100,
+            "wr_pct": 24.242,
+            "avg_win": 3.9555,
+            "avg_loss": -1.0941,
+            "payoff": 3.6152,
+            "pf": 1.1569,
+            "max_dd": 35.1249,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -1.083607,
+            "std": 3.028092
+          },
+          "cost_funding": 19.6369,
+          "yearly_gross": {
+            "2021": 14.592,
+            "2022": 22.209
+          },
+          "yearly_net": {
+            "2021": 4.9811,
+            "2022": 12.1834
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 26,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 137,
+            "sum_r": 42.253,
+            "avg_r": 0.308416,
+            "wins": 36,
+            "losses": 101,
+            "wr_pct": 26.277,
+            "avg_win": 3.8332,
+            "avg_loss": -0.948,
+            "payoff": 4.0437,
+            "pf": 1.4413,
+            "max_dd": 24.698,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.996972
+          },
+          "net": {
+            "n": 137,
+            "sum_r": 21.8678,
+            "avg_r": 0.159619,
+            "wins": 35,
+            "losses": 102,
+            "wr_pct": 25.547,
+            "avg_win": 3.8151,
+            "avg_loss": -1.0947,
+            "payoff": 3.485,
+            "pf": 1.1958,
+            "max_dd": 33.7913,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.082986,
+            "std": 2.992643
+          },
+          "cost_funding": 20.3852,
+          "yearly_gross": {
+            "2021": 16.142,
+            "2022": 26.111
+          },
+          "yearly_net": {
+            "2021": 6.3147,
+            "2022": 15.5536
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 9,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 139,
+            "sum_r": 40.251,
+            "avg_r": 0.289576,
+            "wins": 36,
+            "losses": 103,
+            "wr_pct": 25.899,
+            "avg_win": 3.8332,
+            "avg_loss": -0.949,
+            "payoff": 4.0393,
+            "pf": 1.4118,
+            "max_dd": 25.698,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.979416
+          },
+          "net": {
+            "n": 139,
+            "sum_r": 19.278,
+            "avg_r": 0.13869,
+            "wins": 35,
+            "losses": 104,
+            "wr_pct": 25.18,
+            "avg_win": 3.8151,
+            "avg_loss": -1.0986,
+            "payoff": 3.4728,
+            "pf": 1.1687,
+            "max_dd": 34.9322,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.087758,
+            "std": 2.976078
+          },
+          "cost_funding": 20.973,
+          "yearly_gross": {
+            "2021": 15.142,
+            "2022": 25.109
+          },
+          "yearly_net": {
+            "2021": 5.1738,
+            "2022": 14.1047
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 4,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 38.04,
+            "avg_r": 0.271714,
+            "wins": 35,
+            "losses": 105,
+            "wr_pct": 25.0,
+            "avg_win": 3.9367,
+            "avg_loss": -0.9499,
+            "payoff": 4.1441,
+            "pf": 1.3814,
+            "max_dd": 27.909,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 2.972685
+          },
+          "net": {
+            "n": 140,
+            "sum_r": 16.8978,
+            "avg_r": 0.120698,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.9239,
+            "avg_loss": -1.0992,
+            "payoff": 3.5698,
+            "pf": 1.145,
+            "max_dd": 37.3124,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.088599,
+            "std": 2.969259
+          },
+          "cost_funding": 21.1422,
+          "yearly_gross": {
+            "2021": 12.931,
+            "2022": 25.109
+          },
+          "yearly_net": {
+            "2021": 2.7936,
+            "2022": 14.1047
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 132,
+            "sum_r": 36.801,
+            "avg_r": 0.278795,
+            "wins": 33,
+            "losses": 99,
+            "wr_pct": 25.0,
+            "avg_win": 3.9559,
+            "avg_loss": -0.9469,
+            "payoff": 4.1777,
+            "pf": 1.3926,
+            "max_dd": 26.248,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.032008
+          },
+          "net": {
+            "n": 132,
+            "sum_r": 17.1641,
+            "avg_r": 0.130031,
+            "wins": 32,
+            "losses": 100,
+            "wr_pct": 24.242,
+            "avg_win": 3.9555,
+            "avg_loss": -1.0941,
+            "payoff": 3.6152,
+            "pf": 1.1569,
+            "max_dd": 35.1249,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -1.083607,
+            "std": 3.028092
+          },
+          "cost_funding": 19.6369,
+          "yearly_gross": {
+            "2021": 14.592,
+            "2022": 22.209
+          },
+          "yearly_net": {
+            "2021": 4.9811,
+            "2022": 12.1834
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 26,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 132,
+            "sum_r": 36.801,
+            "avg_r": 0.278795,
+            "wins": 33,
+            "losses": 99,
+            "wr_pct": 25.0,
+            "avg_win": 3.9559,
+            "avg_loss": -0.9469,
+            "payoff": 4.1777,
+            "pf": 1.3926,
+            "max_dd": 26.248,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.032008
+          },
+          "net": {
+            "n": 132,
+            "sum_r": 17.1641,
+            "avg_r": 0.130031,
+            "wins": 32,
+            "losses": 100,
+            "wr_pct": 24.242,
+            "avg_win": 3.9555,
+            "avg_loss": -1.0941,
+            "payoff": 3.6152,
+            "pf": 1.1569,
+            "max_dd": 35.1249,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -1.083607,
+            "std": 3.028092
+          },
+          "cost_funding": 19.6369,
+          "yearly_gross": {
+            "2021": 14.592,
+            "2022": 22.209
+          },
+          "yearly_net": {
+            "2021": 4.9811,
+            "2022": 12.1834
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 26,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 132,
+            "sum_r": 36.801,
+            "avg_r": 0.278795,
+            "wins": 33,
+            "losses": 99,
+            "wr_pct": 25.0,
+            "avg_win": 3.9559,
+            "avg_loss": -0.9469,
+            "payoff": 4.1777,
+            "pf": 1.3926,
+            "max_dd": 26.248,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.032008
+          },
+          "net": {
+            "n": 132,
+            "sum_r": 17.1641,
+            "avg_r": 0.130031,
+            "wins": 32,
+            "losses": 100,
+            "wr_pct": 24.242,
+            "avg_win": 3.9555,
+            "avg_loss": -1.0941,
+            "payoff": 3.6152,
+            "pf": 1.1569,
+            "max_dd": 35.1249,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -1.083607,
+            "std": 3.028092
+          },
+          "cost_funding": 19.6369,
+          "yearly_gross": {
+            "2021": 14.592,
+            "2022": 22.209
+          },
+          "yearly_net": {
+            "2021": 4.9811,
+            "2022": 12.1834
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 26,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 132,
+            "sum_r": 36.801,
+            "avg_r": 0.278795,
+            "wins": 33,
+            "losses": 99,
+            "wr_pct": 25.0,
+            "avg_win": 3.9559,
+            "avg_loss": -0.9469,
+            "payoff": 4.1777,
+            "pf": 1.3926,
+            "max_dd": 26.248,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.032008
+          },
+          "net": {
+            "n": 132,
+            "sum_r": 17.1641,
+            "avg_r": 0.130031,
+            "wins": 32,
+            "losses": 100,
+            "wr_pct": 24.242,
+            "avg_win": 3.9555,
+            "avg_loss": -1.0941,
+            "payoff": 3.6152,
+            "pf": 1.1569,
+            "max_dd": 35.1249,
+            "max_loss_streak": 10,
+            "max_win_streak": 6,
+            "median": -1.083607,
+            "std": 3.028092
+          },
+          "cost_funding": 19.6369,
+          "yearly_gross": {
+            "2021": 14.592,
+            "2022": 22.209
+          },
+          "yearly_net": {
+            "2021": 4.9811,
+            "2022": 12.1834
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 26,
+          "blocked_state": 0
+        }
+      }
+    },
+    "pure_v18_single": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 187,
+            "sum_r": 33.991,
+            "avg_r": 0.18177,
+            "wins": 43,
+            "losses": 144,
+            "wr_pct": 22.995,
+            "avg_win": 3.7973,
+            "avg_loss": -0.8979,
+            "payoff": 4.2292,
+            "pf": 1.2629,
+            "max_dd": 22.109,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.32653
+          },
+          "net": {
+            "n": 187,
+            "sum_r": 8.2848,
+            "avg_r": 0.044304,
+            "wins": 42,
+            "losses": 145,
+            "wr_pct": 22.46,
+            "avg_win": 3.7476,
+            "avg_loss": -1.0284,
+            "payoff": 3.6442,
+            "pf": 1.0556,
+            "max_dd": 27.4911,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075253,
+            "std": 3.30038
+          },
+          "cost_funding": 25.7062,
+          "yearly_gross": {
+            "2021": 12.274,
+            "2022": 21.717
+          },
+          "yearly_net": {
+            "2021": 1.9801,
+            "2022": 6.305
+          },
+          "runners": {
+            "3": 17,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 187,
+            "sum_r": 33.991,
+            "avg_r": 0.18177,
+            "wins": 43,
+            "losses": 144,
+            "wr_pct": 22.995,
+            "avg_win": 3.7973,
+            "avg_loss": -0.8979,
+            "payoff": 4.2292,
+            "pf": 1.2629,
+            "max_dd": 22.109,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.32653
+          },
+          "net": {
+            "n": 187,
+            "sum_r": 8.2848,
+            "avg_r": 0.044304,
+            "wins": 42,
+            "losses": 145,
+            "wr_pct": 22.46,
+            "avg_win": 3.7476,
+            "avg_loss": -1.0284,
+            "payoff": 3.6442,
+            "pf": 1.0556,
+            "max_dd": 27.4911,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075253,
+            "std": 3.30038
+          },
+          "cost_funding": 25.7062,
+          "yearly_gross": {
+            "2021": 12.274,
+            "2022": 21.717
+          },
+          "yearly_net": {
+            "2021": 1.9801,
+            "2022": 6.305
+          },
+          "runners": {
+            "3": 17,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 187,
+            "sum_r": 33.991,
+            "avg_r": 0.18177,
+            "wins": 43,
+            "losses": 144,
+            "wr_pct": 22.995,
+            "avg_win": 3.7973,
+            "avg_loss": -0.8979,
+            "payoff": 4.2292,
+            "pf": 1.2629,
+            "max_dd": 22.109,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.32653
+          },
+          "net": {
+            "n": 187,
+            "sum_r": 8.2848,
+            "avg_r": 0.044304,
+            "wins": 42,
+            "losses": 145,
+            "wr_pct": 22.46,
+            "avg_win": 3.7476,
+            "avg_loss": -1.0284,
+            "payoff": 3.6442,
+            "pf": 1.0556,
+            "max_dd": 27.4911,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075253,
+            "std": 3.30038
+          },
+          "cost_funding": 25.7062,
+          "yearly_gross": {
+            "2021": 12.274,
+            "2022": 21.717
+          },
+          "yearly_net": {
+            "2021": 1.9801,
+            "2022": 6.305
+          },
+          "runners": {
+            "3": 17,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 187,
+            "sum_r": 33.991,
+            "avg_r": 0.18177,
+            "wins": 43,
+            "losses": 144,
+            "wr_pct": 22.995,
+            "avg_win": 3.7973,
+            "avg_loss": -0.8979,
+            "payoff": 4.2292,
+            "pf": 1.2629,
+            "max_dd": 22.109,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.32653
+          },
+          "net": {
+            "n": 187,
+            "sum_r": 8.2848,
+            "avg_r": 0.044304,
+            "wins": 42,
+            "losses": 145,
+            "wr_pct": 22.46,
+            "avg_win": 3.7476,
+            "avg_loss": -1.0284,
+            "payoff": 3.6442,
+            "pf": 1.0556,
+            "max_dd": 27.4911,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075253,
+            "std": 3.30038
+          },
+          "cost_funding": 25.7062,
+          "yearly_gross": {
+            "2021": 12.274,
+            "2022": 21.717
+          },
+          "yearly_net": {
+            "2021": 1.9801,
+            "2022": 6.305
+          },
+          "runners": {
+            "3": 17,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 102,
+            "sum_r": 27.737,
+            "avg_r": 0.271931,
+            "wins": 21,
+            "losses": 81,
+            "wr_pct": 20.588,
+            "avg_win": 4.7627,
+            "avg_loss": -0.8923,
+            "payoff": 5.3373,
+            "pf": 1.3837,
+            "max_dd": 21.56,
+            "max_loss_streak": 18,
+            "max_win_streak": 3,
+            "median": -0.998,
+            "std": 3.997892
+          },
+          "net": {
+            "n": 102,
+            "sum_r": 13.8518,
+            "avg_r": 0.135802,
+            "wins": 20,
+            "losses": 82,
+            "wr_pct": 19.608,
+            "avg_win": 4.8471,
+            "avg_loss": -1.0133,
+            "payoff": 4.7835,
+            "pf": 1.1667,
+            "max_dd": 24.5478,
+            "max_loss_streak": 18,
+            "max_win_streak": 3,
+            "median": -1.070409,
+            "std": 3.959171
+          },
+          "cost_funding": 13.8852,
+          "yearly_gross": {
+            "2021": -6.04,
+            "2022": 33.777
+          },
+          "yearly_net": {
+            "2021": -11.8577,
+            "2022": 25.7096
+          },
+          "runners": {
+            "3": 10,
+            "5": 5,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 139,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 135,
+            "sum_r": 24.106,
+            "avg_r": 0.178563,
+            "wins": 27,
+            "losses": 108,
+            "wr_pct": 20.0,
+            "avg_win": 4.4154,
+            "avg_loss": -0.8807,
+            "payoff": 5.0138,
+            "pf": 1.2535,
+            "max_dd": 20.892,
+            "max_loss_streak": 12,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.623884
+          },
+          "net": {
+            "n": 135,
+            "sum_r": 5.2676,
+            "avg_r": 0.039019,
+            "wins": 27,
+            "losses": 108,
+            "wr_pct": 20.0,
+            "avg_win": 4.2636,
+            "avg_loss": -1.0171,
+            "payoff": 4.1918,
+            "pf": 1.048,
+            "max_dd": 26.56,
+            "max_loss_streak": 12,
+            "max_win_streak": 4,
+            "median": -1.073508,
+            "std": 3.590976
+          },
+          "cost_funding": 18.8384,
+          "yearly_gross": {
+            "2021": -6.116,
+            "2022": 30.222
+          },
+          "yearly_net": {
+            "2021": -14.3314,
+            "2022": 19.5991
+          },
+          "runners": {
+            "3": 13,
+            "5": 7,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 82,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 160,
+            "sum_r": 29.479,
+            "avg_r": 0.184244,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.9059,
+            "avg_loss": -0.8963,
+            "payoff": 4.3581,
+            "pf": 1.2653,
+            "max_dd": 20.611,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.42416
+          },
+          "net": {
+            "n": 160,
+            "sum_r": 7.2641,
+            "avg_r": 0.045401,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.7585,
+            "avg_loss": -1.0326,
+            "payoff": 3.6399,
+            "pf": 1.0567,
+            "max_dd": 26.5664,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -1.075002,
+            "std": 3.392405
+          },
+          "cost_funding": 22.2149,
+          "yearly_gross": {
+            "2021": -2.454,
+            "2022": 31.933
+          },
+          "yearly_net": {
+            "2021": -11.6152,
+            "2022": 18.8794
+          },
+          "runners": {
+            "3": 16,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 43,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 174,
+            "sum_r": 21.893,
+            "avg_r": 0.125822,
+            "wins": 39,
+            "losses": 135,
+            "wr_pct": 22.414,
+            "avg_win": 3.6683,
+            "avg_loss": -0.8976,
+            "payoff": 4.087,
+            "pf": 1.1807,
+            "max_dd": 21.245,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.296613
+          },
+          "net": {
+            "n": 174,
+            "sum_r": -2.9497,
+            "avg_r": -0.016952,
+            "wins": 38,
+            "losses": 136,
+            "wr_pct": 21.839,
+            "avg_win": 3.6182,
+            "avg_loss": -1.0327,
+            "payoff": 3.5038,
+            "pf": 0.979,
+            "max_dd": 29.0315,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075591,
+            "std": 3.268147
+          },
+          "cost_funding": 24.8427,
+          "yearly_gross": {
+            "2021": -4.087,
+            "2022": 25.98
+          },
+          "yearly_net": {
+            "2021": -13.3867,
+            "2022": 10.4374
+          },
+          "runners": {
+            "3": 15,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 24,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 135,
+            "sum_r": 24.106,
+            "avg_r": 0.178563,
+            "wins": 27,
+            "losses": 108,
+            "wr_pct": 20.0,
+            "avg_win": 4.4154,
+            "avg_loss": -0.8807,
+            "payoff": 5.0138,
+            "pf": 1.2535,
+            "max_dd": 20.892,
+            "max_loss_streak": 12,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.623884
+          },
+          "net": {
+            "n": 135,
+            "sum_r": 5.2676,
+            "avg_r": 0.039019,
+            "wins": 27,
+            "losses": 108,
+            "wr_pct": 20.0,
+            "avg_win": 4.2636,
+            "avg_loss": -1.0171,
+            "payoff": 4.1918,
+            "pf": 1.048,
+            "max_dd": 26.56,
+            "max_loss_streak": 12,
+            "max_win_streak": 4,
+            "median": -1.073508,
+            "std": 3.590976
+          },
+          "cost_funding": 18.8384,
+          "yearly_gross": {
+            "2021": -6.116,
+            "2022": 30.222
+          },
+          "yearly_net": {
+            "2021": -14.3314,
+            "2022": 19.5991
+          },
+          "runners": {
+            "3": 13,
+            "5": 7,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 82,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 160,
+            "sum_r": 29.479,
+            "avg_r": 0.184244,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.9059,
+            "avg_loss": -0.8963,
+            "payoff": 4.3581,
+            "pf": 1.2653,
+            "max_dd": 20.611,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.42416
+          },
+          "net": {
+            "n": 160,
+            "sum_r": 7.2641,
+            "avg_r": 0.045401,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.7585,
+            "avg_loss": -1.0326,
+            "payoff": 3.6399,
+            "pf": 1.0567,
+            "max_dd": 26.5664,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -1.075002,
+            "std": 3.392405
+          },
+          "cost_funding": 22.2149,
+          "yearly_gross": {
+            "2021": -2.454,
+            "2022": 31.933
+          },
+          "yearly_net": {
+            "2021": -11.6152,
+            "2022": 18.8794
+          },
+          "runners": {
+            "3": 16,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 43,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 174,
+            "sum_r": 21.893,
+            "avg_r": 0.125822,
+            "wins": 39,
+            "losses": 135,
+            "wr_pct": 22.414,
+            "avg_win": 3.6683,
+            "avg_loss": -0.8976,
+            "payoff": 4.087,
+            "pf": 1.1807,
+            "max_dd": 21.245,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.296613
+          },
+          "net": {
+            "n": 174,
+            "sum_r": -2.9497,
+            "avg_r": -0.016952,
+            "wins": 38,
+            "losses": 136,
+            "wr_pct": 21.839,
+            "avg_win": 3.6182,
+            "avg_loss": -1.0327,
+            "payoff": 3.5038,
+            "pf": 0.979,
+            "max_dd": 29.0315,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075591,
+            "std": 3.268147
+          },
+          "cost_funding": 24.8427,
+          "yearly_gross": {
+            "2021": -4.087,
+            "2022": 25.98
+          },
+          "yearly_net": {
+            "2021": -13.3867,
+            "2022": 10.4374
+          },
+          "runners": {
+            "3": 15,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 24,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 181,
+            "sum_r": 33.359,
+            "avg_r": 0.184304,
+            "wins": 41,
+            "losses": 140,
+            "wr_pct": 22.652,
+            "avg_win": 3.902,
+            "avg_loss": -0.9044,
+            "payoff": 4.3142,
+            "pf": 1.2635,
+            "max_dd": 22.109,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.374458
+          },
+          "net": {
+            "n": 181,
+            "sum_r": 8.0049,
+            "avg_r": 0.044226,
+            "wins": 40,
+            "losses": 141,
+            "wr_pct": 22.099,
+            "avg_win": 3.8553,
+            "avg_loss": -1.0369,
+            "payoff": 3.718,
+            "pf": 1.0548,
+            "max_dd": 27.4911,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.077168,
+            "std": 3.347817
+          },
+          "cost_funding": 25.3541,
+          "yearly_gross": {
+            "2021": 11.642,
+            "2022": 21.717
+          },
+          "yearly_net": {
+            "2021": 1.7003,
+            "2022": 6.305
+          },
+          "runners": {
+            "3": 17,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 11,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 187,
+            "sum_r": 33.991,
+            "avg_r": 0.18177,
+            "wins": 43,
+            "losses": 144,
+            "wr_pct": 22.995,
+            "avg_win": 3.7973,
+            "avg_loss": -0.8979,
+            "payoff": 4.2292,
+            "pf": 1.2629,
+            "max_dd": 22.109,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.32653
+          },
+          "net": {
+            "n": 187,
+            "sum_r": 8.2848,
+            "avg_r": 0.044304,
+            "wins": 42,
+            "losses": 145,
+            "wr_pct": 22.46,
+            "avg_win": 3.7476,
+            "avg_loss": -1.0284,
+            "payoff": 3.6442,
+            "pf": 1.0556,
+            "max_dd": 27.4911,
+            "max_loss_streak": 13,
+            "max_win_streak": 4,
+            "median": -1.075253,
+            "std": 3.30038
+          },
+          "cost_funding": 25.7062,
+          "yearly_gross": {
+            "2021": 12.274,
+            "2022": 21.717
+          },
+          "yearly_net": {
+            "2021": 1.9801,
+            "2022": 6.305
+          },
+          "runners": {
+            "3": 17,
+            "5": 9,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 160,
+            "sum_r": 29.479,
+            "avg_r": 0.184244,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.9059,
+            "avg_loss": -0.8963,
+            "payoff": 4.3581,
+            "pf": 1.2653,
+            "max_dd": 20.611,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.42416
+          },
+          "net": {
+            "n": 160,
+            "sum_r": 7.2641,
+            "avg_r": 0.045401,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.7585,
+            "avg_loss": -1.0326,
+            "payoff": 3.6399,
+            "pf": 1.0567,
+            "max_dd": 26.5664,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -1.075002,
+            "std": 3.392405
+          },
+          "cost_funding": 22.2149,
+          "yearly_gross": {
+            "2021": -2.454,
+            "2022": 31.933
+          },
+          "yearly_net": {
+            "2021": -11.6152,
+            "2022": 18.8794
+          },
+          "runners": {
+            "3": 16,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 43,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 160,
+            "sum_r": 29.479,
+            "avg_r": 0.184244,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.9059,
+            "avg_loss": -0.8963,
+            "payoff": 4.3581,
+            "pf": 1.2653,
+            "max_dd": 20.611,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.42416
+          },
+          "net": {
+            "n": 160,
+            "sum_r": 7.2641,
+            "avg_r": 0.045401,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.7585,
+            "avg_loss": -1.0326,
+            "payoff": 3.6399,
+            "pf": 1.0567,
+            "max_dd": 26.5664,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -1.075002,
+            "std": 3.392405
+          },
+          "cost_funding": 22.2149,
+          "yearly_gross": {
+            "2021": -2.454,
+            "2022": 31.933
+          },
+          "yearly_net": {
+            "2021": -11.6152,
+            "2022": 18.8794
+          },
+          "runners": {
+            "3": 16,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 43,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 160,
+            "sum_r": 29.479,
+            "avg_r": 0.184244,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.9059,
+            "avg_loss": -0.8963,
+            "payoff": 4.3581,
+            "pf": 1.2653,
+            "max_dd": 20.611,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.42416
+          },
+          "net": {
+            "n": 160,
+            "sum_r": 7.2641,
+            "avg_r": 0.045401,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.7585,
+            "avg_loss": -1.0326,
+            "payoff": 3.6399,
+            "pf": 1.0567,
+            "max_dd": 26.5664,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -1.075002,
+            "std": 3.392405
+          },
+          "cost_funding": 22.2149,
+          "yearly_gross": {
+            "2021": -2.454,
+            "2022": 31.933
+          },
+          "yearly_net": {
+            "2021": -11.6152,
+            "2022": 18.8794
+          },
+          "runners": {
+            "3": 16,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 43,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 160,
+            "sum_r": 29.479,
+            "avg_r": 0.184244,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.9059,
+            "avg_loss": -0.8963,
+            "payoff": 4.3581,
+            "pf": 1.2653,
+            "max_dd": 20.611,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 3.42416
+          },
+          "net": {
+            "n": 160,
+            "sum_r": 7.2641,
+            "avg_r": 0.045401,
+            "wins": 36,
+            "losses": 124,
+            "wr_pct": 22.5,
+            "avg_win": 3.7585,
+            "avg_loss": -1.0326,
+            "payoff": 3.6399,
+            "pf": 1.0567,
+            "max_dd": 26.5664,
+            "max_loss_streak": 11,
+            "max_win_streak": 4,
+            "median": -1.075002,
+            "std": 3.392405
+          },
+          "cost_funding": 22.2149,
+          "yearly_gross": {
+            "2021": -2.454,
+            "2022": 31.933
+          },
+          "yearly_net": {
+            "2021": -11.6152,
+            "2022": 18.8794
+          },
+          "runners": {
+            "3": 16,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 43,
+          "blocked_state": 0
+        }
+      }
+    },
+    "pure_v18_multi": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 216,
+            "sum_r": 73.55,
+            "avg_r": 0.340509,
+            "wins": 55,
+            "losses": 161,
+            "wr_pct": 25.463,
+            "avg_win": 3.9295,
+            "avg_loss": -0.8855,
+            "payoff": 4.4374,
+            "pf": 1.5159,
+            "max_dd": 24.261,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.51257
+          },
+          "net": {
+            "n": 216,
+            "sum_r": 44.2626,
+            "avg_r": 0.20492,
+            "wins": 54,
+            "losses": 162,
+            "wr_pct": 25.0,
+            "avg_win": 3.8618,
+            "avg_loss": -1.014,
+            "payoff": 3.8083,
+            "pf": 1.2694,
+            "max_dd": 30.9976,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.068894,
+            "std": 3.483629
+          },
+          "cost_funding": 29.2874,
+          "yearly_gross": {
+            "2021": 11.325,
+            "2022": 62.225
+          },
+          "yearly_net": {
+            "2021": -0.4272,
+            "2022": 44.6903
+          },
+          "runners": {
+            "3": 21,
+            "5": 13,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 216,
+            "sum_r": 73.55,
+            "avg_r": 0.340509,
+            "wins": 55,
+            "losses": 161,
+            "wr_pct": 25.463,
+            "avg_win": 3.9295,
+            "avg_loss": -0.8855,
+            "payoff": 4.4374,
+            "pf": 1.5159,
+            "max_dd": 24.261,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.51257
+          },
+          "net": {
+            "n": 216,
+            "sum_r": 44.2626,
+            "avg_r": 0.20492,
+            "wins": 54,
+            "losses": 162,
+            "wr_pct": 25.0,
+            "avg_win": 3.8618,
+            "avg_loss": -1.014,
+            "payoff": 3.8083,
+            "pf": 1.2694,
+            "max_dd": 30.9976,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.068894,
+            "std": 3.483629
+          },
+          "cost_funding": 29.2874,
+          "yearly_gross": {
+            "2021": 11.325,
+            "2022": 62.225
+          },
+          "yearly_net": {
+            "2021": -0.4272,
+            "2022": 44.6903
+          },
+          "runners": {
+            "3": 21,
+            "5": 13,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 215,
+            "sum_r": 70.751,
+            "avg_r": 0.329074,
+            "wins": 54,
+            "losses": 161,
+            "wr_pct": 25.116,
+            "avg_win": 3.9504,
+            "avg_loss": -0.8855,
+            "payoff": 4.461,
+            "pf": 1.4962,
+            "max_dd": 27.06,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.516716
+          },
+          "net": {
+            "n": 215,
+            "sum_r": 41.6999,
+            "avg_r": 0.193953,
+            "wins": 53,
+            "losses": 162,
+            "wr_pct": 24.651,
+            "avg_win": 3.8863,
+            "avg_loss": -1.014,
+            "payoff": 3.8325,
+            "pf": 1.2538,
+            "max_dd": 33.5604,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.069102,
+            "std": 3.487999
+          },
+          "cost_funding": 29.0511,
+          "yearly_gross": {
+            "2021": 11.325,
+            "2022": 59.426
+          },
+          "yearly_net": {
+            "2021": -0.4272,
+            "2022": 42.1276
+          },
+          "runners": {
+            "3": 21,
+            "5": 13,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 1
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 212,
+            "sum_r": 57.639,
+            "avg_r": 0.271882,
+            "wins": 51,
+            "losses": 161,
+            "wr_pct": 24.057,
+            "avg_win": 3.9257,
+            "avg_loss": -0.8855,
+            "payoff": 4.4331,
+            "pf": 1.4043,
+            "max_dd": 27.06,
+            "max_loss_streak": 13,
+            "max_win_streak": 5,
+            "median": -0.998,
+            "std": 3.49985
+          },
+          "net": {
+            "n": 212,
+            "sum_r": 29.3013,
+            "avg_r": 0.138214,
+            "wins": 50,
+            "losses": 162,
+            "wr_pct": 23.585,
+            "avg_win": 3.8715,
+            "avg_loss": -1.014,
+            "payoff": 3.8179,
+            "pf": 1.1784,
+            "max_dd": 33.5604,
+            "max_loss_streak": 13,
+            "max_win_streak": 5,
+            "median": -1.072612,
+            "std": 3.473865
+          },
+          "cost_funding": 28.3377,
+          "yearly_gross": {
+            "2021": 5.41,
+            "2022": 52.229
+          },
+          "yearly_net": {
+            "2021": -6.1592,
+            "2022": 35.4611
+          },
+          "runners": {
+            "3": 19,
+            "5": 12,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 4
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 108,
+            "sum_r": 66.522,
+            "avg_r": 0.615944,
+            "wins": 25,
+            "losses": 83,
+            "wr_pct": 23.148,
+            "avg_win": 5.5861,
+            "avg_loss": -0.8811,
+            "payoff": 6.34,
+            "pf": 1.9096,
+            "max_dd": 21.56,
+            "max_loss_streak": 18,
+            "max_win_streak": 4,
+            "median": -0.997,
+            "std": 4.454568
+          },
+          "net": {
+            "n": 108,
+            "sum_r": 51.5938,
+            "avg_r": 0.477721,
+            "wins": 24,
+            "losses": 84,
+            "wr_pct": 22.222,
+            "avg_win": 5.6613,
+            "avg_loss": -1.0033,
+            "payoff": 5.6426,
+            "pf": 1.6122,
+            "max_dd": 24.5478,
+            "max_loss_streak": 18,
+            "max_win_streak": 4,
+            "median": -1.068225,
+            "std": 4.41504
+          },
+          "cost_funding": 14.9282,
+          "yearly_gross": {
+            "2021": -3.429,
+            "2022": 69.951
+          },
+          "yearly_net": {
+            "2021": -9.6658,
+            "2022": 61.2597
+          },
+          "runners": {
+            "3": 14,
+            "5": 8,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 146,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 145,
+            "sum_r": 88.486,
+            "avg_r": 0.610248,
+            "wins": 37,
+            "losses": 108,
+            "wr_pct": 25.517,
+            "avg_win": 4.9425,
+            "avg_loss": -0.874,
+            "payoff": 5.6553,
+            "pf": 1.9375,
+            "max_dd": 27.249,
+            "max_loss_streak": 12,
+            "max_win_streak": 6,
+            "median": -0.997,
+            "std": 4.205515
+          },
+          "net": {
+            "n": 145,
+            "sum_r": 67.8512,
+            "avg_r": 0.467939,
+            "wins": 37,
+            "losses": 108,
+            "wr_pct": 25.517,
+            "avg_win": 4.7826,
+            "avg_loss": -1.0102,
+            "payoff": 4.7341,
+            "pf": 1.6219,
+            "max_dd": 32.7754,
+            "max_loss_streak": 12,
+            "max_win_streak": 6,
+            "median": -1.066857,
+            "std": 4.166492
+          },
+          "cost_funding": 20.6348,
+          "yearly_gross": {
+            "2021": -6.347,
+            "2022": 94.833
+          },
+          "yearly_net": {
+            "2021": -15.0203,
+            "2022": 82.8717
+          },
+          "runners": {
+            "3": 18,
+            "5": 11,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 98,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 70.121,
+            "avg_r": 0.410064,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.1749,
+            "avg_loss": -0.8943,
+            "payoff": 4.6684,
+            "pf": 1.6174,
+            "max_dd": 28.954,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -0.997,
+            "std": 3.744787
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 45.6373,
+            "avg_r": 0.266885,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.0198,
+            "avg_loss": -1.0333,
+            "payoff": 3.8901,
+            "pf": 1.3478,
+            "max_dd": 34.9207,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -1.073017,
+            "std": 3.710436
+          },
+          "cost_funding": 24.4837,
+          "yearly_gross": {
+            "2021": -3.883,
+            "2022": 74.004
+          },
+          "yearly_net": {
+            "2021": -13.1489,
+            "2022": 58.7861
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 64,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 89.04,
+            "avg_r": 0.473617,
+            "wins": 47,
+            "losses": 141,
+            "wr_pct": 25.0,
+            "avg_win": 4.5384,
+            "avg_loss": -0.8813,
+            "payoff": 5.1496,
+            "pf": 1.7165,
+            "max_dd": 21.861,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.814673
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 62.4365,
+            "avg_r": 0.332109,
+            "wins": 47,
+            "losses": 141,
+            "wr_pct": 25.0,
+            "avg_win": 4.3816,
+            "avg_loss": -1.0177,
+            "payoff": 4.3053,
+            "pf": 1.4351,
+            "max_dd": 27.7839,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.06722,
+            "std": 3.780044
+          },
+          "cost_funding": 26.6035,
+          "yearly_gross": {
+            "2021": 2.723,
+            "2022": 86.317
+          },
+          "yearly_net": {
+            "2021": -7.0308,
+            "2022": 69.4677
+          },
+          "runners": {
+            "3": 21,
+            "5": 13,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 37,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 145,
+            "sum_r": 88.486,
+            "avg_r": 0.610248,
+            "wins": 37,
+            "losses": 108,
+            "wr_pct": 25.517,
+            "avg_win": 4.9425,
+            "avg_loss": -0.874,
+            "payoff": 5.6553,
+            "pf": 1.9375,
+            "max_dd": 27.249,
+            "max_loss_streak": 12,
+            "max_win_streak": 6,
+            "median": -0.997,
+            "std": 4.205515
+          },
+          "net": {
+            "n": 145,
+            "sum_r": 67.8512,
+            "avg_r": 0.467939,
+            "wins": 37,
+            "losses": 108,
+            "wr_pct": 25.517,
+            "avg_win": 4.7826,
+            "avg_loss": -1.0102,
+            "payoff": 4.7341,
+            "pf": 1.6219,
+            "max_dd": 32.7754,
+            "max_loss_streak": 12,
+            "max_win_streak": 6,
+            "median": -1.066857,
+            "std": 4.166492
+          },
+          "cost_funding": 20.6348,
+          "yearly_gross": {
+            "2021": -6.347,
+            "2022": 94.833
+          },
+          "yearly_net": {
+            "2021": -15.0203,
+            "2022": 82.8717
+          },
+          "runners": {
+            "3": 18,
+            "5": 11,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 98,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 70.121,
+            "avg_r": 0.410064,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.1749,
+            "avg_loss": -0.8943,
+            "payoff": 4.6684,
+            "pf": 1.6174,
+            "max_dd": 28.954,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -0.997,
+            "std": 3.744787
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 45.6373,
+            "avg_r": 0.266885,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.0198,
+            "avg_loss": -1.0333,
+            "payoff": 3.8901,
+            "pf": 1.3478,
+            "max_dd": 34.9207,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -1.073017,
+            "std": 3.710436
+          },
+          "cost_funding": 24.4837,
+          "yearly_gross": {
+            "2021": -3.883,
+            "2022": 74.004
+          },
+          "yearly_net": {
+            "2021": -13.1489,
+            "2022": 58.7861
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 64,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 89.04,
+            "avg_r": 0.473617,
+            "wins": 47,
+            "losses": 141,
+            "wr_pct": 25.0,
+            "avg_win": 4.5384,
+            "avg_loss": -0.8813,
+            "payoff": 5.1496,
+            "pf": 1.7165,
+            "max_dd": 21.861,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.814673
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 62.4365,
+            "avg_r": 0.332109,
+            "wins": 47,
+            "losses": 141,
+            "wr_pct": 25.0,
+            "avg_win": 4.3816,
+            "avg_loss": -1.0177,
+            "payoff": 4.3053,
+            "pf": 1.4351,
+            "max_dd": 27.7839,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.06722,
+            "std": 3.780044
+          },
+          "cost_funding": 26.6035,
+          "yearly_gross": {
+            "2021": 2.723,
+            "2022": 86.317
+          },
+          "yearly_net": {
+            "2021": -7.0308,
+            "2022": 69.4677
+          },
+          "runners": {
+            "3": 21,
+            "5": 13,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 37,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 201,
+            "sum_r": 81.526,
+            "avg_r": 0.405602,
+            "wins": 53,
+            "losses": 148,
+            "wr_pct": 26.368,
+            "avg_win": 4.0442,
+            "avg_loss": -0.8974,
+            "payoff": 4.5066,
+            "pf": 1.6138,
+            "max_dd": 24.99,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.685419
+          },
+          "net": {
+            "n": 201,
+            "sum_r": 53.4383,
+            "avg_r": 0.265862,
+            "wins": 53,
+            "losses": 148,
+            "wr_pct": 26.368,
+            "avg_win": 3.8991,
+            "avg_loss": -1.0352,
+            "payoff": 3.7664,
+            "pf": 1.3488,
+            "max_dd": 31.5837,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.073017,
+            "std": 3.652752
+          },
+          "cost_funding": 28.0877,
+          "yearly_gross": {
+            "2021": 1.106,
+            "2022": 80.42
+          },
+          "yearly_net": {
+            "2021": -9.7715,
+            "2022": 63.2102
+          },
+          "runners": {
+            "3": 20,
+            "5": 12,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 25,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 211,
+            "sum_r": 76.719,
+            "avg_r": 0.363597,
+            "wins": 54,
+            "losses": 157,
+            "wr_pct": 25.592,
+            "avg_win": 3.9878,
+            "avg_loss": -0.8829,
+            "payoff": 4.5165,
+            "pf": 1.5534,
+            "max_dd": 23.271,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.549271
+          },
+          "net": {
+            "n": 211,
+            "sum_r": 47.8932,
+            "avg_r": 0.226982,
+            "wins": 53,
+            "losses": 158,
+            "wr_pct": 25.118,
+            "avg_win": 3.9197,
+            "avg_loss": -1.0117,
+            "payoff": 3.8743,
+            "pf": 1.2996,
+            "max_dd": 29.4596,
+            "max_loss_streak": 13,
+            "max_win_streak": 6,
+            "median": -1.067348,
+            "std": 3.519595
+          },
+          "cost_funding": 28.8258,
+          "yearly_gross": {
+            "2021": 9.561,
+            "2022": 67.158
+          },
+          "yearly_net": {
+            "2021": -2.0982,
+            "2022": 49.9918
+          },
+          "runners": {
+            "3": 21,
+            "5": 13,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 5,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 70.121,
+            "avg_r": 0.410064,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.1749,
+            "avg_loss": -0.8943,
+            "payoff": 4.6684,
+            "pf": 1.6174,
+            "max_dd": 28.954,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -0.997,
+            "std": 3.744787
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 45.6373,
+            "avg_r": 0.266885,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.0198,
+            "avg_loss": -1.0333,
+            "payoff": 3.8901,
+            "pf": 1.3478,
+            "max_dd": 34.9207,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -1.073017,
+            "std": 3.710436
+          },
+          "cost_funding": 24.4837,
+          "yearly_gross": {
+            "2021": -3.883,
+            "2022": 74.004
+          },
+          "yearly_net": {
+            "2021": -13.1489,
+            "2022": 58.7861
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 64,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 62.571,
+            "avg_r": 0.365912,
+            "wins": 42,
+            "losses": 129,
+            "wr_pct": 24.561,
+            "avg_win": 4.2566,
+            "avg_loss": -0.9008,
+            "payoff": 4.7252,
+            "pf": 1.5384,
+            "max_dd": 28.954,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.741974
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 38.4729,
+            "avg_r": 0.224988,
+            "wins": 42,
+            "losses": 129,
+            "wr_pct": 24.561,
+            "avg_win": 4.1067,
+            "avg_loss": -1.0388,
+            "payoff": 3.9532,
+            "pf": 1.2871,
+            "max_dd": 34.9207,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -1.073508,
+            "std": 3.707979
+          },
+          "cost_funding": 24.0981,
+          "yearly_gross": {
+            "2021": -3.883,
+            "2022": 66.454
+          },
+          "yearly_net": {
+            "2021": -13.1489,
+            "2022": 51.6217
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 63,
+          "blocked_addons": 0,
+          "blocked_state": 1
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 70.121,
+            "avg_r": 0.410064,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.1749,
+            "avg_loss": -0.8943,
+            "payoff": 4.6684,
+            "pf": 1.6174,
+            "max_dd": 28.954,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -0.997,
+            "std": 3.744787
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 45.6373,
+            "avg_r": 0.266885,
+            "wins": 44,
+            "losses": 127,
+            "wr_pct": 25.731,
+            "avg_win": 4.0198,
+            "avg_loss": -1.0333,
+            "payoff": 3.8901,
+            "pf": 1.3478,
+            "max_dd": 34.9207,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -1.073017,
+            "std": 3.710436
+          },
+          "cost_funding": 24.4837,
+          "yearly_gross": {
+            "2021": -3.883,
+            "2022": 74.004
+          },
+          "yearly_net": {
+            "2021": -13.1489,
+            "2022": 58.7861
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 64,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 62.571,
+            "avg_r": 0.365912,
+            "wins": 42,
+            "losses": 129,
+            "wr_pct": 24.561,
+            "avg_win": 4.2566,
+            "avg_loss": -0.9008,
+            "payoff": 4.7252,
+            "pf": 1.5384,
+            "max_dd": 28.954,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -0.998,
+            "std": 3.741974
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 38.4729,
+            "avg_r": 0.224988,
+            "wins": 42,
+            "losses": 129,
+            "wr_pct": 24.561,
+            "avg_win": 4.1067,
+            "avg_loss": -1.0388,
+            "payoff": 3.9532,
+            "pf": 1.2871,
+            "max_dd": 34.9207,
+            "max_loss_streak": 11,
+            "max_win_streak": 6,
+            "median": -1.073508,
+            "std": 3.707979
+          },
+          "cost_funding": 24.0981,
+          "yearly_gross": {
+            "2021": -3.883,
+            "2022": 66.454
+          },
+          "yearly_net": {
+            "2021": -13.1489,
+            "2022": 51.6217
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 63,
+          "blocked_state": 1
+        }
+      }
+    },
+    "literal_v18_single": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 28.214,
+            "avg_r": 0.150074,
+            "wins": 48,
+            "losses": 140,
+            "wr_pct": 25.532,
+            "avg_win": 3.1014,
+            "avg_loss": -0.8618,
+            "payoff": 3.5987,
+            "pf": 1.2338,
+            "max_dd": 18.088,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.9405,
+            "std": 2.476796
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 4.1866,
+            "avg_r": 0.022269,
+            "wins": 45,
+            "losses": 143,
+            "wr_pct": 23.936,
+            "avg_win": 3.1751,
+            "avg_loss": -0.9699,
+            "payoff": 3.2737,
+            "pf": 1.0302,
+            "max_dd": 23.5111,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.027065,
+            "std": 2.464862
+          },
+          "cost_funding": 24.0274,
+          "yearly_gross": {
+            "2021": 14.335,
+            "2022": 13.879
+          },
+          "yearly_net": {
+            "2021": 4.0568,
+            "2022": 0.13
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 28.214,
+            "avg_r": 0.150074,
+            "wins": 48,
+            "losses": 140,
+            "wr_pct": 25.532,
+            "avg_win": 3.1014,
+            "avg_loss": -0.8618,
+            "payoff": 3.5987,
+            "pf": 1.2338,
+            "max_dd": 18.088,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.9405,
+            "std": 2.476796
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 4.1866,
+            "avg_r": 0.022269,
+            "wins": 45,
+            "losses": 143,
+            "wr_pct": 23.936,
+            "avg_win": 3.1751,
+            "avg_loss": -0.9699,
+            "payoff": 3.2737,
+            "pf": 1.0302,
+            "max_dd": 23.5111,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.027065,
+            "std": 2.464862
+          },
+          "cost_funding": 24.0274,
+          "yearly_gross": {
+            "2021": 14.335,
+            "2022": 13.879
+          },
+          "yearly_net": {
+            "2021": 4.0568,
+            "2022": 0.13
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 28.214,
+            "avg_r": 0.150074,
+            "wins": 48,
+            "losses": 140,
+            "wr_pct": 25.532,
+            "avg_win": 3.1014,
+            "avg_loss": -0.8618,
+            "payoff": 3.5987,
+            "pf": 1.2338,
+            "max_dd": 18.088,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.9405,
+            "std": 2.476796
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 4.1866,
+            "avg_r": 0.022269,
+            "wins": 45,
+            "losses": 143,
+            "wr_pct": 23.936,
+            "avg_win": 3.1751,
+            "avg_loss": -0.9699,
+            "payoff": 3.2737,
+            "pf": 1.0302,
+            "max_dd": 23.5111,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.027065,
+            "std": 2.464862
+          },
+          "cost_funding": 24.0274,
+          "yearly_gross": {
+            "2021": 14.335,
+            "2022": 13.879
+          },
+          "yearly_net": {
+            "2021": 4.0568,
+            "2022": 0.13
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 28.214,
+            "avg_r": 0.150074,
+            "wins": 48,
+            "losses": 140,
+            "wr_pct": 25.532,
+            "avg_win": 3.1014,
+            "avg_loss": -0.8618,
+            "payoff": 3.5987,
+            "pf": 1.2338,
+            "max_dd": 18.088,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.9405,
+            "std": 2.476796
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 4.1866,
+            "avg_r": 0.022269,
+            "wins": 45,
+            "losses": 143,
+            "wr_pct": 23.936,
+            "avg_win": 3.1751,
+            "avg_loss": -0.9699,
+            "payoff": 3.2737,
+            "pf": 1.0302,
+            "max_dd": 23.5111,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.027065,
+            "std": 2.464862
+          },
+          "cost_funding": 24.0274,
+          "yearly_gross": {
+            "2021": 14.335,
+            "2022": 13.879
+          },
+          "yearly_net": {
+            "2021": 4.0568,
+            "2022": 0.13
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 105,
+            "sum_r": 10.122,
+            "avg_r": 0.0964,
+            "wins": 21,
+            "losses": 84,
+            "wr_pct": 20.0,
+            "avg_win": 3.9787,
+            "avg_loss": -0.8742,
+            "payoff": 4.5514,
+            "pf": 1.1378,
+            "max_dd": 19.833,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.946,
+            "std": 2.675497
+          },
+          "net": {
+            "n": 105,
+            "sum_r": -2.6648,
+            "avg_r": -0.025379,
+            "wins": 20,
+            "losses": 85,
+            "wr_pct": 19.048,
+            "avg_win": 4.0372,
+            "avg_loss": -0.9813,
+            "payoff": 4.1142,
+            "pf": 0.9681,
+            "max_dd": 22.8681,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.035127,
+            "std": 2.656681
+          },
+          "cost_funding": 12.7868,
+          "yearly_gross": {
+            "2021": -5.7,
+            "2022": 15.822
+          },
+          "yearly_net": {
+            "2021": -11.3008,
+            "2022": 8.6363
+          },
+          "runners": {
+            "3": 10,
+            "5": 6,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 140,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 15.059,
+            "avg_r": 0.107564,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.1444,
+            "avg_loss": -0.8665,
+            "payoff": 3.6288,
+            "pf": 1.164,
+            "max_dd": 15.252,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.943,
+            "std": 2.513712
+          },
+          "net": {
+            "n": 140,
+            "sum_r": -2.6583,
+            "avg_r": -0.018988,
+            "wins": 32,
+            "losses": 108,
+            "wr_pct": 22.857,
+            "avg_win": 3.2165,
+            "avg_loss": -0.9776,
+            "payoff": 3.29,
+            "pf": 0.9748,
+            "max_dd": 18.8796,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.029659,
+            "std": 2.501817
+          },
+          "cost_funding": 17.7173,
+          "yearly_gross": {
+            "2021": 3.911,
+            "2022": 11.148
+          },
+          "yearly_net": {
+            "2021": -4.2101,
+            "2022": 1.552
+          },
+          "runners": {
+            "3": 13,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 89,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 164,
+            "sum_r": 32.548,
+            "avg_r": 0.198463,
+            "wins": 41,
+            "losses": 123,
+            "wr_pct": 25.0,
+            "avg_win": 3.352,
+            "avg_loss": -0.8527,
+            "payoff": 3.931,
+            "pf": 1.3103,
+            "max_dd": 22.004,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.9335,
+            "std": 3.159083
+          },
+          "net": {
+            "n": 164,
+            "sum_r": 11.279,
+            "avg_r": 0.068775,
+            "wins": 39,
+            "losses": 125,
+            "wr_pct": 23.78,
+            "avg_win": 3.3917,
+            "avg_loss": -0.968,
+            "payoff": 3.5039,
+            "pf": 1.0932,
+            "max_dd": 26.7836,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.025134,
+            "std": 3.133273
+          },
+          "cost_funding": 21.269,
+          "yearly_gross": {
+            "2021": 6.038,
+            "2022": 26.51
+          },
+          "yearly_net": {
+            "2021": -2.9672,
+            "2022": 14.2465
+          },
+          "runners": {
+            "3": 17,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 48,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 175,
+            "sum_r": 33.36,
+            "avg_r": 0.190629,
+            "wins": 46,
+            "losses": 129,
+            "wr_pct": 26.286,
+            "avg_win": 3.1372,
+            "avg_loss": -0.8601,
+            "payoff": 3.6475,
+            "pf": 1.3007,
+            "max_dd": 16.46,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.934,
+            "std": 2.539257
+          },
+          "net": {
+            "n": 175,
+            "sum_r": 10.7706,
+            "avg_r": 0.061546,
+            "wins": 44,
+            "losses": 131,
+            "wr_pct": 25.143,
+            "avg_win": 3.1486,
+            "avg_loss": -0.9753,
+            "payoff": 3.2283,
+            "pf": 1.0843,
+            "max_dd": 21.4653,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.024604,
+            "std": 2.527334
+          },
+          "cost_funding": 22.5894,
+          "yearly_gross": {
+            "2021": 13.993,
+            "2022": 19.367
+          },
+          "yearly_net": {
+            "2021": 4.6023,
+            "2022": 6.1686
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 22,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 140,
+            "sum_r": 15.059,
+            "avg_r": 0.107564,
+            "wins": 34,
+            "losses": 106,
+            "wr_pct": 24.286,
+            "avg_win": 3.1444,
+            "avg_loss": -0.8665,
+            "payoff": 3.6288,
+            "pf": 1.164,
+            "max_dd": 15.252,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.943,
+            "std": 2.513712
+          },
+          "net": {
+            "n": 140,
+            "sum_r": -2.6583,
+            "avg_r": -0.018988,
+            "wins": 32,
+            "losses": 108,
+            "wr_pct": 22.857,
+            "avg_win": 3.2165,
+            "avg_loss": -0.9776,
+            "payoff": 3.29,
+            "pf": 0.9748,
+            "max_dd": 18.8796,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.029659,
+            "std": 2.501817
+          },
+          "cost_funding": 17.7173,
+          "yearly_gross": {
+            "2021": 3.911,
+            "2022": 11.148
+          },
+          "yearly_net": {
+            "2021": -4.2101,
+            "2022": 1.552
+          },
+          "runners": {
+            "3": 13,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 89,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 164,
+            "sum_r": 32.548,
+            "avg_r": 0.198463,
+            "wins": 41,
+            "losses": 123,
+            "wr_pct": 25.0,
+            "avg_win": 3.352,
+            "avg_loss": -0.8527,
+            "payoff": 3.931,
+            "pf": 1.3103,
+            "max_dd": 22.004,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.9335,
+            "std": 3.159083
+          },
+          "net": {
+            "n": 164,
+            "sum_r": 11.279,
+            "avg_r": 0.068775,
+            "wins": 39,
+            "losses": 125,
+            "wr_pct": 23.78,
+            "avg_win": 3.3917,
+            "avg_loss": -0.968,
+            "payoff": 3.5039,
+            "pf": 1.0932,
+            "max_dd": 26.7836,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.025134,
+            "std": 3.133273
+          },
+          "cost_funding": 21.269,
+          "yearly_gross": {
+            "2021": 6.038,
+            "2022": 26.51
+          },
+          "yearly_net": {
+            "2021": -2.9672,
+            "2022": 14.2465
+          },
+          "runners": {
+            "3": 17,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 48,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 175,
+            "sum_r": 33.36,
+            "avg_r": 0.190629,
+            "wins": 46,
+            "losses": 129,
+            "wr_pct": 26.286,
+            "avg_win": 3.1372,
+            "avg_loss": -0.8601,
+            "payoff": 3.6475,
+            "pf": 1.3007,
+            "max_dd": 16.46,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.934,
+            "std": 2.539257
+          },
+          "net": {
+            "n": 175,
+            "sum_r": 10.7706,
+            "avg_r": 0.061546,
+            "wins": 44,
+            "losses": 131,
+            "wr_pct": 25.143,
+            "avg_win": 3.1486,
+            "avg_loss": -0.9753,
+            "payoff": 3.2283,
+            "pf": 1.0843,
+            "max_dd": 21.4653,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.024604,
+            "std": 2.527334
+          },
+          "cost_funding": 22.5894,
+          "yearly_gross": {
+            "2021": 13.993,
+            "2022": 19.367
+          },
+          "yearly_net": {
+            "2021": 4.6023,
+            "2022": 6.1686
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 22,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 183,
+            "sum_r": 33.616,
+            "avg_r": 0.183694,
+            "wins": 49,
+            "losses": 134,
+            "wr_pct": 26.776,
+            "avg_win": 3.0468,
+            "avg_loss": -0.8632,
+            "payoff": 3.5294,
+            "pf": 1.2906,
+            "max_dd": 18.167,
+            "max_loss_streak": 8,
+            "max_win_streak": 3,
+            "median": -0.934,
+            "std": 2.503359
+          },
+          "net": {
+            "n": 183,
+            "sum_r": 9.9092,
+            "avg_r": 0.054149,
+            "wins": 46,
+            "losses": 137,
+            "wr_pct": 25.137,
+            "avg_win": 3.115,
+            "avg_loss": -0.9736,
+            "payoff": 3.1995,
+            "pf": 1.0743,
+            "max_dd": 23.6696,
+            "max_loss_streak": 8,
+            "max_win_streak": 3,
+            "median": -1.026196,
+            "std": 2.492315
+          },
+          "cost_funding": 23.7068,
+          "yearly_gross": {
+            "2021": 19.913,
+            "2022": 13.703
+          },
+          "yearly_net": {
+            "2021": 9.9379,
+            "2022": -0.0285
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 13,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 188,
+            "sum_r": 28.214,
+            "avg_r": 0.150074,
+            "wins": 48,
+            "losses": 140,
+            "wr_pct": 25.532,
+            "avg_win": 3.1014,
+            "avg_loss": -0.8618,
+            "payoff": 3.5987,
+            "pf": 1.2338,
+            "max_dd": 18.088,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -0.9405,
+            "std": 2.476796
+          },
+          "net": {
+            "n": 188,
+            "sum_r": 4.1866,
+            "avg_r": 0.022269,
+            "wins": 45,
+            "losses": 143,
+            "wr_pct": 23.936,
+            "avg_win": 3.1751,
+            "avg_loss": -0.9699,
+            "payoff": 3.2737,
+            "pf": 1.0302,
+            "max_dd": 23.5111,
+            "max_loss_streak": 10,
+            "max_win_streak": 3,
+            "median": -1.027065,
+            "std": 2.464862
+          },
+          "cost_funding": 24.0274,
+          "yearly_gross": {
+            "2021": 14.335,
+            "2022": 13.879
+          },
+          "yearly_net": {
+            "2021": 4.0568,
+            "2022": 0.13
+          },
+          "runners": {
+            "3": 19,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 164,
+            "sum_r": 32.548,
+            "avg_r": 0.198463,
+            "wins": 41,
+            "losses": 123,
+            "wr_pct": 25.0,
+            "avg_win": 3.352,
+            "avg_loss": -0.8527,
+            "payoff": 3.931,
+            "pf": 1.3103,
+            "max_dd": 22.004,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.9335,
+            "std": 3.159083
+          },
+          "net": {
+            "n": 164,
+            "sum_r": 11.279,
+            "avg_r": 0.068775,
+            "wins": 39,
+            "losses": 125,
+            "wr_pct": 23.78,
+            "avg_win": 3.3917,
+            "avg_loss": -0.968,
+            "payoff": 3.5039,
+            "pf": 1.0932,
+            "max_dd": 26.7836,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.025134,
+            "std": 3.133273
+          },
+          "cost_funding": 21.269,
+          "yearly_gross": {
+            "2021": 6.038,
+            "2022": 26.51
+          },
+          "yearly_net": {
+            "2021": -2.9672,
+            "2022": 14.2465
+          },
+          "runners": {
+            "3": 17,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 48,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 164,
+            "sum_r": 32.548,
+            "avg_r": 0.198463,
+            "wins": 41,
+            "losses": 123,
+            "wr_pct": 25.0,
+            "avg_win": 3.352,
+            "avg_loss": -0.8527,
+            "payoff": 3.931,
+            "pf": 1.3103,
+            "max_dd": 22.004,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.9335,
+            "std": 3.159083
+          },
+          "net": {
+            "n": 164,
+            "sum_r": 11.279,
+            "avg_r": 0.068775,
+            "wins": 39,
+            "losses": 125,
+            "wr_pct": 23.78,
+            "avg_win": 3.3917,
+            "avg_loss": -0.968,
+            "payoff": 3.5039,
+            "pf": 1.0932,
+            "max_dd": 26.7836,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.025134,
+            "std": 3.133273
+          },
+          "cost_funding": 21.269,
+          "yearly_gross": {
+            "2021": 6.038,
+            "2022": 26.51
+          },
+          "yearly_net": {
+            "2021": -2.9672,
+            "2022": 14.2465
+          },
+          "runners": {
+            "3": 17,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 48,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 164,
+            "sum_r": 32.548,
+            "avg_r": 0.198463,
+            "wins": 41,
+            "losses": 123,
+            "wr_pct": 25.0,
+            "avg_win": 3.352,
+            "avg_loss": -0.8527,
+            "payoff": 3.931,
+            "pf": 1.3103,
+            "max_dd": 22.004,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.9335,
+            "std": 3.159083
+          },
+          "net": {
+            "n": 164,
+            "sum_r": 11.279,
+            "avg_r": 0.068775,
+            "wins": 39,
+            "losses": 125,
+            "wr_pct": 23.78,
+            "avg_win": 3.3917,
+            "avg_loss": -0.968,
+            "payoff": 3.5039,
+            "pf": 1.0932,
+            "max_dd": 26.7836,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.025134,
+            "std": 3.133273
+          },
+          "cost_funding": 21.269,
+          "yearly_gross": {
+            "2021": 6.038,
+            "2022": 26.51
+          },
+          "yearly_net": {
+            "2021": -2.9672,
+            "2022": 14.2465
+          },
+          "runners": {
+            "3": 17,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 48,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 164,
+            "sum_r": 32.548,
+            "avg_r": 0.198463,
+            "wins": 41,
+            "losses": 123,
+            "wr_pct": 25.0,
+            "avg_win": 3.352,
+            "avg_loss": -0.8527,
+            "payoff": 3.931,
+            "pf": 1.3103,
+            "max_dd": 22.004,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.9335,
+            "std": 3.159083
+          },
+          "net": {
+            "n": 164,
+            "sum_r": 11.279,
+            "avg_r": 0.068775,
+            "wins": 39,
+            "losses": 125,
+            "wr_pct": 23.78,
+            "avg_win": 3.3917,
+            "avg_loss": -0.968,
+            "payoff": 3.5039,
+            "pf": 1.0932,
+            "max_dd": 26.7836,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.025134,
+            "std": 3.133273
+          },
+          "cost_funding": 21.269,
+          "yearly_gross": {
+            "2021": 6.038,
+            "2022": 26.51
+          },
+          "yearly_net": {
+            "2021": -2.9672,
+            "2022": 14.2465
+          },
+          "runners": {
+            "3": 17,
+            "5": 8,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 48,
+          "blocked_state": 0
+        }
+      }
+    },
+    "literal_v18_multi": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 228,
+            "sum_r": 101.12,
+            "avg_r": 0.443509,
+            "wins": 66,
+            "losses": 162,
+            "wr_pct": 28.947,
+            "avg_win": 3.6441,
+            "avg_loss": -0.8604,
+            "payoff": 4.2352,
+            "pf": 1.7255,
+            "max_dd": 16.641,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.929,
+            "std": 3.392396
+          },
+          "net": {
+            "n": 228,
+            "sum_r": 72.3269,
+            "avg_r": 0.317223,
+            "wins": 63,
+            "losses": 165,
+            "wr_pct": 27.632,
+            "avg_win": 3.6756,
+            "avg_loss": -0.9651,
+            "payoff": 3.8086,
+            "pf": 1.4542,
+            "max_dd": 22.0148,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.017891,
+            "std": 3.362907
+          },
+          "cost_funding": 28.7931,
+          "yearly_gross": {
+            "2021": 16.403,
+            "2022": 84.717
+          },
+          "yearly_net": {
+            "2021": 4.3432,
+            "2022": 67.9838
+          },
+          "runners": {
+            "3": 25,
+            "5": 15,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 228,
+            "sum_r": 101.12,
+            "avg_r": 0.443509,
+            "wins": 66,
+            "losses": 162,
+            "wr_pct": 28.947,
+            "avg_win": 3.6441,
+            "avg_loss": -0.8604,
+            "payoff": 4.2352,
+            "pf": 1.7255,
+            "max_dd": 16.641,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.929,
+            "std": 3.392396
+          },
+          "net": {
+            "n": 228,
+            "sum_r": 72.3269,
+            "avg_r": 0.317223,
+            "wins": 63,
+            "losses": 165,
+            "wr_pct": 27.632,
+            "avg_win": 3.6756,
+            "avg_loss": -0.9651,
+            "payoff": 3.8086,
+            "pf": 1.4542,
+            "max_dd": 22.0148,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.017891,
+            "std": 3.362907
+          },
+          "cost_funding": 28.7931,
+          "yearly_gross": {
+            "2021": 16.403,
+            "2022": 84.717
+          },
+          "yearly_net": {
+            "2021": 4.3432,
+            "2022": 67.9838
+          },
+          "runners": {
+            "3": 25,
+            "5": 15,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 226,
+            "sum_r": 68.066,
+            "avg_r": 0.301177,
+            "wins": 64,
+            "losses": 162,
+            "wr_pct": 28.319,
+            "avg_win": 3.2415,
+            "avg_loss": -0.8604,
+            "payoff": 3.7673,
+            "pf": 1.4883,
+            "max_dd": 17.677,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.931,
+            "std": 2.751893
+          },
+          "net": {
+            "n": 226,
+            "sum_r": 39.9827,
+            "avg_r": 0.176915,
+            "wins": 61,
+            "losses": 165,
+            "wr_pct": 26.991,
+            "avg_win": 3.2659,
+            "avg_loss": -0.9651,
+            "payoff": 3.3841,
+            "pf": 1.2511,
+            "max_dd": 22.5539,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.019742,
+            "std": 2.733393
+          },
+          "cost_funding": 28.0833,
+          "yearly_gross": {
+            "2021": 16.403,
+            "2022": 51.663
+          },
+          "yearly_net": {
+            "2021": 4.3432,
+            "2022": 35.6397
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 2
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 221,
+            "sum_r": 38.234,
+            "avg_r": 0.173005,
+            "wins": 60,
+            "losses": 161,
+            "wr_pct": 27.149,
+            "avg_win": 2.9457,
+            "avg_loss": -0.8603,
+            "payoff": 3.4241,
+            "pf": 1.276,
+            "max_dd": 18.106,
+            "max_loss_streak": 10,
+            "max_win_streak": 4,
+            "median": -0.934,
+            "std": 2.435585
+          },
+          "net": {
+            "n": 221,
+            "sum_r": 11.2034,
+            "avg_r": 0.050694,
+            "wins": 57,
+            "losses": 164,
+            "wr_pct": 25.792,
+            "avg_win": 2.9726,
+            "avg_loss": -0.9648,
+            "payoff": 3.0809,
+            "pf": 1.0708,
+            "max_dd": 23.2636,
+            "max_loss_streak": 10,
+            "max_win_streak": 4,
+            "median": -1.0213,
+            "std": 2.423714
+          },
+          "cost_funding": 27.0306,
+          "yearly_gross": {
+            "2021": 11.665,
+            "2022": 26.569
+          },
+          "yearly_net": {
+            "2021": -0.0997,
+            "2022": 11.3032
+          },
+          "runners": {
+            "3": 21,
+            "5": 12,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 7
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 111,
+            "sum_r": 58.386,
+            "avg_r": 0.526,
+            "wins": 25,
+            "losses": 86,
+            "wr_pct": 22.523,
+            "avg_win": 5.3032,
+            "avg_loss": -0.8627,
+            "payoff": 6.1471,
+            "pf": 1.7869,
+            "max_dd": 19.833,
+            "max_loss_streak": 16,
+            "max_win_streak": 4,
+            "median": -0.941,
+            "std": 4.01001
+          },
+          "net": {
+            "n": 111,
+            "sum_r": 44.4322,
+            "avg_r": 0.40029,
+            "wins": 24,
+            "losses": 87,
+            "wr_pct": 21.622,
+            "avg_win": 5.3713,
+            "avg_loss": -0.971,
+            "payoff": 5.5316,
+            "pf": 1.526,
+            "max_dd": 22.8681,
+            "max_loss_streak": 16,
+            "max_win_streak": 4,
+            "median": -1.033099,
+            "std": 3.97338
+          },
+          "cost_funding": 13.9538,
+          "yearly_gross": {
+            "2021": -3.19,
+            "2022": 61.576
+          },
+          "yearly_net": {
+            "2021": -9.1766,
+            "2022": 53.609
+          },
+          "runners": {
+            "3": 14,
+            "5": 9,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 150,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 151,
+            "sum_r": 91.846,
+            "avg_r": 0.608252,
+            "wins": 42,
+            "losses": 109,
+            "wr_pct": 27.815,
+            "avg_win": 4.387,
+            "avg_loss": -0.8478,
+            "payoff": 5.1746,
+            "pf": 1.9939,
+            "max_dd": 13.611,
+            "max_loss_streak": 8,
+            "max_win_streak": 5,
+            "median": -0.93,
+            "std": 3.898949
+          },
+          "net": {
+            "n": 151,
+            "sum_r": 72.2451,
+            "avg_r": 0.478445,
+            "wins": 40,
+            "losses": 111,
+            "wr_pct": 26.49,
+            "avg_win": 4.4625,
+            "avg_loss": -0.9573,
+            "payoff": 4.6618,
+            "pf": 1.6799,
+            "max_dd": 16.5022,
+            "max_loss_streak": 9,
+            "max_win_streak": 5,
+            "median": -1.024589,
+            "std": 3.864376
+          },
+          "cost_funding": 19.6009,
+          "yearly_gross": {
+            "2021": 6.914,
+            "2022": 84.932
+          },
+          "yearly_net": {
+            "2021": -1.6888,
+            "2022": 73.9341
+          },
+          "runners": {
+            "3": 19,
+            "5": 13,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 102,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 177,
+            "sum_r": 96.645,
+            "avg_r": 0.546017,
+            "wins": 49,
+            "losses": 128,
+            "wr_pct": 27.684,
+            "avg_win": 4.2123,
+            "avg_loss": -0.8575,
+            "payoff": 4.9124,
+            "pf": 1.8805,
+            "max_dd": 17.877,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.93,
+            "std": 3.691704
+          },
+          "net": {
+            "n": 177,
+            "sum_r": 73.1302,
+            "avg_r": 0.413165,
+            "wins": 47,
+            "losses": 130,
+            "wr_pct": 26.554,
+            "avg_win": 4.2439,
+            "avg_loss": -0.9718,
+            "payoff": 4.3671,
+            "pf": 1.5789,
+            "max_dd": 22.1754,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.0213,
+            "std": 3.659025
+          },
+          "cost_funding": 23.5148,
+          "yearly_gross": {
+            "2021": 8.215,
+            "2022": 88.43
+          },
+          "yearly_net": {
+            "2021": -1.1731,
+            "2022": 74.3035
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 69,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 197,
+            "sum_r": 94.79,
+            "avg_r": 0.481168,
+            "wins": 56,
+            "losses": 141,
+            "wr_pct": 28.426,
+            "avg_win": 3.8849,
+            "avg_loss": -0.8707,
+            "payoff": 4.4619,
+            "pf": 1.7721,
+            "max_dd": 16.956,
+            "max_loss_streak": 11,
+            "max_win_streak": 5,
+            "median": -0.934,
+            "std": 3.531026
+          },
+          "net": {
+            "n": 197,
+            "sum_r": 69.241,
+            "avg_r": 0.351477,
+            "wins": 54,
+            "losses": 143,
+            "wr_pct": 27.411,
+            "avg_win": 3.8847,
+            "avg_loss": -0.9827,
+            "payoff": 3.9529,
+            "pf": 1.4927,
+            "max_dd": 21.163,
+            "max_loss_streak": 11,
+            "max_win_streak": 5,
+            "median": -1.0213,
+            "std": 3.499097
+          },
+          "cost_funding": 25.549,
+          "yearly_gross": {
+            "2021": 7.459,
+            "2022": 87.331
+          },
+          "yearly_net": {
+            "2021": -2.6863,
+            "2022": 71.9278
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 44,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 151,
+            "sum_r": 91.846,
+            "avg_r": 0.608252,
+            "wins": 42,
+            "losses": 109,
+            "wr_pct": 27.815,
+            "avg_win": 4.387,
+            "avg_loss": -0.8478,
+            "payoff": 5.1746,
+            "pf": 1.9939,
+            "max_dd": 13.611,
+            "max_loss_streak": 8,
+            "max_win_streak": 5,
+            "median": -0.93,
+            "std": 3.898949
+          },
+          "net": {
+            "n": 151,
+            "sum_r": 72.2451,
+            "avg_r": 0.478445,
+            "wins": 40,
+            "losses": 111,
+            "wr_pct": 26.49,
+            "avg_win": 4.4625,
+            "avg_loss": -0.9573,
+            "payoff": 4.6618,
+            "pf": 1.6799,
+            "max_dd": 16.5022,
+            "max_loss_streak": 9,
+            "max_win_streak": 5,
+            "median": -1.024589,
+            "std": 3.864376
+          },
+          "cost_funding": 19.6009,
+          "yearly_gross": {
+            "2021": 6.914,
+            "2022": 84.932
+          },
+          "yearly_net": {
+            "2021": -1.6888,
+            "2022": 73.9341
+          },
+          "runners": {
+            "3": 19,
+            "5": 13,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 102,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 177,
+            "sum_r": 96.645,
+            "avg_r": 0.546017,
+            "wins": 49,
+            "losses": 128,
+            "wr_pct": 27.684,
+            "avg_win": 4.2123,
+            "avg_loss": -0.8575,
+            "payoff": 4.9124,
+            "pf": 1.8805,
+            "max_dd": 17.877,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.93,
+            "std": 3.691704
+          },
+          "net": {
+            "n": 177,
+            "sum_r": 73.1302,
+            "avg_r": 0.413165,
+            "wins": 47,
+            "losses": 130,
+            "wr_pct": 26.554,
+            "avg_win": 4.2439,
+            "avg_loss": -0.9718,
+            "payoff": 4.3671,
+            "pf": 1.5789,
+            "max_dd": 22.1754,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.0213,
+            "std": 3.659025
+          },
+          "cost_funding": 23.5148,
+          "yearly_gross": {
+            "2021": 8.215,
+            "2022": 88.43
+          },
+          "yearly_net": {
+            "2021": -1.1731,
+            "2022": 74.3035
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 69,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 197,
+            "sum_r": 94.79,
+            "avg_r": 0.481168,
+            "wins": 56,
+            "losses": 141,
+            "wr_pct": 28.426,
+            "avg_win": 3.8849,
+            "avg_loss": -0.8707,
+            "payoff": 4.4619,
+            "pf": 1.7721,
+            "max_dd": 16.956,
+            "max_loss_streak": 11,
+            "max_win_streak": 5,
+            "median": -0.934,
+            "std": 3.531026
+          },
+          "net": {
+            "n": 197,
+            "sum_r": 69.241,
+            "avg_r": 0.351477,
+            "wins": 54,
+            "losses": 143,
+            "wr_pct": 27.411,
+            "avg_win": 3.8847,
+            "avg_loss": -0.9827,
+            "payoff": 3.9529,
+            "pf": 1.4927,
+            "max_dd": 21.163,
+            "max_loss_streak": 11,
+            "max_win_streak": 5,
+            "median": -1.0213,
+            "std": 3.499097
+          },
+          "cost_funding": 25.549,
+          "yearly_gross": {
+            "2021": 7.459,
+            "2022": 87.331
+          },
+          "yearly_net": {
+            "2021": -2.6863,
+            "2022": 71.9278
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 44,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 208,
+            "sum_r": 101.122,
+            "avg_r": 0.486163,
+            "wins": 60,
+            "losses": 148,
+            "wr_pct": 28.846,
+            "avg_win": 3.8245,
+            "avg_loss": -0.8672,
+            "payoff": 4.41,
+            "pf": 1.7879,
+            "max_dd": 15.699,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.931,
+            "std": 3.523613
+          },
+          "net": {
+            "n": 208,
+            "sum_r": 74.354,
+            "avg_r": 0.357471,
+            "wins": 57,
+            "losses": 151,
+            "wr_pct": 27.404,
+            "avg_win": 3.8842,
+            "avg_loss": -0.9738,
+            "payoff": 3.9887,
+            "pf": 1.5057,
+            "max_dd": 20.349,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.020874,
+            "std": 3.493426
+          },
+          "cost_funding": 26.768,
+          "yearly_gross": {
+            "2021": 18.1,
+            "2022": 83.022
+          },
+          "yearly_net": {
+            "2021": 7.2997,
+            "2022": 67.0548
+          },
+          "runners": {
+            "3": 24,
+            "5": 15,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 28,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 224,
+            "sum_r": 99.437,
+            "avg_r": 0.443915,
+            "wins": 64,
+            "losses": 160,
+            "wr_pct": 28.571,
+            "avg_win": 3.7166,
+            "avg_loss": -0.8651,
+            "payoff": 4.2959,
+            "pf": 1.7184,
+            "max_dd": 16.641,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.931,
+            "std": 3.420021
+          },
+          "net": {
+            "n": 224,
+            "sum_r": 70.8924,
+            "avg_r": 0.316484,
+            "wins": 61,
+            "losses": 163,
+            "wr_pct": 27.232,
+            "avg_win": 3.7569,
+            "avg_loss": -0.971,
+            "payoff": 3.869,
+            "pf": 1.4479,
+            "max_dd": 22.0148,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.019742,
+            "std": 3.390547
+          },
+          "cost_funding": 28.5446,
+          "yearly_gross": {
+            "2021": 14.806,
+            "2022": 84.631
+          },
+          "yearly_net": {
+            "2021": 2.8319,
+            "2022": 68.0606
+          },
+          "runners": {
+            "3": 25,
+            "5": 15,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 6,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 177,
+            "sum_r": 96.645,
+            "avg_r": 0.546017,
+            "wins": 49,
+            "losses": 128,
+            "wr_pct": 27.684,
+            "avg_win": 4.2123,
+            "avg_loss": -0.8575,
+            "payoff": 4.9124,
+            "pf": 1.8805,
+            "max_dd": 17.877,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.93,
+            "std": 3.691704
+          },
+          "net": {
+            "n": 177,
+            "sum_r": 73.1302,
+            "avg_r": 0.413165,
+            "wins": 47,
+            "losses": 130,
+            "wr_pct": 26.554,
+            "avg_win": 4.2439,
+            "avg_loss": -0.9718,
+            "payoff": 4.3671,
+            "pf": 1.5789,
+            "max_dd": 22.1754,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.0213,
+            "std": 3.659025
+          },
+          "cost_funding": 23.5148,
+          "yearly_gross": {
+            "2021": 8.215,
+            "2022": 88.43
+          },
+          "yearly_net": {
+            "2021": -1.1731,
+            "2022": 74.3035
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 69,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 176,
+            "sum_r": 74.772,
+            "avg_r": 0.424841,
+            "wins": 48,
+            "losses": 128,
+            "wr_pct": 27.273,
+            "avg_win": 3.8437,
+            "avg_loss": -0.8572,
+            "payoff": 4.4839,
+            "pf": 1.6814,
+            "max_dd": 20.967,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.931,
+            "std": 3.496962
+          },
+          "net": {
+            "n": 176,
+            "sum_r": 51.7409,
+            "avg_r": 0.293982,
+            "wins": 46,
+            "losses": 130,
+            "wr_pct": 26.136,
+            "avg_win": 3.8671,
+            "avg_loss": -0.9703,
+            "payoff": 3.9853,
+            "pf": 1.4102,
+            "max_dd": 25.9458,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.021134,
+            "std": 3.466325
+          },
+          "cost_funding": 23.0311,
+          "yearly_gross": {
+            "2021": 8.215,
+            "2022": 66.557
+          },
+          "yearly_net": {
+            "2021": -1.1731,
+            "2022": 52.9142
+          },
+          "runners": {
+            "3": 22,
+            "5": 12,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 69,
+          "blocked_addons": 0,
+          "blocked_state": 1
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 177,
+            "sum_r": 96.645,
+            "avg_r": 0.546017,
+            "wins": 49,
+            "losses": 128,
+            "wr_pct": 27.684,
+            "avg_win": 4.2123,
+            "avg_loss": -0.8575,
+            "payoff": 4.9124,
+            "pf": 1.8805,
+            "max_dd": 17.877,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.93,
+            "std": 3.691704
+          },
+          "net": {
+            "n": 177,
+            "sum_r": 73.1302,
+            "avg_r": 0.413165,
+            "wins": 47,
+            "losses": 130,
+            "wr_pct": 26.554,
+            "avg_win": 4.2439,
+            "avg_loss": -0.9718,
+            "payoff": 4.3671,
+            "pf": 1.5789,
+            "max_dd": 22.1754,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.0213,
+            "std": 3.659025
+          },
+          "cost_funding": 23.5148,
+          "yearly_gross": {
+            "2021": 8.215,
+            "2022": 88.43
+          },
+          "yearly_net": {
+            "2021": -1.1731,
+            "2022": 74.3035
+          },
+          "runners": {
+            "3": 24,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 69,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 176,
+            "sum_r": 74.772,
+            "avg_r": 0.424841,
+            "wins": 48,
+            "losses": 128,
+            "wr_pct": 27.273,
+            "avg_win": 3.8437,
+            "avg_loss": -0.8572,
+            "payoff": 4.4839,
+            "pf": 1.6814,
+            "max_dd": 20.967,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.931,
+            "std": 3.496962
+          },
+          "net": {
+            "n": 176,
+            "sum_r": 51.7409,
+            "avg_r": 0.293982,
+            "wins": 46,
+            "losses": 130,
+            "wr_pct": 26.136,
+            "avg_win": 3.8671,
+            "avg_loss": -0.9703,
+            "payoff": 3.9853,
+            "pf": 1.4102,
+            "max_dd": 25.9458,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.021134,
+            "std": 3.466325
+          },
+          "cost_funding": 23.0311,
+          "yearly_gross": {
+            "2021": 8.215,
+            "2022": 66.557
+          },
+          "yearly_net": {
+            "2021": -1.1731,
+            "2022": 52.9142
+          },
+          "runners": {
+            "3": 22,
+            "5": 12,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 69,
+          "blocked_state": 1
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 279,
+            "sum_r": 105.725,
+            "avg_r": 0.378943,
+            "wins": 78,
+            "losses": 201,
+            "wr_pct": 27.957,
+            "avg_win": 3.6493,
+            "avg_loss": -0.8901,
+            "payoff": 4.0997,
+            "pf": 1.5909,
+            "max_dd": 37.342,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.369468
+          },
+          "net": {
+            "n": 279,
+            "sum_r": 70.1505,
+            "avg_r": 0.251435,
+            "wins": 76,
+            "losses": 203,
+            "wr_pct": 27.24,
+            "avg_win": 3.6085,
+            "avg_loss": -1.0054,
+            "payoff": 3.5891,
+            "pf": 1.3437,
+            "max_dd": 53.1877,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -1.054379,
+            "std": 3.338949
+          },
+          "cost_funding": 35.5745,
+          "yearly_gross": {
+            "2021": -10.969,
+            "2022": 116.694
+          },
+          "yearly_net": {
+            "2021": -26.4442,
+            "2022": 96.5951
+          },
+          "runners": {
+            "3": 30,
+            "5": 17,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 279,
+            "sum_r": 105.725,
+            "avg_r": 0.378943,
+            "wins": 78,
+            "losses": 201,
+            "wr_pct": 27.957,
+            "avg_win": 3.6493,
+            "avg_loss": -0.8901,
+            "payoff": 4.0997,
+            "pf": 1.5909,
+            "max_dd": 37.342,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.369468
+          },
+          "net": {
+            "n": 279,
+            "sum_r": 70.1505,
+            "avg_r": 0.251435,
+            "wins": 76,
+            "losses": 203,
+            "wr_pct": 27.24,
+            "avg_win": 3.6085,
+            "avg_loss": -1.0054,
+            "payoff": 3.5891,
+            "pf": 1.3437,
+            "max_dd": 53.1877,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -1.054379,
+            "std": 3.338949
+          },
+          "cost_funding": 35.5745,
+          "yearly_gross": {
+            "2021": -10.969,
+            "2022": 116.694
+          },
+          "yearly_net": {
+            "2021": -26.4442,
+            "2022": 96.5951
+          },
+          "runners": {
+            "3": 30,
+            "5": 17,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 277,
+            "sum_r": 69.813,
+            "avg_r": 0.252032,
+            "wins": 76,
+            "losses": 201,
+            "wr_pct": 27.437,
+            "avg_win": 3.2728,
+            "avg_loss": -0.8901,
+            "payoff": 3.6767,
+            "pf": 1.3902,
+            "max_dd": 37.342,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 2.744037
+          },
+          "net": {
+            "n": 277,
+            "sum_r": 35.0113,
+            "avg_r": 0.126395,
+            "wins": 74,
+            "losses": 203,
+            "wr_pct": 26.715,
+            "avg_win": 3.2312,
+            "avg_loss": -1.0054,
+            "payoff": 3.2138,
+            "pf": 1.1715,
+            "max_dd": 53.1877,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -1.055323,
+            "std": 2.724324
+          },
+          "cost_funding": 34.8017,
+          "yearly_gross": {
+            "2021": -10.969,
+            "2022": 80.782
+          },
+          "yearly_net": {
+            "2021": -26.4442,
+            "2022": 61.456
+          },
+          "runners": {
+            "3": 29,
+            "5": 16,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 2
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 272,
+            "sum_r": 37.919,
+            "avg_r": 0.139408,
+            "wins": 72,
+            "losses": 200,
+            "wr_pct": 26.471,
+            "avg_win": 2.9977,
+            "avg_loss": -0.8896,
+            "payoff": 3.3698,
+            "pf": 1.2131,
+            "max_dd": 39.805,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -0.9975,
+            "std": 2.451752
+          },
+          "net": {
+            "n": 272,
+            "sum_r": 4.193,
+            "avg_r": 0.015416,
+            "wins": 70,
+            "losses": 202,
+            "wr_pct": 25.735,
+            "avg_win": 2.9599,
+            "avg_loss": -1.0049,
+            "payoff": 2.9453,
+            "pf": 1.0207,
+            "max_dd": 55.4689,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -1.060877,
+            "std": 2.438725
+          },
+          "cost_funding": 33.726,
+          "yearly_gross": {
+            "2021": -15.858,
+            "2022": 53.777
+          },
+          "yearly_net": {
+            "2021": -31.1076,
+            "2022": 35.3011
+          },
+          "runners": {
+            "3": 26,
+            "5": 14,
+            "10": 4,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 7
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 96,
+            "sum_r": 35.234,
+            "avg_r": 0.367021,
+            "wins": 25,
+            "losses": 71,
+            "wr_pct": 26.042,
+            "avg_win": 3.8877,
+            "avg_loss": -0.8727,
+            "payoff": 4.455,
+            "pf": 1.5687,
+            "max_dd": 15.096,
+            "max_loss_streak": 9,
+            "max_win_streak": 4,
+            "median": -0.997,
+            "std": 2.982615
+          },
+          "net": {
+            "n": 96,
+            "sum_r": 23.0339,
+            "avg_r": 0.239936,
+            "wins": 25,
+            "losses": 71,
+            "wr_pct": 26.042,
+            "avg_win": 3.7542,
+            "avg_loss": -0.9975,
+            "payoff": 3.7637,
+            "pf": 1.3252,
+            "max_dd": 19.0483,
+            "max_loss_streak": 9,
+            "max_win_streak": 4,
+            "median": -1.050892,
+            "std": 2.96245
+          },
+          "cost_funding": 12.2001,
+          "yearly_gross": {
+            "2021": 3.698,
+            "2022": 31.536
+          },
+          "yearly_net": {
+            "2021": -3.0884,
+            "2022": 26.1224
+          },
+          "runners": {
+            "3": 13,
+            "5": 6,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 241,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 148,
+            "sum_r": 88.955,
+            "avg_r": 0.601047,
+            "wins": 42,
+            "losses": 106,
+            "wr_pct": 28.378,
+            "avg_win": 4.3122,
+            "avg_loss": -0.8694,
+            "payoff": 4.9599,
+            "pf": 1.9653,
+            "max_dd": 16.964,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.9965,
+            "std": 3.869409
+          },
+          "net": {
+            "n": 148,
+            "sum_r": 69.1636,
+            "avg_r": 0.467322,
+            "wins": 42,
+            "losses": 106,
+            "wr_pct": 28.378,
+            "avg_win": 4.1785,
+            "avg_loss": -1.0032,
+            "payoff": 4.1654,
+            "pf": 1.6504,
+            "max_dd": 22.1864,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.050892,
+            "std": 3.838519
+          },
+          "cost_funding": 19.7914,
+          "yearly_gross": {
+            "2021": 6.767,
+            "2022": 82.188
+          },
+          "yearly_net": {
+            "2021": -2.6476,
+            "2022": 71.8115
+          },
+          "runners": {
+            "3": 20,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 172,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 186,
+            "sum_r": 120.801,
+            "avg_r": 0.649468,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.2656,
+            "avg_loss": -0.9082,
+            "payoff": 4.6965,
+            "pf": 2.0231,
+            "max_dd": 19.18,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -0.997,
+            "std": 3.938425
+          },
+          "net": {
+            "n": 186,
+            "sum_r": 95.8168,
+            "avg_r": 0.515144,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.1283,
+            "avg_loss": -1.0413,
+            "payoff": 3.9646,
+            "pf": 1.7078,
+            "max_dd": 25.9669,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -1.0533,
+            "std": 3.905769
+          },
+          "cost_funding": 24.9842,
+          "yearly_gross": {
+            "2021": 11.093,
+            "2022": 109.708
+          },
+          "yearly_net": {
+            "2021": 0.075,
+            "2022": 95.7421
+          },
+          "runners": {
+            "3": 25,
+            "5": 14,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 133,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 215,
+            "sum_r": 131.391,
+            "avg_r": 0.611121,
+            "wins": 65,
+            "losses": 150,
+            "wr_pct": 30.233,
+            "avg_win": 4.1048,
+            "avg_loss": -0.9028,
+            "payoff": 4.5467,
+            "pf": 1.9702,
+            "max_dd": 21.859,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.755569
+          },
+          "net": {
+            "n": 215,
+            "sum_r": 103.1004,
+            "avg_r": 0.479537,
+            "wins": 65,
+            "losses": 150,
+            "wr_pct": 30.233,
+            "avg_win": 3.9665,
+            "avg_loss": -1.0315,
+            "payoff": 3.8454,
+            "pf": 1.6664,
+            "max_dd": 28.3195,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.054261,
+            "std": 3.72321
+          },
+          "cost_funding": 28.2906,
+          "yearly_gross": {
+            "2021": 15.424,
+            "2022": 115.967
+          },
+          "yearly_net": {
+            "2021": 2.9082,
+            "2022": 100.1926
+          },
+          "runners": {
+            "3": 29,
+            "5": 16,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 93,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 148,
+            "sum_r": 88.955,
+            "avg_r": 0.601047,
+            "wins": 42,
+            "losses": 106,
+            "wr_pct": 28.378,
+            "avg_win": 4.3122,
+            "avg_loss": -0.8694,
+            "payoff": 4.9599,
+            "pf": 1.9653,
+            "max_dd": 16.964,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.9965,
+            "std": 3.869409
+          },
+          "net": {
+            "n": 148,
+            "sum_r": 69.1636,
+            "avg_r": 0.467322,
+            "wins": 42,
+            "losses": 106,
+            "wr_pct": 28.378,
+            "avg_win": 4.1785,
+            "avg_loss": -1.0032,
+            "payoff": 4.1654,
+            "pf": 1.6504,
+            "max_dd": 22.1864,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.050892,
+            "std": 3.838519
+          },
+          "cost_funding": 19.7914,
+          "yearly_gross": {
+            "2021": 6.767,
+            "2022": 82.188
+          },
+          "yearly_net": {
+            "2021": -2.6476,
+            "2022": 71.8115
+          },
+          "runners": {
+            "3": 20,
+            "5": 10,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 172,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 186,
+            "sum_r": 120.801,
+            "avg_r": 0.649468,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.2656,
+            "avg_loss": -0.9082,
+            "payoff": 4.6965,
+            "pf": 2.0231,
+            "max_dd": 19.18,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -0.997,
+            "std": 3.938425
+          },
+          "net": {
+            "n": 186,
+            "sum_r": 95.8168,
+            "avg_r": 0.515144,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.1283,
+            "avg_loss": -1.0413,
+            "payoff": 3.9646,
+            "pf": 1.7078,
+            "max_dd": 25.9669,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -1.0533,
+            "std": 3.905769
+          },
+          "cost_funding": 24.9842,
+          "yearly_gross": {
+            "2021": 11.093,
+            "2022": 109.708
+          },
+          "yearly_net": {
+            "2021": 0.075,
+            "2022": 95.7421
+          },
+          "runners": {
+            "3": 25,
+            "5": 14,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 133,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 215,
+            "sum_r": 131.391,
+            "avg_r": 0.611121,
+            "wins": 65,
+            "losses": 150,
+            "wr_pct": 30.233,
+            "avg_win": 4.1048,
+            "avg_loss": -0.9028,
+            "payoff": 4.5467,
+            "pf": 1.9702,
+            "max_dd": 21.859,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.755569
+          },
+          "net": {
+            "n": 215,
+            "sum_r": 103.1004,
+            "avg_r": 0.479537,
+            "wins": 65,
+            "losses": 150,
+            "wr_pct": 30.233,
+            "avg_win": 3.9665,
+            "avg_loss": -1.0315,
+            "payoff": 3.8454,
+            "pf": 1.6664,
+            "max_dd": 28.3195,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.054261,
+            "std": 3.72321
+          },
+          "cost_funding": 28.2906,
+          "yearly_gross": {
+            "2021": 15.424,
+            "2022": 115.967
+          },
+          "yearly_net": {
+            "2021": 2.9082,
+            "2022": 100.1926
+          },
+          "runners": {
+            "3": 29,
+            "5": 16,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 93,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 233,
+            "sum_r": 114.361,
+            "avg_r": 0.49082,
+            "wins": 67,
+            "losses": 166,
+            "wr_pct": 28.755,
+            "avg_win": 3.932,
+            "avg_loss": -0.8981,
+            "payoff": 4.3782,
+            "pf": 1.7671,
+            "max_dd": 31.605,
+            "max_loss_streak": 13,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.612245
+          },
+          "net": {
+            "n": 233,
+            "sum_r": 83.7254,
+            "avg_r": 0.359336,
+            "wins": 67,
+            "losses": 166,
+            "wr_pct": 28.755,
+            "avg_win": 3.7965,
+            "avg_loss": -1.0279,
+            "payoff": 3.6933,
+            "pf": 1.4907,
+            "max_dd": 44.9755,
+            "max_loss_streak": 13,
+            "max_win_streak": 5,
+            "median": -1.060949,
+            "std": 3.58125
+          },
+          "cost_funding": 30.6356,
+          "yearly_gross": {
+            "2021": -2.148,
+            "2022": 116.509
+          },
+          "yearly_net": {
+            "2021": -15.6953,
+            "2022": 99.4211
+          },
+          "runners": {
+            "3": 28,
+            "5": 16,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 64,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 276,
+            "sum_r": 104.961,
+            "avg_r": 0.380293,
+            "wins": 77,
+            "losses": 199,
+            "wr_pct": 27.899,
+            "avg_win": 3.6736,
+            "avg_loss": -0.894,
+            "payoff": 4.1091,
+            "pf": 1.59,
+            "max_dd": 38.969,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.385597
+          },
+          "net": {
+            "n": 276,
+            "sum_r": 69.567,
+            "avg_r": 0.252054,
+            "wins": 75,
+            "losses": 201,
+            "wr_pct": 27.174,
+            "avg_win": 3.634,
+            "avg_loss": -1.0099,
+            "payoff": 3.5985,
+            "pf": 1.3427,
+            "max_dd": 54.8587,
+            "max_loss_streak": 15,
+            "max_win_streak": 5,
+            "median": -1.054851,
+            "std": 3.354906
+          },
+          "cost_funding": 35.394,
+          "yearly_gross": {
+            "2021": -11.733,
+            "2022": 116.694
+          },
+          "yearly_net": {
+            "2021": -27.0277,
+            "2022": 96.5951
+          },
+          "runners": {
+            "3": 30,
+            "5": 17,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 4,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 186,
+            "sum_r": 120.801,
+            "avg_r": 0.649468,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.2656,
+            "avg_loss": -0.9082,
+            "payoff": 4.6965,
+            "pf": 2.0231,
+            "max_dd": 19.18,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -0.997,
+            "std": 3.938425
+          },
+          "net": {
+            "n": 186,
+            "sum_r": 95.8168,
+            "avg_r": 0.515144,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.1283,
+            "avg_loss": -1.0413,
+            "payoff": 3.9646,
+            "pf": 1.7078,
+            "max_dd": 25.9669,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -1.0533,
+            "std": 3.905769
+          },
+          "cost_funding": 24.9842,
+          "yearly_gross": {
+            "2021": 11.093,
+            "2022": 109.708
+          },
+          "yearly_net": {
+            "2021": 0.075,
+            "2022": 95.7421
+          },
+          "runners": {
+            "3": 25,
+            "5": 14,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 133,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 185,
+            "sum_r": 87.688,
+            "avg_r": 0.473989,
+            "wins": 55,
+            "losses": 130,
+            "wr_pct": 29.73,
+            "avg_win": 3.7411,
+            "avg_loss": -0.9082,
+            "payoff": 4.119,
+            "pf": 1.7427,
+            "max_dd": 19.18,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -0.997,
+            "std": 3.141273
+          },
+          "net": {
+            "n": 185,
+            "sum_r": 63.2404,
+            "avg_r": 0.34184,
+            "wins": 55,
+            "losses": 130,
+            "wr_pct": 29.73,
+            "avg_win": 3.611,
+            "avg_loss": -1.0413,
+            "payoff": 3.4679,
+            "pf": 1.4672,
+            "max_dd": 25.9669,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -1.054261,
+            "std": 3.122677
+          },
+          "cost_funding": 24.4476,
+          "yearly_gross": {
+            "2021": 11.093,
+            "2022": 76.595
+          },
+          "yearly_net": {
+            "2021": 0.075,
+            "2022": 63.1657
+          },
+          "runners": {
+            "3": 24,
+            "5": 13,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 133,
+          "blocked_addons": 0,
+          "blocked_state": 1
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 186,
+            "sum_r": 120.801,
+            "avg_r": 0.649468,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.2656,
+            "avg_loss": -0.9082,
+            "payoff": 4.6965,
+            "pf": 2.0231,
+            "max_dd": 19.18,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -0.997,
+            "std": 3.938425
+          },
+          "net": {
+            "n": 186,
+            "sum_r": 95.8168,
+            "avg_r": 0.515144,
+            "wins": 56,
+            "losses": 130,
+            "wr_pct": 30.108,
+            "avg_win": 4.1283,
+            "avg_loss": -1.0413,
+            "payoff": 3.9646,
+            "pf": 1.7078,
+            "max_dd": 25.9669,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -1.0533,
+            "std": 3.905769
+          },
+          "cost_funding": 24.9842,
+          "yearly_gross": {
+            "2021": 11.093,
+            "2022": 109.708
+          },
+          "yearly_net": {
+            "2021": 0.075,
+            "2022": 95.7421
+          },
+          "runners": {
+            "3": 25,
+            "5": 14,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 133,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 185,
+            "sum_r": 87.688,
+            "avg_r": 0.473989,
+            "wins": 55,
+            "losses": 130,
+            "wr_pct": 29.73,
+            "avg_win": 3.7411,
+            "avg_loss": -0.9082,
+            "payoff": 4.119,
+            "pf": 1.7427,
+            "max_dd": 19.18,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -0.997,
+            "std": 3.141273
+          },
+          "net": {
+            "n": 185,
+            "sum_r": 63.2404,
+            "avg_r": 0.34184,
+            "wins": 55,
+            "losses": 130,
+            "wr_pct": 29.73,
+            "avg_win": 3.611,
+            "avg_loss": -1.0413,
+            "payoff": 3.4679,
+            "pf": 1.4672,
+            "max_dd": 25.9669,
+            "max_loss_streak": 12,
+            "max_win_streak": 7,
+            "median": -1.054261,
+            "std": 3.122677
+          },
+          "cost_funding": 24.4476,
+          "yearly_gross": {
+            "2021": 11.093,
+            "2022": 76.595
+          },
+          "yearly_net": {
+            "2021": 0.075,
+            "2022": 63.1657
+          },
+          "runners": {
+            "3": 24,
+            "5": 13,
+            "10": 5,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 133,
+          "blocked_state": 1
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 253,
+            "sum_r": 92.641,
+            "avg_r": 0.36617,
+            "wins": 75,
+            "losses": 178,
+            "wr_pct": 29.644,
+            "avg_win": 3.3806,
+            "avg_loss": -0.9039,
+            "payoff": 3.7398,
+            "pf": 1.5758,
+            "max_dd": 22.127,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 3.326125
+          },
+          "net": {
+            "n": 253,
+            "sum_r": 60.2062,
+            "avg_r": 0.237969,
+            "wins": 73,
+            "losses": 180,
+            "wr_pct": 28.854,
+            "avg_win": 3.3385,
+            "avg_loss": -1.0195,
+            "payoff": 3.2747,
+            "pf": 1.3281,
+            "max_dd": 29.3814,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -1.054261,
+            "std": 3.2962
+          },
+          "cost_funding": 32.4348,
+          "yearly_gross": {
+            "2021": 13.168,
+            "2022": 79.473
+          },
+          "yearly_net": {
+            "2021": -1.181,
+            "2022": 61.3876
+          },
+          "runners": {
+            "3": 28,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_m05": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 253,
+            "sum_r": 92.641,
+            "avg_r": 0.36617,
+            "wins": 75,
+            "losses": 178,
+            "wr_pct": 29.644,
+            "avg_win": 3.3806,
+            "avg_loss": -0.9039,
+            "payoff": 3.7398,
+            "pf": 1.5758,
+            "max_dd": 22.127,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 3.326125
+          },
+          "net": {
+            "n": 253,
+            "sum_r": 60.2062,
+            "avg_r": 0.237969,
+            "wins": 73,
+            "losses": 180,
+            "wr_pct": 28.854,
+            "avg_win": 3.3385,
+            "avg_loss": -1.0195,
+            "payoff": 3.2747,
+            "pf": 1.3281,
+            "max_dd": 29.3814,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -1.054261,
+            "std": 3.2962
+          },
+          "cost_funding": 32.4348,
+          "yearly_gross": {
+            "2021": 13.168,
+            "2022": 79.473
+          },
+          "yearly_net": {
+            "2021": -1.181,
+            "2022": 61.3876
+          },
+          "runners": {
+            "3": 28,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_require_0": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 251,
+            "sum_r": 56.729,
+            "avg_r": 0.226012,
+            "wins": 73,
+            "losses": 178,
+            "wr_pct": 29.084,
+            "avg_win": 2.9812,
+            "avg_loss": -0.9039,
+            "payoff": 3.298,
+            "pf": 1.3526,
+            "max_dd": 22.127,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 2.614518
+          },
+          "net": {
+            "n": 251,
+            "sum_r": 25.0671,
+            "avg_r": 0.099869,
+            "wins": 71,
+            "losses": 180,
+            "wr_pct": 28.287,
+            "avg_win": 2.9377,
+            "avg_loss": -1.0195,
+            "payoff": 2.8815,
+            "pf": 1.1366,
+            "max_dd": 29.3814,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -1.054379,
+            "std": 2.597014
+          },
+          "cost_funding": 31.6619,
+          "yearly_gross": {
+            "2021": 13.168,
+            "2022": 43.561
+          },
+          "yearly_net": {
+            "2021": -1.181,
+            "2022": 26.2485
+          },
+          "runners": {
+            "3": 27,
+            "5": 13,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 2
+        }
+      },
+      "green_require_p05": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.5
+        },
+        "metrics": {
+          "gross": {
+            "n": 247,
+            "sum_r": 24.186,
+            "avg_r": 0.097919,
+            "wins": 69,
+            "losses": 178,
+            "wr_pct": 27.935,
+            "avg_win": 2.6773,
+            "avg_loss": -0.902,
+            "payoff": 2.9683,
+            "pf": 1.1506,
+            "max_dd": 22.127,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -0.998,
+            "std": 2.261819
+          },
+          "net": {
+            "n": 247,
+            "sum_r": -6.3804,
+            "avg_r": -0.025831,
+            "wins": 67,
+            "losses": 180,
+            "wr_pct": 27.126,
+            "avg_win": 2.6367,
+            "avg_loss": -1.0169,
+            "payoff": 2.5929,
+            "pf": 0.9651,
+            "max_dd": 30.594,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -1.055323,
+            "std": 2.252331
+          },
+          "cost_funding": 30.5664,
+          "yearly_gross": {
+            "2021": 7.63,
+            "2022": 16.556
+          },
+          "yearly_net": {
+            "2021": -6.4736,
+            "2022": 0.0936
+          },
+          "runners": {
+            "3": 24,
+            "5": 11,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 7
+        }
+      },
+      "max_total_1": {
+        "flags": {
+          "exp_campaign_max_total": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 91,
+            "sum_r": 38.912,
+            "avg_r": 0.427604,
+            "wins": 26,
+            "losses": 65,
+            "wr_pct": 28.571,
+            "avg_win": 3.7372,
+            "avg_loss": -0.8962,
+            "payoff": 4.1699,
+            "pf": 1.6679,
+            "max_dd": 12.095,
+            "max_loss_streak": 9,
+            "max_win_streak": 4,
+            "median": -0.998,
+            "std": 2.992928
+          },
+          "net": {
+            "n": 91,
+            "sum_r": 27.3155,
+            "avg_r": 0.300171,
+            "wins": 26,
+            "losses": 65,
+            "wr_pct": 28.571,
+            "avg_win": 3.6057,
+            "avg_loss": -1.022,
+            "payoff": 3.528,
+            "pf": 1.4112,
+            "max_dd": 15.4752,
+            "max_loss_streak": 9,
+            "max_win_streak": 4,
+            "median": -1.052338,
+            "std": 2.972776
+          },
+          "cost_funding": 11.5965,
+          "yearly_gross": {
+            "2021": 12.658,
+            "2022": 26.254
+          },
+          "yearly_net": {
+            "2021": 6.4896,
+            "2022": 20.8262
+          },
+          "runners": {
+            "3": 14,
+            "5": 6,
+            "10": 2,
+            "15": 1
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 229,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_2": {
+        "flags": {
+          "exp_campaign_max_total": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 142,
+            "sum_r": 80.034,
+            "avg_r": 0.56362,
+            "wins": 41,
+            "losses": 101,
+            "wr_pct": 28.873,
+            "avg_win": 4.1788,
+            "avg_loss": -0.9039,
+            "payoff": 4.623,
+            "pf": 1.8767,
+            "max_dd": 16.703,
+            "max_loss_streak": 10,
+            "max_win_streak": 4,
+            "median": -0.9975,
+            "std": 3.828961
+          },
+          "net": {
+            "n": 142,
+            "sum_r": 61.3933,
+            "avg_r": 0.432347,
+            "wins": 41,
+            "losses": 101,
+            "wr_pct": 28.873,
+            "avg_win": 4.046,
+            "avg_loss": -1.0346,
+            "payoff": 3.9107,
+            "pf": 1.5875,
+            "max_dd": 20.3102,
+            "max_loss_streak": 10,
+            "max_win_streak": 4,
+            "median": -1.054792,
+            "std": 3.799325
+          },
+          "cost_funding": 18.6407,
+          "yearly_gross": {
+            "2021": 17.828,
+            "2022": 62.206
+          },
+          "yearly_net": {
+            "2021": 8.7738,
+            "2022": 52.6199
+          },
+          "runners": {
+            "3": 20,
+            "5": 10,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 154,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_3": {
+        "flags": {
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 172,
+            "sum_r": 121.444,
+            "avg_r": 0.70607,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 4.1386,
+            "avg_loss": -0.9075,
+            "payoff": 4.5604,
+            "pf": 2.1438,
+            "max_dd": 18.179,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.98721
+          },
+          "net": {
+            "n": 172,
+            "sum_r": 98.4149,
+            "avg_r": 0.57218,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 3.9938,
+            "avg_loss": -1.0363,
+            "payoff": 3.854,
+            "pf": 1.8117,
+            "max_dd": 23.6004,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.052322,
+            "std": 3.949143
+          },
+          "cost_funding": 23.0291,
+          "yearly_gross": {
+            "2021": 20.145,
+            "2022": 101.299
+          },
+          "yearly_net": {
+            "2021": 9.4359,
+            "2022": 88.9793
+          },
+          "runners": {
+            "3": 26,
+            "5": 13,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 121,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_total_4": {
+        "flags": {
+          "exp_campaign_max_total": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 197,
+            "sum_r": 84.292,
+            "avg_r": 0.427878,
+            "wins": 58,
+            "losses": 139,
+            "wr_pct": 29.442,
+            "avg_win": 3.6414,
+            "avg_loss": -0.913,
+            "payoff": 3.9883,
+            "pf": 1.6642,
+            "max_dd": 20.177,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 3.495591
+          },
+          "net": {
+            "n": 197,
+            "sum_r": 58.1276,
+            "avg_r": 0.295064,
+            "wins": 58,
+            "losses": 139,
+            "wr_pct": 29.442,
+            "avg_win": 3.507,
+            "avg_loss": -1.0452,
+            "payoff": 3.3554,
+            "pf": 1.4001,
+            "max_dd": 26.1333,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.062655,
+            "std": 3.466098
+          },
+          "cost_funding": 26.1644,
+          "yearly_gross": {
+            "2021": 18.281,
+            "2022": 66.011
+          },
+          "yearly_net": {
+            "2021": 6.1898,
+            "2022": 51.938
+          },
+          "runners": {
+            "3": 25,
+            "5": 12,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 82,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_1": {
+        "flags": {
+          "exp_campaign_max_addons": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 142,
+            "sum_r": 80.034,
+            "avg_r": 0.56362,
+            "wins": 41,
+            "losses": 101,
+            "wr_pct": 28.873,
+            "avg_win": 4.1788,
+            "avg_loss": -0.9039,
+            "payoff": 4.623,
+            "pf": 1.8767,
+            "max_dd": 16.703,
+            "max_loss_streak": 10,
+            "max_win_streak": 4,
+            "median": -0.9975,
+            "std": 3.828961
+          },
+          "net": {
+            "n": 142,
+            "sum_r": 61.3933,
+            "avg_r": 0.432347,
+            "wins": 41,
+            "losses": 101,
+            "wr_pct": 28.873,
+            "avg_win": 4.046,
+            "avg_loss": -1.0346,
+            "payoff": 3.9107,
+            "pf": 1.5875,
+            "max_dd": 20.3102,
+            "max_loss_streak": 10,
+            "max_win_streak": 4,
+            "median": -1.054792,
+            "std": 3.799325
+          },
+          "cost_funding": 18.6407,
+          "yearly_gross": {
+            "2021": 17.828,
+            "2022": 62.206
+          },
+          "yearly_net": {
+            "2021": 8.7738,
+            "2022": 52.6199
+          },
+          "runners": {
+            "3": 20,
+            "5": 10,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 154,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_2": {
+        "flags": {
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 172,
+            "sum_r": 121.444,
+            "avg_r": 0.70607,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 4.1386,
+            "avg_loss": -0.9075,
+            "payoff": 4.5604,
+            "pf": 2.1438,
+            "max_dd": 18.179,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.98721
+          },
+          "net": {
+            "n": 172,
+            "sum_r": 98.4149,
+            "avg_r": 0.57218,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 3.9938,
+            "avg_loss": -1.0363,
+            "payoff": 3.854,
+            "pf": 1.8117,
+            "max_dd": 23.6004,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.052322,
+            "std": 3.949143
+          },
+          "cost_funding": 23.0291,
+          "yearly_gross": {
+            "2021": 20.145,
+            "2022": 101.299
+          },
+          "yearly_net": {
+            "2021": 9.4359,
+            "2022": 88.9793
+          },
+          "runners": {
+            "3": 26,
+            "5": 13,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 121,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_3": {
+        "flags": {
+          "exp_campaign_max_addons": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 197,
+            "sum_r": 84.292,
+            "avg_r": 0.427878,
+            "wins": 58,
+            "losses": 139,
+            "wr_pct": 29.442,
+            "avg_win": 3.6414,
+            "avg_loss": -0.913,
+            "payoff": 3.9883,
+            "pf": 1.6642,
+            "max_dd": 20.177,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 3.495591
+          },
+          "net": {
+            "n": 197,
+            "sum_r": 58.1276,
+            "avg_r": 0.295064,
+            "wins": 58,
+            "losses": 139,
+            "wr_pct": 29.442,
+            "avg_win": 3.507,
+            "avg_loss": -1.0452,
+            "payoff": 3.3554,
+            "pf": 1.4001,
+            "max_dd": 26.1333,
+            "max_loss_streak": 16,
+            "max_win_streak": 3,
+            "median": -1.062655,
+            "std": 3.466098
+          },
+          "cost_funding": 26.1644,
+          "yearly_gross": {
+            "2021": 18.281,
+            "2022": 66.011
+          },
+          "yearly_net": {
+            "2021": 6.1898,
+            "2022": 51.938
+          },
+          "runners": {
+            "3": 25,
+            "5": 12,
+            "10": 3,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 82,
+          "blocked_state": 0
+        }
+      },
+      "max_addons_4": {
+        "flags": {
+          "exp_campaign_max_addons": 4
+        },
+        "metrics": {
+          "gross": {
+            "n": 215,
+            "sum_r": 100.647,
+            "avg_r": 0.468126,
+            "wins": 65,
+            "losses": 150,
+            "wr_pct": 30.233,
+            "avg_win": 3.6553,
+            "avg_loss": -0.913,
+            "payoff": 4.0037,
+            "pf": 1.7349,
+            "max_dd": 18.758,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 3.537783
+          },
+          "net": {
+            "n": 215,
+            "sum_r": 72.3737,
+            "avg_r": 0.336622,
+            "wins": 65,
+            "losses": 150,
+            "wr_pct": 30.233,
+            "avg_win": 3.5197,
+            "avg_loss": -1.0427,
+            "payoff": 3.3755,
+            "pf": 1.4627,
+            "max_dd": 25.1438,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -1.060805,
+            "std": 3.507309
+          },
+          "cost_funding": 28.2733,
+          "yearly_gross": {
+            "2021": 17.372,
+            "2022": 83.275
+          },
+          "yearly_net": {
+            "2021": 5.1339,
+            "2022": 67.2399
+          },
+          "runners": {
+            "3": 26,
+            "5": 13,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 58,
+          "blocked_state": 0
+        }
+      },
+      "block_mixed": {
+        "flags": {
+          "exp_campaign_block_mixed": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 251,
+            "sum_r": 91.87,
+            "avg_r": 0.366016,
+            "wins": 74,
+            "losses": 177,
+            "wr_pct": 29.482,
+            "avg_win": 3.4023,
+            "avg_loss": -0.9034,
+            "payoff": 3.7661,
+            "pf": 1.5745,
+            "max_dd": 22.127,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -0.997,
+            "std": 3.337058
+          },
+          "net": {
+            "n": 251,
+            "sum_r": 59.595,
+            "avg_r": 0.23743,
+            "wins": 72,
+            "losses": 179,
+            "wr_pct": 28.685,
+            "avg_win": 3.3613,
+            "avg_loss": -1.0191,
+            "payoff": 3.2983,
+            "pf": 1.3267,
+            "max_dd": 29.3814,
+            "max_loss_streak": 9,
+            "max_win_streak": 3,
+            "median": -1.054261,
+            "std": 3.306964
+          },
+          "cost_funding": 32.275,
+          "yearly_gross": {
+            "2021": 12.397,
+            "2022": 79.473
+          },
+          "yearly_net": {
+            "2021": -1.7923,
+            "2022": 61.3876
+          },
+          "runners": {
+            "3": 28,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 4,
+          "blocked_total": 0,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_m05_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 172,
+            "sum_r": 121.444,
+            "avg_r": 0.70607,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 4.1386,
+            "avg_loss": -0.9075,
+            "payoff": 4.5604,
+            "pf": 2.1438,
+            "max_dd": 18.179,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.98721
+          },
+          "net": {
+            "n": 172,
+            "sum_r": 98.4149,
+            "avg_r": 0.57218,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 3.9938,
+            "avg_loss": -1.0363,
+            "payoff": 3.854,
+            "pf": 1.8117,
+            "max_dd": 23.6004,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.052322,
+            "std": 3.949143
+          },
+          "cost_funding": 23.0291,
+          "yearly_gross": {
+            "2021": 20.145,
+            "2022": 101.299
+          },
+          "yearly_net": {
+            "2021": 9.4359,
+            "2022": 88.9793
+          },
+          "runners": {
+            "3": 26,
+            "5": 13,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 121,
+          "blocked_addons": 0,
+          "blocked_state": 0
+        }
+      },
+      "green_0_total3": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_total": 3
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 88.331,
+            "avg_r": 0.516556,
+            "wins": 54,
+            "losses": 117,
+            "wr_pct": 31.579,
+            "avg_win": 3.602,
+            "avg_loss": -0.9075,
+            "payoff": 3.9691,
+            "pf": 1.8319,
+            "max_dd": 18.179,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.132623
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 65.8385,
+            "avg_r": 0.385021,
+            "wins": 54,
+            "losses": 117,
+            "wr_pct": 31.579,
+            "avg_win": 3.4645,
+            "avg_loss": -1.0363,
+            "payoff": 3.3432,
+            "pf": 1.543,
+            "max_dd": 23.6004,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.052338,
+            "std": 3.10838
+          },
+          "cost_funding": 22.4925,
+          "yearly_gross": {
+            "2021": 20.145,
+            "2022": 68.186
+          },
+          "yearly_net": {
+            "2021": 9.4359,
+            "2022": 56.4029
+          },
+          "runners": {
+            "3": 25,
+            "5": 12,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 121,
+          "blocked_addons": 0,
+          "blocked_state": 1
+        }
+      },
+      "green_m05_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": -0.5,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 172,
+            "sum_r": 121.444,
+            "avg_r": 0.70607,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 4.1386,
+            "avg_loss": -0.9075,
+            "payoff": 4.5604,
+            "pf": 2.1438,
+            "max_dd": 18.179,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.98721
+          },
+          "net": {
+            "n": 172,
+            "sum_r": 98.4149,
+            "avg_r": 0.57218,
+            "wins": 55,
+            "losses": 117,
+            "wr_pct": 31.977,
+            "avg_win": 3.9938,
+            "avg_loss": -1.0363,
+            "payoff": 3.854,
+            "pf": 1.8117,
+            "max_dd": 23.6004,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.052322,
+            "std": 3.949143
+          },
+          "cost_funding": 23.0291,
+          "yearly_gross": {
+            "2021": 20.145,
+            "2022": 101.299
+          },
+          "yearly_net": {
+            "2021": 9.4359,
+            "2022": 88.9793
+          },
+          "runners": {
+            "3": 26,
+            "5": 13,
+            "10": 5,
+            "15": 3
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 121,
+          "blocked_state": 0
+        }
+      },
+      "green_0_addons2": {
+        "flags": {
+          "exp_campaign_require_marked_r": 0.0,
+          "exp_campaign_max_addons": 2
+        },
+        "metrics": {
+          "gross": {
+            "n": 171,
+            "sum_r": 88.331,
+            "avg_r": 0.516556,
+            "wins": 54,
+            "losses": 117,
+            "wr_pct": 31.579,
+            "avg_win": 3.602,
+            "avg_loss": -0.9075,
+            "payoff": 3.9691,
+            "pf": 1.8319,
+            "max_dd": 18.179,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 3.132623
+          },
+          "net": {
+            "n": 171,
+            "sum_r": 65.8385,
+            "avg_r": 0.385021,
+            "wins": 54,
+            "losses": 117,
+            "wr_pct": 31.579,
+            "avg_win": 3.4645,
+            "avg_loss": -1.0363,
+            "payoff": 3.3432,
+            "pf": 1.543,
+            "max_dd": 23.6004,
+            "max_loss_streak": 10,
+            "max_win_streak": 5,
+            "median": -1.052338,
+            "std": 3.10838
+          },
+          "cost_funding": 22.4925,
+          "yearly_gross": {
+            "2021": 20.145,
+            "2022": 68.186
+          },
+          "yearly_net": {
+            "2021": 9.4359,
+            "2022": 56.4029
+          },
+          "runners": {
+            "3": 25,
+            "5": 12,
+            "10": 4,
+            "15": 2
+          }
+        },
+        "campaign_stats": {
+          "blocked_mixed": 0,
+          "blocked_total": 0,
+          "blocked_addons": 121,
+          "blocked_state": 1
+        }
+      }
+    }
+  },
+  "elapsed_sec": 749.43
+}

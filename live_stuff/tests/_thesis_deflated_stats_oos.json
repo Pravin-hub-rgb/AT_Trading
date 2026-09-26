@@ -1,0 +1,323 @@
+{
+  "study": 2,
+  "name": "deflated statistics / selection-bias correction",
+  "instrument": "BTCUSDT_BYBIT",
+  "scopes": {
+    "is": {
+      "champion_multi_sw10": {
+        "config": "champion_multi_sw10",
+        "n": 500,
+        "observed": {
+          "gross_r": 445.225,
+          "net_r": 325.7817,
+          "avg_gross_r": 0.89045,
+          "max_dd_r": 17.825,
+          "win_rate_pct": 30.0,
+          "payoff": 2.3835
+        },
+        "null_best_of_n": {
+          "n_variants_per_set": 40,
+          "n_sets": 400,
+          "best_gross_r_mean": 267.818,
+          "best_gross_r_p50": 260.923,
+          "best_gross_r_p95": 377.661,
+          "best_gross_r_max": 484.282,
+          "best_avg_r_mean": 0.535636,
+          "best_avg_r_p95": 0.755322,
+          "best_dd_min_p50": 55.084,
+          "best_dd_min_p05": 41.859
+        },
+        "selection_p_value": {
+          "p_gross_at_least_observed": 0.0125,
+          "p_net_at_least_observed": 0.16,
+          "p_avg_r_at_least_observed": 0.0125,
+          "p_dd_at_most_observed": 0.0,
+          "interpretation": "result is in the top few percent of a best-of-N search"
+        },
+        "fragility_null_month_clustered": {
+          "note": "uncentered month-clustered resample; NOT a selection-bias test. Answers: how large could a result be if the real edge were removed but the monthly CLUSTERING of our own P&L were kept?",
+          "best_p50": 700.895,
+          "best_p95": 812.674,
+          "p_observed_gross_at_least": 1.0
+        },
+        "deflation": {
+          "estimated_trials": 464,
+          "trial_basis": "logged_experiments x 8 documented arms per experiment",
+          "observed_avg_r": 0.89045,
+          "null_best_avg_r_p95": 0.755322,
+          "deflation_ratio_vs_p95": 1.1789
+        },
+        "inventory": {
+          "registry_configs": 112,
+          "logged_experiments": 58,
+          "exp_harnesses_on_disk": 153,
+          "test_harnesses_on_disk": 76,
+          "all_py_in_tests": 271,
+          "note": "lower bound on trials; each logged experiment swept multiple arms"
+        }
+      },
+      "utcsat_multi_sw10": {
+        "config": "utcsat_multi_sw10",
+        "n": 454,
+        "observed": {
+          "gross_r": 466.476,
+          "net_r": 358.95,
+          "avg_gross_r": 1.02748,
+          "max_dd_r": 14.821,
+          "win_rate_pct": 30.837,
+          "payoff": 2.6179
+        },
+        "null_best_of_n": {
+          "n_variants_per_set": 40,
+          "n_sets": 400,
+          "best_gross_r_mean": 275.25,
+          "best_gross_r_p50": 265.405,
+          "best_gross_r_p95": 388.544,
+          "best_gross_r_max": 552.0,
+          "best_avg_r_mean": 0.606278,
+          "best_avg_r_p95": 0.855824,
+          "best_dd_min_p50": 56.388,
+          "best_dd_min_p05": 42.286
+        },
+        "selection_p_value": {
+          "p_gross_at_least_observed": 0.01,
+          "p_net_at_least_observed": 0.09,
+          "p_avg_r_at_least_observed": 0.01,
+          "p_dd_at_most_observed": 0.0,
+          "interpretation": "result is in the top few percent of a best-of-N search"
+        },
+        "fragility_null_month_clustered": {
+          "note": "uncentered month-clustered resample; NOT a selection-bias test. Answers: how large could a result be if the real edge were removed but the monthly CLUSTERING of our own P&L were kept?",
+          "best_p50": 733.928,
+          "best_p95": 861.711,
+          "p_observed_gross_at_least": 1.0
+        },
+        "deflation": {
+          "estimated_trials": 464,
+          "trial_basis": "logged_experiments x 8 documented arms per experiment",
+          "observed_avg_r": 1.02748,
+          "null_best_avg_r_p95": 0.855824,
+          "deflation_ratio_vs_p95": 1.2006
+        },
+        "inventory": {
+          "registry_configs": 112,
+          "logged_experiments": 58,
+          "exp_harnesses_on_disk": 153,
+          "test_harnesses_on_disk": 76,
+          "all_py_in_tests": 271,
+          "note": "lower bound on trials; each logged experiment swept multiple arms"
+        }
+      },
+      "fullstack_wage10_cd0_single_sw10": {
+        "config": "fullstack_wage10_cd0_single_sw10",
+        "n": 200,
+        "observed": {
+          "gross_r": 360.61,
+          "net_r": 310.7042,
+          "avg_gross_r": 1.80305,
+          "max_dd_r": 11.21,
+          "win_rate_pct": 32.5,
+          "payoff": 3.8411
+        },
+        "null_best_of_n": {
+          "n_variants_per_set": 40,
+          "n_sets": 400,
+          "best_gross_r_mean": 237.513,
+          "best_gross_r_p50": 230.101,
+          "best_gross_r_p95": 335.592,
+          "best_gross_r_max": 457.018,
+          "best_avg_r_mean": 1.187564,
+          "best_avg_r_p95": 1.67796,
+          "best_dd_min_p50": 54.727,
+          "best_dd_min_p05": 41.372
+        },
+        "selection_p_value": {
+          "p_gross_at_least_observed": 0.0225,
+          "p_net_at_least_observed": 0.095,
+          "p_avg_r_at_least_observed": 0.0225,
+          "p_dd_at_most_observed": 0.0,
+          "interpretation": "result is in the top few percent of a best-of-N search"
+        },
+        "fragility_null_month_clustered": {
+          "note": "uncentered month-clustered resample; NOT a selection-bias test. Answers: how large could a result be if the real edge were removed but the monthly CLUSTERING of our own P&L were kept?",
+          "best_p50": 586.975,
+          "best_p95": 688.487,
+          "p_observed_gross_at_least": 1.0
+        },
+        "deflation": {
+          "estimated_trials": 464,
+          "trial_basis": "logged_experiments x 8 documented arms per experiment",
+          "observed_avg_r": 1.80305,
+          "null_best_avg_r_p95": 1.67796,
+          "deflation_ratio_vs_p95": 1.0745
+        },
+        "inventory": {
+          "registry_configs": 112,
+          "logged_experiments": 58,
+          "exp_harnesses_on_disk": 153,
+          "test_harnesses_on_disk": 76,
+          "all_py_in_tests": 271,
+          "note": "lower bound on trials; each logged experiment swept multiple arms"
+        }
+      }
+    },
+    "oos": {
+      "champion_multi_sw10": {
+        "config": "champion_multi_sw10",
+        "n": 279,
+        "observed": {
+          "gross_r": 105.725,
+          "net_r": 70.1505,
+          "avg_gross_r": 0.378943,
+          "max_dd_r": 37.342,
+          "win_rate_pct": 27.957,
+          "payoff": 1.5909
+        },
+        "null_best_of_n": {
+          "n_variants_per_set": 40,
+          "n_sets": 400,
+          "best_gross_r_mean": 215.342,
+          "best_gross_r_p50": 207.15,
+          "best_gross_r_p95": 327.273,
+          "best_gross_r_max": 447.541,
+          "best_avg_r_mean": 0.771837,
+          "best_avg_r_p95": 1.173022,
+          "best_dd_min_p50": 22.306,
+          "best_dd_min_p05": 16.378
+        },
+        "selection_p_value": {
+          "p_gross_at_least_observed": 0.9975,
+          "p_net_at_least_observed": 1.0,
+          "p_avg_r_at_least_observed": 0.9975,
+          "p_dd_at_most_observed": 1.0,
+          "interpretation": "if p > 0.05 the result is NOT exceptional for a best-of-N search"
+        },
+        "fragility_null_month_clustered": {
+          "note": "uncentered month-clustered resample; NOT a selection-bias test. Answers: how large could a result be if the real edge were removed but the monthly CLUSTERING of our own P&L were kept?",
+          "best_p50": 312.627,
+          "best_p95": 410.891,
+          "p_observed_gross_at_least": 1.0
+        },
+        "deflation": {
+          "estimated_trials": 464,
+          "trial_basis": "logged_experiments x 8 documented arms per experiment",
+          "observed_avg_r": 0.378943,
+          "null_best_avg_r_p95": 1.173022,
+          "deflation_ratio_vs_p95": 0.323
+        },
+        "inventory": {
+          "registry_configs": 112,
+          "logged_experiments": 58,
+          "exp_harnesses_on_disk": 153,
+          "test_harnesses_on_disk": 76,
+          "all_py_in_tests": 271,
+          "note": "lower bound on trials; each logged experiment swept multiple arms"
+        }
+      },
+      "utcsat_multi_sw10": {
+        "config": "utcsat_multi_sw10",
+        "n": 253,
+        "observed": {
+          "gross_r": 92.641,
+          "net_r": 60.2062,
+          "avg_gross_r": 0.36617,
+          "max_dd_r": 22.127,
+          "win_rate_pct": 29.644,
+          "payoff": 1.5758
+        },
+        "null_best_of_n": {
+          "n_variants_per_set": 40,
+          "n_sets": 400,
+          "best_gross_r_mean": 201.622,
+          "best_gross_r_p50": 192.445,
+          "best_gross_r_p95": 317.28,
+          "best_gross_r_max": 431.139,
+          "best_avg_r_mean": 0.796926,
+          "best_avg_r_p95": 1.254071,
+          "best_dd_min_p50": 22.853,
+          "best_dd_min_p05": 17.971
+        },
+        "selection_p_value": {
+          "p_gross_at_least_observed": 0.9975,
+          "p_net_at_least_observed": 1.0,
+          "p_avg_r_at_least_observed": 0.9975,
+          "p_dd_at_most_observed": 0.4275,
+          "interpretation": "if p > 0.05 the result is NOT exceptional for a best-of-N search"
+        },
+        "fragility_null_month_clustered": {
+          "note": "uncentered month-clustered resample; NOT a selection-bias test. Answers: how large could a result be if the real edge were removed but the monthly CLUSTERING of our own P&L were kept?",
+          "best_p50": 281.259,
+          "best_p95": 393.627,
+          "p_observed_gross_at_least": 1.0
+        },
+        "deflation": {
+          "estimated_trials": 464,
+          "trial_basis": "logged_experiments x 8 documented arms per experiment",
+          "observed_avg_r": 0.36617,
+          "null_best_avg_r_p95": 1.254071,
+          "deflation_ratio_vs_p95": 0.292
+        },
+        "inventory": {
+          "registry_configs": 112,
+          "logged_experiments": 58,
+          "exp_harnesses_on_disk": 153,
+          "test_harnesses_on_disk": 76,
+          "all_py_in_tests": 271,
+          "note": "lower bound on trials; each logged experiment swept multiple arms"
+        }
+      },
+      "fullstack_wage10_cd0_single_sw10": {
+        "config": "fullstack_wage10_cd0_single_sw10",
+        "n": 140,
+        "observed": {
+          "gross_r": 38.04,
+          "net_r": 16.8978,
+          "avg_gross_r": 0.271714,
+          "max_dd_r": 27.909,
+          "win_rate_pct": 25.0,
+          "payoff": 1.3814
+        },
+        "null_best_of_n": {
+          "n_variants_per_set": 40,
+          "n_sets": 400,
+          "best_gross_r_mean": 83.064,
+          "best_gross_r_p50": 80.62,
+          "best_gross_r_p95": 120.054,
+          "best_gross_r_max": 182.949,
+          "best_avg_r_mean": 0.593313,
+          "best_avg_r_p95": 0.857529,
+          "best_dd_min_p50": 15.066,
+          "best_dd_min_p05": 11.564
+        },
+        "selection_p_value": {
+          "p_gross_at_least_observed": 0.9975,
+          "p_net_at_least_observed": 1.0,
+          "p_avg_r_at_least_observed": 0.9975,
+          "p_dd_at_most_observed": 1.0,
+          "interpretation": "if p > 0.05 the result is NOT exceptional for a best-of-N search"
+        },
+        "fragility_null_month_clustered": {
+          "note": "uncentered month-clustered resample; NOT a selection-bias test. Answers: how large could a result be if the real edge were removed but the monthly CLUSTERING of our own P&L were kept?",
+          "best_p50": 121.267,
+          "best_p95": 157.109,
+          "p_observed_gross_at_least": 1.0
+        },
+        "deflation": {
+          "estimated_trials": 464,
+          "trial_basis": "logged_experiments x 8 documented arms per experiment",
+          "observed_avg_r": 0.271714,
+          "null_best_avg_r_p95": 0.857529,
+          "deflation_ratio_vs_p95": 0.3169
+        },
+        "inventory": {
+          "registry_configs": 112,
+          "logged_experiments": 58,
+          "exp_harnesses_on_disk": 153,
+          "test_harnesses_on_disk": 76,
+          "all_py_in_tests": 271,
+          "note": "lower bound on trials; each logged experiment swept multiple arms"
+        }
+      }
+    }
+  }
+}

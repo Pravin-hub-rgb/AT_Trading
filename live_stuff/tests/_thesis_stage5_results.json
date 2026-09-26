@@ -1,0 +1,118 @@
+{
+  "stage": 5,
+  "architecture": "current v18 champion/king params, no venue retuning",
+  "common_cost": {
+    "fee_pct": 0.055,
+    "entry_slip_pct": 0.005,
+    "exit_slip_pct": 0.01,
+    "funding": "excluded for cross-venue comparison"
+  },
+  "venues": {
+    "BTCUSDT_BYBIT": {
+      "label": "Bybit BTC perp",
+      "configs": {
+        "champion_multi_sw10": {
+          "n": 500,
+          "gross_r": 445.225,
+          "net_common_cost_r": 349.224,
+          "wr": 30.0,
+          "pf": 2.384,
+          "dd": 17.825,
+          "years": {
+            "2023": 113.907,
+            "2024": 124.076,
+            "2025": 100.392,
+            "2026": 106.85
+          },
+          "avg_bars": 116.91
+        },
+        "utcsat_multi_sw10": {
+          "n": 454,
+          "gross_r": 466.476,
+          "net_common_cost_r": 381.123,
+          "wr": 30.837,
+          "pf": 2.618,
+          "dd": 14.821,
+          "years": {
+            "2023": 125.508,
+            "2024": 127.079,
+            "2025": 99.407,
+            "2026": 114.482
+          },
+          "avg_bars": 123.55
+        }
+      }
+    },
+    "BTCUSDT_PERP": {
+      "label": "Binance BTC perp",
+      "configs": {
+        "champion_multi_sw10": {
+          "n": 488,
+          "gross_r": 367.93,
+          "net_common_cost_r": 281.064,
+          "wr": 31.557,
+          "pf": 2.2,
+          "dd": 27.084,
+          "years": {
+            "2023": 101.821,
+            "2024": 40.606,
+            "2025": 119.928,
+            "2026": 105.575
+          },
+          "avg_bars": 128.33
+        },
+        "utcsat_multi_sw10": {
+          "n": 450,
+          "gross_r": 308.509,
+          "net_common_cost_r": 229.147,
+          "wr": 32.889,
+          "pf": 2.11,
+          "dd": 25.701,
+          "years": {
+            "2023": 48.363,
+            "2024": 52.995,
+            "2025": 125.006,
+            "2026": 82.145
+          },
+          "avg_bars": 128.47
+        }
+      }
+    },
+    "BTCUSDT": {
+      "label": "Binance BTC spot",
+      "configs": {
+        "champion_multi_sw10": {
+          "n": 485,
+          "gross_r": 331.128,
+          "net_common_cost_r": 233.669,
+          "wr": 30.928,
+          "pf": 2.079,
+          "dd": 34.707,
+          "years": {
+            "2023": 21.504,
+            "2024": 77.959,
+            "2025": 90.188,
+            "2026": 141.477
+          },
+          "avg_bars": 114.13
+        },
+        "utcsat_multi_sw10": {
+          "n": 449,
+          "gross_r": 342.817,
+          "net_common_cost_r": 254.647,
+          "wr": 32.294,
+          "pf": 2.23,
+          "dd": 17.57,
+          "years": {
+            "2023": 30.381,
+            "2024": 81.242,
+            "2025": 102.185,
+            "2026": 129.009
+          },
+          "avg_bars": 117.76
+        }
+      }
+    }
+  },
+  "elapsed_sec": 93.54
+}

@@ -1,0 +1,1742 @@
+{
+ "instrument": "BTCUSDT_BYBIT",
+ "study": "W/L x distance matrix (Stage 25 re-cut, descriptive)",
+ "configs": [
+  "fullstack_wage10_cd0_single_sw10",
+  "champion_multi_sw10",
+  "utcsat_multi_sw10"
+ ],
+ "is": {
+  "fullstack_wage10_cd0_single_sw10": {
+   "prev_fs_to_signal_bars": {
+    "0-1": {
+     "n": 49,
+     "wins": 16,
+     "win_rate_pct": 32.7,
+     "gross_r": 212.1,
+     "net_per_r": 4.329,
+     "runner_n": 11
+    },
+    "2-7": {
+     "n": 68,
+     "wins": 18,
+     "win_rate_pct": 26.5,
+     "gross_r": 97.6,
+     "net_per_r": 1.435,
+     "runner_n": 11
+    },
+    "24-47": {
+     "n": 20,
+     "wins": 10,
+     "win_rate_pct": 50.0,
+     "gross_r": 20.56,
+     "net_per_r": 1.028,
+     "runner_n": 3
+    },
+    "48-95": {
+     "n": 6,
+     "wins": 3,
+     "win_rate_pct": 50.0,
+     "gross_r": 2.13,
+     "net_per_r": 0.356,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 45,
+     "wins": 14,
+     "win_rate_pct": 31.1,
+     "gross_r": 26.75,
+     "net_per_r": 0.594,
+     "runner_n": 4
+    },
+    "96+": {
+     "n": 12,
+     "wins": 4,
+     "win_rate_pct": 33.3,
+     "gross_r": 1.47,
+     "net_per_r": 0.123,
+     "runner_n": 1
+    }
+   },
+   "prev_final_to_signal_bars": {
+    "2-7": {
+     "n": 7,
+     "wins": 1,
+     "win_rate_pct": 14.3,
+     "gross_r": 1.78,
+     "net_per_r": 0.254,
+     "runner_n": 1
+    },
+    "24-47": {
+     "n": 78,
+     "wins": 18,
+     "win_rate_pct": 23.1,
+     "gross_r": 70.61,
+     "net_per_r": 0.905,
+     "runner_n": 8
+    },
+    "48-95": {
+     "n": 56,
+     "wins": 26,
+     "win_rate_pct": 46.4,
+     "gross_r": 146.76,
+     "net_per_r": 2.621,
+     "runner_n": 9
+    },
+    "8-23": {
+     "n": 53,
+     "wins": 16,
+     "win_rate_pct": 30.2,
+     "gross_r": 129.32,
+     "net_per_r": 2.44,
+     "runner_n": 11
+    },
+    "96+": {
+     "n": 6,
+     "wins": 4,
+     "win_rate_pct": 66.7,
+     "gross_r": 12.14,
+     "net_per_r": 2.023,
+     "runner_n": 2
+    }
+   },
+   "b1_to_signal_bars": {
+    "0-1": {
+     "n": 11,
+     "wins": 5,
+     "win_rate_pct": 45.5,
+     "gross_r": 143.77,
+     "net_per_r": 13.07,
+     "runner_n": 4
+    },
+    "2-7": {
+     "n": 104,
+     "wins": 30,
+     "win_rate_pct": 28.8,
+     "gross_r": 182.5,
+     "net_per_r": 1.755,
+     "runner_n": 18
+    },
+    "24-47": {
+     "n": 25,
+     "wins": 13,
+     "win_rate_pct": 52.0,
+     "gross_r": 20.5,
+     "net_per_r": 0.82,
+     "runner_n": 4
+    },
+    "48-95": {
+     "n": 5,
+     "wins": 2,
+     "win_rate_pct": 40.0,
+     "gross_r": 4.63,
+     "net_per_r": 0.925,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 53,
+     "wins": 14,
+     "win_rate_pct": 26.4,
+     "gross_r": 10.2,
+     "net_per_r": 0.192,
+     "runner_n": 4
+    },
+    "96+": {
+     "n": 2,
+     "wins": 1,
+     "win_rate_pct": 50.0,
+     "gross_r": -0.98,
+     "net_per_r": -0.488,
+     "runner_n": 0
+    }
+   },
+   "cur_start_to_b1_bars": {
+    "0-1": {
+     "n": 30,
+     "wins": 20,
+     "win_rate_pct": 66.7,
+     "gross_r": 288.1,
+     "net_per_r": 9.603,
+     "runner_n": 13
+    },
+    "2-7": {
+     "n": 22,
+     "wins": 11,
+     "win_rate_pct": 50.0,
+     "gross_r": 51.35,
+     "net_per_r": 2.334,
+     "runner_n": 7
+    },
+    "24-47": {
+     "n": 1,
+     "wins": 1,
+     "win_rate_pct": 100.0,
+     "gross_r": 0.92,
+     "net_per_r": 0.92,
+     "runner_n": 0
+    },
+    "48-95": {
+     "n": 1,
+     "wins": 1,
+     "win_rate_pct": 100.0,
+     "gross_r": 2.69,
+     "net_per_r": 2.687,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 13,
+     "wins": 7,
+     "win_rate_pct": 53.8,
+     "gross_r": 3.43,
+     "net_per_r": 0.264,
+     "runner_n": 1
+    },
+    "96+": {
+     "n": 133,
+     "wins": 25,
+     "win_rate_pct": 18.8,
+     "gross_r": 14.12,
+     "net_per_r": 0.106,
+     "runner_n": 10
+    }
+   },
+   "prev_fs_to_signal_atr": {
+    "0-1": {
+     "n": 116,
+     "wins": 38,
+     "win_rate_pct": 32.8,
+     "gross_r": 232.59,
+     "net_per_r": 2.005,
+     "runner_n": 19
+    },
+    "1-2": {
+     "n": 7,
+     "wins": 2,
+     "win_rate_pct": 28.6,
+     "gross_r": -1.97,
+     "net_per_r": -0.282,
+     "runner_n": 0
+    },
+    "2-4": {
+     "n": 1,
+     "wins": 1,
+     "win_rate_pct": 100.0,
+     "gross_r": 8.78,
+     "net_per_r": 8.782,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 76,
+     "wins": 24,
+     "win_rate_pct": 31.6,
+     "gross_r": 121.21,
+     "net_per_r": 1.595,
+     "runner_n": 11
+    }
+   },
+   "prev_final_to_signal_atr": {
+    "0-1": {
+     "n": 70,
+     "wins": 23,
+     "win_rate_pct": 32.9,
+     "gross_r": 104.18,
+     "net_per_r": 1.488,
+     "runner_n": 9
+    },
+    "1-2": {
+     "n": 26,
+     "wins": 12,
+     "win_rate_pct": 46.2,
+     "gross_r": 157.57,
+     "net_per_r": 6.06,
+     "runner_n": 8
+    },
+    "2-4": {
+     "n": 10,
+     "wins": 1,
+     "win_rate_pct": 10.0,
+     "gross_r": 0.75,
+     "net_per_r": 0.075,
+     "runner_n": 1
+    },
+    "4-8": {
+     "n": 1,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -0.45,
+     "net_per_r": -0.448,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 93,
+     "wins": 29,
+     "win_rate_pct": 31.2,
+     "gross_r": 98.56,
+     "net_per_r": 1.06,
+     "runner_n": 13
+    }
+   },
+   "b1_to_signal_atr": {
+    "0-1": {
+     "n": 110,
+     "wins": 38,
+     "win_rate_pct": 34.5,
+     "gross_r": 264.65,
+     "net_per_r": 2.406,
+     "runner_n": 19
+    },
+    "1-2": {
+     "n": 6,
+     "wins": 1,
+     "win_rate_pct": 16.7,
+     "gross_r": 2.02,
+     "net_per_r": 0.337,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 84,
+     "wins": 26,
+     "win_rate_pct": 31.0,
+     "gross_r": 93.94,
+     "net_per_r": 1.118,
+     "runner_n": 11
+    }
+   }
+  },
+  "champion_multi_sw10": {
+   "prev_fs_to_signal_bars": {
+    "0-1": {
+     "n": 85,
+     "wins": 23,
+     "win_rate_pct": 27.1,
+     "gross_r": 236.18,
+     "net_per_r": 2.779,
+     "runner_n": 19
+    },
+    "2-7": {
+     "n": 149,
+     "wins": 39,
+     "win_rate_pct": 26.2,
+     "gross_r": 112.0,
+     "net_per_r": 0.752,
+     "runner_n": 20
+    },
+    "24-47": {
+     "n": 53,
+     "wins": 17,
+     "win_rate_pct": 32.1,
+     "gross_r": 27.38,
+     "net_per_r": 0.517,
+     "runner_n": 6
+    },
+    "48-95": {
+     "n": 20,
+     "wins": 8,
+     "win_rate_pct": 40.0,
+     "gross_r": -1.88,
+     "net_per_r": -0.094,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 163,
+     "wins": 50,
+     "win_rate_pct": 30.7,
+     "gross_r": 58.64,
+     "net_per_r": 0.36,
+     "runner_n": 15
+    },
+    "96+": {
+     "n": 30,
+     "wins": 13,
+     "win_rate_pct": 43.3,
+     "gross_r": 12.9,
+     "net_per_r": 0.43,
+     "runner_n": 2
+    }
+   },
+   "prev_final_to_signal_bars": {
+    "2-7": {
+     "n": 13,
+     "wins": 5,
+     "win_rate_pct": 38.5,
+     "gross_r": 14.49,
+     "net_per_r": 1.114,
+     "runner_n": 3
+    },
+    "24-47": {
+     "n": 210,
+     "wins": 51,
+     "win_rate_pct": 24.3,
+     "gross_r": 62.36,
+     "net_per_r": 0.297,
+     "runner_n": 16
+    },
+    "48-95": {
+     "n": 149,
+     "wins": 56,
+     "win_rate_pct": 37.6,
+     "gross_r": 208.29,
+     "net_per_r": 1.398,
+     "runner_n": 24
+    },
+    "8-23": {
+     "n": 108,
+     "wins": 30,
+     "win_rate_pct": 27.8,
+     "gross_r": 143.29,
+     "net_per_r": 1.327,
+     "runner_n": 17
+    },
+    "96+": {
+     "n": 20,
+     "wins": 8,
+     "win_rate_pct": 40.0,
+     "gross_r": 16.8,
+     "net_per_r": 0.84,
+     "runner_n": 3
+    }
+   },
+   "b1_to_signal_bars": {
+    "0-1": {
+     "n": 21,
+     "wins": 8,
+     "win_rate_pct": 38.1,
+     "gross_r": 144.35,
+     "net_per_r": 6.874,
+     "runner_n": 5
+    },
+    "2-7": {
+     "n": 225,
+     "wins": 61,
+     "win_rate_pct": 27.1,
+     "gross_r": 208.37,
+     "net_per_r": 0.926,
+     "runner_n": 33
+    },
+    "24-47": {
+     "n": 83,
+     "wins": 33,
+     "win_rate_pct": 39.8,
+     "gross_r": 37.12,
+     "net_per_r": 0.447,
+     "runner_n": 10
+    },
+    "48-95": {
+     "n": 21,
+     "wins": 7,
+     "win_rate_pct": 33.3,
+     "gross_r": 14.69,
+     "net_per_r": 0.7,
+     "runner_n": 2
+    },
+    "8-23": {
+     "n": 144,
+     "wins": 39,
+     "win_rate_pct": 27.1,
+     "gross_r": 40.11,
+     "net_per_r": 0.279,
+     "runner_n": 13
+    },
+    "96+": {
+     "n": 6,
+     "wins": 2,
+     "win_rate_pct": 33.3,
+     "gross_r": 0.58,
+     "net_per_r": 0.097,
+     "runner_n": 0
+    }
+   },
+   "cur_start_to_b1_bars": {
+    "0-1": {
+     "n": 70,
+     "wins": 41,
+     "win_rate_pct": 58.6,
+     "gross_r": 361.69,
+     "net_per_r": 5.167,
+     "runner_n": 25
+    },
+    "2-7": {
+     "n": 60,
+     "wins": 27,
+     "win_rate_pct": 45.0,
+     "gross_r": 101.5,
+     "net_per_r": 1.692,
+     "runner_n": 14
+    },
+    "24-47": {
+     "n": 9,
+     "wins": 3,
+     "win_rate_pct": 33.3,
+     "gross_r": -0.91,
+     "net_per_r": -0.101,
+     "runner_n": 1
+    },
+    "48-95": {
+     "n": 6,
+     "wins": 2,
+     "win_rate_pct": 33.3,
+     "gross_r": -0.42,
+     "net_per_r": -0.07,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 36,
+     "wins": 14,
+     "win_rate_pct": 38.9,
+     "gross_r": 6.69,
+     "net_per_r": 0.186,
+     "runner_n": 4
+    },
+    "96+": {
+     "n": 319,
+     "wins": 63,
+     "win_rate_pct": 19.7,
+     "gross_r": -23.33,
+     "net_per_r": -0.073,
+     "runner_n": 19
+    }
+   },
+   "prev_fs_to_signal_atr": {
+    "0-1": {
+     "n": 260,
+     "wins": 79,
+     "win_rate_pct": 30.4,
+     "gross_r": 275.25,
+     "net_per_r": 1.059,
+     "runner_n": 35
+    },
+    "1-2": {
+     "n": 19,
+     "wins": 7,
+     "win_rate_pct": 36.8,
+     "gross_r": 17.31,
+     "net_per_r": 0.911,
+     "runner_n": 2
+    },
+    "2-4": {
+     "n": 2,
+     "wins": 1,
+     "win_rate_pct": 50.0,
+     "gross_r": 8.63,
+     "net_per_r": 4.314,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 219,
+     "wins": 63,
+     "win_rate_pct": 28.8,
+     "gross_r": 144.03,
+     "net_per_r": 0.658,
+     "runner_n": 25
+    }
+   },
+   "prev_final_to_signal_atr": {
+    "0-1": {
+     "n": 187,
+     "wins": 60,
+     "win_rate_pct": 32.1,
+     "gross_r": 171.24,
+     "net_per_r": 0.916,
+     "runner_n": 24
+    },
+    "1-2": {
+     "n": 60,
+     "wins": 20,
+     "win_rate_pct": 33.3,
+     "gross_r": 159.08,
+     "net_per_r": 2.651,
+     "runner_n": 10
+    },
+    "2-4": {
+     "n": 25,
+     "wins": 6,
+     "win_rate_pct": 24.0,
+     "gross_r": 7.95,
+     "net_per_r": 0.318,
+     "runner_n": 4
+    },
+    "4-8": {
+     "n": 2,
+     "wins": 1,
+     "win_rate_pct": 50.0,
+     "gross_r": -0.34,
+     "net_per_r": -0.169,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 226,
+     "wins": 63,
+     "win_rate_pct": 27.9,
+     "gross_r": 107.29,
+     "net_per_r": 0.475,
+     "runner_n": 25
+    }
+   },
+   "b1_to_signal_atr": {
+    "0-1": {
+     "n": 263,
+     "wins": 87,
+     "win_rate_pct": 33.1,
+     "gross_r": 340.79,
+     "net_per_r": 1.296,
+     "runner_n": 38
+    },
+    "1-2": {
+     "n": 12,
+     "wins": 1,
+     "win_rate_pct": 8.3,
+     "gross_r": -2.52,
+     "net_per_r": -0.21,
+     "runner_n": 1
+    },
+    "2-4": {
+     "n": 1,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -0.15,
+     "net_per_r": -0.153,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 224,
+     "wins": 62,
+     "win_rate_pct": 27.7,
+     "gross_r": 107.11,
+     "net_per_r": 0.478,
+     "runner_n": 24
+    }
+   }
+  },
+  "utcsat_multi_sw10": {
+   "prev_fs_to_signal_bars": {
+    "0-1": {
+     "n": 80,
+     "wins": 23,
+     "win_rate_pct": 28.8,
+     "gross_r": 230.83,
+     "net_per_r": 2.885,
+     "runner_n": 17
+    },
+    "2-7": {
+     "n": 134,
+     "wins": 37,
+     "win_rate_pct": 27.6,
+     "gross_r": 130.0,
+     "net_per_r": 0.97,
+     "runner_n": 22
+    },
+    "24-47": {
+     "n": 51,
+     "wins": 17,
+     "win_rate_pct": 33.3,
+     "gross_r": 28.88,
+     "net_per_r": 0.566,
+     "runner_n": 6
+    },
+    "48-95": {
+     "n": 18,
+     "wins": 8,
+     "win_rate_pct": 44.4,
+     "gross_r": 0.12,
+     "net_per_r": 0.007,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 146,
+     "wins": 43,
+     "win_rate_pct": 29.5,
+     "gross_r": 44.77,
+     "net_per_r": 0.307,
+     "runner_n": 13
+    },
+    "96+": {
+     "n": 25,
+     "wins": 12,
+     "win_rate_pct": 48.0,
+     "gross_r": 31.88,
+     "net_per_r": 1.275,
+     "runner_n": 3
+    }
+   },
+   "prev_final_to_signal_bars": {
+    "2-7": {
+     "n": 10,
+     "wins": 2,
+     "win_rate_pct": 20.0,
+     "gross_r": -0.2,
+     "net_per_r": -0.02,
+     "runner_n": 1
+    },
+    "24-47": {
+     "n": 185,
+     "wins": 47,
+     "win_rate_pct": 25.4,
+     "gross_r": 69.04,
+     "net_per_r": 0.373,
+     "runner_n": 15
+    },
+    "48-95": {
+     "n": 139,
+     "wins": 52,
+     "win_rate_pct": 37.4,
+     "gross_r": 213.46,
+     "net_per_r": 1.536,
+     "runner_n": 24
+    },
+    "8-23": {
+     "n": 102,
+     "wins": 31,
+     "win_rate_pct": 30.4,
+     "gross_r": 150.14,
+     "net_per_r": 1.472,
+     "runner_n": 18
+    },
+    "96+": {
+     "n": 18,
+     "wins": 8,
+     "win_rate_pct": 44.4,
+     "gross_r": 34.05,
+     "net_per_r": 1.891,
+     "runner_n": 4
+    }
+   },
+   "b1_to_signal_bars": {
+    "0-1": {
+     "n": 21,
+     "wins": 7,
+     "win_rate_pct": 33.3,
+     "gross_r": 143.09,
+     "net_per_r": 6.814,
+     "runner_n": 5
+    },
+    "2-7": {
+     "n": 212,
+     "wins": 59,
+     "win_rate_pct": 27.8,
+     "gross_r": 212.58,
+     "net_per_r": 1.003,
+     "runner_n": 33
+    },
+    "24-47": {
+     "n": 75,
+     "wins": 31,
+     "win_rate_pct": 41.3,
+     "gross_r": 54.57,
+     "net_per_r": 0.728,
+     "runner_n": 11
+    },
+    "48-95": {
+     "n": 17,
+     "wins": 7,
+     "win_rate_pct": 41.2,
+     "gross_r": 18.48,
+     "net_per_r": 1.087,
+     "runner_n": 2
+    },
+    "8-23": {
+     "n": 124,
+     "wins": 35,
+     "win_rate_pct": 28.2,
+     "gross_r": 38.62,
+     "net_per_r": 0.311,
+     "runner_n": 11
+    },
+    "96+": {
+     "n": 5,
+     "wins": 1,
+     "win_rate_pct": 20.0,
+     "gross_r": -0.85,
+     "net_per_r": -0.17,
+     "runner_n": 0
+    }
+   },
+   "cur_start_to_b1_bars": {
+    "0-1": {
+     "n": 60,
+     "wins": 36,
+     "win_rate_pct": 60.0,
+     "gross_r": 344.23,
+     "net_per_r": 5.737,
+     "runner_n": 22
+    },
+    "2-7": {
+     "n": 59,
+     "wins": 27,
+     "win_rate_pct": 45.8,
+     "gross_r": 111.27,
+     "net_per_r": 1.886,
+     "runner_n": 16
+    },
+    "24-47": {
+     "n": 11,
+     "wins": 3,
+     "win_rate_pct": 27.3,
+     "gross_r": -2.9,
+     "net_per_r": -0.264,
+     "runner_n": 1
+    },
+    "48-95": {
+     "n": 6,
+     "wins": 2,
+     "win_rate_pct": 33.3,
+     "gross_r": -0.42,
+     "net_per_r": -0.07,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 33,
+     "wins": 14,
+     "win_rate_pct": 42.4,
+     "gross_r": 10.37,
+     "net_per_r": 0.314,
+     "runner_n": 4
+    },
+    "96+": {
+     "n": 285,
+     "wins": 58,
+     "win_rate_pct": 20.4,
+     "gross_r": 3.92,
+     "net_per_r": 0.014,
+     "runner_n": 19
+    }
+   },
+   "prev_fs_to_signal_atr": {
+    "0-1": {
+     "n": 237,
+     "wins": 79,
+     "win_rate_pct": 33.3,
+     "gross_r": 315.77,
+     "net_per_r": 1.332,
+     "runner_n": 37
+    },
+    "1-2": {
+     "n": 20,
+     "wins": 7,
+     "win_rate_pct": 35.0,
+     "gross_r": 16.87,
+     "net_per_r": 0.843,
+     "runner_n": 2
+    },
+    "2-4": {
+     "n": 2,
+     "wins": 1,
+     "win_rate_pct": 50.0,
+     "gross_r": 8.63,
+     "net_per_r": 4.314,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 195,
+     "wins": 53,
+     "win_rate_pct": 27.2,
+     "gross_r": 125.21,
+     "net_per_r": 0.642,
+     "runner_n": 22
+    }
+   },
+   "prev_final_to_signal_atr": {
+    "0-1": {
+     "n": 161,
+     "wins": 57,
+     "win_rate_pct": 35.4,
+     "gross_r": 202.47,
+     "net_per_r": 1.258,
+     "runner_n": 24
+    },
+    "1-2": {
+     "n": 51,
+     "wins": 21,
+     "win_rate_pct": 41.2,
+     "gross_r": 174.11,
+     "net_per_r": 3.414,
+     "runner_n": 11
+    },
+    "2-4": {
+     "n": 24,
+     "wins": 6,
+     "win_rate_pct": 25.0,
+     "gross_r": 8.95,
+     "net_per_r": 0.373,
+     "runner_n": 4
+    },
+    "4-8": {
+     "n": 3,
+     "wins": 1,
+     "win_rate_pct": 33.3,
+     "gross_r": -0.79,
+     "net_per_r": -0.262,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 215,
+     "wins": 55,
+     "win_rate_pct": 25.6,
+     "gross_r": 81.73,
+     "net_per_r": 0.38,
+     "runner_n": 23
+    }
+   },
+   "b1_to_signal_atr": {
+    "0-1": {
+     "n": 242,
+     "wins": 84,
+     "win_rate_pct": 34.7,
+     "gross_r": 368.65,
+     "net_per_r": 1.523,
+     "runner_n": 39
+    },
+    "1-2": {
+     "n": 13,
+     "wins": 1,
+     "win_rate_pct": 7.7,
+     "gross_r": -3.52,
+     "net_per_r": -0.271,
+     "runner_n": 1
+    },
+    "2-4": {
+     "n": 1,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -0.15,
+     "net_per_r": -0.153,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 198,
+     "wins": 55,
+     "win_rate_pct": 27.8,
+     "gross_r": 101.5,
+     "net_per_r": 0.513,
+     "runner_n": 22
+    }
+   }
+  }
+ },
+ "oos": {
+  "fullstack_wage10_cd0_single_sw10": {
+   "prev_fs_to_signal_bars": {
+    "0-1": {
+     "n": 31,
+     "wins": 4,
+     "win_rate_pct": 12.9,
+     "gross_r": -6.89,
+     "net_per_r": -0.222,
+     "runner_n": 3
+    },
+    "2-7": {
+     "n": 50,
+     "wins": 12,
+     "win_rate_pct": 24.0,
+     "gross_r": 8.75,
+     "net_per_r": 0.175,
+     "runner_n": 4
+    },
+    "24-47": {
+     "n": 9,
+     "wins": 4,
+     "win_rate_pct": 44.4,
+     "gross_r": 1.6,
+     "net_per_r": 0.178,
+     "runner_n": 0
+    },
+    "48-95": {
+     "n": 3,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -1.22,
+     "net_per_r": -0.408,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 43,
+     "wins": 14,
+     "win_rate_pct": 32.6,
+     "gross_r": 31.41,
+     "net_per_r": 0.73,
+     "runner_n": 6
+    },
+    "96+": {
+     "n": 4,
+     "wins": 1,
+     "win_rate_pct": 25.0,
+     "gross_r": 4.38,
+     "net_per_r": 1.096,
+     "runner_n": 1
+    }
+   },
+   "prev_final_to_signal_bars": {
+    "2-7": {
+     "n": 3,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -2.98,
+     "net_per_r": -0.994,
+     "runner_n": 0
+    },
+    "24-47": {
+     "n": 50,
+     "wins": 11,
+     "win_rate_pct": 22.0,
+     "gross_r": -6.47,
+     "net_per_r": -0.129,
+     "runner_n": 3
+    },
+    "48-95": {
+     "n": 44,
+     "wins": 10,
+     "win_rate_pct": 22.7,
+     "gross_r": -3.58,
+     "net_per_r": -0.081,
+     "runner_n": 3
+    },
+    "8-23": {
+     "n": 40,
+     "wins": 13,
+     "win_rate_pct": 32.5,
+     "gross_r": 50.76,
+     "net_per_r": 1.269,
+     "runner_n": 8
+    },
+    "96+": {
+     "n": 3,
+     "wins": 1,
+     "win_rate_pct": 33.3,
+     "gross_r": 0.32,
+     "net_per_r": 0.106,
+     "runner_n": 0
+    }
+   },
+   "b1_to_signal_bars": {
+    "0-1": {
+     "n": 14,
+     "wins": 3,
+     "win_rate_pct": 21.4,
+     "gross_r": 7.98,
+     "net_per_r": 0.57,
+     "runner_n": 3
+    },
+    "2-7": {
+     "n": 69,
+     "wins": 15,
+     "win_rate_pct": 21.7,
+     "gross_r": 12.59,
+     "net_per_r": 0.182,
+     "runner_n": 5
+    },
+    "24-47": {
+     "n": 16,
+     "wins": 7,
+     "win_rate_pct": 43.8,
+     "gross_r": 8.78,
+     "net_per_r": 0.549,
+     "runner_n": 2
+    },
+    "48-95": {
+     "n": 4,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -2.22,
+     "net_per_r": -0.555,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 37,
+     "wins": 10,
+     "win_rate_pct": 27.0,
+     "gross_r": 10.91,
+     "net_per_r": 0.295,
+     "runner_n": 4
+    }
+   },
+   "cur_start_to_b1_bars": {
+    "0-1": {
+     "n": 19,
+     "wins": 11,
+     "win_rate_pct": 57.9,
+     "gross_r": 32.06,
+     "net_per_r": 1.687,
+     "runner_n": 5
+    },
+    "2-7": {
+     "n": 20,
+     "wins": 11,
+     "win_rate_pct": 55.0,
+     "gross_r": 28.77,
+     "net_per_r": 1.438,
+     "runner_n": 3
+    },
+    "24-47": {
+     "n": 2,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -1.16,
+     "net_per_r": -0.578,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 8,
+     "wins": 4,
+     "win_rate_pct": 50.0,
+     "gross_r": 29.41,
+     "net_per_r": 3.676,
+     "runner_n": 2
+    },
+    "96+": {
+     "n": 91,
+     "wins": 9,
+     "win_rate_pct": 9.9,
+     "gross_r": -51.04,
+     "net_per_r": -0.561,
+     "runner_n": 4
+    }
+   },
+   "prev_fs_to_signal_atr": {
+    "0-1": {
+     "n": 77,
+     "wins": 17,
+     "win_rate_pct": 22.1,
+     "gross_r": 13.65,
+     "net_per_r": 0.177,
+     "runner_n": 9
+    },
+    "1-2": {
+     "n": 1,
+     "wins": 1,
+     "win_rate_pct": 100.0,
+     "gross_r": 0.54,
+     "net_per_r": 0.543,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 62,
+     "wins": 17,
+     "win_rate_pct": 27.4,
+     "gross_r": 23.85,
+     "net_per_r": 0.385,
+     "runner_n": 5
+    }
+   },
+   "prev_final_to_signal_atr": {
+    "0-1": {
+     "n": 48,
+     "wins": 12,
+     "win_rate_pct": 25.0,
+     "gross_r": 14.16,
+     "net_per_r": 0.295,
+     "runner_n": 5
+    },
+    "1-2": {
+     "n": 17,
+     "wins": 2,
+     "win_rate_pct": 11.8,
+     "gross_r": -11.06,
+     "net_per_r": -0.651,
+     "runner_n": 0
+    },
+    "2-4": {
+     "n": 8,
+     "wins": 3,
+     "win_rate_pct": 37.5,
+     "gross_r": 0.65,
+     "net_per_r": 0.081,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 67,
+     "wins": 18,
+     "win_rate_pct": 26.9,
+     "gross_r": 34.29,
+     "net_per_r": 0.512,
+     "runner_n": 8
+    }
+   },
+   "b1_to_signal_atr": {
+    "0-1": {
+     "n": 78,
+     "wins": 17,
+     "win_rate_pct": 21.8,
+     "gross_r": 7.82,
+     "net_per_r": 0.1,
+     "runner_n": 9
+    },
+    "1-2": {
+     "n": 3,
+     "wins": 1,
+     "win_rate_pct": 33.3,
+     "gross_r": -0.49,
+     "net_per_r": -0.163,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 59,
+     "wins": 17,
+     "win_rate_pct": 28.8,
+     "gross_r": 30.71,
+     "net_per_r": 0.521,
+     "runner_n": 5
+    }
+   }
+  },
+  "champion_multi_sw10": {
+   "prev_fs_to_signal_bars": {
+    "0-1": {
+     "n": 46,
+     "wins": 8,
+     "win_rate_pct": 17.4,
+     "gross_r": -18.28,
+     "net_per_r": -0.397,
+     "runner_n": 2
+    },
+    "2-7": {
+     "n": 85,
+     "wins": 22,
+     "win_rate_pct": 25.9,
+     "gross_r": 10.84,
+     "net_per_r": 0.128,
+     "runner_n": 9
+    },
+    "24-47": {
+     "n": 15,
+     "wins": 5,
+     "win_rate_pct": 33.3,
+     "gross_r": 18.1,
+     "net_per_r": 1.207,
+     "runner_n": 2
+    },
+    "48-95": {
+     "n": 13,
+     "wins": 3,
+     "win_rate_pct": 23.1,
+     "gross_r": 3.69,
+     "net_per_r": 0.284,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 101,
+     "wins": 34,
+     "win_rate_pct": 33.7,
+     "gross_r": 50.02,
+     "net_per_r": 0.495,
+     "runner_n": 12
+    },
+    "96+": {
+     "n": 19,
+     "wins": 6,
+     "win_rate_pct": 31.6,
+     "gross_r": 41.34,
+     "net_per_r": 2.176,
+     "runner_n": 4
+    }
+   },
+   "prev_final_to_signal_bars": {
+    "2-7": {
+     "n": 2,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -1.29,
+     "net_per_r": -0.643,
+     "runner_n": 0
+    },
+    "24-47": {
+     "n": 110,
+     "wins": 30,
+     "win_rate_pct": 27.3,
+     "gross_r": 2.04,
+     "net_per_r": 0.019,
+     "runner_n": 9
+    },
+    "48-95": {
+     "n": 88,
+     "wins": 24,
+     "win_rate_pct": 27.3,
+     "gross_r": 28.49,
+     "net_per_r": 0.324,
+     "runner_n": 10
+    },
+    "8-23": {
+     "n": 69,
+     "wins": 22,
+     "win_rate_pct": 31.9,
+     "gross_r": 78.58,
+     "net_per_r": 1.139,
+     "runner_n": 11
+    },
+    "96+": {
+     "n": 10,
+     "wins": 2,
+     "win_rate_pct": 20.0,
+     "gross_r": -2.09,
+     "net_per_r": -0.209,
+     "runner_n": 0
+    }
+   },
+   "b1_to_signal_bars": {
+    "0-1": {
+     "n": 17,
+     "wins": 3,
+     "win_rate_pct": 17.6,
+     "gross_r": 27.75,
+     "net_per_r": 1.633,
+     "runner_n": 2
+    },
+    "2-7": {
+     "n": 111,
+     "wins": 33,
+     "win_rate_pct": 29.7,
+     "gross_r": 47.2,
+     "net_per_r": 0.425,
+     "runner_n": 14
+    },
+    "24-47": {
+     "n": 35,
+     "wins": 7,
+     "win_rate_pct": 20.0,
+     "gross_r": -6.69,
+     "net_per_r": -0.191,
+     "runner_n": 2
+    },
+    "48-95": {
+     "n": 12,
+     "wins": 2,
+     "win_rate_pct": 16.7,
+     "gross_r": 3.39,
+     "net_per_r": 0.282,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 101,
+     "wins": 32,
+     "win_rate_pct": 31.7,
+     "gross_r": 34.06,
+     "net_per_r": 0.337,
+     "runner_n": 11
+    },
+    "96+": {
+     "n": 3,
+     "wins": 1,
+     "win_rate_pct": 33.3,
+     "gross_r": 0.01,
+     "net_per_r": 0.003,
+     "runner_n": 0
+    }
+   },
+   "cur_start_to_b1_bars": {
+    "0-1": {
+     "n": 21,
+     "wins": 11,
+     "win_rate_pct": 52.4,
+     "gross_r": 43.23,
+     "net_per_r": 2.059,
+     "runner_n": 5
+    },
+    "2-7": {
+     "n": 51,
+     "wins": 28,
+     "win_rate_pct": 54.9,
+     "gross_r": 66.2,
+     "net_per_r": 1.298,
+     "runner_n": 9
+    },
+    "24-47": {
+     "n": 5,
+     "wins": 1,
+     "win_rate_pct": 20.0,
+     "gross_r": 1.85,
+     "net_per_r": 0.37,
+     "runner_n": 1
+    },
+    "8-23": {
+     "n": 26,
+     "wins": 11,
+     "win_rate_pct": 42.3,
+     "gross_r": 37.31,
+     "net_per_r": 1.435,
+     "runner_n": 5
+    },
+    "96+": {
+     "n": 176,
+     "wins": 27,
+     "win_rate_pct": 15.3,
+     "gross_r": -42.86,
+     "net_per_r": -0.244,
+     "runner_n": 10
+    }
+   },
+   "prev_fs_to_signal_atr": {
+    "0-1": {
+     "n": 149,
+     "wins": 44,
+     "win_rate_pct": 29.5,
+     "gross_r": 28.18,
+     "net_per_r": 0.189,
+     "runner_n": 17
+    },
+    "1-2": {
+     "n": 7,
+     "wins": 2,
+     "win_rate_pct": 28.6,
+     "gross_r": 0.15,
+     "net_per_r": 0.021,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 123,
+     "wins": 32,
+     "win_rate_pct": 26.0,
+     "gross_r": 77.4,
+     "net_per_r": 0.629,
+     "runner_n": 12
+    }
+   },
+   "prev_final_to_signal_atr": {
+    "0-1": {
+     "n": 88,
+     "wins": 30,
+     "win_rate_pct": 34.1,
+     "gross_r": 35.5,
+     "net_per_r": 0.403,
+     "runner_n": 12
+    },
+    "1-2": {
+     "n": 32,
+     "wins": 5,
+     "win_rate_pct": 15.6,
+     "gross_r": -16.95,
+     "net_per_r": -0.53,
+     "runner_n": 1
+    },
+    "2-4": {
+     "n": 11,
+     "wins": 3,
+     "win_rate_pct": 27.3,
+     "gross_r": -0.75,
+     "net_per_r": -0.068,
+     "runner_n": 1
+    },
+    "4-8": {
+     "n": 1,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -1.0,
+     "net_per_r": -1.0,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 147,
+     "wins": 40,
+     "win_rate_pct": 27.2,
+     "gross_r": 88.93,
+     "net_per_r": 0.605,
+     "runner_n": 16
+    }
+   },
+   "b1_to_signal_atr": {
+    "0-1": {
+     "n": 155,
+     "wins": 46,
+     "win_rate_pct": 29.7,
+     "gross_r": 30.5,
+     "net_per_r": 0.197,
+     "runner_n": 18
+    },
+    "1-2": {
+     "n": 7,
+     "wins": 1,
+     "win_rate_pct": 14.3,
+     "gross_r": -4.29,
+     "net_per_r": -0.613,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 117,
+     "wins": 31,
+     "win_rate_pct": 26.5,
+     "gross_r": 79.52,
+     "net_per_r": 0.68,
+     "runner_n": 12
+    }
+   }
+  },
+  "utcsat_multi_sw10": {
+   "prev_fs_to_signal_bars": {
+    "0-1": {
+     "n": 43,
+     "wins": 10,
+     "win_rate_pct": 23.3,
+     "gross_r": -8.44,
+     "net_per_r": -0.196,
+     "runner_n": 3
+    },
+    "2-7": {
+     "n": 84,
+     "wins": 22,
+     "win_rate_pct": 26.2,
+     "gross_r": -2.44,
+     "net_per_r": -0.029,
+     "runner_n": 8
+    },
+    "24-47": {
+     "n": 14,
+     "wins": 5,
+     "win_rate_pct": 35.7,
+     "gross_r": 22.63,
+     "net_per_r": 1.616,
+     "runner_n": 3
+    },
+    "48-95": {
+     "n": 11,
+     "wins": 1,
+     "win_rate_pct": 9.1,
+     "gross_r": -6.86,
+     "net_per_r": -0.624,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 85,
+     "wins": 32,
+     "win_rate_pct": 37.6,
+     "gross_r": 50.21,
+     "net_per_r": 0.591,
+     "runner_n": 11
+    },
+    "96+": {
+     "n": 16,
+     "wins": 5,
+     "win_rate_pct": 31.2,
+     "gross_r": 37.54,
+     "net_per_r": 2.346,
+     "runner_n": 3
+    }
+   },
+   "prev_final_to_signal_bars": {
+    "2-7": {
+     "n": 3,
+     "wins": 0,
+     "win_rate_pct": 0.0,
+     "gross_r": -2.29,
+     "net_per_r": -0.762,
+     "runner_n": 0
+    },
+    "24-47": {
+     "n": 102,
+     "wins": 29,
+     "win_rate_pct": 28.4,
+     "gross_r": -4.77,
+     "net_per_r": -0.047,
+     "runner_n": 8
+    },
+    "48-95": {
+     "n": 74,
+     "wins": 21,
+     "win_rate_pct": 28.4,
+     "gross_r": 10.51,
+     "net_per_r": 0.142,
+     "runner_n": 8
+    },
+    "8-23": {
+     "n": 64,
+     "wins": 23,
+     "win_rate_pct": 35.9,
+     "gross_r": 91.12,
+     "net_per_r": 1.424,
+     "runner_n": 12
+    },
+    "96+": {
+     "n": 10,
+     "wins": 2,
+     "win_rate_pct": 20.0,
+     "gross_r": -1.94,
+     "net_per_r": -0.194,
+     "runner_n": 0
+    }
+   },
+   "b1_to_signal_bars": {
+    "0-1": {
+     "n": 18,
+     "wins": 4,
+     "win_rate_pct": 22.2,
+     "gross_r": 32.34,
+     "net_per_r": 1.797,
+     "runner_n": 3
+    },
+    "2-7": {
+     "n": 104,
+     "wins": 31,
+     "win_rate_pct": 29.8,
+     "gross_r": 23.0,
+     "net_per_r": 0.221,
+     "runner_n": 11
+    },
+    "24-47": {
+     "n": 30,
+     "wins": 8,
+     "win_rate_pct": 26.7,
+     "gross_r": 3.26,
+     "net_per_r": 0.109,
+     "runner_n": 3
+    },
+    "48-95": {
+     "n": 9,
+     "wins": 1,
+     "win_rate_pct": 11.1,
+     "gross_r": -4.86,
+     "net_per_r": -0.54,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 89,
+     "wins": 30,
+     "win_rate_pct": 33.7,
+     "gross_r": 38.89,
+     "net_per_r": 0.437,
+     "runner_n": 11
+    },
+    "96+": {
+     "n": 3,
+     "wins": 1,
+     "win_rate_pct": 33.3,
+     "gross_r": 0.01,
+     "net_per_r": 0.003,
+     "runner_n": 0
+    }
+   },
+   "cur_start_to_b1_bars": {
+    "0-1": {
+     "n": 24,
+     "wins": 13,
+     "win_rate_pct": 54.2,
+     "gross_r": 49.01,
+     "net_per_r": 2.042,
+     "runner_n": 6
+    },
+    "2-7": {
+     "n": 41,
+     "wins": 25,
+     "win_rate_pct": 61.0,
+     "gross_r": 39.08,
+     "net_per_r": 0.953,
+     "runner_n": 6
+    },
+    "24-47": {
+     "n": 2,
+     "wins": 1,
+     "win_rate_pct": 50.0,
+     "gross_r": 3.36,
+     "net_per_r": 1.679,
+     "runner_n": 1
+    },
+    "48-95": {
+     "n": 1,
+     "wins": 1,
+     "win_rate_pct": 100.0,
+     "gross_r": 1.19,
+     "net_per_r": 1.193,
+     "runner_n": 0
+    },
+    "8-23": {
+     "n": 27,
+     "wins": 11,
+     "win_rate_pct": 40.7,
+     "gross_r": 35.8,
+     "net_per_r": 1.326,
+     "runner_n": 5
+    },
+    "96+": {
+     "n": 158,
+     "wins": 24,
+     "win_rate_pct": 15.2,
+     "gross_r": -35.8,
+     "net_per_r": -0.227,
+     "runner_n": 10
+    }
+   },
+   "prev_fs_to_signal_atr": {
+    "0-1": {
+     "n": 138,
+     "wins": 44,
+     "win_rate_pct": 31.9,
+     "gross_r": 19.72,
+     "net_per_r": 0.143,
+     "runner_n": 15
+    },
+    "1-2": {
+     "n": 5,
+     "wins": 2,
+     "win_rate_pct": 40.0,
+     "gross_r": 1.15,
+     "net_per_r": 0.23,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 110,
+     "wins": 29,
+     "win_rate_pct": 26.4,
+     "gross_r": 71.77,
+     "net_per_r": 0.652,
+     "runner_n": 12
+    }
+   },
+   "prev_final_to_signal_atr": {
+    "0-1": {
+     "n": 82,
+     "wins": 31,
+     "win_rate_pct": 37.8,
+     "gross_r": 35.63,
+     "net_per_r": 0.435,
+     "runner_n": 11
+    },
+    "1-2": {
+     "n": 32,
+     "wins": 5,
+     "win_rate_pct": 15.6,
+     "gross_r": -16.51,
+     "net_per_r": -0.516,
+     "runner_n": 1
+    },
+    "2-4": {
+     "n": 9,
+     "wins": 3,
+     "win_rate_pct": 33.3,
+     "gross_r": 1.25,
+     "net_per_r": 0.139,
+     "runner_n": 1
+    },
+    "neg": {
+     "n": 130,
+     "wins": 36,
+     "win_rate_pct": 27.7,
+     "gross_r": 72.27,
+     "net_per_r": 0.556,
+     "runner_n": 15
+    }
+   },
+   "b1_to_signal_atr": {
+    "0-1": {
+     "n": 142,
+     "wins": 47,
+     "win_rate_pct": 33.1,
+     "gross_r": 28.64,
+     "net_per_r": 0.202,
+     "runner_n": 17
+    },
+    "1-2": {
+     "n": 6,
+     "wins": 1,
+     "win_rate_pct": 16.7,
+     "gross_r": -3.29,
+     "net_per_r": -0.549,
+     "runner_n": 0
+    },
+    "neg": {
+     "n": 105,
+     "wins": 27,
+     "win_rate_pct": 25.7,
+     "gross_r": 67.29,
+     "net_per_r": 0.641,
+     "runner_n": 11
+    }
+   }
+  }
+ },
+ "elapsed_sec": 86.7
+}

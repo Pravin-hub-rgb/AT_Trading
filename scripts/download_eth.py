@@ -14,7 +14,7 @@ SYMBOL = "ETHUSDT"
 FAPI_URL = "https://fapi.binance.com/fapi/v1/klines"
 TF_MS = {"15m": 900_000, "1h": 3_600_000}
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "eth-fut"
-START_IST = "2023-01-01 05:30:00"
+START_IST = "2021-01-01 05:30:00"
 
 
 def _fetch_json(url: str) -> list:

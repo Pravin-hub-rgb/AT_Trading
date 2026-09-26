@@ -1,0 +1,115 @@
+{
+  "stage": "X",
+  "scope": "is",
+  "instrument": "BTCUSDT_BYBIT",
+  "mode": "descriptive; b1_gap never promotable (stale-B1 closed)",
+  "configs": {
+    "champion_multi_sw10": {
+      "coverage_pct": 99.8,
+      "measures": {
+        "vol_ratio": {
+          "overall_avg": 0.6504,
+          "bins": {
+            "<0.75": -8.69,
+            "0.75-1.25": 52.57,
+            ">=1.25": 280.67
+          }
+        },
+        "body_atr": {
+          "overall_avg": 0.6504,
+          "bins": {
+            "<0.5": 101.65,
+            "0.5-1.0": 105.83,
+            "1.0-1.5": 1.04,
+            ">=1.5": 116.04
+          }
+        },
+        "disp_atr": {
+          "overall_avg": 0.6504,
+          "bins": {
+            "<0.5": 101.65,
+            "0.5-1.5": 106.87,
+            ">=1.5": 116.04
+          }
+        },
+        "risk_pct": {
+          "overall_avg": 0.6504,
+          "bins": {
+            "<1.0": 34.18,
+            "1.0-2.0": 65.22,
+            ">=2.0": 225.15
+          }
+        },
+        "b1_gap": {
+          "overall_avg": 0.6504,
+          "bins": {
+            "<8": 56.48,
+            "8-32": 164.99,
+            ">=32": 103.08
+          }
+        }
+      },
+      "availability": {
+        "vol_ratio": 499,
+        "body_atr": 499,
+        "disp_atr": 499,
+        "risk_pct": 499,
+        "b1_gap": 499
+      }
+    },
+    "utcsat_multi_sw10": {
+      "coverage_pct": 99.78,
+      "measures": {
+        "vol_ratio": {
+          "overall_avg": 0.7897,
+          "bins": {
+            "<0.75": -5.8,
+            "0.75-1.25": 47.64,
+            ">=1.25": 315.89
+          }
+        },
+        "body_atr": {
+          "overall_avg": 0.7897,
+          "bins": {
+            "<0.5": 105.8,
+            "0.5-1.0": 111.18,
+            "1.0-1.5": 5.06,
+            ">=1.5": 135.68
+          }
+        },
+        "disp_atr": {
+          "overall_avg": 0.7897,
+          "bins": {
+            "<0.5": 105.8,
+            "0.5-1.5": 116.24,
+            ">=1.5": 135.68
+          }
+        },
+        "risk_pct": {
+          "overall_avg": 0.7897,
+          "bins": {
+            "<1.0": 35.91,
+            "1.0-2.0": 94.62,
+            ">=2.0": 227.2
+          }
+        },
+        "b1_gap": {
+          "overall_avg": 0.7897,
+          "bins": {
+            "<8": 75.38,
+            "8-32": 192.62,
+            ">=32": 89.72
+          }
+        }
+      },
+      "availability": {
+        "vol_ratio": 453,
+        "body_atr": 453,
+        "disp_atr": 453,
+        "risk_pct": 453,
+        "b1_gap": 453
+      }
+    }
+  },
+  "elapsed_sec": 69.04
+}

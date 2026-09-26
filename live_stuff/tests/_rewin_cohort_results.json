@@ -1,0 +1,514 @@
+{
+  "instrument": "BTCUSDT_BYBIT",
+  "stage": "rewin_cohort",
+  "lens": "descriptive cohort study; no gate",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "scopes": {
+    "is": {
+      "champion": {
+        "n": 466,
+        "cohorts": {
+          "first": {
+            "n": 197,
+            "net": 3.6,
+            "wr": 19.3,
+            "avgR": 0.263,
+            "runner_n": 15
+          },
+          "rewin": {
+            "n": 88,
+            "net": 282.0,
+            "wr": 30.7,
+            "avgR": 3.52,
+            "runner_n": 15
+          },
+          "relic": {
+            "n": 181,
+            "net": 144.0,
+            "wr": 30.9,
+            "avgR": 1.058,
+            "runner_n": 31
+          }
+        },
+        "book_full": {
+          "n": 466,
+          "net": 429.6277,
+          "wr": 25.97,
+          "pf": 2.1049,
+          "max_dd": 26.9888,
+          "max_dd_dur": 56,
+          "uw_pct": 90.77,
+          "max_uw": 79,
+          "ulcer": 12.4115,
+          "sortino": 424.0735,
+          "calmar": 4.3375,
+          "recovery": 15.9187,
+          "max_streak": 19,
+          "months_n": 45,
+          "pos_month_pct": 44.4,
+          "worst_month": -11.861,
+          "best_month": 78.558,
+          "years_n": 4,
+          "pos_year_pct": 100.0,
+          "worst_year": 73.639,
+          "yearly": {
+            "2023": 107.597,
+            "2024": 73.639,
+            "2025": 91.575,
+            "2026": 156.816
+          },
+          "net_per_yr": 117.065
+        },
+        "book_drop_rewin": {
+          "n": 378,
+          "net": 147.5841,
+          "wr": 24.87,
+          "pf": 1.4625,
+          "max_dd": 38.9215,
+          "max_dd_dur": 160,
+          "uw_pct": 95.5,
+          "max_uw": 179,
+          "ulcer": 26.0354,
+          "sortino": 145.1772,
+          "calmar": 1.0332,
+          "recovery": 3.7918,
+          "max_streak": 18,
+          "months_n": 45,
+          "pos_month_pct": 33.3,
+          "worst_month": -11.385,
+          "best_month": 81.001,
+          "years_n": 4,
+          "pos_year_pct": 100.0,
+          "worst_year": 10.56,
+          "yearly": {
+            "2023": 84.586,
+            "2024": 10.56,
+            "2025": 12.182,
+            "2026": 40.256
+          },
+          "net_per_yr": 40.214
+        },
+        "d_drop_rewin": -282.0
+      },
+      "utcsat": {
+        "n": 428,
+        "cohorts": {
+          "first": {
+            "n": 199,
+            "net": -4.2,
+            "wr": 19.6,
+            "avgR": 0.224,
+            "runner_n": 15
+          },
+          "rewin": {
+            "n": 84,
+            "net": 280.7,
+            "wr": 32.1,
+            "avgR": 3.656,
+            "runner_n": 14
+          },
+          "relic": {
+            "n": 145,
+            "net": 134.7,
+            "wr": 34.5,
+            "avgR": 1.183,
+            "runner_n": 30
+          }
+        },
+        "book_full": {
+          "n": 428,
+          "net": 411.15,
+          "wr": 27.1,
+          "pf": 2.1687,
+          "max_dd": 23.8979,
+          "max_dd_dur": 29,
+          "uw_pct": 89.95,
+          "max_uw": 72,
+          "ulcer": 9.8384,
+          "sortino": 408.3624,
+          "calmar": 4.6879,
+          "recovery": 17.2044,
+          "max_streak": 14,
+          "months_n": 45,
+          "pos_month_pct": 46.7,
+          "worst_month": -11.049,
+          "best_month": 72.639,
+          "years_n": 4,
+          "pos_year_pct": 100.0,
+          "worst_year": 80.448,
+          "yearly": {
+            "2023": 114.521,
+            "2024": 80.448,
+            "2025": 88.535,
+            "2026": 127.646
+          },
+          "net_per_yr": 112.03
+        },
+        "book_drop_rewin": {
+          "n": 344,
+          "net": 130.4907,
+          "wr": 25.87,
+          "pf": 1.4532,
+          "max_dd": 26.8645,
+          "max_dd_dur": 45,
+          "uw_pct": 94.77,
+          "max_uw": 157,
+          "ulcer": 19.2115,
+          "sortino": 128.7034,
+          "calmar": 1.3235,
+          "recovery": 4.8574,
+          "max_streak": 14,
+          "months_n": 45,
+          "pos_month_pct": 31.1,
+          "worst_month": -11.049,
+          "best_month": 45.554,
+          "years_n": 4,
+          "pos_year_pct": 100.0,
+          "worst_year": 3.532,
+          "yearly": {
+            "2023": 91.51,
+            "2024": 15.72,
+            "2025": 19.728,
+            "2026": 3.532
+          },
+          "net_per_yr": 35.556
+        },
+        "d_drop_rewin": -280.7
+      },
+      "age10": {
+        "n": 94,
+        "cohorts": {
+          "first": {
+            "n": 78,
+            "net": 320.3,
+            "wr": 46.2,
+            "avgR": 4.5,
+            "runner_n": 23
+          },
+          "rewin": {
+            "n": 6,
+            "net": 78.6,
+            "wr": 66.7,
+            "avgR": 13.66,
+            "runner_n": 2
+          },
+          "relic": {
+            "n": 10,
+            "net": 90.5,
+            "wr": 60.0,
+            "avgR": 9.5,
+            "runner_n": 3
+          }
+        },
+        "book_full": {
+          "n": 94,
+          "net": 489.3304,
+          "wr": 48.94,
+          "pf": 10.023,
+          "max_dd": 8.3525,
+          "max_dd_dur": 13,
+          "uw_pct": 59.57,
+          "max_uw": 12,
+          "ulcer": 4.159,
+          "sortino": 563.6732,
+          "calmar": 15.9631,
+          "recovery": 58.5847,
+          "max_streak": 5,
+          "months_n": 42,
+          "pos_month_pct": 57.1,
+          "worst_month": -3.069,
+          "best_month": 70.266,
+          "years_n": 4,
+          "pos_year_pct": 100.0,
+          "worst_year": 55.692,
+          "yearly": {
+            "2023": 83.121,
+            "2024": 210.846,
+            "2025": 55.692,
+            "2026": 139.671
+          },
+          "net_per_yr": 133.333
+        },
+        "book_drop_rewin": {
+          "n": 88,
+          "net": 410.7684,
+          "wr": 47.73,
+          "pf": 8.8134,
+          "max_dd": 8.3525,
+          "max_dd_dur": 13,
+          "uw_pct": 60.23,
+          "max_uw": 12,
+          "ulcer": 4.3148,
+          "sortino": 463.2491,
+          "calmar": 13.4002,
+          "recovery": 49.1789,
+          "max_streak": 5,
+          "months_n": 41,
+          "pos_month_pct": 58.5,
+          "worst_month": -3.069,
+          "best_month": 70.266,
+          "years_n": 4,
+          "pos_year_pct": 100.0,
+          "worst_year": 55.692,
+          "yearly": {
+            "2023": 82.136,
+            "2024": 155.706,
+            "2025": 55.692,
+            "2026": 117.235
+          },
+          "net_per_yr": 111.926
+        },
+        "d_drop_rewin": -78.6
+      }
+    },
+    "oos": {
+      "champion": {
+        "n": 217,
+        "cohorts": {
+          "first": {
+            "n": 96,
+            "net": 136.3,
+            "wr": 28.1,
+            "avgR": 1.589,
+            "runner_n": 15
+          },
+          "rewin": {
+            "n": 40,
+            "net": -12.9,
+            "wr": 15.0,
+            "avgR": -0.199,
+            "runner_n": 3
+          },
+          "relic": {
+            "n": 81,
+            "net": -12.9,
+            "wr": 27.2,
+            "avgR": -0.004,
+            "runner_n": 6
+          }
+        },
+        "book_full": {
+          "n": 217,
+          "net": 110.4897,
+          "wr": 25.35,
+          "pf": 1.6448,
+          "max_dd": 30.6089,
+          "max_dd_dur": 40,
+          "uw_pct": 93.09,
+          "max_uw": 113,
+          "ulcer": 53.9837,
+          "sortino": 117.5955,
+          "calmar": 1.8049,
+          "recovery": 3.6097,
+          "max_streak": 15,
+          "months_n": 22,
+          "pos_month_pct": 40.9,
+          "worst_month": -9.312,
+          "best_month": 86.995,
+          "years_n": 2,
+          "pos_year_pct": 100.0,
+          "worst_year": 10.456,
+          "yearly": {
+            "2021": 10.456,
+            "2022": 100.034
+          },
+          "net_per_yr": 55.245
+        },
+        "book_drop_rewin": {
+          "n": 177,
+          "net": 123.4376,
+          "wr": 27.68,
+          "pf": 1.9177,
+          "max_dd": 23.2981,
+          "max_dd_dur": 31,
+          "uw_pct": 90.4,
+          "max_uw": 34,
+          "ulcer": 70.2487,
+          "sortino": 133.9317,
+          "calmar": 2.6491,
+          "recovery": 5.2982,
+          "max_streak": 15,
+          "months_n": 22,
+          "pos_month_pct": 40.9,
+          "worst_month": -9.312,
+          "best_month": 88.114,
+          "years_n": 2,
+          "pos_year_pct": 100.0,
+          "worst_year": 14.375,
+          "yearly": {
+            "2021": 14.375,
+            "2022": 109.062
+          },
+          "net_per_yr": 61.719
+        },
+        "d_drop_rewin": 12.9
+      },
+      "utcsat": {
+        "n": 194,
+        "cohorts": {
+          "first": {
+            "n": 87,
+            "net": 105.4,
+            "wr": 26.4,
+            "avgR": 1.378,
+            "runner_n": 13
+          },
+          "rewin": {
+            "n": 43,
+            "net": -14.7,
+            "wr": 16.3,
+            "avgR": -0.211,
+            "runner_n": 3
+          },
+          "relic": {
+            "n": 64,
+            "net": 3.8,
+            "wr": 32.8,
+            "avgR": 0.219,
+            "runner_n": 6
+          }
+        },
+        "book_full": {
+          "n": 194,
+          "net": 94.5612,
+          "wr": 26.29,
+          "pf": 1.6289,
+          "max_dd": 29.1569,
+          "max_dd_dur": 39,
+          "uw_pct": 94.33,
+          "max_uw": 54,
+          "ulcer": 35.0656,
+          "sortino": 101.3918,
+          "calmar": 1.6216,
+          "recovery": 3.2432,
+          "max_streak": 9,
+          "months_n": 22,
+          "pos_month_pct": 36.4,
+          "worst_month": -8.037,
+          "best_month": 89.407,
+          "years_n": 2,
+          "pos_year_pct": 100.0,
+          "worst_year": 27.765,
+          "yearly": {
+            "2021": 27.765,
+            "2022": 66.796
+          },
+          "net_per_yr": 47.281
+        },
+        "book_drop_rewin": {
+          "n": 151,
+          "net": 109.2479,
+          "wr": 29.14,
+          "pf": 1.9809,
+          "max_dd": 16.267,
+          "max_dd_dur": 25,
+          "uw_pct": 90.73,
+          "max_uw": 31,
+          "ulcer": 31.484,
+          "sortino": 120.1173,
+          "calmar": 3.358,
+          "recovery": 6.7159,
+          "max_streak": 11,
+          "months_n": 22,
+          "pos_month_pct": 40.9,
+          "worst_month": -7.484,
+          "best_month": 90.525,
+          "years_n": 2,
+          "pos_year_pct": 100.0,
+          "worst_year": 31.163,
+          "yearly": {
+            "2021": 31.163,
+            "2022": 78.085
+          },
+          "net_per_yr": 54.624
+        },
+        "d_drop_rewin": 14.7
+      },
+      "age10": {
+        "n": 50,
+        "cohorts": {
+          "first": {
+            "n": 41,
+            "net": 43.1,
+            "wr": 41.5,
+            "avgR": 1.248,
+            "runner_n": 8
+          },
+          "rewin": {
+            "n": 6,
+            "net": 5.4,
+            "wr": 50.0,
+            "avgR": 1.03,
+            "runner_n": 1
+          },
+          "relic": {
+            "n": 3,
+            "net": 17.2,
+            "wr": 66.7,
+            "avgR": 6.166,
+            "runner_n": 2
+          }
+        },
+        "book_full": {
+          "n": 50,
+          "net": 65.7543,
+          "wr": 44.0,
+          "pf": 3.1676,
+          "max_dd": 6.5351,
+          "max_dd_dur": 7,
+          "uw_pct": 62.0,
+          "max_uw": 7,
+          "ulcer": 10.0644,
+          "sortino": 78.113,
+          "calmar": 5.0308,
+          "recovery": 10.0617,
+          "max_streak": 6,
+          "months_n": 22,
+          "pos_month_pct": 72.7,
+          "worst_month": -3.357,
+          "best_month": 17.958,
+          "years_n": 2,
+          "pos_year_pct": 100.0,
+          "worst_year": 28.836,
+          "yearly": {
+            "2021": 28.836,
+            "2022": 36.919
+          },
+          "net_per_yr": 32.877
+        },
+        "book_drop_rewin": {
+          "n": 44,
+          "net": 60.3046,
+          "wr": 43.18,
+          "pf": 3.2315,
+          "max_dd": 6.5351,
+          "max_dd_dur": 7,
+          "uw_pct": 63.64,
+          "max_uw": 7,
+          "ulcer": 14.4942,
+          "sortino": 70.9694,
+          "calmar": 4.6139,
+          "recovery": 9.2278,
+          "max_streak": 6,
+          "months_n": 22,
+          "pos_month_pct": 72.7,
+          "worst_month": -3.357,
+          "best_month": 17.958,
+          "years_n": 2,
+          "pos_year_pct": 100.0,
+          "worst_year": 22.246,
+          "yearly": {
+            "2021": 22.246,
+            "2022": 38.059
+          },
+          "net_per_yr": 30.152
+        },
+        "d_drop_rewin": -5.4
+      }
+    }
+  },
+  "elapsed_sec": 83.27
+}

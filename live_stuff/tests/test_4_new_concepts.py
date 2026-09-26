@@ -36,7 +36,8 @@ def load_unseen(tf):
     for row in df.itertuples():
         date = row.timestamp.strftime("%Y-%m-%d %H:%M:%S")
         candles.append({"date": date, "ts": int(row.ts), "open": float(row.open),
-                        "high": float(row.high), "low": float(row.low), "close": float(row.close)})
+                        "high": float(row.high), "low": float(row.low), "close": float(row.close),
+                        "volume": float(getattr(row, "volume", 0.0) or 0.0)})
         flow.append(FlowCandle(date=date, open=float(row.open), high=float(row.high),
                                low=float(row.low), close=float(row.close)))
     return candles, flow

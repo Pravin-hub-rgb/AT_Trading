@@ -1,0 +1,783 @@
+{
+  "stage": 13,
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "oos",
+  "pre_registered": true,
+  "weekly_only": true,
+  "definitions": {
+    "accepted_now": "current developing week traded beyond prior completed weekly boundary and has a completed 1h close beyond it; entry remains outside the prior boundary",
+    "accepted_then_back_inside": "same causal boundary acceptance occurred, but the entry price is back inside the prior completed weekly range",
+    "policy": "state is evaluated at signal entry instant; skipped candidates never enter the actual chain"
+  },
+  "configs": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "description": "KING SINGLE: fullstack + wage10 + cd=0 \u2014 chop15 band + ATR blow-off",
+      "variants": {
+        "baseline": {
+          "action": "",
+          "trade_count": 140,
+          "metrics": {
+            "gross": {
+              "n": 140,
+              "sum_r": 38.04,
+              "avg_r": 0.271714,
+              "wins": 35,
+              "losses": 105,
+              "win_rate_pct": 25.0,
+              "avg_win": 3.9367,
+              "avg_loss": -0.9499,
+              "payoff": 4.1441,
+              "pf": 1.3814,
+              "max_dd": 27.909,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -0.998,
+              "std": 2.972685
+            },
+            "net": {
+              "n": 140,
+              "sum_r": 16.8978,
+              "avg_r": 0.120698,
+              "wins": 34,
+              "losses": 106,
+              "win_rate_pct": 24.286,
+              "avg_win": 3.9239,
+              "avg_loss": -1.0992,
+              "payoff": 3.5698,
+              "pf": 1.145,
+              "max_dd": 37.3124,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -1.088599,
+              "std": 2.969259
+            },
+            "cost_and_funding": 21.1422,
+            "runners": {
+              "2.0": {
+                "n": 21,
+                "r": 123.584
+              },
+              "3.0": {
+                "n": 14,
+                "r": 105.967
+              },
+              "5.0": {
+                "n": 9,
+                "r": 86.414
+              },
+              "10.0": {
+                "n": 3,
+                "r": 45.583
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 0,
+            "states": {},
+            "allowed_states": {},
+            "blocked_states": {},
+            "blocked_total": 0
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 140,
+            "candidate_trades": 140,
+            "common_entries": 140,
+            "missing_entries": 0,
+            "new_entries": 0,
+            "common_entry_pct": 100.0,
+            "gross_delta_common": 0.0
+          }
+        },
+        "skip_weekly_accepted_then_back_inside": {
+          "action": "skip_back_inside",
+          "trade_count": 115,
+          "metrics": {
+            "gross": {
+              "n": 115,
+              "sum_r": 23.276,
+              "avg_r": 0.2024,
+              "wins": 29,
+              "losses": 86,
+              "win_rate_pct": 25.217,
+              "avg_win": 3.5971,
+              "avg_loss": -0.9423,
+              "payoff": 3.8173,
+              "pf": 1.2872,
+              "max_dd": 19.259,
+              "max_loss_streak": 14,
+              "max_win_streak": 3,
+              "median": -0.998,
+              "std": 2.762195
+            },
+            "net": {
+              "n": 115,
+              "sum_r": 5.5269,
+              "avg_r": 0.04806,
+              "wins": 28,
+              "losses": 87,
+              "win_rate_pct": 24.348,
+              "avg_win": 3.6039,
+              "avg_loss": -1.0963,
+              "payoff": 3.2872,
+              "pf": 1.0579,
+              "max_dd": 26.2759,
+              "max_loss_streak": 14,
+              "max_win_streak": 3,
+              "median": -1.088644,
+              "std": 2.766103
+            },
+            "cost_and_funding": 17.7491,
+            "runners": {
+              "2.0": {
+                "n": 17,
+                "r": 93.296
+              },
+              "3.0": {
+                "n": 12,
+                "r": 80.061
+              },
+              "5.0": {
+                "n": 7,
+                "r": 61.001
+              },
+              "10.0": {
+                "n": 1,
+                "r": 19.808
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 366,
+            "states": {
+              "accepted_now": 118,
+              "accepted_then_back_inside": 75,
+              "middle_or_other": 143,
+              "rejected_but_close_below": 3,
+              "rejected_now": 27
+            },
+            "allowed_states": {
+              "accepted_now": 118,
+              "middle_or_other": 143,
+              "rejected_but_close_below": 3,
+              "rejected_now": 27
+            },
+            "blocked_states": {
+              "accepted_then_back_inside": 75
+            },
+            "blocked_total": 75
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 140,
+            "candidate_trades": 115,
+            "common_entries": 109,
+            "missing_entries": 31,
+            "new_entries": 6,
+            "common_entry_pct": 77.857,
+            "gross_delta_common": 0.0
+          }
+        },
+        "weekly_accepted_now_only": {
+          "action": "accepted_now_only",
+          "trade_count": 40,
+          "metrics": {
+            "gross": {
+              "n": 40,
+              "sum_r": 41.77,
+              "avg_r": 1.04425,
+              "wins": 17,
+              "losses": 23,
+              "win_rate_pct": 42.5,
+              "avg_win": 3.7194,
+              "avg_loss": -0.933,
+              "payoff": 3.9864,
+              "pf": 2.9465,
+              "max_dd": 6.259,
+              "max_loss_streak": 5,
+              "max_win_streak": 3,
+              "median": -0.9195,
+              "std": 3.77283
+            },
+            "net": {
+              "n": 40,
+              "sum_r": 36.7792,
+              "avg_r": 0.919479,
+              "wins": 16,
+              "losses": 24,
+              "win_rate_pct": 40.0,
+              "avg_win": 3.8248,
+              "avg_loss": -1.0174,
+              "payoff": 3.7594,
+              "pf": 2.5063,
+              "max_dd": 7.2637,
+              "max_loss_streak": 5,
+              "max_win_streak": 3,
+              "median": -0.950352,
+              "std": 3.74867
+            },
+            "cost_and_funding": 4.9908,
+            "runners": {
+              "2.0": {
+                "n": 8,
+                "r": 53.747
+              },
+              "3.0": {
+                "n": 6,
+                "r": 48.143
+              },
+              "5.0": {
+                "n": 5,
+                "r": 45.139
+              },
+              "10.0": {
+                "n": 1,
+                "r": 19.808
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 366,
+            "states": {
+              "accepted_now": 118,
+              "accepted_then_back_inside": 75,
+              "middle_or_other": 143,
+              "rejected_but_close_below": 3,
+              "rejected_now": 27
+            },
+            "allowed_states": {
+              "accepted_now": 118
+            },
+            "blocked_states": {
+              "accepted_then_back_inside": 75,
+              "middle_or_other": 143,
+              "rejected_but_close_below": 3,
+              "rejected_now": 27
+            },
+            "blocked_total": 248
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 140,
+            "candidate_trades": 40,
+            "common_entries": 32,
+            "missing_entries": 108,
+            "new_entries": 8,
+            "common_entry_pct": 22.857,
+            "gross_delta_common": 0.0
+          }
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "description": "Champion multi sw10 \u2014 causal SL (live-honest)",
+      "variants": {
+        "baseline": {
+          "action": "",
+          "trade_count": 279,
+          "metrics": {
+            "gross": {
+              "n": 279,
+              "sum_r": 105.725,
+              "avg_r": 0.378943,
+              "wins": 78,
+              "losses": 201,
+              "win_rate_pct": 27.957,
+              "avg_win": 3.6493,
+              "avg_loss": -0.8901,
+              "payoff": 4.0997,
+              "pf": 1.5909,
+              "max_dd": 37.342,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 3.369468
+            },
+            "net": {
+              "n": 279,
+              "sum_r": 70.1505,
+              "avg_r": 0.251435,
+              "wins": 76,
+              "losses": 203,
+              "win_rate_pct": 27.24,
+              "avg_win": 3.6085,
+              "avg_loss": -1.0054,
+              "payoff": 3.5891,
+              "pf": 1.3437,
+              "max_dd": 53.1877,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.054379,
+              "std": 3.338949
+            },
+            "cost_and_funding": 35.5745,
+            "runners": {
+              "2.0": {
+                "n": 40,
+                "r": 255.898
+              },
+              "3.0": {
+                "n": 30,
+                "r": 231.485
+              },
+              "5.0": {
+                "n": 17,
+                "r": 183.699
+              },
+              "10.0": {
+                "n": 6,
+                "r": 105.058
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 0,
+            "states": {},
+            "allowed_states": {},
+            "blocked_states": {},
+            "blocked_total": 0
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 279,
+            "candidate_trades": 279,
+            "common_entries": 279,
+            "missing_entries": 0,
+            "new_entries": 0,
+            "common_entry_pct": 100.0,
+            "gross_delta_common": 0.0
+          }
+        },
+        "skip_weekly_accepted_then_back_inside": {
+          "action": "skip_back_inside",
+          "trade_count": 223,
+          "metrics": {
+            "gross": {
+              "n": 223,
+              "sum_r": 92.075,
+              "avg_r": 0.412892,
+              "wins": 64,
+              "losses": 159,
+              "win_rate_pct": 28.7,
+              "avg_win": 3.6736,
+              "avg_loss": -0.8996,
+              "payoff": 4.0836,
+              "pf": 1.6437,
+              "max_dd": 28.358,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 3.501693
+            },
+            "net": {
+              "n": 223,
+              "sum_r": 62.4168,
+              "avg_r": 0.279896,
+              "wins": 62,
+              "losses": 161,
+              "win_rate_pct": 27.803,
+              "avg_win": 3.66,
+              "avg_loss": -1.0217,
+              "payoff": 3.5821,
+              "pf": 1.3794,
+              "max_dd": 39.313,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -1.05343,
+              "std": 3.474444
+            },
+            "cost_and_funding": 29.6582,
+            "runners": {
+              "2.0": {
+                "n": 32,
+                "r": 211.446
+              },
+              "3.0": {
+                "n": 25,
+                "r": 194.402
+              },
+              "5.0": {
+                "n": 15,
+                "r": 157.924
+              },
+              "10.0": {
+                "n": 4,
+                "r": 79.283
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 379,
+            "states": {
+              "accepted_now": 119,
+              "accepted_then_back_inside": 78,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "allowed_states": {
+              "accepted_now": 119,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "blocked_states": {
+              "accepted_then_back_inside": 78
+            },
+            "blocked_total": 78
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 279,
+            "candidate_trades": 223,
+            "common_entries": 200,
+            "missing_entries": 79,
+            "new_entries": 23,
+            "common_entry_pct": 71.685,
+            "gross_delta_common": 0.0
+          }
+        },
+        "weekly_accepted_now_only": {
+          "action": "accepted_now_only",
+          "trade_count": 84,
+          "metrics": {
+            "gross": {
+              "n": 84,
+              "sum_r": 93.12,
+              "avg_r": 1.108571,
+              "wins": 26,
+              "losses": 58,
+              "win_rate_pct": 30.952,
+              "avg_win": 5.472,
+              "avg_loss": -0.8474,
+              "payoff": 6.4571,
+              "pf": 2.8946,
+              "max_dd": 26.53,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -0.9955,
+              "std": 5.058843
+            },
+            "net": {
+              "n": 84,
+              "sum_r": 82.8061,
+              "avg_r": 0.985787,
+              "wins": 25,
+              "losses": 59,
+              "win_rate_pct": 29.762,
+              "avg_win": 5.5363,
+              "avg_loss": -0.9424,
+              "payoff": 5.8747,
+              "pf": 2.4893,
+              "max_dd": 30.4178,
+              "max_loss_streak": 13,
+              "max_win_streak": 5,
+              "median": -1.022142,
+              "std": 5.0057
+            },
+            "cost_and_funding": 10.3139,
+            "runners": {
+              "2.0": {
+                "n": 14,
+                "r": 133.185
+              },
+              "3.0": {
+                "n": 12,
+                "r": 128.029
+              },
+              "5.0": {
+                "n": 10,
+                "r": 121.652
+              },
+              "10.0": {
+                "n": 4,
+                "r": 79.283
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 379,
+            "states": {
+              "accepted_now": 119,
+              "accepted_then_back_inside": 78,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "allowed_states": {
+              "accepted_now": 119
+            },
+            "blocked_states": {
+              "accepted_then_back_inside": 78,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "blocked_total": 260
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 279,
+            "candidate_trades": 84,
+            "common_entries": 78,
+            "missing_entries": 201,
+            "new_entries": 6,
+            "common_entry_pct": 27.957,
+            "gross_delta_common": 0.0
+          }
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "description": "king multi + SKIP UTC-SATURDAY \u2014 causal SL (live-honest)",
+      "variants": {
+        "baseline": {
+          "action": "",
+          "trade_count": 253,
+          "metrics": {
+            "gross": {
+              "n": 253,
+              "sum_r": 92.641,
+              "avg_r": 0.36617,
+              "wins": 75,
+              "losses": 178,
+              "win_rate_pct": 29.644,
+              "avg_win": 3.3806,
+              "avg_loss": -0.9039,
+              "payoff": 3.7398,
+              "pf": 1.5758,
+              "max_dd": 22.127,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -0.997,
+              "std": 3.326125
+            },
+            "net": {
+              "n": 253,
+              "sum_r": 60.2062,
+              "avg_r": 0.237969,
+              "wins": 73,
+              "losses": 180,
+              "win_rate_pct": 28.854,
+              "avg_win": 3.3385,
+              "avg_loss": -1.0195,
+              "payoff": 3.2747,
+              "pf": 1.3281,
+              "max_dd": 29.3814,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -1.054261,
+              "std": 3.2962
+            },
+            "cost_and_funding": 32.4348,
+            "runners": {
+              "2.0": {
+                "n": 36,
+                "r": 222.69
+              },
+              "3.0": {
+                "n": 28,
+                "r": 203.36
+              },
+              "5.0": {
+                "n": 14,
+                "r": 150.982
+              },
+              "10.0": {
+                "n": 4,
+                "r": 81.375
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 0,
+            "states": {},
+            "allowed_states": {},
+            "blocked_states": {},
+            "blocked_total": 0
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 253,
+            "candidate_trades": 253,
+            "common_entries": 253,
+            "missing_entries": 0,
+            "new_entries": 0,
+            "common_entry_pct": 100.0,
+            "gross_delta_common": 0.0
+          }
+        },
+        "skip_weekly_accepted_then_back_inside": {
+          "action": "skip_back_inside",
+          "trade_count": 206,
+          "metrics": {
+            "gross": {
+              "n": 206,
+              "sum_r": 84.25,
+              "avg_r": 0.408981,
+              "wins": 60,
+              "losses": 146,
+              "win_rate_pct": 29.126,
+              "avg_win": 3.6258,
+              "avg_loss": -0.913,
+              "payoff": 3.9713,
+              "pf": 1.632,
+              "max_dd": 25.674,
+              "max_loss_streak": 14,
+              "max_win_streak": 3,
+              "median": -0.9975,
+              "std": 3.524597
+            },
+            "net": {
+              "n": 206,
+              "sum_r": 55.2697,
+              "avg_r": 0.2683,
+              "wins": 58,
+              "losses": 148,
+              "win_rate_pct": 28.155,
+              "avg_win": 3.6155,
+              "avg_loss": -1.0434,
+              "payoff": 3.465,
+              "pf": 1.3579,
+              "max_dd": 31.3297,
+              "max_loss_streak": 14,
+              "max_win_streak": 3,
+              "median": -1.060877,
+              "std": 3.497493
+            },
+            "cost_and_funding": 28.9803,
+            "runners": {
+              "2.0": {
+                "n": 30,
+                "r": 194.53
+              },
+              "3.0": {
+                "n": 24,
+                "r": 179.876
+              },
+              "5.0": {
+                "n": 13,
+                "r": 138.806
+              },
+              "10.0": {
+                "n": 3,
+                "r": 69.199
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 379,
+            "states": {
+              "accepted_now": 119,
+              "accepted_then_back_inside": 78,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "allowed_states": {
+              "accepted_now": 119,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "blocked_states": {
+              "accepted_then_back_inside": 78
+            },
+            "blocked_total": 78
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 253,
+            "candidate_trades": 206,
+            "common_entries": 189,
+            "missing_entries": 64,
+            "new_entries": 17,
+            "common_entry_pct": 74.704,
+            "gross_delta_common": 0.0
+          }
+        },
+        "weekly_accepted_now_only": {
+          "action": "accepted_now_only",
+          "trade_count": 70,
+          "metrics": {
+            "gross": {
+              "n": 70,
+              "sum_r": 78.814,
+              "avg_r": 1.125914,
+              "wins": 23,
+              "losses": 47,
+              "win_rate_pct": 32.857,
+              "avg_win": 5.194,
+              "avg_loss": -0.8649,
+              "payoff": 6.0057,
+              "pf": 2.9389,
+              "max_dd": 17.236,
+              "max_loss_streak": 12,
+              "max_win_streak": 4,
+              "median": -0.9965,
+              "std": 5.275435
+            },
+            "net": {
+              "n": 70,
+              "sum_r": 70.045,
+              "avg_r": 1.000643,
+              "wins": 22,
+              "losses": 48,
+              "win_rate_pct": 31.429,
+              "avg_win": 5.2752,
+              "avg_loss": -0.9585,
+              "payoff": 5.5034,
+              "pf": 2.5224,
+              "max_dd": 19.8304,
+              "max_loss_streak": 12,
+              "max_win_streak": 4,
+              "median": -1.02479,
+              "std": 5.216058
+            },
+            "cost_and_funding": 8.769,
+            "runners": {
+              "2.0": {
+                "n": 11,
+                "r": 110.368
+              },
+              "3.0": {
+                "n": 10,
+                "r": 107.602
+              },
+              "5.0": {
+                "n": 8,
+                "r": 101.225
+              },
+              "10.0": {
+                "n": 3,
+                "r": 69.199
+              }
+            }
+          },
+          "state_rows": {
+            "candidate_rows": 379,
+            "states": {
+              "accepted_now": 119,
+              "accepted_then_back_inside": 78,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "allowed_states": {
+              "accepted_now": 119
+            },
+            "blocked_states": {
+              "accepted_then_back_inside": 78,
+              "middle_or_other": 151,
+              "rejected_but_close_below": 2,
+              "rejected_now": 29
+            },
+            "blocked_total": 260
+          },
+          "path_shift_vs_baseline": {
+            "baseline_trades": 253,
+            "candidate_trades": 70,
+            "common_entries": 65,
+            "missing_entries": 188,
+            "new_entries": 5,
+            "common_entry_pct": 25.692,
+            "gross_delta_common": 0.0
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 89.01
+}

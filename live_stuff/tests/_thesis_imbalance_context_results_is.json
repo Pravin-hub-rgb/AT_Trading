@@ -1,0 +1,300 @@
+{
+  "stage": 14,
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "is",
+  "definition": "latest causal 15m 3-candle FVG known at signal close; bullish gap if middle low > left high, bearish gap if middle high < left low",
+  "configurations": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "config": "fullstack_wage10_cd0_single_sw10",
+      "description": "KING SINGLE: fullstack + wage10 + cd=0 \u2014 chop15 band + ATR blow-off",
+      "trade_count": 200,
+      "fvg_event_count": 0,
+      "baseline": {
+        "gross": {
+          "n": 200,
+          "sum_r": 360.61,
+          "avg_r": 1.80305,
+          "wins": 65,
+          "losses": 135,
+          "win_rate_pct": 32.5,
+          "avg_win": 7.5006,
+          "avg_loss": -0.9402,
+          "payoff": 7.9777,
+          "pf": 3.8411,
+          "max_dd": 11.21,
+          "max_loss_streak": 11,
+          "max_win_streak": 5,
+          "median": -0.998,
+          "std": 8.044247
+        },
+        "net": {
+          "n": 200,
+          "sum_r": 310.7042,
+          "avg_r": 1.553521,
+          "wins": 59,
+          "losses": 141,
+          "win_rate_pct": 29.5,
+          "avg_win": 7.9072,
+          "avg_loss": -1.1051,
+          "payoff": 7.155,
+          "pf": 2.994,
+          "max_dd": 14.0078,
+          "max_loss_streak": 11,
+          "max_win_streak": 5,
+          "median": -1.109857,
+          "std": 7.857236
+        },
+        "cost_and_funding": 49.9058,
+        "yearly_counts": {
+          "2023": 47,
+          "2024": 66,
+          "2025": 47,
+          "2026": 40
+        }
+      },
+      "contexts": {
+        "no_fvg": {
+          "gross": {
+            "n": 200,
+            "sum_r": 360.61,
+            "avg_r": 1.80305,
+            "wins": 65,
+            "losses": 135,
+            "win_rate_pct": 32.5,
+            "avg_win": 7.5006,
+            "avg_loss": -0.9402,
+            "payoff": 7.9777,
+            "pf": 3.8411,
+            "max_dd": 11.21,
+            "max_loss_streak": 11,
+            "max_win_streak": 5,
+            "median": -0.998,
+            "std": 8.044247
+          },
+          "net": {
+            "n": 200,
+            "sum_r": 310.7042,
+            "avg_r": 1.553521,
+            "wins": 59,
+            "losses": 141,
+            "win_rate_pct": 29.5,
+            "avg_win": 7.9072,
+            "avg_loss": -1.1051,
+            "payoff": 7.155,
+            "pf": 2.994,
+            "max_dd": 14.0078,
+            "max_loss_streak": 11,
+            "max_win_streak": 5,
+            "median": -1.109857,
+            "std": 7.857236
+          },
+          "cost_and_funding": 49.9058,
+          "yearly_counts": {
+            "2023": 47,
+            "2024": 66,
+            "2025": 47,
+            "2026": 40
+          }
+        }
+      },
+      "context_counts": {
+        "no_fvg": 200
+      }
+    },
+    "champion_multi_sw10": {
+      "config": "champion_multi_sw10",
+      "description": "Champion multi sw10 \u2014 causal SL (live-honest)",
+      "trade_count": 500,
+      "fvg_event_count": 0,
+      "baseline": {
+        "gross": {
+          "n": 500,
+          "sum_r": 445.225,
+          "avg_r": 0.89045,
+          "wins": 150,
+          "losses": 350,
+          "win_rate_pct": 30.0,
+          "avg_win": 5.1136,
+          "avg_loss": -0.9195,
+          "payoff": 5.5615,
+          "pf": 2.3835,
+          "max_dd": 17.825,
+          "max_loss_streak": 16,
+          "max_win_streak": 5,
+          "median": -0.997,
+          "std": 5.540877
+        },
+        "net": {
+          "n": 500,
+          "sum_r": 325.7817,
+          "avg_r": 0.651563,
+          "wins": 139,
+          "losses": 361,
+          "win_rate_pct": 27.8,
+          "avg_win": 5.2204,
+          "avg_loss": -1.1076,
+          "payoff": 4.7131,
+          "pf": 1.8148,
+          "max_dd": 27.7242,
+          "max_loss_streak": 16,
+          "max_win_streak": 5,
+          "median": -1.098502,
+          "std": 5.424503
+        },
+        "cost_and_funding": 119.4433,
+        "yearly_counts": {
+          "2023": 107,
+          "2024": 161,
+          "2025": 130,
+          "2026": 102
+        }
+      },
+      "contexts": {
+        "no_fvg": {
+          "gross": {
+            "n": 500,
+            "sum_r": 445.225,
+            "avg_r": 0.89045,
+            "wins": 150,
+            "losses": 350,
+            "win_rate_pct": 30.0,
+            "avg_win": 5.1136,
+            "avg_loss": -0.9195,
+            "payoff": 5.5615,
+            "pf": 2.3835,
+            "max_dd": 17.825,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 5.540877
+          },
+          "net": {
+            "n": 500,
+            "sum_r": 325.7817,
+            "avg_r": 0.651563,
+            "wins": 139,
+            "losses": 361,
+            "win_rate_pct": 27.8,
+            "avg_win": 5.2204,
+            "avg_loss": -1.1076,
+            "payoff": 4.7131,
+            "pf": 1.8148,
+            "max_dd": 27.7242,
+            "max_loss_streak": 16,
+            "max_win_streak": 5,
+            "median": -1.098502,
+            "std": 5.424503
+          },
+          "cost_and_funding": 119.4433,
+          "yearly_counts": {
+            "2023": 107,
+            "2024": 161,
+            "2025": 130,
+            "2026": 102
+          }
+        }
+      },
+      "context_counts": {
+        "no_fvg": 500
+      }
+    },
+    "utcsat_multi_sw10": {
+      "config": "utcsat_multi_sw10",
+      "description": "king multi + SKIP UTC-SATURDAY \u2014 causal SL (live-honest)",
+      "trade_count": 454,
+      "fvg_event_count": 0,
+      "baseline": {
+        "gross": {
+          "n": 454,
+          "sum_r": 466.476,
+          "avg_r": 1.02748,
+          "wins": 140,
+          "losses": 314,
+          "win_rate_pct": 30.837,
+          "avg_win": 5.3914,
+          "avg_loss": -0.9182,
+          "payoff": 5.8715,
+          "pf": 2.6179,
+          "max_dd": 14.821,
+          "max_loss_streak": 13,
+          "max_win_streak": 5,
+          "median": -0.997,
+          "std": 5.806507
+        },
+        "net": {
+          "n": 454,
+          "sum_r": 358.95,
+          "avg_r": 0.790639,
+          "wins": 132,
+          "losses": 322,
+          "win_rate_pct": 29.075,
+          "avg_win": 5.4183,
+          "avg_loss": -1.1064,
+          "payoff": 4.8972,
+          "pf": 2.0075,
+          "max_dd": 21.1764,
+          "max_loss_streak": 13,
+          "max_win_streak": 5,
+          "median": -1.090105,
+          "std": 5.684718
+        },
+        "cost_and_funding": 107.526,
+        "yearly_counts": {
+          "2023": 103,
+          "2024": 141,
+          "2025": 119,
+          "2026": 91
+        }
+      },
+      "contexts": {
+        "no_fvg": {
+          "gross": {
+            "n": 454,
+            "sum_r": 466.476,
+            "avg_r": 1.02748,
+            "wins": 140,
+            "losses": 314,
+            "win_rate_pct": 30.837,
+            "avg_win": 5.3914,
+            "avg_loss": -0.9182,
+            "payoff": 5.8715,
+            "pf": 2.6179,
+            "max_dd": 14.821,
+            "max_loss_streak": 13,
+            "max_win_streak": 5,
+            "median": -0.997,
+            "std": 5.806507
+          },
+          "net": {
+            "n": 454,
+            "sum_r": 358.95,
+            "avg_r": 0.790639,
+            "wins": 132,
+            "losses": 322,
+            "win_rate_pct": 29.075,
+            "avg_win": 5.4183,
+            "avg_loss": -1.1064,
+            "payoff": 4.8972,
+            "pf": 2.0075,
+            "max_dd": 21.1764,
+            "max_loss_streak": 13,
+            "max_win_streak": 5,
+            "median": -1.090105,
+            "std": 5.684718
+          },
+          "cost_and_funding": 107.526,
+          "yearly_counts": {
+            "2023": 103,
+            "2024": 141,
+            "2025": 119,
+            "2026": 91
+          }
+        }
+      },
+      "context_counts": {
+        "no_fvg": 454
+      }
+    }
+  },
+  "elapsed_sec": 54.37
+}

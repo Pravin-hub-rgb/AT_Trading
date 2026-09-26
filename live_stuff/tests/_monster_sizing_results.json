@@ -1,0 +1,440 @@
+{
+  "instrument": "BTCUSDT_BYBIT",
+  "stage": "monster_sizing",
+  "lens": "descriptive; sizing post-process, no engine change",
+  "size": 1.5,
+  "monster_r": 4.0,
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "scopes": {
+    "is": {
+      "champion": {
+        "n_trades": 466,
+        "n_rows": 466,
+        "flat_net_rows": 429.6,
+        "maps": {
+          "M1_freshB1": 635.8,
+          "M2_bigleg": 583.1,
+          "M3_union": 678.0,
+          "M4_b2only": 495.1
+        },
+        "deltas": {
+          "M1_freshB1": 206.2,
+          "M2_bigleg": 153.5,
+          "M3_union": 248.4,
+          "M4_b2only": 65.5
+        },
+        "anatomy": {
+          "M1_freshB1": {
+            "n_flag": 354,
+            "pct_of_trades": 76.0,
+            "avgR_flag": 1.165,
+            "avgR_unflag": 1.256,
+            "monster_n": 51,
+            "monster_flagged": 34,
+            "flag_rate_in_monsters_pct": 66.7,
+            "flag_rate_in_others_pct": 77.1
+          },
+          "M2_bigleg": {
+            "n_flag": 120,
+            "pct_of_trades": 25.8,
+            "avgR_flag": 2.558,
+            "avgR_unflag": 0.712,
+            "monster_n": 51,
+            "monster_flagged": 23,
+            "flag_rate_in_monsters_pct": 45.1,
+            "flag_rate_in_others_pct": 23.4
+          },
+          "M3_union": {
+            "n_flag": 380,
+            "pct_of_trades": 81.5,
+            "avgR_flag": 1.307,
+            "avgR_unflag": 0.656,
+            "monster_n": 51,
+            "monster_flagged": 42,
+            "flag_rate_in_monsters_pct": 82.4,
+            "flag_rate_in_others_pct": 81.4
+          },
+          "M4_b2only": {
+            "n_flag": 236,
+            "pct_of_trades": 50.6,
+            "avgR_flag": 0.555,
+            "avgR_unflag": 1.836,
+            "monster_n": 51,
+            "monster_flagged": 22,
+            "flag_rate_in_monsters_pct": 43.1,
+            "flag_rate_in_others_pct": 51.6
+          }
+        }
+      },
+      "utcsat": {
+        "n_trades": 428,
+        "n_rows": 428,
+        "flat_net_rows": 411.1,
+        "maps": {
+          "M1_freshB1": 604.3,
+          "M2_bigleg": 542.2,
+          "M3_union": 639.6,
+          "M4_b2only": 481.1
+        },
+        "deltas": {
+          "M1_freshB1": 193.2,
+          "M2_bigleg": 131.1,
+          "M3_union": 228.5,
+          "M4_b2only": 70.0
+        },
+        "anatomy": {
+          "M1_freshB1": {
+            "n_flag": 320,
+            "pct_of_trades": 74.8,
+            "avgR_flag": 1.207,
+            "avgR_unflag": 1.268,
+            "monster_n": 48,
+            "monster_flagged": 32,
+            "flag_rate_in_monsters_pct": 66.7,
+            "flag_rate_in_others_pct": 75.8
+          },
+          "M2_bigleg": {
+            "n_flag": 125,
+            "pct_of_trades": 29.2,
+            "avgR_flag": 2.096,
+            "avgR_unflag": 0.862,
+            "monster_n": 48,
+            "monster_flagged": 21,
+            "flag_rate_in_monsters_pct": 43.8,
+            "flag_rate_in_others_pct": 27.4
+          },
+          "M3_union": {
+            "n_flag": 349,
+            "pct_of_trades": 81.5,
+            "avgR_flag": 1.309,
+            "avgR_unflag": 0.839,
+            "monster_n": 48,
+            "monster_flagged": 39,
+            "flag_rate_in_monsters_pct": 81.2,
+            "flag_rate_in_others_pct": 81.6
+          },
+          "M4_b2only": {
+            "n_flag": 225,
+            "pct_of_trades": 52.6,
+            "avgR_flag": 0.621,
+            "avgR_unflag": 1.889,
+            "monster_n": 48,
+            "monster_flagged": 23,
+            "flag_rate_in_monsters_pct": 47.9,
+            "flag_rate_in_others_pct": 53.2
+          }
+        }
+      },
+      "age10": {
+        "n_trades": 94,
+        "n_rows": 94,
+        "flat_net_rows": 489.3,
+        "maps": {
+          "M1_freshB1": 743.8,
+          "M2_bigleg": 606.4,
+          "M3_union": 747.8,
+          "M4_b2only": 520.8
+        },
+        "deltas": {
+          "M1_freshB1": 254.5,
+          "M2_bigleg": 117.1,
+          "M3_union": 258.5,
+          "M4_b2only": 31.5
+        },
+        "anatomy": {
+          "M1_freshB1": {
+            "n_flag": 82,
+            "pct_of_trades": 87.2,
+            "avgR_flag": 6.205,
+            "avgR_unflag": 1.592,
+            "monster_n": 25,
+            "monster_flagged": 23,
+            "flag_rate_in_monsters_pct": 92.0,
+            "flag_rate_in_others_pct": 85.5
+          },
+          "M2_bigleg": {
+            "n_flag": 15,
+            "pct_of_trades": 16.0,
+            "avgR_flag": 15.615,
+            "avgR_unflag": 3.718,
+            "monster_n": 25,
+            "monster_flagged": 9,
+            "flag_rate_in_monsters_pct": 36.0,
+            "flag_rate_in_others_pct": 8.7
+          },
+          "M3_union": {
+            "n_flag": 83,
+            "pct_of_trades": 88.3,
+            "avgR_flag": 6.229,
+            "avgR_unflag": 0.996,
+            "monster_n": 25,
+            "monster_flagged": 24,
+            "flag_rate_in_monsters_pct": 96.0,
+            "flag_rate_in_others_pct": 85.5
+          },
+          "M4_b2only": {
+            "n_flag": 29,
+            "pct_of_trades": 30.9,
+            "avgR_flag": 2.171,
+            "avgR_unflag": 7.153,
+            "monster_n": 25,
+            "monster_flagged": 7,
+            "flag_rate_in_monsters_pct": 28.0,
+            "flag_rate_in_others_pct": 31.9
+          }
+        }
+      }
+    },
+    "oos": {
+      "champion": {
+        "n_trades": 217,
+        "n_rows": 217,
+        "flat_net_rows": 110.5,
+        "maps": {
+          "M1_freshB1": 130.7,
+          "M2_bigleg": 142.0,
+          "M3_union": 157.3,
+          "M4_b2only": 160.5
+        },
+        "deltas": {
+          "M1_freshB1": 20.2,
+          "M2_bigleg": 31.5,
+          "M3_union": 46.8,
+          "M4_b2only": 50.0
+        },
+        "anatomy": {
+          "M1_freshB1": {
+            "n_flag": 155,
+            "pct_of_trades": 71.4,
+            "avgR_flag": 0.261,
+            "avgR_unflag": 1.675,
+            "monster_n": 20,
+            "monster_flagged": 11,
+            "flag_rate_in_monsters_pct": 55.0,
+            "flag_rate_in_others_pct": 73.1
+          },
+          "M2_bigleg": {
+            "n_flag": 41,
+            "pct_of_trades": 18.9,
+            "avgR_flag": 1.536,
+            "avgR_unflag": 0.462,
+            "monster_n": 20,
+            "monster_flagged": 7,
+            "flag_rate_in_monsters_pct": 35.0,
+            "flag_rate_in_others_pct": 17.3
+          },
+          "M3_union": {
+            "n_flag": 163,
+            "pct_of_trades": 75.1,
+            "avgR_flag": 0.575,
+            "avgR_unflag": 0.936,
+            "monster_n": 20,
+            "monster_flagged": 14,
+            "flag_rate_in_monsters_pct": 70.0,
+            "flag_rate_in_others_pct": 75.6
+          },
+          "M4_b2only": {
+            "n_flag": 115,
+            "pct_of_trades": 53.0,
+            "avgR_flag": 0.869,
+            "avgR_unflag": 0.434,
+            "monster_n": 20,
+            "monster_flagged": 13,
+            "flag_rate_in_monsters_pct": 65.0,
+            "flag_rate_in_others_pct": 51.8
+          }
+        }
+      },
+      "utcsat": {
+        "n_trades": 194,
+        "n_rows": 194,
+        "flat_net_rows": 94.6,
+        "maps": {
+          "M1_freshB1": 122.3,
+          "M2_bigleg": 125.3,
+          "M3_union": 148.7,
+          "M4_b2only": 126.9
+        },
+        "deltas": {
+          "M1_freshB1": 27.7,
+          "M2_bigleg": 30.7,
+          "M3_union": 54.1,
+          "M4_b2only": 32.3
+        },
+        "anatomy": {
+          "M1_freshB1": {
+            "n_flag": 137,
+            "pct_of_trades": 70.6,
+            "avgR_flag": 0.405,
+            "avgR_unflag": 1.217,
+            "monster_n": 17,
+            "monster_flagged": 11,
+            "flag_rate_in_monsters_pct": 64.7,
+            "flag_rate_in_others_pct": 71.2
+          },
+          "M2_bigleg": {
+            "n_flag": 38,
+            "pct_of_trades": 19.6,
+            "avgR_flag": 1.62,
+            "avgR_unflag": 0.406,
+            "monster_n": 17,
+            "monster_flagged": 7,
+            "flag_rate_in_monsters_pct": 41.2,
+            "flag_rate_in_others_pct": 17.5
+          },
+          "M3_union": {
+            "n_flag": 144,
+            "pct_of_trades": 74.2,
+            "avgR_flag": 0.752,
+            "avgR_unflag": 0.332,
+            "monster_n": 17,
+            "monster_flagged": 14,
+            "flag_rate_in_monsters_pct": 82.4,
+            "flag_rate_in_others_pct": 73.4
+          },
+          "M4_b2only": {
+            "n_flag": 110,
+            "pct_of_trades": 56.7,
+            "avgR_flag": 0.589,
+            "avgR_unflag": 0.716,
+            "monster_n": 17,
+            "monster_flagged": 10,
+            "flag_rate_in_monsters_pct": 58.8,
+            "flag_rate_in_others_pct": 56.5
+          }
+        }
+      },
+      "age10": {
+        "n_trades": 50,
+        "n_rows": 50,
+        "flat_net_rows": 65.8,
+        "maps": {
+          "M1_freshB1": 92.2,
+          "M2_bigleg": 84.5,
+          "M3_union": 92.2,
+          "M4_b2only": 86.3
+        },
+        "deltas": {
+          "M1_freshB1": 26.4,
+          "M2_bigleg": 18.7,
+          "M3_union": 26.4,
+          "M4_b2only": 20.5
+        },
+        "anatomy": {
+          "M1_freshB1": {
+            "n_flag": 35,
+            "pct_of_trades": 70.0,
+            "avgR_flag": 1.514,
+            "avgR_unflag": 1.526,
+            "monster_n": 8,
+            "monster_flagged": 7,
+            "flag_rate_in_monsters_pct": 87.5,
+            "flag_rate_in_others_pct": 66.7
+          },
+          "M2_bigleg": {
+            "n_flag": 5,
+            "pct_of_trades": 10.0,
+            "avgR_flag": 7.506,
+            "avgR_unflag": 0.852,
+            "monster_n": 8,
+            "monster_flagged": 4,
+            "flag_rate_in_monsters_pct": 50.0,
+            "flag_rate_in_others_pct": 2.4
+          },
+          "M3_union": {
+            "n_flag": 35,
+            "pct_of_trades": 70.0,
+            "avgR_flag": 1.514,
+            "avgR_unflag": 1.526,
+            "monster_n": 8,
+            "monster_flagged": 7,
+            "flag_rate_in_monsters_pct": 87.5,
+            "flag_rate_in_others_pct": 66.7
+          },
+          "M4_b2only": {
+            "n_flag": 27,
+            "pct_of_trades": 54.0,
+            "avgR_flag": 1.523,
+            "avgR_unflag": 1.51,
+            "monster_n": 8,
+            "monster_flagged": 4,
+            "flag_rate_in_monsters_pct": 50.0,
+            "flag_rate_in_others_pct": 54.8
+          }
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "champion": {
+      "M1_freshB1": {
+        "d_is": 206.2,
+        "d_oos": 20.2,
+        "both_positive": true
+      },
+      "M2_bigleg": {
+        "d_is": 153.5,
+        "d_oos": 31.5,
+        "both_positive": true
+      },
+      "M3_union": {
+        "d_is": 248.4,
+        "d_oos": 46.8,
+        "both_positive": true
+      },
+      "M4_b2only": {
+        "d_is": 65.5,
+        "d_oos": 50.0,
+        "both_positive": true
+      }
+    },
+    "utcsat": {
+      "M1_freshB1": {
+        "d_is": 193.2,
+        "d_oos": 27.7,
+        "both_positive": true
+      },
+      "M2_bigleg": {
+        "d_is": 131.1,
+        "d_oos": 30.7,
+        "both_positive": true
+      },
+      "M3_union": {
+        "d_is": 228.5,
+        "d_oos": 54.1,
+        "both_positive": true
+      },
+      "M4_b2only": {
+        "d_is": 70.0,
+        "d_oos": 32.3,
+        "both_positive": true
+      }
+    },
+    "age10": {
+      "M1_freshB1": {
+        "d_is": 254.5,
+        "d_oos": 26.4,
+        "both_positive": true
+      },
+      "M2_bigleg": {
+        "d_is": 117.1,
+        "d_oos": 18.7,
+        "both_positive": true
+      },
+      "M3_union": {
+        "d_is": 258.5,
+        "d_oos": 26.4,
+        "both_positive": true
+      },
+      "M4_b2only": {
+        "d_is": 31.5,
+        "d_oos": 20.5,
+        "both_positive": true
+      }
+    }
+  },
+  "elapsed_sec": 74.84
+}

@@ -1,0 +1,420 @@
+{
+ "instrument": "BTCUSDT_BYBIT",
+ "study": "dip->reclaim entry predicate (descriptive; r of filled = proxy)",
+ "depths": [
+  0.1,
+  0.25,
+  0.5
+ ],
+ "wait_min": 240,
+ "configs": [
+  "champion_multi_sw10",
+  "age10_dirmatch_swingpause_single_sw10"
+ ],
+ "caveats": [
+  "filled r_proxy = original baseline r of that signal; path after a reclaim fill differs (later entry, trail path changes) \u2014 Phase 2 measures path-true P&L",
+  "SL touch while waiting = setup killed permanently (conservative)",
+  "same-bar arm+reclaim impossible: reclaim only counted in a later bar"
+ ],
+ "is": {
+  "scope": "is",
+  "configs": {
+   "champion_multi_sw10": {
+    "0.1": {
+     "filled_n": 387,
+     "filled_r_proxy": 375.113,
+     "filled_wr": 30.23,
+     "no_dip_n": 47,
+     "no_dip_r": 100.74,
+     "killed_n": 37,
+     "killed_r": -36.997,
+     "timeout_n": 29,
+     "timeout_r": 6.369,
+     "monsters_captured": 13,
+     "monsters_missed": 4,
+     "arm_wait_med_1m": 4,
+     "fill_wait_med_1m": 15,
+     "filled_winners": 117,
+     "filled_losses": 270,
+     "skipped_monster_ids": [
+      [
+       2161,
+       "long"
+      ],
+      [
+       2708,
+       "long"
+      ],
+      [
+       371,
+       "long"
+      ],
+      [
+       694,
+       "long"
+      ]
+     ]
+    },
+    "0.25": {
+     "filled_n": 238,
+     "filled_r_proxy": 330.764,
+     "filled_wr": 28.15,
+     "no_dip_n": 129,
+     "no_dip_r": 192.182,
+     "killed_n": 75,
+     "killed_r": -74.994,
+     "timeout_n": 58,
+     "timeout_r": -2.727,
+     "monsters_captured": 12,
+     "monsters_missed": 5,
+     "arm_wait_med_1m": 19,
+     "fill_wait_med_1m": 58,
+     "filled_winners": 67,
+     "filled_losses": 171,
+     "skipped_monster_ids": [
+      [
+       1981,
+       "long"
+      ],
+      [
+       2161,
+       "long"
+      ],
+      [
+       2708,
+       "long"
+      ],
+      [
+       371,
+       "long"
+      ],
+      [
+       694,
+       "long"
+      ]
+     ]
+    },
+    "0.5": {
+     "filled_n": 97,
+     "filled_r_proxy": 186.461,
+     "filled_wr": 28.87,
+     "no_dip_n": 240,
+     "no_dip_r": 386.408,
+     "killed_n": 103,
+     "killed_r": -102.992,
+     "timeout_n": 60,
+     "timeout_r": -24.652,
+     "monsters_captured": 7,
+     "monsters_missed": 10,
+     "arm_wait_med_1m": 43,
+     "fill_wait_med_1m": 96,
+     "filled_winners": 28,
+     "filled_losses": 69,
+     "skipped_monster_ids": [
+      [
+       1055,
+       "long"
+      ],
+      [
+       1981,
+       "long"
+      ],
+      [
+       2161,
+       "long"
+      ],
+      [
+       2708,
+       "long"
+      ],
+      [
+       371,
+       "long"
+      ],
+      [
+       41,
+       "long"
+      ],
+      [
+       626,
+       "long"
+      ],
+      [
+       693,
+       "long"
+      ],
+      [
+       694,
+       "long"
+      ],
+      [
+       803,
+       "short"
+      ]
+     ]
+    }
+   },
+   "age10_dirmatch_swingpause_single_sw10": {
+    "0.1": {
+     "filled_n": 110,
+     "filled_r_proxy": 413.92,
+     "filled_wr": 53.64,
+     "no_dip_n": 16,
+     "no_dip_r": 64.553,
+     "killed_n": 1,
+     "killed_r": -1.0,
+     "timeout_n": 3,
+     "timeout_r": -0.992,
+     "monsters_captured": 12,
+     "monsters_missed": 2,
+     "arm_wait_med_1m": 3,
+     "fill_wait_med_1m": 11,
+     "filled_winners": 59,
+     "filled_losses": 51,
+     "skipped_monster_ids": [
+      [
+       2161,
+       "long"
+      ],
+      [
+       371,
+       "long"
+      ]
+     ]
+    },
+    "0.25": {
+     "filled_n": 79,
+     "filled_r_proxy": 376.706,
+     "filled_wr": 53.16,
+     "no_dip_n": 42,
+     "no_dip_r": 106.039,
+     "killed_n": 1,
+     "killed_r": -1.0,
+     "timeout_n": 8,
+     "timeout_r": -5.264,
+     "monsters_captured": 11,
+     "monsters_missed": 3,
+     "arm_wait_med_1m": 18,
+     "fill_wait_med_1m": 67,
+     "filled_winners": 42,
+     "filled_losses": 37,
+     "skipped_monster_ids": [
+      [
+       1981,
+       "long"
+      ],
+      [
+       2161,
+       "long"
+      ],
+      [
+       371,
+       "long"
+      ]
+     ]
+    },
+    "0.5": {
+     "filled_n": 37,
+     "filled_r_proxy": 207.557,
+     "filled_wr": 59.46,
+     "no_dip_n": 80,
+     "no_dip_r": 276.434,
+     "killed_n": 1,
+     "killed_r": -1.0,
+     "timeout_n": 12,
+     "timeout_r": -6.51,
+     "monsters_captured": 6,
+     "monsters_missed": 8,
+     "arm_wait_med_1m": 33,
+     "fill_wait_med_1m": 119,
+     "filled_winners": 22,
+     "filled_losses": 15,
+     "skipped_monster_ids": [
+      [
+       1055,
+       "long"
+      ],
+      [
+       1981,
+       "long"
+      ],
+      [
+       2161,
+       "long"
+      ],
+      [
+       371,
+       "long"
+      ],
+      [
+       41,
+       "long"
+      ],
+      [
+       626,
+       "long"
+      ],
+      [
+       693,
+       "long"
+      ],
+      [
+       803,
+       "short"
+      ]
+     ]
+    }
+   }
+  }
+ },
+ "oos": {
+  "scope": "oos",
+  "configs": {
+   "champion_multi_sw10": {
+    "0.1": {
+     "filled_n": 197,
+     "filled_r_proxy": 107.27,
+     "filled_wr": 30.46,
+     "no_dip_n": 33,
+     "no_dip_r": 22.718,
+     "killed_n": 35,
+     "killed_r": -34.999,
+     "timeout_n": 14,
+     "timeout_r": 10.736,
+     "monsters_captured": 5,
+     "monsters_missed": 1,
+     "arm_wait_med_1m": 5,
+     "fill_wait_med_1m": 23,
+     "filled_winners": 60,
+     "filled_losses": 137,
+     "skipped_monster_ids": [
+      [
+       1191,
+       "short"
+      ]
+     ]
+    },
+    "0.25": {
+     "filled_n": 132,
+     "filled_r_proxy": 95.358,
+     "filled_wr": 30.3,
+     "no_dip_n": 75,
+     "no_dip_r": 46.636,
+     "killed_n": 45,
+     "killed_r": -44.999,
+     "timeout_n": 27,
+     "timeout_r": 8.73,
+     "monsters_captured": 5,
+     "monsters_missed": 1,
+     "arm_wait_med_1m": 31,
+     "fill_wait_med_1m": 83,
+     "filled_winners": 40,
+     "filled_losses": 92,
+     "skipped_monster_ids": [
+      [
+       1191,
+       "short"
+      ]
+     ]
+    },
+    "0.5": {
+     "filled_n": 43,
+     "filled_r_proxy": 41.673,
+     "filled_wr": 30.23,
+     "no_dip_n": 145,
+     "no_dip_r": 120.706,
+     "killed_n": 58,
+     "killed_r": -57.999,
+     "timeout_n": 33,
+     "timeout_r": 1.345,
+     "monsters_captured": 2,
+     "monsters_missed": 4,
+     "arm_wait_med_1m": 38,
+     "fill_wait_med_1m": 111,
+     "filled_winners": 13,
+     "filled_losses": 30,
+     "skipped_monster_ids": [
+      [
+       1000,
+       "long"
+      ],
+      [
+       1191,
+       "short"
+      ],
+      [
+       1519,
+       "short"
+      ],
+      [
+       1521,
+       "short"
+      ]
+     ]
+    }
+   },
+   "age10_dirmatch_swingpause_single_sw10": {
+    "0.1": {
+     "filled_n": 60,
+     "filled_r_proxy": 46.007,
+     "filled_wr": 40.0,
+     "no_dip_n": 13,
+     "no_dip_r": 6.887,
+     "killed_n": 0,
+     "killed_r": 0,
+     "timeout_n": 3,
+     "timeout_r": 1.962,
+     "monsters_captured": 1,
+     "monsters_missed": 0,
+     "arm_wait_med_1m": 4,
+     "fill_wait_med_1m": 13,
+     "filled_winners": 24,
+     "filled_losses": 36,
+     "skipped_monster_ids": []
+    },
+    "0.25": {
+     "filled_n": 42,
+     "filled_r_proxy": 36.74,
+     "filled_wr": 42.86,
+     "no_dip_n": 29,
+     "no_dip_r": 18.149,
+     "killed_n": 0,
+     "killed_r": 0,
+     "timeout_n": 5,
+     "timeout_r": -0.033,
+     "monsters_captured": 1,
+     "monsters_missed": 0,
+     "arm_wait_med_1m": 34,
+     "fill_wait_med_1m": 89,
+     "filled_winners": 18,
+     "filled_losses": 24,
+     "skipped_monster_ids": []
+    },
+    "0.5": {
+     "filled_n": 18,
+     "filled_r_proxy": 11.181,
+     "filled_wr": 38.89,
+     "no_dip_n": 52,
+     "no_dip_r": 42.401,
+     "killed_n": 0,
+     "killed_r": 0,
+     "timeout_n": 6,
+     "timeout_r": 1.274,
+     "monsters_captured": 0,
+     "monsters_missed": 1,
+     "arm_wait_med_1m": 62,
+     "fill_wait_med_1m": 123,
+     "filled_winners": 7,
+     "filled_losses": 11,
+     "skipped_monster_ids": [
+      [
+       1000,
+       "long"
+      ]
+     ]
+    }
+   }
+  }
+ },
+ "elapsed_sec": 70.82
+}

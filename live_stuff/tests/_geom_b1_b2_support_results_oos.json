@@ -1,0 +1,223 @@
+{
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "oos",
+  "policy": "block_immediate_b1_b2",
+  "variants": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "baseline": {
+        "n": 140,
+        "gross_r": 38.04,
+        "net_r": 16.8978,
+        "avg_gross_r": 0.271714,
+        "avg_net_r": 0.120698,
+        "wins": 35,
+        "losses": 105,
+        "win_rate_pct": 25.0,
+        "avg_win": 3.9367,
+        "avg_loss": -0.9499,
+        "payoff": 4.1441,
+        "gross_pf": 1.3814,
+        "max_net_dd": 37.3124,
+        "max_loss_streak": 13,
+        "max_win_streak": 6,
+        "median_net_r": -1.088599,
+        "yearly_gross": {
+          "2021": 12.931000000000001,
+          "2022": 25.108999999999995
+        },
+        "yearly_net": {
+          "2021": 2.79364458881369,
+          "2022": 14.104145199341177
+        },
+        "runners": {
+          "3": 14,
+          "5": 9,
+          "10": 3,
+          "15": 1
+        }
+      },
+      "block_immediate": {
+        "metrics": {
+          "n": 137,
+          "gross_r": 52.314,
+          "net_r": 31.8093,
+          "avg_gross_r": 0.381854,
+          "avg_net_r": 0.232185,
+          "wins": 37,
+          "losses": 100,
+          "win_rate_pct": 27.007,
+          "avg_win": 3.9745,
+          "avg_loss": -0.9474,
+          "payoff": 4.1951,
+          "gross_pf": 1.5522,
+          "max_net_dd": 32.9226,
+          "max_loss_streak": 9,
+          "max_win_streak": 6,
+          "median_net_r": -1.084227,
+          "yearly_gross": {
+            "2021": 27.205000000000005,
+            "2022": 25.108999999999995
+          },
+          "yearly_net": {
+            "2021": 17.705203783174756,
+            "2022": 14.104145199341177
+          },
+          "runners": {
+            "3": 15,
+            "5": 10,
+            "10": 3,
+            "15": 1
+          }
+        },
+        "activation": {
+          "b2_candidates": 189,
+          "blocked": 15
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "baseline": {
+        "n": 279,
+        "gross_r": 105.725,
+        "net_r": 70.1505,
+        "avg_gross_r": 0.378943,
+        "avg_net_r": 0.251435,
+        "wins": 78,
+        "losses": 201,
+        "win_rate_pct": 27.957,
+        "avg_win": 3.6493,
+        "avg_loss": -0.8901,
+        "payoff": 4.0997,
+        "gross_pf": 1.5909,
+        "max_net_dd": 53.1877,
+        "max_loss_streak": 15,
+        "max_win_streak": 5,
+        "median_net_r": -1.054379,
+        "yearly_gross": {
+          "2021": -10.969000000000001,
+          "2022": 116.69400000000003
+        },
+        "yearly_net": {
+          "2021": -26.44429356859174,
+          "2022": 96.59474784915291
+        },
+        "runners": {
+          "3": 30,
+          "5": 17,
+          "10": 6,
+          "15": 3
+        }
+      },
+      "block_immediate": {
+        "metrics": {
+          "n": 267,
+          "gross_r": 109.584,
+          "net_r": 75.7698,
+          "avg_gross_r": 0.410427,
+          "avg_net_r": 0.283782,
+          "wins": 77,
+          "losses": 190,
+          "win_rate_pct": 28.839,
+          "avg_win": 3.6269,
+          "avg_loss": -0.8931,
+          "payoff": 4.061,
+          "gross_pf": 1.6458,
+          "max_net_dd": 43.906,
+          "max_loss_streak": 19,
+          "max_win_streak": 5,
+          "median_net_r": -1.054261,
+          "yearly_gross": {
+            "2021": -0.7969999999999942,
+            "2022": 110.38100000000004
+          },
+          "yearly_net": {
+            "2021": -14.845154829191962,
+            "2022": 90.6149082705687
+          },
+          "runners": {
+            "3": 30,
+            "5": 17,
+            "10": 6,
+            "15": 3
+          }
+        },
+        "activation": {
+          "b2_candidates": 200,
+          "blocked": 17
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "baseline": {
+        "n": 253,
+        "gross_r": 92.641,
+        "net_r": 60.2062,
+        "avg_gross_r": 0.36617,
+        "avg_net_r": 0.237969,
+        "wins": 75,
+        "losses": 178,
+        "win_rate_pct": 29.644,
+        "avg_win": 3.3806,
+        "avg_loss": -0.9039,
+        "payoff": 3.7398,
+        "gross_pf": 1.5758,
+        "max_net_dd": 29.3814,
+        "max_loss_streak": 9,
+        "max_win_streak": 3,
+        "median_net_r": -1.054261,
+        "yearly_gross": {
+          "2021": 13.168,
+          "2022": 79.473
+        },
+        "yearly_net": {
+          "2021": -1.1810792433361963,
+          "2022": 61.387301027517495
+        },
+        "runners": {
+          "3": 28,
+          "5": 14,
+          "10": 4,
+          "15": 3
+        }
+      },
+      "block_immediate": {
+        "metrics": {
+          "n": 242,
+          "gross_r": 116.132,
+          "net_r": 85.3391,
+          "avg_gross_r": 0.479884,
+          "avg_net_r": 0.352641,
+          "wins": 78,
+          "losses": 164,
+          "win_rate_pct": 32.231,
+          "avg_win": 3.3782,
+          "avg_loss": -0.8986,
+          "payoff": 3.7594,
+          "gross_pf": 1.788,
+          "max_net_dd": 24.3496,
+          "max_loss_streak": 11,
+          "max_win_streak": 3,
+          "median_net_r": -1.052073,
+          "yearly_gross": {
+            "2021": 28.979999999999986,
+            "2022": 87.15199999999999
+          },
+          "yearly_net": {
+            "2021": 16.02913972293211,
+            "2022": 69.30995127760251
+          },
+          "runners": {
+            "3": 29,
+            "5": 14,
+            "10": 4,
+            "15": 3
+          }
+        },
+        "activation": {
+          "b2_candidates": 200,
+          "blocked": 17
+        }
+      }
+    }
+  }
+}

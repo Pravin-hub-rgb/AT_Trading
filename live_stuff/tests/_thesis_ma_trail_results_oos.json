@@ -1,0 +1,971 @@
+{
+  "stage": 18,
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "oos",
+  "definition": "completed 15m close below/above SMA20/50/100; structural SL and structural trail remain active",
+  "pre_registered": true,
+  "arms": [
+    {
+      "name": "baseline",
+      "period": 0
+    },
+    {
+      "name": "sma20",
+      "period": 20
+    },
+    {
+      "name": "sma50",
+      "period": 50
+    },
+    {
+      "name": "sma100",
+      "period": 100
+    }
+  ],
+  "configs": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "description": "KING SINGLE: fullstack + wage10 + cd=0 \u2014 chop15 band + ATR blow-off",
+      "arms": {
+        "baseline": {
+          "flags": {
+            "exp_ma_trail_period": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 140,
+              "sum_r": 38.04,
+              "avg_r": 0.271714,
+              "wins": 35,
+              "losses": 105,
+              "win_rate_pct": 25.0,
+              "avg_win": 3.9367,
+              "avg_loss": -0.9499,
+              "payoff": 4.1441,
+              "pf": 1.3814,
+              "max_dd": 27.909,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -0.998,
+              "std": 2.972685
+            },
+            "net": {
+              "n": 140,
+              "sum_r": 16.8978,
+              "avg_r": 0.120698,
+              "wins": 34,
+              "losses": 106,
+              "win_rate_pct": 24.286,
+              "avg_win": 3.9239,
+              "avg_loss": -1.0992,
+              "payoff": 3.5698,
+              "pf": 1.145,
+              "max_dd": 37.3124,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -1.088599,
+              "std": 2.969259
+            },
+            "cost_and_funding": 21.1422,
+            "yearly_gross": {
+              "2021": 12.931000000000001,
+              "2022": 25.108999999999995
+            },
+            "yearly_net": {
+              "2021": 2.79364458881369,
+              "2022": 14.104145199341177
+            },
+            "outcomes": {
+              "trail": 72,
+              "sl": 68
+            },
+            "runners": {
+              "2.0": {
+                "n": 21,
+                "r": 123.584
+              },
+              "3.0": {
+                "n": 14,
+                "r": 105.967
+              },
+              "5.0": {
+                "n": 9,
+                "r": 86.414
+              },
+              "10.0": {
+                "n": 3,
+                "r": 45.583
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": 0.0,
+            "net_r": 0.0,
+            "trade_count": 0
+          }
+        },
+        "sma20": {
+          "flags": {
+            "exp_ma_trail_period": 20
+          },
+          "metrics": {
+            "gross": {
+              "n": 161,
+              "sum_r": -2.472,
+              "avg_r": -0.015354,
+              "wins": 39,
+              "losses": 122,
+              "win_rate_pct": 24.224,
+              "avg_win": 0.9804,
+              "avg_loss": -0.3337,
+              "payoff": 2.9382,
+              "pf": 0.9393,
+              "max_dd": 11.134,
+              "max_loss_streak": 17,
+              "max_win_streak": 5,
+              "median": -0.127,
+              "std": 0.816886
+            },
+            "net": {
+              "n": 161,
+              "sum_r": -23.0741,
+              "avg_r": -0.143317,
+              "wins": 35,
+              "losses": 126,
+              "win_rate_pct": 21.739,
+              "avg_win": 1.0057,
+              "avg_loss": -0.4625,
+              "payoff": 2.1745,
+              "pf": 0.604,
+              "max_dd": 23.3345,
+              "max_loss_streak": 23,
+              "max_win_streak": 5,
+              "median": -0.258319,
+              "std": 0.856527
+            },
+            "cost_and_funding": 20.6021,
+            "yearly_gross": {
+              "2021": -1.9560000000000013,
+              "2022": -0.5159999999999989
+            },
+            "yearly_net": {
+              "2021": -12.720729471604939,
+              "2022": -10.353337143344234
+            },
+            "outcomes": {
+              "ma_trail": 149,
+              "sl": 12
+            },
+            "runners": {
+              "2.0": {
+                "n": 8,
+                "r": 22.748
+              },
+              "3.0": {
+                "n": 3,
+                "r": 10.894
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -40.512,
+            "net_r": -39.9719,
+            "trade_count": 21
+          }
+        },
+        "sma50": {
+          "flags": {
+            "exp_ma_trail_period": 50
+          },
+          "metrics": {
+            "gross": {
+              "n": 157,
+              "sum_r": 3.617,
+              "avg_r": 0.023038,
+              "wins": 31,
+              "losses": 126,
+              "win_rate_pct": 19.745,
+              "avg_win": 1.3717,
+              "avg_loss": -0.3088,
+              "payoff": 4.4424,
+              "pf": 1.093,
+              "max_dd": 9.819,
+              "max_loss_streak": 16,
+              "max_win_streak": 3,
+              "median": 0.0,
+              "std": 1.168746
+            },
+            "net": {
+              "n": 157,
+              "sum_r": -17.3338,
+              "avg_r": -0.110406,
+              "wins": 29,
+              "losses": 128,
+              "win_rate_pct": 18.471,
+              "avg_win": 1.3734,
+              "avg_loss": -0.4466,
+              "payoff": 3.0753,
+              "pf": 0.6968,
+              "max_dd": 22.7535,
+              "max_loss_streak": 18,
+              "max_win_streak": 3,
+              "median": -0.181839,
+              "std": 1.192975
+            },
+            "cost_and_funding": 20.9508,
+            "yearly_gross": {
+              "2021": -6.551000000000001,
+              "2022": 10.168000000000005
+            },
+            "yearly_net": {
+              "2021": -17.441649317811127,
+              "2022": 0.10784626448893986
+            },
+            "outcomes": {
+              "ma_trail": 136,
+              "sl": 20,
+              "trail": 1
+            },
+            "runners": {
+              "2.0": {
+                "n": 5,
+                "r": 24.163
+              },
+              "3.0": {
+                "n": 2,
+                "r": 16.577
+              },
+              "5.0": {
+                "n": 2,
+                "r": 16.577
+              },
+              "10.0": {
+                "n": 1,
+                "r": 10.076
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -34.423,
+            "net_r": -34.2316,
+            "trade_count": 17
+          }
+        },
+        "sma100": {
+          "flags": {
+            "exp_ma_trail_period": 100
+          },
+          "metrics": {
+            "gross": {
+              "n": 154,
+              "sum_r": -2.761,
+              "avg_r": -0.017929,
+              "wins": 25,
+              "losses": 129,
+              "win_rate_pct": 16.234,
+              "avg_win": 1.7682,
+              "avg_loss": -0.3641,
+              "payoff": 4.8567,
+              "pf": 0.9412,
+              "max_dd": 9.068,
+              "max_loss_streak": 16,
+              "max_win_streak": 2,
+              "median": 0.0,
+              "std": 1.187631
+            },
+            "net": {
+              "n": 154,
+              "sum_r": -23.4165,
+              "avg_r": -0.152055,
+              "wins": 23,
+              "losses": 131,
+              "win_rate_pct": 14.935,
+              "avg_win": 1.8105,
+              "avg_loss": -0.4966,
+              "payoff": 3.6456,
+              "pf": 0.6401,
+              "max_dd": 24.0225,
+              "max_loss_streak": 21,
+              "max_win_streak": 2,
+              "median": -0.183207,
+              "std": 1.21334
+            },
+            "cost_and_funding": 20.6555,
+            "yearly_gross": {
+              "2021": -6.460000000000002,
+              "2022": 3.6990000000000007
+            },
+            "yearly_net": {
+              "2021": -17.223865166257593,
+              "2022": -6.192680113336641
+            },
+            "outcomes": {
+              "ma_trail": 122,
+              "sl": 26,
+              "trail": 6
+            },
+            "runners": {
+              "2.0": {
+                "n": 8,
+                "r": 31.36
+              },
+              "3.0": {
+                "n": 3,
+                "r": 19.263
+              },
+              "5.0": {
+                "n": 2,
+                "r": 15.181
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -40.801,
+            "net_r": -40.3143,
+            "trade_count": 14
+          }
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "description": "Champion multi sw10 \u2014 causal SL (live-honest)",
+      "arms": {
+        "baseline": {
+          "flags": {
+            "exp_ma_trail_period": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 279,
+              "sum_r": 105.725,
+              "avg_r": 0.378943,
+              "wins": 78,
+              "losses": 201,
+              "win_rate_pct": 27.957,
+              "avg_win": 3.6493,
+              "avg_loss": -0.8901,
+              "payoff": 4.0997,
+              "pf": 1.5909,
+              "max_dd": 37.342,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 3.369468
+            },
+            "net": {
+              "n": 279,
+              "sum_r": 70.1505,
+              "avg_r": 0.251435,
+              "wins": 76,
+              "losses": 203,
+              "win_rate_pct": 27.24,
+              "avg_win": 3.6085,
+              "avg_loss": -1.0054,
+              "payoff": 3.5891,
+              "pf": 1.3437,
+              "max_dd": 53.1877,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.054379,
+              "std": 3.338949
+            },
+            "cost_and_funding": 35.5745,
+            "yearly_gross": {
+              "2021": -10.969000000000001,
+              "2022": 116.69400000000003
+            },
+            "yearly_net": {
+              "2021": -26.44429356859174,
+              "2022": 96.59474784915291
+            },
+            "outcomes": {
+              "trail": 179,
+              "sl": 100
+            },
+            "runners": {
+              "2.0": {
+                "n": 40,
+                "r": 255.898
+              },
+              "3.0": {
+                "n": 30,
+                "r": 231.485
+              },
+              "5.0": {
+                "n": 17,
+                "r": 183.699
+              },
+              "10.0": {
+                "n": 6,
+                "r": 105.058
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": 0.0,
+            "net_r": 0.0,
+            "trade_count": 0
+          }
+        },
+        "sma20": {
+          "flags": {
+            "exp_ma_trail_period": 20
+          },
+          "metrics": {
+            "gross": {
+              "n": 312,
+              "sum_r": -17.36,
+              "avg_r": -0.055641,
+              "wins": 75,
+              "losses": 237,
+              "win_rate_pct": 24.038,
+              "avg_win": 0.8491,
+              "avg_loss": -0.3419,
+              "payoff": 2.4831,
+              "pf": 0.7858,
+              "max_dd": 22.106,
+              "max_loss_streak": 21,
+              "max_win_streak": 3,
+              "median": -0.151,
+              "std": 0.767969
+            },
+            "net": {
+              "n": 312,
+              "sum_r": -57.6671,
+              "avg_r": -0.184831,
+              "wins": 62,
+              "losses": 250,
+              "win_rate_pct": 19.872,
+              "avg_win": 0.9364,
+              "avg_loss": -0.4629,
+              "payoff": 2.0229,
+              "pf": 0.5017,
+              "max_dd": 59.2538,
+              "max_loss_streak": 21,
+              "max_win_streak": 3,
+              "median": -0.296339,
+              "std": 0.799277
+            },
+            "cost_and_funding": 40.3071,
+            "yearly_gross": {
+              "2021": -9.336,
+              "2022": -8.023999999999997
+            },
+            "yearly_net": {
+              "2021": -28.33737690860566,
+              "2022": -29.329768070978847
+            },
+            "outcomes": {
+              "ma_trail": 290,
+              "sl": 22
+            },
+            "runners": {
+              "2.0": {
+                "n": 11,
+                "r": 33.771
+              },
+              "3.0": {
+                "n": 5,
+                "r": 19.339
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -123.085,
+            "net_r": -127.8176,
+            "trade_count": 33
+          }
+        },
+        "sma50": {
+          "flags": {
+            "exp_ma_trail_period": 50
+          },
+          "metrics": {
+            "gross": {
+              "n": 308,
+              "sum_r": 20.557,
+              "avg_r": 0.066744,
+              "wins": 68,
+              "losses": 240,
+              "win_rate_pct": 22.078,
+              "avg_win": 1.5301,
+              "avg_loss": -0.3479,
+              "payoff": 4.3984,
+              "pf": 1.2462,
+              "max_dd": 19.228,
+              "max_loss_streak": 21,
+              "max_win_streak": 3,
+              "median": -0.0645,
+              "std": 1.313086
+            },
+            "net": {
+              "n": 308,
+              "sum_r": -18.8829,
+              "avg_r": -0.061308,
+              "wins": 60,
+              "losses": 248,
+              "win_rate_pct": 19.481,
+              "avg_win": 1.6383,
+              "avg_loss": -0.4725,
+              "payoff": 3.4673,
+              "pf": 0.8389,
+              "max_dd": 34.4524,
+              "max_loss_streak": 27,
+              "max_win_streak": 3,
+              "median": -0.241051,
+              "std": 1.324484
+            },
+            "cost_and_funding": 39.4399,
+            "yearly_gross": {
+              "2021": -12.918999999999997,
+              "2022": 33.476000000000006
+            },
+            "yearly_net": {
+              "2021": -31.18971962551853,
+              "2022": 12.306850186147138
+            },
+            "outcomes": {
+              "ma_trail": 273,
+              "sl": 35
+            },
+            "runners": {
+              "2.0": {
+                "n": 13,
+                "r": 67.371
+              },
+              "3.0": {
+                "n": 9,
+                "r": 57.338
+              },
+              "5.0": {
+                "n": 6,
+                "r": 45.593
+              },
+              "10.0": {
+                "n": 1,
+                "r": 10.076
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -85.168,
+            "net_r": -89.0334,
+            "trade_count": 29
+          }
+        },
+        "sma100": {
+          "flags": {
+            "exp_ma_trail_period": 100
+          },
+          "metrics": {
+            "gross": {
+              "n": 296,
+              "sum_r": 8.593,
+              "avg_r": 0.02903,
+              "wins": 58,
+              "losses": 238,
+              "win_rate_pct": 19.595,
+              "avg_win": 1.7133,
+              "avg_loss": -0.3814,
+              "payoff": 4.4919,
+              "pf": 1.0947,
+              "max_dd": 25.324,
+              "max_loss_streak": 16,
+              "max_win_streak": 4,
+              "median": 0.0,
+              "std": 1.234909
+            },
+            "net": {
+              "n": 296,
+              "sum_r": -28.6754,
+              "avg_r": -0.096876,
+              "wins": 55,
+              "losses": 241,
+              "win_rate_pct": 18.581,
+              "avg_win": 1.7025,
+              "avg_loss": -0.5075,
+              "payoff": 3.3545,
+              "pf": 0.7656,
+              "max_dd": 39.9958,
+              "max_loss_streak": 23,
+              "max_win_streak": 4,
+              "median": -0.212537,
+              "std": 1.24739
+            },
+            "cost_and_funding": 37.2684,
+            "yearly_gross": {
+              "2021": -17.56000000000001,
+              "2022": 26.153
+            },
+            "yearly_net": {
+              "2021": -35.891263369944646,
+              "2022": 7.215859278100956
+            },
+            "outcomes": {
+              "ma_trail": 233,
+              "sl": 44,
+              "trail": 19
+            },
+            "runners": {
+              "2.0": {
+                "n": 17,
+                "r": 70.567
+              },
+              "3.0": {
+                "n": 11,
+                "r": 56.83
+              },
+              "5.0": {
+                "n": 5,
+                "r": 32.325
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -97.132,
+            "net_r": -98.8259,
+            "trade_count": 17
+          }
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "description": "king multi + SKIP UTC-SATURDAY \u2014 causal SL (live-honest)",
+      "arms": {
+        "baseline": {
+          "flags": {
+            "exp_ma_trail_period": 0
+          },
+          "metrics": {
+            "gross": {
+              "n": 253,
+              "sum_r": 92.641,
+              "avg_r": 0.36617,
+              "wins": 75,
+              "losses": 178,
+              "win_rate_pct": 29.644,
+              "avg_win": 3.3806,
+              "avg_loss": -0.9039,
+              "payoff": 3.7398,
+              "pf": 1.5758,
+              "max_dd": 22.127,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -0.997,
+              "std": 3.326125
+            },
+            "net": {
+              "n": 253,
+              "sum_r": 60.2062,
+              "avg_r": 0.237969,
+              "wins": 73,
+              "losses": 180,
+              "win_rate_pct": 28.854,
+              "avg_win": 3.3385,
+              "avg_loss": -1.0195,
+              "payoff": 3.2747,
+              "pf": 1.3281,
+              "max_dd": 29.3814,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -1.054261,
+              "std": 3.2962
+            },
+            "cost_and_funding": 32.4348,
+            "yearly_gross": {
+              "2021": 13.168,
+              "2022": 79.473
+            },
+            "yearly_net": {
+              "2021": -1.1810792433361963,
+              "2022": 61.387301027517495
+            },
+            "outcomes": {
+              "trail": 158,
+              "sl": 95
+            },
+            "runners": {
+              "2.0": {
+                "n": 36,
+                "r": 222.69
+              },
+              "3.0": {
+                "n": 28,
+                "r": 203.36
+              },
+              "5.0": {
+                "n": 14,
+                "r": 150.982
+              },
+              "10.0": {
+                "n": 4,
+                "r": 81.375
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": 0.0,
+            "net_r": 0.0,
+            "trade_count": 0
+          }
+        },
+        "sma20": {
+          "flags": {
+            "exp_ma_trail_period": 20
+          },
+          "metrics": {
+            "gross": {
+              "n": 275,
+              "sum_r": -6.607,
+              "avg_r": -0.024025,
+              "wins": 71,
+              "losses": 204,
+              "win_rate_pct": 25.818,
+              "avg_win": 0.8972,
+              "avg_loss": -0.3446,
+              "payoff": 2.6032,
+              "pf": 0.906,
+              "max_dd": 13.531,
+              "max_loss_streak": 12,
+              "max_win_streak": 3,
+              "median": -0.127,
+              "std": 0.813523
+            },
+            "net": {
+              "n": 275,
+              "sum_r": -41.2443,
+              "avg_r": -0.149979,
+              "wins": 61,
+              "losses": 214,
+              "win_rate_pct": 22.182,
+              "avg_win": 0.9546,
+              "avg_loss": -0.4648,
+              "payoff": 2.0536,
+              "pf": 0.5854,
+              "max_dd": 43.4086,
+              "max_loss_streak": 12,
+              "max_win_streak": 3,
+              "median": -0.257242,
+              "std": 0.842802
+            },
+            "cost_and_funding": 34.6373,
+            "yearly_gross": {
+              "2021": -2.694,
+              "2022": -3.9129999999999985
+            },
+            "yearly_net": {
+              "2021": -19.783426524002337,
+              "2022": -21.46092084902405
+            },
+            "outcomes": {
+              "ma_trail": 254,
+              "sl": 21
+            },
+            "runners": {
+              "2.0": {
+                "n": 11,
+                "r": 34.071
+              },
+              "3.0": {
+                "n": 5,
+                "r": 19.639
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -99.248,
+            "net_r": -101.4505,
+            "trade_count": 22
+          }
+        },
+        "sma50": {
+          "flags": {
+            "exp_ma_trail_period": 50
+          },
+          "metrics": {
+            "gross": {
+              "n": 269,
+              "sum_r": 34.107,
+              "avg_r": 0.126792,
+              "wins": 62,
+              "losses": 207,
+              "win_rate_pct": 23.048,
+              "avg_win": 1.6839,
+              "avg_loss": -0.3396,
+              "payoff": 4.9586,
+              "pf": 1.4852,
+              "max_dd": 9.965,
+              "max_loss_streak": 15,
+              "max_win_streak": 4,
+              "median": 0.0,
+              "std": 1.393725
+            },
+            "net": {
+              "n": 269,
+              "sum_r": 0.1065,
+              "avg_r": 0.000396,
+              "wins": 59,
+              "losses": 210,
+              "win_rate_pct": 21.933,
+              "avg_win": 1.6769,
+              "avg_loss": -0.4706,
+              "payoff": 3.5632,
+              "pf": 1.0011,
+              "max_dd": 21.6818,
+              "max_loss_streak": 17,
+              "max_win_streak": 3,
+              "median": -0.214717,
+              "std": 1.403963
+            },
+            "cost_and_funding": 34.0005,
+            "yearly_gross": {
+              "2021": -0.8700000000000028,
+              "2022": 34.97700000000001
+            },
+            "yearly_net": {
+              "2021": -17.28956080174235,
+              "2022": 17.396073232231696
+            },
+            "outcomes": {
+              "ma_trail": 237,
+              "sl": 32
+            },
+            "runners": {
+              "2.0": {
+                "n": 13,
+                "r": 67.371
+              },
+              "3.0": {
+                "n": 9,
+                "r": 57.338
+              },
+              "5.0": {
+                "n": 6,
+                "r": 45.593
+              },
+              "10.0": {
+                "n": 1,
+                "r": 10.076
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -58.534,
+            "net_r": -60.0997,
+            "trade_count": 16
+          }
+        },
+        "sma100": {
+          "flags": {
+            "exp_ma_trail_period": 100
+          },
+          "metrics": {
+            "gross": {
+              "n": 259,
+              "sum_r": 28.381,
+              "avg_r": 0.109579,
+              "wins": 53,
+              "losses": 206,
+              "win_rate_pct": 20.463,
+              "avg_win": 1.9883,
+              "avg_loss": -0.3738,
+              "payoff": 5.3194,
+              "pf": 1.3686,
+              "max_dd": 19.497,
+              "max_loss_streak": 19,
+              "max_win_streak": 3,
+              "median": 0.0,
+              "std": 1.38622
+            },
+            "net": {
+              "n": 259,
+              "sum_r": -3.9193,
+              "avg_r": -0.015133,
+              "wins": 50,
+              "losses": 209,
+              "win_rate_pct": 19.305,
+              "avg_win": 1.9984,
+              "avg_loss": -0.4968,
+              "payoff": 4.0222,
+              "pf": 0.9623,
+              "max_dd": 28.4548,
+              "max_loss_streak": 22,
+              "max_win_streak": 3,
+              "median": -0.201202,
+              "std": 1.394556
+            },
+            "cost_and_funding": 32.3003,
+            "yearly_gross": {
+              "2021": -2.015999999999993,
+              "2022": 30.397000000000006
+            },
+            "yearly_net": {
+              "2021": -17.87013513938473,
+              "2022": 13.95079438056742
+            },
+            "outcomes": {
+              "ma_trail": 202,
+              "sl": 39,
+              "trail": 18
+            },
+            "runners": {
+              "2.0": {
+                "n": 19,
+                "r": 80.324
+              },
+              "3.0": {
+                "n": 12,
+                "r": 64.35
+              },
+              "5.0": {
+                "n": 6,
+                "r": 39.845
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "delta_vs_baseline": {
+            "gross_r": -64.26,
+            "net_r": -64.1255,
+            "trade_count": 6
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 70.71
+}

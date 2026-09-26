@@ -1,0 +1,156 @@
+{
+  "scope": "is",
+  "mode": "block_immediate",
+  "fractions": [
+    0.7,
+    0.85
+  ],
+  "configs": {
+    "literal_v18_single": {
+      "full_trades": 338,
+      "0.7": {
+        "full_bars": 211,
+        "prefix_bars": 209,
+        "common_bars": 170,
+        "full_only": 41,
+        "prefix_only": 39,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 14,
+        "parity_pass": true
+      },
+      "0.85": {
+        "full_bars": 247,
+        "prefix_bars": 246,
+        "common_bars": 193,
+        "full_only": 54,
+        "prefix_only": 53,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 15,
+        "parity_pass": true
+      }
+    },
+    "literal_v18_multi": {
+      "full_trades": 420,
+      "0.7": {
+        "full_bars": 211,
+        "prefix_bars": 209,
+        "common_bars": 170,
+        "full_only": 41,
+        "prefix_only": 39,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 14,
+        "parity_pass": true
+      },
+      "0.85": {
+        "full_bars": 247,
+        "prefix_bars": 246,
+        "common_bars": 193,
+        "full_only": 54,
+        "prefix_only": 53,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 15,
+        "parity_pass": true
+      }
+    },
+    "champion_multi_sw10": {
+      "full_trades": 491,
+      "0.7": {
+        "full_bars": 238,
+        "prefix_bars": 236,
+        "common_bars": 200,
+        "full_only": 38,
+        "prefix_only": 36,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 11,
+        "parity_pass": true
+      },
+      "0.85": {
+        "full_bars": 286,
+        "prefix_bars": 286,
+        "common_bars": 234,
+        "full_only": 52,
+        "prefix_only": 52,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 15,
+        "parity_pass": true
+      }
+    },
+    "utcsat_multi_sw10": {
+      "full_trades": 447,
+      "0.7": {
+        "full_bars": 238,
+        "prefix_bars": 236,
+        "common_bars": 200,
+        "full_only": 38,
+        "prefix_only": 36,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 11,
+        "parity_pass": true
+      },
+      "0.85": {
+        "full_bars": 286,
+        "prefix_bars": 286,
+        "common_bars": 234,
+        "full_only": 52,
+        "prefix_only": 52,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 15,
+        "parity_pass": true
+      }
+    },
+    "fullstack_wage10_cd0_single_sw10": {
+      "full_trades": 187,
+      "0.7": {
+        "full_bars": 210,
+        "prefix_bars": 210,
+        "common_bars": 174,
+        "full_only": 36,
+        "prefix_only": 36,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 10,
+        "parity_pass": true
+      },
+      "0.85": {
+        "full_bars": 255,
+        "prefix_bars": 257,
+        "common_bars": 205,
+        "full_only": 50,
+        "prefix_only": 52,
+        "age_mismatch": 0,
+        "dec_mismatch": 0,
+        "dec_mismatch_bars": [],
+        "age_mismatch_bars": [],
+        "blocked_in_full": 14,
+        "parity_pass": true
+      }
+    }
+  },
+  "elapsed_sec": 148.4
+}

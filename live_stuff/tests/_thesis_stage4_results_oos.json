@@ -1,0 +1,273 @@
+{
+  "stage": 4,
+  "scope": "oos",
+  "source": "C:\\Users\\Pravin\\Desktop\\main\\AT_Trading\\live_stuff\\tests\\_thesis_stage3_results_oos.json",
+  "bootstrap_reps": 5000,
+  "seed": 2701,
+  "research_inventory": {
+    "experiment_harnesses": 77,
+    "test_harnesses": 76,
+    "experiment_documents": 6,
+    "registry_keys": 112,
+    "note": "Lower-bound inventory of current files/registry, not a reconstruction of every historical variant."
+  },
+  "configs": {
+    "champion_multi_sw10": {
+      "n": 279,
+      "observed_sum_r": 105.725,
+      "monthly_bootstrap": {
+        "n": 5000,
+        "mean": 105.41242,
+        "median": 99.269,
+        "positive_pct": 92.12,
+        "q10": 8.532,
+        "q90": 211.749
+      },
+      "leave_one_year_out": {
+        "2021": 116.694,
+        "2022": -10.969
+      },
+      "positive_months": 10,
+      "months": 24,
+      "control_summaries": {
+        "random_entry/target_3R": {
+          "n": 279,
+          "sum_r": 65.6475,
+          "mean_r": 0.235296,
+          "win_pct": 30.824
+        },
+        "random_entry/target_5R": {
+          "n": 279,
+          "sum_r": 96.2578,
+          "mean_r": 0.34501,
+          "win_pct": 22.581
+        },
+        "random_entry/time_96m": {
+          "n": 279,
+          "sum_r": 9.4792,
+          "mean_r": 0.033975,
+          "win_pct": 48.746
+        },
+        "delay_4/target_3R": {
+          "n": 279,
+          "sum_r": 35.0027,
+          "mean_r": 0.125458,
+          "win_pct": 28.315
+        },
+        "delay_4/target_5R": {
+          "n": 279,
+          "sum_r": 65.0027,
+          "mean_r": 0.232985,
+          "win_pct": 20.789
+        },
+        "delay_4/time_96m": {
+          "n": 279,
+          "sum_r": 0.5045,
+          "mean_r": 0.001808,
+          "win_pct": 50.179
+        },
+        "delay_8/target_3R": {
+          "n": 279,
+          "sum_r": 31.0764,
+          "mean_r": 0.111385,
+          "win_pct": 27.957
+        },
+        "delay_8/target_5R": {
+          "n": 279,
+          "sum_r": 59.0764,
+          "mean_r": 0.211743,
+          "win_pct": 20.43
+        },
+        "delay_8/time_96m": {
+          "n": 279,
+          "sum_r": 3.5133,
+          "mean_r": 0.012592,
+          "win_pct": 49.462
+        },
+        "delay_16/target_3R": {
+          "n": 279,
+          "sum_r": 42.9701,
+          "mean_r": 0.154015,
+          "win_pct": 29.032
+        },
+        "delay_16/target_5R": {
+          "n": 279,
+          "sum_r": 94.9701,
+          "mean_r": 0.340395,
+          "win_pct": 22.581
+        },
+        "delay_16/time_96m": {
+          "n": 279,
+          "sum_r": -1.0017,
+          "mean_r": -0.00359,
+          "win_pct": 45.52
+        },
+        "delay_32/target_3R": {
+          "n": 279,
+          "sum_r": 35.1063,
+          "mean_r": 0.125829,
+          "win_pct": 28.315
+        },
+        "delay_32/target_5R": {
+          "n": 279,
+          "sum_r": 35.1063,
+          "mean_r": 0.125829,
+          "win_pct": 18.996
+        },
+        "delay_32/time_96m": {
+          "n": 279,
+          "sum_r": 17.8608,
+          "mean_r": 0.064017,
+          "win_pct": 54.122
+        },
+        "reverse_direction/target_3R": {
+          "n": 279,
+          "sum_r": -33.546,
+          "mean_r": -0.120237,
+          "win_pct": 22.222
+        },
+        "reverse_direction/target_5R": {
+          "n": 279,
+          "sum_r": -61.546,
+          "mean_r": -0.220595,
+          "win_pct": 13.262
+        },
+        "reverse_direction/time_96m": {
+          "n": 279,
+          "sum_r": -5.9406,
+          "mean_r": -0.021293,
+          "win_pct": 51.254
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "n": 253,
+      "observed_sum_r": 92.641,
+      "monthly_bootstrap": {
+        "n": 5000,
+        "mean": 92.357221,
+        "median": 83.759,
+        "positive_pct": 92.82,
+        "q10": 8.002,
+        "q90": 187.804
+      },
+      "leave_one_year_out": {
+        "2021": 79.473,
+        "2022": 13.168
+      },
+      "positive_months": 10,
+      "months": 24,
+      "control_summaries": {
+        "random_entry/target_3R": {
+          "n": 253,
+          "sum_r": 39.8452,
+          "mean_r": 0.157491,
+          "win_pct": 28.854
+        },
+        "random_entry/target_5R": {
+          "n": 253,
+          "sum_r": 26.5457,
+          "mean_r": 0.104924,
+          "win_pct": 18.577
+        },
+        "random_entry/time_96m": {
+          "n": 253,
+          "sum_r": 6.3149,
+          "mean_r": 0.02496,
+          "win_pct": 50.988
+        },
+        "delay_4/target_3R": {
+          "n": 253,
+          "sum_r": 41.0027,
+          "mean_r": 0.162066,
+          "win_pct": 29.249
+        },
+        "delay_4/target_5R": {
+          "n": 253,
+          "sum_r": 73.0027,
+          "mean_r": 0.288548,
+          "win_pct": 21.739
+        },
+        "delay_4/time_96m": {
+          "n": 253,
+          "sum_r": -1.405,
+          "mean_r": -0.005553,
+          "win_pct": 49.012
+        },
+        "delay_8/target_3R": {
+          "n": 253,
+          "sum_r": 33.0764,
+          "mean_r": 0.130737,
+          "win_pct": 28.458
+        },
+        "delay_8/target_5R": {
+          "n": 253,
+          "sum_r": 55.0764,
+          "mean_r": 0.217693,
+          "win_pct": 20.553
+        },
+        "delay_8/time_96m": {
+          "n": 253,
+          "sum_r": 1.8765,
+          "mean_r": 0.007417,
+          "win_pct": 50.198
+        },
+        "delay_16/target_3R": {
+          "n": 253,
+          "sum_r": 40.9701,
+          "mean_r": 0.161937,
+          "win_pct": 29.249
+        },
+        "delay_16/target_5R": {
+          "n": 253,
+          "sum_r": 96.9701,
+          "mean_r": 0.383281,
+          "win_pct": 23.32
+        },
+        "delay_16/time_96m": {
+          "n": 253,
+          "sum_r": 6.97,
+          "mean_r": 0.027549,
+          "win_pct": 48.221
+        },
+        "delay_32/target_3R": {
+          "n": 253,
+          "sum_r": 21.1063,
+          "mean_r": 0.083424,
+          "win_pct": 27.273
+        },
+        "delay_32/target_5R": {
+          "n": 253,
+          "sum_r": 13.1063,
+          "mean_r": 0.051803,
+          "win_pct": 17.787
+        },
+        "delay_32/time_96m": {
+          "n": 253,
+          "sum_r": 19.2843,
+          "mean_r": 0.076222,
+          "win_pct": 53.755
+        },
+        "reverse_direction/target_3R": {
+          "n": 253,
+          "sum_r": -11.546,
+          "mean_r": -0.045637,
+          "win_pct": 24.111
+        },
+        "reverse_direction/target_5R": {
+          "n": 253,
+          "sum_r": -23.546,
+          "mean_r": -0.093067,
+          "win_pct": 15.415
+        },
+        "reverse_direction/time_96m": {
+          "n": 253,
+          "sum_r": -2.5288,
+          "mean_r": -0.009995,
+          "win_pct": 52.174
+        }
+      }
+    }
+  },
+  "elapsed_sec": 0.14
+}

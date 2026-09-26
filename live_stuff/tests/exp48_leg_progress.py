@@ -32,8 +32,9 @@ import src.btc.engines.htf_ltf.v18_streak_halt as shipped_mod
 A4=dict(exp31_lb=30,chop_thresh=55.0,exp_persist=2)
 LB30=dict(exp31_lb=30)
 GATES=[4.0,6.0,8.0,10.0,12.0]
-PINS={("lb30","w0"):(349,196.3),("lb30","w24"):(265,185.0),
-      ("A4","w0"):(359,203.3),("A4","w24"):(261,223.1)}
+# POST trail-fix ee574f9: fine nets ~-26R vs pre-fix exp40c pins; n unchanged.
+PINS={("lb30","w0"):(349,170.5),("lb30","w24"):(265,159.1),
+      ("A4","w0"):(359,177.5),("A4","w24"):(261,197.3)}
 def main():
  t0=time.time()
  (c15,f15),(c1h,f1h)=load_candles()

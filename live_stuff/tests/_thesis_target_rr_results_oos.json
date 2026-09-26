@@ -1,0 +1,1001 @@
+{
+  "stage": 16,
+  "instrument": "BTCUSDT_BYBIT",
+  "scope": "oos",
+  "pre_registered": true,
+  "threshold": 2.5,
+  "definition": "nearest completed 15m structural endpoint above/below entry, confirmed before entry_idx; no fixed-target or 24h room",
+  "configs": {
+    "fullstack_wage10_cd0_single_sw10": {
+      "description": "KING SINGLE: fullstack + wage10 + cd=0 \u2014 chop15 band + ATR blow-off",
+      "trade_count": 140,
+      "target_count": 140,
+      "groups": {
+        "all": {
+          "count": 140,
+          "metrics": {
+            "gross": {
+              "n": 140,
+              "sum_r": 38.04,
+              "avg_r": 0.271714,
+              "wins": 35,
+              "losses": 105,
+              "win_rate_pct": 25.0,
+              "avg_win": 3.9367,
+              "avg_loss": -0.9499,
+              "payoff": 4.1441,
+              "pf": 1.3814,
+              "max_dd": 27.909,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -0.998,
+              "std": 2.972685
+            },
+            "net": {
+              "n": 140,
+              "sum_r": 16.8978,
+              "avg_r": 0.120698,
+              "wins": 34,
+              "losses": 106,
+              "win_rate_pct": 24.286,
+              "avg_win": 3.9239,
+              "avg_loss": -1.0992,
+              "payoff": 3.5698,
+              "pf": 1.145,
+              "max_dd": 37.3124,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -1.088599,
+              "std": 2.969259
+            },
+            "cost_and_funding": 21.1422,
+            "yearly_gross": {
+              "2021": 12.931000000000001,
+              "2022": 25.108999999999995
+            },
+            "yearly_net": {
+              "2021": 2.79364458881369,
+              "2022": 14.104145199341177
+            },
+            "runners": {
+              "2.0": {
+                "n": 21,
+                "r": 123.584
+              },
+              "3.0": {
+                "n": 14,
+                "r": 105.967
+              },
+              "5.0": {
+                "n": 9,
+                "r": 86.414
+              },
+              "10.0": {
+                "n": 3,
+                "r": 45.583
+              }
+            }
+          },
+          "room_r": {
+            "n": 140,
+            "sum_r": 33.8969,
+            "avg_r": 0.242121,
+            "wins": 140,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 0.2421,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 140,
+            "median": 0.069058,
+            "std": 0.445398
+          }
+        },
+        "room_ge_2.5": {
+          "count": 0,
+          "metrics": {
+            "gross": {
+              "n": 0
+            },
+            "net": {
+              "n": 0
+            },
+            "cost_and_funding": 0,
+            "yearly_gross": {},
+            "yearly_net": {},
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        },
+        "room_lt_2.5": {
+          "count": 140,
+          "metrics": {
+            "gross": {
+              "n": 140,
+              "sum_r": 38.04,
+              "avg_r": 0.271714,
+              "wins": 35,
+              "losses": 105,
+              "win_rate_pct": 25.0,
+              "avg_win": 3.9367,
+              "avg_loss": -0.9499,
+              "payoff": 4.1441,
+              "pf": 1.3814,
+              "max_dd": 27.909,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -0.998,
+              "std": 2.972685
+            },
+            "net": {
+              "n": 140,
+              "sum_r": 16.8978,
+              "avg_r": 0.120698,
+              "wins": 34,
+              "losses": 106,
+              "win_rate_pct": 24.286,
+              "avg_win": 3.9239,
+              "avg_loss": -1.0992,
+              "payoff": 3.5698,
+              "pf": 1.145,
+              "max_dd": 37.3124,
+              "max_loss_streak": 13,
+              "max_win_streak": 6,
+              "median": -1.088599,
+              "std": 2.969259
+            },
+            "cost_and_funding": 21.1422,
+            "yearly_gross": {
+              "2021": 12.931000000000001,
+              "2022": 25.108999999999995
+            },
+            "yearly_net": {
+              "2021": 2.79364458881369,
+              "2022": 14.104145199341177
+            },
+            "runners": {
+              "2.0": {
+                "n": 21,
+                "r": 123.584
+              },
+              "3.0": {
+                "n": 14,
+                "r": 105.967
+              },
+              "5.0": {
+                "n": 9,
+                "r": 86.414
+              },
+              "10.0": {
+                "n": 3,
+                "r": 45.583
+              }
+            }
+          },
+          "room_r": {
+            "n": 140,
+            "sum_r": 33.8969,
+            "avg_r": 0.242121,
+            "wins": 140,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 0.2421,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 140,
+            "median": 0.069058,
+            "std": 0.445398
+          }
+        },
+        "no_known_target": {
+          "count": 0,
+          "metrics": {
+            "gross": {
+              "n": 0
+            },
+            "net": {
+              "n": 0
+            },
+            "cost_and_funding": 0,
+            "yearly_gross": {},
+            "yearly_net": {},
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        },
+        "invalid_risk": {
+          "count": 0,
+          "metrics": {
+            "gross": {
+              "n": 0
+            },
+            "net": {
+              "n": 0
+            },
+            "cost_and_funding": 0,
+            "yearly_gross": {},
+            "yearly_net": {},
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        }
+      }
+    },
+    "champion_multi_sw10": {
+      "description": "Champion multi sw10 \u2014 causal SL (live-honest)",
+      "trade_count": 279,
+      "target_count": 276,
+      "groups": {
+        "all": {
+          "count": 279,
+          "metrics": {
+            "gross": {
+              "n": 279,
+              "sum_r": 105.725,
+              "avg_r": 0.378943,
+              "wins": 78,
+              "losses": 201,
+              "win_rate_pct": 27.957,
+              "avg_win": 3.6493,
+              "avg_loss": -0.8901,
+              "payoff": 4.0997,
+              "pf": 1.5909,
+              "max_dd": 37.342,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 3.369468
+            },
+            "net": {
+              "n": 279,
+              "sum_r": 70.1505,
+              "avg_r": 0.251435,
+              "wins": 76,
+              "losses": 203,
+              "win_rate_pct": 27.24,
+              "avg_win": 3.6085,
+              "avg_loss": -1.0054,
+              "payoff": 3.5891,
+              "pf": 1.3437,
+              "max_dd": 53.1877,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.054379,
+              "std": 3.338949
+            },
+            "cost_and_funding": 35.5745,
+            "yearly_gross": {
+              "2021": -10.969000000000001,
+              "2022": 116.69400000000003
+            },
+            "yearly_net": {
+              "2021": -26.44429356859174,
+              "2022": 96.59474784915291
+            },
+            "runners": {
+              "2.0": {
+                "n": 40,
+                "r": 255.898
+              },
+              "3.0": {
+                "n": 30,
+                "r": 231.485
+              },
+              "5.0": {
+                "n": 17,
+                "r": 183.699
+              },
+              "10.0": {
+                "n": 6,
+                "r": 105.058
+              }
+            }
+          },
+          "room_r": {
+            "n": 276,
+            "sum_r": 49.9208,
+            "avg_r": 0.180872,
+            "wins": 276,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 0.1809,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 276,
+            "median": 0.063348,
+            "std": 0.332359
+          }
+        },
+        "room_ge_2.5": {
+          "count": 1,
+          "metrics": {
+            "gross": {
+              "n": 1,
+              "sum_r": -1.0,
+              "avg_r": -1.0,
+              "wins": 0,
+              "losses": 1,
+              "win_rate_pct": 0.0,
+              "avg_win": 0.0,
+              "avg_loss": -1.0,
+              "payoff": 0.0,
+              "pf": 0.0,
+              "max_dd": 1.0,
+              "max_loss_streak": 1,
+              "max_win_streak": 0,
+              "median": -1.0,
+              "std": 0.0
+            },
+            "net": {
+              "n": 1,
+              "sum_r": -1.463,
+              "avg_r": -1.463009,
+              "wins": 0,
+              "losses": 1,
+              "win_rate_pct": 0.0,
+              "avg_win": 0.0,
+              "avg_loss": -1.463,
+              "payoff": 0.0,
+              "pf": 0.0,
+              "max_dd": 1.463,
+              "max_loss_streak": 1,
+              "max_win_streak": 0,
+              "median": -1.463009,
+              "std": 0.0
+            },
+            "cost_and_funding": 0.463,
+            "yearly_gross": {
+              "2021": -1.0
+            },
+            "yearly_net": {
+              "2021": -1.4630093475557329
+            },
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 1,
+            "sum_r": 2.8158,
+            "avg_r": 2.81582,
+            "wins": 1,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 2.8158,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 1,
+            "median": 2.81582,
+            "std": 0.0
+          }
+        },
+        "room_lt_2.5": {
+          "count": 275,
+          "metrics": {
+            "gross": {
+              "n": 275,
+              "sum_r": 107.498,
+              "avg_r": 0.390902,
+              "wins": 77,
+              "losses": 198,
+              "win_rate_pct": 28.0,
+              "avg_win": 3.6807,
+              "avg_loss": -0.8885,
+              "payoff": 4.1428,
+              "pf": 1.6111,
+              "max_dd": 36.342,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -0.997,
+              "std": 3.390421
+            },
+            "net": {
+              "n": 275,
+              "sum_r": 72.5509,
+              "avg_r": 0.263821,
+              "wins": 75,
+              "losses": 200,
+              "win_rate_pct": 27.273,
+              "avg_win": 3.641,
+              "avg_loss": -1.0026,
+              "payoff": 3.6315,
+              "pf": 1.3618,
+              "max_dd": 51.7247,
+              "max_loss_streak": 15,
+              "max_win_streak": 5,
+              "median": -1.054379,
+              "std": 3.359231
+            },
+            "cost_and_funding": 34.9471,
+            "yearly_gross": {
+              "2021": -9.195999999999994,
+              "2022": 116.69400000000003
+            },
+            "yearly_net": {
+              "2021": -24.043870229022367,
+              "2022": 96.59474784915291
+            },
+            "runners": {
+              "2.0": {
+                "n": 40,
+                "r": 255.898
+              },
+              "3.0": {
+                "n": 30,
+                "r": 231.485
+              },
+              "5.0": {
+                "n": 17,
+                "r": 183.699
+              },
+              "10.0": {
+                "n": 6,
+                "r": 105.058
+              }
+            }
+          },
+          "room_r": {
+            "n": 275,
+            "sum_r": 47.105,
+            "avg_r": 0.171291,
+            "wins": 275,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 0.1713,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 275,
+            "median": 0.063073,
+            "std": 0.292448
+          }
+        },
+        "no_known_target": {
+          "count": 3,
+          "metrics": {
+            "gross": {
+              "n": 3,
+              "sum_r": -0.773,
+              "avg_r": -0.257667,
+              "wins": 1,
+              "losses": 2,
+              "win_rate_pct": 33.333,
+              "avg_win": 1.227,
+              "avg_loss": -1.0,
+              "payoff": 1.227,
+              "pf": 0.6135,
+              "max_dd": 2.0,
+              "max_loss_streak": 2,
+              "max_win_streak": 1,
+              "median": -1.0,
+              "std": 1.049818
+            },
+            "net": {
+              "n": 3,
+              "sum_r": -0.9374,
+              "avg_r": -0.312471,
+              "wins": 1,
+              "losses": 2,
+              "win_rate_pct": 33.333,
+              "avg_win": 1.1703,
+              "avg_loss": -1.0538,
+              "payoff": 1.1105,
+              "pf": 0.5552,
+              "max_dd": 2.1077,
+              "max_loss_streak": 2,
+              "max_win_streak": 1,
+              "median": -1.036771,
+              "std": 1.048545
+            },
+            "cost_and_funding": 0.1644,
+            "yearly_gross": {
+              "2021": -0.7729999999999999
+            },
+            "yearly_net": {
+              "2021": -0.9374139920136566
+            },
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        },
+        "invalid_risk": {
+          "count": 0,
+          "metrics": {
+            "gross": {
+              "n": 0
+            },
+            "net": {
+              "n": 0
+            },
+            "cost_and_funding": 0,
+            "yearly_gross": {},
+            "yearly_net": {},
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "description": "king multi + SKIP UTC-SATURDAY \u2014 causal SL (live-honest)",
+      "trade_count": 253,
+      "target_count": 250,
+      "groups": {
+        "all": {
+          "count": 253,
+          "metrics": {
+            "gross": {
+              "n": 253,
+              "sum_r": 92.641,
+              "avg_r": 0.36617,
+              "wins": 75,
+              "losses": 178,
+              "win_rate_pct": 29.644,
+              "avg_win": 3.3806,
+              "avg_loss": -0.9039,
+              "payoff": 3.7398,
+              "pf": 1.5758,
+              "max_dd": 22.127,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -0.997,
+              "std": 3.326125
+            },
+            "net": {
+              "n": 253,
+              "sum_r": 60.2062,
+              "avg_r": 0.237969,
+              "wins": 73,
+              "losses": 180,
+              "win_rate_pct": 28.854,
+              "avg_win": 3.3385,
+              "avg_loss": -1.0195,
+              "payoff": 3.2747,
+              "pf": 1.3281,
+              "max_dd": 29.3814,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -1.054261,
+              "std": 3.2962
+            },
+            "cost_and_funding": 32.4348,
+            "yearly_gross": {
+              "2021": 13.168,
+              "2022": 79.473
+            },
+            "yearly_net": {
+              "2021": -1.1810792433361963,
+              "2022": 61.387301027517495
+            },
+            "runners": {
+              "2.0": {
+                "n": 36,
+                "r": 222.69
+              },
+              "3.0": {
+                "n": 28,
+                "r": 203.36
+              },
+              "5.0": {
+                "n": 14,
+                "r": 150.982
+              },
+              "10.0": {
+                "n": 4,
+                "r": 81.375
+              }
+            }
+          },
+          "room_r": {
+            "n": 250,
+            "sum_r": 50.0382,
+            "avg_r": 0.200153,
+            "wins": 250,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 0.2002,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 250,
+            "median": 0.065474,
+            "std": 0.368678
+          }
+        },
+        "room_ge_2.5": {
+          "count": 1,
+          "metrics": {
+            "gross": {
+              "n": 1,
+              "sum_r": -1.0,
+              "avg_r": -1.0,
+              "wins": 0,
+              "losses": 1,
+              "win_rate_pct": 0.0,
+              "avg_win": 0.0,
+              "avg_loss": -1.0,
+              "payoff": 0.0,
+              "pf": 0.0,
+              "max_dd": 1.0,
+              "max_loss_streak": 1,
+              "max_win_streak": 0,
+              "median": -1.0,
+              "std": 0.0
+            },
+            "net": {
+              "n": 1,
+              "sum_r": -1.463,
+              "avg_r": -1.463009,
+              "wins": 0,
+              "losses": 1,
+              "win_rate_pct": 0.0,
+              "avg_win": 0.0,
+              "avg_loss": -1.463,
+              "payoff": 0.0,
+              "pf": 0.0,
+              "max_dd": 1.463,
+              "max_loss_streak": 1,
+              "max_win_streak": 0,
+              "median": -1.463009,
+              "std": 0.0
+            },
+            "cost_and_funding": 0.463,
+            "yearly_gross": {
+              "2021": -1.0
+            },
+            "yearly_net": {
+              "2021": -1.4630093475557329
+            },
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 1,
+            "sum_r": 2.8158,
+            "avg_r": 2.81582,
+            "wins": 1,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 2.8158,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 1,
+            "median": 2.81582,
+            "std": 0.0
+          }
+        },
+        "room_lt_2.5": {
+          "count": 249,
+          "metrics": {
+            "gross": {
+              "n": 249,
+              "sum_r": 94.414,
+              "avg_r": 0.379173,
+              "wins": 74,
+              "losses": 175,
+              "win_rate_pct": 29.719,
+              "avg_win": 3.4097,
+              "avg_loss": -0.9023,
+              "payoff": 3.7789,
+              "pf": 1.5979,
+              "max_dd": 21.127,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -0.997,
+              "std": 3.348909
+            },
+            "net": {
+              "n": 249,
+              "sum_r": 62.6066,
+              "avg_r": 0.251432,
+              "wins": 72,
+              "losses": 177,
+              "win_rate_pct": 28.916,
+              "avg_win": 3.3687,
+              "avg_loss": -1.0166,
+              "payoff": 3.3137,
+              "pf": 1.3479,
+              "max_dd": 27.9184,
+              "max_loss_streak": 9,
+              "max_win_streak": 3,
+              "median": -1.054261,
+              "std": 3.318249
+            },
+            "cost_and_funding": 31.8074,
+            "yearly_gross": {
+              "2021": 14.941000000000003,
+              "2022": 79.473
+            },
+            "yearly_net": {
+              "2021": 1.2193440962331932,
+              "2022": 61.387301027517495
+            },
+            "runners": {
+              "2.0": {
+                "n": 36,
+                "r": 222.69
+              },
+              "3.0": {
+                "n": 28,
+                "r": 203.36
+              },
+              "5.0": {
+                "n": 14,
+                "r": 150.982
+              },
+              "10.0": {
+                "n": 4,
+                "r": 81.375
+              }
+            }
+          },
+          "room_r": {
+            "n": 249,
+            "sum_r": 47.2223,
+            "avg_r": 0.189648,
+            "wins": 249,
+            "losses": 0,
+            "win_rate_pct": 100.0,
+            "avg_win": 0.1896,
+            "avg_loss": 0.0,
+            "payoff": 0.0,
+            "pf": 0.0,
+            "max_dd": 0.0,
+            "max_loss_streak": 0,
+            "max_win_streak": 249,
+            "median": 0.065317,
+            "std": 0.329973
+          }
+        },
+        "no_known_target": {
+          "count": 3,
+          "metrics": {
+            "gross": {
+              "n": 3,
+              "sum_r": -0.773,
+              "avg_r": -0.257667,
+              "wins": 1,
+              "losses": 2,
+              "win_rate_pct": 33.333,
+              "avg_win": 1.227,
+              "avg_loss": -1.0,
+              "payoff": 1.227,
+              "pf": 0.6135,
+              "max_dd": 2.0,
+              "max_loss_streak": 2,
+              "max_win_streak": 1,
+              "median": -1.0,
+              "std": 1.049818
+            },
+            "net": {
+              "n": 3,
+              "sum_r": -0.9374,
+              "avg_r": -0.312471,
+              "wins": 1,
+              "losses": 2,
+              "win_rate_pct": 33.333,
+              "avg_win": 1.1703,
+              "avg_loss": -1.0538,
+              "payoff": 1.1105,
+              "pf": 0.5552,
+              "max_dd": 2.1077,
+              "max_loss_streak": 2,
+              "max_win_streak": 1,
+              "median": -1.036771,
+              "std": 1.048545
+            },
+            "cost_and_funding": 0.1644,
+            "yearly_gross": {
+              "2021": -0.7729999999999999
+            },
+            "yearly_net": {
+              "2021": -0.9374139920136566
+            },
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        },
+        "invalid_risk": {
+          "count": 0,
+          "metrics": {
+            "gross": {
+              "n": 0
+            },
+            "net": {
+              "n": 0
+            },
+            "cost_and_funding": 0,
+            "yearly_gross": {},
+            "yearly_net": {},
+            "runners": {
+              "2.0": {
+                "n": 0,
+                "r": 0
+              },
+              "3.0": {
+                "n": 0,
+                "r": 0
+              },
+              "5.0": {
+                "n": 0,
+                "r": 0
+              },
+              "10.0": {
+                "n": 0,
+                "r": 0
+              }
+            }
+          },
+          "room_r": {
+            "n": 0
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 30.75
+}

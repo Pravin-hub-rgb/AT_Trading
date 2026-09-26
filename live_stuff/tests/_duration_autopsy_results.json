@@ -1,0 +1,1425 @@
+{
+  "stage": "duration_autopsy",
+  "lens": "descriptive fine replay",
+  "years": {
+    "is": 3.67,
+    "oos": 2.0
+  },
+  "scopes": {
+    "is": {
+      "champion": {
+        "n_rows": 466,
+        "r1": {
+          "0-6h": {
+            "loss": {
+              "n": 153,
+              "net": -153.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -153.0,
+            "dur_med": 2.4
+          },
+          "6-12h": {
+            "loss": {
+              "n": 62,
+              "net": -62.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -62.0,
+            "dur_med": 8.12
+          },
+          "12-24h": {
+            "loss": {
+              "n": 50,
+              "net": -48.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -48.0,
+            "dur_med": 18.04
+          },
+          "24-48h": {
+            "loss": {
+              "n": 51,
+              "net": -40.1
+            },
+            "win": {
+              "n": 10,
+              "net": 10.4
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -29.7,
+            "dur_med": 34.25
+          },
+          "48-96h": {
+            "loss": {
+              "n": 17,
+              "net": -8.9
+            },
+            "win": {
+              "n": 37,
+              "net": 41.5
+            },
+            "monster": {
+              "n": 9,
+              "net": 72.6
+            },
+            "net": 105.2,
+            "dur_med": 66.58
+          },
+          "96-infh": {
+            "loss": {
+              "n": 4,
+              "net": -1.8
+            },
+            "win": {
+              "n": 31,
+              "net": 51.0
+            },
+            "monster": {
+              "n": 42,
+              "net": 691.4
+            },
+            "net": 740.6,
+            "dur_med": 150.28
+          }
+        },
+        "r2": {
+          "0R": {
+            "n_known": 129,
+            "n_never": 0,
+            "med": 0.17,
+            "mean": 0.15
+          },
+          "+0.5R": {
+            "n_known": 129,
+            "n_never": 0,
+            "med": 1.78,
+            "mean": 5.92
+          },
+          "+1R": {
+            "n_known": 129,
+            "n_never": 0,
+            "med": 4.23,
+            "mean": 12.42
+          }
+        },
+        "r3": {
+          "loss": {
+            "n": 337,
+            "hrs_neg_med": 2.87,
+            "zone_longest_med": 0.88,
+            "hrs_below05_med": 0.45
+          },
+          "win": {
+            "n": 78,
+            "hrs_neg_med": 1.94,
+            "zone_longest_med": 0.28,
+            "hrs_below05_med": 0.0
+          },
+          "monster": {
+            "n": 51,
+            "hrs_neg_med": 0.75,
+            "zone_longest_med": 0.12,
+            "hrs_below05_med": 0
+          }
+        },
+        "r4": {
+          "12": {
+            "n": 19,
+            "classes": {
+              "loss": 13,
+              "win": 6,
+              "monster": 0
+            },
+            "final_net": -4.7,
+            "cut_net_at_H": -10.8,
+            "delta_cut_minus_final": -6.1,
+            "n_sl": 12
+          },
+          "24": {
+            "n": 5,
+            "classes": {
+              "loss": 2,
+              "win": 3,
+              "monster": 0
+            },
+            "final_net": 2.1,
+            "cut_net_at_H": -2.8,
+            "delta_cut_minus_final": -4.9,
+            "n_sl": 2
+          },
+          "48": {
+            "n": 3,
+            "classes": {
+              "loss": 1,
+              "win": 2,
+              "monster": 0
+            },
+            "final_net": 1.9,
+            "cut_net_at_H": -1.6,
+            "delta_cut_minus_final": -3.5,
+            "n_sl": 1
+          }
+        },
+        "r5": {
+          "12": {
+            "A_r<=-0.5": {
+              "n": 9,
+              "cut_net": -6.0,
+              "final_net": -6.5,
+              "delta_cut_minus_final": 0.5,
+              "n_win": 1,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 53,
+              "cut_net": -7.3,
+              "final_net": -3.5,
+              "delta_cut_minus_final": -3.8,
+              "n_win": 14,
+              "n_mon": 1
+            }
+          },
+          "24": {
+            "A_r<=-0.5": {
+              "n": 7,
+              "cut_net": -4.5,
+              "final_net": -6.3,
+              "delta_cut_minus_final": 1.8,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 17,
+              "cut_net": -2.0,
+              "final_net": -0.3,
+              "delta_cut_minus_final": -1.7,
+              "n_win": 8,
+              "n_mon": 0
+            }
+          },
+          "48": {
+            "A_r<=-0.5": {
+              "n": 1,
+              "cut_net": -0.5,
+              "final_net": -1.0,
+              "delta_cut_minus_final": 0.5,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 5,
+              "cut_net": -0.1,
+              "final_net": 0.8,
+              "delta_cut_minus_final": -0.9,
+              "n_win": 2,
+              "n_mon": 0
+            }
+          }
+        },
+        "r6": {
+          "full_sl_with_24h_below_-0.5": {
+            "n": 2,
+            "save_if_cut_at_-0.5": 1.0
+          },
+          "winners_with_24h_below_-0.5": {
+            "n": 2,
+            "final_net": 2.9
+          }
+        },
+        "median_dur": {
+          "loss": 7.13,
+          "win": 80.96,
+          "monster": 172.0
+        }
+      },
+      "utcsat": {
+        "n_rows": 428,
+        "r1": {
+          "0-6h": {
+            "loss": {
+              "n": 137,
+              "net": -137.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -137.0,
+            "dur_med": 2.3
+          },
+          "6-12h": {
+            "loss": {
+              "n": 57,
+              "net": -57.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -57.0,
+            "dur_med": 8.12
+          },
+          "12-24h": {
+            "loss": {
+              "n": 50,
+              "net": -48.3
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -48.3,
+            "dur_med": 16.91
+          },
+          "24-48h": {
+            "loss": {
+              "n": 40,
+              "net": -32.1
+            },
+            "win": {
+              "n": 9,
+              "net": 8.9
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -23.2,
+            "dur_med": 33.83
+          },
+          "48-96h": {
+            "loss": {
+              "n": 17,
+              "net": -9.8
+            },
+            "win": {
+              "n": 36,
+              "net": 42.8
+            },
+            "monster": {
+              "n": 9,
+              "net": 72.6
+            },
+            "net": 105.7,
+            "dur_med": 66.41
+          },
+          "96-infh": {
+            "loss": {
+              "n": 3,
+              "net": -1.7
+            },
+            "win": {
+              "n": 31,
+              "net": 54.1
+            },
+            "monster": {
+              "n": 39,
+              "net": 630.6
+            },
+            "net": 683.0,
+            "dur_med": 150.12
+          }
+        },
+        "r2": {
+          "0R": {
+            "n_known": 124,
+            "n_never": 0,
+            "med": 0.17,
+            "mean": 0.15
+          },
+          "+0.5R": {
+            "n_known": 124,
+            "n_never": 0,
+            "med": 1.95,
+            "mean": 6.82
+          },
+          "+1R": {
+            "n_known": 124,
+            "n_never": 0,
+            "med": 4.18,
+            "mean": 13.09
+          }
+        },
+        "r3": {
+          "loss": {
+            "n": 304,
+            "hrs_neg_med": 2.85,
+            "zone_longest_med": 0.76,
+            "hrs_below05_med": 0.43
+          },
+          "win": {
+            "n": 76,
+            "hrs_neg_med": 1.94,
+            "zone_longest_med": 0.29,
+            "hrs_below05_med": 0.0
+          },
+          "monster": {
+            "n": 48,
+            "hrs_neg_med": 0.81,
+            "zone_longest_med": 0.14,
+            "hrs_below05_med": 0.0
+          }
+        },
+        "r4": {
+          "12": {
+            "n": 20,
+            "classes": {
+              "loss": 13,
+              "win": 6,
+              "monster": 1
+            },
+            "final_net": 0.3,
+            "cut_net_at_H": -11.6,
+            "delta_cut_minus_final": -11.9,
+            "n_sl": 12
+          },
+          "24": {
+            "n": 7,
+            "classes": {
+              "loss": 3,
+              "win": 4,
+              "monster": 0
+            },
+            "final_net": 1.8,
+            "cut_net_at_H": -4.0,
+            "delta_cut_minus_final": -5.8,
+            "n_sl": 3
+          },
+          "48": {
+            "n": 3,
+            "classes": {
+              "loss": 1,
+              "win": 2,
+              "monster": 0
+            },
+            "final_net": 1.9,
+            "cut_net_at_H": -1.6,
+            "delta_cut_minus_final": -3.5,
+            "n_sl": 1
+          }
+        },
+        "r5": {
+          "12": {
+            "A_r<=-0.5": {
+              "n": 9,
+              "cut_net": -5.9,
+              "final_net": -6.5,
+              "delta_cut_minus_final": 0.6,
+              "n_win": 1,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 45,
+              "cut_net": -8.4,
+              "final_net": 8.2,
+              "delta_cut_minus_final": -16.7,
+              "n_win": 14,
+              "n_mon": 2
+            }
+          },
+          "24": {
+            "A_r<=-0.5": {
+              "n": 8,
+              "cut_net": -5.0,
+              "final_net": -0.0,
+              "delta_cut_minus_final": -5.0,
+              "n_win": 2,
+              "n_mon": 1
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 14,
+              "cut_net": -1.2,
+              "final_net": 1.4,
+              "delta_cut_minus_final": -2.6,
+              "n_win": 7,
+              "n_mon": 0
+            }
+          },
+          "48": {
+            "A_r<=-0.5": {
+              "n": 2,
+              "cut_net": -1.2,
+              "final_net": -2.0,
+              "delta_cut_minus_final": 0.8,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 7,
+              "cut_net": -0.7,
+              "final_net": 6.1,
+              "delta_cut_minus_final": -6.8,
+              "n_win": 4,
+              "n_mon": 1
+            }
+          }
+        },
+        "r6": {
+          "full_sl_with_24h_below_-0.5": {
+            "n": 3,
+            "save_if_cut_at_-0.5": 1.5
+          },
+          "winners_with_24h_below_-0.5": {
+            "n": 3,
+            "final_net": 7.6
+          }
+        },
+        "median_dur": {
+          "loss": 7.13,
+          "win": 86.83,
+          "monster": 165.64
+        }
+      },
+      "age10": {
+        "n_rows": 94,
+        "r1": {
+          "0-6h": {
+            "loss": {
+              "n": 2,
+              "net": -2.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -2.0,
+            "dur_med": 2.81
+          },
+          "6-12h": {
+            "loss": {
+              "n": 7,
+              "net": -6.5
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -6.5,
+            "dur_med": 9.85
+          },
+          "12-24h": {
+            "loss": {
+              "n": 23,
+              "net": -22.7
+            },
+            "win": {
+              "n": 2,
+              "net": 4.7
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -17.9,
+            "dur_med": 17.1
+          },
+          "24-48h": {
+            "loss": {
+              "n": 11,
+              "net": -9.0
+            },
+            "win": {
+              "n": 12,
+              "net": 13.9
+            },
+            "monster": {
+              "n": 5,
+              "net": 85.9
+            },
+            "net": 90.8,
+            "dur_med": 34.14
+          },
+          "48-96h": {
+            "loss": {
+              "n": 1,
+              "net": -0.6
+            },
+            "win": {
+              "n": 10,
+              "net": 14.9
+            },
+            "monster": {
+              "n": 9,
+              "net": 104.1
+            },
+            "net": 118.4,
+            "dur_med": 62.8
+          },
+          "96-infh": {
+            "loss": {
+              "n": 0,
+              "net": 0
+            },
+            "win": {
+              "n": 1,
+              "net": 2.8
+            },
+            "monster": {
+              "n": 11,
+              "net": 342.3
+            },
+            "net": 345.1,
+            "dur_med": 138.91
+          }
+        },
+        "r2": {
+          "0R": {
+            "n_known": 50,
+            "n_never": 0,
+            "med": 0.02,
+            "mean": 0.04
+          },
+          "+0.5R": {
+            "n_known": 50,
+            "n_never": 0,
+            "med": 0.67,
+            "mean": 2.6
+          },
+          "+1R": {
+            "n_known": 49,
+            "n_never": 1,
+            "med": 1.55,
+            "mean": 4.21
+          }
+        },
+        "r3": {
+          "loss": {
+            "n": 44,
+            "hrs_neg_med": 2.94,
+            "zone_longest_med": 0.49,
+            "hrs_below05_med": 0.29
+          },
+          "win": {
+            "n": 25,
+            "hrs_neg_med": 0.6,
+            "zone_longest_med": 0.07,
+            "hrs_below05_med": 0
+          },
+          "monster": {
+            "n": 25,
+            "hrs_neg_med": 0.35,
+            "zone_longest_med": 0.05,
+            "hrs_below05_med": 0
+          }
+        },
+        "r4": {
+          "12": {
+            "n": 2,
+            "classes": {
+              "loss": 2,
+              "win": 0,
+              "monster": 0
+            },
+            "final_net": -1.6,
+            "cut_net_at_H": -1.2,
+            "delta_cut_minus_final": 0.4,
+            "n_sl": 1
+          },
+          "24": {
+            "n": 0
+          },
+          "48": {
+            "n": 0
+          }
+        },
+        "r5": {
+          "12": {
+            "A_r<=-0.5": {
+              "n": 1,
+              "cut_net": -0.8,
+              "final_net": -1.0,
+              "delta_cut_minus_final": 0.2,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 7,
+              "cut_net": -0.9,
+              "final_net": -3.6,
+              "delta_cut_minus_final": 2.7,
+              "n_win": 2,
+              "n_mon": 0
+            }
+          },
+          "24": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 3,
+              "cut_net": -0.3,
+              "final_net": -1.6,
+              "delta_cut_minus_final": 1.3,
+              "n_win": 1,
+              "n_mon": 0
+            }
+          },
+          "48": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 1,
+              "cut_net": -0.2,
+              "final_net": -0.6,
+              "delta_cut_minus_final": 0.4,
+              "n_win": 0,
+              "n_mon": 0
+            }
+          }
+        },
+        "r6": {
+          "full_sl_with_24h_below_-0.5": {
+            "n": 0,
+            "save_if_cut_at_-0.5": 0.0
+          },
+          "winners_with_24h_below_-0.5": {
+            "n": 0,
+            "final_net": 0
+          }
+        },
+        "median_dur": {
+          "loss": 17.4,
+          "win": 45.18,
+          "monster": 88.25
+        }
+      }
+    },
+    "oos": {
+      "champion": {
+        "n_rows": 217,
+        "r1": {
+          "0-6h": {
+            "loss": {
+              "n": 69,
+              "net": -69.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -69.0,
+            "dur_med": 2.32
+          },
+          "6-12h": {
+            "loss": {
+              "n": 28,
+              "net": -28.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -28.0,
+            "dur_med": 8.15
+          },
+          "12-24h": {
+            "loss": {
+              "n": 27,
+              "net": -26.4
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -26.4,
+            "dur_med": 17.87
+          },
+          "24-48h": {
+            "loss": {
+              "n": 24,
+              "net": -16.7
+            },
+            "win": {
+              "n": 6,
+              "net": 2.3
+            },
+            "monster": {
+              "n": 1,
+              "net": 4.1
+            },
+            "net": -10.3,
+            "dur_med": 36.58
+          },
+          "48-96h": {
+            "loss": {
+              "n": 7,
+              "net": -5.7
+            },
+            "win": {
+              "n": 23,
+              "net": 34.8
+            },
+            "monster": {
+              "n": 5,
+              "net": 27.5
+            },
+            "net": 56.6,
+            "dur_med": 68.0
+          },
+          "96-infh": {
+            "loss": {
+              "n": 3,
+              "net": -3.0
+            },
+            "win": {
+              "n": 10,
+              "net": 18.5
+            },
+            "monster": {
+              "n": 14,
+              "net": 205.8
+            },
+            "net": 221.3,
+            "dur_med": 157.53
+          }
+        },
+        "r2": {
+          "0R": {
+            "n_known": 59,
+            "n_never": 0,
+            "med": 0.17,
+            "mean": 0.15
+          },
+          "+0.5R": {
+            "n_known": 59,
+            "n_never": 0,
+            "med": 2.77,
+            "mean": 6.53
+          },
+          "+1R": {
+            "n_known": 58,
+            "n_never": 1,
+            "med": 7.71,
+            "mean": 12.3
+          }
+        },
+        "r3": {
+          "loss": {
+            "n": 158,
+            "hrs_neg_med": 3.3,
+            "zone_longest_med": 0.82,
+            "hrs_below05_med": 0.44
+          },
+          "win": {
+            "n": 39,
+            "hrs_neg_med": 2.28,
+            "zone_longest_med": 0.22,
+            "hrs_below05_med": 0
+          },
+          "monster": {
+            "n": 20,
+            "hrs_neg_med": 2.35,
+            "zone_longest_med": 0.23,
+            "hrs_below05_med": 0.01
+          }
+        },
+        "r4": {
+          "12": {
+            "n": 6,
+            "classes": {
+              "loss": 5,
+              "win": 1,
+              "monster": 0
+            },
+            "final_net": -4.0,
+            "cut_net_at_H": -2.7,
+            "delta_cut_minus_final": 1.3,
+            "n_sl": 4
+          },
+          "24": {
+            "n": 4,
+            "classes": {
+              "loss": 3,
+              "win": 1,
+              "monster": 0
+            },
+            "final_net": -2.0,
+            "cut_net_at_H": -2.2,
+            "delta_cut_minus_final": -0.2,
+            "n_sl": 2
+          },
+          "48": {
+            "n": 2,
+            "classes": {
+              "loss": 2,
+              "win": 0,
+              "monster": 0
+            },
+            "final_net": -2.0,
+            "cut_net_at_H": -0.9,
+            "delta_cut_minus_final": 1.1,
+            "n_sl": 2
+          }
+        },
+        "r5": {
+          "12": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 30,
+              "cut_net": -4.2,
+              "final_net": 33.2,
+              "delta_cut_minus_final": -37.4,
+              "n_win": 11,
+              "n_mon": 3
+            }
+          },
+          "24": {
+            "A_r<=-0.5": {
+              "n": 2,
+              "cut_net": -1.0,
+              "final_net": -2.0,
+              "delta_cut_minus_final": 1.0,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 8,
+              "cut_net": -1.0,
+              "final_net": -3.4,
+              "delta_cut_minus_final": 2.4,
+              "n_win": 2,
+              "n_mon": 0
+            }
+          },
+          "48": {
+            "A_r<=-0.5": {
+              "n": 1,
+              "cut_net": -0.8,
+              "final_net": -1.0,
+              "delta_cut_minus_final": 0.2,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 4,
+              "cut_net": -0.5,
+              "final_net": -2.5,
+              "delta_cut_minus_final": 2.1,
+              "n_win": 1,
+              "n_mon": 0
+            }
+          }
+        },
+        "r6": {
+          "full_sl_with_24h_below_-0.5": {
+            "n": 1,
+            "save_if_cut_at_-0.5": 0.5
+          },
+          "winners_with_24h_below_-0.5": {
+            "n": 1,
+            "final_net": 0.5
+          }
+        },
+        "median_dur": {
+          "loss": 7.41,
+          "win": 71.9,
+          "monster": 169.14
+        }
+      },
+      "utcsat": {
+        "n_rows": 194,
+        "r1": {
+          "0-6h": {
+            "loss": {
+              "n": 66,
+              "net": -66.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -66.0,
+            "dur_med": 2.44
+          },
+          "6-12h": {
+            "loss": {
+              "n": 20,
+              "net": -20.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -20.0,
+            "dur_med": 8.41
+          },
+          "12-24h": {
+            "loss": {
+              "n": 29,
+              "net": -28.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -28.0,
+            "dur_med": 18.6
+          },
+          "24-48h": {
+            "loss": {
+              "n": 15,
+              "net": -9.9
+            },
+            "win": {
+              "n": 6,
+              "net": 2.3
+            },
+            "monster": {
+              "n": 1,
+              "net": 4.1
+            },
+            "net": -3.5,
+            "dur_med": 37.17
+          },
+          "48-96h": {
+            "loss": {
+              "n": 5,
+              "net": -3.7
+            },
+            "win": {
+              "n": 24,
+              "net": 33.2
+            },
+            "monster": {
+              "n": 5,
+              "net": 27.0
+            },
+            "net": 56.5,
+            "dur_med": 67.14
+          },
+          "96-infh": {
+            "loss": {
+              "n": 3,
+              "net": -3.0
+            },
+            "win": {
+              "n": 9,
+              "net": 19.5
+            },
+            "monster": {
+              "n": 11,
+              "net": 169.4
+            },
+            "net": 185.9,
+            "dur_med": 149.72
+          }
+        },
+        "r2": {
+          "0R": {
+            "n_known": 56,
+            "n_never": 0,
+            "med": 0.17,
+            "mean": 0.14
+          },
+          "+0.5R": {
+            "n_known": 56,
+            "n_never": 0,
+            "med": 2.65,
+            "mean": 5.82
+          },
+          "+1R": {
+            "n_known": 56,
+            "n_never": 0,
+            "med": 6.44,
+            "mean": 12.16
+          }
+        },
+        "r3": {
+          "loss": {
+            "n": 138,
+            "hrs_neg_med": 2.86,
+            "zone_longest_med": 0.75,
+            "hrs_below05_med": 0.38
+          },
+          "win": {
+            "n": 39,
+            "hrs_neg_med": 1.67,
+            "zone_longest_med": 0.22,
+            "hrs_below05_med": 0
+          },
+          "monster": {
+            "n": 17,
+            "hrs_neg_med": 1.6,
+            "zone_longest_med": 0.18,
+            "hrs_below05_med": 0
+          }
+        },
+        "r4": {
+          "12": {
+            "n": 5,
+            "classes": {
+              "loss": 5,
+              "win": 0,
+              "monster": 0
+            },
+            "final_net": -4.5,
+            "cut_net_at_H": -2.3,
+            "delta_cut_minus_final": 2.2,
+            "n_sl": 4
+          },
+          "24": {
+            "n": 3,
+            "classes": {
+              "loss": 3,
+              "win": 0,
+              "monster": 0
+            },
+            "final_net": -2.5,
+            "cut_net_at_H": -1.7,
+            "delta_cut_minus_final": 0.8,
+            "n_sl": 2
+          },
+          "48": {
+            "n": 2,
+            "classes": {
+              "loss": 2,
+              "win": 0,
+              "monster": 0
+            },
+            "final_net": -2.0,
+            "cut_net_at_H": -0.9,
+            "delta_cut_minus_final": 1.1,
+            "n_sl": 2
+          }
+        },
+        "r5": {
+          "12": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 26,
+              "cut_net": -4.6,
+              "final_net": 40.4,
+              "delta_cut_minus_final": -45.1,
+              "n_win": 11,
+              "n_mon": 3
+            }
+          },
+          "24": {
+            "A_r<=-0.5": {
+              "n": 2,
+              "cut_net": -1.0,
+              "final_net": -2.0,
+              "delta_cut_minus_final": 1.0,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 6,
+              "cut_net": -0.8,
+              "final_net": -2.9,
+              "delta_cut_minus_final": 2.1,
+              "n_win": 1,
+              "n_mon": 0
+            }
+          },
+          "48": {
+            "A_r<=-0.5": {
+              "n": 1,
+              "cut_net": -0.8,
+              "final_net": -1.0,
+              "delta_cut_minus_final": 0.2,
+              "n_win": 0,
+              "n_mon": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 3,
+              "cut_net": -0.6,
+              "final_net": -3.0,
+              "delta_cut_minus_final": 2.4,
+              "n_win": 0,
+              "n_mon": 0
+            }
+          }
+        },
+        "r6": {
+          "full_sl_with_24h_below_-0.5": {
+            "n": 1,
+            "save_if_cut_at_-0.5": 0.5
+          },
+          "winners_with_24h_below_-0.5": {
+            "n": 0,
+            "final_net": 0
+          }
+        },
+        "median_dur": {
+          "loss": 6.49,
+          "win": 71.52,
+          "monster": 149.72
+        }
+      },
+      "age10": {
+        "n_rows": 50,
+        "r1": {
+          "0-6h": {
+            "loss": {
+              "n": 2,
+              "net": -2.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -2.0,
+            "dur_med": 3.12
+          },
+          "6-12h": {
+            "loss": {
+              "n": 9,
+              "net": -9.0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -9.0,
+            "dur_med": 10.52
+          },
+          "12-24h": {
+            "loss": {
+              "n": 15,
+              "net": -13.4
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 0,
+              "net": 0
+            },
+            "net": -13.4,
+            "dur_med": 18.6
+          },
+          "24-48h": {
+            "loss": {
+              "n": 2,
+              "net": -0.6
+            },
+            "win": {
+              "n": 7,
+              "net": 13.0
+            },
+            "monster": {
+              "n": 5,
+              "net": 38.5
+            },
+            "net": 51.0,
+            "dur_med": 33.98
+          },
+          "48-96h": {
+            "loss": {
+              "n": 0,
+              "net": 0
+            },
+            "win": {
+              "n": 7,
+              "net": 15.6
+            },
+            "monster": {
+              "n": 2,
+              "net": 15.2
+            },
+            "net": 30.7,
+            "dur_med": 54.97
+          },
+          "96-infh": {
+            "loss": {
+              "n": 0,
+              "net": 0
+            },
+            "win": {
+              "n": 0,
+              "net": 0
+            },
+            "monster": {
+              "n": 1,
+              "net": 18.5
+            },
+            "net": 18.5,
+            "dur_med": 158.55
+          }
+        },
+        "r2": {
+          "0R": {
+            "n_known": 22,
+            "n_never": 0,
+            "med": 0.02,
+            "mean": 0.02
+          },
+          "+0.5R": {
+            "n_known": 22,
+            "n_never": 0,
+            "med": 0.79,
+            "mean": 1.81
+          },
+          "+1R": {
+            "n_known": 22,
+            "n_never": 0,
+            "med": 3.24,
+            "mean": 4.96
+          }
+        },
+        "r3": {
+          "loss": {
+            "n": 28,
+            "hrs_neg_med": 1.94,
+            "zone_longest_med": 0.44,
+            "hrs_below05_med": 0.31
+          },
+          "win": {
+            "n": 14,
+            "hrs_neg_med": 1.08,
+            "zone_longest_med": 0.21,
+            "hrs_below05_med": 0.0
+          },
+          "monster": {
+            "n": 8,
+            "hrs_neg_med": 0.78,
+            "zone_longest_med": 0.21,
+            "hrs_below05_med": 0.04
+          }
+        },
+        "r4": {
+          "12": {
+            "n": 0
+          },
+          "24": {
+            "n": 0
+          },
+          "48": {
+            "n": 0
+          }
+        },
+        "r5": {
+          "12": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 2,
+              "cut_net": -0.3,
+              "final_net": -2.0,
+              "delta_cut_minus_final": 1.7,
+              "n_win": 0,
+              "n_mon": 0
+            }
+          },
+          "24": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 0
+            }
+          },
+          "48": {
+            "A_r<=-0.5": {
+              "n": 0
+            },
+            "B_-0.5<r<+0.5": {
+              "n": 0
+            }
+          }
+        },
+        "r6": {
+          "full_sl_with_24h_below_-0.5": {
+            "n": 0,
+            "save_if_cut_at_-0.5": 0.0
+          },
+          "winners_with_24h_below_-0.5": {
+            "n": 0,
+            "final_net": 0
+          }
+        },
+        "median_dur": {
+          "loss": 14.66,
+          "win": 48.38,
+          "monster": 41.44
+        }
+      }
+    }
+  },
+  "elapsed_sec": 88.19
+}

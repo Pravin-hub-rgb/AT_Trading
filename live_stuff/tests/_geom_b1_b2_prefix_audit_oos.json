@@ -1,0 +1,101 @@
+{
+  "scope": "oos",
+  "fractions": [
+    0.7,
+    0.85
+  ],
+  "variants": {
+    "literal_v18_single": {
+      "0.7": {
+        "baseline": {
+          "cutoff": 1653588900,
+          "full_n": 122,
+          "prefix_n": 130,
+          "full_only": 33,
+          "prefix_only": 41,
+          "full_r": 8.597,
+          "prefix_r": 18.024,
+          "passed": false
+        },
+        "block_immediate": {
+          "cutoff": 1653588900,
+          "full_n": 114,
+          "prefix_n": 125,
+          "full_only": 28,
+          "prefix_only": 39,
+          "full_r": 13.039,
+          "prefix_r": 21.884,
+          "passed": false
+        }
+      },
+      "0.85": {
+        "baseline": {
+          "cutoff": 1663049700,
+          "full_n": 147,
+          "prefix_n": 158,
+          "full_only": 48,
+          "prefix_only": 59,
+          "full_r": 21.709,
+          "prefix_r": 16.605,
+          "passed": false
+        },
+        "block_immediate": {
+          "cutoff": 1663049700,
+          "full_n": 139,
+          "prefix_n": 152,
+          "full_only": 43,
+          "prefix_only": 56,
+          "full_r": 25.302,
+          "prefix_r": 20.316,
+          "passed": false
+        }
+      }
+    },
+    "literal_v18_multi": {
+      "0.7": {
+        "baseline": {
+          "cutoff": 1653588900,
+          "full_n": 139,
+          "prefix_n": 156,
+          "full_only": 30,
+          "prefix_only": 47,
+          "full_r": 12.458,
+          "prefix_r": 28.757,
+          "passed": false
+        },
+        "block_immediate": {
+          "cutoff": 1653588900,
+          "full_n": 130,
+          "prefix_n": 148,
+          "full_only": 26,
+          "prefix_only": 44,
+          "full_r": 17.9,
+          "prefix_r": 35.612,
+          "passed": false
+        }
+      },
+      "0.85": {
+        "baseline": {
+          "cutoff": 1663049700,
+          "full_n": 168,
+          "prefix_n": 186,
+          "full_only": 47,
+          "prefix_only": 65,
+          "full_r": 37.606,
+          "prefix_r": 38.36,
+          "passed": false
+        },
+        "block_immediate": {
+          "cutoff": 1663049700,
+          "full_n": 159,
+          "prefix_n": 177,
+          "full_only": 43,
+          "prefix_only": 61,
+          "full_r": 42.199,
+          "prefix_r": 44.899,
+          "passed": false
+        }
+      }
+    }
+  }
+}

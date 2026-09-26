@@ -1,0 +1,465 @@
+{
+  "scope": "oos",
+  "instrument": "BTCUSDT_BYBIT",
+  "audit": "same-bar MFE eligibility vs previous-completed-bar MFE",
+  "configs": {
+    "champion_multi_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 279,
+            "sum": 105.725,
+            "avg": 0.378943,
+            "wins": 78,
+            "losses": 201,
+            "wr": 27.957,
+            "avg_win": 3.649256,
+            "avg_loss": -0.890134,
+            "pf": 1.590916,
+            "runners_2": 40,
+            "runners_3": 30,
+            "runners_5": 17,
+            "runners_10": 6
+          },
+          "net": {
+            "n": 279,
+            "sum": 70.150454,
+            "avg": 0.251435,
+            "wins": 76,
+            "losses": 203,
+            "wr": 27.2401,
+            "avg_win": 3.608528,
+            "avg_loss": -1.005407,
+            "pf": 1.34371,
+            "runners_2": 38,
+            "runners_3": 28,
+            "runners_5": 17,
+            "runners_10": 5
+          },
+          "net_dd": 53.187727,
+          "yearly_gross": {
+            "2021": -10.969000000000001,
+            "2022": 116.69400000000003
+          },
+          "outcomes": {
+            "sl": 100,
+            "trail": 179
+          }
+        }
+      },
+      "half_delay1_original": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 271,
+            "sum": 128.171,
+            "avg": 0.472956,
+            "wins": 69,
+            "losses": 202,
+            "wr": 25.4613,
+            "avg_win": 4.594319,
+            "avg_loss": -0.934837,
+            "pf": 1.678739,
+            "runners_2": 35,
+            "runners_3": 27,
+            "runners_5": 19,
+            "runners_10": 9
+          },
+          "net": {
+            "n": 271,
+            "sum": 89.776371,
+            "avg": 0.331278,
+            "wins": 65,
+            "losses": 206,
+            "wr": 23.9852,
+            "avg_win": 4.691411,
+            "avg_loss": -1.044492,
+            "pf": 1.417244,
+            "runners_2": 35,
+            "runners_3": 27,
+            "runners_5": 18,
+            "runners_10": 9
+          },
+          "net_dd": 46.254081,
+          "yearly_gross": {
+            "2021": 11.117,
+            "2022": 117.054
+          },
+          "outcomes": {
+            "open": 1,
+            "sl": 147,
+            "trail": 123
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 22.446,
+          "net": 19.625917,
+          "n": -8
+        }
+      },
+      "half_delay1_strict_prevbar": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0,
+          "exp_trail_delay_prevbar": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 271,
+            "sum": 128.171,
+            "avg": 0.472956,
+            "wins": 69,
+            "losses": 202,
+            "wr": 25.4613,
+            "avg_win": 4.594319,
+            "avg_loss": -0.934837,
+            "pf": 1.678739,
+            "runners_2": 35,
+            "runners_3": 27,
+            "runners_5": 19,
+            "runners_10": 9
+          },
+          "net": {
+            "n": 271,
+            "sum": 89.776371,
+            "avg": 0.331278,
+            "wins": 65,
+            "losses": 206,
+            "wr": 23.9852,
+            "avg_win": 4.691411,
+            "avg_loss": -1.044492,
+            "pf": 1.417244,
+            "runners_2": 35,
+            "runners_3": 27,
+            "runners_5": 18,
+            "runners_10": 9
+          },
+          "net_dd": 46.254081,
+          "yearly_gross": {
+            "2021": 11.117,
+            "2022": 117.054
+          },
+          "outcomes": {
+            "open": 1,
+            "sl": 147,
+            "trail": 123
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 22.446,
+          "net": 19.625917,
+          "n": -8
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 253,
+            "sum": 92.641,
+            "avg": 0.36617,
+            "wins": 75,
+            "losses": 178,
+            "wr": 29.6443,
+            "avg_win": 3.38056,
+            "avg_loss": -0.903938,
+            "pf": 1.575764,
+            "runners_2": 36,
+            "runners_3": 28,
+            "runners_5": 14,
+            "runners_10": 4
+          },
+          "net": {
+            "n": 253,
+            "sum": 60.206222,
+            "avg": 0.237969,
+            "wins": 73,
+            "losses": 180,
+            "wr": 28.8538,
+            "avg_win": 3.338537,
+            "avg_loss": -1.019483,
+            "pf": 1.328087,
+            "runners_2": 34,
+            "runners_3": 26,
+            "runners_5": 14,
+            "runners_10": 4
+          },
+          "net_dd": 29.381363,
+          "yearly_gross": {
+            "2021": 13.168,
+            "2022": 79.473
+          },
+          "outcomes": {
+            "sl": 95,
+            "trail": 158
+          }
+        }
+      },
+      "half_delay1_original": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 244,
+            "sum": 121.78,
+            "avg": 0.499098,
+            "wins": 69,
+            "losses": 175,
+            "wr": 28.2787,
+            "avg_win": 4.14071,
+            "avg_loss": -0.936737,
+            "pf": 1.742883,
+            "runners_2": 33,
+            "runners_3": 26,
+            "runners_5": 16,
+            "runners_10": 6
+          },
+          "net": {
+            "n": 244,
+            "sum": 87.067895,
+            "avg": 0.356836,
+            "wins": 63,
+            "losses": 181,
+            "wr": 25.8197,
+            "avg_win": 4.348962,
+            "avg_loss": -1.032689,
+            "pf": 1.465811,
+            "runners_2": 33,
+            "runners_3": 26,
+            "runners_5": 14,
+            "runners_10": 6
+          },
+          "net_dd": 29.436273,
+          "yearly_gross": {
+            "2021": 40.258,
+            "2022": 81.52199999999999
+          },
+          "outcomes": {
+            "open": 1,
+            "sl": 129,
+            "trail": 114
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 29.139,
+          "net": 26.861673,
+          "n": -9
+        }
+      },
+      "half_delay1_strict_prevbar": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0,
+          "exp_trail_delay_prevbar": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 244,
+            "sum": 121.78,
+            "avg": 0.499098,
+            "wins": 69,
+            "losses": 175,
+            "wr": 28.2787,
+            "avg_win": 4.14071,
+            "avg_loss": -0.936737,
+            "pf": 1.742883,
+            "runners_2": 33,
+            "runners_3": 26,
+            "runners_5": 16,
+            "runners_10": 6
+          },
+          "net": {
+            "n": 244,
+            "sum": 87.067895,
+            "avg": 0.356836,
+            "wins": 63,
+            "losses": 181,
+            "wr": 25.8197,
+            "avg_win": 4.348962,
+            "avg_loss": -1.032689,
+            "pf": 1.465811,
+            "runners_2": 33,
+            "runners_3": 26,
+            "runners_5": 14,
+            "runners_10": 6
+          },
+          "net_dd": 29.436273,
+          "yearly_gross": {
+            "2021": 40.258,
+            "2022": 81.52199999999999
+          },
+          "outcomes": {
+            "open": 1,
+            "sl": 129,
+            "trail": 114
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": 29.139,
+          "net": 26.861673,
+          "n": -9
+        }
+      }
+    },
+    "age10_dirmatch_swingpause_single_sw10": {
+      "baseline": {
+        "flags": {},
+        "metrics": {
+          "gross": {
+            "n": 76,
+            "sum": 54.856,
+            "avg": 0.721789,
+            "wins": 30,
+            "losses": 46,
+            "wr": 39.4737,
+            "avg_win": 3.170733,
+            "avg_loss": -0.875348,
+            "pf": 2.36234,
+            "runners_2": 16,
+            "runners_3": 10,
+            "runners_5": 6,
+            "runners_10": 1
+          },
+          "net": {
+            "n": 76,
+            "sum": 43.223578,
+            "avg": 0.568731,
+            "wins": 30,
+            "losses": 46,
+            "wr": 39.4737,
+            "avg_win": 3.030393,
+            "avg_loss": -1.0367,
+            "pf": 1.906379,
+            "runners_2": 15,
+            "runners_3": 10,
+            "runners_5": 6,
+            "runners_10": 1
+          },
+          "net_dd": 8.569878,
+          "yearly_gross": {
+            "2021": 20.372,
+            "2022": 34.484
+          },
+          "outcomes": {
+            "sl": 1,
+            "trail": 75
+          }
+        }
+      },
+      "half_delay1_original": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0
+        },
+        "metrics": {
+          "gross": {
+            "n": 71,
+            "sum": 39.411,
+            "avg": 0.555085,
+            "wins": 26,
+            "losses": 45,
+            "wr": 36.6197,
+            "avg_win": 3.122,
+            "avg_loss": -0.928022,
+            "pf": 1.943727,
+            "runners_2": 11,
+            "runners_3": 9,
+            "runners_5": 6,
+            "runners_10": 2
+          },
+          "net": {
+            "n": 71,
+            "sum": 27.543142,
+            "avg": 0.387932,
+            "wins": 22,
+            "losses": 49,
+            "wr": 30.9859,
+            "avg_win": 3.502229,
+            "avg_loss": -1.010325,
+            "pf": 1.556361,
+            "runners_2": 11,
+            "runners_3": 9,
+            "runners_5": 5,
+            "runners_10": 2
+          },
+          "net_dd": 9.457944,
+          "yearly_gross": {
+            "2021": 21.450000000000003,
+            "2022": 17.961
+          },
+          "outcomes": {
+            "sl": 18,
+            "trail": 53
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": -15.445,
+          "net": -15.680436,
+          "n": -5
+        }
+      },
+      "half_delay1_strict_prevbar": {
+        "flags": {
+          "exp_trail_half": 1,
+          "exp_trail_delay_r": 1.0,
+          "exp_trail_delay_prevbar": 1
+        },
+        "metrics": {
+          "gross": {
+            "n": 71,
+            "sum": 39.411,
+            "avg": 0.555085,
+            "wins": 26,
+            "losses": 45,
+            "wr": 36.6197,
+            "avg_win": 3.122,
+            "avg_loss": -0.928022,
+            "pf": 1.943727,
+            "runners_2": 11,
+            "runners_3": 9,
+            "runners_5": 6,
+            "runners_10": 2
+          },
+          "net": {
+            "n": 71,
+            "sum": 27.543142,
+            "avg": 0.387932,
+            "wins": 22,
+            "losses": 49,
+            "wr": 30.9859,
+            "avg_win": 3.502229,
+            "avg_loss": -1.010325,
+            "pf": 1.556361,
+            "runners_2": 11,
+            "runners_3": 9,
+            "runners_5": 5,
+            "runners_10": 2
+          },
+          "net_dd": 9.457944,
+          "yearly_gross": {
+            "2021": 21.450000000000003,
+            "2022": 17.961
+          },
+          "outcomes": {
+            "sl": 18,
+            "trail": 53
+          }
+        },
+        "delta_vs_baseline": {
+          "gross": -15.445,
+          "net": -15.680436,
+          "n": -5
+        }
+      }
+    }
+  },
+  "elapsed_sec": 53.696
+}

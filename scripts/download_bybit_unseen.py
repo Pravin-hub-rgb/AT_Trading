@@ -1,12 +1,9 @@
-"""Download 2022 BTCUSDT PERPETUAL data from Bybit (USDT linear) — UNSEEN OOS data.
+"""Download historical Bybit linear-perpetual OHLCV for the unseen OOS set.
 
-Fetches 15m and 1h klines from api.bybit.com/v5/market/kline for 2022-01-01 to 2022-12-31.
-Saves to data/unseen/bybit/BTCUSDT_15m.csv and BTCUSDT_1h.csv — completely separate from
-the existing data/bybit/ directory used for backtesting.
-
-Usage:
-    python scripts/download_bybit_unseen.py          # download both 15m and 1h
-    python scripts/download_bybit_unseen.py --tf 15m # download only 15m
+Supports 1m, 5m, 15m, and 1h. Files are written to
+ data/unseen/bybit/<SYMBOL>_<TF>.csv in the project's IST wall-clock
+convention. Existing files are resumed, never overwritten with another
+symbol, and API pagination is chronological.
 """
 from __future__ import annotations
 import argparse
@@ -20,10 +17,10 @@ from pathlib import Path
 IST = timedelta(hours=5, minutes=30)
 SYMBOL = "BTCUSDT"
 BYBIT_URL = "https://api.bybit.com/v5/market/kline"
-TF_MS = {"1m": 60_000, "15m": 900_000, "1h": 3_600_000}
-TF_BYBIT = {"1m": "1", "15m": "15", "1h": "60"}
+TF_MS = {"1m": 60_000, "5m": 300_000, "15m": 900_000, "1h": 3_600_000}
+TF_BYBIT = {"1m": "1", "5m": "5", "15m": "15", "1h": "60"}
 DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "unseen" / "bybit"
-DEFAULT_START_IST = "2022-01-01 05:30:00"
+DEFAULT_START_IST = "2021-01-01 05:30:00"
 DEFAULT_END_IST = "2022-12-31 23:59:59"
 
 

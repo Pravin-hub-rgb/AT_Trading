@@ -43,10 +43,12 @@ LB14=dict()
 WAGE=24.0
 TAILS=(2.0,3.0,4.0,5.0,10.0)
 # fine pins: exp40c Phase C + exp42 Phase 1 (all ext1.5)
-PINS={("lb30",0):(349,196.3),("lb30",24):(265,185.0),
-      ("A4",0):(359,203.3),("A4",24):(261,223.1),
-      ("OPT-cd10",0):(453,259.4),("OPT-cd10",24):(326,337.7),
-      ("lb14",0):(351,148.0),("lb14",24):(272,193.7)}
+# POST trail-fix ee574f9 (2026-09-21): fine nets shifted ~-26R vs pre-fix
+# exp40c/exp42 values; n and DD unchanged. Re-baselined from exp43 re-run.
+PINS={("lb30",0):(349,170.5),("lb30",24):(265,159.1),
+      ("A4",0):(359,177.5),("A4",24):(261,197.3),
+      ("OPT-cd10",0):(453,233.5),("OPT-cd10",24):(326,311.8),
+      ("lb14",0):(351,122.1),("lb14",24):(272,167.8)}
 def main():
  t0=time.time()
  (c15,f15),(c1h,f1h)=load_candles()

@@ -1,0 +1,277 @@
+{
+  "stage": 4,
+  "scope": "is",
+  "source": "C:\\Users\\Pravin\\Desktop\\main\\AT_Trading\\live_stuff\\tests\\_thesis_stage3_results_is.json",
+  "bootstrap_reps": 5000,
+  "seed": 2701,
+  "research_inventory": {
+    "experiment_harnesses": 77,
+    "test_harnesses": 76,
+    "experiment_documents": 6,
+    "registry_keys": 112,
+    "note": "Lower-bound inventory of current files/registry, not a reconstruction of every historical variant."
+  },
+  "configs": {
+    "champion_multi_sw10": {
+      "n": 500,
+      "observed_sum_r": 445.225,
+      "monthly_bootstrap": {
+        "n": 5000,
+        "mean": 447.590745,
+        "median": 444.129,
+        "positive_pct": 100.0,
+        "q10": 309.536,
+        "q90": 591.96
+      },
+      "leave_one_year_out": {
+        "2023": 331.318,
+        "2024": 321.149,
+        "2025": 344.833,
+        "2026": 338.375
+      },
+      "positive_months": 27,
+      "months": 45,
+      "control_summaries": {
+        "random_entry/target_3R": {
+          "n": 500,
+          "sum_r": 60.0,
+          "mean_r": 0.12,
+          "win_pct": 28.0
+        },
+        "random_entry/target_5R": {
+          "n": 500,
+          "sum_r": 64.0,
+          "mean_r": 0.128,
+          "win_pct": 18.8
+        },
+        "random_entry/time_96m": {
+          "n": 500,
+          "sum_r": 17.2356,
+          "mean_r": 0.034471,
+          "win_pct": 51.8
+        },
+        "delay_4/target_3R": {
+          "n": 500,
+          "sum_r": 60.0,
+          "mean_r": 0.12,
+          "win_pct": 28.0
+        },
+        "delay_4/target_5R": {
+          "n": 500,
+          "sum_r": 100.0,
+          "mean_r": 0.2,
+          "win_pct": 20.0
+        },
+        "delay_4/time_96m": {
+          "n": 500,
+          "sum_r": 42.3247,
+          "mean_r": 0.084649,
+          "win_pct": 47.2
+        },
+        "delay_8/target_3R": {
+          "n": 500,
+          "sum_r": 52.0,
+          "mean_r": 0.104,
+          "win_pct": 27.6
+        },
+        "delay_8/target_5R": {
+          "n": 500,
+          "sum_r": 100.0,
+          "mean_r": 0.2,
+          "win_pct": 20.0
+        },
+        "delay_8/time_96m": {
+          "n": 500,
+          "sum_r": 40.4207,
+          "mean_r": 0.080841,
+          "win_pct": 48.0
+        },
+        "delay_16/target_3R": {
+          "n": 500,
+          "sum_r": 0.0,
+          "mean_r": 0.0,
+          "win_pct": 25.0
+        },
+        "delay_16/target_5R": {
+          "n": 500,
+          "sum_r": 64.0,
+          "mean_r": 0.128,
+          "win_pct": 18.8
+        },
+        "delay_16/time_96m": {
+          "n": 500,
+          "sum_r": -26.1671,
+          "mean_r": -0.052334,
+          "win_pct": 41.6
+        },
+        "delay_32/target_3R": {
+          "n": 500,
+          "sum_r": 28.0,
+          "mean_r": 0.056,
+          "win_pct": 26.4
+        },
+        "delay_32/target_5R": {
+          "n": 500,
+          "sum_r": 10.0,
+          "mean_r": 0.02,
+          "win_pct": 17.0
+        },
+        "delay_32/time_96m": {
+          "n": 500,
+          "sum_r": -22.1365,
+          "mean_r": -0.044273,
+          "win_pct": 45.0
+        },
+        "reverse_direction/target_3R": {
+          "n": 500,
+          "sum_r": -24.0,
+          "mean_r": -0.048,
+          "win_pct": 23.8
+        },
+        "reverse_direction/target_5R": {
+          "n": 500,
+          "sum_r": -50.0,
+          "mean_r": -0.1,
+          "win_pct": 15.0
+        },
+        "reverse_direction/time_96m": {
+          "n": 500,
+          "sum_r": -39.5408,
+          "mean_r": -0.079082,
+          "win_pct": 51.8
+        }
+      }
+    },
+    "utcsat_multi_sw10": {
+      "n": 454,
+      "observed_sum_r": 466.476,
+      "monthly_bootstrap": {
+        "n": 5000,
+        "mean": 468.350055,
+        "median": 463.011,
+        "positive_pct": 100.0,
+        "q10": 326.601,
+        "q90": 618.821
+      },
+      "leave_one_year_out": {
+        "2023": 340.968,
+        "2024": 339.397,
+        "2025": 367.069,
+        "2026": 351.994
+      },
+      "positive_months": 26,
+      "months": 45,
+      "control_summaries": {
+        "random_entry/target_3R": {
+          "n": 454,
+          "sum_r": 62.0,
+          "mean_r": 0.136564,
+          "win_pct": 28.414
+        },
+        "random_entry/target_5R": {
+          "n": 454,
+          "sum_r": 80.0,
+          "mean_r": 0.176211,
+          "win_pct": 19.604
+        },
+        "random_entry/time_96m": {
+          "n": 454,
+          "sum_r": 26.1726,
+          "mean_r": 0.057649,
+          "win_pct": 49.559
+        },
+        "delay_4/target_3R": {
+          "n": 454,
+          "sum_r": 78.0,
+          "mean_r": 0.171806,
+          "win_pct": 29.295
+        },
+        "delay_4/target_5R": {
+          "n": 454,
+          "sum_r": 104.0,
+          "mean_r": 0.229075,
+          "win_pct": 20.485
+        },
+        "delay_4/time_96m": {
+          "n": 454,
+          "sum_r": 49.8509,
+          "mean_r": 0.109804,
+          "win_pct": 47.577
+        },
+        "delay_8/target_3R": {
+          "n": 454,
+          "sum_r": 90.0,
+          "mean_r": 0.198238,
+          "win_pct": 29.956
+        },
+        "delay_8/target_5R": {
+          "n": 454,
+          "sum_r": 122.0,
+          "mean_r": 0.268722,
+          "win_pct": 21.145
+        },
+        "delay_8/time_96m": {
+          "n": 454,
+          "sum_r": 54.0108,
+          "mean_r": 0.118967,
+          "win_pct": 48.238
+        },
+        "delay_16/target_3R": {
+          "n": 454,
+          "sum_r": 46.0,
+          "mean_r": 0.101322,
+          "win_pct": 27.533
+        },
+        "delay_16/target_5R": {
+          "n": 454,
+          "sum_r": 74.0,
+          "mean_r": 0.162996,
+          "win_pct": 19.383
+        },
+        "delay_16/time_96m": {
+          "n": 454,
+          "sum_r": -6.9394,
+          "mean_r": -0.015285,
+          "win_pct": 42.731
+        },
+        "delay_32/target_3R": {
+          "n": 454,
+          "sum_r": 54.0,
+          "mean_r": 0.118943,
+          "win_pct": 27.974
+        },
+        "delay_32/target_5R": {
+          "n": 454,
+          "sum_r": 14.0,
+          "mean_r": 0.030837,
+          "win_pct": 17.181
+        },
+        "delay_32/time_96m": {
+          "n": 454,
+          "sum_r": -24.6174,
+          "mean_r": -0.054223,
+          "win_pct": 45.595
+        },
+        "reverse_direction/target_3R": {
+          "n": 454,
+          "sum_r": -22.0,
+          "mean_r": -0.048458,
+          "win_pct": 23.789
+        },
+        "reverse_direction/target_5R": {
+          "n": 454,
+          "sum_r": -52.0,
+          "mean_r": -0.114537,
+          "win_pct": 14.758
+        },
+        "reverse_direction/time_96m": {
+          "n": 454,
+          "sum_r": -43.7429,
+          "mean_r": -0.09635,
+          "win_pct": 50.661
+        }
+      }
+    }
+  },
+  "elapsed_sec": 0.21
+}

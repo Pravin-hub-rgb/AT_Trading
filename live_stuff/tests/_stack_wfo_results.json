@@ -1,0 +1,162 @@
+{
+  "instrument": "BTCUSDT_BYBIT",
+  "stage": "stack_wfo",
+  "arms": [
+    "baseline",
+    "half+delay1",
+    "skip_decisive",
+    "regime10",
+    "half+delay1+skipD",
+    "half+delay1+reg10",
+    "skipD+reg10",
+    "all_three"
+  ],
+  "stage_b_pick": "half+delay1+skipD",
+  "steps": [
+    {
+      "step": "S1",
+      "test_year": 2023,
+      "train": "2021-2022",
+      "chosen": "all_three",
+      "train_net": 112.4,
+      "test_net": 115.6,
+      "stageb": 107.6,
+      "baseline": 86.9
+    },
+    {
+      "step": "S2",
+      "test_year": 2024,
+      "train": "2021-2023",
+      "chosen": "all_three",
+      "train_net": 228.0,
+      "test_net": 65.0,
+      "stageb": 76.6,
+      "baseline": 90.4
+    },
+    {
+      "step": "S3",
+      "test_year": 2025,
+      "train": "2021-2024",
+      "chosen": "skipD+reg10",
+      "train_net": 297.4,
+      "test_net": 67.2,
+      "stageb": 88.6,
+      "baseline": 67.2
+    },
+    {
+      "step": "S4",
+      "test_year": 2026,
+      "train": "2021-2025",
+      "chosen": "half+delay1+skipD",
+      "train_net": 383.3,
+      "test_net": 156.8,
+      "stageb": 156.8,
+      "baseline": 81.3
+    }
+  ],
+  "path_sums": {
+    "chosen": 404.6,
+    "stageb": 429.6,
+    "baseline": 325.8
+  },
+  "path_stats": {
+    "chosen": {
+      "n": 454,
+      "net": 404.5701,
+      "wr": 26.43,
+      "pf": 2.0794,
+      "max_dd": 26.8357,
+      "max_dd_dur": 48,
+      "uw_pct": 90.53,
+      "max_uw": 73,
+      "ulcer": 10.4543,
+      "sortino": 401.1934,
+      "calmar": 3.0152,
+      "recovery": 15.0758,
+      "max_streak": 17,
+      "months_n": 45,
+      "pos_month_pct": 44.4,
+      "worst_month": -11.861,
+      "best_month": 78.558,
+      "years_n": 4,
+      "pos_year_pct": 100.0,
+      "worst_year": 62.003,
+      "yearly": {
+        "2023": 115.607,
+        "2024": 62.003,
+        "2025": 70.145,
+        "2026": 156.816
+      },
+      "net_per_yr": 80.914
+    },
+    "stageb": {
+      "n": 466,
+      "net": 429.6277,
+      "wr": 25.97,
+      "pf": 2.1049,
+      "max_dd": 26.9888,
+      "max_dd_dur": 56,
+      "uw_pct": 90.77,
+      "max_uw": 79,
+      "ulcer": 12.4115,
+      "sortino": 424.0735,
+      "calmar": 3.1837,
+      "recovery": 15.9187,
+      "max_streak": 19,
+      "months_n": 45,
+      "pos_month_pct": 44.4,
+      "worst_month": -11.861,
+      "best_month": 78.558,
+      "years_n": 4,
+      "pos_year_pct": 100.0,
+      "worst_year": 73.639,
+      "yearly": {
+        "2023": 107.597,
+        "2024": 73.639,
+        "2025": 91.575,
+        "2026": 156.816
+      },
+      "net_per_yr": 85.926
+    },
+    "baseline": {
+      "n": 500,
+      "net": 325.7817,
+      "wr": 27.8,
+      "pf": 1.8148,
+      "max_dd": 27.7242,
+      "max_dd_dur": 72,
+      "uw_pct": 90.4,
+      "max_uw": 77,
+      "ulcer": 14.6226,
+      "sortino": 328.3271,
+      "calmar": 2.3502,
+      "recovery": 11.7508,
+      "max_streak": 16,
+      "months_n": 45,
+      "pos_month_pct": 51.1,
+      "worst_month": -11.781,
+      "best_month": 48.499,
+      "years_n": 4,
+      "pos_year_pct": 100.0,
+      "worst_year": 68.798,
+      "yearly": {
+        "2023": 86.854,
+        "2024": 88.792,
+        "2025": 68.798,
+        "2026": 81.337
+      },
+      "net_per_yr": 65.156
+    }
+  },
+  "arm_full_nets": {
+    "baseline": 395.9,
+    "half+delay1": 519.4,
+    "skip_decisive": 425.1,
+    "regime10": 429.2,
+    "half+delay1+skipD": 540.1,
+    "half+delay1+reg10": 514.5,
+    "skipD+reg10": 458.4,
+    "all_three": 535.2
+  },
+  "elapsed_sec": 166.84
+}
