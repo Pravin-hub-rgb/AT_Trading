@@ -11,6 +11,50 @@
 > **Nothing here is run or approved - this is the pre-registration
 > proposal; the variant list is frozen before any code is written.**
 
+## STATUS UPDATE 2026-09-26 - EXECUTED. FAMILY CLOSED.
+
+Run: `exp_pyramid_phase2.py` -> `_pyramid_phase2_results.json`. Model A, flat
+books, 3 lanes x 2 eras, 5 arms. Identity gate IDENTICAL; all 6 base ledgers
+asserted (500/+325.8, 454/+359.0, 130/+435.7, 279/+70.1, 253/+60.2, 76/+43.2).
+**Phase 1's 1/6 did not survive the real engine.**
+
+| arm | cells | robust lanes | champion dNet IS/OOS | note |
+|---|---|---|---|---|
+| V1 r_mile 0.5/1/2, add-SL 1R | 1/6 | 3/3 | +227.6 / +96.2 | age10 curve FALSE both eras |
+| V2 r_mile 0.5 only | **2/6** | 3/3 | +132.0 / +37.7 | best; fails only age10 |
+| V3 r_mile, add-SL none | 2/6 | 2/3 | +547.3 / +113.7 | age10 OOS dNet **-0.8**, not robust |
+| V4 swing_confirm | 1/6 | 3/3 | +227.6 / +96.2 | **INVALID - see caveat** |
+
+V2 (Phase 1's only passer) is strongest and clears champion and utcsat in BOTH
+eras. It still misses the gate: on age10 the curve degrades in both eras while
+dNet stays positive. V3 is the only arm that breaks the robustness gate - its
+age10 OOS dNet is -0.8 and removing the best trade moves it to +4.2, so the
+sign is not stable.
+
+**Caveat - V4 is not a real test.** `swing_confirm` was never implemented in the
+injected logic; the trigger string is not branched on, so V4 ran the default
+r_mile path and is byte-identical to V1 in all six cells (753/701/300 children,
++227.6/+249.6/+242.2 IS). Its 1/6 re-measures V1; it says nothing about a
+swing-confirmation trigger. That arm remains genuinely unfinished, and its
+verdict must not be cited.
+
+The KILL criterion in section 4 therefore fires: **no arm passes both gates, so
+the pyramid / scale-in family is CLOSED.** No kwarg shipped, no default changed.
+
+## 0b. IMPLEMENTATION NOTE - the shared engine was never edited
+
+The design doc assumed this needed an edit to
+`backend/src/btc/engines/htf_ltf/v18_streak_halt.py` and explicit user sign-off
+per AGENT_COORDINATION. It did not. Every experiment in this repo already works
+by patching the engine SOURCE at runtime (`test_experiments_craze.build_module`),
+so `exp_pyramid_phase2.py` intercepts that loader and splices the pyramid kwargs
+plus the Model A child logic on top of the existing full super-set. The shipped
+file and the other agents' patches are untouched. Starting from a
+pyramid-ONLY patch instead would accept `exp_mltf` / `exp_persist` /
+`exp_swingpause` / `exp_require_dir_match` but silently ignore them, and the
+champion base ledger would come out 395 trades instead of 500 - the base-ledger
+assert is what caught that.
+
 ## 1. What Phase 2 must answer
 
 1. Does the Phase-1 thin cell survive in the REAL engine (15m bars + fine

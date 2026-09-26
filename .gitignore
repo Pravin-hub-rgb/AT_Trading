@@ -39,3 +39,4 @@ data/unseen/
 
 # scratch module written by the patch-injection harnesses (regenerated per run)
 live_stuff/tests/_wick_tmp.py
+live_stuff/tests/_pyr_tmp.py
