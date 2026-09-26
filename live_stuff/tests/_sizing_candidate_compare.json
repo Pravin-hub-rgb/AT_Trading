@@ -1,0 +1,651 @@
+{
+  "stage": "sizing_candidate_compare",
+  "instrument": "BTCUSDT_BYBIT",
+  "lens": "post-process sizing, identity = same trade keys. Valid as measured: sizing cannot change which trades are taken (AGENT_COORDINATION.md sizing exemption). Descriptive only - nothing adopted.",
+  "size_mult": 1.5,
+  "forward_status": "BLOCKED - untouched forward slice has 5 trades against a pre-registered n >= 50 minimum.",
+  "candidates": {
+    "X": {
+      "source": "_htf_break_sizing_results.json",
+      "description": "HTF 1h break quality",
+      "lanes": {
+        "champion_A": {
+          "n_is": 46,
+          "n_oos": 7,
+          "dNet_is": 23.866,
+          "dNet_oos": 36.6165,
+          "dDD_is": -1.998,
+          "dDD_oos": 2.83,
+          "small_n": true,
+          "pass": true
+        },
+        "champion_B": {
+          "n_is": 137,
+          "n_oos": 29,
+          "dNet_is": -65.2188,
+          "dNet_oos": 19.5936,
+          "dDD_is": 2.5152,
+          "dDD_oos": 17.7758,
+          "small_n": false,
+          "pass": false
+        },
+        "champion_C": {
+          "n_is": 59,
+          "n_oos": 32,
+          "dNet_is": 8.6891,
+          "dNet_oos": -46.7022,
+          "dDD_is": 1.2851,
+          "dDD_oos": 8.442,
+          "small_n": false,
+          "pass": false
+        },
+        "utcsat_A": {
+          "n_is": 39,
+          "n_oos": 9,
+          "dNet_is": 23.3615,
+          "dNet_oos": 39.534,
+          "dDD_is": -0.9975,
+          "dDD_oos": 1.072,
+          "small_n": true,
+          "pass": true
+        },
+        "utcsat_B": {
+          "n_is": 133,
+          "n_oos": 25,
+          "dNet_is": -94.6175,
+          "dNet_oos": 19.0769,
+          "dDD_is": 0.077,
+          "dDD_oos": 7.5256,
+          "small_n": false,
+          "pass": false
+        },
+        "utcsat_C": {
+          "n_is": 48,
+          "n_oos": 32,
+          "dNet_is": 5.8041,
+          "dNet_oos": -52.7551,
+          "dDD_is": -4.5182,
+          "dDD_oos": 0.4683,
+          "small_n": false,
+          "pass": false
+        }
+      }
+    },
+    "Y": {
+      "source": "_ema4h_pullback_sizing_results.json",
+      "description": "4h EMA-extension pullback",
+      "lanes": {
+        "champion_A": {
+          "n_is": 71,
+          "n_oos": 42,
+          "dNet_is": 58.6725,
+          "dNet_oos": 18.8885,
+          "dDD_is": -2.3254,
+          "dDD_oos": -0.408,
+          "small_n": null,
+          "pass": true
+        },
+        "champion_B": {
+          "n_is": 69,
+          "n_oos": 41,
+          "dNet_is": -66.5395,
+          "dNet_oos": 4.9774,
+          "dDD_is": -1.8481,
+          "dDD_oos": 11.8141,
+          "small_n": null,
+          "pass": false
+        },
+        "champion_C": {
+          "n_is": 69,
+          "n_oos": 45,
+          "dNet_is": -25.9154,
+          "dNet_oos": -30.5288,
+          "dDD_is": 3.6065,
+          "dDD_oos": 10.1554,
+          "small_n": null,
+          "pass": false
+        },
+        "champion_D": {
+          "n_is": 71,
+          "n_oos": 42,
+          "dNet_is": -7.867,
+          "dNet_oos": 23.8659,
+          "dDD_is": -5.3223,
+          "dDD_oos": 11.4061,
+          "small_n": null,
+          "pass": false
+        },
+        "utcsat_A": {
+          "n_is": 60,
+          "n_oos": 37,
+          "dNet_is": 60.111,
+          "dNet_oos": 20.9605,
+          "dDD_is": -3.69,
+          "dDD_oos": 3.1635,
+          "small_n": null,
+          "pass": false
+        },
+        "utcsat_B": {
+          "n_is": 69,
+          "n_oos": 35,
+          "dNet_is": -72.5472,
+          "dNet_oos": 14.6274,
+          "dDD_is": -2.9969,
+          "dDD_oos": 5.5958,
+          "small_n": null,
+          "pass": false
+        },
+        "utcsat_C": {
+          "n_is": 65,
+          "n_oos": 45,
+          "dNet_is": -22.1897,
+          "dNet_oos": -36.7605,
+          "dDD_is": 1.0197,
+          "dDD_oos": 5.9646,
+          "small_n": null,
+          "pass": false
+        },
+        "utcsat_D": {
+          "n_is": 60,
+          "n_oos": 37,
+          "dNet_is": -12.4362,
+          "dNet_oos": 35.5879,
+          "dDD_is": -6.6869,
+          "dDD_oos": 6.3027,
+          "small_n": null,
+          "pass": false
+        },
+        "fullstack_A": {
+          "n_is": 29,
+          "n_oos": 21,
+          "dNet_is": 52.007,
+          "dNet_oos": 13.782,
+          "dDD_is": -0.5,
+          "dDD_oos": -2.375,
+          "small_n": null,
+          "pass": true
+        },
+        "fullstack_B": {
+          "n_is": 25,
+          "n_oos": 16,
+          "dNet_is": -64.1306,
+          "dNet_oos": 3.4707,
+          "dDD_is": -0.5432,
+          "dDD_oos": 5.3989,
+          "small_n": null,
+          "pass": false
+        },
+        "fullstack_C": {
+          "n_is": 41,
+          "n_oos": 26,
+          "dNet_is": -40.7638,
+          "dNet_oos": 15.1445,
+          "dDD_is": -1.8305,
+          "dDD_oos": 9.7679,
+          "small_n": null,
+          "pass": false
+        },
+        "fullstack_D": {
+          "n_is": 29,
+          "n_oos": 21,
+          "dNet_is": -12.1236,
+          "dNet_oos": 17.2527,
+          "dDD_is": -2.0402,
+          "dDD_oos": 3.0239,
+          "small_n": null,
+          "pass": false
+        }
+      }
+    },
+    "Z": {
+      "source": "_regime_structure_sizing_results.json",
+      "description": "regime structure (Z1)",
+      "lanes": {
+        "champion_A": {
+          "n_is": 167,
+          "n_oos": 84,
+          "dNet_is": 110.2565,
+          "dNet_oos": 17.311,
+          "dDD_is": -4.2782,
+          "dDD_oos": -2.1865,
+          "small_n": false,
+          "pass": true
+        },
+        "champion_B": {
+          "n_is": 121,
+          "n_oos": 70,
+          "dNet_is": 74.145,
+          "dNet_oos": 18.258,
+          "dDD_is": -1.4417,
+          "dDD_oos": -1.379,
+          "small_n": false,
+          "pass": true
+        },
+        "champion_C": {
+          "n_is": 166,
+          "n_oos": 81,
+          "dNet_is": 106.5155,
+          "dNet_oos": 32.1765,
+          "dDD_is": -0.5553,
+          "dDD_oos": -8.59,
+          "small_n": false,
+          "pass": true
+        },
+        "champion_D": {
+          "n_is": 170,
+          "n_oos": 92,
+          "dNet_is": -71.509,
+          "dNet_oos": 10.8157,
+          "dDD_is": 2.9974,
+          "dDD_oos": 21.8665,
+          "small_n": false,
+          "pass": false
+        },
+        "utcsat_A": {
+          "n_is": 142,
+          "n_oos": 81,
+          "dNet_is": 110.545,
+          "dNet_oos": 23.4225,
+          "dDD_is": -5.5507,
+          "dDD_oos": -0.4115,
+          "small_n": false,
+          "pass": true
+        },
+        "utcsat_B": {
+          "n_is": 112,
+          "n_oos": 62,
+          "dNet_is": 71.867,
+          "dNet_oos": 23.3545,
+          "dDD_is": -1.0008,
+          "dDD_oos": -0.551,
+          "small_n": false,
+          "pass": true
+        },
+        "utcsat_C": {
+          "n_is": 146,
+          "n_oos": 76,
+          "dNet_is": 112.262,
+          "dNet_oos": 40.387,
+          "dDD_is": -3.3022,
+          "dDD_oos": -3.7946,
+          "small_n": false,
+          "pass": true
+        },
+        "utcsat_D": {
+          "n_is": 152,
+          "n_oos": 77,
+          "dNet_is": -67.2068,
+          "dNet_oos": 23.4127,
+          "dDD_is": -2.5754,
+          "dDD_oos": 12.3856,
+          "small_n": false,
+          "pass": false
+        }
+      }
+    },
+    "M2": {
+      "source": "_m2_size_phase2_results.json",
+      "description": "monster / cur_mag_atr >= 3",
+      "lanes": {
+        "champion": {
+          "n_is": null,
+          "n_oos": null,
+          "dNet_is": 153.472,
+          "dNet_oos": 31.4835,
+          "dDD_is": -2.1495,
+          "dDD_oos": -0.1869,
+          "small_n": null,
+          "pass": true
+        },
+        "utcsat": {
+          "n_is": null,
+          "n_oos": null,
+          "dNet_is": 131.0025,
+          "dNet_oos": 30.7815,
+          "dDD_is": -0.913,
+          "dDD_oos": 0.446,
+          "small_n": null,
+          "pass": true
+        },
+        "age10": {
+          "n_is": null,
+          "n_oos": null,
+          "dNet_is": 117.1145,
+          "dNet_oos": 18.764,
+          "dDD_is": -0.498,
+          "dDD_oos": 0.0,
+          "small_n": null,
+          "pass": true
+        }
+      }
+    }
+  },
+  "ranking": [
+    {
+      "candidate": "M2",
+      "lane": "champion",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 3,
+      "lanes_pass": 3,
+      "min_dNet_oos": 18.764,
+      "dNet_oos": 31.4835,
+      "dNet_is": 153.472
+    },
+    {
+      "candidate": "M2",
+      "lane": "utcsat",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 3,
+      "lanes_pass": 3,
+      "min_dNet_oos": 18.764,
+      "dNet_oos": 30.7815,
+      "dNet_is": 131.0025
+    },
+    {
+      "candidate": "M2",
+      "lane": "age10",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 3,
+      "lanes_pass": 3,
+      "min_dNet_oos": 18.764,
+      "dNet_oos": 18.764,
+      "dNet_is": 117.1145
+    },
+    {
+      "candidate": "Z",
+      "lane": "champion_A",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 17.311,
+      "dNet_is": 110.2565
+    },
+    {
+      "candidate": "Z",
+      "lane": "champion_B",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 18.258,
+      "dNet_is": 74.145
+    },
+    {
+      "candidate": "Z",
+      "lane": "champion_C",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 32.1765,
+      "dNet_is": 106.5155
+    },
+    {
+      "candidate": "Z",
+      "lane": "champion_D",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 10.8157,
+      "dNet_is": -71.509
+    },
+    {
+      "candidate": "Z",
+      "lane": "utcsat_A",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 23.4225,
+      "dNet_is": 110.545
+    },
+    {
+      "candidate": "Z",
+      "lane": "utcsat_B",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 23.3545,
+      "dNet_is": 71.867
+    },
+    {
+      "candidate": "Z",
+      "lane": "utcsat_C",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 40.387,
+      "dNet_is": 112.262
+    },
+    {
+      "candidate": "Z",
+      "lane": "utcsat_D",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 8,
+      "lanes_pass": 6,
+      "min_dNet_oos": 10.8157,
+      "dNet_oos": 23.4127,
+      "dNet_is": -67.2068
+    },
+    {
+      "candidate": "Y",
+      "lane": "champion_A",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 18.8885,
+      "dNet_is": 58.6725
+    },
+    {
+      "candidate": "Y",
+      "lane": "champion_B",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 4.9774,
+      "dNet_is": -66.5395
+    },
+    {
+      "candidate": "Y",
+      "lane": "champion_C",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": -30.5288,
+      "dNet_is": -25.9154
+    },
+    {
+      "candidate": "Y",
+      "lane": "champion_D",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 23.8659,
+      "dNet_is": -7.867
+    },
+    {
+      "candidate": "Y",
+      "lane": "utcsat_A",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 20.9605,
+      "dNet_is": 60.111
+    },
+    {
+      "candidate": "Y",
+      "lane": "utcsat_B",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 14.6274,
+      "dNet_is": -72.5472
+    },
+    {
+      "candidate": "Y",
+      "lane": "utcsat_C",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": -36.7605,
+      "dNet_is": -22.1897
+    },
+    {
+      "candidate": "Y",
+      "lane": "utcsat_D",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 35.5879,
+      "dNet_is": -12.4362
+    },
+    {
+      "candidate": "Y",
+      "lane": "fullstack_A",
+      "pass": true,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 13.782,
+      "dNet_is": 52.007
+    },
+    {
+      "candidate": "Y",
+      "lane": "fullstack_B",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 3.4707,
+      "dNet_is": -64.1306
+    },
+    {
+      "candidate": "Y",
+      "lane": "fullstack_C",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 15.1445,
+      "dNet_is": -40.7638
+    },
+    {
+      "candidate": "Y",
+      "lane": "fullstack_D",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 12,
+      "lanes_pass": 2,
+      "min_dNet_oos": -36.7605,
+      "dNet_oos": 17.2527,
+      "dNet_is": -12.1236
+    },
+    {
+      "candidate": "X",
+      "lane": "champion_A",
+      "pass": true,
+      "small_n": true,
+      "lanes_total": 6,
+      "lanes_pass": 2,
+      "min_dNet_oos": -52.7551,
+      "dNet_oos": 36.6165,
+      "dNet_is": 23.866
+    },
+    {
+      "candidate": "X",
+      "lane": "champion_B",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 6,
+      "lanes_pass": 2,
+      "min_dNet_oos": -52.7551,
+      "dNet_oos": 19.5936,
+      "dNet_is": -65.2188
+    },
+    {
+      "candidate": "X",
+      "lane": "champion_C",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 6,
+      "lanes_pass": 2,
+      "min_dNet_oos": -52.7551,
+      "dNet_oos": -46.7022,
+      "dNet_is": 8.6891
+    },
+    {
+      "candidate": "X",
+      "lane": "utcsat_A",
+      "pass": true,
+      "small_n": true,
+      "lanes_total": 6,
+      "lanes_pass": 2,
+      "min_dNet_oos": -52.7551,
+      "dNet_oos": 39.534,
+      "dNet_is": 23.3615
+    },
+    {
+      "candidate": "X",
+      "lane": "utcsat_B",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 6,
+      "lanes_pass": 2,
+      "min_dNet_oos": -52.7551,
+      "dNet_oos": 19.0769,
+      "dNet_is": -94.6175
+    },
+    {
+      "candidate": "X",
+      "lane": "utcsat_C",
+      "pass": false,
+      "small_n": false,
+      "lanes_total": 6,
+      "lanes_pass": 2,
+      "min_dNet_oos": -52.7551,
+      "dNet_oos": -52.7551,
+      "dNet_is": 5.8041
+    }
+  ],
+  "headline": {
+    "best": "M2",
+    "passes_all_lanes": true,
+    "worst_oos_across_lanes": 18.764,
+    "caveat": "Ranking is for choosing what to forward-test first. It is NOT an adoption decision, and the M2-style numbers here are largely IS-derived. X arm A has n_oos = 7 and is flagged small_n."
+  },
+  "elapsed_sec": 0.0
+}
