@@ -32,10 +32,39 @@ compile. Their owner confirms intent and stages them.
 - `wick_atr12@short <= 6.03` — the standing candidate. Post-process removal
   only; engine untouched. Adoption needs a path-true engine rerun, since a
   post-process skip does not account for chain re-timing.
+  **RESOLVED 2026-09-26 - RETRACTED, the rerun was run and it FAILS 0/4.**
+  See the "Removal retractions" section below.
 - `flips96@short 4-5` also passes 4/4 but overlaps with the above (both
-  short-side). Do not stack; combination untested.
+  short-side). Do not stack; combination untested. **Same lever, so the same
+  fate is expected - not separately rerun.**
 - Worktrees for both agents have not been created yet. Until they are, assume
   every working-tree change may belong to the other agent.
+
+## Removal retractions - post-process PASS does not mean real
+
+Stage B's 2 surviving removals were **retracted 2026-09-26** after a path-true
+rerun. `exp_wick_short_pathtrue.py` patches the same super-set `build_module()`
+builds, rejecting the entry *before* any state mutation (immediately after
+`i=ltf_store.pos(bar_time)`, ahead of `busy_until` / cooldown / streak-halt / book).
+Identity gate IDENTICAL in all 4 cells, so the numbers are trustworthy.
+
+| cell | n | dNet path-true | dNet post-process | maxDD | curve |
+|---|---|---|---|---|---|
+| is\|champion | 500->389 | **-50.6** | +28.1 | 27.7->27.2 | FAIL |
+| is\|utcsat | 454->362 | **-54.5** | +25.7 | 21.2->**24.7** | FAIL |
+| oos\|champion | 279->216 | **-78.0** | +19.8 | 53.2->**57.6** | FAIL |
+| oos\|utcsat | 253->198 | **-59.6** | +23.8 | 29.4->**31.4** | FAIL |
+
+OOS champion goes **negative** (+70.2 -> -7.8); OOS utcsat goes to zero.
+0/4 pass, every cell fails `curve_better`, maxDD worsens in 3 of 4.
+
+This is the Study-1 cascade in full force: deleting a trade from a *finished*
+ledger while the engine kept behaving as if it existed freed `busy_until` slots,
+shifted the cooldown timeline and the loss streak, and that cost more than the
+removed losers returned.
+
+**Rule:** no removal candidate is adoptable on a post-process ledger skip under
+`exp_mltf=True`. A post-process dNet is an UPPER BOUND. Rerun path-true first.
 
 ## Causality rule (added after the Stage B retraction)
 

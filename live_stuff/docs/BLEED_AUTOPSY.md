@@ -1,7 +1,8 @@
 # Stage B - Bleed Autopsy (net-negative bucket hunt + removal test)
 
-**Date:** 2026-09-26 | **Status:** COMPLETE + causality-audited - **FINAL: 2/4 removal PASS**
-(ORIGINAL "4/4 PASS" + chain HEADLINE RETRACTED - lookahead leak found post-run, fixed same session)
+**Date:** 2026-09-26 | **Status:** COMPLETE + causality-audited + path-true rerun - **FINAL: 0/4 removal PASS**
+(BOTH retractions: the original "4/4 PASS" + chain headline was a lookahead leak, fixed same session.
+The remaining 2 PASS were post-process ledger skips; a path-true engine rerun 2026-09-26 kills them 0/4. See section 10.)
 **Harness:** `live_stuff/tests/exp_bleed_autopsy.py` (closed-only enrich, fixed in place) -> `_bleed_autopsy_results.json` (= 2/4)
 **Audit:** `verify_bleed_causality.py` -> `_bleed_autopsy_CLOSEDONLY.json` (byte-identical to the fixed main JSON, excl. elapsed)
 **Identity:** gate IDENTICAL both scopes | **Smoke:** PASS 351t / +211.7R | **Engine:** untouched (post-process)
@@ -101,7 +102,7 @@ loss. The bucket itself stays 4/4-negative descriptively (nets -19.7/-20.1/-16.4
 the leaky enrich had flattered the chain features (the leak made them look better at
 identifying losers than they really are - section 9.9).
 
-### 5.3 Remove `wick_atr12@short <= 6.03` (short trades, low opposing-wick days) - **PASS (HEADLINE)**
+### 5.3 Remove `wick_atr12@short <= 6.03` (short trades, low opposing-wick days) - **PASS post-process, RETRACTED path-true (sec 10)**
 
 | cell | n | net R | dNet | avgNet | maxDD | calmar | curve |
 |---|---|---|---|---|---|---|---|
@@ -111,7 +112,8 @@ identifying losers than they really are - section 9.9).
 | oos uts | 253->217 | +84.0 | **+23.8** | +0.387 | 19.8 | 2.124 | True |
 
 Bucket avgNet -0.38/-0.41/-0.57/-0.66 - the Z1 era-flip candidate that only bleeds when
-conditioned on shorts. Best OOS DD improvement (uts 29.4->19.8).
+conditioned on shorts. **These are post-process ledger numbers. The path-true rerun in
+section 10 gives dNet -50.6/-54.5/-78.0/-59.6 - i.e. FAIL 0/4. Do not use this table for adoption.**
 
 ### 5.4 Remove `flips96@short = 4-5` (short trades, 4-5 swing flips in 96h) - **PASS**
 
@@ -137,9 +139,10 @@ structure from `z1_compute`, no trade state - immune to the leak). **Sections 5.
 2. **Direction-conditioning rescues two Z1 era-flips:** pooled `wick_atr12|<=6.03` and
    `flips96|4-5` flip eras (2/4 negative); masked to shorts they are 4/4-negative in both eras.
    The pooled era-flip was averaging long-positive against short-negative.
-3. **Headline after the audit = `wick_atr12@short <= 6.03`** (best OOS DD reduction:
-   champion 53.2->36.7, utcsat 29.4->19.8; dNet +28.1/+25.7/+19.8/+23.8; removal immune to
-   the leak). The chain plane remains interesting DESCRIPTIVELY - both chain buckets stay
+3. **Post-audit headline was `wick_atr12@short <= 6.03`** (post-process: champion 53.2->36.7,
+   utcsat 29.4->19.8; dNet +28.1/+25.7/+19.8/+23.8) - **since RETRACTED by the path-true
+   rerun in section 10, which fails 0/4.** The chain plane remains interesting DESCRIPTIVELY -
+   both chain buckets stay
    4/4-negative after the fix - but their removals fail the equity rule. The leaky version
    was partly right by accident: folding still-open trades' outcomes made the chain features
    look better at identifying losers than they really are.
@@ -167,11 +170,15 @@ structure from `z1_compute`, no trade state - immune to the leak). **Sections 5.
 
 ## 8. Verdict
 
-**FINAL: 2/4 pre-registered removal PASS.**
+**FINAL: 0/4 pre-registered removal PASS** (after two retractions: a causality leak,
+then a post-process-vs-path-true gap).
 
-- **PASS / recommended candidate: `wick_atr12@short <= 6.03`** (headline - best OOS DD
-  reduction 53.2->36.7 and 29.4->19.8) and **`flips96@short 4-5`** - both byte-identical
-  under the leaky and closed-only enriches (no trade state involved).
+- **RETRACTED: `wick_atr12@short <= 6.03` and `flips96@short 4-5`.** Both were correct as
+  post-process ledger skips (5.3/5.4) and were byte-identical under the leaky and
+  closed-only enriches. But a **path-true engine rerun (sec 10) gives 0/4** for the wick
+  removal, with OOS champion going negative. Both are short-side entry removals, i.e.
+  the same lever, so the same fate is expected for flips96. **No removal candidate from
+  this study is deployable.**
 - **RETRACTED: `chain_r_so_far < 0` and `chain_wl_streak = -1`.** The original 4/4 PASS
   relied on a lookahead leak in `enrich_sequential`; corrected run fails is|utcsat
   (DD 21.2->26.2, calmar 4.619->3.940/3.910, curve False). Descriptive FIND survives

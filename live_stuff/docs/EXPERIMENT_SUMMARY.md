@@ -339,8 +339,9 @@ better OOS net).
 
 **Stage B "bleed autopsy" (user goal pre-registered): find a bucket with NET NEGATIVE R in
 all 4 cells (champion/utcsat x IS/OOS), remove it, baseline strictly better (net up, trades
-down, avg/trade up). FINAL AFTER CAUSALITY AUDIT: 2/4 removal PASS - the original "4/4 PASS"
-and chain headline are RETRACTED.** Phase-0: 74 Z1 buckets = ZERO 4/4-negative -> 30 new
+down, avg/trade up). FINAL AFTER CAUSALITY AUDIT **AND PATH-TRUE RERUN: 0/4 removal PASS - BOTH the original
+"4/4 PASS" and the post-audit 2/4 are RETRACTED.** The two survivors were post-process ledger skips; through the
+real engine they fail 0/4 (OOS champion goes negative).** Phase-0: 74 Z1 buckets = ZERO 4/4-negative -> 30 new
 features (114 buckets) on the untouched HTF chain-state plane. Harness
 `exp_bleed_autopsy.py` -> `_bleed_autopsy_results.json`; FIND = n>=15 AND share<=35% AND
 sumNet<0 x4; REMOVAL PASS = dNet>0 AND avgNet>=base AND n<base AND curve_better x4 (both
@@ -348,8 +349,8 @@ pre-registered). 4 qualifiers; post-audit results:
 
 | removal | dNet IS c/u | dNet OOS c/u | verdict |
 |---|---|---|---|
-| **wick_atr12@short <= 6.03 (HEADLINE)** | +28.1 / +25.7 | +19.8 / +23.8 | **PASS 4/4** - byte-identical pre/post audit; OOS DD 53.2->36.7 and 29.4->19.8, n 500->426/454->392/279->244/253->217 |
-| **flips96@short = 4-5** | +8.2 / +14.0 | +12.8 / +11.6 | **PASS 4/4** - byte-identical; n ->463/417/262/237 |
+| **wick_atr12@short <= 6.03** | +28.1 / +25.7 | +19.8 / +23.8 | **RETRACTED - PASS 4/4 post-process, FAIL 0/4 path-true** (dNet -50.6/-54.5/-78.0/-59.6, OOS champ net +70.2->-7.8) |
+| **flips96@short = 4-5** | +8.2 / +14.0 | +12.8 / +11.6 | **RETRACTED** - same short-side removal lever as the wick gate, so the same path-true failure is expected; not rerun separately |
 | chain_r_so_far < 0 | +19.7 / +20.1 | +16.4 / +10.0 | **FAIL** - is\|utcsat DD 21.2->26.2, calmar 4.619->3.940, curve False (3/4 cells pass) |
 | chain_wl_streak = -1 | +12.9 / +17.2 | +11.7 / +9.5 | **FAIL** - same cell (calmar 4.619->3.910) |
 
