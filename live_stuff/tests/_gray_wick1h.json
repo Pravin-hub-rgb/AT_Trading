@@ -1,0 +1,326 @@
+{
+  "stage": "gray_wick1h",
+  "predicate": {
+    "plane": "1h",
+    "window_bars": 12,
+    "cutoff": "entry_ts+900",
+    "atr": "ATR14-1h",
+    "bucket": [
+      -1000000000.0,
+      6.026
+    ],
+    "source": "_regime_structure_is.json"
+  },
+  "pre_registered": "see exp_gray_wick1h.py docstring P1-P4",
+  "controls": {
+    "is/champion/ref": {
+      "n": 500,
+      "net": 325.78,
+      "ok": true
+    },
+    "is/champion/skip_off_identity": true,
+    "is/utcsat/ref": {
+      "n": 454,
+      "net": 358.95,
+      "ok": true
+    },
+    "is/utcsat/skip_off_identity": true,
+    "is/age10/ref": {
+      "n": 130,
+      "net": 435.72,
+      "ok": true
+    },
+    "is/age10/skip_off_identity": true,
+    "oos/champion/ref": {
+      "n": 279,
+      "net": 70.15,
+      "ok": true
+    },
+    "oos/champion/skip_off_identity": true,
+    "oos/utcsat/ref": {
+      "n": 253,
+      "net": 60.21,
+      "ok": true
+    },
+    "oos/utcsat/skip_off_identity": true,
+    "oos/age10/ref": {
+      "n": 76,
+      "net": 43.22,
+      "ok": true
+    },
+    "oos/age10/skip_off_identity": true
+  },
+  "parity": {
+    "is/champion": {
+      "n": 74,
+      "sum_net": -28.056935,
+      "stageb_n": 74,
+      "stageb_sum_net": -28.056934599080492,
+      "match": true
+    },
+    "is/utcsat": {
+      "n": 62,
+      "sum_net": -25.673556,
+      "stageb_n": 62,
+      "stageb_sum_net": -25.67355552906787,
+      "match": true
+    },
+    "is/age10": {
+      "n": 20,
+      "sum_net": 2.011785
+    },
+    "oos/champion": {
+      "n": 35,
+      "sum_net": -19.78051,
+      "stageb_n": 35,
+      "stageb_sum_net": -19.780510224801763,
+      "match": true
+    },
+    "oos/utcsat": {
+      "n": 36,
+      "sum_net": -23.77461,
+      "stageb_n": 36,
+      "stageb_sum_net": -23.774610405016276,
+      "match": true
+    },
+    "oos/age10": {
+      "n": 7,
+      "sum_net": -5.178276
+    }
+  },
+  "gray": {
+    "is/champion": {
+      "n_gray": 74,
+      "flag_set_match_offline": true,
+      "seq_identical": true,
+      "harness_d_net": 10.49,
+      "raw_r_forgiven": -10.49,
+      "cascade_term": 0.0,
+      "live_d_net": 28.057,
+      "live_d_max_dd": 4.712,
+      "kept_pct": 85.2,
+      "avg_ref": 0.6516,
+      "avg_live": 0.8306,
+      "curve_better": true,
+      "stageb_postprocess_dnet": 28.1,
+      "p2_match": true
+    },
+    "is/utcsat": {
+      "n_gray": 62,
+      "flag_set_match_offline": true,
+      "seq_identical": true,
+      "harness_d_net": 13.131,
+      "raw_r_forgiven": -13.131,
+      "cascade_term": 0.0,
+      "live_d_net": 25.673,
+      "live_d_max_dd": 1.115,
+      "kept_pct": 86.34,
+      "avg_ref": 0.7906,
+      "avg_live": 0.9812,
+      "curve_better": true,
+      "stageb_postprocess_dnet": 25.7,
+      "p2_match": true
+    },
+    "is/age10": {
+      "n_gray": 20,
+      "flag_set_match_offline": true,
+      "seq_identical": true,
+      "harness_d_net": -6.702,
+      "raw_r_forgiven": 6.702,
+      "cascade_term": -0.0,
+      "live_d_net": -2.012,
+      "live_d_max_dd": 1.148,
+      "kept_pct": 84.62,
+      "avg_ref": 3.3517,
+      "avg_live": 3.9428,
+      "curve_better": false
+    },
+    "oos/champion": {
+      "n_gray": 35,
+      "flag_set_match_offline": true,
+      "seq_identical": true,
+      "harness_d_net": 15.466,
+      "raw_r_forgiven": -15.466,
+      "cascade_term": 0.0,
+      "live_d_net": 19.781,
+      "live_d_max_dd": 16.463,
+      "kept_pct": 87.46,
+      "avg_ref": 0.2514,
+      "avg_live": 0.3686,
+      "curve_better": true,
+      "stageb_postprocess_dnet": 19.8,
+      "p2_match": true
+    },
+    "oos/utcsat": {
+      "n_gray": 36,
+      "flag_set_match_offline": true,
+      "seq_identical": true,
+      "harness_d_net": 19.28,
+      "raw_r_forgiven": -19.28,
+      "cascade_term": 0.0,
+      "live_d_net": 23.775,
+      "live_d_max_dd": 9.609,
+      "kept_pct": 85.77,
+      "avg_ref": 0.238,
+      "avg_live": 0.387,
+      "curve_better": true,
+      "stageb_postprocess_dnet": 23.8,
+      "p2_match": true
+    },
+    "oos/age10": {
+      "n_gray": 7,
+      "flag_set_match_offline": true,
+      "seq_identical": true,
+      "harness_d_net": 4.325,
+      "raw_r_forgiven": -4.325,
+      "cascade_term": 0.0,
+      "live_d_net": 5.178,
+      "live_d_max_dd": 0.0,
+      "kept_pct": 90.79,
+      "avg_ref": 0.5687,
+      "avg_live": 0.7015,
+      "curve_better": true
+    }
+  },
+  "skip": {
+    "is/champion": {
+      "n": 428,
+      "removed": 72,
+      "net": 286.83,
+      "d_net": -38.954,
+      "d_max_dd": 6.674,
+      "avg": 0.6702,
+      "base_avg": 0.6516,
+      "curve_better": false
+    },
+    "is/utcsat": {
+      "n": 400,
+      "removed": 54,
+      "net": 346.33,
+      "d_net": -12.619,
+      "d_max_dd": 1.419,
+      "avg": 0.8658,
+      "base_avg": 0.7906,
+      "curve_better": false
+    },
+    "is/age10": {
+      "n": 111,
+      "removed": 19,
+      "net": 426.67,
+      "d_net": -9.052,
+      "d_max_dd": 1.148,
+      "avg": 3.8439,
+      "base_avg": 3.3517,
+      "curve_better": false
+    },
+    "oos/champion": {
+      "n": 247,
+      "removed": 32,
+      "net": 77.63,
+      "d_net": 7.485,
+      "d_max_dd": 14.409,
+      "avg": 0.3143,
+      "base_avg": 0.2514,
+      "curve_better": true
+    },
+    "oos/utcsat": {
+      "n": 220,
+      "removed": 33,
+      "net": 84.22,
+      "d_net": 24.014,
+      "d_max_dd": 2.274,
+      "avg": 0.3828,
+      "base_avg": 0.238,
+      "curve_better": true
+    },
+    "oos/age10": {
+      "n": 70,
+      "removed": 6,
+      "net": 47.3,
+      "d_net": 4.077,
+      "d_max_dd": 0.0,
+      "avg": 0.6757,
+      "base_avg": 0.5687,
+      "curve_better": true
+    }
+  },
+  "reconcile_15m": {
+    "is/champion": {
+      "parity_ok": true,
+      "n": 112,
+      "n_expected": 112,
+      "harness_d_net": -6.702,
+      "cost_relief": 26.14,
+      "live_d_net": 19.438,
+      "bound_live_d_net": 53.476,
+      "live_positive": true
+    },
+    "is/utcsat": {
+      "parity_ok": true,
+      "n": 100,
+      "n_expected": 100,
+      "harness_d_net": -7.044,
+      "cost_relief": 21.391,
+      "live_d_net": 14.347,
+      "bound_live_d_net": 48.16,
+      "live_positive": true
+    },
+    "is/age10": {
+      "parity_ok": true,
+      "n": 30,
+      "n_expected": 30,
+      "harness_d_net": -24.47,
+      "cost_relief": 7.261,
+      "live_d_net": -17.209,
+      "bound_live_d_net": -2.471,
+      "live_positive": false
+    },
+    "oos/champion": {
+      "parity_ok": true,
+      "n": 64,
+      "n_expected": 64,
+      "harness_d_net": -77.997,
+      "cost_relief": 7.903,
+      "live_d_net": -70.094,
+      "bound_live_d_net": -60.978,
+      "live_positive": false
+    },
+    "oos/utcsat": {
+      "parity_ok": true,
+      "n": 61,
+      "n_expected": 61,
+      "harness_d_net": -78.093,
+      "cost_relief": 7.914,
+      "live_d_net": -70.179,
+      "bound_live_d_net": -61.995,
+      "live_positive": false
+    },
+    "oos/age10": {
+      "parity_ok": true,
+      "n": 18,
+      "n_expected": 18,
+      "harness_d_net": -32.195,
+      "cost_relief": 2.016,
+      "live_d_net": -30.179,
+      "bound_live_d_net": -26.301,
+      "live_positive": false
+    }
+  },
+  "verdicts": {
+    "p1_stageb_parity": true,
+    "gray_seq_identical": 6,
+    "gray_cascade_free": true,
+    "gray_flag_sets_match": true,
+    "p2_live_eq_postprocess": {
+      "is/champion": true,
+      "is/utcsat": true,
+      "oos/champion": true,
+      "oos/utcsat": true
+    },
+    "g_rule_all6": false,
+    "g_rule_stageb4": true,
+    "reconcile_parity": true,
+    "old_15m_oos_negative": true
+  },
+  "elapsed_sec": 261.29
+}
