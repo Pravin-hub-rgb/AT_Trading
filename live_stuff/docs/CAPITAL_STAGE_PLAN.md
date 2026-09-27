@@ -81,6 +81,65 @@ Notes:
 
 ## 4. Open risks
 
+- **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
+  24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
+  trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard
+  zero threshold, L in 24/168h). Bybit base ledgers reproduced 24.85, and on
+  the pre-registered Bybit gate three arms cleared 6/6 - `E_lead` on **both**
+  venues.
+
+  Two things in that JSON did not look right, so it was not accepted at face
+  value. `d_max_dd` is **negative in 22 of 24 cells** - the drawdown gets deeper
+  almost everywhere, and every pass rode the `d_ulcer>0.5 OR d_calmar>0.05`
+  branches, never `d_max_dd>0.5`. `E_lag` passes 6/6 with ulcer -9.21 and
+  d_max_dd -19.68, carried entirely by a calmar ratio. And the flag is not
+  picking winners: `mean_r_flagged / book_mean` is 0.76 / 0.79 / 0.65 / 0.72 /
+  0.97 / 1.43, below 1.0 in five of six cells, on a cohort that is ~45% of the
+  book.
+
+  `exp_eth_ledness_null.py` -> `_eth_ledness_null.json` then ran the decisive
+  test: x1.5 on a **random subset matched to each real arm's flagged count**,
+  200 seeds per cell, 24 cells.
+
+  | measure | value |
+  |---|---|
+  | cells where the RANDOM null passes `curve_better` | **24 / 24** |
+  | mean random-null `curve_better` pass rate | **83.8%** (72.5 - 96.5) |
+  | mean percentile of the real ETH arms | **49.5** (8.5 - 93.5) |
+  | arms beating their own null at >=90th pct in all 6 cells | **0 / 4** |
+
+  `E_lead` - the arm that passed on both venues - sits at the **8.5th**
+  percentile in is/champion and **9.5th** in is/utcsat, i.e. **worse than a
+  random pick of the same size**: real dNet +54.2 against a null median of
+  +101.4.
+
+  **The mechanism, stated generally: dNet>0 and `curve_better` are close to
+  automatic for ANY ~45% subset of a profitable book.** Upsize a profitable
+  cohort by 1.5x and the subset's R sum stays positive; ulcer and calmar both
+  move favourably enough to clear absolute thresholds. On these books a 6/6
+  sizing result therefore carries almost no information about the feature - the
+  gate is measuring the base book, not the lever.
+
+  ETH-LEDNESS is CLOSED. This is a stronger outcome than a plain fail: it shows
+  the 6/6 sizing gate on this book is **not falsifiable by dNet+curve alone**
+  and needs a matched-null comparison to carry any meaning.
+
+- **(a7) The same logic invalidates the ZCX headline, and the ZCX family is
+  CLOSED with it.** 24.86's 5/6 and 24.87's cap sweep are sizing results on the
+  same books judged by the same two gates. ZCX was never shown to beat a matched
+  random null, and 24.86's dNet was positive in 22/24 cells *on a ~45% cohort* -
+  exactly the condition under which a null does as well. The "dNet is real and
+  only curve shape fails" reading of 24.86 is therefore **not safe**. ZCX closes
+  **unadopted**: no arm passed the pre-registered 6/6, and the family was never
+  validated against a null. The only survivor from the ZCX line is the negative,
+  mechanism-level finding in (a5): curve deltas are linear in (cap-1) and
+  `d_max_dd` is negative because the flagged cohort sits on the base drawdown.
+
+  **Standing rule adopted from this: no sizing arm on these books is reported as
+  a pass without a matched-count random null.** Re-run the null before quoting
+  any dNet from `_sizing_combo_results.json`, `_zx_causal_combo_results.json`,
+  `_zx_cross_venue_results.json` or `_zx_sizecap.json` as evidence of edge.
+
 - **(a) Order-time sizing bridge - BUILT AND TESTED 2026-09-26, RESULT:
   BLOCKED.** `exp_m2_live_bridge.py` -> `_m2_live_bridge.json`. This was the one
   hard engineering blocker and it does not clear.

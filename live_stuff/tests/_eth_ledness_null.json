@@ -1,0 +1,366 @@
+{
+  "stage": "eth_ledness_null",
+  "lens": "random-subset null, matched flagged COUNT, 200 seeds per cell",
+  "seeds": 200,
+  "size": 1.5,
+  "pre_registered": {
+    "purpose": "place each 24.88 arm in its own matched null distribution instead of eyeballing it",
+    "null": "x1.5 on a random subset of the same size as the real flag",
+    "reading": "~50th percentile => ETH adds nothing and 6/6 is a property of the base book; only a high percentile with a null that mostly FAILS curve_better justifies 'real'",
+    "control": "bybit base ledgers reproduce the 24.85 references"
+  },
+  "scopes": {
+    "is/champion": {
+      "E_lead": {
+        "n_flagged": 219,
+        "share": 0.438,
+        "real_d_net": 54.2055,
+        "real_curve_better": true,
+        "null_mean_d_net": 99.7958,
+        "null_median_d_net": 101.406,
+        "null_p5": 51.6095,
+        "null_p95": 154.932,
+        "real_percentile": 8.5,
+        "null_curve_pass_rate": 89.5,
+        "beats_null_p50": false
+      },
+      "E_lag": {
+        "n_flagged": 281,
+        "share": 0.562,
+        "real_d_net": 168.407,
+        "real_curve_better": true,
+        "null_mean_d_net": 126.2819,
+        "null_median_d_net": 129.3345,
+        "null_p5": 72.5295,
+        "null_p95": 173.6945,
+        "real_percentile": 88.5,
+        "null_curve_pass_rate": 94.5,
+        "beats_null_p50": true
+      },
+      "E_lead_w": {
+        "n_flagged": 198,
+        "share": 0.396,
+        "real_d_net": 110.1555,
+        "real_curve_better": true,
+        "null_mean_d_net": 89.1246,
+        "null_median_d_net": 87.6755,
+        "null_p5": 39.2905,
+        "null_p95": 138.5265,
+        "real_percentile": 76.0,
+        "null_curve_pass_rate": 84.0,
+        "beats_null_p50": true
+      },
+      "E_lag_w": {
+        "n_flagged": 298,
+        "share": 0.596,
+        "real_d_net": 109.879,
+        "real_curve_better": true,
+        "null_mean_d_net": 133.5796,
+        "null_median_d_net": 134.7065,
+        "null_p5": 90.408,
+        "null_p95": 180.7805,
+        "real_percentile": 21.0,
+        "null_curve_pass_rate": 96.5,
+        "beats_null_p50": false
+      }
+    },
+    "is/utcsat": {
+      "E_lead": {
+        "n_flagged": 206,
+        "share": 0.4537,
+        "real_d_net": 64.435,
+        "real_curve_better": true,
+        "null_mean_d_net": 103.6298,
+        "null_median_d_net": 104.143,
+        "null_p5": 53.2485,
+        "null_p95": 149.5755,
+        "real_percentile": 9.5,
+        "null_curve_pass_rate": 82.0,
+        "beats_null_p50": false
+      },
+      "E_lag": {
+        "n_flagged": 248,
+        "share": 0.5463,
+        "real_d_net": 168.803,
+        "real_curve_better": true,
+        "null_mean_d_net": 125.1798,
+        "null_median_d_net": 127.707,
+        "null_p5": 70.4225,
+        "null_p95": 171.9875,
+        "real_percentile": 93.5,
+        "null_curve_pass_rate": 86.0,
+        "beats_null_p50": true
+      },
+      "E_lead_w": {
+        "n_flagged": 185,
+        "share": 0.4075,
+        "real_d_net": 124.975,
+        "real_curve_better": true,
+        "null_mean_d_net": 94.5812,
+        "null_median_d_net": 92.2065,
+        "null_p5": 49.471,
+        "null_p95": 147.2985,
+        "real_percentile": 80.5,
+        "null_curve_pass_rate": 76.0,
+        "beats_null_p50": true
+      },
+      "E_lag_w": {
+        "n_flagged": 265,
+        "share": 0.5837,
+        "real_d_net": 105.685,
+        "real_curve_better": true,
+        "null_mean_d_net": 135.9293,
+        "null_median_d_net": 139.9455,
+        "null_p5": 83.6265,
+        "null_p95": 183.204,
+        "real_percentile": 19.0,
+        "null_curve_pass_rate": 89.0,
+        "beats_null_p50": false
+      }
+    },
+    "is/age10": {
+      "E_lead": {
+        "n_flagged": 49,
+        "share": 0.3769,
+        "real_d_net": 53.2795,
+        "real_curve_better": true,
+        "null_mean_d_net": 87.3763,
+        "null_median_d_net": 86.0195,
+        "null_p5": 48.911,
+        "null_p95": 128.5715,
+        "real_percentile": 9.0,
+        "null_curve_pass_rate": 81.0,
+        "beats_null_p50": false
+      },
+      "E_lag": {
+        "n_flagged": 81,
+        "share": 0.6231,
+        "real_d_net": 184.961,
+        "real_curve_better": true,
+        "null_mean_d_net": 148.3398,
+        "null_median_d_net": 146.9665,
+        "null_p5": 104.055,
+        "null_p95": 194.0805,
+        "real_percentile": 90.0,
+        "null_curve_pass_rate": 96.5,
+        "beats_null_p50": true
+      },
+      "E_lead_w": {
+        "n_flagged": 51,
+        "share": 0.3923,
+        "real_d_net": 113.1745,
+        "real_curve_better": true,
+        "null_mean_d_net": 91.2249,
+        "null_median_d_net": 90.5935,
+        "null_p5": 48.628,
+        "null_p95": 135.8175,
+        "real_percentile": 78.5,
+        "null_curve_pass_rate": 85.0,
+        "beats_null_p50": true
+      },
+      "E_lag_w": {
+        "n_flagged": 77,
+        "share": 0.5923,
+        "real_d_net": 121.489,
+        "real_curve_better": true,
+        "null_mean_d_net": 139.9137,
+        "null_median_d_net": 140.599,
+        "null_p5": 95.3275,
+        "null_p95": 181.122,
+        "real_percentile": 28.5,
+        "null_curve_pass_rate": 92.5,
+        "beats_null_p50": false
+      }
+    },
+    "oos/champion": {
+      "E_lead": {
+        "n_flagged": 134,
+        "share": 0.4803,
+        "real_d_net": 12.0595,
+        "real_curve_better": true,
+        "null_mean_d_net": 27.3625,
+        "null_median_d_net": 27.479,
+        "null_p5": 3.8485,
+        "null_p95": 51.073,
+        "real_percentile": 16.0,
+        "null_curve_pass_rate": 82.5,
+        "beats_null_p50": false
+      },
+      "E_lag": {
+        "n_flagged": 145,
+        "share": 0.5197,
+        "real_d_net": 40.803,
+        "real_curve_better": true,
+        "null_mean_d_net": 27.7049,
+        "null_median_d_net": 28.112,
+        "null_p5": 3.2705,
+        "null_p95": 50.496,
+        "real_percentile": 83.0,
+        "null_curve_pass_rate": 81.5,
+        "beats_null_p50": true
+      },
+      "E_lead_w": {
+        "n_flagged": 146,
+        "share": 0.5233,
+        "real_d_net": 12.197,
+        "real_curve_better": true,
+        "null_mean_d_net": 27.2509,
+        "null_median_d_net": 28.0345,
+        "null_p5": 5.9285,
+        "null_p95": 49.9905,
+        "real_percentile": 16.0,
+        "null_curve_pass_rate": 87.5,
+        "beats_null_p50": false
+      },
+      "E_lag_w": {
+        "n_flagged": 131,
+        "share": 0.4695,
+        "real_d_net": 40.552,
+        "real_curve_better": true,
+        "null_mean_d_net": 23.4248,
+        "null_median_d_net": 23.286,
+        "null_p5": -0.5835,
+        "null_p95": 48.5395,
+        "real_percentile": 86.5,
+        "null_curve_pass_rate": 72.5,
+        "beats_null_p50": true
+      }
+    },
+    "oos/utcsat": {
+      "E_lead": {
+        "n_flagged": 123,
+        "share": 0.4862,
+        "real_d_net": 14.246,
+        "real_curve_better": true,
+        "null_mean_d_net": 22.5987,
+        "null_median_d_net": 22.5815,
+        "null_p5": -1.249,
+        "null_p95": 46.153,
+        "real_percentile": 25.5,
+        "null_curve_pass_rate": 78.0,
+        "beats_null_p50": false
+      },
+      "E_lag": {
+        "n_flagged": 130,
+        "share": 0.5138,
+        "real_d_net": 32.0745,
+        "real_curve_better": true,
+        "null_mean_d_net": 25.473,
+        "null_median_d_net": 25.959,
+        "null_p5": 1.834,
+        "null_p95": 47.0525,
+        "real_percentile": 64.0,
+        "null_curve_pass_rate": 78.5,
+        "beats_null_p50": true
+      },
+      "E_lead_w": {
+        "n_flagged": 133,
+        "share": 0.5257,
+        "real_d_net": 7.4075,
+        "real_curve_better": false,
+        "null_mean_d_net": 23.0249,
+        "null_median_d_net": 22.7495,
+        "null_p5": 3.699,
+        "null_p95": 43.4955,
+        "real_percentile": 10.5,
+        "null_curve_pass_rate": 80.0,
+        "beats_null_p50": false
+      },
+      "E_lag_w": {
+        "n_flagged": 118,
+        "share": 0.4664,
+        "real_d_net": 38.7995,
+        "real_curve_better": true,
+        "null_mean_d_net": 19.82,
+        "null_median_d_net": 19.5235,
+        "null_p5": -1.5395,
+        "null_p95": 42.5705,
+        "real_percentile": 91.0,
+        "null_curve_pass_rate": 75.0,
+        "beats_null_p50": true
+      }
+    },
+    "oos/age10": {
+      "E_lead": {
+        "n_flagged": 38,
+        "share": 0.5,
+        "real_d_net": 15.4595,
+        "real_curve_better": true,
+        "null_mean_d_net": 14.1583,
+        "null_median_d_net": 14.1835,
+        "null_p5": 4.6175,
+        "null_p95": 23.606,
+        "real_percentile": 59.5,
+        "null_curve_pass_rate": 81.5,
+        "beats_null_p50": true
+      },
+      "E_lag": {
+        "n_flagged": 38,
+        "share": 0.5,
+        "real_d_net": 11.9685,
+        "real_curve_better": true,
+        "null_mean_d_net": 14.1583,
+        "null_median_d_net": 14.1835,
+        "null_p5": 4.6175,
+        "null_p95": 23.606,
+        "real_percentile": 38.0,
+        "null_curve_pass_rate": 81.5,
+        "beats_null_p50": false
+      },
+      "E_lead_w": {
+        "n_flagged": 44,
+        "share": 0.5789,
+        "real_d_net": 15.312,
+        "real_curve_better": true,
+        "null_mean_d_net": 16.0656,
+        "null_median_d_net": 16.069,
+        "null_p5": 6.0465,
+        "null_p95": 24.1545,
+        "real_percentile": 42.5,
+        "null_curve_pass_rate": 82.0,
+        "beats_null_p50": false
+      },
+      "E_lag_w": {
+        "n_flagged": 32,
+        "share": 0.4211,
+        "real_d_net": 12.116,
+        "real_curve_better": true,
+        "null_mean_d_net": 11.9482,
+        "null_median_d_net": 11.847,
+        "null_p5": 2.321,
+        "null_p95": 21.597,
+        "real_percentile": 52.0,
+        "null_curve_pass_rate": 77.0,
+        "beats_null_p50": true
+      }
+    }
+  },
+  "verdicts": {
+    "arm_cells": {
+      "E_lead": 6,
+      "E_lag": 6,
+      "E_lead_w": 6,
+      "E_lag_w": 6
+    },
+    "arm_cells_real_pct_ge_90": {
+      "E_lead": 0,
+      "E_lag": 2,
+      "E_lead_w": 0,
+      "E_lag_w": 1
+    },
+    "arm_cells_null_curve_pass_under_50pct": {
+      "E_lead": 0,
+      "E_lag": 0,
+      "E_lead_w": 0,
+      "E_lag_w": 0
+    },
+    "arm_is_real": {
+      "E_lead": false,
+      "E_lag": false,
+      "E_lead_w": false,
+      "E_lag_w": false
+    }
+  },
+  "any_arm_real": false,
+  "elapsed_sec": 84.39
+}
