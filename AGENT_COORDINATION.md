@@ -388,6 +388,35 @@ and 2h both oppose) and did not run it, because chasing it is the `6.026`
 failure mode wearing a new hat. If a pre-registration says the null ends the
 pass, it does.
 
+**Rule 13 — judge a predicate on a ROBUST statistic. avgR will lie to you.**
+Log 109 closed the log-108 pattern: "2h-opposing trades are better" showed a
+raw-mean gap in 5/6 live cells, but the **median opposed it in 6/6** and the
+5%-trimmed mean in 3/6. The mean was tracking a heavier tail (stdev 6.58 vs
+4.59, win rate *lower* 23.4% vs 30.4%), and the gap vanished on an independent
+dataset. Report `mean`, `median`, `trimmed_mean` and `stdev` for any bucket
+comparison, and treat a mean-only result as unproven.
+
+**Rule 14 — the books are tail-concentrated; every avgR comparison inherits
+that.** The top 5% of trades carry **>100% of the net** in every live-lane book
+(bybit OOS champion 348%, bybit OOS utcsat 262%, btc-fut champion 233%). So:
+
+- The median trade is a small loss, and any statistic that averages R is
+  dominated by a handful of winners. This is the mechanical reason the CIs in
+  logs 106-108 were so wide — it is not a small-sample coincidence.
+- A book like this will have a worse drawdown distribution than its average R
+  implies. That is a standing **risk** observation and belongs in any future
+  capital-sizing discussion. It is not a finding and changes no lane.
+- Do not "fix" it by trimming winners. Measure robustly; do not filter on the
+  very statistic you are trying to improve.
+
+**Rule 15 — chase a null with POWER or with the alternative explanation, never
+with more predicates.** Log 108 left a consistent-looking pattern and an obvious
+next predicate available. The correct response (log 109) was to ask "could this
+be an artifact?" and to test it on an independent dataset — not to run the
+tempting next split. If a pre-registration names the null response, that response
+is the experiment.
+
+
 
 
 

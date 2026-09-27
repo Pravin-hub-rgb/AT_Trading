@@ -225,6 +225,120 @@ repo has a documented history of causality mistakes that cost several cycles
 | **veto** an already-generated 15m entry | safe, causal, in scope |
 | **enter earlier** on a 30m signal | **out of scope** — breaks C15, needs its own pre-registered causality experiment |
 
+
+---
+
+# S3 DEEP DIVE — the 6/6 pattern is a TAIL ARTIFACT (2026-09-27)
+
+The log-108 pattern was chased, but **not with more predicates**. The one obvious
+next predicate ("keep trades where 30m and 2h both oppose") was deliberately not
+run. What was run instead is the only two things that can settle it: buy power,
+and test the alternative explanation.
+
+## A1 — is the avgR gap a mean shift, or a distribution-shape artifact?
+
+Harness `exp_s3_forensic.py` → `_s3_forensic.json` (186s). Gap is
+`agree − oppose`, so **negative = the opposing bucket is better**. The decisive
+statistics are the median and the 5%-trimmed mean, because a few large winners
+cannot move either. `shape()` was smoke-tested on a synthetic pair with equal
+means and different tail weight to confirm it separates them.
+
+| book | lane | Δmean | Δmedian | Δtrimmed | Δstdev |
+|---|---|---|---|---|---|
+| bybit IS | champion | **−0.36** | **+0.04** | **+0.09** | −1.99 |
+| bybit IS | utcsat | **−0.43** | **+0.05** | **+0.09** | −2.18 |
+| bybit IS | age10 | −1.41 | −0.15 | −1.00 | −1.99 |
+| bybit OOS | champion | **−0.34** | **+0.03** | −0.06 | −1.52 |
+| bybit OOS | utcsat | **−0.19** | **+0.03** | −0.00 | −1.34 |
+| bybit OOS | age10 | −0.65 | +0.38 | −0.55 | −1.31 |
+| btc-fut | champion | **+0.03** | +0.05 | +0.04 | +0.13 |
+| btc-fut | utcsat | −0.02 | +0.04 | −0.08 | +0.56 |
+| btc-fut | age10 | +0.18 | −0.17 | −0.09 | +1.82 |
+
+**Live lanes only (champion + utcsat, 6 cells):**
+
+| statistic | cells favouring the opposing bucket |
+|---|---|
+| raw mean | 5/6 |
+| trimmed mean | 3/6 |
+| **median** | **0/6** |
+
+**The median opposes the pattern in every single live-lane cell.** The higher
+average comes entirely from a heavier tail: stdev 6.58 vs 4.59 (IS champion) and
+4.22 vs 2.70 (OOS champion), with a *lower* win rate (23.4% vs 30.4%). A wider
+distribution with the same body gives a higher mean and a worse median — exactly
+what is observed.
+
+## A2 — replication on an independent dataset kills the remainder
+
+`data/btc-fut` (49,974 1h rows, 2020-12 → 2026, its own 1m file). **Caveat, stated
+so it is not over-read: same calendar span as bybit IS+OOS, so this is
+replication across datasets, not extra time.**
+
+| lane | bybit IS Δmean | btc-fut Δmean |
+|---|---|---|
+| champion | −0.36 | **+0.03** |
+| utcsat | −0.43 | **−0.02** |
+
+The mean gap **evaporates** on the independent dataset. A property of the
+strategy should survive a dataset change; this did not.
+
+## Verdict — the pre-registered null fires, closing the thread
+
+> **7/9 cells favour the opposing bucket on the raw mean, but only 6/9 on the
+> trimmed mean and 2/9 on the median. The robust statistics move less than the
+> raw mean, so a substantial part of the gap is a tail/variance artifact.
+> CLOSED — no filter proposed.**
+
+The pre-registration said: *if the trimmed-mean and median gaps collapse toward
+zero while the raw mean gap persists, the pattern is a tail artifact → CLOSED.*
+That is what happened, so no filter is proposed and the A3 dose-response test is
+**not** run. `age10` is the only lane where the trimmed mean also favours the
+opposing bucket (−1.00 IS, −0.55 OOS) — but it is default-off, structurally a
+different single-book strategy, and it does not replicate on btc-fut either
+(+0.18 mean, −0.09 trimmed). Recorded, not acted on.
+
+**The S3 thread is closed.** The log-108 "6/6 consistent" pattern is fully
+explained: the raw mean was tracking tail luck in one dataset.
+
+## The more important thing this surfaced
+
+Measuring the tail turned up something about the strategy that matters more than
+S3: **the top 5% of trades carry more than 100% of the net in every live-lane
+book.**
+
+| book / lane | top-5% share of net |
+|---|---|
+| bybit IS champion | 147% agree / 138% oppose |
+| bybit OOS champion | **348%** agree / 157% oppose |
+| bybit OOS utcsat | 262% / 175% |
+| btc-fut champion | 233% / 218% |
+
+Above 100% means the median trade is a small loss and the book is, in accounting
+terms, carried entirely by a handful of outliers. Three consequences, none of
+them about S3:
+
+1. **Every avgR comparison in this repo is tail-dominated by construction.** That
+   is the mechanical reason the CIs in logs 106-108 were so wide, and why "mean
+   says yes, median says no" kept recurring.
+2. Any future predicate should be judged on a **robust** statistic and reported
+   with its tail concentration alongside. Judging on avgR alone will manufacture
+   effects.
+3. Standing risk observation, not a finding: a book that needs its top 5% to be
+   right will have a worse drawdown distribution than its average R implies. This
+   belongs in any future capital discussion, and it is **not** something this
+   experiment set out to measure.
+
+## What I would do next
+
+- **Nothing, for S3.** Closed on the evidence; the obvious rescue attempt is the
+  fishing the pre-registration forbade.
+- **S6 remains the live idea** — an independent 30m/2h shadow *book* as a
+  feature, not a direction comparison. Untested, and still the only shadow-TF
+  idea whose object is genuinely new.
+- **The tail concentration deserves its own look** as a risk question, under its
+  own pre-registration, if capital sizing is ever revisited.
+
 The early-entry version is the more valuable idea and the more dangerous one.
 Excluded from this pass deliberately, not forgotten.
 # END_MARKER
