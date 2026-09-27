@@ -81,6 +81,54 @@ Notes:
 
 ## 4. Open risks
 
+- **(a8) The wide-SL sizing idea - the user's original, first sizing thesis -
+  is REFUTED, and it was testable this whole time because SL is known at
+  entry.** `exp_sl_width_sizing.py` -> `_sl_width_sizing.json` sizes the top
+  half of `sl_width_pct = |entry_price - sl| / entry_price` (per-book median
+  split, no hand-picked threshold). Unlike M2 this reads only values the engine
+  fixes at entry (`v18_streak_halt.py:732-733`) - no `seg.end_px`, so it is
+  causal and deployable in principle. Bybit base ledgers reproduce 24.85;
+  identity gate IDENTICAL.
+
+  | cell | n_wide | wide avgR | narrow avgR | wide WR | narrow WR | claim |
+  |---|---|---|---|---|---|---|
+  | is/champion | 250 | **+0.216** | +1.565 | 32.8% | 27.2% | **no** |
+  | is/utcsat | 227 | **+0.373** | +1.682 | 34.4% | 27.3% | **no** |
+  | is/age10 | 65 | **+0.715** | +6.616 | 49.2% | 58.5% | **no** |
+  | oos/champion | 140 | **+0.200** | +0.559 | 35.0% | 20.9% | **no** |
+  | oos/utcsat | 127 | **+0.210** | +0.523 | 37.8% | 21.4% | **no** |
+  | oos/age10 | 38 | +0.801 | +0.642 | 52.6% | 26.3% | yes |
+
+  **CLAIM HOLDS 1/6. ARM PASSES 0/6.**
+
+  The thesis was "bigger SL => higher success rate, so size those up". The
+  success-rate half is *partly* real - in the two OOS cells wide-SL trades win
+  35.0%/37.8% against 20.9%/21.4% narrow, a large consistent margin. But **avgR
+  runs the other way in 5 of 6 cells**, because the wide-SL winners are small:
+  they get stopped less often but trail out on small gains, while the narrow-SL
+  book carries the 3R runners. Win rate without R is not an edge. That is why
+  the arm is scored on avgR, and why the pre-registered claim test was checked
+  *before* the sizing result rather than after it.
+
+  The sizing arm fails for the Stage-M M1 reason in its purest form: flagged
+  avgR is **below** the per-cell book mean in 5 of 6 cells, so `leverage_trap` is
+  true. The +27.0/+42.4/+23.2 IS dNet is pure leverage on a worse-than-average
+  cohort, and it sits at the **0.0th percentile** against a matched-count
+  random null in **all six cells** - worse than picking trades at random. A
+  random subset of the same size passes `curve_better` **100%** of the time,
+  which is the 24.87 mechanism surfacing again in a fourth independent
+  harness.
+
+  All four readings of the SL-width idea are now closed:
+  - remove wide-SL trades (ANCHOR_BASIS_AUDIT 3e) - failed, path cascade
+  - size up a broad flag (Stage M / M1) - failed, leverage trap
+  - size up tight SL instead (Stage X / A) - passed 4/4 but on n=7/9 OOS
+  - size up wide SL directly (this run) - failed 0/6, avgR 0.0th pct vs null
+
+  What survives is the 24.87 mechanism, now confirmed three times over: a
+  matched random null passes `curve_better` in essentially every cell on these
+  books, so dNet+curve alone cannot certify a sizing feature.
+
 - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
   trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard

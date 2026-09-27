@@ -1,0 +1,160 @@
+{
+  "stage": "sl_width_sizing",
+  "lens": "post-process sizing on flat books; trade keys identical; sl_width_pct = |entry-sl|/entry, known at entry (no end_px)",
+  "arm": "x1.5 on top-half sl_width_pct (median split per book)",
+  "pre_registered": {
+    "pass": "CLAIM(wide mean_r > narrow, 6/6) AND dNet>0 6/6 AND curve_better 6/6 AND not-leverage-trap 6/6 AND beats matched null at 90th pct 6/6",
+    "claim_first": "the hypothesis is tested BEFORE the sizing result",
+    "null": "x1.5 on random subset of same flagged count, 200 seeds",
+    "control": "base ledgers reproduce the 24.85 references",
+    "no_retune": "nothing retuned after the run"
+  },
+  "scopes": {
+    "is/champion": {
+      "n": 500,
+      "net": 325.7817,
+      "n_wide": 500,
+      "claim": {
+        "wide_mean_r": 0.2163,
+        "narrow_mean_r": 1.5646,
+        "n_wide": 250,
+        "n_narrow": 250,
+        "wide_wr": 0.328,
+        "narrow_wr": 0.272,
+        "wide_beats_narrow": false
+      },
+      "d_net": 27.0365,
+      "curve_better": false,
+      "book_mean_r": 0.6516,
+      "leverage_trap": true,
+      "real_percentile_vs_null": 0.0,
+      "null_curve_pass_rate": 100.0,
+      "beats_null_90": false,
+      "claim_holds": false,
+      "arm_pass": false
+    },
+    "is/utcsat": {
+      "n": 454,
+      "net": 358.95,
+      "n_wide": 454,
+      "claim": {
+        "wide_mean_r": 0.3731,
+        "narrow_mean_r": 1.6818,
+        "n_wide": 227,
+        "n_narrow": 227,
+        "wide_wr": 0.3436,
+        "narrow_wr": 0.2731,
+        "wide_beats_narrow": false
+      },
+      "d_net": 42.351,
+      "curve_better": false,
+      "book_mean_r": 0.7906,
+      "leverage_trap": true,
+      "real_percentile_vs_null": 0.0,
+      "null_curve_pass_rate": 100.0,
+      "beats_null_90": false,
+      "claim_holds": false,
+      "arm_pass": false
+    },
+    "is/age10": {
+      "n": 130,
+      "net": 435.7239,
+      "n_wide": 130,
+      "claim": {
+        "wide_mean_r": 0.7149,
+        "narrow_mean_r": 6.6156,
+        "n_wide": 65,
+        "n_narrow": 65,
+        "wide_wr": 0.4923,
+        "narrow_wr": 0.5846,
+        "wide_beats_narrow": false
+      },
+      "d_net": 23.2335,
+      "curve_better": false,
+      "book_mean_r": 3.3517,
+      "leverage_trap": true,
+      "real_percentile_vs_null": 0.0,
+      "null_curve_pass_rate": 100.0,
+      "beats_null_90": false,
+      "claim_holds": false,
+      "arm_pass": false
+    },
+    "oos/champion": {
+      "n": 279,
+      "net": 70.1505,
+      "n_wide": 279,
+      "claim": {
+        "wide_mean_r": 0.2,
+        "narrow_mean_r": 0.5592,
+        "n_wide": 140,
+        "n_narrow": 139,
+        "wide_wr": 0.35,
+        "narrow_wr": 0.2086,
+        "wide_beats_narrow": false
+      },
+      "d_net": 14.0,
+      "curve_better": true,
+      "book_mean_r": 0.2514,
+      "leverage_trap": true,
+      "real_percentile_vs_null": 0.0,
+      "null_curve_pass_rate": 100.0,
+      "beats_null_90": false,
+      "claim_holds": false,
+      "arm_pass": false
+    },
+    "oos/utcsat": {
+      "n": 253,
+      "net": 60.2062,
+      "n_wide": 253,
+      "claim": {
+        "wide_mean_r": 0.2104,
+        "narrow_mean_r": 0.5232,
+        "n_wide": 127,
+        "n_narrow": 126,
+        "wide_wr": 0.378,
+        "narrow_wr": 0.2143,
+        "wide_beats_narrow": false
+      },
+      "d_net": 13.36,
+      "curve_better": true,
+      "book_mean_r": 0.238,
+      "leverage_trap": true,
+      "real_percentile_vs_null": 0.0,
+      "null_curve_pass_rate": 100.0,
+      "beats_null_90": false,
+      "claim_holds": false,
+      "arm_pass": false
+    },
+    "oos/age10": {
+      "n": 76,
+      "net": 43.2236,
+      "n_wide": 76,
+      "claim": {
+        "wide_mean_r": 0.8011,
+        "narrow_mean_r": 0.6424,
+        "n_wide": 38,
+        "n_narrow": 38,
+        "wide_wr": 0.5263,
+        "narrow_wr": 0.2632,
+        "wide_beats_narrow": true
+      },
+      "d_net": 15.2215,
+      "curve_better": true,
+      "book_mean_r": 0.5687,
+      "leverage_trap": false,
+      "real_percentile_vs_null": 0.0,
+      "null_curve_pass_rate": 100.0,
+      "beats_null_90": false,
+      "claim_holds": true,
+      "arm_pass": false
+    }
+  },
+  "verdicts": {
+    "cells": 6,
+    "claim_holds_cells": 1,
+    "arm_pass_cells": 0,
+    "arm_is_real": false,
+    "conclusion": "wide-SL claim FAILS in at least one cell - the sizing idea is not supported, regardless of dNet"
+  },
+  "elapsed_sec": 79.46
+}
