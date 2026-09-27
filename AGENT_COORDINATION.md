@@ -366,6 +366,29 @@ every resample satisfies one of the two clauses. The correct two-sided bootstrap
 p is `2 * min(P(diff<=0), P(diff>=0))` capped at 1. Smoke-test any new statistic
 against a known-null and a known-signal input before believing its output.
 
+**Rule 10 — a 30m/2h "shadow timeframe" may only VETO, never enter early.** The
+C15 window gate derives to `entry_instant (bar_ts+900) > htf_close (s+3600)`, so
+the 1h bar must already be closed before a 15m entry is legal. 30m is a strict
+sub-interval of 1h, which makes it a *half-bar checkpoint* on the existing chain
+— genuinely interesting, and genuinely unable to act earlier. If early entry from
+30m is ever tested it needs its own pre-registration and its own review; do not
+smuggle it in as a "filter". See `docs/SHADOW_TIMEFRAME_IDEAS.md`.
+
+**Rule 11 — a consistent-but-backwards pattern is still a null.** Log 108 found
+trades pushing *against* the 2h context were better in 6/6 cells (both eras, all
+three lanes) — the exact opposite of the pre-registered mechanism, and still not
+adoptable because every p > 0.27 and every CI straddled zero. Consistency across
+cells is not significance. Record the direction as a *pattern* and keep the
+verdict separate, or the pattern will be quoted as an edge later.
+
+**Rule 12 — pre-register the null response too, and honour it.** Rule: "a null
+will be reported as one and not re-run with extra predicates until something
+fires." Log 108 had an obvious next predicate available (keep trades where 30m
+and 2h both oppose) and did not run it, because chasing it is the `6.026`
+failure mode wearing a new hat. If a pre-registration says the null ends the
+pass, it does.
+
+
 
 
 **Rule 3b — when two arms come out bit-identical, prove it is real.** A2 == A3
@@ -414,6 +437,18 @@ data defect; do not "fix" it by admitting half-formed 2h candles.
 
   4/4 (4f97f90), ruling brief (b7be019), independent audit + two harness
   fixes (c18ffbb, eb12934). HOLD on the forward gate (5/50) only; age10 =
+- 2026-09-27 - Shadow timeframes: user asked how 30m and 2h could be used while
+  staying on 15m/1h. Pre-registered S1-S4 as binary veto predicates (no tunable
+  threshold, so the 6.026 failure mode is structurally unavailable) and ran Phase 1:
+  all six controls EXACT, and all four predicates FAIL. S1's sign flips between
+  eras; S3 is consistent 6/6 but backwards from the mechanism and never
+  significant; S4 is non-monotone with every small bucket below the n<30 floor.
+  Recorded as a null and not chased - an obvious next predicate existed and was
+  deliberately not run. Also recorded the hard structural limit: 30m is a
+  half-bar checkpoint on the 1h chain, but C15 requires the 1h bar to be closed
+  before any 15m entry, so 30m can veto and cannot enter early. S6 (independent
+  30m/2h shadow book as a feature) is the surviving idea. No adoption.
+
   insufficient data; threshold not frozen; nothing adopted. See "Wick 1h
   gate - corrected status" above.
 - 2026-09-27 - HTF plane deep follow-up: fetched Bybit native 2h to cross-check
