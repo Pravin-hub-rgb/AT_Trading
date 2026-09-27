@@ -1,0 +1,1801 @@
+{
+  "stage": "win_spacing",
+  "thresholds": [
+    3.0,
+    5.0,
+    10.0
+  ],
+  "note": "thresholds are the repo's own, not chosen for effect",
+  "eras": {
+    "is": {
+      "3.0": {
+        "threshold": 3.0,
+        "n_wins": 61,
+        "pct_of_book": 12.2,
+        "share_of_net": 197.0,
+        "mean_gap_trades": 7.2,
+        "median_gap_trades": 5.0,
+        "max_gap_trades": 25,
+        "max_gap_days": 99,
+        "median_gap_days": 17.5,
+        "mean_gap_R": -5.2,
+        "worst_gap_R": -23.8,
+        "worst_within_gap": -23.8,
+        "worst_gap": {
+          "from_trade": 468,
+          "to_trade": 494,
+          "gap_trades": 25,
+          "gap_R": -23.8,
+          "worst_within_gap": -23.8,
+          "gap_days": 63,
+          "from_date": "2026-06-15",
+          "to_date": "2026-08-17"
+        },
+        "gaps": [
+          {
+            "from_trade": 3,
+            "to_trade": 7,
+            "gap_trades": 3,
+            "gap_R": 4.0,
+            "worst_within_gap": 0.0,
+            "gap_days": 16,
+            "from_date": "2023-01-04",
+            "to_date": "2023-01-20"
+          },
+          {
+            "from_trade": 7,
+            "to_trade": 24,
+            "gap_trades": 16,
+            "gap_R": -8.9,
+            "worst_within_gap": -8.9,
+            "gap_days": 55,
+            "from_date": "2023-01-20",
+            "to_date": "2023-03-16"
+          },
+          {
+            "from_trade": 24,
+            "to_trade": 50,
+            "gap_trades": 25,
+            "gap_R": -20.6,
+            "worst_within_gap": -20.6,
+            "gap_days": 96,
+            "from_date": "2023-03-16",
+            "to_date": "2023-06-20"
+          },
+          {
+            "from_trade": 50,
+            "to_trade": 70,
+            "gap_trades": 19,
+            "gap_R": -20.7,
+            "worst_within_gap": -20.7,
+            "gap_days": 99,
+            "from_date": "2023-06-20",
+            "to_date": "2023-09-27"
+          },
+          {
+            "from_trade": 70,
+            "to_trade": 71,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-09-27",
+            "to_date": "2023-09-28"
+          },
+          {
+            "from_trade": 71,
+            "to_trade": 83,
+            "gap_trades": 11,
+            "gap_R": -11.7,
+            "worst_within_gap": -11.7,
+            "gap_days": 25,
+            "from_date": "2023-09-28",
+            "to_date": "2023-10-23"
+          },
+          {
+            "from_trade": 83,
+            "to_trade": 84,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2023-10-23",
+            "to_date": "2023-10-23"
+          },
+          {
+            "from_trade": 84,
+            "to_trade": 85,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-10-23",
+            "to_date": "2023-10-24"
+          },
+          {
+            "from_trade": 85,
+            "to_trade": 91,
+            "gap_trades": 5,
+            "gap_R": -5.8,
+            "worst_within_gap": -5.8,
+            "gap_days": 37,
+            "from_date": "2023-10-24",
+            "to_date": "2023-11-30"
+          },
+          {
+            "from_trade": 91,
+            "to_trade": 92,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-11-30",
+            "to_date": "2023-12-01"
+          },
+          {
+            "from_trade": 92,
+            "to_trade": 93,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 3,
+            "from_date": "2023-12-01",
+            "to_date": "2023-12-04"
+          },
+          {
+            "from_trade": 93,
+            "to_trade": 94,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2023-12-04",
+            "to_date": "2023-12-04"
+          },
+          {
+            "from_trade": 94,
+            "to_trade": 95,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-12-04",
+            "to_date": "2023-12-05"
+          },
+          {
+            "from_trade": 95,
+            "to_trade": 106,
+            "gap_trades": 10,
+            "gap_R": -2.0,
+            "worst_within_gap": -2.7,
+            "gap_days": 23,
+            "from_date": "2023-12-05",
+            "to_date": "2023-12-28"
+          },
+          {
+            "from_trade": 106,
+            "to_trade": 112,
+            "gap_trades": 5,
+            "gap_R": -5.0,
+            "worst_within_gap": -5.0,
+            "gap_days": 21,
+            "from_date": "2023-12-28",
+            "to_date": "2024-01-18"
+          },
+          {
+            "from_trade": 112,
+            "to_trade": 120,
+            "gap_trades": 7,
+            "gap_R": -8.7,
+            "worst_within_gap": -8.7,
+            "gap_days": 22,
+            "from_date": "2024-01-18",
+            "to_date": "2024-02-09"
+          },
+          {
+            "from_trade": 120,
+            "to_trade": 134,
+            "gap_trades": 13,
+            "gap_R": -12.0,
+            "worst_within_gap": -12.0,
+            "gap_days": 23,
+            "from_date": "2024-02-09",
+            "to_date": "2024-03-03"
+          },
+          {
+            "from_trade": 134,
+            "to_trade": 140,
+            "gap_trades": 5,
+            "gap_R": -5.4,
+            "worst_within_gap": -5.4,
+            "gap_days": 15,
+            "from_date": "2024-03-03",
+            "to_date": "2024-03-18"
+          },
+          {
+            "from_trade": 140,
+            "to_trade": 152,
+            "gap_trades": 11,
+            "gap_R": -7.7,
+            "worst_within_gap": -7.7,
+            "gap_days": 17,
+            "from_date": "2024-03-18",
+            "to_date": "2024-04-04"
+          },
+          {
+            "from_trade": 152,
+            "to_trade": 165,
+            "gap_trades": 12,
+            "gap_R": -7.7,
+            "worst_within_gap": -7.7,
+            "gap_days": 29,
+            "from_date": "2024-04-04",
+            "to_date": "2024-05-03"
+          },
+          {
+            "from_trade": 165,
+            "to_trade": 170,
+            "gap_trades": 4,
+            "gap_R": -3.9,
+            "worst_within_gap": -3.9,
+            "gap_days": 12,
+            "from_date": "2024-05-03",
+            "to_date": "2024-05-15"
+          },
+          {
+            "from_trade": 170,
+            "to_trade": 188,
+            "gap_trades": 17,
+            "gap_R": -13.3,
+            "worst_within_gap": -13.3,
+            "gap_days": 37,
+            "from_date": "2024-05-15",
+            "to_date": "2024-06-21"
+          },
+          {
+            "from_trade": 188,
+            "to_trade": 189,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2024-06-21",
+            "to_date": "2024-06-23"
+          },
+          {
+            "from_trade": 189,
+            "to_trade": 190,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2024-06-23",
+            "to_date": "2024-06-24"
+          },
+          {
+            "from_trade": 190,
+            "to_trade": 209,
+            "gap_trades": 18,
+            "gap_R": -13.9,
+            "worst_within_gap": -13.9,
+            "gap_days": 41,
+            "from_date": "2024-06-24",
+            "to_date": "2024-08-04"
+          },
+          {
+            "from_trade": 209,
+            "to_trade": 218,
+            "gap_trades": 8,
+            "gap_R": -5.6,
+            "worst_within_gap": -5.6,
+            "gap_days": 16,
+            "from_date": "2024-08-04",
+            "to_date": "2024-08-20"
+          },
+          {
+            "from_trade": 218,
+            "to_trade": 219,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2024-08-20",
+            "to_date": "2024-08-21"
+          },
+          {
+            "from_trade": 219,
+            "to_trade": 234,
+            "gap_trades": 14,
+            "gap_R": -9.6,
+            "worst_within_gap": -9.6,
+            "gap_days": 36,
+            "from_date": "2024-08-21",
+            "to_date": "2024-09-26"
+          },
+          {
+            "from_trade": 234,
+            "to_trade": 240,
+            "gap_trades": 5,
+            "gap_R": -6.0,
+            "worst_within_gap": -6.0,
+            "gap_days": 18,
+            "from_date": "2024-09-26",
+            "to_date": "2024-10-14"
+          },
+          {
+            "from_trade": 240,
+            "to_trade": 252,
+            "gap_trades": 11,
+            "gap_R": -6.9,
+            "worst_within_gap": -8.7,
+            "gap_days": 35,
+            "from_date": "2024-10-14",
+            "to_date": "2024-11-18"
+          },
+          {
+            "from_trade": 252,
+            "to_trade": 271,
+            "gap_trades": 18,
+            "gap_R": -5.5,
+            "worst_within_gap": -7.1,
+            "gap_days": 44,
+            "from_date": "2024-11-18",
+            "to_date": "2025-01-01"
+          },
+          {
+            "from_trade": 271,
+            "to_trade": 281,
+            "gap_trades": 9,
+            "gap_R": -7.2,
+            "worst_within_gap": -7.2,
+            "gap_days": 30,
+            "from_date": "2025-01-01",
+            "to_date": "2025-01-31"
+          },
+          {
+            "from_trade": 281,
+            "to_trade": 291,
+            "gap_trades": 9,
+            "gap_R": -6.6,
+            "worst_within_gap": -6.6,
+            "gap_days": 26,
+            "from_date": "2025-01-31",
+            "to_date": "2025-02-26"
+          },
+          {
+            "from_trade": 291,
+            "to_trade": 308,
+            "gap_trades": 16,
+            "gap_R": -17.6,
+            "worst_within_gap": -17.6,
+            "gap_days": 55,
+            "from_date": "2025-02-26",
+            "to_date": "2025-04-22"
+          },
+          {
+            "from_trade": 308,
+            "to_trade": 309,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2025-04-22",
+            "to_date": "2025-04-22"
+          },
+          {
+            "from_trade": 309,
+            "to_trade": 331,
+            "gap_trades": 21,
+            "gap_R": -14.2,
+            "worst_within_gap": -14.6,
+            "gap_days": 77,
+            "from_date": "2025-04-22",
+            "to_date": "2025-07-08"
+          },
+          {
+            "from_trade": 331,
+            "to_trade": 332,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-07-08",
+            "to_date": "2025-07-09"
+          },
+          {
+            "from_trade": 332,
+            "to_trade": 343,
+            "gap_trades": 10,
+            "gap_R": -8.1,
+            "worst_within_gap": -8.1,
+            "gap_days": 27,
+            "from_date": "2025-07-09",
+            "to_date": "2025-08-05"
+          },
+          {
+            "from_trade": 343,
+            "to_trade": 344,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-08-05",
+            "to_date": "2025-08-06"
+          },
+          {
+            "from_trade": 344,
+            "to_trade": 351,
+            "gap_trades": 6,
+            "gap_R": -3.3,
+            "worst_within_gap": -3.3,
+            "gap_days": 17,
+            "from_date": "2025-08-06",
+            "to_date": "2025-08-23"
+          },
+          {
+            "from_trade": 351,
+            "to_trade": 352,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-08-23",
+            "to_date": "2025-08-24"
+          },
+          {
+            "from_trade": 352,
+            "to_trade": 365,
+            "gap_trades": 12,
+            "gap_R": -5.0,
+            "worst_within_gap": -6.3,
+            "gap_days": 36,
+            "from_date": "2025-08-24",
+            "to_date": "2025-09-29"
+          },
+          {
+            "from_trade": 365,
+            "to_trade": 366,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2025-09-29",
+            "to_date": "2025-09-29"
+          },
+          {
+            "from_trade": 366,
+            "to_trade": 374,
+            "gap_trades": 7,
+            "gap_R": -2.8,
+            "worst_within_gap": -3.6,
+            "gap_days": 27,
+            "from_date": "2025-09-29",
+            "to_date": "2025-10-26"
+          },
+          {
+            "from_trade": 374,
+            "to_trade": 383,
+            "gap_trades": 8,
+            "gap_R": -4.7,
+            "worst_within_gap": -4.7,
+            "gap_days": 17,
+            "from_date": "2025-10-26",
+            "to_date": "2025-11-12"
+          },
+          {
+            "from_trade": 383,
+            "to_trade": 384,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-11-12",
+            "to_date": "2025-11-13"
+          },
+          {
+            "from_trade": 384,
+            "to_trade": 389,
+            "gap_trades": 4,
+            "gap_R": -2.0,
+            "worst_within_gap": -3.3,
+            "gap_days": 18,
+            "from_date": "2025-11-13",
+            "to_date": "2025-12-01"
+          },
+          {
+            "from_trade": 389,
+            "to_trade": 400,
+            "gap_trades": 10,
+            "gap_R": -10.5,
+            "worst_within_gap": -10.5,
+            "gap_days": 35,
+            "from_date": "2025-12-01",
+            "to_date": "2026-01-05"
+          },
+          {
+            "from_trade": 400,
+            "to_trade": 411,
+            "gap_trades": 10,
+            "gap_R": -10.9,
+            "worst_within_gap": -10.9,
+            "gap_days": 24,
+            "from_date": "2026-01-05",
+            "to_date": "2026-01-29"
+          },
+          {
+            "from_trade": 411,
+            "to_trade": 412,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2026-01-29",
+            "to_date": "2026-01-29"
+          },
+          {
+            "from_trade": 412,
+            "to_trade": 414,
+            "gap_trades": 1,
+            "gap_R": -1.1,
+            "worst_within_gap": -1.1,
+            "gap_days": 2,
+            "from_date": "2026-01-29",
+            "to_date": "2026-01-31"
+          },
+          {
+            "from_trade": 414,
+            "to_trade": 415,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2026-01-31",
+            "to_date": "2026-01-31"
+          },
+          {
+            "from_trade": 415,
+            "to_trade": 416,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2026-01-31",
+            "to_date": "2026-02-02"
+          },
+          {
+            "from_trade": 416,
+            "to_trade": 419,
+            "gap_trades": 2,
+            "gap_R": 0.1,
+            "worst_within_gap": -1.1,
+            "gap_days": 11,
+            "from_date": "2026-02-02",
+            "to_date": "2026-02-13"
+          },
+          {
+            "from_trade": 419,
+            "to_trade": 425,
+            "gap_trades": 5,
+            "gap_R": -2.6,
+            "worst_within_gap": -2.6,
+            "gap_days": 9,
+            "from_date": "2026-02-13",
+            "to_date": "2026-02-22"
+          },
+          {
+            "from_trade": 425,
+            "to_trade": 426,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2026-02-22",
+            "to_date": "2026-02-23"
+          },
+          {
+            "from_trade": 426,
+            "to_trade": 437,
+            "gap_trades": 10,
+            "gap_R": 0.2,
+            "worst_within_gap": -2.1,
+            "gap_days": 31,
+            "from_date": "2026-02-23",
+            "to_date": "2026-03-26"
+          },
+          {
+            "from_trade": 437,
+            "to_trade": 462,
+            "gap_trades": 24,
+            "gap_R": -12.4,
+            "worst_within_gap": -15.1,
+            "gap_days": 62,
+            "from_date": "2026-03-26",
+            "to_date": "2026-05-27"
+          },
+          {
+            "from_trade": 462,
+            "to_trade": 468,
+            "gap_trades": 5,
+            "gap_R": -0.8,
+            "worst_within_gap": -0.8,
+            "gap_days": 19,
+            "from_date": "2026-05-27",
+            "to_date": "2026-06-15"
+          },
+          {
+            "from_trade": 468,
+            "to_trade": 494,
+            "gap_trades": 25,
+            "gap_R": -23.8,
+            "worst_within_gap": -23.8,
+            "gap_days": 63,
+            "from_date": "2026-06-15",
+            "to_date": "2026-08-17"
+          }
+        ]
+      },
+      "5.0": {
+        "threshold": 5.0,
+        "n_wins": 41,
+        "pct_of_book": 8.2,
+        "share_of_net": 173.7,
+        "mean_gap_trades": 11.2,
+        "median_gap_trades": 11.0,
+        "max_gap_trades": 30,
+        "max_gap_days": 99,
+        "median_gap_days": 33.5,
+        "mean_gap_R": -6.0,
+        "worst_gap_R": -23.8,
+        "worst_within_gap": -23.8,
+        "worst_gap": {
+          "from_trade": 468,
+          "to_trade": 494,
+          "gap_trades": 25,
+          "gap_R": -23.8,
+          "worst_within_gap": -23.8,
+          "gap_days": 63,
+          "from_date": "2026-06-15",
+          "to_date": "2026-08-17"
+        },
+        "gaps": [
+          {
+            "from_trade": 7,
+            "to_trade": 24,
+            "gap_trades": 16,
+            "gap_R": -8.9,
+            "worst_within_gap": -8.9,
+            "gap_days": 55,
+            "from_date": "2023-01-20",
+            "to_date": "2023-03-16"
+          },
+          {
+            "from_trade": 24,
+            "to_trade": 50,
+            "gap_trades": 25,
+            "gap_R": -20.6,
+            "worst_within_gap": -20.6,
+            "gap_days": 96,
+            "from_date": "2023-03-16",
+            "to_date": "2023-06-20"
+          },
+          {
+            "from_trade": 50,
+            "to_trade": 70,
+            "gap_trades": 19,
+            "gap_R": -20.7,
+            "worst_within_gap": -20.7,
+            "gap_days": 99,
+            "from_date": "2023-06-20",
+            "to_date": "2023-09-27"
+          },
+          {
+            "from_trade": 70,
+            "to_trade": 71,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-09-27",
+            "to_date": "2023-09-28"
+          },
+          {
+            "from_trade": 71,
+            "to_trade": 83,
+            "gap_trades": 11,
+            "gap_R": -11.7,
+            "worst_within_gap": -11.7,
+            "gap_days": 25,
+            "from_date": "2023-09-28",
+            "to_date": "2023-10-23"
+          },
+          {
+            "from_trade": 83,
+            "to_trade": 84,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2023-10-23",
+            "to_date": "2023-10-23"
+          },
+          {
+            "from_trade": 84,
+            "to_trade": 85,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-10-23",
+            "to_date": "2023-10-24"
+          },
+          {
+            "from_trade": 85,
+            "to_trade": 91,
+            "gap_trades": 5,
+            "gap_R": -5.8,
+            "worst_within_gap": -5.8,
+            "gap_days": 37,
+            "from_date": "2023-10-24",
+            "to_date": "2023-11-30"
+          },
+          {
+            "from_trade": 91,
+            "to_trade": 92,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-11-30",
+            "to_date": "2023-12-01"
+          },
+          {
+            "from_trade": 92,
+            "to_trade": 93,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 3,
+            "from_date": "2023-12-01",
+            "to_date": "2023-12-04"
+          },
+          {
+            "from_trade": 93,
+            "to_trade": 94,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2023-12-04",
+            "to_date": "2023-12-04"
+          },
+          {
+            "from_trade": 94,
+            "to_trade": 112,
+            "gap_trades": 17,
+            "gap_R": 0.1,
+            "worst_within_gap": 0.0,
+            "gap_days": 45,
+            "from_date": "2023-12-04",
+            "to_date": "2024-01-18"
+          },
+          {
+            "from_trade": 112,
+            "to_trade": 134,
+            "gap_trades": 21,
+            "gap_R": -16.8,
+            "worst_within_gap": -16.8,
+            "gap_days": 45,
+            "from_date": "2024-01-18",
+            "to_date": "2024-03-03"
+          },
+          {
+            "from_trade": 134,
+            "to_trade": 140,
+            "gap_trades": 5,
+            "gap_R": -5.4,
+            "worst_within_gap": -5.4,
+            "gap_days": 15,
+            "from_date": "2024-03-03",
+            "to_date": "2024-03-18"
+          },
+          {
+            "from_trade": 140,
+            "to_trade": 152,
+            "gap_trades": 11,
+            "gap_R": -7.7,
+            "worst_within_gap": -7.7,
+            "gap_days": 17,
+            "from_date": "2024-03-18",
+            "to_date": "2024-04-04"
+          },
+          {
+            "from_trade": 152,
+            "to_trade": 170,
+            "gap_trades": 17,
+            "gap_R": -8.0,
+            "worst_within_gap": -8.0,
+            "gap_days": 41,
+            "from_date": "2024-04-04",
+            "to_date": "2024-05-15"
+          },
+          {
+            "from_trade": 170,
+            "to_trade": 189,
+            "gap_trades": 18,
+            "gap_R": -9.3,
+            "worst_within_gap": -13.3,
+            "gap_days": 39,
+            "from_date": "2024-05-15",
+            "to_date": "2024-06-23"
+          },
+          {
+            "from_trade": 189,
+            "to_trade": 190,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2024-06-23",
+            "to_date": "2024-06-24"
+          },
+          {
+            "from_trade": 190,
+            "to_trade": 209,
+            "gap_trades": 18,
+            "gap_R": -13.9,
+            "worst_within_gap": -13.9,
+            "gap_days": 41,
+            "from_date": "2024-06-24",
+            "to_date": "2024-08-04"
+          },
+          {
+            "from_trade": 209,
+            "to_trade": 218,
+            "gap_trades": 8,
+            "gap_R": -5.6,
+            "worst_within_gap": -5.6,
+            "gap_days": 16,
+            "from_date": "2024-08-04",
+            "to_date": "2024-08-20"
+          },
+          {
+            "from_trade": 218,
+            "to_trade": 234,
+            "gap_trades": 15,
+            "gap_R": -5.5,
+            "worst_within_gap": -5.5,
+            "gap_days": 37,
+            "from_date": "2024-08-20",
+            "to_date": "2024-09-26"
+          },
+          {
+            "from_trade": 234,
+            "to_trade": 252,
+            "gap_trades": 17,
+            "gap_R": -9.6,
+            "worst_within_gap": -11.3,
+            "gap_days": 53,
+            "from_date": "2024-09-26",
+            "to_date": "2024-11-18"
+          },
+          {
+            "from_trade": 252,
+            "to_trade": 271,
+            "gap_trades": 18,
+            "gap_R": -5.5,
+            "worst_within_gap": -7.1,
+            "gap_days": 44,
+            "from_date": "2024-11-18",
+            "to_date": "2025-01-01"
+          },
+          {
+            "from_trade": 271,
+            "to_trade": 281,
+            "gap_trades": 9,
+            "gap_R": -7.2,
+            "worst_within_gap": -7.2,
+            "gap_days": 30,
+            "from_date": "2025-01-01",
+            "to_date": "2025-01-31"
+          },
+          {
+            "from_trade": 281,
+            "to_trade": 308,
+            "gap_trades": 26,
+            "gap_R": -20.8,
+            "worst_within_gap": -20.8,
+            "gap_days": 81,
+            "from_date": "2025-01-31",
+            "to_date": "2025-04-22"
+          },
+          {
+            "from_trade": 308,
+            "to_trade": 331,
+            "gap_trades": 22,
+            "gap_R": -10.0,
+            "worst_within_gap": -10.4,
+            "gap_days": 77,
+            "from_date": "2025-04-22",
+            "to_date": "2025-07-08"
+          },
+          {
+            "from_trade": 331,
+            "to_trade": 332,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-07-08",
+            "to_date": "2025-07-09"
+          },
+          {
+            "from_trade": 332,
+            "to_trade": 343,
+            "gap_trades": 10,
+            "gap_R": -8.1,
+            "worst_within_gap": -8.1,
+            "gap_days": 27,
+            "from_date": "2025-07-09",
+            "to_date": "2025-08-05"
+          },
+          {
+            "from_trade": 343,
+            "to_trade": 351,
+            "gap_trades": 7,
+            "gap_R": 0.6,
+            "worst_within_gap": 0.0,
+            "gap_days": 18,
+            "from_date": "2025-08-05",
+            "to_date": "2025-08-23"
+          },
+          {
+            "from_trade": 351,
+            "to_trade": 365,
+            "gap_trades": 13,
+            "gap_R": -1.4,
+            "worst_within_gap": -2.7,
+            "gap_days": 37,
+            "from_date": "2025-08-23",
+            "to_date": "2025-09-29"
+          },
+          {
+            "from_trade": 365,
+            "to_trade": 366,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2025-09-29",
+            "to_date": "2025-09-29"
+          },
+          {
+            "from_trade": 366,
+            "to_trade": 383,
+            "gap_trades": 16,
+            "gap_R": -3.0,
+            "worst_within_gap": -3.6,
+            "gap_days": 44,
+            "from_date": "2025-09-29",
+            "to_date": "2025-11-12"
+          },
+          {
+            "from_trade": 383,
+            "to_trade": 384,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-11-12",
+            "to_date": "2025-11-13"
+          },
+          {
+            "from_trade": 384,
+            "to_trade": 400,
+            "gap_trades": 15,
+            "gap_R": -7.5,
+            "worst_within_gap": -7.5,
+            "gap_days": 53,
+            "from_date": "2025-11-13",
+            "to_date": "2026-01-05"
+          },
+          {
+            "from_trade": 400,
+            "to_trade": 411,
+            "gap_trades": 10,
+            "gap_R": -10.9,
+            "worst_within_gap": -10.9,
+            "gap_days": 24,
+            "from_date": "2026-01-05",
+            "to_date": "2026-01-29"
+          },
+          {
+            "from_trade": 411,
+            "to_trade": 415,
+            "gap_trades": 3,
+            "gap_R": 6.9,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2026-01-29",
+            "to_date": "2026-01-31"
+          },
+          {
+            "from_trade": 415,
+            "to_trade": 416,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2026-01-31",
+            "to_date": "2026-02-02"
+          },
+          {
+            "from_trade": 416,
+            "to_trade": 437,
+            "gap_trades": 20,
+            "gap_R": 7.1,
+            "worst_within_gap": -1.1,
+            "gap_days": 52,
+            "from_date": "2026-02-02",
+            "to_date": "2026-03-26"
+          },
+          {
+            "from_trade": 437,
+            "to_trade": 468,
+            "gap_trades": 30,
+            "gap_R": -8.4,
+            "worst_within_gap": -15.1,
+            "gap_days": 81,
+            "from_date": "2026-03-26",
+            "to_date": "2026-06-15"
+          },
+          {
+            "from_trade": 468,
+            "to_trade": 494,
+            "gap_trades": 25,
+            "gap_R": -23.8,
+            "worst_within_gap": -23.8,
+            "gap_days": 63,
+            "from_date": "2026-06-15",
+            "to_date": "2026-08-17"
+          }
+        ]
+      },
+      "10.0": {
+        "threshold": 10.0,
+        "n_wins": 17,
+        "pct_of_book": 3.4,
+        "share_of_net": 125.2,
+        "mean_gap_trades": 29.4,
+        "median_gap_trades": 31.0,
+        "max_gap_trades": 78,
+        "max_gap_days": 232,
+        "median_gap_days": 81.5,
+        "mean_gap_R": -5.2,
+        "worst_gap_R": -24.1,
+        "worst_within_gap": -24.1,
+        "worst_gap": {
+          "from_trade": 7,
+          "to_trade": 50,
+          "gap_trades": 42,
+          "gap_R": -24.1,
+          "worst_within_gap": -24.1,
+          "gap_days": 151,
+          "from_date": "2023-01-20",
+          "to_date": "2023-06-20"
+        },
+        "gaps": [
+          {
+            "from_trade": 7,
+            "to_trade": 50,
+            "gap_trades": 42,
+            "gap_R": -24.1,
+            "worst_within_gap": -24.1,
+            "gap_days": 151,
+            "from_date": "2023-01-20",
+            "to_date": "2023-06-20"
+          },
+          {
+            "from_trade": 50,
+            "to_trade": 83,
+            "gap_trades": 32,
+            "gap_R": -20.4,
+            "worst_within_gap": -20.7,
+            "gap_days": 125,
+            "from_date": "2023-06-20",
+            "to_date": "2023-10-23"
+          },
+          {
+            "from_trade": 83,
+            "to_trade": 91,
+            "gap_trades": 7,
+            "gap_R": 7.4,
+            "worst_within_gap": 0.0,
+            "gap_days": 38,
+            "from_date": "2023-10-23",
+            "to_date": "2023-11-30"
+          },
+          {
+            "from_trade": 91,
+            "to_trade": 92,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2023-11-30",
+            "to_date": "2023-12-01"
+          },
+          {
+            "from_trade": 92,
+            "to_trade": 112,
+            "gap_trades": 19,
+            "gap_R": 14.0,
+            "worst_within_gap": 0.0,
+            "gap_days": 48,
+            "from_date": "2023-12-01",
+            "to_date": "2024-01-18"
+          },
+          {
+            "from_trade": 112,
+            "to_trade": 170,
+            "gap_trades": 57,
+            "gap_R": -18.3,
+            "worst_within_gap": -18.3,
+            "gap_days": 118,
+            "from_date": "2024-01-18",
+            "to_date": "2024-05-15"
+          },
+          {
+            "from_trade": 170,
+            "to_trade": 218,
+            "gap_trades": 47,
+            "gap_R": -11.0,
+            "worst_within_gap": -13.3,
+            "gap_days": 97,
+            "from_date": "2024-05-15",
+            "to_date": "2024-08-20"
+          },
+          {
+            "from_trade": 218,
+            "to_trade": 252,
+            "gap_trades": 33,
+            "gap_R": -10.0,
+            "worst_within_gap": -11.8,
+            "gap_days": 90,
+            "from_date": "2024-08-20",
+            "to_date": "2024-11-18"
+          },
+          {
+            "from_trade": 252,
+            "to_trade": 331,
+            "gap_trades": 78,
+            "gap_R": -23.4,
+            "worst_within_gap": -23.8,
+            "gap_days": 232,
+            "from_date": "2024-11-18",
+            "to_date": "2025-07-08"
+          },
+          {
+            "from_trade": 331,
+            "to_trade": 332,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2025-07-08",
+            "to_date": "2025-07-09"
+          },
+          {
+            "from_trade": 332,
+            "to_trade": 366,
+            "gap_trades": 33,
+            "gap_R": 12.1,
+            "worst_within_gap": -8.1,
+            "gap_days": 82,
+            "from_date": "2025-07-09",
+            "to_date": "2025-09-29"
+          },
+          {
+            "from_trade": 366,
+            "to_trade": 383,
+            "gap_trades": 16,
+            "gap_R": -3.0,
+            "worst_within_gap": -3.6,
+            "gap_days": 44,
+            "from_date": "2025-09-29",
+            "to_date": "2025-11-12"
+          },
+          {
+            "from_trade": 383,
+            "to_trade": 416,
+            "gap_trades": 32,
+            "gap_R": 18.2,
+            "worst_within_gap": -6.2,
+            "gap_days": 82,
+            "from_date": "2025-11-12",
+            "to_date": "2026-02-02"
+          },
+          {
+            "from_trade": 416,
+            "to_trade": 437,
+            "gap_trades": 20,
+            "gap_R": 7.1,
+            "worst_within_gap": -1.1,
+            "gap_days": 52,
+            "from_date": "2026-02-02",
+            "to_date": "2026-03-26"
+          },
+          {
+            "from_trade": 437,
+            "to_trade": 468,
+            "gap_trades": 30,
+            "gap_R": -8.4,
+            "worst_within_gap": -15.1,
+            "gap_days": 81,
+            "from_date": "2026-03-26",
+            "to_date": "2026-06-15"
+          },
+          {
+            "from_trade": 468,
+            "to_trade": 494,
+            "gap_trades": 25,
+            "gap_R": -23.8,
+            "worst_within_gap": -23.8,
+            "gap_days": 63,
+            "from_date": "2026-06-15",
+            "to_date": "2026-08-17"
+          }
+        ]
+      }
+    },
+    "oos": {
+      "3.0": {
+        "threshold": 3.0,
+        "n_wins": 28,
+        "pct_of_book": 10.0,
+        "share_of_net": 313.2,
+        "mean_gap_trades": 8.4,
+        "median_gap_trades": 4,
+        "max_gap_trades": 60,
+        "max_gap_days": 138,
+        "median_gap_days": 8,
+        "mean_gap_R": -5.1,
+        "worst_gap_R": -37.2,
+        "worst_within_gap": -37.2,
+        "worst_gap": {
+          "from_trade": 46,
+          "to_trade": 107,
+          "gap_trades": 60,
+          "gap_R": -37.2,
+          "worst_within_gap": -37.2,
+          "gap_days": 138,
+          "from_date": "2021-04-16",
+          "to_date": "2021-09-01"
+        },
+        "gaps": [
+          {
+            "from_trade": 21,
+            "to_trade": 26,
+            "gap_trades": 4,
+            "gap_R": -2.1,
+            "worst_within_gap": -2.1,
+            "gap_days": 7,
+            "from_date": "2021-02-08",
+            "to_date": "2021-02-15"
+          },
+          {
+            "from_trade": 26,
+            "to_trade": 30,
+            "gap_trades": 3,
+            "gap_R": 0.7,
+            "worst_within_gap": -1.1,
+            "gap_days": 4,
+            "from_date": "2021-02-15",
+            "to_date": "2021-02-19"
+          },
+          {
+            "from_trade": 30,
+            "to_trade": 46,
+            "gap_trades": 15,
+            "gap_R": -14.4,
+            "worst_within_gap": -14.4,
+            "gap_days": 56,
+            "from_date": "2021-02-19",
+            "to_date": "2021-04-16"
+          },
+          {
+            "from_trade": 46,
+            "to_trade": 107,
+            "gap_trades": 60,
+            "gap_R": -37.2,
+            "worst_within_gap": -37.2,
+            "gap_days": 138,
+            "from_date": "2021-04-16",
+            "to_date": "2021-09-01"
+          },
+          {
+            "from_trade": 107,
+            "to_trade": 116,
+            "gap_trades": 8,
+            "gap_R": -4.6,
+            "worst_within_gap": -4.6,
+            "gap_days": 29,
+            "from_date": "2021-09-01",
+            "to_date": "2021-09-30"
+          },
+          {
+            "from_trade": 116,
+            "to_trade": 117,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2021-09-30",
+            "to_date": "2021-10-01"
+          },
+          {
+            "from_trade": 117,
+            "to_trade": 129,
+            "gap_trades": 11,
+            "gap_R": -9.0,
+            "worst_within_gap": -9.0,
+            "gap_days": 38,
+            "from_date": "2021-10-01",
+            "to_date": "2021-11-08"
+          },
+          {
+            "from_trade": 129,
+            "to_trade": 136,
+            "gap_trades": 6,
+            "gap_R": -5.9,
+            "worst_within_gap": -5.9,
+            "gap_days": 18,
+            "from_date": "2021-11-08",
+            "to_date": "2021-11-26"
+          },
+          {
+            "from_trade": 136,
+            "to_trade": 141,
+            "gap_trades": 4,
+            "gap_R": 1.0,
+            "worst_within_gap": 0.0,
+            "gap_days": 7,
+            "from_date": "2021-11-26",
+            "to_date": "2021-12-03"
+          },
+          {
+            "from_trade": 141,
+            "to_trade": 163,
+            "gap_trades": 21,
+            "gap_R": -7.0,
+            "worst_within_gap": -7.0,
+            "gap_days": 50,
+            "from_date": "2021-12-03",
+            "to_date": "2022-01-22"
+          },
+          {
+            "from_trade": 163,
+            "to_trade": 179,
+            "gap_trades": 15,
+            "gap_R": -13.9,
+            "worst_within_gap": -13.9,
+            "gap_days": 60,
+            "from_date": "2022-01-22",
+            "to_date": "2022-03-23"
+          },
+          {
+            "from_trade": 179,
+            "to_trade": 180,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-03-23",
+            "to_date": "2022-03-24"
+          },
+          {
+            "from_trade": 180,
+            "to_trade": 181,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-03-24",
+            "to_date": "2022-03-25"
+          },
+          {
+            "from_trade": 181,
+            "to_trade": 182,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2022-03-25",
+            "to_date": "2022-03-27"
+          },
+          {
+            "from_trade": 182,
+            "to_trade": 183,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-03-27",
+            "to_date": "2022-03-27"
+          },
+          {
+            "from_trade": 183,
+            "to_trade": 186,
+            "gap_trades": 2,
+            "gap_R": -1.4,
+            "worst_within_gap": -1.4,
+            "gap_days": 9,
+            "from_date": "2022-03-27",
+            "to_date": "2022-04-05"
+          },
+          {
+            "from_trade": 186,
+            "to_trade": 191,
+            "gap_trades": 4,
+            "gap_R": -2.7,
+            "worst_within_gap": -2.7,
+            "gap_days": 6,
+            "from_date": "2022-04-05",
+            "to_date": "2022-04-11"
+          },
+          {
+            "from_trade": 191,
+            "to_trade": 206,
+            "gap_trades": 14,
+            "gap_R": -4.8,
+            "worst_within_gap": -6.5,
+            "gap_days": 41,
+            "from_date": "2022-04-11",
+            "to_date": "2022-05-22"
+          },
+          {
+            "from_trade": 206,
+            "to_trade": 208,
+            "gap_trades": 1,
+            "gap_R": -0.4,
+            "worst_within_gap": -0.4,
+            "gap_days": 8,
+            "from_date": "2022-05-22",
+            "to_date": "2022-05-30"
+          },
+          {
+            "from_trade": 208,
+            "to_trade": 209,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 12,
+            "from_date": "2022-05-30",
+            "to_date": "2022-06-11"
+          },
+          {
+            "from_trade": 209,
+            "to_trade": 210,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-06-11",
+            "to_date": "2022-06-11"
+          },
+          {
+            "from_trade": 210,
+            "to_trade": 211,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2022-06-11",
+            "to_date": "2022-06-13"
+          },
+          {
+            "from_trade": 211,
+            "to_trade": 220,
+            "gap_trades": 8,
+            "gap_R": -4.1,
+            "worst_within_gap": -4.1,
+            "gap_days": 27,
+            "from_date": "2022-06-13",
+            "to_date": "2022-07-10"
+          },
+          {
+            "from_trade": 220,
+            "to_trade": 264,
+            "gap_trades": 43,
+            "gap_R": -23.4,
+            "worst_within_gap": -23.4,
+            "gap_days": 119,
+            "from_date": "2022-07-10",
+            "to_date": "2022-11-06"
+          },
+          {
+            "from_trade": 264,
+            "to_trade": 265,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-11-06",
+            "to_date": "2022-11-06"
+          },
+          {
+            "from_trade": 265,
+            "to_trade": 266,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-11-06",
+            "to_date": "2022-11-07"
+          },
+          {
+            "from_trade": 266,
+            "to_trade": 274,
+            "gap_trades": 7,
+            "gap_R": -9.1,
+            "worst_within_gap": -9.1,
+            "gap_days": 36,
+            "from_date": "2022-11-07",
+            "to_date": "2022-12-13"
+          }
+        ]
+      },
+      "5.0": {
+        "threshold": 5.0,
+        "n_wins": 17,
+        "pct_of_book": 6.1,
+        "share_of_net": 255.8,
+        "mean_gap_trades": 14.3,
+        "median_gap_trades": 1.0,
+        "max_gap_trades": 94,
+        "max_gap_days": 231,
+        "median_gap_days": 6.5,
+        "mean_gap_R": -5.8,
+        "worst_gap_R": -37.1,
+        "worst_within_gap": -42.7,
+        "worst_gap": {
+          "from_trade": 46,
+          "to_trade": 141,
+          "gap_trades": 94,
+          "gap_R": -37.1,
+          "worst_within_gap": -42.7,
+          "gap_days": 231,
+          "from_date": "2021-04-16",
+          "to_date": "2021-12-03"
+        },
+        "gaps": [
+          {
+            "from_trade": 21,
+            "to_trade": 30,
+            "gap_trades": 8,
+            "gap_R": 1.8,
+            "worst_within_gap": -2.1,
+            "gap_days": 11,
+            "from_date": "2021-02-08",
+            "to_date": "2021-02-19"
+          },
+          {
+            "from_trade": 30,
+            "to_trade": 46,
+            "gap_trades": 15,
+            "gap_R": -14.4,
+            "worst_within_gap": -14.4,
+            "gap_days": 56,
+            "from_date": "2021-02-19",
+            "to_date": "2021-04-16"
+          },
+          {
+            "from_trade": 46,
+            "to_trade": 141,
+            "gap_trades": 94,
+            "gap_R": -37.1,
+            "worst_within_gap": -42.7,
+            "gap_days": 231,
+            "from_date": "2021-04-16",
+            "to_date": "2021-12-03"
+          },
+          {
+            "from_trade": 141,
+            "to_trade": 179,
+            "gap_trades": 37,
+            "gap_R": -17.6,
+            "worst_within_gap": -17.6,
+            "gap_days": 110,
+            "from_date": "2021-12-03",
+            "to_date": "2022-03-23"
+          },
+          {
+            "from_trade": 179,
+            "to_trade": 180,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-03-23",
+            "to_date": "2022-03-24"
+          },
+          {
+            "from_trade": 180,
+            "to_trade": 181,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-03-24",
+            "to_date": "2022-03-25"
+          },
+          {
+            "from_trade": 181,
+            "to_trade": 182,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2022-03-25",
+            "to_date": "2022-03-27"
+          },
+          {
+            "from_trade": 182,
+            "to_trade": 183,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-03-27",
+            "to_date": "2022-03-27"
+          },
+          {
+            "from_trade": 183,
+            "to_trade": 191,
+            "gap_trades": 7,
+            "gap_R": 0.1,
+            "worst_within_gap": -1.4,
+            "gap_days": 15,
+            "from_date": "2022-03-27",
+            "to_date": "2022-04-11"
+          },
+          {
+            "from_trade": 191,
+            "to_trade": 206,
+            "gap_trades": 14,
+            "gap_R": -4.8,
+            "worst_within_gap": -6.5,
+            "gap_days": 41,
+            "from_date": "2022-04-11",
+            "to_date": "2022-05-22"
+          },
+          {
+            "from_trade": 206,
+            "to_trade": 209,
+            "gap_trades": 2,
+            "gap_R": 4.2,
+            "worst_within_gap": -0.4,
+            "gap_days": 20,
+            "from_date": "2022-05-22",
+            "to_date": "2022-06-11"
+          },
+          {
+            "from_trade": 209,
+            "to_trade": 210,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-06-11",
+            "to_date": "2022-06-11"
+          },
+          {
+            "from_trade": 210,
+            "to_trade": 211,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 2,
+            "from_date": "2022-06-11",
+            "to_date": "2022-06-13"
+          },
+          {
+            "from_trade": 211,
+            "to_trade": 264,
+            "gap_trades": 52,
+            "gap_R": -24.4,
+            "worst_within_gap": -24.4,
+            "gap_days": 146,
+            "from_date": "2022-06-13",
+            "to_date": "2022-11-06"
+          },
+          {
+            "from_trade": 264,
+            "to_trade": 265,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-11-06",
+            "to_date": "2022-11-06"
+          },
+          {
+            "from_trade": 265,
+            "to_trade": 266,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-11-06",
+            "to_date": "2022-11-07"
+          }
+        ]
+      },
+      "10.0": {
+        "threshold": 10.0,
+        "n_wins": 5,
+        "pct_of_book": 1.8,
+        "share_of_net": 133.0,
+        "mean_gap_trades": 60.2,
+        "median_gap_trades": 42.0,
+        "max_gap_trades": 157,
+        "max_gap_days": 408,
+        "median_gap_days": 114.5,
+        "mean_gap_R": -1.6,
+        "worst_gap_R": -45.7,
+        "worst_within_gap": -45.7,
+        "worst_gap": {
+          "from_trade": 21,
+          "to_trade": 179,
+          "gap_trades": 157,
+          "gap_R": -45.7,
+          "worst_within_gap": -45.7,
+          "gap_days": 408,
+          "from_date": "2021-02-08",
+          "to_date": "2022-03-23"
+        },
+        "gaps": [
+          {
+            "from_trade": 21,
+            "to_trade": 179,
+            "gap_trades": 157,
+            "gap_R": -45.7,
+            "worst_within_gap": -45.7,
+            "gap_days": 408,
+            "from_date": "2021-02-08",
+            "to_date": "2022-03-23"
+          },
+          {
+            "from_trade": 179,
+            "to_trade": 264,
+            "gap_trades": 84,
+            "gap_R": 39.5,
+            "worst_within_gap": 0.0,
+            "gap_days": 228,
+            "from_date": "2022-03-23",
+            "to_date": "2022-11-06"
+          },
+          {
+            "from_trade": 264,
+            "to_trade": 265,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 0,
+            "from_date": "2022-11-06",
+            "to_date": "2022-11-06"
+          },
+          {
+            "from_trade": 265,
+            "to_trade": 266,
+            "gap_trades": 0,
+            "gap_R": 0,
+            "worst_within_gap": 0.0,
+            "gap_days": 1,
+            "from_date": "2022-11-06",
+            "to_date": "2022-11-07"
+          }
+        ]
+      }
+    }
+  }
+}
