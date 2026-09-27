@@ -292,12 +292,51 @@ write-up's unproven *reason* was wrong, its direction was right.
   `n=490 net=+53.8630` every time, while `_chop_series_1h(lb=14)` vs `lb=2`
   returns different series. Params reach the code; they just don't move trades.
 
-**Rule 3a — the corrected reason, cite this instead of Rule 2's wording.** The
-edge needs the parent sampled at **1h** and is **indifferent to lookback
-duration** and to the chop/garch feature windows. Per-bar parent structure
-(swing turns, chop transitions) carries the signal, and averaging the same
-window to 2h destroys it. "1h is load-bearing because the lookbacks are tuned
-for it" is **false** — the lookbacks are not what is tuned.
+**Rule 3a — SUPERSEDED 2026-09-27 by log 106. DO NOT CITE Rule 3a.** It said
+the edge needs a 1h-sampled parent and called the 2h loss a "resolution" effect.
+That was measured on a confounded design: the LTF stayed at 15m, so the ladder
+went 4:1 → 8:1 at the same time. Pairing 2h with a matching 30m LTF recovers
++182R IS and +27R OOS (PF 1.11 → 2.28). A large part of what Rule 3a attributed
+to resolution was **ladder skew**. See Rule 6.
+
+**Rule 6 — when you vary one timeframe, vary it in isolation, or say you did not.**
+The whole error in logs 104/105 was moving the HTF while holding the LTF, which
+changes the ladder silently. The engine's own relationship is 15m × 4 = 1h, so
+any HTF change moves the ladder to 8:1 unless the LTF moves with it. The
+correct read is a set of *paired* contrasts, each differing in one factor:
+
+| Contrast | Hold fixed | IS champ | OOS champ |
+|---|---|---|---|
+| A ladder | HTF = 2h | +222.4 vs +40.2 | −19.9 vs −47.3 |
+| B LTF | HTF = 1h | +241.6 vs +325.8 | +15.5 vs +70.2 |
+| C HTF | LTF = 15m | +40.2 vs +325.8 | −47.3 vs +70.2 |
+
+Both the ladder and the 15m LTF are load-bearing, and they are **separate**
+effects. Matching the ladder is necessary but not sufficient. Shipped 15m/1h is
+still the best of all 12 cells. 2h is no longer disqualified, just not better.
+
+**Rule 7 — the C15 window gate is `htf_bar_secs - ltf_bar_secs`, at 7 sites.**
+v18:539's `s + 2700 < bar_ts <= e + 2700` is not a constant; 2700 = 3600 − 900.
+Any run that changes either timeframe must move it. Every 2h run in logs
+104/105 left it at 1h math while reading 2h bars — a leak that flattered 2h.
+Derive it; never hard-code it. Two traps when patching it:
+- **A grep of the raw v18 file misses sites.** `build_module()` layers extra
+  patches; two more gate sites exist only in the patched text. Sweep the literal
+  and assert zero survive, with the expected count asserted so a future patch
+  fails loudly.
+- **Check the patch variable name for collisions.** `_win` already exists in v18
+  as a local list slice (`_win=_vol15[_lo:_vi]`). Reusing it produced
+  `int + list` hundreds of lines from the cause. Use `_knowwin` and assert the
+  name is unused.
+
+**Rule 8 — LTF sensitivity lives on the swing, not the features.** Log 105 proved
+the HTF chop/garch/ent/detect windows are inert (absurd values → identical book).
+Contrast B shows the LTF is where real sensitivity is. Corollary lead, **not
+adopted**: `min_bars_15m=25` on the shipped 15m/1h gave +272.8R IS but
+**+128.6R OOS** vs shipped +70.2R — better OOS, worse IS, one un-pre-registered
+observation. Do not treat it as a result; do not let it die either. It needs a
+pre-registered sweep.
+
 
 **Rule 3b — when two arms come out bit-identical, prove it is real.** A2 == A3
 could have been dropped kwargs. It was not, and the proof is cheap: drive the

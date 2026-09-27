@@ -227,4 +227,103 @@ evidence about the live lanes.
 - Only 1h and 2h were tested. 30m/4h were not, and this result does not
   license proposing them (see Rule 2 in `AGENT_COORDINATION.md`).
 - The mechanism in the box above is an *interpretation* consistent with the
+
+
+---
+
+# ADDENDUM 2 — the ladder, not the plane (2026-09-27)
+
+Addendum 1 concluded "1h is load-bearing because the parent must be sampled at
+1h". **That conclusion is wrong, and this addendum supersedes it.** It came from
+a design flaw: every earlier run moved the HTF while **holding the LTF at 15m**,
+so "2h is bad" and "an 8:1 ladder is bad" were never separated.
+
+The user spotted the flaw directly: shipped is 15m × 4 = 1h, so 30m × 4 = 2h
+should be an equally coherent family. That is the right question, and it turns
+out the ladder is half the story.
+
+## Also fixed here: a causality leak in every prior 2h run
+
+v18:537-539, in the engine's own comment:
+
+> *the window is knowable from the flip candle CLOSE (entry_ts + 3600); the LTF
+> entry instant is bar_ts + 900. Gate in knowable-instant space.*
+> `if not (s + 2700 < bar_ts <= e + 2700): continue`
+
+`s` is an HTF `entry_ts` (v18:239), so the gate compares HTF space to LTF space,
+and `2700 = 3600 − 900 = htf_bar_secs − ltf_bar_secs`. The earlier runs patched
+the bisect close list to 7200 but **left this 2700 alone** — they gated on 1h
+math while reading 2h bars, admitting entries up to an hour before the 2h flip
+candle closed. Every prior 2h number is recomputed here. The leak *flattered*
+2h, and 2h still lost, so the direction of those verdicts survives; the numbers
+did not.
+
+The gate is now derived (`_knowwin = htf_bar_secs - ltf_bar_secs`) at all **7**
+sites. Two lessons from doing this safely, both worth keeping:
+
+- **A grep of the raw v18 file is not enough.** `build_module()` layers extra
+  patches, and two more gate sites exist *only* in the patched text. Sweep the
+  literal and hard-assert none survive.
+- **Check your patch variable name for collisions.** `_win` already exists in
+  v18 as a local list slice (`_win=_vol15[_lo:_vi]`). Naming the gate `_win`
+  reassigned it and produced `int + list` far from the cause.
+
+## The grid (446s, both era identity gates EXACT)
+
+min_bars 15m = 50 (shipped) — champion / utcsat:
+
+| Cell | LTF/HTF | Ladder | Gate | IS champ | IS utcsat | OOS champ | OOS utcsat |
+|---|---|---|---|---|---|---|---|
+| F0 control | 15m/1h | 4:1 | 2700 | **+325.8** | **+358.9** | **+70.2** | **+60.2** |
+| F1 LTF only | 30m/1h | 2:1 | 1800 | +241.6 | +200.1 | +15.5 | −9.9 |
+| F2 HTF only | 15m/2h | 8:1 | 6300 | +40.2 | +59.7 | −47.3 | −50.0 |
+| F3 family | 30m/2h | 4:1 | 5400 | +222.4 | +159.3 | −19.9 | −10.4 |
+
+## The three paired contrasts — this is the actual result
+
+Pairing cells that differ in exactly one factor separates the three effects that
+earlier work had fused.
+
+| Contrast | Held fixed | IS champ | OOS champ | Read |
+|---|---|---|---|---|
+| **A — ladder** | HTF = 2h | +222.4 vs +40.2 | −19.9 vs −47.3 | **matching the ladder recovers most of the 2h loss, both eras** |
+| **B — LTF** | HTF = 1h | +241.6 vs +325.8 | +15.5 vs +70.2 | **30m LTF costs 84R IS and 55R OOS on its own** |
+| **C — HTF** | LTF = 15m | +40.2 vs +325.8 | −47.3 vs +70.2 | 2h under a 15m LTF is very costly |
+
+**Contrast A confirms the user's hypothesis.** Held at 2h, moving the LTF to 30m
+so the ladder returns to 4:1 recovers +182R IS and +27R OOS, and PF goes
+1.11 → 2.28. The 8:1 mismatch was a genuine, separable drag. This part of the
+insight is right, and it invalidated my earlier conclusion.
+
+**Contrast B is where the hypothesis stops.** Held at 1h, the 30m LTF *by itself*
+costs 84R IS and 55R OOS. So 30m is not a free substitute for 15m. The ladder is
+**necessary but not sufficient**: matching 4:1 does not rescue a coarser LTF,
+because the LTF is what actually generates entries and 15m captures structure
+that 30m averages away.
+
+## Verdict
+
+- **The shipped 15m/1h remains the best cell in all 12 measured cells.** Nothing
+  beats it, in either era, on any lane.
+- **15m LTF is load-bearing** (Contrast B, both eras) — it is the entry
+  generator, and coarsening it is not compensated by anything upstream.
+- **The 4:1 ladder is load-bearing** (Contrast A, both eras) — Addendum 1 was
+  wrong to call this a "resolution" effect; a large part of it was ladder skew.
+- **2h is no longer disqualified.** It was never fairly tested until this run,
+  and at a matched 4:1 ladder it is roughly half as bad as it looked. It is
+  still not *better* than 1h, and it is not adopted.
+- Nothing adopted. Engine stays 15m / 1h / min_bars 20.
+
+## One loose end worth naming, not acting on
+
+`min_bars_15m=25` on the **shipped 15m/1h** control gave +272.8R IS but
+**+128.6R OOS** — better out of sample than the shipped +70.2R, while being
+worse in sample. That is a single un-pre-registered observation on a lever I had
+not proposed, so it is a **lead, not a finding**, and it is not adopted. It is
+recorded because it is the one place the LTF swing length (6.25h vs 12.5h)
+moved OOS in the right direction, and because Contrast B just proved the LTF side
+is where the binding sensitivity lives — the opposite of the HTF chop/garch
+windows, which log 105 proved inert. Worth a properly pre-registered sweep; not
+worth a decision now.
+
   evidence, not a separately tested claim.

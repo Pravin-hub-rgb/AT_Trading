@@ -1,0 +1,445 @@
+{
+  "stage": "tf_family",
+  "question": "is the 4:1 ladder what matters, or the specific 15m/1h pair?",
+  "bug_fixed": "C15 window gate was hard-coded 2700 (=3600-900); on 2h it must be 6300. Earlier 2h numbers ran with a 1h gate and are recomputed here.",
+  "gate_formula": "htf_bar_secs - ltf_bar_secs",
+  "cells": {
+    "is/mb50_count/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 500,
+          "net": 325.8,
+          "max_dd": 27.7242,
+          "pf": 1.8148
+        },
+        "utcsat": {
+          "n": 454,
+          "net": 358.9,
+          "max_dd": 21.1764,
+          "pf": 2.0075
+        },
+        "age10": {
+          "n": 130,
+          "net": 435.7,
+          "max_dd": 8.7253,
+          "pf": 7.5691
+        }
+      }
+    },
+    "is/mb50_count/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 268,
+          "net": 241.6,
+          "max_dd": 29.9977,
+          "pf": 2.2707
+        },
+        "utcsat": {
+          "n": 249,
+          "net": 200.1,
+          "max_dd": 30.5883,
+          "pf": 2.1088
+        },
+        "age10": {
+          "n": 58,
+          "net": 117.4,
+          "max_dd": 4.7239,
+          "pf": 4.5904
+        }
+      }
+    },
+    "is/mb50_count/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 467,
+          "net": 40.2,
+          "max_dd": 63.9042,
+          "pf": 1.1078
+        },
+        "utcsat": {
+          "n": 423,
+          "net": 59.7,
+          "max_dd": 43.7752,
+          "pf": 1.1827
+        },
+        "age10": {
+          "n": 124,
+          "net": 186.7,
+          "max_dd": 7.9163,
+          "pf": 3.819
+        }
+      }
+    },
+    "is/mb50_count/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 233,
+          "net": 222.4,
+          "max_dd": 34.18,
+          "pf": 2.2753
+        },
+        "utcsat": {
+          "n": 207,
+          "net": 159.3,
+          "max_dd": 34.3307,
+          "pf": 2.0311
+        },
+        "age10": {
+          "n": 63,
+          "net": 75.2,
+          "max_dd": 11.4516,
+          "pf": 3.1571
+        }
+      }
+    },
+    "is/mb25_duration/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 818,
+          "net": 272.8,
+          "max_dd": 66.3875,
+          "pf": 1.4171
+        },
+        "utcsat": {
+          "n": 746,
+          "net": 166.4,
+          "max_dd": 65.5614,
+          "pf": 1.2775
+        },
+        "age10": {
+          "n": 290,
+          "net": 195.4,
+          "max_dd": 21.2656,
+          "pf": 1.9566
+        }
+      }
+    },
+    "is/mb25_duration/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 441,
+          "net": 171.4,
+          "max_dd": 55.3872,
+          "pf": 1.5533
+        },
+        "utcsat": {
+          "n": 416,
+          "net": 207.2,
+          "max_dd": 44.8198,
+          "pf": 1.6959
+        },
+        "age10": {
+          "n": 163,
+          "net": 189.4,
+          "max_dd": 19.7257,
+          "pf": 2.7174
+        }
+      }
+    },
+    "is/mb25_duration/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 771,
+          "net": 117.7,
+          "max_dd": 88.5086,
+          "pf": 1.1979
+        },
+        "utcsat": {
+          "n": 691,
+          "net": 25.9,
+          "max_dd": 84.8082,
+          "pf": 1.0478
+        },
+        "age10": {
+          "n": 290,
+          "net": 112.0,
+          "max_dd": 38.3593,
+          "pf": 1.5548
+        }
+      }
+    },
+    "is/mb25_duration/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 401,
+          "net": 69.6,
+          "max_dd": 54.0076,
+          "pf": 1.2392
+        },
+        "utcsat": {
+          "n": 364,
+          "net": 27.6,
+          "max_dd": 56.5172,
+          "pf": 1.1015
+        },
+        "age10": {
+          "n": 157,
+          "net": 165.4,
+          "max_dd": 9.3588,
+          "pf": 2.7893
+        }
+      }
+    },
+    "oos/mb50_count/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 279,
+          "net": 70.2,
+          "max_dd": 53.1877,
+          "pf": 1.3437
+        },
+        "utcsat": {
+          "n": 253,
+          "net": 60.2,
+          "max_dd": 29.3814,
+          "pf": 1.3281
+        },
+        "age10": {
+          "n": 76,
+          "net": 43.2,
+          "max_dd": 8.5699,
+          "pf": 1.9064
+        }
+      }
+    },
+    "oos/mb50_count/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 138,
+          "net": 15.5,
+          "max_dd": 25.4895,
+          "pf": 1.147
+        },
+        "utcsat": {
+          "n": 117,
+          "net": -9.9,
+          "max_dd": 25.9593,
+          "pf": 0.8932
+        },
+        "age10": {
+          "n": 35,
+          "net": 45.0,
+          "max_dd": 6.2935,
+          "pf": 3.8014
+        }
+      }
+    },
+    "oos/mb50_count/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 248,
+          "net": -47.3,
+          "max_dd": 92.2912,
+          "pf": 0.7709
+        },
+        "utcsat": {
+          "n": 224,
+          "net": -50.0,
+          "max_dd": 78.7305,
+          "pf": 0.7346
+        },
+        "age10": {
+          "n": 75,
+          "net": 19.7,
+          "max_dd": 7.779,
+          "pf": 1.4301
+        }
+      }
+    },
+    "oos/mb50_count/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 136,
+          "net": -19.9,
+          "max_dd": 47.3007,
+          "pf": 0.8182
+        },
+        "utcsat": {
+          "n": 121,
+          "net": -10.4,
+          "max_dd": 41.2926,
+          "pf": 0.8929
+        },
+        "age10": {
+          "n": 35,
+          "net": 50.6,
+          "max_dd": 6.4571,
+          "pf": 3.4163
+        }
+      }
+    },
+    "oos/mb25_duration/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 535,
+          "net": 128.6,
+          "max_dd": 45.8325,
+          "pf": 1.3308
+        },
+        "utcsat": {
+          "n": 475,
+          "net": 57.9,
+          "max_dd": 48.3538,
+          "pf": 1.1639
+        },
+        "age10": {
+          "n": 194,
+          "net": 120.1,
+          "max_dd": 14.9173,
+          "pf": 1.9582
+        }
+      }
+    },
+    "oos/mb25_duration/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 286,
+          "net": 46.0,
+          "max_dd": 26.8397,
+          "pf": 1.237
+        },
+        "utcsat": {
+          "n": 255,
+          "net": 20.1,
+          "max_dd": 24.0975,
+          "pf": 1.1183
+        },
+        "age10": {
+          "n": 100,
+          "net": 76.2,
+          "max_dd": 11.2403,
+          "pf": 2.4108
+        }
+      }
+    },
+    "oos/mb25_duration/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 449,
+          "net": -34.1,
+          "max_dd": 78.1471,
+          "pf": 0.9025
+        },
+        "utcsat": {
+          "n": 404,
+          "net": -101.4,
+          "max_dd": 101.9189,
+          "pf": 0.6882
+        },
+        "age10": {
+          "n": 183,
+          "net": 16.3,
+          "max_dd": 24.5795,
+          "pf": 1.1293
+        }
+      }
+    },
+    "oos/mb25_duration/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 259,
+          "net": -8.5,
+          "max_dd": 54.1941,
+          "pf": 0.954
+        },
+        "utcsat": {
+          "n": 232,
+          "net": -20.5,
+          "max_dd": 55.4486,
+          "pf": 0.8787
+        },
+        "age10": {
+          "n": 89,
+          "net": 91.4,
+          "max_dd": 5.759,
+          "pf": 3.1217
+        }
+      }
+    }
+  },
+  "controls": {
+    "is": "EXACT - all 3 lanes reproduced",
+    "oos": "EXACT - all 3 lanes reproduced"
+  },
+  "elapsed_sec": 446.45
+}
