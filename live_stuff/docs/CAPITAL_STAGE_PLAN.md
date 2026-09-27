@@ -180,6 +180,54 @@ Notes:
   positive, reproducible, *live-computable* signal - it just does not yet clear
   the same bar M2 was held to.
 
+- **(a5) The size-cap attack is REFUTED, and the reason is structural, not a
+  matter of picking a better cap.** `exp_zx_sizecap.py` -> `_zx_sizecap.json`
+  swept the multiplier over 1.00 / 1.10 / 1.20 / 1.25 / 1.30 / 1.40 / 1.50 on
+  both arms, both venues, both eras. Post-process sizing, so per the sizing
+  exemption in `AGENT_COORDINATION.md` this is a real measurement - no engine
+  rerun, trade keys identical. Bybit control passed again (base ledgers +
+  uZX@1.50 reproduce 24.86).
+
+  | cap | Binance curve cells | Bybit curve cells |
+  |---|---|---|
+  | 1.00 (base) | 0/12 | 0/12 |
+  | 1.10 - 1.40 | 8/12 | 10/12 |
+  | 1.50 | 9/12 | 10/12 |
+
+  **No cap passes 6/6 on either venue. The curve-cell count is essentially flat
+  in the cap** - and that flatness was *predicted before the run*, in the
+  harness docstring, from the arithmetic of `curve_better`:
+
+  - `apply_cap` scales `r_multiple`, so the arm's whole equity curve scales.
+    Therefore `d_max_dd` and `d_ulcer` must be **linear in (cap - 1)**, while
+    `d_calmar` is ~**invariant** (net and dd both scale, their ratio does not).
+  - `curve_better` tests **absolute** thresholds (`d_max_dd>0.5` OR
+    `d_ulcer>0.5` OR `d_calmar>0.05`), so a smaller cap can only ever score a
+    *smaller* curve delta. Capping cannot flip the gate; it can only shrink the
+    miss.
+
+  The measurement confirms it to four decimals on Binance - mean absolute
+  deviation from linear **0.0048**, max **0.047** over 72 comparisons (Bybit is
+  noisier at 0.30 mean because its flagged cohorts are smaller). Champion IS
+  `d_max_dd` walks -2.2539 / -4.5078 / -11.2695 at cap 1.10 / 1.20 / 1.50 -
+  ratios 1.0000 / 2.0000 / **5.0000**. Exactly linear.
+
+  So the hypothesis in (a4) was **wrong in an instructive way**: the failure is
+  not "1.5x is too hot". `d_max_dd` is **negative** and grows with the cap,
+  which means the flagged cohort sits *on top of* the base book's deepest
+  drawdown - upsizing it makes the drawdown deeper, not shallower. champion IS
+  and utcsat IS stay `curve_better=False` at **every** cap from 1.10 to 1.50,
+  while all four OOS cells and age10 pass at every cap. The cell pattern is
+  cap-invariant, so no sizing setting reaches it.
+
+  Two things this run *does* settle. dNet is **robust** - removing the single
+  best trade leaves it unchanged in all 24 cells (`d_net == d_net_no_best`,
+  best trade sits outside the flagged cohort), so the profit is not a
+  one-winner artifact. And the ZC/X profit effect is confirmed at **every** cap,
+  on both venues: dNet is real, it is just inseparable from the drawdown it
+  amplifies. **The size-cap family is CLOSED.** Anything that attacks the shape
+  has to change *which* trades are sized, not how much.
+
   **Net position: the queue splits in two.** M2, ramp_mag, and the M2 component
   of uMZX/sMZX/count_linear are non-deployable as measured (feature-definition
   problem, not rounding). ZC/X are deployable and promising but unadopted at
