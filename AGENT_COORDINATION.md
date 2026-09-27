@@ -234,6 +234,53 @@ other agent's worktree. Merge into experiments/v19-plus deliberately - not by
 editing files in the main tree. If you find yourself reading a file the other
 agent has uncommitted, that is the old workflow; stop and check the branch.
 
+## HTF plane is 1h and that is a fixed assumption (added 2026-09-27)
+
+Tested and rejected the 2h parent plane. **2h loses 6/6** and the way it loses
+rules out the easy explanation. See `docs/HTF_2H_PLANE_TEST.md`, log #104.
+
+| Cell | 1h net | 2h net | 1h DD | 2h DD |
+|---|---|---|---|---|
+| is/champion | +325.8 | +49.4 | 27.7 | 60.6 |
+| is/utcsat | +358.9 | +59.7 | 21.2 | 46.1 |
+| oos/champion | +70.2 | **−55.8** | 53.2 | 95.2 |
+| oos/utcsat | +60.2 | **−56.1** | 29.4 | 80.5 |
+
+(age10 reported separately: +435.7→+184.4 IS, +43.2→+13.6 OOS. Default-off,
+structurally different single-book strategy — not evidence about live lanes.)
+
+The objection "2h is just coarser, of course it trades less" **fails**: trade
+count barely moves (−3% to −9%; age10 OOS actually gained 3) while drawdown
+roughly **doubles** and PF collapses toward 1.0, with both live lanes negative
+out of sample. Same number of trades, twice the pain. 2h is not a quieter view
+of the same signal — it selects a *different and worse* set of trades.
+
+**Rule 1 — changing the HTF plane requires moving the close-time constant in
+the same change.** `v18_streak_halt.py:269`
+`candle_ts_htf_close=[t+3600 for t in candle_ts_htf]` is the gate that decides
+which parent bar has CLOSED and may be read. Feed it 2h candles while it still
+says `t+3600` and the engine reads every 2h bar **one hour before it closed** —
+a lookahead leak, not a bias, and it produces plausible-looking numbers. A
+plane shift without this is not an experiment, it is a leak with a chart
+attached. (Six other 1h constants exist but are LTF-side — `ts+900` is the 15m
+close, `2700` is the window bound — and correctly stay.)
+
+**Rule 2 — treat 1h as structural, not tunable.** Do not propose 30m/2h/4h
+parent variants as sizing or smoothing ideas. The plane is load-bearing.
+
+**Rule 3 — one open question, recorded not hidden.** The 2h run used the same
+`min_bars` (20/10) over 2h bars, so a 20-bar swing spans 40h. Re-tuning to
+10/5 to hold swing *duration* constant is a different experiment that was not
+run. The 0/6 result does not speak to it, and must not be cited as if it did.
+
+**Rule 4 — data note.** The raw CSVs stamp 1h bars at `:30`; the loader
+hour-aligns to the opening boundary. Bucket on the engine's convention. Of
+16,218 (IS) / 8,761 (OOS) 2h buckets, exactly 2 per scope are dropped for
+having a single leg, and both are the ragged **series edges** (bucket index 0
+and the last) — zero interior gaps. An edge-drop is correct behaviour, not a
+data defect; do not "fix" it by admitting half-formed 2h candles.
+
+
 ## Message log
 
 - 2026-09-26 — Found lookahead leak in `enrich_sequential` (203 prior-open
@@ -245,6 +292,15 @@ agent has uncommitted, that is the old workflow; stop and check the branch.
   deliberately left uncommitted.
 - 2026-09-27 - Wick 1h gate: predicate mismatch found (Stage B qualified on
   the 1h plane; all follow-ups tested 15m - wrong cohort), gray re-test PASS
+- 2026-09-27 - HTF plane 1h -> 2h: first test that changed the PLANE rather than
+  the flag or the size. 2h loses 6/6; both live lanes go negative OOS
+  (+70.2 -> -55.8, +60.2 -> -56.1) with DD roughly doubling while trade count
+  holds, so 2h picks worse trades rather than fewer. 1h is now a fixed
+  structural assumption. Found the causality trap: `candle_ts_htf_close` at
+  v18:269 must move with the plane or the engine reads 2h bars an hour early.
+  Runtime patch only, `backend/` clean. See "HTF plane is 1h" above and
+  `docs/HTF_2H_PLANE_TEST.md`.
+
   4/4 (4f97f90), ruling brief (b7be019), independent audit + two harness
   fixes (c18ffbb, eb12934). HOLD on the forward gate (5/50) only; age10 =
   insufficient data; threshold not frozen; nothing adopted. See "Wick 1h

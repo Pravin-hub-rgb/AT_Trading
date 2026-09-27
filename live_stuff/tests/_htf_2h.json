@@ -1,0 +1,130 @@
+{
+  "stage": "htf_2h",
+  "lens": "LTF 15m + fine 1m UNCHANGED; only the HTF parent plane moves 1h -> 2h",
+  "resample": "exact, 2x1h, incomplete buckets dropped",
+  "engine_patch": "candle_ts_htf_close t+3600 -> t+htf_bar_secs (7200 for 2h)",
+  "pre_registered": {
+    "control": "1h arm must reproduce 24.85 exactly",
+    "no_gate": "measured not gated - is 2h better or worse",
+    "adopt": "nothing adopted"
+  },
+  "cells": {
+    "is/champion": {
+      "h1": {
+        "n": 500,
+        "net": 325.8,
+        "max_dd": 27.7242,
+        "pf": 1.8148,
+        "wr": 27.8
+      },
+      "h2": {
+        "n": 484,
+        "net": 49.4,
+        "max_dd": 60.5743,
+        "pf": 1.1309,
+        "wr": 26.86
+      }
+    },
+    "is/utcsat": {
+      "h1": {
+        "n": 454,
+        "net": 358.9,
+        "max_dd": 21.1764,
+        "pf": 2.0075,
+        "wr": 29.07
+      },
+      "h2": {
+        "n": 436,
+        "net": 59.7,
+        "max_dd": 46.1049,
+        "pf": 1.1779,
+        "wr": 28.44
+      }
+    },
+    "is/age10": {
+      "h1": {
+        "n": 130,
+        "net": 435.7,
+        "max_dd": 8.7253,
+        "pf": 7.5691,
+        "wr": 49.23
+      },
+      "h2": {
+        "n": 125,
+        "net": 184.4,
+        "max_dd": 7.8202,
+        "pf": 3.6963,
+        "wr": 46.4
+      }
+    },
+    "oos/champion": {
+      "h1": {
+        "n": 279,
+        "net": 70.2,
+        "max_dd": 53.1877,
+        "pf": 1.3437,
+        "wr": 27.24
+      },
+      "h2": {
+        "n": 254,
+        "net": -55.8,
+        "max_dd": 95.1685,
+        "pf": 0.7356,
+        "wr": 19.69
+      }
+    },
+    "oos/utcsat": {
+      "h1": {
+        "n": 253,
+        "net": 60.2,
+        "max_dd": 29.3814,
+        "pf": 1.3281,
+        "wr": 28.85
+      },
+      "h2": {
+        "n": 228,
+        "net": -56.1,
+        "max_dd": 80.4971,
+        "pf": 0.7064,
+        "wr": 18.86
+      }
+    },
+    "oos/age10": {
+      "h1": {
+        "n": 76,
+        "net": 43.2,
+        "max_dd": 8.5699,
+        "pf": 1.9064,
+        "wr": 39.47
+      },
+      "h2": {
+        "n": 79,
+        "net": 13.6,
+        "max_dd": 8.1979,
+        "pf": 1.2827,
+        "wr": 36.71
+      }
+    }
+  },
+  "bars": {
+    "is": {
+      "n_2h_bars": 16216
+    },
+    "oos": {
+      "n_2h_bars": 8759
+    }
+  },
+  "verdicts": {
+    "twoh_beats_on_net": 0,
+    "cells": 6,
+    "twoh_trade_count_change": {
+      "is/champion": -16,
+      "is/utcsat": -18,
+      "is/age10": -5,
+      "oos/champion": -25,
+      "oos/utcsat": -25,
+      "oos/age10": 3
+    }
+  },
+  "elapsed_sec": 149.29
+}
