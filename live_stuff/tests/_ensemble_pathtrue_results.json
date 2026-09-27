@@ -1,0 +1,113 @@
+{
+ "meta": {
+  "hypothesis": "correlation-filtered ensemble of alive kings beats the champion on risk-adjusted terms in both scopes",
+  "priority": [
+   "champion",
+   "utcsat",
+   "fullstack",
+   "age10"
+  ],
+  "corr_max": 0.9,
+  "arms": [
+   "scaled",
+   "full"
+  ],
+  "k5": "n>=100 IS / >=60 OOS (house)",
+  "k7": "calmar strictly above champion-alone in the same scope (replaces corr-vs-v18: N/A by construction)",
+  "build_s": 123.5
+ },
+ "controls": {
+  "v18_control": {
+   "key": "champion_multi_sw10",
+   "is": {
+    "n": 500,
+    "net": 325.7819,
+    "ref_n": 500,
+    "ref_net": 325.8,
+    "gross": 445.225
+   },
+   "oos": {
+    "n": 279,
+    "net": 70.1499,
+    "ref_n": 279,
+    "ref_net": 70.2,
+    "gross": 105.725
+   }
+  },
+  "champ_ref": {
+   "is": {
+    "n": 500,
+    "net": 325.8
+   },
+   "oos": {
+    "n": 279,
+    "net": 70.2
+   }
+  },
+  "corr_is": {
+   "champion|utcsat": 0.9808,
+   "champion|fullstack": 0.912,
+   "champion|age10": 0.9308,
+   "utcsat|fullstack": 0.9315,
+   "utcsat|age10": 0.9423,
+   "fullstack|age10": 0.9675
+  },
+  "corr_oos": {
+   "champion|utcsat": 0.9419,
+   "champion|fullstack": 0.8091,
+   "champion|age10": 0.4413,
+   "utcsat|fullstack": 0.7746,
+   "utcsat|age10": 0.291,
+   "fullstack|age10": 0.5417
+  },
+  "membership_kept": [
+   "champion"
+  ],
+  "membership_dropped": {
+   "utcsat": "|corr| 0.981 vs champion > 0.90",
+   "fullstack": "|corr| 0.912 vs champion > 0.90",
+   "age10": "|corr| 0.931 vs champion > 0.90"
+  }
+ },
+ "lane_stats": {
+  "is": {
+   "champion": {
+    "n": 500,
+    "net": 325.8
+   },
+   "utcsat": {
+    "n": 454,
+    "net": 358.9
+   },
+   "fullstack": {
+    "n": 200,
+    "net": 310.7
+   },
+   "age10": {
+    "n": 130,
+    "net": 435.7
+   }
+  },
+  "oos": {
+   "champion": {
+    "n": 279,
+    "net": 70.2
+   },
+   "utcsat": {
+    "n": 253,
+    "net": 60.2
+   },
+   "fullstack": {
+    "n": 140,
+    "net": 16.9
+   },
+   "age10": {
+    "n": 76,
+    "net": 43.2
+   }
+  }
+ },
+ "arms": {},
+ "verdict": "NO ENSEMBLE - membership rule retained <2 lanes",
+ "passing_arms": []
+}
