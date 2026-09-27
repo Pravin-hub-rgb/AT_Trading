@@ -977,3 +977,19 @@ VERDICT: G-RULE PASS 4/4 on Stage B's pre-registered lanes (champion/utcsat x IS
 CORRECTED NUMBERS (strict `<`): ck_u both-eras window = 5.0-5.4 | 5.6-6.4 - 14 steps, NOT contiguous, hole at 5.5 (is/utcsat +0.95); cliff 6.4->6.5 (is/champion +24.59, is/utcsat +34.13 together); flip points IS 6.4/6.4/6.1, OOS 7.2/7.2/6.6 (IS binding); all-6 window = 6.1 only at -0.29R on n22 = one trade, post-hoc, NOT a recommendation. Robustness PASS: best trade dropped, cohort still negative 6/6 at 6.026.
 AGE10: "structural" RETRACTED - nested thresholds are the same n=20 cohort (one observation, not five); sum_net_ex_best -3.875 so the +2.01 is a single +5.9R winner; oos/age10 -5.18 on n=7 -> INSUFFICIENT DATA, default-off, not a failure. Also retracted: "cohort worse than book avg at every threshold" (cumulative 1-D sweep over-read).
 STATUS: gray mechanism proven (24.96 / row 101), cohort robust, HOLD - sole blocker = forward gate 5/50; threshold NOT frozen (user: let the result decide; 6.026 sits inside the window and is the only pre-registered gray-validated candidate); adoption path forward -> user ruling -> engine (pravinx0). 5 house rules recorded in AGENT_COORDINATION (strict `<`, control = assert before verdicts, nested = one cohort, windows as blocks, verify before writing). NOT ADOPTED (RESEARCH_POLICY).
+
+- [x] 24.98 **Wick 1h gate - ADOPTION RECORD (documentation only, no new run)**: **2026-09-27.**
+  `docs/WICK_1H_GATE_ADOPTION_RECORD.md` written so the gate can be adopted later
+  without rediscovering it. Pins the predicate to source (shorts only,
+  wick_atr12 < 6.026 STRICT, 1h plane, 12 CLOSED 1h bars, j>=50,
+  cutoff=entry_ts+900), the scope (champion+utcsat only; age10 default-off as a
+  structurally different single-book strategy - 7 differing params, 3.5x fewer
+  trades), the full evidence table (+28.1/+25.7/+19.8/+23.8, cascade 0.00, seq
+  6/6, ex-best 6/6, parity 4/4 asserted, window 5.0-5.4|5.6-6.4 blocks, cliff
+  6.4->6.5), why gray rather than a skip (cascade 0.00 vs -39.0 path-true), the
+  cost-relief distinction between harness and live dNet, the six mistakes that
+  cost two investigations (15m predicate, <= vs <, control-fail footnote,
+  nested thresholds as one cohort, windows as ranges, verify-before-writing),
+  and the adoption procedure. Threshold 6.026 recorded as VALIDATED CANDIDATE,
+  NOT FROZEN; 6.1 explicitly marked post-hoc and not recommended. Blocker
+  unchanged: forward gate 5/50. Nothing adopted, no engine change.
