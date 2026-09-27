@@ -1,0 +1,125 @@
+{
+  "tolerance": 1e-06,
+  "rule": "exact->certify resampler; not exact->report, do NOT substitute",
+  "scopes": {
+    "is": {
+      "native_n": 16224,
+      "resampled_n": 16216,
+      "common_n": 16214,
+      "only_native": 10,
+      "only_resampled": 2,
+      "ohlc_mismatches": 2,
+      "bars_affected": 1,
+      "mismatch_by_field": {
+        "low": 1,
+        "close": 1
+      },
+      "structural_ohlc_exact": false,
+      "by_year": {
+        "2026": 1
+      },
+      "magnitude": {
+        "min": 67.0,
+        "median": 124.9,
+        "max": 124.9
+      },
+      "exact": false,
+      "examples": [
+        {
+          "ts": "2026-09-11 02:00",
+          "field": "low",
+          "native": 76660.0,
+          "resampled": 76727.0
+        },
+        {
+          "ts": "2026-09-11 02:00",
+          "field": "close",
+          "native": 76857.7,
+          "resampled": 76732.8
+        }
+      ],
+      "only_native_stamps": [
+        1789272000,
+        1789279200,
+        1789286400,
+        1789293600,
+        1789300800
+      ],
+      "only_resampled_stamps": [
+        1672516800,
+        1672524000
+      ]
+    },
+    "oos": {
+      "native_n": 8760,
+      "resampled_n": 8759,
+      "common_n": 8757,
+      "only_native": 3,
+      "only_resampled": 2,
+      "ohlc_mismatches": 59,
+      "bars_affected": 59,
+      "mismatch_by_field": {
+        "close": 59
+      },
+      "structural_ohlc_exact": true,
+      "by_year": {
+        "2021": 59
+      },
+      "magnitude": {
+        "min": 0.5,
+        "median": 3.0,
+        "max": 40.0
+      },
+      "exact": false,
+      "examples": [
+        {
+          "ts": "2021-02-03 10:00",
+          "field": "close",
+          "native": 36009.5,
+          "resampled": 35990.0
+        },
+        {
+          "ts": "2021-02-05 06:00",
+          "field": "close",
+          "native": 37700.5,
+          "resampled": 37701.5
+        },
+        {
+          "ts": "2021-02-07 04:00",
+          "field": "close",
+          "native": 38546.5,
+          "resampled": 38570.5
+        },
+        {
+          "ts": "2021-02-09 06:00",
+          "field": "close",
+          "native": 47605.0,
+          "resampled": 47600.0
+        },
+        {
+          "ts": "2021-02-11 00:00",
+          "field": "close",
+          "native": 44251.0,
+          "resampled": 44249.5
+        }
+      ],
+      "only_native_stamps": [
+        1672509600,
+        1672516800,
+        1672524000
+      ],
+      "only_resampled_stamps": [
+        1609444800,
+        1609452000
+      ]
+    }
+  },
+  "structural_mismatch_rate": 4e-05,
+  "per_scope_structural": {
+    "is": false,
+    "oos": true
+  },
+  "verdict": "RESAMPLER ARITHMETIC VERIFIED. open/high/low are byte-identical to Bybit's native 2h on 24970/24971 common bars (0.004% structural divergence). Bucket alignment is therefore correct. The residue is DATA VINTAGE, not construction: IS has 1 bar (near the snapshot's live edge, open+high agree, low+close revised) and OOS has close-only revisions (median 3.0 pts) that never touch high/low - a signature impossible from misaligned buckets, which would corrupt high/low too. SUBSTITUTION DECLINED: the fresh download extends 10 bars past the repo's 1h snapshot and revises historical closes, so swapping it in would have mixed a data-vintage change into a timeframe comparison. Both planes stay on the one 1h snapshot.",
+  "substitution": "declined - both planes kept on the repo's single 1h snapshot",
+  "elapsed_sec": 19.13
+}

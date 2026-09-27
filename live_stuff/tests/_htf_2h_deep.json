@@ -1,0 +1,383 @@
+{
+  "stage": "htf_2h_deep",
+  "question": "is the 1h edge lost to bar RESOLUTION or to doubled lookback DURATION?",
+  "ltf_unchanged": "15m candles, 1m fine data, min_bars_15m=50 - never varied",
+  "cache": {},
+  "arms": {
+    "C0_1h_full": {
+      "is": {
+        "plane_h": 1.0,
+        "bars": {
+          "sw20": 20,
+          "sw10": 10,
+          "chop": 14,
+          "garch": 96,
+          "ent": 96,
+          "detect": 48
+        },
+        "htf_swing_h": 20.0,
+        "htf_ltf_ratio": 1.6,
+        "cells": {
+          "champion": {
+            "n": 500,
+            "net": 325.8,
+            "max_dd": 27.7242,
+            "pf": 1.8148,
+            "wr": 27.8
+          },
+          "utcsat": {
+            "n": 454,
+            "net": 358.9,
+            "max_dd": 21.1764,
+            "pf": 2.0075,
+            "wr": 29.07
+          },
+          "age10": {
+            "n": 130,
+            "net": 435.7,
+            "max_dd": 8.7253,
+            "pf": 7.5691,
+            "wr": 49.23
+          }
+        }
+      },
+      "oos": {
+        "plane_h": 1.0,
+        "bars": {
+          "sw20": 20,
+          "sw10": 10,
+          "chop": 14,
+          "garch": 96,
+          "ent": 96,
+          "detect": 48
+        },
+        "htf_swing_h": 20.0,
+        "htf_ltf_ratio": 1.6,
+        "cells": {
+          "champion": {
+            "n": 279,
+            "net": 70.2,
+            "max_dd": 53.1877,
+            "pf": 1.3437,
+            "wr": 27.24
+          },
+          "utcsat": {
+            "n": 253,
+            "net": 60.2,
+            "max_dd": 29.3814,
+            "pf": 1.3281,
+            "wr": 28.85
+          },
+          "age10": {
+            "n": 76,
+            "net": 43.2,
+            "max_dd": 8.5699,
+            "pf": 1.9064,
+            "wr": 39.47
+          }
+        }
+      }
+    },
+    "A1_1h_half": {
+      "is": {
+        "plane_h": 1.0,
+        "bars": {
+          "sw20": 10,
+          "sw10": 5,
+          "chop": 7,
+          "garch": 48,
+          "ent": 48,
+          "detect": 24
+        },
+        "htf_swing_h": 10.0,
+        "htf_ltf_ratio": 0.8,
+        "cells": {
+          "champion": {
+            "n": 508,
+            "net": 328.2,
+            "max_dd": 25.8021,
+            "pf": 1.8101,
+            "wr": 27.95
+          },
+          "utcsat": {
+            "n": 467,
+            "net": 346.9,
+            "max_dd": 22.0584,
+            "pf": 1.9383,
+            "wr": 28.69
+          },
+          "age10": {
+            "n": 132,
+            "net": 431.7,
+            "max_dd": 8.7253,
+            "pf": 7.4692,
+            "wr": 49.24
+          }
+        }
+      },
+      "oos": {
+        "plane_h": 1.0,
+        "bars": {
+          "sw20": 10,
+          "sw10": 5,
+          "chop": 7,
+          "garch": 48,
+          "ent": 48,
+          "detect": 24
+        },
+        "htf_swing_h": 10.0,
+        "htf_ltf_ratio": 0.8,
+        "cells": {
+          "champion": {
+            "n": 278,
+            "net": 71.1,
+            "max_dd": 53.1877,
+            "pf": 1.3499,
+            "wr": 27.34
+          },
+          "utcsat": {
+            "n": 251,
+            "net": 62.3,
+            "max_dd": 29.3814,
+            "pf": 1.3437,
+            "wr": 29.08
+          },
+          "age10": {
+            "n": 76,
+            "net": 43.2,
+            "max_dd": 8.5699,
+            "pf": 1.9064,
+            "wr": 39.47
+          }
+        }
+      }
+    },
+    "B0_2h_full": {
+      "is": {
+        "plane_h": 2.0,
+        "bars": {
+          "sw20": 20,
+          "sw10": 10,
+          "chop": 14,
+          "garch": 96,
+          "ent": 96,
+          "detect": 48
+        },
+        "htf_swing_h": 40.0,
+        "htf_ltf_ratio": 3.2,
+        "cells": {
+          "champion": {
+            "n": 484,
+            "net": 49.4,
+            "max_dd": 60.5743,
+            "pf": 1.1309,
+            "wr": 26.86
+          },
+          "utcsat": {
+            "n": 436,
+            "net": 59.7,
+            "max_dd": 46.1049,
+            "pf": 1.1779,
+            "wr": 28.44
+          },
+          "age10": {
+            "n": 125,
+            "net": 184.4,
+            "max_dd": 7.8202,
+            "pf": 3.6963,
+            "wr": 46.4
+          }
+        }
+      },
+      "oos": {
+        "plane_h": 2.0,
+        "bars": {
+          "sw20": 20,
+          "sw10": 10,
+          "chop": 14,
+          "garch": 96,
+          "ent": 96,
+          "detect": 48
+        },
+        "htf_swing_h": 40.0,
+        "htf_ltf_ratio": 3.2,
+        "cells": {
+          "champion": {
+            "n": 254,
+            "net": -55.8,
+            "max_dd": 95.1685,
+            "pf": 0.7356,
+            "wr": 19.69
+          },
+          "utcsat": {
+            "n": 228,
+            "net": -56.1,
+            "max_dd": 80.4971,
+            "pf": 0.7064,
+            "wr": 18.86
+          },
+          "age10": {
+            "n": 79,
+            "net": 13.6,
+            "max_dd": 8.1979,
+            "pf": 1.2827,
+            "wr": 36.71
+          }
+        }
+      }
+    },
+    "A2_2h_half": {
+      "is": {
+        "plane_h": 2.0,
+        "bars": {
+          "sw20": 10,
+          "sw10": 5,
+          "chop": 7,
+          "garch": 48,
+          "ent": 48,
+          "detect": 24
+        },
+        "htf_swing_h": 20.0,
+        "htf_ltf_ratio": 1.6,
+        "cells": {
+          "champion": {
+            "n": 490,
+            "net": 53.9,
+            "max_dd": 62.1555,
+            "pf": 1.1415,
+            "wr": 27.14
+          },
+          "utcsat": {
+            "n": 441,
+            "net": 51.6,
+            "max_dd": 48.0828,
+            "pf": 1.1512,
+            "wr": 28.12
+          },
+          "age10": {
+            "n": 125,
+            "net": 185.6,
+            "max_dd": 7.8202,
+            "pf": 3.7634,
+            "wr": 46.4
+          }
+        }
+      },
+      "oos": {
+        "plane_h": 2.0,
+        "bars": {
+          "sw20": 10,
+          "sw10": 5,
+          "chop": 7,
+          "garch": 48,
+          "ent": 48,
+          "detect": 24
+        },
+        "htf_swing_h": 20.0,
+        "htf_ltf_ratio": 1.6,
+        "cells": {
+          "champion": {
+            "n": 242,
+            "net": -46.4,
+            "max_dd": 86.4098,
+            "pf": 0.7663,
+            "wr": 20.25
+          },
+          "utcsat": {
+            "n": 219,
+            "net": -50.3,
+            "max_dd": 74.2821,
+            "pf": 0.7241,
+            "wr": 19.18
+          },
+          "age10": {
+            "n": 77,
+            "net": 11.2,
+            "max_dd": 10.1933,
+            "pf": 1.2353,
+            "wr": 35.06
+          }
+        }
+      }
+    },
+    "A3_2h_swhalf_featfull": {
+      "is": {
+        "plane_h": 2.0,
+        "bars": {
+          "sw20": 10,
+          "sw10": 5,
+          "chop": 14,
+          "garch": 96,
+          "ent": 96,
+          "detect": 48
+        },
+        "htf_swing_h": 20.0,
+        "htf_ltf_ratio": 1.6,
+        "cells": {
+          "champion": {
+            "n": 490,
+            "net": 53.9,
+            "max_dd": 62.1555,
+            "pf": 1.1415,
+            "wr": 27.14
+          },
+          "utcsat": {
+            "n": 441,
+            "net": 51.6,
+            "max_dd": 48.0828,
+            "pf": 1.1512,
+            "wr": 28.12
+          },
+          "age10": {
+            "n": 125,
+            "net": 185.6,
+            "max_dd": 7.8202,
+            "pf": 3.7634,
+            "wr": 46.4
+          }
+        }
+      },
+      "oos": {
+        "plane_h": 2.0,
+        "bars": {
+          "sw20": 10,
+          "sw10": 5,
+          "chop": 14,
+          "garch": 96,
+          "ent": 96,
+          "detect": 48
+        },
+        "htf_swing_h": 20.0,
+        "htf_ltf_ratio": 1.6,
+        "cells": {
+          "champion": {
+            "n": 242,
+            "net": -46.4,
+            "max_dd": 86.4098,
+            "pf": 0.7663,
+            "wr": 20.25
+          },
+          "utcsat": {
+            "n": 219,
+            "net": -50.3,
+            "max_dd": 74.2821,
+            "pf": 0.7241,
+            "wr": 19.18
+          },
+          "age10": {
+            "n": 77,
+            "net": 11.2,
+            "max_dd": 10.1933,
+            "pf": 1.2353,
+            "wr": 35.06
+          }
+        }
+      }
+    }
+  },
+  "controls": {
+    "is": "EXACT - all 3 lanes reproduced",
+    "oos": "EXACT - all 3 lanes reproduced"
+  },
+  "elapsed_sec": 323.68
+}

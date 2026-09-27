@@ -268,10 +268,52 @@ close, `2700` is the window bound — and correctly stay.)
 **Rule 2 — treat 1h as structural, not tunable.** Do not propose 30m/2h/4h
 parent variants as sizing or smoothing ideas. The plane is load-bearing.
 
-**Rule 3 — one open question, recorded not hidden.** The 2h run used the same
-`min_bars` (20/10) over 2h bars, so a 20-bar swing spans 40h. Re-tuning to
-10/5 to hold swing *duration* constant is a different experiment that was not
-run. The 0/6 result does not speak to it, and must not be cited as if it did.
+**Rule 3 — RESOLVED 2026-09-27 (deep follow-up, log 105). The open question
+above is now CLOSED: duration matching does NOT rescue 2h.** A 5-arm run
+separated the two and the answer was the opposite of the worry — the first
+write-up's unproven *reason* was wrong, its direction was right.
+
+| Arm | Plane | lookbacks | HTF:LTF ratio | IS champ | OOS champ |
+|---|---|---|---|---|---|
+| C0 | 1h | full | 1.6× | +325.8 | +70.2 |
+| A1 | 1h | **halved** | 0.8× | +328.2 | +71.1 |
+| B0 | 2h | full | 3.2× | +49.4 | −55.8 |
+| A2 | 2h | **halved** | 1.6× | +53.9 | −46.4 |
+| A3 | 2h | swings halved only | 1.6× | +53.9 | −46.4 |
+
+- **Duration is inert.** A1 ≈ C0 in both eras. Halving all six lookbacks on the
+  1h plane moved champion +2.4R IS / +0.9R OOS — noise, slightly positive both
+  times. A1 even inverts the ratio (parent swing *shorter* than LTF swing) and
+  nothing breaks.
+- **Resolution is the whole story.** A2 restores duration AND the 1.6× ratio and
+  recovers nothing. Both 2h arms still collapse.
+- **chop/garch/ent/detect are non-binding.** A2 and A3 are bit-identical.
+  Falsified as a plumbing bug: absurd `lb` 2→400 leaves the book at
+  `n=490 net=+53.8630` every time, while `_chop_series_1h(lb=14)` vs `lb=2`
+  returns different series. Params reach the code; they just don't move trades.
+
+**Rule 3a — the corrected reason, cite this instead of Rule 2's wording.** The
+edge needs the parent sampled at **1h** and is **indifferent to lookback
+duration** and to the chop/garch feature windows. Per-bar parent structure
+(swing turns, chop transitions) carries the signal, and averaging the same
+window to 2h destroys it. "1h is load-bearing because the lookbacks are tuned
+for it" is **false** — the lookbacks are not what is tuned.
+
+**Rule 3b — when two arms come out bit-identical, prove it is real.** A2 == A3
+could have been dropped kwargs. It was not, and the proof is cheap: drive the
+parameter to an absurd value and show the book does not move, *and* show the
+callee it feeds returns a different series. Do not report an inert parameter as
+a finding on one observation.
+
+**Rule 5 — do not substitute a fresher download into a controlled comparison.**
+Native Bybit 2h was fetched and diffed: `open/high/low` byte-identical on
+24,970/24,971 bars (99.996%), but the venue had since revised 59 OOS closes and
+the file ran 10 bars past the repo's 1h snapshot. Swapping it in would have
+mixed a data-vintage change into a timeframe result and looked like an effect.
+Cross-check the download; keep both planes on one snapshot. Also: `close`-only
+divergence is the signature of a **revision**; misalignment corrupts
+`high`/`low` too, so the field breakdown is the diagnostic that separates them.
+
 
 **Rule 4 — data note.** The raw CSVs stamp 1h bars at `:30`; the loader
 hour-aligns to the opening boundary. Bucket on the engine's convention. Of
@@ -305,3 +347,15 @@ data defect; do not "fix" it by admitting half-formed 2h candles.
   fixes (c18ffbb, eb12934). HOLD on the forward gate (5/50) only; age10 =
   insufficient data; threshold not frozen; nothing adopted. See "Wick 1h
   gate - corrected status" above.
+- 2026-09-27 - HTF plane deep follow-up: fetched Bybit native 2h to cross-check
+  our resampled plane (open/high/low byte-identical on 99.996% of bars; residue
+  is close-only venue revisions = data vintage, and substitution was declined
+  to keep both planes on one snapshot). Then a 5-arm run separated lookback
+  DURATION from bar RESOLUTION, closing the open question from the first HTF
+  write-up. Duration is inert (halving all six lookbacks on the 1h plane moves
+  champion by +2.4R IS / +0.9R OOS); resolution is the whole story (2h still
+  collapses at matched duration and matched 1.6x ratio). chop/garch/ent/detect
+  proven non-binding by falsification, not assumption. 1h confirmed, 2h
+  rejected on a different ground than first stated. No adoption; engine stays
+  1h/min_bars 20. See "HTF plane is 1h" above and
+  `docs/HTF_2H_PLANE_TEST.md`.

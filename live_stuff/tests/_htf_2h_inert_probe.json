@@ -1,0 +1,53 @@
+{
+  "books": {
+    "A3_baseline": {
+      "feat": {
+        "exp31_lb": 14,
+        "garch_lb": 96,
+        "ent_lb": 96,
+        "fd_lb": 48
+      },
+      "n": 490,
+      "net": 53.863,
+      "pf": 1.1415
+    },
+    "A2_halved": {
+      "feat": {
+        "exp31_lb": 7,
+        "garch_lb": 48,
+        "ent_lb": 48,
+        "fd_lb": 24
+      },
+      "n": 490,
+      "net": 53.863,
+      "pf": 1.1415
+    },
+    "absurd_tiny": {
+      "feat": {
+        "exp31_lb": 2,
+        "garch_lb": 3,
+        "ent_lb": 3,
+        "fd_lb": 3
+      },
+      "n": 490,
+      "net": 53.863,
+      "pf": 1.1415
+    },
+    "absurd_huge": {
+      "feat": {
+        "exp31_lb": 200,
+        "garch_lb": 400,
+        "ent_lb": 400,
+        "fd_lb": 200
+      },
+      "n": 490,
+      "net": 53.863,
+      "pf": 1.1415
+    }
+  },
+  "chop_series_differs_by_lb": true,
+  "distinct_nets": [
+    53.863
+  ],
+  "verdict": "features are LIVE but NON-BINDING on trade selection"
+}

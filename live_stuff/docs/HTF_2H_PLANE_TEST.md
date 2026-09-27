@@ -124,3 +124,107 @@ ones — is consistent with acting on stale context.
 
 **1h confirmed. 2h rejected, 0/6.** No production file was modified — runtime
 patch only, `backend/` verified clean. No adoption, nothing to adopt.
+
+
+
+---
+
+# ADDENDUM — the confound is now resolved (2026-09-27)
+
+The section above ended with an open question: *the 2h run held bar-counts in
+bar units, so all six lookbacks doubled; did the 0/6 come from resolution or
+from duration?* That is answered below, by experiment.
+
+## Step 0 first — is our 2h real? (venue cross-check)
+
+Rather than assert the 2h was fine, it was checked against Bybit's own
+`interval=120` klines (`htf2h_fetch_verify.py`).
+
+| Scope | common bars | open/high/low identical | OHLC mismatches |
+|---|---|---|---|
+| IS | 16,214 | 16,213 | 2 (1 bar) |
+| OOS | 8,757 | **8,757 (100%)** | 59 (`close` only) |
+
+**`open`, `high` and `low` are byte-identical on 24,970 of 24,971 common bars
+(99.996%).** Bucket alignment is confirmed against the venue, not assumed. The
+residue is data *vintage*, and the field breakdown proves it: misaligned
+buckets would corrupt high/low too, but every OOS discrepancy is `close`-only
+(median 3.0 points, all in 2021) — the venue revised historical closes after the
+repo's 1h snapshot was taken.
+
+**Substitution was declined, deliberately.** The fresh download extends 10 bars
+past the repo's 1h snapshot and revises historical closes. Swapping it in would
+have mixed a data-vintage change into a timeframe comparison and produced a
+number that looked like a "2h effect". Both planes stay on the one snapshot.
+
+## The 5 arms (pre-registered, 324s, both identity gates EXACT)
+
+| Arm | Plane | sw20/sw10/chop/garch/ent/detect | HTF swing | HTF:LTF ratio |
+|---|---|---|---|---|
+| C0 | 1h | 20/10/14/96/96/48 | 20h | 1.6× |
+| A1 | 1h | 10/5/7/48/48/24 | 10h | 0.8× |
+| B0 | 2h | 20/10/14/96/96/48 | 40h | 3.2× |
+| A2 | 2h | 10/5/7/48/48/24 | 20h | 1.6× |
+| A3 | 2h | 10/5/**14/96/96/48** | 20h | 1.6× |
+
+A2 restores C0's 1.6× ratio exactly, which is what isolates resolution.
+
+| Arm | IS champ | IS utcsat | OOS champ | OOS utcsat |
+|---|---|---|---|---|
+| C0 1h full | **+325.8** | **+358.9** | **+70.2** | **+60.2** |
+| A1 1h half | +328.2 | +346.9 | +71.1 | +62.3 |
+| B0 2h full | +49.4 | +59.7 | −55.8 | −56.1 |
+| A2 2h half | +53.9 | +51.6 | −46.4 | −50.3 |
+| A3 2h sw-half, feat-full | +53.9 | +51.6 | −46.4 | −50.3 |
+
+## What this actually shows
+
+**1. Duration is inert. A1 ≈ C0 in both eras.** Halving all six lookbacks on
+the 1h plane moved champion by +2.4R IS and +0.9R OOS — inside noise, and
+slightly *positive* both times. A1 even inverts the ratio (0.8×: the parent
+swing becomes shorter than the LTF swing) and nothing breaks. Whatever the
+strategy is doing, it is not sensitive to how much history the parent looks
+back over.
+
+**2. Resolution is the whole story. A2 ≈ B0.** Restoring the duration *and* the
+1.6× ratio on the 2h plane recovered essentially nothing: +49.4 → +53.9 IS,
+−55.8 → −46.4 OOS. Both 2h arms still collapse. Since duration was varied and
+shown inert, and 2h still fails at matched duration, the damage is the 2h bar
+itself.
+
+**3. The feature lookbacks do not touch the book at all.** A2 and A3 are
+bit-identical in both eras. That could have been a plumbing bug, so it was
+falsified directly (`_probe_inert.py`): driving chop/garch/ent/detect to absurd
+values (`lb` 2 → 400) leaves the book at `n=490, net=+53.8630` **every time**,
+while the patched engine's own `_chop_series_1h` at `lb=14` vs `lb=2` returns
+**different series**. So the parameters genuinely reach the code and are
+genuinely non-binding on trade selection. The book is decided by the swing
+chain.
+
+## The corrected conclusion
+
+The first write-up said "the 1h plane is load-bearing" on 0/6 evidence alone.
+That was directionally right but the *reason* was unproven. It is now pinned
+down much more precisely:
+
+> The strategy's edge depends on the parent plane being sampled at **1h**, and
+> is **indifferent to lookback duration** and **indifferent to the chop/garch
+> feature windows**. Per-bar structure in the parent — swing turns, chop
+> transitions — is what carries the signal, and that structure is averaged away
+> when the same window is sampled at 2h.
+
+This also *closes* the open question flagged in the first write-up, which said
+the 0/6 "does not speak to" a duration-matched 2h. It now speaks to it, and the
+answer is that duration matching does not rescue 2h.
+
+`age10` is reported separately throughout and shows the same pattern
+(+435.7 / +431.7 / +184.4 / +185.6 IS). It remains default-off and is not
+evidence about the live lanes.
+
+## Still not claimed
+
+- No adoption in any arm. The shipped engine stays **1h / min_bars 20**.
+- Only 1h and 2h were tested. 30m/4h were not, and this result does not
+  license proposing them (see Rule 2 in `AGENT_COORDINATION.md`).
+- The mechanism in the box above is an *interpretation* consistent with the
+  evidence, not a separately tested claim.
