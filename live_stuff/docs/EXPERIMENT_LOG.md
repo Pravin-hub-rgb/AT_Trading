@@ -1,3 +1,63 @@
+
+---
+
+## Log 111 — 5m confirmation delay: the engine's own built-but-disabled gate
+
+**Date:** 2026-09-27 · **Harness:** `exp_5m_confirm.py` → `_5m_confirm.json`
+**Docs:** `5M_CONFIRM.md`, `ENGINE_SHELF.md`
+
+Recon of the built engine text found a fully-implemented 5m entry-confirmation
+gate sitting at `exp_5m_confirm=0`. It delays entry until a 5m close breaks the
+prior-3 5m extreme, cancels if the stop is touched while waiting, and re-checks
+slot state at the new, later entry time. This is a **delay with cancellation**,
+not a skip — the user's "use gray, not skip" steer pointed at exactly this.
+
+Turned on across 3 lanes × 2 bybit eras × wait ladder {60,120,240,480} plus
+`data/btc` replication. Controls reproduced the published books exactly.
+
+**Result: CLOSED. 0/36 trimmed-mean difference CIs exclude zero, and every one
+of the 36 cells is net-negative.** champion IS +325.8 → +75.9/+76.9/+104.0;
+champion OOS +70.2 → +21.7/+38.5/+36.3; btc champion +210.9 → +76–84.
+
+Two things worth keeping:
+
+1. **The mechanism.** The gate does not make survivors worse (hence the null
+   CIs) — it makes the book *more fragile*. Top-5%-of-net concentration rises
+   144.8% → 261.0% (bybit/IS champion) and 221.7% → 338.0% (bybit/OOS
+   champion), 6/9 lanes up. Requiring visible fast-tape momentum before entry
+   systematically discards the early, well-priced entries and keeps the late,
+   chased ones. **Confirmation is a price.**
+
+2. **An accounting hole in the built engine.** `five_m_stats` has no bucket for
+   candidates that die at the slot re-check. Measured: champion IS w60 ran 524
+   candidates → 76 timeout, 13 stop-cancel → 435 survived → only 329 traded.
+   **106 (20%) silently lost**, uncounted anywhere. Same on OOS (66, 21%). The
+   slot is a scarce contended resource; the cost of an intervention is not
+   "the trades it removes" but "what it does to the queue." This is the direct
+   fruit of the wick finding (gray +28.1R vs skip −39.0R IS) and it is why the
+   S1–S6 composition studies could not have answered this class of question.
+
+**Methodology note, recorded because it nearly produced a wrong answer:** the
+first `boot()` tested each book's trimmed mean against *zero* rather than
+against its control. Caught by a smoke test in which two halves of one pool
+from the same distribution gave a CI excluding zero — impossible for a true
+null, because resampling *within* each side measures each side's own mean, never
+the difference. Replaced with `boot_diff(a, b)`; verified true-null p=0.064,
+identical books p=0.95, +1.2R shift excludes zero.
+
+**No production change.** `exp_5m_data`/`exp_5m_confirm` were only ever passed
+from the harness. The shipped 15m/1h strategy is unchanged and `exp_5m_confirm`
+stays 0.
+
+**Not reopened:** Rule 17's 30m/2h agreement-predicates thread. The 5m gate is a
+different mechanism and a pre-existing engine hook.
+
+**Redirect:** §5 says the next experiments worth running are slot-policy ones —
+`exp_max_concurrent`, `exp_window_r_cap`, `exp_window_entry_cap`,
+`exp_cohort_rearm` — which are exposure brakes rather than entry predicates and
+so are not blocked by Rule 17. Inventory in `ENGINE_SHELF.md`. OOS remains
+heavily inspected and is not untouched validation for anything new (Rule 4).
+
 # Experiment Log — All Tests (Pass & Fail)
 
 > Every experiment ever tested. If you think of something, check here FIRST.

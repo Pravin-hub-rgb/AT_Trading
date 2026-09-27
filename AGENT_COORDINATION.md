@@ -433,6 +433,63 @@ to enter *earlier* than the 1h close — stays blocked behind Rule 10, and
 unblocking it is a deliberate decision about the C15 causality gate, not
 something to slip in as a filter.
 
+**Rule 18 — when a hypothesis says "gate the entry", the gate MUST be a delay
+or a gray, never a plain skip, and the slot's fate must be measured.** This is
+the direct generalisation of the wick finding and it is now load-bearing. Two
+reasons, both measured:
+
+- A plain skip frees the slot, which admits a *replacement* trade that is often
+  worse. Wick gate, IS: skip −39.0R vs gray +28.1R — a ~67R swing bought
+  entirely by what happened to the freed slot, not by which trades were
+  removed.
+- A **delay** is not automatically safe either. Log 111 measured the built
+  `exp_5m_confirm` gate, which re-checks `busy_until` / `cooldown_bars` /
+  `exp_max_concurrent` at the *later* entry time. Pushing an entry later
+  re-queues it into a competition for a single slot, where someone else may now
+  be ahead of it. Champion IS w60: 524 candidates → 76 timeout, 13
+  stop-cancelled → 435 survived → only 329 traded. **106 (20%) died at the slot
+  re-check, and `five_m_stats` has no bucket for them.** Any entry-gating
+  proposal must therefore report what the gate did to the *queue*, not just to
+  the trades. This is also why every S1–S6 composition study was structurally
+  unable to answer the question: composition measures which trades exist, never
+  what happens to the slot afterwards.
+
+**Rule 19 — "wait for confirmation" is a cost, not a free safety upgrade, and
+this is measured on this strategy.** Log 111 turned on the engine's own
+built-but-disabled 5m confirmation gate. It is a textbook confirmation filter:
+delay entry until a 5m close breaks the prior-3 5m extreme. It was harmful in
+**0/36 cells it improved, and it was net-negative in all 36** (champion IS
++325.8 → +104.0). The reason is not worse trades — trimmed-mean difference CIs
+exclude zero nowhere. The reason is structural: top-5%-of-net concentration
+*rose* from 144.8% to 261.0% (bybit/IS champion) and 221.7% to 338.0%
+(bybit/OOS champion). Requiring visible fast-tape momentum before entry
+systematically discards the early, well-priced entries and keeps the late,
+chased ones, so the book shrinks without losing its tail and becomes strictly
+more fragile. **Any future proposal to "confirm before entering" on a
+higher-timeframe swing system must expect to pay for it, and must be judged on
+tail concentration, not avgR.**
+
+**Rule 20 — the built engine has a shelf of implemented-but-disabled experiment
+hooks; check it before inventing anything.** Recon of the *built* text (not the
+source) found `exp_5m_confirm` (a complete 5m entry-gate with its own stats
+dict) already written and switched off. Others still on the shelf, all default
+off, all untested: `exp_chop15_lo/hi`, `exp_max_concurrent`,
+`exp_window_r_cap`, `exp_window_entry_cap`, `exp_cohort_rearm`, `exp_defer_h`,
+`exp_legskip_r`. Two practical consequences:
+
+- A hook that already exists and emits its own stats is *cheaper and more
+  trustworthy* than a new one reimplemented in a harness, because it has been
+  exercised by the engine's own control path. It also cannot silently diverge
+  from production semantics.
+- But hooks exist **in the built text**, not the source. Note that
+  `exp_sizing_combo.run` returns only `out["ltf_trades"]` and discards
+  `five_m_stats`; a harness that routes through it will report
+  `candidates=0` for a gate that is demonstrably firing. Call the engine
+  directly when you need the diagnostics.
+- Inventory: `docs/ENGINE_SHELF.md`. Testing one of these is *not* covered by
+  Rule 17 — they are exposure brakes and queue rules, not 30m/2h agreement
+  predicates.
+
 
 
 

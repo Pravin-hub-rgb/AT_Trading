@@ -1,0 +1,1331 @@
+{
+  "stage": "5m_confirm",
+  "mechanism": "delay entry until a 5m close breaks the prior-3 extreme; cancel if the stop is touched while waiting",
+  "contract": "a 5m bar stamped t closes at t+300 (engine uses ts+300)",
+  "wait_ladder_min": [
+    60,
+    120,
+    240,
+    480
+  ],
+  "fixed_grid_no_cell_selected": true,
+  "hit_bar": "same sign both eras AND trimmed-mean CI excludes zero in both AND replicates on data/btc AND direction consistent across the whole wait ladder",
+  "books": {
+    "bybit/is": {
+      "champion": {
+        "control": {
+          "n": 500,
+          "net": 325.8,
+          "mean": 0.6516,
+          "median": -1.0985,
+          "trimmed_mean": -0.2259,
+          "stdev": 5.4245,
+          "wr": 27.8,
+          "pf": 1.815,
+          "top5_share_pct": 144.8,
+          "max_dd": 27.7
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 329,
+              "net": 75.9,
+              "mean": 0.2308,
+              "median": -1.0934,
+              "trimmed_mean": -0.4545,
+              "stdev": 4.2561,
+              "wr": 23.4,
+              "pf": 1.283,
+              "top5_share_pct": 312.8,
+              "max_dd": 47.3
+            },
+            "boot": {
+              "diff": -0.2286,
+              "ci95": [
+                -0.5475,
+                0.099
+              ],
+              "p": 0.1721,
+              "n_a": 329,
+              "n_b": 500
+            },
+            "five_m_stats": {
+              "candidates": 524,
+              "confirmed": 329,
+              "stop_cancelled": 13,
+              "timeout": 76,
+              "delayed": 329
+            },
+            "vs_control_net": -249.9,
+            "vs_control_trim": -0.2286
+          },
+          "120": {
+            "book": {
+              "n": 360,
+              "net": 76.9,
+              "mean": 0.2136,
+              "median": -1.0942,
+              "trimmed_mean": -0.4645,
+              "stdev": 4.1724,
+              "wr": 23.3,
+              "pf": 1.259,
+              "top5_share_pct": 335.3,
+              "max_dd": 45.8
+            },
+            "boot": {
+              "diff": -0.2386,
+              "ci95": [
+                -0.5474,
+                0.0828
+              ],
+              "p": 0.1439,
+              "n_a": 360,
+              "n_b": 500
+            },
+            "five_m_stats": {
+              "candidates": 520,
+              "confirmed": 360,
+              "stop_cancelled": 28,
+              "timeout": 12,
+              "delayed": 360
+            },
+            "vs_control_net": -248.9,
+            "vs_control_trim": -0.2386
+          },
+          "240": {
+            "book": {
+              "n": 366,
+              "net": 104.0,
+              "mean": 0.284,
+              "median": -1.0934,
+              "trimmed_mean": -0.4138,
+              "stdev": 4.2436,
+              "wr": 24.0,
+              "pf": 1.348,
+              "top5_share_pct": 261.0,
+              "max_dd": 43.1
+            },
+            "boot": {
+              "diff": -0.1879,
+              "ci95": [
+                -0.5046,
+                0.1462
+              ],
+              "p": 0.2652,
+              "n_a": 366,
+              "n_b": 500
+            },
+            "five_m_stats": {
+              "candidates": 522,
+              "confirmed": 366,
+              "stop_cancelled": 34,
+              "timeout": 0,
+              "delayed": 366
+            },
+            "vs_control_net": -221.8,
+            "vs_control_trim": -0.1879
+          },
+          "480": {
+            "book": {
+              "n": 366,
+              "net": 104.0,
+              "mean": 0.284,
+              "median": -1.0934,
+              "trimmed_mean": -0.4138,
+              "stdev": 4.2436,
+              "wr": 24.0,
+              "pf": 1.348,
+              "top5_share_pct": 261.0,
+              "max_dd": 43.1
+            },
+            "boot": {
+              "diff": -0.1879,
+              "ci95": [
+                -0.5046,
+                0.1462
+              ],
+              "p": 0.2652,
+              "n_a": 366,
+              "n_b": 500
+            },
+            "five_m_stats": {
+              "candidates": 522,
+              "confirmed": 366,
+              "stop_cancelled": 34,
+              "timeout": 0,
+              "delayed": 366
+            },
+            "vs_control_net": -221.8,
+            "vs_control_trim": -0.1879
+          }
+        }
+      },
+      "utcsat": {
+        "control": {
+          "n": 454,
+          "net": 358.9,
+          "mean": 0.7906,
+          "median": -1.0901,
+          "trimmed_mean": -0.144,
+          "stdev": 5.6847,
+          "wr": 29.1,
+          "pf": 2.008,
+          "top5_share_pct": 127.7,
+          "max_dd": 21.2
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 303,
+              "net": 98.0,
+              "mean": 0.3234,
+              "median": -1.0843,
+              "trimmed_mean": -0.4128,
+              "stdev": 4.4184,
+              "wr": 25.4,
+              "pf": 1.409,
+              "top5_share_pct": 239.2,
+              "max_dd": 39.0
+            },
+            "boot": {
+              "diff": -0.2689,
+              "ci95": [
+                -0.6179,
+                0.0845
+              ],
+              "p": 0.1382,
+              "n_a": 303,
+              "n_b": 454
+            },
+            "five_m_stats": {
+              "candidates": 475,
+              "confirmed": 303,
+              "stop_cancelled": 13,
+              "timeout": 72,
+              "delayed": 303
+            },
+            "vs_control_net": -260.9,
+            "vs_control_trim": -0.2688
+          },
+          "120": {
+            "book": {
+              "n": 331,
+              "net": 131.6,
+              "mean": 0.3977,
+              "median": -1.0843,
+              "trimmed_mean": -0.3194,
+              "stdev": 4.3801,
+              "wr": 26.0,
+              "pf": 1.51,
+              "top5_share_pct": 191.8,
+              "max_dd": 30.3
+            },
+            "boot": {
+              "diff": -0.1754,
+              "ci95": [
+                -0.5358,
+                0.1936
+              ],
+              "p": 0.3509,
+              "n_a": 331,
+              "n_b": 454
+            },
+            "five_m_stats": {
+              "candidates": 473,
+              "confirmed": 331,
+              "stop_cancelled": 25,
+              "timeout": 12,
+              "delayed": 331
+            },
+            "vs_control_net": -227.3,
+            "vs_control_trim": -0.1754
+          },
+          "240": {
+            "book": {
+              "n": 337,
+              "net": 135.5,
+              "mean": 0.4019,
+              "median": -1.0855,
+              "trimmed_mean": -0.3007,
+              "stdev": 4.3511,
+              "wr": 26.4,
+              "pf": 1.517,
+              "top5_share_pct": 186.3,
+              "max_dd": 30.3
+            },
+            "boot": {
+              "diff": -0.1567,
+              "ci95": [
+                -0.5074,
+                0.2075
+              ],
+              "p": 0.4062,
+              "n_a": 337,
+              "n_b": 454
+            },
+            "five_m_stats": {
+              "candidates": 471,
+              "confirmed": 337,
+              "stop_cancelled": 29,
+              "timeout": 0,
+              "delayed": 337
+            },
+            "vs_control_net": -223.4,
+            "vs_control_trim": -0.1567
+          },
+          "480": {
+            "book": {
+              "n": 337,
+              "net": 135.5,
+              "mean": 0.4019,
+              "median": -1.0855,
+              "trimmed_mean": -0.3007,
+              "stdev": 4.3511,
+              "wr": 26.4,
+              "pf": 1.517,
+              "top5_share_pct": 186.3,
+              "max_dd": 30.3
+            },
+            "boot": {
+              "diff": -0.1567,
+              "ci95": [
+                -0.5074,
+                0.2075
+              ],
+              "p": 0.4062,
+              "n_a": 337,
+              "n_b": 454
+            },
+            "five_m_stats": {
+              "candidates": 471,
+              "confirmed": 337,
+              "stop_cancelled": 29,
+              "timeout": 0,
+              "delayed": 337
+            },
+            "vs_control_net": -223.4,
+            "vs_control_trim": -0.1567
+          }
+        }
+      },
+      "age10": {
+        "control": {
+          "n": 130,
+          "net": 435.7,
+          "mean": 3.3517,
+          "median": -0.0305,
+          "trimmed_mean": 1.7457,
+          "stdev": 9.4957,
+          "wr": 49.2,
+          "pf": 7.569,
+          "top5_share_pct": 55.2,
+          "max_dd": 8.7
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 116,
+              "net": 320.3,
+              "mean": 2.7616,
+              "median": -0.1563,
+              "trimmed_mean": 1.6222,
+              "stdev": 7.6885,
+              "wr": 46.6,
+              "pf": 6.535,
+              "top5_share_pct": 48.7,
+              "max_dd": 7.0
+            },
+            "boot": {
+              "diff": -0.1235,
+              "ci95": [
+                -1.9864,
+                1.5383
+              ],
+              "p": 0.8668,
+              "n_a": 116,
+              "n_b": 130
+            },
+            "five_m_stats": {
+              "candidates": 133,
+              "confirmed": 116,
+              "stop_cancelled": 1,
+              "timeout": 16,
+              "delayed": 116
+            },
+            "vs_control_net": -115.4,
+            "vs_control_trim": -0.1235
+          },
+          "120": {
+            "book": {
+              "n": 127,
+              "net": 340.2,
+              "mean": 2.679,
+              "median": -0.1414,
+              "trimmed_mean": 1.4906,
+              "stdev": 7.4281,
+              "wr": 46.5,
+              "pf": 6.433,
+              "top5_share_pct": 52.3,
+              "max_dd": 7.0
+            },
+            "boot": {
+              "diff": -0.2552,
+              "ci95": [
+                -2.0107,
+                1.3354
+              ],
+              "p": 0.7574,
+              "n_a": 127,
+              "n_b": 130
+            },
+            "five_m_stats": {
+              "candidates": 130,
+              "confirmed": 127,
+              "stop_cancelled": 1,
+              "timeout": 2,
+              "delayed": 127
+            },
+            "vs_control_net": -95.5,
+            "vs_control_trim": -0.2551
+          },
+          "240": {
+            "book": {
+              "n": 129,
+              "net": 340.0,
+              "mean": 2.6353,
+              "median": -0.1414,
+              "trimmed_mean": 1.4627,
+              "stdev": 7.3796,
+              "wr": 46.5,
+              "pf": 6.331,
+              "top5_share_pct": 52.3,
+              "max_dd": 7.8
+            },
+            "boot": {
+              "diff": -0.2831,
+              "ci95": [
+                -2.0995,
+                1.2852
+              ],
+              "p": 0.7228,
+              "n_a": 129,
+              "n_b": 130
+            },
+            "five_m_stats": {
+              "candidates": 130,
+              "confirmed": 129,
+              "stop_cancelled": 1,
+              "timeout": 0,
+              "delayed": 129
+            },
+            "vs_control_net": -95.7,
+            "vs_control_trim": -0.283
+          },
+          "480": {
+            "book": {
+              "n": 129,
+              "net": 340.0,
+              "mean": 2.6353,
+              "median": -0.1414,
+              "trimmed_mean": 1.4627,
+              "stdev": 7.3796,
+              "wr": 46.5,
+              "pf": 6.331,
+              "top5_share_pct": 52.3,
+              "max_dd": 7.8
+            },
+            "boot": {
+              "diff": -0.2831,
+              "ci95": [
+                -2.0995,
+                1.2852
+              ],
+              "p": 0.7228,
+              "n_a": 129,
+              "n_b": 130
+            },
+            "five_m_stats": {
+              "candidates": 130,
+              "confirmed": 129,
+              "stop_cancelled": 1,
+              "timeout": 0,
+              "delayed": 129
+            },
+            "vs_control_net": -95.7,
+            "vs_control_trim": -0.283
+          }
+        }
+      }
+    },
+    "bybit/oos": {
+      "champion": {
+        "control": {
+          "n": 279,
+          "net": 70.2,
+          "mean": 0.2514,
+          "median": -1.0544,
+          "trimmed_mean": -0.2668,
+          "stdev": 3.3389,
+          "wr": 27.2,
+          "pf": 1.344,
+          "top5_share_pct": 221.7,
+          "max_dd": 53.2
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 193,
+              "net": 21.7,
+              "mean": 0.1125,
+              "median": -1.0565,
+              "trimmed_mean": -0.3487,
+              "stdev": 2.8877,
+              "wr": 28.0,
+              "pf": 1.154,
+              "top5_share_pct": 437.7,
+              "max_dd": 33.9
+            },
+            "boot": {
+              "diff": -0.0819,
+              "ci95": [
+                -0.4449,
+                0.2982
+              ],
+              "p": 0.6749,
+              "n_a": 193,
+              "n_b": 279
+            },
+            "five_m_stats": {
+              "candidates": 315,
+              "confirmed": 193,
+              "stop_cancelled": 6,
+              "timeout": 50,
+              "delayed": 193
+            },
+            "vs_control_net": -48.5,
+            "vs_control_trim": -0.0819
+          },
+          "120": {
+            "book": {
+              "n": 209,
+              "net": 38.5,
+              "mean": 0.1841,
+              "median": -1.0564,
+              "trimmed_mean": -0.3742,
+              "stdev": 3.7408,
+              "wr": 26.8,
+              "pf": 1.251,
+              "top5_share_pct": 319.1,
+              "max_dd": 34.9
+            },
+            "boot": {
+              "diff": -0.1075,
+              "ci95": [
+                -0.4641,
+                0.2451
+              ],
+              "p": 0.5542,
+              "n_a": 209,
+              "n_b": 279
+            },
+            "five_m_stats": {
+              "candidates": 306,
+              "confirmed": 209,
+              "stop_cancelled": 12,
+              "timeout": 6,
+              "delayed": 209
+            },
+            "vs_control_net": -31.7,
+            "vs_control_trim": -0.1074
+          },
+          "240": {
+            "book": {
+              "n": 211,
+              "net": 36.3,
+              "mean": 0.1722,
+              "median": -1.0565,
+              "trimmed_mean": -0.3816,
+              "stdev": 3.7251,
+              "wr": 26.5,
+              "pf": 1.234,
+              "top5_share_pct": 338.0,
+              "max_dd": 34.9
+            },
+            "boot": {
+              "diff": -0.1148,
+              "ci95": [
+                -0.4718,
+                0.2347
+              ],
+              "p": 0.5226,
+              "n_a": 211,
+              "n_b": 279
+            },
+            "five_m_stats": {
+              "candidates": 306,
+              "confirmed": 211,
+              "stop_cancelled": 14,
+              "timeout": 0,
+              "delayed": 211
+            },
+            "vs_control_net": -33.9,
+            "vs_control_trim": -0.1148
+          },
+          "480": {
+            "book": {
+              "n": 211,
+              "net": 36.3,
+              "mean": 0.1722,
+              "median": -1.0565,
+              "trimmed_mean": -0.3816,
+              "stdev": 3.7251,
+              "wr": 26.5,
+              "pf": 1.234,
+              "top5_share_pct": 338.0,
+              "max_dd": 34.9
+            },
+            "boot": {
+              "diff": -0.1148,
+              "ci95": [
+                -0.4718,
+                0.2347
+              ],
+              "p": 0.5226,
+              "n_a": 211,
+              "n_b": 279
+            },
+            "five_m_stats": {
+              "candidates": 306,
+              "confirmed": 211,
+              "stop_cancelled": 14,
+              "timeout": 0,
+              "delayed": 211
+            },
+            "vs_control_net": -33.9,
+            "vs_control_trim": -0.1148
+          }
+        }
+      },
+      "utcsat": {
+        "control": {
+          "n": 253,
+          "net": 60.2,
+          "mean": 0.238,
+          "median": -1.0543,
+          "trimmed_mean": -0.2558,
+          "stdev": 3.2962,
+          "wr": 28.9,
+          "pf": 1.328,
+          "top5_share_pct": 225.4,
+          "max_dd": 29.4
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 173,
+              "net": 25.4,
+              "mean": 0.1468,
+              "median": -1.0606,
+              "trimmed_mean": -0.3171,
+              "stdev": 2.9483,
+              "wr": 28.3,
+              "pf": 1.2,
+              "top5_share_pct": 340.8,
+              "max_dd": 25.5
+            },
+            "boot": {
+              "diff": -0.0613,
+              "ci95": [
+                -0.443,
+                0.341
+              ],
+              "p": 0.7714,
+              "n_a": 173,
+              "n_b": 253
+            },
+            "five_m_stats": {
+              "candidates": 275,
+              "confirmed": 173,
+              "stop_cancelled": 7,
+              "timeout": 48,
+              "delayed": 173
+            },
+            "vs_control_net": -34.8,
+            "vs_control_trim": -0.0613
+          },
+          "120": {
+            "book": {
+              "n": 189,
+              "net": 53.0,
+              "mean": 0.2806,
+              "median": -1.0552,
+              "trimmed_mean": -0.2566,
+              "stdev": 3.8068,
+              "wr": 29.1,
+              "pf": 1.39,
+              "top5_share_pct": 206.0,
+              "max_dd": 21.3
+            },
+            "boot": {
+              "diff": -0.0007,
+              "ci95": [
+                -0.3843,
+                0.388
+              ],
+              "p": 0.9973,
+              "n_a": 189,
+              "n_b": 253
+            },
+            "five_m_stats": {
+              "candidates": 270,
+              "confirmed": 189,
+              "stop_cancelled": 17,
+              "timeout": 6,
+              "delayed": 189
+            },
+            "vs_control_net": -7.2,
+            "vs_control_trim": -0.0008
+          },
+          "240": {
+            "book": {
+              "n": 191,
+              "net": 48.4,
+              "mean": 0.2536,
+              "median": -1.0565,
+              "trimmed_mean": -0.2795,
+              "stdev": 3.7906,
+              "wr": 28.3,
+              "pf": 1.347,
+              "top5_share_pct": 225.6,
+              "max_dd": 21.3
+            },
+            "boot": {
+              "diff": -0.0237,
+              "ci95": [
+                -0.4031,
+                0.3578
+              ],
+              "p": 0.9129,
+              "n_a": 191,
+              "n_b": 253
+            },
+            "five_m_stats": {
+              "candidates": 269,
+              "confirmed": 191,
+              "stop_cancelled": 19,
+              "timeout": 0,
+              "delayed": 191
+            },
+            "vs_control_net": -11.8,
+            "vs_control_trim": -0.0237
+          },
+          "480": {
+            "book": {
+              "n": 191,
+              "net": 48.4,
+              "mean": 0.2536,
+              "median": -1.0565,
+              "trimmed_mean": -0.2795,
+              "stdev": 3.7906,
+              "wr": 28.3,
+              "pf": 1.347,
+              "top5_share_pct": 225.6,
+              "max_dd": 21.3
+            },
+            "boot": {
+              "diff": -0.0237,
+              "ci95": [
+                -0.4031,
+                0.3578
+              ],
+              "p": 0.9129,
+              "n_a": 191,
+              "n_b": 253
+            },
+            "five_m_stats": {
+              "candidates": 269,
+              "confirmed": 191,
+              "stop_cancelled": 19,
+              "timeout": 0,
+              "delayed": 191
+            },
+            "vs_control_net": -11.8,
+            "vs_control_trim": -0.0237
+          }
+        }
+      },
+      "age10": {
+        "control": {
+          "n": 76,
+          "net": 43.2,
+          "mean": 0.5687,
+          "median": -0.7579,
+          "trimmed_mean": 0.288,
+          "stdev": 2.6978,
+          "wr": 39.5,
+          "pf": 1.906,
+          "top5_share_pct": 64.7,
+          "max_dd": 8.6
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 70,
+              "net": 42.0,
+              "mean": 0.6006,
+              "median": -0.7571,
+              "trimmed_mean": 0.2968,
+              "stdev": 2.6415,
+              "wr": 42.9,
+              "pf": 2.018,
+              "top5_share_pct": 65.1,
+              "max_dd": 8.5
+            },
+            "boot": {
+              "diff": 0.0088,
+              "ci95": [
+                -0.7881,
+                0.8132
+              ],
+              "p": 0.9748,
+              "n_a": 70,
+              "n_b": 76
+            },
+            "five_m_stats": {
+              "candidates": 77,
+              "confirmed": 70,
+              "stop_cancelled": 0,
+              "timeout": 7,
+              "delayed": 70
+            },
+            "vs_control_net": -1.2,
+            "vs_control_trim": 0.0088
+          },
+          "120": {
+            "book": {
+              "n": 75,
+              "net": 38.0,
+              "mean": 0.507,
+              "median": -0.7567,
+              "trimmed_mean": 0.2185,
+              "stdev": 2.5778,
+              "wr": 40.0,
+              "pf": 1.839,
+              "top5_share_pct": 72.0,
+              "max_dd": 8.5
+            },
+            "boot": {
+              "diff": -0.0695,
+              "ci95": [
+                -0.8628,
+                0.7133
+              ],
+              "p": 0.8637,
+              "n_a": 75,
+              "n_b": 76
+            },
+            "five_m_stats": {
+              "candidates": 76,
+              "confirmed": 75,
+              "stop_cancelled": 0,
+              "timeout": 1,
+              "delayed": 75
+            },
+            "vs_control_net": -5.2,
+            "vs_control_trim": -0.0695
+          },
+          "240": {
+            "book": {
+              "n": 76,
+              "net": 36.9,
+              "mean": 0.4859,
+              "median": -0.7571,
+              "trimmed_mean": 0.1996,
+              "stdev": 2.5673,
+              "wr": 39.5,
+              "pf": 1.795,
+              "top5_share_pct": 74.1,
+              "max_dd": 8.5
+            },
+            "boot": {
+              "diff": -0.0884,
+              "ci95": [
+                -0.8685,
+                0.6852
+              ],
+              "p": 0.831,
+              "n_a": 76,
+              "n_b": 76
+            },
+            "five_m_stats": {
+              "candidates": 76,
+              "confirmed": 76,
+              "stop_cancelled": 0,
+              "timeout": 0,
+              "delayed": 76
+            },
+            "vs_control_net": -6.3,
+            "vs_control_trim": -0.0884
+          },
+          "480": {
+            "book": {
+              "n": 76,
+              "net": 36.9,
+              "mean": 0.4859,
+              "median": -0.7571,
+              "trimmed_mean": 0.1996,
+              "stdev": 2.5673,
+              "wr": 39.5,
+              "pf": 1.795,
+              "top5_share_pct": 74.1,
+              "max_dd": 8.5
+            },
+            "boot": {
+              "diff": -0.0884,
+              "ci95": [
+                -0.8685,
+                0.6852
+              ],
+              "p": 0.831,
+              "n_a": 76,
+              "n_b": 76
+            },
+            "five_m_stats": {
+              "candidates": 76,
+              "confirmed": 76,
+              "stop_cancelled": 0,
+              "timeout": 0,
+              "delayed": 76
+            },
+            "vs_control_net": -6.3,
+            "vs_control_trim": -0.0884
+          }
+        }
+      }
+    },
+    "btc": {
+      "champion": {
+        "control": {
+          "n": 485,
+          "net": 210.9,
+          "mean": 0.4349,
+          "median": -1.0922,
+          "trimmed_mean": -0.2795,
+          "stdev": 4.6894,
+          "wr": 28.2,
+          "pf": 1.544,
+          "top5_share_pct": 179.5,
+          "max_dd": 48.4
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 326,
+              "net": 83.0,
+              "mean": 0.2547,
+              "median": -1.0783,
+              "trimmed_mean": -0.2642,
+              "stdev": 3.2758,
+              "wr": 28.8,
+              "pf": 1.336,
+              "top5_share_pct": 225.9,
+              "max_dd": 32.5
+            },
+            "boot": {
+              "diff": 0.0153,
+              "ci95": [
+                -0.2968,
+                0.3436
+              ],
+              "p": 0.9197,
+              "n_a": 326,
+              "n_b": 485
+            },
+            "five_m_stats": {
+              "candidates": 528,
+              "confirmed": 326,
+              "stop_cancelled": 11,
+              "timeout": 75,
+              "delayed": 326
+            }
+          },
+          "120": {
+            "book": {
+              "n": 344,
+              "net": 84.4,
+              "mean": 0.2455,
+              "median": -1.0687,
+              "trimmed_mean": -0.2605,
+              "stdev": 3.2005,
+              "wr": 29.4,
+              "pf": 1.331,
+              "top5_share_pct": 227.7,
+              "max_dd": 30.0
+            },
+            "boot": {
+              "diff": 0.0191,
+              "ci95": [
+                -0.2847,
+                0.3341
+              ],
+              "p": 0.9028,
+              "n_a": 344,
+              "n_b": 485
+            },
+            "five_m_stats": {
+              "candidates": 522,
+              "confirmed": 344,
+              "stop_cancelled": 26,
+              "timeout": 13,
+              "delayed": 344
+            }
+          },
+          "240": {
+            "book": {
+              "n": 347,
+              "net": 76.1,
+              "mean": 0.2192,
+              "median": -1.0717,
+              "trimmed_mean": -0.2889,
+              "stdev": 3.2024,
+              "wr": 28.8,
+              "pf": 1.292,
+              "top5_share_pct": 254.5,
+              "max_dd": 36.2
+            },
+            "boot": {
+              "diff": -0.0093,
+              "ci95": [
+                -0.3075,
+                0.2933
+              ],
+              "p": 0.9561,
+              "n_a": 347,
+              "n_b": 485
+            },
+            "five_m_stats": {
+              "candidates": 518,
+              "confirmed": 347,
+              "stop_cancelled": 33,
+              "timeout": 0,
+              "delayed": 347
+            }
+          },
+          "480": {
+            "book": {
+              "n": 347,
+              "net": 76.1,
+              "mean": 0.2192,
+              "median": -1.0717,
+              "trimmed_mean": -0.2889,
+              "stdev": 3.2024,
+              "wr": 28.8,
+              "pf": 1.292,
+              "top5_share_pct": 254.5,
+              "max_dd": 36.2
+            },
+            "boot": {
+              "diff": -0.0093,
+              "ci95": [
+                -0.3075,
+                0.2933
+              ],
+              "p": 0.9561,
+              "n_a": 347,
+              "n_b": 485
+            },
+            "five_m_stats": {
+              "candidates": 518,
+              "confirmed": 347,
+              "stop_cancelled": 33,
+              "timeout": 0,
+              "delayed": 347
+            }
+          }
+        }
+      },
+      "utcsat": {
+        "control": {
+          "n": 449,
+          "net": 233.8,
+          "mean": 0.5207,
+          "median": -1.0775,
+          "trimmed_mean": -0.2145,
+          "stdev": 4.8355,
+          "wr": 29.8,
+          "pf": 1.668,
+          "top5_share_pct": 155.5,
+          "max_dd": 27.5
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 305,
+              "net": 104.8,
+              "mean": 0.3436,
+              "median": -1.0577,
+              "trimmed_mean": -0.1876,
+              "stdev": 3.3546,
+              "wr": 31.1,
+              "pf": 1.475,
+              "top5_share_pct": 173.9,
+              "max_dd": 27.3
+            },
+            "boot": {
+              "diff": 0.0269,
+              "ci95": [
+                -0.3163,
+                0.3732
+              ],
+              "p": 0.8811,
+              "n_a": 305,
+              "n_b": 449
+            },
+            "five_m_stats": {
+              "candidates": 478,
+              "confirmed": 305,
+              "stop_cancelled": 11,
+              "timeout": 66,
+              "delayed": 305
+            }
+          },
+          "120": {
+            "book": {
+              "n": 322,
+              "net": 108.9,
+              "mean": 0.3381,
+              "median": -1.0599,
+              "trimmed_mean": -0.1844,
+              "stdev": 3.2997,
+              "wr": 31.4,
+              "pf": 1.471,
+              "top5_share_pct": 173.1,
+              "max_dd": 28.0
+            },
+            "boot": {
+              "diff": 0.0301,
+              "ci95": [
+                -0.297,
+                0.3618
+              ],
+              "p": 0.8684,
+              "n_a": 322,
+              "n_b": 449
+            },
+            "five_m_stats": {
+              "candidates": 471,
+              "confirmed": 322,
+              "stop_cancelled": 23,
+              "timeout": 12,
+              "delayed": 322
+            }
+          },
+          "240": {
+            "book": {
+              "n": 324,
+              "net": 107.7,
+              "mean": 0.3323,
+              "median": -1.0629,
+              "trimmed_mean": -0.1962,
+              "stdev": 3.3205,
+              "wr": 30.9,
+              "pf": 1.459,
+              "top5_share_pct": 177.5,
+              "max_dd": 28.0
+            },
+            "boot": {
+              "diff": 0.0183,
+              "ci95": [
+                -0.3199,
+                0.3547
+              ],
+              "p": 0.9068,
+              "n_a": 324,
+              "n_b": 449
+            },
+            "five_m_stats": {
+              "candidates": 468,
+              "confirmed": 324,
+              "stop_cancelled": 30,
+              "timeout": 0,
+              "delayed": 324
+            }
+          },
+          "480": {
+            "book": {
+              "n": 324,
+              "net": 107.7,
+              "mean": 0.3323,
+              "median": -1.0629,
+              "trimmed_mean": -0.1962,
+              "stdev": 3.3205,
+              "wr": 30.9,
+              "pf": 1.459,
+              "top5_share_pct": 177.5,
+              "max_dd": 28.0
+            },
+            "boot": {
+              "diff": 0.0183,
+              "ci95": [
+                -0.3199,
+                0.3547
+              ],
+              "p": 0.9068,
+              "n_a": 324,
+              "n_b": 449
+            },
+            "five_m_stats": {
+              "candidates": 468,
+              "confirmed": 324,
+              "stop_cancelled": 30,
+              "timeout": 0,
+              "delayed": 324
+            }
+          }
+        }
+      },
+      "age10": {
+        "control": {
+          "n": 126,
+          "net": 265.7,
+          "mean": 2.1085,
+          "median": -0.2018,
+          "trimmed_mean": 0.9719,
+          "stdev": 7.2031,
+          "wr": 45.2,
+          "pf": 4.771,
+          "top5_share_pct": 62.5,
+          "max_dd": 8.9
+        },
+        "waits": {
+          "60": {
+            "book": {
+              "n": 111,
+              "net": 209.4,
+              "mean": 1.8868,
+              "median": -0.2072,
+              "trimmed_mean": 0.9675,
+              "stdev": 5.9007,
+              "wr": 44.1,
+              "pf": 4.458,
+              "top5_share_pct": 57.0,
+              "max_dd": 10.2
+            },
+            "boot": {
+              "diff": -0.0043,
+              "ci95": [
+                -1.1243,
+                1.1606
+              ],
+              "p": 0.9808,
+              "n_a": 111,
+              "n_b": 126
+            },
+            "five_m_stats": {
+              "candidates": 129,
+              "confirmed": 111,
+              "stop_cancelled": 1,
+              "timeout": 17,
+              "delayed": 111
+            }
+          },
+          "120": {
+            "book": {
+              "n": 124,
+              "net": 220.0,
+              "mean": 1.7742,
+              "median": -0.1604,
+              "trimmed_mean": 0.8689,
+              "stdev": 5.6251,
+              "wr": 46.0,
+              "pf": 4.422,
+              "top5_share_pct": 59.9,
+              "max_dd": 7.9
+            },
+            "boot": {
+              "diff": -0.103,
+              "ci95": [
+                -1.1573,
+                0.9517
+              ],
+              "p": 0.8597,
+              "n_a": 124,
+              "n_b": 126
+            },
+            "five_m_stats": {
+              "candidates": 127,
+              "confirmed": 124,
+              "stop_cancelled": 1,
+              "timeout": 2,
+              "delayed": 124
+            }
+          },
+          "240": {
+            "book": {
+              "n": 125,
+              "net": 213.9,
+              "mean": 1.711,
+              "median": -0.1923,
+              "trimmed_mean": 0.8071,
+              "stdev": 5.6126,
+              "wr": 44.8,
+              "pf": 4.204,
+              "top5_share_pct": 61.6,
+              "max_dd": 7.9
+            },
+            "boot": {
+              "diff": -0.1648,
+              "ci95": [
+                -1.2149,
+                0.8867
+              ],
+              "p": 0.7625,
+              "n_a": 125,
+              "n_b": 126
+            },
+            "five_m_stats": {
+              "candidates": 126,
+              "confirmed": 125,
+              "stop_cancelled": 1,
+              "timeout": 0,
+              "delayed": 125
+            }
+          },
+          "480": {
+            "book": {
+              "n": 125,
+              "net": 213.9,
+              "mean": 1.711,
+              "median": -0.1923,
+              "trimmed_mean": 0.8071,
+              "stdev": 5.6126,
+              "wr": 44.8,
+              "pf": 4.204,
+              "top5_share_pct": 61.6,
+              "max_dd": 7.9
+            },
+            "boot": {
+              "diff": -0.1648,
+              "ci95": [
+                -1.2149,
+                0.8867
+              ],
+              "p": 0.7625,
+              "n_a": 125,
+              "n_b": 126
+            },
+            "five_m_stats": {
+              "candidates": 126,
+              "confirmed": 125,
+              "stop_cancelled": 1,
+              "timeout": 0,
+              "delayed": 125
+            }
+          }
+        }
+      }
+    }
+  },
+  "verdict": "0/36 bootstrapped trimmed-mean DIFFERENCE CIs (book - control) exclude zero across the whole wait ladder and every book. CLOSED - the 5m confirmation delay does not improve the book.",
+  "elapsed_sec": 763.68
+}
