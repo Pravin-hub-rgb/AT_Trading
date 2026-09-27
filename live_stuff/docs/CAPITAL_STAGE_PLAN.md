@@ -336,6 +336,65 @@ Notes:
   evidence that closes to the cent, and with the mechanism validated rather
   than merely claimed.
 
+  - **(a13) INDEPENDENT AUDIT of the 1h wick gate. The other agent's finding is
+  REPRODUCED, but it is a cliff-edge gate, not a robust one - and age10 fails
+  structurally, not by noise.** `exp_wick1h_audit.py` -> `_wick1h_audit.json`
+  recomputes `wick_atr12` from the engine (1h plane, 12 closed 1h bars, ATR14-1h)
+  rather than reading the other agent's JSON, and sweeps the threshold.
+
+  **Parity** - OOS exact, IS one trade wide:
+  | cell | mine | theirs | sum_net match |
+  |---|---|---|---|
+  | oos/champion | 35/35 | 35/35 | -19.780510 **exact** |
+  | oos/utcsat | 36/36 | 36/36 | -23.774610 **exact** |
+  | is/champion | **75** | 74 | -29.55 vs -28.06 |
+  | is/utcsat | **63** | 62 | -27.16 vs -25.67 |
+
+  A systematic +1 trade in IS only, costing ~1.5R - a boundary/cutoff artefact,
+  not a disagreement. The direction and magnitude reproduce.
+
+  **Q1 ROBUSTNESS - PASSES.** Dropping the cohort's single best trade leaves it
+  negative in **6 of 6** cells at 6.026. The cohort is not outlier-driven.
+
+  **Q2 THRESHOLD OVERFIT - FAILS the pre-registered test.** The sign flips
+  just above the Stage B value:
+
+  | thr | is/champ n | sum | is/age10 n | sum | oos/champ n | sum |
+  |---|---|---|---|---|---|---|
+  | 5.00 | 18 | -6.13 | 6 | **+6.76** | 8 | -4.85 |
+  | 5.50 | 31 | -5.96 | 12 | **+2.81** | 14 | -10.69 |
+  | 6.00 | 70 | -23.26 | 20 | **+2.01** | 33 | -18.22 |
+  | **6.026** | 75 | **-29.55** | 20 | **+2.01** | 35 | -19.78 |
+  | 6.50 | 116 | **+24.59** | 30 | **+74.95** | 56 | -19.80 |
+  | 7.00 | 158 | **+53.07** | 43 | **+125.77** | 77 | -3.91 |
+  | 8.00 | 207 | **+47.41** | 51 | **+125.53** | 102 | **+60.31** |
+
+  A 0.5 ATR move in the threshold is worth ~+54R on is/champion. There is no
+  plateau around 6.026 - it sits **at the upper cliff edge of a sign flip**. And
+  the flip point is **not stable across eras**: IS flips at ~6.3, OOS champion
+  does not flip until ~7.5. So the *direction* is real but the *exact value* is
+  mined, and the two eras disagree on where the boundary sits.
+
+  Worth recording: the flagged cohort is worse than the book average
+  (`vs_book_avg` negative) at **every** threshold up to 7.0. What changes at
+  6.3 is not that the cohort stops being bad - it stops being net-negative.
+  The honest description is "gate short trades in the low-wick band", with the
+  band edge era-dependent.
+
+  **Q3 AGE10 - fails structurally, and the brief understates it.** The age10
+  cohort is **positive at every threshold from 4.5 to 6.026** (+3.89 / +6.76 /
+  +2.81 / +2.01 / +2.01) while champion/utcsat are negative throughout. That is
+  not a n=20 sampling wobble; it is a different relationship. Note the cohort is
+  still *worse than the age10 book average* (vs_book_avg -3.25) - it is simply
+  still profitable, so gating it forfeits money. oos/age10 is negative (-5.18),
+  so age10 is inconsistent across eras as well.
+
+  **Verdict: the mechanism is real (cascade 0.00, seq-identical 6/6, cohort
+  robust 6/6, live dNet == post-process exactly) but the gate is not ready to
+  adopt.** Three things are open: the threshold has no plateau and its flip point
+  differs by era, age10 fails structurally, and the forward gate is 5/50.
+  Recorded as (a13) so the 6.026 number is never quoted as a stable boundary.
+
   - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
   trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard

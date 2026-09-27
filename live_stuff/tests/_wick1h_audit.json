@@ -1,0 +1,755 @@
+{
+  "stage": "wick1h_audit",
+  "plane": "1h",
+  "window": 12,
+  "stageb_thr": 6.026,
+  "sweep": [
+    4.0,
+    4.5,
+    5.0,
+    5.5,
+    6.0,
+    6.026,
+    6.5,
+    7.0,
+    8.0
+  ],
+  "pre_registered": {
+    "real_edge": "cohort sum_net<0 in BOTH eras at 6.026 AND across the 5.0-7.0 span (plateau) AND survives dropping the cohort's best trade in >=4 of 6 cells",
+    "control": "base ledgers reproduce 24.85; Stage B parity to 1e-3"
+  },
+  "cells": {
+    "is/champion": {
+      "n": 500,
+      "net": 325.782,
+      "book_avg_r": 0.6516
+    },
+    "is/utcsat": {
+      "n": 454,
+      "net": 358.95,
+      "book_avg_r": 0.7906
+    },
+    "is/age10": {
+      "n": 130,
+      "net": 435.724,
+      "book_avg_r": 3.3517
+    },
+    "oos/champion": {
+      "n": 279,
+      "net": 70.15,
+      "book_avg_r": 0.2514
+    },
+    "oos/utcsat": {
+      "n": 253,
+      "net": 60.206,
+      "book_avg_r": 0.238
+    },
+    "oos/age10": {
+      "n": 76,
+      "net": 43.224,
+      "book_avg_r": 0.5687
+    }
+  },
+  "sweep_tbl": {
+    "is/champion/4.0": {
+      "thr": 4.0,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "is/champion/4.5": {
+      "thr": 4.5,
+      "n_cohort": 4,
+      "sum_net": -0.737,
+      "avg_r": -0.1842,
+      "vs_book_avg": -0.8357,
+      "positive": false,
+      "sum_net_ex_best": -1.742,
+      "still_neg_ex_best": true,
+      "top3_contrib": 0.393
+    },
+    "is/champion/5.0": {
+      "thr": 5.0,
+      "n_cohort": 18,
+      "sum_net": -6.129,
+      "avg_r": -0.3405,
+      "vs_book_avg": -0.992,
+      "positive": false,
+      "sum_net_ex_best": -9.513,
+      "still_neg_ex_best": true,
+      "top3_contrib": 7.472
+    },
+    "is/champion/5.5": {
+      "thr": 5.5,
+      "n_cohort": 31,
+      "sum_net": -5.956,
+      "avg_r": -0.1921,
+      "vs_book_avg": -0.8437,
+      "positive": false,
+      "sum_net_ex_best": -12.121,
+      "still_neg_ex_best": true,
+      "top3_contrib": 13.138
+    },
+    "is/champion/6.0": {
+      "thr": 6.0,
+      "n_cohort": 70,
+      "sum_net": -23.256,
+      "avg_r": -0.3322,
+      "vs_book_avg": -0.9838,
+      "positive": false,
+      "sum_net_ex_best": -30.058,
+      "still_neg_ex_best": true,
+      "top3_contrib": 18.854
+    },
+    "is/champion/6.026": {
+      "thr": 6.026,
+      "n_cohort": 75,
+      "sum_net": -29.548,
+      "avg_r": -0.394,
+      "vs_book_avg": -1.0455,
+      "positive": false,
+      "sum_net_ex_best": -36.35,
+      "still_neg_ex_best": true,
+      "top3_contrib": 18.854
+    },
+    "is/champion/6.5": {
+      "thr": 6.5,
+      "n_cohort": 116,
+      "sum_net": 24.586,
+      "avg_r": 0.2119,
+      "vs_book_avg": -0.4396,
+      "positive": true,
+      "sum_net_ex_best": -23.9,
+      "still_neg_ex_best": true,
+      "top3_contrib": 67.742
+    },
+    "is/champion/7.0": {
+      "thr": 7.0,
+      "n_cohort": 158,
+      "sum_net": 53.073,
+      "avg_r": 0.3359,
+      "vs_book_avg": -0.3157,
+      "positive": true,
+      "sum_net_ex_best": 4.588,
+      "still_neg_ex_best": false,
+      "top3_contrib": 94.722
+    },
+    "is/champion/8.0": {
+      "thr": 8.0,
+      "n_cohort": 207,
+      "sum_net": 47.407,
+      "avg_r": 0.229,
+      "vs_book_avg": -0.4225,
+      "positive": true,
+      "sum_net_ex_best": -1.078,
+      "still_neg_ex_best": true,
+      "top3_contrib": 94.722
+    },
+    "is/utcsat/4.0": {
+      "thr": 4.0,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "is/utcsat/4.5": {
+      "thr": 4.5,
+      "n_cohort": 5,
+      "sum_net": 1.631,
+      "avg_r": 0.3262,
+      "vs_book_avg": -0.4644,
+      "positive": true,
+      "sum_net_ex_best": -0.737,
+      "still_neg_ex_best": true,
+      "top3_contrib": 3.889
+    },
+    "is/utcsat/5.0": {
+      "thr": 5.0,
+      "n_cohort": 15,
+      "sum_net": -0.157,
+      "avg_r": -0.0105,
+      "vs_book_avg": -0.8011,
+      "positive": false,
+      "sum_net_ex_best": -3.542,
+      "still_neg_ex_best": true,
+      "top3_contrib": 8.835
+    },
+    "is/utcsat/5.5": {
+      "thr": 5.5,
+      "n_cohort": 27,
+      "sum_net": 0.948,
+      "avg_r": 0.0351,
+      "vs_book_avg": -0.7555,
+      "positive": true,
+      "sum_net_ex_best": -5.217,
+      "still_neg_ex_best": true,
+      "top3_contrib": 13.138
+    },
+    "is/utcsat/6.0": {
+      "thr": 6.0,
+      "n_cohort": 59,
+      "sum_net": -22.091,
+      "avg_r": -0.3744,
+      "vs_book_avg": -1.1651,
+      "positive": false,
+      "sum_net_ex_best": -28.256,
+      "still_neg_ex_best": true,
+      "top3_contrib": 15.641
+    },
+    "is/utcsat/6.026": {
+      "thr": 6.026,
+      "n_cohort": 63,
+      "sum_net": -27.165,
+      "avg_r": -0.4312,
+      "vs_book_avg": -1.2218,
+      "positive": false,
+      "sum_net_ex_best": -33.329,
+      "still_neg_ex_best": true,
+      "top3_contrib": 15.641
+    },
+    "is/utcsat/6.5": {
+      "thr": 6.5,
+      "n_cohort": 104,
+      "sum_net": 34.133,
+      "avg_r": 0.3282,
+      "vs_book_avg": -0.4624,
+      "positive": true,
+      "sum_net_ex_best": -14.352,
+      "still_neg_ex_best": true,
+      "top3_contrib": 67.742
+    },
+    "is/utcsat/7.0": {
+      "thr": 7.0,
+      "n_cohort": 138,
+      "sum_net": 65.591,
+      "avg_r": 0.4753,
+      "vs_book_avg": -0.3153,
+      "positive": true,
+      "sum_net_ex_best": 17.105,
+      "still_neg_ex_best": false,
+      "top3_contrib": 94.722
+    },
+    "is/utcsat/8.0": {
+      "thr": 8.0,
+      "n_cohort": 183,
+      "sum_net": 52.782,
+      "avg_r": 0.2884,
+      "vs_book_avg": -0.5022,
+      "positive": true,
+      "sum_net_ex_best": 4.297,
+      "still_neg_ex_best": false,
+      "top3_contrib": 94.722
+    },
+    "is/age10/4.0": {
+      "thr": 4.0,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "is/age10/4.5": {
+      "thr": 4.5,
+      "n_cohort": 3,
+      "sum_net": 3.889,
+      "avg_r": 1.2963,
+      "vs_book_avg": -2.0555,
+      "positive": true,
+      "sum_net_ex_best": 1.521,
+      "still_neg_ex_best": false,
+      "top3_contrib": 3.889
+    },
+    "is/age10/5.0": {
+      "thr": 5.0,
+      "n_cohort": 6,
+      "sum_net": 6.763,
+      "avg_r": 1.1272,
+      "vs_book_avg": -2.2245,
+      "positive": true,
+      "sum_net_ex_best": 3.379,
+      "still_neg_ex_best": false,
+      "top3_contrib": 6.757
+    },
+    "is/age10/5.5": {
+      "thr": 5.5,
+      "n_cohort": 12,
+      "sum_net": 2.812,
+      "avg_r": 0.2343,
+      "vs_book_avg": -3.1174,
+      "positive": true,
+      "sum_net_ex_best": -0.572,
+      "still_neg_ex_best": true,
+      "top3_contrib": 6.981
+    },
+    "is/age10/6.0": {
+      "thr": 6.0,
+      "n_cohort": 20,
+      "sum_net": 2.012,
+      "avg_r": 0.1006,
+      "vs_book_avg": -3.2511,
+      "positive": true,
+      "sum_net_ex_best": -3.875,
+      "still_neg_ex_best": true,
+      "top3_contrib": 11.639
+    },
+    "is/age10/6.026": {
+      "thr": 6.026,
+      "n_cohort": 20,
+      "sum_net": 2.012,
+      "avg_r": 0.1006,
+      "vs_book_avg": -3.2511,
+      "positive": true,
+      "sum_net_ex_best": -3.875,
+      "still_neg_ex_best": true,
+      "top3_contrib": 11.639
+    },
+    "is/age10/6.5": {
+      "thr": 6.5,
+      "n_cohort": 30,
+      "sum_net": 74.95,
+      "avg_r": 2.4983,
+      "vs_book_avg": -0.8534,
+      "positive": true,
+      "sum_net_ex_best": 26.464,
+      "still_neg_ex_best": false,
+      "top3_contrib": 67.742
+    },
+    "is/age10/7.0": {
+      "thr": 7.0,
+      "n_cohort": 43,
+      "sum_net": 125.767,
+      "avg_r": 2.9248,
+      "vs_book_avg": -0.4269,
+      "positive": true,
+      "sum_net_ex_best": 77.281,
+      "still_neg_ex_best": false,
+      "top3_contrib": 94.722
+    },
+    "is/age10/8.0": {
+      "thr": 8.0,
+      "n_cohort": 51,
+      "sum_net": 125.527,
+      "avg_r": 2.4613,
+      "vs_book_avg": -0.8904,
+      "positive": true,
+      "sum_net_ex_best": 77.042,
+      "still_neg_ex_best": false,
+      "top3_contrib": 94.722
+    },
+    "oos/champion/4.0": {
+      "thr": 4.0,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "oos/champion/4.5": {
+      "thr": 4.5,
+      "n_cohort": 1,
+      "sum_net": 0.257,
+      "avg_r": 0.2575,
+      "vs_book_avg": 0.0061,
+      "positive": true,
+      "sum_net_ex_best": 0.0,
+      "still_neg_ex_best": false,
+      "top3_contrib": 0.257
+    },
+    "oos/champion/5.0": {
+      "thr": 5.0,
+      "n_cohort": 8,
+      "sum_net": -4.85,
+      "avg_r": -0.6063,
+      "vs_book_avg": -0.8577,
+      "positive": false,
+      "sum_net_ex_best": -5.73,
+      "still_neg_ex_best": true,
+      "top3_contrib": 0.773
+    },
+    "oos/champion/5.5": {
+      "thr": 5.5,
+      "n_cohort": 14,
+      "sum_net": -10.687,
+      "avg_r": -0.7634,
+      "vs_book_avg": -1.0148,
+      "positive": false,
+      "sum_net_ex_best": -11.567,
+      "still_neg_ex_best": true,
+      "top3_contrib": 0.773
+    },
+    "oos/champion/6.0": {
+      "thr": 6.0,
+      "n_cohort": 33,
+      "sum_net": -18.22,
+      "avg_r": -0.5521,
+      "vs_book_avg": -0.8036,
+      "positive": false,
+      "sum_net_ex_best": -27.636,
+      "still_neg_ex_best": true,
+      "top3_contrib": 11.243
+    },
+    "oos/champion/6.026": {
+      "thr": 6.026,
+      "n_cohort": 35,
+      "sum_net": -19.781,
+      "avg_r": -0.5652,
+      "vs_book_avg": -0.8166,
+      "positive": false,
+      "sum_net_ex_best": -29.196,
+      "still_neg_ex_best": true,
+      "top3_contrib": 11.243
+    },
+    "oos/champion/6.5": {
+      "thr": 6.5,
+      "n_cohort": 56,
+      "sum_net": -19.797,
+      "avg_r": -0.3535,
+      "vs_book_avg": -0.605,
+      "positive": false,
+      "sum_net_ex_best": -29.769,
+      "still_neg_ex_best": true,
+      "top3_contrib": 22.015
+    },
+    "oos/champion/7.0": {
+      "thr": 7.0,
+      "n_cohort": 77,
+      "sum_net": -3.914,
+      "avg_r": -0.0508,
+      "vs_book_avg": -0.3023,
+      "positive": false,
+      "sum_net_ex_best": -19.907,
+      "still_neg_ex_best": true,
+      "top3_contrib": 35.38
+    },
+    "oos/champion/8.0": {
+      "thr": 8.0,
+      "n_cohort": 102,
+      "sum_net": 60.307,
+      "avg_r": 0.5912,
+      "vs_book_avg": 0.3398,
+      "positive": true,
+      "sum_net_ex_best": 27.73,
+      "still_neg_ex_best": false,
+      "top3_contrib": 68.058
+    },
+    "oos/utcsat/4.0": {
+      "thr": 4.0,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "oos/utcsat/4.5": {
+      "thr": 4.5,
+      "n_cohort": 1,
+      "sum_net": 0.257,
+      "avg_r": 0.2575,
+      "vs_book_avg": 0.0195,
+      "positive": true,
+      "sum_net_ex_best": 0.0,
+      "still_neg_ex_best": false,
+      "top3_contrib": 0.257
+    },
+    "oos/utcsat/5.0": {
+      "thr": 5.0,
+      "n_cohort": 10,
+      "sum_net": -7.377,
+      "avg_r": -0.7377,
+      "vs_book_avg": -0.9757,
+      "positive": false,
+      "sum_net_ex_best": -8.257,
+      "still_neg_ex_best": true,
+      "top3_contrib": 0.773
+    },
+    "oos/utcsat/5.5": {
+      "thr": 5.5,
+      "n_cohort": 17,
+      "sum_net": -6.693,
+      "avg_r": -0.3937,
+      "vs_book_avg": -0.6317,
+      "positive": false,
+      "sum_net_ex_best": -13.717,
+      "still_neg_ex_best": true,
+      "top3_contrib": 8.161
+    },
+    "oos/utcsat/6.0": {
+      "thr": 6.0,
+      "n_cohort": 34,
+      "sum_net": -22.214,
+      "avg_r": -0.6534,
+      "vs_book_avg": -0.8913,
+      "positive": false,
+      "sum_net_ex_best": -29.239,
+      "still_neg_ex_best": true,
+      "top3_contrib": 8.852
+    },
+    "oos/utcsat/6.026": {
+      "thr": 6.026,
+      "n_cohort": 36,
+      "sum_net": -23.775,
+      "avg_r": -0.6604,
+      "vs_book_avg": -0.8984,
+      "positive": false,
+      "sum_net_ex_best": -30.799,
+      "still_neg_ex_best": true,
+      "top3_contrib": 8.852
+    },
+    "oos/utcsat/6.5": {
+      "thr": 6.5,
+      "n_cohort": 55,
+      "sum_net": -36.618,
+      "avg_r": -0.6658,
+      "vs_book_avg": -0.9037,
+      "positive": false,
+      "sum_net_ex_best": -43.642,
+      "still_neg_ex_best": true,
+      "top3_contrib": 10.141
+    },
+    "oos/utcsat/7.0": {
+      "thr": 7.0,
+      "n_cohort": 72,
+      "sum_net": -19.227,
+      "avg_r": -0.267,
+      "vs_book_avg": -0.505,
+      "positive": false,
+      "sum_net_ex_best": -35.22,
+      "still_neg_ex_best": true,
+      "top3_contrib": 30.169
+    },
+    "oos/utcsat/8.0": {
+      "thr": 8.0,
+      "n_cohort": 93,
+      "sum_net": 43.821,
+      "avg_r": 0.4712,
+      "vs_book_avg": 0.2332,
+      "positive": true,
+      "sum_net_ex_best": 11.245,
+      "still_neg_ex_best": false,
+      "top3_contrib": 68.058
+    },
+    "oos/age10/4.0": {
+      "thr": 4.0,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "oos/age10/4.5": {
+      "thr": 4.5,
+      "n_cohort": 0,
+      "sum_net": 0,
+      "avg_r": null,
+      "vs_book_avg": null,
+      "positive": false
+    },
+    "oos/age10/5.0": {
+      "thr": 5.0,
+      "n_cohort": 1,
+      "sum_net": -1.052,
+      "avg_r": -1.052,
+      "vs_book_avg": -1.6207,
+      "positive": false,
+      "sum_net_ex_best": 0.0,
+      "still_neg_ex_best": false,
+      "top3_contrib": -1.052
+    },
+    "oos/age10/5.5": {
+      "thr": 5.5,
+      "n_cohort": 3,
+      "sum_net": -2.873,
+      "avg_r": -0.9576,
+      "vs_book_avg": -1.5263,
+      "positive": false,
+      "sum_net_ex_best": -2.297,
+      "still_neg_ex_best": true,
+      "top3_contrib": -2.873
+    },
+    "oos/age10/6.0": {
+      "thr": 6.0,
+      "n_cohort": 6,
+      "sum_net": -4.059,
+      "avg_r": -0.6766,
+      "vs_book_avg": -1.2453,
+      "positive": false,
+      "sum_net_ex_best": -5.008,
+      "still_neg_ex_best": true,
+      "top3_contrib": -0.679
+    },
+    "oos/age10/6.026": {
+      "thr": 6.026,
+      "n_cohort": 7,
+      "sum_net": -5.178,
+      "avg_r": -0.7398,
+      "vs_book_avg": -1.3085,
+      "positive": false,
+      "sum_net_ex_best": -6.127,
+      "still_neg_ex_best": true,
+      "top3_contrib": -0.679
+    },
+    "oos/age10/6.5": {
+      "thr": 6.5,
+      "n_cohort": 9,
+      "sum_net": -5.146,
+      "avg_r": -0.5718,
+      "vs_book_avg": -1.1405,
+      "positive": false,
+      "sum_net_ex_best": -6.321,
+      "still_neg_ex_best": true,
+      "top3_contrib": 1.548
+    },
+    "oos/age10/7.0": {
+      "thr": 7.0,
+      "n_cohort": 21,
+      "sum_net": 10.191,
+      "avg_r": 0.4853,
+      "vs_book_avg": -0.0834,
+      "positive": true,
+      "sum_net_ex_best": 3.04,
+      "still_neg_ex_best": false,
+      "top3_contrib": 17.408
+    },
+    "oos/age10/8.0": {
+      "thr": 8.0,
+      "n_cohort": 24,
+      "sum_net": 8.961,
+      "avg_r": 0.3734,
+      "vs_book_avg": -0.1953,
+      "positive": true,
+      "sum_net_ex_best": 1.81,
+      "still_neg_ex_best": false,
+      "top3_contrib": 17.408
+    }
+  },
+  "parity": {
+    "is/champion": {
+      "n": 75,
+      "n_expected": 74,
+      "sum_net": -29.54788,
+      "sum_expected": -28.056935,
+      "match": false
+    },
+    "is/utcsat": {
+      "n": 63,
+      "n_expected": 62,
+      "sum_net": -27.164501,
+      "sum_expected": -25.673556,
+      "match": false
+    },
+    "oos/champion": {
+      "n": 35,
+      "n_expected": 35,
+      "sum_net": -19.78051,
+      "sum_expected": -19.78051,
+      "match": true
+    },
+    "oos/utcsat": {
+      "n": 36,
+      "n_expected": 36,
+      "sum_net": -23.77461,
+      "sum_expected": -23.77461,
+      "match": true
+    }
+  },
+  "verdicts": {
+    "stageb_parity_all": false,
+    "parity_cells": 4,
+    "thr_4.0": {
+      "neg_cells": 0,
+      "of": 6,
+      "ex_best_neg_cells": 0,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": false
+      }
+    },
+    "thr_4.5": {
+      "neg_cells": 1,
+      "of": 6,
+      "ex_best_neg_cells": 2,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": false
+      }
+    },
+    "thr_5.0": {
+      "neg_cells": 5,
+      "of": 6,
+      "ex_best_neg_cells": 4,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": true
+      }
+    },
+    "thr_5.5": {
+      "neg_cells": 4,
+      "of": 6,
+      "ex_best_neg_cells": 6,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": true
+      }
+    },
+    "thr_6.0": {
+      "neg_cells": 5,
+      "of": 6,
+      "ex_best_neg_cells": 6,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": true
+      }
+    },
+    "thr_6.026": {
+      "neg_cells": 5,
+      "of": 6,
+      "ex_best_neg_cells": 6,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": true
+      }
+    },
+    "thr_6.5": {
+      "neg_cells": 3,
+      "of": 6,
+      "ex_best_neg_cells": 5,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": true
+      }
+    },
+    "thr_7.0": {
+      "neg_cells": 2,
+      "of": 6,
+      "ex_best_neg_cells": 2,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": false
+      }
+    },
+    "thr_8.0": {
+      "neg_cells": 0,
+      "of": 6,
+      "ex_best_neg_cells": 1,
+      "both_eras_all_lanes_negative": false,
+      "era_detail": {
+        "is": false,
+        "oos": false
+      }
+    },
+    "plateau_5_to_7": false,
+    "edge_is_real": false
+  },
+  "elapsed_sec": 116.8
+}
