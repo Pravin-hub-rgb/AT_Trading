@@ -1,4 +1,49 @@
 
+## Log 112 — B1/B2/FLIP decomposition: the free test that killed the idea
+
+**Date:** 2026-09-27 · **Harness:** `exp_break_kind.py` → `_break_kind.json`
+**Docs:** `BREAK_KIND.md`
+
+Asked for a brainstorm at the level of the signal generator itself — B1 (lock,
+unconfirmed), B2 (confirm), FLIP (engine reverses its own lock), FS — rather
+than at the level of "which timeframe filters the entry". Every prior experiment
+in this programme had treated a signal as a point-in-time-with-direction; that
+framing is exhausted.
+
+The engine already stores `"break_kind": sig["kind"]` on every trade (L1811) and
+the live path branches on `kind` in four places. So the decomposition was
+**free** — zero new sims, zero new data, zero new code. Ran in ~90s.
+
+**Result: NO. B1/B2/FLIP carry no stable economic distinction.**
+
+bybit IS champion read as a beautiful story: B2 = half the trades but only
+**9.8%** of net at PF **1.17** with **384%** top-5% concentration, while FLIP —
+the engine admitting it was wrong — carried **90.2%** of net at PF **2.43**.
+Same shape in utcsat and age10.
+
+bybit OOS reversed it completely: champion B2 **98.1%** of net, FLIP **1.9%** at
+PF **1.01** with **6084.7%** top-5% concentration. All three lanes reversed.
+
+This is **the S3 trap from log 109 reproduced exactly** — consistent IS, inverted
+OOS, same root cause. "Trade FLIP not B2" (and its inverse) is dead, and the
+`exp_kinds` knob at L1293 is a loaded gun for exactly that mistake.
+
+Value: killed in 90 seconds what could have consumed days. Confirms at the
+highest level that **sub-bucket statistics on these books are governed by one or
+two trades** — 384% and 6084% are the normal state, not edge cases.
+
+**What survives** (does not depend on a label's historical avgR): the B1→B2
+unconfirmed window as an *uncertainty* object (size by state, not filter — no
+trade removed, so Rule 18's slot-cascade does not apply); B1 as an early-warning
+read using a higher TF to move the information frontier (not a direction
+comparison, so Rule 17 does not reach it); B1→B2 latency volatility-normalized
+by a higher TF; the `chop` category in `b2_vs_flip_chop` mode (live path uses
+`continuous` and never separates it); FS chop-break vs sustain.
+
+**No production change.** Decomposition only.
+
+
+
 ---
 
 ## Log 111 — 5m confirmation delay: the engine's own built-but-disabled gate

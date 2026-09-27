@@ -488,7 +488,36 @@ off, all untested: `exp_chop15_lo/hi`, `exp_max_concurrent`,
   directly when you need the diagnostics.
 - Inventory: `docs/ENGINE_SHELF.md`. Testing one of these is *not* covered by
   Rule 17 — they are exposure brakes and queue rules, not 30m/2h agreement
-  predicates.
+**Rule 21 — a signal's internal state label is not an edge, and this has now
+been shown twice by the same trap.** B1/B2/FLIP were decomposed in log 112 at
+zero cost, because the engine stores `break_kind` on every trade (L1811). bybit
+IS said the continuation signal B2 was nearly worthless (9.8% of net, PF 1.17,
+384% top-5% concentration) while FLIP — the engine reversing its own lock —
+carried 90.2% of net at PF 2.43. bybit OOS inverted it completely: B2 98.1%,
+FLIP 1.9% at PF 1.01. All three lanes reversed. That is the log-109 S3 trap
+again (consistent IS, inverted OOS), now at the level of the state machine
+itself. Two consequences:
+
+- **Never propose "trade X not Y" on the basis of a bucket's historical avgR.**
+  The `exp_kinds` knob (L1293) is a free parameter to overfit with, and any
+  such proposal must be judged on both eras simultaneously or it is already
+  dead before it is run.
+- **The labels are unstable, but the process around them is not.** What is still
+  worth testing at this level does not depend on a label's past: the B1→B2
+  unconfirmed window as an *uncertainty* object (size by state, remove nothing),
+  B1 as an early-warning read from a higher TF (moves the information frontier
+  rather than comparing direction, so Rule 17 does not reach it), B1→B2 latency
+  volatility-normalized by a higher TF, the `chop` category in
+  `b2_vs_flip_chop` mode, and FS chop-break vs sustain.
+
+**Rule 22 — decompose before you theorise, and the cheapest decomposition is
+usually already stored in the trade record.** Log 112's entire B1/B2/FLIP
+question — which could have consumed days of experiment design — was answered in
+90 seconds by reading a field the engine had been writing all along. When
+someone proposes a new axis to slice the book on, first check whether the
+engine already tags it per trade; if it does, run the two-era decomposition
+immediately and *before* writing any rationale, because on these books the IS
+alone will confidently point the wrong way.
 
 
 
