@@ -3,6 +3,8 @@
 **Date:** 2026-09-27 | **Status:** kuch bhi ADOPT nahi hua - tumhara ruling pending hai
 **Full technical record:** CHECKLIST 24.96, EXPERIMENT_LOG row 101, harness
 `live_stuff/tests/exp_gray_wick1h.py`, results `_gray_wick1h.json`
+**OUTCOME (2026-09-27): HOLD - sole blocker forward gate 5/50 (supersedes "ruling pending" above).**
+**Corrected in c18ffbb/eb12934: window 5.0-5.4 | 5.6-6.4 (hole 5.5), age10 = insufficient data, all-6 = 6.1 post-hoc; record extended: CHECKLIST 24.97, LOG row 102.**
 
 ---
 

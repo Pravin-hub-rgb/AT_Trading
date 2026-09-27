@@ -39,17 +39,24 @@ compile. Their owner confirms intent and stages them.
 
 - Are the production diffs (`v18_streak_halt.py` +195, `persistent_swing.py`
   +147, `live_loop.py` +95) finished and intentional? Uncommitted.
-- `wick_atr12@short <= 6.03` — the standing candidate. Post-process removal
-  only; engine untouched. Adoption needs a path-true engine rerun, since a
-  post-process skip does not account for chain re-timing.
-  **RESOLVED 2026-09-26 - RETRACTED, the rerun was run and it FAILS 0/4.**
-  See the "Removal retractions" section below.
+- `wick_atr12@short < 6.026` (STRICT, 1h plane) - the standing gray candidate.
+  **UPDATED 2026-09-27:** the 2026-09-26 "FAILS 0/4" retraction below was
+  measured on a WRONG 15m predicate (cohort swap: 112 vs 74 flagged, opposite
+  sign). Corrected status: gray 4/4 proven on the real 1h gate; HOLD on the
+  forward gate (5/50). See "Wick 1h gate - corrected status" below.
 - `flips96@short 4-5` also passes 4/4 but overlaps with the above (both
   short-side). Do not stack; combination untested. **Same lever, so the same
   fate is expected - not separately rerun.**
 - **RESOLVED 2026-09-26 - worktrees created.** See Worktrees below.
 
 ## Removal retractions - post-process PASS does not mean real
+
+**SCOPE CORRECTION (2026-09-27): every number in this section was measured on
+the 15m-plane predicate - a DIFFERENT cohort from Stage B's actual 1h gate.
+The 0/4 and the -78.6R cascade describe the wrong gate (112 flagged vs 74,
+opposite cohort sign). The real 1h predicate under gray mode: cascade 0.00,
+seq-identical 6/6, live dNet == post-process exactly. The RULE below (a
+post-process removal is an upper bound) stands unchanged for true removals.**
 
 Stage B's 2 surviving removals were **retracted 2026-09-26** after a path-true
 rerun. `exp_wick_short_pathtrue.py` patches the same super-set `build_module()`
@@ -95,6 +102,51 @@ below instead of more removal work.
 The signs here are easy to get wrong - a hand-typed version of this table put
 the cohort R into the dNet column and understated the cascade as 45-75% of the
 total instead of 125-156%. Derive these numbers in the harness.
+
+## Wick 1h gate - corrected status (2026-09-27)
+
+Predicate: shorts only, strict `wick_atr12 < 6.026` (Stage B `bucket_of`
+semantics), computed on the 1h plane - 12 CLOSED 1h bars ending at j = last
+1h bar closed by cutoff, ATR14 of the 1h TR series, j >= 50; wick_atr12 =
+(sum of upper + lower wicks over the window) / ATR14-1h. Single-source
+flagger: `exp_gray_wick1h.py` (4f97f90).
+
+**Status: HOLD.** Gray mechanism proven: 4/4 cells (cascade 0.00,
+seq-identical 6/6, live dNet == post-process exactly); cohort robust - best
+trade dropped, still negative 6/6 at 6.026. Independent audit + two harness
+fixes (c18ffbb, eb12934) reproduced Stage B with parity 4/4 EXACT to 1e-3
+(74/-28.057, 62/-25.674, 35/-19.781, 36/-23.775), now a hard assert.
+
+Corrected numbers (from `_wick1h_deep.json`, strict `<`):
+- ck_u both-eras window: **5.0-5.4 | 5.6-6.4** - 14 steps, NOT contiguous;
+  hole at 5.5 (is/utcsat +0.95). Record windows as blocks, never ranges.
+- cliff 6.4 -> 6.5 (is/champion +24.59, is/utcsat +34.13 flip together);
+  flip points IS 6.4/6.4/6.1, OOS 7.2/7.2/6.6 - IS is the binding constraint.
+- all-6 window: **6.1 only**, -0.29R on n22 = one trade, post-hoc picked to
+  make age10 pass - NOT a recommendation.
+- age10: INSUFFICIENT DATA (n=20, sum_ex_best -3.875 = a single +5.9R winner;
+  oos n=7), default-off. "Structural fail" RETRACTED - nested thresholds are
+  the same cohort, not independent evidence.
+- RETRACTED: "cohort worse than book avg at every threshold" (cumulative 1-D
+  sweep over-read).
+
+HOLD has ONE blocker: the forward gate (5/50 untouched). Threshold value is
+NOT frozen (user: "let the result decide") - 6.026 sits inside the window and
+is the only pre-registered, gray-validated candidate. Adoption path: forward
+5/50 -> user ruling -> engine change (pravinx0). Nothing adopted.
+
+House rules added this slice (5):
+1. Stage B bucket predicates are STRICT `<` - `<=` adds a trade per IS cell
+   and breaks parity (the audit's first failed control).
+2. A control mismatch is a hard assert: abort BEFORE printing verdicts
+   (c18ffbb reported every verdict off a failed control - do not repeat).
+3. Nested-threshold sweeps reuse the same cohort - one observation, not N
+   (the age10 "structural" error).
+4. Windows/stable sets are recorded as blocks with holes explicit - never as
+   `a-b` ranges that hide a gap.
+5. **Verify before writing** - any number attributed to another agent is
+   checked against source before it enters a doc (two wrong attributions in
+   this slice, both caught only by reading the file).
 
 ## Causality rule (added after the Stage B retraction)
 
@@ -191,3 +243,9 @@ agent has uncommitted, that is the old workflow; stop and check the branch.
 - 2026-09-26 — Committed 5 slices: `.gitignore` hygiene, Stage B bleed study,
   integrity-test re-anchor, docs, harness suite + scripts. Production diffs
   deliberately left uncommitted.
+- 2026-09-27 - Wick 1h gate: predicate mismatch found (Stage B qualified on
+  the 1h plane; all follow-ups tested 15m - wrong cohort), gray re-test PASS
+  4/4 (4f97f90), ruling brief (b7be019), independent audit + two harness
+  fixes (c18ffbb, eb12934). HOLD on the forward gate (5/50) only; age10 =
+  insufficient data; threshold not frozen; nothing adopted. See "Wick 1h
+  gate - corrected status" above.
