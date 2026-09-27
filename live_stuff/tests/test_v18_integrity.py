@@ -217,7 +217,10 @@ def test_win_rate_and_pf(trades):
     print(f"  PF: {pf:.2f}")
     print(f"  Gross: +{gross_win:.1f}R / -{gross_loss:.1f}R")
     assert 27 < wr < 50, f"VIOLATION: Win rate {wr:.1f}% outside 27-50% range"
-    assert pf > 2.0, f"VIOLATION: PF {pf:.2f} < 2.0"
+    # Bar re-anchored to 1.80 per EXPERIMENT_LOG row 79 (user-approved): post-ee574f9
+    # trail-ordering fix baseline is 351t / +211.72 gross / PF 1.907 (pre-fix 2.020,
+    # old bar cleared it by only 0.02 — never a robust alarm).
+    assert pf > 1.80, f"VIOLATION: PF {pf:.2f} < 1.80"
     print("  PASS: Win rate and PF in expected range")
 
 
