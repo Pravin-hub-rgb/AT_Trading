@@ -140,11 +140,18 @@ def run_set(name: str, jobs):
 
 
 def merge_metrics():
-    """Concatenate daily metrics zips -> single CSV with 5m rows."""
+    """Concatenate daily metrics zips -> single CSV with 5m rows.
+
+    Binance quirk: 186/2094 daily files ship DUPLICATE create_time rows
+    (e.g. 2021-01-01 has 576 rows = 288 unique x2). Dedupe on create_time,
+    keep first occurrence — OI/ratios are state snapshots, so a dup carries
+    no new information.
+    """
     dest = OUT / "BTCUSDT_metrics_5m.csv"
     zips = sorted((OUT / "metrics").glob("BTCUSDT-metrics-*.zip"))
-    rows, gaps = 0, []
+    rows, gaps, dups = 0, [], 0
     prev_day = None
+    seen = set()
     with open(dest, "w", newline="", encoding="utf-8") as fo:
         w = None
         for i, zp in enumerate(zips, 1):
@@ -163,9 +170,15 @@ def merge_metrics():
                             gaps.append(f"{prev_day}->{day}")
                     prev_day = day
                     for row in r:
+                        key = row[0]
+                        if key in seen:
+                            dups += 1
+                            continue
+                        seen.add(key)
                         w.writerow(row)
                         rows += 1
-    print(f"[merge] metrics -> {dest.name}: {rows} rows, {len(zips)} zips, gaps={len(gaps)}")
+    print(f"[merge] metrics -> {dest.name}: {rows} rows, {len(zips)} zips, "
+          f"gaps={len(gaps)}, dup-dropped={dups}")
     if gaps:
         print(f"  gap sample: {gaps[:5]}")
     return rows
