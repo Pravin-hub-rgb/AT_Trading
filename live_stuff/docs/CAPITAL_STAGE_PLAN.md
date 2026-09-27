@@ -383,8 +383,11 @@ Notes:
   post-hoc chosen to make age10 pass. It is not a recommendation.
 
   **Corrected net position:** champion/utcsat have a genuine 14-step stable
-  window containing 6.026, the cohort is robust (ex-best negative in 5 of 6
-  cells), and the gray mechanism is proven. What survives against adoption is
+  window containing 6.026, the cohort is robust (ex-best negative in **6 of 6**
+  cells** - the other agent caught that an earlier draft of this line said
+  5 of 6, which was a transcription error on my part and made the cohort look
+  like it failed one cell; it does not), and the gray mechanism is proven. What
+  survives against adoption is
   only: the all-6 rule needs a data-snooped single point, age10 is unpowered,
   and **the forward gate is 5/50**. HOLD stands - but on the forward gate, not
   on the objections (a13) originally raised.
