@@ -416,6 +416,24 @@ be an artifact?" and to test it on an independent dataset — not to run the
 tempting next split. If a pre-registration names the null response, that response
 is the experiment.
 
+**Rule 16 — one p<0.05 out of ~13 testable cells is noise, not a finding.**
+Log 110 scanned 36 cells, 13 testable, and exactly one printed p=0.018. Under a
+true null that is the *expected* number (~0.65 of 13, or ~1.8 of 36). A lone hit
+that (a) reverses sign in the other era and (b) fails to replicate on an
+independent dataset is the canonical multiple-comparisons artifact. Before
+believing any single p, count the cells behind it. Two more things that same
+cell got wrong, worth checking every time: it was the **widest** tolerance in its
+ladder, and it was the only cell in its row to clear the n floor — i.e. the least
+sharp version, found by luck.
+
+**Rule 17 — the whole shadow-timeframe thread is now exhausted.** S1 fail, S3
+fail (tail artifact), S4 fail, S6 fail (log 110). Do not re-open it by adding
+another 30m/2h comparison. The one idea that would be genuinely new — using 30m
+to enter *earlier* than the 1h close — stays blocked behind Rule 10, and
+unblocking it is a deliberate decision about the C15 causality gate, not
+something to slip in as a filter.
+
+
 
 
 

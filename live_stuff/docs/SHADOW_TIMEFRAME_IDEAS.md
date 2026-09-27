@@ -341,4 +341,93 @@ them about S3:
 
 The early-entry version is the more valuable idea and the more dangerous one.
 Excluded from this pass deliberately, not forgotten.
+
+---
+
+# S6 — the independent 30m/2h shadow BOOK (2026-09-27)
+
+S6 was the one shadow-TF idea whose object is genuinely new. S1-S4 asked "does
+this single 30m/2h bar point the same way?". S6 runs the **entire strategy a
+second time** on the matched ladder (30m/2h, cell F3) and asks, at each 15m
+entry: *is that independent system already positioned, and in which direction?*
+
+Harness `exp_s6_shadow_book.py` → `_s6_shadow_book.json` (251s). Tolerance was
+the one knob in this family, so it was handled as a **fixed geometric ladder**
+(±0/±1/±4/±8 fifteen-minute bars) with the **whole grid reported and no cell
+selected**. Flat is kept separate from opposing — a shadow system not in a trade
+has not expressed an opinion.
+
+## Coverage — the feature is structurally narrow
+
+The shadow book is in a position during only **16-33%** of 15m entries:
+
+| book | champion | utcsat | age10 |
+|---|---|---|---|
+| bybit IS | 30.2% | 26.4% | 16.9% |
+| bybit OOS | 26.2% | 23.3% | 15.8% |
+| btc-fut | 32.9% | 29.7% | 15.8% |
+
+So even a working feature could only speak to roughly a quarter of the book.
+
+## The grid
+
+`dtrim` = agreeing − opposing, trimmed mean. Positive = agreement is better.
+
+| book | lane | tol | n_ag | n_op | dtrim | verdict |
+|---|---|---|---|---|---|---|
+| bybit IS | champion | ±0/1/4/8 | 112-121 | 39-43 | +0.61 … +0.92 | null ×4 |
+| bybit IS | utcsat | ±0/1/4 | 94-99 | 26-29 | — | n<30 floor |
+| bybit IS | **utcsat** | **±8** | **104** | **30** | **+0.92** | **SIGNIFICANT** |
+| bybit OOS | champion | ±0-8 | 51-54 | 22-25 | — | n<30 floor |
+| bybit OOS | utcsat | ±8 | 46 | 20 | — | n<30 floor |
+| btcfut | champion | ±0/1/4/8 | 191-203 | 65-75 | +0.17 … +0.31 | null ×4 |
+| btcfut | utcsat | ±0/1/4/8 | 162-172 | 49-63 | −0.11 … +0.15 | null ×4 |
+
+## Verdict — CLOSED, and the one hit is what chance looks like
+
+The pre-registered bar needed **all four** of: same sign both eras, trimmed-mean
+CI excluding zero in both, n≥30 both buckets, and replication on btc-fut.
+
+**1 of 13 testable cells cleared the CI test** — `bybit/is/utcsat/±8`,
+dtrim +0.92, p=0.018. It fails the other three:
+
+- **Wrong sign out of sample.** bybit OOS utcsat has agree −0.41 against oppose
+  +0.27, the exact opposite of IS.
+- **Does not replicate.** btc-fut utcsat runs −0.11, −0.08, −0.09, +0.15 —
+  mostly the wrong way.
+- **It is the widest tolerance** (±8 = ±2h), the least sharp version of the
+  feature, and the only cell in its row that reached the n=30 floor.
+
+**The multiplicity arithmetic settles it.** 36 cells were scanned, 13 testable.
+Under a true null, ~0.65 of 13 would be expected to print p<0.05 (≈1.8 counting
+all 36). **Finding exactly one is what noise returns, not what a discovery looks
+like.** A lone p=0.018 that reverses sign out of sample and fails to replicate is
+the canonical multiple-comparisons artifact.
+
+**The honest residue, recorded but not acted on:** `champion`'s direction is
+positive in both datasets at every tolerance (bybit IS +0.61…+0.92, btc-fut
++0.17…+0.31). Consistent in sign, never significant, and it *shrinks* on the
+independent dataset. Directionally coherent but underpowered at best, and not a
+basis for any filter.
+
+**S6 is closed. No filter proposed, nothing adopted.** The +0.92 cell is exactly
+the kind of number that gets quoted later as "we almost found something", so it
+is recorded here with its failure modes attached.
+
+## Where the shadow-timeframe thread now stands
+
+| idea | verdict |
+|---|---|
+| S1 30m bar agreement | fail (sign flips between eras) |
+| S2 30m first-leg veto | never reached — S1/S3 exhausted the family |
+| S3 2h swing agreement | fail (tail artifact, log 109) |
+| S4 agreement stack | fail (non-monotone) |
+| **S6 independent shadow book** | **fail (1/13, wrong sign OOS, no replication)** |
+
+Every shadow-TF idea that can be built without breaking the C15 gate has now been
+tested and none survived. The one that would be genuinely new — using 30m to
+enter *earlier* than the 1h bar close — remains excluded by Rule 10, because it
+requires deliberately relaxing a causality gate this repo has already been
+burned by three times.
+
 # END_MARKER
