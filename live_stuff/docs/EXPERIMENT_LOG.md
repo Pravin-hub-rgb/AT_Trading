@@ -1,4 +1,57 @@
 
+## Log 113 — The Stage-B stack book was already in the repo; it reproduces 24/24
+
+**Date:** 2026-09-27 · **Harness:** `exp_stack_repro.py` → `_stack_repro.json`
+**Docs:** `STACK_BOOK.md`
+
+Told to read the docs instead of running another experiment. That was the right
+correction. Logs 109–112 all worked on **entry** — timeframe, filter, break kind.
+The docs describe an **exit-side** candidate stack, measured and
+causality-audited on 24–26 Sep, left default-off, which I had never opened:
+`EQUITY_CURVE_STUDY.md`, `TRAIL_MECHANICS.md`, `CAPITAL_STAGE_PLAN.md`.
+
+Three flags, all already in the built engine at default 0:
+`exp_trail_half=1` (ratchet moves halfway, stop stays wider),
+`exp_trail_delay_r=1.0` (trail off until the trade has +1R — "prove it first"),
+`exp_skip_decisive=1` (skip `use=="decisive"`).
+
+**Reproduced 24/24 documented cells to 0.1R.**
+
+champion (the lane we ship): IS +325.8 → **+429.6**; OOS +70.2 → **+110.5 (+57%)**
+with OOS maxDD **53.2 → 30.6 (−42%)**. utcsat independently: OOS +60.2 → +94.6,
+the same +57%. The documented age10 FAILURE reproduced too: STACK takes age10
+OOS from +43.2 to **−0.3**, so this is a multi-only change.
+
+This directly answers the audit in `IS_IT_RIGHT.md`, which had found the shipped
+book fragile — OOS mean p=0.199, three of 279 trades carrying the result, 53.2R
+DD. The stack improves net and drawdown together, on the shipped lane, and
+removes **no entry at all in IS**, so the Rule 18 slot-cascade that killed the
+5m gate cannot apply to it.
+
+Causality already audited independently (Stage 19 / CHECKLIST 24.24): a strict
+prev-bar MFE gate gives identical numbers. Not a leak artifact.
+
+**Not deployed, and the blockers are not "it doesn't work":** forward n = 5/50
+against a pre-registered ≥50, which gates every candidate in this programme;
+age10 is destroyed, so adopting on multi means retiring the smoothest curve in
+the repo; and `skip_decisive` fires 0 times in IS, so its evidence is 57 trades
+removed from one heavily-inspected era.
+
+Also: do **not** stack the sizing queue on top yet. All five sizing candidates
+key off `cur_mag_atr` and CAPITAL_STAGE_PLAN §3 records the bridge test as
+**failed** — 46.5% agreement at send time against a 95% bar, so they are not
+live-computable as measured. The stack has no such problem.
+
+Methodology: my first run of this harness reported 10/30 with 20 mismatches.
+That was my bug — one expected-value table applied to all three lanes. All 20
+were exact reproductions of each lane's own documented number. Third
+reporting-layer error caught in these logs (after `boot()` vs control, and
+`exp_sizing_combo.run` discarding `five_m_stats`). **When a harness disagrees
+with a document, suspect the harness first.**
+
+**No production change.** `backend/` untouched, all three flags default 0.
+
+
 ## Log 112 — B1/B2/FLIP decomposition: the free test that killed the idea
 
 **Date:** 2026-09-27 · **Harness:** `exp_break_kind.py` → `_break_kind.json`
