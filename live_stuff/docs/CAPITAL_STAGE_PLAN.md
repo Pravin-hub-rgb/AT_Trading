@@ -293,6 +293,49 @@ Notes:
   is immaterial next to a 5/50 forward gate. But the mechanism claim is now
   proven rather than assumed.
 
+  - **(a12) RE-RUN of (a9) and (a10) after the cooldown fix. The 0/36 and the
+  "gray cannot rescue the wick gate" verdicts SURVIVE - but now they are real
+  measurements rather than artefacts of my bug.** Both harnesses were re-run
+  with the cooldown suppression removed and the cascade guard added.
+
+  **Re-run of the wick gate** (`exp_sl_fine_cascade.py`, 24.86 predicate frozen
+  at 6.03/12): cascade term is **+0.00 in all 6 cells**, `seq_identical` **6/6**,
+  dNet **-6.7 / -7.0 / -24.5 / -78.0 / -78.1 / -32.2** - negative everywhere.
+  So the earlier conclusion holds for the right reason this time: the wick
+  gate really does lose, because the flagged cohort was net profitable, not
+  because of a phantom cascade. **The wick gate is genuinely dead.**
+
+  **Re-run of the SL-width gate** (`exp_sl_width_gate.py`, 3 bands x 2 streak
+  designs x 6 cells): still **0/36**, and the accounting now closes exactly.
+
+  | arm | G-RULE | seqID | total dNet | -raw | max abs cascade |
+  |---|---|---|---|---|---|
+  | b_040_090 / streakON | 0/6 | **True** | -1091.0 | +1091.0 | **0.000** |
+  | b_040_120 / streakON | 0/6 | **True** | -1019.8 | +1019.8 | **0.000** |
+  | b_055_120 / streakON | 0/6 | **True** | -1176.6 | +1176.6 | **0.000** |
+  | b_040_090 / streakOFF | 0/6 | False | -1126.1 | +1018.1 | 40.486 |
+  | b_040_120 / streakOFF | 0/6 | False | -1132.9 | +985.3 | 66.169 |
+  | b_055_120 / streakOFF | 0/6 | False | -1193.2 | +1085.0 | 63.218 |
+
+  **Every `streakON` arm is exactly cascade-free** (max abs cascade term 0.000
+  across all 36 of its cells), which is the cleanest possible proof that the
+  gray mechanism itself is sound. And the 0/36 verdict is now **honest**: the
+  grayed cohort is worth **+1,019R to +1,177R** in aggregate, so a band gate
+  that keeps only 17-58% of the book is throwing away more than a thousand R of
+  real profit. The wide-SL gate is dead for a real reason, not a bug.
+
+  **Second design question, answered by the data rather than by me:**
+  `exp_gray_streak=True` is the only correct setting. `streakOFF` is a genuine
+  bug - when a gray trade does not advance the loss streak, a stale
+  `halt_skip_next` set by an earlier real loss is still pending, and the engine
+  consumes it by skipping the NEXT real entry (v18:580-583). That is the only
+  remaining source of a non-zero cascade term, and it is fully explained by it.
+
+  Net effect on the research programme: nothing is rescued, and the three
+  gray-mode gates (wide SL, 3%+ tail, wick) are all **CLOSED** - but now on
+  evidence that closes to the cent, and with the mechanism validated rather
+  than merely claimed.
+
   - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
   trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard

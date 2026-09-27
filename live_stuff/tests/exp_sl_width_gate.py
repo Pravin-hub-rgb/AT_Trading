@@ -133,7 +133,10 @@ _STREAK_PATCH = (
     '        if max_consecutive_losses > 0 and not (_isgray and not exp_gray_streak):\n'
 )
 _COOL_ANCHOR = '        if cooldown_bars > 0 and r_multiple < 0:\n'
-_COOL_PATCH = '        if cooldown_bars > 0 and r_multiple < 0 and not _isgray:\n'
+# A gray trade still HAPPENS: it holds its slot, advances the streak and must
+# start its cooldown like a real loss. Gating the cooldown here was a BUG that
+# shifted the timeline and manufactured a fake cascade (see a3ca96b). Identity.
+_COOL_PATCH = _COOL_ANCHOR
 _BOOK_ANCHOR = '            "r_multiple": round(float(r_multiple),3),\n'
 _BOOK_PATCH = (
     '            "r_multiple": round(0.0 if _isgray else float(r_multiple),3),\n'
@@ -269,6 +272,8 @@ def main():
                     m = equity_quality(arm, years[scope])
                     grays = sum(1 for t in arm if t.get("is_gray"))
                     kept = m["n"] - grays
+                    raw_r = sum(float(t.get("r_multiple_raw") or 0.0)
+                                for t in arm if t.get("is_gray"))
                     seq_ref = [(t["entry_ts"], t["exit_ts"]) for t in ref]
                     seq_arm = [(t["entry_ts"], t["exit_ts"]) for t in arm]
                     cell = {
@@ -282,6 +287,11 @@ def main():
                         "ref_avg_per_trade": round(m_ref["net"] / m_ref["n"], 4),
                         "seq_identical": seq_ref == seq_arm,
                         "gray_streak": streak_flag,
+                        # CASCADE GUARD: cascade-free means d_net == -raw_r.
+                        "raw_r_grayed": round(raw_r, 2),
+                        "expected_d_net_if_cascade_free": round(-raw_r, 3),
+                        "cascade_term": round(
+                            (m["net"] - m_ref["net"]) + raw_r, 3),
                     }
                     cell["g_rule_pass"] = bool(
                         cell["kept_pct"] >= 55.0
@@ -295,6 +305,7 @@ def main():
                           f"streak={'ON ' if streak_flag else 'OFF'} "
                           f"kept={cell['kept_pct']:>6}% gray={grays:>3} "
                           f"dNet={cell['d_net']:>+8.1f} dDD={cell['d_max_dd']:>+6.2f} "
+                          f"casc={cell['cascade_term']:>+7.2f} "
                           f"seqID={cell['seq_identical']} "
                           f"pass={cell['g_rule_pass']}", flush=True)
 
@@ -306,6 +317,11 @@ def main():
         tally[a] = {"cells": len(cells),
                     "g_rule_pass_cells": sum(1 for c in cells if c["g_rule_pass"]),
                     "all_seq_identical": all(c["seq_identical"] for c in cells),
+                    "max_abs_cascade_term": round(
+                        max(abs(c["cascade_term"]) for c in cells), 3),
+                    "total_d_net": round(sum(c["d_net"] for c in cells), 2),
+                    "total_raw_grayed": round(
+                        sum(c["raw_r_grayed"] for c in cells), 2),
                     "pass": all(c["g_rule_pass"] for c in cells)}
     payload["verdicts"] = {
         "arms": tally,
@@ -319,7 +335,9 @@ def main():
     print("  VERDICTS:", flush=True)
     for a, v in tally.items():
         print(f"    {a:<22} G-RULE {v['g_rule_pass_cells']}/{v['cells']} "
-              f"pass={v['pass']} seq_identical={v['all_seq_identical']}", flush=True)
+              f"pass={v['pass']} seqID={v['all_seq_identical']} "
+              f"| dNet {v['total_d_net']:+.1f} = -raw({v['total_raw_grayed']:+.1f}) "
+              f"| max|casc|={v['max_abs_cascade_term']}", flush=True)
     vd = payload["verdicts"]
     print(f"  CASCADE-FREE (all arms): {vd['cascade_free']}", flush=True)
     print(f"  ANY ARM PASSES: {vd['any_arm_passes']}", flush=True)

@@ -161,7 +161,10 @@ def build_module():
     s = s.replace(st, '        if max_consecutive_losses > 0 and not (_isgray and not exp_gray_streak):\n')
     cd = '        if cooldown_bars > 0 and r_multiple < 0:\n'
     assert s.count(cd) == 1, "cooldown"
-    s = s.replace(cd, '        if cooldown_bars > 0 and r_multiple < 0 and not _isgray:\n')
+    # A gray trade still HAPPENS: it holds its slot, advances the streak and
+    # must start its cooldown like a real loss. Gating it was a BUG that
+    # manufactured a fake cascade (see a3ca96b). Identity.
+    s = s.replace(cd, cd)
     bk = '            "r_multiple": round(float(r_multiple),3),\n'
     assert s.count(bk) == 1, "book"
     s = s.replace(bk,
@@ -251,6 +254,11 @@ def main():
             seq_g = [(t["entry_ts"], t["exit_ts"]) for t in gray]
             raw_gray = sum(float(t.get("r_multiple_raw") or 0.0)
                            for t in gray if t.get("is_gray"))
+            d_net = round(mg["net"] - mr["net"], 3)
+            # CASCADE GUARD: a truly cascade-free gray satisfies
+            # d_net == -raw_r_grayed exactly. Any gap IS the cascade, and this
+            # is what caught the cooldown-suppression bug in a3ca96b.
+            cascade_term = round(d_net + raw_gray, 3)
             cell = {
                 "n": mg["n"], "n_gray": grays,
                 "kept_pct": round(100.0 * (mg["n"] - grays) / max(1, mg["n"]), 2),
@@ -258,12 +266,14 @@ def main():
                 "d_max_dd": round(mr["max_dd"] - mg["max_dd"], 3),
                 "seq_identical": seq_ref == seq_g,
                 "raw_r_forgiven_by_gray": round(raw_gray, 2),
+                "expected_d_net_if_cascade_free": round(-raw_gray, 3),
+                "cascade_term": cascade_term,
             }
             payload["gray"][f"{scope}/{name}"] = cell
             print(f"      GRAY wick kept={cell['kept_pct']:>6}% gray={grays:>3} "
                   f"dNet={cell['d_net']:>+8.1f} dDD={cell['d_max_dd']:>+6.2f} "
-                  f"seqID={cell['seq_identical']} "
-                  f"rawR_grayed={cell['raw_r_forgiven_by_gray']:>+7.1f}", flush=True)
+                  f"casc={cell['cascade_term']:>+7.2f} "
+                  f"seqID={cell['seq_identical']}", flush=True)
 
     print("\n=== FINE LADDER AGGREGATE (all 6 cells) ===", flush=True)
     for lo, hi in FINE_BUCKETS:
@@ -280,7 +290,8 @@ def main():
 
     print("\n=== GRAY-MODE CASCADE RESULT ===", flush=True)
     for k, v in payload["gray"].items():
-        print(f"  {k:16} dNet={v['d_net']:>+8.1f}  seqID={v['seq_identical']}  "
+        print(f"  {k:16} dNet={v['d_net']:>+8.1f}  casc={v['cascade_term']:>+7.2f} "
+              f" seqID={v['seq_identical']}  "
               f"kept={v['kept_pct']:>6}%", flush=True)
     payload["verdicts"] = {
         "gray_seq_identical_cells": sum(1 for v in payload["gray"].values()
