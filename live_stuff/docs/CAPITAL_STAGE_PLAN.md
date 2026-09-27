@@ -178,6 +178,67 @@ Notes:
   anchors and replaces them with newline-anchored matching, because the 8-space
   form is a substring of the 12-space one.
 
+- **(a10) Fine SL ladder: 3%+ is genuinely dead, and GRAY MODE does NOT rescue the
+  wick gate.** `exp_sl_fine_cascade.py` -> `_sl_fine_cascade.json`. The previous
+  autopsy's top band was `1.60-99.00` - a 37%-wide bucket with 488 trades, so
+  everything above 2% was invisible inside it. Splitting the tail (all six
+  ledger controls exact, costs-aware `net_r`):
+
+  | sl_width % | n | avgR | WR | net |
+  |---|---|---|---|---|
+  | 0.00-0.25 | 54 | +7.871 | 31.5% | +425.0 |
+  | 0.25-0.40 | 118 | +2.192 | 27.1% | +258.6 |
+  | 0.40-0.55 | 129 | +0.903 | 15.5% | +116.5 |
+  | 0.55-0.70 | 178 | +0.465 | 34.3% | +82.8 |
+  | 0.70-0.90 | 178 | +1.277 | 33.7% | +227.4 |
+  | 0.90-1.20 | 293 | +0.091 | 22.5% | +26.6 |
+  | 1.20-1.60 | 254 | +0.461 | 32.7% | +117.0 |
+  | 1.60-2.00 | 170 | +0.222 | 33.5% | +37.7 |
+  | 2.00-2.50 | 131 | +0.004 | 33.6% | +0.5 |
+  | 2.50-3.00 | 76 | +0.311 | 52.6% | +23.7 |
+  | **3.00-5.00** | 78 | **-0.107** | 34.6% | **-8.4** |
+  | **5.00+** | 33 | **-0.402** | 21.2% | **-13.3** |
+
+  **3%+ is negative in the aggregate and in 5 of 6 cells** (only oos/age10
+  rescues 2.5-3.0). 2.0-3.0 is flat, not negative - the damage starts at 3%, not
+  2%. So a "very wide SL" gate is worth roughly **-21R** on this book: too small
+  to matter and pointing the wrong way.
+
+  **Q2 - the cascade experiment, run under gray mode.** The user correctly
+  recalled `exp_cascade_tax_test.py` (H2): the wick removal scored +28.1R
+  post-process but **-50.5R path-true**, a -78.6R cascade at 280% of the direct
+  effect, and that the same removal turns **positive (+5.61R)** once the three
+  stateful carriers are switched off. That is exactly the shape a gray trade
+  should fix, so the wick gate was re-run as gray: trade runs to completion,
+  P&L suppressed, carriers untouched, threshold frozen at 6.03/12.
+
+  | cell | gray n | kept | dNet | seq_identical |
+  |---|---|---|---|---|
+  | is/champion | 113 | 77.9% | **-30.1** | no |
+  | is/utcsat | 108 | 78.0% | **-83.5** | no |
+  | is/age10 | 30 | 76.9% | -24.5 | **yes** |
+  | oos/champion | 62 | 77.6% | **-91.6** | no |
+  | oos/utcsat | 61 | 77.1% | -90.9 | no |
+  | oos/age10 | 18 | 76.3% | -32.2 | **yes** |
+
+  **dNet is negative in 6 of 6 cells**, and the prediction held: gray lands
+  between the two known bounds (+28.1 post-process, -50.5 path-true) rather than
+  on either. But it is negative, and the reason is visible in the raw R of the
+  flagged cohort: **+1.9R and +24.5R on the two IS books** - the wick-flagged
+  trades were net *profitable*. Graying them forfeits winners, so the "cascade
+  tax" was never the only term; the direct effect was negative too. The
+  post-process +28.1R was an artefact of the slot refilling, not of an edge.
+
+  `seq_identical` is False on the four multi books and True only on age10, so
+  gray mode is **not** universally cascade-free for a mid-sequence gate: on the
+  busier books the cooldown/streak timeline still shifts enough to move a
+  downstream entry. The mechanism holds where the book is sparse.
+
+  Both questions answered, both negative. The gray mechanism remains sound and
+  reusable (identity gate IDENTICAL, and it is the only way to make a gate that
+  does not refill slots), but there is no edge underneath either the SL-width or
+  the wick gate to rescue.
+
   - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
   trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard
