@@ -1,11 +1,13 @@
-"""Download BTCUSDT PERPETUAL 1m data from Binance Futures (fapi).
+"""Download PERPETUAL 1m data from Binance Futures (fapi).
 
-Saves to data/btc-fut/BTCUSDT_1m.csv in IST wall-clock format.
+Saves to data/btc-fut/BTCUSDT_1m.csv in IST wall-clock format by default.
 Resumes from checkpoint if file exists.
 
 Usage:
     python scripts/download_binance_fut_1m.py
     python scripts/download_binance_fut_1m.py --start "2023-01-01 05:30:00"
+    python scripts/download_binance_fut_1m.py --symbol ETHUSDT \
+        --dir data/eth-fut --start "2020-12-31 00:00:00" --sleep 0.3
 """
 from __future__ import annotations
 import argparse
@@ -29,7 +31,8 @@ def _fetch_json(url: str) -> dict:
         return json.loads(resp.read().decode())
 
 
-def download_1m(symbol: str, data_dir: Path, start_ms: int) -> int:
+def download_1m(symbol: str, data_dir: Path, start_ms: int,
+                sleep_sec: float = 0.0) -> int:
     step_ms = TF_MS["1m"]
     now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
 
@@ -84,6 +87,8 @@ def download_1m(symbol: str, data_dir: Path, start_ms: int) -> int:
             break
         cur = nxt
         batch += 1
+        if sleep_sec > 0:
+            time.sleep(sleep_sec)
 
         if batch % 10 == 0:
             elapsed = time.time() - t_start
@@ -126,13 +131,26 @@ def download_1m(symbol: str, data_dir: Path, start_ms: int) -> int:
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Download BTCUSDT perp 1m from Binance Futures")
+    ap = argparse.ArgumentParser(description="Download perp 1m from Binance Futures")
     ap.add_argument("--start", default=DEFAULT_START_IST, help="IST start datetime")
+    ap.add_argument("--symbol", default=SYMBOL, help="futures symbol (default BTCUSDT)")
+    ap.add_argument("--dir", default=None,
+                    help="output dir (default data/btc-fut); relative to repo root")
+    ap.add_argument("--sleep", type=float, default=0.0,
+                    help="seconds to sleep between requests (rate limit)")
     args = ap.parse_args()
 
     start_dt = datetime.strptime(args.start, "%Y-%m-%d %H:%M:%S")
     start_ms = int(start_dt.replace(tzinfo=timezone.utc).timestamp() * 1000)
 
-    print(f"Downloading BTCUSDT perp 1m from Binance Futures ({args.start}...)...")
-    n = download_1m(SYMBOL, DATA_DIR, start_ms)
+    data_dir = DATA_DIR
+    if args.dir:
+        root = Path(__file__).resolve().parents[1]
+        data_dir = Path(args.dir)
+        if not data_dir.is_absolute():
+            data_dir = root / data_dir
+
+    print(f"Downloading {args.symbol} perp 1m from Binance Futures "
+          f"({args.start}... -> {data_dir})...")
+    n = download_1m(args.symbol, data_dir, start_ms, sleep_sec=args.sleep)
     print(f"Done: {n} candles")
