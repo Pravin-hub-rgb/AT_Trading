@@ -342,58 +342,52 @@ Notes:
   recomputes `wick_atr12` from the engine (1h plane, 12 closed 1h bars, ATR14-1h)
   rather than reading the other agent's JSON, and sweeps the threshold.
 
-  **Parity** - OOS exact, IS one trade wide:
-  | cell | mine | theirs | sum_net match |
-  |---|---|---|---|
-  | oos/champion | 35/35 | 35/35 | -19.780510 **exact** |
-  | oos/utcsat | 36/36 | 36/36 | -23.774610 **exact** |
-  | is/champion | **75** | 74 | -29.55 vs -28.06 |
-  | is/utcsat | **63** | 62 | -27.16 vs -25.67 |
-
-  A systematic +1 trade in IS only, costing ~1.5R - a boundary/cutoff artefact,
-  not a disagreement. The direction and magnitude reproduce.
+  **Parity - first run, `w <= thr` (WRONG):** OOS exact, IS one trade wide
+  (75/63 vs 74/62). The one-trade gap was the strict-`<` defect, not a
+  disagreement. **After the fix: 4/4 exact to 1e-3** (74/-28.057, 62/-25.674,
+  35/-19.781, 36/-23.775), asserted rather than reported.
 
   **Q1 ROBUSTNESS - PASSES.** Dropping the cohort's single best trade leaves it
   negative in **6 of 6** cells at 6.026. The cohort is not outlier-driven.
 
-  **Q2 THRESHOLD OVERFIT - FAILS the pre-registered test.** The sign flips
-  just above the Stage B value:
+  **Q2 THRESHOLD OVERFIT - FAILED as first written, and the reason was partly my
+  own harness.** Two defects, both found by the other agent and both fixed here:
 
-  | thr | is/champ n | sum | is/age10 n | sum | oos/champ n | sum |
-  |---|---|---|---|---|---|---|
-  | 5.00 | 18 | -6.13 | 6 | **+6.76** | 8 | -4.85 |
-  | 5.50 | 31 | -5.96 | 12 | **+2.81** | 14 | -10.69 |
-  | 6.00 | 70 | -23.26 | 20 | **+2.01** | 33 | -18.22 |
-  | **6.026** | 75 | **-29.55** | 20 | **+2.01** | 35 | -19.78 |
-  | 6.50 | 116 | **+24.59** | 30 | **+74.95** | 56 | -19.80 |
-  | 7.00 | 158 | **+53.07** | 43 | **+125.77** | 77 | -3.91 |
-  | 8.00 | 207 | **+47.41** | 51 | **+125.53** | 102 | **+60.31** |
+  1. `cohort()` used `w <= thr` while Stage B's `bucket_of` is strict `v < 6.026`.
+     That added exactly one trade per IS cell (75/63 vs 74/62, -1.49R each) and
+     is why IS parity failed while OOS was exact. With strict `<` the parity
+     control now passes **4/4 to 1e-3** and is a hard `assert` that aborts
+     before any verdict is printed - (a13) reported every verdict off a FAILED
+     control, which broke the house rule that a control mismatch means the
+     harness is wrong. That is now enforced in code, not by intention.
+  2. `stable_window_ck_u` built its check dict as `{c: ...}` while iterating
+     over both scope and lane, so the OOS value overwrote the IS one and the
+     stored window was OOS-only (5.0-7.2, 23 steps). Corrected and re-run.
 
-  A 0.5 ATR move in the threshold is worth ~+54R on is/champion. There is no
-  plateau around 6.026 - it sits **at the upper cliff edge of a sign flip**. And
-  the flip point is **not stable across eras**: IS flips at ~6.3, OOS champion
-  does not flip until ~7.5. So the *direction* is real but the *exact value* is
-  mined, and the two eras disagree on where the boundary sits.
+  **The corrected window is 5.0-5.4 | 5.6-6.4** - 14 steps but **not
+  contiguous**: there is a hole at 5.5 (is/utcsat +0.95). 6.026 sits inside the
+  second block. The upper cliff is 6.4 -> 6.5, where is/champion and is/utcsat
+  flip together (+24.59 / +34.13). Flip points: IS 6.4/6.4/6.1, OOS 7.2/7.2/6.6,
+  so IS is the binding constraint.
 
-  Worth recording: the flagged cohort is worse than the book average
-  (`vs_book_avg` negative) at **every** threshold up to 7.0. What changes at
-  6.3 is not that the cohort stops being bad - it stops being net-negative.
-  The honest description is "gate short trades in the low-wick band", with the
-  band edge era-dependent.
+  **Q3 AGE10 - RETRACTED as "structural".** I claimed the age10 cohort was
+  positive at every threshold and called that structural. It was not five
+  independent observations: nested thresholds contain each other, so 4.5 / 5.0 /
+  5.5 are the *same* n=20 cohort. The correct reading is in my own deep run -
+  is/age10 `sum_net_ex_best` is **-3.88**, so the +2.01 is a single +5.9R
+  winner, and oos/age10 is -5.18. **age10 is insufficient data (n=20), not a
+  counter-example.** It should be left default-off for lack of evidence, not
+  recorded as a failure.
 
-  **Q3 AGE10 - fails structurally, and the brief understates it.** The age10
-  cohort is **positive at every threshold from 4.5 to 6.026** (+3.89 / +6.76 /
-  +2.81 / +2.01 / +2.01) while champion/utcsat are negative throughout. That is
-  not a n=20 sampling wobble; it is a different relationship. Note the cohort is
-  still *worse than the age10 book average* (vs_book_avg -3.25) - it is simply
-  still profitable, so gating it forfeits money. oos/age10 is negative (-5.18),
-  so age10 is inconsistent across eras as well.
+  The single all-6 point is **6.1 at -0.29R on n=22** - one trade wide, and
+  post-hoc chosen to make age10 pass. It is not a recommendation.
 
-  **Verdict: the mechanism is real (cascade 0.00, seq-identical 6/6, cohort
-  robust 6/6, live dNet == post-process exactly) but the gate is not ready to
-  adopt.** Three things are open: the threshold has no plateau and its flip point
-  differs by era, age10 fails structurally, and the forward gate is 5/50.
-  Recorded as (a13) so the 6.026 number is never quoted as a stable boundary.
+  **Corrected net position:** champion/utcsat have a genuine 14-step stable
+  window containing 6.026, the cohort is robust (ex-best negative in 5 of 6
+  cells), and the gray mechanism is proven. What survives against adoption is
+  only: the all-6 rule needs a data-snooped single point, age10 is unpowered,
+  and **the forward gate is 5/50**. HOLD stands - but on the forward gate, not
+  on the objections (a13) originally raised.
 
   - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
