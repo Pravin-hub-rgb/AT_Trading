@@ -129,7 +129,56 @@ Notes:
   matched random null passes `curve_better` in essentially every cell on these
   books, so dNet+curve alone cannot certify a sizing feature.
 
-- **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
+- **(a9) SL-width: the user is RIGHT that a healthy range exists, and GRAY MODE
+  WORKS - but the range is the OPPOSITE end, and no gate band passes.**
+  `exp_sl_width_buckets.py` -> `_sl_width_buckets.json` (descriptive, costs-aware
+  via `net_r`, all 6 ledger controls exact) settles the "which band is healthy"
+  question the gate was built on:
+
+  | sl_width % band | n | avgR | WR | net |
+  |---|---|---|---|---|
+  | **0.00-0.25** | 54 | **+7.871** | 31.5% | **+425.0** |
+  | 0.25-0.40 | 118 | +2.192 | 27.1% | +258.6 |
+  | 0.40-0.55 | 129 | +0.903 | 15.5% | +116.5 |
+  | 0.55-0.70 | 178 | +0.465 | 34.3% | +82.8 |
+  | 0.70-0.90 | 178 | +1.277 | 33.7% | +227.4 |
+  | 0.90-1.20 | 293 | +0.091 | 22.5% | +26.6 |
+  | 1.20-1.60 | 254 | +0.461 | 32.7% | +117.0 |
+  | 1.60+ | 488 | +0.082 | 35.9% | +40.2 |
+
+  **The tightest band is by far the best: 1.7% of trades carrying +425R**, at
+  avgR 7.9 versus 0.08-1.3 for everything wider. That is the whole edge in one
+  line - the runner is a *tight-stop* runner, and width is the enemy. This is the
+  mirror image of (a8): the same idea, and it inverts cleanly.
+
+  It is **not monotonic** - 0.70-0.90 (+1.277) beats both neighbours - so there
+  is no single "healthy range" cut, and the two deepest bands (0.00-0.25,
+  0.25-0.40) hold only 172 trades total. A gate on "wide" is therefore a gate
+  on the losing side, and a gate on "tight" throws away most of the book.
+
+  `exp_sl_width_gate.py` -> `_sl_width_gate.json` then ran the gray-mode gate for
+  real, in the engine, and **0 of 36 arms pass** (3 bands x 2 streak designs x 6
+  cells). Failure counts: dNet<=0 in 36/36, avg/trade worse in 36/36, kept<55%
+  in 34/36, maxDD worse in 30/36. Two bands keep >55% yet still fail on every
+  other rule, because a gray wide-SL trade forfeits a winner and the kept book
+  loses more than the gray book gave up.
+
+  **The gray mechanism itself works and is the reusable part.** The trade is
+  run to completion inside the engine, so `busy_until` (v18:743), the loss
+  streak (v18:713-722) and `cooldown_bars` (v18:744-745) all still update -
+  the slot is NOT refilled, which is the one thing a post-process removal
+  (Stage B, Z3) can never do. `seq_identical=True` is reported per cell and is
+  the property to watch. The identity gate held IDENTICAL (patched-off ==
+  shipped, 340t/+225.3R) on both runs.
+
+  One implementation note worth keeping: the super-set engine contains
+  `sl0=sl; sl_cur=sl; best=entry` at **two different indents** (the main entry
+  path at 8 spaces, the 5m/retest delayed path at 12). Gating only the first
+  silently lets every retest-path trade through. The harness asserts both
+  anchors and replaces them with newline-anchored matching, because the 8-space
+  form is a substring of the 12-space one.
+
+  - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
   trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard
   zero threshold, L in 24/168h). Bybit base ledgers reproduced 24.85, and on
