@@ -239,6 +239,43 @@ Notes:
   does not refill slots), but there is no edge underneath either the SL-width or
   the wick gate to rescue.
 
+  - **(a11) The surgical tail gate - 1/6, and the split is the whole lesson.**
+  `exp_sl_gray_tail.py` -> `_sl_gray_tail.json`. The user's refinement of (a9)
+  was right in principle: gray ONLY `sl_width_pct >= 3.0`, which is the one
+  uniformly bad band (-21.65R aggregate, negative in 5 of 6 cells), and leave
+  the 0.25-2.00 region that holds the edge completely untouched. A 2.5 arm was
+  run alongside as a sensitivity check. G-RULE = dNet>0 AND kept>=85% AND
+  maxDD not worse, all 6 cells. Base ledgers exact; identity gate IDENTICAL.
+
+  | cell | gray | kept | dNet | raw R grayed | seq_identical | pass |
+  |---|---|---|---|---|---|---|
+  | is/champion | 14 | 97.2% | -21.28 | -0.39 | no | no |
+  | is/utcsat | 15 | 96.8% | -16.31 | -1.39 | no | no |
+  | is/age10 | 2 | 98.5% | **+1.49** | -1.48 | **yes** | **yes** |
+  | oos/champion | 41 | 85.8% | -2.44 | -7.78 | no | no |
+  | oos/utcsat | 36 | 86.3% | -5.16 | -9.44 | no | no |
+  | oos/age10 | 8 | 89.5% | -0.51 | +0.51 | **yes** | no |
+
+  `gray_ge_3.0`: **G-RULE 1/6**, total dNet **-44.2** against only **-20.0** of
+  raw grayed R. `gray_ge_2.5`: 0/6, total -69.2 against -3.6 raw.
+
+  **The result splits exactly on the same line as (a9) and (a10).** The only
+  passing cell, and the only cells where `seq_identical` is True, are both
+  age10 - the sparse book. On champion/utcsat, which trade far more often, the
+  trade sequence still changes even though the slot is never refilled. So the
+  direct effect here is small and correct (graying 3%+ gives back -20.0R) but
+  the cascade term is roughly **2x larger and always negative**, which is what
+  ee8a42b found and what the original Stage B study measured at 280% of direct.
+
+  This settles the question the gray mode was built to answer. **Gray is
+  necessary but not sufficient**: it removes the slot-refill channel, but on a
+  dense book the cooldown and loss-streak timeline still shift, and that
+  residual cascade is bigger than the edge being gated. A gate is only clean
+  where trades are sparse enough that removing one does not move the timeline.
+  The tail itself is only -21.65R, so even a perfectly cascade-free gate could
+  not matter much on this book - the honest summary is that the 3%+ tail is a
+  real but immaterial drag, and the cost of gating it exceeds the benefit.
+
   - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC
   trades on ETH-minus-BTC return divergence (1h, fully-closed bars only, hard

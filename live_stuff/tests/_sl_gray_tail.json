@@ -1,0 +1,171 @@
+{
+  "stage": "sl_gray_tail",
+  "lens": "ONE-SIDED gray gate: sl_width_pct >= min. The 0.25-2.00 region is untouched. Trade runs to completion, P&L suppressed, so busy_until/streak/cooldown all update - no slot refill.",
+  "arms": {
+    "gray_ge_3.0": "gray when sl_width_pct >= 3.0",
+    "gray_ge_2.5": "gray when sl_width_pct >= 2.5"
+  },
+  "g_rule": "dNet>0 AND kept%>=85 AND maxDD not worse, in all 6 cells",
+  "pre_registered": {
+    "threshold": "3.0 from the (a10) ladder; 2.5 is a sensitivity check only",
+    "kept_floor": "85% - this is a tail trim, not a filter",
+    "seq_identical": "reported per cell, NOT gated (ee8a42b showed the busy books still move a downstream entry)",
+    "control": "base ledgers reproduce 24.85; identity gate on",
+    "no_retune": "nothing retuned after the run"
+  },
+  "cells": {
+    "is/champion/gray_ge_3.0": {
+      "n": 504,
+      "n_gray": 14,
+      "kept_pct": 97.22,
+      "net": 304.5057,
+      "d_net": -21.276,
+      "d_max_dd": -0.657,
+      "raw_r_grayed": -0.39,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "is/champion/gray_ge_2.5": {
+      "n": 507,
+      "n_gray": 34,
+      "kept_pct": 93.29,
+      "net": 309.7118,
+      "d_net": -16.07,
+      "d_max_dd": 2.402,
+      "raw_r_grayed": -6.61,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "is/utcsat/gray_ge_3.0": {
+      "n": 462,
+      "n_gray": 15,
+      "kept_pct": 96.75,
+      "net": 342.6407,
+      "d_net": -16.309,
+      "d_max_dd": -2.986,
+      "raw_r_grayed": -1.39,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "is/utcsat/gray_ge_2.5": {
+      "n": 470,
+      "n_gray": 34,
+      "kept_pct": 92.77,
+      "net": 354.2675,
+      "d_net": -4.683,
+      "d_max_dd": -1.986,
+      "raw_r_grayed": -8.8,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "is/age10/gray_ge_3.0": {
+      "n": 130,
+      "n_gray": 2,
+      "kept_pct": 98.46,
+      "net": 437.2089,
+      "d_net": 1.485,
+      "d_max_dd": 0.0,
+      "raw_r_grayed": -1.48,
+      "seq_identical": true,
+      "g_rule_pass": true
+    },
+    "is/age10/gray_ge_2.5": {
+      "n": 130,
+      "n_gray": 5,
+      "kept_pct": 96.15,
+      "net": 432.1709,
+      "d_net": -3.553,
+      "d_max_dd": 0.0,
+      "raw_r_grayed": 3.55,
+      "seq_identical": true,
+      "g_rule_pass": false
+    },
+    "oos/champion/gray_ge_3.0": {
+      "n": 288,
+      "n_gray": 41,
+      "kept_pct": 85.76,
+      "net": 67.7095,
+      "d_net": -2.441,
+      "d_max_dd": 3.338,
+      "raw_r_grayed": -7.78,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "oos/champion/gray_ge_2.5": {
+      "n": 289,
+      "n_gray": 59,
+      "kept_pct": 79.58,
+      "net": 53.9855,
+      "d_net": -16.165,
+      "d_max_dd": 0.627,
+      "raw_r_grayed": -0.57,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "oos/utcsat/gray_ge_3.0": {
+      "n": 262,
+      "n_gray": 36,
+      "kept_pct": 86.26,
+      "net": 55.0488,
+      "d_net": -5.157,
+      "d_max_dd": -3.18,
+      "raw_r_grayed": -9.44,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "oos/utcsat/gray_ge_2.5": {
+      "n": 262,
+      "n_gray": 55,
+      "kept_pct": 79.01,
+      "net": 41.3587,
+      "d_net": -18.848,
+      "d_max_dd": -2.282,
+      "raw_r_grayed": -1.14,
+      "seq_identical": false,
+      "g_rule_pass": false
+    },
+    "oos/age10/gray_ge_3.0": {
+      "n": 76,
+      "n_gray": 8,
+      "kept_pct": 89.47,
+      "net": 42.7116,
+      "d_net": -0.512,
+      "d_max_dd": 0.998,
+      "raw_r_grayed": 0.51,
+      "seq_identical": true,
+      "g_rule_pass": false
+    },
+    "oos/age10/gray_ge_2.5": {
+      "n": 76,
+      "n_gray": 13,
+      "kept_pct": 82.89,
+      "net": 33.2956,
+      "d_net": -9.928,
+      "d_max_dd": 1.995,
+      "raw_r_grayed": 9.93,
+      "seq_identical": true,
+      "g_rule_pass": false
+    }
+  },
+  "verdicts": {
+    "gray_ge_3.0": {
+      "cells": 6,
+      "g_rule_pass_cells": 1,
+      "dnet_positive_cells": 1,
+      "seq_identical_cells": 2,
+      "total_d_net": -44.21,
+      "total_raw_grayed": -19.97,
+      "pass": false
+    },
+    "gray_ge_2.5": {
+      "cells": 6,
+      "g_rule_pass_cells": 0,
+      "dnet_positive_cells": 0,
+      "seq_identical_cells": 2,
+      "total_d_net": -69.25,
+      "total_raw_grayed": -3.64,
+      "pass": false
+    }
+  },
+  "elapsed_sec": 178.35
+}
