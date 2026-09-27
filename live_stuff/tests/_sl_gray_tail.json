@@ -15,48 +15,56 @@
   },
   "cells": {
     "is/champion/gray_ge_3.0": {
-      "n": 504,
+      "n": 500,
       "n_gray": 14,
-      "kept_pct": 97.22,
-      "net": 304.5057,
-      "d_net": -21.276,
-      "d_max_dd": -0.657,
+      "kept_pct": 97.2,
+      "net": 326.1747,
+      "d_net": 0.393,
+      "d_max_dd": -0.919,
       "raw_r_grayed": -0.39,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "seq_identical": true,
+      "g_rule_pass": false,
+      "expected_d_net_if_cascade_free": 0.393,
+      "cascade_term": -0.0
     },
     "is/champion/gray_ge_2.5": {
-      "n": 507,
-      "n_gray": 34,
-      "kept_pct": 93.29,
-      "net": 309.7118,
-      "d_net": -16.07,
-      "d_max_dd": 2.402,
-      "raw_r_grayed": -6.61,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "n": 500,
+      "n_gray": 31,
+      "kept_pct": 93.8,
+      "net": 327.5897,
+      "d_net": 1.808,
+      "d_max_dd": 1.152,
+      "raw_r_grayed": -1.81,
+      "seq_identical": true,
+      "g_rule_pass": true,
+      "expected_d_net_if_cascade_free": 1.808,
+      "cascade_term": -0.0
     },
     "is/utcsat/gray_ge_3.0": {
-      "n": 462,
+      "n": 454,
       "n_gray": 15,
-      "kept_pct": 96.75,
-      "net": 342.6407,
-      "d_net": -16.309,
-      "d_max_dd": -2.986,
+      "kept_pct": 96.7,
+      "net": 360.341,
+      "d_net": 1.391,
+      "d_max_dd": 0.859,
       "raw_r_grayed": -1.39,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "seq_identical": true,
+      "g_rule_pass": true,
+      "expected_d_net_if_cascade_free": 1.391,
+      "cascade_term": 0.0
     },
     "is/utcsat/gray_ge_2.5": {
-      "n": 470,
-      "n_gray": 34,
-      "kept_pct": 92.77,
-      "net": 354.2675,
-      "d_net": -4.683,
-      "d_max_dd": -1.986,
-      "raw_r_grayed": -8.8,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "n": 454,
+      "n_gray": 31,
+      "kept_pct": 93.17,
+      "net": 362.411,
+      "d_net": 3.461,
+      "d_max_dd": 1.106,
+      "raw_r_grayed": -3.46,
+      "seq_identical": true,
+      "g_rule_pass": true,
+      "expected_d_net_if_cascade_free": 3.461,
+      "cascade_term": 0.0
     },
     "is/age10/gray_ge_3.0": {
       "n": 130,
@@ -67,7 +75,9 @@
       "d_max_dd": 0.0,
       "raw_r_grayed": -1.48,
       "seq_identical": true,
-      "g_rule_pass": true
+      "g_rule_pass": true,
+      "expected_d_net_if_cascade_free": 1.485,
+      "cascade_term": 0.0
     },
     "is/age10/gray_ge_2.5": {
       "n": 130,
@@ -78,51 +88,61 @@
       "d_max_dd": 0.0,
       "raw_r_grayed": 3.55,
       "seq_identical": true,
-      "g_rule_pass": false
+      "g_rule_pass": false,
+      "expected_d_net_if_cascade_free": -3.553,
+      "cascade_term": 0.0
     },
     "oos/champion/gray_ge_3.0": {
-      "n": 288,
-      "n_gray": 41,
-      "kept_pct": 85.76,
-      "net": 67.7095,
-      "d_net": -2.441,
-      "d_max_dd": 3.338,
-      "raw_r_grayed": -7.78,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "n": 279,
+      "n_gray": 39,
+      "kept_pct": 86.02,
+      "net": 75.9295,
+      "d_net": 5.779,
+      "d_max_dd": 5.91,
+      "raw_r_grayed": -5.78,
+      "seq_identical": true,
+      "g_rule_pass": true,
+      "expected_d_net_if_cascade_free": 5.779,
+      "cascade_term": 0.0
     },
     "oos/champion/gray_ge_2.5": {
-      "n": 289,
-      "n_gray": 59,
-      "kept_pct": 79.58,
-      "net": 53.9855,
-      "d_net": -16.165,
-      "d_max_dd": 0.627,
-      "raw_r_grayed": -0.57,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "n": 279,
+      "n_gray": 56,
+      "kept_pct": 79.93,
+      "net": 67.7265,
+      "d_net": -2.424,
+      "d_max_dd": 3.327,
+      "raw_r_grayed": 2.42,
+      "seq_identical": true,
+      "g_rule_pass": false,
+      "expected_d_net_if_cascade_free": -2.424,
+      "cascade_term": 0.0
     },
     "oos/utcsat/gray_ge_3.0": {
-      "n": 262,
-      "n_gray": 36,
-      "kept_pct": 86.26,
-      "net": 55.0488,
-      "d_net": -5.157,
-      "d_max_dd": -3.18,
-      "raw_r_grayed": -9.44,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "n": 253,
+      "n_gray": 33,
+      "kept_pct": 86.96,
+      "net": 68.6842,
+      "d_net": 8.478,
+      "d_max_dd": 3.939,
+      "raw_r_grayed": -8.48,
+      "seq_identical": true,
+      "g_rule_pass": true,
+      "expected_d_net_if_cascade_free": 8.478,
+      "cascade_term": 0.0
     },
     "oos/utcsat/gray_ge_2.5": {
-      "n": 262,
-      "n_gray": 55,
-      "kept_pct": 79.01,
-      "net": 41.3587,
-      "d_net": -18.848,
-      "d_max_dd": -2.282,
-      "raw_r_grayed": -1.14,
-      "seq_identical": false,
-      "g_rule_pass": false
+      "n": 253,
+      "n_gray": 51,
+      "kept_pct": 79.84,
+      "net": 59.3902,
+      "d_net": -0.816,
+      "d_max_dd": 3.84,
+      "raw_r_grayed": 0.82,
+      "seq_identical": true,
+      "g_rule_pass": false,
+      "expected_d_net_if_cascade_free": -0.816,
+      "cascade_term": -0.0
     },
     "oos/age10/gray_ge_3.0": {
       "n": 76,
@@ -133,7 +153,9 @@
       "d_max_dd": 0.998,
       "raw_r_grayed": 0.51,
       "seq_identical": true,
-      "g_rule_pass": false
+      "g_rule_pass": false,
+      "expected_d_net_if_cascade_free": -0.512,
+      "cascade_term": -0.0
     },
     "oos/age10/gray_ge_2.5": {
       "n": 76,
@@ -144,28 +166,32 @@
       "d_max_dd": 1.995,
       "raw_r_grayed": 9.93,
       "seq_identical": true,
-      "g_rule_pass": false
+      "g_rule_pass": false,
+      "expected_d_net_if_cascade_free": -9.928,
+      "cascade_term": 0.0
     }
   },
   "verdicts": {
     "gray_ge_3.0": {
       "cells": 6,
-      "g_rule_pass_cells": 1,
-      "dnet_positive_cells": 1,
-      "seq_identical_cells": 2,
-      "total_d_net": -44.21,
-      "total_raw_grayed": -19.97,
+      "g_rule_pass_cells": 4,
+      "dnet_positive_cells": 5,
+      "seq_identical_cells": 6,
+      "total_d_net": 17.01,
+      "total_raw_grayed": -17.01,
+      "total_cascade_term": 0.0,
       "pass": false
     },
     "gray_ge_2.5": {
       "cells": 6,
-      "g_rule_pass_cells": 0,
-      "dnet_positive_cells": 0,
-      "seq_identical_cells": 2,
-      "total_d_net": -69.25,
-      "total_raw_grayed": -3.64,
+      "g_rule_pass_cells": 2,
+      "dnet_positive_cells": 2,
+      "seq_identical_cells": 6,
+      "total_d_net": -11.45,
+      "total_raw_grayed": 11.45,
+      "total_cascade_term": 0.0,
       "pass": false
     }
   },
-  "elapsed_sec": 178.35
+  "elapsed_sec": 169.36
 }

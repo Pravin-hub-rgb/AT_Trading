@@ -239,42 +239,59 @@ Notes:
   does not refill slots), but there is no edge underneath either the SL-width or
   the wick gate to rescue.
 
-  - **(a11) The surgical tail gate - 1/6, and the split is the whole lesson.**
-  `exp_sl_gray_tail.py` -> `_sl_gray_tail.json`. The user's refinement of (a9)
-  was right in principle: gray ONLY `sl_width_pct >= 3.0`, which is the one
-  uniformly bad band (-21.65R aggregate, negative in 5 of 6 cells), and leave
-  the 0.25-2.00 region that holds the edge completely untouched. A 2.5 arm was
-  run alongside as a sensitivity check. G-RULE = dNet>0 AND kept>=85% AND
-  maxDD not worse, all 6 cells. Base ledgers exact; identity gate IDENTICAL.
+  - **(a11) CORRECTED - the -44R was MY BUG, not a property of gray mode. The
+  user's arithmetic was right and the run now behaves exactly as they said it
+  would.** In the first pass of this gate the harness patched the engine with
 
-  | cell | gray | kept | dNet | raw R grayed | seq_identical | pass |
-  |---|---|---|---|---|---|---|
-  | is/champion | 14 | 97.2% | -21.28 | -0.39 | no | no |
-  | is/utcsat | 15 | 96.8% | -16.31 | -1.39 | no | no |
-  | is/age10 | 2 | 98.5% | **+1.49** | -1.48 | **yes** | **yes** |
-  | oos/champion | 41 | 85.8% | -2.44 | -7.78 | no | no |
-  | oos/utcsat | 36 | 86.3% | -5.16 | -9.44 | no | no |
-  | oos/age10 | 8 | 89.5% | -0.51 | +0.51 | **yes** | no |
+      if cooldown_bars > 0 and r_multiple < 0 and not _isgray:
 
-  `gray_ge_3.0`: **G-RULE 1/6**, total dNet **-44.2** against only **-20.0** of
-  raw grayed R. `gray_ge_2.5`: 0/6, total -69.2 against -3.6 raw.
+  i.e. it SUPPRESSED the cooldown for gray trades. That is backwards. A gray
+  trade still happens - it holds its slot, advances the loss streak and should
+  start its cooldown exactly like a real loss. Suppressing it shifted the
+  cooldown timeline, let worse trades in, and produced a spurious -44R that I
+  then wrote up as a structural finding about gray mode being "necessary but
+  not sufficient". **That conclusion was wrong and is retracted.**
 
-  **The result splits exactly on the same line as (a9) and (a10).** The only
-  passing cell, and the only cells where `seq_identical` is True, are both
-  age10 - the sparse book. On champion/utcsat, which trade far more often, the
-  trade sequence still changes even though the slot is never refilled. So the
-  direct effect here is small and correct (graying 3%+ gives back -20.0R) but
-  the cascade term is roughly **2x larger and always negative**, which is what
-  ee8a42b found and what the original Stage B study measured at 280% of direct.
+  The user caught it by simple arithmetic: graying 3%+ removes 111 trades whose
+  raw R is only about -17R, so how can dNet be -44R? It cannot. The gap was my
+  patch. The same suppression is present in `exp_sl_width_gate.py` and
+  `exp_sl_fine_cascade.py` and **their conclusions about gray mode are affected
+  too** - re-run before quoting them.
 
-  This settles the question the gray mode was built to answer. **Gray is
-  necessary but not sufficient**: it removes the slot-refill channel, but on a
-  dense book the cooldown and loss-streak timeline still shift, and that
-  residual cascade is bigger than the edge being gated. A gate is only clean
-  where trades are sparse enough that removing one does not move the timeline.
-  The tail itself is only -21.65R, so even a perfectly cascade-free gate could
-  not matter much on this book - the honest summary is that the 3%+ tail is a
-  real but immaterial drag, and the cost of gating it exceeds the benefit.
+  Cooldown is no longer gated. The harness now also computes the identity that
+  makes this class of bug impossible to miss:
+
+      d_net  ==  -raw_r_grayed  +  cascade_term
+      cascade_term = d_net + raw_r_grayed   (must be 0.00 when clean)
+
+  Corrected results, `gray_ge_3.0` (one-sided, 0.25-2.00 untouched):
+
+  | cell | gray | kept | dNet | raw R | cascade | seqID | pass |
+  |---|---|---|---|---|---|---|---|
+  | is/champion | 14 | 97.2% | +0.39 | -0.39 | **0.00** | yes | no (DD) |
+  | is/utcsat | 15 | 96.7% | +1.39 | -1.39 | **0.00** | yes | **yes** |
+  | is/age10 | 2 | 98.5% | +1.49 | -1.48 | 0.00 | yes | **yes** |
+  | oos/champion | 39 | 86.0% | +5.78 | -5.78 | **0.00** | yes | **yes** |
+  | oos/utcsat | 33 | 87.0% | +8.48 | -8.48 | **0.00** | yes | **yes** |
+  | oos/age10 | 8 | 89.5% | -0.51 | +0.51 | 0.00 | yes | no (dNet) |
+
+  **`gray_ge_3.0`: G-RULE 4/6, dNet>0 in 5/6, seq_identical 6/6, cascade term
+  EXACTLY 0.00 in every cell.** Total dNet **+17.0** = -raw(-17.0) + cascade
+  **(+0.0)**. The accounting closes to the cent, which is the proof that gray
+  mode really is cascade-free - the trade sequence is untouched, so the only R
+  that leaves the book is the gray cohort's own.
+
+  `gray_ge_2.5` is worse (G-RULE 2/6, total -11.4) and correctly so: widening
+  the gate to 2.5% starts graying the 2.5-3.0 band, whose raw R is **+11.4**,
+  i.e. that band is profitable and the gate is now deleting winners. This is
+  the same lesson as (a9) - the gate has to be one-sided and tight.
+
+  So gray mode **works exactly as designed**: the 3%+ tail is a real, cleanly
+  removable drag worth about +17R with no cascade and no slot refill. It is
+  still **not adopted** - 4/6 is short of the gate, oos/age10's 8 grayed trades
+  are net positive so the gate bites a winner there, and +17R over 1,592 trades
+  is immaterial next to a 5/50 forward gate. But the mechanism claim is now
+  proven rather than assumed.
 
   - **(a6) ETH-ledness produced a 6/6 that the NULL CONTROL KILLED. Do not read
   24.88 as a pass.** `exp_eth_ledness.py` -> `_eth_ledness.json` sized BTC

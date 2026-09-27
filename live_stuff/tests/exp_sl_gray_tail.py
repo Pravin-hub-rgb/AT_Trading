@@ -121,9 +121,14 @@ def build_module():
     st = '        if max_consecutive_losses > 0:\n'
     assert s.count(st) == 1, "streak"
     s = s.replace(st, '        if max_consecutive_losses > 0 and not (_isgray and not exp_gray_streak):\n')
+    # A gray trade still HAPPENS - it holds its slot, advances the streak and
+    # should still start its cooldown exactly like a real loss. Suppressing
+    # the cooldown here (an earlier bug, 6aa49de) shifted the cooldown timeline
+    # and let worse trades in, which is what produced the unexplained -44R.
+    # Cooldown is deliberately NOT gated.
     cd = '        if cooldown_bars > 0 and r_multiple < 0:\n'
     assert s.count(cd) == 1, "cooldown"
-    s = s.replace(cd, '        if cooldown_bars > 0 and r_multiple < 0 and not _isgray:\n')
+    s = s.replace(cd, cd)
     bk = '            "r_multiple": round(float(r_multiple),3),\n'
     assert s.count(bk) == 1, "book"
     s = s.replace(bk,
@@ -207,11 +212,16 @@ def main():
                     "g_rule_pass": bool(d_net > 0 and kept_pct >= 85.0
                                         and d_dd >= 0.0),
                 }
+                # A truly cascade-free gray must satisfy d_net == -raw_r_grayed
+                # exactly: the only R that leaves the book is the gray cohort's
+                # own. Any gap IS the cascade, and its size is the diagnostic.
+                cell["expected_d_net_if_cascade_free"] = round(-raw, 3)
+                cell["cascade_term"] = round(d_net + raw, 3)
                 payload["cells"][f"{scope}/{name}/{lbl}"] = cell
                 print(f"      {lbl:<14} gray={grays:>3} kept={kept_pct:>6.2f}% "
                       f"dNet={d_net:>+7.2f} dDD={d_dd:>+6.2f} "
-                      f"rawR_grayed={raw:>+7.2f} seqID={seq} "
-                      f"pass={cell['g_rule_pass']}", flush=True)
+                      f"rawR={raw:>+7.2f} cascade={cell['cascade_term']:>+7.2f} "
+                      f"seqID={seq} pass={cell['g_rule_pass']}", flush=True)
 
     print("\n" + "=" * 100, flush=True)
     for lbl, _ in GATE_ARMS:
@@ -223,14 +233,16 @@ def main():
             "seq_identical_cells": sum(1 for c in cells if c["seq_identical"]),
             "total_d_net": round(sum(c["d_net"] for c in cells), 2),
             "total_raw_grayed": round(sum(c["raw_r_grayed"] for c in cells), 2),
+            "total_cascade_term": round(sum(c["cascade_term"] for c in cells), 2),
         }
         tally["pass"] = tally["g_rule_pass_cells"] == tally["cells"]
         payload["verdicts"][lbl] = tally
         print(f"  {lbl:<14} G-RULE {tally['g_rule_pass_cells']}/{tally['cells']} "
               f"| dNet>0 in {tally['dnet_positive_cells']}/{tally['cells']} "
-              f"| seqID {tally['seq_identical_cells']}/{tally['cells']} "
-              f"| total dNet {tally['total_d_net']:+.1f} "
-              f"(raw grayed {tally['total_raw_grayed']:+.1f})", flush=True)
+              f"| seqID {tally['seq_identical_cells']}/{tally['cells']}", flush=True)
+        print(f"      total dNet {tally['total_d_net']:+.1f} = "
+              f"-raw({tally['total_raw_grayed']:+.1f}) "
+              f"+ cascade({tally['total_cascade_term']:+.1f})", flush=True)
     print("=" * 100, flush=True)
     payload["elapsed_sec"] = round(time.time() - t0, 2)
     OUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
