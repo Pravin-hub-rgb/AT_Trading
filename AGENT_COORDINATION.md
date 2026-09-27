@@ -329,13 +329,43 @@ Derive it; never hard-code it. Two traps when patching it:
   `int + list` hundreds of lines from the cause. Use `_knowwin` and assert the
   name is unused.
 
-**Rule 8 — LTF sensitivity lives on the swing, not the features.** Log 105 proved
-the HTF chop/garch/ent/detect windows are inert (absurd values → identical book).
-Contrast B shows the LTF is where real sensitivity is. Corollary lead, **not
-adopted**: `min_bars_15m=25` on the shipped 15m/1h gave +272.8R IS but
-**+128.6R OOS** vs shipped +70.2R — better OOS, worse IS, one un-pre-registered
-observation. Do not treat it as a result; do not let it die either. It needs a
-pre-registered sweep.
+**Rule 8 — LTF sensitivity lives on the swing, not the features — and it is a
+FREQUENCY dial, not an edge dial. RESOLVED by log 107; do not cite the old
+version of this rule.**
+
+The old Rule 8 said `min_bars_15m=25` looked promising because it gave +128.6R
+OOS vs shipped +70.2R. The forensic kills that reading:
+
+| Era | mb50 avgR | mb25 avgR | trades | per-trade diff | 95% CI | p |
+|---|---|---|---|---|---|---|
+| IS | +0.652 (500) | +0.334 (818) | ×1.64 | −0.318R | [−0.892, +0.216] | 0.259 |
+| OOS | +0.251 (279) | +0.240 (535) | ×1.92 | **−0.011R** | [−0.507, +0.475] | 0.974 |
+
+**mb25's OOS per-trade edge over mb50 is −0.011R — identical.** The +58R "OOS
+win" is purely 1.92× the trades at the same edge. Neither era's difference is
+significant and both CIs straddle zero. `min_bars` sets how many trades you take,
+not how good each one is.
+
+Consequences worth remembering:
+- **"Which swing length is better?" is ill-posed without fixing position size.**
+  At equal size mb25 is a 1.6-1.9× bigger bet (maxDD 27.7→66.4 IS, 53.2→45.8 OOS).
+  The honest next arm is mb25 at HALF size.
+- The year split kills the regime story: IS flips sign 3× in 4 years, and the
+  whole OOS preference is 2021, where mb50 went negative.
+- A trailing-vol tercile split (IS-fitted, applied to OOS) has sign agreeing
+  across eras in all 3 buckets — low vol favours 50, mid/high favour 25 — but the
+  OOS low-vol bucket is **n=7**, and 3-for-3 sign agreement is p=0.25 by chance.
+  **Do not treat this as a rule.** It is a pre-registered-sweep hypothesis.
+- age10 disagrees: OOS mb50 +43.2R (n76) vs mb25 **+120.1R** (n194) with *better*
+  avgR. The only cell in the grid where the short swing wins on quality too.
+  age10 is default-off, so this is a separate-book observation, not a live-lane one.
+
+**Rule 9 — report a p-value you have tested.** The first bootstrap here used
+`(count(x<=0) + count(x>=0)) / n_boot`, which is ~1.0 for *any* input because
+every resample satisfies one of the two clauses. The correct two-sided bootstrap
+p is `2 * min(P(diff<=0), P(diff>=0))` capped at 1. Smoke-test any new statistic
+against a known-null and a known-signal input before believing its output.
+
 
 
 **Rule 3b — when two arms come out bit-identical, prove it is real.** A2 == A3
