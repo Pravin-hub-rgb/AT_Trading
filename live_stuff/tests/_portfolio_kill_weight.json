@@ -1,0 +1,313 @@
+{
+  "assets": [
+    "AVAXUSDT",
+    "BNBUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "NEARUSDT",
+    "DOTUSDT"
+  ],
+  "kill_min": {
+    "is": 100,
+    "oos": 60
+  },
+  "eras": {
+    "is": {
+      "AVAXUSDT": {
+        "n": 145,
+        "net": 173.9,
+        "wr": 46.9,
+        "dd": 11.0,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "BNBUSDT": {
+        "n": 126,
+        "net": 200.9,
+        "wr": 45.2,
+        "dd": 6.0,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "LTCUSDT": {
+        "n": 138,
+        "net": 147.9,
+        "wr": 36.2,
+        "dd": 10.9,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "LINKUSDT": {
+        "n": 133,
+        "net": 122.5,
+        "wr": 44.4,
+        "dd": 7.9,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "NEARUSDT": {
+        "n": 98,
+        "net": 108.7,
+        "wr": 39.8,
+        "dd": 13.2,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": true,
+          "K6": false
+        },
+        "fired": [
+          "K5"
+        ]
+      },
+      "DOTUSDT": {
+        "n": 115,
+        "net": 84.8,
+        "wr": 39.1,
+        "dd": 10.9,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      }
+    },
+    "oos": {
+      "AVAXUSDT": {
+        "n": 82,
+        "net": 189.8,
+        "wr": 54.9,
+        "dd": 5.4,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "BNBUSDT": {
+        "n": 92,
+        "net": 95.9,
+        "wr": 40.2,
+        "dd": 11.6,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "LTCUSDT": {
+        "n": 95,
+        "net": 89.0,
+        "wr": 38.9,
+        "dd": 6.9,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "LINKUSDT": {
+        "n": 87,
+        "net": 116.5,
+        "wr": 50.6,
+        "dd": 5.3,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "NEARUSDT": {
+        "n": 85,
+        "net": 50.9,
+        "wr": 40.0,
+        "dd": 6.9,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      },
+      "DOTUSDT": {
+        "n": 88,
+        "net": 32.3,
+        "wr": 38.6,
+        "dd": 11.1,
+        "kills": {
+          "K1": false,
+          "K2": false,
+          "K3": false,
+          "K4": false,
+          "K5": false,
+          "K6": false
+        },
+        "fired": []
+      }
+    }
+  },
+  "clean": {
+    "is": [
+      "AVAXUSDT",
+      "BNBUSDT",
+      "LTCUSDT",
+      "LINKUSDT",
+      "DOTUSDT"
+    ],
+    "oos": [
+      "AVAXUSDT",
+      "BNBUSDT",
+      "LTCUSDT",
+      "LINKUSDT",
+      "NEARUSDT",
+      "DOTUSDT"
+    ]
+  },
+  "clean_both": [
+    "AVAXUSDT",
+    "BNBUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "DOTUSDT"
+  ],
+  "weighting": {
+    "equal": {
+      "is": {
+        "net": 139.8,
+        "net_yr": 38.1,
+        "dd": 2.4,
+        "weights": {
+          "AVAXUSDT": 0.1667,
+          "BNBUSDT": 0.1667,
+          "LTCUSDT": 0.1667,
+          "LINKUSDT": 0.1667,
+          "NEARUSDT": 0.1667,
+          "DOTUSDT": 0.1667
+        }
+      },
+      "oos": {
+        "net": 95.7,
+        "net_yr": 47.9,
+        "dd": 0.0,
+        "weights": {
+          "AVAXUSDT": 0.1667,
+          "BNBUSDT": 0.1667,
+          "LTCUSDT": 0.1667,
+          "LINKUSDT": 0.1667,
+          "NEARUSDT": 0.1667,
+          "DOTUSDT": 0.1667
+        }
+      }
+    },
+    "inv_vol": {
+      "is": {
+        "net": 133.4,
+        "net_yr": 36.3,
+        "dd": 2.4,
+        "weights": {
+          "AVAXUSDT": 0.1424,
+          "BNBUSDT": 0.142,
+          "LTCUSDT": 0.1166,
+          "LINKUSDT": 0.2085,
+          "NEARUSDT": 0.177,
+          "DOTUSDT": 0.2136
+        }
+      },
+      "oos": {
+        "net": 77.6,
+        "net_yr": 38.8,
+        "dd": 0.4,
+        "weights": {
+          "AVAXUSDT": 0.0783,
+          "BNBUSDT": 0.1058,
+          "LTCUSDT": 0.1262,
+          "LINKUSDT": 0.1686,
+          "NEARUSDT": 0.2631,
+          "DOTUSDT": 0.258
+        }
+      }
+    },
+    "inv_corr": {
+      "is": {
+        "net": 146.7,
+        "net_yr": 40.0,
+        "dd": 2.1,
+        "weights": {
+          "AVAXUSDT": 0.2062,
+          "BNBUSDT": 0.1546,
+          "LTCUSDT": 0.2905,
+          "LINKUSDT": 0.116,
+          "NEARUSDT": 0.122,
+          "DOTUSDT": 0.1107
+        }
+      },
+      "oos": {
+        "net": 116.5,
+        "net_yr": 58.3,
+        "dd": 4.8,
+        "weights": {
+          "AVAXUSDT": 0.0,
+          "BNBUSDT": 0.0,
+          "LTCUSDT": 0.0,
+          "LINKUSDT": 1.0,
+          "NEARUSDT": 0.0,
+          "DOTUSDT": 0.0
+        }
+      }
+    }
+  },
+  "elapsed_sec": 276.9
+}
