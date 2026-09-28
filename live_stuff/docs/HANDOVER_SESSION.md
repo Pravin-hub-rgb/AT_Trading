@@ -313,7 +313,57 @@ rung. Full detail and the causality audit in `MLTF_GREEN_R.md`.
 
 
 
-## 8. Other open items (not entry-timing)
+## 7a-4. Second-researcher round: TWO ERRORS FOUND IN MY OWN HANDOVER
+
+Date: 2026-09-28. Full review in `SECOND_RESEARCHER_REVIEW.md`; proposals in
+`other bots proposal.md` (four independent sets). Every claim below was
+verified in code before being accepted.
+
+**1. `chop_thresh=58.0` IS INERT on the shipped lane.** This handover
+lists it as a live champion parameter under §1. It is not read.
+`v18_streak_halt.py:417-418` under `mode=="atr_high"` consults only
+`atr_high_thresh`:
+
+    elif mode=="atr_high":
+        use="decisive" if atrp > atr_high_thresh else "flip"
+
+**Consequence:** every `chop_thresh` 58.0 → 57.0 → 55.0 sweep in the
+history varied a parameter the champion never reads. Do not reason about
+the champion from those deltas.
+
+**2. `sw10`/`sw20` are built from the 1h STREAM, not 15m.** This handover
+says at §2: *"sw10/sw15/sw20 are all built from the 15m stream."* That is
+wrong. `exp_5m_confirm.py:186-187` passes `_flow(c1h)`. Only `sw15` is
+15m. **The 1h chain and the 15m chain are separate instruments**, which
+matters for any future work on the HTF layer.
+
+**3. My own "untouched" seed list was three-quarters wrong.** 30m and 2h
+are closed (`exp_tf_family.py`, `HTF_2H_PLANE_TEST.md`: 30m costs 84R IS /
+55R OOS). Scheduled events are closed path-true with ±1-day placebos
+(`SCHEDULED_EVENTS_AUTOPSY.md`). A reviewer told to verify rather than
+trust caught all three.
+
+**4. `data/flow/bookDepth/` exists: 3,617 files, 2023-01 → 2026-09, never
+read by any harness.** Depth-band notional, ±1-5%, ~30s. It is a real
+unused information set — and it **cannot be used**, because it has no
+2021-2022 coverage and so can never satisfy the same-sign-both-eras bar.
+Not weak: structurally excluded. Same for the `funding/`, `metrics/`,
+`premium1h/` siblings.
+
+### What survives as genuinely open
+
+- **Label/notation redesign** (P1/P2 wave or ZigZag+Elliott instead of
+  B1/B2/FLIP/FS). Raised first and independently by all four reviewers.
+  The one live idea that changes what the system **sees** rather than
+  filtering an exhausted set.
+- **Multi-swing 1h bias confirmation.** A 2-of-3 rule on the 1h chain
+  intervenes on the *bias timeline*, which no closed row has touched.
+- **One family-wise pass on `data/forward/bybit/`.** Better than my own
+  "one look per slice" framing: adjudicate all unadopted survivors in a
+  single pre-registered pass rather than spending the slice one candidate
+  at a time. It is ~60-70 trades, so it can rule on several things but
+  confirm none of them.
+
 - **Live size state.** `v18_streak_halt.py` has **zero** hits for
   equity/size/notional/qty. Any sizing change has no execution channel. This
   is engineering, not research.
