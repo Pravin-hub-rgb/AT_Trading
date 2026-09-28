@@ -1,0 +1,49 @@
+{
+  "lane": "champion_multi_sw10",
+  "eras": {
+    "is": {
+      "n": 500,
+      "corr_swing_no_calendar": 1.0,
+      "calendar_decile_median_r": [
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -0.99,
+        -0.99,
+        -0.99
+      ],
+      "within_decile_auc": {
+        "dec2": {
+          "n": 50,
+          "auc_swing_no": 0.613
+        },
+        "dec8": {
+          "n": 50,
+          "auc_swing_no": 0.637
+        }
+      }
+    },
+    "oos": {
+      "n": 279,
+      "corr_swing_no_calendar": 1.0,
+      "calendar_decile_median_r": [
+        -0.99,
+        -1.0,
+        -1.0,
+        -1.0,
+        -1.0,
+        -0.57,
+        -0.61,
+        0.06,
+        -1.0,
+        -1.0
+      ],
+      "within_decile_auc": {}
+    }
+  },
+  "elapsed_sec": 48.6
+}
