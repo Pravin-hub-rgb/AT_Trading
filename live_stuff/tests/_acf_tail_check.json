@@ -1,0 +1,72 @@
+{
+  "lane": "champion_multi_sw10",
+  "monster_r": 5.0,
+  "eras": {
+    "is": {
+      "n": 500,
+      "band": 0.0877,
+      "acf_raw": 0.0651,
+      "acf_wins": 0.0753,
+      "acf_ranked": 0.1191,
+      "raw_outside": false,
+      "wins_outside": false,
+      "ranked_outside": true,
+      "monsters": 45,
+      "monster_adjacent_pairs": 12,
+      "monster_positions": [
+        6,
+        23,
+        49,
+        69,
+        70,
+        82,
+        83,
+        84,
+        90,
+        91,
+        92,
+        93,
+        111,
+        133,
+        139,
+        151,
+        169,
+        188,
+        189,
+        208
+      ]
+    },
+    "oos": {
+      "n": 279,
+      "band": 0.1173,
+      "acf_raw": 0.4981,
+      "acf_wins": 0.1138,
+      "acf_ranked": 0.2357,
+      "raw_outside": true,
+      "wins_outside": false,
+      "ranked_outside": true,
+      "monsters": 17,
+      "monster_adjacent_pairs": 8,
+      "monster_positions": [
+        20,
+        29,
+        45,
+        140,
+        178,
+        179,
+        180,
+        181,
+        182,
+        190,
+        205,
+        208,
+        209,
+        210,
+        263,
+        264,
+        265
+      ]
+    }
+  },
+  "elapsed_sec": 45.2
+}
