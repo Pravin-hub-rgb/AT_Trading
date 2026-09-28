@@ -1,0 +1,38 @@
+{
+  "lane": "age10_dirmatch_swingpause_single_sw10",
+  "dataset": "data/btc",
+  "arms": [
+    "baseline",
+    "limit_0.25R"
+  ],
+  "cells": {
+    "btc_is/baseline": {
+      "n": 77,
+      "net": 97.2
+    },
+    "btc_is/limit_0.25R": {
+      "n": 50,
+      "net": 73.5,
+      "d_net_yr": -6.47,
+      "d_net_total": -23.7,
+      "monsters": 5,
+      "wr": 40.0,
+      "monster_delta": 5
+    },
+    "btc_oos/baseline": {
+      "n": 49,
+      "net": 168.5
+    },
+    "btc_oos/limit_0.25R": {
+      "n": 36,
+      "net": 195.1,
+      "d_net_yr": 13.31,
+      "d_net_total": 26.6,
+      "monsters": 4,
+      "wr": 55.6,
+      "monster_delta": 4
+    }
+  },
+  "verdict": "fails_to_replicate",
+  "elapsed_sec": 41.2
+}

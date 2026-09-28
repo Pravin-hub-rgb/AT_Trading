@@ -1,0 +1,45 @@
+{
+  "drop_test": {
+    "one_min_signals": 5759,
+    "resolvable_in_15m_store": 524,
+    "pct_kept": 9.0988,
+    "note": "the engine's `if bar < 0: continue` drops the rest silently"
+  },
+  "control_15m": {
+    "signals": 411,
+    "resolvable": 411,
+    "pct_kept": 100.0
+  },
+  "atr_scale": {
+    "mean_atr_pct_15m": 0.25935,
+    "mean_atr_pct_1m": 0.05571,
+    "ratio_15m_over_1m": 4.66
+  },
+  "bar_params": [
+    {
+      "param": "cooldown_bars",
+      "value": 8,
+      "minutes_on_15m": 120,
+      "minutes_on_1m": 8
+    },
+    {
+      "param": "max_consecutive_losses",
+      "value": 3,
+      "minutes_on_15m": 45,
+      "minutes_on_1m": 3
+    },
+    {
+      "param": "sustainBars",
+      "value": 7,
+      "minutes_on_15m": 105,
+      "minutes_on_1m": 7
+    },
+    {
+      "param": "minBars(sw10)",
+      "value": 10,
+      "minutes_on_15m": 150,
+      "minutes_on_1m": 10
+    }
+  ],
+  "hardcoded_900_in_source": "ts+900 lookbacks assume the 15m bar"
+}

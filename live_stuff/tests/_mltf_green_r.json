@@ -1,0 +1,300 @@
+{
+  "stage": "mltf_green_r",
+  "k_ladder": [
+    0.25,
+    0.5,
+    1.0,
+    1.5
+  ],
+  "cells": {
+    "is/champion/k0.25": {
+      "n": 492,
+      "net": 308.1207,
+      "d_net": -17.7,
+      "wr": 26.83,
+      "pf": 1.771,
+      "max_dd": 34.5015,
+      "calmar": 2.4334,
+      "ex_best3": 275.5,
+      "ex_best5": 206.7,
+      "top3_share": 35.3,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 471,
+        "blocked": 42,
+        "allowed": 147
+      }
+    },
+    "is/champion/k0.5": {
+      "n": 482,
+      "net": 273.0453,
+      "d_net": -52.7,
+      "wr": 26.14,
+      "pf": 1.6875,
+      "max_dd": 34.5015,
+      "calmar": 2.1564,
+      "ex_best3": 237.7,
+      "ex_best5": 168.9,
+      "top3_share": 38.7,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 474,
+        "blocked": 57,
+        "allowed": 129
+      }
+    },
+    "is/champion/k1.0": {
+      "n": 462,
+      "net": 273.4248,
+      "d_net": -52.4,
+      "wr": 25.76,
+      "pf": 1.7158,
+      "max_dd": 34.3424,
+      "calmar": 2.1694,
+      "ex_best3": 232.2,
+      "ex_best5": 163.4,
+      "top3_share": 39.3,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 470,
+        "blocked": 89,
+        "allowed": 101
+      }
+    },
+    "is/champion/k1.5": {
+      "n": 454,
+      "net": 208.4984,
+      "d_net": -117.3,
+      "wr": 25.33,
+      "pf": 1.5478,
+      "max_dd": 35.1486,
+      "calmar": 1.6163,
+      "ex_best3": 185.3,
+      "ex_best5": 126.5,
+      "top3_share": 41.5,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 471,
+        "blocked": 108,
+        "allowed": 81
+      }
+    },
+    "is/utcsat/k0.25": {
+      "n": 446,
+      "net": 339.0758,
+      "d_net": -19.9,
+      "wr": 28.03,
+      "pf": 1.9524,
+      "max_dd": 30.1611,
+      "calmar": 3.0633,
+      "ex_best3": 294.5,
+      "ex_best5": 225.7,
+      "top3_share": 33.8,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 476,
+        "blocked": 43,
+        "allowed": 141
+      }
+    },
+    "is/utcsat/k0.5": {
+      "n": 439,
+      "net": 305.4401,
+      "d_net": -53.5,
+      "wr": 27.56,
+      "pf": 1.8671,
+      "max_dd": 31.6256,
+      "calmar": 2.6316,
+      "ex_best3": 258.2,
+      "ex_best5": 189.4,
+      "top3_share": 36.8,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 479,
+        "blocked": 59,
+        "allowed": 122
+      }
+    },
+    "is/utcsat/k1.0": {
+      "n": 418,
+      "net": 300.546,
+      "d_net": -58.4,
+      "wr": 27.99,
+      "pf": 1.9061,
+      "max_dd": 27.2844,
+      "calmar": 3.0014,
+      "ex_best3": 247.0,
+      "ex_best5": 178.2,
+      "top3_share": 37.8,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 473,
+        "blocked": 88,
+        "allowed": 99
+      }
+    },
+    "is/utcsat/k1.5": {
+      "n": 409,
+      "net": 237.9036,
+      "d_net": -121.0,
+      "wr": 27.63,
+      "pf": 1.7252,
+      "max_dd": 28.0906,
+      "calmar": 2.3077,
+      "ex_best3": 201.1,
+      "ex_best5": 142.3,
+      "top3_share": 39.5,
+      "gate": {
+        "considered": 660,
+        "no_open_cohort": 474,
+        "blocked": 106,
+        "allowed": 80
+      }
+    },
+    "oos/champion/k0.25": {
+      "n": 275,
+      "net": 33.7275,
+      "d_net": -36.4,
+      "wr": 26.55,
+      "pf": 1.1661,
+      "max_dd": 52.0894,
+      "calmar": 0.3237,
+      "ex_best3": 18.7,
+      "ex_best5": -3.6,
+      "top3_share": 72.7,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 268,
+        "allowed": 86,
+        "blocked": 25
+      }
+    },
+    "oos/champion/k0.5": {
+      "n": 272,
+      "net": 4.193,
+      "d_net": -66.0,
+      "wr": 25.74,
+      "pf": 1.0207,
+      "max_dd": 55.4689,
+      "calmar": 0.0378,
+      "ex_best3": -4.1,
+      "ex_best5": -23.7,
+      "top3_share": 110.9,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 268,
+        "allowed": 80,
+        "blocked": 31
+      }
+    },
+    "oos/champion/k1.0": {
+      "n": 264,
+      "net": -7.4577,
+      "d_net": -77.6,
+      "wr": 24.24,
+      "pf": 0.9629,
+      "max_dd": 57.1471,
+      "calmar": -0.0653,
+      "ex_best3": -16.8,
+      "ex_best5": -34.9,
+      "top3_share": 166.8,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 268,
+        "allowed": 64,
+        "blocked": 47
+      }
+    },
+    "oos/champion/k1.5": {
+      "n": 255,
+      "net": -6.4133,
+      "d_net": -76.6,
+      "wr": 23.53,
+      "pf": 0.9674,
+      "max_dd": 54.7342,
+      "calmar": -0.0586,
+      "ex_best3": -16.3,
+      "ex_best5": -34.3,
+      "top3_share": 163.3,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 269,
+        "allowed": 51,
+        "blocked": 59
+      }
+    },
+    "oos/utcsat/k0.25": {
+      "n": 250,
+      "net": 22.6849,
+      "d_net": -37.5,
+      "wr": 28.0,
+      "pf": 1.1236,
+      "max_dd": 29.3814,
+      "calmar": 0.386,
+      "ex_best3": 6.0,
+      "ex_best5": -10.2,
+      "top3_share": 88.9,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 279,
+        "allowed": 79,
+        "blocked": 21
+      }
+    },
+    "oos/utcsat/k0.5": {
+      "n": 247,
+      "net": -6.3804,
+      "d_net": -66.6,
+      "wr": 27.13,
+      "pf": 0.9651,
+      "max_dd": 30.594,
+      "calmar": -0.1043,
+      "ex_best3": -12.8,
+      "ex_best5": -27.7,
+      "top3_share": 152.9,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 279,
+        "allowed": 72,
+        "blocked": 28
+      }
+    },
+    "oos/utcsat/k1.0": {
+      "n": 243,
+      "net": -7.7048,
+      "d_net": -67.9,
+      "wr": 26.34,
+      "pf": 0.9578,
+      "max_dd": 30.7783,
+      "calmar": -0.1252,
+      "ex_best3": -14.5,
+      "ex_best5": -29.4,
+      "top3_share": 164.4,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 279,
+        "allowed": 60,
+        "blocked": 40
+      }
+    },
+    "oos/utcsat/k1.5": {
+      "n": 236,
+      "net": -8.0045,
+      "d_net": -68.2,
+      "wr": 25.42,
+      "pf": 0.9554,
+      "max_dd": 29.7096,
+      "calmar": -0.1347,
+      "ex_best3": -15.4,
+      "ex_best5": -30.3,
+      "top3_share": 171.0,
+      "gate": {
+        "considered": 379,
+        "no_open_cohort": 279,
+        "allowed": 50,
+        "blocked": 50
+      }
+    }
+  },
+  "elapsed_sec": 169.7
+}

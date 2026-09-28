@@ -1,0 +1,110 @@
+{
+  "risk_floor_atr": 0.25,
+  "min_bars": 10,
+  "diagnosis": {
+    "is/decisive": {
+      "n": 16,
+      "net": 2947.5,
+      "median_r": -0.105,
+      "max_r": 2942.7,
+      "risk_in_atr_median": 6.3285,
+      "risk_in_atr_min": 2.0368,
+      "risk_in_atr_max": 19.751,
+      "below_floor_0.25atr": 0,
+      "pct_below_floor": 0.0,
+      "net_ex_best1": 4.8,
+      "net_ex_best3": 0.8,
+      "net_ex_best5": -3.2,
+      "gate": {
+        "signals": 87516,
+        "window_hits": 34037,
+        "miss_time": 19711,
+        "miss_dir": 33768,
+        "excluded_sl_geometry": 0,
+        "excluded_degenerate": 1,
+        "trades": 16,
+        "targets": 5,
+        "still_open": 1,
+        "windows": 331
+      }
+    },
+    "is/flip": {
+      "n": 551,
+      "net": -13.4,
+      "median_r": -0.827,
+      "max_r": 2.0,
+      "risk_in_atr_median": 3.2005,
+      "risk_in_atr_min": 0.4008,
+      "risk_in_atr_max": 29.877,
+      "below_floor_0.25atr": 0,
+      "pct_below_floor": 0.0,
+      "net_ex_best1": -15.4,
+      "net_ex_best3": -19.4,
+      "net_ex_best5": -23.4,
+      "gate": {
+        "signals": 45127,
+        "window_hits": 17494,
+        "miss_time": 10164,
+        "miss_dir": 17469,
+        "excluded_sl_geometry": 0,
+        "excluded_degenerate": 35,
+        "trades": 551,
+        "targets": 171,
+        "still_open": 1,
+        "windows": 331
+      }
+    },
+    "oos/decisive": {
+      "n": 515,
+      "net": 17.2,
+      "median_r": -0.759,
+      "max_r": 48.8,
+      "risk_in_atr_median": 3.392,
+      "risk_in_atr_min": 0.4252,
+      "risk_in_atr_max": 14.867,
+      "below_floor_0.25atr": 0,
+      "pct_below_floor": 0.0,
+      "net_ex_best1": -31.6,
+      "net_ex_best3": -35.6,
+      "net_ex_best5": -39.6,
+      "gate": {
+        "signals": 44205,
+        "window_hits": 17260,
+        "miss_time": 9894,
+        "miss_dir": 17051,
+        "excluded_sl_geometry": 0,
+        "excluded_degenerate": 0,
+        "trades": 515,
+        "targets": 116,
+        "still_open": 1,
+        "windows": 210
+      }
+    },
+    "oos/flip": {
+      "n": 1867,
+      "net": -60.9,
+      "median_r": -0.994,
+      "max_r": 2.1,
+      "risk_in_atr_median": 3.501,
+      "risk_in_atr_min": 0.2303,
+      "risk_in_atr_max": 41.325,
+      "below_floor_0.25atr": 1,
+      "pct_below_floor": 0.1,
+      "net_ex_best1": -63.0,
+      "net_ex_best3": -67.0,
+      "net_ex_best5": -71.0,
+      "gate": {
+        "signals": 21071,
+        "window_hits": 8271,
+        "miss_time": 4684,
+        "miss_dir": 8116,
+        "excluded_sl_geometry": 2,
+        "excluded_degenerate": 14,
+        "trades": 1867,
+        "targets": 494,
+        "still_open": 1,
+        "windows": 210
+      }
+    }
+  }
+}

@@ -1,0 +1,298 @@
+{
+  "lane": "age10_dirmatch_swingpause_single_sw10",
+  "min_n": 30,
+  "assets": {
+    "ADAUSDT": {
+      "is": {
+        "n": 16,
+        "net": -7.5,
+        "net_yr": -2.04,
+        "wr": 12.5,
+        "pf": 0.375,
+        "max_dd": 11.0,
+        "avg_r": -0.468
+      },
+      "oos": {
+        "n": 25,
+        "net": 5.6,
+        "net_yr": 2.81,
+        "wr": 40.0,
+        "pf": 1.447,
+        "max_dd": 4.3,
+        "avg_r": 0.225
+      },
+      "transfer_pass": false
+    },
+    "APTUSDT": {
+      "is": {
+        "n": 125,
+        "net": 106.0,
+        "net_yr": 28.89,
+        "wr": 40.8,
+        "pf": 2.614,
+        "max_dd": 10.5,
+        "avg_r": 0.848
+      },
+      "oos": {
+        "n": 6,
+        "net": 24.7,
+        "net_yr": 12.36,
+        "wr": 66.7,
+        "pf": 15.269,
+        "max_dd": 1.0,
+        "avg_r": 4.121
+      },
+      "transfer_pass": false
+    },
+    "ARBUSDT": {
+      "error": "ARBUSDT/oos: too short (15m=0 1h=0)"
+    },
+    "AVAXUSDT": {
+      "is": {
+        "n": 145,
+        "net": 173.9,
+        "net_yr": 47.38,
+        "wr": 46.9,
+        "pf": 3.668,
+        "max_dd": 11.0,
+        "avg_r": 1.199
+      },
+      "oos": {
+        "n": 82,
+        "net": 189.8,
+        "net_yr": 94.91,
+        "wr": 54.9,
+        "pf": 7.59,
+        "max_dd": 5.4,
+        "avg_r": 2.315
+      },
+      "transfer_pass": true
+    },
+    "BNBUSDT": {
+      "is": {
+        "n": 126,
+        "net": 200.9,
+        "net_yr": 54.74,
+        "wr": 45.2,
+        "pf": 4.288,
+        "max_dd": 6.0,
+        "avg_r": 1.595
+      },
+      "oos": {
+        "n": 92,
+        "net": 95.9,
+        "net_yr": 47.97,
+        "wr": 40.2,
+        "pf": 2.939,
+        "max_dd": 11.6,
+        "avg_r": 1.043
+      },
+      "transfer_pass": true
+    },
+    "DOGEUSDT": {
+      "is": {
+        "n": 1,
+        "net": -1.0,
+        "net_yr": -0.27,
+        "wr": 0.0,
+        "pf": 0.0,
+        "max_dd": 1.0,
+        "avg_r": -0.998
+      },
+      "oos": {
+        "n": 4,
+        "net": -0.4,
+        "net_yr": -0.2,
+        "wr": 25.0,
+        "pf": 0.866,
+        "max_dd": 2.0,
+        "avg_r": -0.1
+      },
+      "transfer_pass": false
+    },
+    "DOTUSDT": {
+      "is": {
+        "n": 115,
+        "net": 84.8,
+        "net_yr": 23.09,
+        "wr": 39.1,
+        "pf": 2.513,
+        "max_dd": 10.9,
+        "avg_r": 0.737
+      },
+      "oos": {
+        "n": 88,
+        "net": 32.3,
+        "net_yr": 16.14,
+        "wr": 38.6,
+        "pf": 1.651,
+        "max_dd": 11.1,
+        "avg_r": 0.367
+      },
+      "transfer_pass": true
+    },
+    "LINKUSDT": {
+      "is": {
+        "n": 133,
+        "net": 122.5,
+        "net_yr": 33.38,
+        "wr": 44.4,
+        "pf": 2.802,
+        "max_dd": 7.9,
+        "avg_r": 0.921
+      },
+      "oos": {
+        "n": 87,
+        "net": 116.5,
+        "net_yr": 58.27,
+        "wr": 50.6,
+        "pf": 4.062,
+        "max_dd": 5.3,
+        "avg_r": 1.34
+      },
+      "transfer_pass": true
+    },
+    "LTCUSDT": {
+      "is": {
+        "n": 138,
+        "net": 147.9,
+        "net_yr": 40.29,
+        "wr": 36.2,
+        "pf": 2.938,
+        "max_dd": 10.9,
+        "avg_r": 1.071
+      },
+      "oos": {
+        "n": 95,
+        "net": 89.0,
+        "net_yr": 44.49,
+        "wr": 38.9,
+        "pf": 2.787,
+        "max_dd": 6.9,
+        "avg_r": 0.937
+      },
+      "transfer_pass": true
+    },
+    "MATICUSDT": {
+      "is": {
+        "n": 6,
+        "net": -5.6,
+        "net_yr": -1.54,
+        "wr": 0.0,
+        "pf": 0.0,
+        "max_dd": 5.6,
+        "avg_r": -0.941
+      },
+      "oos": {
+        "n": 47,
+        "net": 13.0,
+        "net_yr": 6.52,
+        "wr": 34.0,
+        "pf": 1.533,
+        "max_dd": 7.0,
+        "avg_r": 0.277
+      },
+      "transfer_pass": false
+    },
+    "NEARUSDT": {
+      "is": {
+        "n": 98,
+        "net": 108.7,
+        "net_yr": 29.62,
+        "wr": 39.8,
+        "pf": 3.041,
+        "max_dd": 13.2,
+        "avg_r": 1.109
+      },
+      "oos": {
+        "n": 85,
+        "net": 50.9,
+        "net_yr": 25.46,
+        "wr": 40.0,
+        "pf": 2.131,
+        "max_dd": 6.9,
+        "avg_r": 0.599
+      },
+      "transfer_pass": true
+    },
+    "OPUSDT": {
+      "is": {
+        "n": 67,
+        "net": 37.4,
+        "net_yr": 10.19,
+        "wr": 43.3,
+        "pf": 2.269,
+        "max_dd": 4.4,
+        "avg_r": 0.558
+      },
+      "oos": {
+        "n": 22,
+        "net": 10.1,
+        "net_yr": 5.03,
+        "wr": 31.8,
+        "pf": 1.791,
+        "max_dd": 6.3,
+        "avg_r": 0.457
+      },
+      "transfer_pass": false
+    },
+    "SOLUSDT": {
+      "is": {
+        "n": 138,
+        "net": 320.6,
+        "net_yr": 87.35,
+        "wr": 45.7,
+        "pf": 6.119,
+        "max_dd": 8.2,
+        "avg_r": 2.323
+      },
+      "oos": {
+        "n": 90,
+        "net": 127.1,
+        "net_yr": 63.56,
+        "wr": 43.3,
+        "pf": 4.058,
+        "max_dd": 5.4,
+        "avg_r": 1.412
+      },
+      "transfer_pass": true
+    },
+    "SUIUSDT": {
+      "error": "SUIUSDT/oos: too short (15m=0 1h=0)"
+    },
+    "WIFUSDT": {
+      "error": "WIFUSDT/oos: too short (15m=0 1h=0)"
+    },
+    "XRPUSDT": {
+      "is": {
+        "n": 39,
+        "net": 18.1,
+        "net_yr": 4.92,
+        "wr": 35.9,
+        "pf": 1.997,
+        "max_dd": 7.9,
+        "avg_r": 0.463
+      },
+      "oos": {
+        "n": 17,
+        "net": 20.5,
+        "net_yr": 10.25,
+        "wr": 47.1,
+        "pf": 4.015,
+        "max_dd": 3.2,
+        "avg_r": 1.206
+      },
+      "transfer_pass": false
+    }
+  },
+  "pass_list": [
+    "AVAXUSDT",
+    "BNBUSDT",
+    "DOTUSDT",
+    "LINKUSDT",
+    "LTCUSDT",
+    "NEARUSDT",
+    "SOLUSDT"
+  ],
+  "elapsed_sec": 202.4
+}

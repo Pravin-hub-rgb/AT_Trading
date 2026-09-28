@@ -194,31 +194,126 @@ trail/exit fills. Nobody has ever run a 1m setup or a 1m-triggered entry.
 Verified this session:
 - 1m data exists and is large: **1,946,026 bars**, 2023-01-01 → 2026-09-13.
 - **1m swings are not computed anywhere** in the engine.
-- **BLOCKER:** `_compute_swings(fine, "continuous", min_bars=N)` over the full
-  1.95M bars did not finish in ~2 minutes and the process died —
-  memory-bound. **Solve this first; everything else is wasted until then.**
+- ~~**BLOCKER:** `_compute_swings(fine, "continuous", min_bars=N)` over the
+  full 1.95M bars did not finish in ~2 minutes and the process died —
+  memory-bound. **Solve this first; everything else is wasted until then.**~~
+  **RESOLVED — the blocker was not real. See §7a.**
 
 Phase 0 options (none chosen, all plausible):
   (a) chunked/windowed swing computation with overlap, stitched at boundaries;
   (b) pre-filter 1m bars (drop low-activity bars) before swinging;
   (c) keep swing detection on 15m, map only entry *timing* onto 1m.
+  **None of these were needed — (a) and (b) were solving a problem that does
+  not exist. (c) is superseded by the Phase 1 finding below.**
 
 Phase 1: a new kwarg (e.g. `exp_entry_tf="1m"`) substituting `swings_ltf` with
 1m swings and reusing the existing `_collect_signals` call — the mark kinds
 (B1/B2/FLIP/FS) already exist in the swing structure, so this is wiring, not a
 new concept.
+**⚠ CORRECTED: this is NOT a self-contained flag flip. Read §7a before
+starting — the naive form of this patch silently drops 91% of signals and
+silently rescales every bar-counted risk parameter by 15×.**
 
 Phase 2: pre-registered sweep, 1m setup on/off × `exp_mltf` on/off, 4 cells,
 full metrics, control asserts the shipped book.
 
-Phase 3: the user's other idea, **still untested** — `exp_mltf_green_r`: fire
-the 1m add only when the HTF trade is at least kR green (k = 0.25/0.5/1.0/1.5).
-This differs from `exp_persist`, which is time-based. Stage 44 says the cohort
-is already profitable, so the open question is whether an **R-threshold** beats
-a **time-threshold** across both eras.
+Phase 3: the user's other idea, **now TESTED and CLOSED** — `exp_mltf_green_r`:
+fire the 1m add only when the HTF trade is at least kR green. **FAILS 16/16**,
+monotone in k; see §7a-3. Do not retune the threshold.
+
+## 7a. Two measured corrections (2026-09-28) — READ BEFORE PHASE 1
+
+Both below are from scripts in `live_stuff/tests/`, both with control gates,
+and both change what Phase 1 should be. Full detail in
+`PHASE0_1M_SWING_BLOCKER.md`.
+
+### 7a-1. The 1m swing blocker does not exist
+
+`phase0_1m_swing_diag.py` ran the exact call on growing prefixes:
+
+| bars | swings | time_s | µs/bar |
+|---|---|---|---|
+| 345,600 | 14,719 | 2.68 | 7.75 |
+| **1,946,042 (full)** | **90,991** | **18.49** | **9.50** |
+
+Cost is **linear** (time ratios track bar ratios at every step), and the full
+1.95M-bar run finishes in **18.5 seconds** at **957 MB** working set, of
+which only 162 MB is the swing call — the rest is the 1.95M `FlowCandle`
+objects that are already resident. tracemalloc peak is 177 MB. There is no
+unbounded accumulator: `bar_highs`/`bar_lows` are cleared at `bars_seen == 1`
+and the engine is re-seeded per swing, so per-engine state is bounded by one
+swing (~21 bars).
+
+**Likely the harness, not the algorithm** — `exp_s3_forensic._candles` builds
+candle dicts *and* `FlowCandle`s (only the latter is needed to swing), and
+`_read_tf` holds a full pandas frame plus a sort copy. If someone saw the
+original failure, the useful question is *which harness*, not *how to chunk*.
+
+### 7a-2. Phase 1 as written would produce a silently wrong book
+
+`swings_ltf` is **index-coupled to `candles_ltf`**. In the engine:
+
+    bar = ltf_store.pos(sig["bar"])          # CandleStore(candles_ltf)
+    if bar < 0 or bar >= len(candles_ltf): continue
+
+`bar` is a position in `candles_ltf`, then indexes `chop_per_ltf`, `atr_pct`,
+`candle_ts_ltf` and `atr15`. So passing 1m swings with 15m candles drops
+almost every signal via that `continue`. Measured on a 90-day window:
+
+- 1m signals: **5,759**, resolvable in the 15m store: **524 (9.10%)**
+- control (15m vs 15m): **411/411 = 100.00%**
+
+No crash, no warning — a quietly near-empty book. That is exactly the class
+of silent-failure this repo's process rules exist to prevent.
+
+And passing 1m *candles* too is not neutral, because `candles_ltf` drives the
+feature layer and the bar-counted risk params:
+
+- mean ATR%: 15m **0.2594**, 1m **0.0557** → **4.7×**, so `sl_buf_atr=0.01`
+  and `chop_thresh=58.0` under `mode="atr_high"` are different gates
+- `cooldown_bars=8` → 120 min on 15m, **8 min on 1m**
+- `max_consecutive_losses=3` → 45 min → **3 min**
+- `sustainBars=7`, `minBars=10` → same 15× collapse
+- `ts+900` in the chop/garch lookbacks **hardcodes the 15m bar duration**
+
+**So a 1m layer is a re-parameterisation, not a flag flip.** Phase 1's real
+first step is deciding, per parameter, whether it stays in bars (and gets
+rescaled) or becomes a duration. That decision must be pre-registered, and
+Phase 2's 4-cell sweep is not meaningful until it is made.
+
+### 7a-3. `exp_mltf_green_r` — TESTED, FAILS 16/16, CLOSED
+
+Run 2026-09-28, `exp_mltf_green_r.py`, path-true, controls exact
+(500/454/279/253 at +325.8/+358.9/+70.2/+60.2). dNet vs control:
+
+| lane | k=0.25 | k=0.5 | k=1.0 | k=1.5 |
+|---|---|---|---|---|
+| is/champion | −17.7 | −52.7 | −52.4 | **−117.3** |
+| is/utcsat | −19.9 | −53.5 | −58.4 | **−121.0** |
+| oos/champion | −36.4 | −66.0 | −77.6 | −76.6 |
+| oos/utcsat | −37.5 | −66.6 | −67.9 | −68.2 |
+
+Same sign 16/16, monotone in k on both IS lanes. The gate is not inert — it
+blocks 42→108 (champion IS) and the damage scales with the blocking. OOS
+goes outright negative at k≥0.5 (PF 0.958-0.965) and **ex-best-5 is
+negative in 14/16 cells**, including OOS at k=0.25.
+
+**The sign of the finding is the point.** Stage 44 showed the green add-on
+cohort is profitable *in isolation*; this shows that **removing the
+non-green ones makes the book worse**. Both hold. Under `exp_mltf` the
+blocked add-ons were occupying concurrency slots and suppressing worse
+replacements — the documented 3-5× cascade (`AGENT_COORDINATION.md`,
+`BLEED_AUTOPSY.md`), reached here by a different route than the wick gate
+(skip −39.0R vs gray +28.1R).
+
+**Do not retune k** — a monotone 16/16 cannot be flipped by a different
+rung. Full detail and the causality audit in `MLTF_GREEN_R.md`.
+
+**Nothing adopted.** Production untouched, all flags default-off.
+
+
 
 ## 8. Other open items (not entry-timing)
-
 - **Live size state.** `v18_streak_halt.py` has **zero** hits for
   equity/size/notional/qty. Any sizing change has no execution channel. This
   is engineering, not research.

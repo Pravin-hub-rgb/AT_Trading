@@ -1,0 +1,586 @@
+{
+  "sl_modes": [
+    "fs_pivot",
+    "seg_start"
+  ],
+  "target_r": [
+    2.0,
+    3.0
+  ],
+  "cooldown": 8,
+  "cells": {
+    "is/champion/fs_pivot/r2.0": {
+      "n": 2,
+      "gross": -2.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 2.0,
+      "ex_best3": 0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 2899,
+        "trades": 2,
+        "excluded_geometry": 2896,
+        "excluded_noise": 1
+      },
+      "had_break": {
+        "n": 2,
+        "gross": -2.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 2.0,
+        "ex_best3": 0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/champion/fs_pivot/r3.0": {
+      "n": 2,
+      "gross": -2.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 2.0,
+      "ex_best3": 0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 2899,
+        "trades": 2,
+        "excluded_geometry": 2896,
+        "excluded_noise": 1
+      },
+      "had_break": {
+        "n": 2,
+        "gross": -2.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 2.0,
+        "ex_best3": 0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/champion/seg_start/r2.0": {
+      "n": 263,
+      "gross": 31.7,
+      "wr": 37.3,
+      "pf": 1.193,
+      "avg_r": 0.121,
+      "trimmed_mean": 0.079,
+      "max_dd": 24.0,
+      "ex_best3": 25.7,
+      "ex_best5": 21.7,
+      "calmar": 1.321,
+      "stats": {
+        "signals": 2899,
+        "trades": 263,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 263,
+        "gross": 31.7,
+        "wr": 37.3,
+        "pf": 1.193,
+        "avg_r": 0.121,
+        "trimmed_mean": 0.079,
+        "max_dd": 24.0,
+        "ex_best3": 25.7,
+        "ex_best5": 21.7,
+        "calmar": 1.321
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/champion/seg_start/r3.0": {
+      "n": 179,
+      "gross": 18.3,
+      "wr": 27.9,
+      "pf": 1.142,
+      "avg_r": 0.102,
+      "trimmed_mean": 0.014,
+      "max_dd": 35.0,
+      "ex_best3": 9.3,
+      "ex_best5": 3.3,
+      "calmar": 0.523,
+      "stats": {
+        "signals": 2899,
+        "trades": 179,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 179,
+        "gross": 18.3,
+        "wr": 27.9,
+        "pf": 1.142,
+        "avg_r": 0.102,
+        "trimmed_mean": 0.014,
+        "max_dd": 35.0,
+        "ex_best3": 9.3,
+        "ex_best5": 3.3,
+        "calmar": 0.523
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/utcsat/fs_pivot/r2.0": {
+      "n": 2,
+      "gross": -2.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 2.0,
+      "ex_best3": 0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 2899,
+        "trades": 2,
+        "excluded_geometry": 2896,
+        "excluded_noise": 1
+      },
+      "had_break": {
+        "n": 2,
+        "gross": -2.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 2.0,
+        "ex_best3": 0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/utcsat/fs_pivot/r3.0": {
+      "n": 2,
+      "gross": -2.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 2.0,
+      "ex_best3": 0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 2899,
+        "trades": 2,
+        "excluded_geometry": 2896,
+        "excluded_noise": 1
+      },
+      "had_break": {
+        "n": 2,
+        "gross": -2.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 2.0,
+        "ex_best3": 0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/utcsat/seg_start/r2.0": {
+      "n": 263,
+      "gross": 31.7,
+      "wr": 37.3,
+      "pf": 1.193,
+      "avg_r": 0.121,
+      "trimmed_mean": 0.079,
+      "max_dd": 24.0,
+      "ex_best3": 25.7,
+      "ex_best5": 21.7,
+      "calmar": 1.321,
+      "stats": {
+        "signals": 2899,
+        "trades": 263,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 263,
+        "gross": 31.7,
+        "wr": 37.3,
+        "pf": 1.193,
+        "avg_r": 0.121,
+        "trimmed_mean": 0.079,
+        "max_dd": 24.0,
+        "ex_best3": 25.7,
+        "ex_best5": 21.7,
+        "calmar": 1.321
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "is/utcsat/seg_start/r3.0": {
+      "n": 179,
+      "gross": 18.3,
+      "wr": 27.9,
+      "pf": 1.142,
+      "avg_r": 0.102,
+      "trimmed_mean": 0.014,
+      "max_dd": 35.0,
+      "ex_best3": 9.3,
+      "ex_best5": 3.3,
+      "calmar": 0.523,
+      "stats": {
+        "signals": 2899,
+        "trades": 179,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 179,
+        "gross": 18.3,
+        "wr": 27.9,
+        "pf": 1.142,
+        "avg_r": 0.102,
+        "trimmed_mean": 0.014,
+        "max_dd": 35.0,
+        "ex_best3": 9.3,
+        "ex_best5": 3.3,
+        "calmar": 0.523
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/champion/fs_pivot/r2.0": {
+      "n": 4,
+      "gross": -4.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 4.0,
+      "ex_best3": -1.0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 1633,
+        "trades": 4,
+        "excluded_geometry": 1629,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 4,
+        "gross": -4.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 4.0,
+        "ex_best3": -1.0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/champion/fs_pivot/r3.0": {
+      "n": 4,
+      "gross": -4.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 4.0,
+      "ex_best3": -1.0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 1633,
+        "trades": 4,
+        "excluded_geometry": 1629,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 4,
+        "gross": -4.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 4.0,
+        "ex_best3": -1.0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/champion/seg_start/r2.0": {
+      "n": 108,
+      "gross": 1.3,
+      "wr": 34.3,
+      "pf": 1.019,
+      "avg_r": 0.012,
+      "trimmed_mean": -0.037,
+      "max_dd": 16.0,
+      "ex_best3": -4.7,
+      "ex_best5": -8.7,
+      "calmar": 0.084,
+      "stats": {
+        "signals": 1633,
+        "trades": 108,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 108,
+        "gross": 1.3,
+        "wr": 34.3,
+        "pf": 1.019,
+        "avg_r": 0.012,
+        "trimmed_mean": -0.037,
+        "max_dd": 16.0,
+        "ex_best3": -4.7,
+        "ex_best5": -8.7,
+        "calmar": 0.084
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/champion/seg_start/r3.0": {
+      "n": 58,
+      "gross": 3.3,
+      "wr": 27.6,
+      "pf": 1.079,
+      "avg_r": 0.058,
+      "trimmed_mean": -0.012,
+      "max_dd": 10.0,
+      "ex_best3": -5.7,
+      "ex_best5": -11.7,
+      "calmar": 0.334,
+      "stats": {
+        "signals": 1633,
+        "trades": 58,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 58,
+        "gross": 3.3,
+        "wr": 27.6,
+        "pf": 1.079,
+        "avg_r": 0.058,
+        "trimmed_mean": -0.012,
+        "max_dd": 10.0,
+        "ex_best3": -5.7,
+        "ex_best5": -11.7,
+        "calmar": 0.334
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/utcsat/fs_pivot/r2.0": {
+      "n": 4,
+      "gross": -4.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 4.0,
+      "ex_best3": -1.0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 1633,
+        "trades": 4,
+        "excluded_geometry": 1629,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 4,
+        "gross": -4.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 4.0,
+        "ex_best3": -1.0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/utcsat/fs_pivot/r3.0": {
+      "n": 4,
+      "gross": -4.0,
+      "wr": 0.0,
+      "pf": 0.0,
+      "avg_r": -1.0,
+      "trimmed_mean": -1.0,
+      "max_dd": 4.0,
+      "ex_best3": -1.0,
+      "ex_best5": 0,
+      "calmar": -1.0,
+      "stats": {
+        "signals": 1633,
+        "trades": 4,
+        "excluded_geometry": 1629,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 4,
+        "gross": -4.0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "avg_r": -1.0,
+        "trimmed_mean": -1.0,
+        "max_dd": 4.0,
+        "ex_best3": -1.0,
+        "ex_best5": 0,
+        "calmar": -1.0
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/utcsat/seg_start/r2.0": {
+      "n": 108,
+      "gross": 1.3,
+      "wr": 34.3,
+      "pf": 1.019,
+      "avg_r": 0.012,
+      "trimmed_mean": -0.037,
+      "max_dd": 16.0,
+      "ex_best3": -4.7,
+      "ex_best5": -8.7,
+      "calmar": 0.084,
+      "stats": {
+        "signals": 1633,
+        "trades": 108,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 108,
+        "gross": 1.3,
+        "wr": 34.3,
+        "pf": 1.019,
+        "avg_r": 0.012,
+        "trimmed_mean": -0.037,
+        "max_dd": 16.0,
+        "ex_best3": -4.7,
+        "ex_best5": -8.7,
+        "calmar": 0.084
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    },
+    "oos/utcsat/seg_start/r3.0": {
+      "n": 58,
+      "gross": 3.3,
+      "wr": 27.6,
+      "pf": 1.079,
+      "avg_r": 0.058,
+      "trimmed_mean": -0.012,
+      "max_dd": 10.0,
+      "ex_best3": -5.7,
+      "ex_best5": -11.7,
+      "calmar": 0.334,
+      "stats": {
+        "signals": 1633,
+        "trades": 58,
+        "excluded_geometry": 0,
+        "excluded_noise": 0
+      },
+      "had_break": {
+        "n": 58,
+        "gross": 3.3,
+        "wr": 27.6,
+        "pf": 1.079,
+        "avg_r": 0.058,
+        "trimmed_mean": -0.012,
+        "max_dd": 10.0,
+        "ex_best3": -5.7,
+        "ex_best5": -11.7,
+        "calmar": 0.334
+      },
+      "never_priced": {
+        "n": 0,
+        "net": 0.0,
+        "gross": 0.0
+      }
+    }
+  },
+  "population": {
+    "is": {
+      "swings": 2900,
+      "fs_signals": 2899,
+      "never_priced": 0
+    },
+    "oos": {
+      "swings": 1634,
+      "fs_signals": 1633,
+      "never_priced": 0
+    }
+  },
+  "elapsed_sec": 58.1
+}
