@@ -1,0 +1,304 @@
+{
+  "stage": "b1_sl_variants",
+  "b1": {
+    "is/champion": {
+      "n": 492,
+      "B1 + swing-low SL": {
+        "n": 492,
+        "avg": 2.069,
+        "median": -0.179,
+        "net": 1018.1,
+        "wr": 33.7
+      },
+      "B1 + 1.0 ATR stop": {
+        "n": 492,
+        "avg": 2.899,
+        "median": -0.688,
+        "net": 1426.3,
+        "wr": 33.7
+      },
+      "B1 + 1.5 ATR stop": {
+        "n": 492,
+        "avg": 1.933,
+        "median": -0.459,
+        "net": 950.9,
+        "wr": 33.7
+      }
+    },
+    "is/utcsat": {
+      "n": 448,
+      "B1 + swing-low SL": {
+        "n": 448,
+        "avg": 2.252,
+        "median": -0.164,
+        "net": 1009.1,
+        "wr": 34.6
+      },
+      "B1 + 1.0 ATR stop": {
+        "n": 448,
+        "avg": 3.949,
+        "median": -0.649,
+        "net": 1769.1,
+        "wr": 34.6
+      },
+      "B1 + 1.5 ATR stop": {
+        "n": 448,
+        "avg": 2.633,
+        "median": -0.433,
+        "net": 1179.4,
+        "wr": 34.6
+      }
+    },
+    "oos/champion": {
+      "n": 275,
+      "B1 + swing-low SL": {
+        "n": 275,
+        "avg": 1.421,
+        "median": -0.229,
+        "net": 390.7,
+        "wr": 32.7
+      },
+      "B1 + 1.0 ATR stop": {
+        "n": 275,
+        "avg": 3.445,
+        "median": -0.779,
+        "net": 947.3,
+        "wr": 32.7
+      },
+      "B1 + 1.5 ATR stop": {
+        "n": 275,
+        "avg": 2.296,
+        "median": -0.52,
+        "net": 631.5,
+        "wr": 32.7
+      }
+    },
+    "oos/utcsat": {
+      "n": 249,
+      "B1 + swing-low SL": {
+        "n": 249,
+        "avg": 1.573,
+        "median": -0.202,
+        "net": 391.8,
+        "wr": 33.7
+      },
+      "B1 + 1.0 ATR stop": {
+        "n": 249,
+        "avg": 3.331,
+        "median": -0.801,
+        "net": 829.5,
+        "wr": 33.7
+      },
+      "B1 + 1.5 ATR stop": {
+        "n": 249,
+        "avg": 2.221,
+        "median": -0.534,
+        "net": 553.0,
+        "wr": 33.7
+      }
+    }
+  },
+  "sl": {
+    "is/champion/baseline buf0.01": {
+      "n": 500,
+      "net": 325.7817,
+      "wr": 27.8,
+      "pf": 1.8148,
+      "max_dd": 27.7242,
+      "calmar": 3.2019,
+      "d_net": 0.0,
+      "d_dd": 0.0
+    },
+    "is/champion/buf 0.10": {
+      "n": 498,
+      "net": 293.1948,
+      "wr": 27.91,
+      "pf": 1.7501,
+      "max_dd": 27.549,
+      "calmar": 2.8999,
+      "d_net": -32.6,
+      "d_dd": 0.2
+    },
+    "is/champion/buf 0.25": {
+      "n": 498,
+      "net": 257.1807,
+      "wr": 28.11,
+      "pf": 1.6799,
+      "max_dd": 27.8705,
+      "calmar": 2.5144,
+      "d_net": -68.6,
+      "d_dd": -0.1
+    },
+    "is/champion/causal SL": {
+      "n": 494,
+      "net": 247.9579,
+      "wr": 27.13,
+      "pf": 1.6537,
+      "max_dd": 34.8046,
+      "calmar": 1.9412,
+      "d_net": -77.8,
+      "d_dd": -7.1
+    },
+    "is/champion/pivot trail": {
+      "n": 515,
+      "net": 169.8177,
+      "wr": 26.41,
+      "pf": 1.4664,
+      "max_dd": 28.5738,
+      "calmar": 1.6194,
+      "d_net": -156.0,
+      "d_dd": -0.8
+    },
+    "is/utcsat/baseline buf0.01": {
+      "n": 454,
+      "net": 358.95,
+      "wr": 29.07,
+      "pf": 2.0075,
+      "max_dd": 21.1764,
+      "calmar": 4.6187,
+      "d_net": 0.0,
+      "d_dd": 0.0
+    },
+    "is/utcsat/buf 0.10": {
+      "n": 454,
+      "net": 361.1807,
+      "wr": 29.07,
+      "pf": 2.0312,
+      "max_dd": 26.5438,
+      "calmar": 3.7076,
+      "d_net": 2.2,
+      "d_dd": -5.4
+    },
+    "is/utcsat/buf 0.25": {
+      "n": 454,
+      "net": 317.9852,
+      "wr": 29.3,
+      "pf": 1.9403,
+      "max_dd": 26.1475,
+      "calmar": 3.3137,
+      "d_net": -41.0,
+      "d_dd": -5.0
+    },
+    "is/utcsat/causal SL": {
+      "n": 449,
+      "net": 295.7118,
+      "wr": 28.95,
+      "pf": 1.8953,
+      "max_dd": 22.2009,
+      "calmar": 3.6294,
+      "d_net": -63.2,
+      "d_dd": -1.0
+    },
+    "is/utcsat/pivot trail": {
+      "n": 473,
+      "net": 209.4137,
+      "wr": 28.33,
+      "pf": 1.6514,
+      "max_dd": 24.776,
+      "calmar": 2.3031,
+      "d_net": -149.5,
+      "d_dd": -3.6
+    },
+    "oos/champion/baseline buf0.01": {
+      "n": 279,
+      "net": 70.1505,
+      "wr": 27.24,
+      "pf": 1.3437,
+      "max_dd": 53.1877,
+      "calmar": 0.6595,
+      "d_net": 0.0,
+      "d_dd": 0.0
+    },
+    "oos/champion/buf 0.10": {
+      "n": 277,
+      "net": 60.0796,
+      "wr": 26.71,
+      "pf": 1.299,
+      "max_dd": 54.2273,
+      "calmar": 0.554,
+      "d_net": -10.1,
+      "d_dd": -1.0
+    },
+    "oos/champion/buf 0.25": {
+      "n": 278,
+      "net": 80.0427,
+      "wr": 27.7,
+      "pf": 1.4152,
+      "max_dd": 34.2602,
+      "calmar": 1.1682,
+      "d_net": 9.9,
+      "d_dd": 18.9
+    },
+    "oos/champion/causal SL": {
+      "n": 282,
+      "net": 80.0116,
+      "wr": 28.01,
+      "pf": 1.4078,
+      "max_dd": 46.5656,
+      "calmar": 0.8591,
+      "d_net": 9.9,
+      "d_dd": 6.6
+    },
+    "oos/champion/pivot trail": {
+      "n": 295,
+      "net": -2.5146,
+      "wr": 25.76,
+      "pf": 0.9875,
+      "max_dd": 39.0886,
+      "calmar": -0.0322,
+      "d_net": -72.7,
+      "d_dd": 14.1
+    },
+    "oos/utcsat/baseline buf0.01": {
+      "n": 253,
+      "net": 60.2062,
+      "wr": 28.85,
+      "pf": 1.3281,
+      "max_dd": 29.3814,
+      "calmar": 1.0246,
+      "d_net": 0.0,
+      "d_dd": 0.0
+    },
+    "oos/utcsat/buf 0.10": {
+      "n": 252,
+      "net": 50.5713,
+      "wr": 28.57,
+      "pf": 1.2799,
+      "max_dd": 30.1577,
+      "calmar": 0.8384,
+      "d_net": -9.6,
+      "d_dd": -0.8
+    },
+    "oos/utcsat/buf 0.25": {
+      "n": 252,
+      "net": 59.3004,
+      "wr": 28.97,
+      "pf": 1.3403,
+      "max_dd": 27.5851,
+      "calmar": 1.0749,
+      "d_net": -0.9,
+      "d_dd": 1.8
+    },
+    "oos/utcsat/causal SL": {
+      "n": 255,
+      "net": 72.7891,
+      "wr": 29.8,
+      "pf": 1.4165,
+      "max_dd": 26.2686,
+      "calmar": 1.3855,
+      "d_net": 12.6,
+      "d_dd": 3.1
+    },
+    "oos/utcsat/pivot trail": {
+      "n": 262,
+      "net": 11.2472,
+      "wr": 26.34,
+      "pf": 1.0651,
+      "max_dd": 34.4405,
+      "calmar": 0.1633,
+      "d_net": -49.0,
+      "d_dd": -5.1
+    }
+  },
+  "elapsed_sec": 277.5
+}
