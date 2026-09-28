@@ -1,0 +1,1167 @@
+{
+  "results": [
+    {
+      "window": "4h",
+      "label": "A) pos75-100 - pos0-25 @width0",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.14,
+          "n_a": 39,
+          "n_b": 34,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.347,
+          "n_a": 35,
+          "n_b": 27,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -1.509,
+          "n_a": 16,
+          "n_b": 20,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -1.403,
+          "n_a": 17,
+          "n_b": 17,
+          "positive": false
+        }
+      ],
+      "is_sign": "1/2",
+      "oos_sign": "0/2",
+      "monotone": "1/4",
+      "min_n": 16,
+      "verdict": "null"
+    },
+    {
+      "window": "4h",
+      "label": "B) edges - mid @width0",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.208,
+          "n_a": 94,
+          "n_b": 73,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.098,
+          "n_a": 81,
+          "n_b": 62,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.952,
+          "n_a": 45,
+          "n_b": 36,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.668,
+          "n_a": 25,
+          "n_b": 34,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 25,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "4h",
+      "label": "A) pos75-100 - pos0-25 @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.743,
+          "n_a": 32,
+          "n_b": 37,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.386,
+          "n_a": 32,
+          "n_b": 40,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -1.319,
+          "n_a": 23,
+          "n_b": 16,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -1.538,
+          "n_a": 20,
+          "n_b": 20,
+          "positive": false
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "0/2",
+      "monotone": "2/4",
+      "min_n": 16,
+      "verdict": "null"
+    },
+    {
+      "window": "4h",
+      "label": "B) edges - mid @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.157,
+          "n_a": 98,
+          "n_b": 69,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.022,
+          "n_a": 81,
+          "n_b": 72,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.017,
+          "n_a": 64,
+          "n_b": 39,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.022,
+          "n_a": 64,
+          "n_b": 40,
+          "positive": true
+        }
+      ],
+      "is_sign": "1/2",
+      "oos_sign": "1/2",
+      "monotone": "2/4",
+      "min_n": 39,
+      "verdict": "null"
+    },
+    {
+      "window": "4h",
+      "label": "A) pos75-100 - pos0-25 @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 1.087,
+          "n_a": 34,
+          "n_b": 41,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 1.513,
+          "n_a": 32,
+          "n_b": 39,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.204,
+          "n_a": 24,
+          "n_b": 22,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.608,
+          "n_a": 19,
+          "n_b": 18,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 18,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "4h",
+      "label": "B) edges - mid @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.769,
+          "n_a": 91,
+          "n_b": 75,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.861,
+          "n_a": 87,
+          "n_b": 71,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.404,
+          "n_a": 49,
+          "n_b": 46,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.176,
+          "n_a": 40,
+          "n_b": 37,
+          "positive": false
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "0/2",
+      "monotone": "2/4",
+      "min_n": 37,
+      "verdict": "null"
+    },
+    {
+      "window": "4h",
+      "label": "C) width2 - width0 @pos0",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.354,
+          "n_a": 39,
+          "n_b": 34,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.435,
+          "n_a": 35,
+          "n_b": 32,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -1.834,
+          "n_a": 16,
+          "n_b": 24,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -1.694,
+          "n_a": 17,
+          "n_b": 19,
+          "positive": false
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "0/2",
+      "monotone": "0/4",
+      "min_n": 16,
+      "verdict": "null"
+    },
+    {
+      "window": "4h",
+      "label": "C) width2 - width0 @pos2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.437,
+          "n_a": 50,
+          "n_b": 46,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.504,
+          "n_a": 43,
+          "n_b": 42,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.04,
+          "n_a": 28,
+          "n_b": 23,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.176,
+          "n_a": 25,
+          "n_b": 19,
+          "positive": true
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "1/2",
+      "monotone": "1/4",
+      "min_n": 19,
+      "verdict": "null"
+    },
+    {
+      "window": "4h",
+      "label": "C) width2 - width0 @pos3",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.873,
+          "n_a": 34,
+          "n_b": 41,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.731,
+          "n_a": 27,
+          "n_b": 39,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.121,
+          "n_a": 20,
+          "n_b": 22,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.317,
+          "n_a": 17,
+          "n_b": 18,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "1/2",
+      "monotone": "3/4",
+      "min_n": 17,
+      "verdict": "null"
+    },
+    {
+      "window": "1d",
+      "label": "B) edges - mid @width0",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.216,
+          "n_a": 125,
+          "n_b": 42,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.525,
+          "n_a": 118,
+          "n_b": 39,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.012,
+          "n_a": 57,
+          "n_b": 15,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.001,
+          "n_a": 59,
+          "n_b": 15,
+          "positive": false
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "0/2",
+      "monotone": "2/4",
+      "min_n": 15,
+      "verdict": "null"
+    },
+    {
+      "window": "1d",
+      "label": "A) pos75-100 - pos0-25 @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.357,
+          "n_a": 31,
+          "n_b": 36,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.258,
+          "n_a": 30,
+          "n_b": 34,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.322,
+          "n_a": 29,
+          "n_b": 23,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.365,
+          "n_a": 27,
+          "n_b": 23,
+          "positive": false
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "0/2",
+      "monotone": "2/4",
+      "min_n": 23,
+      "verdict": "null"
+    },
+    {
+      "window": "1d",
+      "label": "B) edges - mid @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.5,
+          "n_a": 100,
+          "n_b": 67,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.515,
+          "n_a": 94,
+          "n_b": 64,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.173,
+          "n_a": 57,
+          "n_b": 52,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.181,
+          "n_a": 53,
+          "n_b": 50,
+          "positive": false
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "0/2",
+      "monotone": "0/4",
+      "min_n": 50,
+      "verdict": "null"
+    },
+    {
+      "window": "1d",
+      "label": "A) pos75-100 - pos0-25 @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.365,
+          "n_a": 42,
+          "n_b": 47,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.046,
+          "n_a": 36,
+          "n_b": 39,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.468,
+          "n_a": 22,
+          "n_b": 35,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.457,
+          "n_a": 18,
+          "n_b": 26,
+          "positive": true
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "1/2",
+      "monotone": "1/4",
+      "min_n": 18,
+      "verdict": "null"
+    },
+    {
+      "window": "1d",
+      "label": "B) edges - mid @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.224,
+          "n_a": 77,
+          "n_b": 89,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.228,
+          "n_a": 64,
+          "n_b": 75,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.295,
+          "n_a": 35,
+          "n_b": 57,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.502,
+          "n_a": 16,
+          "n_b": 44,
+          "positive": false
+        }
+      ],
+      "is_sign": "1/2",
+      "oos_sign": "0/2",
+      "monotone": "1/4",
+      "min_n": 16,
+      "verdict": "null"
+    },
+    {
+      "window": "1d",
+      "label": "C) width2 - width0 @pos2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.506,
+          "n_a": 68,
+          "n_b": 38,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.29,
+          "n_a": 61,
+          "n_b": 31,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 1.036,
+          "n_a": 24,
+          "n_b": 17,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.835,
+          "n_a": 27,
+          "n_b": 16,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 16,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "1d",
+      "label": "C) width2 - width0 @pos3",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -1.227,
+          "n_a": 23,
+          "n_b": 47,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -1.365,
+          "n_a": 19,
+          "n_b": 39,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.252,
+          "n_a": 15,
+          "n_b": 35,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.284,
+          "n_a": 15,
+          "n_b": 26,
+          "positive": true
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "1/2",
+      "monotone": "1/4",
+      "min_n": 15,
+      "verdict": "null"
+    },
+    {
+      "window": "3d",
+      "label": "B) edges - mid @width0",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.276,
+          "n_a": 90,
+          "n_b": 76,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.113,
+          "n_a": 85,
+          "n_b": 68,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.293,
+          "n_a": 51,
+          "n_b": 20,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.358,
+          "n_a": 47,
+          "n_b": 21,
+          "positive": false
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "0/2",
+      "monotone": "0/4",
+      "min_n": 20,
+      "verdict": "null"
+    },
+    {
+      "window": "3d",
+      "label": "A) pos75-100 - pos0-25 @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.577,
+          "n_a": 28,
+          "n_b": 40,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.674,
+          "n_a": 26,
+          "n_b": 40,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.79,
+          "n_a": 27,
+          "n_b": 39,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.842,
+          "n_a": 18,
+          "n_b": 37,
+          "positive": false
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "0/2",
+      "monotone": "2/4",
+      "min_n": 18,
+      "verdict": "null"
+    },
+    {
+      "window": "3d",
+      "label": "B) edges - mid @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.24,
+          "n_a": 98,
+          "n_b": 68,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.171,
+          "n_a": 93,
+          "n_b": 66,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.279,
+          "n_a": 60,
+          "n_b": 66,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.447,
+          "n_a": 57,
+          "n_b": 55,
+          "positive": true
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "2/2",
+      "monotone": "2/4",
+      "min_n": 55,
+      "verdict": "null"
+    },
+    {
+      "window": "3d",
+      "label": "A) pos75-100 - pos0-25 @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.39,
+          "n_a": 20,
+          "n_b": 54,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.469,
+          "n_a": 19,
+          "n_b": 49,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.83,
+          "n_a": 17,
+          "n_b": 28,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 1.265,
+          "n_a": 16,
+          "n_b": 24,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 16,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "3d",
+      "label": "C) width2 - width0 @pos0",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.175,
+          "n_a": 44,
+          "n_b": 20,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.36,
+          "n_a": 42,
+          "n_b": 19,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.472,
+          "n_a": 20,
+          "n_b": 17,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.505,
+          "n_a": 21,
+          "n_b": 16,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 16,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "1w",
+      "label": "A) pos75-100 - pos0-25 @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.125,
+          "n_a": 42,
+          "n_b": 50,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.147,
+          "n_a": 38,
+          "n_b": 49,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.304,
+          "n_a": 20,
+          "n_b": 35,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.283,
+          "n_a": 17,
+          "n_b": 25,
+          "positive": false
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "0/2",
+      "monotone": "2/4",
+      "min_n": 17,
+      "verdict": "null"
+    },
+    {
+      "window": "1w",
+      "label": "B) edges - mid @width1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.019,
+          "n_a": 73,
+          "n_b": 92,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 0.338,
+          "n_a": 61,
+          "n_b": 87,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.349,
+          "n_a": 56,
+          "n_b": 55,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.145,
+          "n_a": 53,
+          "n_b": 42,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 42,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "1w",
+      "label": "A) pos75-100 - pos0-25 @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.884,
+          "n_a": 20,
+          "n_b": 68,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -1.66,
+          "n_a": 20,
+          "n_b": 63,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.382,
+          "n_a": 18,
+          "n_b": 34,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.722,
+          "n_a": 15,
+          "n_b": 32,
+          "positive": true
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "2/2",
+      "monotone": "2/4",
+      "min_n": 15,
+      "verdict": "null"
+    },
+    {
+      "window": "1w",
+      "label": "B) edges - mid @width2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": 0.856,
+          "n_a": 77,
+          "n_b": 88,
+          "positive": true
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": 1.198,
+          "n_a": 65,
+          "n_b": 83,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": 0.677,
+          "n_a": 39,
+          "n_b": 52,
+          "positive": true
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.552,
+          "n_a": 38,
+          "n_b": 47,
+          "positive": true
+        }
+      ],
+      "is_sign": "2/2",
+      "oos_sign": "2/2",
+      "monotone": "4/4",
+      "min_n": 38,
+      "verdict": "SURVIVOR"
+    },
+    {
+      "window": "1w",
+      "label": "C) width2 - width0 @pos1",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.423,
+          "n_a": 58,
+          "n_b": 48,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.26,
+          "n_a": 56,
+          "n_b": 40,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.091,
+          "n_a": 26,
+          "n_b": 16,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": 0.362,
+          "n_a": 23,
+          "n_b": 15,
+          "positive": true
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "1/2",
+      "monotone": "1/4",
+      "min_n": 15,
+      "verdict": "null"
+    },
+    {
+      "window": "1w",
+      "label": "C) width2 - width0 @pos2",
+      "per_cell": [
+        {
+          "era": "is",
+          "lane": "champion",
+          "diff": -0.073,
+          "n_a": 48,
+          "n_b": 29,
+          "positive": false
+        },
+        {
+          "era": "is",
+          "lane": "utcsat",
+          "diff": -0.077,
+          "n_a": 39,
+          "n_b": 25,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "champion",
+          "diff": -0.647,
+          "n_a": 23,
+          "n_b": 23,
+          "positive": false
+        },
+        {
+          "era": "oos",
+          "lane": "utcsat",
+          "diff": -0.541,
+          "n_a": 24,
+          "n_b": 23,
+          "positive": false
+        }
+      ],
+      "is_sign": "0/2",
+      "oos_sign": "0/2",
+      "monotone": "0/4",
+      "min_n": 23,
+      "verdict": "null"
+    }
+  ],
+  "survivors": 7,
+  "tested": 27
+}
