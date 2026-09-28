@@ -1,0 +1,110 @@
+{
+  "lane": "champion_multi_sw10",
+  "halt_at": 3,
+  "eras": {
+    "is": {
+      "3": {
+        "n": 500,
+        "net": 325.7817,
+        "loss_runs": 98,
+        "runs_ge3": 51,
+        "entries_skipped": 186,
+        "run_len_hist": {
+          "1": 32,
+          "2": 15,
+          "3": 12,
+          "4": 7,
+          "5": 13,
+          "6": 6,
+          "7": 3,
+          "8": 4,
+          "9": 1,
+          "10": 1,
+          "11": 2,
+          "13": 1,
+          "16": 1
+        },
+        "mean_run": 3.57,
+        "max_run": 16,
+        "fire_rate_per_100": 10.2
+      },
+      "0": {
+        "n": 557,
+        "net": 308.5046,
+        "loss_runs": 106,
+        "runs_ge3": 54,
+        "entries_skipped": 215,
+        "run_len_hist": {
+          "1": 33,
+          "2": 19,
+          "3": 9,
+          "4": 12,
+          "5": 8,
+          "6": 9,
+          "7": 5,
+          "8": 2,
+          "9": 3,
+          "10": 2,
+          "12": 2,
+          "13": 1,
+          "19": 1
+        },
+        "mean_run": 3.72,
+        "max_run": 19,
+        "fire_rate_per_100": 9.69
+      },
+      "fire_rate_delta": 0.51
+    },
+    "oos": {
+      "3": {
+        "n": 279,
+        "net": 70.1505,
+        "loss_runs": 50,
+        "runs_ge3": 29,
+        "entries_skipped": 113,
+        "run_len_hist": {
+          "1": 12,
+          "2": 9,
+          "3": 4,
+          "4": 7,
+          "5": 6,
+          "6": 3,
+          "7": 3,
+          "8": 1,
+          "9": 2,
+          "10": 1,
+          "11": 1,
+          "15": 1
+        },
+        "mean_run": 4.02,
+        "max_run": 15,
+        "fire_rate_per_100": 10.39
+      },
+      "0": {
+        "n": 320,
+        "net": 60.4937,
+        "loss_runs": 59,
+        "runs_ge3": 35,
+        "entries_skipped": 126,
+        "run_len_hist": {
+          "1": 14,
+          "2": 10,
+          "3": 9,
+          "4": 3,
+          "5": 6,
+          "6": 5,
+          "7": 6,
+          "8": 1,
+          "9": 3,
+          "10": 2
+        },
+        "mean_run": 3.9,
+        "max_run": 10,
+        "fire_rate_per_100": 10.94
+      },
+      "fire_rate_delta": -0.55
+    }
+  },
+  "verdict": "CONFIRMED: the halt bites harder in IS",
+  "elapsed_sec": 61.7
+}
