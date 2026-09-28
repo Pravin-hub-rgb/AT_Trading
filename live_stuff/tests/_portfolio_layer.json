@@ -1,0 +1,162 @@
+{
+  "assets": [
+    "AVAXUSDT",
+    "BNBUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "NEARUSDT",
+    "DOTUSDT"
+  ],
+  "eras": {
+    "is": {
+      "rows": [
+        {
+          "sym": "AVAXUSDT",
+          "net": 173.9,
+          "dd": 10.998000000000005
+        },
+        {
+          "sym": "BNBUSDT",
+          "net": 200.9,
+          "dd": 5.951000000000008
+        },
+        {
+          "sym": "LTCUSDT",
+          "net": 147.9,
+          "dd": 10.91999999999998
+        },
+        {
+          "sym": "LINKUSDT",
+          "net": 122.5,
+          "dd": 7.917999999999992
+        },
+        {
+          "sym": "NEARUSDT",
+          "net": 108.7,
+          "dd": 13.169999999999987
+        },
+        {
+          "sym": "DOTUSDT",
+          "net": 84.8,
+          "dd": 10.852999999999987
+        }
+      ],
+      "months": 45,
+      "eq_portfolio_net": 139.8,
+      "eq_portfolio_dd": 17.9,
+      "single_dd_min": 6.0,
+      "single_dd_avg": 10.0,
+      "single_dd_max": 13.2,
+      "sum_single_net": 838.7,
+      "mean_pairwise_corr": 0.072,
+      "corr": {
+        "AVAXUSDT|BNBUSDT": 0.051,
+        "AVAXUSDT|LTCUSDT": 0.035,
+        "AVAXUSDT|LINKUSDT": 0.047,
+        "AVAXUSDT|NEARUSDT": -0.185,
+        "AVAXUSDT|DOTUSDT": 0.039,
+        "BNBUSDT|AVAXUSDT": 0.051,
+        "BNBUSDT|LTCUSDT": -0.059,
+        "BNBUSDT|LINKUSDT": 0.158,
+        "BNBUSDT|NEARUSDT": 0.108,
+        "BNBUSDT|DOTUSDT": -0.044,
+        "LTCUSDT|AVAXUSDT": 0.035,
+        "LTCUSDT|BNBUSDT": -0.059,
+        "LTCUSDT|LINKUSDT": 0.092,
+        "LTCUSDT|NEARUSDT": -0.255,
+        "LTCUSDT|DOTUSDT": -0.03,
+        "LINKUSDT|AVAXUSDT": 0.047,
+        "LINKUSDT|BNBUSDT": 0.158,
+        "LINKUSDT|LTCUSDT": 0.092,
+        "LINKUSDT|NEARUSDT": 0.176,
+        "LINKUSDT|DOTUSDT": 0.386,
+        "NEARUSDT|AVAXUSDT": -0.185,
+        "NEARUSDT|BNBUSDT": 0.108,
+        "NEARUSDT|LTCUSDT": -0.255,
+        "NEARUSDT|LINKUSDT": 0.176,
+        "NEARUSDT|DOTUSDT": 0.559,
+        "DOTUSDT|AVAXUSDT": 0.039,
+        "DOTUSDT|BNBUSDT": -0.044,
+        "DOTUSDT|LTCUSDT": -0.03,
+        "DOTUSDT|LINKUSDT": 0.386,
+        "DOTUSDT|NEARUSDT": 0.559
+      }
+    },
+    "oos": {
+      "rows": [
+        {
+          "sym": "AVAXUSDT",
+          "net": 189.8,
+          "dd": 5.447000000000003
+        },
+        {
+          "sym": "BNBUSDT",
+          "net": 95.9,
+          "dd": 11.581000000000003
+        },
+        {
+          "sym": "LTCUSDT",
+          "net": 89.0,
+          "dd": 6.925000000000001
+        },
+        {
+          "sym": "LINKUSDT",
+          "net": 116.5,
+          "dd": 5.302999999999999
+        },
+        {
+          "sym": "NEARUSDT",
+          "net": 50.9,
+          "dd": 6.857000000000006
+        },
+        {
+          "sym": "DOTUSDT",
+          "net": 32.3,
+          "dd": 11.107999999999997
+        }
+      ],
+      "months": 24,
+      "eq_portfolio_net": 95.7,
+      "eq_portfolio_dd": 9.9,
+      "single_dd_min": 5.3,
+      "single_dd_avg": 7.9,
+      "single_dd_max": 11.6,
+      "sum_single_net": 574.4,
+      "mean_pairwise_corr": -0.053,
+      "corr": {
+        "AVAXUSDT|BNBUSDT": 0.605,
+        "AVAXUSDT|LTCUSDT": -0.022,
+        "AVAXUSDT|LINKUSDT": -0.318,
+        "AVAXUSDT|NEARUSDT": -0.215,
+        "AVAXUSDT|DOTUSDT": 0.054,
+        "BNBUSDT|AVAXUSDT": 0.605,
+        "BNBUSDT|LTCUSDT": -0.149,
+        "BNBUSDT|LINKUSDT": -0.213,
+        "BNBUSDT|NEARUSDT": -0.153,
+        "BNBUSDT|DOTUSDT": -0.095,
+        "LTCUSDT|AVAXUSDT": -0.022,
+        "LTCUSDT|BNBUSDT": -0.149,
+        "LTCUSDT|LINKUSDT": -0.321,
+        "LTCUSDT|NEARUSDT": -0.062,
+        "LTCUSDT|DOTUSDT": 0.203,
+        "LINKUSDT|AVAXUSDT": -0.318,
+        "LINKUSDT|BNBUSDT": -0.213,
+        "LINKUSDT|LTCUSDT": -0.321,
+        "LINKUSDT|NEARUSDT": -0.05,
+        "LINKUSDT|DOTUSDT": -0.297,
+        "NEARUSDT|AVAXUSDT": -0.215,
+        "NEARUSDT|BNBUSDT": -0.153,
+        "NEARUSDT|LTCUSDT": -0.062,
+        "NEARUSDT|LINKUSDT": -0.05,
+        "NEARUSDT|DOTUSDT": 0.244,
+        "DOTUSDT|AVAXUSDT": 0.054,
+        "DOTUSDT|BNBUSDT": -0.095,
+        "DOTUSDT|LTCUSDT": 0.203,
+        "DOTUSDT|LINKUSDT": -0.297,
+        "DOTUSDT|NEARUSDT": 0.244
+      }
+    }
+  },
+  "corr_drift": -0.125,
+  "elapsed_sec": 136.6
+}
