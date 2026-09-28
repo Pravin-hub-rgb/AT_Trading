@@ -112,4 +112,74 @@ each form.
 - Stage 47 swept 17 campaign policies; caps improved OOS (+70.2→+95.8) but
   gutted IS. Era split, again.
 
-<!-- HANDOVER2 -->
+
+## 4. The M2 retraction — read before touching any sizing number
+
+`sMZX` (`1.5^count` on M2/ZC/X) was the repo's only lever that ever passed at
+scale (6/6, champion +346.5 IS / +130.4 OOS). **The user caught that its
+load-bearing flag is forward-looking, and they were right.**
+
+- `cur_mag_atr = |seg.end_px − seg.start_px| / atr15` reads the swing's **END**
+  price. `backend_check_wd_days.py:108` asserts `fs_at_idx >= seg.end_idx` —
+  the swing confirms at/after the end bar, while the entry fires at B2/flip,
+  **before** it ends. The number does not exist at decision time.
+- `CAPITAL_STAGE_PLAN.md` had already recorded all of this: send-time
+  replacement agrees only **77.5%** (bar: 95%), fires on **0-6 trades of
+  76-500**, `mag_so_far` → 0/6, `ramp_so_far` → 0/6, and **"a send-time
+  replacement for M2 was searched for and does not exist."**
+  **I failed to read this before building on the number.**
+- My 50-draw matched-count shuffle null showed the flags beating random size
+  assignment 49-50/50. I called it SELECTION. **The null cannot separate skill
+  from look-ahead** — a feature encoding the trade's own future beats a random
+  null every time.
+- Decomposition: **M2 alone is 4/4** (the look-ahead flag), ZC 1/4, X 2/4 but
+  its OOS "passes" are on 7 and 9 trades, **M2-free ZC+X is 3/4** (fails
+  is/champion at 80th percentile, 10/50 shuffles beat it).
+
+**New standing rule: a matched-count null is NECESSARY BUT NOT SUFFICIENT.**
+Any feature touching future bars needs an explicit causality audit of its
+inputs **before** the arm is run. → `SMZX_LOOKAHEAD_RETRACTION.md`
+
+## 5. Three traps that produced spectacular fake numbers
+
+1. **Degenerate risk denominator.** A stop near the fill makes R explode. A
+   real harness printed **avg +19.4R, net +9700R** before being caught. Any
+   stop closer than ~0.25 × ATR is inside the noise. Guard: exclude and
+   *count* the excluded trades, never average them in.
+2. **Comparing across buckets without a constant denominator.** The user
+   caught this: for a long the original stop sits at the swing LOW, and by FS
+   price has moved away, so `|entry − sl|` **grows with swing size** and R
+   gets divided by a bigger number. That made "big swings are worst" look
+   like a finding; the claim had to be partially retracted. Fix: report a
+   **size-neutral measure** (`% move`) alongside R, and hold the denominator
+   constant (1.0 × ATR) when comparing across scales.
+3. **Wrong-cohort bugs** (worth memorising):
+   - `entry_idx`/`exit_idx` are **NOT c1h indices** (`entry_idx=204` resolves
+     to 2023-01-09 for a trade entered 2023-01-02, true index 50). Use
+     **timestamps**.
+   - Per-scope feature maps leaking — a loop that leaves the last scope's map
+     in the module makes the *other* era's arms look trades up in the wrong
+     table. Symptom: `gray 0` in one era, normal in the other. Re-seed per
+     cell.
+   - Drawdown computed on **sorted** R silently reports `max_dd 1.0`. Walk the
+     curve in **time order**.
+
+## 6. Process rules this repo enforces
+
+- **Controls first.** Assert reference ledgers before any verdict; abort on
+  mismatch. `exp_b1_entry.py` does this.
+- **Never edit `backend/src/btc/btc_engine.py`.** Rebuild it in memory with
+  `types.ModuleType` + `exec`, install into `sys.modules` **before** the craze
+  loader imports it. See `exp_sl_tighten.py`, `exp_b1_entry.py`.
+- **Match anchors with exact indentation, assert count == 1.** The 8-space
+  anchor is a substring of the 12-space one — bare-text matching silently
+  double-patches.
+- **GRAY, not skip** (Rule 18): trade runs to completion, P&L → r=0, slot
+  held, **loss streak must still advance** (`exp_gray_streak=True`), cooldown
+  untouched. Skipping frees the slot and admits a worse replacement (wick
+  gate: skip −39.0R vs gray +28.1R in IS).
+- **Same sign in both eras** on both lanes, or it is closed. This session
+  produced seven such IS/OOS flips.
+- Report **ex-best-3/5** on anything tail-dependent.
+<!-- HANDOVER3 -->
+
