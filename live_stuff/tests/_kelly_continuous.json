@@ -1,0 +1,74 @@
+{
+  "lane": "champion_multi_sw10",
+  "eras": {
+    "is": {
+      "halt_k3": {
+        "n": 500,
+        "net": 325.7817,
+        "acf1": 0.0651,
+        "acf2": -0.028,
+        "band": 0.0877,
+        "acf1_outside": false
+      },
+      "halt_k0": {
+        "n": 557,
+        "net": 308.5046,
+        "acf1": 0.1317,
+        "acf2": -0.0234,
+        "band": 0.083,
+        "acf1_outside": true
+      },
+      "acf1_delta_halt_off": 0.0666,
+      "kelly": {
+        "n": 500,
+        "mu": 0.89045,
+        "sigma2_naive": 25.84175,
+        "bandwidth_K": 5,
+        "sigma2_long_run": 21.75138,
+        "rho1": 0.0651,
+        "f_naive": 0.0345,
+        "f_long_run": 0.0409,
+        "fractions": {
+          "1.0": 0.0409,
+          "0.5": 0.0205,
+          "0.25": 0.0102
+        }
+      }
+    },
+    "oos": {
+      "halt_k3": {
+        "n": 279,
+        "net": 70.1505,
+        "acf1": 0.4981,
+        "acf2": 0.1494,
+        "band": 0.1173,
+        "acf1_outside": true
+      },
+      "halt_k0": {
+        "n": 320,
+        "net": 60.4937,
+        "acf1": 0.4813,
+        "acf2": 0.159,
+        "band": 0.1096,
+        "acf1_outside": true
+      },
+      "acf1_delta_halt_off": -0.0168,
+      "kelly": {
+        "n": 279,
+        "mu": 0.37894,
+        "sigma2_naive": 25.49978,
+        "bandwidth_K": 5,
+        "sigma2_long_run": 57.27302,
+        "rho1": 0.4981,
+        "f_naive": 0.0149,
+        "f_long_run": 0.0066,
+        "fractions": {
+          "1.0": 0.0066,
+          "0.5": 0.0033,
+          "0.25": 0.0017
+        }
+      }
+    }
+  },
+  "elapsed_sec": 73.8
+}
