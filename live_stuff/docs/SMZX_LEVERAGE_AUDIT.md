@@ -1,4 +1,15 @@
-# sMZX LEVERAGE AUDIT — it is REAL SELECTION (4/4), not a leverage trap
+# sMZX LEVERAGE AUDIT — real selection on the null test, BUT SEE THE RETRACTION
+
+> **RETRACTED IN PART.** `SMZX_LOOKAHEAD_RETRACTION.md` withdraws the
+> "SELECTION" interpretation below. The shuffle test here is the
+> matched-count null this repo requires, and it does show the flags beat
+> random size assignment — but it **cannot** separate skill from
+> look-ahead, and the load-bearing flag **M2 is forward-looking** (it reads
+> the swing segment's `end_px`, which does not exist at B2/flip entry time;
+> `backend_check_wd_days.py:108` asserts `fs_at_idx >= seg.end_idx`). No
+> send-time replacement exists — `CAPITAL_STAGE_PLAN.md` tested and recorded
+> that before this run, and this run failed to read it. Read the retraction
+> first; the numbers below are accurate but were over-interpreted.
 
 The only lever in this repo that ever passed at scale deserved the same test
 that killed `monster_sizing` M1. It now has one, and it passes.
