@@ -1,0 +1,338 @@
+{
+  "stage": "fs_time_geometry",
+  "cells": {
+    "is/champion": {
+      "n_all": 500,
+      "n_open": 314,
+      "terciles": [
+        6.98,
+        9.6
+      ],
+      "buckets": {
+        "low mag": {
+          "remaining": {
+            "n": 105,
+            "net": 60.8,
+            "mean": 0.579,
+            "trimmed": -0.082,
+            "median": -0.505
+          },
+          "r_at_fs": {
+            "n": 105,
+            "net": 53.6,
+            "mean": 0.511,
+            "trimmed": -0.001,
+            "median": -0.075
+          },
+          "final": {
+            "n": 105,
+            "net": 114.4,
+            "mean": 1.09,
+            "trimmed": -0.081,
+            "median": -0.993
+          },
+          "mean_mag": 5.66
+        },
+        "mid mag": {
+          "remaining": {
+            "n": 105,
+            "net": 142.8,
+            "mean": 1.36,
+            "trimmed": 0.159,
+            "median": -0.347
+          },
+          "r_at_fs": {
+            "n": 105,
+            "net": 87.3,
+            "mean": 0.831,
+            "trimmed": 0.542,
+            "median": 0.29
+          },
+          "final": {
+            "n": 105,
+            "net": 230.1,
+            "mean": 2.191,
+            "trimmed": 0.751,
+            "median": -0.196
+          },
+          "mean_mag": 8.13
+        },
+        "high mag": {
+          "remaining": {
+            "n": 104,
+            "net": 60.1,
+            "mean": 0.578,
+            "trimmed": -0.112,
+            "median": -0.213
+          },
+          "r_at_fs": {
+            "n": 104,
+            "net": 226.6,
+            "mean": 2.179,
+            "trimmed": 1.026,
+            "median": 0.545
+          },
+          "final": {
+            "n": 104,
+            "net": 286.7,
+            "mean": 2.757,
+            "trimmed": 1.037,
+            "median": 0.4
+          },
+          "mean_mag": 13.09
+        }
+      },
+      "remaining_high_minus_low": -0.0
+    },
+    "is/utcsat": {
+      "n_all": 454,
+      "n_open": 291,
+      "terciles": [
+        7.12,
+        9.7
+      ],
+      "buckets": {
+        "low mag": {
+          "remaining": {
+            "n": 98,
+            "net": 58.0,
+            "mean": 0.592,
+            "trimmed": -0.028,
+            "median": -0.495
+          },
+          "r_at_fs": {
+            "n": 98,
+            "net": 56.9,
+            "mean": 0.58,
+            "trimmed": 0.026,
+            "median": -0.054
+          },
+          "final": {
+            "n": 98,
+            "net": 114.9,
+            "mean": 1.172,
+            "trimmed": 0.001,
+            "median": -0.993
+          },
+          "mean_mag": 5.71
+        },
+        "mid mag": {
+          "remaining": {
+            "n": 97,
+            "net": 155.9,
+            "mean": 1.607,
+            "trimmed": 0.136,
+            "median": -0.347
+          },
+          "r_at_fs": {
+            "n": 97,
+            "net": 74.7,
+            "mean": 0.77,
+            "trimmed": 0.526,
+            "median": 0.315
+          },
+          "final": {
+            "n": 97,
+            "net": 230.6,
+            "mean": 2.378,
+            "trimmed": 0.71,
+            "median": -0.197
+          },
+          "mean_mag": 8.29
+        },
+        "high mag": {
+          "remaining": {
+            "n": 96,
+            "net": 44.3,
+            "mean": 0.461,
+            "trimmed": -0.132,
+            "median": -0.254
+          },
+          "r_at_fs": {
+            "n": 96,
+            "net": 239.7,
+            "mean": 2.497,
+            "trimmed": 1.312,
+            "median": 0.634
+          },
+          "final": {
+            "n": 96,
+            "net": 284.0,
+            "mean": 2.958,
+            "trimmed": 1.245,
+            "median": 0.651
+          },
+          "mean_mag": 13.56
+        }
+      },
+      "remaining_high_minus_low": -0.131
+    },
+    "oos/champion": {
+      "n_all": 279,
+      "n_open": 179,
+      "terciles": [
+        7.39,
+        9.71
+      ],
+      "buckets": {
+        "low mag": {
+          "remaining": {
+            "n": 60,
+            "net": 43.4,
+            "mean": 0.723,
+            "trimmed": -0.168,
+            "median": -0.495
+          },
+          "r_at_fs": {
+            "n": 60,
+            "net": 7.3,
+            "mean": 0.122,
+            "trimmed": 0.022,
+            "median": -0.023
+          },
+          "final": {
+            "n": 60,
+            "net": 50.7,
+            "mean": 0.846,
+            "trimmed": -0.178,
+            "median": -0.521
+          },
+          "mean_mag": 6.0
+        },
+        "mid mag": {
+          "remaining": {
+            "n": 60,
+            "net": 46.4,
+            "mean": 0.773,
+            "trimmed": -0.139,
+            "median": -0.59
+          },
+          "r_at_fs": {
+            "n": 60,
+            "net": 47.5,
+            "mean": 0.791,
+            "trimmed": 0.546,
+            "median": 0.444
+          },
+          "final": {
+            "n": 60,
+            "net": 93.9,
+            "mean": 1.565,
+            "trimmed": 0.549,
+            "median": -0.17
+          },
+          "mean_mag": 8.37
+        },
+        "high mag": {
+          "remaining": {
+            "n": 59,
+            "net": 11.1,
+            "mean": 0.188,
+            "trimmed": -0.061,
+            "median": -0.149
+          },
+          "r_at_fs": {
+            "n": 59,
+            "net": 50.0,
+            "mean": 0.848,
+            "trimmed": 0.583,
+            "median": 0.383
+          },
+          "final": {
+            "n": 59,
+            "net": 61.1,
+            "mean": 1.036,
+            "trimmed": 0.608,
+            "median": 0.274
+          },
+          "mean_mag": 12.98
+        }
+      },
+      "remaining_high_minus_low": -0.535
+    },
+    "oos/utcsat": {
+      "n_all": 253,
+      "n_open": 158,
+      "terciles": [
+        7.33,
+        9.71
+      ],
+      "buckets": {
+        "low mag": {
+          "remaining": {
+            "n": 53,
+            "net": 31.6,
+            "mean": 0.596,
+            "trimmed": -0.221,
+            "median": -0.533
+          },
+          "r_at_fs": {
+            "n": 53,
+            "net": 5.7,
+            "mean": 0.108,
+            "trimmed": 0.01,
+            "median": -0.026
+          },
+          "final": {
+            "n": 53,
+            "net": 37.3,
+            "mean": 0.704,
+            "trimmed": -0.228,
+            "median": -0.72
+          },
+          "mean_mag": 5.93
+        },
+        "mid mag": {
+          "remaining": {
+            "n": 53,
+            "net": 46.2,
+            "mean": 0.872,
+            "trimmed": -0.006,
+            "median": -0.455
+          },
+          "r_at_fs": {
+            "n": 53,
+            "net": 45.8,
+            "mean": 0.864,
+            "trimmed": 0.639,
+            "median": 0.466
+          },
+          "final": {
+            "n": 53,
+            "net": 92.0,
+            "mean": 1.736,
+            "trimmed": 0.767,
+            "median": 0.117
+          },
+          "mean_mag": 8.38
+        },
+        "high mag": {
+          "remaining": {
+            "n": 52,
+            "net": 5.4,
+            "mean": 0.105,
+            "trimmed": -0.08,
+            "median": -0.147
+          },
+          "r_at_fs": {
+            "n": 52,
+            "net": 52.9,
+            "mean": 1.017,
+            "trimmed": 0.694,
+            "median": 0.413
+          },
+          "final": {
+            "n": 52,
+            "net": 58.3,
+            "mean": 1.121,
+            "trimmed": 0.767,
+            "median": 0.422
+          },
+          "mean_mag": 13.13
+        }
+      },
+      "remaining_high_minus_low": -0.491
+    }
+  },
+  "elapsed_sec": 71.4
+}
