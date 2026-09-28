@@ -1,0 +1,193 @@
+{
+  "lane": "champion_multi_sw10",
+  "bands": [
+    "<0.25",
+    "0.25-0.50",
+    "0.50-0.75",
+    "0.75-1.00",
+    ">1.00"
+  ],
+  "lookback": 60,
+  "target_r": 3.0,
+  "eras": {
+    "is": {
+      "baseline": {
+        "n": 500,
+        "net": 325.7817
+      },
+      "signals": 2307,
+      "rows": {
+        "<0.25": {
+          "n": 0,
+          "net": 0.0,
+          "net_yr": 0.0,
+          "wr": 0,
+          "pf": null,
+          "avg_r": 0.0,
+          "trimmed_mean": 0.0,
+          "max_dd": 0.0,
+          "ex_best3": 0.0,
+          "ex_best5": 0.0,
+          "stats": {
+            "trades": 0,
+            "excluded_geometry": 0
+          }
+        },
+        "0.25-0.50": {
+          "n": 12,
+          "net": 2.5,
+          "net_yr": 0.68,
+          "wr": 33.3,
+          "pf": 1.419,
+          "avg_r": 0.207,
+          "trimmed_mean": 0.207,
+          "max_dd": 3.0,
+          "ex_best3": -4.9,
+          "ex_best5": -5.7,
+          "stats": {
+            "trades": 12,
+            "excluded_geometry": 0
+          }
+        },
+        "0.50-0.75": {
+          "n": 27,
+          "net": 0.5,
+          "net_yr": 0.14,
+          "wr": 48.1,
+          "pf": 1.039,
+          "avg_r": 0.018,
+          "trimmed_mean": -0.06,
+          "max_dd": 6.3,
+          "ex_best3": -7.2,
+          "ex_best5": -9.7,
+          "stats": {
+            "trades": 27,
+            "excluded_geometry": 0
+          }
+        },
+        "0.75-1.00": {
+          "n": 219,
+          "net": 3.2,
+          "net_yr": 0.87,
+          "wr": 34.2,
+          "pf": 1.024,
+          "avg_r": 0.015,
+          "trimmed_mean": -0.084,
+          "max_dd": 25.7,
+          "ex_best3": -5.8,
+          "ex_best5": -11.8,
+          "stats": {
+            "trades": 219,
+            "excluded_geometry": 0
+          }
+        },
+        ">1.00": {
+          "n": 1027,
+          "net": 15.9,
+          "net_yr": 4.34,
+          "wr": 28.7,
+          "pf": 1.022,
+          "avg_r": 0.016,
+          "trimmed_mean": -0.093,
+          "max_dd": 51.7,
+          "ex_best3": 6.9,
+          "ex_best5": 0.9,
+          "stats": {
+            "trades": 1027,
+            "excluded_geometry": 2
+          }
+        }
+      }
+    },
+    "oos": {
+      "baseline": {
+        "n": 279,
+        "net": 70.1505
+      },
+      "signals": 1255,
+      "rows": {
+        "<0.25": {
+          "n": 0,
+          "net": 0.0,
+          "net_yr": 0.0,
+          "wr": 0,
+          "pf": null,
+          "avg_r": 0.0,
+          "trimmed_mean": 0.0,
+          "max_dd": 0.0,
+          "ex_best3": 0.0,
+          "ex_best5": 0.0,
+          "stats": {
+            "trades": 0,
+            "excluded_geometry": 0
+          }
+        },
+        "0.25-0.50": {
+          "n": 0,
+          "net": 0.0,
+          "net_yr": 0.0,
+          "wr": 0,
+          "pf": null,
+          "avg_r": 0.0,
+          "trimmed_mean": 0.0,
+          "max_dd": 0.0,
+          "ex_best3": 0.0,
+          "ex_best5": 0.0,
+          "stats": {
+            "trades": 0,
+            "excluded_geometry": 0
+          }
+        },
+        "0.50-0.75": {
+          "n": 5,
+          "net": 0.8,
+          "net_yr": 0.39,
+          "wr": 20.0,
+          "pf": 1.349,
+          "avg_r": 0.155,
+          "trimmed_mean": 0.155,
+          "max_dd": 1.8,
+          "ex_best3": -1.5,
+          "ex_best5": 0,
+          "stats": {
+            "trades": 5,
+            "excluded_geometry": 0
+          }
+        },
+        "0.75-1.00": {
+          "n": 110,
+          "net": -15.7,
+          "net_yr": -7.85,
+          "wr": 27.3,
+          "pf": 0.79,
+          "avg_r": -0.143,
+          "trimmed_mean": -0.257,
+          "max_dd": 19.3,
+          "ex_best3": -24.7,
+          "ex_best5": -30.7,
+          "stats": {
+            "trades": 110,
+            "excluded_geometry": 0
+          }
+        },
+        ">1.00": {
+          "n": 585,
+          "net": -48.8,
+          "net_yr": -24.38,
+          "wr": 26.3,
+          "pf": 0.885,
+          "avg_r": -0.083,
+          "trimmed_mean": -0.203,
+          "max_dd": 77.9,
+          "ex_best3": -57.8,
+          "ex_best5": -63.8,
+          "stats": {
+            "trades": 585,
+            "excluded_geometry": 1
+          }
+        }
+      }
+    }
+  },
+  "elapsed_sec": 47.0
+}
