@@ -62,6 +62,25 @@ and tail-concentrated, and the tail is the 1-in-4 windows that reached
 windows IS / 11 OOS. Any experiment that varies `cap_days` is moving ~6%
 of the book.
 
+> ### ⚠️ CORRECTION — P3-A ran and inverted this conclusion
+>
+> The two paragraphs above are right about the *numbers* and wrong about
+> the *resolution*. The user pushed back ("we still get +325R, so either
+> the window contributes none of it or we are missing something") and the
+> second horn is what happened. Same 15m engine, window removed:
+> **+227.5R → +17.0R IS, +22.7R → −24.7R OOS.** The gate is worth +210.5R
+> and +47.4R, and in OOS it is the difference between positive and
+> negative.
+>
+> The 15m layer is **not** finding its own edge inside a dead window. The
+> 1h window is a **quality oracle**, not a permission slice: its 15m
+> trades run 55.7% WR when the window reached +3R and **8.6% WR** when it
+> hit −1R. And the oracle's verdict arrives only at the window's exit, a
+> median 1.1 days later — which is the real "something we are missing."
+> Full numbers, and the circularity caveat that goes with them, in
+> **`HTF_ATTRIBUTION.md`**. New top item: **P3-B, read the oracle early.**
+
+
 ## What this opens
 
 Not a new entry idea — a **characterisation** of the window distribution

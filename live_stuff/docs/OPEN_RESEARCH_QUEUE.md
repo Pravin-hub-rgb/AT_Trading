@@ -189,6 +189,72 @@ not P7:** keep the pivot generator the book was fitted to, change the
 TILING. Cheapest falsifier in the list: Jaccard overlap between the Walker
 and ZigZag pivot streams on control data — if > 0.9, dead in 30 minutes.
 
+## `[x]` P3 — score the 1h HTF layer's own P&L — DONE, and it INVERTED
+
+Run as `probe_htf_attribution.py`. Full write-up: **`HTF_ATTRIBUTION.md`**.
+
+The user challenged the "15m finds its own edge in a dead window" reading:
+*if 70% of windows are dead and we still make +325R, either the window
+contributes none of it or we're missing something.* **Second horn, and it
+is the bigger result.**
+
+**Q1 — 1h standalone is worthless as a book.** flip +50.6R IS but
+**−6.0R OOS** (PF 0.96); decisive +28.1 / −19.6; b2 +4.0 / −7.0.
+
+**Q3 — but the window is a hugely binding gate.** Same 15m engine, same
+swings, same exits, window removed:
+
+| | 1h-gated | ungated | gate worth |
+|---|---|---|---|
+| IS | 396t **+227.5R** PF 1.87 | 843t **+17.0R** PF 1.04 | **+210.5R** |
+| OOS | 242t **+22.7R** PF 1.14 | 530t **−24.7R** PF 0.91 | **+47.4R** |
+
+In OOS the window is the difference between positive and negative.
+
+**Q2 — the mechanism.** Cascade R by parent window's exit: **+3R windows →
+55.7% WR, +231.4R. −1R windows → 8.6% WR, −133.6R** on 47% of all IS
+trades. The window is a **quality oracle**, not a permission slice — and
+its verdict only lands at the exit, a median 1.1 days later.
+
+**Caveat recorded up front:** Q2 is partly circular (a +3R window and a
+−1R window are different price paths). Q3 is not — it is a live gate.
+
+**Consequence for the queue:** the pre-registered direction on P4 is now
+**suspect**. The time-capped windows are the IS book's **+131.2R** bucket
+(2nd largest), so cutting `cap_days` to 8 would likely destroy R rather
+than add it. P4 must be re-registered before it runs.
+
+## `[ ]` P3-B — READ THE ORACLE EARLY  ← **this is the new #1**
+
+The user asked what the 1h layer should do differently, since B1/B2/FLIP
+obviously do not work there. **Answer: the 1h layer's job is not to be a
+book, it is to be an oracle — and the oracle is currently read only in
+hindsight, a median 1.1 days late.**
+
+`HTF_ATTRIBUTION.md` shows the 1h leg has no standalone edge (best mode
++50.6R IS, **−6.0R OOS**) yet gates the 15m book worth +210.5R IS /
++47.4R OOS, and splits it into a 55.7%-WR cohort (+231R) and an 8.6%-WR
+cohort (−134R). **That verdict is knowable in hindsight but partially
+LIVE** — the 1h leg passes through +1.5R and −1R while the window is still
+open. Use that state inside the open window.
+
+**This is NOT the dead `r_touch`.** `r_touch` closed the *window* at
++1.5R and lost 130R. This leaves the window open and changes what the 15m
+layer may do inside it. Opposite action, different mechanism.
+
+**Falsifier (pre-registered before any run):** the live-oracle arm must
+beat the same arm using only information available at window open, on
+**both** eras. If it does not, the oracle is genuinely unknowable in real
+time and Q2's entire advantage is hindsight — in which case the honest
+conclusion is that the 1h layer is a good *hindsight* label and a useless
+*live* gate, and the whole programme should stop pretending otherwise.
+
+**Note this is also the only item that can resolve W2.** If the oracle is
+readable early, then closing a window at +1.5R losing 130R becomes
+intelligible: `r_touch` threw away the *timing* that made the early
+verdict useful. Run P3-B before W2 and W1 — it is the same measurement
+seen from the live side.
+
 ---
 
 ## OPEN — the real queue
