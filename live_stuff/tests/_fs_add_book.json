@@ -1,0 +1,307 @@
+{
+  "stage": "fs_add_book",
+  "add": 0.5,
+  "cells": {
+    "is/champion": {
+      "base": {
+        "n": 500,
+        "net": 325.7817,
+        "wr": 27.8,
+        "pf": 1.8148,
+        "max_dd": 27.7242,
+        "calmar": 3.2019,
+        "net_per_yr": 88.769,
+        "max_streak": 16
+      },
+      "n_actionable": 314,
+      "arms": {
+        "CTRL add_BAD (bottom mag)": {
+          "n_adds": 105,
+          "gross_R": 30.4,
+          "cost_R": 9.4,
+          "net_of_cost": 20.9,
+          "armed_net": 346.7148,
+          "DELTA": 20.9,
+          "armed_pf": 1.7932,
+          "armed_dd": 29.5726,
+          "d_dd": -1.8,
+          "armed_calmar": 3.1946
+        },
+        "CTRL add_any (all open)": {
+          "n_adds": 314,
+          "gross_R": 131.8,
+          "cost_R": 24.5,
+          "net_of_cost": 107.3,
+          "armed_net": 433.0984,
+          "DELTA": 107.3,
+          "armed_pf": 1.871,
+          "armed_dd": 41.6739,
+          "d_dd": -13.9,
+          "armed_calmar": 2.8318
+        },
+        "add_M2 (top third mag)": {
+          "n_adds": 210,
+          "gross_R": 101.6,
+          "cost_R": 15.1,
+          "net_of_cost": 86.5,
+          "armed_net": 412.2708,
+          "DELTA": 86.5,
+          "armed_pf": 1.8963,
+          "armed_dd": 40.8733,
+          "d_dd": -13.1,
+          "armed_calmar": 2.7484
+        },
+        "add_wide (top half mag)": {
+          "n_adds": 157,
+          "gross_R": 88.5,
+          "cost_R": 11.7,
+          "net_of_cost": 76.8,
+          "armed_net": 402.5773,
+          "DELTA": 76.8,
+          "armed_pf": 1.8986,
+          "armed_dd": 40.0355,
+          "d_dd": -12.3,
+          "armed_calmar": 2.7399
+        },
+        "add_slow (bars_fs top third)": {
+          "n_adds": 105,
+          "gross_R": 97.4,
+          "cost_R": 11.5,
+          "net_of_cost": 85.9,
+          "armed_net": 411.6627,
+          "DELTA": 85.9,
+          "armed_pf": 1.9344,
+          "armed_dd": 39.1386,
+          "d_dd": -11.4,
+          "armed_calmar": 2.866
+        }
+      }
+    },
+    "is/utcsat": {
+      "base": {
+        "n": 454,
+        "net": 358.95,
+        "wr": 29.07,
+        "pf": 2.0075,
+        "max_dd": 21.1764,
+        "calmar": 4.6187,
+        "net_per_yr": 97.807,
+        "max_streak": 13
+      },
+      "n_actionable": 291,
+      "arms": {
+        "CTRL add_BAD (bottom mag)": {
+          "n_adds": 98,
+          "gross_R": 29.0,
+          "cost_R": 7.9,
+          "net_of_cost": 21.1,
+          "armed_net": 380.0461,
+          "DELTA": 21.1,
+          "armed_pf": 1.9705,
+          "armed_dd": 24.5772,
+          "d_dd": -3.4,
+          "armed_calmar": 4.2135
+        },
+        "CTRL add_any (all open)": {
+          "n_adds": 291,
+          "gross_R": 129.1,
+          "cost_R": 22.2,
+          "net_of_cost": 106.9,
+          "armed_net": 465.8063,
+          "DELTA": 106.9,
+          "armed_pf": 2.0366,
+          "armed_dd": 38.3315,
+          "d_dd": -17.2,
+          "armed_calmar": 3.3112
+        },
+        "add_M2 (top third mag)": {
+          "n_adds": 194,
+          "gross_R": 100.8,
+          "cost_R": 14.4,
+          "net_of_cost": 86.4,
+          "armed_net": 445.3226,
+          "DELTA": 86.4,
+          "armed_pf": 2.0755,
+          "armed_dd": 35.83,
+          "d_dd": -14.7,
+          "armed_calmar": 3.3866
+        },
+        "add_wide (top half mag)": {
+          "n_adds": 146,
+          "gross_R": 80.0,
+          "cost_R": 11.4,
+          "net_of_cost": 68.5,
+          "armed_net": 427.4742,
+          "DELTA": 68.5,
+          "armed_pf": 2.0608,
+          "armed_dd": 34.8919,
+          "d_dd": -13.7,
+          "armed_calmar": 3.3383
+        },
+        "add_slow (bars_fs top third)": {
+          "n_adds": 106,
+          "gross_R": 92.8,
+          "cost_R": 12.0,
+          "net_of_cost": 80.8,
+          "armed_net": 439.7879,
+          "DELTA": 80.8,
+          "armed_pf": 2.1027,
+          "armed_dd": 33.9539,
+          "d_dd": -12.8,
+          "armed_calmar": 3.5293
+        }
+      }
+    },
+    "oos/champion": {
+      "base": {
+        "n": 279,
+        "net": 70.1505,
+        "wr": 27.24,
+        "pf": 1.3437,
+        "max_dd": 53.1877,
+        "calmar": 0.6595,
+        "net_per_yr": 35.075,
+        "max_streak": 15
+      },
+      "n_actionable": 179,
+      "arms": {
+        "CTRL add_BAD (bottom mag)": {
+          "n_adds": 60,
+          "gross_R": 21.7,
+          "cost_R": 2.8,
+          "net_of_cost": 18.9,
+          "armed_net": 89.0809,
+          "DELTA": 18.9,
+          "armed_pf": 1.3988,
+          "armed_dd": 57.2933,
+          "d_dd": -4.1,
+          "armed_calmar": 0.7774
+        },
+        "CTRL add_any (all open)": {
+          "n_adds": 179,
+          "gross_R": 50.4,
+          "cost_R": 7.5,
+          "net_of_cost": 42.9,
+          "armed_net": 113.0379,
+          "DELTA": 42.9,
+          "armed_pf": 1.4402,
+          "armed_dd": 66.379,
+          "d_dd": -13.2,
+          "armed_calmar": 0.8515
+        },
+        "add_M2 (top third mag)": {
+          "n_adds": 120,
+          "gross_R": 29.9,
+          "cost_R": 4.8,
+          "net_of_cost": 25.1,
+          "armed_net": 95.2298,
+          "DELTA": 25.1,
+          "armed_pf": 1.401,
+          "armed_dd": 62.2734,
+          "d_dd": -9.1,
+          "armed_calmar": 0.7646
+        },
+        "add_wide (top half mag)": {
+          "n_adds": 90,
+          "gross_R": 32.4,
+          "cost_R": 3.2,
+          "net_of_cost": 29.2,
+          "armed_net": 99.3911,
+          "DELTA": 29.2,
+          "armed_pf": 1.4365,
+          "armed_dd": 58.0138,
+          "d_dd": -4.8,
+          "armed_calmar": 0.8566
+        },
+        "add_slow (bars_fs top third)": {
+          "n_adds": 64,
+          "gross_R": 17.9,
+          "cost_R": 3.0,
+          "net_of_cost": 14.9,
+          "armed_net": 85.0202,
+          "DELTA": 14.9,
+          "armed_pf": 1.3789,
+          "armed_dd": 64.3061,
+          "d_dd": -11.1,
+          "armed_calmar": 0.6611
+        }
+      }
+    },
+    "oos/utcsat": {
+      "base": {
+        "n": 253,
+        "net": 60.2062,
+        "wr": 28.85,
+        "pf": 1.3281,
+        "max_dd": 29.3814,
+        "calmar": 1.0246,
+        "net_per_yr": 30.103,
+        "max_streak": 9
+      },
+      "n_actionable": 158,
+      "arms": {
+        "CTRL add_BAD (bottom mag)": {
+          "n_adds": 53,
+          "gross_R": 15.8,
+          "cost_R": 2.4,
+          "net_of_cost": 13.4,
+          "armed_net": 73.5781,
+          "DELTA": 13.4,
+          "armed_pf": 1.3651,
+          "armed_dd": 34.055,
+          "d_dd": -4.7,
+          "armed_calmar": 1.0803
+        },
+        "CTRL add_any (all open)": {
+          "n_adds": 158,
+          "gross_R": 41.6,
+          "cost_R": 6.7,
+          "net_of_cost": 34.9,
+          "armed_net": 95.1341,
+          "DELTA": 34.9,
+          "armed_pf": 1.4176,
+          "armed_dd": 37.3269,
+          "d_dd": -7.9,
+          "armed_calmar": 1.2743
+        },
+        "add_M2 (top third mag)": {
+          "n_adds": 106,
+          "gross_R": 25.3,
+          "cost_R": 4.3,
+          "net_of_cost": 21.0,
+          "armed_net": 81.164,
+          "DELTA": 21.0,
+          "armed_pf": 1.3858,
+          "armed_dd": 32.6532,
+          "d_dd": -3.3,
+          "armed_calmar": 1.2428
+        },
+        "add_wide (top half mag)": {
+          "n_adds": 79,
+          "gross_R": 31.8,
+          "cost_R": 2.8,
+          "net_of_cost": 29.0,
+          "armed_net": 89.1743,
+          "DELTA": 29.0,
+          "armed_pf": 1.4438,
+          "armed_dd": 31.976,
+          "d_dd": -2.6,
+          "armed_calmar": 1.3944
+        },
+        "add_slow (bars_fs top third)": {
+          "n_adds": 59,
+          "gross_R": 10.3,
+          "cost_R": 2.9,
+          "net_of_cost": 7.4,
+          "armed_net": 67.6182,
+          "DELTA": 7.4,
+          "armed_pf": 1.3384,
+          "armed_dd": 36.0999,
+          "d_dd": -6.7,
+          "armed_calmar": 0.9365
+        }
+      }
+    }
+  },
+  "elapsed_sec": 92.6
+}
