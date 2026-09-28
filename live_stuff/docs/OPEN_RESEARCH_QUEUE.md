@@ -197,9 +197,11 @@ and ZigZag pivot streams on control data — if > 0.9, dead in 30 minutes.
   closed **by the probe, no run needed**. The rule keeps 1,599/1,599 IS and
   901/901 OOS swings: the direction chain is built in same-direction PAIRS
   (1,1 / -1,-1), so any 3 consecutive swings contain a majority by
-  construction. A vacuous rule. A window-DURATION rule (mean window is
-  76h IS / 66h OOS, 45-47% flip rate) is the untested successor.
-  `MULTISWING_BIAS_2OF3.md`
+  construction. A vacuous rule. Its successor is **W1 above** (window
+  duration), now measured properly: median **1.17d IS / 1.06d OOS** — *not*
+  the 76h/66h mean I first wrote here, which was inflated by the 5-7% of
+  windows sitting on the 16-day cap.
+  `MULTISWING_BIAS_2OF3.md`, `BIAS_WINDOW_THEORY.md`
 - `[ ]` **1h swing geometry gate at bias-window open** *(Nemotron)* —
   magnitude / duration / confirmation source, all known at the swing's
   confirmation instant. Overlaps the graveyard's "range width" row, so it
