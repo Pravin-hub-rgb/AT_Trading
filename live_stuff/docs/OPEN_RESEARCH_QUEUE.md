@@ -53,9 +53,13 @@ deduplicated below.
 
 ## OPEN — the real queue
 
-- `[ ]` **Multi-swing 1h bias confirmation (2-of-3)** *(Nemotron)* —
-  intervenes on the *bias timeline*, which no closed row has touched.
-  Genuinely untested. **This is where to go next.**
+- `[x]` **Multi-swing 1h bias confirmation (2-of-3)** *(Nemotron)* —
+  closed **by the probe, no run needed**. The rule keeps 1,599/1,599 IS and
+  901/901 OOS swings: the direction chain is built in same-direction PAIRS
+  (1,1 / -1,-1), so any 3 consecutive swings contain a majority by
+  construction. A vacuous rule. A window-DURATION rule (mean window is
+  76h IS / 66h OOS, 45-47% flip rate) is the untested successor.
+  `MULTISWING_BIAS_2OF3.md`
 - `[ ]` **1h swing geometry gate at bias-window open** *(Nemotron)* —
   magnitude / duration / confirmation source, all known at the swing's
   confirmation instant. Overlaps the graveyard's "range width" row, so it
