@@ -181,5 +181,75 @@ inputs **before** the arm is run. → `SMZX_LOOKAHEAD_RETRACTION.md`
 - **Same sign in both eras** on both lanes, or it is closed. This session
   produced seven such IS/OOS flips.
 - Report **ex-best-3/5** on anything tail-dependent.
-<!-- HANDOVER3 -->
+
+## 7. THE OPEN DIRECTION — a 1-minute setup/entry layer
+
+**This is the only genuinely new research left, and the user asked for it
+explicitly.**
+
+Today **setup AND entry both happen on 15m.** `sw10`/`sw15`/`sw20` are all
+built from the 15m stream. The 1m series (`data["fine"]`) is used only for
+trail/exit fills. Nobody has ever run a 1m setup or a 1m-triggered entry.
+
+Verified this session:
+- 1m data exists and is large: **1,946,026 bars**, 2023-01-01 → 2026-09-13.
+- **1m swings are not computed anywhere** in the engine.
+- **BLOCKER:** `_compute_swings(fine, "continuous", min_bars=N)` over the full
+  1.95M bars did not finish in ~2 minutes and the process died —
+  memory-bound. **Solve this first; everything else is wasted until then.**
+
+Phase 0 options (none chosen, all plausible):
+  (a) chunked/windowed swing computation with overlap, stitched at boundaries;
+  (b) pre-filter 1m bars (drop low-activity bars) before swinging;
+  (c) keep swing detection on 15m, map only entry *timing* onto 1m.
+
+Phase 1: a new kwarg (e.g. `exp_entry_tf="1m"`) substituting `swings_ltf` with
+1m swings and reusing the existing `_collect_signals` call — the mark kinds
+(B1/B2/FLIP/FS) already exist in the swing structure, so this is wiring, not a
+new concept.
+
+Phase 2: pre-registered sweep, 1m setup on/off × `exp_mltf` on/off, 4 cells,
+full metrics, control asserts the shipped book.
+
+Phase 3: the user's other idea, **still untested** — `exp_mltf_green_r`: fire
+the 1m add only when the HTF trade is at least kR green (k = 0.25/0.5/1.0/1.5).
+This differs from `exp_persist`, which is time-based. Stage 44 says the cohort
+is already profitable, so the open question is whether an **R-threshold** beats
+a **time-threshold** across both eras.
+
+## 8. Other open items (not entry-timing)
+
+- **Live size state.** `v18_streak_halt.py` has **zero** hits for
+  equity/size/notional/qty. Any sizing change has no execution channel. This
+  is engineering, not research.
+- **True FS-only engine.** 2900 (IS) / 1634 (OOS) confirmed swings exist; only
+  the 314/179 that produced a B2/flip entry have been priced. An FS-only entry
+  could be a larger book. Not simulated.
+- **Forward gate / independent data.** The champion IS/OOS slices are the most
+  inspected data in this repo. Candidates here have looked excellent in IS and
+  died on OOS or cross-venue repeatedly.
+
+## 9. What the user contributed (keep listening to these)
+
+The user caught two real errors in my work:
+
+1. **M2 is forward-looking** — I had built a headline on it without reading
+   `CAPITAL_STAGE_PLAN.md`.
+2. **The stop-distance confound** — I had compared swing-magnitude buckets
+   without holding the risk denominator constant, and had to retract it.
+
+They also correctly noted the SL should sit *above* the swing low (which led
+to the clean negative in `SL_TIGHTEN.md`), and that low WR plus tail
+concentration is a **feature, not a bug** — which the stop experiment then
+proved: tighten the stop and WR drops 9 points while DD rises 4×.
+
+**Ask them before dismissing an idea.** Both errors above were raised by them
+and missed by me.
+
+## 10. Status
+
+**NOTHING ADOPTED.** Production untouched, all experimental flags default-off.
+Latest commit at time of writing. The one-page closed list is
+`CLOSED_DO_NOT_REPEAT.md` — check it before proposing anything.
+
 
