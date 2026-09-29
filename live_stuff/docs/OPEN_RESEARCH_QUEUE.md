@@ -292,6 +292,52 @@ ceiling) and builds the book from `exp_mltf` + `exp_persist` — repeated
 entries inside a window. **An underwater 1h leg is often a continuation
 state on this book, not a warning.**
 
+## `[x]` P5 — the base-book null: **M = 479.9R IS / 193.4R OOS**
+
+Full write-up: **`BASE_BOOK_NULL.md`**. Move-block bootstrap, block=20,
+10,000 draws, pins reproduced first (IS 500t/+325.8R, OOS 279t/+70.1R).
+
+| | observed | null mean | **M (p95 of a reshuffle)** | percentile | p |
+|---|---|---|---|---|---|
+| IS | +325.8R | +316.5R | **479.9R** | 45.7th | **0.914** |
+| OOS | +70.1R | +69.2R | **193.4R** | 47.9th | **0.958** |
+
+**The champion's own net sits at the 46th/48th percentile of a reshuffle
+of itself. It is not distinguishable from reordering its own trades.**
+
+### The bar every dNet must now clear
+
+- **IS: |dNet| > 479.9R**
+- **OOS: |dNet| > 193.4R**
+
+**Immediate audit of headline results against it:**
+- `exp_trail_half=1` (IS +103.8R, OOS +40.3R dNet) — **inside the null
+  in both eras.** Its famous OOS maxDD −42% is not backed by a net move
+  that clears M.
+- `partial_r` (+84.3R) — inside the null.
+- The `live_R` floor — rejected for real reasons, and would have been
+  inside M regardless.
+
+This does not make those results wrong; it means the repo has been scoring
+arms against a number whose significance was never established.
+
+### What this changes
+
+1. **The forward slice is now usable.** `data/forward/bybit/` was blocked
+   because nothing meant anything without a null. M exists. With
+   M = 193.4R, a 60-70 trade slice **can rule things out and confirm
+   nothing** — which is exactly what the queue already suspected. One
+   family-wise pre-registered pass is now the right next move.
+2. **Single net-R deltas stop being evidence.** Required instead: a
+   forward pass, or a variance-reduced statistic (per-year, per-regime,
+   ex-best-5), which the repo already computes.
+3. **Not a reason to stop.** It is a reason to stop trusting one number.
+
+**Caveat carried:** block length 20 was pre-registered to match
+`exp_montecarlo_dd.py`, not tuned. Shorter block → wider null; much
+longer → destroys the serial structure the method exists to preserve.
+A block-length sensitivity sweep is the obvious next check.
+
 ---
 
 ## OPEN — the real queue
