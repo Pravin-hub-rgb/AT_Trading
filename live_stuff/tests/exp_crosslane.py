@@ -73,6 +73,15 @@ LANES = [
     "age25_dirmatch_multi_sw10", "dirmatch_single_sw10",
     "wage10_swingpause_wskip_single_sw10",
     "wage12_swingpause_single_nowknd_sw10",
+    # the user asked for the plain v18 baseline explicitly. These are the
+    # UNMODIFIED engine: no partial exits, no stack flags, and the two
+    # shipped pin variants. They matter more than the rest, because if the
+    # filter only works on the heavily-configured lanes it is a config
+    # artifact; on a bare engine it would be a market property or nothing.
+    "baseline_no_partial_sw20",     # +122.3R
+    "baseline_no_partial_sw10",     # +137.7R
+    "_shipped_fine_58",             # shipped engine, fine 1m, chop 58
+    "_shipped_coarse_618",          # identity basis, coarse 15m
 ]
 
 # The registry's own pins are a "causal SL" variant (+248.0R for the
@@ -87,6 +96,10 @@ DOC_PINS = {
     "utcsat_multi_sw10": {"is": (454, 358.9), "oos": (253, 60.2)},
     "fullstack_wage10_cd0_single_sw10": {"is": (200, 310.7),
                                          "oos": (140, 16.9)},
+    "baseline_no_partial_sw20": {"is": (372, 122.3)},
+    "baseline_no_partial_sw10": {"is": (395, 137.7)},
+    "_shipped_fine_58": {"is": (351, None)},      # gross pin
+    "_shipped_coarse_618": {"is": (340, None)},    # gross pin
 }
 
 
