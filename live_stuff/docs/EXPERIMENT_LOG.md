@@ -1,5 +1,77 @@
 
-## Log 116 — P27/P28: the #1 candidate, finally scored with the right test
+## Log 117 — P35–P38: the decay theory completed. The short-side autopsy, and an age cap the rule never had
+
+**Date:** 2026-09-29 · **Doc:** `DECAY_THEORY.md`
+· **Harnesses:** `exp_decay_grid.py`, `exp_decay_autopsy2.py`,
+`exp_decay_stale.py`, `exp_decay_gray_skip.py`, `exp_decay_gray_sweep.py`
+
+All pins matched. **Nothing adopted.**
+
+### The user asked why shorts die at high decay, and the answer was not the one I had given
+
+I had explained the long/short symmetry with a story — "broken structure
+means the market is confused, so sit out" — without ever reading the short
+side. `exp_decay_autopsy2.py` reads it directly. Mean gross R by buying
+decay, champion:
+
+| buying decay | LONG n | meanR | SHORT n | meanR |
+|---|---|---|---|---|
+| 0.25–0.50 | 70 | +0.748 | 32 | **+1.725** |
+| 0.50–0.75 | 77 | **+3.330** | 66 | **+0.972** |
+| 0.75–1.00 | 80 | +0.178 | 113 | **−0.063** |
+
+**Shorts are best when buyers are partly stopped and worst when buyers are
+fully gone.** The assumption I had been working from — buyers repeatedly
+stopped means price is falling, therefore a short should profit — is
+inverted. When every buying support is gone the tape is sideways or up, not
+down. **The feature is a no-trade-zone detector, not a direction signal**,
+which is why blocking both sides on one number beats judging each side by
+its own structure. The mirror confirms it: six lanes, all negative.
+
+### The user found a real gap: the rule has no age cap
+
+*"last ke 4 swing buying dhoondhta hai sach mai? agar bahut poorane hain toh
+unka kya impact padega."* Correct. `decay_pair()` takes the last four
+**buying** legs and never checks how old they are, so a reading can describe
+a regime that has since been replaced.
+
+415 of 500 entries read legs fresher than a day; 71 read 1–2 days; only 14
+read 2–4 days, and those 14 average −0.006R. The stale trades are **good** —
++68.7R IS and +68.0R OOS on the champion — so the right move is to stop
+gating them, not to drop them.
+
+| rule | n | IS dNet | OOS dNet |
+|---|---|---|---|
+| B current | 307 | +34.2R | +7.5R |
+| G GRAY stale | 415 | −53.1R | −62.0R |
+| **E CAP 2d** (the user's idea) | 321 | +32.5R | **+25.1R** |
+| **C CAP 1d** | 364 | **+56.6R** | +17.4R |
+
+**Both caps beat the current rule; 1d leads in-sample, 2d leads out of
+sample, and the choice between them is not settled.** The direction of the
+fix is the point: a stale decay reading is absence of evidence, and the
+rule was treating it as evidence against the trade.
+
+### Also fixed, and it is the day's most useful correction
+
+Every post-hoc filter in this repo was **gray-with-slot-held**, not a purge —
+the engine set `busy_until` before the trade was ever seen. Running the
+slot question properly for `decay` gives GRAY **+39.0R IS / +9.7R OOS**
+against SKIP **−12.6R / −12.4R**; freeing the slot costs **−51.6R IS and
+−22.0R OOS**. The label confusion that hid this was mine: I called the same
+mechanism "SKIP" in one run and "HELD" in another, and the user had to point
+out that a post-hoc removal is not a live mechanism at all.
+
+Getting there cost about fifteen runs of a harness bug: `v18_streak_halt.py`
+does `import datetime as _dts` at line 314 and uses `_t` at line 1084, so a
+patcher kwarg named either one overwrites an engine local. It presented as
+"0 trades on the control arm". The fix was to stop computing features
+inside the engine — compute in the harness, pass plain data in, inject one
+line. Recorded in `HANDOVER_DECAY_SKIP.md`.
+
+**Status: champion unchanged (500t/+325.8R IS, 279t/+70.1R OOS). Forward
+window 5 trades, pre-registered floor 50.**
+
 
 **Date:** 2026-09-29 · **Doc:** `STACK_PAIRED.md`
 · **Harnesses:** `exp_stack_paired.py`, `exp_stack_decay_combo.py`
