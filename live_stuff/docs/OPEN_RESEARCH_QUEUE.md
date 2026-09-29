@@ -255,6 +255,43 @@ intelligible: `r_touch` threw away the *timing* that made the early
 verdict useful. Run P3-B before W2 and W1 — it is the same measurement
 seen from the live side.
 
+## `[x]` P3/P4 — the live_R floor: REJECTED on the real champion, 0/7
+
+**Superseded. Read `CHAMPION_FLOOR_REJECTED.md` first.**
+
+`P3-C` and `P3-D` reported this as "the strongest candidate produced today"
+with drawdown halving in both eras. **That was measured on a book that is
+not the champion**, in three ways at once: the shipped engine instead of
+`engine:"patched"` (so `exp_mltf`/`exp_persist` were missing and the book
+had 356 trades, not 500), a guessed config (`b2_vs_flip_chop/chop=61.8/
+sl_buf=0.25/ext=1.5/mcl=5` instead of `atr_high/chop=58.0/sl_buf=0.01/
+ext=3.0/mcl=3/cooldown=8`), and **gross** instead of NET.
+
+Re-run properly (`exp_champion_true.py`) with the pin reproduced first
+(IS 500t/+325.8R NET, OOS 279t/+70.1R NET — both exact):
+
+| floor | IS net | OOS net | both? |
+|---|---|---|---|
+| **None (champion)** | **+325.8R** | **+70.1R** | — |
+| −0.25 | +228.2R | +31.7R | no |
+| −0.10 | +230.4R | +39.7R | no |
+| +0.00 | +220.6R | +53.4R | no |
+| +0.10 | +211.7R | +11.0R | no |
+| +0.25 | +110.4R | +18.4R | no |
+| +0.50 | +175.4R | **−17.3R** | no |
+
+**0 of 7. Not one arm beats the champion in either era.**
+
+**What survives:** the inversion is real on the champion too — `+0.50` has
+the best IS PF in the grid (2.97) and turns OOS negative (PF 0.93). The
+ceiling/floor conflict is a property of the idea, not of the mis-specified
+book.
+
+**Why it fails here:** the champion runs `ext_stop_r=3.0` (a live-R
+ceiling) and builds the book from `exp_mltf` + `exp_persist` — repeated
+entries inside a window. **An underwater 1h leg is often a continuation
+state on this book, not a warning.**
+
 ---
 
 ## OPEN — the real queue
