@@ -30,17 +30,16 @@ beats held-slot.
 
 ARMS
 ====
-  A  control   engine, no filter (reproduces the pin)
-  B  HELD      post-hoc drop - the slot stays held. This is what P14-P20
-               actually measured.
-  C  PURGE     engine-level `continue` BEFORE busy_until is set, so the
-               slot is never taken and the next signal is free.
+  A  control              n = all trades
+  B  GRAY  (busy)         trade NOT booked, slot HELD, r = 0,
+                          **n stays 500** - the position is never taken,
+                          so no cost is paid on it
+  C  SKIP  (remove)       trade removed from the book, slot HELD by
+                          the engine, n falls to 307
 
-B and C differ in exactly one thing: whether the slot is held. B reuses
-A's run so it costs nothing; only C needs a second engine run.
-
-No lookahead: nest1h and age come from the HTF window containing the
-entry instant, using only bars at or before it.
+B and C carry the same P&L. They differ in whether the rejected trade
+occupies a slot in the reported book and pays cost. The user is right that
+B must keep n = 500; my earlier table conflated the two.
 """
 from __future__ import annotations
 
@@ -184,6 +183,13 @@ def main():
 
             rb = [t for t in ra if keep(t)]
             nb = net_r(rb)
+            # GRAY: the rejected trades still occupy their slot and stay
+            # in the book at r=0. No position was taken, so no cost is
+            # paid on them - which is the whole point of a real gray.
+            per = (sum(float(t["r_multiple"]) for t in ra) - na) / len(ra)
+            grayed = [t for t in ra if not keep(t)]
+            gray_net = (sum(float(t["r_multiple"]) for t in rb)
+                        - per * len(rb))
 
             rc = sim(*args, _exp_purge_nest=NEST, _exp_purge_age=AGE,
                      **params)["ltf_trades"]
@@ -194,13 +200,15 @@ def main():
             sb = [float(t["r_multiple"]) for t in rb]
             sc = [float(t["r_multiple"]) for t in rc]
             print(f"    [{scope}] control {ga:>4}t net {na:+8.1f}R  ({ok})")
-            print(f"      B HELD (purge-off) n={len(rb):>4} net={nb:+8.1f}R "
-                  f"dNet={nb-na:+7.1f}R  R/tr={sum(sb)/max(1,len(sb)):+5.2f} "
+            print(f"      GRAY (busy)      n={len(ra):>4} net={gray_net:>+8.1f}R "
+                  f"dNet={gray_net-na:>+7.1f}R   {len(grayed)} at r=0, no cost")
+            print(f"      SKIP (remove)    n={len(rb):>4} net={nb:>+8.1f}R "
+                  f"dNet={nb-na:>+7.1f}R  R/tr={sum(sb)/max(1,len(sb)):+5.2f} "
                   f"PF={pf(sb):4.2f} strk={streak(sb):2d}")
-            print(f"      C PURGE           n={len(rc):>4} net={nc:+8.1f}R "
-                  f"dNet={nc-na:+7.1f}R  R/tr={sum(sc)/max(1,len(sc)):+5.2f} "
+            print(f"      PURGE (slot free) n={len(rc):>4} net={nc:>+8.1f}R "
+                  f"dNet={nc-na:>+7.1f}R  R/tr={sum(sc)/max(1,len(sc)):+5.2f} "
                   f"PF={pf(sc):4.2f} strk={streak(sc):2d}")
-            print(f"      C - B  (slot effect only) {nc-nb:+7.1f}R   "
+            print(f"      PURGE - SKIP (cost of freeing slot) {nc-nb:>+7.1f}R   "
                   f"n {len(rc)-len(rb):+d}")
     print()
 
