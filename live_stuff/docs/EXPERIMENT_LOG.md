@@ -1,5 +1,197 @@
 
-## Log 113 — The Stage-B stack book was already in the repo; it reproduces 24/24
+## Log 114 — Attribution, the base-book null, and three user-supplied ideas (two rejected)
+
+**Date:** 2026-09-28 · **Docs:** `BIAS_WINDOW_THEORY.md`, `HTF_ATTRIBUTION.md`,
+`CHAMPION_FLOOR_REJECTED.md`, `NULL_SENSITIVITY.md`, `DECOMPOSITION_NULL.md`,
+`TREND_SHARE.md`, `RUNNER_LIVE.md`, `STRUCTURAL_DECAY.md`, `DECAY_SWITCH.md`,
+`REBIAS_CONFIRMATION.md`, `NEWBAR_SEARCH.md`, `GREY_BOOK_BRUTAL.md`,
+`SMOOTH_BOOK.md`, `RATCHET_FREEZE.md`, `STRUCTURAL_CLOSURES.md`,
+`NESTING_PROBE.md`
+
+Seventeen experiments. Three user-supplied ideas were tested (structural
+decay, regime re-bias, ratchet freeze). **One held, two were rejected
+decisively.** The largest result is not an edge — it is that the
+champion's own net is inside a reshuffle of itself.
+
+### The three process errors, recorded because they cost the most
+
+**1. Three experiments (P3-A → P3-D) ran against a book that was not the
+champion, in three independent ways at once.** Wrong engine (shipped
+instead of `engine:"patched"`, so `exp_mltf`/`exp_persist` were missing and
+the book had 356 trades not 500), wrong config (guessed rather than read
+from `experiment_registry.py:191-202`), and **gross instead of NET** — the
+pins subtract fees and funding (`run_experiment.py:121-124`), so a gross
+number was never comparable to a net pin. The `+277.1R` quoted for two
+turns was never a valid comparison. **The identity gate that was run proved
+the *patch* was faithful and never checked that the *book* was the
+champion. A patch can be perfectly faithful to the wrong thing.**
+
+**2. Agreement between two runs was read as confirmation.** P3-C reported a
+local maximum at exactly zero, reproduced from two code paths, and that
+agreement was treated as evidence. It was a real feature of a
+mis-specified book, measured twice. Third instance of the same failure this
+session, and the most expensive.
+
+**3. Over-engineering a warning into a blocker.** A "you cannot negate
+`r_multiple`" caveat was raised against the user's flip idea. A `-r` screen
+is a reasonable approximation and would have returned the same negative.
+The user was right; the caveat was recorded rather than argued.
+
+**Rule adopted after it, and applied for the rest of the session: look up
+the config and the metric first, then import. Do not guess a default.**
+
+### The base-book null — the session's most consequential number
+
+`exp_base_null.py` · `exp_null_sensitivity.py` · `exp_decomposition_null.py`
+
+Move-block bootstrap, block=20, 10,000 draws, pins reproduced first. The
+book's net against reshuffles of its own trades.
+
+| | observed | null mean | **M (p95)** | pctile | p |
+|---|---|---|---|---|---|
+| IS | +325.8R | +316.5R | **479.9R** | 45.7th | 0.914 |
+| OOS | +70.1R | +69.2R | **193.4R** | 47.9th | 0.958 |
+
+**The champion's own net sits at the 46th/48th percentile of a reshuffle
+of itself.** Block sensitivity spans 439.6R–576.4R IS and 154.3R–221.7R
+OOS across blocks 5–90 — a plateau, not a cliff, and M *decreases*
+monotonically with block length, the correct direction for a method that
+preserves serial structure. **The bar is stable, so the finding hardens.**
+
+Audit of the registry against M: `exp_trail_half=1` (+103.8R IS, +40.3R
+OOS) is **inside the null in both eras**; `partial_r` (+84.3R) likewise.
+Then: does any *part* clear a tighter null of its own — by year, by HTF
+regime, by tail-removal? **None did.** Ex-best-5 is the sharpest: IS
++138.9R against a null mean of **−10.0R** (149R above the reshuffle mean,
+still inside M=427.5R), and OOS ex-best-5 is **−16.0R** — the champion
+without its best five does not profit at all. The top 5 trades are +218.9R
+of +445.2R gross, **49% of P&L in 1% of trades. The book IS the tail.**
+
+Not a claim that the book has no skill — 500 trades at 30% WR with a heavy
+right tail has irreducible reshuffle variance at this sample size. The
+consequence is narrower and firmer: **no net-R delta is evidence until it
+clears M, and the forward window is the only arbiter that has not been
+used to select anything.**
+
+### What the user contributed, and what it cost
+
+**1. "Prev kuch swings buying ke hai, aur ab in swings ke jab lows break
+hone lage toh trend might be changing."** → `exp_structural_decay.py` ·
+`STRUCTURAL_DECAY.md`. **WORKED, and is novel.** `broken_low`,
+`lows_broken`, `higher_lows_fail`, `structural_decay`, `break_of_low`,
+`prior_swing_low` all return zero hits in engine and tests, while ADX,
+regime and efficiency-ratio gates are all closed. Causal by filter: a leg
+enters the calculation only once `confirmed_at_time <= t`, and only 1m lows
+at or before `t` are read.
+
+Forward edge (MFE−MAE, next 32 bars) **decreases monotonically in both
+eras**: IS +0.69 → +0.41 → +0.05 → −0.16; OOS top bucket −0.63R, the worst
+of any bucket. The book splits decisively on it — **245 of 500 IS trades sit
+at exactly `decay=0.25` and carry +384.9R at 34.3% WR**, while
+`decay≥0.75` is the worst cohort in the study at **20.3% WR**. And the
+direct answer to "is the book long into a changing trend?": **no** — at
+decay≥0.5 it drops from 70.7% long to **46.7% IS / 52.8% OOS**. It goes
+balanced, not bullish. Nobody had measured that before.
+
+**2. "Kuch trades ke liye okay, ab bias change karo… agle selling swing ka
+confirm hone ka intezaar karo, phir usme position bana lo."** →
+`exp_rebias.py` · `REBIAS_CONFIRMATION.md`. **Rejected, 0 of 10 arms** —
+and correctly, because this is a state machine, not the blind flip P12
+tested. Both forms fail the same way: P12's blind flip died at 12.6% WR,
+the re bias at 13.7% IS / 17.6% OOS, and arms converge monotonically toward
+the control as more evidence is required before switching. **A confirmed,
+intact opposing leg is un-attractive most of the time** — 63.2% of IS
+entries already have one — because on this book an opposing leg forming is
+evidence the market is two-legged, which is what a range is.
+
+**3. "Agar N time move up ho gaya hai toh ab ratchet ko thoda delay karde…
+ab naya swing ka bhi naya banega tab trail kare."** → `exp_ratchet_freeze.py`
+· `RATCHET_FREEZE.md`. Genuinely new — every closed exit arm tightens or
+protects; this one **loosens after success**. Control exact
+(500t/+356.9R/std 5.55/streak 16). **Rejected 0 of 6, monotone, both eras,
+all four falsifiers.** N=1 collapses to 117 trades and −142R.
+
+The reason is the useful part: **the ratchet is not profit-protection on
+this book, it IS the profit.** Log 82/Stage 2 already said the trail is
+the dominant source of payoff, and P12's control showed a 3R target costs
+313R. Freezing the ratchet is not giving a winner room — it is removing
+the mechanism that converts a 1R winner into a 24R runner. The arms *do*
+lower r_std (5.55→4.39), the smoothness hope — but buy it with 159R of net
+and 159 trades. **Smoothing by removing the edge is not smoothing**, and it
+closes the exit surface in the loosening direction that
+`exp_trail_half`/`delay1`/`tighten`/`partial` had closed in the tightening
+one. **The exit surface is now exhausted in both directions.**
+
+### The new bar, and what survives it
+
+The user reframed the objective mid-session: *net can fall to 300R,
+R/trade to 1.0, but it has to be smooth.* → `exp_newbar_search.py` ·
+`exp_gray_brutal.py` · `exp_smooth_search.py`
+
+The previous bar (maximise net subject to a size cap) is what produced a
+book swinging +22/+22/**−22**/+9 across four years, so the new bar is the
+correction. Smoothness is measured as four separate terms, not a composite:
+worst_year, max losing streak, r_std, maxDD, ranked lexicographically.
+**The year floor is enforced against the champion's own same year**, which
+is the direct fix for the 2025 regression.
+
+`decay<0.75` (P15) improves net, WR, PF, DD and R/trade on both eras, and
+its 193 greyed trades are **17.6% WR and net negative**. But **2025 degrades
+−22.3R** — falsifier (a) fires and is reported rather than averaged away.
+Causality is proven, not asserted: a real greyed trade is dumped with all
+four legs, their confirmations, and the worst low measured only to the entry
+bar, and the last leg confirmed **two days before** the 2023-01-20 08:00
+entry.
+
+P16's bar is much harsher and **only 3 arms of ~200 survive.** The
+recommendation is `nest1h>0.25 + age>0.5d` (352 trades, +409.0R, R/trade
++1.339 vs the champion's +0.890, PF 3.13, losing streak 13 vs 16, OOS
++85.7R, every year at or above the champion's) — **the only survivor with
+no hour-of-day term**, since `hour!=3/6/9/12` all appearing in a top-15 is
+the grid manufacturing results and is visible as such.
+
+**And the limit, stated plainly: every survivor's r_std is 6.1–6.5, ABOVE
+the champion's 5.55.** Entry filters improve every ratio and do not reduce
+per-trade variance. You cannot buy smoothness with an entry filter on a
+book made of runners.
+
+### Structural closures
+
+`STRUCTURAL_CLOSURES.md`. **P2 (risk-weighted concurrency) is void on
+inspection** — `busy_until` at `v18_streak_halt.py:567/577/743` means the
+engine holds exactly one position at a time, so there is no sum-of-open-risk
+to cap. Three variants of the same gap now: no equity, no size, no
+concurrency. **The forward slice was already read** on 2026-09-25 at n=5,
+net −3.83R, and `FORWARD_TEST_PLAN.md:96-104` fixes R5 at n<50 = NO
+VERDICT; M does not change a sample size. This corrects an earlier claim
+in this session that the slice had "become usable" now that M exists.
+
+### Session table
+
+| harness | what | verdict |
+|---|---|---|
+| `probe_window_theory.py` | what closes a 1h bias window | +3R 24.5% / −1R 68.9% / 16d cap 6.6%; median 1.17d |
+| `probe_htf_attribution.py` | does the window earn the R | gate worth +210.5R IS / +47.4R OOS; ungated OOS **negative** |
+| `exp_oracle_early.py` | live_R floor, post-hoc | one arm passes both eras; later shown to be a wrong book |
+| `exp_live_gate.py` | same, as a real engine gate | byte-identical control, then 0/7 on the champion |
+| `exp_champion_true.py` | the correct champion, pin-first | pins 500t/+325.8R and 279t/+70.1R exact; **all 7 arms negative** |
+| `exp_base_null.py` | the base-book null | **M = 479.9R IS / 193.4R OOS** |
+| `exp_null_sensitivity.py` | is M block-dependent | stable, ×1.31/×1.44, correct direction |
+| `exp_decomposition_null.py` | does any split clear its own null | **none** — by year, regime, tail |
+| `exp_trend_share.py` | is the edge in trending tape | **no** — book is contrarian, trending cohort worst OOS |
+| `exp_runner_live.py` | can a runner be spotted at +1R | no; IS ordering inverts OOS; ratchet-at-+1R degenerate |
+| `exp_structural_decay.py` | **user's decay idea** | **works**, monotone both eras, novel |
+| `exp_decay_switch.py` | 7-arm sweep incl. flip | 0/7; flip −216R at 12.6% WR |
+| `exp_rebias.py` | **user's re-bias idea** | 0/10 arms, both eras |
+| `exp_newbar_search.py` | new bar, 7 features | 4 singles + 64 pairs clear; selection effect visible |
+| `exp_gray_brutal.py` | **causality proof + robustness** | causality proven; 2025 regression reported |
+| `exp_smooth_search.py` | smoothness bar | **3 of ~200** survive |
+| `exp_ratchet_freeze.py` | **user's ratchet idea** | 0/6, monotone, both eras |
+| `exp_nesting_probe.py` | is nesting worth building | real two-era gradient, clears no null; `nest_15m` degenerate |
+
+**Nothing adopted. No production change. The forward slice is untouched and
+remains the only unselected arbiter.**
+
 
 **Date:** 2026-09-27 · **Harness:** `exp_stack_repro.py` → `_stack_repro.json`
 **Docs:** `STACK_BOOK.md`
