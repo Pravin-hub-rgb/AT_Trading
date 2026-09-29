@@ -166,6 +166,54 @@ It read the realised R to decide which trades were losers. The GRAY version
 of the same arm is contaminated identically and its −59.3R is equally
 meaningless. **Both numbers are discarded, not merely unadopted.**
 
+### P43 — the proof that it was a bug, not a signal · `exp_leak_proof.py`
+
+Asserting a leak is not the same as demonstrating one, so the feature was
+**deleted** and the outcome-based selection run on its own:
+
+| | champ IS | champ OOS | utcsat IS | utcsat OOS |
+|---|---|---|---|---|
+| no filter | +325.8R | +70.1R | +359.0R | +60.2R |
+| **LEAK — delete `r<0`, no feature** | **+723.7R** | **+274.1R** | **+714.1R** | **+243.6R** |
+| LEAK PF | 7.67e11 | 2.85e11 | 7.55e11 | 2.54e11 |
+| LEAK hit rate | 100.0% | 100.0% | 100.0% | 100.0% |
+
+**No feature, no signal, no model — just "remove the trades that lost."**
+PF of 7.7 × 10¹¹ is not a trading result; it is a book of 150 winners with
+zero losers.
+
+The arithmetic is worth stating because it is the whole lesson:
+
+```
+every winner is +1R, every loser is -1R
+control  = W - L  = +325.8R   where L = -397.9R over 350 losers
+leaked   = W      = +723.7R   = control - L
+```
+
+**Deleting losers doubles any book, always, in any strategy, on any market —
+including a book of coin flips.** It is arithmetic, not insight. The P42
+number was a property of the leak, not of the character score.
+
+### The honest version of the same idea
+
+Decide from the score alone, never from the outcome — 1h |s| ≤ 0.10 is
+"weak structure", drop or gray it:
+
+| | champ IS | champ OOS | utcsat IS | utcsat OOS |
+|---|---|---|---|---|
+| no filter | +325.8R | +70.1R | +359.0R | +60.2R |
+| CAUSAL SKIP | **+15.1R** | −55.0R | **+14.3R** | −65.9R |
+| CAUSAL GRAY | −7.2R | −62.5R | −3.2R | −73.2R |
+
+**+723.7R → +15.1R. Same idea, same feature, outcome-reading switched off.
+A factor of 48.** The causal version is the one that was already on record in
+P41, and it is era-flipped: positive in both IS cells, strongly negative in
+both OOS cells.
+
+**GRAY is worse than SKIP here too** — the weak set contains winners, so
+zeroing them throws away real P&L. Consistent with the decay GRAY/SKIP
+reversal above.
+
 The valid GRAY/SKIP comparison uses decay only, and it **reverses P33**:
 
 | | champ IS | champ OOS | utcsat IS | utcsat OOS |
