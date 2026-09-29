@@ -1,4 +1,68 @@
 
+## Log 115 — P20→P26: the user corrected the method, not the answers
+
+**Date:** 2026-09-29 · **Doc:** `SESSION_P20_P26.md` (+ `AGE_GATE.md`)
+· **Harnesses:** `exp_age_gate.py`, `exp_slot_vs_purge.py`,
+`exp_book_anatomy.py`, `exp_decay_lookback.py`, `exp_directional_decay.py`,
+`exp_perm_null.py`, `exp_perm_candidates.py`
+
+Seven experiments. **Five were corrections of my own errors, found by the
+user pushing back on assertions I had made.** Nothing adopted.
+
+### The corrections (the real content of this session)
+
+1. **"Gray-with-slot-held kabhi run nahi hua"** — I had called every
+   post-hoc filter a *purge*. Wrong: the engine sets `busy_until` before
+   the trade is ever inspected, so **every P14–P20 filter was
+   gray-with-slot-held**, and the *true* purge had never been run. P21 ran
+   it: on the champion, purging the slot is **−28.7R**. Held-slot was the
+   right methodology; the "never tested" arm turned out to be the wrong
+   arm, and that is now settled rather than assumed.
+2. **"Kon rule bana raha hai −27R bura hai?"** — the per-year delta was
+   **my** killer, not the user's. Equity curve is the criterion they
+   asked for.
+3. **"Lookback swings kitne?"** — `N_SWINGS=4` was an arbitrary constant.
+   Swept 2→12: flat, nothing wins, 4 is not magic.
+4. **"Decay price-action edge hai"** — correct; decay is structural,
+   `age`/`nest1h` are clock-based, and the structural one is the one that
+   holds.
+5. **"M karna zaroori hai? research karo"** — **the most important
+   change.** `M` is a bootstrap of the book's own net: right for a book,
+   wrong for a filter (a filter is a subset of the same trades; M discards
+   the pairing and is so wide nothing can clear it). Replaced with a
+   **permutation null** — random removal of the *same size* as the real
+   filter. Under it, `decay<0.75` (p 0.000/0.021), `age>0.5d`
+   (0.002/0.020), `age>1.0d` (0.030/0.012) and `nest1h+age`
+   (0.000/0.037) all clear both eras. **But 8/8 pass in-sample**, so the
+   bar is low and "real" means only "beats a same-size random pick."
+
+### Bugs I shipped and caught
+
+- P20: arms C/D printed the **unfiltered** `net_r` beside the filtered
+  count (caught: B and C showed identical nets at different n).
+- P23: `per` cost was `net/n` instead of `(gross−net)/n` — cost
+  double-subtracted.
+- P25/P26: `p = P(null <= dNet)` — **wrong tail**, inverting every
+  verdict (caught: 8/8 arms at p≈1.000). P25 also built 15m legs from
+  synthesized 1m bars instead of the real `sw15`, so its "15m" arm was a
+  different filter that removed winners. Both fixed; numbers above are the
+  corrected run.
+
+### Also established
+
+- **P22 anatomy:** exit is the **ratchet**, not the 3R target — `target`
+  is computed and never read as an exit. FLIP carries the book
+  (+362.8R vs B2 +82.4R); 100% of trades sit in a 1h window they match.
+- **P20:** the `exp_max_swing_age` ceiling gains +100.7R IS on one lane,
+  loses −144.8R on another, and is better *removed* on 2/3 lanes OOS —
+  it is fitting the era. The champion has no ceiling, so it is unchanged.
+
+**Status: champion unchanged (500t/+325.8R IS, 279t/+70.1R OOS). Forward
+window at 5 trades; the pre-registered no-verdict-below-n=50 rule stands,
+so the next real arbiter is data, not another filter.**
+
+---
+
 ## Log 114 — Attribution, the base-book null, and three user-supplied ideas (two rejected)
 
 **Date:** 2026-09-28 · **Docs:** `BIAS_WINDOW_THEORY.md`, `HTF_ATTRIBUTION.md`,
