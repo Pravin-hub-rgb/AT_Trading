@@ -1,4 +1,70 @@
 
+## Log 116 — P27/P28: the #1 candidate, finally scored with the right test
+
+**Date:** 2026-09-29 · **Doc:** `STACK_PAIRED.md`
+· **Harnesses:** `exp_stack_paired.py`, `exp_stack_decay_combo.py`
+
+All six pins exact. **Nothing adopted.**
+
+### The user pointed at something I had written off
+
+*"humare paas delay bhi candidate hai... ab ek baar poore docs dekho aur top
+ke list nikalo"* — and the top of the list was
+`exp_trail_half` + `exp_trail_delay_r` + `exp_skip_decisive` (the **STACK**):
+champion IS +325.8 → **+429.6R** with maxDD 27.7 → 27.0, OOS +70.2 →
+**+110.5R** with maxDD 53.2 → **30.6**. Reproduced 24/24 in log 113,
+causality audit passed in checklist 24.24.
+
+**I had written in `SMOOTH_BOOK.md` that "the entire exit family is closed"
+and sent the reader to entry filters.** That is **false**. After six
+entry-side experiments (P19–P24) produced nothing that cleared a bar I
+concluded the grid was exhausted. **The grid was not exhausted — I was
+only looking at one end of the book.** The user found the other end.
+
+### And the null I had been using was the wrong one for it
+
+`BASE_BOOK_NULL.md` scored +103.8R against `M` = 479.9R and called it
+"inside the null". `M` bootstraps the book's own **level** — the right
+question for "is this book distinguishable from a reshuffle of itself", the
+wrong one for "did this change help". A change like this is **paired**
+before/after on largely the same trades, and the book-level variance that
+makes `M` 480R wide cancels in the pairing.
+
+Correct test: `d[i] = r_stack[i] − r_baseline[i]` on shared trades,
+move-block bootstrap the **differences** (block 20, 10,000 draws), and ask
+`p = P(Σd* ≥ Σd)`.
+
+| lane | era | STACK dNet | exit-only | count effect | p |
+|---|---|---|---|---|---|
+| champion | IS | +103.8R | +75.2R | +28.6R | 0.364 |
+| champion | OOS | +40.9R | +12.7R | +28.1R | 0.387 |
+| utcsat | IS | +52.2R | +45.9R | +6.3R | 0.387 |
+| utcsat | OOS | +34.9R | +9.3R | +25.6R | 0.282 |
+| age10 | IS | −13.4R | **+34.8R** | **−48.2R** | 0.234 |
+| age10 | OOS | −43.5R | −15.7R | −27.9R | 0.777 |
+
+**No cell clears p<0.05.** Most of the headline is the *count* effect, and
+`skip_decisive` — which supplies it — is a **perfect IS no-op** (0 decisive
+trades 2023–26); its whole evidence is **57 OOS trades**. On age10 the exit
+rule genuinely helped (+34.8R on shared trades) and the count effect
+destroyed it by deleting **+46.2R** of winners.
+
+### P28 — STACK × decay, the last untried cell
+
+Entry filter and exit change have never been combined. On champion:
+`half+delay1` alone +103.8R PF 2.76, and `decay<0.75 + half+delay1` **+99.7R
+PF 3.70 DD 17.0** — same net, better shape. **They overlap**: both are
+removing the same bad trades, so combining them adds nothing. No combo arm
+clears p<0.05 on either multi lane. The one cell that "passes" (age10 F,
+p=0.000) is a **negative** effect at **n=29**.
+
+**Status: champion unchanged (500t/+325.8R IS, 279t/+70.1R OOS). No
+production change. The honest position is that the entry side and the exit
+side are two views of the same shortlist, and the documented STACK headline
+is roughly half selection on 57 out-of-sample trades.**
+
+---
+
 ## Log 115 — P20→P26: the user corrected the method, not the answers
 
 **Date:** 2026-09-29 · **Doc:** `SESSION_P20_P26.md` (+ `AGE_GATE.md`)
