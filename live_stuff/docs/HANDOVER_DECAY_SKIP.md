@@ -37,27 +37,39 @@ engine for the name before using it.
 
 ---
 
-## 2. Where P33 stands
 
-`live_stuff/tests/exp_decay_gray_skip.py`. Written from scratch for this
-question. Status:
+## 2. RESOLVED - how P33 is built now, and its result
 
-- **Control PASSES** — 500t / +325.8R IS, 279t / +70.1R OOS, pin matched.
-- **The `_dts` collision is found and renamed** (`_pdts`, `_pdlo`, `_pdup`,
-  `_pdlog`, `_pdthr`).
-- **One remaining failure:** with the gate kwargs live, the control arm
-  returns **0 trades** instead of 500. The gate is default-off
-  (`_pdthr=0.0`) so the `continue` cannot fire, which means the block is
-  still mutating engine state. Suspect the `_t` local: the engine uses
-  `_t` at `:1084` inside the shadow-book branch, and the injected block
-  assigns `_t = int(candles_ltf[i]["ts"])` at the same loop level.
-  **Rename `_t` first.**
+The fix was to stop computing decay INSIDE the engine. Now the decay is
+computed in the harness via the committed decay_pair()/legs_by_dir(), and
+only a set of sig["bar"] strings is passed in. The injection is ONE line,
+placed before the LTF loop:
 
-**Do not report any P33 number until the control prints 500t / +325.8R.**
-The harness already stops on a control mismatch; keep that.
+    for sig, use in filtered:
+        if exp_drop_bars and sig["bar"] in exp_drop_bars:
+            continue
 
----
+Dropping from `filtered` is exactly how the engine already drops a signal
+for its own gates, so this is faithful: the signal is never seen,
+busy_until is never set, and the next signal is free. That is SKIP. No
+engine-side arithmetic means no engine-local collisions.
 
+    IS   control 500t +325.8R  (PIN ok)
+         GRAY  n=500  +364.8R  dNet +39.0R   193 grayed at r=0
+         SKIP  n=349  +313.2R  dNet -12.6R   PF 2.79 DD 21.2
+         SKIP - GRAY (value of freeing the slot)  -51.6R
+
+    OOS  control 279t +70.1R  (PIN ok)
+         GRAY  n=279   +79.8R  dNet  +9.7R   132 grayed at r=0
+         SKIP  n=183   +57.8R  dNet -12.4R   PF 1.69 DD 20.4
+         SKIP - GRAY (value of freeing the slot)  -22.0R
+
+GRAY wins both eras. Worse than P21s nest1h+age (-28.7R) for the predicted
+reason: decay blocks 193 of 500 trades against that filters 148, so it
+frees far more slots and admits more of the weak signals the slot was
+blocking.
+
+decay<0.75 is a GRAY rule, not a SKIP rule. Nothing adopted.
 ## 3. The question P33 is trying to answer
 
 `decay < 0.75` is the user's own idea (P11), and it is the only candidate

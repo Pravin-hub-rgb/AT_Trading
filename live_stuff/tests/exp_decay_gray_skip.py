@@ -1,11 +1,17 @@
-"""P33 - decay, GRAY vs SKIP, from the committed rule.
+"""P33 - decay: GRAY vs SKIP. Minimal patch, computed OUTSIDE the engine.
+
 decay = of the last 4 CONFIRMED 15m BUYING legs, the fraction whose
-start-price LOW is broken by 1m price at or before the entry.
-GRAY = no order, slot held, n stays 500, r=0, no cost.
-SKIP = no order, slot free, next signal taken.
+start LOW is broken by 1m price at or before entry.  decay<0.75 keeps.
+
+GRAY  no order, slot held  -> n stays 500, grayed at r=0, no cost
+SKIP  no order, slot free  -> engine never sees that signal, next one
+      is taken.  Implemented by dropping the signal from `filtered`
+      BEFORE the LTF loop, which is the same place the engine drops a
+      signal for its own gates.  One line of injected text, no decay
+      arithmetic inside the engine at all.
+
 CONTROL IS CHECKED FIRST; the run stops if the pin does not match.
 """
-import bisect as bs
 import sys
 from pathlib import Path
 
@@ -19,7 +25,7 @@ import test_experiments_craze as tc
 from test_4_new_concepts import load_unseen, load_fine_1m
 from test_experiments_craze import _compute_swings
 from engine.v18_params import SWING
-from exp_decay_switch import legs_by_dir
+from exp_decay_switch import legs_by_dir, decay_pair
 
 THR = 0.75
 KEY = "champion_multi_sw10"
@@ -37,38 +43,13 @@ def patched():
     s = cap["s"]
     t1 = "    *,\n"
     assert s.count(t1) == 1
-    s = s.replace(t1, t1 + "    _pdthr=0.0,\n    _pdlog=None,\n    _pdup=None,\n"
-                          "    _pdts=None,\n    _pdlo=None,\n")
-    a = ("        if (not exp_mltf) and busy_until and "
-         "bar_time <= busy_until:\n"
-         "            if exp_shadow_book: _sr[\"reason\"]=\"busy\"\n")
-    assert s.count(a) == 1, "anchor"
-    inj = (
-        "        if _pdup is not None and _pdlo is not None:\n"
-        "            _t = int(candles_ltf[i][\"ts\"])\n"
-        "            _j = bs.bisect_right(_pdts, _t) - 1\n"
-        "            _v = 0.5\n"
-        "            if _j >= 0:\n"
-        "                _QQ = [L for L in _pdup if L['cts'] <= _t][-4:]\n"
-        "                if _QQ:\n"
-        "                    _b = 0\n"
-        "                    for _L in _QQ:\n"
-        "                        _p = _L['px']\n"
-        "                        if _p <= 0:\n"
-        "                            continue\n"
-        "                        _x = bs.bisect_left(_pdts, _L['cts'])\n"
-        "                        if _j < _x:\n"
-        "                            continue\n"
-        "                        _GG = _pdlo[_x:_j + 1]\n"
-        "                        if _GG and min(_GG) < _p:\n"
-        "                            _b += 1\n"
-        "                    _v = _b / float(len(_QQ))\n"
-        "            if _pdlog is not None:\n"
-        "                _pdlog.append((_t, _v))\n"
-        "            if _pdthr > 0 and _v >= _pdthr:\n"
-        "                continue\n"
-    )
-    return s.replace(a, a + inj)
+    s = s.replace(t1, t1 + "    exp_drop_bars=None,\n")
+    a = "    for sig, use in filtered:\n"
+    assert s.count(a) == 1, "loop anchor"
+    return s.replace(a, a + (
+        "        if exp_drop_bars and sig[\"bar\"] in exp_drop_bars:\n"
+        "            continue\n"
+    ))
 
 
 def load(scope):
@@ -108,9 +89,9 @@ def main():
     print("=" * 96)
     print("  P33  decay GRAY vs SKIP   (buying decay < 0.75, last 4 legs)")
     print("=" * 96)
-    print("  A control n=500 NET; run stops if the pin does not match")
+    print("  A control n=500 NET - run stops if the pin does not match")
     print("  B GRAY    n=500, grayed at r=0, no cost")
-    print("  C SKIP    pre-slot reject, slot free, next signal taken\n")
+    print("  C SKIP    signal dropped before the LTF loop, slot freed\n")
     sim = tc._load_module(patched(), "p33")
     sim = sim[0] if isinstance(sim, tuple) else sim
     sim = getattr(sim, "simulate_htf_ltf_streak_halt", sim)
@@ -122,11 +103,7 @@ def main():
             r = sim(c1h, sw10, c15, sw15, fine, **params, **extra)
             return [t for t in r["ltf_trades"] if t.get("outcome") != "open"]
 
-        up0, _ = legs_by_dir(sw15)
-        fts0 = [int(c["ts"]) for c in fine]
-        flo0 = [float(c["low"]) for c in fine]
-        log = []
-        base = run({"_pdlog": log, "_pdup": up0, "_pdts": fts0, "_pdlo": flo0})
+        base = run({})
         nb, n0 = net_r(base), len(base)
         pin = PIN[scope]
         if abs(n0 - pin[0]) > 2 or abs(nb - pin[1]) > 1.5:
@@ -138,16 +115,22 @@ def main():
         up, _dn = legs_by_dir(sw15)
         fts = [int(c["ts"]) for c in fine]
         flo = [float(c["low"]) for c in fine]
-        g = dict((e[0], e[1]) for e in log)
-        kept = [t for t in base
-                if g.get(int(t["entry_ts"]), 0.5) < THR]
-        per = (sum(float(t["r_multiple"]) for t in base) - nb) / n0
-        gnet = sum(float(t["r_multiple"]) for t in kept) - per * len(kept)
-        c = run({"_pdthr": THR, "_pdup": up, "_pdts": fts, "_pdlo": flo})
+        fhi = [float(c["high"]) for c in fine]
+        drop = set()
+        grayed = []
+        for t in base:
+            v, _ = decay_pair(up, _dn, int(t["entry_ts"]), flo, fhi, fts, n=4)
+            if v is not None and v >= THR:
+                drop.add(t["entry_date"])
+                grayed.append(t)
+        kept = [t for t in base if t["entry_date"] not in drop]
+        per = (sum(float(x["r_multiple"]) for x in base) - nb) / n0
+        gnet = (sum(float(x["r_multiple"]) for x in kept) - per * len(kept))
+        c = run({"exp_drop_bars": drop})
         nc = net_r(c)
-        kc = [float(t["r_multiple"]) for t in c]
+        kc = [float(x["r_multiple"]) for x in c]
         print("      GRAY  n=%4d net=%+8.1fR dNet=%+7.1fR   %d grayed at r=0"
-              % (n0, gnet, gnet - nb, n0 - len(kept)))
+              % (n0, gnet, gnet - nb, len(grayed)))
         print("      SKIP  n=%4d net=%+8.1fR dNet=%+7.1fR  PF=%4.2f DD=%5.1f strk=%2d"
               % (len(c), nc, nc - nb, pf(kc), dd(kc), streak(kc)))
         print("      SKIP - GRAY (value of freeing the slot) %+7.1fR   n %+d\n"
