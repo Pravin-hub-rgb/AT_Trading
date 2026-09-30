@@ -1,3 +1,22 @@
+# reality of champion.md
+
+> ## ⚠️ PARTIALLY SUPERSEDED
+>
+> This document is from **P99** and was written when the champion existed only as a
+> runtime source patch over `v18_streak_halt.py`. That is no longer the situation.
+>
+> | Claim here | Status |
+> |---|---|
+> | "Harness reads v18 source text and patches it" | **obsolete** — the champion is now a real committed engine, `v19_champion.py` |
+> | "500T / +325.8R is proven" | **still true**, but now reproduced by importing the committed file from disk |
+>
+> **Read with:** `P112_V19_REBUILD.md` (v19 rebuilt clean, pin proven, trade-level audit),
+> `reality of champion followup.md` (the five bots, point by point), and
+> `CORRECTIONS_P106.md`.
+>
+> One correction worth carrying forward: the "6/6 params differ" claim repeated in
+> this file was wrong. **3 of 3 differ**, not 6 — see the followup.
+
 big pickle:
 Investigation complete. Teeno confusion clear ho gaye — aur ek jagah main khud galat tha.
 1. "Kya yeh wahi code hai jo 500T/+325.8R deta hai?" — HAAN. PROVEN.

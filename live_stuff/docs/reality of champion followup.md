@@ -1,3 +1,27 @@
+# reality of champion followup.md
+
+> ## ✅ RESOLVED — 2026-09-30, commit `7077046`
+>
+> The four objections in section *"Step 1"* (L209–L214 below) were **all correct
+> when written**. All four are now closed. Full detail in **`P112_V19_REBUILD.md`**.
+>
+> | Objection | Status |
+> |---|---|
+> | `_v19_src.py` does not exist, harnesses cannot be re-run | **CLOSED** — both now import the committed engine |
+> | Docstring corrupted, six consecutive quotes at line 17 | **CLOSED** — header is now an ASCII comment block |
+> | Encoding damage visible throughout | **CLOSED** — rebuild was double-encoding bytes inherited from v18 |
+> | "The pin is currently unproven" | **CLOSED** — reproduced by real disk import |
+>
+> ```
+> IS   n=500  net=+325.78R  PF 2.384
+> OOS  n=279  net=+70.15R   PF 1.591
+> ```
+>
+> The lines below are kept verbatim as the record of what was found. Where they
+> say "unproven", read P112 — that is now superseded.
+>
+> ---
+
 big pickle:
 Teen corrections hain — teeno aapke bot ki. Aur ek cheez hai jo kisi ne nahi kahi.
 ❌ Correction 1: "HTF gate koi nahi khola" — GALAT. Already khola gaya hai, AABHI.
