@@ -23,6 +23,26 @@ sheet keeps the two judgements apart rather than collapsing them.
 
 ## TIER A — 4/4 positive, consistent sign
 
+### A0. Window `cap_days` — turn the 16-day cap OFF (new, P49)
+
+The 16-day cap is literal in three call sites of `v18_streak_halt.py` and had
+never been swept. **Removing it is 4/4 positive and adds trades.**
+
+| | champ IS | champ OOS | utcsat IS | utcsat OOS |
+|---|---|---|---|---|
+| `cap_days=16` (shipped) | 500t +325.8R | 279t +70.1R | 454t +359.0R | 253t +60.2R |
+| **`cap_days` off** | **586t +401.1R** | **313t +125.2R** | **535t +372.6R** | **284t +138.7R** |
+| **dNet** | **+75.3R** | **+55.1R** | **+13.7R** | **+78.5R** |
+| extra trades | +86 | +34 | +81 | +31 |
+
+Every value 1–12 is worse than 16 and every value 20+ is better, so 16 sits
+at the bottom of a valley. **The cap only ever truncates windows that are
+still open and still working.**
+
+Not a pass under the P3 rule (does not beat 16 by more than M in both eras),
+and the sweep is **not monotone** — `cap_days=24` is anomalously bad in both
+OOS cells — so the **direction** is the finding, not any number. `CAPS_P49.md`.
+
 ### A1. `decay < 0.75` — SKIP
 
 Skip a 15m entry when the decay feature reads ≥ 0.75.
@@ -42,15 +62,22 @@ dNet +34.2R ≈ 0.18 × M. Real, consistent, inside the null.
 The decay leg's lookback is stale-prone, and stale legs turned out to be
 *good*. Capping their age recovered the rest.
 
-| variant | IS dNet | OOS dNet |
-|---|---:|---:|
-| B — current, no cap | +34.2R | +7.5R |
-| **C — CAP 1 day** | **+56.6R** | +17.4R |
-| E — CAP 2 days | +32.5R | **+25.1R** |
-| G — GRAY stale instead of skip | −53.1R | −62.0R |
+| variant | IS dNet | OOS dNet | |
+|---|---:|---:|---|
+| B — current, no cap | +34.2R | +7.5R | |
+| **C — CAP 1 day** | +56.6R | +17.4R | ⚠️ **NOT REPRODUCED** |
+| E — CAP 2 days | +32.5R | **+25.1R** | ⚠️ **NOT REPRODUCED** |
+| G — GRAY stale instead of skip | −53.1R | −62.0R | |
 
-**C wins IS, E wins OOS.** That conflict is unresolved and is the one open
-decision here. Both documented; neither chosen.
+⚠️ **C and E did not reproduce in P49.** Sweeping the *leg-age* cap over
+0.5–7 days produced no arm close to them, and a 1-day cap is not viable on
+that definition at all — the oldest of the last 4 buying legs is
+**p50 = 3.05 days**, so a 1-day cap keeps 3 trades. Whatever these rows
+measured, it was not leg age. **The original P38 definition must be
+recovered before this decision can be asked.** `CAPS_P49.md`.
+
+**What P49 does confirm is the direction:** the cap helps OOS and hurts IS
+at every value, and removing it is the best arm.
 
 **Note G:** GRAY the stale set instead of skipping it is *worse than doing
 nothing* in both eras. GRAY only pays when the gray set is mostly winners,
@@ -168,14 +195,16 @@ plausible candidate.
 
 | still open, not documented as candidates | state |
 |---|---|
-| P4 `cap_days` sweep | not run — literal `16` in three call sites |
-| 1d vs 2d age cap | measured, decision not taken |
+| 1d vs 2d age cap | **not reproducible** — see the ⚠️ under A2 |
 | P6 / alt breadth | blocked on Bybit perp data |
 | forward pass on `data/forward/bybit/` | M now exists, not run |
 
 **P1 nesting was closed on 2026-09-29 without the rebuild** — containment
 measured on the existing chain came out *below* the book in all four cells,
 and the cohort that is good is the one nesting would exclude. `NESTING_P1.md`.
+
+**P4 `cap_days` was swept and closed on 2026-09-29** — the 16-day cap costs R
+4/4, now documented as candidate A0. `CAPS_P49.md`.
 
 
 **The ordering reverses between eras** — IS rewards 0.0–0.2, OOS rewards
