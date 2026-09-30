@@ -59,6 +59,14 @@ PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
        "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
 
 
+def net_of(tr):
+    from run_experiment import _trade_costs, fund, _g
+    rs = [float(t["r_multiple"]) for t in tr]
+    c2, _ = _trade_costs(tr, _g["fee_pct"], 0.0,
+                         _g["entry_slip_pct"], _g["exit_slip_pct"])
+    return sum(rs) - c2 - fund(tr)
+
+
 def pf(rs):
     return sum(x for x in rs if x > 0) / max(1e-9, -sum(x for x in rs if x < 0))
 
@@ -80,9 +88,22 @@ def agg_by(tr, keyfn):
 
 
 def row(lbl, tr):
+    """NET of costs, on the pins' own basis.
+
+    A FIRST VERSION OF THIS HARNESS PRINTED sum(r_multiple) - GROSS - while
+    the pinned champion figure is NET. The owner's own arithmetic caught it:
+    113.9 + 124.1 + 100.4 + 106.8 = 445.2R against a pin of 325.8R, a gap
+    of 119.4R, which is exactly the cost of the book. That is the SAME gross
+    -vs-net mistake P60 made in this round, made a second time and in a
+    summary table, which is worse because summary tables get quoted.
+    """
+    from run_experiment import _trade_costs, fund, _g
     rs = [float(t["r_multiple"]) for t in tr]
+    c2, _ = _trade_costs(tr, _g["fee_pct"], 0.0,
+                         _g["entry_slip_pct"], _g["exit_slip_pct"])
+    net = sum(rs) - c2 - fund(tr)
     print("      %-8s %5d %+9.1fR %+8.3f %7.2f %6.1f%%"
-          % (lbl, len(rs), sum(rs), sum(rs) / len(rs), pf(rs),
+          % (lbl, len(rs), net, net / len(rs), pf(rs),
              100.0 * sum(1 for x in rs if x > 0) / len(rs)))
 
 
@@ -185,11 +206,9 @@ def main():
             print("    max drawdown: %.1fR over %d trades / %.0f days"
                   % (dd, ddn, ddd))
             neg = [k for k in sorted(set(agg_by(tr, y)))
-                   if sum(float(x["r_multiple"])
-                          for x in agg_by(tr, y)[k]) <= 0]
+                   if net_of(agg_by(tr, y)[k]) <= 0]
             part = [k for k in sorted(set(agg_by(tr, y)))
-                    if 0 < sum(float(x["r_multiple"])
-                               for x in agg_by(tr, y)[k])
+                    if 0 < net_of(agg_by(tr, y)[k])
                     < 0.5 * net_r(tr) / len(set(agg_by(tr, y)))]
             print("    years at or below zero: %s" % (neg or "none"))
             print("    years below half-speed:    %s" % (part or "none"))
