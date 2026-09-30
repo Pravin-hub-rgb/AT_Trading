@@ -1,4 +1,4 @@
-import sys, os, pickle, inspect, types
+﻿import sys, os, pickle, inspect, types
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 for p in ("live_stuff","live_stuff/tests","backend"):
@@ -8,9 +8,9 @@ with open(Path(os.environ["TEMP"])/"at_datacache.pkl","rb") as f: d=pickle.load(
 from run_experiment import net_r
 from experiment_registry import BP,EXPERIMENTS
 from exp_concurrency_guard import concurrency, pf
-src=(ROOT/"live_stuff/tests/_v19_src.py").read_text(encoding="utf-8")
+src=(ROOT/"backend/src/btc/engines/htf_ltf/v19_champion.py").read_text(encoding="utf-8")
 mod=types.ModuleType("v19_champion")
-mod.__file__="live_stuff/tests/_v19_src.py"
+mod.__file__="backend/src/btc/engines/htf_ltf/v19_champion.py"
 exec(compile(src,"v19_champion.py","exec"),mod.__dict__)
 fn=mod.simulate_htf_ltf_streak_halt
 params={**BP,**EXPERIMENTS["champion_multi_sw10"]["params"]}
@@ -25,3 +25,4 @@ print("V19 PRODUCTION-STYLE CHAMPION (IS)")
 print("  n=%d  net=%+.2fR  PF=%.3f  maxconc=%d"%(len(rs),net_r(tr),pf(rs),concurrency(tr)))
 print("  PIN was:  n=500  net=+325.8R  maxconc=6")
 print("  MATCH: %s"%(len(rs)==500 and abs(net_r(tr)-325.78)<0.5))
+

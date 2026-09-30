@@ -1,4 +1,4 @@
-import sys, os, pickle, types
+﻿import sys, os, pickle, types
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 for p in ("live_stuff","live_stuff/tests","backend"):
@@ -12,7 +12,7 @@ from experiment_registry import BP,EXPERIMENTS
 from exp_concurrency_guard import concurrency, pf
 (oc15,of15),(oc1h,of1h)=load_unseen("15m"),load_unseen("1h")
 of= lfo(oc15[0]["ts"],oc15[-1]["ts"])
-src=(ROOT/"live_stuff/tests/_v19_src.py").read_text(encoding="utf-8")
+src=(ROOT/"backend/src/btc/engines/htf_ltf/v19_champion.py").read_text(encoding="utf-8")
 mod=types.ModuleType("v19o"); mod.__file__="v19o.py"
 exec(compile(src,"v19o.py","exec"),mod.__dict__)
 fn=mod.simulate_htf_ltf_streak_halt
