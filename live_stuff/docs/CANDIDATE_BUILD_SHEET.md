@@ -266,11 +266,78 @@ rewarding.
 
 ---
 
-# `cand_4h1h` — TIER: REGISTERED CANDIDATE, NOT ADOPTED
+# `cand_4h1h` — **DOWNGRADED 2026-09-29, NOT A CANDIDATE. DO NOT REBUILD.**
 
-**4h HTF + 1h LTF.** The only architecture in the programme that beats the
-champion in OOS, in both lanes. Registered 2026-09-29 from P58 + P59.
-Nothing in production changed.
+**4h HTF + 1h LTF.** Registered from P58 + P59, closed at P61.
+`STABILITY_FORWARD_P61.md`, `exp_stability_forward.py`. Nothing in
+production ever changed.
+
+## Why it was registered
+
+P58: the only architecture in the programme that beat the champion in OOS,
+in both lanes, better on R/trade, PF and win rate in **both** eras.
+
+| | IS | OOS |
+|---|---|---|
+| champion 1h + 15m | 500t +325.8R PF 2.38 R/t 0.652 WR 30.0% | 279t +70.1R PF 1.59 R/t 0.251 WR 28.0% |
+| `cand_4h1h` | 286t +212.8R PF 2.59 R/t 0.744 WR 35.3% | 189t +98.0R PF 2.02 R/t 0.519 WR 32.8% |
+
+**Those numbers are correct. They are also an aggregate over a
+distribution where the advantage does not exist.**
+
+## Why it was downgraded
+
+P61 split each era into calendar half-years — time-based, fixed before
+looking, never by `r_multiple` / `outcome` / `pnl`:
+
+| period | champ R/t | cand R/t | cand |
+|---|---|---|---|
+| 2023H1 | +0.897 | **+1.842** | YES |
+| 2023H2 | +1.217 | **+2.319** | YES |
+| 2024H1 | +1.081 | +0.518 | no |
+| 2024H2 | +0.421 | **+1.557** | YES |
+| 2025H1 | −0.126 | +0.054 | YES |
+| **2025H2** | **+1.470** | **−0.401** | no |
+| **2026H1** | **+0.814** | **−0.115** | no |
+| **2026H2** | **+1.807** | **+0.056** | no |
+
+**IS: 4 wins, 4 losses of 8. OOS: 3 wins, 1 loss of 4, the loss being the
+most recent period.** Both lanes identical in shape.
+
+**The candidate has lost every period since 2025H2, and loses them in
+precisely the stretches where the champion is strongest.** Its aggregate
+edge lives in 2023–2024. Part of the aggregate R/trade gap is also just
+weighting: a book that trades less has its per-trade average less diluted
+by a run where the champion works and it does not.
+
+## The union is also closed
+
+P60: champion ∪ `cand_4h1h` under a pre-registered one-slot SKIP rule lost
+in **4 of 4 cells** (−97.0R, −64.0R, −163.2R, −31.5R), with 43–46% of all
+signals skipped. The deduplicated "bound" of +664.0R IS / +225.8R OOS was
+**2.9x and 36x too high** — the single-slot constraint does not tax a
+union, it destroys it.
+
+## The forward pass settles nothing
+
+12.5 days (2026-09-13 → 09-25), 14 1h swings: **2 champion trades against
+1 candidate trade.** No crash, no empty book, no sign error — the P58
+construction ports. That is all it is. Pre-registered as a smoke test
+before it ran, and reported as one.
+
+## What to keep
+
+- The **harnesses**: `exp_tf_matrix.py`, `exp_cand_cost.py`,
+  `exp_union.py`, `exp_stability_forward.py`.
+- The **method lesson**, which is the real product here: an aggregate
+  "better in both eras" is not a candidate until it survives a time
+  partition. This is the fifth appearance of the IS-fitted pattern in this
+  round — P56 expiry, P58 granularity, P59 agreement, P60 union risk
+  profile, P61 this — and the programme's held-out era plus the
+  deck-relative null exist to catch exactly this.
+- The champion stands: **1h HTF + 15m LTF**, 500t/+325.8R IS,
+  279t/+70.1R OOS, unchanged.
+
 
 ## Build it as
 

@@ -529,6 +529,50 @@ not gated on. 15–19 trades per cell is also too thin to filter on.
 
 ---
 
+## `[x]` P59 → P61 — `cand_4h1h`: **DOWNGRADED, NOT A CANDIDATE** (2026-09-29)
+
+**Closed at P61. `STABILITY_FORWARD_P61.md`, harness `exp_stability_forward.py`.**
+
+P58 and P59 recorded `cand_4h1h` (4h HTF + 1h LTF) as a registered
+candidate on the strength of an aggregate: better R/trade, PF and win rate
+than the champion in **both** eras, at the cost of −113.0R in IS. **P61
+broke that aggregate into calendar half-years and the advantage is a coin
+flip — 4 wins and 4 losses of 8 in IS, 3-1 in OOS — and the candidate has
+lost every period since 2025H2.**
+
+| period | champ R/t | cand R/t | cand |
+|---|---|---|---|
+| 2023H1 | +0.897 | +1.842 | YES |
+| 2023H2 | +1.217 | +2.319 | YES |
+| 2024H1 | +1.081 | +0.518 | no |
+| 2024H2 | +0.421 | +1.557 | YES |
+| 2025H1 | −0.126 | +0.054 | YES |
+| **2025H2** | **+1.470** | **−0.401** | no |
+| **2026H1** | **+0.814** | **−0.115** | no |
+| **2026H2** | **+1.807** | **+0.056** | no |
+
+**The aggregate advantage lives in 2023–2024 and is gone since 2025H2 —
+and in exactly the periods where the champion is strongest. A book whose
+edge only exists in the older half of the sample is a fitted artefact.**
+
+Partitioned by calendar period, fixed before looking, never by
+`r_multiple` / `outcome` / `pnl`. No threshold was searched.
+
+**The union route was closed at P60** (4/4 losses; 43–46% of signals
+skipped; the +664.0R / +225.8R "bound" was 2.9x and 36x too high).
+
+**The forward pass is a smoke test only**: 12.5 days, 14 1h swings, **2
+champion trades against 1 candidate trade**. It confirms the P58
+construction ports without crashing and settles nothing. The champion's
+reported PF of 6195000000.00 is a divide-by-near-zero artefact on n=2 and
+is left visible rather than tidied away.
+
+**Keep the harness and the finding. Do not rebuild the architecture.** The
+1h+15m champion is confirmed from every direction (P58) and nothing is
+adopted.
+
+---
+
 ## Notes recorded from the round
 
 - My briefing was **three-quarters wrong** on "untouched" seeds, and two
