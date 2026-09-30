@@ -87,7 +87,21 @@ constant, or report a size-neutral measure (e.g. % move) alongside R.
 
 ## Still open (not closed)
 
-- **B1 entry.** No kwarg fires the entry on B1 — `exp_b1_b2_mode` is a
+- **B1 entry.** ~~No kwarg fires the entry on B1.~~ **CLOSED at P71,
+  on evidence.** `B1_ENTRY_P71.md`, `exp_b1_entry.py`. Adding B1 to the
+  decisive tradeable set loses **36–164R in all four cells** and makes the
+  book *smaller* (500 → 466 IS). Adding it to the flip set changes the book
+  by **exactly +0.0R in all four cells**. The reason is structural and is
+  the useful part: `_collect_signals` is FCFS — first tradeable mark wins,
+  then the swing closes — and a B1 mark always fires *earlier* than its own
+  swing's B2/FLIP, so it can only ever displace them, never join them. B1
+  marks are not scarce either: per chain, OOS runs **B1 = 2537, B2 = 1990,
+  FLIP = 1985**, so B1 is the *most common* mark and is excluded correctly.
+  **This retires the standing "only ~1/3 of swings get priced, that's
+  headroom" temptation — the unpriced swings are supersessions of marks on
+  swings that were priced, not unused capacity.** Caveat recorded in the doc:
+  the per-chain, per-kind attribution is not measured, so why the flip arm
+  is inert is inferred rather than shown.
   blocking filter on the B2 trigger, not a different trigger. Needs a
   signal-selection patch plus a full path-true run. Honestly **unknown**;
   every B1 number produced so far has been an artefact.

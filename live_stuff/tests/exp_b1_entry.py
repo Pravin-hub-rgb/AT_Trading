@@ -1,167 +1,209 @@
-"""B1 ENTRY - the last open direction, done properly (path-true engine run).
+"""P71 - CAN B1 FIRE ENTRIES? The one mechanical gap left in the engine.
 
-THE GAP THIS CLOSES
-===================
-`CLOSED_DO_NOT_REPEAT.md` lists "B1 entry" as genuinely untested. Every B1
-number produced so far was an artefact: it reused the B2-era exit, mixed risk
-denominators, and had a degenerate-stop bug. This is the real thing.
+WHAT "B1 ENTRY" MEANS
+    btc_swing emits break_kind "B1" / "B2" / "FLIP". B2 is the decisive
+    break of a structure extreme; FLIP is the direction change; B1 is the
+    weaker first touch of the same extreme. `_collect_signals` has:
 
-HOW THE PATCH WORKS
-===================
-The LTF entry trigger is
-    ltf_sigs=_collect_signals(swings_ltf, "decisive", ...)
-and inside `_collect_signals` the mark kinds come from
-    {"b2": ("B2",), "flip": ("FLIP",)}.get(entry_break, ("B2","FLIP"))
-There is NO "b1" key, so B1 entry has never been reachable, and
-`exp_b1_b2_mode` cannot help - it blocks the B2 trigger, it does not change
-it.
+        tradeable = {"decisive": ("B2","FLIP"), "b2": ("B2",),
+                     "flip": ("FLIP",)}.get(entry_break, ("B2","FLIP"))
 
-Rather than edit the shared engine file, this rebuilds that one module in
-memory with a `"b1": ("B1",)` key added and installs it in sys.modules BEFORE
-the craze loader imports it. Everything downstream (SL, trail, cooldown, loss
-streak, window caps) then runs untouched. Same pattern the repo already uses
-for `no_shared_file_edit` runtime patches. B1 marks do exist -
-`exp_thesis_swing_geometry_deep.first_mark(s,"B1",...)` finds them.
+    B1 is in NO entry set. Every B1 mark is read, checked, and skipped.
+    CLOSED_DO_NOT_REPEAT.md records this as "still open (not closed)": no
+    kwarg fires an entry on B1.
 
-The user also asked for a stop above the swing low. Both are swept together,
-because a B1 fill with a swing-low stop is the degenerate case: the fill sits
-near the extreme, so the stop must come up. Whether B1 can be made to work at
-all is only visible in the combined grid.
+    That makes it the cleanest item left - a gap in the engine rather than a
+    filter to be searched - and it is worth asking because if B1 fires and
+    the extra entries are bad, that is an information win for free.
 
-Arms: entry {b1, decisive=B2/flip} x SL pull {0, 0.5, 1.0, 1.5, 2.0} x ATR15.
-decisive + 0.0 is the shipped book and must reproduce the reference ledgers
-exactly or the run aborts.
+TWO ARMS, BECAUSE "ADD B1" IS NOT ONE THING
+    B1_both   add B1 to the DECISIVE set  -> ("B1","B2","FLIP")
+    B1_flip   add B1 to the FLIP set      -> ("B1","FLIP")
+
+    These reach different places. v18 builds its HTF windows from three v7
+    calls: flip, decisive and b2. Adding B1 to the flip set touches the
+    direction windows; adding it to decisive touches the chop windows. One
+    could work while the other bleeds, and reporting them together would
+    hide that.
+
+PATCH MECHANISM - source read, patched, exec'd, repo file never written
+    The tradeable dict is a function-local literal, so it cannot be extended
+    from outside. One insertion adds two new keys; the original keys are
+    left byte-identical so the control path is provably unchanged. This is
+    the same read-patch-exec approach exp_no_expiry.py used on v7, and it
+    is preferred here over a wrapper that rewrites break kinds, because
+    relabelling a B1 as a B2 would change what the mark MEANS rather than
+    whether it is allowed.
+
+PASS CRITERION - FIXED BEFORE RUNNING
+    Beat the champion in BOTH eras in BOTH lanes AND clear M = 193.4R. A
+    larger book that nets less is not a result; it is the trade this
+    programme has seen nine times. And per P61's lesson, any arm that wins
+    in the aggregate must also survive a calendar half-year partition
+    before it is called anything.
+
+THE PRIOR
+    The book prices roughly a third of its confirmed swings, and P64 just
+    established that a different swing SEGMENTATION (ZigZag) was worse than
+    the incumbent's tuned min_bars. This is the opposite move - same swings,
+    more of their marks priced - so the incumbent's detection quality is
+    held fixed and only the trigger set changes.
 """
-from __future__ import annotations
-
-import json
 import sys
-import time
 import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "live_stuff/tests"))
-sys.path.insert(0, str(ROOT / "live_stuff"))
-sys.path.insert(0, str(ROOT / "backend"))
+for p in ("live_stuff/tests", "live_stuff", "backend"):
+    sys.path.insert(0, str(ROOT / p))
+sys.path.append(str(ROOT / "backend" / "src"))
 
-OUT = ROOT / "live_stuff/tests/_b1_entry.json"
-ENGINE_SRC = ROOT / "backend/src/btc/btc_engine.py"
-LANES = (("champion", "champion_multi_sw10"),
-         ("utcsat", "utcsat_multi_sw10"))
-YEARS = {"is": 3.67, "oos": 2.0}
-SL_K = (0.0, 0.5, 1.0, 1.5, 2.0)
-BYBIT_BASE = {
-    "is/champion": (500, 325.8), "is/utcsat": (454, 358.9),
-    "oos/champion": (279, 70.2), "oos/utcsat": (253, 60.2),
-}
-_LONG_SL = ('            sl=sl_pivot - sl_buf_atr*atr15[i] '
-           'if sl_buf_atr>0 else sl_pivot')
-_SHORT_SL = ('            sl=sl_pivot + sl_buf_atr*atr15[i] '
-            'if sl_buf_atr>0 else sl_pivot')
-_TIGHT = ('            if exp_sl_tight>0.0:\n'
-          '                sl_pivot = sl_pivot + exp_sl_tight*atr15[i]*'
-          '(1.0 if entry>sl_pivot else -1.0)\n')
-_TRIG = 'ltf_sigs=_collect_signals(swings_ltf, "decisive",'
+from experiment_registry import BP, EXPERIMENTS
+from run_experiment import get_data, identity_gate, net_r
+import test_experiments_craze as tc
+from test_4_new_concepts import load_unseen
+from test_4_new_concepts import load_fine_1m as load_fine_oos
 
-def install_b1():
-    """Rebuild btc_engine in memory with a B1 mark kind. No file is edited."""
-    src = ENGINE_SRC.read_text(encoding="utf-8")
-    anchor = '        "b2": ("B2",),'
-    if '"b1": ("B1",)' not in src:
-        assert src.count(anchor) == 1, f"b2 key count {src.count(anchor)}"
-        src = src.replace(anchor, anchor + '\n        "b1": ("B1",),')
-    mod = types.ModuleType("src.btc.btc_engine")
-    mod.__file__ = str(ENGINE_SRC)
-    mod.__package__ = "src.btc"
-    exec(compile(src, str(ENGINE_SRC), "exec"), mod.__dict__)
-    sys.modules["src.btc.btc_engine"] = mod
-    return mod
+M_NULL = 193.4
+ENGINE = ROOT / "backend" / "src" / "btc" / "btc_engine.py"
+ORIG = '        "flip": ("FLIP",),\n    }.get(entry_break, ("B2", "FLIP"))'
+PATCH = ('        "flip": ("FLIP",),\n'
+         '        "b1_decisive": ("B1", "B2", "FLIP"),\n'
+         '        "b1_flip": ("B1", "FLIP"),\n'
+         '    }.get(entry_break, ("B2", "FLIP"))')
+PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
+       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
 
 
-def build():
-    """Craze super-set + B1 entry switch + SL-pull patch."""
-    import importlib.util
-    import test_experiments_craze as tc
-    cap = {}
-    orig = tc._load_module
+def pf(rs):
+    return sum(x for x in rs if x > 0) / max(1e-9, -sum(x for x in rs if x < 0))
 
-    def spy(t, n):
-        cap["text"] = t
-        return orig(t, n)
-    tc._load_module = spy
+
+def dd(rs):
+    e = p = d = 0.0
+    for x in rs:
+        e += x
+        p = max(p, e)
+        d = max(d, p - e)
+    return d
+
+
+def patched_module():
+    """btc_engine with two extra tradeable keys. The original keys are
+    untouched, so the control path is byte-identical."""
+    src = ENGINE.read_text(encoding="utf-8")
+    n = src.count(ORIG)
+    if n != 1:
+        raise SystemExit("patch site not unique (%d)" % n)
+    m = types.ModuleType("btc_engine_b1")
+    m.__file__ = str(ENGINE)
+    exec(compile(src.replace(ORIG, PATCH), str(ENGINE), "exec"),
+         m.__dict__)
+    return m
+
+
+PATCHED = {}
+
+
+def run_arm(sim, translate, args, params):
+    """Run the champion with entry_break names translated through
+    `translate`, so 'decisive' -> 'b1_decisive' routes to the new key.
+
+    v18 imports _collect_signals from src.btc.btc_engine INSIDE the
+    function body - the same late-import shape exp_no_expiry.py exploited
+    for v7 - so swapping the attribute on that module redirects the engine
+    without touching any file. That is also why the sim must be
+    tc.build_module() and not a raw exec of v18: the raw module lacks the
+    super-set kwargs the champion's params use.
+    """
+    import src.btc.btc_engine as be
+    orig = be._collect_signals
+    patched = PATCHED["_collect_signals"]
+
+    def routed(swings, eb, **kw):
+        return patched(swings, translate.get(eb, eb), **kw)
+
+    be._collect_signals = routed
     try:
-        tc.build_module()
+        res = sim(*args, **params)
     finally:
-        tc._load_module = orig
-    s = cap["text"]
-    t1 = "    *,\n"
-    assert s.count(t1) == 1
-    s = s.replace(t1, t1 + "    exp_sl_tight=0.0,\n    exp_b1_entry=\"decisive\",\n")
-    for a in (_LONG_SL, _SHORT_SL):
-        assert s.count("\n" + a) == 1, f"sl anchor {a[:30]}"
-        s = s.replace("\n" + a, "\n" + _TIGHT + a)
-    assert s.count(_TRIG) == 1, f"trigger count {s.count(_TRIG)}"
-    s = s.replace(_TRIG, 'ltf_sigs=_collect_signals(swings_ltf, exp_b1_entry,')
-    p = ROOT / "live_stuff/tests/_v18_b1_tmp.py"
-    p.write_text(s, encoding="utf-8")
-    spec = importlib.util.spec_from_file_location("v18_b1", str(p))
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    return m.simulate_htf_ltf_streak_halt
+        be._collect_signals = orig
+    return [t for t in res["ltf_trades"] if t.get("outcome") != "open"]
 
 
 def main():
-    t0 = time.time()
-    install_b1()
-    print("  btc_engine rebuilt in memory with a B1 mark kind "
-          "(shared file NOT edited)", flush=True)
-    sim = build()
-    print("  craze module built: B1 entry switch + SL-pull patch", flush=True)
-    from exp_sizing_combo import run as sim_fn
-    from exp_5m_confirm import load_book
-    from experiment_registry import BP, EXPERIMENTS
-    from exp_equity_quality import equity_quality
+    print("=" * 100)
+    print("  P71  CAN B1 FIRE ENTRIES?")
+    print("=" * 100)
+    print("  B1 marks are generated, read, and skipped by _collect_signals.")
+    print("  Two arms: B1 added to the DECISIVE set, and to the FLIP set.")
+    print("  Pass = beat the champion in BOTH eras in BOTH lanes AND clear M.")
+    print("  M = %.1fR\n" % M_NULL)
 
-    payload = {"stage": "b1_entry", "cells": {}}
-    print("\n" + "=" * 100, flush=True)
-    print("  B1 ENTRY x SL VARIANT - full path-true grid", flush=True)
-    print("=" * 100, flush=True)
-    for scope in ("is", "oos"):
-        data, _ = load_book(scope)
-        for name, key in LANES:
-            params = {**BP, **EXPERIMENTS[key]["params"]}
-            ctl = equity_quality(sim_fn(sim, data, {
-                **params, "exp_b1_entry": "decisive",
-                "exp_sl_tight": 0.0}), YEARS[scope])
-            exp_n, exp_net = BYBIT_BASE[f"{scope}/{name}"]
-            ok = ctl["n"] == exp_n and abs(ctl["net"] - exp_net) < 0.6
-            print(f"\n  [{scope}/{name}] CONTROL {ctl['n']}t {ctl['net']:+.1f}R"
-                  f" (expect {exp_n}t {exp_net:+.1f}) "
-                  f"{'OK' if ok else 'MISMATCH - ABORT'}", flush=True)
-            if not ok:
-                payload.setdefault("errors", []).append(f"{scope}/{name}")
-                continue
-            for entry in ("b1", "decisive"):
-                for k in SL_K:
-                    tr = sim_fn(sim, data, {
-                        **params, "exp_b1_entry": entry, "exp_sl_tight": k})
-                    m = equity_quality(tr, YEARS[scope])
-                    d = round(m["net"] - ctl["net"], 1)
-                    lbl = "B1    " if entry == "b1" else "B2flip"
-                    payload["cells"][
-                        f"{scope}/{name}/{lbl}/k{k}"] = {
-                        "n": m["n"], "net": m["net"], "wr": m["wr"],
-                        "pf": m["pf"], "max_dd": m["max_dd"],
-                        "calmar": m["calmar"], "d_net": d,
-                        "d_dd": round(ctl["max_dd"] - m["max_dd"], 1)}
-                    print(f"    {lbl} SL+{k:<4} {m['n']:>4}t {m['net']:>+8.1f}R"
-                          f" ({d:+7.1f})  WR {m['wr']:>5}%  PF {m['pf']:>6}  "
-                          f"DD {m['max_dd']:>6.1f}  cal {m['calmar']:>7.3f}",
-                          flush=True)
-    payload["elapsed_sec"] = round(time.time() - t0, 1)
-    OUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    print(f"\nwrote {OUT} ({payload['elapsed_sec']}s)")
+    d = get_data()
+    identity_gate(d, tc.build_module())
+    (oc15, of15), (oc1h, of1h) = load_unseen("15m"), load_unseen("1h")
+    oos_fine = load_fine_oos(oc15[0]["ts"], oc15[-1]["ts"])
+    # engine signature is (candles_htf, swings_htf, candles_ltf, swings_ltf, fine)
+    src = {"is": (d["c1h"], d["sw10"], d["c15"], d["sw15"], d["fine"]),
+           "oos": (oc1h,
+                   tc._compute_swings(of1h, "continuous", min_bars=10),
+                   oc15,
+                   tc._compute_swings(of15, "continuous", min_bars=50),
+                   oos_fine)}
+
+    be = patched_module()
+    PATCHED.update({"_collect_signals": be._collect_signals})
+    sim = tc.build_module()
+    print("  btc_engine patched: tradeable gains 'b1_decisive' and")
+    print("  'b1_flip'. Original keys untouched, so the control is")
+    print("  byte-identical. Repo's file is never written.")
+    print("  Also counting raw break kinds per swing chain, because an")
+    print("  arm that changes nothing usually means the marks are not")
+    print("  where it was assumed they were.\n")
+
+    ARMS = [("control (B1 never enters)", {}),
+            ("B1 -> decisive set", {"decisive": "b1_decisive"}),
+            ("B1 -> flip set", {"flip": "b1_flip"}),
+            ("B1 -> both sets", {"decisive": "b1_decisive",
+                                 "flip": "b1_flip"})]
+
+    for name in ("champion_multi_sw10", "utcsat_multi_sw10"):
+        params = {**BP, **EXPERIMENTS[name]["params"]}
+        pin = PIN[name]
+        print("  " + "=" * 98)
+        print("  LANE: %s" % name)
+        print("  " + "=" * 98)
+        for i, scope in enumerate(("is", "oos")):
+            args = src[scope]
+            ctl = run_arm(sim, {}, args, params)
+            if (abs(len(ctl) - pin[i][0]) > 2
+                    or abs(net_r(ctl) - pin[i][1]) > 1.5):
+                print("  [%s] CONTROL FAILED %dt %+.1fR vs pin %dt %+.1fR - STOP"
+                      % (scope.upper(), len(ctl), net_r(ctl), *pin[i]))
+                return
+            base = net_r(ctl)
+            kinds = {}
+            for sw in (args[1], args[3]):
+                for s_ in sw:
+                    for b in (s_.get("breaks") or []):
+                        k = b.get("kind")
+                        kinds[k] = kinds.get(k, 0) + 1
+            print("  --- [%s] control %dt %+.1fR (PIN ok) | break marks: %s"
+                  % (scope.upper(), len(ctl), base,
+                     ", ".join("%s=%d" % kv for kv in sorted(kinds.items()))))
+            print("      %-26s %6s %9s %7s %6s %6s %11s"
+                  % ("arm", "n", "net", "R/t", "PF", "DD", "dNet"))
+            for lbl, tr_map in ARMS:
+                tr = ctl if not tr_map else run_arm(sim, tr_map, args, params)
+                rs = [float(t["r_multiple"]) for t in tr]
+                net = net_r(tr)
+                dv = net - base
+                print("      %-26s %6d %+9.1fR %+7.3f %6.2f %6.1f %+9.1fR%s"
+                      % (lbl, len(rs), net, net / len(rs), pf(rs), dd(rs),
+                         dv, "  <-- CLEARS M" if abs(dv) > M_NULL else ""))
+            print()
+    print("  Nothing adopted.")
 
 
 if __name__ == "__main__":
