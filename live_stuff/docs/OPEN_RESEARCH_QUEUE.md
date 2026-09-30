@@ -152,7 +152,40 @@ are worse *and still profitable*, so every binding threshold spends more than
 it earns. Best arm is `skip widest 10%` at **4/4 positive but +13.3R max**,
 which is **1/15 of M = 193.4R** — an order of magnitude inside the null.
 
-### `[ ]` P1 — nested swing containment (tree instead of tiling)
+### `[x]` P7 — ZigZag re-count over the raw pivot pools — **RUN 2026-09-29, dead, as the queue predicted. `QUEUE_SWEEP.md`**
+
+Jaccard of a textbook ZigZag against the shipped chain: **0.0063 / 0.0017 /
+0.0003** at 3/5/8% (champ IS), **0.0134 / 0.0037 / 0.0010** OOS. Effectively
+**zero overlap at every threshold, both eras, both lanes.**
+
+A ZigZag and the shipped chain find disjoint pivots — so the shipped chain
+is a **segmentation**, and segmentation is a parameterised choice, never a
+discovery. Same lesson as the 2h plane test: the plane and the chain carry
+the edge.
+
+### `[x]` W1 — late-window fade — **RUN 2026-09-29, era-flipped and inside the null. `QUEUE_SWEEP.md`**
+
+Violent sign flip on every threshold — IS `−301.9R` at 2d, OOS `+15.4R`;
+utcsat `−328.7R` / `+5.1R`. Largest `|dNet|` anywhere is **17.1R against
+M = 193.4R**.
+
+**The durable part, and it points the opposite way to intuition:** the p75
+window-age cohort has a **higher** win rate than the book in **all four
+cells** (33.9% vs 30.0%, 29.0% vs 28.0%, 31.7% vs 29.6%). Older windows are
+not tired — they are the ones that worked. Consistent with P38's stale-legs
+result and P3-B's impossible `DEAD`. Three results, one direction, none
+tradable at the required size.
+
+### `[ ]` P1 — nested swing containment — **STILL OPEN, NOT TESTED**
+
+The sweep run in this slot measured **window age (W1)**, not nesting. Letting
+legs nest changes which marks exist and needs `btc_swing.py:150` +
+`walker.py:76` edited — an engine change, not a filter. The queue's
+falsifier stands untouched: *if the containment cohort is a subset of the
+one `RANGE_PEAK_GRAY` showed is the book's best, nesting is rediscovering
+range position and fails 4/4.*
+
+
 
 The chain is a strict tiling (`btc_swing.py:150`) and
 `walker.py:76` `_enforce_alternation` both **destroy nested-counter-leg

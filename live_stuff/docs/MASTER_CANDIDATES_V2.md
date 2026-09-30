@@ -123,3 +123,50 @@ covers the SL-width ladder (a9) and the 3%+ fine-SL gate (a10).
 | age10 | IS | half+delay1 | 8.8 | **2.1** | 491.7 | 62.8% | 7 | 49.8% | — |
 | age10 | OOS | **baseline** | **8.6** | 31.6 | 51.4 | 70.8% | 8 | 64.7% | — |
 | age10 | OOS | **STACK** | 12.5 | 59.3 | 17.5 | 31.8% | 7 | — | — |
+
+---
+
+## 8. CANDIDATE — tight-stop half of the book — **DOCUMENTED, NOT ADOPTED**
+
+Added 2026-09-29 from `RISK_CONCURRENCY.md` (P2). Recorded here because the
+concentration is real and worth keeping visible. **It is not a validated
+candidate and the numbers below must not be read as one.**
+
+| lane | era | arm | n | net | WR | PF | dNet vs book |
+|---|---|---|---:|---:|---:|---:|---:|
+| champion | IS | **tight half** | 251 | **+300.0** | 27.1% | **3.17** | — |
+| champion | IS | wide half | 249 | +25.8 | 32.9% | 1.39 | — |
+| champion | OOS | **tight half** | 140 | **+51.6** | 20.7% | 1.75 | — |
+| champion | OOS | wide half | 139 | +18.6 | 35.3% | 1.38 | — |
+| utcsat | IS | **tight half** | 227 | **+300.7** | 27.3% | **3.35** | — |
+| utcsat | IS | wide half | 227 | +58.2 | 34.4% | 1.67 | — |
+| utcsat | OOS | **tight half** | 127 | **+43.7** | 22.0% | 1.72 | — |
+| utcsat | OOS | wide half | 126 | +16.5 | 37.3% | 1.38 | — |
+
+Stop distance is `|entry − sl| / entry`, known at entry, so the *feature* is
+causal. The ordering is consistent in all four cells: tight-stop trades run
+PF 1.7–3.4 against 1.4–1.7.
+
+### Three reasons this is not a strategy yet
+
+**1. The net is not additive — it is a subset.** +300.0R out of +325.8R is
+**92% of the book from half the trades**, not +300R on top. The correct
+framing is *concentration*, which is a fragility finding, not an edge
+finding.
+
+**2. Trading only the tight half is 4/4 negative.** dNet is
+−25.8R / −18.6R / −58.2R / −16.5R. The wide trades are worse **and still
+profitable**, so the selection spends more than it earns.
+
+**3. The split is post-hoc and untested against the null.** "Half" was chosen
+after seeing the distribution. Per the register's own standard, a candidate
+needs a pre-registered null test, and **M = 193.4R** is the bar the
+`|dNet|` has to clear. The best arm of the whole sweep reached **+13.3R —
+about 1/15 of M.**
+
+### What would promote it
+
+A pre-registered split on a threshold fixed in advance, carried through the
+block bootstrap, with `|dNet| > M` in **both** eras. Not a retune of "half."
+
+
