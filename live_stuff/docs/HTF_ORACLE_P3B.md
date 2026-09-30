@@ -93,7 +93,6 @@ arms that *do* select, both are 4/4 negative.
 
 **Settled:** the early read is possible, causal, and carries no exploitable
 information. One of its two states is already implemented in the engine.
-
 **Not settled:** the queue's harder question — *"ye 1h window gate sach me
 strong hai ya nahi."* This run shows the early read adds nothing. It does
 **not** show the gate itself is hindsight-only. Those are separate claims
