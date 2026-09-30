@@ -1,6 +1,11 @@
-# P80 — DIRECTIONAL FS. The owner's idea works, and it revives what P73 killed.
+# P80: directional FS — **CLOSED AT P82, NOT SIGNIFICANT IN ANY CELL**
 
-> Run 2026-09-29. Harness `exp_directional.py`. **NOT ADOPTED — one test short.**
+> **PERMUTATION TESTED AT P82 (`PERMUTATION_P82.md`).** Every cell fails:
+> champion IS p = 0.6895 and 0.8590, champion OOS p = 0.9197 and 0.7712,
+> utcsat IS p = 0.3022. **The four-of-four positive result and the clean
+> period partition were a difference of two large, similar numbers — a swap
+> of ~400 trades for ~400 trades. Closed.** P80's numbers below are correct
+> and reproduce; the interpretation did not survive.
 > Champion unchanged: 500t/+325.8R IS, 279t/+70.1R OOS.
 > **This is the first architecture in the round that is positive in all four
 > cells AND survives the period partition in every one of them.**
