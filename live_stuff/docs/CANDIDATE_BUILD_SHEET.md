@@ -264,6 +264,72 @@ rewarding.
 | p75 cohort WR | 33.9% | 29.0% | — | 31.7% |
 | whole book WR | 30.0% | 28.0% | 30.8% | 29.6% |
 
-The oldest quartile of windows beats the book in **all four cells** — older
-windows are not tired. But every fade threshold flips sign between eras and
-the largest `|dNet|` is 17.1R.
+---
+
+# `cand_4h1h` — TIER: REGISTERED CANDIDATE, NOT ADOPTED
+
+**4h HTF + 1h LTF.** The only architecture in the programme that beats the
+champion in OOS, in both lanes. Registered 2026-09-29 from P58 + P59.
+Nothing in production changed.
+
+## Build it as
+
+```
+HTF  4h  = aggregate 4 x 1h, min_bars=3   (12h swing confirmation)
+LTF  1h  = aggregate 4 x 15m, min_bars=12  (12h swing confirmation)
+params    = same as champion_multi_sw10
+```
+
+Lag-matched, not bar-count-matched: see `TF_MATRIX_P58.md` for why a
+constant `min_bars` across timeframes is a confound, and why it was fixed.
+
+## Numbers
+
+| | IS | OOS |
+|---|---|---|
+| champion 1h + 15m | 500t +325.8R PF 2.38 R/t 0.652 WR 30.0% | 279t +70.1R PF 1.59 R/t 0.251 WR 28.0% |
+| **cand_4h1h** | 286t +212.8R PF 2.59 R/t 0.744 WR 35.3% | 189t **+98.0R PF 2.02** R/t 0.519 WR 32.8% |
+| utcsat champion | 454t +359.0R PF 2.62 R/t 0.791 WR 30.8% | 253t +60.2R PF 1.58 R/t 0.238 WR 29.6% |
+| **utcsat cand_4h1h** | 257t +165.4R PF 2.38 R/t 0.643 WR 33.9% | 171t **+72.1R PF 1.86** R/t 0.421 WR 32.2% |
+
+Better on R/trade, PF and win rate in **both** eras. OOS R/trade 0.519 vs
+0.251, more than double.
+
+## Against it
+
+- **−113.0R IS** (champion lane), **−193.5R** (utcsat), for 214 / 197 fewer
+  trades. OOS gain +27.9R / +11.9R.
+- **Does not clear M = 193.4R** in either era.
+- One OOS era, and the two lanes are highly correlated.
+- A 4h LTF is bad in OOS under any HTF (P58), so this cell depends on the
+  4h HTF being right, not on the LTF being forgiving.
+
+## The P59 finding that decides how to build it
+
+**It is not a filtered champion. It is a second book. Only 4–7% of trades
+are common** when matched on (4h bucket, direction).
+
+| lane / era | SHARED | CHAMP-ONLY | CAND-ONLY |
+|---|---|---|---|
+| champion IS | 19 (4%) | 478 +370.0R | 267 +228.9R |
+| champion OOS | 19 (7%) | 259 +103.0R | 170 +119.1R |
+| utcsat IS | 18 (4%) | 433 +393.8R | 239 +181.6R |
+| utcsat OOS | 15 (6%) | 238 +84.2R | 156 +92.8R |
+
+**No exclusive group is negative anywhere.** The IS cost is volume, not bad
+trades.
+
+**Therefore: do not build it as a replacement. Build it as a union, under a
+pre-registered slot-conflict rule, and require both eras in both lanes plus
+M = 193.4R before it is considered.** The deduplicated sum of both books
+(+664.0R IS / +225.8R OOS) is a **bound, not a measurement** — the engine
+holds one position, so a union is not free.
+
+## Harnesses
+
+| file | what it does |
+|---|---|
+| `exp_tf_matrix.py` | the 3x3 timeframe matrix, lag-matched (P58) |
+| `exp_cand_cost.py` | shared / champ-only / cand-only decomposition (P59) |
+| `exp_timeframe_arch.py` | first architecture sweep, bar-count convention (P57) |
+

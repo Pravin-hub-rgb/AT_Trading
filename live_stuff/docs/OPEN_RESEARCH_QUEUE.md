@@ -464,6 +464,71 @@ A block-length sensitivity sweep is the obvious next check.
   of the same bars, which is the closest reachable relative of the dead
   P1/P2 wave labelling.
 
+---
+
+## `[ ]` P59 — `cand_4h1h`: 4h HTF + 1h LTF as a COMPLEMENT, not a replacement
+
+**Status: REGISTERED CANDIDATE. Not adopted. Nothing changed in production.**
+
+The only architecture in the programme that beats the champion in OOS, in
+both lanes. Registered because its weakness has an identified cause, and a
+candidate with a known weakness is decidable on the forward pass.
+
+| | IS | OOS |
+|---|---|---|
+| champion 1h + 15m | 500t +325.8R PF 2.38 R/t 0.652 WR 30.0% | 279t +70.1R PF 1.59 R/t 0.251 WR 28.0% |
+| **cand_4h1h 4h + 1h** | 286t +212.8R PF 2.59 R/t 0.744 WR 35.3% | 189t **+98.0R PF 2.02** R/t 0.519 WR 32.8% |
+| utcsat champion | 454t +359.0R PF 2.62 R/t 0.791 | 253t +60.2R PF 1.58 R/t 0.238 |
+| utcsat cand_4h1h | 257t +165.4R PF 2.38 R/t 0.643 | 171t **+72.1R PF 1.86** R/t 0.421 |
+
+Better on R/trade, PF **and** win rate in **both** eras. Costs −113.0R IS /
+−193.5R utcsat for 214 / 197 fewer trades. Gains +27.9R / +11.9R in OOS.
+Params are lag-matched: HTF 4h `min_bars=3`, LTF 1h `min_bars=12`, both
+~12h swing confirmation. Harness `exp_tf_matrix.py`.
+
+### Why it is a complement and not a replacement — P59
+
+Trades matched on **(4h bucket, direction)** only; never on `r_multiple`,
+`outcome`, `exit_ts` or `pnl`. Result: **only 4–7% of trades are common.**
+
+| lane / era | SHARED | CHAMP-ONLY | CAND-ONLY |
+|---|---|---|---|
+| champion IS | 19 (4%) +65.1R | **478 +370.0R** | 267 **+228.9R** |
+| champion OOS | 19 (7%) +3.7R | **259 +103.0R** | 170 **+119.1R** |
+| utcsat IS | 18 (4%) +62.5R | 433 +393.8R | 239 +181.6R |
+| utcsat OOS | 15 (6%) +8.4R | 238 +84.2R | 156 +92.8R |
+
+**No exclusive group is negative in any cell.** So the IS cost is **not bad
+trades being removed — it is 214 fewer trades.** It is a volume story, not a
+quality story. The candidate is a different book trading the same asset.
+
+### The queued experiment, pre-registered
+
+**One union of `champion_multi_sw10` and `cand_4h1h` under a single
+slot-conflict rule, fixed before running.** The programme's existing
+semantics cover it: `SKIP` = pre-entry reject with the slot free, `GRAY` =
+reject while holding the slot. The rule must be pre-registered and chosen
+without looking at the outcome of either book.
+
+Passes only if it beats the champion in **both eras in both lanes** and
+clears **M = 193.4R**.
+
+**Explicitly NOT claimed:** the deduplicated sum of both books is
++664.0R IS / +225.8R OOS. That is a **bound, not a measurement** — the
+engine holds one position, a union needs a conflict rule, and any rule
+picked now is picked by looking at these cells.
+
+### The overlap signal, recorded and not used
+
+19 shared trades return **+3.425R each at PF 7.99 in IS** — the highest
+conviction reading anywhere in the programme. In OOS the same 19 return
+**+0.194R at PF 1.37.** Layer agreement is strong in the era the book was
+built in and unremarkable out of it: the **third** appearance of the
+IS-fitted pattern (P56 expiry, P58 granularity, here agreement). Recorded,
+not gated on. 15–19 trades per cell is also too thin to filter on.
+
+---
+
 ## Notes recorded from the round
 
 - My briefing was **three-quarters wrong** on "untouched" seeds, and two
