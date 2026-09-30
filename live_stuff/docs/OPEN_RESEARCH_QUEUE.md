@@ -224,7 +224,29 @@ its verdict only lands at the exit, a median 1.1 days later.
 (2nd largest), so cutting `cap_days` to 8 would likely destroy R rather
 than add it. P4 must be re-registered before it runs.
 
-## `[ ]` P3-B — READ THE ORACLE EARLY  ← **this is the new #1**
+## `[x]` P3-B — READ THE ORACLE EARLY — **RUN 2026-09-29, ANSWERED, nothing adopted. `HTF_ORACLE_P3B.md`**
+
+**The read works and is causal, but carries no exploitable information.**
+
+- **`DEAD` is structurally impossible — 0 trades in all four cells.** A 15m
+  entry can only fire while the parent leg is still above −1R, so the LTF
+  layer *already is* that filter. Half the oracle was never new information.
+- Of the two reachable states, **`NEUTRAL` has a better PF than `PROVED` in
+  all four cells** (2.56/2.20/2.69/2.12 vs 2.10/1.07/2.48/1.17). Once the
+  parent is already +1.5R, the LTF trade is late.
+- **Both selection arms are 4/4 negative.** This closed **W1's
+  "prove-it-first" arm** (`only PROVED`: −232.2 / −76.5 / −234.9 / −61.3).
+- The pre-registered falsifier could not be run as written: `skip DEAD`
+  keeps 500/500 trades, so there is no coverage to match a window-open-only
+  arm against.
+
+**Scope note — this answers the *early read*, not the *gate*.** The harder
+claim below, that the 1h layer is a hindsight label, is **untested and still
+open**. Run 1 of the harness was void (baseline used `risk` where
+`parent_entry` belonged); the built-in causality probe caught it and is
+retained.
+
+<details><summary>original brief, retained</summary>
 
 The user asked what the 1h layer should do differently, since B1/B2/FLIP
 obviously do not work there. **Answer: the 1h layer's job is not to be a
