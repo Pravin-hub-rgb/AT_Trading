@@ -176,14 +176,22 @@ not tired — they are the ones that worked. Consistent with P38's stale-legs
 result and P3-B's impossible `DEAD`. Three results, one direction, none
 tradable at the required size.
 
-### `[ ]` P1 — nested swing containment — **STILL OPEN, NOT TESTED**
+### `[x]` P1 — nested swing containment — **CLOSED 2026-09-29 without the rebuild. `NESTING_P1.md`**
 
-The sweep run in this slot measured **window age (W1)**, not nesting. Letting
-legs nest changes which marks exist and needs `btc_swing.py:150` +
-`walker.py:76` edited — an engine change, not a filter. The queue's
-falsifier stands untouched: *if the containment cohort is a subset of the
-one `RANGE_PEAK_GRAY` showed is the book's best, nesting is rediscovering
-range position and fails 4/4.*
+The full test needed `btc_swing.py:150` + `walker.py:76` edited, which moves
+the control off the pinned book. **The falsifier did not need that**, so
+containment was measured on the existing chain first.
+
+**It fires, from the other direction.** CONTAINED cohort WR is **29.1% /
+25.9% / 30.0% / 27.2%** — *below* the book's 30.0 / 28.0 / 30.8 / 29.6 in
+**all four cells**, and nowhere near the 41–42% `RANGE_PEAK_GRAY` it was
+supposed to match. The `OUTSIDE` cohort is the best in every cell
+(33.8 / 37.0 / 33.7 / 37.2%) — the good cohort is the one nesting would
+*exclude*. Depth makes it worse: the deepest contained half is **−4.5R and
+−6.7R OOS** on the two lanes.
+
+**Verdict: do not build it.** Closed with the reasoning recorded so a future
+revisit finds this rather than re-running it.
 
 
 

@@ -166,13 +166,16 @@ plausible candidate.
 
 ## Still open, not documented as candidates
 
-| item | state |
+| still open, not documented as candidates | state |
 |---|---|
-| P1 nested swing containment | **not tested** — needs `btc_swing.py:150` + `walker.py:76` edited |
 | P4 `cap_days` sweep | not run — literal `16` in three call sites |
 | 1d vs 2d age cap | measured, decision not taken |
 | P6 / alt breadth | blocked on Bybit perp data |
 | forward pass on `data/forward/bybit/` | M now exists, not run |
+
+**P1 nesting was closed on 2026-09-29 without the rebuild** — containment
+measured on the existing chain came out *below* the book in all four cells,
+and the cohort that is good is the one nesting would exclude. `NESTING_P1.md`.
 
 
 **The ordering reverses between eras** — IS rewards 0.0–0.2, OOS rewards
