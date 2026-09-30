@@ -10,18 +10,34 @@ P82 closed directional FS, which left "the champion trades". **That is not
 a complete answer**, and the owner was right to push. The champion's own
 year table is not comfortable:
 
-| year | n | net | PF |
-|---|---|---|---|
-| 2021 | 152 | **−11.0R** | 0.89 |
-| 2022 | 127 | +116.7R | 2.54 |
-| 2023 | 107 | +113.9R | 2.71 |
-| 2024 | 163 | +124.1R | 2.08 |
-| 2025 | 128 | +100.4R | 2.24 |
-| 2026 | 102 | +106.8R | 2.79 |
 
-**One year in six is negative.** A book can net +325.8R over 3.7 years and
-still be unshippable inside a single year. This measures the **sequence**,
-not the total — the total is already known and is not the question.
+> **THE TABLE BELOW WAS WRONG THE FIRST TIME IT WAS PRINTED, AND IT STAYED
+> WRONG IN THIS FILE AFTER THE HARNESS WAS FIXED.** The owner's arithmetic
+> caught it — 113.9 + 124.1 + 100.4 + 106.8 = 445.2R against a pin of
+> 325.8R, a 119.4R gap that is exactly the cost of the book. That is the
+> gross-vs-net mistake of P60, repeated in P83, and **the harness was
+> corrected while this document kept quoting the gross numbers.** A second
+> reviewer (`NEXT_ROUND_BRIEF.md`, "Space bunny") caught the stale copy in
+> the very document that documents the error. Corrected figures are marked
+> NET and the gross column is shown beside them rather than deleted, so the
+> gap is visible instead of merely asserted.
+
+**Corrected, NET (these sum to the +325.8R pin):**
+
+| year | n | **net NET** | ~~gross (was printed here)~~ | PF |
+|---|---|---|---|---|
+| 2021 | 152 | **−26.4R** | ~~−11.0R~~ | 0.89 |
+| 2022 | 127 | **+96.6R** | ~~+116.7R~~ | 2.54 |
+| 2023 | 107 | **+86.9R** | ~~+113.9R~~ | 2.71 |
+| 2024 | 163 | **+90.4R** | ~~+124.1R~~ | 2.08 |
+| 2025 | 128 | **+67.2R** | ~~+100.4R~~ | 2.24 |
+| 2026 | 102 | **+81.3R** | ~~+106.8R~~ | 2.79 |
+
+**One year in six is negative, and on the net basis it is worse than the
+gross figures suggested: 2021 is −26.4R, and three of its four quarters are
+negative (2021Q2 −19.3R at PF 0.41, 2021Q3 −7.3R, 2021Q4 −1.8R).** A book
+can net +325.8R over 3.7 years and still be unshippable inside a single
+year. This measures the **sequence**, not the total.
 
 ## What the sequence actually looks like
 
