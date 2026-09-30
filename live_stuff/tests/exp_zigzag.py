@@ -99,42 +99,60 @@ def as_swing_records(zz, candles):
     The engine does not read {dir, ts, px}. btc_swing.compute_btc_swings
     emits a chain of records with `swing_index`, a `seg` block of
     idx/px fields, `breaks`, and `confirmed_at_idx/_time`, and v18's
-    skip_first drops swing_index 0. Feeding it bare {dir, ts, px} dicts
-    produced a silent ZERO-trade book rather than an error, which is the
-    worst kind of failure - the first ZigZag run printed a clean table of
-    empty cells and looked like a real result.
+    skip_first drops swing_index 0.
 
-    `confirmed_at_idx` is what makes this causal: the engine indexes bars,
-    not timestamps, so the idx stamped here is the CONFIRMATION bar's idx.
+    THE ACTUAL CONTRACT, read from the CONSUMER this time - _collect_signals
+    in btc_engine.py, which is what simulate_btc_trades_v7 calls. Two
+    violations in the first adapter explain the silent zero-trade book:
+
+      1. `sdir = 1 if s.get("dir") == "up" else -1`  -> `dir` must be the
+         STRING "up"/"down". An int 1/-1 collapses every swing to -1.
+      2. `if b["kind"] not in tradeable: continue`, where tradeable is
+         ("B2", "FLIP") for the default entry_break. The first adapter
+         emitted kind "H"/"L", so every break was skipped, every swing set
+         swing_done, and _collect_signals returned nothing at all.
+
+    So a ZigZag swing's break mark is emitted as a FLIP in that swing's own
+    direction at its confirmation bar - which is also the semantically right
+    mapping, since a ZigZag high is confirmed by price breaking UP through
+    the prior high.
+
+    `confirmed_at_idx` is the causality guarantee: the engine indexes BARS,
+    so the idx stamped here is the CONFIRMATION bar's idx and never the
+    pivot's. A pivot-stamped swing is the P52 lookahead.
     """
     ts_to_idx = {}
     for i, c in enumerate(candles):
         ts_to_idx.setdefault(int(c["ts"]), i)
-    out, prev = [], None
+    out, prev_px, prev_idx = [], None, None
     for k, s in enumerate(zz):
         ci = ts_to_idx.get(int(s["ts"]))
-        if ci is None:
-            continue
         pi = ts_to_idx.get(int(s["pivot_ts"]), ci)
+        if ci is None or pi is None:
+            continue
+        d = "up" if s["dir"] > 0 else "down"
+        si_ = prev_idx if prev_idx is not None else pi
+        sp = prev_px if prev_px is not None else float(candles[si_]["close"])
         out.append({
             "day": candles[ci]["date"][:10],
-            "swing_index": k + 1,          # skip_first drops 0
+            "swing_index": k + 1,          # v18 skip_first drops 0
             "seg": {"dir": "B" if s["dir"] > 0 else "S",
-                    "start_idx": prev if prev is not None else pi,
-                    "start_px": float(candles[prev if prev is not None
-                                              else pi]["close"]),
+                    "start_idx": si_, "start_px": sp,
                     "end_idx": pi, "end_px": float(s["px"])},
             "source": "zigzag",
-            "dir": s["dir"],
+            "dir": d,                      # STRING - violation #1
             "kind": src_kind,
-            "breaks": [{"idx": pi, "time": candles[pi]["date"],
-                        "kind": "H" if s["dir"] > 0 else "L",
-                        "dir": s["dir"], "px": float(s["px"])}],
+            "break_kind": "FLIP",
+            "breaks": [{"idx": ci,
+                        "time": candles[ci]["date"],   # candle date format
+                        "kind": "FLIP",                 # violation #2
+                        "dir": d,                       # STRING, not int
+                        "px": float(candles[ci]["close"])}],
             "confirmed_at_idx": ci,
             "confirmed_at_time": candles[ci]["date"],
             "fs_at_idx": ci, "fs_at_time": candles[ci]["date"],
         })
-        prev = pi
+        prev_idx, prev_px = pi, float(s["px"])
     return out
 
 

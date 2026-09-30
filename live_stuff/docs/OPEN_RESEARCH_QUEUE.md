@@ -470,11 +470,17 @@ A block-length sensitivity sweep is the obvious next check.
   kills-clean) is on Binance fapi and therefore does not answer a Bybit
   question. Fetching Bybit alts is the precondition for the whole
   multi-instrument thread, and for P6 above.
-- `[ ]` **ZigZag re-count over `normal_highs`/`normal_lows`** — the raw
-  pivot pools already exist in `firstswing.py`; a different segmentation
-  of the same bars, which is the closest reachable relative of the dead
-  P1/P2 wave labelling. **No data blocker — the only fully runnable item
-  left on this list.**
+- `[x]` ~~**ZigZag re-count over `normal_highs`/`normal_lows`**~~ —
+  **CLOSED at P70, dead.** `ZIGZAG_CLOSED_P70.md`. The integration finished:
+  the engine's contract is in `_collect_signals` (`btc_engine.py`), and the
+  adapter had violated it twice — `dir` must be the STRING `"up"`/`"down"`
+  (an int collapses every swing to −1) and `kind` must be `B2`/`FLIP`
+  (`"H"`/`"L"` skips every break). Both failed **silently**, printing clean
+  tables of empty cells. With the engine actually trading:
+  **12 of 24 cells clear M = 193.4R and all 12 are negative.**
+  A fixed-percentage reversal rule is a worse swing detector than the
+  engine's own tuned `min_bars` rule. Nemotron P10 answered. This was the
+  last fully runnable item on the queue.
 - `[ ]` **Stationary-block bootstrap to size the forward null** — added by
   P62. M = 193.4R comes from a two-year block; a forward slice is shorter
   and its null is wider, so the required forward length is currently
