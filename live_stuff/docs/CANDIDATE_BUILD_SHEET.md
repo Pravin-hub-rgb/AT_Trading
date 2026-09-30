@@ -1,5 +1,13 @@
 # CANDIDATE BUILD SHEET — every documented finding, with its harness
 
+> **READ FIRST: [`THE_CHAMPION_HANDOFF.md`](THE_CHAMPION_HANDOFF.md)** —
+> the authoritative P55–P98 record. Before building any candidate from this
+> sheet, check it against the handoff's **PART 3 (retracted/corrected)**
+> and **PART 4 (closed, never rerun)**. Notable: **P89's side-asymmetry
+> recommendation is withdrawn and inverted**, **P92's drawdown depths were
+> produced by a double-subtraction bug**, and **P83's 37.3R max drawdown is
+> actually 30.5R**.
+
 > **Written 2026-09-29. Nothing here is adopted.** This file exists so any
 > finding below can later be turned into a new strategy without redoing the
 > archaeology. Rule, numbers, harness and wiring are all in one place.

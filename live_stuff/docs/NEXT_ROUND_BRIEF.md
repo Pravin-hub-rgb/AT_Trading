@@ -1,5 +1,13 @@
 # NEXT ROUND BRIEF — v18 / champion_multi_sw10
 
+> **READ FIRST: [`THE_CHAMPION_HANDOFF.md`](THE_CHAMPION_HANDOFF.md)** —
+> the authoritative P55–P98 record: validated / exploratory / retracted /
+> closed, with each result's accounting basis stated. Nothing was adopted
+> in 44 experiments. Three earlier numbers are now **superseded** (P89
+> inverted, P92's depths ~15× too large, P83's 37.3R is actually 30.5R),
+> and **P96/P97 found the concurrency guard has never fired** — 58% of
+> shipped IS R is not deployable, and no slot queue can recover it.
+
 **Read this whole file before proposing anything. It exists because the
 previous round wasted itself by not doing so.**
 

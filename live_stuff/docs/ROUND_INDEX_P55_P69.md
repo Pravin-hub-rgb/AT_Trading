@@ -1,5 +1,11 @@
 # The round, indexed — P55 to P69
 
+> **SUPERSEDED IN PART.** The authoritative record is now
+> [`THE_CHAMPION_HANDOFF.md`](THE_CHAMPION_HANDOFF.md) (P55–P98). Read
+> that first. Two corrections apply to this index: **P57's `min_bars` was a
+> bar COUNT, not a lag** (corrected in P58), and **P60's "+664R bound" was
+> 36× too high** because it compared a gross sum against a net book.
+
 **Every experiment run 2026-09-29, what it asked, what it found, and whether
 it survives. Nothing was adopted in any of them.**
 

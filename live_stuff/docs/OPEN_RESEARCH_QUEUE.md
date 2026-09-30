@@ -1,6 +1,15 @@
 # OPEN RESEARCH QUEUE — every suggestion from the second-researcher round,
 # in the order received. No priority. Worked one at a time.
 
+> **READ FIRST: [`THE_CHAMPION_HANDOFF.md`](THE_CHAMPION_HANDOFF.md)** —
+> the authoritative P55–P98 record. It lists what is validated, what is
+> exploratory, what is **retracted or corrected**, and what is **closed —
+> never rerun as new**. Three recorded numbers are now superseded: **P89
+> inverted, P92's drawdown depths were ~15× too large, P83's 37.3R max DD
+> is actually 30.5R.** And **P96/P97: the concurrency guard has never
+> once fired** — 58% of shipped IS R is not deployable by a bot whose
+> guard works.
+
 Date: 2026-09-28. Source: `other bots proposal.md` (four sets: Nemotron 3,
 Big Pickle, Link3.0, Mimo-V2). ~30 proposals were returned; they are
 deduplicated below.

@@ -1,5 +1,11 @@
 # Transcript Thesis Backlog — Bybit BTCUSDT Perp Only
 
+> **READ FIRST: [`THE_CHAMPION_HANDOFF.md`](THE_CHAMPION_HANDOFF.md)** —
+> the authoritative P55–P98 record. Any thesis below that overlaps
+> existing research must be checked against its **PART 4 (closed, never
+> rerun)** first — several theses in this backlog were re-derived and
+> killed, and rerunning them wastes a cycle.
+
 Dated: 2026-09-24. This file records the distinct theses extracted from the supplied trading-video transcripts and marks whether each overlaps existing v18 research.
 
 ## Queue order
