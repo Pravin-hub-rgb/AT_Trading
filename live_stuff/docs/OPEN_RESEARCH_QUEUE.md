@@ -71,7 +71,45 @@ Median window is **1.17d IS / 1.06d OOS**, p75 ~3.8d. Two arms:
 is a label, not a driver. **Not closed by `window_r_cap`** — that capped
 R *within* a window, this filters *by* window age.
 
-### `[ ]` W2 — why did `r_touch` lose 130R?
+### `[x]` P3 — score the 1h HTF layer's own P&L — **RUN 2026-09-29. The 1h layer has no standalone edge. `HTF_STANDALONE_P3.md`**
+
+| net of costs | champ IS | champ OOS |
+|---|---|---|
+| 1h FLIP | 355t **+1.9R** PF 1.20 | 204t **−23.6R** PF 0.96 |
+| 1h B2 | 309t **−49.6R** PF 0.92 | 194t **−21.7R** PF 0.94 |
+| **CASCADE** | 500t **+325.8R** R/t +0.652 | 279t **+70.1R** R/t +0.251 |
+
+The claim (**cascade ≥2× the best 1h standalone**) **passes at 4.6×**. The
+falsifier (1h positive both eras, PF > 1.3) **does not fire** — 1h is
+negative OOS and never above PF 1.20.
+
+**The 1h layer supplies direction, it does not carry edge.** Same fact P3-B
+found from the other side.
+
+**Two corrections this run had to make:** the primary 1h book is
+`htf_trades`, *not* `htf_trades_flip` (the engine returns no
+`htf_trades_decisive` at all, and the first run of this file reported the
+flip book as empty); and `r_multiple` sums to +50.6R gross where `net_r`
+gives +1.9R, so costs are ~0.24R/trade and every figure above is net.
+
+### `[x]` W2 — why did `r_touch` lose 130R? — **RUN 2026-09-29. MFE is bimodal; the recorded reason is wrong**
+
+| MFE | champ IS | champ OOS |
+|---|---|---|
+| below 1.5R | **65.7%** | **66.0%** |
+| 1.5–3.0 band | **12.6%** | **12.4%** |
+| reaching 3R | **21.7%** | **21.6%** |
+
+**The 1.5–3.0 band is the thinnest part of the distribution, in both eras.**
+By the queue's own falsifier, 1.5R sits in a gap and should have been free —
+**so the −130R is not explained by MFE, and `r_touch` was rejected for a
+reason that does not hold up.**
+
+**The blame is retracted, not the rejection.** An unexplained regression is
+still a regression, and 1.5R still truncates the 21.7% of legs that run past
+it. But the recorded *reason* must not be cited again.
+
+
 
 Closing at +1.5R should have helped if 25% of windows reach 3R. It
 regressed instead. Worth understanding before any duration rule is
@@ -106,24 +144,13 @@ and rejected (`exp_partial_r`: multi sw10 +247.9 vs no-partial +163.6 =
 at 0.0. So "add / close earlier / partial" are ALL closed — **only shrink
 is untested.**
 
-### `[ ]` P3 — score the 1h HTF layer's own P&L ← highest value
+### `[ ]` P5 — the base-book null ← governance — **DELIVERED: M = 193.4R**
 
-Every run simulates the 1h book **three times** (`entry_break` ∈ {flip,
-decisive, b2}, `v18_streak_halt.py:222-224`) and throws its P&L away,
-keeping only `(entry_ts, exit_ts, dir, px, sl)` as window bounds. **Nobody
-has ever reported what the 1h book earns standalone.**
+Superseded by the result at line 274. Retained as the original brief.
 
-Either the 1h book carries the edge (three-timeframe architecture is
-decoration) or the 15m layer does. Pre-registered claim: the cascade
-beats the best 1h standalone book on R/trade by ≥2× in both eras — if not,
-the architecture is not earning its complexity.
-
-**Output is attribution, not edge.** Nearly free — the trades already
-exist inside every backtest — and it re-ranks the rest of the queue.
-Falsifier: 1h standalone positive in both eras with PF > 1.3 means the LTF
-layer adds nothing and the programme is one timeframe too low.
-
-### `[ ]` P5 — the base-book null ← governance
+> "Every run simulates the 1h book **three times**… **Nobody has ever
+> reported what the 1h book earns standalone.**" *(this is P3, answered
+> above)*
 
 No experiment has established what `dNet` must be to mean anything.
 `IS_IT_RIGHT.md` has a zero-mean bootstrap (IS p=0.0025, **OOS p=0.199**,
