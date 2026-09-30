@@ -449,10 +449,23 @@ A block-length sensitivity sweep is the obvious next check.
   swing geometry gave a clean era inversion, and P55 then showed the
   inversion is not detectable at runtime (IS/OOS medians within 0.01–0.10
   against an IQR of ~0.75). `HTF_GEOMETRY_P54.md`, `REGIME_DETECT_P55.md`
-- `[ ]` **Alt breadth as a BTC HTF feature** *(Nemotron P6)* — alt index
-  state gating BTC bias. Flagged as risky by the proposer; the
-  cross-sectional-rotation closure creates real tension. **BLOCKED on
-  Bybit perp alt data** (below).
+- `[x]` ~~**Alt breadth as a BTC HTF feature**~~ *(Nemotron P6)* — **BLOCKED
+  on Bybit perp alt data** (below). Not runnable without a data fetch.
+- `[x]` **Nemotron P4 — 30m timeframe**: **RUN at P66, closed, nothing
+  adopted.** `TF_INTERP_P66.md`, `exp_tf_interp.py`. P58 had skipped
+  everything between 15m and 1h — the space the champion lives in — so P66
+  ran LTF ∈ {15m, 30m, 45m} at a fixed 1h HTF with lag-matched `min_bars`
+  (50/25/17) and the champion's own 1h/10 held constant.
+  **30m in OOS more than doubles the champion in both lanes: +141.9R vs
+  +70.1R and +103.1R vs +60.2R, with every quality measure better at once —
+  R/trade 0.537 vs 0.251, PF 2.06 vs 1.59, DD 17.6 vs 37.3, WR 29.9% vs
+  28.0%. And it costs −187.8R / −238.5R in IS.**
+  Every measure moves together and in **opposite** directions across eras,
+  which is the sixth appearance of the era-split pattern. **The adaptive
+  fix is exactly the gate P55 could not support** — the eras are not
+  separable at decision time — so switching by regime would be a lookahead
+  wearing a switch. Not adopted; the 15m LTF is confirmed from both sides
+  of the gap.
 - `[ ]` **Bybit perp alt data** — the transfer census (7/13 passing, 5/6
   kills-clean) is on Binance fapi and therefore does not answer a Bybit
   question. Fetching Bybit alts is the precondition for the whole

@@ -115,6 +115,37 @@ and the stale set is not.
 
 ## TIER B — strong in IS, negative in OOS
 
+### B0. Stage 64 `global_soft_n3` — **period-STABLE but magnitude-failed**
+
+> Filed in the backlog without ever meeting the null. Re-tested at P65.
+> `WINSTREAK_M_P65.md` · `exp_winstreak_M.py`
+
+After **three completed global wins**, block new entries in the current
+parent HTF window; keep open positions. (`exp_window_win_kill_n=3`,
+action `soft`, scope `global`.)
+
+| lane / era | n | net | R/t | PF | DD | WR | dNet |
+|---|---|---|---|---|---|---|---|
+| champ IS | 483 | +331.7R | +0.687 | 2.46 | 17.8 | 30.6% | **+5.9R** |
+| champ OOS | 262 | +90.0R | +0.343 | 1.74 | 35.1 | 29.0% | **+19.8R** |
+| utcsat IS | 425 | +360.5R | +0.848 | 2.72 | 14.8 | 31.1% | **+1.5R** |
+| utcsat OOS | 245 | +60.8R | +0.248 | 1.59 | 21.5 | 29.4% | **+0.6R** |
+
+**Fails M = 193.4R in every cell** — best is 10.3% of the null, and on
+utcsat it is indistinguishable from nothing. It removes 17 trades per era
+on the champion lane for +5.9R / +19.8R.
+
+**But the period partition is the exception: 14 wins, 3 losses, 7 ties over
+24 half-year cells.** This is the **only candidate this round that is both
+period-stable and positive in both eras in both lanes.**
+
+**So it fails on MAGNITUDE, not direction — the opposite of `cand_4h1h`,
+which had a stable-looking aggregate and became a 4-4 coin flip.** Keep it
+on the list for a forward slice that can rule (P63), not confirm.
+`window_soft_n3` is inert in OOS on both lanes (+0.0R).
+
+---
+
 ### B1. 1h character strength + decay, N = 8
 
 Read the 1h rolling character score (buying intact + selling broken, over 8
