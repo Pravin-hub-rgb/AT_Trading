@@ -42,5 +42,32 @@ Dated: 2026-09-24. This file records the distinct theses extracted from the supp
 - Stage 63 tested the loss-triggered HTF-window invalidation family (N2/3/4/5, window/global, soft/hard) across seven references. Zero arms were positive in both IS and OOS versus the no-halt control. OOS-only gains came from deleting later recovery/re-entry and runner trades; hard close changed little. Family closed; no production flag.
 - Stage 64 tested completed-win-streak controls and then completed the direct shipped-default stacking matrix. Champion default + `global_soft_n3` improves IS `+325.8→+331.7R` and reused OOS `+70.2→+90.0R`, with better R/trade, PF, and drawdown while preserving the OOS 10R+ tail. King global N3 is only `+1.5/+0.6R`; conservative king `window_soft_n3` is `+3.2R` IS and neutral OOS with complete tail preservation. The rule is not universal: pure/literal/fullstack cells are mixed or negative. Keep champion-global and king-window as separate current-multi research candidates; reject a universal default; no production flag in the study. See `WIN_STREAK_STACKING_AUTOPSY.md` and `_thesis_win_streak_stack_results_{is,oos}.json`.
 
+## Re-tested at P65 against the programme's own bar
+
+The Stage 64 **win-streak** half above was re-tested at P65
+(`WINSTREAK_M_P65.md`, `exp_winstreak_M.py`). Stage 64 had never met
+M = 193.4R and had never received the P61 period partition — its hit bar was
+a single-axis delta. It had the same profile that killed `cand_4h1h` (better
+risk profile *and* better return), so it was worth putting through the
+standard the programme adopted afterwards.
+
+**Stage 64's numbers reproduce exactly** — champion IS +325.8→+331.7R,
+OOS +70.2→+90.0R, better R/trade, PF and drawdown — **but the deltas are
++5.9R IS and +19.8R OOS on the champion lane, and +1.5R / +0.6R on utcsat.**
+Best cell is **10.3% of the null**; on the second lane it is
+indistinguishable from nothing.
+
+**The period partition is the part worth keeping: 14 wins, 3 losses, 7 ties
+across 24 half-year cells — the only candidate this round that is BOTH
+period-stable AND positive in both eras in both lanes.**
+
+Status: **NOT ADOPTED — real but small.** It fails on magnitude, not
+direction. `cand_4h1h` failed the opposite way (a stable-looking aggregate
+that became a 4-4 coin flip under partition). This one survives partition
+and adds ~1.8% to a +325.8R book. Recorded for the pile and for a future
+forward slice, which per P63 can rule but never confirm.
+`window_soft_n3` is inert in OOS on both lanes (+0.0R), +3.2R in IS on both.
+
+
 
 
