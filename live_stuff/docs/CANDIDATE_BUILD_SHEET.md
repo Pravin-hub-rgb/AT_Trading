@@ -23,25 +23,53 @@ sheet keeps the two judgements apart rather than collapsing them.
 
 ## TIER A — 4/4 positive, consistent sign
 
-### A0. Window `cap_days` — turn the 16-day cap OFF (new, P49)
+### A0. Window `cap_days` — a risk control inherited across an architecture change (P49 + P50)
 
-The 16-day cap is literal in three call sites of `v18_streak_halt.py` and had
-never been swept. **Removing it is 4/4 positive and adds trades.**
+**This is the cleanest finding in the sheet, and the reason is historical
+rather than statistical.**
+
+```python
+# backend/src/btc/engines/v7_timecap.py
+"""v7 — Time Cap for 1h Flip Fixed 3R. Exits at market if hold > cap_days."""
+cap_days: int = 30,        # v7's own default
+```
+
+**v7 traded the 1h leg directly.** A leg that hit neither −1R nor +3R could
+hold for months, so a time cap was added to force a market exit. **For that
+architecture it was the right call.** Then the LTF layer arrived; v18
+inherited `cap_days=16` as a literal in three call sites and became
+**HTF-as-gate, LTF-as-executor**. The number survived the change. The meaning
+did not.
+
+| | v7 | v18 (shipped) |
+|---|---|---|
+| what the 1h leg is | the trade | a gate |
+| what a cap exit does | closes one position at market | closes the window **and every LTF entry inside it** |
+| is that a risk decision | yes | it is opportunity suppression |
+
+**The cap is doing exactly what it was built to do, on the wrong object.**
+
+Turning it off is 4/4 positive and **adds** trades:
 
 | | champ IS | champ OOS | utcsat IS | utcsat OOS |
 |---|---|---|---|---|
 | `cap_days=16` (shipped) | 500t +325.8R | 279t +70.1R | 454t +359.0R | 253t +60.2R |
-| **`cap_days` off** | **586t +401.1R** | **313t +125.2R** | **535t +372.6R** | **284t +138.7R** |
+| **cap off** | **586t +401.1R** | **313t +125.2R** | **535t +372.6R** | **284t +138.7R** |
 | **dNet** | **+75.3R** | **+55.1R** | **+13.7R** | **+78.5R** |
 | extra trades | +86 | +34 | +81 | +31 |
 
-Every value 1–12 is worse than 16 and every value 20+ is better, so 16 sits
-at the bottom of a valley. **The cap only ever truncates windows that are
-still open and still working.**
+**And the mechanism is measured, not inferred.** 12 windows truncated in
+champion IS: ten died at −1R, those HTF legs came to **−4.0R** in total, and
+the LTF trades taken inside them while still open were **176 trades worth
++88.2R**. Uncapped there are *fewer* HTF legs (309 → 226) yet *more* LTF
+trades (500 → 586) — trades per window goes 1.6 → 2.6. **The long windows are
+the ones that keep producing, and the cap removes them systematically.**
 
-Not a pass under the P3 rule (does not beat 16 by more than M in both eras),
-and the sweep is **not monotone** — `cap_days=24` is anomalously bad in both
-OOS cells — so the **direction** is the finding, not any number. `CAPS_P49.md`.
+**Limits, kept next to it:** largest dNet +78.5R against M = 193.4R — real,
+4/4, **not a pass**. A 98-day window is three months of directional exposure
+and **the v7 rationale is still valid, it just applies to the leg now, not
+the window.** The sweep was not monotone. And the cap binds on only 5–6% of
+legs, so it is a small-sample effect. `CAPS_P49.md`, `WINDOW_LIFE.md`.
 
 ### A1. `decay < 0.75` — SKIP
 
@@ -174,10 +202,11 @@ cell.
 
 ---
 
-## The honest summary of the four concentration findings
+## The honest summary of the concentration findings
 
 | feature | concentration | eras agree | extractable |
 |---|---|---|---|
+| **cap_days off** | real, measured mechanism | **yes, 4/4** | no — 0.4 × M |
 | decay | real | yes, 4/4 | no — 0.18 × M |
 | window age | real | yes, 4/4 | no — era-flip |
 | stop width | real | yes | no — 4/4 negative |
@@ -188,6 +217,20 @@ median trade is roughly break-even, the profitable subset is large and
 overlapping, so cutting it removes winners faster than losers.** Decay is
 the only one whose sign survives every test, and it is the only one still a
 plausible candidate.
+
+## The one finding whose reason is structural, not statistical
+
+`cap_days` is the only item here whose case does not rest on a number
+clearing a threshold. **A trade-exit control written for a standalone-HTF
+architecture was inherited by a gate-based one, where the same exit now
+suppresses the LTF layer.** The number it produces (+78.5R) does not clear
+M. The reasoning does not need M at all, and it is the one item here that
+survives if every dNet in this sheet turns out to be noise.
+
+That is also why it should be resolved by a *decision* — drop the cap, or
+replace it with a ceiling that still limits the leg — rather than by looking
+for a better threshold.
+
 
 ---
 

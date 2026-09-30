@@ -4,14 +4,45 @@
 > Champion unchanged: 500t/+325.8R IS, 279t/+70.1R OOS.
 > This is the diagnostic behind P49's "turn the cap off" direction.
 
+## Where the 16-day cap came from, and why it no longer means what it meant
+
+The owner recalled the origin, and the code confirms it exactly:
+
+```python
+# backend/src/btc/engines/v7_timecap.py
+"""v7 — Time Cap for 1h Flip Fixed 3R. Exits at market if hold > cap_days."""
+cap_days: int = 30,        # v7's own default
+```
+
+**It was a trade exit.** v7 traded the 1h leg directly. A leg that neither
+hit −1R nor +3R could stay open for months, holding real directional risk, so
+a time cap was added to force a market exit. **For that architecture that was
+the right call, and it is still a sound risk control.**
+
+Then the LTF layer arrived. v18 inherited `cap_days=16` as a literal in three
+call sites and became **HTF-as-gate, LTF-as-executor**. The number survived the
+architecture change. The **meaning did not.**
+
+| | v7 | v18 (shipped) |
+|---|---|---|
+| what the 1h leg is | the trade | a gate |
+| what a cap exit does | closes one position at market | closes the window **and every LTF entry inside it** |
+| is that a risk decision | yes | it is opportunity suppression |
+
+**So the cap is doing exactly what it was built to do, on the wrong object.**
+It is not a bug. It is a correct control that became an incorrect one when
+the thing it was controlling stopped being the thing that was traded.
+
+That is the whole finding, and P50 measures the consequence of it.
+
 ## The question asked
 
 > "like mahino tak htf same bias? woh hua hoga nah — −1R pe mara hai, +3R pe
 > mara hai, bas"
 
-A window is supposed to end at −1R, at +3R, or at 16 days. So: what does the
-duration distribution actually look like, and **is the 16-day cap removing
-windows that were still working?**
+A window ends at −1R, at +3R, or at 16 days. So: what does the duration
+distribution look like, and **is the 16-day cap removing windows that were
+still working?**
 
 ## Answer: the cap binds on a small tail, and that tail is the productive one
 
@@ -23,10 +54,10 @@ windows that were still working?**
 | **max, uncapped** | **98.10 d** | **76.82 d** | 76.82 d |
 | legs at the 16d cap | 19/309 (6.1%) | 9/194 (4.6%) | 9/194 (4.6%) |
 
-**So the honest answer to the question: no, most windows are short — the
-median is barely over a day — but the tail runs to three months.** The 16
-days is not a representative window life, it is a ceiling, and only 5–6% of
-legs are anywhere near it.
+**So the direct answer: no, most windows are short — the median is barely
+over a day — but the tail runs to three months.** The 16 days is not a
+representative window life, it is a ceiling, and only 5–6% of legs are
+anywhere near it.
 
 ## What the cap actually kills
 
@@ -43,12 +74,11 @@ legs are anywhere near it.
 
 **Ten of twelve truncated windows died at −1R — and the LTF trades taken
 inside them while they were still open were worth +88.2R.** The parent leg's
-own outcome was −4.0R. The money was never in the leg.
+own outcome was −4.0R. **The money was never in the leg.**
 
-**This inverts what the cap was assumed to be.** The queue treats the 16-day
-cap as a risk control. It is not. It is a brake on the only thing that
-makes money: closing a window at −1R also closes the LTF layer inside it, and
-those LTF entries were profitable.
+Read against the v7 origin, this is exactly the predicted failure. The cap
+was built to stop a position being held too long. It stopped the position.
+It also stopped the executor, and the executor was where the edge lived.
 
 There is a second effect that makes the same point. Uncapped, the book has
 **fewer** HTF legs (309 → 226 in champion IS) because a long window blocks
@@ -63,7 +93,8 @@ keep producing, and the cap removes them systematically.
 - **A 98-day window is three months of directional exposure.** The engine has
   no rule that would stop a bias persisting that long, and the fact that it
   made money here does not make it safe. This is the strongest argument
-  *against* turning the cap off, and it belongs next to the +75.3R.
+  *against* turning the cap off, and it belongs next to the +75.3R. **The
+  v7 rationale is still valid; it just applies to the leg, not the window.**
 - **P49's sweep was not monotone** — `cap_days=24` is anomalously bad in both
   OOS cells while 20 and 32 on either side are fine — so a single good value
   is partly noise. The direction is the finding, not a number.
@@ -73,15 +104,16 @@ keep producing, and the cap removes them systematically.
 ## What this suggests, and what it does not
 
 **Suggests:** the window should be allowed to run to its own −1R/+3R
-resolution, and the 16 days removed as a parameter that has never earned its
-place. The legs the cap kills are unprofitable; the trades inside them are not.
+resolution. The 16 days is a risk control for a position the engine no longer
+holds.
 
-**Does not suggest:** that a 98-day directional window is acceptable to hold.
-The right next question is whether some *finer* ceiling — on age, or on
-drawdown within the window — captures the win without the three-month
-exposure. That is a new experiment, not a result.
+**Does not suggest:** that a 98-day directional window is acceptable. The
+right next question is whether some *finer* ceiling — on age, or on drawdown
+within the window — captures the win without the three-month exposure. That
+is a new experiment, not a result.
 
-The engine also offers no mechanism for a window that simply never resolves:
-with the cap off, a bias can persist indefinitely, and this dataset says the
-rare long ones paid. That is an observation about 2021–2024, not a property
-to rely on.
+The engine offers no mechanism for a window that simply never resolves: with
+the cap off, a bias can persist indefinitely, and this dataset says the rare
+long ones paid. That is an observation about 2021–2024, not a property to
+rely on.
+
