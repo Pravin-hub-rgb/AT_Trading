@@ -138,16 +138,19 @@ the null's 95th percentile exceeds. Then audit the registry: how many
 registered PASS arms have `|dNet| < M`. **Publish it whatever it says.**
 Zero edge; changes how every other result is read.
 
-### `[ ]` P2 — risk-weighted concurrency
+### `[x]` P2 — risk-weighted concurrency — **RUN 2026-09-29, no adoption. `RISK_CONCURRENCY.md`**
 
-`exp_max_concurrent` counts open positions, treating a 3-ATR stop and a
-1-ATR stop as identical risk. Cap the **sum** of open risk instead. Zero
-repo hits for `sum_risk`/`open_risk`/`risk_cap`. The stated blocker (no
-size channel) does **not** apply — a skip rule needs only the open
-positions and their `sl`, which v18 has. Cheapest real edge candidate.
-Caveat: the graveyard's one consistent brake lesson is that every brake
-that actually binds costs R (`max_concurrent` 2/3 cost real R; campaign
-caps +325.8 → +107.7 IS; `window_r_cap` rejected).
+Premise **validated** (my "strictly serial" assumption was wrong in the
+item's favour): **max concurrent open positions = 6 / 5 / 6 / 3.** The
+`busy_until` guard compares a *date* against a *datetime* as strings, so it
+does not block same-day re-entry — an engine inconsistency, **recorded, not
+fixed** (the book is profitable with it and the control is pinned).
+
+The gradient is real and 4/4 consistent — tight-stop trades run PF 1.7–3.4
+against 1.4–1.7 for wide-stop. **But no brake extracts it**: the wide trades
+are worse *and still profitable*, so every binding threshold spends more than
+it earns. Best arm is `skip widest 10%` at **4/4 positive but +13.3R max**,
+which is **1/15 of M = 193.4R** — an order of magnitude inside the null.
 
 ### `[ ]` P1 — nested swing containment (tree instead of tiling)
 
