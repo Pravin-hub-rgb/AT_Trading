@@ -56,7 +56,7 @@ and hysteresis) as the engine, the champion param set in
 `v18_params.py`, and a decision on capital allocation across concurrent
 positions. The last is a design question, not an audit finding.
 
-## ONE THING THAT IS A REAL BUG
+## ONE THING THAT IS A REAL BUG (CORRECTED - SEE NOTE)
 
 `new bugs.md` C8 records that live attaches a 3R take-profit to every LTF
 order while the backtest rides winners to +5.02R on the trail. If v19 is
