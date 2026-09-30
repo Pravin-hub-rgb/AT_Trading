@@ -1,4 +1,13 @@
-# P73: a true FS-only engine — 3 of 4 cells positive, and the first candidate with more trades AND better quality
+# P73: a true FS-only engine — **SUPERSEDED BY P74, LABEL WAS WRONG**
+
+> **AUDITED 2026-09-29 → `FS_ONLY_AUDIT_P74.md`.** The arm below is a
+> **HYBRID**, not FS-only: only the `decisive` entry path was routed to FS;
+> the `flip` and `b2` paths were untouched. `FS_ONLY_ENGINE.md` (2026-09-28)
+> already answered the pure FS-only question — **263t +31.7R IS, 108t +1.3R
+> OOS** — and P73 did not read it. **The "strongest live candidate"
+> registration is WITHDRAWN.** Numbers below reproduce from the stated
+> patch; the interpretation did not survive the audit. Champion unchanged,
+> nothing adopted.
 
 > Run 2026-09-29. Harness `exp_fs_only.py`. **NOT ADOPTED. Two tests outstanding.**
 > Champion unchanged: 500t/+325.8R IS, 279t/+70.1R OOS.

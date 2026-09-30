@@ -106,23 +106,25 @@ constant, or report a size-neutral measure (e.g. % move) alongside R.
   signal-selection patch plus a full path-true run. Honestly **unknown**;
   every B1 number produced so far has been an artefact.
 - **True FS-only engine.** ~~2900/1634 confirmed swings exist; only the
-  314/179 that produced a B2/flip entry have been priced.~~ **RUN at P73 —
-  NOT ADOPTED, and it is now the strongest live candidate in the programme.**
-  `FS_ONLY_P73.md`, `exp_fs_only.py`. Entering at the swing's **first seal**
-  (`fs_at_idx`, when structure is declared) instead of at a B2/FLIP break:
-  champ IS 500t **+325.8R → 646t +405.2R, PF 2.38→2.99, DD 17.8→14.3**
-  (**+79.4R**); champ OOS 279t **+70.1R → 364t +233.6R, PF 1.59→2.81, DD
-  37.3→17.3** (**+163.4R**); utcsat OOS +138.7R; **utcsat IS −78.2R**.
-  **Three of four cells positive, and it is the first candidate all round
-  with more trades AND better PF AND better drawdown at once.**
-  **But: nothing clears M (best 84.5%), utcsat IS disagrees in the SAME era
-  — parameter sensitivity, not period overfitting — and the P61 period
-  partition has NOT been run.** Two named tests outstanding: the period
-  split, and a hybrid arm (break entries PLUS FS entries on swings that
-  never broke). **If the split comes back 4-4 the way `cand_4h1h` did, this
-  closes like that did.**
-  Also corrects the item's framing: the book grows ~30%, not 9x — the
-  binding constraint is the one-slot rule, not signal supply.
+  314/179 that produced a B2/flip entry have been priced.~~ **RUN at P73,
+  AUDITED at P74.** `FS_ONLY_AUDIT_P74.md`, `FS_ONLY_P73.md`,
+  `exp_fs_only.py`.
+  **Two separate findings, and P73 conflated them.**
+  **(a) PURE FS-only was already answered** in `FS_ONLY_ENGINE.md`
+  (2026-09-28): **263t +31.7R IS, 108t +1.3R OOS** — *smaller*, not bigger,
+  because every one of the 2900 swings carries a B2/FLIP mark, so the
+  "unpriced" population is unpriced *trades*, not unpriced *swings*.
+  **(b) P73 ran a HYBRID**: routing the `decisive` entry path alone from
+  break-entry to FS-first-seal, with `flip` and `b2` untouched, gave 646t
+  +405.2R IS / 364t +233.6R OOS — 3 of 4 cells positive, more trades AND
+  better PF AND better DD in both champion-lane cells.
+  **P73 was wrong to call (b) FS-only, wrong to present it as novel, and
+  wrong to present "+146 trades for +79.4R" without a trade-level
+  decomposition — that reading assumes additions which were never shown to
+  be additions. Registration WITHDRAWN.** Outstanding before it can be
+  believed: rename as hybrid, decompose survivors vs newcomers, run the P61
+  period partition, reconcile with (a), and check the `FS_ENTRY.md`
+  warning that FS-time buckets invert 4/4 when made legal.
 - **Live size state.** `v18_streak_halt.py` has zero hits for
   equity/size/notional/qty. Any sizing change has no execution channel.
 
