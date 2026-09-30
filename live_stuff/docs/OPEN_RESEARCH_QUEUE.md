@@ -444,25 +444,41 @@ A block-length sensitivity sweep is the obvious next check.
   the 76h/66h mean I first wrote here, which was inflated by the 5-7% of
   windows sitting on the 16-day cap.
   `MULTISWING_BIAS_2OF3.md`, `BIAS_WINDOW_THEORY.md`
-- `[ ]` **1h swing geometry gate at bias-window open** *(Nemotron)* —
-  magnitude / duration / confirmation source, all known at the swing's
-  confirmation instant. Overlaps the graveyard's "range width" row, so it
-  must be pre-registered as distinct or it is a re-run.
+- `[x]` **1h swing geometry gate at bias-window open** *(Nemotron)* —
+  **CLOSED at P54**, so this entry is historical, not open. Trailing 1h
+  swing geometry gave a clean era inversion, and P55 then showed the
+  inversion is not detectable at runtime (IS/OOS medians within 0.01–0.10
+  against an IQR of ~0.75). `HTF_GEOMETRY_P54.md`, `REGIME_DETECT_P55.md`
 - `[ ]` **Alt breadth as a BTC HTF feature** *(Nemotron P6)* — alt index
   state gating BTC bias. Flagged as risky by the proposer; the
-  cross-sectional-rotation closure creates real tension.
-- `[ ]` **One family-wise pass on `data/forward/bybit/`** *(Mimo-V2)* —
-  adjudicate all unadopted survivors in a single pre-registered pass
-  rather than spending the slice one candidate at a time. ~464 trades, so
-  it can rule on things and confirm none.
+  cross-sectional-rotation closure creates real tension. **BLOCKED on
+  Bybit perp alt data** (below).
 - `[ ]` **Bybit perp alt data** — the transfer census (7/13 passing, 5/6
   kills-clean) is on Binance fapi and therefore does not answer a Bybit
   question. Fetching Bybit alts is the precondition for the whole
-  multi-instrument thread.
+  multi-instrument thread, and for P6 above.
 - `[ ]` **ZigZag re-count over `normal_highs`/`normal_lows`** — the raw
   pivot pools already exist in `firstswing.py`; a different segmentation
   of the same bars, which is the closest reachable relative of the dead
-  P1/P2 wave labelling.
+  P1/P2 wave labelling. **No data blocker — the only fully runnable item
+  left on this list.**
+- `[ ]` **Stationary-block bootstrap to size the forward null** — added by
+  P62. M = 193.4R comes from a two-year block; a forward slice is shorter
+  and its null is wider, so the required forward length is currently
+  unspecified. P62's disjoint-block version was **underpowered** (2–25
+  blocks per size makes `max − min` a badly biased-low spread estimate) and
+  its "20 trades suffice" reading is explicitly withdrawn. Build and
+  validate the resampling estimator before anyone plans a date around it.
+  `FORWARD_NEED_P62.md`
+- `[x]` ~~**One family-wise pass on `data/forward/bybit/`**~~ — **NOT
+  EXECUTABLE, entry corrected 2026-09-29.** It promised "~464 trades, so
+  it can rule on things and confirm none." P61 measured the actual slice:
+  **12.5 days, 14 1h swings, 2 champion trades and 1 candidate trade.** Two
+  orders of magnitude short of the promise, and a long way below even the
+  60–70 trade floor. At the champion's ~135 trades/year the 60–70 trade
+  range is **~5–6 months of forward data, roughly March 2027** — a
+  rate-based estimate, not a computed requirement. Do not spend a day
+  building this pass. `STABILITY_FORWARD_P61.md`, `FORWARD_NEED_P62.md`
 
 ---
 
