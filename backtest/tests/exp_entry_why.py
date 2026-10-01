@@ -17,6 +17,7 @@ Run:  python -u exp_entry_why.py 2024-11-17 2024-11-20
       (no args = that same default window)
 """
 import sys, os, pickle, inspect, types
+import bisect as bs
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -54,6 +55,12 @@ def ts_of(date_str):
 def fmt(ts):
     return datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d %H:%M")
 
+candle_ts_htf_close = [int(c["ts"]) + 3600 for c in d["c1h"]]
+_tr = [float(c["high"]) - float(c["low"]) for c in d["c1h"]]
+_n = len(d["c1h"])
+_pc = [float(d["c1h"][i - 1]["close"]) for i in range(1, _n)]
+atrp_series = [(_tr[i] / max(_pc[i - 1], 1e-9)) * 100.0 for i in range(1, _n)]
+atrp_series.insert(0, 0.5)
 
 print("=" * 78)
 print("SWING MARKS between %s and %s  (15m chain)" % (DAY0, DAY1))
@@ -102,8 +109,54 @@ print("  (%d signals in window)" % shown)
 
 print()
 print("=" * 78)
+print("REGIME  (mode=atr_high: atrp > 0.65 -> 'decisive', else 'flip')")
+print("=" * 78)
+prm = EXPERIMENTS["champion_multi_sw10"]["params"]
+print("  mode=%s  atr_high_thresh=%s  atr_low_thresh=%s  chop_thresh=%s"
+      % (prm.get("mode"), prm.get("atr_high_thresh"),
+         prm.get("atr_low_thresh"), prm.get("chop_thresh")))
+print()
+print("  interval sets the engine can pick from:")
+print("    'flip'      -> intervals_flip    (1h trades with entry_break='flip')")
+print("    'b2'        -> intervals_b2      (1h trades with entry_break='b2')")
+print("    'decisive'  -> intervals_decisive(1h trades with entry_break='decisive')")
+print()
+print("  So the mark you see is decided by the REGIME, not by preference:")
+print("    low  ATR%  -> 'flip'      -> only FLIP windows open")
+print("    high ATR%  -> 'decisive'  -> only DECISIVE (B2) windows open")
+print("  A swing can have BOTH a B2 and a FLIP mark. Which one can trade")
+print("  depends on the regime at that bar.")
+
+
+def regime_at(bar_ts):
+    j = bs.bisect_right(candle_ts_htf_close, bar_ts) - 1
+    if j < 0 or j >= len(atrp_series):
+        return None, None
+    return atrp_series[j], j
+
+
+print()
+print("  regime at each signal in the window:")
+for s in sigs:
+    bt = ts_of(s["bar"])
+    if bt is None:
+        continue
+    day = fmt(bt)[:10]
+    if day < DAY0 or day > DAY1:
+        continue
+    a, j = regime_at(bt)
+    if a is None:
+        print("    %s  %-5s  regime: no ATR value" % (fmt(bt), s["kind"]))
+        continue
+    use = "decisive" if a > float(prm["atr_high_thresh"]) else "flip"
+    print("    %s  %-5s  ATR%%=%.4f  -> regime '%s'  (HTF bar close #%d)"
+          % (fmt(bt), s["kind"], a, use, j))
+
+print()
+print("=" * 78)
 print("WHAT THE ENGINE ACTUALLY ENTERED  (v19 causal, IS)")
 print("=" * 78)
+
 SRC = (ROOT / "backend/src/btc/engines/htf_ltf/v19_champion.py").read_text(encoding="latin-1")
 mod = types.ModuleType("ew")
 mod.__file__ = "ew.py"
