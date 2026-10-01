@@ -169,21 +169,34 @@ for _i in range(n):
     _lo = max(0, _i-13)
     atr15[_i] = sum(tr_l[_lo:_i+1])/(_i-_lo+1)   # current + past ONLY
 ATR uses current bar (_i) and 13 prior bars. Zero future data.
-4. THE CHAMPION THAT GIVES 500T / +325.8R IS REAL
-It's v18_streak_halt.py with BYBIT params:
-# v18_params.py:41-49
-"BTCUSDT_BYBIT": {
-    "chop_thresh": 58.0,
-    "cooldown_bars": 10,
-    "sl_buf_atr": 0.01,      # sweep-optimized: +27R over 0.10
-    "max_consecutive_losses": 3,
-}
-Run via verify_parity.py:48-51:
-result = simulate_htf_ltf_streak_halt(
-    c1h, sw1h, c15, sw15, fine_ltf=fine,
-    sl_buf_atr=0.25, ext_stop_r=1.5, mode="b2_vs_flip_chop",
-    cooldown_bars=20, max_consecutive_losses=5)   # SPOT params
-The 500T/325.8R IS the backtest number — produced by the exact code above. The live loop (live_loop.py:1394) runs the same function on rolling windows.
+4. THE 500T / +325.8R BOOK IS REAL — but it is the PRE-C16 RETRO book
+CORRECTED 2026-10-01. This section previously said the champion giving 500t/+325.8R
+"IS the backtest number, produced by the exact code above". That was wrong twice
+over. The code block below it passed sl_buf_atr 0.25, ext_stop_r 1.5,
+mode b2_vs_flip_chop, cooldown 20 and max_consecutive_losses 5, and its own
+comment said SPOT params. Those are not the champion's parameters at all and not
+this project's venue. The paragraph above it, listing the Bybit params, was the
+correct one.
+
+The number itself is real, but it needs a name:
+    500t  gross +445.22R  net +325.78R   = pivot_rule "origin"
+The origin pivot is the swing's declared seg_start. It is knowable only after the
+swing has completed, so it is LOOKAHEAD and cannot be placed live. It is retained
+as the pre-C16 baseline so the cost of C16 stays measurable.
+    499t  gross +355.72R  net +239.12R   = pivot_rule "leg"
+The leg pivot is the swing's own extreme up to and including the entry candle.
+Causal, live-computable, and this is the book that ships.
+
+Measured on Bybit perp, 2026-10-01, through the API and the harness, which agree
+exactly. The retro book's OOS is 279t / +70.15R, and out of sample not one trade
+differs between the two rules — the whole difference is in-sample.
+
+To reproduce the retro book, pass pivot_rule="origin" explicitly. Do not rely on
+the default: it is "leg", and it is the value live_loop.py and the v19_c16 and
+v19_causal dropdown books run.
+
+The live loop calls the same simulate_htf_ltf_streak_halt function on rolling
+windows (live_loop.py:35), so it produces the leg book, not this one.
 YOUR SPECIFIC QUESTIONS ANSWERED
 Question	Answer
 "Entry at B2/FLIP candle close?"	Yes — backtest enters at break-bar close. Live would be next-bar open.

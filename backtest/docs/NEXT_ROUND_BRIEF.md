@@ -8,6 +8,32 @@
 > and **P96/P97 found the concurrency guard has never fired** — 58% of
 > shipped IS R is not deployable, and no slot queue can recover it.
 
+> ## CHANGED UNDER YOU, 2026-10-01 — three things to know before you measure
+>
+> **1. `pivot_rule` is now an explicit parameter.** Commit `64a061a` threaded it
+> through `simulate_btc_trades_v7` and both `simulate_htf_ltf_streak_halt` entry
+> points, to all four `_collect_signals` call sites, and deleted the module
+> monkeypatch at `btc_routes.py`. Previously the route selected the origin rule by
+> rebinding `btc_engine._collect_signals`, which reached the LTF half only — the
+> HTF windows went through `v7_timecap.py`, which binds that name at module import
+> and never saw the rebind. **Both rules are reachable and both are measured:
+> origin 500t / +325.78R net, leg 499t / +239.12R net, on Bybit perp.** The
+> registry entry named `champion_multi_sw10` is the *origin* book; the one that
+> ships is `champion_multi_sw10_leg`. Read `pivot_rule`, not the name.
+>
+> **2. Any anchor dated before `203e207` (2026-10-01 16:38) that reads
+> `_collect_signals` is stale.** That commit flipped the pivot default to `"leg"`,
+> so every caller that did not pass a rule silently moved from origin to leg.
+> Pins from before it need re-anchoring. Known red: `exp_closeout_battery`
+> (PIN_LB30, +1 trade / −6.9R), `exp_issue10_window` (imports `persistence`, not
+> tracked). `exp_sweep_static.py` lists them.
+>
+> **3. `BTCUSDT` is Binance spot and is not traded here.** Everything is Bybit perp,
+> symbol `BTCUSDT_BYBIT`. The backtest endpoint defaults to spot, so a request
+> omitting `symbol=` measures the wrong market — it produced a fake three-day data
+> gap and a fake +5.2-point win-rate jump on v18 during the C16 audit. Both were
+> retracted.
+
 **Read this whole file before proposing anything. It exists because the
 previous round wasted itself by not doing so.**
 
