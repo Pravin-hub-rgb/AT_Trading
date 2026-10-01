@@ -1,5 +1,7 @@
 ﻿import sys, os, pickle
-sys.setrecursionlimit(20000)  # the patched-source walk recurses deeply through pathlib
+# NOTE: this walk recurses through pathlib. Do NOT fix a RecursionError here by
+# raising sys.setrecursionlimit - that overflows the C stack and kills the process
+# with 0xc00000fd instead of raising. Use backtest/tests/_bigstack.run instead.
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 for p in ("backtest", "backtest/tests", "backtest/sweeps", "backend"):
@@ -23,3 +25,4 @@ for name,sw in (("sw20 = golden chain",d["sw20"]),("sw10 = my earlier run",d["sw
     print("  %-26s n=%3d gross=%+7.2f net=%+7.2f PF=%.3f"%(name,len(rs),g,nn,pf(rs)))
 print()
 print("  golden test claims:          n=351 gross=+211.72 net=+137.33 PF=1.907")
+

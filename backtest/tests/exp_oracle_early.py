@@ -51,7 +51,9 @@ from __future__ import annotations
 import bisect as bs
 import random
 import sys
-sys.setrecursionlimit(20000)  # deep recursion through pathlib when walking the patched source
+# NOTE: this walk recurses through pathlib. Do NOT fix a RecursionError here by
+# raising sys.setrecursionlimit - that overflows the C stack and kills the process
+# with 0xc00000fd instead of raising. Use backtest/tests/_bigstack.run instead.
 from collections import defaultdict
 from pathlib import Path
 
@@ -306,6 +308,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
