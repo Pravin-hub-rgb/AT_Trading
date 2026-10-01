@@ -349,16 +349,17 @@ export default function BtcPage() {
   // trades on - the 15m LTF book lives on minBars=50, the 5m book on 14, the
   // 1h HTF book on 20. Otherwise B2/FLIP entry marks and FS confirmations on
   // screen come from a chain the engine never uses (chart default was 14).
-  // The chart's swing chain must be the SAME chain the engine walks, or the
-  // marks on the chart are at different bars than the marks the engine traded
-  // on - which is exactly what happened: the chart drew minBars=20 (from a
-  // master preset) while v19 walks minBars=50, so a B2 the engine entered on
-  // had no mark anywhere near it on screen.
+  // The chart must draw the SAME swing chain the engine walks for whichever
+  // timeframe is on screen. That value is per-leg: the LTF leg carries
+  // ltf_min_bars and the HTF leg carries htf_min_bars, and they are different
+  // numbers on purpose - v19 is 15m at 50 and 1h at 10.
   //
-  // The book is the single source. htfLtf no longer has a say: the book
-  // already carries ltf_min_bars, and a second rule layered on top of it is a
-  // second thing that can disagree.
-  const strategyChainMinBars = bookSizing.minBars;
+  // Using bookSizing.minBars unconditionally was right on 15m and wrong on 1h:
+  // the 1h chart drew a 50-bar chain while the engine built its 1h leg at 10.
+  // Same class of bug as the master-preset mismatch - a second rule layered
+  // over the book, disagreeing with it.
+  const strategyChainMinBars =
+    tf === bookSizing.htfTf ? bookSizing.htfMinBars : bookSizing.minBars;
 
   useEffect(() => {
     if (!hydrated) return;

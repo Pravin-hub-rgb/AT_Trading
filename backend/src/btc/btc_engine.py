@@ -188,7 +188,29 @@ def _collect_signals(
                 if b["kind"] != s.get("break_kind"):
                     swing_done = True
                     continue
-                sl = seg_start
+                # C16 FIX, same reason as the stream branch below: seg_start is a
+                # structural origin, not the leg's extreme. Use the swing's own
+                # bars up to and including the break bar.
+                #
+                # candles is optional in this API - the docstring and P73 both say
+                # so, and sweep_pref_fs.py:51 calls the stream path without it.
+                # Without a guard this indexes None and raises TypeError. The
+                # pre-C16 code read only seg_start, so it had no such dependency.
+                if candles is not None:
+                    _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
+                    _br_idx = store.pos(b_time) if store else -1
+                    if _br_idx < 0:
+                        _br_idx = _sw_idx
+                    _lo_leg = [float(c["low"]) for c in candles[_sw_idx : _br_idx + 1]]
+                    _hi_leg = [float(c["high"]) for c in candles[_sw_idx : _br_idx + 1]]
+                else:
+                    _lo_leg = _hi_leg = []
+                if not _lo_leg or not _hi_leg:
+                    sl = seg_start
+                elif bdir == 1:
+                    sl = min(_lo_leg)
+                else:
+                    sl = max(_hi_leg)
             else:
                 if bdir == sdir:
                     # Pre-start churn: mark fires before swing's start
@@ -232,7 +254,40 @@ def _collect_signals(
                                 swing_done = True
                                 continue
                     else:
-                        sl = seg_start
+                        # C16 FIX. Was: sl = seg_start.
+                        #
+                        # seg_start is the swing's declared origin, not the leg's
+                        # extreme. A leg can travel further in its own direction
+                        # after that bar, so seg_start is not where a short's stop
+                        # belongs. On 18 Jan 2024 13:30 the swing's first candle
+                        # high was 42920.70 and the entry candle itself traded to
+                        # 42931.30, so the old rule set a short stop 10.60 below a
+                        # price the position had already seen.
+                        #
+                        # The stop must be the extreme of the swing's own bars up
+                        # to and including the break bar. That is computable live
+                        # and it is what a trader would actually place.
+                        #
+                        # candles is optional in this API - the docstring and P73
+                        # both say so, and sweep_pref_fs.py:51 calls the stream path
+                        # without it. Without a guard this indexes None and raises
+                        # TypeError. Pre-C16 code read only seg_start, so it had no
+                        # such dependency.
+                        if candles is not None:
+                            _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
+                            _br_idx = store.pos(b_time) if store else -1
+                            if _br_idx < 0:
+                                _br_idx = _sw_idx
+                            _lo_leg = [float(c["low"]) for c in candles[_sw_idx : _br_idx + 1]]
+                            _hi_leg = [float(c["high"]) for c in candles[_sw_idx : _br_idx + 1]]
+                        else:
+                            _lo_leg = _hi_leg = []
+                        if not _lo_leg or not _hi_leg:
+                            sl = seg_start
+                        elif bdir == 1:
+                            sl = min(_lo_leg)
+                        else:
+                            sl = max(_hi_leg)
                 else:
                     # Opposite-direction break: fade the PREVIOUS leg
                     if not prev_end:
