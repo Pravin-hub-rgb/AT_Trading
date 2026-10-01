@@ -34,6 +34,42 @@
 > gap and a fake +5.2-point win-rate jump on v18 during the C16 audit. Both were
 > retracted.
 
+> ## What M = 193.4R is, and is not
+>
+> Read this before quoting any gate. `BOOTSTRAP_NULL_P63.md` is explicit:
+>
+> - **M is a PROPOSAL-DIFFERENCE null, not a shipping bar.** The gate is
+>   `|dNet| > 193.4R` — how much a proposal must beat the book *by*. A book's own
+>   total net is a level and is never compared against it. "The champion clears M
+>   by +45.7R" is a category error and has been withdrawn.
+> - **M is calibrated for ~100-180 trades.** P63 line 39: a forward slice's own
+>   null is TIGHTER than M at ~100 trades and WIDER at ~140-220. The champion has
+>   499 trades, so its own null is not M either.
+> - **There is no pre-registered bar for the shipping book.** 499t / +239.12R IS
+>   and 279t / +70.15R OOS are measurements, not pass/fail results.
+>
+> The honest statement of where this thread left the shipping book: it is the
+> causal leg rule, the pin reproduces through the API on Bybit, and no gate was
+> ever defined for it. Deriving one is open work.
+>
+> A note on re-derivation: the origin and leg books differ by one trade out of 500,
+> and a bootstrap null scales with roughly √n, so the movement in the null is on
+> the order of 0.2R. That is immaterial against a 45R scale. Whatever gate gets
+> defined, re-deriving it for n=499 is a formality, not a risk.
+
+> ## The fourth instance, and the rule this thread actually produced
+>
+> P90 reported **+174.8R** from re-filling entries at a different bar price. In
+> 129,732 of 129,735 bar pairs in the Bybit 15m file those two prices are the
+> same number: `close[i] == open[i+1]`. The number was plausible, the mechanism
+> was real, the premise was false.
+>
+> That is the fourth time in one round a number survived scrutiny while its
+> premise did not, after the venue trap, the 28-vs-435 count, and the
+> module-global half-application. **So: re-measure before you quote. Retracting
+> the number is not enough — the premise is what was wrong, and only a run finds
+> that out.**
+
 > **Run 2 and Run 3 are not open. Do not re-open them.**
 > - **Run 2, entry-fill truth — CLOSED 2026-09-30** by
 >   [`P90_FILL_P109.md`](P90_FILL_P109.md). The original arm was anti-causal: it

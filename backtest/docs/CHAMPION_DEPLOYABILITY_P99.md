@@ -111,5 +111,11 @@ the champion is exp_mltf.
   single-position sizing the engine assumes.
 - OOS is 12.5 days and 2 trades on the forward lane. Nothing here is a
   ruling on live merit.
-- `reality of champion.md` flagged three findings in the HTF GATE path
-  that nobody has opened yet. That is the next audit, ahead of the port.
+- ~~`reality of champion.md` flagged three findings in the HTF GATE path
+  that nobody has opened yet. That is the next audit, ahead of the port.~~
+  **RESOLVED 2026-09-26** (`new bugs.md:601` — all three closed and re-verified):
+  C14 at `v18_streak_halt.py:269,272`, covered by `test_c14_c15_gates_present`
+  which PASSES; C15 at `:539,513`, covered by `test_c15_count_band` which PASSES.
+  Independently re-verified inside v19 by
+  [`HTF_GATE_AUDIT_P101.md`](HTF_GATE_AUDIT_P101.md). This line said "nobody has
+  opened it yet" five days after it was opened and closed.
