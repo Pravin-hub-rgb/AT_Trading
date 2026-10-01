@@ -11,11 +11,14 @@
 > | "500T / +325.8R is proven" | **still true**, but now reproduced by importing the committed file from disk |
 >
 > **Read with:** `P112_V19_REBUILD.md` (v19 rebuilt clean, pin proven, trade-level audit),
-> `reality of champion followup.md` (the five bots, point by point), and
+> `reality of champion followup.md` (the four bots, point by point), and
 > `CORRECTIONS_P106.md`.
 >
 > One correction worth carrying forward: the "6/6 params differ" claim repeated in
-> this file was wrong. **3 of 3 differ**, not 6 — see the followup.
+> this file was wrong. **3 of 6 differ**, not 6 — see the followup. The table there
+> shows three params identical (`sl_buf_atr` 0.01, `chop_thresh` 58.0,
+> `max_consecutive_losses` 3) and three different (`mode`, `cooldown_bars`,
+> `ext_stop_r`).
 
 big pickle:
 Investigation complete. Teeno confusion clear ho gaye — aur ek jagah main khud galat tha.

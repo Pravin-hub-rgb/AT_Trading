@@ -17,8 +17,82 @@
 > OOS  n=279  net=+70.15R   PF 1.591
 > ```
 >
-> The lines below are kept verbatim as the record of what was found. Where they
-> say "unproven", read P112 — that is now superseded.
+> The bot sections below are the bots' own text. Where they say "unproven", read
+> P112 — that is now superseded.
+>
+> ---
+>
+> # ANSWERS — what was actually run, and what it printed
+>
+> Written 2026-10-01. Every number below was produced by running the named file
+> today, not copied from an earlier note.
+>
+> ## spance's four objections — all closed
+>
+> | spance said | What I did | Harness | Result |
+> |---|---|---|---|
+> | `_v19_src.py` missing, harnesses cannot re-run | Both proofs now import `v19_champion.py` from disk | `exp_v19_import.py`, `exp_v19_oos.py` | IS 500t/+325.78R/PF 2.384, OOS 279t/+70.15R/PF 1.591 |
+> | Docstring broken, six quotes at L17 | Header rewritten as an ASCII comment block so v18's docstring stays the module docstring | `python -m py_compile` | COMPILE OK |
+> | Encoding damage | v19 rebuilt from v18 as **latin-1**, `newline=''`, so every byte maps to one codepoint | byte compare | encoding + line endings identical |
+> | "pin is unproven" | Re-ran both proofs | as above | MATCH, both sides |
+>
+> ## spance on "arm A is an artificial build" — spance is right
+>
+> I had called arm A artificial. It is a real book and it is OOS-negative. Measured,
+> not argued:
+>
+> ```
+> arm                    |   ISn      ISnet    ISPF conc |  OOSn     OOSnet
+> gate ON,  persist OFF  |   395    +137.72   1.859    1 |   230     -13.26
+> gate ON,  persist ON   |   387    +150.40   1.931    1 |   219      -1.79
+> gate OFF, persist OFF  |   500    +325.78   2.384    6 |   279     +70.15
+> gate OFF, persist ON   |   500    +325.78   2.384    6 |   258     +67.75
+> ```
+> `exp_v19_2x2.py`, run 2026-10-01. The −1.79 row independently reproduces the
+> −1.8R that spance quoted for "Arm B".
+>
+> **What the table says:** with the gate on, both single-position books are
+> **negative OOS**. Multi-positioning is the only reason OOS is positive. That is
+> spance's sharper framing and it holds.
+>
+> ## mimo's four points
+>
+> | mimo said | What I found | Evidence |
+> |---|---|---|
+> | "6/6 params differ" | **3 of 6 differ.** `sl_buf_atr`, `chop_thresh`, `max_consecutive_losses` are identical; `mode`, `cooldown_bars`, `ext_stop_r` are not | the table at L43–50 of this file |
+> | `exp_mltf=OFF` is not serial — the gate is string-broken | **Confirmed.** The gate compares a datetime to a date string, so it never blocks | `exp_v19_2x2.py`, gate-ON arm: maxconc 1 |
+> | entry look-ahead | **None on the shipped fill.** `entry_price == close[signal bar]` on 500/500, and `close[i]==open[i+1]` on 500/500 | `exp_v19_audit.py` section B, both PASS |
+> | porting the flags will not make the live bot multi-position | **Confirmed, and this is the blocker.** `live_loop.py:1778-1781` has its own guard: `in_trade = self._open_ltf_trade is not None` → `if in_trade:` → skip, journal at `r_multiple=0.0` | read directly, `live_stuff/live_loop.py` |
+>
+> The last row matters more than the rest. Even a perfect port leaves the live bot
+> single-position, because the live loop blocks the entry itself. The 6-deep book
+> needs a change in `live_loop.py`, not in the engine.
+>
+> ## One correction to P114
+>
+> P114 records that `PERSIST=7` "costs 2.40R OOS". The 2.40R is right, but the
+> shape of it was described loosely. It is not a 2.40R haircut on an otherwise
+> identical book — it **removes 21 OOS trades** (279 → 258) and nets 2.40R less. On
+> IS it is bit-identical: 500 trades, +325.78R, PF 2.384, with persist on and off.
+>
+> PERSIST=7 is part of the champion's config, so it stays. It is not load-bearing.
+>
+> ## Audit result, stated honestly
+>
+> `exp_v19_audit.py`, run 2026-10-01: **11 checks, 10 PASS, 1 FAIL.**
+> Breakdown — A: 4 PASS, B: 2 PASS, C: 1 PASS + 1 FAIL, D: 1 PASS, E: 2 PASS.
+>
+> The failure is section C, `recomputed R == reported R`, max drift **1.75e-03 R**.
+> That is display-rounding scale, not a book error. All 187 SL exits are exactly
+> −1.0R, no trail exit is worse than −1R, no duplicates, max concurrency 6. I am
+> recording the FAIL rather than widening the tolerance to make it green.
+>
+> ## Still open
+>
+> **The live bot's own number is still unknown.** Nobody has run
+> `get_v18_params("BTCUSDT_BYBIT")` through a backtest. mimo and big pickle both
+> asked for it; it has not been done. Until it is, "what does the live bot make"
+> has no answer in this repo.
 >
 > ---
 
