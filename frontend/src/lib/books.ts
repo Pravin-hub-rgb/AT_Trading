@@ -89,20 +89,22 @@ const V19 = {
 export const BOOK_OPTIONS: BookOption[] = [
   {
     id: "v19_retro",
-    label: "v19 RETRO stop (lookahead) — IS 500t +325.8R | OOS 279t +70.2R",
-    hint: "stop at the swing's true origin · lookahead",
+    label: "v19 RETRO stop (lookahead) — IS 500t +325.8R",
+    hint: "stop at the swing's true origin · lookahead · equals registry pin",
     config: { ...V19, version: "v19_champion" },
   },
   {
     id: "v19_causal",
-    label: "v19 CAUSAL stop (live-honest) — IS 494t +248.0R | OOS 282t +80.0R",
-    hint: "stop at the running extreme · what a live trader can actually place",
+    label: "v19 CAUSAL stop (live-honest) — IS 499t +239.1R",
+    hint: "stop at the running extreme · live-placeable · identical to POST-C16",
+    measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
     config: { ...V19, version: "v19_causal" },
   },
   {
     id: "v19_retro_htf",
     label: "v19 RETRO + HTF-LTF (1h to 15m)",
     hint: "RETRO stop with the 1h window gate on",
+    measured: { isN: 500, isNet: 325.78, oosN: 0, oosNet: 0 },
     config: { ...V19, version: "v19_champion", htf_ltf: "15m" },
   },
   {
@@ -110,12 +112,12 @@ export const BOOK_OPTIONS: BookOption[] = [
     label: "v19 CAUSAL + HTF-LTF (1h to 15m)",
     shortLabel: "CAUSAL+HTF",
     slMode: "causal",
-    measured: { isN: 494, isNet: 247.96, oosN: 0, oosNet: 0 },
+    measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
     config: { ...V19, version: "v19_causal", htf_ltf: "15m" },
   },
   {
     id: "v19_c16",
-    label: "v19 POST-C16 - leg-extreme stop (causal, live-computable)",
+    label: "v19 POST-C16 — leg-extreme stop (live-honest) — IS 499t +239.1R",
     shortLabel: "C16",
     slMode: "causal",
     measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
