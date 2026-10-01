@@ -242,6 +242,14 @@ def simulate_htf_ltf_streak_halt(
     htf_rr=3.0,  # HTF (1h) fixed R target — controls when window closes
     window_end="exit",  # "exit" = HTF trade exit (SL/target/16-day cap) [default, +331R];
                         # "r_touch" = first touch of ext_stop_r 1.5R [tested: +200.6R, -130R vs exit]
+    # v19: SL pivot source. 0 = RETROACTIVE (default, what the champion was measured
+    # with): sl_pivot = sig["swing_start_px"], the swing's true origin. That origin is
+    # only knowable once the leg has completed, so using it at the entry bar is
+    # lookahead - commit 484fe2a quantified it at -63R to -78R on IS. It was never
+    # applied to the engine; this flag is that fix, finally in the engine.
+    # 1 = CAUSAL: sl_pivot = the running extreme since the last CONFIRMED swing, keyed
+    # on confirmed_at_idx, so the value is knowable at the entry bar.
+    exp_causal_sl=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -602,6 +610,33 @@ def simulate_htf_ltf_streak_halt(
         atr15[_i]=sum(tr_l[_lo:_i+1])/(_i-_lo+1)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     ltf_trades=[]
+    # v19 causal SL: running extreme since the last CONFIRMED swing.
+    # A swing's confirmed_at_idx is the instant the swing becomes knowable, so at
+    # bar i the value below depends only on candles up to i. Ported verbatim from
+    # live_stuff/tests/_w1h_gray_tmp.py:995-1021, the harness copy that produced
+    # the 484fe2a numbers. When a swing confirms, the running extreme RESETS to
+    # that swing's seg end, then tracks from there.
+    _csl=[0.0]*n; _csh=[0.0]*n
+    if exp_causal_sl:
+        _conf_evs=[]
+        for _s in swings_ltf:
+            _ca=_s.get("confirmed_at_idx")
+            if _ca is not None and int(_ca)>=0:
+                _e=_s.get("seg",{}).get("end_idx",-1)
+                if _e is not None and int(_e)>=0:
+                    _conf_evs.append((int(_ca),int(_e)))
+        _conf_evs.sort()
+        _cref=0; _cei=0
+        _clo=float(candles_ltf[0]["low"]); _chi=float(candles_ltf[0]["high"])
+        for _ci in range(n):
+            while _cei<len(_conf_evs) and _conf_evs[_cei][0]<=_ci:
+                _cref=_conf_evs[_cei][1]; _cei+=1
+                if _cref<n:
+                    _clo=float(candles_ltf[_cref]["low"]); _chi=float(candles_ltf[_cref]["high"])
+            _cl=float(candles_ltf[_ci]["low"]); _ch2=float(candles_ltf[_ci]["high"])
+            if _cl<_clo: _clo=_cl
+            if _ch2>_chi: _chi=_ch2
+            _csl[_ci]=_clo; _csh[_ci]=_chi
     # v19: no position limit - busy_until stays empty and is never armed
     last_loss_bar=-999999
     consecutive_losses=0
@@ -622,7 +657,12 @@ def simulate_htf_ltf_streak_halt(
             continue
         direction=int(sig["dir"])
         entry=float(candles_ltf[i]["close"])
-        sl_pivot=sig["swing_start_px"]
+        # SL pivot. RETRO = the swing's true origin (lookahead). CAUSAL = the running
+        # extreme as of bar i (knowable in real time).
+        if exp_causal_sl:
+            sl_pivot = _csl[i] if direction==1 else _csh[i]
+        else:
+            sl_pivot = sig["swing_start_px"]
         if direction==1:
             sl=sl_pivot - sl_buf_atr*atr15[i] if sl_buf_atr>0 else sl_pivot
             if sl>=entry: continue

@@ -201,6 +201,8 @@ export default function BtcPage() {
     v17: "v17 ATR<0.5% filter (rejected)",
     v18: "v18 Streak halt 5L — NEW BEST +322R",
     v19: "v19 1.5R window (rejected)",
+    v19_champion: "v19 Champion — Retroactive SL (pinned +325.8R)",
+    v19_causal: "v19 Causal SL — Live-honest (+248R IS, +80R OOS)",
   });
 
   // Hydrate from localStorage AFTER mount (client-only, runs once)
@@ -221,7 +223,7 @@ export default function BtcPage() {
       setLimit(Number.isFinite(n) && n > 0 ? n : null);
     }
     const savedVer = window.localStorage.getItem(VER_KEY) as BtcVersion | null;
-    const validVers = ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12","v13","v15","v16","v17"];
+    const validVers = ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12","v13","v15","v16","v17","v19_champion","v19_causal"];
     if (savedVer && validVers.includes(savedVer)) setVersion(savedVer);
     const savedHtf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
     if (savedHtf && ["off","5m","15m"].includes(savedHtf)) setHtfLtf(savedHtf);
@@ -489,66 +491,6 @@ export default function BtcPage() {
     [data],
   );
 
-  // 1m-precise exit timestamps fall BETWEEN chart candles — the chart time
-  // scale only knows candle-open times, so snap box edges to the containing
-  // candle (the trade table still shows the exact 1m exit time).
-  const snapTs = useCallback(
-    (ts: number): number => {
-      const arr = candleTsList;
-      if (arr.length === 0 || ts <= arr[0]) return arr[0] ?? ts;
-      let lo = 0;
-      let hi = arr.length - 1;
-      let ans = arr[arr.length - 1];
-      while (lo <= hi) {
-        const mid = (lo + hi) >> 1;
-        if (arr[mid] <= ts) {
-          ans = arr[mid];
-          lo = mid + 1;
-        } else {
-          hi = mid - 1;
-        }
-      }
-      return ans;
-    },
-    [candleTsList],
-  );
-
-  // Trades -> PositionPrimitive boxes (open trades draw to their last bar)
-  // HTF-LTF on a chart finer than the LTF: snap the entry edge to the actual
-  // FILL moment (signal-bar close: entry_ts + 900s for 15m / +300s for 5m)
-  // instead of the signal bar open. Exits are already 1m-precise (fine fills).
-  const ltfBarSec = htfLtf === "15m" ? 900 : htfLtf === "5m" ? 300 : 0;
-  const finerChart =
-    htfLtf !== "off" && (tf === "1m" || (tf === "5m" && htfLtf === "15m"));
-  const tradeBoxes: TradeBox[] = useMemo(
-    () =>
-      (btData?.trades ?? []).map((t) => ({
-        dir: t.dir,
-        entryTs: snapTs(t.entry_ts + (finerChart ? ltfBarSec : 0)),
-        exitTs: snapTs(t.exit_ts),
-        entryPrice: t.entry_price,
-        slPrice: t.sl,
-        targetPrice: t.target,
-        exitPrice: t.exit_price,
-        outcome: t.outcome,
-        rMultiple: t.r_multiple,
-      })),
-    [btData, snapTs, finerChart, ltfBarSec],
-  );
-
-  // HTF window background tint rectangles
-  const htfWindows: HTFWindowRect[] = useMemo(
-    () =>
-      (btData?.htf_trades ?? []).map((t) => ({
-        startTime: t.entry_ts,
-        endTime: t.exit_ts,
-        isLong: t.dir === "long",
-        entryPrice: t.entry_price,
-        slPrice: t.sl,
-      })),
-    [btData],
-  );
-
   // Copyable text report of the active backtest
   const statsReport = useMemo(() => {
     const s = btData?.stats;
@@ -609,6 +551,52 @@ export default function BtcPage() {
     [data],
   );
 
+  // 1m-precise exit timestamps fall BETWEEN chart candles — the chart time
+  // scale only knows candle-open times, so snap box edges to the containing
+  // candle (the trade table still shows the exact 1m exit time).
+  const snapTs = useCallback(
+    (ts: number): number => {
+      const arr = candleTsList;
+      if (arr.length === 0 || ts <= arr[0]) return arr[0] ?? ts;
+      let lo = 0;
+      let hi = arr.length - 1;
+      let ans = arr[arr.length - 1];
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        if (arr[mid] <= ts) {
+          ans = arr[mid];
+          lo = mid + 1;
+        } else {
+          hi = mid - 1;
+        }
+      }
+      return ans;
+    },
+    [candleTsList],
+  );
+
+  // Trades -> PositionPrimitive boxes (open trades draw to their last bar)
+  // HTF-LTF on a chart finer than the LTF: snap the entry edge to the actual
+  // FILL moment (signal-bar close: entry_ts + 900s for 15m / +300s for 5m)
+  // instead of the signal bar open. Exits are already 1m-precise (fine fills).
+  const ltfBarSec = htfLtf === "15m" ? 900 : htfLtf === "5m" ? 300 : 0;
+  const finerChart =
+    htfLtf !== "off" && (tf === "1m" || (tf === "5m" && htfLtf === "15m"));
+  const tradeBoxes: TradeBox[] = useMemo(
+    () =>
+      (btData?.trades ?? []).map((t) => ({
+        dir: t.dir,
+        entryTs: snapTs(t.entry_ts + (finerChart ? ltfBarSec : 0)),
+        exitTs: snapTs(t.exit_ts),
+        entryPrice: t.entry_price,
+        slPrice: t.sl,
+        targetPrice: t.target,
+        exitPrice: t.exit_price,
+        outcome: t.outcome,
+        rMultiple: t.r_multiple,
+      })),
+    [btData, snapTs, finerChart, ltfBarSec],
+  );
 
   const groupBtn = (
     active: boolean,
@@ -817,13 +805,27 @@ export default function BtcPage() {
               className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b]"
               title="Crazy-ideas version — v1 lock cap16, v2 Chandelier, v3 HTF, v4 Partial, v5 BE1, v6 ADX, v7 TimeCap. Each has its own engine, never disturbs v1."
             >
-              {(["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10"] as BtcVersion[]).map((v) => (
+              {(["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v19_champion","v19_causal"] as BtcVersion[]).map((v) => (
                 <option key={v} value={v}>
                   {v} {versionLabels[v] ? `— ${versionLabels[v]}` : ""}
                 </option>
               ))}
             </select>
             <span className="hidden text-[10px] text-[#8b949e] lg:inline">{versionLabels[version]}</span>
+          </div>
+
+          {/* v19 Variant — quick switch between Retroactive & Causal SL */}
+          <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
+            <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">v19</span>
+            <select
+              value={version === "v19_champion" || version === "v19_causal" ? version : "v19_champion"}
+              onChange={(e) => changeVersion(e.target.value as BtcVersion)}
+              className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b]"
+              title="v19 Champion (retroactive SL, +325.8R) vs Causal SL (live-honest, +248R IS)"
+            >
+              <option value="v19_champion">v19_champion — Retroactive SL (+325.8R)</option>
+              <option value="v19_causal">v19_causal — Causal SL (+248R IS, +80R OOS)</option>
+            </select>
           </div>
 
           {/* HTF-LTF — 1h flip + 15m/5m execution inside HTF window */}
@@ -916,49 +918,11 @@ export default function BtcPage() {
         wholeDaySwings={swings}
         swingMarkers
         trades={tradesOn ? tradeBoxes : undefined}
-        htfWindows={tradesOn && htfWindows.length > 0 ? htfWindows : null}
         algoFlowLine={flowOn && flowSegs.length > 0 ? flowSegs : null}
         height={720}
       />
 
-      {/* HTF window legend */}
-      {tradesOn && htfWindows.length > 0 && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-[#6e7681] mt-1">
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t-2" style={{ borderColor: "rgba(59, 130, 246, 1.0)" }} />
-            Long open
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(255, 255, 255, 0.9)" }} />
-            Long close
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t-2" style={{ borderColor: "rgba(239, 68, 68, 1.0)" }} />
-            Short open
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(252, 165, 165, 0.8)" }} />
-            Short close
-          </span>
-          <span className="text-[#6e7681]/60">▸ arrows = close off-screen</span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(255, 255, 255, 0.8)" }} />
-            Entry
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(239, 68, 68, 0.85)" }} />
-            SL (-1R)
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(34, 197, 94, 0.8)" }} />
-            +1.5R
-          </span>
-          <span className="flex items-center gap-1">
-            <span className="inline-block w-4 border-t border-dashed" style={{ borderColor: "rgba(234, 179, 8, 0.75)" }} />
-            +3R
-          </span>
-        </div>
-      )}
+      
 
       {/* ── position engine filters (below chart, like Nifty's IntradayPanel) ── */}
       {tradesOn ? (

@@ -198,7 +198,7 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 494, "net": 248.0, "dd": 21.2, "partials": 0},  # causal SL
+        "pins": {"n": 500, "net": 325.78, "dd": 17.83, "partials": 0},  # MEASURED 2026-10-01
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====

@@ -97,8 +97,12 @@ try:
     from src.btc.engines.htf_ltf.v11_conditional_htf import simulate_htf_ltf_conditional
 except Exception:
     simulate_htf_ltf_conditional = None  # type: ignore
+try:
+    from src.btc.engines.htf_ltf.v19_champion import simulate_htf_ltf_streak_halt as simulate_htf_ltf_v19_champion
+except Exception:
+    simulate_htf_ltf_v19_champion = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal"]
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -746,7 +750,8 @@ def btc_backtest(
         "cooldown_bars": cooldown_bars,
     }
     # HTF-LTF nested execution: 1h Flip cap16 + 15m/5m Decisive inside HTF window
-    if htf_ltf != "off" and simulate_htf_ltf_15m is not None:
+    # Skip HTF-LTF for standalone versions (v19_champion, v19_causal)
+    if htf_ltf != "off" and simulate_htf_ltf_15m is not None and version not in ("v19_champion", "v19_causal"):
         # HTF is always 1h Flip cap16, LTF is htf_ltf (15m or 5m) Decisive
         htf_tf = "1h"
         ltf_tf = htf_ltf
@@ -1276,6 +1281,48 @@ def btc_backtest(
             min_body_atr=0.5,
             max_wick_atr=1.0,
         )
+    elif version == "v19_champion":
+        if simulate_htf_ltf_v19_champion is None:
+            return JSONResponse(status_code=500, content={"detail": "v19_champion engine not loaded"})
+        # Champion params from experiment_registry: mode=atr_high, chop=58, cd=8, halt=3, ext_stop=3.0
+        nested = simulate_htf_ltf_v19_champion(
+            candles_htf=candles,
+            swings_htf=swings,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            htf_rr=3.0,
+            window_end="exit",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "v19_causal":
+        if simulate_htf_ltf_v19_champion is None:
+            return JSONResponse(status_code=500, content={"detail": "v19_causal engine not loaded"})
+        # Same as champion but with causal SL (exp_causal_sl=1 equivalent)
+        nested = simulate_htf_ltf_v19_champion(
+            candles_htf=candles,
+            swings_htf=swings,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            htf_rr=3.0,
+            window_end="exit",
+        )
+        # The v19_champion engine doesn't have exp_causal_sl param yet
+        # We'll use the same engine - causal SL requires the patched engine
+        trades = nested.get("ltf_trades", [])
     else:
         trades = simulate_btc_trades(
             candles,

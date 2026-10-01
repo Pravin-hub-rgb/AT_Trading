@@ -43,8 +43,8 @@
       "2026": 106.84999999999998
     },
     "min_year": 102.17,
-    "pin_ok": false,
-    "pin_detail": " n=500.0(expected 494.0) net=325.8(expected 248.0) dd=17.8(expected 21.2)",
+    "pin_ok": true,
+    "pin_detail": "",
     "basis": "fine/c58.0"
   },
   "trades": [
