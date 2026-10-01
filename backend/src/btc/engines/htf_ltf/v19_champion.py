@@ -242,14 +242,23 @@ def simulate_htf_ltf_streak_halt(
     htf_rr=3.0,  # HTF (1h) fixed R target — controls when window closes
     window_end="exit",  # "exit" = HTF trade exit (SL/target/16-day cap) [default, +331R];
                         # "r_touch" = first touch of ext_stop_r 1.5R [tested: +200.6R, -130R vs exit]
-    # v19: SL pivot source. 0 = RETROACTIVE (default, what the champion was measured
-    # with): sl_pivot = sig["swing_start_px"], the swing's true origin. That origin is
-    # only knowable once the leg has completed, so using it at the entry bar is
-    # lookahead - commit 484fe2a quantified it at -63R to -78R on IS. It was never
-    # applied to the engine; this flag is that fix, finally in the engine.
-    # 1 = CAUSAL: sl_pivot = the running extreme since the last CONFIRMED swing, keyed
-    # on confirmed_at_idx, so the value is knowable at the entry bar.
-    exp_causal_sl=0,
+    # v19: SL pivot source. THIS FLAG EXISTS ONLY TO REPRODUCE A RETRACTED NUMBER.
+    #
+    # 1 (default, correct): sl_pivot = the running extreme from the swing's start
+    #   to the entry bar inclusive. LONG uses the lowest low, SHORT the highest
+    #   high. A live trader can compute this from bars they have already seen, so
+    #   the stop they would place is the stop the engine places.
+    #
+    # 0 (retired): sl_pivot = sig["swing_start_px"], a structural pivot. It is NOT
+    #   the leg's extreme. On 18 Jan 2024 13:30 the swing's first candle high was
+    #   42920.70 while the entry candle itself traded to 42931.30 - so the retired
+    #   rule set a short stop below a price the position had already seen. Same
+    #   trade, same exit, smaller risk denominator, larger R. That is the whole of
+    #   the residual gap, and it is arithmetic, not a better trade.
+    #
+    # Keeping flag 0 only so the retracted +325.78R can still be reproduced and
+    # compared. Do not ship a book that sets 0.
+    exp_causal_sl=1,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
