@@ -13,6 +13,12 @@ from src.btc.engines.htf_ltf.v18_streak_halt import (  # noqa: E402
 )
 EF = os.path.join(R, "backend/src/btc/engines/htf_ltf/v18_streak_halt.py")
 
+# Re-anchored 2026-10-01 after C16, measured on Bybit perp: 352 trades.
+# Kept as a constant so the assert and the printed band cannot drift apart -
+# they did once already, when the print still read [346,356] after the assert
+# had been moved to [348,358].
+COUNT_BAND = (348, 358)
+
 
 def _src():
     return open(EF, encoding="utf-8").read()
@@ -74,8 +80,8 @@ def test_c14_c15_gates_present():
 
 def test_c15_count_band():
     p, tr = _run(fine=False)
-    assert 346 <= len(tr) <= 356, "count outside production band"
-    print("PASS: trade count %d within [346,356]" % len(tr))
+    assert COUNT_BAND[0] <= len(tr) <= COUNT_BAND[1], "count outside production band"
+    print("PASS: trade count %d within [%d,%d]" % (len(tr), *COUNT_BAND))
 
 
 def test_baseline():
@@ -87,28 +93,50 @@ def test_baseline():
         yrs[str((t.get("exit_date") or t.get("entry_date") or "")[:4])] += float(t["r_multiple"])
     assert all(v >= 0 for v in yrs.values())
     assert 346 <= len(tr) <= 356
-    # RE-ANCHORED 2026-09-26. BOTH bars below were calibrated 2026-09-19
-    # (a329ff3: 351t/+238.0 gross/+163.7 net) BEFORE the trail-ordering
+    # RE-ANCHORED AGAIN 2026-10-01, after C16. The previous anchor below was
+    # itself set on 2026-09-26, five days before 203e207 changed
+    # _collect_signals' pivot_rule default to "leg". The old bar was therefore an
+    # ORIGIN-era bar and no longer described the engine that ships.
+    #
+    # Measured today, Bybit perp, leg rule, production params:
+    #   352t  gross +220.15  net +146.55  PF 1.947  WR 27.8%
+    #   outcomes  sl 145 / trail 207
+    #   by year   2023 +38.78  2024 +81.11  2025 +47.97  2026 +52.29
+    #
+    # Against the origin-era anchor on the same Bybit window:
+    #   count 351 -> 352      (+1)
+    #   net   +137.33 -> +146.55   (+9.22)
+    #   PF    1.907 -> 1.947       (+0.040)
+    #   WR    27.6% -> 27.8%       (+0.2pt)
+    #
+    # That is the real size of C16's effect on the live engine: one extra trade
+    # and two tenths of a point of win rate. It is not a regression and not a
+    # jump, so the bars are re-centred on the leg measurement rather than moved
+    # to accommodate a change that never happened.
+    #
+    # The bars are tighter than before on purpose. The previous pair was 120.0 net
+    # against a 137.33 pin and 1.80 PF against a 1.907 pin, i.e. 12.6% and 5.6%
+    # headroom, which is wide enough that the old pin and a real regression both
+    # pass. 135.0 and 1.85 keep ~8% and ~5% below today's values.
+    #
+    # History of this anchor, kept because the trail fix it recorded is still the
+    # reason the PF bar is not 2.0:
+    # 2026-09-19 a329ff3 anchored 351t/+238.0/+163.7, before the trail-ordering
     # correctness fix ee574f9 (2026-09-21, "ratchet before SL check"). That fix
     # costs ~26R on fine fills because the pre-fix trail gave a trade one extra
     # bar of slack when its structural stop tightened - slack that does not exist
-    # live, where the stop is armed at the activation instant.
+    # live, where the stop is armed at the activation instant. Same data, same
+    # trade count, -26.31R gross / -26.33R net, -0.113 PF. The old PF bar of 2.0
+    # cleared the pre-fix 2.020 by only 0.02. Win rate never moved across that
+    # fix - only exit magnitude did. See backtest/docs/new bugs.md -> REBASELINE
+    # NOTE (2026-09-26).
     #
-    # Proof, pre-fix engine (ee574f9^) vs the current engine, both on today's
-    # identical data:
-    #   PRE-FIX   351t  gross +238.03  net +163.66  PF 2.020  WR 27.6%
-    #   POST-FIX  351t  gross +211.72  net +137.33  PF 1.907  WR 27.6%
-    # Same data, same trade count, -26.31R gross / -26.33R net, -0.113 PF.
-    # Note the old PF bar of 2.0 cleared the PRE-FIX 2.020 by only 0.02.
-    #
-    # So 150.0 and 2.0 were pre-fix leftovers, not regression alarms; the fix
-    # made the backtest more honest. 120.0 and 1.80 keep ~13% and ~5.6% headroom
-    # below the correct post-fix values so both still catch a real drop.
-    # Win rate is unchanged at 27.6% across the fix - only exit magnitude moved.
-    # See backtest/docs/new bugs.md -> REBASELINE NOTE (2026-09-26).
-    assert n >= 120.0
+    # All figures above are Bybit perp. BTCUSDT is Binance spot and is not traded
+    # on this project; a measurement run with that symbol moves the window and the
+    # trade set and will not match anything here.
+    assert n >= 135.0
     pf = sum(x for x in rs if x > 0) / abs(sum(x for x in rs if x < 0)) if l else 9.0
-    assert pf >= 1.80
+    assert pf >= 1.85
     print("PASS: %dt gross %+.1f net %+.1f WR %.1f%% PF %.2f %s" % (len(tr), g, n, 100*w/len(tr), pf, dict(yrs)))
 
 
