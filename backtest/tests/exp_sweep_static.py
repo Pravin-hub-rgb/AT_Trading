@@ -115,7 +115,8 @@ report.append(f"[4] registry    : {len(EXPERIMENTS)} experiments, "
 # one that ships. Anything reading the former by name is measuring a lookahead
 # book, so the number of readers is worth keeping visible.
 LEG = "champion_multi_sw10_leg"
-refs = 0
+mentions = 0
+mention_files = set()
 readers = set()
 for f in (ROOT / "backtest/tests").glob("*.py"):
     if f.name == SELF:
@@ -125,17 +126,26 @@ for f in (ROOT / "backtest/tests").glob("*.py"):
         if LEG in line:
             continue
         if "champion_multi_sw10" in line:
-            refs += 1
+            mentions += 1
+            mention_files.add(f.name)
+            # A registry reader touches EXPERIMENTS[...]["params"] somewhere.
+            # A harness that binds the key on one line and uses it on another is
+            # counted as a mention but not a reader, so readers is a floor.
             if "EXPERIMENTS[" in line or "params" in line:
                 readers.add(f.name)
-report.append(f"[4b] champion   : {refs} references to champion_multi_sw10 across "
-              f"{len(readers)} runnable file(s)")
-report.append(f"      every one of them reads the ORIGIN book via the registry.")
-report.append(f"      The shipping book is champion_multi_sw10_leg.")
-report.append(f"      An earlier commit said this was '28 harnesses'. That was wrong by")
-report.append(f"      roughly four times; the count was estimated, not measured. The")
-report.append(f"      registry-level fix covers all of them regardless, which is the only")
-report.append(f"      reason the wrong number was harmless.")
+
+report.append(f"[4b] champion   : {mentions} mentions of champion_multi_sw10 across "
+              f"{len(mention_files)} file(s) under backtest/tests")
+report.append(f"      {len(readers)} of those files touch EXPERIMENTS[]/params on the "
+              f"same line as the mention")
+report.append(f"      (a harness that binds the key on one line and reads it on another")
+report.append(f"       is counted as a mention but not a reader, so the reader count is")
+report.append(f"       a floor, not a total)")
+report.append(f"      champion_multi_sw10 is the PRE-C16 origin book. The shipping book")
+report.append(f"      is champion_multi_sw10_leg. Check pivot_rule, not the name.")
+report.append(f"      Earlier commits quoted a harness count here from memory rather than")
+report.append(f"      by counting. Read these figures off the code above; do not quote a")
+report.append(f"      number that did not come out of a run.")
 
 # -------------------------------------------------------------- 5. known red
 missing = [k for k in KNOWN_RED if not (ROOT / "backtest/tests" / (k + ".py")).exists()]

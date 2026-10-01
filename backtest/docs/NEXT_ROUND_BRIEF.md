@@ -34,6 +34,20 @@
 > gap and a fake +5.2-point win-rate jump on v18 during the C16 audit. Both were
 > retracted.
 
+> **Run 2 and Run 3 are not open. Do not re-open them.**
+> - **Run 2, entry-fill truth — CLOSED 2026-09-30** by
+>   [`P90_FILL_P109.md`](P90_FILL_P109.md). The original arm was anti-causal: it
+>   entered at `open[i]`, the open of the signal candle, which is ahead of the
+>   `close[i]` the engine fills at. Re-run as the true next open `open[i+1]`,
+>   **0 of 500 trades differ, delta +0.0R**, because on contiguous candles
+>   `close[i] == open[i+1]`. Nothing between the two prices.
+>   [`ENTRY_FILL_P90.md`](ENTRY_FILL_P90.md) still carried the retracted result and
+>   has now been marked at every claim site.
+> - **Run 3, live single-position guard — DEFERRED BY DESIGN.** `live_loop.py:1778-1801`
+>   keeps its own 1-slot guard, which is correct. Measuring refused trades against a
+>   6-deep harness book was deferred deliberately: no live work until a candidate is
+>   chosen. See `BOT_REPLIES.md:133-136`.
+
 **Read this whole file before proposing anything. It exists because the
 previous round wasted itself by not doing so.**
 

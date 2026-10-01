@@ -2,9 +2,33 @@
 # WORSE. And the falsifier fired, so the first result is retracted and the
 # second is reported with its mechanism unproven.
 
+> ## SUPERSEDED 2026-09-30 by [`P90_FILL_P109.md`](P90_FILL_P109.md). Read that instead.
+>
+> **Every result below about fill improvement is retracted.** P109 established that
+> the P90 arm was anti-causal: it entered at the open of the signal candle itself,
+> which is a price the bot had to trade through to reach the close. Re-run as the
+> true next open, `open[i+1]`, **0 of 500 trades differ and the delta is +0.0R**,
+> because on contiguous candles `close[i] == open[i+1]`. There is nothing between
+> the two prices, so the "the book improves on live fills" claim below has nothing
+> underneath it. The +174.8R and +174.8R-family figures in the corrected-result
+> section are anti-causal artefacts and are retracted with the rest.
+>
+> **Also retracted, 2026-10-01: "500t/+325.8R as SHIPPED" is wrong.** That figure is
+> the PRE-C16 origin book, and it is lookahead — the stop sits at a price only known
+> after the swing completed. The books are:
+>
+> | book | pivot | IS | OOS | status |
+> |---|---|---|---|---|
+> | `champion_multi_sw10` | origin | 500t / +325.78R | 279t / +70.15R | pre-C16 baseline, LOOKAHEAD, not live-placeable |
+> | `champion_multi_sw10_leg` | leg | 499t / +239.12R | 279t / +70.15R | causal, this is what the dropdown ships |
+> | v18 live engine | leg | 352t / +146.55R | — | what `live_loop.py` actually runs |
+>
+> Nothing in this document was re-measured after C16. Do not quote any headline
+> figure from it; take the numbers from the table above.
+>
 > Run 2026-09-29. Harness `exp_entry_fill.py`.
 > **From `NEXT_ROUND_BRIEF.md`, Big Pickle's P90.** Nothing adopted.
-> Champion unchanged: 500t/+325.8R IS, 279t/+70.1R OOS as SHIPPED.
+> Champion as measured then: 500t/+325.8R IS, 279t/+70.1R OOS — the pre-C16 book.
 
 ## The concern, and it is confirmed in the shipped code
 
@@ -54,6 +78,12 @@ shipped number, which is the invariant now asserted.
 
 ## The corrected result — the book IMPROVES on live fills
 
+> **RETRACTED 2026-09-30, see the banner at the top.** This whole table is void.
+> The arm entered at `open[i]`, the open of the signal candle itself, which is
+> ahead of the `close[i]` the engine actually fills at — anti-causal. Re-run as the
+> true next open `open[i+1]`: **0 of 500 trades differ, delta +0.0R.** The dNet
+> column below, +174.8R and +144.0R, does not exist.
+
 | arm | lane / era | shipped | next 15m open | next open + 5bp | dNet (b) |
 |---|---|---|---|---|---|
 | (b) | **champ IS** | +325.8R | **+500.6R** PF 5.39 | +480.6R | **+174.8R** |
@@ -75,6 +105,13 @@ and both eras.** R/trade goes 0.652 → 1.001 in IS and 0.251 → 0.768 in OOS.
 **The concern that motivated this audit is answered, and in the direction
 that matters for shipping: +325.8R is not a fill artefact. If anything the
 shipped figure is the pessimistic one.**
+
+> **RETRACTED — the sentence above is void.** It rests on the void dNet table. The
+> correct answer is P90_FILL_P109: entry at the true next open `open[i+1]` differs
+> on **0 of 500 trades**, so the fill question is settled at **+0.0R** and this
+> document's conclusion was an artefact of entering at `open[i]`.
+>
+> Separately, "+325.8R" is the pre-C16 origin book, not the shipped figure.
 
 ## But the falsifier still fires, so the mechanism is NOT established
 
@@ -137,7 +174,14 @@ edge.
 **Nothing adopted, and nothing needs to change in production.** The shipped
 figure is not overstated.
 
-Champion unchanged: 500t/+325.8R IS, 279t/+70.1R OOS as shipped.
+> **RETRACTED — see banner.** The claim above is void; the fill arm was
+> anti-causal and P90_FILL_P109 settles it at +0.0R. "Nothing needs to change"
+> happens to still hold, but not for the reason given here.
+
+Champion as measured in this document: 500t/+325.8R IS, 279t/+70.1R OOS — the
+**pre-C16 origin book**, which is lookahead. The shipping book is
+`champion_multi_sw10_leg` at 499t/+239.12R IS / 279t/+70.15R OOS, and the live v18
+engine runs 352t/+146.55R.
 
 **Follow-up, one run: recompute both arms in absolute R per unit notional.
 That is what would turn a suggestive +174.8R into a shippable expectancy.**
