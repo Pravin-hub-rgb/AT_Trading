@@ -42,3 +42,6 @@ live_stuff/tests/_wick_tmp.py
 live_stuff/tests/_pyr_tmp.py
 live_stuff/tests/_w1h_gray_tmp.py
 live_stuff/tests/_w1h_skip_tmp.py
+
+# scratch output from the backtest harnesses
+backtest/tests/_*.txt
