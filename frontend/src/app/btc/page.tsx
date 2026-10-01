@@ -68,7 +68,11 @@ const BT_DEFAULTS: BtcBacktestParams = {
   slippagePts: 2,
   entrySlipPct: 0.005,
   exitSlipPct: 0.010,
-  fundingRatePct: 0.0,
+  // Funding is always charged. 0.01 is the standard BTC perp rate; a book that
+  // holds for ~117 bars pays real funding whether or not the UI lets you turn
+  // it off. This matches run_experiment.net_r, which subtracts fund(tr)
+  // unconditionally.
+  fundingRatePct: 0.01,
 };
 
 /** Bybit-optimized v18 parameters — tuned for Bybit's volatility profile. */
@@ -464,6 +468,8 @@ export default function BtcPage() {
       slippagePts: b.config.slippage_pts,
       entrySlipPct: b.config.entry_slip_pct,
       exitSlipPct: b.config.exit_slip_pct,
+      // always on, regardless of what a stale localStorage holds
+      fundingRatePct: 0.01,
     } as BtcBacktestParams);
     window.localStorage.setItem(BT_KEY, JSON.stringify(btParams));
     setTradesOn(true);
@@ -1099,16 +1105,12 @@ export default function BtcPage() {
             <span className="text-[10px] text-[#6e7681]">% in/out</span>
           </label>
 
-          <button
-            onClick={() => setBt("fundingRatePct", btParams.fundingRatePct > 0 ? 0 : 0.01)}
-            className={`rounded border px-2 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors ${
-              btParams.fundingRatePct > 0
-                ? "border-[#f97316]/60 bg-[#f97316]/20 text-[#f97316]"
-                : "border-[#30363d] bg-[#161b22] text-[#6e7681] hover:text-[#8b949e]"
-            }`}
-          >
-            Fund {btParams.fundingRatePct > 0 ? "ON" : "OFF"}
-          </button>
+          {/* Funding is not optional and has no toggle. It is a real cost of
+              holding a perp position and this book holds ~117 bars, so leaving
+              it off understated net R by 23.44R on the IS book. The harness has
+              always charged it: run_experiment.net_r subtracts fund(tr)
+              unconditionally, and btc_backtest() floors it server-side too. A
+              toggle that is always on is a control that lies, so it is gone. */}
         </div>
       ) : null}
 
@@ -1175,7 +1177,7 @@ export default function BtcPage() {
             />
             {(btData.stats.total_costs_r ?? 0) > 0 ? (
               <Stat
-                label={`Net R (${(btData.params.fee_pct ?? 0)}% fee + ${(btData.params.entry_slip_pct ?? 0)}%/${(btData.params.exit_slip_pct ?? 0)}% slip${(btData.params.funding_rate_pct ?? 0) > 0 ? ` + ${(btData.params.funding_rate_pct ?? 0)}%/8h fund` : ""})`}
+                label={`Net R (${(btData.params.fee_pct ?? 0)}% fee + ${(btData.params.entry_slip_pct ?? 0)}%/${(btData.params.exit_slip_pct ?? 0)}% slip + funding)`}
                 value={`${(btData.stats.net_total_r ?? 0) >= 0 ? "+" : ""}${(btData.stats.net_total_r ?? 0).toFixed(2)}`}
                 accent={(btData.stats.net_total_r ?? 0) >= 0 ? "#10b981" : "#ef4444"}
               />

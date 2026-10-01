@@ -1,0 +1,21 @@
+﻿funding is now always charged and the toggle is gone
+The frontend matched the harness on everything except net R: 500 trades,
+PF 2.38, TRAIL 313, SL 187 and DD 17.83R were all exact, but net R read
++349.22 against the pinned +325.78. The 23.44R gap was funding. The UI had a
+Fund ON/OFF button, run_experiment.net_r subtracts fund(tr) unconditionally, and
+the default was 0.0 - so the page was the only place in the repo reporting a net
+number the harness would disagree with.
+Removed rather than defaulted on. A toggle that is always on is a control that lies,
+and leaving it visible invites someone to switch it back off.
+  BT_DEFAULTS.fundingRatePct  0.0 -> 0.01
+  applyBook                        forces 0.01, so a stale localStorage cannot
+                                    reintroduce 0
+  btc_backtest default             0.0 -> 0.01
+  btc_backtest                     funding_rate_pct = max(funding_rate_pct,
+                                    MIN_FUNDING_PCT) - floored server-side, so a curl or a
+                                    stale bookmark cannot switch it off either
+  Net R label                      always reads "... slip + funding" now, with no
+                                    conditional on the rate
+The floor is the part that matters. Defaulting alone would still have let any
+caller pass funding_rate_pct=0 and get a net R the harness rejects.
+py_compile OK. tsc -p tsconfig.json exits 0.

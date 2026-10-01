@@ -128,6 +128,11 @@ router = APIRouter(prefix="/api/btc")
 # seg.start_idx/seg.end_idx are nested inside `seg` and offset separately.
 _IDX_FIELDS = ("confirmed_at_idx", "fs_at_idx")
 
+# Funding cannot be switched off. A perp position pays it whether or not a UI
+# offers a toggle, and run_experiment.net_r has always subtracted it. 0.01 is
+# the standard BTC perp rate per 8h. See the floor in btc_backtest().
+MIN_FUNDING_PCT = 0.01
+
 
 def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT"):
     """Validated load of one timeframe window. Returns (candles, flow) or
@@ -605,7 +610,7 @@ def btc_backtest(
     slippage_pts: float = 0.0,
     entry_slip_pct: float = 0.005,
     exit_slip_pct: float = 0.010,
-    funding_rate_pct: float = 0.0,
+    funding_rate_pct: float = 0.01,
     entry_break: str = "decisive",
     sl_mode: str = "swing",
     sl_pct: float = 0.5,
@@ -740,6 +745,13 @@ def btc_backtest(
                 if 0 <= int(s.get("confirmed_at_idx", -1)) < len(htf_candles)
             )
             bias_applied = True
+
+    # Funding is a real, unavoidable cost of a perp position and these books hold
+    # for ~117 bars. It is floored here rather than merely defaulted, so no
+    # caller - the UI, a curl, a stale bookmark - can switch it off and report a
+    # net R the harness would not agree with. run_experiment.net_r has always
+    # charged it unconditionally; this closes the last way the two could differ.
+    funding_rate_pct = max(float(funding_rate_pct), MIN_FUNDING_PCT)
 
     params = {
         "tf": tf,
