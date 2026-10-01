@@ -12,6 +12,21 @@
 //   CAUSAL - stop at the running extreme as of the entry bar. Knowable live.
 // Both measured on the committed engine by backtest/tests/exp_v19_causal.py.
 // backtest/tests/exp_v19_tradediff.py lists every trade they disagree on.
+//
+// VENUE. Every figure in this file, and every figure in the experiment registry,
+// is Bybit PERP (symbol BTCUSDT_BYBIT). "BTCUSDT" is Binance spot and is not
+// traded on this project. Measuring with that symbol silently moves the data
+// window and the trade set and produces numbers that look plausible and match
+// nothing - it produced a fake "3 day data gap" and a fake "+5.2 point win rate
+// jump" on v18 during the C16 audit. The backtest endpoint defaults to spot, so
+// a request that omits symbol= is measuring the wrong market.
+//
+// The v19 CAUSAL and POST-C16 entries are the same book. Both resolve to
+// pivot_rule="leg", which is why they return byte-identical trades. They differ
+// only in that POST-C16 spells the rule out at the engine and CAUSAL sets the
+// engine's older exp_causal_sl flag, which the leg rule has since made inert.
+// They are kept separate so the pre/post C16 diff stays visible in the dropdown,
+// not because they measure different things.
 
 export type BookId = string;
 
