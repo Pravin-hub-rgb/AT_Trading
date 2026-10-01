@@ -49,6 +49,10 @@ report = []
 red = []
 
 # ---------------------------------------------------------------- 1. syntax
+# Compile to a scratch file outside the repo. Writing into backtest/tests/__pycache__
+# races with anything else compiling there and fails with PermissionError on
+# Windows when two runs overlap.
+_SCRATCH = Path(os.environ.get("TEMP", ".")) / "_sweep_compile.pyc"
 bad = []
 for sub in ("backend/src", "backend/tests", "backtest/tests", "backtest/engine",
             "backtest/sweeps"):
@@ -57,8 +61,7 @@ for sub in ("backend/src", "backend/tests", "backtest/tests", "backtest/engine",
         continue
     for f in base.rglob("*.py"):
         try:
-            py_compile.compile(str(f), doraise=True,
-                               cfile=str(ROOT / "backtest/tests/__pycache__/_sweep.pyc"))
+            py_compile.compile(str(f), doraise=True, cfile=str(_SCRATCH))
         except py_compile.PyCompileError as e:
             bad.append((sub + "/" + str(f.relative_to(base)), str(e).splitlines()[-1]))
 report.append(f"[1] syntax      : {'OK' if not bad else str(len(bad)) + ' BROKEN'}")
@@ -106,6 +109,33 @@ with_rule = sum(1 for v in EXPERIMENTS.values()
                 if isinstance(v, dict) and "pivot_rule" in v.get("params", {}))
 report.append(f"[4] registry    : {len(EXPERIMENTS)} experiments, "
               f"{with_rule} declare pivot_rule")
+
+# ------------------------------------------------- 4b. champion book usage
+# champion_multi_sw10 is the PRE-C16 origin book. champion_multi_sw10_leg is the
+# one that ships. Anything reading the former by name is measuring a lookahead
+# book, so the number of readers is worth keeping visible.
+LEG = "champion_multi_sw10_leg"
+refs = 0
+readers = set()
+for f in (ROOT / "backtest/tests").glob("*.py"):
+    if f.name == SELF:
+        continue
+    t = f.read_text(encoding="utf-8", errors="replace")
+    for line in t.splitlines():
+        if LEG in line:
+            continue
+        if "champion_multi_sw10" in line:
+            refs += 1
+            if "EXPERIMENTS[" in line or "params" in line:
+                readers.add(f.name)
+report.append(f"[4b] champion   : {refs} references to champion_multi_sw10 across "
+              f"{len(readers)} runnable file(s)")
+report.append(f"      every one of them reads the ORIGIN book via the registry.")
+report.append(f"      The shipping book is champion_multi_sw10_leg.")
+report.append(f"      An earlier commit said this was '28 harnesses'. That was wrong by")
+report.append(f"      roughly four times; the count was estimated, not measured. The")
+report.append(f"      registry-level fix covers all of them regardless, which is the only")
+report.append(f"      reason the wrong number was harmless.")
 
 # -------------------------------------------------------------- 5. known red
 missing = [k for k in KNOWN_RED if not (ROOT / "backtest/tests" / (k + ".py")).exists()]
