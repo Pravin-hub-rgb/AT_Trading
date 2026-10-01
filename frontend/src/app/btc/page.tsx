@@ -205,10 +205,14 @@ export default function BtcPage() {
   const bookHint = getBook(book).hint;
   // Per-leg swing sizing. minBars alone cannot express the champion, which is
   // sw15 at 50 and sw10 at 10 on two different timeframes.
+  // Per-leg swing sizing. minBars alone cannot express the champion, which is
+  // sw15 at 50 and sw10 at 10 on two different timeframes. Initialised from the
+  // default book, not from a literal 14 - 14 is what the API defaults to and it
+  // is not any book's value.
   const [bookSizing, setBookSizing] = useState({
-    minBars: 14,
-    htfTf: "1h" as BtcTf,
-    htfMinBars: 10,
+    minBars: boot.config.ltf_min_bars,
+    htfTf: boot.config.htf_tf as BtcTf,
+    htfMinBars: boot.config.htf_min_bars,
   });
   const [summaryData, setSummaryData] = useState<BtcSummaryResponse | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
@@ -268,6 +272,15 @@ export default function BtcPage() {
       setHtfLtf(b.config.htf_ltf as "off" | "5m" | "15m");
       setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
       setSymbol(b.config.symbol as BtcSymbol);
+      setTf(b.config.tf as BtcTf);
+      // Per-leg sizing is part of the book. It was missing from this branch, so
+      // a reload with a saved book restored the version but left minBars at its
+      // 14 literal - which produced 1052 trades instead of 500.
+      setBookSizing({
+        minBars: b.config.ltf_min_bars,
+        htfTf: b.config.htf_tf as BtcTf,
+        htfMinBars: b.config.htf_min_bars,
+      });
     } else {
       // No saved book. Start from the default book rather than leaving the
       // version at v1 with minBars at the API default, which is a combination
