@@ -60,7 +60,7 @@ from itertools import combinations
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-for p in ("backtest/tests", "backtest", "backend"):
+for p in ("backtest/tests", "backtest", "backtest/sweeps", "backend"):
     sys.path.insert(0, str(ROOT / p))
 
 from experiment_registry import BP, EXPERIMENTS  # noqa: E402

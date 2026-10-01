@@ -1,7 +1,7 @@
 import sys, os, pickle, types
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-for p in ("backtest","backtest/tests","backtest/sweeps","backend"):
+for p in ("backtest", "backtest/tests", "backtest/sweeps", "backend"):
     sys.path.insert(0,str(ROOT/p))
 sys.path.append(str(ROOT/"backend"/"src"))
 import test_experiments_craze as tc

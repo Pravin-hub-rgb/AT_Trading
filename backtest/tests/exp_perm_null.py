@@ -51,7 +51,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-for p in ("backtest/tests", "backtest", "backend"):
+for p in ("backtest/tests", "backtest", "backtest/sweeps", "backend"):
     sys.path.insert(0, str(ROOT / p))
 
 from run_experiment import get_data, identity_gate, net_r  # noqa: E402

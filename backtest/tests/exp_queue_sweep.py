@@ -37,7 +37,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-for p in ("backtest/tests", "backtest", "backend"):
+for p in ("backtest/tests", "backtest", "backtest/sweeps", "backend"):
     sys.path.insert(0, str(ROOT / p))
 # APPENDED, not inserted: backend/src contains modules that shadow stdlib
 # names (a `logging.py`), and prepending it breaks urllib3 with a circular

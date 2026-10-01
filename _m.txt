@@ -1,0 +1,9 @@
+﻿add backtest/sweeps to the sys.path tuple in 112 harnesses
+exp_v19_tradediff.py failed after the folder move with No module named
+replay_harness. test_experiments_craze imports it and it now lives in
+backtest/sweeps rather than live_stuff. The 15 harnesses whose sys.path tuple was
+updated in the move commit used the spaced form ("backtest", "backtest/tests",
+"backend"); the compact form used by the other 112 was missed. They all
+pointed at backtest, backtest/tests and backend but not backtest/sweeps, so any
+harness that transitively imports test_experiments_craze was broken. That is
+most of them, which is why this only surfaced when the diff harness was run.

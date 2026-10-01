@@ -1,7 +1,7 @@
 import sys, os, pickle, types, bisect
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-for p in ("backtest","backtest/tests","backtest/sweeps","backend"):
+for p in ("backtest", "backtest/tests", "backtest/sweeps", "backend"):
     sys.path.insert(0,str(ROOT/p))
 sys.path.append(str(ROOT/"backend"/"src"))
 with open(Path(os.environ["TEMP"])/"at_datacache.pkl","rb") as f: d=pickle.load(f)

@@ -58,7 +58,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-for p in ("backtest/tests", "backtest", "backend"):
+for p in ("backtest/tests", "backtest", "backtest/sweeps", "backend"):
     sys.path.insert(0, str(ROOT / p))
 sys.path.append(str(ROOT / "backend" / "src"))
 
