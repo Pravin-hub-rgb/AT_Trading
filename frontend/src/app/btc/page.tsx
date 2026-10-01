@@ -181,7 +181,10 @@ export default function BtcPage() {
   // kept only so the backtest request stays shaped the way the API expects -
   // applyBook is the only thing that writes them now.
   const [book, setBook] = useState<string>(DEFAULT_BOOK);
-  const bookHint = getBook(book).hint;
+  // Set when something outside this dropdown changed the engine, so the select
+  // can show that the running book is not one of the named ones.
+  const [customLabel, setCustomLabel] = useState<string | null>(null);
+  const bookHint = customLabel ?? getBook(book).hint;
   // Per-leg swing sizing. minBars alone cannot express the champion, which is
   // sw15 at 50 and sw10 at 10 on two different timeframes.
   const [bookSizing, setBookSizing] = useState({
@@ -367,9 +370,16 @@ export default function BtcPage() {
     });
   };
 
+  // Any control that changes the engine must keep the Book dropdown honest.
+  // The summary tables further down call these directly with versions that are
+  // not books (v2..v6, htf_ltf_ver v3/v5/v6/v11/...), so the dropdown has to
+  // be able to represent "something is running that is not a named book".
+  const markCustom = (what: string) => setCustomLabel(`custom: ${what}`);
+
   const changeVersion = (v: BtcVersion) => {
     window.localStorage.setItem(VER_KEY, v);
     setVersion(v);
+    if (!BOOK_OPTIONS.some((b) => b.config.version === v)) markCustom(v);
   };
   const changeHtfLtf = (v: "off" | "5m" | "15m") => {
     window.localStorage.setItem(HTF_KEY, v);
@@ -378,6 +388,7 @@ export default function BtcPage() {
   const changeHtfLtfVer = (v: HtfLtfVer) => {
     window.localStorage.setItem(HTF_VER_KEY, v);
     setHtfLtfVer(v as any);
+    if (!BOOK_OPTIONS.some((b) => b.config.htf_ltf_ver === v)) markCustom(`htf ${v}`);
   };
 
   // One control sets everything. Each book in books.ts carries the full config,
@@ -385,6 +396,8 @@ export default function BtcPage() {
   // applyBook, which calls the same setters the old individual controls used.
   const applyBook = (id: string) => {
     const b = getBook(id);
+    // picking a real book clears any "custom" state left by the tables
+    setCustomLabel(null);
     window.localStorage.setItem(BOOK_KEY, b.id);
     setBook(b.id);
     setVersion(b.config.version as BtcVersion);
@@ -499,6 +512,9 @@ export default function BtcPage() {
   const applyMaster = (v: string) => {
     const mode = BTC_MASTER_MODES.find((x) => x.value === v);
     if (!mode) return;
+    // Master presets are their own config, not a named book. Flag it so the
+    // dropdown stops claiming a book is running.
+    setCustomLabel(`master: ${mode.label}`);
     setMaster(v);
     window.localStorage.setItem(MASTER_KEY, v);
     // strategy is measured on its reference TF — switch the chart there too
@@ -858,11 +874,17 @@ export default function BtcPage() {
           <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
             <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">Book</span>
             <select
-              value={book}
-              onChange={(e) => applyBook(e.target.value)}
+              value={customLabel ? "__custom__" : book}
+              onChange={(e) => {
+                if (e.target.value === "__custom__") return;
+                applyBook(e.target.value);
+              }}
               className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b] min-w-[26rem]"
               title="Pick the book. Each option carries its full config - version, timeframe, stop source, HTF gate and cost model - and applies all of it at once."
             >
+              {customLabel && (
+                <option value="__custom__">{customLabel} - not a named book</option>
+              )}
               {BOOK_OPTIONS.map((b) => (
                 <option key={b.id} value={b.id}>{b.label}</option>
               ))}
