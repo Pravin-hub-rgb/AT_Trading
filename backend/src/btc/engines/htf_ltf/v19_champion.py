@@ -613,7 +613,7 @@ def simulate_htf_ltf_streak_halt(
     # v19 causal SL: running extreme since the last CONFIRMED swing.
     # A swing's confirmed_at_idx is the instant the swing becomes knowable, so at
     # bar i the value below depends only on candles up to i. Ported verbatim from
-    # live_stuff/tests/_w1h_gray_tmp.py:995-1021, the harness copy that produced
+    # backtest/tests/_w1h_gray_tmp.py:995-1021, the harness copy that produced
     # the 484fe2a numbers. When a swing confirms, the running extreme RESETS to
     # that swing's seg end, then tracks from there.
     _csl=[0.0]*n; _csh=[0.0]*n

@@ -30,7 +30,7 @@ Created 2026-09-26 after two agents converged on one working tree.
 | `backend/src/live/persistent_swing.py` | other agent (live) |
 | `live_stuff/live_loop.py` | other agent (live) |
 | `live_stuff/replay_harness.py` | other agent (live) |
-| `live_stuff/tests/**`, `live_stuff/docs/**`, `scripts/**` | this agent (research) |
+| `backtest/tests/**`, `backtest/docs/**`, `scripts/**` | this agent (research) |
 
 Production/live diffs are **not** committed by the research agent, even when they
 compile. Their owner confirms intent and stages them.

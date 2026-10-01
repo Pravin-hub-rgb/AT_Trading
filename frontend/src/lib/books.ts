@@ -10,8 +10,8 @@
 //   RETRO  - stop at the swing's true origin, knowable only after the leg
 //            completes. Lookahead. This is what the champion always was.
 //   CAUSAL - stop at the running extreme as of the entry bar. Knowable live.
-// Both measured on the committed engine by live_stuff/tests/exp_v19_causal.py.
-// live_stuff/tests/exp_v19_tradediff.py lists every trade they disagree on.
+// Both measured on the committed engine by backtest/tests/exp_v19_causal.py.
+// backtest/tests/exp_v19_tradediff.py lists every trade they disagree on.
 
 export type BookId = string;
 

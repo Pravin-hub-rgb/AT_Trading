@@ -4,7 +4,7 @@ import os, sys
 from collections import defaultdict
 R = "c:/Users/Pravin/Desktop/main/AT_Trading"
 sys.path.insert(0, R + "/backend")
-sys.path.insert(0, R + "/live_stuff")
+sys.path.insert(0, R + "/backtest")
 from replay_harness import load_candles, INSTRUMENT  # noqa: E402
 from engine.v18_params import SWING, get_v18_params, V18_ENGINE  # noqa: E402
 from src.btc.btc_routes import _compute_swings, _trade_costs, _load_fine_1m  # noqa: E402
@@ -105,7 +105,7 @@ def test_baseline():
     # made the backtest more honest. 120.0 and 1.80 keep ~13% and ~5.6% headroom
     # below the correct post-fix values so both still catch a real drop.
     # Win rate is unchanged at 27.6% across the fix - only exit magnitude moved.
-    # See live_stuff/docs/new bugs.md -> REBASELINE NOTE (2026-09-26).
+    # See backtest/docs/new bugs.md -> REBASELINE NOTE (2026-09-26).
     assert n >= 120.0
     pf = sum(x for x in rs if x > 0) / abs(sum(x for x in rs if x < 0)) if l else 9.0
     assert pf >= 1.80

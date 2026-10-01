@@ -1,0 +1,50 @@
+move all backtesting out of live_stuff into backtest/
+
+live_stuff was holding two unrelated things: the live bot, and every backtest
+harness and research note in the repo. The live bot has not been decided yet -
+no final engine has been chosen for it - so it is the only thing that belongs
+there.
+
+  backtest/tests/     1045 harnesses    (was live_stuff/tests)
+  backtest/docs/       216 research docs (was live_stuff/docs, 228)
+  backtest/sweeps/      12 sweep + parity scripts (were in live_stuff/ root)
+  backtest/engine/       4 engine param modules (was live_stuff/engine)
+
+v18_params.py went with the backtests. It is the v18 engine's parameter set, and
+v18 is a backtest engine here. The live bot gets a fresh module when an engine
+is actually chosen for it.
+
+Twelve docs stayed in live_stuff/docs because they are about the live bot
+itself: live checklist, live trading doc, live trading issue, live DD monitor,
+live engine design challenge, the four bybit ones, RUNNER_LIVE, and grok chat
+for live. LIVE_PARITY_P104 went to backtest/docs - it is a research finding
+about comparing the two, not a live document.
+
+live_stuff now holds only the bot: live_loop.py, bybit_order.py,
+bybit_streamer.py, data_streamer.py, config.py, kill_switch.py, rate_manager.py,
+telegram_alert.py, main.py, stream_ticks.py, plus api/, persistence/, data/,
+stat_arb/, verification/.
+
+Path references were rewritten across the tree. The harnesses all used
+
+    ROOT = Path(__file__).resolve().parents[2]
+    for p in ("live_stuff", "live_stuff/tests", "backend"):
+
+and backtest/tests/ is the same depth as live_stuff/tests/, so parents[2] is
+unchanged and only the directory strings moved.
+
+Two files in backtest/sweeps - replay_harness.py and verify_parity.py - import
+persistence.database, the module the live bot writes trades to. They are parity
+tools by definition, so they add live_stuff to the path explicitly with a
+comment saying why. Everything else they touch is backtest.
+
+One live bug fixed on the way. live_loop.py looked for seed_marks.json at
+parents[1]/"live_stuff"/"docs", which from live_stuff/live_loop.py resolved to
+live_stuff/live_stuff/docs and has never existed. The file is backtest research
+and now lives at backtest/docs, so that is the new candidate.
+
+Verified after the move, run from the new location:
+  exp_v19_import.py   IS  n=500  +325.78R  MATCH  (negative control passes)
+  exp_v19_oos.py      OOS n=279  +70.15R   MATCH
+  exp_v19_audit.py    500 trades, FAILURES=1 (the known 1.75e-03 R drift)
+  py_compile live_stuff/live_loop.py  OK

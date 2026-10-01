@@ -856,7 +856,10 @@ class LiveLoop:
             import json as _json
             candidates = [
                 Path(__file__).resolve().parent / "docs" / "seed_marks.json",
-                Path(__file__).resolve().parents[1] / "live_stuff" / "docs" / "seed_marks.json",
+                # seed_marks.json is backtest research, it moved to backtest/docs.
+                # The second candidate used to be parents[1]/"live_stuff"/"docs",
+                # which resolved to live_stuff/live_stuff/docs and never existed.
+                Path(__file__).resolve().parents[1] / "backtest" / "docs" / "seed_marks.json",
             ]
             seed_path = None
             for p in candidates:
