@@ -7,7 +7,7 @@ This is the exact code path production would run.
 import sys, json, os, pickle
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
-for p in ("backtest/tests","backtest","backend"):
+for p in ("backtest/tests","backtest","backtest/sweeps","backend"):
     sys.path.insert(0,str(ROOT/p))
 sys.path.append(str(ROOT/"backend"/"src"))
 CACHE=Path(os.environ["TEMP"])/"at_datacache.pkl"

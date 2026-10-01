@@ -1,0 +1,10 @@
+========================================================================================================
+  P19  CROSS-LANE TEST  nest1h>0.25 AND age>0.5d
+========================================================================================================
+  If this is a market property it transfers. If it is a
+  champion artifact it dies on the first other lane.
+
+data loaded (18s)
+  champion_multi_sw10                        DOC pin n=500 got 500 OK
+  utcsat_multi_sw10                          DOC pin n=454 got 453 OK
+  fullstack_wage10_cd0_single_sw10           DOC pin n=200 got 199 OK

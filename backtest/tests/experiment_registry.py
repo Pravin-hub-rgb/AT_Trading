@@ -189,16 +189,22 @@ EXPERIMENTS = {
         "pins": {"n": 487, "net": 208.4, "dd": 29.4, "partials": 60},
     },
     "champion_multi_sw10": {
-        "desc": "Champion multi sw10 — causal SL (live-honest)",
+        "desc": "Champion multi sw10 - PRE-C16 retro book, origin SL pivot (LOOKAHEAD, research baseline only)",
         "engine": "patched",
+        # pivot_rule belongs here, not at each call site. The engine default is
+        # "leg" (Causal), so a harness that builds its kwargs from this registry
+        # and does not override the rule silently measures the post-C16 leg book
+        # and cannot meet the pins below. Every harness that filters these params
+        # against the engine signature now inherits the retro rule automatically.
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "origin"},
         "swing": "sw10",
-        "pins": {"n": 500, "net": 325.78, "dd": 17.83, "partials": 0},  # MEASURED 2026-10-01
+        "pins": {"n": 500, "net": 325.78, "dd": 17.83, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====

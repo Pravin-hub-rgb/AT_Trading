@@ -44,6 +44,10 @@ IS_END = int(d["c15"][int(len(d["c15"]) * 0.70)]["ts"])
 
 
 def run(c15, sw15, c1h, sw1h, fine, causal):
+    # pivot_rule comes from EXPERIMENTS["champion_multi_sw10"]["params"], which now
+    # declares "origin" because this harness measures the PRE-C16 retro book. The
+    # engine default is "leg", so without that registry entry both arms would
+    # silently measure the post-C16 leg book and the pins below could not be met.
     r = m.simulate_htf_ltf_streak_halt(
         c1h, sw1h, c15, sw15, fine_ltf=fine, exp_causal_sl=causal, **pr)
     tr = [t for t in r["ltf_trades"] if t.get("outcome") != "open"]

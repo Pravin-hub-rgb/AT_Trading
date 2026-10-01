@@ -234,7 +234,11 @@ def build_module():
     # opposite-dir mark -> prev swing end_px, pre-start churn -> touchable
     # extreme since prev_end. filter_pre_fs honored. B1 decisions resolve
     # silently (B1s are not tradeable in v18 semantics).
-    t6 = '    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf)\n'
+    # Post-C16 this call takes pivot_rule explicitly (64a061a). The engine used
+    # to read the swing start unconditionally; the parameter now defaults to
+    # "leg" and the anchor has to match the shipped line exactly or the whole
+    # source-patching harness silently stops patching.
+    t6 = '    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)\n'
     assert s.count(t6) == 1, "collect sigs"
     s = s.replace(t6, t6 +
                   '    _exp_weekly_state_rows=[]\n')
