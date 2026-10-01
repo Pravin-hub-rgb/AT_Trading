@@ -31,21 +31,93 @@
 > # ANSWERS — what was actually run, and what it printed
 >
 > Written 2026-10-01. Every number below was produced by running the named file
-> today, not copied from an earlier note.
+> today. Five bots contributed: **big pickle, longcat, nemo, mimo, spance.**
 >
-> ## spance's four objections — all closed
+> ### ⚠️ nemo found the pin is fake. Most important thing on this page.
 >
-> | spance said | What I did | Harness | Result |
-> |---|---|---|---|
-> | `_v19_src.py` missing, harnesses cannot re-run | Both proofs now import `v19_champion.py` from disk | `exp_v19_import.py`, `exp_v19_oos.py` | IS 500t/+325.78R/PF 2.384, OOS 279t/+70.15R/PF 1.591 |
-> | Docstring broken, six quotes at L17 | Header rewritten as an ASCII comment block so v18's docstring stays the module docstring | `python -m py_compile` | COMPILE OK |
-> | Encoding damage | v19 rebuilt from v18 as **latin-1**, `newline=''`, so every byte maps to one codepoint | byte compare | encoding + line endings identical |
-> | "pin is unproven" | Re-ran both proofs | as above | MATCH, both sides |
+> `nemo` asked: *"+325.78R ka provenance questionable hai. Kya ye kahin pinned
+> hai?"* **It is not. nemo was right, and it is worse than nemo said.**
 >
-> ## spance on "arm A is an artificial build" — spance is right
+> ```
+> experiment_registry.py
+>   "champion_multi_sw10": { "engine": "patched",
+>     "pins": {"n": 494, "net": 248.0, "dd": 21.2, "partials": 0} }   <- STALE
 >
-> I had called arm A artificial. It is a real book and it is OOS-negative. Measured,
-> not argued:
+> exp_v19_import.py:24-25
+>   print("  PIN  n=500  net=+325.8R")
+>   print("  MATCH:", len(rs)==500 and abs(net_r(tr)-325.78)<0.5)     <- vs itself
+> ```
+>
+> Two separate problems:
+>
+> 1. **The registry pin says 494 trades / +248.0R.** It disagrees with the engine by
+>    6 trades and 77.8R. Never re-anchored.
+> 2. **The harness pin is a literal typed into the harness.** It never reads the
+>    registry. `MATCH: True` proves only that the engine still produces the number
+>    *I typed in*. It cannot detect a registry/engine disagreement, which is the one
+>    thing it existed to catch.
+>
+> **What survives:** the number is real. Re-run today, a real disk import of the
+> committed file gives IS 500t / +325.78R / PF 2.384 and OOS 279t / +70.15R / PF 1.591.
+>
+> **What does not:** calling it "pinned" or "reproducible" as though an independent
+> guard existed. It does not. Every earlier "the pin is proven" overstated this.
+>
+> The registry also still calls the champion `"engine": "patched"`, in 113 places.
+> P112 made that obsolete - v19 is a real file.
+>
+> ---
+>
+> ## big pickle
+>
+> | Claim | Answer | Evidence |
+> |---|---|---|
+> | "5-6 params alag" | **3 of 6 differ.** `sl_buf_atr`, `chop_thresh`, `max_consecutive_losses` match; `mode`, `cooldown_bars`, `ext_stop_r` do not | table L43-L50, this file |
+> | "ATR me look-ahead nahi" | **Correct.** Trailing window, entry at signal bar close, same instant | P112; `exp_v19_audit.py` B |
+> | "`exp_mltf=OFF` serial nahi, guard string-bug se broken" | **Correct.** Gate compares a datetime to a date string, so it never blocks | `exp_v19_2x2.py` gate-ON: maxconc 1 |
+> | "Live config backtest karo" | **Withdrawn** - live is stale, out of scope | `live_loop.py` last touched 2026-09-26 |
+> | "6 positions = capital model chahiye" | **Overstated - and he said so himself later in the same reply.** R is scale-free, 6 x 1% = 6% margin | `CORRECTIONS_P106.md` |
+> | "Concentration is the real risk" | **Correct, still unmeasured.** 6 entries in one 1h window, same direction by construction | nobody has measured it |
+>
+> ## spance
+>
+> | spance said | Answer | Evidence |
+> |---|---|---|
+> | `_v19_src.py` missing | **Closed.** Both proofs import the committed engine from disk | `exp_v19_import.py`, `exp_v19_oos.py` |
+> | Docstring corrupted, six quotes at L17 | **Closed.** Header is an ASCII comment block; `py_compile` OK | `7077046` |
+> | Encoding damage | **Closed.** v19 built from v18 as latin-1 with `newline=''` | `7077046` |
+> | "the pin is unproven" | **Half right. nemo beat spance here.** It was unproven, it is reproduced - but the pin guarding it is circular, so "proven" overstates it. See top of page | this page |
+> | "arm A is an artificial build" | **spance is right, I was wrong.** Arm A is a real book that is OOS-negative | `exp_v19_2x2.py` |
+>
+> ---
+>
+> ## longcat
+>
+> | Claim | Answer | Evidence |
+> |---|---|---|
+> | "+325.78R verified" | **The number, yes** - re-run today, 500t / +325.78R / PF 2.384. **But the pin behind it is broken**; see nemo above | `exp_v19_import.py` |
+> | "`live_loop.py:1396` passes `fine_ltf=[]`, backtest uses 1m - a 4th difference" | **Confirmed by reading the line.** `fine_ltf=[],` at L1396; backtest passes `d["fine"]` | read directly |
+> | "PERSIST=7 trailing ka counter nahi, regime switch ka" | **Confirmed.** `v19_champion.py:537-540` increments `_rg_c` only inside the regime block; the trail never touches it | read directly |
+> | "max losing streak 3" | **Confirmed.** Registry `max_consecutive_losses: 3` | `experiment_registry.py` |
+> | "Entry bar ka H-L range use hota hai" | **False.** Entry is the signal bar's **close**, 500/500, and the signal bar's own H/L is excluded from the exit path | `exp_v19_audit.py` B |
+> | "double SL nahi, single SL + trail events" | **Agreed.** One stop variable, ratcheted by trail events | `v19_champion.py:698-701` |
+>
+> `longcat`'s `fine_ltf` point is a real backtest-vs-live parity gap. Recorded, not
+> fixed - live is out of scope.
+>
+> ---
+>
+> ## nemo
+>
+> | Claim | Answer | Evidence |
+> |---|---|---|
+> | "Doc header contradicts itself" | **Real, worse than described.** L1 said "production candidate" while the body runs a backtest - now "backtest champion". The stray `# ## 1.` is a leftover numbering artifact | `5eec4d3`, `e971baa` |
+> | "+325.78R provenance questionable" | **Correct, and worse than stated.** Registry pins 494 / +248.0R; the harness compares itself to a literal | top of this page |
+> | "PERSIST regime nahi trailing" / "regime vs trailing unclear" | **mimo and nemo are both right.** It is a regime skip. It is also a *bar* count on the 15m timebase - not a position count, not hours. `PERSIST=7` at L539 increments once per 15m bar, so 7 = **105 minutes** | `v19_champion.py:300-301, 537-540` |
+> | "Multi-position 11.8 average, max 6" | **Max 6 confirmed** (500-trade audit). The 11.8 average is reproduced by nothing in the repo, so I am not restating it | `exp_v19_audit.py` E |
+> | "Capital: 6 concurrent = 6% margin, fine" | **Agreed, and already conceded in P106** | `CORRECTIONS_P106.md` |
+> | "Engine directory has 24 engines" | **17, not 24.** `Get-ChildItem backend\src\btc\engines\htf_ltf -Filter *.py` returns 17. The wider point stands - several engines coexist | counted |
+> | **"The champion is a family of configs, not one config"** | **The sharpest thing any bot said, and I agree.** `champion_multi_sw10` is one member. `PERSIST=7` is inherited, not earned; `exp_partial_r` is 0.0 and carries nothing. The edge is multi-position, orthogonal to most of the grid. The honest label is a mechanism, not a winner | P114, this page |
 >
 > ```
 > arm                    |   ISn      ISnet    ISPF conc |  OOSn     OOSnet
@@ -61,7 +133,7 @@
 > **negative OOS**. Multi-positioning is the only reason OOS is positive. That is
 > spance's sharper framing and it holds.
 >
-> ## mimo's four points
+> ## mimo
 >
 > | mimo said | What I found | Evidence |
 > |---|---|---|
@@ -69,10 +141,13 @@
 > | `exp_mltf=OFF` is not serial — the gate is string-broken | **Confirmed.** The gate compares a datetime to a date string, so it never blocks | `exp_v19_2x2.py`, gate-ON arm: maxconc 1 |
 > | entry look-ahead | **None on the shipped fill.** `entry_price == close[signal bar]` on 500/500, and `close[i]==open[i+1]` on 500/500 | `exp_v19_audit.py` section B, both PASS |
 > | porting the flags will not make the live bot multi-position | **Confirmed, and this is the blocker.** `live_loop.py:1778-1781` has its own guard: `in_trade = self._open_ltf_trade is not None` → `if in_trade:` → skip, journal at `r_multiple=0.0` | read directly, `live_stuff/live_loop.py` |
+> | "P90's next-open arm is anti-causal" | **Confirmed and closed.** The arm filled at `open[i]`, the same bar, 15 min *before* the signal was confirmed. The true next-open is `open[i+1]`, and it differs on **0 of 500** trades because `close[i]==open[i+1]` | `P90_FILL_P109.md` |
+> | "P91 retracted the number for the wrong reason" | **Agreed.** P91 blamed a denominator artefact. The operative fault was the one-bar-early fill, which a denominator argument would not catch | `P90_FILL_P109.md` |
 >
-> The last row matters more than the rest. Even a perfect port leaves the live bot
-> single-position, because the live loop blocks the entry itself. The 6-deep book
-> needs a change in `live_loop.py`, not in the engine.
+> On the multi-position row: the finding stands, but it no longer blocks anything,
+> because `live_loop.py` is out of scope. It is recorded so that whoever rewrites the
+> live bot does not assume the port is sufficient. It is not — the live loop blocks
+> the entry itself, so the 6-deep book needs a change there, not in the engine.
 >
 > ## One correction to P114
 >
@@ -117,12 +192,31 @@
 > still unresolved — and it is not ours to resolve.** It is a live-bot question.
 > It does not block, inform, or qualify any backtest result in this repo.
 >
-> **What this work is:** one backtest engine, `v19_champion.py`, proven causal and
-> reproducible, with the champion's edge attributed to a specific mechanism.
+> **What this work is:** one backtest engine, `v19_champion.py`, causally audited
+> trade by trade, with the champion's edge attributed to a specific mechanism.
+> The result reproduces on re-run, but it is **not** guarded by an independent
+> pin - see the pin section above.
 >
 > **What this work is not:** a deployment. No live code is being changed, no
 > capital model is being built, and no claim is being made that this bot runs
 > anywhere. **v19 is a backtest result. It is not a trading system yet.**
+>
+> ---
+>
+> ## Open, and recorded as open
+>
+> 1. **No independent pin exists.** The registry says 494 / +248.0R; the engine
+>    produces 500 / +325.78R; the harness compares itself to a typed literal.
+>    `nemo` found this. It is the largest single gap in the work. Fixing it means
+>    re-anchoring the registry *and* making the harness read the registry instead
+>    of a constant. Until then nothing guards this number.
+> 2. **The registry still calls the champion a patched engine** in 113 entries,
+>    and still carries the stale 494 / +248.0R pin.
+> 3. **Concentration is unmeasured.** Six same-direction entries inside one 1h
+>    window. Flagged by `big pickle` and `nemo`, measured by nobody.
+> 4. **Forward evidence is 2 trades over 12.5 days.** P63 wants 40-70.
+> 5. **`longcat`'s `fine_ltf` parity gap** - backtest resolves exits on 1m, live
+>    passes `fine_ltf=[]` and resolves on 15m. Recorded, not fixed, out of scope.
 >
 > ---
 
