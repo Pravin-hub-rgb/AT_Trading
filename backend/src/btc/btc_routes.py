@@ -1,4 +1,4 @@
-﻿"""BTC API routes â€” chart swings + position-engine backtest (24/7 continuous).
+"""BTC API routes â€” chart swings + position-engine backtest (24/7 continuous).
 
 Mounted from server.py via a single app.include_router() call.
 BTC-only: no Nifty imports, no session logic, no Upstox dependency.
@@ -102,7 +102,7 @@ try:
 except Exception:
     simulate_htf_ltf_v19_champion = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16"]
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -782,8 +782,8 @@ def btc_backtest(
         "cooldown_bars": cooldown_bars,
     }
     # HTF-LTF nested execution: 1h Flip cap16 + 15m/5m Decisive inside HTF window
-    # Skip HTF-LTF for standalone versions (v19_champion, v19_causal)
-    if htf_ltf != "off" and simulate_htf_ltf_15m is not None and version not in ("v19_champion", "v19_causal"):
+    # Skip HTF-LTF for standalone versions (v19_champion, v19_causal, v19_c16)
+    if htf_ltf != "off" and simulate_htf_ltf_15m is not None and version not in ("v19_champion", "v19_causal", "v19_c16"):
         # HTF is always 1h Flip cap16, LTF is htf_ltf (15m or 5m) Decisive
         htf_tf = "1h"
         ltf_tf = htf_ltf
@@ -1316,22 +1316,40 @@ def btc_backtest(
     elif version == "v19_champion":
         if simulate_htf_ltf_v19_champion is None:
             return JSONResponse(status_code=500, content={"detail": "v19_champion engine not loaded"})
-        # Champion params from experiment_registry: mode=atr_high, chop=58, cd=8, halt=3, ext_stop=3.0
-        nested = simulate_htf_ltf_v19_champion(
-            candles_htf=candles_htf,
-            swings_htf=swings_htf,
-            candles_ltf=candles,
-            swings_ltf=swings,
-            fine_ltf=fine,
-            sl_buf_atr=0.01,
-            ext_stop_r=3.0,
-            mode="atr_high",
-            chop_thresh=58.0,
-            cooldown_bars=8,
-            max_consecutive_losses=3,
-            htf_rr=3.0,
-            window_end="exit",
-        )
+        # PRE-C16 book. The signal SL is seg_start, the swing's declared origin.
+        # Measured IS 500t / +325.78R. Kept so the pre/post comparison is
+        # reproducible from the dropdown; the origin rule is the lookahead one
+        # (C16 in backtest/docs/C16_C18_SL_PIVOT_AUDIT.md).
+        #
+        # v19_champion does `from src.btc.btc_engine import _collect_signals`
+        # inside the function body, so rebinding the attribute on that module is
+        # enough - the engine picks it up on the next call.
+        import src.btc.btc_engine as _be
+        _orig = _be._collect_signals
+
+        def _origin_signals(*a, **kw):
+            kw["pivot_rule"] = "origin"
+            return _orig(*a, **kw)
+
+        _be._collect_signals = _origin_signals
+        try:
+            nested = simulate_htf_ltf_v19_champion(
+                candles_htf=candles_htf,
+                swings_htf=swings_htf,
+                candles_ltf=candles,
+                swings_ltf=swings,
+                fine_ltf=fine,
+                sl_buf_atr=0.01,
+                ext_stop_r=3.0,
+                mode="atr_high",
+                chop_thresh=58.0,
+                cooldown_bars=8,
+                max_consecutive_losses=3,
+                htf_rr=3.0,
+                window_end="exit",
+            )
+        finally:
+            _be._collect_signals = _orig
         trades = nested.get("ltf_trades", [])
     elif version == "v19_causal":
         if simulate_htf_ltf_v19_champion is None:
@@ -1355,6 +1373,30 @@ def btc_backtest(
             htf_rr=3.0,
             window_end="exit",
             exp_causal_sl=1,
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "v19_c16":
+        # POST-C16 book, no separate signal collection - pivot_rule defaults to
+        # "leg", so the initial stop is the swing's own extreme up to the entry
+        # candle. Measured IS 499t / +239.12R. Present so the pre/post diff is
+        # visible trade by trade in the dropdown.
+        if simulate_htf_ltf_v19_champion is None:
+            return JSONResponse(status_code=500, content={"detail": "v19_c16 engine not loaded"})
+        nested = simulate_htf_ltf_v19_champion(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            htf_rr=3.0,
+            window_end="exit",
+            exp_causal_sl=0,
         )
         trades = nested.get("ltf_trades", [])
     else:

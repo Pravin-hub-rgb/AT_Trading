@@ -18,7 +18,7 @@ export type BookId = string;
 export interface BookOption {
   id: BookId;
   label: string;
-  /** Shown next to the dropdown. */
+  shortLabel: string;
   hint: string;
   config: {
     version: string;
@@ -103,8 +103,18 @@ export const BOOK_OPTIONS: BookOption[] = [
   {
     id: "v19_causal_htf",
     label: "v19 CAUSAL + HTF-LTF (1h to 15m)",
-    hint: "CAUSAL stop with the 1h window gate on",
+    shortLabel: "CAUSAL+HTF",
+    slMode: "causal",
+    measured: { isN: 494, isNet: 247.96, oosN: 0, oosNet: 0 },
     config: { ...V19, version: "v19_causal", htf_ltf: "15m" },
+  },
+  {
+    id: "v19_c16",
+    label: "v19 POST-C16 - leg-extreme stop (causal, live-computable)",
+    shortLabel: "C16",
+    slMode: "causal",
+    measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
+    config: { ...V19, version: "v19_c16" },
   },
   {
     id: "v1",

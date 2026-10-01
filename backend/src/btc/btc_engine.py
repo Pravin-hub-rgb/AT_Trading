@@ -98,6 +98,12 @@ def _collect_signals(
     skip_first: bool = True,
     selection: str = "stream",
     candles: Optional[list[dict]] = None,
+    # C16: which pivot becomes the signal's SL.
+    #   "leg"    (default) - the extreme of the swing's own bars up to and
+    #                       including the break bar. Causal, live-computable.
+    #   "origin"          - seg_start, the swing's declared origin. Retains the
+    #                       old behaviour so the two books stay comparable.
+    pivot_rule: str = "leg",
     filter_pre_fs: bool = True,
 ) -> list[dict]:
     """Entry signals from swing break marks.
@@ -196,7 +202,7 @@ def _collect_signals(
                 # so, and sweep_pref_fs.py:51 calls the stream path without it.
                 # Without a guard this indexes None and raises TypeError. The
                 # pre-C16 code read only seg_start, so it had no such dependency.
-                if candles is not None:
+                if pivot_rule == "leg" and candles is not None:
                     _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
                     _br_idx = store.pos(b_time) if store else -1
                     if _br_idx < 0:
@@ -273,7 +279,7 @@ def _collect_signals(
                         # without it. Without a guard this indexes None and raises
                         # TypeError. Pre-C16 code read only seg_start, so it had no
                         # such dependency.
-                        if candles is not None:
+                        if pivot_rule == "leg" and candles is not None:
                             _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
                             _br_idx = store.pos(b_time) if store else -1
                             if _br_idx < 0:
