@@ -1,14 +1,27 @@
 # V19 CHAMPION - production candidate. Real code, not a source patch.
-# v18_streak_halt.py plus the two behaviours the pinned champion needs,
-# made permanent:
+#
+# v18_streak_halt.py with two behaviours made permanent. P114 measured
+# what each one is actually worth, and they are not equal:
+#
 #   1. No position limit - the one-position gate is removed and busy_until
 #      is never armed, so a window may hold overlapping entries. This is
-#      the multi in champion_multi_sw10.
-#   2. Regime hysteresis - on a regime flip, keep trading the previous
-#      regime for 7 consecutive disagreements before switching.
+#      the multi in champion_multi_sw10, and it is the entire edge. With
+#      the gate on, the same config is +137.72R IS but -13.26R OOS over
+#      230 trades. Turning it off gives +325.78R IS / +70.15R OOS.
+#
+#   2. Regime hysteresis, PERSIST=7 - on a regime flip, keep trading the
+#      previous regime for 7 consecutive disagreements before switching.
+#      INHERITED, NOT EARNED. In isolation it is bit-identical on IS
+#      (500 trades, +325.78R, PF 2.384 either way) and costs 2.40R on
+#      OOS. It was never tested alone. It is kept because removing it is
+#      a separate open question, not because it carries the result.
+#
 # Twelve functional lines differ from v18. The ~100 other harness knobs
 # are research scaffolding and are not copied here. A production engine
 # ships one frozen strategy, not a flag zoo.
+#
+# Evidence: P112 (rebuild + trade audit), P113 (ratchet clamp rejected),
+# P114 (flag attribution). Harness: exp_v19_2x2.py.
 
 """v11_conditional_htf — HTF conditional break: when to use B2 vs Flip vs Decisive.
 HTF 1h: if regime is chop (HIGH chop >61.8 or LOW vol) -> use Decisive (B2|FLIP) window, else use Flip window.
