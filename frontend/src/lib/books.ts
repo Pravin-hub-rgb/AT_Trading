@@ -18,8 +18,13 @@ export type BookId = string;
 export interface BookOption {
   id: BookId;
   label: string;
-  shortLabel: string;
-  hint: string;
+  shortLabel?: string;
+  /** "causal" = a rule a live trader could place. "retro" = the origin pivot. */
+  slMode?: "causal" | "retro";
+  /** Shown next to the dropdown. */
+  hint?: string;
+  /** Measured on the committed engine. oos 0 means not yet measured. */
+  measured?: { isN: number; isNet: number; oosN: number; oosNet: number };
   config: {
     version: string;
     tf: string;
