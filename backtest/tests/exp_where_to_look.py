@@ -52,7 +52,18 @@ def key(t):
 
 
 def when(ts):
+    # NOT used for the dates the reader is told to open. Every trade carries an
+    # entry_date string, and that string is what the chart renders. The ts field
+    # on the same trade is a true UTC epoch while the date string is IST
+    # wall-clock, so converting ts and printing it shifts every time back 5h30m
+    # and lands the trade on the wrong bar. Both fields are printed so a
+    # mismatch is visible rather than silent.
     return datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d %H:%M")
+
+
+def chart_time(t):
+    """The string the chart shows. This is the one to open."""
+    return str(t.get("entry_date", ""))[:16]
 
 
 retro, causal = run(0), run(1)
@@ -79,10 +90,9 @@ print("  %-17s %-6s %-10s %-10s %-8s %-8s %s"
       % ("date", "side", "sl_retro", "sl_causal", "R_retro", "R_causal", "dR"))
 for _, k, sa, sb, ra, rb in rows[:8]:
     print("  %-17s %-6s %-10.2f %-10.2f %-+8.2f %-+8.2f %+.2f"
-          % (when(k[0]), "LONG" if k[1] == 1 else "SHORT",
-             sa, sb, ra, rb, rb - ra))
-
-print()
+          % (chart_time(rk[k]), "LONG" if k[1] == 1 else "SHORT",
+             sa, sb, ra, rb, rb - ra)
+          + "   [entry_ts UTC: %s]" % when(k[0]))
 print("=" * 78)
 print("B. A TRADE THAT ONLY ONE BOOK TAKES  - membership")
 print("=" * 78)
@@ -92,13 +102,13 @@ print("  RETRO only  (%d) - causal stopped these out earlier:" % len(only_r))
 for k in only_r:
     t = rk[k]
     print("    %-17s %-6s R %+.2f  (%s)"
-          % (when(k[0]), "LONG" if k[1] == 1 else "SHORT",
+          % (chart_time(t), "LONG" if k[1] == 1 else "SHORT",
              float(t["r_multiple"]), t.get("outcome")))
 print("  CAUSAL only (%d):" % len(only_c))
 for k in only_c:
     t = ck[k]
     print("    %-17s %-6s R %+.2f  (%s)"
-          % (when(k[0]), "LONG" if k[1] == 1 else "SHORT",
+          % (chart_time(t), "LONG" if k[1] == 1 else "SHORT",
              float(t["r_multiple"]), t.get("outcome")))
 
 print()
