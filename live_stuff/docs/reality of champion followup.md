@@ -1,5 +1,11 @@
 # reality of champion followup.md
 
+> ## 📌 SCOPE — backtest engine only
+>
+> No live engine is in this work. `live_loop.py` is stale (last touched 2026-09-26)
+> and imports v18, not v19. Live-bot numbers are not a reference point here.
+> **v19 is a backtest result, not a trading system.** See **SCOPE** below.
+
 > ## ✅ RESOLVED — 2026-09-30, commit `7077046`
 >
 > The four objections in section *"Step 1"* (L209–L214 below) were **all correct
@@ -87,12 +93,36 @@
 > −1.0R, no trail exit is worse than −1R, no duplicates, max concurrency 6. I am
 > recording the FAIL rather than widening the tolerance to make it green.
 >
-> ## Still open
+> ## SCOPE — backtest engine only. There is no live engine in this work.
 >
-> **The live bot's own number is still unknown.** Nobody has run
-> `get_v18_params("BTCUSDT_BYBIT")` through a backtest. mimo and big pickle both
-> asked for it; it has not been done. Until it is, "what does the live bot make"
-> has no answer in this repo.
+> `mimo` and `big pickle` both asked for the live bot's own backtest number. That
+> question is **withdrawn, not answered.** The live bot is stale and out of scope,
+> so its number is not a reference point for anything.
+>
+> The facts, so nobody reopens this:
+>
+> | | |
+> |---|---|
+> | `live_loop.py` last touched | **2026-09-26** (`bd78169`) |
+> | P102–P114 and the v19 rebuild | 2026-09-30 / 10-01 |
+> | What `live_loop.py:35` imports | `v18_streak_halt` — **not v19** |
+> | Commits since live was last touched that changed the engine | P102, P112, P113, P114, `7077046`, `5eec4d3` |
+>
+> The live bot has not moved while the backtest engine moved six times. It cannot
+> produce a comparable number, so comparing the champion to it would be measuring
+> two different things and calling one of them a regression.
+>
+> `CORRECTIONS_P106.md` records a live-config run at 369t / +78.50R / PF 1.675
+> against a golden-test claim of 351t / +137.33R. **That conflict is real and is
+> still unresolved — and it is not ours to resolve.** It is a live-bot question.
+> It does not block, inform, or qualify any backtest result in this repo.
+>
+> **What this work is:** one backtest engine, `v19_champion.py`, proven causal and
+> reproducible, with the champion's edge attributed to a specific mechanism.
+>
+> **What this work is not:** a deployment. No live code is being changed, no
+> capital model is being built, and no claim is being made that this bot runs
+> anywhere. **v19 is a backtest result. It is not a trading system yet.**
 >
 > ---
 

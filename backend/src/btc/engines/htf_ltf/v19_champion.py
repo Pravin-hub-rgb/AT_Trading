@@ -1,4 +1,7 @@
-# V19 CHAMPION - production candidate. Real code, not a source patch.
+# V19 CHAMPION - backtest champion. Real code, not a source patch.
+# SCOPE: this is a BACKTEST engine. There is no live engine in this work.
+# live_loop.py is stale and still imports v18, so nothing here is deployed and
+# nothing here is a claim about a running bot. This file is a research object.
 #
 # v18_streak_halt.py with two behaviours made permanent. P114 measured
 # what each one is actually worth, and they are not equal:
