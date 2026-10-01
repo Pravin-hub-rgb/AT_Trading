@@ -630,8 +630,14 @@ def simulate_htf_ltf_streak_halt(
         _clo=float(candles_ltf[0]["low"]); _chi=float(candles_ltf[0]["high"])
         for _ci in range(n):
             while _cei<len(_conf_evs) and _conf_evs[_cei][0]<=_ci:
-                _cref=_conf_evs[_cei][1]; _cei+=1
-                if _cref<n:
+                # +1: the forming swing starts on the bar AFTER the finished leg.
+                # Resetting to seg end put the running extreme on the low of a
+                # candle belonging to a leg that had already completed, which is
+                # the retroactive pivot one swing earlier - not a causal value.
+                # Checked: across all 2900 swings, seg_end + 1 is never after
+                # confirmed_at_idx, so this cannot read a future bar.
+                _cref=_conf_evs[_cei][1]+1; _cei+=1
+                if _cref<=_ci and _cref<n:
                     _clo=float(candles_ltf[_cref]["low"]); _chi=float(candles_ltf[_cref]["high"])
             _cl=float(candles_ltf[_ci]["low"]); _ch2=float(candles_ltf[_ci]["high"])
             if _cl<_clo: _clo=_cl
