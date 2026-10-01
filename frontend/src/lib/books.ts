@@ -14,18 +14,12 @@
 // backtest/tests/exp_v19_tradediff.py lists every trade they disagree on.
 
 export type BookId = string;
-export type SlMode = "causal" | "retro";
 
 export interface BookOption {
   id: BookId;
   label: string;
-  shortLabel: string;
-  /** "causal" = the shippable rule. "retro" = the retired lookahead rule. */
-  slMode?: SlMode;
   /** Shown next to the dropdown. */
-  hint?: string;
-  /** Measured on the committed engine. oos 0 means not yet measured. */
-  measured?: { isN: number; isNet: number; oosN: number; oosNet: number };
+  hint: string;
   config: {
     version: string;
     tf: string;
@@ -89,40 +83,31 @@ const V19 = {
 
 export const BOOK_OPTIONS: BookOption[] = [
   {
-    id: "v19",
-    label: "v19 - running-extreme SL (live-implementable)",
-    shortLabel: "v19",
-    slMode: "causal",
-    measured: { isN: 500, isNet: 314.52, oosN: 0, oosNet: 0 },
-    config: { ...V19, version: "v19_causal" },
-  },
-  {
-    id: "v19_retired",
-    label: "v19 RETIRED rule - reproduces the retracted +325.8R, DO NOT SHIP",
-    shortLabel: "RETIRED",
-    slMode: "retro",
-    measured: { isN: 500, isNet: 325.78, oosN: 279, oosNet: 70.15 },
+    id: "v19_retro",
+    label: "v19 RETRO stop (lookahead) — IS 500t +325.8R | OOS 279t +70.2R",
+    hint: "stop at the swing's true origin · lookahead",
     config: { ...V19, version: "v19_champion" },
   },
   {
-    id: "v19_htf",
-    label: "v19 - running-extreme SL + HTF-LTF (1h to 15m)",
-    shortLabel: "v19+HTF",
-    slMode: "causal",
-    measured: { isN: 500, isNet: 314.52, oosN: 0, oosNet: 0 },
-    config: { ...V19, version: "v19_causal", htf_ltf: "15m" },
+    id: "v19_causal",
+    label: "v19 CAUSAL stop (live-honest) — IS 494t +248.0R | OOS 282t +80.0R",
+    hint: "stop at the running extreme · what a live trader can actually place",
+    config: { ...V19, version: "v19_causal" },
   },
   {
-    id: "v19_retired_htf",
-    label: "v19 RETIRED + HTF-LTF (1h to 15m) - DO NOT SHIP",
-    shortLabel: "RETIRED+HTF",
-    slMode: "retro",
-    measured: { isN: 500, isNet: 325.78, oosN: 0, oosNet: 0 },
+    id: "v19_retro_htf",
+    label: "v19 RETRO + HTF-LTF (1h to 15m)",
+    hint: "RETRO stop with the 1h window gate on",
     config: { ...V19, version: "v19_champion", htf_ltf: "15m" },
   },
   {
+    id: "v19_causal_htf",
+    label: "v19 CAUSAL + HTF-LTF (1h to 15m)",
+    hint: "CAUSAL stop with the 1h window gate on",
+    config: { ...V19, version: "v19_causal", htf_ltf: "15m" },
+  },
+  {
     id: "v1",
-    shortLabel: "v1",
     label: "v1 Honest — 1h Flip cap 16d",
     hint: "baseline · 1h flip, fixed 3R, cap 16d",
     config: {
@@ -144,7 +129,6 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "v7",
-    shortLabel: "v7",
     label: "v7 TimeCap 16d — 1h Flip, no cooldown",
     hint: "v1 with the cooldown removed",
     config: {
