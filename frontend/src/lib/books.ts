@@ -23,8 +23,15 @@ export interface BookOption {
   config: {
     version: string;
     tf: string;
+    /** signal timeframe — the LTF leg */
     mode: string;
     symbol: string;
+    /** swing minBars for the LTF leg. Champion = 50. */
+    ltf_min_bars: number;
+    /** higher timeframe for the window gate. Champion = 1h. */
+    htf_tf: string;
+    /** swing minBars for the HTF leg. Champion = 10. */
+    htf_min_bars: number;
     htf_ltf: string;
     htf_ltf_ver: string;
     min_bars: number;
@@ -49,6 +56,12 @@ const V19 = {
   tf: "15m",
   mode: "continuous",
   symbol: "BTCUSDT_BYBIT",
+  // the champion harness: sw15 at min_bars=50, sw10 at min_bars=10. These are
+  // two different values on two different timeframes and neither is the API
+  // default of 14.
+  ltf_min_bars: 50,
+  htf_tf: "1h",
+  htf_min_bars: 10,
   htf_ltf: "off",
   htf_ltf_ver: "v18",
   min_bars: 50,
@@ -101,7 +114,10 @@ export const BOOK_OPTIONS: BookOption[] = [
       ...V19,
       version: "v1",
       tf: "1h",
+      htf_tf: "1h",
       htf_ltf_ver: "v1",
+      ltf_min_bars: 20,
+      htf_min_bars: 20,
       min_bars: 20,
       fee_pct: 0.05,
       sl_buf_atr: 0.25,
@@ -119,7 +135,10 @@ export const BOOK_OPTIONS: BookOption[] = [
       ...V19,
       version: "v7",
       tf: "1h",
+      htf_tf: "1h",
       htf_ltf_ver: "v1",
+      ltf_min_bars: 20,
+      htf_min_bars: 20,
       min_bars: 20,
       fee_pct: 0.05,
       sl_buf_atr: 0.25,

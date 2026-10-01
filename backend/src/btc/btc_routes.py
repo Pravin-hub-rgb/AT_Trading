@@ -1,4 +1,4 @@
-"""BTC API routes — chart swings + position-engine backtest (24/7 continuous).
+﻿"""BTC API routes â€” chart swings + position-engine backtest (24/7 continuous).
 
 Mounted from server.py via a single app.include_router() call.
 BTC-only: no Nifty imports, no session logic, no Upstox dependency.
@@ -16,7 +16,7 @@ from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts, E
 from src.btc.btc_swing import compute_btc_flow, compute_btc_swings
 from src.walker import FlowCandle
 
-# Versioned engines — each isolated, v1 is the default (above)
+# Versioned engines â€” each isolated, v1 is the default (above)
 try:
     from src.btc.engines.v2_chandelier import simulate_btc_trades_v2
 except Exception:
@@ -104,7 +104,7 @@ except Exception:
 
 BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal"]
 VERSION_LABELS = {
-    "v1": "v1 Honest (touchable + one-swing-one-trade) — cap 16d for 1h Flip",
+    "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
     "v3": "v3 HTF 1h Trail",
     "v4": "v4 Partial 50/50",
@@ -112,10 +112,10 @@ VERSION_LABELS = {
     "v6": "v6 ADX>25",
     "v7": "v7 TimeCap 16d (1h Flip)",
     "v8": "v8 Break High/Low + Opposite Cancel",
-    "v9": "v9 Conditional Cap 2R→30d",
+    "v9": "v9 Conditional Cap 2Râ†’30d",
     "v10": "v10 Flip Strength Body/ATR",
     "v11": "v11 Conditional HTF (chop-aware entry)",
-    "v12": "v12 Cooldown 20 bars (cd20) — FROZEN BASELINE",
+    "v12": "v12 Cooldown 20 bars (cd20) â€” FROZEN BASELINE",
     "v13": "v13 Cooldown 30 bars",
     "v15": "v15 Recover 1R mode",
     "v16": "v16 Entry distance <=30% (rejected)",
@@ -137,7 +137,7 @@ def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT"):
     except FileNotFoundError:
         return None, JSONResponse(
             status_code=404,
-            content={"detail": f"{symbol} {tf} data missing — copy the CSV first."},
+            content={"detail": f"{symbol} {tf} data missing â€” copy the CSV first."},
         )
     except ValueError as e:
         return None, JSONResponse(status_code=400, content={"detail": str(e)})
@@ -157,7 +157,7 @@ def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT"):
                 "high": h,
                 "low": lo,
                 "close": c,
-                # BTC CSV has no volume/oi — zero-filled for frontend shape compat
+                # BTC CSV has no volume/oi â€” zero-filled for frontend shape compat
                 "volume": 0,
                 "oi": 0,
             }
@@ -175,7 +175,7 @@ def _compute_swings(flow: list[FlowCandle], mode: str, min_bars: int = 14) -> li
     min_bars:   SwingEngine minBars (sweep winner: 20 > 14 > 7 on BTC)
     """
     opts = {"minBars": max(2, int(min_bars))}
-    cap = max(1, len(flow) // 2)  # no 1000-swing cap — full chain like the sweep
+    cap = max(1, len(flow) // 2)  # no 1000-swing cap â€” full chain like the sweep
     if mode == "continuous":
         return compute_btc_swings(flow, opts=opts, max_swings=cap)
 
@@ -192,7 +192,7 @@ def _compute_swings(flow: list[FlowCandle], mode: str, min_bars: int = 14) -> li
                 for f in _IDX_FIELDS:
                     if s.get(f, -1) >= 0:
                         s[f] += slice_start
-                # seg.start_idx/end_idx are nested — offset them the same way
+                # seg.start_idx/end_idx are nested â€” offset them the same way
                 # so the zigzag draws at the correct window positions.
                 seg = s.get("seg") or {}
                 if seg.get("start_idx", -1) >= 0:
@@ -280,7 +280,7 @@ def _net_stats(stats: dict, trades: list[dict]) -> dict:
     return out
 
 
-# Master presets — ONE SWING ONE TRADE + 11:30 fix 2026-09-06 via _rerun_master_sweep.py
+# Master presets â€” ONE SWING ONE TRADE + 11:30 fix 2026-09-06 via _rerun_master_sweep.py
 # Fix: one swing one trade (first B2/FLIP per swing only) + opposite-dir touchable SL (max high since prev_end).
 # 14 Jan 21:30 FLIP from same swing as 17:30 B2 now ignored; 11:30 SL 95465 not 95281; 20:00 SL 91780.
 # Method: stream incl churn + touchable + one-trade-per-swing + 1m fills + 0.05%+2pt FULL window, OWN TF, net desc.
@@ -346,8 +346,8 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
                 entry_selection: str = "stream", version: str = "v1",
                 entry_slip_pct: float = 0.005, exit_slip_pct: float = 0.010,
                 funding_rate_pct: float = 0.0) -> dict:
-    """Run one master preset and return a summary row. Versioned — v1 default never disturbed."""
-    # v1 flip1h20 is now cap 16d default (old cap 0 removed) — use v7 engine for this preset when version v1
+    """Run one master preset and return a summary row. Versioned â€” v1 default never disturbed."""
+    # v1 flip1h20 is now cap 16d default (old cap 0 removed) â€” use v7 engine for this preset when version v1
     if p.get("key") == "flip1h20" and version == "v1" and simulate_btc_trades_v7 is not None:
         tr = simulate_btc_trades_v7(
             candles, swings,
@@ -382,9 +382,9 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
             trailing=p["trailing"], breakeven_r=float(p["breakeven_r"]),
             bias_timeline=bias_timeline, day_gate=day_gate, fine=fine, entry_selection=entry_selection,
         )
-        # for v2 we ignore p trailing and force chandelier if needed — but keep as is
+        # for v2 we ignore p trailing and force chandelier if needed â€” but keep as is
     elif version == "v3" and simulate_btc_trades_v3 is not None:
-        # v3 needs HTF swings — caller should have built them; fallback to v1
+        # v3 needs HTF swings â€” caller should have built them; fallback to v1
         tr = simulate_btc_trades(
             candles, swings,
             entry_break=p["entry_break"], sl_mode=p["sl_mode"],
@@ -444,7 +444,7 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
 
 
 def _load_fine_1m(t0: int, t1: int, symbol: str = "BTCUSDT") -> list[dict]:
-    """1m candles for [t0, t1] from the 1m CSV — for 1m-precise exit fills.
+    """1m candles for [t0, t1] from the 1m CSV â€” for 1m-precise exit fills.
 
     Returns [] when the 1m CSV is missing. Filters the frame BEFORE building
     dicts so a full-window backtest still only materialises the needed rows.
@@ -474,7 +474,7 @@ def _streak_regime_gate(candles: list[dict]) -> dict[str, Optional[str]]:
 
     Trade the regime; on a color-break day keep the old regime; the NEXT day
     is a PAUSE (no trades) and the regime flips to the pause day's color.
-    Returns {date: "long"|"short"|None} — None = pause day.
+    Returns {date: "long"|"short"|None} â€” None = pause day.
     """
     per_day: dict[str, list[dict]] = {}
     for c in candles:
@@ -616,6 +616,8 @@ def btc_backtest(
     skip_first: bool = True,
     bias: str = "off",
     min_bars: int = 14,
+    htf_min_bars: int = 10,
+    htf_tf: str = "1h",
     regime: str = "off",
     fill_tf: str = "1m",
     entry_selection: str = "stream",
@@ -631,22 +633,22 @@ def btc_backtest(
     Args:
         entry_break: decisive (default: the swing's B2/FLIP flip break) | b2 | flip
         sl_mode:     swing (broken pivot extreme) | pct (sl_pct% beyond entry)
-        rr_target:   fixed R target — used when trailing=off
+        rr_target:   fixed R target â€” used when trailing=off
         trailing:    off | r (trail trail_distance_r behind favorable extreme)
                      | swing (trail to confirmed swing pivots)
         breakeven_r: SL moves to entry after breakeven_r * risk traveled (0 = off)
         skip_first:  first swing of the chain establishes structure only (FS/bias
-                     role) — entries start from swing #2 onward (default true)
-        bias:        off | 15m — gate entries by the last CONFIRMED 15m swing
+                     role) â€” entries start from swing #2 onward (default true)
+        bias:        off | 15m â€” gate entries by the last CONFIRMED 15m swing
                      direction (longs need "up", shorts need "down"). The BTC
                      analog of Nifty's pre-open bias. Ignored when tf=15m
                      (no higher TF available).
         min_bars:    SwingEngine minBars (sweep winner: 20 > 14 > 7 on BTC).
-        regime:      off | streak_311 — daily-color streak regime gate
+        regime:      off | streak_311 â€” daily-color streak regime gate
                      (trade regime, fade the break day, pause, flip).
 
     Returns:
-        {params, stats, trades: [...]} — trades carry entry/exit ts + date so
+        {params, stats, trades: [...]} â€” trades carry entry/exit ts + date so
         the frontend draws PositionPrimitive boxes and a trade table.
     """
     err = _validate_tf_mode(tf, mode)
@@ -664,6 +666,10 @@ def btc_backtest(
         return JSONResponse(status_code=400, content={"detail": "regime must be off | streak_311"})
     if not (2 <= int(min_bars) <= 200):
         return JSONResponse(status_code=400, content={"detail": "min_bars must be 2..200"})
+    if not (2 <= int(htf_min_bars) <= 200):
+        return JSONResponse(status_code=400, content={"detail": "htf_min_bars must be 2..200"})
+    if htf_tf not in ("15m", "1h", "4h"):
+        return JSONResponse(status_code=400, content={"detail": "htf_tf must be 15m | 1h | 4h"})
     if not (0 <= float(fee_pct) <= 0.5):
         return JSONResponse(status_code=400, content={"detail": "fee_pct must be 0..0.5 (% per side)"})
     if not (0 <= float(slippage_pts) <= 1000):
@@ -686,6 +692,20 @@ def btc_backtest(
 
     swings = _compute_swings(flow, mode, min_bars=min_bars)
 
+    # HTF leg is genuinely a different timeframe. It used to be fed the SAME
+    # candles and swings as the LTF leg, so the 1h window gate was deciding on
+    # 15m structure and min_bars for the two could never differ. The champion
+    # harness does not do this: it passes sw10 (1h, min_bars=10) and sw15
+    # (15m, min_bars=50) as separate arguments. Each book now carries both.
+    candles_htf: list = candles
+    swings_htf: list = swings
+    if htf_tf != tf:
+        hwin, herr = _load_window(htf_tf, limit, symbol)
+        if herr is not None:
+            return herr
+        candles_htf, hflow = hwin
+        swings_htf = _compute_swings(hflow, mode, min_bars=htf_min_bars)
+
     # 1m-precise exit fills: walk 1m candles for SL/target/trail/BE instead of
     # the signal TF's bars (no hidden intrabar stops). tf=1m already exact.
     fine: Optional[list[dict]] = None
@@ -694,7 +714,7 @@ def btc_backtest(
         if not fine:
             return JSONResponse(
                 status_code=400,
-                content={"detail": "fill_tf=1m needs data/btc/BTCUSDT_1m.csv — missing or empty for this window."},
+                content={"detail": "fill_tf=1m needs data/btc/BTCUSDT_1m.csv â€” missing or empty for this window."},
             )
 
     # Daily-color streak regime gate (3-1-1) over the trade window's days.
@@ -804,7 +824,7 @@ def btc_backtest(
                 params["ext_stop_r"] = 1.5
                 params["sl_hhll_n"] = 30
             elif htf_ltf_ver == "v11" and simulate_htf_ltf_conditional is not None:
-                # v11 BEST all-positive 539 +172.5 chop_or_atr_low HIGH chop>61.8 OR LOW vol atr%<0.35 -> decisive else Flip — beats v5 +4.4R total +28.6R 2023
+                # v11 BEST all-positive 539 +172.5 chop_or_atr_low HIGH chop>61.8 OR LOW vol atr%<0.35 -> decisive else Flip â€” beats v5 +4.4R total +28.6R 2023
                 nested = simulate_htf_ltf_conditional(
                     htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
                     sl_buf_atr=0.25, ext_stop_r=1.5, chop_thresh=61.8, atr_low_thresh=0.35,
@@ -816,7 +836,7 @@ def btc_backtest(
             elif htf_ltf_ver == "v12" and simulate_htf_ltf_conditional is not None:
                 # v12 = v11 (conditional HTF) + cooldown 20 bars.
                 # FROZEN BASELINE: 414 trades, +265.30R gross, all 4 years positive.
-                # Do not modify — this is the reference version.
+                # Do not modify â€” this is the reference version.
                 nested = simulate_htf_ltf_conditional(
                     htf_candles, htf_swings, ltf_candles, ltf_swings, ltf_fine,
                     sl_buf_atr=0.25, ext_stop_r=1.5, chop_thresh=61.8, atr_low_thresh=0.35,
@@ -913,9 +933,9 @@ def btc_backtest(
                 # vs +265R without halt (streak analysis test_streak_analysis.py).
                 #
                 # Per-instrument tuning (2026-09-17, corrected streak + cd sweep):
-                #   BTC Spot:     chop=61.8 cd=20 slbuf=0.25 halt=5 → +331.1R  DD 9.7R
-                #   Binance Perp: chop=61.8 cd=5  slbuf=0.15 halt=5 → +311.7R  DD 11.6R
-                # Bybit Perp:   chop=58.0 cd=10 slbuf=0.01 halt=3 → +365.7R  DD 17.9R
+                #   BTC Spot:     chop=61.8 cd=20 slbuf=0.25 halt=5 â†’ +331.1R  DD 9.7R
+                #   Binance Perp: chop=61.8 cd=5  slbuf=0.15 halt=5 â†’ +311.7R  DD 11.6R
+                # Bybit Perp:   chop=58.0 cd=10 slbuf=0.01 halt=3 â†’ +365.7R  DD 17.9R
                 if symbol == "BTCUSDT_BYBIT":
                     _chop = 58.0
                     _cd = 10
@@ -951,7 +971,7 @@ def btc_backtest(
             elif htf_ltf_ver == "v19" and simulate_htf_ltf_streak_halt is not None:
                 # v19 = v18 with HTF window ending at first touch of 1.5R (r_touch)
                 # instead of the HTF trade's exit. Research 2026-09-08 (fix/research_v19.md):
-                # 242t +200.6R DD8.5 PF2.51 vs v18 330t +331.1R DD9.7 — REJECTED as default
+                # 242t +200.6R DD8.5 PF2.51 vs v18 330t +331.1R DD9.7 â€” REJECTED as default
                 # (removed 88 trades avg +1.48R = pullback winners), kept for comparison.
                 if symbol == "BTCUSDT_BYBIT":
                     _chop = 58.0
@@ -996,7 +1016,7 @@ def btc_backtest(
             ltf_trades = nested.get("ltf_trades", [])
             htf_trades = nested.get("htf_trades", [])
             # Merged intervals from v18: union of flip + b2 + decisive.
-            # These are the actual windows the engine trades in — used for chart tinting.
+            # These are the actual windows the engine trades in â€” used for chart tinting.
             merged_intervals = nested.get("intervals", [])
             # Use LTF trades for main chart, but also include HTF for stats
             # For now, return LTF trades as primary, with HTF count in params
@@ -1030,7 +1050,7 @@ def btc_backtest(
             params["htf_trades"] = len(htf_trades)
             params["htf_net"] = stats_htf.get("net_total_r")
             params["ltf_trades"] = len(ltf_trades)
-            # Build htf_windows from parent intervals — each LTF trade's parent
+            # Build htf_windows from parent intervals â€” each LTF trade's parent
             # HTF interval (flip or b2). Non-overlapping, covers every trade.
             htf_windows = []
             for iv in merged_intervals:
@@ -1058,8 +1078,8 @@ def btc_backtest(
                 "htf_stats": stats_htf,
                 "combined_net": combined_net,
             }
-    # versioned dispatch — v1 is default honest baseline, v2..v7 are isolated crazy ideas
-    # v1 flip1h20 is now cap 16d default (old cap 0 removed) — use v7 engine for that preset
+    # versioned dispatch â€” v1 is default honest baseline, v2..v7 are isolated crazy ideas
+    # v1 flip1h20 is now cap 16d default (old cap 0 removed) â€” use v7 engine for that preset
     if version == "v1" and tf == "1h" and entry_break == "flip" and int(min_bars) == 20 and trailing == "off" and float(breakeven_r) == 0.0 and simulate_btc_trades_v7 is not None:
         trades = simulate_btc_trades_v7(
             candles,
@@ -1286,8 +1306,8 @@ def btc_backtest(
             return JSONResponse(status_code=500, content={"detail": "v19_champion engine not loaded"})
         # Champion params from experiment_registry: mode=atr_high, chop=58, cd=8, halt=3, ext_stop=3.0
         nested = simulate_htf_ltf_v19_champion(
-            candles_htf=candles,
-            swings_htf=swings,
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
             candles_ltf=candles,
             swings_ltf=swings,
             fine_ltf=fine,
@@ -1309,8 +1329,8 @@ def btc_backtest(
         # of the entry bar. Measured IS 494t/+247.96R vs retro 500t/+325.78R, OOS
         # 282t/+80.01R vs 279t/+70.15R. See exp_v19_causal.py.
         nested = simulate_htf_ltf_v19_champion(
-            candles_htf=candles,
-            swings_htf=swings,
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
             candles_ltf=candles,
             swings_ltf=swings,
             fine_ltf=fine,
@@ -1455,7 +1475,7 @@ def btc_summary(
     }
 
 
-# ── data fetch (append new candles to CSVs) — all exchanges ──────────────
+# â”€â”€ data fetch (append new candles to CSVs) â€” all exchanges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 
 @router.post("/fetch")
@@ -1492,7 +1512,7 @@ def btc_fetch(body: dict | None = None):
 
 @router.get("/fetch/status")
 def btc_fetch_status(exchange: str = "spot"):
-    """Current last timestamp per TF — see what the button would append."""
+    """Current last timestamp per TF â€” see what the button would append."""
     if exchange not in EXCHANGES:
         return JSONResponse(
             status_code=400,

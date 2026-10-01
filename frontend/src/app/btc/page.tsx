@@ -182,6 +182,13 @@ export default function BtcPage() {
   // applyBook is the only thing that writes them now.
   const [book, setBook] = useState<string>(DEFAULT_BOOK);
   const bookHint = getBook(book).hint;
+  // Per-leg swing sizing. minBars alone cannot express the champion, which is
+  // sw15 at 50 and sw10 at 10 on two different timeframes.
+  const [bookSizing, setBookSizing] = useState({
+    minBars: 14,
+    htfTf: "1h" as BtcTf,
+    htfMinBars: 10,
+  });
   const [summaryData, setSummaryData] = useState<BtcSummaryResponse | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
   const [status, setStatus] = useState<BtcStatusResponse | null>(null);
@@ -390,6 +397,14 @@ export default function BtcPage() {
     changeTf(b.config.tf as BtcTf);
     // books are quoted on the full history, so drop any date window
     changeLimit(null);
+    // minBars is per-leg, not one global value. The champion is sw15 at 50 and
+    // sw10 at 10, so a single minBars field cannot express it, and the API
+    // default of 14 was producing 1022 trades instead of 500.
+    setBookSizing({
+      minBars: b.config.ltf_min_bars,
+      htfTf: b.config.htf_tf as BtcTf,
+      htfMinBars: b.config.htf_min_bars,
+    });
     setBtParams({
       ...BT_DEFAULTS,
       feePct: b.config.fee_pct,
@@ -425,7 +440,7 @@ export default function BtcPage() {
     // instant restore from cache on tab switch — no loading flash
     const cached = getCachedBacktest(cacheKey);
     if (cached && !cancelled) setBtData(cached);
-    getBtcBacktest(tf, mode, limit, btParams, version, htfLtf, htfLtfVer, symbol)
+    getBtcBacktest(tf, mode, limit, { ...btParams, minBars: bookSizing.minBars }, version, htfLtf, htfLtfVer, symbol, bookSizing.htfTf, bookSizing.htfMinBars)
       .then((res) => {
         if (!cancelled) {
           setBtData(res);
@@ -441,7 +456,7 @@ export default function BtcPage() {
     return () => {
       cancelled = true;
     };
-  }, [tradesOn, hydrated, tf, mode, limit, btParams, version, htfLtf, htfLtfVer, symbol]);
+  }, [tradesOn, hydrated, tf, mode, limit, btParams, version, htfLtf, htfLtfVer, symbol, bookSizing]);
 
   // "konsi best hai" — every master preset on the SAME window, ranked by NET R
   useEffect(() => {

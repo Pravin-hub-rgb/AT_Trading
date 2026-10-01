@@ -277,6 +277,8 @@ export async function getBtcBacktest(
   htfLtf: HtfLtfMode = "off",
   htfLtfVer: HtfLtfVer = "v1",
   symbol: BtcSymbol = "BTCUSDT",
+  htfTf: BtcTf = "1h",
+  htfMinBars: number = 10,
 ): Promise<BtcBacktestResponse> {
   const q = new URLSearchParams({
     tf,
@@ -296,6 +298,8 @@ export async function getBtcBacktest(
     breakeven_r: String(p.breakevenR),
     bias: p.bias,
     min_bars: String(p.minBars),
+    htf_tf: htfTf,
+    htf_min_bars: String(htfMinBars),
     regime: p.regime,
     version,
     htf_ltf: htfLtf,
