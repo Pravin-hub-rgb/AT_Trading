@@ -1304,7 +1304,10 @@ def btc_backtest(
     elif version == "v19_causal":
         if simulate_htf_ltf_v19_champion is None:
             return JSONResponse(status_code=500, content={"detail": "v19_causal engine not loaded"})
-        # Same as champion but with causal SL (exp_causal_sl=1 equivalent)
+        # Identical to v19_champion except exp_causal_sl=1, which swaps the initial
+        # stop from the swing's retroactively-known origin to the running extreme as
+        # of the entry bar. Measured IS 494t/+247.96R vs retro 500t/+325.78R, OOS
+        # 282t/+80.01R vs 279t/+70.15R. See exp_v19_causal.py.
         nested = simulate_htf_ltf_v19_champion(
             candles_htf=candles,
             swings_htf=swings,
@@ -1319,9 +1322,8 @@ def btc_backtest(
             max_consecutive_losses=3,
             htf_rr=3.0,
             window_end="exit",
+            exp_causal_sl=1,
         )
-        # The v19_champion engine doesn't have exp_causal_sl param yet
-        # We'll use the same engine - causal SL requires the patched engine
         trades = nested.get("ltf_trades", [])
     else:
         trades = simulate_btc_trades(

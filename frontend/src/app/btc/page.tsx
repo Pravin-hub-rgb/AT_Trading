@@ -814,17 +814,19 @@ export default function BtcPage() {
             <span className="hidden text-[10px] text-[#8b949e] lg:inline">{versionLabels[version]}</span>
           </div>
 
-          {/* v19 Variant — quick switch between Retroactive & Causal SL */}
+          {/* v19 stop source - the ONLY thing that differs between the two books.
+              Both numbers below are measured on the committed engine by
+              live_stuff/tests/exp_v19_causal.py. */}
           <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
             <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">v19</span>
             <select
-              value={version === "v19_champion" || version === "v19_causal" ? version : "v19_champion"}
+              value={version === "v19_causal" ? "v19_causal" : "v19_champion"}
               onChange={(e) => changeVersion(e.target.value as BtcVersion)}
               className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b]"
-              title="v19 Champion (retroactive SL, +325.8R) vs Causal SL (live-honest, +248R IS)"
+              title="RETRO places the initial stop at the swing s true origin, knowable only after the leg completes - that is lookahead. CAUSAL uses the running extreme as of the entry bar, which a live trader can actually place."
             >
-              <option value="v19_champion">v19_champion — Retroactive SL (+325.8R)</option>
-              <option value="v19_causal">v19_causal — Causal SL (+248R IS, +80R OOS)</option>
+              <option value="v19_champion">RETRO stop (lookahead) - IS 500t +325.8R | OOS 279t +70.2R</option>
+              <option value="v19_causal">CAUSAL stop (live-honest) - IS 494t +248.0R | OOS 282t +80.0R</option>
             </select>
           </div>
 
