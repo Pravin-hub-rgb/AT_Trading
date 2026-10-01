@@ -45,3 +45,7 @@ live_stuff/tests/_w1h_skip_tmp.py
 
 # scratch output from the backtest harnesses
 backtest/tests/_*.txt
+
+# per-build temp modules written by test_experiments_craze._load_module
+backtest/tests/_craze_tmp_*.py
+backtest/tests/__pycache__/_craze_tmp*.pyc

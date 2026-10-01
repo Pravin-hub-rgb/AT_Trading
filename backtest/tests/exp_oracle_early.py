@@ -1,4 +1,4 @@
-"""P3-B - READ THE ORACLE EARLY. The full matrix.
+﻿"""P3-B - READ THE ORACLE EARLY. The full matrix.
 
 WHY THIS EXISTS
 ===============
@@ -50,7 +50,8 @@ from __future__ import annotations
 
 import bisect as bs
 import random
-import sys
+import sys
+sys.setrecursionlimit(20000)  # deep recursion through pathlib when walking the patched source
 from collections import defaultdict
 from pathlib import Path
 
@@ -305,4 +306,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
 

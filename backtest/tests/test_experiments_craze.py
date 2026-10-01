@@ -1,4 +1,4 @@
-"""CRAZE harness â€” runs the SHIPPED engine source with minimal asserted patches.
+﻿"""CRAZE harness Ã¢â‚¬â€ runs the SHIPPED engine source with minimal asserted patches.
 
 Safety model (no retyped engine, no look-ahead):
 - We load backend/src/btc/engines/htf_ltf/v18_streak_halt.py SOURCE TEXT.
@@ -11,7 +11,8 @@ Experiments:
   split_mb   : trail events from a slower/faster 15m swing chain (Exp 11)
   momentum   : 1h close vs 3-bar 1h MA agreement gate at entry (Exp 16)
 """
-import sys, time, importlib.util
+import sys, time, importlib.util, hashlib
+sys.setrecursionlimit(20000)  # the patched-source walk recurses deeply through pathlib
 from pathlib import Path
 from collections import defaultdict
 
@@ -35,8 +36,19 @@ BASE = {k: _P[k] for k in ["sl_buf_atr", "ext_stop_r", "chop_thresh",
 MB15 = SWING["min_bars_15m"]
 
 
+_N = [0]  # monotonic suffix so each build writes a distinct temp module
+
 def _load_module(text, name):
-    p = Path(ROOT / "backtest/tests/_craze_tmp.py")
+    # Unique filename per build. This used to be the constant _craze_tmp.py, so
+    # CPython could reuse a cached __pycache__/_craze_tmp.*.pyc left by an earlier
+    # build. The patched source changes on every build_module() call but a stale
+    # .pyc can still win the mtime+size check, and the module then comes back
+    # missing definitions it is supposed to have - which surfaced as
+    # "module 'craze_superset' has no attribute simulate_htf_ltf_streak_halt".
+    tag = hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()[:12]
+    _N[0] += 1
+    p = Path(ROOT / ("backtest/tests/_craze_tmp_%s_%d_%s.py"
+                     % (name.replace(".", "_"), _N[0], tag)))
     p.write_text(text, encoding="utf-8")
     spec = importlib.util.spec_from_file_location(name, str(p))
     m = importlib.util.module_from_spec(spec)
@@ -228,7 +240,7 @@ def build_module():
                   '                _ma=(closes_htf[_j-2]+closes_htf[_j-1]+closes_htf[_j])/3.0\n'
                   '                if sig["dir"]==1 and closes_htf[_j]<_ma: continue\n'
                   '                if sig["dir"]==-1 and closes_htf[_j]>_ma: continue\n')
-    # 3b) Exp 18: 3-Mark Judgment System â€” signals from the breaks mark stream.
+    # 3b) Exp 18: 3-Mark Judgment System Ã¢â‚¬â€ signals from the breaks mark stream.
     # B1-anchored sequences resolve at the 3rd mark (arm "D": 2-mark flips).
     # SL attribution mirrors _collect_signals: same-dir mark -> swing start_px,
     # opposite-dir mark -> prev swing end_px, pre-start churn -> touchable
@@ -286,7 +298,7 @@ def build_module():
         '                            "dir":_tdir,"swing_start_px":_piv,\n'
         '                            "swing_no":_si,"kind":_mkind})\n'
         '                _seq=[]\n')
-    # 3c) Exp 22: conviction trail â€” ratchet each same-dir swing's trail level
+    # 3c) Exp 22: conviction trail Ã¢â‚¬â€ ratchet each same-dir swing's trail level
     # at its B2 MARK (break) instead of its confirmation (which lags ~mb bars).
     # Same pivot, earlier activation; ratchet conditions still gate it.
     t6b = '        events.sort(key=lambda x: x[0])\n'
@@ -336,7 +348,7 @@ def build_module():
         '                if _eok:\n'
         '                    exit_idx, exit_px, outcome = j, float(c["close"]), "accel27"\n'
         '                    break\n')
-    # 3f) Exp 31: HTF chop lookback (lb) sweep â€” regime-detection responsiveness.
+    # 3f) Exp 31: HTF chop lookback (lb) sweep Ã¢â‚¬â€ regime-detection responsiveness.
     # Shipped default 14. exp31_lb=0 keeps shipped (identity).
     t6e = '    chop=_chop_series_1h(candles_htf, lb=14)\n'
     assert s.count(t6e) == 1, "chop lb call"
@@ -472,7 +484,7 @@ def build_module():
                   '            if not _allow: continue\n'
                   + t6h +
                   '    filtered.sort(key=lambda z: ltf_store.pos(z[0]["bar"]))\n')
-    # 3j) Idea E: regime-TRANSITION skip — |Δchop| over last 4x15m bars > thresh
+    # 3j) Idea E: regime-TRANSITION skip â€” |Î”chop| over last 4x15m bars > thresh
     # (defensive; skip while regime is CHANGING, not based on its state).
     t_e = '        filtered.append((sig, use))\n    filtered.sort'
     assert s.count(t_e) == 1, "regime skip anchor"
@@ -603,7 +615,7 @@ def build_module():
                   '        _pct15[_vi]=100.0*sum(1 for _x in _win if _x<=_cur)/len(_win)\n'
                   '        _mean=(_vp[_vi]-_vp[_lo])/(_vi-_lo)\n'
                   '        if _mean>0: _rvol15[_vi]=_cur/_mean\n')
-    # 3k) Idea G: ETH/BTC ratio momentum — precompute eth_mom per LTF bar
+    # 3k) Idea G: ETH/BTC ratio momentum â€” precompute eth_mom per LTF bar
     # (path-true: uses only closes up to bar_ts). Default exp_eth_skip=0 = no-op.
     t_em = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t_em) == 1, "chop init"
@@ -958,12 +970,12 @@ def build_module():
     assert s.count(t10) == 1, "busy gate"
     s = s.replace(t10, '        if (not exp_mltf) and busy_until and bar_time <= busy_until:\n            if exp_shadow_book: _sr["reason"]="busy"\n            continue\n')
     # 4a) retest fill bookkeeping (per-sim-call counters, returned to harness)
-    t_bu = '    busy_until=""  # datetime string — timestamp-based, not index\n'
+    t_bu = '    busy_until=""  # datetime string â€” timestamp-based, not index\n'
     assert s.count(t_bu) == 1, "busy_until init"
     s = s.replace(t_bu, t_bu +
                   '    retest_stats={"filled":0,"timeout":0}\n')
     # 4a-2) fine walk starts AT the retest fill minute (rest of fill bar managed);
-    #       baseline (no fill) keeps candle_ts[i+1] — identity-safe.
+    #       baseline (no fill) keeps candle_ts[i+1] â€” identity-safe.
     t_fs = '            f_start=bisect.bisect_left(fine_ts, candle_ts[i+1])\n'
     assert s.count(t_fs) == 1, "f_start"
     s = s.replace(t_fs,
@@ -971,7 +983,7 @@ def build_module():
     # 4) B3 relocation (no-op when b3_k=0): entry AFTER confirmation of the break.
     #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
     #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;
-    #    busy + cooldown re-checked there (causal â€” known at trigger close).
+    #    busy + cooldown re-checked there (causal Ã¢â‚¬â€ known at trigger close).
     t6 = '        sl_pivot=sig["swing_start_px"]\n'
     assert s.count(t6) == 1, "sl pivot"
     # 5) Partial exit (exp_partial_r): 50% sold at level, remaining runs half-weighted.
@@ -982,7 +994,7 @@ def build_module():
     #     a limit at entry -/+ exp_retest_fill*risk (long below / short above).
     #     Walk fine 1m bars up to exp_retest_wait minutes after signal close;
     #     first touch fills at min(limit, open) long / max(limit, open) short
-    #     (gap fills at the better price). SL price UNCHANGED — risk/target are
+    #     (gap fills at the better price). SL price UNCHANGED â€” risk/target are
     #     recomputed at the fill price (better entry = smaller risk = more R per
     #     same move). Timeout = cancel, no trade (counted in retest_stats).
     #     Entry relocates to the fill's 15m bar; trail events only from there
@@ -1189,7 +1201,7 @@ def build_module():
                    '                _now_ts2=candle_ts[i]\n'
                    '                _open_now2=sum(1 for _t in ltf_trades if int(_t["exit_ts"])>_now_ts2)\n'
                    '                if _open_now2>=exp_max_concurrent: continue\n')
-    # 3g-3) D3 CAUSAL SL â€” the user's fix: SL = running extreme from the last
+    # 3g-3) D3 CAUSAL SL Ã¢â‚¬â€ the user's fix: SL = running extreme from the last
     #     confirmed swing's END to the entry bar (inclusive). This is what a
     #     live trader computes at candle close without any declaration lag.
     #     Replaces the retroactive swing_start_px for SL computation.
@@ -1235,7 +1247,7 @@ def build_module():
                   '            sl_pivot = sig["swing_start_px"]\n')
     t_c13b = '    exp_risk_max_pct=0.0,\n'
     # NOTE: exp_causal_sl and exp_trail_max_dist kwargs already added in the
-    # kwargs block above — this replace would create duplicates. No-op.
+    # kwargs block above â€” this replace would create duplicates. No-op.
 
     t_c10 = '    atr_pct=_atr_pct_15m(candles_ltf)\n'
     assert s.count(t_c10) == 1, "atr_pct anchor"
@@ -1339,7 +1351,7 @@ def build_module():
                    '                if _atr > 0 and _swing_mag / _atr < exp_min_swing_ratio:\n'
                    '                    continue\n'
                    + t_c11)
-    # 3g-6) D3 STRUCTURAL ALIGNMENT — three fixes from the pre-entry autopsy:
+    # 3g-6) D3 STRUCTURAL ALIGNMENT â€” three fixes from the pre-entry autopsy:
     #     1. dir match: entries where the forming swing direction OPPOSES the
     #        trade direction are 100% losers (125/125). Never take them.
     #     2. swing age: entries on swings > exp_max_swing_age bars old are
@@ -1425,7 +1437,7 @@ def build_module():
                   '                _cr2=float(candles_ltf[i]["high"])-float(candles_ltf[i]["low"])\n'
                   '                if _cr2>0 and _cb2/_cr2<0.3: continue\n')
     # 3g-5) Pivot-break trail (fix/more ideas.md): trail to intervening extreme
-    # when opposite pivot breaks — precompute break bars once per direction.
+    # when opposite pivot breaks â€” precompute break bars once per direction.
     t_pb = "    for sig, use in filtered:\n"
     assert s.count(t_pb) == 1, "filtered loop anchor"
     s = s.replace(t_pb,
@@ -1602,7 +1614,7 @@ def main():
     s_ship = stats(t_ship)
     show("shipped", s_ship)
     assert s_ship["n"] == 340 and abs(s_ship["gross"] - 225.3) < 0.1, \
-        "ANCHOR MISMATCH â€” aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
+        "ANCHOR MISMATCH Ã¢â‚¬â€ aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
     for flags in [dict(), dict(b3_k=4), dict(exp_momentum=True),
                   dict(b3_k=4, exp_momentum=True)]:
         sim = build_module()
@@ -1639,3 +1651,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

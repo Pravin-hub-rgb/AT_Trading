@@ -647,5 +647,5 @@
     "worst_oos_across_lanes": 18.764,
     "caveat": "Ranking is for choosing what to forward-test first. It is NOT an adoption decision, and the M2-style numbers here are largely IS-derived. X arm A has n_oos = 7 and is flagged small_n."
   },
-  "elapsed_sec": 0.0
+  "elapsed_sec": 0.03
 }

@@ -124,6 +124,17 @@ SRC = (ROOT / "backend/src/btc/engines/htf_ltf/v19_champion.py").read_text(encod
 
 OLD = '_cref=_conf_evs[_cei][1]; _cei+=1'
 NEW = '_cref=_conf_evs[_cei][1]+1; _cei+=1'   # start of the FORMING swing, not the old leg's end
+
+# RETIRED 2026-10-01. This harness patched the pre-C17 engine text back to its
+# earlier form and compared the two. That fix is already in the engine, so the old
+# anchor cannot exist again and there is nothing left to compare. It is a
+# completed one-shot, not a broken harness, so it exits 0 with an explanation
+# rather than raising. Re-enable only against a pre-C17 checkout.
+if SRC.count(OLD) != 1:
+    print("RETIRED: the pre-C17 anchor this harness patches is no longer in the engine.")
+    print("  The causal-reset fix it measured (forming-swing start, scanning all bars")
+    print("  through confirmation) has shipped and is now the only behaviour.")
+    raise SystemExit(0)
 assert SRC.count(OLD) == 1, "anchor not found in the engine"
 
 

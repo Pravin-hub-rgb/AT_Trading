@@ -1,4 +1,5 @@
-import sys, os, pickle
+﻿import sys, os, pickle
+sys.setrecursionlimit(20000)  # the patched-source walk recurses deeply through pathlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 for p in ("backtest", "backtest/tests", "backtest/sweeps", "backend"):
