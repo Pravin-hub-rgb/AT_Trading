@@ -1,5 +1,40 @@
 # HANDOFF — v19 origin rule only ever reaches half the engine
 
+> **RESOLVED in `64a061a`.** `pivot_rule` is now an explicit parameter on
+> `simulate_btc_trades_v7` and on both `simulate_htf_ltf_streak_halt` entry
+> points, forwarded to all four `_collect_signals` call sites. The monkeypatch at
+> `btc_routes.py` is deleted. Measured on Bybit perp:
+>
+>     origin / origin    n=500  gross +445.22R  net +325.78R   <- registry pin
+>     leg / leg          n=499  gross +355.72R  net +239.12R
+>     C16 cost           -86.67R over -1 trade
+>
+> Route and harness now agree exactly. **The one thing that must not be repeated:**
+> every diagnostic in `backtest/tests/` was called with `symbol="BTCUSDT"`, which
+> is Binance **spot** (`btc_config.btc_csv_path`: `BTCUSDT` -> `data/btc`,
+> `BTCUSDT_BYBIT` -> `data/bybit`). Trading is Bybit perp only. Spot produced a
+> fake "3 day data gap" and a fake "+5.2 point win-rate jump" on v18. On Bybit the
+> swings, fine fills and date window are byte-identical to the harness cache
+> (swings15 2900=2900, swings10 1601=1601, fine1m 1946026=1946026). Scripts now
+> read `VENUE` from the environment, default `BTCUSDT_BYBIT`. Never measure this
+> project on `data/btc`.
+>
+> v18, the live engine, on Bybit with the leg rule:
+> measured n=352 gross +220.15R net +146.55R PF 1.947 WR 27.8%
+> pin n=351 gross +211.72R net +137.33R PF 1.907 WR 27.6%
+> One extra trade, +0.2 points win rate. Its pin was anchored 2026-09-26, five days
+> before `203e207` flipped the default, so it is origin-era and needs
+> re-anchoring. The bands `[346,356]`, `net >= 120`, `PF >= 1.80` are too loose to
+> detect a change of this shape - the net floor has 13% headroom below the pin.
+>
+> Still open: eleven harnesses assert origin-era figures and now fail against the
+> leg default - `exp_v19_causal.py:72,81`, `exp_v19_tradediff.py:58,59`,
+> `exp_where_to_look.py:70,71`, `exp_oos_final.py:64`, `exp_v19_proof.py:27`,
+> `exp_v19_oos.py:26`, `exp_shipped_direct.py:34`, `exp_crosslane.py:100`,
+> `exp_sizing_candidate_compare.py:55`, `exp_wick_cascade_decomposition.py:59,61`,
+> `exp_sl_origin.py:154`.
+
+## The mechanism, confirmed
 ## The mechanism, confirmed
 
 `pivot_rule` is applied through a monkeypatch of `btc_engine._collect_signals`
