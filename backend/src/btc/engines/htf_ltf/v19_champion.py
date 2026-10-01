@@ -638,7 +638,16 @@ def simulate_htf_ltf_streak_halt(
                 # confirmed_at_idx, so this cannot read a future bar.
                 _cref=_conf_evs[_cei][1]+1; _cei+=1
                 if _cref<=_ci and _cref<n:
-                    _clo=float(candles_ltf[_cref]["low"]); _chi=float(candles_ltf[_cref]["high"])
+                    # Scan _cref.._ci, not just _cref. The old code took only the
+                    # single candle at _cref, so every bar between the swing end
+                    # and the confirm instant was skipped - and the lowest of
+                    # those is usually the one that matters. On 30 Nov 2023 the
+                    # reset fired at 22:15 pointing at 19:45, and the 21:15 low
+                    # in between was never read; the engine used the 22:45 low
+                    # instead, 118 points higher. That alone turned a +18.61R
+                    # winner into a -1.00R stop-out.
+                    _clo=min(float(candles_ltf[k]["low"]) for k in range(_cref,_ci+1))
+                    _chi=max(float(candles_ltf[k]["high"]) for k in range(_cref,_ci+1))
             _cl=float(candles_ltf[_ci]["low"]); _ch2=float(candles_ltf[_ci]["high"])
             if _cl<_clo: _clo=_cl
             if _ch2>_chi: _chi=_ch2

@@ -56,7 +56,7 @@ def when(ts):
 retro = run(0)
 causal = run(1)
 assert abs(net_r(retro) - 325.78) < 0.5, "retro arm wrong - harness is broken"
-assert abs(net_r(causal) - 255.20) < 0.5, "causal arm wrong - harness is broken"
+assert abs(net_r(causal) - 314.52) < 0.5, "causal arm wrong - harness is broken"
 
 rk = {}
 for t in retro:
