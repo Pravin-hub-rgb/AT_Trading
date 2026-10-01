@@ -1317,39 +1317,32 @@ def btc_backtest(
         if simulate_htf_ltf_v19_champion is None:
             return JSONResponse(status_code=500, content={"detail": "v19_champion engine not loaded"})
         # PRE-C16 book. The signal SL is seg_start, the swing's declared origin.
-        # Measured IS 500t / +325.78R. Kept so the pre/post comparison is
-        # reproducible from the dropdown; the origin rule is the lookahead one
-        # (C16 in backtest/docs/C16_C18_SL_PIVOT_AUDIT.md).
+        # This is the LOOKAHEAD rule; it is retained only so the pre/post C16
+        # comparison stays reproducible from the dropdown. It is not shippable.
         #
-        # v19_champion does `from src.btc.btc_engine import _collect_signals`
-        # inside the function body, so rebinding the attribute on that module is
-        # enough - the engine picks it up on the next call.
-        import src.btc.btc_engine as _be
-        _orig = _be._collect_signals
-
-        def _origin_signals(*a, **kw):
-            kw["pivot_rule"] = "origin"
-            return _orig(*a, **kw)
-
-        _be._collect_signals = _origin_signals
-        try:
-            nested = simulate_htf_ltf_v19_champion(
-                candles_htf=candles_htf,
-                swings_htf=swings_htf,
-                candles_ltf=candles,
-                swings_ltf=swings,
-                fine_ltf=fine,
-                sl_buf_atr=0.01,
-                ext_stop_r=3.0,
-                mode="atr_high",
-                chop_thresh=58.0,
-                cooldown_bars=8,
-                max_consecutive_losses=3,
-                htf_rr=3.0,
-                window_end="exit",
-            )
-        finally:
-            _be._collect_signals = _orig
+        # The rule is passed as an explicit argument and now reaches BOTH halves
+        # of the engine: the three HTF windows (via simulate_btc_trades_v7) and
+        # the LTF signal collection. It used to be applied by rebinding
+        # btc_engine._collect_signals, which only ever reached the LTF half -
+        # v7_timecap binds that name at module import, so the HTF windows stayed
+        # on the new default and this book silently ran leg-on-HTF,
+        # origin-on-LTF. That hybrid is what the dropdown used to show.
+        nested = simulate_htf_ltf_v19_champion(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            htf_rr=3.0,
+            window_end="exit",
+            pivot_rule="origin",
+        )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_causal":
         if simulate_htf_ltf_v19_champion is None:

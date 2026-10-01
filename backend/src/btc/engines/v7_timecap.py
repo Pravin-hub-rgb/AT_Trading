@@ -21,12 +21,21 @@ def simulate_btc_trades_v7(
     entry_selection: str="stream",
     cap_days: int=30,  # time cap in days, 0 = off
     entry_gate=None,  # optional callable(idx)->bool — return False to skip the entry
+    # C16: which pivot becomes the signal's SL.
+    #   "leg"    (default) - the swing's own extreme up to and including the
+    #                       break bar. Causal, live-computable.
+    #   "origin"          - the swing's declared seg_start. Retains pre-C16
+    #                       behaviour. Lookahead; research baseline only.
+    # This is forwarded explicitly at the _collect_signals call below. It used to
+    # be unreachable from here, so changing the default in _collect_signals
+    # silently switched every v7 caller from origin to leg.
+    pivot_rule: str="leg",
 ) -> list[dict]:
     n=len(candles)
     if n==0:
         return []
     store=CandleStore(candles)
-    signals=_collect_signals(swings, entry_break, skip_first=skip_first, selection=entry_selection, candles=candles if entry_selection=="stream" else None)
+    signals=_collect_signals(swings, entry_break, skip_first=skip_first, selection=entry_selection, candles=candles if entry_selection=="stream" else None, pivot_rule=pivot_rule)
     candle_ts=[int(c["ts"]) for c in candles]
     fine_ts=[int(c["ts"]) for c in fine] if fine else []
     # for 1h, 1 bar =3600s, cap_days*24 bars; for other TF, use hours

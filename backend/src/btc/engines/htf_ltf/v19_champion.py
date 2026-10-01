@@ -250,14 +250,24 @@ def simulate_htf_ltf_streak_halt(
     # 1 = CAUSAL: sl_pivot = the running extreme since the last CONFIRMED swing, keyed
     # on confirmed_at_idx, so the value is knowable at the entry bar.
     exp_causal_sl=0,
+    # C16 SL pivot rule, applied to BOTH halves of this engine.
+    #   "leg"    (default) - the swing's own extreme up to and including the break
+    #                       bar. Causal, live-computable. This is what ships.
+    #   "origin"          - the swing's declared seg_start. Lookahead; retained
+    #                       only so the pre-C16 baseline stays reproducible.
+    # Forwarded to the three HTF windows (via simulate_btc_trades_v7) and to the
+    # LTF signal collection. Before this was explicit, the HTF half could not be
+    # selected at all: v7_timecap binds _collect_signals at module import, so it
+    # silently kept whatever the default was and the two halves diverged.
+    pivot_rule="leg",
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
     import bisect as bs
     # Build HTF intervals for both flip and decisive
-    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
-    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
-    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16)
+    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
+    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
+    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     def to_intervals(trades):
         # Window end: "exit" = HTF trade exit (SL/target/cap) — default, best R.
@@ -436,7 +446,7 @@ def simulate_htf_ltf_streak_halt(
     # LTF signals (decisive)
     from src.btc.btc_engine import CandleStore
     ltf_store = CandleStore(candles_ltf)
-    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf)
+    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)
     filtered=[]
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
