@@ -40,6 +40,7 @@ import {
   setCachedSummary,
 } from "@/lib/btcCache";
 import { BTC_MASTER_DEFAULT, BTC_MASTER_MODES } from "@/lib/btcMaster";
+import { BOOK_OPTIONS, DEFAULT_BOOK, getBook } from "@/lib/books";
 
 const TF_KEY = "btc_chart_tf";
 const MODE_KEY = "btc_chart_mode";
@@ -50,6 +51,7 @@ const VER_KEY = "btc_version";
 const HTF_KEY = "btc_htf_ltf";
 const HTF_VER_KEY = "btc_htf_ltf_ver";
 const SYMBOL_KEY = "btc_chart_symbol";
+const BOOK_KEY = "btc_book";
 
 const BT_DEFAULTS: BtcBacktestParams = {
   entryBreak: "decisive",
@@ -175,6 +177,11 @@ export default function BtcPage() {
   const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
   const [htfLtfVer, setHtfLtfVer] = useState<HtfLtfVer>("v18");
   const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
+  // the single control. The version/htfLtf/htfLtfVer/symbol states above are
+  // kept only so the backtest request stays shaped the way the API expects -
+  // applyBook is the only thing that writes them now.
+  const [book, setBook] = useState<string>(DEFAULT_BOOK);
+  const bookHint = getBook(book).hint;
   const [summaryData, setSummaryData] = useState<BtcSummaryResponse | null>(null);
   const [summaryError, setSummaryError] = useState<string | null>(null);
   const [status, setStatus] = useState<BtcStatusResponse | null>(null);
@@ -222,11 +229,18 @@ export default function BtcPage() {
       const n = Number(savedLimit);
       setLimit(Number.isFinite(n) && n > 0 ? n : null);
     }
-    const savedVer = window.localStorage.getItem(VER_KEY) as BtcVersion | null;
-    const validVers = ["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12","v13","v15","v16","v17","v19_champion","v19_causal"];
-    if (savedVer && validVers.includes(savedVer)) setVersion(savedVer);
-    const savedHtf = window.localStorage.getItem(HTF_KEY) as "off" | "5m" | "15m" | null;
-    if (savedHtf && ["off","5m","15m"].includes(savedHtf)) setHtfLtf(savedHtf);
+    // The book is the single source of truth on load. Restoring the individual
+    // version/htfLtf keys here is what let the old dropdowns drift apart from
+    // each other, so only the book is read back and the rest is re-derived.
+    const savedBook = window.localStorage.getItem(BOOK_KEY);
+    if (savedBook && BOOK_OPTIONS.some((b) => b.id === savedBook)) {
+      setBook(savedBook);
+      const b = getBook(savedBook);
+      setVersion(b.config.version as BtcVersion);
+      setHtfLtf(b.config.htf_ltf as "off" | "5m" | "15m");
+      setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
+      setSymbol(b.config.symbol as BtcSymbol);
+    }
     const savedHtfVer = window.localStorage.getItem(HTF_VER_KEY) as HtfLtfVer | null;
     const validHtfVers = ["v1","v3","v5","v6","v11","v12","v13","v15","v16","v17","v18","v19"];
     if (savedHtfVer && validHtfVers.includes(savedHtfVer)) setHtfLtfVer(savedHtfVer);
@@ -357,6 +371,34 @@ export default function BtcPage() {
   const changeHtfLtfVer = (v: HtfLtfVer) => {
     window.localStorage.setItem(HTF_VER_KEY, v);
     setHtfLtfVer(v as any);
+  };
+
+  // One control sets everything. Each book in books.ts carries the full config,
+  // so there is no second dropdown to disagree with this one. Kept in sync by
+  // applyBook, which calls the same setters the old individual controls used.
+  const applyBook = (id: string) => {
+    const b = getBook(id);
+    window.localStorage.setItem(BOOK_KEY, b.id);
+    setBook(b.id);
+    setVersion(b.config.version as BtcVersion);
+    window.localStorage.setItem(VER_KEY, b.config.version);
+    setHtfLtf(b.config.htf_ltf as "off" | "5m" | "15m");
+    window.localStorage.setItem(HTF_KEY, b.config.htf_ltf);
+    setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
+    window.localStorage.setItem(HTF_VER_KEY, b.config.htf_ltf_ver);
+    setSymbol(b.config.symbol as BtcSymbol);
+    changeTf(b.config.tf as BtcTf);
+    // books are quoted on the full history, so drop any date window
+    changeLimit(null);
+    setBtParams({
+      ...BT_DEFAULTS,
+      feePct: b.config.fee_pct,
+      slippagePts: b.config.slippage_pts,
+      entrySlipPct: b.config.entry_slip_pct,
+      exitSlipPct: b.config.exit_slip_pct,
+    } as BtcBacktestParams);
+    window.localStorage.setItem(BT_KEY, JSON.stringify(btParams));
+    setTradesOn(true);
   };
 
   // Go-to-date: pick a date, chart jumps to it (snaps to nearest day with data).
@@ -796,105 +838,21 @@ export default function BtcPage() {
             </button>
           </div>
 
-          {/* VERSION — crazy ideas v1..v7, each isolated engine */}
+          {/* ONE dropdown. Every book, complete config. Replaces the previous
+              six: symbol, Ver, v19 stop source, HTF-LTF, HTF-LTF version, Master. */}
           <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
-            <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">Ver</span>
+            <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">Book</span>
             <select
-              value={version}
-              onChange={(e) => changeVersion(e.target.value as BtcVersion)}
-              className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b]"
-              title="Crazy-ideas version — v1 lock cap16, v2 Chandelier, v3 HTF, v4 Partial, v5 BE1, v6 ADX, v7 TimeCap. Each has its own engine, never disturbs v1."
+              value={book}
+              onChange={(e) => applyBook(e.target.value)}
+              className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b] min-w-[26rem]"
+              title="Pick the book. Each option carries its full config - version, timeframe, stop source, HTF gate and cost model - and applies all of it at once."
             >
-              {(["v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v19_champion","v19_causal"] as BtcVersion[]).map((v) => (
-                <option key={v} value={v}>
-                  {v} {versionLabels[v] ? `— ${versionLabels[v]}` : ""}
-                </option>
+              {BOOK_OPTIONS.map((b) => (
+                <option key={b.id} value={b.id}>{b.label}</option>
               ))}
             </select>
-            <span className="hidden text-[10px] text-[#8b949e] lg:inline">{versionLabels[version]}</span>
-          </div>
-
-          {/* v19 stop source - the ONLY thing that differs between the two books.
-              Both numbers below are measured on the committed engine by
-              live_stuff/tests/exp_v19_causal.py. */}
-          <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
-            <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">v19</span>
-            <select
-              value={version === "v19_causal" ? "v19_causal" : "v19_champion"}
-              onChange={(e) => changeVersion(e.target.value as BtcVersion)}
-              className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b]"
-              title="RETRO places the initial stop at the swing s true origin, knowable only after the leg completes - that is lookahead. CAUSAL uses the running extreme as of the entry bar, which a live trader can actually place."
-            >
-              <option value="v19_champion">RETRO stop (lookahead) - IS 500t +325.8R | OOS 279t +70.2R</option>
-              <option value="v19_causal">CAUSAL stop (live-honest) - IS 494t +248.0R | OOS 282t +80.0R</option>
-            </select>
-          </div>
-
-          {/* HTF-LTF — 1h flip + 15m/5m execution inside HTF window */}
-          <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#10b981]/50 bg-[#10b981]/10 px-3 py-1.5">
-            <span className="text-xs font-bold uppercase tracking-wide text-[#10b981]">HTF-LTF</span>
-            <select
-              value={htfLtf}
-              onChange={(e) => changeHtfLtf(e.target.value as any)}
-              className="rounded border border-[#10b981] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#10b981]"
-              title="Multi TF — 1h Flip cap16 window me 15m/5m Decisive execution. off=normal, 15m/5m = lower TF inside HTF (new strategy, doc: multi tf 1hour flip and lower tf execution.md)"
-            >
-              <option value="off">off</option>
-              <option value="15m">15m inside 1h</option>
-              <option value="5m">5m inside 1h</option>
-            </select>
-            {htfLtf !== "off" && (
-              <select
-                value={htfLtfVer}
-                onChange={(e) => changeHtfLtfVer(e.target.value as HtfLtfVer)}
-                className="rounded border border-[#10b981] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#10b981]"
-                title="HTF-LTF engine version — v11 BEST all-positive 539 +172.5 PF1.77 21.4/25.7/55.4/70.0 (HIGH chop>61.8 OR LOW vol<0.35 → decisive else Flip) vs v5 442 +168, v12+cd20 FROZEN BASELINE 414 +265.3 all years positive. IS+OOS both improve for v11/v12."
-              >
-                <option value="v1">v1 plain</option>
-                <option value="v3">v3 ext-stop 1.5R</option>
-                <option value="v5">v5 buf-SL 0.25ATR</option>
-                <option value="v6">v6 hhll-30 SL</option>
-                <option value="v11">v11 BEST all-positive</option>
-                <option value="v12">v12+cd20 FROZEN BASELINE</option>
-                <option value="v13">v13 cooldown 30</option>
-                <option value="v15">v15 recover 1R</option>
-                <option value="v16">v16 entry dist (rejected)</option>
-                <option value="v17">v17 ATR filter (rejected)</option>
-                <option value="v18">v18 streak halt 5L ⭐ NEW BEST</option>
-                <option value="v19">v19 1.5R window (rejected)</option>
-              </select>
-            )}
-            {htfLtf !== "off" && (
-              <span
-                className="rounded bg-[#10b981]/20 px-1.5 py-0.5 text-[10px] font-semibold text-[#10b981]"
-                title="Swing overlay is locked to the strategy chain so every B2/FLIP entry mark and FS confirmation you see comes from the same chain the engine trades. (15m: mb50, 5m: mb14, 1h: mb20)"
-              >
-                overlay: strategy chain (mb{tf === "15m" ? 50 : tf === "5m" ? 14 : tf === "1h" ? 20 : "?"})
-              </span>
-            )}
-            <span className="hidden text-[10px] text-[#8b949e] lg:inline">{htfLtf==="off"?"normal":`1h → ${htfLtf} execution`}</span>
-          </div>
-
-          {/* MASTER strategy — sweep winners from fix/btc_ideas.md, instant apply */}
-          <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#6366f1]/50 bg-[#6366f1]/10 px-3 py-1.5">
-            <span className="text-xs font-bold uppercase tracking-wide text-[#6366f1]">
-              Master
-            </span>
-            <select
-              value={master}
-              onChange={(e) => applyMaster(e.target.value)}
-              className="rounded border border-[#6366f1] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#6366f1]"
-              title="Master strategy — each option instantly applies its sweep-best params (fix/btc_ideas.md) and shows its trades on the chart."
-            >
-              {BTC_MASTER_MODES.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-            <span className="hidden text-[10px] text-[#8b949e] lg:inline">
-              {BTC_MASTER_MODES.find((m) => m.value === master)?.hint ?? ""}
-            </span>
+            <span className="hidden text-[10px] text-[#8b949e] lg:inline">{bookHint}</span>
           </div>
         </div>
       </div>

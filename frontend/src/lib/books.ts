@@ -1,0 +1,138 @@
+// ONE dropdown. Every book the chart can show, in one list.
+//
+// This file replaced six separate dropdowns (symbol, version, v19 stop source,
+// HTF-LTF, HTF-LTF version, master strategy). Each entry below carries the
+// complete config for its book, so picking one sets everything at once and there
+// is no second control that can get out of sync with it.
+//
+// The v19 entries differ by the initial stop source only, which the backend maps
+// to exp_causal_sl:
+//   RETRO  - stop at the swing's true origin, knowable only after the leg
+//            completes. Lookahead. This is what the champion always was.
+//   CAUSAL - stop at the running extreme as of the entry bar. Knowable live.
+// Both measured on the committed engine by live_stuff/tests/exp_v19_causal.py.
+// live_stuff/tests/exp_v19_tradediff.py lists every trade they disagree on.
+
+export type BookId = string;
+
+export interface BookOption {
+  id: BookId;
+  label: string;
+  /** Shown next to the dropdown. */
+  hint: string;
+  config: {
+    version: string;
+    tf: string;
+    mode: string;
+    symbol: string;
+    htf_ltf: string;
+    htf_ltf_ver: string;
+    min_bars: number;
+    fee_pct: number;
+    slippage_pts: number;
+    entry_slip_pct: number;
+    exit_slip_pct: number;
+    fill_tf: string;
+    sl_buf_atr: number;
+    ext_stop_r: number;
+    chop_thresh: number;
+    cooldown_bars: number;
+    max_consecutive_losses: number;
+    atr_low_thresh: number;
+    atr_high_thresh: number;
+    htf_rr: number;
+    window_end: string;
+  };
+}
+
+const V19 = {
+  tf: "15m",
+  mode: "continuous",
+  symbol: "BTCUSDT_BYBIT",
+  htf_ltf: "off",
+  htf_ltf_ver: "v18",
+  min_bars: 50,
+  fee_pct: 0.055,
+  slippage_pts: 2,
+  entry_slip_pct: 0.005,
+  exit_slip_pct: 0.01,
+  fill_tf: "1m",
+  sl_buf_atr: 0.01,
+  ext_stop_r: 3.0,
+  chop_thresh: 58.0,
+  cooldown_bars: 8,
+  max_consecutive_losses: 3,
+  atr_low_thresh: 0.35,
+  atr_high_thresh: 0.65,
+  htf_rr: 3.0,
+  window_end: "exit",
+};
+
+export const BOOK_OPTIONS: BookOption[] = [
+  {
+    id: "v19_retro",
+    label: "v19 RETRO stop (lookahead) — IS 500t +325.8R | OOS 279t +70.2R",
+    hint: "stop at the swing's true origin · lookahead",
+    config: { ...V19, version: "v19_champion" },
+  },
+  {
+    id: "v19_causal",
+    label: "v19 CAUSAL stop (live-honest) — IS 494t +248.0R | OOS 282t +80.0R",
+    hint: "stop at the running extreme · what a live trader can actually place",
+    config: { ...V19, version: "v19_causal" },
+  },
+  {
+    id: "v19_retro_htf",
+    label: "v19 RETRO + HTF-LTF (1h to 15m)",
+    hint: "RETRO stop with the 1h window gate on",
+    config: { ...V19, version: "v19_champion", htf_ltf: "15m" },
+  },
+  {
+    id: "v19_causal_htf",
+    label: "v19 CAUSAL + HTF-LTF (1h to 15m)",
+    hint: "CAUSAL stop with the 1h window gate on",
+    config: { ...V19, version: "v19_causal", htf_ltf: "15m" },
+  },
+  {
+    id: "v1",
+    label: "v1 Honest — 1h Flip cap 16d",
+    hint: "baseline · 1h flip, fixed 3R, cap 16d",
+    config: {
+      ...V19,
+      version: "v1",
+      tf: "1h",
+      htf_ltf_ver: "v1",
+      min_bars: 20,
+      fee_pct: 0.05,
+      sl_buf_atr: 0.25,
+      ext_stop_r: 1.5,
+      chop_thresh: 61.8,
+      cooldown_bars: 20,
+      max_consecutive_losses: 5,
+    },
+  },
+  {
+    id: "v7",
+    label: "v7 TimeCap 16d — 1h Flip, no cooldown",
+    hint: "v1 with the cooldown removed",
+    config: {
+      ...V19,
+      version: "v7",
+      tf: "1h",
+      htf_ltf_ver: "v1",
+      min_bars: 20,
+      fee_pct: 0.05,
+      sl_buf_atr: 0.25,
+      ext_stop_r: 1.5,
+      chop_thresh: 61.8,
+      cooldown_bars: 0,
+      max_consecutive_losses: 5,
+    },
+  },
+];
+
+export const DEFAULT_BOOK = "v19_retro";
+
+export function getBook(id: string): BookOption {
+  return BOOK_OPTIONS.find((b) => b.id === id) ?? BOOK_OPTIONS[0];
+}
