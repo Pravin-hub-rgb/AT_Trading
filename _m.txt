@@ -1,0 +1,32 @@
+﻿the chart was drawing a different swing chain than the engine walked
+Asked why no mark appeared at 2024-11-19 09:15 when the engine had a B2 signal
+there. The engine says:
+
+  2024-11-19 06:45  B2  dir=+1  swing#1468   <- the trade, entered 12:15
+  2024-11-19 09:15  B2  dir=-1  swing#1469   <- a second signal, gated out
+
+both of which do have marks. But the chart showed nothing near either, because
+the chart and the engine were not looking at the same swings:
+
+  chart  strategyChainMinBars -> btParams.minBars -> BT_DEFAULTS + masterM.preset
+          = 20   (the #1 Flip master preset carries minBars: 20)
+  engine bookSizing.minBars = 50
+
+minBars 20 and minBars 50 produce different swing chains. Different chains
+means different pivot locations, so every mark on screen sits somewhere the engine
+never looked. Not close to right - structurally unrelated.
+
+Two changes:
+  strategyChainMinBars is now bookSizing.minBars, full stop. The old value had
+    a second rule keyed on htfLtf that could override the book - a second thing
+    that can disagree, which is the whole problem this commit is about.
+  btParams no longer merges masterM.preset. Master presets are recorded sweeps,
+    not books; merging one in is what put minBars=20 there in the first place.
+    btParams now carries the cost model and nothing else.
+exp_entry_why.py added, which prints the mark stream, the derived signals and the
+actual entries for any date window, so this chain is checkable rather than
+inferred. It also shows the answer to the earlier question: entries fire on B2 or
+FLIP, whichever comes first, and a signal can sit for hours before the 1h window
+gate lets it in. The 09:15 signal existed; the gate opened at 12:15 and a different
+signal (06:45, swing 1468, long) was the one that got in.
+tsc -p tsconfig.json exits 0.

@@ -308,8 +308,11 @@ export default function BtcPage() {
     const modeM = savedMaster ? BTC_MASTER_MODES.find((x) => x.value === savedMaster) : undefined;
     const masterM = modeM ?? BTC_MASTER_MODES.find((x) => x.value === BTC_MASTER_DEFAULT)!;
     setMaster(masterM.value);
-    const next = { ...BT_DEFAULTS, ...masterM.preset } as BtcBacktestParams;
-    // Auto-correct feePct based on saved symbol
+    // master presets are recorded sweeps, not books. They used to be merged into
+    // btParams here, which is how the chart ended up drawing a minBars=20 swing
+    // chain while the engine walked minBars=50. The book owns every parameter
+    // that affects the result; btParams only carries the cost model.
+    const next = { ...BT_DEFAULTS } as BtcBacktestParams;
     if (savedSymbol === "BTCUSDT_BYBIT") next.feePct = 0.055;
     setBtParams(next);
     window.localStorage.setItem(MASTER_KEY, masterM.value);
@@ -346,16 +349,16 @@ export default function BtcPage() {
   // trades on - the 15m LTF book lives on minBars=50, the 5m book on 14, the
   // 1h HTF book on 20. Otherwise B2/FLIP entry marks and FS confirmations on
   // screen come from a chain the engine never uses (chart default was 14).
-  const strategyChainMinBars =
-    htfLtf !== "off"
-      ? tf === "15m"
-        ? 50
-        : tf === "5m"
-          ? 14
-          : tf === "1h"
-            ? 20
-            : btParams.minBars
-      : btParams.minBars;
+  // The chart's swing chain must be the SAME chain the engine walks, or the
+  // marks on the chart are at different bars than the marks the engine traded
+  // on - which is exactly what happened: the chart drew minBars=20 (from a
+  // master preset) while v19 walks minBars=50, so a B2 the engine entered on
+  // had no mark anywhere near it on screen.
+  //
+  // The book is the single source. htfLtf no longer has a say: the book
+  // already carries ltf_min_bars, and a second rule layered on top of it is a
+  // second thing that can disagree.
+  const strategyChainMinBars = bookSizing.minBars;
 
   useEffect(() => {
     if (!hydrated) return;
