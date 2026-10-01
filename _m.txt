@@ -1,0 +1,31 @@
+﻿exp_sl_origin.py: the shipped causal SL reads the finished leg low
+Reading the chart, the user asked whether the causal stop is really causal. On the
+18 Nov 2024 04:30 long it lands on the 03:30 candle low, and 03:30 is where the
+PREVIOUS swing ended. The forming swing started at 03:45, so the lowest price a
+live trader could have used is the 04:00 candle low.
+Measured:
+
+  RETRO   sig["swing_start_px"]              89300.10
+  CAUSAL  _csl[bar] (shipped)               88735.70   <- low at 03:30
+  FORMING running low from 03:45            89300.10   <- low at 04:00
+
+The shipped causal stop is 564 points lower than the forming-swing low. It is
+reading a pivot from a leg that had already finished. That is the retroactive
+SL one swing earlier, not a different rule.
+
+Whole book, IS, all with exp_causal_sl=1:
+  causal as shipped (reset to seg end)   n=494   net=+247.96R  {sl:189, trail:305}
+  causal from FORMING swing low          n=496   net=+255.20R  {sl:223, trail:273}
+  RETRO for reference                    n=500   net=+325.78R  {sl:187, trail:313}
+
+So the rule the user proposed is worth +7.24R over the shipped one - it is better,
+and it is the one that is actually causal. But it does not close the gap to
+retro: 255.20 against 325.78 is 70.58R still unexplained. Fixing this is worth
+7R of the 78R, not all of it, so something else is also carrying advantage.
+
+257 of 484 shared trades get a different stop under the two causal rules, so this
+is not a rare edge case - it touches half the book. 227 are identical.
+
+Both books still exit 18 Nov on 24 Nov 01:45. The stop is hit either way; what
+differs is how much R accrued before it was hit, which is exactly the shape of a
+stop-placement advantage rather than a different trade.
