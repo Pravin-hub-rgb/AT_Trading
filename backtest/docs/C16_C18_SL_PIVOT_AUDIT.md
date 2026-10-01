@@ -3,6 +3,24 @@
 Branch: agents/champion-reality-audit
 Date: 2026-10-01. Backtesting only.
 
+> **SUPERSEDED IN PART, 2026-10-01.** The scope note below said "the other 19 still
+> carry these". That was true when written and was made false 91 minutes later by
+> `203e207`, which added `pivot_rule` to `_collect_signals` and defaulted it to
+> `"leg"`. Every one of those 19 engines reads that default, so all of them were
+> switched from the origin pivot to the leg pivot without any caller asking. The
+> doc was invalidated by the commit written to implement it.
+>
+> Still true here: the origin pivot IS lookahead, and every code path that
+> explicitly asks for it (`pivot_rule="origin"`, the `v19_retro` dropdown book,
+> the `champion_multi_sw10` registry entry) still carries the bug by choice.
+>
+> Now false: "the other 19 engines are broken" and "fixed in v19 only".
+> `64a061a` made `pivot_rule` an explicit parameter threaded through
+> `simulate_btc_trades_v7` and both `simulate_htf_ltf_streak_halt` entry points,
+> so the rule is chosen per book instead of by a shared default. Measured on Bybit
+> perp: origin/origin 500 trades +325.78R net, leg/leg 499 trades +239.12R net.
+> On the live v18 engine the whole effect is one extra trade and +0.2 points of
+> win rate.
 **Scope: every engine, not just the champion.** `swing_start_px` is produced once,
 in `btc_engine.py:294`, and consumed by 20 engine files. The champion was fixed
 locally and the other 19 still carry these. Nothing here is closed.

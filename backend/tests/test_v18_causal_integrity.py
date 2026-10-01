@@ -117,7 +117,15 @@ def test_baseline():
     # The bars are tighter than before on purpose. The previous pair was 120.0 net
     # against a 137.33 pin and 1.80 PF against a 1.907 pin, i.e. 12.6% and 5.6%
     # headroom, which is wide enough that the old pin and a real regression both
-    # pass. 135.0 and 1.85 keep ~8% and ~5% below today's values.
+    # pass.
+    #
+    # The net floor is 140.0 rather than 145.0. 145.0 would sit 1.1% under today's
+    # value, which is tighter than a daily-refreshable pin can honestly hold. But
+    # anything at or below 137.33 would also pass the origin-era book, and a suite
+    # that cannot tell the two eras apart cannot catch a change of exactly the kind
+    # this thread was about. 140.0 keeps 4.5% headroom below the current value and
+    # sits 2.0% above the origin-era anchor, so each era fails on the other.
+    # PF stays at 1.85, about 5% below today.
     #
     # History of this anchor, kept because the trail fix it recorded is still the
     # reason the PF bar is not 2.0:
@@ -134,7 +142,7 @@ def test_baseline():
     # All figures above are Bybit perp. BTCUSDT is Binance spot and is not traded
     # on this project; a measurement run with that symbol moves the window and the
     # trade set and will not match anything here.
-    assert n >= 135.0
+    assert n >= 140.0
     pf = sum(x for x in rs if x > 0) / abs(sum(x for x in rs if x < 0)) if l else 9.0
     assert pf >= 1.85
     print("PASS: %dt gross %+.1f net %+.1f WR %.1f%% PF %.2f %s" % (len(tr), g, n, 100*w/len(tr), pf, dict(yrs)))

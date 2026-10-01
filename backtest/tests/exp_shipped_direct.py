@@ -1,8 +1,21 @@
-"""DEFINITIVE: can the SHIPPED engine reproduce arm A with champion params?
+"""Can the SHIPPED engine reproduce arm A with champion params?
 
 Calls src.btc.engines.htf_ltf.v18_streak_halt.simulate_htf_ltf_streak_halt
 DIRECTLY - no test_experiments_craze, no source patching, no harness.
-This is the exact code path production would run.
+
+SCOPE. "The exact code path production would run" is not true, and was already
+only half true before pivot_rule existed:
+
+  This harness uses EXPERIMENTS["champion_multi_sw10"], which declares
+  pivot_rule="origin". Production passes no pivot_rule and gets the engine
+  default, "leg". So this measures the PRE-C16 lookahead book.
+
+  It also uses the champion params (mode atr_high, ext_stop_r 3.0,
+  max_consecutive_losses 3). Production runs v18 params from get_v18_params
+  (b2_vs_flip_chop, ext_stop_r 1.5, halt 5-10).
+
+  Use champion_multi_sw10_leg for the causal book and engine/v18_params.py for
+  production parameters. The numbers printed here certify the retro book only.
 """
 import sys, json, os, pickle
 from pathlib import Path

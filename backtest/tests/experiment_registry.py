@@ -206,6 +206,28 @@ EXPERIMENTS = {
         "swing": "sw10",
         "pins": {"n": 500, "net": 325.78, "dd": 17.83, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
     },
+    "champion_multi_sw10_leg": {
+        "desc": "Champion multi sw10 - POST-C16 CAUSAL book, leg SL pivot. THIS is the "
+                "one that ships (what live_loop and the v19_c16 / v19_causal dropdown "
+                "books run). Same params as champion_multi_sw10, differing only in "
+                "pivot_rule.",
+        "engine": "patched",
+        # The two champion_multi_sw10* entries exist because pivot_rule split them on
+        # 2026-10-01. The entry literally named champion_multi_sw10 is the PRE-C16
+        # lookahead book; it kept the old name because twenty-odd harnesses reference
+        # it by key and renaming it would break every one of them. Read pivot_rule,
+        # not the name, when deciding which book a harness measures.
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg"},
+        "swing": "sw10",
+        "pins": {"n": 499, "net": 239.12, "dd": 15.36, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
+        "oos": {"n": 279, "net": 70.15},
+    },
 
     # ===== BASELINES (no partial, for delta measurement) =====
 
