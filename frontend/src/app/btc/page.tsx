@@ -159,9 +159,7 @@ function Stat({
 
 export default function BtcPage() {
   // ALL state initializes with HARDCODED DEFAULTS (server + client agree on first render)
-  const [tf, setTf] = useState<BtcTf>("5m");
   const [mode, setMode] = useState<BtcMode>("continuous");
-  const [symbol, setSymbol] = useState<BtcSymbol>("BTCUSDT");
   const [limit, setLimit] = useState<number | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [data, setData] = useState<BtcChartResponse | null>(null);
@@ -173,14 +171,31 @@ export default function BtcPage() {
   const [btData, setBtData] = useState<BtcBacktestResponse | null>(null);
   const [reportCopied, setReportCopied] = useState(false);
   const [btError, setBtError] = useState<string | null>(null);
-  const [version, setVersion] = useState<BtcVersion>("v1");
-  const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">("off");
-  const [htfLtfVer, setHtfLtfVer] = useState<HtfLtfVer>("v18");
+  // The Book dropdown is the master. version/htfLtf/htfLtfVer/symbol exist only
+  // because the backtest request is shaped that way, so they initialise from the
+  // book rather than to a hardcoded v1. Defaulting to v1 meant a page with no
+  // saved book ran v1, and v1's exits are labelled 'target' - which is why the
+  // stats panel showed TARGET 228 and TRAIL 0 for what looked like a v19 run.
+  // The Book dropdown is the master. Every one of these initialises from the
+  // default book rather than to a literal. Defaulting to v1 / 5m / BTCUSDT /
+  // minBars 14 is a combination that corresponds to nothing in books.ts, and
+  // running it produced 842 trades with TARGET 228 and TRAIL 0 - v1's exit
+  // labels, not v19's.
+  const [book, setBook] = useState<string>(DEFAULT_BOOK);
+  const boot = getBook(DEFAULT_BOOK);
+  const [tf, setTf] = useState<BtcTf>(boot.config.tf as BtcTf);
+  const [symbol, setSymbol] = useState<BtcSymbol>(boot.config.symbol as BtcSymbol);
+  const [version, setVersion] = useState<BtcVersion>(boot.config.version as BtcVersion);
+  const [htfLtf, setHtfLtf] = useState<"off" | "5m" | "15m">(
+    boot.config.htf_ltf as "off" | "5m" | "15m",
+  );
+  const [htfLtfVer, setHtfLtfVer] = useState<HtfLtfVer>(
+    boot.config.htf_ltf_ver as HtfLtfVer,
+  );
   const [master, setMaster] = useState<string>(BTC_MASTER_DEFAULT);
   // the single control. The version/htfLtf/htfLtfVer/symbol states above are
   // kept only so the backtest request stays shaped the way the API expects -
   // applyBook is the only thing that writes them now.
-  const [book, setBook] = useState<string>(DEFAULT_BOOK);
   // Set when something outside this dropdown changed the engine, so the select
   // can show that the running book is not one of the named ones.
   const bookHint = getBook(book).hint;
@@ -249,6 +264,24 @@ export default function BtcPage() {
       setHtfLtf(b.config.htf_ltf as "off" | "5m" | "15m");
       setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
       setSymbol(b.config.symbol as BtcSymbol);
+    } else {
+      // No saved book. Start from the default book rather than leaving the
+      // version at v1 with minBars at the API default, which is a combination
+      // that corresponds to nothing in books.ts and produced 842 trades and
+      // TRAIL 0.
+      const b = getBook(DEFAULT_BOOK);
+      setBook(b.id);
+      setVersion(b.config.version as BtcVersion);
+      setHtfLtf(b.config.htf_ltf as "off" | "5m" | "15m");
+      setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
+      setSymbol(b.config.symbol as BtcSymbol);
+      setTf(b.config.tf as BtcTf);
+      setBookSizing({
+        minBars: b.config.ltf_min_bars,
+        htfTf: b.config.htf_tf as BtcTf,
+        htfMinBars: b.config.htf_min_bars,
+      });
+      window.localStorage.setItem(BOOK_KEY, b.id);
     }
     // htf_ltf_ver is NOT restored from its own key. It is part of the book, and
     // restoring it separately is how the book and the running engine could
