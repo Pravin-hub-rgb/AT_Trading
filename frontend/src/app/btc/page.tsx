@@ -183,8 +183,7 @@ export default function BtcPage() {
   const [book, setBook] = useState<string>(DEFAULT_BOOK);
   // Set when something outside this dropdown changed the engine, so the select
   // can show that the running book is not one of the named ones.
-  const [customLabel, setCustomLabel] = useState<string | null>(null);
-  const bookHint = customLabel ?? getBook(book).hint;
+  const bookHint = getBook(book).hint;
   // Per-leg swing sizing. minBars alone cannot express the champion, which is
   // sw15 at 50 and sw10 at 10 on two different timeframes.
   const [bookSizing, setBookSizing] = useState({
@@ -251,9 +250,10 @@ export default function BtcPage() {
       setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
       setSymbol(b.config.symbol as BtcSymbol);
     }
-    const savedHtfVer = window.localStorage.getItem(HTF_VER_KEY) as HtfLtfVer | null;
-    const validHtfVers = ["v1","v3","v5","v6","v11","v12","v13","v15","v16","v17","v18","v19"];
-    if (savedHtfVer && validHtfVers.includes(savedHtfVer)) setHtfLtfVer(savedHtfVer);
+    // htf_ltf_ver is NOT restored from its own key. It is part of the book, and
+    // restoring it separately is how the book and the running engine could
+    // disagree. Saved master is also ignored for the same reason - it is a
+    // recorded sweep, not a book.
     const savedMaster = window.localStorage.getItem(MASTER_KEY);
     const modeM = savedMaster ? BTC_MASTER_MODES.find((x) => x.value === savedMaster) : undefined;
     const masterM = modeM ?? BTC_MASTER_MODES.find((x) => x.value === BTC_MASTER_DEFAULT)!;
@@ -370,26 +370,34 @@ export default function BtcPage() {
     });
   };
 
-  // Any control that changes the engine must keep the Book dropdown honest.
-  // The summary tables further down call these directly with versions that are
-  // not books (v2..v6, htf_ltf_ver v3/v5/v6/v11/...), so the dropdown has to
-  // be able to represent "something is running that is not a named book".
-  const markCustom = (what: string) => setCustomLabel(`custom: ${what}`);
-
-  const changeVersion = (v: BtcVersion) => {
-    window.localStorage.setItem(VER_KEY, v);
-    setVersion(v);
-    if (!BOOK_OPTIONS.some((b) => b.config.version === v)) markCustom(v);
+  // ── The tables below are a historical record, not a set of controls. ──
+  //
+  // They list sweep results that were measured once, long ago, under whatever
+  // the data path and swing sizing were at that time. Clicking a row used to
+  // call changeVersion / changeHtfLtfVer / applyMaster, which changed the engine
+  // while leaving the Book dropdown pointing at a book that was no longer
+  // running. Worse, those rows carry no per-leg minBars, so a click produced a
+  // number that never matched the number printed in the row.
+  //
+  // A row you can click but cannot reproduce is worse than a row you can only
+  // read, so they no longer change anything. To run one of these as a real
+  // book it has to be added to frontend/src/lib/books.ts with its own full
+  // config, the way v19 RETRO and CAUSAL are.
+  const [tableNotice, setTableNotice] = useState<string | null>(null);
+  const showTableNotice = (what: string) => {
+    setTableNotice(
+      `${what} is a recorded sweep result, not a runnable book. It is shown for ` +
+        `reference only. The Book dropdown at the top is the only control that ` +
+        `changes the engine.`,
+    );
   };
+
+  const changeVersion = (v: BtcVersion) => showTableNotice(v);
   const changeHtfLtf = (v: "off" | "5m" | "15m") => {
     window.localStorage.setItem(HTF_KEY, v);
     setHtfLtf(v);
   };
-  const changeHtfLtfVer = (v: HtfLtfVer) => {
-    window.localStorage.setItem(HTF_VER_KEY, v);
-    setHtfLtfVer(v as any);
-    if (!BOOK_OPTIONS.some((b) => b.config.htf_ltf_ver === v)) markCustom(`htf ${v}`);
-  };
+  const changeHtfLtfVer = (v: HtfLtfVer) => showTableNotice(`htf_ltf_ver ${v}`);
 
   // One control sets everything. Each book in books.ts carries the full config,
   // so there is no second dropdown to disagree with this one. Kept in sync by
@@ -397,7 +405,6 @@ export default function BtcPage() {
   const applyBook = (id: string) => {
     const b = getBook(id);
     // picking a real book clears any "custom" state left by the tables
-    setCustomLabel(null);
     window.localStorage.setItem(BOOK_KEY, b.id);
     setBook(b.id);
     setVersion(b.config.version as BtcVersion);
@@ -512,23 +519,8 @@ export default function BtcPage() {
   const applyMaster = (v: string) => {
     const mode = BTC_MASTER_MODES.find((x) => x.value === v);
     if (!mode) return;
-    // Master presets are their own config, not a named book. Flag it so the
-    // dropdown stops claiming a book is running.
-    setCustomLabel(`master: ${mode.label}`);
-    setMaster(v);
-    window.localStorage.setItem(MASTER_KEY, v);
-    // strategy is measured on its reference TF — switch the chart there too
-    changeTf(mode.bestTf);
-    // presets are ranked on the FULL window — jump there so the chart trade
-    // count matches the summary card / dropdown ref numbers exactly
-    changeLimit(null);
-    const next = { ...BT_DEFAULTS, ...mode.preset } as BtcBacktestParams;
-    // Preserve Bybit fee when switching master presets
-    if (symbol === "BTCUSDT_BYBIT") next.feePct = 0.055;
-    setBtParams(next);
-    window.localStorage.setItem(BT_KEY, JSON.stringify(next));
-    // master exists to show its trades — turn the position engine on
-    setTradesOn(true);
+    // Master presets are recorded sweep results too, not books.
+    showTableNotice(`Master: ${mode.label}`);
   };
 // APPEND_MARKER
   // Backend swings -> WholeDaySwingPoint (seg indices == candle array positions).
@@ -874,23 +866,27 @@ export default function BtcPage() {
           <div className="flex flex-wrap items-center gap-2 rounded-md border border-[#f59e0b]/50 bg-[#f59e0b]/10 px-3 py-1.5">
             <span className="text-xs font-bold uppercase tracking-wide text-[#f59e0b]">Book</span>
             <select
-              value={customLabel ? "__custom__" : book}
+              value={book}
               onChange={(e) => {
-                if (e.target.value === "__custom__") return;
                 applyBook(e.target.value);
               }}
               className="rounded border border-[#f59e0b] bg-[#161b22] px-2 py-1 text-xs font-semibold text-[#e6edf3] outline-none focus:border-[#f59e0b] min-w-[26rem]"
               title="Pick the book. Each option carries its full config - version, timeframe, stop source, HTF gate and cost model - and applies all of it at once."
             >
-              {customLabel && (
-                <option value="__custom__">{customLabel} - not a named book</option>
-              )}
               {BOOK_OPTIONS.map((b) => (
                 <option key={b.id} value={b.id}>{b.label}</option>
               ))}
             </select>
             <span className="hidden text-[10px] text-[#8b949e] lg:inline">{bookHint}</span>
           </div>
+          {tableNotice && (
+            <div
+             
+              className="mt-1 w-full rounded-md border border-[#f59e0b]/40 bg-[#f59e0b]/10 px-3 py-1.5 text-[10px] text-[#f59e0b]"
+            >
+              {tableNotice}
+            </div>
+          )}
         </div>
       </div>
 
