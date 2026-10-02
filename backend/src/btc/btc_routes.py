@@ -105,6 +105,18 @@ except Exception:
     simulate_unified = None  # type: ignore
 
 BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16", "unified"]
+
+# Versions that ARE a complete HTF-LTF engine and must not also run through the
+# nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
+# inline tuple at the use site: "unified" was added to BTC_VERSIONS and given its
+# own dispatch branch but missed the inline exclusion tuple, so selecting it with
+# htf_ltf="15m" would have run both paths. A set defined next to the version list
+# cannot fall behind it the way a hand-written tuple did.
+#   v19_champion - origin SL pivot (lookahead)
+#   v19_causal   - exp_causal_sl=1 on the pre-C16 rule; a DIFFERENT book, 494t
+#   v19_c16      - pivot_rule="leg"
+#   unified      - the pinned shipping book, champion_multi_sw10_leg, 499t
+STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified"}
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -787,7 +799,7 @@ def btc_backtest(
     }
     # HTF-LTF nested execution: 1h Flip cap16 + 15m/5m Decisive inside HTF window
     # Skip HTF-LTF for standalone versions (v19_champion, v19_causal, v19_c16)
-    if htf_ltf != "off" and simulate_htf_ltf_15m is not None and version not in ("v19_champion", "v19_causal", "v19_c16"):
+    if htf_ltf != "off" and simulate_htf_ltf_15m is not None and version not in STANDALONE_HTF_LTF_VERSIONS:
         # HTF is always 1h Flip cap16, LTF is htf_ltf (15m or 5m) Decisive
         htf_tf = "1h"
         ltf_tf = htf_ltf
