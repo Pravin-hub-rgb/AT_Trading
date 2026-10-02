@@ -1,0 +1,39 @@
+Archive v18/v19, add CHAMPION ENTRY-1, and make every book one engine
+
+v18_streak_halt.py and v19_champion.py move to engines/htf_ltf/_archive/
+with a README recording what replaces them. Not deleted - archived.
+
+Before archiving, v19_champion.py was checked against unified.py on all three
+pivot rules, trade for trade including exits, R and stop price: 500/+445.22
+origin, 499/+355.72 leg, 500/+445.19 leg_no_entry, IDENTICAL in every case.
+
+The v19_* route keys now resolve to unified.py through an alias, so the dropdown
+entries keep working while pointing at one engine.
+
+NEW BOOK - CHAMPION ENTRY-1 (pivot_rule='leg_no_entry', version
+'entry_minus_1'). pivot_rule='leg' reads the extreme from the swing start up
+to and including the break bar, so the entry bar own extreme can set the
+stop. 'leg_no_entry' stops one bar earlier. Both are causal - both read
+only bars that closed before the entry.
+
+It is worth stating what the measurements show, because it cuts against the
+usual framing: leg_no_entry lands within 0.03R of the origin book over 500
+trades, with 497 of 500 stops identical. So the origin pivot is not
+measurably lookahead. What C16 changed was the risk denominator, not
+knowledge of the future. C16's rule is still the right one to ship - the
+structural extreme rather than a structural pivot - but 'lookahead'
+overstated it. Recorded in the registry beside the three books.
+
+One regression caught on the way: the v19_* branches relied on max_positions and
+exp_persist being hardcoded inside v19_champion.py. unified.py takes them as
+arguments, so a branch that omitted them got the neutral default and
+v19_champion returned 503 trades / +443.58R against its 500 / +445.22R pin.
+All three branches now pass them explicitly. Re-verified after the fix:
+
+  entry_minus_1   500 trades  +445.19R   OK
+  unified          499 trades  +355.72R   OK
+  v19_champion     500 trades  +445.22R   OK
+  v19_causal       499 trades  +355.72R   OK
+  v19_c16          499 trades  +355.72R   OK
+
+One engine, three stop-placement rules, every book pinned and reproduced.

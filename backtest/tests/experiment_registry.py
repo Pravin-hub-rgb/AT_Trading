@@ -206,6 +206,33 @@ EXPERIMENTS = {
         "swing": "sw10",
         "pins": {"n": 500, "net": 325.78, "dd": 17.83, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
     },
+    # =========================================================================
+    # THE CHAMPION BOOKS - one engine (unified.py), three stop-placement rules.
+    # =========================================================================
+    # The engine is the same for all three. They differ in ONE thing: which
+    # price the initial stop is placed on. Verified trade-for-trade identical
+    # on every rule before v19_champion.py was archived.
+    #
+    #   pivot_rule       stop goes on                       n     gross    htf
+    #   origin           the swing's declared origin       500   +445.22   355
+    #   leg              leg extreme, entry bar INCLUDED   499   +355.72   350
+    #   leg_no_entry     leg extreme, entry bar EXCLUDED   500   +445.19   355
+    #
+    # leg and leg_no_entry are both causal: each reads only bars that closed
+    # before the entry. They differ only on bars where the entry itself
+    # extended the extreme, so the entry bar's own high/low can set the stop
+    # under "leg" and cannot under "leg_no_entry".
+    #
+    # Worth stating plainly because it cuts against the usual framing: the
+    # origin pivot is NOT measurably lookahead. leg_no_entry sits within
+    # 0.03R of it over 500 trades, with 497 of 500 stops identical. What C16
+    # actually changed was the risk denominator, not knowledge of the future.
+    # Its rule is still the right one to ship - "leg" is the structural
+    # extreme rather than a structural pivot - but "lookahead" overstated it.
+    #
+    # champion_multi_sw10 (origin)      - research baseline, superseded
+    # champion_multi_sw10_leg (leg)    - THE SHIPPING BOOK
+    # champion_multi_sw10_entry1        - the proposed ENTRY-1 variant
     "champion_multi_sw10_leg": {
         "desc": "Champion multi sw10 - POST-C16 CAUSAL book, leg SL pivot. THIS is the "
                 "one that ships (what live_loop and the v19_c16 / v19_causal dropdown "

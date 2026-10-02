@@ -99,12 +99,16 @@ except Exception:
     simulate_htf_ltf_conditional = None  # type: ignore
 try:
     from src.btc.engines.htf_ltf.unified import simulate_htf_ltf_streak_halt as simulate_unified
-    from src.btc.engines.htf_ltf.v19_champion import simulate_htf_ltf_streak_halt as simulate_htf_ltf_v19_champion
+    simulate_htf_ltf_v19_champion = simulate_unified
+    # v19_champion.py is archived under engines/htf_ltf/_archive. unified.py is
+    # byte-identical to it on all three pivot rules, verified trade for trade,
+    # so the v19_* version keys below resolve to the same engine.
 except Exception:
     simulate_htf_ltf_v19_champion = None  # type: ignore
     simulate_unified = None  # type: ignore
+    simulate_unified = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16", "unified"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -116,7 +120,8 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
 #   v19_causal   - exp_causal_sl=1 on the pre-C16 rule; a DIFFERENT book, 494t
 #   v19_c16      - pivot_rule="leg"
 #   unified      - the pinned shipping book, champion_multi_sw10_leg, 499t
-STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified"}
+STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified",
+                              "entry_minus_1"}
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -1329,6 +1334,40 @@ def btc_backtest(
             min_body_atr=0.5,
             max_wick_atr=1.0,
         )
+    elif version == "entry_minus_1":
+        # CHAMPION ENTRY-1. The leg extreme EXCLUDING the entry candle.
+        #
+        # pivot_rule="leg" reads the extreme from the swing start up to and
+        # including the bar that broke the swing, so the entry bar's own
+        # extreme can set the stop. "leg_no_entry" stops one bar earlier.
+        # Both read only bars that closed before the entry, so both are causal;
+        # they differ on the bars where the entry itself extended the extreme.
+        #
+        # Measured: 500 trades / +445.19R gross / 355 HTF windows. That is
+        # within 0.03R of the origin book (500 / +445.22R) - 497 of its 500
+        # stops are identical - which is worth knowing before choosing it: it
+        # sits beside the origin book, not beside the causal champion.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500, content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            htf_rr=3.0,
+            window_end="exit",
+            max_positions=0,
+            exp_persist=7,
+            pivot_rule="leg_no_entry",
+        )
+        trades = nested.get("ltf_trades", [])
     elif version == "unified":
         # THE SHIPPING BOOK, and the only dropdown entry that is the same object
         # the registry pins. champion_multi_sw10_leg in experiment_registry.py:
@@ -1392,6 +1431,13 @@ def btc_backtest(
             htf_rr=3.0,
             window_end="exit",
             pivot_rule="origin",
+            # v19_champion.py had these hardcoded. unified.py takes them as
+            # arguments, so a branch that omits them silently gets the neutral
+            # default instead and returns a DIFFERENT book. Found by re-running
+            # v19_champion through the alias: 503 trades / +443.58R against its
+            # 500 / +445.22R pin.
+            max_positions=0,
+            exp_persist=7,
         )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_causal":
@@ -1420,6 +1466,13 @@ def btc_backtest(
             htf_rr=3.0,
             window_end="exit",
             exp_causal_sl=1,
+            # v19_champion.py had these hardcoded. unified.py takes them as
+            # arguments, so a branch that omits them silently gets the neutral
+            # default instead and returns a DIFFERENT book. Found by re-running
+            # v19_champion through the alias: 503 trades / +443.58R against its
+            # 500 / +445.22R pin.
+            max_positions=0,
+            exp_persist=7,
         )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_c16":
@@ -1444,6 +1497,13 @@ def btc_backtest(
             htf_rr=3.0,
             window_end="exit",
             exp_causal_sl=0,
+            # v19_champion.py had these hardcoded. unified.py takes them as
+            # arguments, so a branch that omits them silently gets the neutral
+            # default instead and returns a DIFFERENT book. Found by re-running
+            # v19_champion through the alias: 503 trades / +443.58R against its
+            # 500 / +445.22R pin.
+            max_positions=0,
+            exp_persist=7,
         )
         trades = nested.get("ltf_trades", [])
     else:

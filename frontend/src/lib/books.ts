@@ -117,6 +117,15 @@ export const BOOK_OPTIONS: BookOption[] = [
     config: { ...V19, version: "unified" },
   },
   {
+    id: "champion_entry_minus_1",
+    label: "CHAMPION ENTRY-1 (leg extreme, entry bar excluded) - 500t +445.2R",
+    shortLabel: "ENTRY-1",
+    slMode: "causal",
+    hint: "same as CAUSAL but the stop ignores the entry bar's own extreme - sits beside the RETRO book, not beside CAUSAL",
+    measured: { isN: 500, isNet: 0, oosN: 0, oosNet: 0 },
+    config: { ...V19, version: "entry_minus_1" },
+  },
+  {
     id: "champion_retro",
     label: "CHAMPION RETRO (origin stop) - LOOKAHEAD, research only - IS 500t +325.8R",
     shortLabel: "RETRO",

@@ -202,13 +202,18 @@ def _collect_signals(
                 # so, and sweep_pref_fs.py:51 calls the stream path without it.
                 # Without a guard this indexes None and raises TypeError. The
                 # pre-C16 code read only seg_start, so it had no such dependency.
-                if pivot_rule == "leg" and candles is not None:
+                if pivot_rule in ("leg", "leg_no_entry") and candles is not None:
                     _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
                     _br_idx = store.pos(b_time) if store else -1
                     if _br_idx < 0:
                         _br_idx = _sw_idx
-                    _lo_leg = [float(c["low"]) for c in candles[_sw_idx : _br_idx + 1]]
-                    _hi_leg = [float(c["high"]) for c in candles[_sw_idx : _br_idx + 1]]
+                    # "leg" reads up to and INCLUDING the break bar. "leg_no_entry"
+                    # stops one bar earlier, so the entry candle own extreme cannot set
+                    # the stop. Causal either way - both read only past bars - but the
+                    # stop differs on bars where the entry itself made a new extreme.
+                    _hi_i = _br_idx if pivot_rule == "leg_no_entry" else _br_idx + 1
+                    _lo_leg = [float(c["low"]) for c in candles[_sw_idx : _hi_i]]
+                    _hi_leg = [float(c["high"]) for c in candles[_sw_idx : _hi_i]]
                 else:
                     _lo_leg = _hi_leg = []
                 if not _lo_leg or not _hi_leg:
@@ -279,13 +284,18 @@ def _collect_signals(
                         # without it. Without a guard this indexes None and raises
                         # TypeError. Pre-C16 code read only seg_start, so it had no
                         # such dependency.
-                        if pivot_rule == "leg" and candles is not None:
+                        if pivot_rule in ("leg", "leg_no_entry") and candles is not None:
                             _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
                             _br_idx = store.pos(b_time) if store else -1
                             if _br_idx < 0:
                                 _br_idx = _sw_idx
-                            _lo_leg = [float(c["low"]) for c in candles[_sw_idx : _br_idx + 1]]
-                            _hi_leg = [float(c["high"]) for c in candles[_sw_idx : _br_idx + 1]]
+                            # "leg" reads up to and INCLUDING the break bar. "leg_no_entry"
+                            # stops one bar earlier, so the entry candle own extreme cannot set
+                            # the stop. Causal either way - both read only past bars - but the
+                            # stop differs on bars where the entry itself made a new extreme.
+                            _hi_i = _br_idx if pivot_rule == "leg_no_entry" else _br_idx + 1
+                            _lo_leg = [float(c["low"]) for c in candles[_sw_idx : _hi_i]]
+                            _hi_leg = [float(c["high"]) for c in candles[_sw_idx : _hi_i]]
                         else:
                             _lo_leg = _hi_leg = []
                         if not _lo_leg or not _hi_leg:
