@@ -289,11 +289,11 @@ Report the IN cohort's R distribution: median, % at exactly -1.00R,
 If >60% of IN trades sit at exactly −1.0R, there is no loss left to compress and Q2 is closed permanently — exit-side work on this cohort can never be worth more than a few R. I'd run this before anything else; it is 20 minutes and it either kills the whole exit direction or reframes it.
 And the deeper point: not entering frees the slot from the start; exiting early frees it later, and the replacement arrives later still. For a book whose problem is that the OUT cohort needs 4.8 days, entry policy strictly dominates exit policy. This is architecture, not a trade.
 Q3 — Something nobody has touched
-Rank 1: exp_window_entry_cap — cap entries per parent window
+**Rank 1 — CLOSED 2026-10-01. ~~exp_window_entry_cap — cap entries per parent window.~~** It already ran. See :416, point 4: CHECKLIST 24.9 records the result as **"OOS-only, NOT ROBUST"**. Not a proposal.
 ENGINE_SHELF.md:28 lists it UNTESTED. It is a slot policy, not a filter: it throttles, does not veto, and the cascade question doesn't bite in the same form (ENGINE_SHELF:38-40 says exactly this).
 The mechanism is already measured. P95: bwe falls monotonically as a window ages, so the N+1'th entry in a window is guaranteed lower-bwe than the N'th. And WINDOW_LIFE says the champion runs 1.6 trades per window, 2.6 uncapped.
 ID            : P97
-R1 status     : NEW, and on the shelf as untested. ENGINE_SHELF.md:28.
+R1 status     : ~~NEW, and on the shelf as untested. ENGINE_SHELF.md:28.~~ **CLOSED — it ran, and the result was OOS-only / NOT ROBUST (:416). "Untested" in ENGINE_SHELF means "no robust result", not "never run".**
                 Distinct from P96: P96 is a time threshold, this is a count.
 COUNTER       : Wrong if entry ordinal within a window carries no
                 information - i.e. the 2nd entry in a window is no worse
@@ -412,7 +412,7 @@ Done this session (all read-only, source-verified):
 - Four verified findings nobody else has:
 1. bars_to_wend is non-causal — exp_inside80.py:166 takes we from res["intervals"], built at v18_streak_halt.py:242 as int(t["exit_ts"]) (parent's future exit). Peers killed the 16× unit bug; nobody saw the look-ahead.
 2. Champion has no slot at all — test_experiments_craze.py:955 rewrites the gate to if (not exp_mltf) and busy_until… (champion is exp_mltf=True), and :85 sets exp_max_concurrent=0 so the cap branch never runs → Big Pickle's P96 arms (b)/(d) are exact no-ops; RISK_CONCURRENCY's string-bug story is inert on this path.
-3. Live is serial, backtest is up to 6-deep — live_loop.py:1777-1801 in_trade skip at 0R; ANCHOR serial +293.2R vs +446.2R. Untouched by anyone; this is the real deployability bound.
+3. Live is serial, backtest is up to 6-deep — live_loop.py:1777-1801 in_trade skip at 0R; ANCHOR serial +293.2R vs +446.2R. **PARTLY WITHDRAWN 2026-10-01 — see LIVE_CONCURRENCY_P118.md.** The +293.2R vs +446.2R comparison is champion-serial vs champion-deep, NOT live vs backtest. The live engine runs v18, a different book, and v18 is serial *natively* — `v18_streak_halt.py` has no concurrency parameter and `test_v18_causal_integrity.py:39` omits `exp_mltf`, so its 352 trades are already its cap-1 count. v18's own record is +146.55R net / PF 1.947. So the serial cost quoted here is a property of the champion, and "this is the real deployability bound" is withdrawn: it is a strategy-selection question, not a deployability one.
 4. Two peer R1 conflicts — exp_window_entry_cap already ran (CHECKLIST 24.9, "OOS-only, NOT ROBUST"); "FS-only swing-trail" is marked closed (OPEN_RESEARCH_QUEUE:22) though the harness that closed it used fixed target_r (exp_fs_only_engine.py:160,208) — label and arms disagree.
 Next step (the deliverable)
 Write the empty --- mimo: section in chat, three questions in §9 format:

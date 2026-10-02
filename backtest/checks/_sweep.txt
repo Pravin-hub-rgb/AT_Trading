@@ -1,0 +1,70 @@
+[1] syntax      : OK
+[2] pre-C16 pins: 9 harness(es) assert an origin-era figure
+      exp_pin_audit.py                             325.78
+      exp_sizing_candidate_compare.py              325.78
+      exp_sl_origin.py                             325.78
+      exp_v19_causal.py                            325.78
+      exp_v19_matrix.py                            325.78
+      exp_v19_proof.py                             325.78
+      exp_v19_tradediff.py                         325.78,314.52
+      exp_where_to_look.py                         325.78,314.52
+      exp_wick_cascade_decomposition.py            325.78
+[3] venue       : 0 harness(es) load a non-Bybit symbol
+[4] registry    : 113 experiments, 2 declare pivot_rule
+[4b] champion   : 437 mentions of champion_multi_sw10 across 322 file(s) under backtest/tests
+      100 of those files touch EXPERIMENTS[]/params on the same line as the mention
+      (a harness that binds the key on one line and reads it on another
+       is counted as a mention but not a reader, so the reader count is
+       a floor, not a total)
+      champion_multi_sw10 is the PRE-C16 origin book. The shipping book
+      is champion_multi_sw10_leg. Check pivot_rule, not the name.
+      Earlier commits quoted a harness count here from memory rather than
+      by counting. Read these figures off the code above; do not quote a
+      number that did not come out of a run.
+[5] known red   : 2 documented as failing
+      exp_closeout_battery                         PIN_LB30 anchored at ee574f9 (2026-09-21), before the 203e207 pivot de
+      exp_issue10_window                           imports persistence.database, a package that is not tracked in this re
+[6] C16 anchors : 6 value(s) quoted with no retraction marker anywhere in the file
+      325.78   (champion origin IS net) -> 14 unmarked file(s)
+          CANDIDATE_P108.md
+          CHAMPION_CANONICAL_P102.md
+          CONCENTRATION_P107.md
+          CORRECTIONS_P106.md
+          HTF_GATE_AUDIT_P101.md
+          P114_FLAG_ATTRIBUTION.md
+          TF_METRICS_TABLE.md
+          exp_pin_audit.py
+      314.52   (champion causal IS net) -> 2 unmarked file(s)
+          exp_v19_tradediff.py
+          exp_where_to_look.py
+      225.3    (identity gate origin coarse gross) -> 23 unmarked file(s)
+          CAMPAIGN_POLICY_AUTOPSY.md
+          CHAMPION_FLOOR_REJECTED.md
+          CONCURRENCY_GUARD_P96.md
+          EQUITY_CURVE_STUDY.md
+          FIVE_MINUTE_CONFIRM_COHORT_AUTOPSY.md
+          LOSS_TRIGGERED_WINDOW_KILL_AUTOPSY.md
+          SLOT_QUEUE_P97.md
+          SL_RECLAIM_REENTRY.md
+      193.4    (base-book null M, OOS, origin) -> 62 unmarked file(s)
+          BOOTSTRAP_NULL_P63.md
+          CANDIDATE_P108.md
+          CAND_COST_P59.md
+          CEILING_RELPRICE_P69.md
+          CONCURRENCY_GUARD_P96.md
+          DECOMPOSITION_NULL.md
+          DIRECTIONAL_FS_P80.md
+          FORWARD_NEED_P62.md
+      479.9    (base-book null M, IS, origin) -> 13 unmarked file(s)
+          DECOMPOSITION_NULL.md
+          NEWBAR_SEARCH.md
+          NULL_SENSITIVITY.md
+          STACK_PAIRED.md
+          exp_alignment_autopsy.py
+          exp_decay_lookback.py
+          exp_decay_switch.py
+          exp_decomposition_null.py
+      170.5    (closeout_battery PIN_LB30 net) -> 3 unmarked file(s)
+          exp43_loss_autopsy.py
+          exp48_leg_progress.py
+          exp_closeout_battery.py

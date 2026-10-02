@@ -67,6 +67,17 @@ for sub in ("backend/src", "backend/tests", "backtest/tests", "backtest/engine",
         continue
     for f in base.rglob("*.py"):
         try:
+          # FOURTH BLIND SPOT, found 2026-10-01: this check does not detect a
+          # document that PROPOSES a knob it elsewhere reports as CLOSED.
+          # ROUND_SUMMARY_P55_P95.md:292 ranked exp_window_entry_cap as Rank 1
+          # while :416 of the same file recorded that it had already run and was
+          # "OOS-only, NOT ROBUST". Both readable, neither marked. That is a
+          # third variant of the stale-claim family - not a wrong number, not a
+          # fictional feature, but two contradictory statements about one object
+          # in one file. Cheap to catch, and this check does not catch it: it
+          # needs both a proposal framing and a closed verdict for the same knob
+          # in one document. Documented, not implemented - that needs a real
+          # parser, not a grep.
             py_compile.compile(str(f), doraise=True, cfile=str(_SCRATCH))
         except py_compile.PyCompileError as e:
             bad.append((sub + "/" + str(f.relative_to(base)), str(e).splitlines()[-1]))
