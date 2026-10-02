@@ -280,6 +280,14 @@ def simulate_htf_ltf_streak_halt(
     # applied to the engine; this flag is that fix, finally in the engine.
     # 1 = CAUSAL: sl_pivot = the running extreme since the last CONFIRMED swing, keyed
     # on confirmed_at_idx, so the value is knowable at the entry bar.
+      # UNIFIED: LTF stop source. 1 = running extreme up to and INCLUDING the
+      # entry bar (current causal rule). Controlled separately from pivot_rule,
+      # which selects the HTF side's pivot; the two halves were never linked.
+      #   exp_ltf_no_entry=1  -> same exclusion as pivot_rule="leg_no_entry"
+      #                          so one book can apply "exclude the entry
+      #                          candle" to BOTH legs rather than HTF only.
+      # Default 0: identical to every measurement pinned before this existed.
+      exp_ltf_no_entry=0,
       exp_causal_sl=0,
       # UNIFIED: position limit. 1 = serial (v18 behaviour, busy_until gate armed)
       #   0 = unlimited (v19 behaviour, gate never fires). This is the ONLY
@@ -763,7 +771,8 @@ def simulate_htf_ltf_streak_halt(
         # SL pivot. RETRO = the swing's true origin (lookahead). CAUSAL = the running
         # extreme as of bar i (knowable in real time).
         if exp_causal_sl:
-            sl_pivot = _csl[i] if direction==1 else _csh[i]
+            sl_pivot = _csl[_ci] if direction==1 else _csh[_ci]
+            _ci = i - 1 if (exp_ltf_no_entry and i > 0) else i
         else:
             sl_pivot = sig["swing_start_px"]
         if direction==1:
