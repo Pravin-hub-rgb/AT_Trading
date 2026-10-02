@@ -56,12 +56,19 @@ not for the reason P90 gave.
 **The per-side absolute split, on the same numbers R-multiple reported as
 profitable on both sides:**
 
+> **⚠️ THE TWO SHORT ROWS BELOW ARE SIGN ERRORS AND ARE STRUCK.** `abs_return()`
+> ignored `t["dir"]`, so `(exit − entry)/entry` — the *negative* of short PnL —
+> was tabulated. Profitable shorts exited below entry and their raw change came
+> out negative. Correct values are **+0.4415** IS / **+0.7471** OOS, and they
+> **agree** with R. The long rows are unaffected. Source fixed in
+> `exp_entry_fill_absolute.py`; re-derived in `exp_p121_short_absolute.py`.
+
 | lane / era | side | shipped | next open |
 |---|---|---|---|
 | champ IS | longs | **+1.6433** (273t) | **+2.3195** |
-| champ IS | shorts | **−0.4415** (227t) | **−1.1089** |
+| champ IS | shorts | ~~**−0.4415**~~ **(227t)** | ~~**−1.1089**~~ |
 | champ OOS | longs | +0.3676 (162t) | +1.1962 |
-| champ OOS | shorts | **−0.7471** (117t) | **−1.3150** |
+| champ OOS | shorts | ~~**−0.7471**~~ **(117t)** | ~~**−1.3150**~~ |
 
 ## Second sighting — 2026-10-01, `CONCURRENCY_P117_P120.md`
 

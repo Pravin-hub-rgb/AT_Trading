@@ -11,7 +11,7 @@
       exp_wick_cascade_decomposition.py            325.78
 [3] venue       : 0 harness(es) load a non-Bybit symbol
 [4] registry    : 113 experiments, 2 declare pivot_rule
-[4b] champion   : 437 mentions of champion_multi_sw10 across 322 file(s) under backtest/tests
+[4b] champion   : 439 mentions of champion_multi_sw10 across 323 file(s) under backtest/tests
       100 of those files touch EXPERIMENTS[]/params on the same line as the mention
       (a harness that binds the key on one line and reads it on another
        is counted as a mention but not a reader, so the reader count is
@@ -46,7 +46,7 @@
           LOSS_TRIGGERED_WINDOW_KILL_AUTOPSY.md
           SLOT_QUEUE_P97.md
           SL_RECLAIM_REENTRY.md
-      193.4    (base-book null M, OOS, origin) -> 62 unmarked file(s)
+      193.4    (base-book null M, OOS, origin) -> 61 unmarked file(s)
           BOOTSTRAP_NULL_P63.md
           CANDIDATE_P108.md
           CAND_COST_P59.md

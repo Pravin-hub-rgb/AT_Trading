@@ -99,6 +99,40 @@ looking like they had been committed. The tool had done its job and the layer in
 between swallowed the result. Every check here should be confirmed by reading what
 it produced, not by the fact that it ran.
 
+## 5. Three rules, all earned here
+
+Each one came from a bug in this session, and each is cheaper than the thing it
+replaces.
+
+**1. Ask which convention produced the number.** — caught P121
+
+> P91 tabulated shorts at −0.4415 and −0.7471 "absolute". `abs_return()` never
+> read `t["dir"]`, so it computed `(exit − entry)/entry` for shorts too, which is
+> the *negative* of PnL. Profitable shorts were read as losses. The number was
+> arithmetically correct; the reading was not.
+
+**2. Report n beside every rate.** — caught P115
+
+> P119 label (3) read AUC 0.601, which on a naive threshold flags as separating.
+> Its positive class is 20 trades out of 252. The pre-registered (1) is what
+> stopped a false positive being written up. An AUC without its n is not evidence.
+
+**3. Verify the artefact, not the tool's exit code.** — caught two lost commits
+
+> A commit silently did not happen because the command returned non-zero on a
+> stderr warning, leaving files staged and looking committed. The tool did its
+> job; the layer between swallowed the result.
+
+**Rule 1 is first because it runs before the experiment.** The other two are
+checks you can apply to a finished number. Rule 1 is the only one that costs
+nothing and prevents the work rather than auditing it.
+
+Two of these are the same failure wearing different clothes — a shared variable
+between an instrument and its own yardstick. In P115 the feature and the label
+both contained `window_end`. In P121 the measure and the convention were the same
+expression read twice. **When two numbers disagree, ask what they share before
+asking which is right.**
+
 ## Running them
 
 Static, safe to run any time:

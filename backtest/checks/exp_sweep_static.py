@@ -19,7 +19,7 @@ What it does catch, in seconds:
 
 SCOPE LIMIT, stated so nobody trusts it further than it goes. Item 2 matches on
   net-R anchors only. It cannot catch a stale claim that quotes an AUC or a trade
-  count, because those shapes never appear in C16_ANCHORS. INSIDE80_P95.md was
+  count, because those shapes never appear in RETRACTED_ANCHORS. INSIDE80_P95.md was
   reported clean by this sweep while its headline "0.847 / separates" was dead -
   the same blind spot as a check matching on the wrong shape, which is what the
   `if PERP in t: continue` bug was. An honest scope beats an implied one.
@@ -189,7 +189,12 @@ if missing:
 # or was silently re-baselined by C16 without anyone saying so. This does not know
 # which. It only knows what is still un-marked, which is the half that has been
 # costing time.
-C16_ANCHORS = {
+# RENAMED from C16_ANCHORS 2026-10-01 and merged with the P91 values. The
+# concept was never C16-specific - it is "a number that has been retracted and
+# will keep propagating until something stops it". Two lists of retracted
+# numbers are one concept, and two lists drift exactly the way two documents
+# drifted. C16 is a source of entries here, not the definition of the set.
+RETRACTED_ANCHORS = {
     "325.78": "champion origin IS net",
     "314.52": "champion causal IS net",
     "247.96": "champion C17-only IS net",
@@ -198,7 +203,15 @@ C16_ANCHORS = {
     "193.4":  "base-book null M, OOS, origin",
     "479.9":  "base-book null M, IS, origin",
     "170.5":  "closeout_battery PIN_LB30 net",
+    # P91 short-side absolutes. Retracted 2026-10-01: abs_return() never read
+    # t["dir"], so (exit-entry)/entry - the NEGATIVE of short PnL - was tabulated
+    # and read as a loss. True values are +0.4415 IS / +0.7471 OOS and they
+    # AGREE with R; there is no divergence. These two numbers propagated across
+    # three documents and produced a Rank-8 queue entry on a dead premise.
+    "0.4415": "P91 short absolute IS (origin) - SIGN ERROR",
+    "0.7471": "P91 short absolute OOS (origin) - SIGN ERROR",
 }
+C16_ANCHORS = RETRACTED_ANCHORS  # back-compat name; kept so nothing breaks
 MARKERS = ("RETRACT", "SUPERSEDED", "superseded", "RESOLVED", "KNOWN RED",
            "STALE", "stale", "VOID", "void", "RE-DERIVED", "re-derived",
            "origin-era", "ORIGIN-era", "origin book", "pre-C16", "PRE-C16",

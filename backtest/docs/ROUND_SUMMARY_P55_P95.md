@@ -326,12 +326,14 @@ Rank 3: §7's blocker #1 is wrong as stated — and P91 opened the door
 The brief says "any sizing change has no execution channel." That is true of v18_streak_halt.py and false of the live bot:
 live_loop.py:1869   qty = self._calculate_qty(entry_price, sl_price)
 The live bot has risk-based lot sizing. So the blocker is a backtest-harness limitation, not a deployment one.
-And P91 just built the measure where sizing actually matters: absolute return per unit notional. P91's finding — every short book loses money in price terms in both eras (IS −0.4415, OOS −0.7471) while reading +53.2R and +68.4R — means a live-only short-side size reduction is a real, executable, zero-backtest-change risk decision. It cannot be scored in R (correctly — R is size-invariant), but it can be scored in the absolute measure P91 introduced.
+And P91 built the measure where sizing would actually matter: absolute return per unit notional. ~~P91's finding — every short book loses money in price terms in both eras (IS −0.4415, OOS −0.7471) while reading +53.2R and +68.4R — means a live-only short-side size reduction is a real, executable, zero-backtest-change risk decision.~~ **RETRACTED 2026-10-01 — the premise was a sign-convention error, so there is nothing to size.**
+
+**What happened:** `exp_entry_fill_absolute.py`'s `abs_return()` never read `t["dir"]`, so it computed `(exit − entry)/entry` for shorts too — which is the *negative* of PnL. A profitable short exits below entry, so its raw change is negative. P91 read those negatives as losses. Re-derived in `exp_p121_short_absolute.py`, the shorts are **+0.4415** IS and **+0.7471** OOS in absolute terms, against +105.7R and +83.6R — exact negations, and the two metrics **agree**. There is no divergence to size against. See `FILL_ABSOLUTE_P91.md`.
 That is the first sizing question this repo has ever been able to answer, and it took P91 to make it answerable.
 Rank 4: P89 and P91 contradict each other on the short side and nobody has reconciled them
  	says about shorts
 P89	OOS b = −0.29 → no deficit to correct; shorts are fine
-P91	shorts are −0.44 IS / −0.75 OOS in absolute terms → a real drag
+~~P91	shorts are −0.44 IS / −0.75 OOS in absolute terms → a real drag~~ **RETRACTED 2026-10-01 — sign-convention error; shorts are +0.44 / +0.75 and agree with R.**
 They used different measures (R vs absolute) on the same trades. One of them is an artefact. Until that is settled, the entire P84/P86 "protect the long side" programme is resting on an unexamined premise — it may have been solving a denominator problem.
 One run: absolute return per unit notional ~ short + half-year FE, month-clustered, four cells. If b < 0 and significant, shorts are a genuine drag and the fix is size, not filter. If b ≈ 0, P91's absolute number is itself a stop-distance artefact and P89 stands.
 This is cheap and it is the highest-leverage thing on the list, because it decides whether a whole direction was real.
@@ -344,7 +346,7 @@ Honest ranking
 5	P97 engine arm	Only if #2 fires.
 6	cap-off through §6	Best-motivated item never period-controlled.
 7	Q2 exit rule	Kill it. 20-minute distribution check will close it.
-8	Short-side sizing (absolute)	Live-executable, unscored in R, real. Needs a risk decision, not a backtest.
+~~8	Short-side sizing (absolute)	Live-executable, unscored in R, real. Needs a risk decision, not a backtest.~~ **STRUCK 2026-10-01 — the premise was retracted, so there is nothing to size. Do not pick this up.**
 The single most likely outcome: none of these clear M. The honest case for running them anyway is that P96 is the first removal whose dropped cohort was losing money — and M is a whole-book null being applied to a cohort change, which P63 already said is the wrong bar for the forward slice and arguably here too.
 Want me to write the P89/P91 reconciliation and the two 20-minute falsifiers as one harness? They share the data load and the P87 instrument, so it is one file, ~10 minutes of runtime.
 

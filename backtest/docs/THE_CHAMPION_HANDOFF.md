@@ -60,7 +60,7 @@ this programme is NET unless a row says otherwise.
 | **P83** | max DD **37.3R** | **30.5R** on a correct algorithm. **Every doc carrying 37.3R is stale.** |
 | **P94** | +506.2R, dNet **0.93× M** | **+481.6R net, 0.81× M.** Gross-vs-net comparison. |
 | **P90** | next-open **+500.6R** | **RETRACTED** in P91 — R-denominator artefact. |
-| **P91** | absolute return figures | **OMIT COSTS.** Descriptive, **not an account curve.** |
+| **P91** | absolute return figures | **OMIT COSTS.** Descriptive, **not an account curve.** **⚠️ 2026-10-01: its long/short split claim is RETRACTED — `abs_return()` ignored `t["dir"]`, so profitable shorts were read as losses. The fill result survives; the split does not. See `FILL_ABSOLUTE_P91.md`.** |
 | **P95** | OUT cohort "76 days", IN "13 days" | **16× unit bug.** Correct: **4.78 days / 114.7 hours** and **0.80 days / 19.2 hours**. |
 | **P57** | `min_bars` as a lag | was a bar **COUNT** — a 24× penalty on slow arms, corrected in P58 |
 
