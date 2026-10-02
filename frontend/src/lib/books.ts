@@ -5,18 +5,32 @@
 // complete config for its book, so picking one sets everything at once and there
 // is no second control that can get out of sync with it.
 //
-// There are two champion books and they differ in ONE thing - where the initial
-// stop goes. That one thing is the entire difference between 500 trades and 499.
+// There are two champion books in this dropdown. They run the same engine and
+// differ in ONE thing: where the initial stop goes.
 //
-//   RETRO  (origin stop) - stop at the swing's declared origin. That origin is
-//           only knowable once the whole leg has completed, so it is FUTURE DATA
-//           at the entry bar. Lookahead. 500t / +325.78R. Research baseline.
-//   CAUSAL (leg stop)    - stop at the swing's own extreme up to and including
-//           the entry bar. Knowable at that bar. 499t / +239.12R. This ships.
+//   CAUSAL  (leg stop)         the leg extreme up to and including the entry
+//                               bar. 499 trades / +355.72R gross.
+//   ENTRY-1 (leg minus entry)  the same extreme but the entry bar itself is
+//                               excluded, so the entry's own high or low can
+//                               never set the stop. 500 / +445.19R gross.
 //
-// They are the same signal generator, the same gates, the same fills. The two
-// books differ on 19 of ~500 trades. Measured 2026-10-02 on unified.py with
-// pivot_rule "origin" vs "leg"; both pins reproduce.
+// Both are causal. The stop on each reads only bars that closed before the
+// entry. They differ on the bars where the entry itself extended the extreme.
+//
+// A third book, CHAMPION RETRO, used to be listed here. It placed the stop on
+// the swing's declared origin. It was described as lookahead and retired on
+// that basis; that turned out to be wrong. exp_origin_lookahead.py rebuilds the
+// swing chain from candles truncated at each swing's own confirmation and finds
+// seg.start_px identical every time - the origin price was knowable at the
+// entry bar. The two books also collapse to one another the moment the SL rule
+// is equalised: the RETRO engine with pivot_rule="leg" is trade-for-trade
+// identical to the causal engine.
+//
+// So RETRO is not deleted and not broken. It is just not offered, because
+// CAUSAL and ENTRY-1 place the stop better and the origin rule adds a third
+// answer to a question those two already answer. It stays reachable as
+// version=v19_champion and pinned in the registry as champion_multi_sw10 if
+// the comparison is ever needed again.
 //
 // VENUE. Every figure in this file, and every figure in the experiment registry,
 // is Bybit PERP (symbol BTCUSDT_BYBIT). "BTCUSDT" is Binance spot and is not
@@ -124,15 +138,6 @@ export const BOOK_OPTIONS: BookOption[] = [
     hint: "same as CAUSAL but the stop ignores the entry bar's own extreme - sits beside the RETRO book, not beside CAUSAL",
     measured: { isN: 500, isNet: 0, oosN: 0, oosNet: 0 },
     config: { ...V19, version: "entry_minus_1" },
-  },
-  {
-    id: "champion_retro",
-    label: "CHAMPION RETRO (origin stop) - LOOKAHEAD, research only - IS 500t +325.8R",
-    shortLabel: "RETRO",
-    slMode: "retro",
-    hint: "stop at the swing's true origin - only knowable after the leg completes - do not ship",
-    measured: { isN: 500, isNet: 325.78, oosN: 279, oosNet: 70.15 },
-    config: { ...V19, version: "v19_champion" },
   },
   {
     id: "v1",
