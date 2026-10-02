@@ -1329,18 +1329,6 @@ def btc_backtest(
             min_body_atr=0.5,
             max_wick_atr=1.0,
         )
-    htf_windows = []
-    if version in STANDALONE_HTF_LTF_VERSIONS:
-        # The engine returns its own HTF windows as intervals: [start, end, dir,
-        # entry_price, sl]. These ARE the windows - not the trades, and not any
-        # per-bar reconstruction. 179 of them for the champion, each unique.
-        htf_windows = [
-            {"startTime": int(iv[0]), "endTime": int(iv[1]),
-             "isLong": int(iv[2]) == 1,
-             "entryPrice": float(iv[3]), "slPrice": float(iv[4])}
-            for iv in nested.get("intervals", [])
-            if len(iv) >= 5
-        ]
     elif version == "unified":
         # THE SHIPPING BOOK, and the only dropdown entry that is the same object
         # the registry pins. champion_multi_sw10_leg in experiment_registry.py:
@@ -1471,6 +1459,29 @@ def btc_backtest(
             fine=fine,
             entry_selection=entry_selection,
         )
+
+    # HTF window boundaries for the chart overlay. Collected here, AFTER the
+    # version dispatch above, because `nested` is only bound once a standalone
+    # book has run - reading it earlier raises UnboundLocalError.
+    #
+    # These are the engine's own intervals [start, end, dir, entry_price, sl].
+    # They ARE the windows - not reconstructed from trades. 179 for the
+    # champion, all unique.
+    #
+    # Only REPLACES the list for a standalone book. The nested htf_ltf path
+    # above already built one from merged_intervals in the entry_ts/exit_ts/dir
+    # shape; assigning [] unconditionally here would have silently emptied it
+    # for every htf_ltf="15m" book.
+    if version in STANDALONE_HTF_LTF_VERSIONS:
+        htf_windows = [
+            {"startTime": int(iv[0]), "endTime": int(iv[1]),
+             "isLong": int(iv[2]) == 1,
+             "entryPrice": float(iv[3]), "slPrice": float(iv[4])}
+            for iv in nested.get("intervals", [])
+            if len(iv) >= 5
+        ]
+
+    htf_windows = locals().get("htf_windows", [])
 
     # cost model: round-trip fees (% notional, both sides) + slippage points,
     # expressed in R against each trade's own risk -> honest NET R stats.
