@@ -77,6 +77,22 @@ def _oos_args():
 
 
 
+def _is_args_legchain():
+    """IS on the LEG swing chain (min_bars_1h=10) - the shipping books chain."""
+    (c15, f15), (c1h, f1h) = load_candles()
+    return (c1h, tc._compute_swings(f1h, "continuous", min_bars=10),
+            c15, tc._compute_swings(f15, "continuous", min_bars=50),
+            [])
+
+
+def _oos_args_legchain():
+    c15o, f15o = load_unseen("15m")
+    c1ho, f1ho = load_unseen("1h")
+    return (c1ho, tc._compute_swings(f1ho, "continuous", min_bars=10),
+            c15o, tc._compute_swings(f15o, "continuous", min_bars=50),
+            [])
+
+
 def v18_params():
     # HARNESS BUG 2026-10-01, found because arm A's own pin did not hold.
     # test_v18_causal_integrity.py:28 does get_v18_params THEN .update(V18_ENGINE).
@@ -131,8 +147,9 @@ def run_v19(args, params):
     return [t for t in r["ltf_trades"] if t.get("outcome") != "open"]
 
 
-ARMS = (("A", "v18", "v18"), ("B", "v19", "leg"),
-        ("C", "v18", "leg"), ("D", "v19", "v18"))
+ARMS = (("A", "v18", "v18", "v18chain"), ("B", "v19", "leg", "v18chain"),
+        ("C", "v18", "leg", "v18chain"), ("D", "v19", "v18", "v18chain"),
+        ("E", "v19", "leg", "legchain"),  ("F", "v18", "v18", "legchain"))
 
 def main():
     d = get_data()
@@ -161,15 +178,20 @@ def main():
     print()
 
     got = {}
-    for tag, eng, pk in ARMS:
+    for tag, eng, pk, chain in ARMS:
         print("-" * 94)
-        print("  ARM %s   %s @ %s params" % (tag, eng, pk))
+        print("  ARM %s   %s @ %s params, %s" % (tag, eng, pk, chain))
         for scope in ("is", "oos"):
-            args = is_args if scope == "is" else oos_args
+            if chain == "legchain":
+                args = _is_args_legchain() if scope == "is" else _oos_args_legchain()
+            else:
+                args = is_args if scope == "is" else oos_args
             tr = (run_v18(args, P[pk], fine=(pk != "v18"))
                   if eng == "v18" else run_v19(args, P[pk]))
             n, net = len(tr), net_r(tr)
             got[(tag, scope)] = (n, net)
+            print("    %-4s %5d trades  net %+.1fR" % (scope.upper(), n, net))
+        print()
 
     print("=" * 94)
     print("  VERDICT")
@@ -180,8 +202,13 @@ def main():
     ok_b = abs(b_n - 499) <= 2
     print("  A  v18 @ v18 params = %4d trades   pin 352   %s" % (a_n, "HOLDS" if ok_a else "MOVED"))
     print("  B  v19 @ leg params = %4d trades   pin 499   %s" % (b_n, "HOLDS" if ok_b else "MOVED"))
-    print("  C  v18 @ leg params = %4d trades" % got[("C", "is")][0])
-    print("  D  v19 @ v18 params = %4d trades" % got[("D", "is")][0])
+    print("  C  v18 @ leg params, v18chain = %4d" % got[("C", "is")][0])
+    print("  D  v19 @ v18 params, v18chain = %4d" % got[("D", "is")][0])
+    e_n = got[("E", "is")][0]
+    f_n = got[("F", "is")][0]
+    print("  E  v19 @ leg params, LEGCHAIN  = %4d   pin 499   %s"
+          % (e_n, "HOLDS" if abs(e_n - 499) <= 2 else "MOVED"))
+    print("  F  v18 @ v18 params, LEGCHAIN  = %4d" % f_n)
     print("")
     print("  RESOLVED: both pins are valid. They were never comparable, because")
     print("  they differ in the SWING CHAIN before they differ in any parameter.")
