@@ -62,7 +62,18 @@ _g = _gvp(INSTRUMENT)
 # Identity gate (structural, D3 2026-09-20): the patched engine with ALL flags
 # off must reproduce the shipped engine's trade list EXACTLY, else nothing
 # downstream is trustworthy. Basis: coarse 15m fills + chop 61.8 (the craze
-# identity basis — this is what test_experiments_craze.main() asserts, 340t/+225.3).
+# identity basis — this is what test_experiments_craze.main() asserts).
+    #
+    # ANCHOR RE-DERIVED 2026-10-01, was 340t / +225.3R. That was an ORIGIN-era
+    # figure, so C16's pivot-rule flip moved this basis out from under the gate and
+    # every harness calling it printed a warning. exp_identity_gate_drift.py
+    # settles the cause rather than assuming it, running the shipped engine on
+    # this same basis under both rules:
+    #     pivot_rule="origin"  -> 340t / +225.3R   matches the old anchor exactly
+    #     pivot_rule="leg"     -> 339t / +237.5R
+    #     rule delta           ->  -1 trade, +12.3R
+    # Same signature C16 left everywhere else: one trade, R moved, count nearly
+    # identical. If this gate ever warns again, the cause is NOT the pivot rule.
 # Runs once per process, before any experiment. Cheap (two sims, data cached).
 # ---------------------------------------------------------------------------
 _id_gate = {"done": False}
@@ -85,8 +96,8 @@ def identity_gate(data=None, sim=None):
     g_patch = sum(float(t["r_multiple"]) for t in tp_)
     print("[identity-gate] shipped %dt/%+.1fR vs patched-off %dt/%+.1fR -> %s" %
           (len(ts_), g_ship, len(tp_), g_patch, "IDENTICAL" if ok else "DIVERGED"))
-    if abs(len(ts_) - 340) > 1 or abs(g_ship - 225.3) > 0.5:
-        print("[identity-gate] WARNING: shipped anchor drifted from 340t/+225.3R "
+    if abs(len(ts_) - 339) > 1 or abs(g_ship - 237.5) > 0.5:
+        print("[identity-gate] WARNING: shipped anchor drifted from 339t/+237.5R "
               "(coarse+chop61.8) — reference pins may be stale")
     if not ok:
         raise SystemExit("IDENTITY GATE FAILED — patched engine no longer matches shipped; "

@@ -1,5 +1,47 @@
 # P5 — the base-book null. M is larger than the book.
 
+> **UPDATED 2026-10-01. M has been re-derived on the shipping book. Read the
+> second table before using any number from this file.**
+>
+> C16 changed the shipped SL pivot from the origin pivot to the leg pivot, so the
+> book this null was computed on is no longer the book that trades. The original
+> result is kept below as history; it is correct for the origin book and wrong as
+> the programme's bar.
+>
+> Method is unchanged and cannot drift: same block bootstrap, block 20 trades,
+> 10,000 draws, seed 20260928, and `exp_base_null_leg.py` imports P5's own
+> `block_bootstrap_nets` rather than reimplementing it.
+>
+> | era | **origin (superseded)** | **leg (current bar)** |
+> |---|---|---|
+> | IS | 500t / +325.8R / **M 479.9R** | 499t / +239.1R / **M 381.7R** |
+> | OOS | 279t / +70.1R / **M 193.4R** | 280t / +72.8R / **M 205.5R** |
+>
+> The leg-book null in full:
+>
+> | era | observed | null mean | null p05\|net\| | **M (p95)** | percentile |
+> |---|---|---|---|---|---|
+> | IS | **+239.1R** | +218.6R | 62.3R | **381.7R** | 41.0th |
+> | OOS | **+72.8R** | +77.1R | 6.9R | **205.5R** | 50.3rd |
+>
+> **The shipping book is indistinguishable from a reshuffle of itself in both eras,
+> exactly as the origin book was.** Origin 46th and 48th percentile; leg 41st and
+> 50.3rd. C16 moved the in-sample net by 86.7R and changed this picture not at all,
+> because the question being tested is whether the trade ORDER carries information.
+> It does not. The null is wide because the tail is wide.
+>
+> One correction to the direction argument made when this was re-derived. The leg
+> null was expected to be uniformly narrower, on the reasoning that fewer trades
+> and smaller per-trade R imply a tighter band. That holds in sample, where M
+> falls from 479.9R to 381.7R, and fails out of sample, where it widens from
+> 193.4R to 205.5R because the leg slice carries 280 trades rather than 279. It was
+> reasoning presented as a result and should have been labelled as such.
+>
+> **Every dNet result must clear M before it counts** — and from 2026-10-01 that
+> means M = 381.7R IS and M = 205.5R OOS.
+>
+> The original P5 run follows, unchanged, for the record.
+
 `exp_base_null.py`. Pins reproduced first, both exact (IS 500t/+325.8R
 NET, OOS 279t/+70.1R NET). Published as run, whatever it says.
 
