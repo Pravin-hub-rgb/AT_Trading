@@ -26,7 +26,7 @@
 > so every caller that did not pass a rule silently moved from origin to leg.
 > Pins from before it need re-anchoring. Known red: `exp_closeout_battery`
 > (PIN_LB30, +1 trade / −6.9R), `exp_issue10_window` (imports `persistence`, not
-> tracked). `exp_sweep_static.py` lists them.
+> tracked). `backtest/checks/exp_sweep_static.py` lists them (all checks are indexed in `backtest/checks/README.md`).
 >
 > **3. `BTCUSDT` is Binance spot and is not traded here.** Everything is Bybit perp,
 > symbol `BTCUSDT_BYBIT`. The backtest endpoint defaults to spot, so a request

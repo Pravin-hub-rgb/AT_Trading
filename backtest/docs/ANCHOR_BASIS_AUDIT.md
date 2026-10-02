@@ -364,7 +364,7 @@ cap=5 → 5 — which would be impossible if the count were off by a bar.
 
 Re-derived on the leg book by P117: cap5 dNet **+1.1R IS / +0.0R OOS**,
 reproducing this grid. The OOS arm is partly vacuous: max concurrency on the leg
-OOS book is 5, so cap=6 cannot bind there. Sweep script: `exp_engine_knobs.py`.
+OOS book is 5, so cap=6 cannot bind there. Sweep script: `backtest/checks/exp_engine_knobs.py`.
 
 **Idea E regime-transition skip** (`exp_regime_skip.py`): exp_regime_skip =
 |Δchop over 4×15m| > 5..20. Best both-sides: champion >10 +30.9/+2.3 NET;

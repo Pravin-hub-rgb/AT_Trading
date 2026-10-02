@@ -5,7 +5,7 @@ cannot tell you whether a harness passes or fails, because running them takes
 minutes each. An earlier version of this file claimed it could, which was
 overstated. For an actual pass/fail signal use:
 
-    python backtest/tests/exp_verify_route.py     API end to end, ~3 min
+    python backtest/checks/exp_verify_route.py   API end to end, ~3 min
     python backtest/tests/exp_v19_matrix.py       both pivot rules, ~4 min
 
 What it does catch, in seconds:
@@ -220,4 +220,4 @@ out = "\n".join(report)
 print(out)
 print()
 print(f"  NOTE: items 1-4 are static only. {len(stale)} harness(es) need an actual run.")
-(ROOT / "backtest/tests/_sweep.txt").write_text(out, encoding="utf-8")
+(ROOT / "backtest/checks/_sweep.txt").write_text(out, encoding="utf-8")

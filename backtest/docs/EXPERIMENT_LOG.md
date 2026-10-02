@@ -694,7 +694,7 @@ heavily inspected and is not untouched validation for anything new (Rule 4).
     2026-10-01: the cap logic and its numbers are sound, but the knob exists only
     as a test_experiments_craze.py source patch — zero occurrences under
     backend/src. It is not an engine feature and nothing can enable it. See
-    ANCHOR_BASIS_AUDIT.md:346 and exp_engine_knobs.py.**
+    ANCHOR_BASIS_AUDIT.md:346 and backtest/checks/exp_engine_knobs.py.**
 - Idea E regime-transition skip — MARGINAL/MIXED; no universal improvement (legacy 30R screen not met)
 - Stack flip×regime — configuration-specific (best swingpause +38.7/+27.7; legacy 30R screen not met)
 - EMA path-true — NOT RUN (§3h entry-quality budget closed)

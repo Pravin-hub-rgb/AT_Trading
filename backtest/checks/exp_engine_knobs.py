@@ -31,7 +31,7 @@ before citing any row.
 
 Read-only, no engine runs, seconds.
 
-  python -u backtest/tests/exp_engine_knobs.py
+  python -u backtest/checks/exp_engine_knobs.py
 """
 import re
 import sys
