@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backtest"))
 sys.path.insert(0, str(ROOT / "backend"))
 
-ENGINE = ROOT / "backend/src/btc/engines/htf_ltf/v18_streak_halt.py"
+ENGINE = ROOT / "backend/src/btc/engines/htf_ltf/unified.py"
 SRC = ENGINE.read_text(encoding="utf-8")
 
 from replay_harness import load_candles, INSTRUMENT
@@ -82,7 +82,10 @@ def _build_module():
                   '    b3_mode="close",\n'
                   '    exp18_arm=None,\n'
                   '    exp22_conv=False,\n'
-                  '    exp_persist=0,\n'
+    # PHASE 2, 2026-10-01: exp_persist injection REMOVED. unified.py promotes it
+    # from v19s hardcoded PERSIST=7 to a real signature parameter, so injecting it
+    # produced a duplicate argument. Third and last duplicate found this way:
+    # exp_causal_sl, exp_persist, and (via t_c13) the causal-SL branch itself.
                   '    exp_mltf=False,\n'
                   '    exp27_mode=None,\n'
                   '    exp31_lb=0,\n'
@@ -152,7 +155,10 @@ def _build_module():
     '    exp_bias_momentum_min=0.0,\n'
     '    exp_min_swing_ratio=0.0,\n'
     '    exp_wick_reject=0.0,\n'
-    '    exp_causal_sl=0,\n'
+    # PHASE 2, 2026-10-01: exp_causal_sl injection REMOVED. unified.py carries
+    # it natively (it came from v19s body), so injecting it produced a duplicate
+    # argument in the generated signature - SyntaxError at build time.
+    # This is the kwarg half of what t_c13 removed: the branch half.
     '    exp_trail_max_dist=0.0,\n'
     '    exp_trail_delay_r=0.0,\n'
     '    exp_trail_delay_prevbar=0,\n'
@@ -975,9 +981,11 @@ def _build_module():
         '                if _event_day in exp_event_dates:\n'
         '                    _exp_event_stats["blocked"] += 1\n'
         '                    continue\n' + t9)
-    t10 = '        if busy_until and bar_time <= busy_until: continue\n'
+    # Phase 2, 2026-10-01: ENGINE now points at unified.py, which restores the
+    # v18 gate under a parameter. The bare v18 form no longer exists verbatim.
+    t10 = '        if max_positions > 0 and busy_until and bar_time <= busy_until: continue\n'
     assert s.count(t10) == 1, "busy gate"
-    s = s.replace(t10, '        if (not exp_mltf) and busy_until and bar_time <= busy_until:\n            if exp_shadow_book: _sr["reason"]="busy"\n            continue\n')
+    s = s.replace(t10, '        if max_positions > 0 and (not exp_mltf) and busy_until and bar_time <= busy_until:\n            if exp_shadow_book: _sr["reason"]="busy"\n            continue\n')
     # 4a) retest fill bookkeeping (per-sim-call counters, returned to harness)
     t_bu = '    busy_until=""  # datetime string — timestamp-based, not index\n'
     assert s.count(t_bu) == 1, "busy_until init"
@@ -993,8 +1001,15 @@ def _build_module():
     #    Scan bars i+1..i+b3_k for a trigger (close/wick beyond the signal bar's
     #    extreme). Dead if SL pivot touched first. Entry relocates to trigger bar;
     #    busy + cooldown re-checked there (causal â€” known at trigger close).
-    t6 = '        sl_pivot=sig["swing_start_px"]\n'
-    assert s.count(t6) == 1, "sl pivot"
+    # PHASE 2, 2026-10-01: this bare assertion is deleted along with t_c13.
+    # It checked that v18s single-line sl_pivot=sig["swing_start_px"] still
+    # existed, and nothing followed it - it had no replacement. In unified.py the
+    # assignment lives inside the exp_causal_sl if/else with different spacing, so
+    # the anchor text no longer matches while the behaviour it guarded is now
+    # enforced by the engine itself rather than by a patch.
+    #
+    # Kept as a note rather than silently dropped: an assertion with no action
+    # behind it is a tripwire, not a check.
     # 5) Partial exit (exp_partial_r): 50% sold at level, remaining runs half-weighted.
     #    Per-trade state init (after sl0/best init, before trail events)
     t_pe_init = '        sl0=sl; sl_cur=sl; best=entry\n'
@@ -1183,7 +1198,18 @@ def _build_module():
                    '            "opposite_override": _exp_opposite,\n'
                   '            "profit_stage_fired": int(_profit_stage_fired),\n'
                   '        })')
-    s = s.replace(t6, t6 +
+    # PHASE 2: t6 was REUSED for two anchors. In v18 the B3-relocation block
+    # hung off the 8-space `sl_pivot=sig["swing_start_px"]` line while the
+    # earlier collect-signs anchor was the 4-space ltf_sigs line. Deleting the
+    # second definition left t6 pointing at collect-signs, so this replace
+    # appended an 8-space block after a 4-space line and produced an
+    # IndentationError in the generated module. Caught by build_module.
+    #
+    # Unified has the same assignment inside the exp_causal_sl else-branch,
+    # at 12 spaces. t_b3 anchors on that exact line instead.
+    t_b3 = '            sl_pivot = sig["swing_start_px"]\n'
+    assert s.count(t_b3) == 1, "b3 reloc anchor"
+    s = s.replace(t_b3, t_b3 +
                   '        if b3_k>0:\n'
                   '            _lv=float(candles_ltf[i]["high"]) if direction==1 else float(candles_ltf[i]["low"])\n'
                   '            _sig_close=float(candles_ltf[i]["close"])\n'
@@ -1244,16 +1270,22 @@ def _build_module():
                   '        if _ch2 > _chi: _chi = _ch2\n'
                   '        _csl[_ci] = _clo\n'
                   '        _csh[_ci] = _chi\n')
-    t_c13 = '        sl_pivot=sig["swing_start_px"]\n'
-    assert s.count(t_c13) == 1, "sl pivot anchor"
-    s = s.replace(t_c13,
-                  '        if exp_causal_sl:\n'
-                  '            if direction == 1:\n'
-                  '                sl_pivot = _csl[i]\n'
-                  '            else:\n'
-                  '                sl_pivot = _csh[i]\n'
-                  '        else:\n'
-                  '            sl_pivot = sig["swing_start_px"]\n')
+    # C16 PHASE 2, 2026-10-01: t_c13 DELETED, not rewritten.
+    #
+    # This block injected the exp_causal_sl branch into v18s single-line
+    #     sl_pivot=sig["swing_start_px"]
+    # That branch now EXISTS NATIVELY in unified.py - it came from v19s body.
+    # unified.py is v19s code, so the C16 fix that once had to be threaded through
+    # a source patch is now in the engine.
+    #
+    # This is the payoff of Phase 2 and it is not cosmetic: one of the three sites
+    # C16 had to be applied to is now unnecessary. v19s own comment said as much -
+    # "It was never applied to the engine; this flag is that fix, finally in the
+    # engine." Phase 2 is what makes that sentence true.
+    #
+    # The _csl/_csh running-extreme computation just above is still injected,
+    # because unified.py computes it unconditionally - see Phase 4.
+
     t_c13b = '    exp_risk_max_pct=0.0,\n'
     # NOTE: exp_causal_sl and exp_trail_max_dist kwargs already added in the
     # kwargs block above — this replace would create duplicates. No-op.

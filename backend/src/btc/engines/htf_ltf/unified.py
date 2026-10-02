@@ -704,10 +704,11 @@ def simulate_htf_ltf_streak_halt(
             if _ch2>_chi: _chi=_ch2
             _csl[_ci]=_clo; _csh[_ci]=_chi
     # v19: no position limit - busy_until stays empty and is never armed
-    busy_until=""  # UNIFIED: restored from v18:572. v19 deleted this initialisation
-                        # when it removed the gate, but kept the assignment at the
-                        # end of the loop - so re-adding the gate without this line
-                        # raises UnboundLocalError on the first entry.
+    # UNIFIED: v19 deleted this initialisation along with the gate but kept
+    # the assignment at the end of the loop, so restoring the gate without
+    # this line raises UnboundLocalError on the first entry. The line itself is
+    # kept VERBATIM from v18:572 because test_experiments_craze.py anchors on it.
+    busy_until=""  # datetime string — timestamp-based, not index
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
@@ -720,6 +721,12 @@ def simulate_htf_ltf_streak_halt(
         # UNIFIED: the position gate, restored from v18:582 under a parameter.
         # max_positions=1 reproduces v18 exactly; 0 is v19 (unlimited).
         if max_positions > 0 and busy_until and bar_time <= busy_until: continue
+        # CRAZE ANCHOR: the line above is the v18 gate restored verbatim, so
+        # test_experiments_craze.py's t10 anchor (which rewrites the bare
+        # `if busy_until and bar_time <= busy_until: continue` form) does not
+        # match. That anchor exists to inject exp_mltf gating. It is the ONE
+        # anchor of 62 that Phase 2 had to touch, and it is touched here rather
+        # than in the harness so the harness stays engine-agnostic.
         if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue
         # Streak halt (causal): after N consecutive losses BOOKED, skip NEXT entry
         if halt_skip_next:

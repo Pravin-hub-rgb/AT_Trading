@@ -113,6 +113,17 @@ def leg_params():
     return {**BP, **EXPERIMENTS["champion_multi_sw10_leg"]["params"]}
 
 
+def run_craze(args, name):
+    """The SHIPPING path: raw engine source text-patched by test_experiments_craze.
+    This is what every experiment in the repo actually runs."""
+    params = {**BP, **EXPERIMENTS["champion_multi_sw10_leg"]["params"]}
+    m = tc.build_module()
+    tr = [t for t in m(args[0], args[1], args[2], args[3],
+                       fine_ltf=args[4], **params)["ltf_trades"]
+          if t.get("outcome") != "open"]
+    return tr
+
+
 def run_unified(args, params, max_positions, exp_persist, exp_causal_sl):
     """The ONE gate for Phase 1: unified.py must reproduce both pins exactly."""
     from btc.engines.htf_ltf.unified import simulate_htf_ltf_streak_halt as u
@@ -163,7 +174,8 @@ def run_v19(args, params):
 ARMS = (("A", "v18", "v18", "v18chain"), ("B", "v19", "leg", "v18chain"),
         ("C", "v18", "leg", "v18chain"), ("D", "v19", "v18", "v18chain"),
         ("E", "v19", "leg", "legchain"),  ("F", "v18", "v18", "legchain"),
-        ("U1", "u", "v18", "v18chain"), ("U2", "u", "leg", "legchain"))
+        ("U1", "u", "v18", "v18chain"), ("U2", "u", "leg", "legchain"),
+        ("S1", "s", "leg", "legchain"))
 
 def main():
     d = get_data()
@@ -200,7 +212,9 @@ def main():
                 args = _is_args_legchain() if scope == "is" else _oos_args_legchain()
             else:
                 args = is_args if scope == "is" else oos_args
-            if eng == "u":
+            if eng == "s":
+                tr = run_craze(args, pk)
+            elif eng == "u":
                 mp, ep, ec = ((1, 0, 0) if pk == "v18" else (0, 7, 0))
                 tr = run_unified(args, P[pk], mp, ep, ec)
             elif eng == "v18":
@@ -237,6 +251,10 @@ def main():
           % (u1, "PASS" if abs(u1 - 352) <= 0 else "*** FAIL ***"))
     print("  U2 unified max_positions=0 @ leg params, legchain -> %d / %d OOS  (need 499 / 280)  %s"
           % (u2, u2o, "PASS" if (u2 == 499 and u2o == 280) else "*** FAIL ***"))
+    s1 = got[("S1", "is")][0]
+    s1o = got[("S1", "oos")][0]
+    print("  S1 craze-patched SHIPPING PATH -> %d / %d OOS  (need 499 / 280)  %s"
+          % (s1, s1o, "PASS" if (s1 == 499 and s1o == 280) else "*** FAIL ***"))
     print("")
     print("  RESOLVED: both pins are valid. They were never comparable, because")
     print("  they differ in the SWING CHAIN before they differ in any parameter.")
