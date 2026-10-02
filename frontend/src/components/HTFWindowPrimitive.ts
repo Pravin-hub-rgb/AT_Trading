@@ -29,10 +29,10 @@ interface WindowItem {
   yTp3: number | null;
 }
 
-const LONG_OPEN = "rgba(59, 130, 246, 1.0)";
+const LONG_OPEN = "rgba(34, 197, 94, 1.0)";
 const LONG_CLOSE = "rgba(255, 255, 255, 0.9)";
 const SHORT_OPEN = "rgba(239, 68, 68, 1.0)";
-const SHORT_CLOSE = "rgba(252, 165, 165, 1.0)";
+const SHORT_CLOSE = "rgba(59, 130, 246, 0.9)";
 const R_SL = "rgba(239, 68, 68, 0.7)";
 const R_TP_LONG = "rgba(59, 130, 246, 0.7)";
 const R_TP_SHORT = "rgba(239, 68, 68, 0.7)";
@@ -64,10 +64,24 @@ export class HTFWindowPrimitive implements IPanePrimitive<Time> {
   private chart: IChartApi | null = null;
   private items: WindowItem[] = [];
 
+  /**
+   * Draw the per-window entry/SL/TP horizontal lines in addition to the window
+   * boundaries. Off by default.
+   *
+   * With ~179 windows that is four extra horizontal lines each - 700+ lines
+   * competing with the candles. The start/end boundaries are the signal; the R
+   * levels are detail that belongs on inspection, not on every glance. Pass
+   * true to the constructor to get them.
+   */
+  private readonly showRLevels: boolean;
+
   constructor(
     private series: ISeriesApi<"Candlestick">,
     private windows: HTFWindowRect[],
-  ) {}
+    showRLevels = false,
+  ) {
+    this.showRLevels = showRLevels;
+  }
 
   private recalc() {
     const chart = this.chart;
@@ -178,6 +192,7 @@ class HTFWindowPaneRenderer implements IPrimitivePaneRenderer {
         }
 
         // R-level horizontal lines — distinct colors regardless of direction
+        if (!this.showRLevels) return;
         if (it.yEntry == null || it.ySl == null) continue;
         const x1 = Math.max(0, it.openX);
         const x2 = it.closeX != null ? Math.min(W, it.closeX) : W;

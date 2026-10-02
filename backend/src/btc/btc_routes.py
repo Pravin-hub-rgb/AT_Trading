@@ -1329,6 +1329,18 @@ def btc_backtest(
             min_body_atr=0.5,
             max_wick_atr=1.0,
         )
+    htf_windows = []
+    if version in STANDALONE_HTF_LTF_VERSIONS:
+        # The engine returns its own HTF windows as intervals: [start, end, dir,
+        # entry_price, sl]. These ARE the windows - not the trades, and not any
+        # per-bar reconstruction. 179 of them for the champion, each unique.
+        htf_windows = [
+            {"startTime": int(iv[0]), "endTime": int(iv[1]),
+             "isLong": int(iv[2]) == 1,
+             "entryPrice": float(iv[3]), "slPrice": float(iv[4])}
+            for iv in nested.get("intervals", [])
+            if len(iv) >= 5
+        ]
     elif version == "unified":
         # THE SHIPPING BOOK, and the only dropdown entry that is the same object
         # the registry pins. champion_multi_sw10_leg in experiment_registry.py:
@@ -1471,6 +1483,9 @@ def btc_backtest(
         "swings_used": len(swings),
         "trades": trades,
         "stats": stats,
+        # HTF window boundaries for the chart overlay: start line, end line,
+        # direction. Empty for books that are not standalone HTF-LTF engines.
+        "htf_windows": htf_windows,
     }
 
 

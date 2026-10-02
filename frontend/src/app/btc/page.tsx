@@ -719,6 +719,25 @@ export default function BtcPage() {
     [btData, snapTs, finerChart, ltfBarSec],
   );
 
+  // HTF window boundaries -> HTFWindowPrimitive. One entry per window, straight
+  // from the engine's intervals, snapped with the same snapTs the trade boxes
+  // use so a boundary and a box edge land on the same candle. Raw timestamps
+  // here would sit up to one bar away from every box and read as a data bug.
+  //
+  // Time-based, not bar-based: a line at 12:45 is at 12:45 on the 1h, 15m and
+  // 5m chart alike. Only the candles between the lines change.
+  const htfWindowRects = useMemo(() => {
+    const w = btData?.htf_windows;
+    if (!w || w.length === 0) return undefined;
+    return w.map((x) => ({
+      startTime: snapTs(x.startTime),
+      endTime: snapTs(x.endTime),
+      isLong: x.isLong,
+      entryPrice: x.entryPrice,
+      slPrice: x.slPrice,
+    }));
+  }, [btData, snapTs]);
+
   const groupBtn = (
     active: boolean,
     onClick: () => void,
@@ -967,6 +986,7 @@ export default function BtcPage() {
         wholeDaySwings={swings}
         swingMarkers
         trades={tradesOn ? tradeBoxes : undefined}
+        htfWindows={htfWindowRects}
         algoFlowLine={flowOn && flowSegs.length > 0 ? flowSegs : null}
         height={720}
       />

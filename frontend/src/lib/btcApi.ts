@@ -273,7 +273,19 @@ export interface BtcBacktestResponse {
   htf_stats?: BtcTradeStats;
   /** 1h book net + 15m book net (both after costs) */
   combined_net?: number;
-}
+    /**
+     * HTF window boundaries for the chart overlay: one entry per window, in
+     * wall-clock time, so a line lands at the same place on every timeframe.
+     * Present only for the standalone HTF-LTF books; empty otherwise.
+     */
+    htf_windows?: {
+      startTime: number;
+      endTime: number;
+      isLong: boolean;
+      entryPrice?: number;
+      slPrice?: number;
+    }[];
+  }
 
 export type HtfLtfMode = "off" | "5m" | "15m";
 /** HTF-LTF engine version — v3 = Extension Stop, v5 = + ATR-buffered SL, v6 = + N-bar structure SL, v11 = Conditional HTF (all-positive 539 +172.5), v12+cd20 = FROZEN BASELINE (414 trades, +265.3R gross, all 4 years positive), v13 = cooldown 30, v15 = recover 1R, v16 = entry distance (rejected), v17 = ATR filter (rejected), v18 = streak halt at 5L (+331.1R net, NEW BEST), v19 = 1.5R window (rejected, see fix/research_v19.md). */
