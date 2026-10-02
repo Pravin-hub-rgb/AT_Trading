@@ -226,7 +226,7 @@ EXPERIMENTS = {
                     "pivot_rule": "leg"},
         "swing": "sw10",
         "pins": {"n": 499, "net": 239.12, "dd": 15.36, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
-        "oos": {"n": 279, "net": 70.15},
+        "oos": {"n": 280, "net": 72.8},  # MEASURED. NOT the origin book's 279 / +70.15.
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
