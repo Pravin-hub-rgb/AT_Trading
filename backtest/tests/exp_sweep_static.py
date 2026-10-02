@@ -157,6 +157,59 @@ for n, why in red:
 if missing:
     report.append(f"      WARNING: listed but absent: {', '.join(missing)}")
 
+# ------------------------------------------- 6. C16-era anchors still quoted
+# C16's signature, seen five times now: one stop rule changed the trade count by
+# exactly +/-1 and moved R by more than a few percent.
+#
+#   v18 re-anchor      +1 trade   +0.2pt WR
+#   closeout_battery   +1 trade   -6.9R
+#   champion book      -1 trade   +86.7R
+#   identity gate      -1 trade   +12.3R
+#   champion OOS       +1 trade   +2.7R
+#
+# Every value below is an anchor measured before 203e207 flipped the pivot
+# default. A file still quoting one without a retraction marker is either wrong,
+# or was silently re-baselined by C16 without anyone saying so. This does not know
+# which. It only knows what is still un-marked, which is the half that has been
+# costing time.
+C16_ANCHORS = {
+    "325.78": "champion origin IS net",
+    "314.52": "champion causal IS net",
+    "247.96": "champion C17-only IS net",
+    "255.20": "champion C17-only IS net, upper",
+    "225.3":  "identity gate origin coarse gross",
+    "193.4":  "base-book null M, OOS, origin",
+    "479.9":  "base-book null M, IS, origin",
+    "170.5":  "closeout_battery PIN_LB30 net",
+}
+MARKERS = ("RETRACT", "SUPERSEDED", "superseded", "RESOLVED", "KNOWN RED",
+           "STALE", "stale", "VOID", "void", "RE-DERIVED", "re-derived",
+           "origin-era", "ORIGIN-era", "origin book", "pre-C16", "PRE-C16",
+           "not shippable", "withdrawn", "WITHDRAWN")
+DOCS = ROOT / "backtest/docs"
+stale_docs = []
+for val, what in C16_ANCHORS.items():
+    hits = []
+    for f in list(DOCS.glob("*.md")) + sorted((ROOT / "backtest/tests").glob("*.py")):
+        if f.name == SELF:
+            continue
+        try:
+            t = f.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+        if val not in t:
+            continue
+        if not any(m in t for m in MARKERS):
+            hits.append(f.name)
+    if hits:
+        stale_docs.append((val, what, hits))
+report.append(f"[6] C16 anchors : {len(stale_docs)} value(s) quoted with no "
+              f"retraction marker anywhere in the file")
+for val, what, hits in stale_docs:
+    report.append(f"      {val:8s} ({what}) -> {len(hits)} unmarked file(s)")
+    for h in hits[:8]:
+        report.append(f"          {h}")
+
 out = "\n".join(report)
 print(out)
 print()
