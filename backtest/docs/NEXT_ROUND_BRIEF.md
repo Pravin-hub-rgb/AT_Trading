@@ -34,6 +34,41 @@
 > gap and a fake +5.2-point win-rate jump on v18 during the C16 audit. Both were
 > retracted.
 
+> ## DECLINE EDGE-FRAMED PROPOSALS AT THE PROPOSAL STAGE
+>
+> This is a governance rule, not a finding, and it is here so the next round does
+> not spend itself rediscovering an arithmetic fact.
+>
+> On the shipping book (`champion_multi_sw10_leg`), from `BASE_BOOK_NULL.md`:
+>
+> | | value |
+> |---|---|
+> | book's own net | **+239.1R** IS, **+72.8R** OOS |
+> | M, the p95 of a reshuffle of that book | **381.7R** IS, **205.5R** OOS |
+> | where the book sits in that null | **41.0th** pct IS, **50.3rd** pct OOS |
+>
+> **A filter can only remove trades. To clear M it would have to beat the 95th
+> percentile of noise using a subset of the trades that produced the 50th. No
+> threshold on any cohort does that.** It is not that the bar is high — the signal
+> is inside the band, so no subset of it can get outside.
+>
+> Consequence for the queue: this programme is no longer looking for filters. It is
+> establishing what the strategy is and whether it runs in production. Work is
+> therefore framed as causality or deployability, not edge:
+>
+> - **Causality** — does a feature carry information at entry time at all
+>   (`bars_to_wend`, P115). Independent of M, because M cannot be answered for
+>   this kind of question.
+> - **Deployability** — does the book survive the live bot's single-slot
+>   constraint that the backtest's six-deep concurrency never tested (P117).
+>   Also independent of M: "does it run at all in production" is prior to "is it
+>   a good trade".
+> - **Census** — how many signals never become trades and why (P116). After P117,
+>   since the slot count decides how much contention exists.
+>
+> **A proposal framed as "X improves the book" should be declined when it is
+> proposed, not run and rejected at 10% of M twenty minutes later.**
+
 > ## What M = 193.4R is, and is not
 >
 > Two values, both from `BASE_BOOK_NULL.md` (P5). Move-block bootstrap, block 20
