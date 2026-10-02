@@ -168,6 +168,36 @@ Candidates not yet eliminated: the `t_b3` re-anchor (the B3-relocation block now
 hangs off unified's 12-space assignment inside the `exp_causal_sl` else-branch
 rather than v18's single 8-space line), and the `_csl`/`_csh` running-extreme
 computation, which is native in unified and injected in the old path and may not
+### Resolved — the generated-module diff, exhaustive
+
+Captured both generated modules by patching `Path.write_text` (the original
+module's `_bigstack_run` indirection and the temp file being unlinked on the way
+out defeated two earlier attempts). **1861 of 1872 lines identical.** Every
+remaining difference:
+
+| in patched v18 (A) | in patched unified (B) | effect |
+|---|---|---|
+| `exp_persist=0,` | `exp_persist=7,` native, plus the `if PERSIST>0: … use=_rg_s` block | **BEHAVIOURAL — the only one** |
+| `exp_causal_sl=0,` | `exp_causal_sl=0,` (moved) | neutral |
+| four C16 comment lines | absent | cosmetic |
+| `if (not exp_mltf) and busy_until …` | `if max_positions > 0 and (not exp_mltf) and busy_until …` | neutral — both skip with `exp_mltf=True` |
+| `if direction == 1: sl_pivot = _csl[i]` / `else: _csh[i]` | one-line ternary | neutral |
+
+**The injected `_csl` block is byte-identical in both and is unconditional in
+both** — it is not guarded by `exp_causal_sl` in either, and `sl_pivot` only
+reads it inside that guard, which is false. Verified, not assumed.
+
+**So there is exactly one behavioural difference, and it is not a bug in the
+refactor: `exp_persist=7` was in the registry the whole time and was being
+accepted and discarded, because v18 has no hysteresis code to accept it into.
+Phase 2 repointed the harness at `unified.py`, which does, so the 7 now lands.**
+
+The 502/294 arm that looked like a second cause is not one. It passes
+`exp_persist=0` explicitly, but `PERSIST` is read from module-level `_rg_s`/`_rg_c`
+state that the previous build left behind, so that arm is not a clean isolation.
+It was a third measurement of the same single difference.
+
+## Verdict on Phase 0
 be computing the same thing.
 
 **This is a hypothesis list, not a diagnosis.** The next step is a diff of the two
