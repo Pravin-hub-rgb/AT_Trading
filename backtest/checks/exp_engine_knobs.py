@@ -72,9 +72,18 @@ def main():
     print("  engines scanned: %d files under backend/src" % len(files))
     print("  exp_* referenced by test_experiments_craze.py: %d" % len(injected))
     print()
+    print("  UNIT WARNING. These are DISTINCT exp_* TOKENS, not knobs. A knob is a")
+    print("  declared injected kwarg; this figure also counts call-site references and")
+    print("  the exp_* locals craze.py defines internally. The earlier phrase")
+    print("  'harness-only knobs' was a MISLABEL - it should read harness-only TOKENS.")
+    print("  The counts remain valid as an existence sweep: a token with zero engine")
+    print("  hits cannot be an engine feature. Only the label was wrong.")
+    print("  See AGENT_COORDINATION.md, 'State the unit of every count', for the")
+    print("  unresolved 54-vs-107 question over the true knob count.")
+    print()
 
     print("-" * 88)
-    print("  BACKED BY AN ENGINE  (%d)  -- at least one hit under backend/src" % len(backed))
+    print("  BACKED BY AN ENGINE  (%d tokens)  -- at least one hit under backend/src" % len(backed))
     print("-" * 88)
     for k in backed:
         print("    %-32s %s" % (k, ", ".join(p.split("/")[-1]
@@ -84,7 +93,7 @@ def main():
 
     print()
     print("-" * 88)
-    print("  HARNESS-ONLY  (%d)  -- ZERO engine hits, injected by craze.py" % len(fiction))
+    print("  HARNESS-ONLY  (%d tokens)  -- ZERO engine hits, referenced by craze.py" % len(fiction))
     print("-" * 88)
     print("    %-32s %s" % ("KNOB", "injected at"))
     for k in fiction:

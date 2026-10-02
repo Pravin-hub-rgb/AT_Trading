@@ -13,11 +13,30 @@ Created 2026-09-26 after two agents converged on one working tree.
   of them. They were invented, and survived because nothing checks a summary.
   A wrong number is bad, but a wrong number has a value you can look up; credit
   has nothing to check against, so it propagates without ever meeting resistance.
-- **State the unit of every count.** *(added 2026-10-01)* "105 knobs", "52 knobs"
-  and "149 knobs" were all used in one session for the same population. They
-  count different things — distinct `exp_*` tokens in `craze.py` versus kwargs
-  declared for injection — and none of them was wrong *once the unit was named*.
-  Unnamed counts are unfalsifiable.
+- **State the unit of every count.** *(added 2026-10-01)* Three numbers were used
+  in one session for what reads as the same population — 105, 52, 149 — and none
+  of them was wrong *once the unit was named*. The measurements:
+
+  | unit | value | measured by |
+  |---|---|---|
+  | distinct `exp_*` tokens, word-boundary regex | 107 | `exp_sweep_static` author |
+  | distinct `exp_*` tokens, loose regex (incl. `_exp_*` fragments) | 149 | peer reviewer |
+  | declared injected kwargs | **disputed: 54 vs 107** | see below |
+
+  **The dispute is unresolved and is left that way deliberately.** The two token
+  counts differ by exactly 42, and all 42 are `_`-prefixed local variables
+  (`_exp_5m_sorted=sorted(...)`) that a `\b` regex cannot match because `_` is a
+  word character. Both numbers are correct for their own regex.
+
+  Neither is a count of *knobs*. A knob is a declared kwarg, and both 107 and 149
+  include call-site references. The 105 figure that appeared in several commits
+  is `107 − 2`, subtracting engine-present knobs from a token population — a valid
+  subtraction on the wrong population.
+
+  The reviewer's 54 is the only figure measured against declared signature
+  defaults rather than tokens. **It could not be independently reproduced**, so it
+  is recorded as disputed rather than adopted. Resolve it by opening
+  `test_experiments_craze.py` and counting the signature block by hand.
 - **Never `git add -A`.** Stage explicit paths only; use `git add -- <paths>`.
 - **Check `.git/index.lock`** before every `git add` / `git commit`.
 - One logical slice per commit. Verify with `git diff --cached --name-only`
