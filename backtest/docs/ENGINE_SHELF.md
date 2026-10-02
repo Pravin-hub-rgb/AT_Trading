@@ -67,7 +67,8 @@ why gray beat skip by ~67R, and it is the reason a plain composition study
 **Consequence for the research programme:** the highest-value next experiments
 are the ones that change *slot policy*, not entry predicates. `exp_max_concurrent`
 and the window caps are the natural candidates. They are not "5m/2h predicates",
-so Rule 17 does not block them.
+so Rule 17 does not block them. *(Harness-injected knobs, not engine features —
+see the status table above.)*
 
 ## What this does NOT say
 

@@ -343,7 +343,7 @@ kings. Best both-sides = noise (champion 0.70 +0/+4.4 NET; swingpause 0.55
 **exp_max_concurrent** (`exp_maxconc_path.py`): position cap. ~~in-engine~~ — **it is not in any engine.**
 cap=5 multi = **FREE** (champion/king dIS +1.1 / dOOS 0.0). cap=4 near-free
 (champion OOS −6.2). cap=2/3 cost real R. single = no-op.
-**ALIVE deployment enabler** — path-true validates offline audit 3c; use
+**~~ALIVE deployment enabler~~ — path-true validates offline audit 3c; use
 cap=5 for live risk. **← RETRACTED 2026-10-01, WRONG. See the correction below.**
 
 **CORRECTION 2026-10-01.** This recommended a code path that does not exist.
