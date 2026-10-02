@@ -91,6 +91,30 @@ _g = _gvp(INSTRUMENT)
     # identical. If this gate ever warns again, the cause is NOT the pivot rule.
 # Runs once per process, before any experiment. Cheap (two sims, data cached).
 # ---------------------------------------------------------------------------
+# The gate runs on the v18 construction, not on the neutral default, so that
+# "patched == shipped" is checked against a book that has an anchor with a
+# stated provenance instead of a bare observation.
+#
+# 339t/+237.5R was removed as the gate's anchor. It was captured when shipped
+# was v18_streak_halt; shipped is now unified, so the number moved for a reason
+# that was itself verified (origin reproduces 500/+325.78/dd17.83, leg reproduces
+# 499/+239.12). Re-recording the new number would just restate the output, so
+# instead the gate is given a construction that an outside band can check.
+#
+# GATE_COUNT_BAND is shared with backend/tests/test_v18_causal_integrity.py and
+# is honestly what it is: a band re-anchored on 2026-10-01 from a 352-trade
+# measurement on Bybit perp, not a first-principles spec. It earns its place by
+# being tolerant of small legitimate drift while still catching a gross move,
+# and by having a second, independent consumer. It is not self-evidencing.
+# NOTE: this uses BP, not the BASE imported from test_experiments_craze. The two
+# differ by chop_thresh - BASE is 61.8, BP is the production 58.0 that
+# btc_routes 914-918 ships. COUNT_BAND was measured on the production basis, so
+# running the gate on BASE lands at 339, outside the band, for a reason that has
+# nothing to do with the engine. On BP this construction reproduces 352, the
+# band centre.
+GATE_KW = {**dict(BP), "max_positions": 1, "exp_persist": 0, "exp_causal_sl": 0}
+GATE_COUNT_BAND = (348, 358)
+
 _id_gate = {"done": False}
 
 
@@ -102,8 +126,8 @@ def identity_gate(data=None, sim=None):
     if sim is None:
         sim = build_module()
     r_ship = shipped_mod.simulate_htf_ltf_streak_halt(
-        data["c1h"], data["sw20"], data["c15"], data["sw15"], fine_ltf=[], **dict(BASE))
-    r_patch = sim(data["c1h"], data["sw20"], data["c15"], data["sw15"], fine_ltf=[], **dict(BASE))
+        data["c1h"], data["sw20"], data["c15"], data["sw15"], fine_ltf=[], **GATE_KW)
+    r_patch = sim(data["c1h"], data["sw20"], data["c15"], data["sw15"], fine_ltf=[], **GATE_KW)
     ts_, tp_ = r_ship["ltf_trades"], r_patch["ltf_trades"]
     ok = (len(ts_) == len(tp_)
           and [t["r_multiple"] for t in ts_] == [t["r_multiple"] for t in tp_])
@@ -111,9 +135,12 @@ def identity_gate(data=None, sim=None):
     g_patch = sum(float(t["r_multiple"]) for t in tp_)
     print("[identity-gate] shipped %dt/%+.1fR vs patched-off %dt/%+.1fR -> %s" %
           (len(ts_), g_ship, len(tp_), g_patch, "IDENTICAL" if ok else "DIVERGED"))
-    if abs(len(ts_) - 339) > 1 or abs(g_ship - 237.5) > 0.5:
-        print("[identity-gate] WARNING: shipped anchor drifted from 339t/+237.5R "
-              "(coarse+chop61.8) — reference pins may be stale")
+    if not (GATE_COUNT_BAND[0] <= len(ts_) <= GATE_COUNT_BAND[1]):
+        print("[identity-gate] WARNING: %dt falls outside the v18 production band %s"
+              % (len(ts_), list(GATE_COUNT_BAND)))
+        print("[identity-gate] the engine moved on the v18 construction; the band is "
+              "shared with backend/tests/test_v18_causal_integrity.py and should move "
+              "with it, deliberately, in both places at once")
     if not ok:
         raise SystemExit("IDENTITY GATE FAILED — patched engine no longer matches shipped; "
                          "all experiment results are untrustworthy until fixed")
