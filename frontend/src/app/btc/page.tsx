@@ -209,6 +209,18 @@ export default function BtcPage() {
   // sw15 at 50 and sw10 at 10 on two different timeframes. Initialised from the
   // default book, not from a literal 14 - 14 is what the API defaults to and it
   // is not any book's value.
+  // bookTf is the book's EXECUTION timeframe and is not the same thing as `tf`,
+  // which is only which candles the chart is drawing.
+  //
+  // They were conflated: the backtest was called with the chart's tf, so moving
+  // the chart to 1h silently re-ran the backtest as 1h-bias -> 1h-execution.
+  // That is a different strategy, not a different zoom: 179 HTF windows become
+  // 47, and the 500-trade champion becomes something else entirely. The user
+  // changed only the view and got a different book with no indication.
+  //
+  // The chart may be drawn at any timeframe. The strategy runs at the one the
+  // book declares.
+  const [bookTf, setBookTf] = useState<BtcTf>(boot.config.tf as BtcTf);
   const [bookSizing, setBookSizing] = useState({
     minBars: boot.config.ltf_min_bars,
     htfTf: boot.config.htf_tf as BtcTf,
@@ -273,6 +285,7 @@ export default function BtcPage() {
       setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
       setSymbol(b.config.symbol as BtcSymbol);
       setTf(b.config.tf as BtcTf);
+      setBookTf(b.config.tf as BtcTf);
       // Per-leg sizing is part of the book. It was missing from this branch, so
       // a reload with a saved book restored the version but left minBars at its
       // 14 literal - which produced 1052 trades instead of 500.
@@ -293,6 +306,7 @@ export default function BtcPage() {
       setHtfLtfVer(b.config.htf_ltf_ver as HtfLtfVer);
       setSymbol(b.config.symbol as BtcSymbol);
       setTf(b.config.tf as BtcTf);
+      setBookTf(b.config.tf as BtcTf);
       setBookSizing({
         minBars: b.config.ltf_min_bars,
         htfTf: b.config.htf_tf as BtcTf,
@@ -512,11 +526,11 @@ export default function BtcPage() {
     if (!hydrated || !tradesOn) return;
     let cancelled = false;
     setBtError(null);
-    const cacheKey = `${tf}|${mode}|${limit}|${JSON.stringify(btParams)}|${version}|${htfLtf}|${htfLtfVer}|${symbol}`;
+    const cacheKey = `${tf}~${bookTf}|${mode}|${limit}|${JSON.stringify(btParams)}|${version}|${htfLtf}|${htfLtfVer}|${symbol}`;
     // instant restore from cache on tab switch — no loading flash
     const cached = getCachedBacktest(cacheKey);
     if (cached && !cancelled) setBtData(cached);
-    getBtcBacktest(tf, mode, limit, { ...btParams, minBars: bookSizing.minBars }, version, htfLtf, htfLtfVer, symbol, bookSizing.htfTf, bookSizing.htfMinBars)
+    getBtcBacktest(bookTf, mode, limit, { ...btParams, minBars: bookSizing.minBars }, version, htfLtf, htfLtfVer, symbol, bookSizing.htfTf, bookSizing.htfMinBars)
       .then((res) => {
         if (!cancelled) {
           setBtData(res);
@@ -532,7 +546,7 @@ export default function BtcPage() {
     return () => {
       cancelled = true;
     };
-  }, [tradesOn, hydrated, tf, mode, limit, btParams, version, htfLtf, htfLtfVer, symbol, bookSizing]);
+  }, [tradesOn, hydrated, tf, bookTf, mode, limit, btParams, version, htfLtf, htfLtfVer, symbol, bookSizing]);
 
   // "konsi best hai" — every master preset on the SAME window, ranked by NET R
   useEffect(() => {
