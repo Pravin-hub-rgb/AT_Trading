@@ -57,12 +57,12 @@
 # Evidence: P112 (rebuild + trade audit), P113 (ratchet clamp rejected),
 # P114 (flag attribution). Harness: exp_v19_2x2.py.
 
-"""v11_conditional_htf — HTF conditional break: when to use B2 vs Flip vs Decisive.
+"""v11_conditional_htf â€” HTF conditional break: when to use B2 vs Flip vs Decisive.
 HTF 1h: if regime is chop (HIGH chop >61.8 or LOW vol) -> use Decisive (B2|FLIP) window, else use Flip window.
 LTF 15m: decisive MB50 0.25ATR ext-stop1.5 MB50 trail, same as v5.
 Costs 0.05%+2pt, 1m fine, stream.
 Separate engine, never disturb v5.
-Ref: permutation fix choppy 2023 decisive×decisive +37.7 vs flip×decisive -7.2 (+44.9R) but total 122 vs 168 (-46R) fix/permutation_htf_ltf.md:7, Exp4 LOW vol 309 +133 vs HIGH vol 17 +12, MED chop 366 +130 vs HIGH chop 24 +9.9 fix/v5:172, firstswing chop v4_chop.py:26, ATR% 15m.
+Ref: permutation fix choppy 2023 decisiveÃ—decisive +37.7 vs flipÃ—decisive -7.2 (+44.9R) but total 122 vs 168 (-46R) fix/permutation_htf_ltf.md:7, Exp4 LOW vol 309 +133 vs HIGH vol 17 +12, MED chop 366 +130 vs HIGH chop 24 +9.9 fix/v5:172, firstswing chop v4_chop.py:26, ATR% 15m.
 """
 from __future__ import annotations
 import bisect
@@ -113,7 +113,7 @@ def _atr_pct_15m(candles_15m):
     return pct
 
 def _hmm_regime_1h(candles_1h, train_frac=0.45, n_iter=40, seed=0):
-    """Idea A — 2-state Gaussian HMM on 1h log-returns. Range vs trend router.
+    """Idea A â€” 2-state Gaussian HMM on 1h log-returns. Range vs trend router.
 
     Train Baum-Welch on the first train_frac only (rest never seen by params),
     then causal forward-filter the WHOLE series with frozen params. numpy only.
@@ -207,7 +207,7 @@ def _hmm_regime_1h(candles_1h, train_frac=0.45, n_iter=40, seed=0):
 
 
 def _garch_regime_1h(candles_1h, train_frac=0.45, a=0.1, b=0.85, lb=96):
-    """Idea F — GARCH(1,1) predicted-vol regime score on 1h closes.
+    """Idea F â€” GARCH(1,1) predicted-vol regime score on 1h closes.
 
     omega/alpha/beta frozen from train prefix (path-true); recursive
     sigma2 filter over full series. Returns range-score 0..100 per 1h bar
@@ -270,7 +270,7 @@ def simulate_htf_ltf_streak_halt(
     soft_width=4.0,  # Idea D: half-width of soft band (0 = hard switch)
     cooldown_bars=0,
     max_consecutive_losses=0,  # 0 = no halt, N = halt after N consecutive losses
-    htf_rr=3.0,  # HTF (1h) fixed R target — controls when window closes
+    htf_rr=3.0,  # HTF (1h) fixed R target â€” controls when window closes
     window_end="exit",  # "exit" = HTF trade exit (SL/target/16-day cap) [default, +331R];
                         # "r_touch" = first touch of ext_stop_r 1.5R [tested: +200.6R, -130R vs exit]
     # v19: SL pivot source. 0 = RETROACTIVE (default, what the champion was measured
@@ -280,12 +280,11 @@ def simulate_htf_ltf_streak_halt(
     # applied to the engine; this flag is that fix, finally in the engine.
     # 1 = CAUSAL: sl_pivot = the running extreme since the last CONFIRMED swing, keyed
     # on confirmed_at_idx, so the value is knowable at the entry bar.
-      # UNIFIED: LTF stop source. 1 = running extreme up to and INCLUDING the
-      # entry bar (current causal rule). Controlled separately from pivot_rule,
-      # which selects the HTF side's pivot; the two halves were never linked.
-      #   exp_ltf_no_entry=1  -> same exclusion as pivot_rule="leg_no_entry"
-      #                          so one book can apply "exclude the entry
-      #                          candle" to BOTH legs rather than HTF only.
+      # UNIFIED: LTF stop source, controlled separately from pivot_rule, which
+      # selects the HTF side's pivot. The two halves were never linked.
+      #   0  running extreme up to and INCLUDING the entry bar (current rule)
+      #   1  the same, minus the entry bar - so a book can exclude the entry
+      #      candle on BOTH legs, matching pivot_rule="leg_no_entry" on the HTF.
       # Default 0: identical to every measurement pinned before this existed.
       exp_ltf_no_entry=0,
       exp_causal_sl=0,
@@ -330,8 +329,8 @@ def simulate_htf_ltf_streak_halt(
     htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     def to_intervals(trades):
-        # Window end: "exit" = HTF trade exit (SL/target/cap) — default, best R.
-        # "r_touch" = first touch of 1.5R — tested 2026-09-08: +200.6R vs +331R (removed 88 trades avg +1.48R). Rejected.
+        # Window end: "exit" = HTF trade exit (SL/target/cap) â€” default, best R.
+        # "r_touch" = first touch of 1.5R â€” tested 2026-09-08: +200.6R vs +331R (removed 88 trades avg +1.48R). Rejected.
         # "bias_flip" = next OPPOSITE-direction HTF entry (bias-based, not trade-based).
         # Tested 2026-09-08: 485t +368.6R vs exit 330t +331.1R (+37.5R) BUT added cohort t=1.21 (not significant),
         # 2026 worse (+55.1/DD7.3 vs +69.0/DD5.0), 2023 flat R at 85% more churn. net/DD 38.6 vs 34.0. NOT adopted.
@@ -422,17 +421,17 @@ def simulate_htf_ltf_streak_halt(
     import datetime as _dts
     for i,ts in enumerate(candle_ts_ltf):
         _hr=_dts.datetime.utcfromtimestamp(ts).hour
-        if _hr<7: session_per_ltf[i]=0      # Asia: range→B2
-        elif _hr<14: session_per_ltf[i]=1   # London: trend→FLIP
-        elif _hr<21: session_per_ltf[i]=2   # NY: trend→FLIP
-        else: session_per_ltf[i]=3           # Night: range→B2
+        if _hr<7: session_per_ltf[i]=0      # Asia: rangeâ†’B2
+        elif _hr<14: session_per_ltf[i]=1   # London: trendâ†’FLIP
+        elif _hr<21: session_per_ltf[i]=2   # NY: trendâ†’FLIP
+        else: session_per_ltf[i]=3           # Night: rangeâ†’B2
     # --- Rolling entropy of 1h returns (Idea L) --- computed per HTF bar, mapped to LTF
     import math
     _ret_1h=[]
     for i in range(1,len(candles_htf)):
         p0=float(candles_htf[i-1]["close"]); p1=float(candles_htf[i]["close"])
         _ret_1h.append((p1-p0)/p0 if p0>0 else 0.0)
-    _ent_lb=96  # 4 days — compute per HTF bar (not per LTF bar) for speed
+    _ent_lb=96  # 4 days â€” compute per HTF bar (not per LTF bar) for speed
     _ent_htf=[50.0]*len(candles_htf)
     _nhtf=len(candles_htf)
     for i in range(_ent_lb, len(_ret_1h)):
@@ -460,7 +459,7 @@ def simulate_htf_ltf_streak_halt(
             entropy_per_ltf[i]=_ent_htf[j]
     # --- Rolling fractal dimension of 1h candles (Idea K) --- computed per HTF bar, mapped
     fd_per_ltf=[50.0]*len(candles_ltf)
-    _fd_lb=48  # 2 days — reduced for speed
+    _fd_lb=48  # 2 days â€” reduced for speed
     _fd_htf=[50.0]*len(candles_htf)
     for i in range(_fd_lb, len(candles_htf)):
         _cl=[float(candles_htf[k]["close"]) for k in range(i-_fd_lb, i+1)]
@@ -550,35 +549,35 @@ def simulate_htf_ltf_streak_halt(
         elif mode=="union":
             use="union"
         elif mode=="session":
-            # Idea H: Asia(0,3)=range→B2, London/NY(1,2)=trend→flip
+            # Idea H: Asia(0,3)=rangeâ†’B2, London/NY(1,2)=trendâ†’flip
             _s=session_per_ltf[bar]
             use="b2" if _s in (0,3) else "flip"
         elif mode=="session_flip":
-            # Inverted: Asia→flip, London/NY→B2
+            # Inverted: Asiaâ†’flip, London/NYâ†’B2
             _s=session_per_ltf[bar]
             use="flip" if _s in (0,3) else "b2"
         elif mode=="entropy":
-            # Idea L: low entropy=range→B2, high entropy=trend→flip
+            # Idea L: low entropy=rangeâ†’B2, high entropy=trendâ†’flip
             use="b2" if entropy_per_ltf[bar]<chop_thresh else "flip"
         elif mode=="entropy_inv":
             use="flip" if entropy_per_ltf[bar]<chop_thresh else "b2"
         elif mode=="fd":
-            # Idea K: low FD=trend→flip, high FD=range→B2
+            # Idea K: low FD=trendâ†’flip, high FD=rangeâ†’B2
             use="b2" if fd_per_ltf[bar]>chop_thresh else "flip"
         elif mode=="fd_inv":
             use="flip" if fd_per_ltf[bar]>chop_thresh else "b2"
         elif mode=="hmm":
-            # Idea A: P(range)*100 > chop_thresh → range → B2 else flip
+            # Idea A: P(range)*100 > chop_thresh â†’ range â†’ B2 else flip
             use="b2" if hmm_per_ltf[bar]>chop_thresh else "flip"
         elif mode=="hmm_inv":
             use="flip" if hmm_per_ltf[bar]>chop_thresh else "b2"
         elif mode=="garch":
-            # Idea F: low predicted vol (high range-score) → B2, high vol → flip
+            # Idea F: low predicted vol (high range-score) â†’ B2, high vol â†’ flip
             use="b2" if garch_per_ltf[bar]>chop_thresh else "flip"
         elif mode=="garch_inv":
             use="flip" if garch_per_ltf[bar]>chop_thresh else "b2"
         elif mode=="soft_chop":
-            # Idea D: soft band around chop_thresh — uncertain zone uses both windows
+            # Idea D: soft band around chop_thresh â€” uncertain zone uses both windows
             _hw=max(float(soft_width),0.0)
             if ch>chop_thresh+_hw: use="b2"
             elif ch<chop_thresh-_hw: use="flip"
@@ -591,7 +590,7 @@ def simulate_htf_ltf_streak_halt(
             else: use="decisive" if ch>chop_thresh else "flip"
         elif mode=="soft_ensemble":
             # Idea D: blend chop + ATR% + entropy + FD into one range score (0-100),
-            # soft-route: high→B2, low→FLIP, band→decisive (both).
+            # soft-route: highâ†’B2, lowâ†’FLIP, bandâ†’decisive (both).
             _hw=max(float(soft_width),1e-6)
             def _ramp(x,thr,half=1.0):
                 if half<=0: return 1.0 if x>thr else 0.0
@@ -731,7 +730,7 @@ def simulate_htf_ltf_streak_halt(
     # the assignment at the end of the loop, so restoring the gate without
     # this line raises UnboundLocalError on the first entry. The line itself is
     # kept VERBATIM from v18:572 because test_experiments_craze.py anchors on it.
-    busy_until=""  # datetime string — timestamp-based, not index
+    busy_until=""  # datetime string â€” timestamp-based, not index
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
@@ -771,8 +770,11 @@ def simulate_htf_ltf_streak_halt(
         # SL pivot. RETRO = the swing's true origin (lookahead). CAUSAL = the running
         # extreme as of bar i (knowable in real time).
         if exp_causal_sl:
-            sl_pivot = _csl[_ci] if direction==1 else _csh[_ci]
+            # _ci must exist before it is read. Defining it after this line
+            # compiles fine and never runs when exp_causal_sl=0, which is why it
+            # reached a commit.
             _ci = i - 1 if (exp_ltf_no_entry and i > 0) else i
+            sl_pivot = _csl[_ci] if direction==1 else _csh[_ci]
         else:
             sl_pivot = sig["swing_start_px"]
         if direction==1:
@@ -788,7 +790,7 @@ def simulate_htf_ltf_streak_halt(
             if risk<0.0005*entry: continue
             target=entry-3.0*risk
         sl0=sl; sl_cur=sl; best=entry
-        # Trail events: timestamp-based (confirmed_at_time → position via store)
+        # Trail events: timestamp-based (confirmed_at_time â†’ position via store)
         want_dir = "up" if direction == 1 else "down"
         events = []
         for s in swings_ltf:
@@ -812,7 +814,7 @@ def simulate_htf_ltf_streak_halt(
                 if lo<best: best=lo
             if direction==1:
                 # D3 ordering fix 2026-09-20: the ratchet applies BEFORE the SL
-                # check — the stop is armed the instant the swing confirms (bar
+                # check â€” the stop is armed the instant the swing confirms (bar
                 # open), so this same bar is enforced against the new level.
                 while ev_idx+1 < len(events) and events[ev_idx+1][0] <= j:
                     ev_idx+=1
@@ -851,7 +853,7 @@ def simulate_htf_ltf_streak_halt(
                 else:
                     if lo<best_f: best_f=lo
                 if direction==1:
-                    # D3 ordering fix 2026-09-20: ratchet BEFORE the SL check —
+                    # D3 ordering fix 2026-09-20: ratchet BEFORE the SL check â€”
                     # the stop is armed at the activation instant (bar open), so
                     # this same 1m bar is enforced against the new level. Combined
                     # with the unconditional ratchet this is the full live-faithful
@@ -941,7 +943,7 @@ def simulate_htf_ltf_streak_halt(
             last_loss_bar = exit_idx
     # For each LTF trade, find its parent HTF interval.
     # Pass 1: flip intervals (direction-matched). Pass 2: b2 intervals as-is
-    # for trades not covered by a flip. No trimming — b2 fills the gaps.
+    # for trades not covered by a flip. No trimming â€” b2 fills the gaps.
     _parent_ivs = {}
     _flip_starts = [s for s,_,_,_,_ in intervals_flip]
     _b2_starts = [s for s,_,_,_,_ in intervals_b2]
