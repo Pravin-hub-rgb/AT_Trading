@@ -1,4 +1,4 @@
-﻿"""Compatibility shim - the implementation moved, this name must not.
+"""Compatibility shim - the implementation moved, this name must not.
 
 v18_streak_halt.py and v19_champion.py were archived under _archive/ once
 unified.py was verified byte-identical to both on all three pivot rules. But

@@ -108,7 +108,15 @@ except Exception:
     simulate_unified = None  # type: ignore
     simulate_unified = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1"]
+# v11, v13, v15, v16, v17 and v18 were removed from this list. They were
+# never dispatched - the elif chain below has branches for v1, v3, v5 and v6
+# only - so selecting one silently returned the same fallback book as the
+# others. Eight version keys were serving one trade list while each name
+# claimed a different filter, and the registry pins quoted numbers for
+# them. A key that cannot do what its name says should not be selectable.
+# The engine modules still exist under engines/htf_ltf/ if any of those
+# books is wanted again; it needs a branch here first.
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
