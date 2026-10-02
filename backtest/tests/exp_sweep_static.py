@@ -17,6 +17,12 @@ What it does catch, in seconds:
   5. known red     - harnesses documented as failing, so silence is not mistaken
                      for a pass
 
+SCOPE LIMIT, stated so nobody trusts it further than it goes. Item 2 matches on
+  net-R anchors only. It cannot catch a stale claim that quotes an AUC or a trade
+  count, because those shapes never appear in C16_ANCHORS. INSIDE80_P95.md was
+  reported clean by this sweep while its headline "0.847 / separates" was dead -
+  the same blind spot as a check matching on the wrong shape, which is what the
+  `if PERP in t: continue` bug was. An honest scope beats an implied one.
 Run: python -u exp_sweep_static.py
 """
 import sys, os, re, py_compile
