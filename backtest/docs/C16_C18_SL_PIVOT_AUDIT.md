@@ -10,9 +10,28 @@ Date: 2026-10-01. Backtesting only.
 > switched from the origin pivot to the leg pivot without any caller asking. The
 > doc was invalidated by the commit written to implement it.
 >
-> Still true here: the origin pivot IS lookahead, and every code path that
-> explicitly asks for it (`pivot_rule="origin"`, the `v19_retro` dropdown book,
-> the `champion_multi_sw10` registry entry) still carries the bug by choice.
+> **SUPERSEDED 2026-10-02. The origin pivot is NOT lookahead.** Measured,
+> not argued: `backtest/tests/exp_origin_lookahead.py` rebuilds the swing chain
+> from candles truncated at each swing's own confirmation and compares
+> `seg.start_px`. Across the sample it is identical every time - 40 of 40, zero
+> cases where the future moved the price. So the origin stop was knowable at
+> the entry bar.
+>
+> Two independent measurements agree. The proposed `leg_no_entry` book, which
+> reads the leg extreme but excludes the entry bar, lands within 0.03R of the
+> origin book over 500 trades with 497 of 500 stops identical. And the two
+> books collapse to the same trade list the moment the SL rule is equalised:
+> RETRO engine with `pivot_rule="leg"` is trade-for-trade identical to the
+> causal engine, 499 / +355.72R, so origin is the only thing that differed.
+>
+> What C16 actually changed was the risk denominator, not knowledge of the
+> future. A structural pivot is a worse structure for a stop - a narrower one
+> gives a smaller denominator and inflates R - and that is worth fixing on its
+> own terms. But describing it as lookahead was wrong, and the number attached
+> to it, +445R against +355R, is not a phantom profit. Both books are real;
+> they place the stop differently. `pivot_rule="origin"` and the
+> `champion_multi_sw10` registry entry are a deliberate research baseline,
+> not a book carrying a bug.
 >
 > Now false: "the other 19 engines are broken" and "fixed in v19 only".
 > `64a061a` made `pivot_rule` an explicit parameter threaded through
