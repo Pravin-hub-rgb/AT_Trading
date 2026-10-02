@@ -1,0 +1,6 @@
+# The repo is LF. Editor tooling on Windows was rewriting docs to CRLF, which with
+# core.autocrlf=false produced whole-file diffs that buried the real edit: P95's
+# retraction was 6 lines and showed as 250. Normalise at the boundary so the class
+# of bug cannot recur silently.
+* text=auto eol=lf
+*.py  text diff=python
