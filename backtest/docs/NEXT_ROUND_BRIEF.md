@@ -36,26 +36,44 @@
 
 > ## What M = 193.4R is, and is not
 >
-> Read this before quoting any gate. `BOOTSTRAP_NULL_P63.md` is explicit:
+> Two values, both from `BASE_BOOK_NULL.md` (P5). Move-block bootstrap, block 20
+> trades, 10,000 draws, seed 20260928, resampling the champion's own trades with
+> the trade count restored:
 >
-> - **M is a PROPOSAL-DIFFERENCE null, not a shipping bar.** The gate is
->   `|dNet| > 193.4R` — how much a proposal must beat the book *by*. A book's own
->   total net is a level and is never compared against it. "The champion clears M
->   by +45.7R" is a category error and has been withdrawn.
-> - **M is calibrated for ~100-180 trades.** P63 line 39: a forward slice's own
->   null is TIGHTER than M at ~100 trades and WIDER at ~140-220. The champion has
->   499 trades, so its own null is not M either.
-> - **There is no pre-registered bar for the shipping book.** 499t / +239.12R IS
->   and 279t / +70.15R OOS are measurements, not pass/fail results.
+> | era | M (p95 of \|net\|) |
+> |---|---|
+> | IS | **479.9R** |
+> | OOS | **193.4R** |
 >
-> The honest statement of where this thread left the shipping book: it is the
-> causal leg rule, the pin reproduces through the API on Bybit, and no gate was
-> ever defined for it. Deriving one is open work.
+> - **M is the proposal-difference null and it is correctly derived.** A proposal's
+>   dNet is a difference over the same trade universe, so it is measured against the
+>   reshuffle variance of that universe. P5: "Every dNet result must clear M before
+>   it counts." That design is right.
+> - **M has two values and they are not interchangeable.** The 193.4R figure is the
+>   OOS one. Quoting it against an in-sample result is wrong, and this document did
+>   that once: it claimed the shipping book "clears M by +45.7R", which compared an
+>   OOS null against an IS total, and compared a level against a difference at the
+>   same time. Withdrawn.
+> - **What changed is M's value, not its validity.** M was computed on the origin
+>   book's R sequence. The shipping book has 499 trades and compressed risk
+>   denominators, so M must be re-derived with `exp_base_null.py` pointed at
+>   `champion_multi_sw10_leg`. Same harness, one run, not a new concept.
+> - **`BOOTSTRAP_NULL_P63.md` does not contradict this.** Its 100-180 table is about
+>   what bar a *forward slice* should be measured against, and it concludes M is the
+>   wrong bar for a slice because slice nulls scale with n. That is a statement
+>   about slices. It is not a statement about how M was derived, and reading it as
+>   one is what produced the withdrawn claim above.
 >
-> A note on re-derivation: the origin and leg books differ by one trade out of 500,
-> and a bootstrap null scales with roughly √n, so the movement in the null is on
-> the order of 0.2R. That is immaterial against a 45R scale. Whatever gate gets
-> defined, re-deriving it for n=499 is a formality, not a risk.
+> The direction argument holds and it is the reassuring one: fewer trades and
+> smaller per-trade R give a narrower null, so every candidate that failed M under
+> the origin book's null fails harder under the leg book's. **No re-adoption is
+> possible.**
+>
+> The finding P5 actually contains, which is larger than any of the above: **the
+> champion's own net sits at the 46th and 48th percentile of a reshuffle of
+> itself** — +325.8R observed against a +316.5R null mean, nine R apart on a
+> three-hundred-R book. The null is wide because the tail is wide. Whatever M
+> gets re-derived to, that result stands and it is the one to keep in view.
 
 > ## The fourth instance, and the rule this thread actually produced
 >
