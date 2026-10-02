@@ -5,13 +5,18 @@
 // complete config for its book, so picking one sets everything at once and there
 // is no second control that can get out of sync with it.
 //
-// The v19 entries differ by the initial stop source only, which the backend maps
-// to exp_causal_sl:
-//   RETRO  - stop at the swing's true origin, knowable only after the leg
-//            completes. Lookahead. This is what the champion always was.
-//   CAUSAL - stop at the running extreme as of the entry bar. Knowable live.
-// Both measured on the committed engine by backtest/tests/exp_v19_causal.py.
-// backtest/tests/exp_v19_tradediff.py lists every trade they disagree on.
+// There are two champion books and they differ in ONE thing - where the initial
+// stop goes. That one thing is the entire difference between 500 trades and 499.
+//
+//   RETRO  (origin stop) - stop at the swing's declared origin. That origin is
+//           only knowable once the whole leg has completed, so it is FUTURE DATA
+//           at the entry bar. Lookahead. 500t / +325.78R. Research baseline.
+//   CAUSAL (leg stop)    - stop at the swing's own extreme up to and including
+//           the entry bar. Knowable at that bar. 499t / +239.12R. This ships.
+//
+// They are the same signal generator, the same gates, the same fills. The two
+// books differ on 19 of ~500 trades. Measured 2026-10-02 on unified.py with
+// pivot_rule "origin" vs "leg"; both pins reproduce.
 //
 // VENUE. Every figure in this file, and every figure in the experiment registry,
 // is Bybit PERP (symbol BTCUSDT_BYBIT). "BTCUSDT" is Binance spot and is not
@@ -103,51 +108,22 @@ const V19 = {
 
 export const BOOK_OPTIONS: BookOption[] = [
   {
-    id: "unified",
-    label: "UNIFIED engine — the pinned shipping book — IS 499t +239.1R",
-    shortLabel: "UNIFIED",
+    id: "champion_causal",
+    label: "CHAMPION CAUSAL (leg stop) - ships - IS 499t +239.1R",
+    shortLabel: "CAUSAL",
     slMode: "causal",
-    hint: "champion_multi_sw10_leg on unified.py · the registry pin, the identity gate and the bias check all run here",
+    hint: "stop at the leg extreme up to the entry bar - knowable live - the pinned shipping book",
     measured: { isN: 499, isNet: 239.12, oosN: 280, oosNet: 72.8 },
     config: { ...V19, version: "unified" },
   },
   {
-    id: "v19_retro",
-    label: "CHAMPION RETRO (LOOKAHEAD — do not ship) — IS 500t +325.8R",
-    shortLabel: "RETRO ⚠",
-    hint: "stop at the swing's true origin · LOOKAHEAD · research baseline only",
+    id: "champion_retro",
+    label: "CHAMPION RETRO (origin stop) - LOOKAHEAD, research only - IS 500t +325.8R",
+    shortLabel: "RETRO",
+    slMode: "retro",
+    hint: "stop at the swing's true origin - only knowable after the leg completes - do not ship",
+    measured: { isN: 500, isNet: 325.78, oosN: 279, oosNet: 70.15 },
     config: { ...V19, version: "v19_champion" },
-  },
-  {
-    id: "v19_causal",
-    label: "CHAMPION LEG (shipping) — IS 499t +239.1R",
-    shortLabel: "CHAMPION LEG",
-    hint: "leg-extreme stop · live-placeable · same book as UNIFIED and C16",
-    measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
-    config: { ...V19, version: "v19_causal" },
-  },
-  {
-    id: "v19_retro_htf",
-    label: "CHAMPION RETRO + HTF-LTF (1h to 15m)",
-    hint: "RETRO stop with the 1h window gate on",
-    measured: { isN: 500, isNet: 325.78, oosN: 0, oosNet: 0 },
-    config: { ...V19, version: "v19_champion", htf_ltf: "15m" },
-  },
-  {
-    id: "v19_causal_htf",
-    label: "CHAMPION LEG + HTF-LTF (1h to 15m)",
-    shortLabel: "LEG+HTF",
-    slMode: "causal",
-    measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
-    config: { ...V19, version: "v19_causal", htf_ltf: "15m" },
-  },
-  {
-    id: "v19_c16",
-    label: "CHAMPION LEG via v19 engine — IS 499t +239.1R",
-    shortLabel: "LEG (v19)",
-    slMode: "causal",
-    measured: { isN: 499, isNet: 239.12, oosN: 0, oosNet: 0 },
-    config: { ...V19, version: "v19_c16" },
   },
   {
     id: "v1",
@@ -193,7 +169,9 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
 ];
 
-export const DEFAULT_BOOK = "v19_retro";
+// The shipping book. Was "v19_retro", which was the 500t origin-pivot book -
+// the wrong default to ship, and an id that no longer exists here.
+export const DEFAULT_BOOK = "champion_causal";
 
 export function getBook(id: string): BookOption {
   return BOOK_OPTIONS.find((b) => b.id === id) ?? BOOK_OPTIONS[0];
