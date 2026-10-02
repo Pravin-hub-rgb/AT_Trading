@@ -59,7 +59,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1672628400,
+      "window_end": 1673035320,
+      "target": 16924.94,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-01-03 11:00:00",
@@ -71,7 +76,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 37,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1672628400,
+      "window_end": 1673035320,
+      "target": 16878.3,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-01-04 01:15:00",
@@ -83,7 +93,12 @@
       "r_multiple": 4.672,
       "outcome": "trail",
       "bars_held": 169,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1672628400,
+      "window_end": 1673035320,
+      "target": 16719.16,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-01-06 21:00:00",
@@ -95,7 +110,12 @@
       "r_multiple": 2.473,
       "outcome": "trail",
       "bars_held": 312,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1672628400,
+      "window_end": 1673035320,
+      "target": 17246.31,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-01-16 06:30:00",
@@ -107,7 +127,12 @@
       "r_multiple": -0.247,
       "outcome": "trail",
       "bars_held": 251,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1673704800,
+      "window_end": 1674253200,
+      "target": 23932.17,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-01-20 08:00:00",
@@ -119,7 +144,12 @@
       "r_multiple": 2.164,
       "outcome": "trail",
       "bars_held": 262,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1673704800,
+      "window_end": 1674253200,
+      "target": 23197.35,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-01-20 23:45:00",
@@ -131,7 +161,12 @@
       "r_multiple": 29.125,
       "outcome": "trail",
       "bars_held": 199,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1673704800,
+      "window_end": 1674253200,
+      "target": 21438.18,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-01-23 02:15:00",
@@ -143,7 +178,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 72,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1674399600,
+      "window_end": 1674485580,
+      "target": 20633.03,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-01-25 20:00:00",
@@ -155,7 +195,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1674640800,
+      "window_end": 1674676800,
+      "target": 21811.83,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-01-29 16:30:00",
@@ -167,7 +212,12 @@
       "r_multiple": -0.103,
       "outcome": "trail",
       "bars_held": 88,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1674954000,
+      "window_end": 1675105800,
+      "target": 26179.8,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-02-05 21:15:00",
@@ -179,7 +229,12 @@
       "r_multiple": -0.197,
       "outcome": "trail",
       "bars_held": 200,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1675371600,
+      "window_end": 1676493240,
+      "target": 22768.63,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-02-09 08:30:00",
@@ -191,7 +246,12 @@
       "r_multiple": 1.369,
       "outcome": "trail",
       "bars_held": 267,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1675371600,
+      "window_end": 1676493240,
+      "target": 20867.68,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-02-10 21:15:00",
@@ -203,7 +263,12 @@
       "r_multiple": -0.461,
       "outcome": "trail",
       "bars_held": 120,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1675371600,
+      "window_end": 1676493240,
+      "target": 20716.09,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-02-13 21:45:00",
@@ -215,7 +280,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 27,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1675371600,
+      "window_end": 1676493240,
+      "target": 21015.56,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-02-14 16:30:00",
@@ -227,7 +297,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1675371600,
+      "window_end": 1676493240,
+      "target": 21610.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-02-17 19:45:00",
@@ -239,7 +314,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1676635200,
+      "window_end": 1676664540,
+      "target": 24273.76,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-02-21 20:45:00",
@@ -251,7 +331,12 @@
       "r_multiple": 0.42,
       "outcome": "trail",
       "bars_held": 140,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1676966400,
+      "window_end": 1677267360,
+      "target": 22765.35,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-02-24 19:00:00",
@@ -263,7 +348,12 @@
       "r_multiple": 0.942,
       "outcome": "trail",
       "bars_held": 212,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1676966400,
+      "window_end": 1677267360,
+      "target": 22369.85,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-02-27 19:00:00",
@@ -275,7 +365,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1677434400,
+      "window_end": 1677528300,
+      "target": 24972.2,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-03-02 16:15:00",
@@ -287,7 +382,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 33,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1677740400,
+      "window_end": 1677807120,
+      "target": 23055.38,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-03-03 06:45:00",
@@ -299,7 +399,12 @@
       "r_multiple": 0.628,
       "outcome": "trail",
       "bars_held": 192,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1677740400,
+      "window_end": 1677807120,
+      "target": 20704.53,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-03-09 13:30:00",
@@ -311,7 +416,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1678312800,
+      "window_end": 1678393320,
+      "target": 21209.56,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-03-14 16:45:00",
@@ -323,7 +433,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 39,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1678788000,
+      "window_end": 1678798020,
+      "target": 26175.9,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-03-16 12:15:00",
@@ -335,7 +450,12 @@
       "r_multiple": 5.537,
       "outcome": "trail",
       "bars_held": 228,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1678942800,
+      "window_end": 1678959780,
+      "target": 25911.35,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-03-21 15:00:00",
@@ -347,7 +467,12 @@
       "r_multiple": 0.023,
       "outcome": "trail",
       "bars_held": 132,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1679299200,
+      "window_end": 1679512320,
+      "target": 29791.56,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-03-22 17:45:00",
@@ -359,7 +484,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1679299200,
+      "window_end": 1679512320,
+      "target": 28829.66,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-03-31 02:00:00",
@@ -371,7 +501,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 43,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 29171.17,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-02 01:30:00",
@@ -383,7 +518,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 65,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 28776.12,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-04-04 04:30:00",
@@ -395,7 +535,12 @@
       "r_multiple": 0.168,
       "outcome": "trail",
       "bars_held": 160,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 29431.01,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-06 00:45:00",
@@ -407,7 +552,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 24,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 29144.16,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-06 21:00:00",
@@ -419,7 +569,12 @@
       "r_multiple": -0.736,
       "outcome": "trail",
       "bars_held": 253,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 29311.6,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-12 18:00:00",
@@ -431,7 +586,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 31643.99,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-04-13 14:00:00",
@@ -443,7 +603,12 @@
       "r_multiple": 0.759,
       "outcome": "trail",
       "bars_held": 123,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1680069600,
+      "window_end": 1681452000,
+      "target": 30441.33,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-04-16 06:30:00",
@@ -455,7 +620,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 72,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1681556400,
+      "window_end": 1681607520,
+      "target": 29141.23,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-17 05:45:00",
@@ -467,7 +637,12 @@
       "r_multiple": 0.924,
       "outcome": "trail",
       "bars_held": 117,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1681675200,
+      "window_end": 1681731240,
+      "target": 28539.52,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-21 22:45:00",
@@ -479,7 +654,12 @@
       "r_multiple": 1.196,
       "outcome": "trail",
       "bars_held": 86,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1682056800,
+      "window_end": 1682460180,
+      "target": 26672.89,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-04-22 04:00:00",
@@ -491,7 +671,12 @@
       "r_multiple": -0.993,
       "outcome": "trail",
       "bars_held": 65,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1682056800,
+      "window_end": 1682460180,
+      "target": 26686.75,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-04-25 13:00:00",
@@ -503,7 +688,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 41,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1682056800,
+      "window_end": 1682460180,
+      "target": 26261.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-05-12 08:00:00",
@@ -515,7 +705,12 @@
       "r_multiple": -0.558,
       "outcome": "trail",
       "bars_held": 161,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1683810000,
+      "window_end": 1683919500,
+      "target": 25986.95,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-05-26 07:15:00",
@@ -527,7 +722,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 47,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1684897200,
+      "window_end": 1685298120,
+      "target": 25940.85,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-05-27 19:15:00",
@@ -539,7 +739,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 19,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1684897200,
+      "window_end": 1685298120,
+      "target": 26033.19,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-05-31 16:30:00",
@@ -551,7 +756,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1685455200,
+      "window_end": 1685979120,
+      "target": 26696.86,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-01 22:00:00",
@@ -563,7 +773,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 1,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1685455200,
+      "window_end": 1685979120,
+      "target": 26432.01,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-03 06:45:00",
@@ -575,7 +790,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 58,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1685455200,
+      "window_end": 1685979120,
+      "target": 26671.27,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-04 17:00:00",
@@ -587,7 +807,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1685455200,
+      "window_end": 1685979120,
+      "target": 27045.95,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-09 18:45:00",
@@ -599,7 +824,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 57,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1686078000,
+      "window_end": 1686774660,
+      "target": 27909.08,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-11 02:00:00",
@@ -611,7 +841,12 @@
       "r_multiple": -0.464,
       "outcome": "trail",
       "bars_held": 119,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1686078000,
+      "window_end": 1686774660,
+      "target": 26544.78,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-13 05:45:00",
@@ -623,7 +858,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 62,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1686078000,
+      "window_end": 1686774660,
+      "target": 26667.03,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-06-14 18:15:00",
@@ -635,7 +875,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1686078000,
+      "window_end": 1686774660,
+      "target": 26560.95,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-06-18 02:15:00",
@@ -647,7 +892,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 16,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1686924000,
+      "window_end": 1687197900,
+      "target": 27010.15,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-06-27 13:15:00",
@@ -659,7 +909,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 95,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1687831200,
+      "window_end": 1687980600,
+      "target": 30907.92,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-07-05 20:45:00",
@@ -671,7 +926,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1688486400,
+      "window_end": 1688633820,
+      "target": 30131.27,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-07-08 22:00:00",
@@ -683,7 +943,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1688731200,
+      "window_end": 1689019620,
+      "target": 30635.23,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-07-10 17:15:00",
@@ -695,7 +960,12 @@
       "r_multiple": 0.714,
       "outcome": "trail",
       "bars_held": 209,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1688731200,
+      "window_end": 1689019620,
+      "target": 31087.95,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-07-12 17:45:00",
@@ -707,7 +977,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1689159600,
+      "window_end": 1689166320,
+      "target": 31207.89,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-07-19 23:00:00",
@@ -719,7 +994,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 22,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1689724800,
+      "window_end": 1689864600,
+      "target": 30474.56,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-07-21 07:30:00",
@@ -731,7 +1011,12 @@
       "r_multiple": -0.466,
       "outcome": "trail",
       "bars_held": 181,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1689886800,
+      "window_end": 1690067880,
+      "target": 30903.65,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-07-25 15:00:00",
@@ -743,7 +1028,12 @@
       "r_multiple": 0.555,
       "outcome": "trail",
       "bars_held": 214,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1690225200,
+      "window_end": 1690396920,
+      "target": 29701.32,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-07-26 19:30:00",
@@ -755,7 +1045,12 @@
       "r_multiple": 0.651,
       "outcome": "trail",
       "bars_held": 100,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1690225200,
+      "window_end": 1690396920,
+      "target": 29506.57,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-08-02 01:30:00",
@@ -767,7 +1062,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1690826400,
+      "window_end": 1690933800,
+      "target": 28952.83,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-08-10 19:00:00",
@@ -779,7 +1079,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1691442000,
+      "window_end": 1692230520,
+      "target": 29952.64,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-08-11 01:30:00",
@@ -791,7 +1096,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 27,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1691442000,
+      "window_end": 1692230520,
+      "target": 29792.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-08-13 14:15:00",
@@ -803,7 +1113,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1691442000,
+      "window_end": 1692230520,
+      "target": 29495.86,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-08-14 13:30:00",
@@ -815,7 +1130,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 140,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1691442000,
+      "window_end": 1692230520,
+      "target": 30221.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-09-01 17:45:00",
@@ -827,7 +1147,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1693533600,
+      "window_end": 1693576080,
+      "target": 26381.26,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-09-06 13:15:00",
@@ -839,7 +1164,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 40,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1693825200,
+      "window_end": 1694120400,
+      "target": 25333.85,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-09-10 03:45:00",
@@ -851,7 +1181,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1694271600,
+      "window_end": 1694319720,
+      "target": 26060.59,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-09-13 04:30:00",
@@ -863,7 +1198,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 62,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1694538000,
+      "window_end": 1694697660,
+      "target": 24581.92,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-09-19 20:45:00",
@@ -875,7 +1215,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 112,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1695114000,
+      "window_end": 1695294000,
+      "target": 28671.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-09-26 08:15:00",
@@ -887,7 +1232,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1695657600,
+      "window_end": 1695918360,
+      "target": 26703.05,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-09-27 15:00:00",
@@ -899,7 +1249,12 @@
       "r_multiple": 7.015,
       "outcome": "trail",
       "bars_held": 516,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1695657600,
+      "window_end": 1695918360,
+      "target": 26942.14,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-09-28 16:00:00",
@@ -911,7 +1266,12 @@
       "r_multiple": 5.654,
       "outcome": "trail",
       "bars_held": 416,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1695657600,
+      "window_end": 1695918360,
+      "target": 27213.9,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-02 18:45:00",
@@ -923,7 +1283,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28708.0,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-10-03 05:00:00",
@@ -935,7 +1300,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 60,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28333.42,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-04 05:00:00",
@@ -947,7 +1317,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28025.06,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-10-06 13:00:00",
@@ -959,7 +1334,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28023.4,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-06 20:30:00",
@@ -971,7 +1351,12 @@
       "r_multiple": 0.398,
       "outcome": "trail",
       "bars_held": 111,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28790.19,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-08 05:00:00",
@@ -983,7 +1368,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 41,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28244.68,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-09 23:15:00",
@@ -995,7 +1385,12 @@
       "r_multiple": -0.317,
       "outcome": "trail",
       "bars_held": 73,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 28585.69,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-11 02:30:00",
@@ -1007,7 +1402,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 22,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1696197600,
+      "window_end": 1696991640,
+      "target": 27746.75,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-13 14:00:00",
@@ -1019,7 +1419,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 16,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1697036400,
+      "window_end": 1697433360,
+      "target": 26493.84,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-10-15 17:30:00",
@@ -1031,7 +1436,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1697036400,
+      "window_end": 1697433360,
+      "target": 26587.71,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-16 04:15:00",
@@ -1043,7 +1453,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1697036400,
+      "window_end": 1697433360,
+      "target": 26576.65,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-10-23 04:00:00",
@@ -1055,7 +1470,12 @@
       "r_multiple": 16.656,
       "outcome": "trail",
       "bars_held": 1341,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1697907600,
+      "window_end": 1698100860,
+      "target": 30811.06,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-10-23 20:45:00",
@@ -1067,7 +1487,12 @@
       "r_multiple": 7.825,
       "outcome": "trail",
       "bars_held": 1274,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1697907600,
+      "window_end": 1698100860,
+      "target": 32304.99,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-10-24 00:15:00",
@@ -1079,7 +1504,12 @@
       "r_multiple": 5.955,
       "outcome": "trail",
       "bars_held": 1260,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1697907600,
+      "window_end": 1698100860,
+      "target": 32940.61,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-11-09 02:30:00",
@@ -1091,7 +1521,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 1,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1699470000,
+      "window_end": 1699538460,
+      "target": 36098.09,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-11-09 19:15:00",
@@ -1103,7 +1538,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1699470000,
+      "window_end": 1699538460,
+      "target": 39184.65,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-11-24 20:45:00",
@@ -1115,7 +1555,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 40397.45,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-11-28 06:00:00",
@@ -1127,7 +1572,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 37857.32,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-11-29 01:00:00",
@@ -1139,7 +1589,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 13,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 39622.75,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-11-30 23:45:00",
@@ -1151,7 +1606,12 @@
       "r_multiple": 18.615,
       "outcome": "trail",
       "bars_held": 636,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 38680.14,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-01 14:30:00",
@@ -1163,7 +1623,12 @@
       "r_multiple": 12.855,
       "outcome": "trail",
       "bars_held": 577,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 39566.22,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-04 03:30:00",
@@ -1175,7 +1640,12 @@
       "r_multiple": 9.003,
       "outcome": "trail",
       "bars_held": 333,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 40961.54,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-04 10:15:00",
@@ -1187,7 +1657,12 @@
       "r_multiple": 5.345,
       "outcome": "trail",
       "bars_held": 306,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 42224.4,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-05 17:30:00",
@@ -1199,7 +1674,12 @@
       "r_multiple": 3.514,
       "outcome": "trail",
       "bars_held": 181,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 43023.89,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-06 03:15:00",
@@ -1211,7 +1691,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 142,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 45990.13,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-07 20:30:00",
@@ -1223,7 +1708,12 @@
       "r_multiple": 0.07,
       "outcome": "trail",
       "bars_held": 321,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 45543.94,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-08 16:15:00",
@@ -1235,7 +1725,12 @@
       "r_multiple": 0.845,
       "outcome": "trail",
       "bars_held": 242,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 44253.84,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-10 09:45:00",
@@ -1247,7 +1742,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1700823600,
+      "window_end": 1702206000,
+      "target": 44714.89,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-11 06:30:00",
@@ -1259,7 +1759,12 @@
       "r_multiple": 3.033,
       "outcome": "trail",
       "bars_held": 248,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1702249200,
+      "window_end": 1702260420,
+      "target": 41608.9,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-20 14:15:00",
@@ -1271,7 +1776,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1702994400,
+      "window_end": 1703078640,
+      "target": 42119.58,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-23 23:30:00",
@@ -1283,7 +1793,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1703304000,
+      "window_end": 1704153960,
+      "target": 43383.02,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-25 03:30:00",
@@ -1295,7 +1810,12 @@
       "r_multiple": 0.194,
       "outcome": "trail",
       "bars_held": 241,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1703304000,
+      "window_end": 1704153960,
+      "target": 40286.68,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-25 06:00:00",
@@ -1307,7 +1827,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1703304000,
+      "window_end": 1704153960,
+      "target": 41471.31,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-26 10:30:00",
@@ -1319,7 +1844,12 @@
       "r_multiple": 0.799,
       "outcome": "trail",
       "bars_held": 117,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1703304000,
+      "window_end": 1704153960,
+      "target": 41766.53,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2023-12-28 07:15:00",
@@ -1331,7 +1861,12 @@
       "r_multiple": 4.103,
       "outcome": "trail",
       "bars_held": 241,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1703304000,
+      "window_end": 1704153960,
+      "target": 42578.32,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2023-12-29 12:30:00",
@@ -1343,7 +1878,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1703304000,
+      "window_end": 1704153960,
+      "target": 41740.64,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-01-04 15:45:00",
@@ -1355,7 +1895,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1704279600,
+      "window_end": 1704736440,
+      "target": 41376.89,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-01-05 06:45:00",
@@ -1367,7 +1912,12 @@
       "r_multiple": -0.463,
       "outcome": "trail",
       "bars_held": 240,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1704279600,
+      "window_end": 1704736440,
+      "target": 40968.28,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-01-10 17:45:00",
@@ -1379,7 +1929,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 22,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1704834000,
+      "window_end": 1704983760,
+      "target": 41988.86,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-01-11 08:30:00",
@@ -1391,7 +1946,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 33,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1704834000,
+      "window_end": 1704983760,
+      "target": 44751.97,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-01-14 15:15:00",
@@ -1403,7 +1963,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 41,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1705122000,
+      "window_end": 1705262520,
+      "target": 44599.23,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-01-19 09:00:00",
@@ -1415,7 +1980,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1705507200,
+      "window_end": 1705681380,
+      "target": 39930.45,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-01-19 19:45:00",
@@ -1427,7 +1997,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 18,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1705507200,
+      "window_end": 1705681380,
+      "target": 39684.66,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-01-26 12:15:00",
@@ -1439,7 +2014,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1706187600,
+      "window_end": 1706262300,
+      "target": 39309.2,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-01 02:45:00",
@@ -1451,7 +2031,12 @@
       "r_multiple": -0.272,
       "outcome": "trail",
       "bars_held": 71,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1706655600,
+      "window_end": 1707336180,
+      "target": 37911.79,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-03 19:30:00",
@@ -1463,7 +2048,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1706655600,
+      "window_end": 1707336180,
+      "target": 42939.54,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-05 00:30:00",
@@ -1475,7 +2065,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 51,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1706655600,
+      "window_end": 1707336180,
+      "target": 41179.45,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-07 08:30:00",
@@ -1487,7 +2082,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 47,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1706655600,
+      "window_end": 1707336180,
+      "target": 41994.49,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-09 01:30:00",
@@ -1499,7 +2099,12 @@
       "r_multiple": 4.07,
       "outcome": "trail",
       "bars_held": 331,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1707379200,
+      "window_end": 1707423360,
+      "target": 47284.54,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-10 16:15:00",
@@ -1511,7 +2116,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 40,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1707516000,
+      "window_end": 1707594360,
+      "target": 43288.26,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-11 17:15:00",
@@ -1523,7 +2133,12 @@
       "r_multiple": -0.946,
       "outcome": "trail",
       "bars_held": 76,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1707620400,
+      "window_end": 1707901800,
+      "target": 49975.15,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-12 20:15:00",
@@ -1535,7 +2150,12 @@
       "r_multiple": 0.628,
       "outcome": "trail",
       "bars_held": 91,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1707620400,
+      "window_end": 1707901800,
+      "target": 52174.79,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-13 14:00:00",
@@ -1547,7 +2167,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1707620400,
+      "window_end": 1707901800,
+      "target": 51346.54,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-02-14 05:15:00",
@@ -1559,7 +2184,12 @@
       "r_multiple": 1.55,
       "outcome": "trail",
       "bars_held": 178,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1707620400,
+      "window_end": 1707901800,
+      "target": 53482.39,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-20 06:45:00",
@@ -1571,7 +2201,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 39,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1708358400,
+      "window_end": 1708436040,
+      "target": 49089.88,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-21 19:45:00",
@@ -1583,7 +2218,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 34,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1708506000,
+      "window_end": 1708961400,
+      "target": 49325.16,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-22 18:00:00",
@@ -1595,7 +2235,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 31,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1708506000,
+      "window_end": 1708961400,
+      "target": 50129.58,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-24 20:15:00",
@@ -1607,7 +2252,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1708506000,
+      "window_end": 1708961400,
+      "target": 51060.25,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-25 22:00:00",
@@ -1619,7 +2269,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 14,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1708506000,
+      "window_end": 1708961400,
+      "target": 49974.72,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-02-26 13:00:00",
@@ -1631,7 +2286,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 30,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1708506000,
+      "window_end": 1708961400,
+      "target": 49422.03,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-02 18:00:00",
@@ -1643,7 +2303,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1709294400,
+      "window_end": 1709573160,
+      "target": 63335.78,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-03 04:45:00",
@@ -1655,7 +2320,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1709294400,
+      "window_end": 1709573160,
+      "target": 63055.83,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-03 14:30:00",
@@ -1667,7 +2337,12 @@
       "r_multiple": 6.656,
       "outcome": "trail",
       "bars_held": 220,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1709294400,
+      "window_end": 1709573160,
+      "target": 63240.56,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-04 21:00:00",
@@ -1679,7 +2354,12 @@
       "r_multiple": -0.833,
       "outcome": "trail",
       "bars_held": 98,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1709294400,
+      "window_end": 1709573160,
+      "target": 72346.99,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-12 11:45:00",
@@ -1691,7 +2371,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710212400,
+      "window_end": 1710252360,
+      "target": 69815.51,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-14 12:30:00",
@@ -1703,7 +2388,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 17,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710388800,
+      "window_end": 1710424320,
+      "target": 75984.07,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-17 02:30:00",
@@ -1715,7 +2405,12 @@
       "r_multiple": -0.993,
       "outcome": "trail",
       "bars_held": 74,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 64803.25,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-18 03:15:00",
@@ -1727,7 +2422,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 66619.35,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-18 12:30:00",
@@ -1739,7 +2439,12 @@
       "r_multiple": 7.775,
       "outcome": "trail",
       "bars_held": 240,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 67374.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-19 15:45:00",
@@ -1751,7 +2456,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 23,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 59609.54,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-21 20:30:00",
@@ -1763,7 +2473,12 @@
       "r_multiple": 1.405,
       "outcome": "trail",
       "bars_held": 160,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 62181.31,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-22 01:30:00",
@@ -1775,7 +2490,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 1,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 65228.03,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-22 14:00:00",
@@ -1787,7 +2507,12 @@
       "r_multiple": 2.269,
       "outcome": "trail",
       "bars_held": 90,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 63900.6,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-23 03:00:00",
@@ -1799,7 +2524,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 38,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 57543.59,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-26 02:30:00",
@@ -1811,7 +2541,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 41,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 68316.19,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-26 19:45:00",
@@ -1823,7 +2558,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 92,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 63488.96,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-29 22:15:00",
@@ -1835,7 +2575,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 67973.68,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-03-31 00:30:00",
@@ -1847,7 +2592,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 40,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1710468000,
+      "window_end": 1711850400,
+      "target": 68485.51,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-03-31 13:45:00",
@@ -1859,7 +2609,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1711861200,
+      "window_end": 1711950480,
+      "target": 71171.4,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-03 12:15:00",
@@ -1871,7 +2626,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 17,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712113200,
+      "window_end": 1712566380,
+      "target": 67655.66,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-04 12:00:00",
@@ -1883,7 +2643,12 @@
       "r_multiple": 6.128,
       "outcome": "trail",
       "bars_held": 341,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712113200,
+      "window_end": 1712566380,
+      "target": 67390.29,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-05 13:30:00",
@@ -1895,7 +2660,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712113200,
+      "window_end": 1712566380,
+      "target": 69834.11,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-06 11:00:00",
@@ -1907,7 +2677,12 @@
       "r_multiple": 1.389,
       "outcome": "trail",
       "bars_held": 153,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712113200,
+      "window_end": 1712566380,
+      "target": 70306.97,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-09 21:45:00",
@@ -1919,7 +2694,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712667600,
+      "window_end": 1712787900,
+      "target": 68464.53,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-10 18:00:00",
@@ -1931,7 +2711,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 17,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712667600,
+      "window_end": 1712787900,
+      "target": 63232.05,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-13 20:45:00",
@@ -1943,7 +2728,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1712980800,
+      "window_end": 1713037920,
+      "target": 70310.18,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-20 05:45:00",
@@ -1955,7 +2745,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 65436.32,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-20 21:00:00",
@@ -1967,7 +2762,12 @@
       "r_multiple": -0.019,
       "outcome": "trail",
       "bars_held": 98,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 68505.06,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-22 02:30:00",
@@ -1979,7 +2779,12 @@
       "r_multiple": 1.71,
       "outcome": "trail",
       "bars_held": 138,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 66913.94,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-23 01:30:00",
@@ -1991,7 +2796,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 46,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 68337.06,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-04-25 21:00:00",
@@ -2003,7 +2813,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 133,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 66569.04,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-29 07:00:00",
@@ -2015,7 +2830,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 64640.54,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-04-30 20:15:00",
@@ -2027,7 +2847,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1713506400,
+      "window_end": 1714506900,
+      "target": 63354.1,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-05-03 23:30:00",
@@ -2039,7 +2864,12 @@
       "r_multiple": 3.869,
       "outcome": "trail",
       "bars_held": 267,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 63192.2,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-05 21:15:00",
@@ -2051,7 +2881,12 @@
       "r_multiple": -0.444,
       "outcome": "trail",
       "bars_held": 84,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 70069.6,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-09 07:45:00",
@@ -2063,7 +2898,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 29,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 63528.8,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-10 12:45:00",
@@ -2075,7 +2915,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 27,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 65103.82,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-05-13 21:45:00",
@@ -2087,7 +2932,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 55,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 65705.11,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-15 12:30:00",
@@ -2099,7 +2949,12 @@
       "r_multiple": 43.565,
       "outcome": "trail",
       "bars_held": 127,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 62144.26,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-05-17 08:45:00",
@@ -2111,7 +2966,12 @@
       "r_multiple": 0.94,
       "outcome": "trail",
       "bars_held": 246,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 68514.3,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-18 12:45:00",
@@ -2123,7 +2983,12 @@
       "r_multiple": -0.787,
       "outcome": "trail",
       "bars_held": 134,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1714741200,
+      "window_end": 1716123600,
+      "target": 69562.21,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-21 19:45:00",
@@ -2135,7 +3000,12 @@
       "r_multiple": 0.052,
       "outcome": "trail",
       "bars_held": 101,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716296400,
+      "window_end": 1716472200,
+      "target": 67058.72,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-22 00:45:00",
@@ -2147,7 +3017,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716296400,
+      "window_end": 1716472200,
+      "target": 67534.39,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-22 23:30:00",
@@ -2159,7 +3034,12 @@
       "r_multiple": 0.6,
       "outcome": "trail",
       "bars_held": 258,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716296400,
+      "window_end": 1716472200,
+      "target": 67309.07,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-28 12:15:00",
@@ -2171,7 +3051,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 69044.47,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-29 07:00:00",
@@ -2183,7 +3068,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 55,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 72394.3,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-05-31 17:00:00",
@@ -2195,7 +3085,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 70017.72,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-06-02 03:00:00",
@@ -2207,7 +3102,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 68257.51,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-02 17:15:00",
@@ -2219,7 +3119,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 30,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 70920.94,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-06-03 13:45:00",
@@ -2231,7 +3136,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 26,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 70774.62,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-07 15:30:00",
@@ -2243,7 +3153,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 72365.17,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-08 04:15:00",
@@ -2255,7 +3170,12 @@
       "r_multiple": -0.329,
       "outcome": "trail",
       "bars_held": 235,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 72588.43,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-06-11 18:45:00",
@@ -2267,7 +3187,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1716822000,
+      "window_end": 1718120400,
+      "target": 68777.47,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-13 08:45:00",
@@ -2279,7 +3204,12 @@
       "r_multiple": 0.285,
       "outcome": "trail",
       "bars_held": 105,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718215200,
+      "window_end": 1718381340,
+      "target": 63607.57,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-19 01:15:00",
@@ -2291,7 +3221,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718672400,
+      "window_end": 1719261000,
+      "target": 61433.28,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-06-19 12:45:00",
@@ -2303,7 +3238,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 96,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718672400,
+      "window_end": 1719261000,
+      "target": 63932.74,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-21 09:15:00",
@@ -2315,7 +3255,12 @@
       "r_multiple": 4.312,
       "outcome": "trail",
       "bars_held": 600,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718672400,
+      "window_end": 1719261000,
+      "target": 62244.35,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-23 21:15:00",
@@ -2327,7 +3272,12 @@
       "r_multiple": 6.516,
       "outcome": "trail",
       "bars_held": 360,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718672400,
+      "window_end": 1719261000,
+      "target": 62779.89,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-06-24 02:00:00",
@@ -2339,7 +3289,12 @@
       "r_multiple": 6.254,
       "outcome": "trail",
       "bars_held": 341,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718672400,
+      "window_end": 1719261000,
+      "target": 62569.61,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-06-25 01:45:00",
@@ -2351,7 +3306,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 18,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1718672400,
+      "window_end": 1719261000,
+      "target": 54142.72,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-05 07:45:00",
@@ -2363,7 +3323,12 @@
       "r_multiple": -0.021,
       "outcome": "trail",
       "bars_held": 142,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1720137600,
+      "window_end": 1720584420,
+      "target": 52237.32,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-07 00:15:00",
@@ -2375,7 +3340,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1720137600,
+      "window_end": 1720584420,
+      "target": 57012.49,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-09 19:15:00",
@@ -2387,7 +3357,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 1,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1720137600,
+      "window_end": 1720584420,
+      "target": 55566.82,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-13 00:45:00",
@@ -2399,7 +3374,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 58,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1720710000,
+      "window_end": 1720911480,
+      "target": 55918.07,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-14 03:45:00",
@@ -2411,7 +3391,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 1,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1720710000,
+      "window_end": 1720911480,
+      "target": 57136.47,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-18 07:30:00",
@@ -2423,7 +3408,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 51,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 66406.54,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-19 03:45:00",
@@ -2435,7 +3425,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 65935.17,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-19 18:30:00",
@@ -2447,7 +3442,12 @@
       "r_multiple": 2.392,
       "outcome": "trail",
       "bars_held": 212,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 66834.08,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-20 20:45:00",
@@ -2459,7 +3459,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 107,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 67868.12,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-22 17:15:00",
@@ -2471,7 +3476,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 68372.38,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-24 02:45:00",
@@ -2483,7 +3493,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 20,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 67200.26,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-26 15:00:00",
@@ -2495,7 +3510,12 @@
       "r_multiple": 0.661,
       "outcome": "trail",
       "bars_held": 138,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 68717.45,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-27 03:15:00",
@@ -2507,7 +3527,12 @@
       "r_multiple": -0.286,
       "outcome": "trail",
       "bars_held": 89,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 71117.03,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-29 07:45:00",
@@ -2519,7 +3544,12 @@
       "r_multiple": -0.989,
       "outcome": "trail",
       "bars_held": 59,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 76756.74,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-07-30 12:45:00",
@@ -2531,7 +3561,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 30,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 69910.41,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-07-31 19:00:00",
@@ -2543,7 +3578,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 23,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 69005.26,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-08-01 12:45:00",
@@ -2555,7 +3595,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 32,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1721145600,
+      "window_end": 1722528000,
+      "target": 66811.81,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-08-04 13:30:00",
@@ -2567,7 +3612,12 @@
       "r_multiple": 5.838,
       "outcome": "trail",
       "bars_held": 129,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722697200,
+      "window_end": 1722818220,
+      "target": 57626.76,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-06 05:45:00",
@@ -2579,7 +3629,12 @@
       "r_multiple": -0.027,
       "outcome": "trail",
       "bars_held": 164,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 64861.89,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-08 17:00:00",
@@ -2591,7 +3646,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 59262.08,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-09 03:00:00",
@@ -2603,7 +3663,12 @@
       "r_multiple": 0.17,
       "outcome": "trail",
       "bars_held": 246,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 64463.3,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-10 23:30:00",
@@ -2615,7 +3680,12 @@
       "r_multiple": -0.509,
       "outcome": "trail",
       "bars_held": 68,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 63297.38,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-12 16:30:00",
@@ -2627,7 +3697,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 62968.25,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-14 17:45:00",
@@ -2639,7 +3714,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 66060.26,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-17 15:00:00",
@@ -2651,7 +3731,12 @@
       "r_multiple": -0.364,
       "outcome": "trail",
       "bars_held": 150,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 61138.31,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-08-19 08:00:00",
@@ -2663,7 +3748,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 29,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 59593.32,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-20 23:15:00",
@@ -2675,7 +3765,12 @@
       "r_multiple": 12.981,
       "outcome": "trail",
       "bars_held": 400,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 60066.88,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-21 11:45:00",
@@ -2687,7 +3782,12 @@
       "r_multiple": 4.296,
       "outcome": "trail",
       "bars_held": 350,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 62407.18,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-21 18:00:00",
@@ -2699,7 +3799,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1722866400,
+      "window_end": 1724248800,
+      "target": 60927.77,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-08-24 22:00:00",
@@ -2711,7 +3816,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 20,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1724266800,
+      "window_end": 1724796840,
+      "target": 65206.2,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-08-26 04:30:00",
@@ -2723,7 +3833,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 32,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1724266800,
+      "window_end": 1724796840,
+      "target": 68568.12,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-08-30 12:45:00",
@@ -2735,7 +3850,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 30,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1724929200,
+      "window_end": 1725035220,
+      "target": 62261.8,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-02 19:30:00",
@@ -2747,7 +3867,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1725156000,
+      "window_end": 1725328980,
+      "target": 56503.86,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-09-04 21:00:00",
@@ -2759,7 +3884,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 95,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1725458400,
+      "window_end": 1725549960,
+      "target": 63039.21,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-09-08 17:45:00",
@@ -2771,7 +3901,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 40,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1725631200,
+      "window_end": 1725910920,
+      "target": 53467.07,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-09-09 17:45:00",
@@ -2783,7 +3918,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1725631200,
+      "window_end": 1725910920,
+      "target": 53716.46,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-12 20:00:00",
@@ -2795,7 +3935,12 @@
       "r_multiple": 2.74,
       "outcome": "trail",
       "bars_held": 298,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1726099200,
+      "window_end": 1726240980,
+      "target": 60008.01,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-13 16:00:00",
@@ -2807,7 +3952,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1726099200,
+      "window_end": 1726240980,
+      "target": 59861.24,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-13 20:15:00",
@@ -2819,7 +3969,12 @@
       "r_multiple": 1.713,
       "outcome": "trail",
       "bars_held": 201,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1726099200,
+      "window_end": 1726240980,
+      "target": 60884.35,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-09-23 21:30:00",
@@ -2831,7 +3986,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 34,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727060400,
+      "window_end": 1727794980,
+      "target": 64764.07,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-24 12:30:00",
@@ -2843,7 +4003,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 30,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727060400,
+      "window_end": 1727794980,
+      "target": 65571.99,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-09-25 03:30:00",
@@ -2855,7 +4020,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 33,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727060400,
+      "window_end": 1727794980,
+      "target": 65963.04,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-26 14:45:00",
@@ -2867,7 +4037,12 @@
       "r_multiple": 5.452,
       "outcome": "trail",
       "bars_held": 189,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727060400,
+      "window_end": 1727794980,
+      "target": 64808.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-09-28 23:45:00",
@@ -2879,7 +4054,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727060400,
+      "window_end": 1727794980,
+      "target": 66580.35,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-10-01 06:15:00",
@@ -2891,7 +4071,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 51,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727060400,
+      "window_end": 1727794980,
+      "target": 65217.36,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-10-04 08:45:00",
@@ -2903,7 +4088,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1727946000,
+      "window_end": 1728028200,
+      "target": 60156.68,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-10-08 08:15:00",
@@ -2915,7 +4105,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 18,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1728223200,
+      "window_end": 1728482580,
+      "target": 64680.17,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-10-12 16:45:00",
@@ -2927,7 +4122,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 110,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1728640800,
+      "window_end": 1729000800,
+      "target": 65524.84,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-10-14 02:45:00",
@@ -2939,7 +4139,12 @@
       "r_multiple": 3.486,
       "outcome": "trail",
       "bars_held": 121,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1728640800,
+      "window_end": 1729000800,
+      "target": 65167.99,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-10-15 18:00:00",
@@ -2951,7 +4156,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1728640800,
+      "window_end": 1729000800,
+      "target": 67671.72,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-10-21 03:45:00",
@@ -2963,7 +4173,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 37,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1729429200,
+      "window_end": 1729463280,
+      "target": 70693.29,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-10-23 07:45:00",
@@ -2975,7 +4190,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 141,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1729555200,
+      "window_end": 1729778100,
+      "target": 64954.49,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-10-27 05:30:00",
@@ -2987,7 +4207,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 49,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1729875600,
+      "window_end": 1730111700,
+      "target": 66096.95,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-10-27 21:45:00",
@@ -2999,7 +4224,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1729875600,
+      "window_end": 1730111700,
+      "target": 67067.04,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-10-29 23:45:00",
@@ -3011,7 +4241,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1730199600,
+      "window_end": 1730228400,
+      "target": 73971.02,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-11-04 10:45:00",
@@ -3023,7 +4258,12 @@
       "r_multiple": 0.332,
       "outcome": "trail",
       "bars_held": 105,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1730599200,
+      "window_end": 1730817840,
+      "target": 67703.0,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-11-04 22:00:00",
@@ -3035,7 +4275,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 60,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1730599200,
+      "window_end": 1730817840,
+      "target": 65265.97,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-11-10 06:15:00",
@@ -3047,7 +4292,12 @@
       "r_multiple": 1.868,
       "outcome": "trail",
       "bars_held": 81,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731193200,
+      "window_end": 1731214380,
+      "target": 79748.76,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-11-14 17:15:00",
@@ -3059,7 +4309,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 95014.71,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-11-15 09:00:00",
@@ -3071,7 +4326,12 @@
       "r_multiple": 1.215,
       "outcome": "trail",
       "bars_held": 185,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 92639.19,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-11-18 04:30:00",
@@ -3083,7 +4343,12 @@
       "r_multiple": 36.973,
       "outcome": "trail",
       "bars_held": 565,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 90132.17,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-11-19 12:15:00",
@@ -3095,7 +4360,12 @@
       "r_multiple": 2.876,
       "outcome": "trail",
       "bars_held": 438,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 97456.53,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-11-21 05:45:00",
@@ -3107,7 +4377,12 @@
       "r_multiple": 1.332,
       "outcome": "trail",
       "bars_held": 272,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 100190.37,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-11-21 16:15:00",
@@ -3119,7 +4394,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 15,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 100979.27,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-11-23 00:30:00",
@@ -3131,7 +4411,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 101,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1731438000,
+      "window_end": 1732304220,
+      "target": 105405.15,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-04 11:45:00",
@@ -3143,7 +4428,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 42,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1733274000,
+      "window_end": 1733368080,
+      "target": 102888.84,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-09 21:00:00",
@@ -3155,7 +4445,12 @@
       "r_multiple": -0.071,
       "outcome": "trail",
       "bars_held": 92,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1733713200,
+      "window_end": 1733948880,
+      "target": 90140.85,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-12-10 23:30:00",
@@ -3167,7 +4462,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1733713200,
+      "window_end": 1733948880,
+      "target": 88480.07,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-14 15:00:00",
@@ -3179,7 +4479,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 75,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734148800,
+      "window_end": 1734236220,
+      "target": 98660.58,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-17 18:45:00",
@@ -3191,7 +4496,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734303600,
+      "window_end": 1734552120,
+      "target": 110277.28,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-12-22 01:30:00",
@@ -3203,7 +4513,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 100944.3,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-12-24 19:00:00",
@@ -3215,7 +4530,12 @@
       "r_multiple": 1.519,
       "outcome": "trail",
       "bars_held": 90,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 100146.46,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-12-25 03:45:00",
@@ -3227,7 +4547,12 @@
       "r_multiple": -0.65,
       "outcome": "trail",
       "bars_held": 55,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 102841.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-12-26 00:45:00",
@@ -3239,7 +4564,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 51,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 103022.98,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2024-12-26 19:30:00",
@@ -3251,7 +4581,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 99320.24,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-27 14:30:00",
@@ -3263,7 +4598,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 105226.78,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-28 02:30:00",
@@ -3275,7 +4615,12 @@
       "r_multiple": -0.438,
       "outcome": "trail",
       "bars_held": 166,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1734757200,
+      "window_end": 1735569300,
+      "target": 97899.49,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-31 01:30:00",
@@ -3287,7 +4632,12 @@
       "r_multiple": 0.858,
       "outcome": "trail",
       "bars_held": 553,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 104216.7,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2024-12-31 17:45:00",
@@ -3299,7 +4649,12 @@
       "r_multiple": 0.92,
       "outcome": "trail",
       "bars_held": 488,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 103527.17,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-01-01 17:00:00",
@@ -3311,7 +4666,12 @@
       "r_multiple": 6.331,
       "outcome": "trail",
       "bars_held": 395,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 95400.28,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-01-02 18:30:00",
@@ -3323,7 +4683,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 97573.59,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-01-03 16:45:00",
@@ -3335,7 +4700,12 @@
       "r_multiple": 1.155,
       "outcome": "trail",
       "bars_held": 204,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 98624.36,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-01-06 20:15:00",
@@ -3347,7 +4717,12 @@
       "r_multiple": 0.248,
       "outcome": "trail",
       "bars_held": 83,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 106947.05,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-01-07 06:00:00",
@@ -3359,7 +4734,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 44,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 104443.83,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-01-09 06:45:00",
@@ -3371,7 +4751,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 100761.9,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-01-09 20:15:00",
@@ -3383,7 +4768,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 20,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1735581600,
+      "window_end": 1736454000,
+      "target": 95167.83,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-01-12 02:45:00",
@@ -3395,7 +4785,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 49,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1736528400,
+      "window_end": 1736763720,
+      "target": 97411.31,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-01-13 05:45:00",
@@ -3407,7 +4802,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 26,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1736528400,
+      "window_end": 1736763720,
+      "target": 99690.92,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-01-29 00:30:00",
@@ -3419,7 +4819,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 98,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 98788.57,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-01-31 23:30:00",
@@ -3431,7 +4836,12 @@
       "r_multiple": 7.405,
       "outcome": "trail",
       "bars_held": 278,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 102259.24,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-02-01 15:00:00",
@@ -3443,7 +4853,12 @@
       "r_multiple": 2.524,
       "outcome": "trail",
       "bars_held": 216,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 98093.39,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-02-03 03:00:00",
@@ -3455,7 +4870,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 72,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 91043.13,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-02-05 23:30:00",
@@ -3467,7 +4887,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 67,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 90393.88,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-02-06 20:30:00",
@@ -3479,7 +4904,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 92,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 94619.49,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-02-09 23:00:00",
@@ -3491,7 +4921,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 94078.73,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-02-10 17:30:00",
@@ -3503,7 +4938,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 96580.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-02-11 13:45:00",
@@ -3515,7 +4955,12 @@
       "r_multiple": 0.083,
       "outcome": "trail",
       "bars_held": 326,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1737957600,
+      "window_end": 1739340000,
+      "target": 96966.3,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-02-20 00:30:00",
@@ -3527,7 +4972,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 13,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1739894400,
+      "window_end": 1740006060,
+      "target": 94524.17,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-02-21 14:45:00",
@@ -3539,7 +4989,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 24,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1740074400,
+      "window_end": 1740160920,
+      "target": 99470.08,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-02-26 17:45:00",
@@ -3551,7 +5006,12 @@
       "r_multiple": 3.557,
       "outcome": "trail",
       "bars_held": 209,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1740556800,
+      "window_end": 1740579720,
+      "target": 85444.67,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-04 18:45:00",
@@ -3563,7 +5023,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1740981600,
+      "window_end": 1741101600,
+      "target": 76360.02,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-05 15:00:00",
@@ -3575,7 +5040,12 @@
       "r_multiple": -0.443,
       "outcome": "trail",
       "bars_held": 155,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1741107600,
+      "window_end": 1741558080,
+      "target": 95004.2,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-07 18:30:00",
@@ -3587,7 +5057,12 @@
       "r_multiple": -0.859,
       "outcome": "trail",
       "bars_held": 175,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1741107600,
+      "window_end": 1741558080,
+      "target": 102290.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-03-13 09:00:00",
@@ -3599,7 +5074,12 @@
       "r_multiple": -0.994,
       "outcome": "trail",
       "bars_held": 142,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1741791600,
+      "window_end": 1741965420,
+      "target": 81776.39,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-03-20 23:00:00",
@@ -3611,7 +5091,12 @@
       "r_multiple": -0.991,
       "outcome": "trail",
       "bars_held": 60,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 86199.85,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-22 10:45:00",
@@ -3623,7 +5108,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 39,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 85342.37,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-24 09:15:00",
@@ -3635,7 +5125,12 @@
       "r_multiple": -0.196,
       "outcome": "trail",
       "bars_held": 244,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 89547.41,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-03-27 09:00:00",
@@ -3647,7 +5142,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 88097.92,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-28 03:00:00",
@@ -3659,7 +5159,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 32,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 92820.87,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-03-30 14:15:00",
@@ -3671,7 +5176,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 19,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 84925.52,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-03-30 23:30:00",
@@ -3683,7 +5193,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 14,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 83585.19,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-04-02 05:00:00",
@@ -3695,7 +5210,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 86889.51,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-04-04 12:30:00",
@@ -3707,7 +5227,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 15,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1742371200,
+      "window_end": 1743753600,
+      "target": 86327.93,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-04-09 16:30:00",
@@ -3719,7 +5244,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1744160400,
+      "window_end": 1744219620,
+      "target": 72369.48,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-04-16 22:45:00",
@@ -3731,7 +5261,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1744790400,
+      "window_end": 1745076720,
+      "target": 90732.09,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-04-22 17:15:00",
@@ -3743,7 +5278,12 @@
       "r_multiple": 4.363,
       "outcome": "trail",
       "bars_held": 178,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1745193600,
+      "window_end": 1745415480,
+      "target": 90929.18,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-04-23 02:45:00",
@@ -3755,7 +5295,12 @@
       "r_multiple": 1.249,
       "outcome": "trail",
       "bars_held": 140,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1745193600,
+      "window_end": 1745415480,
+      "target": 92878.29,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-04-27 18:30:00",
@@ -3767,7 +5312,12 @@
       "r_multiple": -0.783,
       "outcome": "trail",
       "bars_held": 70,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1745730000,
+      "window_end": 1745838360,
+      "target": 90955.25,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-05-06 18:30:00",
@@ -3779,7 +5329,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1746529200,
+      "window_end": 1746568980,
+      "target": 92747.96,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-05-12 12:30:00",
@@ -3791,7 +5346,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 29,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1746918000,
+      "window_end": 1747060140,
+      "target": 111735.65,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-05-19 05:15:00",
@@ -3803,7 +5363,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 16,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1747573200,
+      "window_end": 1747632600,
+      "target": 114903.59,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-05-20 13:00:00",
@@ -3815,7 +5380,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 48,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1747720800,
+      "window_end": 1747769400,
+      "target": 100607.52,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-05-28 10:00:00",
@@ -3827,7 +5397,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 22,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1748350800,
+      "window_end": 1748444940,
+      "target": 110599.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-05-31 23:15:00",
@@ -3839,7 +5414,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1748588400,
+      "window_end": 1748910000,
+      "target": 103033.2,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-06-01 15:00:00",
@@ -3851,7 +5431,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 20,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1748588400,
+      "window_end": 1748910000,
+      "target": 101258.61,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-06-11 19:30:00",
@@ -3863,7 +5448,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 15,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1749582000,
+      "window_end": 1749680460,
+      "target": 112910.91,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-06-19 00:15:00",
@@ -3875,7 +5465,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750266000,
+      "window_end": 1750405800,
+      "target": 100227.44,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-06-19 19:15:00",
@@ -3887,7 +5482,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 71,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750266000,
+      "window_end": 1750405800,
+      "target": 101366.32,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-06-25 05:30:00",
@@ -3899,7 +5499,12 @@
       "r_multiple": 0.333,
       "outcome": "trail",
       "bars_held": 151,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 110059.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-06-26 13:45:00",
@@ -3911,7 +5516,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 108893.91,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-06-26 23:30:00",
@@ -3923,7 +5533,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 14,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 109438.92,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-06-27 22:00:00",
@@ -3935,7 +5550,12 @@
       "r_multiple": -0.216,
       "outcome": "trail",
       "bars_held": 278,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 110719.57,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-02 08:45:00",
@@ -3947,7 +5567,12 @@
       "r_multiple": 2.523,
       "outcome": "trail",
       "bars_held": 211,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 109085.79,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-07-02 19:15:00",
@@ -3959,7 +5584,12 @@
       "r_multiple": 1.515,
       "outcome": "trail",
       "bars_held": 169,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 109474.25,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-07-04 16:45:00",
@@ -3971,7 +5601,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 110144.74,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-05 02:45:00",
@@ -3983,7 +5618,12 @@
       "r_multiple": 0.093,
       "outcome": "trail",
       "bars_held": 146,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 109448.28,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-06 04:00:00",
@@ -3995,7 +5635,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 45,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 108970.31,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-08 10:15:00",
@@ -4007,7 +5652,12 @@
       "r_multiple": 18.742,
       "outcome": "trail",
       "bars_held": 426,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 109457.87,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-09 16:30:00",
@@ -4019,7 +5669,12 @@
       "r_multiple": 13.411,
       "outcome": "trail",
       "bars_held": 305,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1750708800,
+      "window_end": 1752091200,
+      "target": 110800.0,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-11 11:00:00",
@@ -4031,7 +5686,12 @@
       "r_multiple": -0.153,
       "outcome": "trail",
       "bars_held": 135,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752163200,
+      "window_end": 1752416280,
+      "target": 132849.79,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-13 07:15:00",
@@ -4043,7 +5703,12 @@
       "r_multiple": 1.15,
       "outcome": "trail",
       "bars_held": 194,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752163200,
+      "window_end": 1752416280,
+      "target": 119226.17,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-07-19 17:30:00",
@@ -4055,7 +5720,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 104,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 117335.49,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-23 07:30:00",
@@ -4067,7 +5737,12 @@
       "r_multiple": -0.21,
       "outcome": "trail",
       "bars_held": 442,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 116221.96,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-28 19:45:00",
@@ -4079,7 +5754,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 70,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 115001.34,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-31 00:00:00",
@@ -4091,7 +5771,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 114261.91,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-07-31 10:45:00",
@@ -4103,7 +5788,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 117850.75,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-01 19:15:00",
@@ -4115,7 +5805,12 @@
       "r_multiple": 0.164,
       "outcome": "trail",
       "bars_held": 181,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 109276.23,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-08-02 04:00:00",
@@ -4127,7 +5822,12 @@
       "r_multiple": -0.953,
       "outcome": "trail",
       "bars_held": 146,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1752825600,
+      "window_end": 1754160960,
+      "target": 109925.0,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-04 19:00:00",
@@ -4139,7 +5839,12 @@
       "r_multiple": -0.921,
       "outcome": "trail",
       "bars_held": 69,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1754182800,
+      "window_end": 1754565900,
+      "target": 116821.49,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-05 22:45:00",
@@ -4151,7 +5856,12 @@
       "r_multiple": 6.279,
       "outcome": "trail",
       "bars_held": 594,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1754182800,
+      "window_end": 1754565900,
+      "target": 115595.42,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-08-06 11:00:00",
@@ -4163,7 +5873,12 @@
       "r_multiple": 4.217,
       "outcome": "trail",
       "bars_held": 545,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1754182800,
+      "window_end": 1754565900,
+      "target": 116941.0,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-08 18:00:00",
@@ -4175,7 +5890,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1754614800,
+      "window_end": 1754734200,
+      "target": 115533.68,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-10 07:45:00",
@@ -4187,7 +5907,12 @@
       "r_multiple": 3.041,
       "outcome": "trail",
       "bars_held": 174,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1754784000,
+      "window_end": 1754795280,
+      "target": 118031.94,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-08-17 03:30:00",
@@ -4199,7 +5924,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 27,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755324000,
+      "window_end": 1755406200,
+      "target": 116018.9,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-19 19:45:00",
@@ -4211,7 +5941,12 @@
       "r_multiple": 0.062,
       "outcome": "trail",
       "bars_held": 287,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755572400,
+      "window_end": 1755875760,
+      "target": 108697.8,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-08-20 17:00:00",
@@ -4223,7 +5958,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 15,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755572400,
+      "window_end": 1755875760,
+      "target": 110518.14,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-21 17:00:00",
@@ -4235,7 +5975,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755572400,
+      "window_end": 1755875760,
+      "target": 112781.59,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-23 16:30:00",
@@ -4247,7 +5992,12 @@
       "r_multiple": 7.458,
       "outcome": "trail",
       "bars_held": 398,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755910800,
+      "window_end": 1756064040,
+      "target": 114257.23,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-24 11:30:00",
@@ -4259,7 +6009,12 @@
       "r_multiple": 3.978,
       "outcome": "trail",
       "bars_held": 322,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755910800,
+      "window_end": 1756064040,
+      "target": 112961.04,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-08-24 21:30:00",
@@ -4271,7 +6026,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1755910800,
+      "window_end": 1756064040,
+      "target": 113517.47,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-08-28 12:15:00",
@@ -4283,7 +6043,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 92,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756299600,
+      "window_end": 1756451940,
+      "target": 119399.53,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-01 07:45:00",
@@ -4295,7 +6060,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756681200,
+      "window_end": 1756713240,
+      "target": 105261.5,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-09-02 12:00:00",
@@ -4307,7 +6077,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 111506.87,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-09-03 23:15:00",
@@ -4319,7 +6094,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 23,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 114208.73,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-09-04 22:30:00",
@@ -4331,7 +6111,12 @@
       "r_multiple": 2.4,
       "outcome": "trail",
       "bars_held": 88,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 110597.17,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-05 18:15:00",
@@ -4343,7 +6128,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 116808.97,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-09-07 06:15:00",
@@ -4355,7 +6145,12 @@
       "r_multiple": 2.304,
       "outcome": "trail",
       "bars_held": 251,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 111415.89,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-09-08 13:45:00",
@@ -4367,7 +6162,12 @@
       "r_multiple": -0.501,
       "outcome": "trail",
       "bars_held": 125,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 113860.48,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-10 18:30:00",
@@ -4379,7 +6179,12 @@
       "r_multiple": 0.794,
       "outcome": "trail",
       "bars_held": 428,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1756774800,
+      "window_end": 1757629320,
+      "target": 118587.05,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-16 21:30:00",
@@ -4391,7 +6196,12 @@
       "r_multiple": 0.364,
       "outcome": "trail",
       "bars_held": 82,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1757955600,
+      "window_end": 1758164820,
+      "target": 118836.3,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-17 01:15:00",
@@ -4403,7 +6213,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 36,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1757955600,
+      "window_end": 1758164820,
+      "target": 118519.41,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-29 01:30:00",
@@ -4415,7 +6230,12 @@
       "r_multiple": 8.782,
       "outcome": "trail",
       "bars_held": 840,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1758906000,
+      "window_end": 1759155300,
+      "target": 114690.54,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-09-29 03:30:00",
@@ -4427,7 +6247,12 @@
       "r_multiple": 13.737,
       "outcome": "trail",
       "bars_held": 832,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1758906000,
+      "window_end": 1759155300,
+      "target": 113945.67,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-10-03 18:45:00",
@@ -4439,7 +6264,12 @@
       "r_multiple": 2.834,
       "outcome": "trail",
       "bars_held": 387,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1759406400,
+      "window_end": 1759507560,
+      "target": 123136.87,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-10-07 09:45:00",
@@ -4451,7 +6281,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1759766400,
+      "window_end": 1759849620,
+      "target": 125312.4,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-10-16 11:15:00",
@@ -4463,7 +6298,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 5,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1760526000,
+      "window_end": 1760683320,
+      "target": 108425.07,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-10-17 00:45:00",
@@ -4475,7 +6315,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 280,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1760526000,
+      "window_end": 1760683320,
+      "target": 103719.83,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-10-21 01:30:00",
@@ -4487,7 +6332,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 23,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1760713200,
+      "window_end": 1761063360,
+      "target": 114261.44,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-10-21 16:15:00",
@@ -4499,7 +6349,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 97,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1760713200,
+      "window_end": 1761063360,
+      "target": 111488.25,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-10-26 14:45:00",
@@ -4511,7 +6366,12 @@
       "r_multiple": 0.975,
       "outcome": "trail",
       "bars_held": 144,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1761235200,
+      "window_end": 1761516180,
+      "target": 117231.04,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-10-26 16:30:00",
@@ -4523,7 +6383,12 @@
       "r_multiple": 5.051,
       "outcome": "trail",
       "bars_held": 137,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1761235200,
+      "window_end": 1761516180,
+      "target": 113449.32,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-10-29 06:15:00",
@@ -4535,7 +6400,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 19,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1761678000,
+      "window_end": 1761853200,
+      "target": 109766.66,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-10-30 09:45:00",
@@ -4547,7 +6417,12 @@
       "r_multiple": -0.818,
       "outcome": "trail",
       "bars_held": 318,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1761678000,
+      "window_end": 1761853200,
+      "target": 97951.59,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-04 10:45:00",
@@ -4559,7 +6434,12 @@
       "r_multiple": 0.936,
       "outcome": "trail",
       "bars_held": 349,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 99220.03,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-11-04 18:45:00",
@@ -4571,7 +6451,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 100560.37,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-07 12:00:00",
@@ -4583,7 +6468,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 43,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 100699.01,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-08 09:45:00",
@@ -4595,7 +6485,12 @@
       "r_multiple": -0.145,
       "outcome": "trail",
       "bars_held": 133,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 97750.05,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-11-11 10:30:00",
@@ -4607,7 +6502,12 @@
       "r_multiple": 0.388,
       "outcome": "trail",
       "bars_held": 112,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 99968.34,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-11 23:00:00",
@@ -4619,7 +6519,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 62,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 97954.07,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-11-12 18:45:00",
@@ -4631,7 +6536,12 @@
       "r_multiple": 31.819,
       "outcome": "trail",
       "bars_held": 581,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 103741.53,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-13 18:45:00",
@@ -4643,7 +6553,12 @@
       "r_multiple": 7.016,
       "outcome": "trail",
       "bars_held": 485,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1762182000,
+      "window_end": 1763094840,
+      "target": 98172.04,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-11-18 23:30:00",
@@ -4655,7 +6570,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1763449200,
+      "window_end": 1763572440,
+      "target": 96077.51,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-23 12:15:00",
@@ -4667,7 +6587,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 22,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1763654400,
+      "window_end": 1764736020,
+      "target": 83220.35,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-11-24 04:45:00",
@@ -4679,7 +6604,12 @@
       "r_multiple": -0.943,
       "outcome": "trail",
       "bars_held": 74,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1763654400,
+      "window_end": 1764736020,
+      "target": 83852.66,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-11-29 23:30:00",
@@ -4691,7 +6621,12 @@
       "r_multiple": 1.434,
       "outcome": "trail",
       "bars_held": 220,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1763654400,
+      "window_end": 1764736020,
+      "target": 83114.42,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-12-01 02:30:00",
@@ -4703,7 +6638,12 @@
       "r_multiple": 5.098,
       "outcome": "trail",
       "bars_held": 112,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1763654400,
+      "window_end": 1764736020,
+      "target": 88635.08,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-12-04 03:15:00",
@@ -4715,7 +6655,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 79,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1764781200,
+      "window_end": 1764870000,
+      "target": 99460.36,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-12-10 21:30:00",
@@ -4727,7 +6672,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 34,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1765155600,
+      "window_end": 1765712640,
+      "target": 94303.14,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-12-11 15:00:00",
@@ -4739,7 +6689,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 21,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1765155600,
+      "window_end": 1765712640,
+      "target": 92645.29,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-12-18 18:00:00",
@@ -4751,7 +6706,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 18,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1765983600,
+      "window_end": 1766086800,
+      "target": 88236.47,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-12-20 15:45:00",
@@ -4763,7 +6723,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 89,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1766163600,
+      "window_end": 1766362440,
+      "target": 87092.82,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-12-21 18:00:00",
@@ -4775,7 +6740,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 46,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1766163600,
+      "window_end": 1766362440,
+      "target": 87329.36,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-12-25 19:00:00",
@@ -4787,7 +6757,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 40,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1766592000,
+      "window_end": 1766979600,
+      "target": 88515.11,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2025-12-26 23:00:00",
@@ -4799,7 +6774,12 @@
       "r_multiple": 0.401,
       "outcome": "trail",
       "bars_held": 195,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1766592000,
+      "window_end": 1766979600,
+      "target": 89054.02,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2025-12-27 12:45:00",
@@ -4811,7 +6791,12 @@
       "r_multiple": 0.049,
       "outcome": "trail",
       "bars_held": 140,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1766592000,
+      "window_end": 1766979600,
+      "target": 88585.24,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-01-04 09:45:00",
@@ -4823,7 +6808,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 57,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1767474000,
+      "window_end": 1767635880,
+      "target": 92436.38,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-05 02:15:00",
@@ -4835,7 +6825,12 @@
       "r_multiple": 5.856,
       "outcome": "trail",
       "bars_held": 139,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1767474000,
+      "window_end": 1767635880,
+      "target": 92256.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-05 20:00:00",
@@ -4847,7 +6842,12 @@
       "r_multiple": -0.035,
       "outcome": "trail",
       "bars_held": 68,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1767474000,
+      "window_end": 1767635880,
+      "target": 96640.94,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-01-08 15:30:00",
@@ -4859,7 +6859,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 23,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1767715200,
+      "window_end": 1768335840,
+      "target": 87358.44,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-09 01:15:00",
@@ -4871,7 +6876,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1767715200,
+      "window_end": 1768335840,
+      "target": 89720.25,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-12 14:00:00",
@@ -4883,7 +6893,12 @@
       "r_multiple": -0.999,
       "outcome": "trail",
       "bars_held": 98,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1767715200,
+      "window_end": 1768335840,
+      "target": 84796.7,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-15 00:45:00",
@@ -4895,7 +6910,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 29,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1768399200,
+      "window_end": 1768577580,
+      "target": 101460.03,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-01-15 11:15:00",
@@ -4907,7 +6927,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 35,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1768399200,
+      "window_end": 1768577580,
+      "target": 98144.04,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-20 13:30:00",
@@ -4919,7 +6944,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1768777200,
+      "window_end": 1768948380,
+      "target": 90051.7,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-01-21 04:00:00",
@@ -4931,7 +6961,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 28,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1768777200,
+      "window_end": 1768948380,
+      "target": 84642.93,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-01-22 19:00:00",
@@ -4943,7 +6978,12 @@
       "r_multiple": -0.921,
       "outcome": "trail",
       "bars_held": 108,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769011200,
+      "window_end": 1769189160,
+      "target": 87437.59,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-27 11:45:00",
@@ -4955,7 +6995,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 56,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769356800,
+      "window_end": 1769879520,
+      "target": 86804.92,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-29 01:00:00",
@@ -4967,7 +7012,12 @@
       "r_multiple": 9.371,
       "outcome": "trail",
       "bars_held": 451,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769356800,
+      "window_end": 1769879520,
+      "target": 85534.63,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-29 23:45:00",
@@ -4979,7 +7029,12 @@
       "r_multiple": 3.193,
       "outcome": "trail",
       "bars_held": 360,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769356800,
+      "window_end": 1769879520,
+      "target": 78520.11,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-30 23:45:00",
@@ -4991,7 +7046,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769356800,
+      "window_end": 1769879520,
+      "target": 79108.35,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-01-31 13:00:00",
@@ -5003,7 +7063,12 @@
       "r_multiple": 5.017,
       "outcome": "trail",
       "bars_held": 211,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769356800,
+      "window_end": 1769879520,
+      "target": 80291.22,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-01-31 18:30:00",
@@ -5015,7 +7080,12 @@
       "r_multiple": 8.684,
       "outcome": "trail",
       "bars_held": 189,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769356800,
+      "window_end": 1769879520,
+      "target": 81174.38,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-02-02 22:15:00",
@@ -5027,7 +7097,12 @@
       "r_multiple": 10.448,
       "outcome": "trail",
       "bars_held": 601,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1769958000,
+      "window_end": 1770226800,
+      "target": 76596.92,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-02-08 15:45:00",
@@ -5039,7 +7114,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1770444000,
+      "window_end": 1770591900,
+      "target": 68005.01,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-09 05:00:00",
@@ -5051,7 +7131,12 @@
       "r_multiple": 1.316,
       "outcome": "trail",
       "bars_held": 334,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1770444000,
+      "window_end": 1770591900,
+      "target": 64937.71,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-02-13 18:45:00",
@@ -5063,7 +7148,12 @@
       "r_multiple": 3.27,
       "outcome": "trail",
       "bars_held": 192,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1770933600,
+      "window_end": 1771056360,
+      "target": 69035.26,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-16 19:15:00",
@@ -5075,7 +7165,12 @@
       "r_multiple": 0.605,
       "outcome": "trail",
       "bars_held": 330,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 63116.07,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-02-17 10:45:00",
@@ -5087,7 +7182,12 @@
       "r_multiple": 0.631,
       "outcome": "trail",
       "bars_held": 268,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 64607.34,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-18 16:30:00",
@@ -5099,7 +7199,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 18,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 64588.38,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-19 13:45:00",
@@ -5111,7 +7216,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 64,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 65640.71,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-21 08:30:00",
@@ -5123,7 +7233,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 25,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 66716.15,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-22 05:45:00",
@@ -5135,7 +7250,12 @@
       "r_multiple": 3.274,
       "outcome": "trail",
       "bars_held": 291,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 65222.68,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-23 06:00:00",
@@ -5147,7 +7267,12 @@
       "r_multiple": 3.402,
       "outcome": "trail",
       "bars_held": 194,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 65240.87,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-02-23 20:00:00",
@@ -5159,7 +7284,12 @@
       "r_multiple": 1.162,
       "outcome": "trail",
       "bars_held": 138,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 63697.34,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-02-24 06:45:00",
@@ -5171,7 +7301,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 95,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1771160400,
+      "window_end": 1771906680,
+      "target": 62620.79,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-01 22:45:00",
@@ -5183,7 +7318,12 @@
       "r_multiple": -0.767,
       "outcome": "trail",
       "bars_held": 86,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1772380800,
+      "window_end": 1772464320,
+      "target": 61977.61,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-03-12 00:30:00",
@@ -5195,7 +7335,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 117,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773226800,
+      "window_end": 1773361860,
+      "target": 67827.85,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-03-19 09:45:00",
@@ -5207,7 +7352,12 @@
       "r_multiple": 1.862,
       "outcome": "trail",
       "bars_held": 411,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 68028.75,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-20 03:15:00",
@@ -5219,7 +7369,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 23,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 69454.39,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-20 19:00:00",
@@ -5231,7 +7386,12 @@
       "r_multiple": 1.298,
       "outcome": "trail",
       "bars_held": 278,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 67400.38,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-03-22 04:30:00",
@@ -5243,7 +7403,12 @@
       "r_multiple": 2.782,
       "outcome": "trail",
       "bars_held": 144,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 68958.5,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-22 13:45:00",
@@ -5255,7 +7420,12 @@
       "r_multiple": -0.469,
       "outcome": "trail",
       "bars_held": 107,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 65664.34,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-24 19:15:00",
@@ -5267,7 +7437,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 86,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 65177.51,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-03-26 12:45:00",
@@ -5279,7 +7454,12 @@
       "r_multiple": 15.848,
       "outcome": "trail",
       "bars_held": 217,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 69302.68,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-27 14:00:00",
@@ -5291,7 +7471,12 @@
       "r_multiple": 0.673,
       "outcome": "trail",
       "bars_held": 116,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 62614.66,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-27 23:00:00",
@@ -5303,7 +7488,12 @@
       "r_multiple": -0.996,
       "outcome": "trail",
       "bars_held": 80,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 62460.06,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-03-29 20:45:00",
@@ -5315,7 +7505,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 36,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 64654.86,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-04-01 18:30:00",
@@ -5327,7 +7522,12 @@
       "r_multiple": 1.52,
       "outcome": "trail",
       "bars_held": 172,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 66099.91,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-04-02 06:30:00",
@@ -5339,7 +7539,12 @@
       "r_multiple": 0.807,
       "outcome": "trail",
       "bars_held": 124,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 64889.8,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-04-02 15:30:00",
@@ -5351,7 +7556,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 18,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 64195.02,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-04-03 07:30:00",
@@ -5363,7 +7573,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 24,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1773831600,
+      "window_end": 1775214000,
+      "target": 64176.03,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-04-07 16:15:00",
@@ -5375,7 +7590,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 37,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1775512800,
+      "window_end": 1775596260,
+      "target": 65123.98,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-04-17 06:45:00",
@@ -5387,7 +7607,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 30,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1776189600,
+      "window_end": 1776418080,
+      "target": 72636.89,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-04-20 19:45:00",
@@ -5399,7 +7624,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 3,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1776664800,
+      "window_end": 1776761220,
+      "target": 77718.6,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-04-24 14:30:00",
@@ -5411,7 +7641,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 8,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1776999600,
+      "window_end": 1777240440,
+      "target": 75910.7,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-04-27 10:30:00",
@@ -5423,7 +7658,12 @@
       "r_multiple": 0.953,
       "outcome": "trail",
       "bars_held": 211,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1777262400,
+      "window_end": 1777267800,
+      "target": 75403.54,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-04-28 18:30:00",
@@ -5435,7 +7675,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 28,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1777302000,
+      "window_end": 1777641000,
+      "target": 75222.3,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-05-04 01:45:00",
@@ -5447,7 +7692,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 14,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1777755600,
+      "window_end": 1777987260,
+      "target": 79959.92,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-05 07:30:00",
@@ -5459,7 +7709,12 @@
       "r_multiple": 0.322,
       "outcome": "trail",
       "bars_held": 225,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1777755600,
+      "window_end": 1777987260,
+      "target": 82530.88,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-09 09:30:00",
@@ -5471,7 +7726,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1778227200,
+      "window_end": 1778452320,
+      "target": 81303.49,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-09 21:00:00",
@@ -5483,7 +7743,12 @@
       "r_multiple": 0.26,
       "outcome": "trail",
       "bars_held": 117,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1778227200,
+      "window_end": 1778452320,
+      "target": 81412.42,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-10 01:15:00",
@@ -5495,7 +7760,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1778227200,
+      "window_end": 1778452320,
+      "target": 81385.36,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-11 03:45:00",
@@ -5507,7 +7777,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 164,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1778227200,
+      "window_end": 1778452320,
+      "target": 85191.25,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-14 12:30:00",
@@ -5519,7 +7794,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1778673600,
+      "window_end": 1778774400,
+      "target": 79100.68,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-05-21 11:15:00",
@@ -5531,7 +7811,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1779058800,
+      "window_end": 1779938220,
+      "target": 76723.22,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-05-22 16:45:00",
@@ -5543,7 +7828,12 @@
       "r_multiple": 2.687,
       "outcome": "trail",
       "bars_held": 110,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1779058800,
+      "window_end": 1779938220,
+      "target": 75433.4,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-05-23 00:00:00",
@@ -5555,7 +7845,12 @@
       "r_multiple": 1.811,
       "outcome": "trail",
       "bars_held": 81,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1779058800,
+      "window_end": 1779938220,
+      "target": 75015.21,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-23 12:30:00",
@@ -5567,7 +7862,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 31,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1779058800,
+      "window_end": 1779938220,
+      "target": 74397.79,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-27 00:15:00",
@@ -5579,7 +7879,12 @@
       "r_multiple": 5.041,
       "outcome": "trail",
       "bars_held": 188,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1779058800,
+      "window_end": 1779938220,
+      "target": 74488.13,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-05-28 03:00:00",
@@ -5591,7 +7896,12 @@
       "r_multiple": 1.282,
       "outcome": "trail",
       "bars_held": 81,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1779058800,
+      "window_end": 1779938220,
+      "target": 72239.29,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-06-08 03:30:00",
@@ -5603,7 +7913,12 @@
       "r_multiple": -0.487,
       "outcome": "trail",
       "bars_held": 107,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 71182.67,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-06-10 01:00:00",
@@ -5615,7 +7930,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 38,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 64027.4,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-12 15:00:00",
@@ -5627,7 +7947,12 @@
       "r_multiple": 0.011,
       "outcome": "trail",
       "bars_held": 212,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 68497.73,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-12 20:15:00",
@@ -5639,7 +7964,12 @@
       "r_multiple": -0.107,
       "outcome": "trail",
       "bars_held": 191,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 66896.85,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-06-15 01:30:00",
@@ -5651,7 +7981,12 @@
       "r_multiple": 12.726,
       "outcome": "trail",
       "bars_held": 170,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 64181.96,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-15 12:45:00",
@@ -5663,7 +7998,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 67034.15,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-16 23:15:00",
@@ -5675,7 +8015,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 6,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 67069.09,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-18 05:30:00",
@@ -5687,7 +8032,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 16,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 66344.86,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-19 18:30:00",
@@ -5699,7 +8049,12 @@
       "r_multiple": 1.136,
       "outcome": "trail",
       "bars_held": 97,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 64172.8,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-06-21 03:45:00",
@@ -5711,7 +8066,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 90,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1780808400,
+      "window_end": 1782190800,
+      "target": 65994.17,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-06-23 13:30:00",
@@ -5723,7 +8083,12 @@
       "r_multiple": -0.995,
       "outcome": "trail",
       "bars_held": 70,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 61341.44,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-06-24 16:15:00",
@@ -5735,7 +8100,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 60463.68,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-06-27 22:30:00",
@@ -5747,7 +8117,12 @@
       "r_multiple": 0.053,
       "outcome": "trail",
       "bars_held": 172,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 59654.79,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-07-01 06:30:00",
@@ -5759,7 +8134,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 2,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 55978.26,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-07-01 17:30:00",
@@ -5771,7 +8151,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 7,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 55614.72,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-07-05 04:30:00",
@@ -5783,7 +8168,12 @@
       "r_multiple": -0.252,
       "outcome": "trail",
       "bars_held": 91,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 61541.34,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-07-08 14:45:00",
@@ -5795,7 +8185,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 86,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1782194400,
+      "window_end": 1783576800,
+      "target": 58867.23,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-07-10 06:00:00",
@@ -5807,7 +8202,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 4,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1783638000,
+      "window_end": 1783647420,
+      "target": 61871.39,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-07-11 21:00:00",
@@ -5819,7 +8219,12 @@
       "r_multiple": 2.006,
       "outcome": "trail",
       "bars_held": 276,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1783692000,
+      "window_end": 1784043060,
+      "target": 62839.07,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-07-13 03:15:00",
@@ -5831,7 +8236,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1783692000,
+      "window_end": 1784043060,
+      "target": 62821.25,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-07-14 03:00:00",
@@ -5843,7 +8253,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 9,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1783692000,
+      "window_end": 1784043060,
+      "target": 60902.77,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-07-14 13:15:00",
@@ -5855,7 +8270,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 12,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1783692000,
+      "window_end": 1784043060,
+      "target": 61519.61,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-07-30 16:45:00",
@@ -5867,7 +8287,12 @@
       "r_multiple": -0.969,
       "outcome": "trail",
       "bars_held": 58,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785373200,
+      "window_end": 1785492360,
+      "target": 64665.81,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-08-03 19:15:00",
@@ -5879,7 +8304,12 @@
       "r_multiple": 0.578,
       "outcome": "trail",
       "bars_held": 191,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 66094.9,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-08-04 10:00:00",
@@ -5891,7 +8321,12 @@
       "r_multiple": -0.244,
       "outcome": "trail",
       "bars_held": 132,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 66314.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-08-07 07:45:00",
@@ -5903,7 +8338,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 10,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 64575.87,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-08-08 19:30:00",
@@ -5915,7 +8355,12 @@
       "r_multiple": -0.998,
       "outcome": "trail",
       "bars_held": 45,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 65519.96,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-08-11 01:00:00",
@@ -5927,7 +8372,12 @@
       "r_multiple": -0.993,
       "outcome": "trail",
       "bars_held": 77,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 64659.53,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-08-12 06:30:00",
@@ -5939,7 +8389,12 @@
       "r_multiple": -0.817,
       "outcome": "trail",
       "bars_held": 157,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 65392.22,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-08-14 00:15:00",
@@ -5951,7 +8406,12 @@
       "r_multiple": -0.994,
       "outcome": "trail",
       "bars_held": 48,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 64413.15,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-08-17 22:45:00",
@@ -5963,7 +8423,12 @@
       "r_multiple": 52.348,
       "outcome": "trail",
       "bars_held": 622,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1785636000,
+      "window_end": 1787018400,
+      "target": 64894.11,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-08-30 14:45:00",
@@ -5975,7 +8440,12 @@
       "r_multiple": -1.0,
       "outcome": "sl",
       "bars_held": 11,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1787882400,
+      "window_end": 1788462300,
+      "target": 77052.27,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-08-31 02:00:00",
@@ -5987,7 +8457,12 @@
       "r_multiple": 0.826,
       "outcome": "trail",
       "bars_held": 312,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1787882400,
+      "window_end": 1788462300,
+      "target": 75876.99,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-09-01 13:45:00",
@@ -5999,7 +8474,12 @@
       "r_multiple": 0.087,
       "outcome": "trail",
       "bars_held": 169,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1787882400,
+      "window_end": 1788462300,
+      "target": 73825.5,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-09-01 21:45:00",
@@ -6011,7 +8491,12 @@
       "r_multiple": -0.197,
       "outcome": "trail",
       "bars_held": 137,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1787882400,
+      "window_end": 1788462300,
+      "target": 75110.77,
+      "break_kind": "B2"
     },
     {
       "entry_date": "2026-09-06 12:15:00",
@@ -6023,7 +8508,12 @@
       "r_multiple": -0.997,
       "outcome": "trail",
       "bars_held": 65,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1788523200,
+      "window_end": 1789272000,
+      "target": 78696.0,
+      "break_kind": "FLIP"
     },
     {
       "entry_date": "2026-09-08 10:15:00",
@@ -6035,7 +8525,12 @@
       "r_multiple": -0.403,
       "outcome": "trail",
       "bars_held": 95,
-      "partial_exit_price": 0.0
+      "partial_exit_price": 0.0,
+      "htf_regime": "flip",
+      "window_start": 1788523200,
+      "window_end": 1789272000,
+      "target": 76151.03,
+      "break_kind": "FLIP"
     }
   ]
 }
