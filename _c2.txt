@@ -1,0 +1,5 @@
+Remove scratch files that were swept into the previous commit
+
+_cm.txt and four temp probe files were committed by an overly broad git add -A.
+They are not part of the archive/ENTRY-1 change and are removed here so the tree
+only carries source.

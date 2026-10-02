@@ -1,3 +1,0 @@
-entry_minus_1  trades= 500 gross=  +445.19 windows=179
-unified        trades= 499 gross=  +355.72 windows=179
-v19_champion   trades= 503 gross=  +443.58 windows=177
