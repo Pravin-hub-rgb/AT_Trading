@@ -53,7 +53,22 @@ from test_experiments_craze import (
 )
 from engine.v18_params import get_v18_params as _gvp
 from src.btc.btc_routes import _trade_costs
-import src.btc.engines.htf_ltf.v18_streak_halt as shipped_mod
+# The identity gate answers "does the patched module equal the engine it patches?"
+# craze patches unified.py, so the comparison target must be unified.py. It used to
+# import v18_streak_halt here, which made the gate diff two different books - v18's
+# construction (minBars_1h=20, its own params) against unified's leg chain. It
+# reported DIVERGED no matter what, and the only way to make it pass would have
+# been to "fix" a divergence that was never in the harness.
+#
+# v18 is not lost: unified.py documents v18's pin on v18's OWN construction
+# (max_positions=1, exp_persist=0, exp_causal_sl=0 -> 352 trades, v18's
+# COUNT_BAND=(348,358)), and v18_streak_halt.py still exists for that. This gate
+# is only patch-neutrality; verifying the v18 book is a different job.
+#
+# NOTE: the _shipped_* reference rows in experiment_registry.py carry v18-era pins
+# (340 / 351 trades). They were measured through this import and will need
+# re-anchoring on unified. They are reference rows, not books.
+import src.btc.engines.htf_ltf.unified as shipped_mod
 
 _g = _gvp(INSTRUMENT)
 
