@@ -1397,10 +1397,14 @@ def btc_backtest(
     elif version == "v19_causal":
         if simulate_htf_ltf_v19_champion is None:
             return JSONResponse(status_code=500, content={"detail": "v19_causal engine not loaded"})
-        # Identical to v19_champion except exp_causal_sl=1, which swaps the initial
-        # stop from the swing's retroactively-known origin to the running extreme as
-        # of the entry bar. Measured IS 494t/+247.96R vs retro 500t/+325.78R, OOS
-        # 282t/+80.01R vs 279t/+70.15R. See exp_v19_causal.py.
+        # NOTE: the "494t / +247.96R vs 500t / +325.78R" figures that used to sit
+        # here were stale - they predate C16. Measured on the current engine,
+        # v19_causal, v19_c16 and the "unified" branch below are IDENTICAL
+        # trade-for-trade at 499 trades / +355.72R gross, because pivot_rule now
+        # defaults to "leg" on this engine and exp_causal_sl is v18's mechanism
+        # for the same thing. Keeping three dropdown entries that return the same
+        # book is worse than one, so this stays as a labelled alias rather than a
+        # separate configuration.
         nested = simulate_htf_ltf_v19_champion(
             candles_htf=candles_htf,
             swings_htf=swings_htf,
