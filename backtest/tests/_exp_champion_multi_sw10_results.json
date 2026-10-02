@@ -1,6 +1,6 @@
 {
   "key": "champion_multi_sw10",
-  "desc": "Champion multi sw10 \u2014 causal SL (live-honest)",
+  "desc": "Champion multi sw10 - PRE-C16 retro book, origin SL pivot (LOOKAHEAD, research baseline only)",
   "params": {
     "sl_buf_atr": 0.01,
     "ext_stop_r": 3.0,
@@ -14,12 +14,13 @@
     "window_end": "exit",
     "exp_partial_r": 0.0,
     "exp_mltf": true,
-    "exp_persist": 7
+    "exp_persist": 7,
+    "pivot_rule": "origin"
   },
   "swing": "sw10",
   "results": {
     "key": "champion_multi_sw10",
-    "desc": "Champion multi sw10 \u2014 causal SL (live-honest)",
+    "desc": "Champion multi sw10 - PRE-C16 retro book, origin SL pivot (LOOKAHEAD, research baseline only)",
     "n": 500,
     "gross": 445.22499999999957,
     "net": 325.78193456515777,

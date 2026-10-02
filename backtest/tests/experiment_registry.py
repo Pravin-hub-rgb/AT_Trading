@@ -225,7 +225,17 @@ EXPERIMENTS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg"},
         "swing": "sw10",
-        "pins": {"n": 499, "net": 239.12, "dd": 15.36, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
+        # dd pin REMOVED 2026-10-02. It read 15.36, stamped MEASURED 2026-10-01 in
+        # the same session as the origin row above, whose dd of 17.83 reproduces
+        # exactly on demand. Here n, net and partials all round-trip and only dd
+        # was wrong - one field out of four, so a transcription slip rather than a
+        # different run. It never matched any measurement taken since: not 32.04
+        # (current IS, confirmed three ways), not 17.83 (origin), not 23.87 (h2 only).
+        # Deliberately not re-anchored to 32.04: three computations agreeing makes a
+        # measurement, not a spec, and pinning it would leave a check that restates its
+        # own output. Removed instead, same as the _shipped_* anchors above. Do not
+        # re-add from memory. n / net / partials / oos below are the book.
+        "pins": {"n": 499, "net": 239.12, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
         "oos": {"n": 280, "net": 72.8},  # MEASURED. NOT the origin book's 279 / +70.15.
     },
 
@@ -1107,33 +1117,30 @@ EXPERIMENTS = {
     },
 
     # ===== SHIPPED BASELINE (identity gate reference) =====
-    # D3 anchor audit (2026-09-20): the old "_shipped_sw20" pin {n:351, gross:225.3}
-    # was an IMPOSSIBLE hybrid — n came from the fine+chop58 run (gross there is
-    # +238.0), gross came from the coarse+chop61.8 run (n there is 340).
-    # Split into two exact reference rows, one per basis. See docs/ANCHOR_BASIS_AUDIT.md.
-
-    "_shipped_coarse_618": {
-        "desc": "Shipped engine, flags off, sw20, COARSE 15m fills + chop 61.8 (identity-gate basis)",
-        "engine": "shipped",
-        "params": {},
-        "use_bp": False,
-        "swing": "sw20",
-        "basis": "coarse",
-        "pins": {"n": 340, "gross": 225.3},
-    },
-    "_shipped_fine_58": {
-        "desc": "Shipped engine, flags off, sw20, FINE 1m fills + chop 58 (production basis)",
-        "engine": "shipped",
-        "params": {},
-        "use_bp": True,
-        "swing": "sw20",
-        "basis": "fine",
-        "pins": {"n": 351, "gross": 211.7},
-    },
-    # NOTE: no separate "sw15" row — run_one fixes the LTF chain at sw15 (mb50)
-    # and cfg["swing"] selects only the HTF window chain, so a sw15 row is not
-    # expressible and _shipped_coarse_618 IS the craze identity twin (verified:
-    # 340t / +225.3R, IDENTICAL to test_experiments_craze.main() gate output).
+    #
+    # REMOVED 2026-10-02: "_shipped_coarse_618" (pins 340 / +225.3R) and
+    # "_shipped_fine_58" (pins 351 / +211.7R). Deleted rather than re-anchored,
+    # and that is the point.
+    #
+    # These were observations, not specs. Nothing independent said "the engine
+    # should print 340 on the coarse basis"; they recorded what one module
+    # printed once, through an import that has since been repointed from
+    # v18_streak_halt to unified. Re-anchoring them to whatever unified prints
+    # today would leave a check that can never fail - the same failure this
+    # registry already had once, when a pin agreed with a stale module and was
+    # believed. A missing anchor is visible. A tautological one is not.
+    #
+    # The identity gate's actual contract is patched == shipped. That is
+    # enforced directly in run_experiment.py against unified and needs no
+    # registry row to do its job.
+    #
+    # What legitimately survives as a spec, and is NOT here: v18's
+    # COUNT_BAND=(348,358), an independent band that is still checked.
+    #
+    # History: docs/ANCHOR_BASIS_AUDIT.md records why the single original pin
+    # {351, +225.3R} was split into two - n came from the fine+chop58 run while
+    # gross came from the coarse+chop61.8 run. exp_crosslane.py still listed both
+    # rows as reference lanes and was updated alongside this removal.
 
     # ===== ENTRY-QUALITY FILTERS (Phase 2: skip bad setups before they happen) =====
     # Based on entry autopsy (Phase 1b): B2+doji is worst combo (48t, 18.8% WR,

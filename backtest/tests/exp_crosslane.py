@@ -80,8 +80,10 @@ LANES = [
     # artifact; on a bare engine it would be a market property or nothing.
     "baseline_no_partial_sw20",     # +122.3R
     "baseline_no_partial_sw10",     # +137.7R
-    "_shipped_fine_58",             # shipped engine, fine 1m, chop 58
-    "_shipped_coarse_618",          # identity basis, coarse 15m
+    # REMOVED 2026-10-02: _shipped_fine_58 and _shipped_coarse_618. Both pins
+    # were observations of a module reached through an import that has since
+    # been repointed from v18_streak_halt to unified, with no spec behind them.
+    # See the tombstone in experiment_registry.py.
 ]
 
 # The registry's own pins are a "causal SL" variant (+248.0R for the
@@ -98,8 +100,9 @@ DOC_PINS = {
                                          "oos": (140, 16.9)},
     "baseline_no_partial_sw20": {"is": (372, 122.3)},
     "baseline_no_partial_sw10": {"is": (395, 137.7)},
-    "_shipped_fine_58": {"is": (351, None)},      # gross pin
-    "_shipped_coarse_618": {"is": (340, None)},    # gross pin
+    # _shipped_fine_58 / _shipped_coarse_618 removed here too, for the reason
+    # above. These were doc-verified ledgers of a v18-era module; keeping the
+    # entries without the rows would let crosslane assert against nothing.
 }
 
 
