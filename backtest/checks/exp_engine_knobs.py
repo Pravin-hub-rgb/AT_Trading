@@ -112,6 +112,41 @@ def main():
             print("    %s" % k)
         print("  These cannot be swept through craze. They need a different path.")
         print()
+    # --- the one existence question that has a cheap answer -----------
+    import glob as _g
+    docs = {}
+    for _p in _g.glob(str(ROOT / "backtest/docs/*.md")) + _g.glob(str(ROOT / "*.md")):
+        docs[Path(_p).name] = Path(_p).read_text(encoding="utf-8", errors="replace")
+    engine_knobs = set()
+    for _f, _t in blob.items():
+        engine_knobs |= set(KNOB.findall(_t))
+    print()
+    print("-" * 88)
+    print("  ENGINE-NATIVE AND LABELLED UNTESTED  <- the cheap existence question")
+    print("-" * 88)
+    print("  %d knob(s) exist in backend/src: %s"
+          % (len(engine_knobs), ", ".join(sorted(engine_knobs))))
+    found = []
+    for k in sorted(engine_knobs):
+        for name, t in docs.items():
+            for m in re.finditer(re.escape(k), t):
+                win = t[max(0, m.start() - 260):m.end() + 260].lower()
+                if "untested" in win:
+                    found.append((k, name, t[:m.start()].count("\n") + 1))
+                    break
+    for k, name, ln in found:
+        print("    %-20s %s:%d" % (k, name, ln))
+    if not found:
+        print("    (none)  ->  CLASS CLOSED 2026-10-01")
+        print()
+        print("    A knob that is real, built into an engine, and still labelled")
+        print("    untested is the one existence question worth time, because it")
+        print("    means nobody ever ran a feature the engine already has. None")
+        print("    here, so the sweep is not needed. Answered by query, not by")
+        print("    auditing targets by hand.")
+    else:
+        print("    ^ exist in an engine AND called untested. Run these.")
+
 
     print("=" * 88)
     print("  HOW TO READ THIS")

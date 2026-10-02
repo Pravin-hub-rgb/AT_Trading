@@ -43,6 +43,32 @@ checks.** Most predate the current venue convention and the C16 re-anchor. Their
 presence in the tree is not endorsement. Do not bulk-run the directory as a
 health check — that is precisely the move `exp_sweep_static.py` was rewritten to
 warn against.
+## 5. The "wired wrong" class — CLOSED by query, 2026-10-01
+
+A knob that **exists in `backend/src`** and is still labelled **untested** in a
+doc means nobody ever ran a feature the engine already has. That is the one
+existence question worth spending time on, and it has a cheap answer.
+
+```
+knobs existing in backend/src: 4
+  exp_causal_sl  exp_persist  exp_v19_2x2  exp_v19_causal
+engine-native AND labelled untested: 0
+  -> CLASS CLOSED
+```
+
+Run it as part of `exp_engine_knobs.py` — it is a section there now, not a
+separate script.
+
+**What this does NOT close:** a feature that exists and is wired to the wrong
+value. That needs reading, not a query, and `exp_engine_knobs` cannot see it by
+construction. The three candidates were checked anyway and are all accounted for:
+`_r_touch_end` is engine-native and the r_touch arm is rejected (`v18_params`
+ships `window_end="exit"`); the trail/breakeven path carries the D3 ordering fix
+at three sites with its rebaseline documented; `exp_partial_r` is harness-only
+and already closed in `CANDIDATE_BUILD_SHEET.md` Tier D.
+
+**Expected yield was zero and was zero. Do not re-propose this audit** — it was
+proposed twice this session and closed twice by query.
 
 ## 4. What none of these checks cover
 
