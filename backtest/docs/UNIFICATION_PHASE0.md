@@ -127,6 +127,58 @@ leg   mode=atr_high        chop_thresh=58.0  cooldown=8           ext_stop_r=3.0
 **Four parameters differ. The two pins are two different strategies, not one
 strategy at two concurrency levels.** The claim that "the two pins sit on opposite
 sides of the concurrency difference" is false — they differ in mode, chop,
+## Phase 2 — INCOMPLETE. One cause isolated, one not.
+
+`test_experiments_craze.py:22` now points at `unified.py`. `build_module()`
+succeeds with every anchor satisfied. But arm **S1** — the real shipping path,
+raw engine source text-patched by craze, which is what every experiment in the
+repo actually runs — returns **499 IS (correct) but 260 OOS where every other path
+gives 280.**
+
+```
+U1  raw unified, max_positions=1, v18 chain ->  352           PASS
+U2  raw unified, max_positions=0, leg chain ->  499 / 280      PASS
+S1  craze-patched shipping path            ->  499 IS / 260    *** GAP ***
+```
+
+**The two pins did not catch this. The shipping-path arm did.** That is the arm
+existing for.
+
+### Isolated: `exp_persist=7` was silently ignored before
+
+Measured by replaying the ORIGINAL `test_experiments_craze.py` from git against
+`v18_streak_halt.py`: **280 trades / +72.8R — the pin reproduces exactly.** So the
+baseline is confirmed, not assumed.
+
+`v18_streak_halt.py` contains **no hysteresis logic at all** (zero occurrences of
+`PERSIST`). The old harness injected `exp_persist=0` into v18's signature as an
+unused kwarg, so the registry's `exp_persist: 7` was accepted and **ignored**.
+Phase 2 repoints the harness at `unified.py`, which *does* have the `PERSIST`
+gate, and the 7 now reaches it. That is a behaviour change, not a harness bug.
+
+**Cost of that change, measured:** 294 → 260 OOS when hysteresis is switched on.
+
+### Not isolated: 294 vs 280
+
+Running the patched path with `exp_persist` forced to 0 gives **502 IS / 294 OOS**,
+not 280. So hysteresis accounts for one difference and **something else accounts
+for 14 more trades**, and that something has not been identified.
+
+Candidates not yet eliminated: the `t_b3` re-anchor (the B3-relocation block now
+hangs off unified's 12-space assignment inside the `exp_causal_sl` else-branch
+rather than v18's single 8-space line), and the `_csl`/`_csh` running-extreme
+computation, which is native in unified and injected in the old path and may not
+be computing the same thing.
+
+**This is a hypothesis list, not a diagnosis.** The next step is a diff of the two
+*generated* modules — `patched v18` against `patched unified` — rather than another
+round of arm-guessing, because two attempts at the diff failed on the original
+module's `_bigstack_run` indirection and the temp file being unlinked on the way
+out.
+
+**Phase 2 is not done. Do not record the unification as behaviour-preserving.**
+
+## Verdict on Phase 0
 cooldown and ext_stop as well.
 
 There is also a hard arithmetic check. P117 measured `champion_multi_sw10_leg` at
