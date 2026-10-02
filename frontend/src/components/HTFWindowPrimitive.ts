@@ -139,19 +139,25 @@ export class HTFWindowPrimitive implements IPanePrimitive<Time> {
   }
 
   paneViews(): readonly IPanePrimitivePaneView[] {
-    return [new HTFWindowPaneView(this.items)];
+    return [new HTFWindowPaneView(this.items, this.showRLevels)];
   }
 }
 
 class HTFWindowPaneView implements IPanePrimitivePaneView {
-  constructor(private items: WindowItem[]) {}
+  constructor(
+    private items: WindowItem[],
+    private showRLevels: boolean,
+  ) {}
   renderer(): IPrimitivePaneRenderer | null {
-    return new HTFWindowPaneRenderer(this.items);
+    return new HTFWindowPaneRenderer(this.items, this.showRLevels);
   }
 }
 
 class HTFWindowPaneRenderer implements IPrimitivePaneRenderer {
-  constructor(private items: WindowItem[]) {}
+  constructor(
+    private items: WindowItem[],
+    private showRLevels: boolean,
+  ) {}
 
   draw(target: CanvasRenderingTarget2D): void {
     target.useMediaCoordinateSpace(({ context: ctx }) => {
@@ -191,8 +197,10 @@ class HTFWindowPaneRenderer implements IPrimitivePaneRenderer {
           ctx.stroke();
         }
 
-        // R-level horizontal lines — distinct colors regardless of direction
-        if (!this.showRLevels) return;
+        // R-level horizontal lines - distinct colors regardless of direction.
+        // `continue`, never `return`: this sits inside the per-window loop, and
+        // returning here would abandon every remaining window, not just this one.
+        if (!this.showRLevels) continue;
         if (it.yEntry == null || it.ySl == null) continue;
         const x1 = Math.max(0, it.openX);
         const x2 = it.closeX != null ? Math.min(W, it.closeX) : W;
