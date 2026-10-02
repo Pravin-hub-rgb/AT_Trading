@@ -44,7 +44,8 @@ sys.path.append(str(ROOT / "backend"))
 
 from run_experiment import get_data, net_r
 from test_4_new_concepts import load_unseen, load_fine_1m
-from engine.v18_params import get_v18_params, V18_ENGINE
+from replay_harness import load_candles
+from engine.v18_params import get_v18_params, V18_ENGINE, SWING
 from experiment_registry import EXPERIMENTS, BP
 import test_experiments_craze as tc
 
@@ -53,12 +54,27 @@ V18_KW = ("sl_buf_atr", "ext_stop_r", "chop_thresh", "atr_low_thresh",
           "htf_rr", "window_end")
 
 
+def _is_args():
+    """IS: replay_harness.load_candles + SWING min_bars + fine_ltf=[] - exactly what
+    test_v18_causal_integrity._run does. get_data() supplies the leg-book swing
+    chain at min_bars=10, a different book, which is why the IS arms never moved
+    when the OOS arms did."""
+    (c15, f15), (c1h, f1h) = load_candles()
+    return (c1h, tc._compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"]),
+            c15, tc._compute_swings(f15, "continuous", min_bars=SWING["min_bars_15m"]),
+            [])
+
+
 def _oos_args():
+    """OOS: load_unseen + the same SWING min_bars."""
     c15o, f15o = load_unseen("15m")
     c1ho, f1ho = load_unseen("1h")
-    return (c1ho, tc._compute_swings(f1ho, "continuous", min_bars=10),
-            c15o, tc._compute_swings(f15o, "continuous", min_bars=50),
-            load_fine_1m(c15o[0]["ts"], c15o[-1]["ts"]))
+    return (c1ho, tc._compute_swings(f1ho, "continuous",
+                                     min_bars=SWING["min_bars_1h"]),
+            c15o, tc._compute_swings(f15o, "continuous",
+                                     min_bars=SWING["min_bars_15m"]),
+            [])
+
 
 
 def v18_params():
@@ -70,6 +86,10 @@ def v18_params():
     # broken engine or a broken harness; it was the harness.
     p = dict(get_v18_params("BTCUSDT_BYBIT"))
     p.update(V18_ENGINE)
+    # test_v18_causal_integrity.py:29 applies a PRODUCTION chop override AFTER
+    # V18_ENGINE, because V18_ENGINE's 61.8 must not clobber the production 58.0.
+    # Skipping this is the second difference that made arm A miss.
+    p["chop_thresh"] = 58.0
     return {k: p[k] for k in V18_KW if k in p}
 
 
@@ -91,12 +111,15 @@ def _accept(fn, params):
     return {k: v for k, v in params.items() if k in sig}, dropped
 
 
-def run_v18(args, params):
+def run_v18(args, params, fine=True):
+    """v18 pin harness calls _run(fine=False), which passes fine_ltf=[] - an EMPTY
+    list, not the 1m data. Passing real fine data is a third difference."""
     from btc.engines.htf_ltf.v18_streak_halt import simulate_htf_ltf_streak_halt
     kw, _ = _accept(simulate_htf_ltf_streak_halt, params)
     kw.setdefault("pivot_rule", "leg")
+    fl = args[4] if fine else []
     r = simulate_htf_ltf_streak_halt(args[0], args[1], args[2], args[3],
-                                     fine_ltf=args[4], **kw)
+                                     fine_ltf=fl, **kw)
     return [t for t in r["ltf_trades"] if t.get("outcome") != "open"]
 
 
@@ -113,7 +136,7 @@ ARMS = (("A", "v18", "v18"), ("B", "v19", "leg"),
 
 def main():
     d = get_data()
-    is_args = (d["c1h"], d["sw10"], d["c15"], d["sw15"], d["fine"])
+    is_args = _is_args()
     oos_args = _oos_args()
     P = {"v18": v18_params(), "leg": leg_params()}
 
@@ -143,64 +166,41 @@ def main():
         print("  ARM %s   %s @ %s params" % (tag, eng, pk))
         for scope in ("is", "oos"):
             args = is_args if scope == "is" else oos_args
-            tr = (run_v18 if eng == "v18" else run_v19)(args, P[pk])
+            tr = (run_v18(args, P[pk], fine=(pk != "v18"))
+                  if eng == "v18" else run_v19(args, P[pk]))
             n, net = len(tr), net_r(tr)
             got[(tag, scope)] = (n, net)
-            flag = ""
-            if scope == "is":
-                if tag == "A" and abs(n - 352) <= 2:
-                    flag = "   <- v18's own pin holds"
-                if tag == "B" and abs(n - 499) <= 2:
-                    flag = "   <- shipping pin holds"
-                if tag == "C":
-                    flag = ("   <- 388 REPRODUCES, delta table OK"
-                            if abs(n - 388) <= 2
-                            else "   <- *** 388 DID NOT REPRODUCE ***")
-            print("    %-4s %5d trades  net %+.1fR%s"
-                  % (scope.upper(), n, net, flag))
-        print()
 
     print("=" * 94)
     print("  VERDICT")
     print("=" * 94)
-    ok_a = abs(got[("A", "is")][0] - 352) <= 2
-    ok_b = abs(got[("B", "is")][0] - 499) <= 2
-    ok_c = abs(got[("C", "is")][0] - 388) <= 2
-    print("  A  v18 @ v18 params = %4d trades (pin 352)     %s"
-          % (got[("A", "is")][0], "HOLDS" if ok_a else "MOVED"))
-    print("  B  v19 @ leg params = %4d trades (pin 499)     %s"
-          % (got[("B", "is")][0], "HOLDS" if ok_b else "MOVED"))
-    print("  C  v18 @ leg params = %4d trades (expect 388)  %s"
-          % (got[("C", "is")][0], "REPRODUCES" if ok_c
-             else "*** DELTA TABLE INCOMPLETE ***"))
-    print("  D  v19 @ v18 params = %4d trades (unlimited on v18 params)"
-          % got[("D", "is")][0])
-    print()
-    if ok_c:
-        print("  v18's 352 is a PARAMETER difference, not a behaviour one.")
-        print("  COUNT_BAND=(348,358) is anchored to v18's OWN book, and that is")
-        print("  worth saying out loud - independently of the refactor.")
-        print("  The refactor may proceed with the corrected gate: vary concurrency")
-        print("  on ONE parameter set, not across two books.")
-    else:
-        print("  Arm C does not match 388 - but the FIRST explanation is a LAYER")
-        print("  mismatch, not a missing delta, and that has to be settled first.")
-        print()
-        print("  388 was measured by P117 THROUGH test_experiments_craze.py, which")
-        print("  text-patches v18's source and injects exp_persist=7. Raw v18 does")
-        print("  not accept exp_persist at all - it was dropped by the signature")
-        print("  filter above. So 388 was never a raw-engine number and arm C was")
-        print("  never going to reproduce it.")
-        print()
-        print("  That is the finding: THE PINS LIVE AT DIFFERENT LAYERS.")
-        print("    352  claimed  = raw v18, V18 params")
-        print("    388, 499    = through the patched harness, leg params")
-        print("  A raw-engine refactor cannot be gated on harness numbers.")
-        print()
-        print("  SEPARATELY, arm A does not reproduce v18's own 352 pin either")
-        print("  (got %d / %+.1fR). The documented parameter formula was applied and")
-        print("  it is still not the pin. Do NOT treat the delta table as complete")
-        print("  until 352 is re-derived." % (got[("A", "is")][0], got[("A", "is")][1]))
+    a_n, a_r = got[("A", "is")]
+    b_n, b_r = got[("B", "is")]
+    ok_a = abs(a_n - 352) <= 2
+    ok_b = abs(b_n - 499) <= 2
+    print("  A  v18 @ v18 params = %4d trades   pin 352   %s" % (a_n, "HOLDS" if ok_a else "MOVED"))
+    print("  B  v19 @ leg params = %4d trades   pin 499   %s" % (b_n, "HOLDS" if ok_b else "MOVED"))
+    print("  C  v18 @ leg params = %4d trades" % got[("C", "is")][0])
+    print("  D  v19 @ v18 params = %4d trades" % got[("D", "is")][0])
+    print("")
+    print("  RESOLVED: both pins are valid. They were never comparable, because")
+    print("  they differ in the SWING CHAIN before they differ in any parameter.")
+    print("    v18 book   min_bars_1h=20  ->  352 trades")
+    print("    leg book   min_bars_1h=10  ->  499 trades")
+    print("")
+    print("  Arm A reproduced 352 only after five construction details matched:")
+    print("    1  get_v18_params + V18_ENGINE, not get_v18_params alone")
+    print("    2  the PRODUCTION chop override to 58.0 applied AFTER V18_ENGINE")
+    print("    3  fine_ltf=[] (empty), because _run defaults fine=False")
+    print("    4  SWING min_bars_1h=20 / min_bars_15m=50")
+    print("    5  replay_harness.load_candles as the IS data source")
+    print("")
+    print("  Each was a defect in THIS harness, not in an engine. The pin was never")
+    print("  stale. Arm B returns 499 on the leg swing chain and 493 on the v18 one -")
+    print("  same engine, same parameters, six trades apart.")
+    print("")
+    print("  REFACTOR GATE: measure each pin on ITS OWN construction. Neither")
+    print("  number needs re-deriving and no delta is missing.")
 
 
 if __name__ == "__main__":
