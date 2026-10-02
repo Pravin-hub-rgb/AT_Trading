@@ -66,7 +66,13 @@ window structure does not obviously offer more.**
 failure is the one that cannot be argued away.
 
 **It is the strongest STRUCTURE found in the entire round**, and it is
-worth stating plainly because nothing else came close:
+worth stating plainly because nothing else came close.
+
+*Qualification added 2026-10-01:* "structure" here means the outlive cohort passes
+every quality gate on `r_multiple`. It does **not** mean there is an entry-time
+signal that identifies the cohort before the fact. `BARS_TO_WEND_P115.md` showed
+the only proposed identifying feature was the label itself. A reader who lands
+here and skips P95 should read this as a quality-gate finding, not a filter.
 
 | | champion | outlive cohort |
 |---|---|---|
