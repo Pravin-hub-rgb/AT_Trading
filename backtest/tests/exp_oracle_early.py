@@ -50,7 +50,7 @@ from __future__ import annotations
 
 import bisect as bs
 import random
-import sys
+import sys
 # NOTE: this walk recurses through pathlib. Do NOT fix a RecursionError here by
 # raising sys.setrecursionlimit - that overflows the C stack and kills the process
 # with 0xc00000fd instead of raising. Use backtest/tests/_bigstack.run instead.
