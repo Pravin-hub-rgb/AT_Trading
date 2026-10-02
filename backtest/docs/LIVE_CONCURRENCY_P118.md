@@ -1,62 +1,56 @@
-# P118 (opened) — THE LIVE BOT IS STRUCTURALLY CAP-1. The shipping book is not executable.
+# P118 — RETRACTED IN SCOPE 2026-10-01. The live bot is out of scope.
 
-Branch: agents/champion-reality-audit
-Date: 2026-10-01. **Code read. No run.** Source: `ANCHOR_BASIS_AUDIT.md:343-347`.
+**This investigation was a category error and its findings are withdrawn as
+research.** Kept in the repo only so the mistake is not repeated.
 
-## The claim under audit
+## What it claimed
 
-> "cap=5 is FREE, use for live risk" — ANCHOR_BASIS_AUDIT.md:346-347, supported by
-> the cap1..cap5 grid at :105-107.
+That `ANCHOR_BASIS_AUDIT.md:346-347` ("cap=5 is FREE, use for live risk") is a
+capability mismatch, because `live_loop.py` is structurally single-position
+(`_open_ltf_trade: dict | None` at :151, an unconditional `continue` at
+:1781-1784, one symbol at `bybit_order.py:258`).
 
-## The finding
+## Why it is withdrawn
 
-**The live bot cannot hold more than one position. This is structural, not
-configurable.**
+**The programme is backtesting only. Reading `live_stuff/` was out of scope.**
 
-| site | evidence |
+Worse, the reasoning was wrong even as a live-engine argument. I measured
+`champion_multi_sw10_leg` at `exp_max_concurrent=1` and reported −11.8R OOS as
+"the config the bot can execute". But the live engine runs
+**`v18_streak_halt.py`, which is a different book**:
+
+- `test_v18_causal_integrity.py:39` builds `kw` without `exp_mltf`, and
+  `v18_streak_halt.py` contains **no concurrency parameter at all**. v18 is
+  serial *natively* — its 352 trades **are** its cap-1 count.
+- `COUNT_BAND = (348, 358)`. My 388 is **inside** the band, so the gate does not
+  fail. My "count gate is unreachable" conclusion was wrong.
+- v18's own record is +146.55R net / PF 1.947 / 5 of 5 tests pass. The −11.8R
+  belongs to a hypothetical champion-at-cap-1 that nobody runs.
+
+**So the −11.8R is not a deployability finding. It is a finding about a book
+that does not exist**, and I reported it as the headline.
+
+## The three claims that were wrong
+
+| claim | status |
 |---|---|
-| `live_loop.py:151` | `self._open_ltf_trade: dict \| None = None` — a scalar, not a list |
-| `live_loop.py:1781` | `in_trade = self._open_ltf_trade is not None` |
-| `live_loop.py:1783` | `if in_trade:` → journal `stale_skip`, `continue` — trade is **not executed** |
-| `bybit_order.py:258` | `get_positions(category="linear", symbol=self.symbol)` — one symbol |
-| `bybit_order.py:279` | `get_position()` → `dict \| None` |
+| "COUNT_BAND will fail — 388 is outside" | **false.** 388 ∈ (348, 358) |
+| "the live config gives −11.8R OOS" | **wrong object.** v18 ≠ champion |
+| "multi-position is a SHIPPING BLOCKER" | **unsupported.** nothing measured a live bot |
 
-There is no position collection anywhere in `live_loop.py` or `bybit_order.py`. The
-single-position guard at :1781-1784 is an unconditional `continue`: a second
-concurrent signal is journaled as skipped and discarded.
+## What survives
 
-## Why this is not a stale number
+Only one thing, and it is a strategy statement, not a deployability one:
 
-The P117 grid answers "does the cap grid transfer from origin to leg". It cannot
-answer this. **Re-running a backtest against a bot that structurally cannot
-execute the configuration reproduces the exact trap P115 fell into — a plausible
-number surviving while its premise is false.** The premise here is that a live
-bot holds 4–5 positions. It holds one.
+**The champion requires 5-deep concurrency to reach its own numbers, and v18 is a
+different book that has its own positive record.** There are two books, not one
+book with a config problem. Selecting between them is a strategy question.
 
-So `ANCHOR_BASIS_AUDIT.md:343-347` is not "out of date". Its conclusion was never
-about the grid; it was the grid **plus an unstated assumption about the live
-architecture**, and that assumption is false against the code.
+`RISK_CONCURRENCY.md` had already said it: **"single = no-op"** — single-position is
+v18's native state, not a modification of the champion. I had the file and did not
+use it.
 
-## Consequence for the shipping book
+## The actual live finding is still tested
 
-The backtest book at cap=6 has 280 OOS trades across several simultaneously open
-positions. At cap=1 the same signals serialise, and the realised book is not a
-subset — it is a different book, because entries that would have overlapped now
-compete for the single slot.
-
-**This puts `COUNT_BAND=(348, 358)` in question.** That band was measured at the
-cap=6 basis. It is a live gate and it is currently anchored to a concurrency level
-the bot cannot reach. It is **not yet known** to be wrong — that requires the
-cap-1 measurement, which is P117's remaining half.
-
-Note what was and was not verified here. **Swing parity between live and backtest
-is proven and unaffected** — this finding is about slot occupancy, not entry
-logic. What was never tested is slot parity.
-
-## Open, deliberately undecided
-
-Do not scope the cap-1 measurement until P117 reports the leg-era grid. Deciding
-now, on origin-era numbers, is the same premature-commitment error as P95's
-COUNT_BAND.
-
-**Status: opened, not resolved. Blocks any "ship it" claim.**
+Not here, and not by re-running a backtest. Swing parity (entry logic) is proven.
+**Slot parity has never been tested**, and this document does not establish it.
