@@ -65,43 +65,34 @@ profitable on both sides:**
 
 ## Second sighting — 2026-10-01, `CONCURRENCY_P117_P120.md`
 
-The short-side asymmetry has now been observed twice, independently. **It has
-been treated as a local finding both times and it is not local.**
+**~~The short-side asymmetry has now been observed twice.~~ RETRACTED — the first
+"observation" was a sign error. See the retraction above.**
 
-**Sighting 1 — this document.** Every short book loses money in absolute terms in
-both eras, −0.4415/trade IS and −0.7471/trade OOS, while reading +53.2R and
-+68.4R in R.
-
-**Sighting 2 — P119, in `CONCURRENCY_P117_P120.md`.** On the leg book, capping
-concurrency to 1 collapses the short side: **+81.5R → +5.9R, −92%** OOS, against
+What remains is **one** short-side asymmetry, from P119: on the leg book, capping
+concurrency to 1 collapses the short side, **+81.5R → +5.9R, −92%** OOS, against
 longs +26.9R → +10.4R. The shorts are disproportionately what the cap deletes.
 
-**Correction to how this was first reported.** P119's short collapse was counted
-as a third sighting alongside P117. It is not. P117 measured the cap grid and
-contained no direction split at all; P119 measured the split. That is two
-observations across two pieces of work, not three.
+The correction to how this was first reported stands on its own: P119's short
+collapse was counted as a third sighting alongside P117. It is not. P117 measured
+the cap grid and contained no direction split at all — grep returns zero hits for
+`dir`, `long` or `short` in that harness. P119 measured the split.
 
-**The important caveat, which cuts against the second sighting.** P119's collapse
-is measured **in R**. This document establishes that R is exactly the metric that
-misrepresents the short side — the entire short-side profit is the denominator,
-because shorts are taken with larger stops. So the −92% is an R-number about a
-book whose R and absolute terms diverge badly on precisely this side.
+The caveat that P119's figure is R-only, not absolute, has also been **removed**.
+It was added here on the grounds that P91 established R misleads on shorts. That
+grounding is gone. P119's observation stands as stated, and it is the only
+short-side asymmetry on record that has not been retracted.
 
-**It is therefore not established that the short side collapsed.** It is
-established that its R collapsed. The absolute number for the cap-1 short arm was
-not computed and should be, before this is written up as a short-side result
-rather than an R-accounting one.
+## The original (now struck) reading
 
-That gap is the substance of the asymmetry being unresolved after two sightings.
-Three would have been a pattern; two is a coincidence until the absolute arm is
-measured.
-**Every short book LOSES money in absolute terms in both eras — and the
-re-fill makes the short side WORSE, not better.**
+**~~Every short book LOSES money in absolute terms in both eras — and the
+re-fill makes the short side WORSE, not better.** ~~**In R units those same short
+books read +53.2R (IS) and +68.4R (OOS). The entire short-side profit is the
+denominator: shorts are taken with larger stop distances, so each one's
+R-multiple looks healthy while the price return is negative.**~~
 
-**In R units those same short books read +53.2R (IS) and +68.4R (OOS).** The
-entire short-side profit is the denominator: shorts are taken with larger
-stop distances, so each one's R-multiple looks healthy while the price
-return is negative.
+**Every line of that paragraph is struck.** The two halves do not disagree — they
+were computed with opposite sign conventions and then read as if they agreed with
+each other and contradicted R. They are the same number. See the retraction above.
 
 **This is the same class of error as P60 and P83, one level deeper.** Both
 of those were gross-vs-net. **This is R-vs-absolute, and it is the most

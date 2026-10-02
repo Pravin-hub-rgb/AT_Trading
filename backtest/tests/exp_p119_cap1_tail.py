@@ -27,9 +27,19 @@ PRE-REGISTERED, before the run:
       A genuine concurrency effect should appear in BOTH halves. A concentration
       effect will be carried by whichever half holds the fat tail.
 
-  H3  DIRECTION SPLIT. P91's lesson: shorts read -0.44 IS / -0.75 OOS in absolute
-      terms while showing +53.2R / +68.4R in R. Any "losing book" language
-      requires looking at the short side, where the divergence lives.
+  H3  DIRECTION SPLIT. On the leg book, capping concurrency to 1 collapses the
+      short side: +81.5R -> +5.9R OOS, against longs +26.9R -> +10.4R.
+
+      HISTORY. This was labelled "R-multiple only, not independent evidence" on
+      2026-10-01, on the grounds that P91 had shown R misleads on shorts. P121
+      then RETRACTED P91's central claim as a sign-convention error - for a short,
+      (exit-entry)/entry is the negative of PnL, so P91 read profitable shorts as
+      losses. See FILL_ABSOLUTE_P91.md. There is no absolute-vs-R divergence on
+      shorts, so the caveat rested on a false premise and has been removed.
+
+      Standing caveat is the narrower true one: the absolute figure for the
+      cap-1 short arm has still not been computed, so the collapse is established
+      in R only. That is a gap in coverage, not a reason to doubt the result.
 
   FALSIFIER: if ex-top-5% arms converge AND the half-year split does not agree,
   the concurrency reading is dead and this is concentration.
