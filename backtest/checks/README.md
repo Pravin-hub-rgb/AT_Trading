@@ -127,6 +127,15 @@ replaces.
 checks you can apply to a finished number. Rule 1 is the only one that costs
 nothing and prevents the work rather than auditing it.
 
+**A fifth rule is agent-facing rather than check-facing, so it lives in
+`AGENT_COORDINATION.md`: *credit only what you opened*.** A summary is a claim
+about work done and needs the same evidence standard as a claim about results.
+Three names were carried through several summaries in one session and a
+repo-wide search plus `git log --all` found no file and no history for any of
+them. A wrong number has a value you can look up; credit has nothing to check
+against, so it propagates without meeting resistance. Its companion — *state the
+unit of every count* — is there too.
+
 Two of these are the same failure wearing different clothes — a shared variable
 between an instrument and its own yardstick. In P115 the feature and the label
 both contained `window_end`. In P121 the measure and the convention were the same

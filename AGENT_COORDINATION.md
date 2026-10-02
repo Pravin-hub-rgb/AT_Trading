@@ -4,6 +4,20 @@ Created 2026-09-26 after two agents converged on one working tree.
 
 ## Shared-tree rules
 
+- **Credit only what you opened.** *(added 2026-10-01)* A summary is a claim
+  about work done and needs the same evidence standard as a claim about results.
+  If a filename, harness or figure appears in your summary, you opened it this
+  session. Three names were carried through multiple summaries on 2026-10-01 —
+  `CHAMPION_CROSS_SYMBOL_REJECTED`, `C16_ENGINE_ANCHORS`, `MASTER_BASELINE` — and
+  a repo-wide search plus `git log --all` found **no file and no history** for any
+  of them. They were invented, and survived because nothing checks a summary.
+  A wrong number is bad, but a wrong number has a value you can look up; credit
+  has nothing to check against, so it propagates without ever meeting resistance.
+- **State the unit of every count.** *(added 2026-10-01)* "105 knobs", "52 knobs"
+  and "149 knobs" were all used in one session for the same population. They
+  count different things — distinct `exp_*` tokens in `craze.py` versus kwargs
+  declared for injection — and none of them was wrong *once the unit was named*.
+  Unnamed counts are unfalsifiable.
 - **Never `git add -A`.** Stage explicit paths only; use `git add -- <paths>`.
 - **Check `.git/index.lock`** before every `git add` / `git commit`.
 - One logical slice per commit. Verify with `git diff --cached --name-only`
