@@ -159,6 +159,37 @@ anything, because the pins would be measuring the same variable.
 3. **Does `busy_until` have any behaviour left in v19**, or is it fully dead? If
    dead, `max_positions` does not need to preserve it and Phase 1 is smaller.
 
+## Open question that survived — arm A does not reproduce v18's own pin
+
+**P122 ran the 2×2. Results:**
+
+| arm | engine @ params | IS | verdict |
+|---|---|---|---|
+| A | v18 @ v18 | 349t / +177.9R | **pin says 352 / +146.55 — NOT REPRODUCED** |
+| B | v19 @ leg | 499t / +239.1R | **HOLDS exactly** |
+| C | v18 @ leg | 395t / +62.3R | 388 was a harness number, not a raw-engine one |
+| D | v19 @ v18 | 420t / +320.1R | — |
+
+**The pins live at different layers.** 388 and 499 were measured *through*
+`test_experiments_craze.py`, which text-patches v18's source and injects
+`exp_persist=7`. Raw v18 does not accept `exp_persist` — P122's signature filter
+dropped it, along with `exp_mltf` and `exp_partial_r`, and printed that it did.
+**So 388 was never a raw-engine number, and arm C could not have reproduced it.**
+
+A raw-engine refactor cannot be gated on harness numbers. That is deeper than the
+four-parameter problem found above.
+
+**Arm B is the result that matters for shipping and it holds:** v19 at the leg
+parameters reproduces 499 / +239.1R exactly. The patched-v18 harness and raw v19
+agree on the shipping book.
+
+**Arm A is the open item.** With `get_v18_params("BTCUSDT_BYBIT")` + `V18_ENGINE`
+applied as `test_v18_causal_integrity.py:28` does, v18 returns 349 / +177.9R, not
+352 / +146.55. Either the pin is stale or something in the construction was not
+replicated here. **Until 352 is re-derived, the delta table must not be treated as
+complete** — not because a behaviour difference was found, but because the one
+number that would have detected it does not reproduce.
+
 ## Verdict on Phase 0
 
 **The gate FAILED, as it should have.** The refactor plan assumed four deltas and
