@@ -44,6 +44,35 @@ presence in the tree is not endorsement. Do not bulk-run the directory as a
 health check — that is precisely the move `exp_sweep_static.py` was rewritten to
 warn against.
 
+## 4. What none of these checks cover
+
+**The generalisation, stated once because it has bitten three separate times.**
+
+`exp_engine_knobs.py` proves a knob **exists**. It does not prove the knob is
+**correct** — `exp_max_concurrent` passed it by name while its enforcement was
+under active suspicion. `exp_sweep_static.py` matches **net-R shapes**; it cannot
+see a dead AUC or trade count, which is how `INSIDE80_P95.md` sat clean for weeks.
+And an **overlap audit** that reads the same `exit_ts` / `entry_ts` the engine
+reads is not independent verification at all — both would be wrong together. That
+argument was used to reject a `+900` clock claim and was itself circular; P120
+replaced it with an actual A-vs-B clock comparison.
+
+**Three tools, three different blind spots. None of them covers another. Do not
+cite one as if it covered a neighbour.**
+
+| you want to know | use | do NOT use |
+|---|---|---|
+| is the knob real? | `exp_engine_knobs.py` | reading the name in a doc |
+| is the anchor stale? | `exp_sweep_static.py` | for AUC or count claims |
+| is the cap on the right clock? | P120's A-vs-B replay | an existence check |
+
+**Verify the artefact, not the tool's exit code.** A green git warning absorbed a
+correct change once already: a commit silently did not happen because the command
+reported a non-zero status on a stderr warning, and the files were left staged
+looking like they had been committed. The tool had done its job and the layer in
+between swallowed the result. Every check here should be confirmed by reading what
+it produced, not by the fact that it ran.
+
 ## Running them
 
 Static, safe to run any time:
