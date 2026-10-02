@@ -340,11 +340,31 @@ kings. Best both-sides = noise (champion 0.70 +0/+4.4 NET; swingpause 0.55
 +3.4/+5.3). 0.40 opens OOS +47..+69 but kills IS −70..−95 (era flip).
 **0.65 confirmed near-optimal. Param family closed.**
 
-**exp_max_concurrent** (`exp_maxconc_path.py`): in-engine position cap.
+**exp_max_concurrent** (`exp_maxconc_path.py`): position cap. ~~in-engine~~ — **it is not in any engine.**
 cap=5 multi = **FREE** (champion/king dIS +1.1 / dOOS 0.0). cap=4 near-free
 (champion OOS −6.2). cap=2/3 cost real R. single = no-op.
 **ALIVE deployment enabler** — path-true validates offline audit 3c; use
-cap=5 for live risk.
+cap=5 for live risk. **← RETRACTED 2026-10-01, WRONG. See the correction below.**
+
+**CORRECTION 2026-10-01.** This recommended a code path that does not exist.
+`exp_max_concurrent` has **zero occurrences under backend/src** — v18 and v19 both
+return 0 hits. It exists only as a source patch injected by
+`test_experiments_craze.py:106` (default) and `:760-763` (enforcement). At the
+default of 0 the injected block is a silent no-op, so every experiment that did
+not set the flag ran uncapped and looked correct. Nothing could fail, so nothing
+was ever validated.
+
+**The cap logic itself is correct, and the numbers stand as research results.**
+Its enforcement counts open trades at `candle_ts[i]`, which is the same clock as
+`entry_ts` (`v19_champion.py:834`); the suspected `+900` unit mismatch does not
+exist, because `ts + 900` in this repo is the *HTF-close alignment* operation
+(`v19_champion.py:320,346,354`), a different question. P117's independent overlap
+audit agrees exactly with every cap — cap=1 → observed max 1, cap=4 → 4,
+cap=5 → 5 — which would be impossible if the count were off by a bar.
+
+Re-derived on the leg book by P117: cap5 dNet **+1.1R IS / +0.0R OOS**,
+reproducing this grid. The OOS arm is partly vacuous: max concurrency on the leg
+OOS book is 5, so cap=6 cannot bind there. Sweep script: `exp_engine_knobs.py`.
 
 **Idea E regime-transition skip** (`exp_regime_skip.py`): exp_regime_skip =
 |Δchop over 4×15m| > 5..20. Best both-sides: champion >10 +30.9/+2.3 NET;

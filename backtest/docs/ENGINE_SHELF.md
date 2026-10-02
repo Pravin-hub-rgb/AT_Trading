@@ -22,7 +22,7 @@ this file reopens it.
 | `exp_5m_confirm` | `0` | 5m close must break the prior-3 5m extreme before entry; cancel if stop touched while waiting; `five_m_stats` breakdown | **TESTED — see 5M_CONFIRM.md. Harmful.** |
 | `exp_chop15_lo` / `exp_chop15_hi` | `0.0` / `0.0` | skip when the 15m chop series sits in a band | untested, untuned |
 | `exp_5m_wait_min` | `240` | bound on the 5m confirm wait | swept as part of the above |
-| `exp_max_concurrent` | `0` | cap simultaneous LTF positions | untested |
+| `exp_max_concurrent` | `0` | cap simultaneous LTF positions | **not implemented in any engine** — harness patch only (craze.py:106, :760). Swept by P117 on the leg book. |
 | `exp_cohort_rearm` | `0` | rearm rule after a cohort loss | untested |
 | `exp_defer_h` | `0.0` | defer hours | untested |
 | `exp_legskip_r` | `0.0` | leg-skip at an R threshold | untested |

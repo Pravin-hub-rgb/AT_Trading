@@ -96,3 +96,13 @@ in this repo.
 
 Recorded for the register: max concurrency is 3–6, not 1, because
 `busy_until` is a date compared against a datetime as strings.
+
+**NOTE 2026-10-01.** Those 3–6 figures are a property of the **uncapped** book as
+observed in the harness, not of any enforced cap. `exp_max_concurrent` — the knob
+that would impose a limit — has **zero occurrences under backend/src**; it is a
+`test_experiments_craze.py` source patch, not an engine feature. So "max
+concurrent 6" answers "how deep does the book get when nothing caps it", which is
+the right question for a risk-sum, and is *not* evidence that a 6-deep book is
+configured or configurable. The cap logic itself is correct and P117's
+independent audit reproduces its numbers exactly; only the framing here needed
+correcting.

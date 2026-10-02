@@ -690,7 +690,11 @@ heavily inspected and is not untouched validation for anything new (Rule 4).
 - Idea A HMM regime router — DEAD (OOS down all bases)
 - Idea D soft ensemble — MARGINAL/MIXED (soft_chop/soft_atr/soft_ensemble; best both-sides +14.3/+3.4 ≈ 4R/yr; not adopted)
 - atr_high_thresh sweep — NO EDGE (0.65 confirmed)
-- exp_max_concurrent=5 — ALIVE deployment enabler (free risk cap)
+- exp_max_concurrent=5 — ~~ALIVE deployment enabler (free risk cap)~~ **RETRACTED
+    2026-10-01: the cap logic and its numbers are sound, but the knob exists only
+    as a test_experiments_craze.py source patch — zero occurrences under
+    backend/src. It is not an engine feature and nothing can enable it. See
+    ANCHOR_BASIS_AUDIT.md:346 and exp_engine_knobs.py.**
 - Idea E regime-transition skip — MARGINAL/MIXED; no universal improvement (legacy 30R screen not met)
 - Stack flip×regime — configuration-specific (best swingpause +38.7/+27.7; legacy 30R screen not met)
 - EMA path-true — NOT RUN (§3h entry-quality budget closed)
