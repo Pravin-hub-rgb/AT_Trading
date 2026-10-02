@@ -211,7 +211,11 @@ def _build_module():
                   '    htf_lo=[float(c["low"]) for c in candles_htf]\n')
     # A4 pullback gate: skip if pullback off leg extreme in [lo, hi] R.
     # Causal: leg anchor = first window of same-dir streak; HTF extreme known at bar_ts.
-    t_pb = '        filtered.append((sig, use))\n'
+    # 2026-10-02: filtered entries now carry the window bounds, so the trade
+    # payload can report which 1h window it came from. Anchors that match this
+    # line must track the new tuple shape or they silently stop matching and
+    # the assert fires - which is what happened, correctly.
+    t_pb = '        filtered.append((sig, use, win_start, win_end))\n'
     assert s.count(t_pb) == 1, "filtered append"
     s = s.replace(t_pb,
                   '        if exp_pb_lo>0 or exp_pb_hi>0:\n'
@@ -424,7 +428,7 @@ def _build_module():
                   '                            _ns=dict(sig);_ns["bar"]=candles_ltf[_k]["date"]\n'
                   '                            filtered.append((_ns,use))\n'
                   '                continue\n')
-    t6h = '        filtered.append((sig, use))\n'
+    t6h = '        filtered.append((sig, use, win_start, win_end))\n'
     assert s.count(t6h) == 1, "filtered append"
     s = s.replace(t6h,
                   '        if exp_geom_mode:\n'
@@ -501,7 +505,7 @@ def _build_module():
                   '    filtered.sort(key=lambda z: ltf_store.pos(z[0]["bar"]))\n')
     # 3j) Idea E: regime-TRANSITION skip — |Δchop| over last 4x15m bars > thresh
     # (defensive; skip while regime is CHANGING, not based on its state).
-    t_e = '        filtered.append((sig, use))\n    filtered.sort'
+    t_e = '        filtered.append((sig, use, win_start, win_end))\n    filtered.sort'
     assert s.count(t_e) == 1, "regime skip anchor"
     s = s.replace(t_e,
                   '        if exp_regime_skip>0 and bar>=4 and abs(chop_per_ltf[bar]-chop_per_ltf[bar-4])>exp_regime_skip: continue\n'
@@ -1484,7 +1488,7 @@ def _build_module():
                   '                if _cr2>0 and _cb2/_cr2<0.3: continue\n')
     # 3g-5) Pivot-break trail (fix/more ideas.md): trail to intervening extreme
     # when opposite pivot breaks — precompute break bars once per direction.
-    t_pb = "    for sig, use in filtered:\n"
+    t_pb = "    for sig, use, win_start, win_end in filtered:\n"
     assert s.count(t_pb) == 1, "filtered loop anchor"
     s = s.replace(t_pb,
                   '    _pb_long=[]; _pb_short=[]\n'

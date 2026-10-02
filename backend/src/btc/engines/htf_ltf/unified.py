@@ -624,12 +624,15 @@ def simulate_htf_ltf_streak_halt(
                     pe=_pe; psl=_psl; d=_d
                     break
             if not _union_matched: continue
+            # union unpacks into _s/_e and never binds s/e, so capture here,
+            # outside the union-gate anchor block, for the reporting fields.
+            if _union_matched: win_start=_s; win_end=_e
             if ext_stop_r>0:
                 hrisk=abs(pe-psl)
                 if hrisk>0:
                     ext=(float(candles_ltf[bar]["close"])-pe)*d/hrisk
                     if ext>ext_stop_r: continue
-            filtered.append((sig,use))
+            filtered.append((sig,use,win_start,win_end))
             continue
         elif use=="flip":
             intervals=intervals_flip; starts=starts_flip
@@ -642,6 +645,7 @@ def simulate_htf_ltf_streak_halt(
         idx=bs.bisect_right(starts, bar_ts)-1
         if idx<0: continue
         s,e,d,pe,psl=intervals[idx]
+        win_start=s; win_end=e   # report-only; see the note at init
         # C15: the window is knowable from the flip candle CLOSE (entry_ts + 3600);
         # the LTF entry instant is bar_ts + 900. Gate in knowable-instant space.
         if not (s + 2700 < bar_ts <= e + 2700): continue
@@ -651,7 +655,7 @@ def simulate_htf_ltf_streak_halt(
             if hrisk>0:
                 ext=(float(candles_ltf[bar]["close"])-pe)*d/hrisk
                 if ext > ext_stop_r: continue
-        filtered.append((sig, use))
+        filtered.append((sig, use, win_start, win_end))
     # Now simulate LTF with filtered signals (same as v1_15m LTF walk, swing trail)
     n=len(candles_ltf)
     if n==0:
@@ -723,9 +727,19 @@ def simulate_htf_ltf_streak_halt(
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
+    # Window bounds for the audit trail, carried on every booked trade.
+    # Captured into their own names rather than read from s/e at the append
+    # site: the union branch (mode=="union") unpacks into _s/_e and only
+    # carries pe, psl and d forward, so s and e still hold the PREVIOUS bar's
+    # window there. Reading s/e directly would publish a stale window on every
+    # union book. Nothing reads these names for control flow - they are
+    # reporting only, and they must not be able to move a number.
+    win_start=0; win_end=0
     from src.btc.btc_engine import _trail_events as _te
     import bisect
-    for sig, use in filtered:
+    # win_start/win_end ride along with the signal: the window bounds are bound in the
+    # filtering loop above, not here, so they cannot be read from s/e at booking time.
+    for sig, use, win_start, win_end in filtered:
         bar_time=sig["bar"]  # datetime string
         i=ltf_store.pos(bar_time)  # position via timestamp lookup
         if i < 0 or i>=n-1: continue
@@ -894,6 +908,11 @@ def simulate_htf_ltf_streak_halt(
             "swing_no": sig["swing_no"],
             "break_kind": sig["kind"],
             "htf_regime": use,
+            # Window this trade was taken in. window_start + 3600 is when the
+            # governing 1h bias candle closed, i.e. the earliest instant the
+            # trade could have been known. entry_ts - that is the lead time.
+            "window_start": int(win_start),
+            "window_end": int(win_end),
             "entry_idx": i,
             "entry_ts": int(candles_ltf[i]["ts"]),
             "entry_date": candles_ltf[i]["date"],

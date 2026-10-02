@@ -98,11 +98,13 @@ try:
 except Exception:
     simulate_htf_ltf_conditional = None  # type: ignore
 try:
+    from src.btc.engines.htf_ltf.unified import simulate_htf_ltf_streak_halt as simulate_unified
     from src.btc.engines.htf_ltf.v19_champion import simulate_htf_ltf_streak_halt as simulate_htf_ltf_v19_champion
 except Exception:
     simulate_htf_ltf_v19_champion = None  # type: ignore
+    simulate_unified = None  # type: ignore
 
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19", "v19_champion", "v19_causal", "v19_c16", "unified"]
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -120,6 +122,8 @@ VERSION_LABELS = {
     "v15": "v15 Recover 1R mode",
     "v16": "v16 Entry distance <=30% (rejected)",
     "v17": "v17 ATR<0.5% filter (rejected)",
+    "unified": "UNIFIED shipping book - champion_multi_sw10_leg on unified.py "
+                "(IS 499t / +239.12R, OOS 280 / +72.8R)",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -1313,6 +1317,40 @@ def btc_backtest(
             min_body_atr=0.5,
             max_wick_atr=1.0,
         )
+    elif version == "unified":
+        # THE SHIPPING BOOK, and the only dropdown entry that is the same object
+        # the registry pins. champion_multi_sw10_leg in experiment_registry.py:
+        #   mode=atr_high, chop=58.0, cd=8, max_consecutive_losses=3,
+        #   ext_stop_r=3.0, htf_rr=3.0, window_end="exit",
+        #   exp_mltf=True, exp_persist=7, pivot_rule="leg", max_positions=0
+        # Pinned IS 499 trades / +239.12R, OOS 280 / +72.8R.
+        #
+        # This is not the same book as the "v19_causal" entry above. That one
+        # uses exp_causal_sl=1 on the pre-C16 stop rule and measures 494t /
+        # +247.96R - a different configuration that happens to sound similar.
+        # Every figure here comes from unified.py, which is the engine the
+        # registry, the identity gate and the knob-wiring audit all run on.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500, content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            htf_rr=3.0,
+            window_end="exit",
+            max_positions=0,
+            exp_persist=7,
+            pivot_rule="leg",
+        )
+        trades = nested.get("ltf_trades", [])
     elif version == "v19_champion":
         if simulate_htf_ltf_v19_champion is None:
             return JSONResponse(status_code=500, content={"detail": "v19_champion engine not loaded"})

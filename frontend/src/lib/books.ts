@@ -103,6 +103,15 @@ const V19 = {
 
 export const BOOK_OPTIONS: BookOption[] = [
   {
+    id: "unified",
+    label: "UNIFIED shipping book - IS 499t +239.1R",
+    shortLabel: "UNIFIED",
+    slMode: "causal",
+    hint: "the pinned champion on unified.py - same object the registry and the identity gate run",
+    measured: { isN: 499, isNet: 239.12, oosN: 280, oosNet: 72.8 },
+    config: { ...V19, version: "unified" },
+  },
+  {
     id: "v19_retro",
     label: "v19 RETRO stop (lookahead) — IS 500t +325.8R",
     hint: "stop at the swing's true origin · lookahead · equals registry pin",

@@ -134,6 +134,17 @@ export interface BtcTrade {
   /** funding cost of this trade, in R (0 when funding_rate_pct=0). */
   funding_r?: number;
   bars_held: number;
+  /** Which 1h side selected this window: "flip" | "b2" | "decisive" | "union". */
+  htf_regime?: string;
+  /**
+   * Start of the 1h window this trade was taken in, unix seconds.
+   * window_start + 3600 is the instant the governing 1h bias candle closed,
+   * i.e. the earliest moment this trade could have been known. Comparing that
+   * against entry_ts is the C12-C15 causality check, per trade, in the UI.
+   */
+  window_start?: number;
+  /** End of that window, unix seconds. */
+  window_end?: number;
 }
 
 export interface BtcTradeStats {

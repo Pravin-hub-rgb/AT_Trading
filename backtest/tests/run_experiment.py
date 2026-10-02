@@ -393,6 +393,13 @@ def cmd_run(key):
                 "outcome": t.get("outcome"),
                 "bars_held": t.get("bars_held"),
                 "partial_exit_price": t.get("partial_exit_price", 0.0),
+                # audit trail: which 1h window this trade came from
+                "htf_regime": t.get("htf_regime"),
+                "window_start": t.get("window_start"),
+                "window_end": t.get("window_end"),
+                "sl": t.get("sl"),
+                "target": t.get("target"),
+                "break_kind": t.get("break_kind"),
             }
             for t in tr
         ],
