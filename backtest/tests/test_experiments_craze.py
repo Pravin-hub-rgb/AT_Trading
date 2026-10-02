@@ -962,14 +962,19 @@ def _build_module():
                   + t_c6)
     t9 = '        # pick intervals\n'
     assert s.count(t9) == 1, "pick intervals"
+    # PHASE 2, 2026-10-02: the injected PERSIST body is REMOVED. unified.py
+    # carries regime hysteresis natively (the PERSIST state and the block that
+    # reads it), so injecting a second copy here put TWO blocks in the generated
+    # module. Each block kept its own disagreement counter, so the regime
+    # flipped roughly twice as fast as one block does - producing a book that
+    # corresponds to no real configuration at all. This is why the patched
+    # module and the raw module disagreed on every book.
+    #
+    # This is the same class as the exp_causal_sl and exp_persist kwarg
+    # injections already removed above: the harness was patching an engine that
+    # already had the feature. Keep the exp_event_mode injection below - that
+    # one is still harness-only.
     s = s.replace(t9,
-        '        if exp_persist>0:\n'
-        '            if _rg_s is None: _rg_s=use\n'
-        '            if use!=_rg_s:\n'
-        '                _rg_c+=1\n'
-        '                if _rg_c>=exp_persist: _rg_s=use; _rg_c=0\n'
-        '            else: _rg_c=0\n'
-        '            use=_rg_s\n'
         '        if exp_event_mode:\n'
         '            _event_now=int(bar_ts)+900\n'
         '            if exp_event_mode=="exact" and any(int(_ets)+int(exp_event_shift_min)*60-3600 <= _event_now <= int(_ets)+int(exp_event_shift_min)*60+1800 for _ets in exp_event_timestamps):\n'

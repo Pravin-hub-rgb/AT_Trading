@@ -289,8 +289,19 @@ def simulate_htf_ltf_streak_halt(
       max_positions=0,
       # UNIFIED: regime hysteresis. v19 hardcoded PERSIST=7 in the function body,
       # so it could not be switched off and v18 could not share the code path.
-      # 0 = off (v18 behaviour). N = hold the old regime for N disagreements.
-      exp_persist=7,
+      #
+      # DEFAULT IS 0 = OFF, and that is deliberate. The engine default answers
+      # "what does an unspecified knob do?", and the honest answer for a
+      # stickiness filter is "nothing" - same reason max_positions defaults to
+      # 0 and exp_causal_sl defaults to 0. Hysteresis is not part of the core
+      # HTF->LTF theory; it is one book's config.
+      #
+      # The value 7 belongs to champion_multi_sw10_leg, which sets it in the
+      # registry. It was hardcoded here before, which meant every book that did
+      # not ask for hysteresis silently got it. Books that want it now say so.
+      #   0 = off (v18 behaviour, and every historical book measured this way)
+      #   N = hold the old regime for N consecutive disagreements before flip
+      exp_persist=0,
     # C16 SL pivot rule, applied to BOTH halves of this engine.
     #   "leg"    (default) - the swing's own extreme up to and including the break
     #                       bar. Causal, live-computable. This is what ships.
