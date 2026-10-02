@@ -1,8 +1,15 @@
 # Archived engines
 
-Neither file here is imported by anything. They are kept so the numbers they
-produced can still be reproduced, and so the diff that produced this state is
-recoverable.
+The two `_real` modules here are the archived implementations. They are NOT
+imported by production: `btc_routes.py` runs `unified.py`.
+
+`../v18_streak_halt.py` and `../v19_champion.py` are shims that re-export
+these, because roughly a hundred research scripts across `backtest/`,
+`backend/debug/` and `backend/tests/` import those two paths by name and their
+numbers are cited in docs. Archiving without shims broke all of them - caught
+here when the truncation test failed to import. The shims restore every
+attribute, so those scripts work again and production still has exactly one
+engine.
 
 ## v18_streak_halt.py
 
