@@ -19,11 +19,25 @@ THE TEST - ABSOLUTE PRICE RETURN, NOT R-MULTIPLE
     For each trade, in price terms, with 1 unit of notional:
 
         long   return = (exit - entry) / entry
-        short  return = (exit - entry) / entry     (signed the same way)
+        short  return = (entry - exit) / entry      <-- SIGN-CORRECTED
+                                                 for direction
 
     Then SUM the absolute returns across the book. This is what a fixed
-    notional account earns, and it has no denominator that can move. The
-    two measures can diverge arbitrarily and that divergence IS the finding.
+    notional account earns, and it has no denominator that can move.
+
+    **CORRECTED 2026-10-01.** This used to read
+        short  return = (exit - entry) / entry   (signed the same way)
+    which is the NEGATIVE of PnL for a short. `abs_return()` below did not
+    check t["dir"] at all, so the short totals came out negative and were read
+    as losses. They were profits. P91's central claim - "every short book loses
+    money in absolute terms" - is retracted; see FILL_ABSOLUTE_P91.md and
+    exp_p121_short_absolute.py.
+
+    The old line also asserted that the two measures "can diverge arbitrarily
+    and that divergence IS the finding". There is no divergence. Shorts are
+    profitable in both metrics and the metrics agree: +0.4415 absolute against
+    +105.7R IS, +0.7471 against +83.6R OOS. The divergence was manufactured by
+    the convention, not found in the data.
 
     Both arms are recomputed the same way, so the comparison is like for
     like, and the shipped arm is the control that must reproduce its own
@@ -121,14 +135,28 @@ def refill(tr, c15, mode):
 
 def abs_return(tr):
     """Sum of per-trade price return at ONE unit of notional. No
-    denominator that can move."""
+    denominator that can move.
+
+    FIXED 2026-10-01. This used to ignore t["dir"] entirely and compute
+    (exit-entry)/entry for every trade. For a SHORT that expression is the
+    NEGATIVE of PnL: a profitable short exits below entry, so its raw change is
+    negative. P91 tabulated -0.4415 IS / -0.7471 OOS for shorts from this
+    function and read them as losses. They were profits.
+
+    The direction is now applied. On the origin book this flips the short
+    totals to +0.4415 IS / +0.7471 OOS - exact negations, confirmed by
+    exp_p121_short_absolute.py, which prints both conventions side by side.
+    """
     s = 0.0
     for t in tr:
         e = float(t["entry_price"])
         x = t.get("exit_price")
         if e <= 0 or x is None:
             continue
-        s += (float(x) - e) / e
+        raw = (float(x) - e) / e
+        if str(t.get("dir", "")).lower().startswith("s"):
+            raw = -raw
+        s += raw
     return s
 
 
