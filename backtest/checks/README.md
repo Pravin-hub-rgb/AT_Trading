@@ -133,6 +133,34 @@ both contained `window_end`. In P121 the measure and the convention were the sam
 expression read twice. **When two numbers disagree, ask what they share before
 asking which is right.**
 
+## 6. Standing practice — every check gets a negative control first
+
+**A check that has never been observed failing is indistinguishable from one that
+always passes.** Before any check in this directory is trusted, write a deliberate
+failure probe: a file that violates exactly what the check claims to catch, run it,
+confirm the check fires, then delete the probe.
+
+This is not hypothetical caution. Three times this session a check reported health
+instead of the thing it was checking:
+
+- a static sweep counted 28 files while 435 existed
+- `if PERP in t: continue` matched nothing and skipped silently
+- the `_now_ts` existence check "confirmed" a rule it never tested the clock of
+
+In each case the check returned success. Only the probe distinguishes a detector
+from a decoration.
+
+**Worked example.** `RETRACTED_ANCHORS` was added for P91's 0.4415 / 0.7471. The
+sweep passed immediately — which proved nothing, since it had never been observed
+catching them. A probe file quoting both values with no retraction marker was
+written to `backtest/docs/`, the sweep was run, and it flagged
+`_PROBE_P91_TEST.md` under both anchors. Probe deleted. Only then was the guard
+considered real.
+
+**Cost is a few lines and about a minute. Skip it and a check that silently matches
+the wrong shape can sit in the tree indefinitely — which is what
+`exp_sweep_static.py`'s own docstring warns about.**
+
 ## Running them
 
 Static, safe to run any time:

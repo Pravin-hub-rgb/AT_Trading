@@ -450,6 +450,7 @@ BLOCKERS      : none. Cannot be adopted even if it passes: it is a
 PERIOD-CONTROL: not a filter, §6 does not apply. Report per-half-year
                 anyway, because a cost that concentrates in volatile bars
                 has a period signature.
+> **ID COLLISION — this P91 is the RATCHET LADDER study** (open proposal, unchanged). A different experiment also carries the ID **P91**: the entry-fill absolute-return study in `FILL_ABSOLUTE_P91.md`, whose long/short split claim was RETRACTED 2026-10-01 as a sign-convention error. That retraction does **not** touch this entry. Cite one by filename, not by ID.
 P91 — WHERE THE TAIL COMES FROM: THE RATCHET LADDER
 ID            : P91
 R1 status     : open. Grep: `n_ratchet` / `ratchet_count` has exactly one
@@ -602,6 +603,7 @@ BLOCKERS      : none. Cannot be adopted even if it passes: a measurement,
 PERIOD-CONTROL: not a filter, §6 does not apply. Report per-half-year
                 anyway — a cost concentrated in volatile bars has a
                 period signature.
+> **ID COLLISION — this P91 is the RATCHET LADDER study** (open proposal, unchanged). A different experiment also carries the ID **P91**: the entry-fill absolute-return study in `FILL_ABSOLUTE_P91.md`, whose long/short split claim was RETRACTED 2026-10-01 as a sign-convention error. That retraction does **not** touch this entry. Cite one by filename, not by ID.
 P91 — WHERE THE TAIL COMES FROM: THE RATCHET LADDER
 ID            : P91
 R1 status     : open. `n_ratchet` / `ratchet_count` has one hit
@@ -701,6 +703,7 @@ EXPECTED SIZE : negative, concentrated in longs, and loading on P69's ATR% — a
 DATA NEEDED   : on disk. No engine edit — post-process re-pricing of entry_price with the existing stop and trail held; cost model unchanged.
 BLOCKERS      : none. Cannot be adopted even if it passes: a measurement, not a parameter. It bounds what can be deployed.
 PERIOD-CONTROL: not a filter, §6 does not apply. Report per-half-year anyway — a cost concentrated in volatile bars has a period signature.
+> **ID COLLISION — this P91 is the RATCHET LADDER study** (open proposal, unchanged). A different experiment also carries the ID **P91**: the entry-fill absolute-return study in `FILL_ABSOLUTE_P91.md`, whose long/short split claim was RETRACTED 2026-10-01 as a sign-convention error. That retraction does **not** touch this entry. Cite one by filename, not by ID.
 P91 — WHERE THE TAIL COMES FROM: THE RATCHET LADDER
 ID            : P91
 R1 status     : open. n_ratchet / ratchet_count has one hit repo-wide — inside the proposal that asked for it. TRAIL_MECHANICS.md and TAIL_RISK_AUDIT.md both concluded "the tail is intrinsic" and neither counted ratchets.

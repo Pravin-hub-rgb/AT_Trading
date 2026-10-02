@@ -1,5 +1,12 @@
 # P91 — THE DENOMINATOR DID MOVE. P90's headline is retracted.
 
+> **ID COLLISION — read this before citing "P91".** This file is the **entry-fill
+> absolute-return study**. A different, unrelated experiment also carries the ID
+> **P91**: *"P91 — WHERE THE TAIL COMES FROM: THE RATCHET LADDER"* in
+> `NEXT_ROUND_BRIEF.md`. That one is an open proposal about `n_ratchet` and is
+> **not** retracted by anything in this file. A retraction here means the
+> absolute-return study only, never the ratchet ladder.
+
 > Run 2026-09-29. Harness `exp_entry_fill_absolute.py`. **Nothing adopted.**
 > Champion unchanged: 500t/+325.8R IS, 279t/+70.1R OOS as shipped.
 > **P90's "+174.8R" is a denominator artefact and is withdrawn.**
