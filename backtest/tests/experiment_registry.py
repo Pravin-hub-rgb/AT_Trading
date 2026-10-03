@@ -920,6 +920,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_skip_decisive": 1},
         "swing": "sw10",
         # KNOB-GAP SWEEP 2026-10-02. An exhaustive audit found 41 knobs that are
@@ -959,6 +960,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_window_r_cap": 2.0},
         "swing": "sw10",
         # KNOB-GAP SWEEP 2026-10-02. An exhaustive audit found 41 knobs that are
@@ -998,6 +1000,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_window_loss_kill_n": 1, "exp_window_loss_kill_scope": "window", "exp_window_loss_kill_action": "close"},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1013,6 +1016,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_block_mixed": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1028,6 +1032,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_ma_trail_period": 20},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1043,6 +1048,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_pivot_trail": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1058,6 +1064,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_window_entry_cap": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1073,6 +1080,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_profit_stage_r": 5.0, "exp_profit_stage_distance_r": 0.25},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1088,6 +1096,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_trail_delay_prevbar": 1, "exp_trail_delay_r": 1.0},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1103,6 +1112,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_curfew_a": 4.0, "exp_curfew_b": 8.0},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1133,6 +1143,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_geom_b1_min": 96, "exp_geom_mag_min_atr": 4.0, "exp_geom_start_dist_max_atr": 1.0, "exp_geom_b1_max": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1148,6 +1159,7 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit",
+                    "cooldown_bars": 8,
                     "pivot_rule": "leg", "exp_window_win_kill_n": 1, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
@@ -1874,7 +1886,7 @@ EXPERIMENTS = {
     "lb30_chop55_persist2": {
         "desc": "lb30 chop55 persist2 mb10 (exp37 A4)",
         "engine": "patched",
-        "params": {"exp31_lb": 30, "chop_thresh": 55.0,
+        "params": { "cooldown_bars": 10,"exp31_lb": 30, "chop_thresh": 55.0,
                     "exp_persist": 2},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -1888,7 +1900,7 @@ EXPERIMENTS = {
     "lb30_persist5": {
         "desc": "lb30 persist5 mb20 (exp37 A3/A5)",
         "engine": "patched",
-        "params": {"exp31_lb": 30, "exp_persist": 5},
+        "params": { "max_consecutive_losses": 3,"exp31_lb": 30, "exp_persist": 5},
         "swing": "sw20",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:

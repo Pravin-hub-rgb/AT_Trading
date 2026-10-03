@@ -88,3 +88,25 @@ does not spend an afternoon rediscovering that.
 cd backtest/tests
 python run_experiment.py <book_key>
 ```
+
+
+## The fault the implicit-inheritance gate was written for
+
+On 2026-10-02 twelve books were written without declaring `cooldown_bars`. A
+book's params dict is merged onto BP, so an undeclared knob silently becomes
+BP's value - 10, while the sweep that produced the pins had used 8. All twelve
+pinned a book they were not measuring, and nothing caught it: the knob is
+wired, the pin was copied from a run that had it right, and no gate compared a
+book's DECLARED knobs against its INHERITED ones.
+
+`check_registry_hygiene` now groups books by the config they share and fails
+when a book omits a knob its siblings declare. Five families, no contested knob
+inherited.
+
+Two things that check deliberately does NOT do, both learned the hard way:
+
+- It ignores a knob that is not in BP. Omitting a knob BP does not define means
+  "take the engine default", which is a real and stable choice rather than an
+  accidental dependence on a base that could move.
+- It writes nothing. The repair writes BP's own value into the book, so the
+  measurement does not change - only the dependence on BP goes away.

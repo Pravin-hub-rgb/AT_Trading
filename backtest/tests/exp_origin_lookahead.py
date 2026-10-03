@@ -28,6 +28,7 @@ Run:  cd backtest/tests && python exp_origin_lookahead.py
 import pathlib
 import re
 import sys
+from collections import defaultdict
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "backtest" / "tests" / "experiment_registry.py"
@@ -219,6 +220,65 @@ def check_registry_hygiene():
         problems.append("%d broken alias(es)" % len(bad_alias))
     else:
         print("  aliases resolve         : %s" % (reg.ALIASES or "none"))
+
+    # --- 3. no book may SILENTLY INHERIT a base knob that its siblings declare
+    #
+    # This is the fault that produced nine wrong pins on 2026-10-02 and it is
+    # invisible from any single book. A book's params dict is merged onto BP, so
+    # any base knob it does not name is taken from BP's default. Twelve books
+    # were written without cooldown_bars: BP says 10, the sweep they were
+    # measured against used 8, and each of them quietly measured a different
+    # book than its own pin claimed. Nothing flagged it - the knob is wired,
+    # the pin was copied from a run that had it right, and no gate compared a
+    # book's DECLARED knobs against its INHERITED ones.
+    #
+    # The check is: group books by the config they share, and if the books in a
+    # group agree on a knob, every book in that group must state it. A book that
+    # omits it is inheriting, and inheriting is fine only when nothing says
+    # otherwise.
+    print()
+    print("  implicit-inheritance check (books must declare what siblings declare)")
+
+    # the champion-base fingerprint: the knobs that identify the book family
+    def family_of(params):
+        return (params.get("mode"), params.get("ext_stop_r"), params.get("chop_thresh"),
+                params.get("sl_buf_atr"), params.get("window_end"))
+
+    fams = defaultdict(list)
+    for key, cfg in reg.EXPERIMENTS.items():
+        if isinstance(cfg, dict):
+            fams[family_of(cfg.get("params", {}))].append((key, cfg.get("params", {})))
+    CORE = ("cooldown_bars", "max_consecutive_losses", "exp_persist", "exp_partial_r", "htf_rr")
+    n_groups = 0
+    for fam, members in sorted(fams.items(), key=lambda kv: -len(kv[1])):
+        if len(members) < 3:
+            continue                       # too small for agreement to mean anything
+        n_groups += 1
+        for knob in CORE:
+            stated = {k: p[knob] for k, p in members if knob in p}
+            if len(stated) < 2 or len({repr(v) for v in stated.values()}) < 2:
+                continue                   # nobody disagrees, so nothing to catch
+            # If the knob is not in BP either, then omitting it means "take the
+            # engine default", which is a real and stable choice - not an
+            # accidental dependence on a base that could move. Only complain
+            # when the inherited value actually comes from BP.
+            try:
+                import run_experiment as _re_
+                if knob not in _re_.BP:
+                    continue
+            except Exception:
+                continue
+            missing = [k for k, p in members if knob not in p]
+            if missing:
+                vals = sorted({repr(v) for v in stated.values()})
+                print("    %-22s family %s disagrees on %s %s" %
+                      (fam, len(members), knob, vals))
+                print("      %d book(s) INHERIT it instead of declaring it: %s" %
+                      (len(missing), ", ".join(sorted(missing)[:4])))
+                problems.append("%d book(s) inherit %s inside one family"
+                                % (len(missing), knob))
+    if not problems:
+        print("    %d families checked, no book inherits a contested knob" % n_groups)
 
     print()
     if problems:
