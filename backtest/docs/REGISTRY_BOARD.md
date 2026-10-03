@@ -303,6 +303,20 @@ Two findings from the last pass worth naming:
 
 See backtest/docs/EXPERIMENT_INVENTORY.md for what is not covered and why.
 
+## Verifying these numbers
+
+```
+cd backtest/tests
+python exp_pinverify.py          # re-derive every pin from the engine
+python exp_pinverify.py <key>   # or just one
+```
+
+The pins in this table are not self-attesting. They were written by the pass
+that measured them, so comparing the registry against a stored measurement only
+proves nobody edited the file afterwards. `exp_pinverify` re-runs the engine.
+That check is what caught twelve books silently measuring a cooldown_bars=10
+book while pinning cooldown_bars=8 numbers - see EXPERIMENT_INVENTORY.md.
+
 ## Reproducing
 
 ```

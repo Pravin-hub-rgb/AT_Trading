@@ -110,3 +110,24 @@ Two things that check deliberately does NOT do, both learned the hard way:
   accidental dependence on a base that could move.
 - It writes nothing. The repair writes BP's own value into the book, so the
   measurement does not change - only the dependence on BP goes away.
+
+
+## How to check that a pin is real
+
+```
+cd backtest/tests
+python exp_pinverify.py          # every book
+python exp_pinverify.py gap_bm09 # one book
+```
+
+A pin written by the same pass that measured it proves nothing - comparing the
+registry against a stored measurement only shows nobody edited the file
+afterwards. This re-runs the engine and compares against the pin, which is the
+only check that has caught a wrong number so far.
+
+It prints per-book progress and writes `_pinverify_results.json` as it goes,
+because a 207-book run takes about half an hour and a silent run looks exactly
+like a hung one. On a busy machine a book that normally takes 10s can take
+minutes; if the whole run stalls, check for other `python` processes before
+suspecting the engine - two long-lived `backend/server.py` dev servers were
+doing this on 2026-10-02.
