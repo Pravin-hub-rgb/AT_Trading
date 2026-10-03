@@ -595,7 +595,17 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 449, "net": 295.7, "dd": 16.0},  # causal SL
+        # MEASURED 2026-10-02 on unified.py, re-run. The previous pin was 449 /
+        # +295.7 and reproduced under no stop rule: origin 454/+358.95, leg
+        # 453/+279.47, leg_no_entry 454/+358.92. It predated the C16 default
+        # change and belonged to no current configuration.
+        #
+        # One knob over the causal champion: skip UTC Saturdays. 499 -> 453
+        # trades, +239.12 -> +279.47 net. 57 of the 86 removed entries fell on
+        # a Saturday and were carrying -16.80R gross. The other 29, and the 40
+        # that appear, are the cooldown and streak-halt chain moving - removing
+        # trades re-opens entries that the skip had closed off.
+        "pins": {"n": 453, "net": 279.47},  # causal SL
     },
     "utcsat_swingpause_single_sw10": {
         "desc": "swingpause single + SKIP UTC-SATURDAY only (UTC Sun = +51.7R is KEPT)",
