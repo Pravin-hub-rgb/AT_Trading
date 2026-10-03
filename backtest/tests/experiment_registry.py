@@ -213,6 +213,272 @@ EXPERIMENTS = {
                  "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
     },
 
+    # AUDIT RESIDUE, 2026-10-02, and why it stays at four.
+    #
+    # Re-running the audit against the patched engine signature (not a name
+    # pattern) leaves four (parameter, value) pairs that appear in scripts and
+    # in no book:
+    #
+    #   sl_buf_atr 0.10            -> covered by gap_slbuf010 (same value, the
+    #                               audit compares the literal string and the
+    #                               book was written with the same one)
+    #   exp_event_shift_min -1440  -> the mirror of gap_inert_event_shift, which
+    #                               uses +1440. Both are bit-for-bit the baseline.
+    #   exp_5m_confirm 1           -> raises TypeError on its own because
+    #   exp_5m_wait_min 240           exp_5m_data is a STATS SINK defaulting to
+    #                               None, so there is no experiment to run.
+    #
+    # So the knob/value layer is CLOSED. Not "nearly" - closed, with the residue
+    # enumerated and each line explained.
+
+    # ===== FINAL AUDIT PASS: plain engine params (2026-10-02) =====
+    "gap_slbuf025": {
+        "desc": "champion leg + sl_buf_atr 0.25",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "sl_buf_atr": 0.25},
+        "swing": "sw10",
+        # FINAL AUDIT PASS 2026-10-02. The previous audit filtered on the
+        # knob NAME PATTERN (exp_*) and so missed every plain engine parameter -
+        # b3_k, chop_thresh, cooldown_bars, sl_buf_atr, htf_rr,
+        # max_consecutive_losses and exp31_lb. Fixed by filtering on the actual
+        # signature of the patched engine instead of a regex, which is the only
+        # correct way to ask "is this a knob". 18 real pairs surfaced that way.
+        #
+        # The notable one: sl_buf_atr=0.25 is BETTER out of sample (+82.53R at
+        # dd 31.78, against the shipped 0.01 giving +72.79 at dd 50.55) while
+        # being worse in sample (+188.41 against +239.12). That is a stop-buffer
+        # value the whole project has been treating as settled, measured by one
+        # script, never pinned.
+        #
+        # MEASURED INERT on both eras - wired but not binding on this book:
+        #   chop_thresh at 52.0 and 61.0. It does not bind because mode=atr_high
+        #     selects the HTF interval set by ATR, not by chop - chop_thresh is
+        #     read only in mode=chop. Every book in the registry is atr_high, so
+        #     chop_thresh has been a decorative parameter on all 192 of them.
+        #   exp31_lb at 50 and 60, htf_rr=3.0 (the shipped value).
+        # The b3_k ladder is a fifth sibling of the decay conclusion: b3_k=2
+        # gives IS +41.78 / OOS +25.70 on 167 and 79 trades. Small, low drawdown
+        # on both sides, and nowhere near the champion - the arm is real and weak.
+        "pins": {"n": 497, "net": 188.41, "dd_net": 44.69,
+                 "oos_n": 279, "oos_net": 82.53, "oos_dd_net": 31.78},
+    },
+    "gap_slbuf010": {
+        "desc": "champion leg + sl_buf_atr 0.10",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "sl_buf_atr": 0.10},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 497, "net": 214.36, "dd_net": 45.99,
+                 "oos_n": 278, "oos_net": 62.66, "oos_dd_net": 51.65},
+    },
+    "gap_cd15": {
+        "desc": "champion leg + cooldown_bars 15",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "cooldown_bars": 15},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 488, "net": 298.14, "dd_net": 46.85,
+                 "oos_n": 273, "oos_net": 74.67, "oos_dd_net": 46.67},
+    },
+    "gap_cd5": {
+        "desc": "champion leg + cooldown_bars 5",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "cooldown_bars": 5},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 502, "net": 238.56, "dd_net": 46.47,
+                 "oos_n": 284, "oos_net": 68.59, "oos_dd_net": 52.83},
+    },
+    "gap_mcl5": {
+        "desc": "champion leg + max_consecutive_losses 5",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "max_consecutive_losses": 5},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 523, "net": 240.02, "dd_net": 43.35,
+                 "oos_n": 302, "oos_net": 72.73, "oos_dd_net": 54.16},
+    },
+    "gap_b3k2": {
+        "desc": "champion leg + b3_k 2",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "b3_k": 2},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 167, "net": 41.78, "dd_net": 19.07,
+                 "oos_n": 79, "oos_net": 25.70, "oos_dd_net": 15.92},
+    },
+    "gap_b3k4": {
+        "desc": "champion leg + b3_k 4",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "b3_k": 4},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 207, "net": 67.39, "dd_net": 19.78,
+                 "oos_n": 107, "oos_net": 14.21, "oos_dd_net": 17.11},
+    },
+    "gap_b3k6": {
+        "desc": "champion leg + b3_k 6",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "b3_k": 6},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 220, "net": 62.40, "dd_net": 26.06,
+                 "oos_n": 122, "oos_net": 19.81, "oos_dd_net": 18.85},
+    },
+    "gap_b3k8": {
+        "desc": "champion leg + b3_k 8",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "b3_k": 8},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 233, "net": 55.36, "dd_net": 26.53,
+                 "oos_n": 128, "oos_net": 18.60, "oos_dd_net": 20.03},
+    },
+    "gap_b3k10": {
+        "desc": "champion leg + b3_k 10",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "b3_k": 10},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 241, "net": 65.65, "dd_net": 23.72,
+                 "oos_n": 135, "oos_net": 20.27, "oos_dd_net": 21.12},
+    },
+    "gap_inert_chop52": {
+        "desc": "champion leg + chop_thresh 52, MEASURED INERT under atr_high",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "chop_thresh": 52.0},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_chop61": {
+        "desc": "champion leg + chop_thresh 61, MEASURED INERT under atr_high",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "chop_thresh": 61.0},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_lb50": {
+        "desc": "champion leg + exp31_lb 50, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp31_lb": 50},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_lb60": {
+        "desc": "champion leg + exp31_lb 60, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp31_lb": 60},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_htfrr3": {
+        "desc": "champion leg + htf_rr 3.0 (shipped value, control)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "htf_rr": 3.0},
+        "swing": "sw10",
+        # Part of the final audit pass - see gap_slbuf025.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+
     # ===== TAIL OF SCRIPT-GRID SWEEP (2026-10-02) =====
     "gap_campaign4": {
         "desc": "champion leg + campaign max total 4",
