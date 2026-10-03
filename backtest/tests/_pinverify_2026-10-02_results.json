@@ -1,0 +1,1379 @@
+{
+ "trail_half": {
+  "n": 468,
+  "net": 384.99,
+  "dd_net": 51.1,
+  "pin_n": 468,
+  "pin_net": 384.99,
+  "pin_dd": 51.1,
+  "OK": true
+ },
+ "trail_delay1": {
+  "n": 501,
+  "net": 263.62,
+  "dd_net": 45.37,
+  "pin_n": 501,
+  "pin_net": 263.62,
+  "pin_dd": 45.37,
+  "OK": true
+ },
+ "trail_half_delay1": {
+  "n": 465,
+  "net": 385.92,
+  "dd_net": 51.39,
+  "pin_n": 465,
+  "pin_net": 385.92,
+  "pin_dd": 51.39,
+  "OK": true
+ },
+ "trail_skipn4": {
+  "n": 439,
+  "net": 357.15,
+  "dd_net": 43.96,
+  "pin_n": 439,
+  "pin_net": 357.15,
+  "pin_dd": 43.96,
+  "OK": true
+ },
+ "trail_half_delay1_skipn4": {
+  "n": 424,
+  "net": 556.62,
+  "dd_net": 44.47,
+  "pin_n": 424,
+  "pin_net": 556.62,
+  "pin_dd": 44.47,
+  "OK": true
+ },
+ "decayA_c": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "decayA_u": {
+  "n": 453,
+  "net": 279.47,
+  "dd_net": 35.54,
+  "pin_n": 453,
+  "pin_net": 279.47,
+  "pin_dd": 35.54,
+  "OK": true
+ },
+ "decayB_c": {
+  "n": 303,
+  "net": 263.9,
+  "dd_net": 30.18,
+  "pin_n": 303,
+  "pin_net": 263.9,
+  "pin_dd": 30.18,
+  "OK": true
+ },
+ "decayB_u": {
+  "n": 270,
+  "net": 220.96,
+  "dd_net": 26.91,
+  "pin_n": 270,
+  "pin_net": 220.96,
+  "pin_dd": 26.91,
+  "OK": true
+ },
+ "decayC_c": {
+  "n": 299,
+  "net": 154.64,
+  "dd_net": 34.02,
+  "pin_n": 299,
+  "pin_net": 154.64,
+  "pin_dd": 34.02,
+  "OK": true
+ },
+ "decayC_u": {
+  "n": 273,
+  "net": 173.31,
+  "dd_net": 30.16,
+  "pin_n": 273,
+  "pin_net": 173.31,
+  "pin_dd": 30.16,
+  "OK": true
+ },
+ "decayD_c": {
+  "n": 353,
+  "net": 194.24,
+  "dd_net": 33.05,
+  "pin_n": 353,
+  "pin_net": 194.24,
+  "pin_dd": 33.05,
+  "OK": true
+ },
+ "decayD_u": {
+  "n": 324,
+  "net": 150.08,
+  "dd_net": 32.45,
+  "pin_n": 324,
+  "pin_net": 150.08,
+  "pin_dd": 32.45,
+  "OK": true
+ },
+ "decayE_c": {
+  "n": 245,
+  "net": 254.21,
+  "dd_net": 28.76,
+  "pin_n": 245,
+  "pin_net": 254.21,
+  "pin_dd": 28.76,
+  "OK": true
+ },
+ "decayE_u": {
+  "n": 217,
+  "net": 250.36,
+  "dd_net": 25.9,
+  "pin_n": 217,
+  "pin_net": 250.36,
+  "pin_dd": 25.9,
+  "OK": true
+ },
+ "decayF_c": {
+  "n": 206,
+  "net": -43.62,
+  "dd_net": 66.8,
+  "pin_n": 206,
+  "pin_net": -43.62,
+  "pin_dd": 66.8,
+  "OK": true
+ },
+ "decayF_u": {
+  "n": 191,
+  "net": -21.96,
+  "dd_net": 51.57,
+  "pin_n": 191,
+  "pin_net": -21.96,
+  "pin_dd": 51.57,
+  "OK": true
+ },
+ "decayG_c": {
+  "n": 148,
+  "net": 40.92,
+  "dd_net": 57.57,
+  "pin_n": 148,
+  "pin_net": 40.92,
+  "pin_dd": 57.57,
+  "OK": true
+ },
+ "decayG_u": {
+  "n": 138,
+  "net": 50.72,
+  "dd_net": 41.95,
+  "pin_n": 138,
+  "pin_net": 50.72,
+  "pin_dd": 41.95,
+  "OK": true
+ },
+ "decayH_c": {
+  "n": 261,
+  "net": 17.03,
+  "dd_net": 59.13,
+  "pin_n": 261,
+  "pin_net": 17.03,
+  "pin_dd": 59.13,
+  "OK": true
+ },
+ "decayH_u": {
+  "n": 246,
+  "net": 32.19,
+  "dd_net": 53.69,
+  "pin_n": 246,
+  "pin_net": 32.19,
+  "pin_dd": 53.69,
+  "OK": true
+ },
+ "trail_half_skipn8_nodelay": {
+  "n": 383,
+  "net": 588.76,
+  "dd_net": 45.46,
+  "pin_n": 383,
+  "pin_net": 588.76,
+  "pin_dd": 45.46,
+  "OK": true
+ },
+ "trail_half_skipn3_nodelay": {
+  "n": 449,
+  "net": 561.98,
+  "dd_net": 43.3,
+  "pin_n": 449,
+  "pin_net": 561.98,
+  "pin_dd": 43.3,
+  "OK": true
+ },
+ "trail_half_skipn6_dr3": {
+  "n": 373,
+  "net": 615.15,
+  "dd_net": 46.15,
+  "pin_n": 373,
+  "pin_net": 615.15,
+  "pin_dd": 46.15,
+  "OK": true
+ },
+ "trail_half_dr3_nodelay": {
+  "n": 412,
+  "net": 416.92,
+  "dd_net": 44.8,
+  "pin_n": 412,
+  "pin_net": 416.92,
+  "pin_dd": 44.8,
+  "OK": true
+ },
+ "trail_half_skipn8_dr1": {
+  "n": 383,
+  "net": 588.76,
+  "dd_net": 45.46,
+  "pin_n": 383,
+  "pin_net": 588.76,
+  "pin_dd": 45.46,
+  "OK": true
+ },
+ "cap1d": {
+  "n": 236,
+  "net": -49.73,
+  "dd_net": 84.28,
+  "pin_n": 236,
+  "pin_net": -49.73,
+  "pin_dd": 84.28,
+  "OK": true
+ },
+ "cap4d": {
+  "n": 385,
+  "net": -35.21,
+  "dd_net": 57.45,
+  "pin_n": 385,
+  "pin_net": -35.21,
+  "pin_dd": 57.45,
+  "OK": true
+ },
+ "cap8d": {
+  "n": 472,
+  "net": 185.83,
+  "dd_net": 47.32,
+  "pin_n": 472,
+  "pin_net": 185.83,
+  "pin_dd": 47.32,
+  "OK": true
+ },
+ "cap12d": {
+  "n": 471,
+  "net": 153.72,
+  "dd_net": 46.71,
+  "pin_n": 471,
+  "pin_net": 153.72,
+  "pin_dd": 46.71,
+  "OK": true
+ },
+ "cap16d": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "cap20d": {
+  "n": 498,
+  "net": 269.6,
+  "dd_net": 46.03,
+  "pin_n": 498,
+  "pin_net": 269.6,
+  "pin_dd": 46.03,
+  "OK": true
+ },
+ "cap24d": {
+  "n": 510,
+  "net": 248.83,
+  "dd_net": 46.68,
+  "pin_n": 510,
+  "pin_net": 248.83,
+  "pin_dd": 46.68,
+  "OK": true
+ },
+ "cap32d": {
+  "n": 522,
+  "net": 375.53,
+  "dd_net": 48.39,
+  "pin_n": 522,
+  "pin_net": 375.53,
+  "pin_dd": 48.39,
+  "OK": true
+ },
+ "cap48d": {
+  "n": 556,
+  "net": 351.27,
+  "dd_net": 54.25,
+  "pin_n": 556,
+  "pin_net": 351.27,
+  "pin_dd": 54.25,
+  "OK": true
+ },
+ "cap999_nocap": {
+  "n": 592,
+  "net": 360.87,
+  "dd_net": 54.25,
+  "pin_n": 592,
+  "pin_net": 360.87,
+  "pin_dd": 54.25,
+  "OK": true
+ },
+ "utcsat_cap16d": {
+  "n": 453,
+  "net": 279.47,
+  "dd_net": 35.54,
+  "pin_n": 453,
+  "pin_net": 279.47,
+  "pin_dd": 35.54,
+  "OK": true
+ },
+ "utcsat_cap999_nocap": {
+  "n": 537,
+  "net": 336.98,
+  "dd_net": 42.82,
+  "pin_n": 537,
+  "pin_net": 336.98,
+  "pin_dd": 42.82,
+  "OK": true
+ },
+ "opt_ml_cd0_mb10": {
+  "n": 510,
+  "net": 215.5,
+  "dd_net": 60.37,
+  "pin_n": 510,
+  "pin_net": 215.5,
+  "pin_dd": 60.37,
+  "OK": true
+ },
+ "opt_ml_cd10_mb10": {
+  "n": 446,
+  "net": 198.09,
+  "dd_net": 44.56,
+  "pin_n": 446,
+  "pin_net": 198.09,
+  "pin_dd": 44.56,
+  "OK": true
+ },
+ "lb30_chop55_persist2": {
+  "n": 429,
+  "net": 247.51,
+  "dd_net": 46.17,
+  "pin_n": 429,
+  "pin_net": 247.51,
+  "pin_dd": 46.17,
+  "OK": true
+ },
+ "lb30_persist5": {
+  "n": 410,
+  "net": 267.3,
+  "dd_net": 49.18,
+  "pin_n": 410,
+  "pin_net": 267.3,
+  "pin_dd": 49.18,
+  "OK": true
+ },
+ "lb30_halt0": {
+  "n": 484,
+  "net": 276.86,
+  "dd_net": 60.28,
+  "pin_n": 484,
+  "pin_net": 276.86,
+  "pin_dd": 60.28,
+  "OK": true
+ },
+ "lb30_halt6_cd0": {
+  "n": 538,
+  "net": 140.96,
+  "dd_net": 84.06,
+  "pin_n": 538,
+  "pin_net": 140.96,
+  "pin_dd": 84.06,
+  "OK": true
+ },
+ "lb30_w24_ext1.5": {
+  "n": 337,
+  "net": 336.67,
+  "dd_net": 35.92,
+  "pin_n": 337,
+  "pin_net": 336.67,
+  "pin_dd": 35.92,
+  "OK": true
+ },
+ "lb30_w24_ext2.0": {
+  "n": 380,
+  "net": 344.61,
+  "dd_net": 36.58,
+  "pin_n": 380,
+  "pin_net": 344.61,
+  "pin_dd": 36.58,
+  "OK": true
+ },
+ "lb30_w24_ext2.5": {
+  "n": 405,
+  "net": 315.08,
+  "dd_net": 42.82,
+  "pin_n": 405,
+  "pin_net": 315.08,
+  "pin_dd": 42.82,
+  "OK": true
+ },
+ "lb30_w24_ext3.0": {
+  "n": 415,
+  "net": 314.51,
+  "dd_net": 42.27,
+  "pin_n": 415,
+  "pin_net": 314.51,
+  "pin_dd": 42.27,
+  "OK": true
+ },
+ "a4_w24_ext1.5": {
+  "n": 300,
+  "net": 144.13,
+  "dd_net": 47.02,
+  "pin_n": 300,
+  "pin_net": 144.13,
+  "pin_dd": 47.02,
+  "OK": true
+ },
+ "a4_w24_ext3.0": {
+  "n": 368,
+  "net": 133.69,
+  "dd_net": 48.14,
+  "pin_n": 368,
+  "pin_net": 133.69,
+  "pin_dd": 48.14,
+  "OK": true
+ },
+ "opt_cd10_w24": {
+  "n": 300,
+  "net": 144.13,
+  "dd_net": 47.02,
+  "pin_n": 300,
+  "pin_net": 144.13,
+  "pin_dd": 47.02,
+  "OK": true
+ },
+ "champion_single_sw20": {
+  "n": 496,
+  "net": 196.28,
+  "dd_net": 58.21,
+  "pin_n": 496,
+  "pin_net": 196.28,
+  "pin_dd": 58.21,
+  "OK": true
+ },
+ "champion_single_sw10": {
+  "n": 503,
+  "net": 170.91,
+  "dd_net": 50.48,
+  "pin_n": 503,
+  "pin_net": 170.91,
+  "pin_dd": 50.48,
+  "OK": true
+ },
+ "champion_multi_sw20": {
+  "n": 493,
+  "net": 213.33,
+  "dd_net": 50.64,
+  "pin_n": 493,
+  "pin_net": 213.33,
+  "pin_dd": 50.64,
+  "OK": true
+ },
+ "champion_multi_sw10": {
+  "n": 500,
+  "net": 325.78,
+  "dd_net": 27.72,
+  "pin_n": 500,
+  "pin_net": 325.78,
+  "pin_dd": 27.72,
+  "OK": true
+ },
+ "champion_multi_sw10_entry_both": {
+  "n": 495,
+  "net": 215.09,
+  "dd_net": 34.72,
+  "pin_n": 495,
+  "pin_net": 215.09,
+  "pin_dd": 34.72,
+  "OK": true
+ },
+ "champion_multi_sw10_leg": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "champion_multi_sw10_entry1": {
+  "n": 500,
+  "net": 325.75,
+  "dd_net": 27.72,
+  "pin_n": 500,
+  "pin_net": 325.75,
+  "pin_dd": 27.72,
+  "OK": true
+ },
+ "champion_multi_sw10_leg_no_entry": {
+  "n": 500,
+  "net": 325.75,
+  "dd_net": 27.72,
+  "pin_n": 500,
+  "pin_net": 325.75,
+  "pin_dd": 27.72,
+  "OK": true
+ },
+ "baseline_no_partial_sw20": {
+  "n": 496,
+  "net": 232.38,
+  "dd_net": 61.58,
+  "pin_n": 496,
+  "pin_net": 232.38,
+  "pin_dd": 61.58,
+  "OK": true
+ },
+ "baseline_no_partial_sw10": {
+  "n": 502,
+  "net": 238.45,
+  "dd_net": 53.86,
+  "pin_n": 502,
+  "pin_net": 238.45,
+  "pin_dd": 53.86,
+  "OK": true
+ },
+ "skipwin1_multi_sw10": {
+  "n": 145,
+  "net": -38.54,
+  "dd_net": 52.54,
+  "pin_n": 145,
+  "pin_net": -38.54,
+  "pin_dd": 52.54,
+  "OK": true
+ },
+ "skipwin2_multi_sw10": {
+  "n": 101,
+  "net": -65.33,
+  "dd_net": 66.47,
+  "pin_n": 101,
+  "pin_net": -65.33,
+  "pin_dd": 66.47,
+  "OK": true
+ },
+ "swingpause_multi_sw10": {
+  "n": 444,
+  "net": 241.06,
+  "dd_net": 41.6,
+  "pin_n": 444,
+  "pin_net": 241.06,
+  "pin_dd": 41.6,
+  "OK": true
+ },
+ "skip1pause_multi_sw10": {
+  "n": 145,
+  "net": -38.54,
+  "dd_net": 52.54,
+  "pin_n": 145,
+  "pin_net": -38.54,
+  "pin_dd": 52.54,
+  "OK": true
+ },
+ "skipwin1_single_sw10": {
+  "n": 148,
+  "net": -38.88,
+  "dd_net": 53.91,
+  "pin_n": 148,
+  "pin_net": -38.88,
+  "pin_dd": 53.91,
+  "OK": true
+ },
+ "swingpause_single_sw10": {
+  "n": 451,
+  "net": 242.55,
+  "dd_net": 48.67,
+  "pin_n": 451,
+  "pin_net": 242.55,
+  "pin_dd": 48.67,
+  "OK": true
+ },
+ "skipwinhalt_multi_sw10": {
+  "n": 323,
+  "net": 28.35,
+  "dd_net": 45.34,
+  "pin_n": 323,
+  "pin_net": 28.35,
+  "pin_dd": 45.34,
+  "OK": true
+ },
+ "skipwinhalt_single_sw10": {
+  "n": 328,
+  "net": 29.64,
+  "dd_net": 60.09,
+  "pin_n": 328,
+  "pin_net": 29.64,
+  "pin_dd": 60.09,
+  "OK": true
+ },
+ "swingpause_cd0_single_sw10": {
+  "n": 451,
+  "net": 242.55,
+  "dd_net": 48.67,
+  "pin_n": 451,
+  "pin_net": 242.55,
+  "pin_dd": 48.67,
+  "OK": true
+ },
+ "swingpause_single_sw20": {
+  "n": 444,
+  "net": 154.08,
+  "dd_net": 57.93,
+  "pin_n": 444,
+  "pin_net": 154.08,
+  "pin_dd": 57.93,
+  "OK": true
+ },
+ "nowknd_multi_sw10": {
+  "n": 403,
+  "net": 301.39,
+  "dd_net": 25.88,
+  "pin_n": 403,
+  "pin_net": 301.39,
+  "pin_dd": 25.88,
+  "OK": true
+ },
+ "nowknd_single_sw10": {
+  "n": 401,
+  "net": 278.06,
+  "dd_net": 32.28,
+  "pin_n": 401,
+  "pin_net": 278.06,
+  "pin_dd": 32.28,
+  "OK": true
+ },
+ "nowknd_swingpause_single_sw10": {
+  "n": 365,
+  "net": 228.26,
+  "dd_net": 30.31,
+  "pin_n": 365,
+  "pin_net": 228.26,
+  "pin_dd": 30.31,
+  "OK": true
+ },
+ "fliponly_multi_sw10": {
+  "n": 286,
+  "net": 202.45,
+  "dd_net": 35.43,
+  "pin_n": 286,
+  "pin_net": 202.45,
+  "pin_dd": 35.43,
+  "OK": true
+ },
+ "fliponly_swingpause_single_sw10": {
+  "n": 268,
+  "net": 211.34,
+  "dd_net": 29.5,
+  "pin_n": 268,
+  "pin_net": 211.34,
+  "pin_dd": 29.5,
+  "OK": true
+ },
+ "wage24_multi_sw10": {
+  "n": 364,
+  "net": 240.58,
+  "dd_net": 31.33,
+  "pin_n": 364,
+  "pin_net": 240.58,
+  "pin_dd": 31.33,
+  "OK": true
+ },
+ "legskip2_multi_sw10": {
+  "n": 269,
+  "net": 235.96,
+  "dd_net": 29.15,
+  "pin_n": 269,
+  "pin_net": 235.96,
+  "pin_dd": 29.15,
+  "OK": true
+ },
+ "utcsat_entry_minus_1": {
+  "n": 454,
+  "net": 358.92,
+  "dd_net": 21.18,
+  "pin_n": 454,
+  "pin_net": 358.92,
+  "pin_dd": 21.18,
+  "OK": true
+ },
+ "utcsat_multi_sw10": {
+  "n": 453,
+  "net": 279.47,
+  "dd_net": 35.54,
+  "pin_n": 453,
+  "pin_net": 279.47,
+  "pin_dd": 35.54,
+  "OK": true
+ },
+ "utcsat_swingpause_single_sw10": {
+  "n": 406,
+  "net": 245.7,
+  "dd_net": 36.47,
+  "pin_n": 406,
+  "pin_net": 245.7,
+  "pin_dd": 36.47,
+  "OK": true
+ },
+ "utc_wknd_swingpause_single_sw10": {
+  "n": 350,
+  "net": 121.03,
+  "dd_net": 40.49,
+  "pin_n": 350,
+  "pin_net": 121.03,
+  "pin_dd": 40.49,
+  "OK": true
+ },
+ "rmax15_swingpause_single_sw10": {
+  "n": 376,
+  "net": 187.78,
+  "dd_net": 57.54,
+  "pin_n": 376,
+  "pin_net": 187.78,
+  "pin_dd": 57.54,
+  "OK": true
+ },
+ "rmax10_swingpause_single_sw10": {
+  "n": 294,
+  "net": 228.59,
+  "dd_net": 47.91,
+  "pin_n": 294,
+  "pin_net": 228.59,
+  "pin_dd": 47.91,
+  "OK": true
+ },
+ "rmax15_multi_sw10": {
+  "n": 407,
+  "net": 255.56,
+  "dd_net": 50.19,
+  "pin_n": 407,
+  "pin_net": 255.56,
+  "pin_dd": 50.19,
+  "OK": true
+ },
+ "chopband_multi_sw10": {
+  "n": 432,
+  "net": 268.79,
+  "dd_net": 41.7,
+  "pin_n": 432,
+  "pin_net": 268.79,
+  "pin_dd": 41.7,
+  "OK": true
+ },
+ "chopband_swingpause_single_sw10": {
+  "n": 395,
+  "net": 241.65,
+  "dd_net": 38.57,
+  "pin_n": 395,
+  "pin_net": 241.65,
+  "pin_dd": 38.57,
+  "OK": true
+ },
+ "atrr_swingpause_single_sw10": {
+  "n": 381,
+  "net": 241.57,
+  "dd_net": 46.77,
+  "pin_n": 381,
+  "pin_net": 241.57,
+  "pin_dd": 46.77,
+  "OK": true
+ },
+ "chopband_atrr_swingpause_single_sw10": {
+  "n": 321,
+  "net": 264.45,
+  "dd_net": 35.77,
+  "pin_n": 321,
+  "pin_net": 264.45,
+  "pin_dd": 35.77,
+  "OK": true
+ },
+ "atrr_swingpause_single_sw20": {
+  "n": 390,
+  "net": 171.57,
+  "dd_net": 50.43,
+  "pin_n": 390,
+  "pin_net": 171.57,
+  "pin_dd": 50.43,
+  "OK": true
+ },
+ "atrr_cd0_swingpause_single_sw10": {
+  "n": 385,
+  "net": 240.56,
+  "dd_net": 47.35,
+  "pin_n": 385,
+  "pin_net": 240.56,
+  "pin_dd": 47.35,
+  "OK": true
+ },
+ "chopband_swingpause_single_sw20": {
+  "n": 388,
+  "net": 146.42,
+  "dd_net": 51.76,
+  "pin_n": 388,
+  "pin_net": 146.42,
+  "pin_dd": 51.76,
+  "OK": true
+ },
+ "chopband_atrr_swingpause_single_sw20": {
+  "n": 329,
+  "net": 175.9,
+  "dd_net": 44.83,
+  "pin_n": 329,
+  "pin_net": 175.9,
+  "pin_dd": 44.83,
+  "OK": true
+ },
+ "utcsat_chopband_multi_sw10": {
+  "n": 392,
+  "net": 315.45,
+  "dd_net": 36.41,
+  "pin_n": 392,
+  "pin_net": 315.45,
+  "pin_dd": 36.41,
+  "OK": true
+ },
+ "fullstack_atrr_utcsat_multi_sw10": {
+  "n": 311,
+  "net": 295.46,
+  "dd_net": 26.61,
+  "pin_n": 311,
+  "pin_net": 295.46,
+  "pin_dd": 26.61,
+  "OK": true
+ },
+ "fullstack_swingpause_single_sw10": {
+  "n": 262,
+  "net": 268.27,
+  "dd_net": 24.22,
+  "pin_n": 262,
+  "pin_net": 268.27,
+  "pin_dd": 24.22,
+  "OK": true
+ },
+ "fullstack_wage10_cd0_single_sw10": {
+  "n": 234,
+  "net": 316.64,
+  "dd_net": 23.96,
+  "pin_n": 234,
+  "pin_net": 316.64,
+  "pin_dd": 23.96,
+  "OK": true
+ },
+ "wage12_swingpause_single_sw10": {
+  "n": 323,
+  "net": 262.31,
+  "dd_net": 27.48,
+  "pin_n": 323,
+  "pin_net": 262.31,
+  "pin_dd": 27.48,
+  "OK": true
+ },
+ "wage8_swingpause_single_sw10": {
+  "n": 329,
+  "net": 247.85,
+  "dd_net": 29.39,
+  "pin_n": 329,
+  "pin_net": 247.85,
+  "pin_dd": 29.39,
+  "OK": true
+ },
+ "wage10_swingpause_wskip_single_sw10": {
+  "n": 330,
+  "net": 308.65,
+  "dd_net": 26.27,
+  "pin_n": 330,
+  "pin_net": 308.65,
+  "pin_dd": 26.27,
+  "OK": true
+ },
+ "wage16_swingpause_single_sw10": {
+  "n": 302,
+  "net": 244.8,
+  "dd_net": 28.04,
+  "pin_n": 302,
+  "pin_net": 244.8,
+  "pin_dd": 28.04,
+  "OK": true
+ },
+ "wage20_swingpause_single_sw10": {
+  "n": 283,
+  "net": 205.35,
+  "dd_net": 26.45,
+  "pin_n": 283,
+  "pin_net": 205.35,
+  "pin_dd": 26.45,
+  "OK": true
+ },
+ "wage12_swingpause_single_nowknd_sw10": {
+  "n": 392,
+  "net": 196.94,
+  "dd_net": 41.23,
+  "pin_n": 392,
+  "pin_net": 196.94,
+  "pin_dd": 41.23,
+  "OK": true
+ },
+ "wage12_swingpause_single_sw20": {
+  "n": 394,
+  "net": 153.32,
+  "dd_net": 43.96,
+  "pin_n": 394,
+  "pin_net": 153.32,
+  "pin_dd": 43.96,
+  "OK": true
+ },
+ "causalsl_multi_sw10": {
+  "n": 493,
+  "net": 185.08,
+  "dd_net": 47.7,
+  "pin_n": 493,
+  "pin_net": 185.08,
+  "pin_dd": 47.7,
+  "OK": true
+ },
+ "causalsl_swingpause_single_sw10": {
+  "n": 446,
+  "net": 195.67,
+  "dd_net": 45.42,
+  "pin_n": 446,
+  "pin_net": 195.67,
+  "pin_dd": 45.42,
+  "OK": true
+ },
+ "causalsl_utcsat_multi_sw10": {
+  "n": 448,
+  "net": 237.43,
+  "dd_net": 36.53,
+  "pin_n": 448,
+  "pin_net": 237.43,
+  "pin_dd": 36.53,
+  "OK": true
+ },
+ "bm05_multi_sw10": {
+  "n": 456,
+  "net": 277.86,
+  "dd_net": 46.63,
+  "pin_n": 456,
+  "pin_net": 277.86,
+  "pin_dd": 46.63,
+  "OK": true
+ },
+ "bm08_multi_sw10": {
+  "n": 391,
+  "net": 248.81,
+  "dd_net": 38.3,
+  "pin_n": 391,
+  "pin_net": 248.81,
+  "pin_dd": 38.3,
+  "OK": true
+ },
+ "bm05_utcsat_multi_sw10": {
+  "n": 420,
+  "net": 298.15,
+  "dd_net": 35.33,
+  "pin_n": 420,
+  "pin_net": 298.15,
+  "pin_dd": 35.33,
+  "OK": true
+ },
+ "bm08_utcsat_multi_sw10": {
+  "n": 359,
+  "net": 264.66,
+  "dd_net": 29.71,
+  "pin_n": 359,
+  "pin_net": 264.66,
+  "pin_dd": 29.71,
+  "OK": true
+ },
+ "bm05_swingpause_single_sw10": {
+  "n": 425,
+  "net": 243.81,
+  "dd_net": 49.0,
+  "pin_n": 425,
+  "pin_net": 243.81,
+  "pin_dd": 49.0,
+  "OK": true
+ },
+ "bm05_multi_sw20": {
+  "n": 458,
+  "net": 259.8,
+  "dd_net": 51.69,
+  "pin_n": 458,
+  "pin_net": 259.8,
+  "pin_dd": 51.69,
+  "OK": true
+ },
+ "trail10_swingpause_single": {
+  "n": 328,
+  "net": -311.27,
+  "dd_net": 313.38,
+  "pin_n": 328,
+  "pin_net": -311.27,
+  "pin_dd": 313.38,
+  "OK": true
+ },
+ "trail06_swingpause_single": {
+  "n": 233,
+  "net": -276.56,
+  "dd_net": 276.56,
+  "pin_n": 233,
+  "pin_net": -276.56,
+  "pin_dd": 276.56,
+  "OK": true
+ },
+ "trail10_multi": {
+  "n": 246,
+  "net": -247.51,
+  "dd_net": 248.22,
+  "pin_n": 246,
+  "pin_net": -247.51,
+  "pin_dd": 248.22,
+  "OK": true
+ },
+ "dualunion_multi": {
+  "n": 90,
+  "net": 201.7,
+  "dd_net": 9.04,
+  "pin_n": 90,
+  "pin_net": 201.7,
+  "pin_dd": 9.04,
+  "OK": true
+ },
+ "union_multi": {
+  "n": 137,
+  "net": 245.39,
+  "dd_net": 16.45,
+  "pin_n": 137,
+  "pin_net": 245.39,
+  "pin_dd": 16.45,
+  "OK": true
+ },
+ "dirmatch_multi_sw10": {
+  "n": 389,
+  "net": 444.21,
+  "dd_net": 24.01,
+  "pin_n": 389,
+  "pin_net": 444.21,
+  "pin_dd": 24.01,
+  "OK": true
+ },
+ "age25_multi_sw10": {
+  "n": 293,
+  "net": 319.22,
+  "dd_net": 25.86,
+  "pin_n": 293,
+  "pin_net": 319.22,
+  "pin_dd": 25.86,
+  "OK": true
+ },
+ "age25_dirmatch_multi_sw10": {
+  "n": 248,
+  "net": 357.01,
+  "dd_net": 21.47,
+  "pin_n": 248,
+  "pin_net": 357.01,
+  "pin_dd": 21.47,
+  "OK": true
+ },
+ "age10_dirmatch_multi_sw10": {
+  "n": 150,
+  "net": 417.68,
+  "dd_net": 13.45,
+  "pin_n": 150,
+  "pin_net": 417.68,
+  "pin_dd": 13.45,
+  "OK": true
+ },
+ "dirmatch_swingpause_single_sw10": {
+  "n": 362,
+  "net": 273.84,
+  "dd_net": 30.04,
+  "pin_n": 362,
+  "pin_net": 273.84,
+  "pin_dd": 30.04,
+  "OK": true
+ },
+ "age10_dirmatch_swingpause_single_sw10": {
+  "n": 149,
+  "net": 414.08,
+  "dd_net": 12.9,
+  "pin_n": 149,
+  "pin_net": 414.08,
+  "pin_dd": 12.9,
+  "OK": true
+ },
+ "dirmatch_single_sw10": {
+  "n": 392,
+  "net": 442.72,
+  "dd_net": 31.02,
+  "pin_n": 392,
+  "pin_net": 442.72,
+  "pin_dd": 31.02,
+  "OK": true
+ },
+ "b2doji_utcsat_multi_sw10": {
+  "n": 422,
+  "net": 295.7,
+  "dd_net": 36.16,
+  "pin_n": 422,
+  "pin_net": 295.7,
+  "pin_dd": 36.16,
+  "OK": true
+ },
+ "b2doji_swingpause_single_sw10": {
+  "n": 414,
+  "net": 188.71,
+  "dd_net": 46.29,
+  "pin_n": 414,
+  "pin_net": 188.71,
+  "pin_dd": 46.29,
+  "OK": true
+ },
+ "age50_utcsat_multi_sw10": {
+  "n": 434,
+  "net": 261.4,
+  "dd_net": 37.95,
+  "pin_n": 434,
+  "pin_net": 261.4,
+  "pin_dd": 37.95,
+  "OK": true
+ },
+ "age50_swingpause_single_sw10": {
+  "n": 429,
+  "net": 137.14,
+  "dd_net": 48.05,
+  "pin_n": 429,
+  "pin_net": 137.14,
+  "pin_dd": 48.05,
+  "OK": true
+ },
+ "combined_b2age_utcsat_multi_sw10": {
+  "n": 407,
+  "net": 265.38,
+  "dd_net": 36.0,
+  "pin_n": 407,
+  "pin_net": 265.38,
+  "pin_dd": 36.0,
+  "OK": true
+ },
+ "persist3_multi_sw10": {
+  "n": 495,
+  "net": 229.45,
+  "dd_net": 53.26,
+  "pin_n": 495,
+  "pin_net": 229.45,
+  "pin_dd": 53.26,
+  "OK": true
+ },
+ "persist4_multi_sw10": {
+  "n": 501,
+  "net": 231.7,
+  "dd_net": 46.85,
+  "pin_n": 501,
+  "pin_net": 231.7,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "persist5_multi_sw10": {
+  "n": 498,
+  "net": 239.0,
+  "dd_net": 46.85,
+  "pin_n": 498,
+  "pin_net": 239.0,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "persist6_multi_sw10": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "persist8_multi_sw10": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd": 46.85,
+  "OK": true
+ },
+ "htfrr2_multi_sw10": {
+  "n": 423,
+  "net": 292.86,
+  "dd_net": 35.68,
+  "pin_n": 423,
+  "pin_net": 292.86,
+  "pin_dd": 35.68,
+  "OK": true
+ },
+ "htfrr25_multi_sw10": {
+  "n": 419,
+  "net": 221.11,
+  "dd_net": 34.27,
+  "pin_n": 419,
+  "pin_net": 221.11,
+  "pin_dd": 34.27,
+  "OK": true
+ },
+ "htfrr35_multi_sw10": {
+  "n": 406,
+  "net": 202.29,
+  "dd_net": 41.04,
+  "pin_n": 406,
+  "pin_net": 202.29,
+  "pin_dd": 41.04,
+  "OK": true
+ },
+ "htfrr4_multi_sw10": {
+  "n": 397,
+  "net": 222.36,
+  "dd_net": 38.81,
+  "pin_n": 397,
+  "pin_net": 222.36,
+  "pin_dd": 38.81,
+  "OK": true
+ },
+ "ext2_utcsat_multi_sw10": {
+  "n": 417,
+  "net": 301.86,
+  "dd_net": 41.77,
+  "pin_n": 417,
+  "pin_net": 301.86,
+  "pin_dd": 41.77,
+  "OK": true
+ },
+ "ext25_utcsat_multi_sw10": {
+  "n": 442,
+  "net": 281.3,
+  "dd_net": 36.18,
+  "pin_n": 442,
+  "pin_net": 281.3,
+  "pin_dd": 36.18,
+  "OK": true
+ },
+ "ext35_utcsat_multi_sw10": {
+  "n": 454,
+  "net": 279.16,
+  "dd_net": 35.54,
+  "pin_n": 454,
+  "pin_net": 279.16,
+  "pin_dd": 35.54,
+  "OK": true
+ },
+ "ext4_utcsat_multi_sw10": {
+  "n": 454,
+  "net": 279.16,
+  "dd_net": 35.54,
+  "pin_n": 454,
+  "pin_net": 279.16,
+  "pin_dd": 35.54,
+  "OK": true
+ },
+ "wage12_utcsat_multi_sw10": {
+  "n": 391,
+  "net": 273.7,
+  "dd_net": 31.66,
+  "pin_n": 391,
+  "pin_net": 273.7,
+  "pin_dd": 31.66,
+  "OK": true
+ },
+ "wage24_utcsat_multi_sw10": {
+  "n": 332,
+  "net": 273.8,
+  "dd_net": 21.7,
+  "pin_n": 332,
+  "pin_net": 273.8,
+  "pin_dd": 21.7,
+  "OK": true
+ },
+ "wage24_swingpause_single_sw10": {
+  "n": 269,
+  "net": 228.4,
+  "dd_net": 20.87,
+  "pin_n": 269,
+  "pin_net": 228.4,
+  "pin_dd": 20.87,
+  "OK": true
+ },
+ "curfew624_utcsat_multi_sw10": {
+  "n": 377,
+  "net": 304.72,
+  "dd_net": 31.95,
+  "pin_n": 377,
+  "pin_net": 304.72,
+  "pin_dd": 31.95,
+  "OK": true
+ },
+ "curfew624_swingpause_single_sw10": {
+  "n": 300,
+  "net": 198.91,
+  "dd_net": 23.17,
+  "pin_n": 300,
+  "pin_net": 198.91,
+  "pin_dd": 23.17,
+  "OK": true
+ },
+ "partial1_multi_sw10": {
+  "n": 553,
+  "net": 50.19,
+  "dd_net": 43.84,
+  "pin_n": 553,
+  "pin_net": 50.19,
+  "pin_dd": 43.84,
+  "OK": true
+ },
+ "partial2_multi_sw10": {
+  "n": 528,
+  "net": 72.28,
+  "dd_net": 39.25,
+  "pin_n": 528,
+  "pin_net": 72.28,
+  "pin_dd": 39.25,
+  "OK": true
+ },
+ "partial3_multi_sw10": {
+  "n": 513,
+  "net": 92.55,
+  "dd_net": 39.75,
+  "pin_n": 513,
+  "pin_net": 92.55,
+  "pin_dd": 39.75,
+  "OK": true
+ },
+ "partial4_multi_sw10": {
+  "n": 506,
+  "net": 106.7,
+  "dd_net": 45.39,
+  "pin_n": 506,
+  "pin_net": 106.7,
+  "pin_dd": 45.39,
+  "OK": true
+ },
+ "partial5_multi_sw10": {
+  "n": 501,
+  "net": 131.63,
+  "dd_net": 46.01,
+  "pin_n": 501,
+  "pin_net": 131.63,
+  "pin_dd": 46.01,
+  "OK": true
+ }
+}

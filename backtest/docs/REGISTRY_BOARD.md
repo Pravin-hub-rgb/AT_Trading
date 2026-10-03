@@ -7,7 +7,10 @@ Every book in `experiment_registry.py`, re-measured on `unified.py` on
 - **OOS** = 2021-22, never used to choose anything.
 
 `net` is after costs (55bp fee/side, 2x, 5bp slippage, 1bp funding, 1bp cost).
-`dd` is max drawdown in R on the net equity curve.
+`dd` is max drawdown in R on the NET equity curve (r_multiple minus cost_r).
+Note the runner prints a GROSS-basis drawdown under the label `DD`; the two differ
+by ~10R per book and are not interchangeable. Registry pins name this one
+`dd_net` so a pin can never be read on the wrong basis.
 
 **Read the OOS column.** A book that wins IS and loses OOS has been fitted to
 the sample. Several books here do exactly that and none should ship.

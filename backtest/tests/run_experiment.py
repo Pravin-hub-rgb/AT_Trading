@@ -252,6 +252,26 @@ def run_one(key, data=None, sim=None):
     return tr, elapsed
 
 
+def _net_dd(tr):
+    """Peak-to-trough on the NET equity curve (r_multiple minus cost_r).
+
+    stats() reports the GROSS drawdown. Costs are a real drag on equity, so a
+    book that is only flat on paper is not flat in the account. Every pin written
+    on 2026-10-02 is on this basis; older pins are on the gross basis and are
+    left alone so their comparison to history does not move.
+    """
+    peak = cum = dd = 0.0
+    for t in tr:
+        if t.get("outcome") == "open":
+            continue
+        cum += float(t.get("r_multiple", 0.0)) - float(t.get("cost_r", 0.0))
+        if cum > peak:
+            peak = cum
+        if peak - cum > dd:
+            dd = peak - cum
+    return dd
+
+
 def evaluate(key, tr):
     cfg = EXPERIMENTS[key]
     s = stats(tr)
@@ -293,7 +313,29 @@ def evaluate(key, tr):
         if "net" in pins:
             checks.append(("net", nt, pins["net"], abs(nt - pins["net"]) < 0.5))
         if "dd" in pins:
-            checks.append(("dd", s["dd"], pins["dd"], abs(s["dd"] - pins["dd"]) < 0.5))
+            # TWO DRAWDOWNS EXIST AND THEY ARE NOT THE SAME NUMBER.
+            #
+            #   dd      peak-to-trough on the GROSS equity curve (r_multiple
+            #           only). This is what this runner has always reported and
+            #           what every pre-2026-10-02 registry pin was written in.
+            #   dd_net  peak-to-trough on the NET equity curve
+            #           (r_multiple minus cost_r).
+            #
+            # The registry board and every pin written on 2026-10-02 use the NET
+            # figure, because costs are a real drag on equity and a book that is
+            # only flat on paper is not flat in the account. But this runner
+            # computes gross, so a net pin read as a gross pin fails by ~10R on
+            # every book - which is exactly what happened to champion_multi_sw10_leg
+            # (gross 32.0, net 46.9) and to every decay book.
+            #
+            # Both are legitimate; comparing them is not. Check against whichever
+            # the pin declares, and say so out loud when they disagree, rather
+            # than leaving a pin that always fails and nobody can tell why.
+            net_dd = _net_dd(tr)
+            if "dd_net" in pins:
+                checks.append(("dd_net", net_dd, pins["dd_net"], abs(net_dd - pins["dd_net"]) < 0.5))
+            else:
+                checks.append(("dd(gross-basis pin)", s["dd"], pins["dd"], abs(s["dd"] - pins["dd"]) < 0.5))
         for name, actual, expected, ok in checks:
             if not ok:
                 pin_ok = False
