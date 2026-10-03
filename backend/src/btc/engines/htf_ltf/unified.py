@@ -730,7 +730,7 @@ def simulate_htf_ltf_streak_halt(
     # the assignment at the end of the loop, so restoring the gate without
     # this line raises UnboundLocalError on the first entry. The line itself is
     # kept VERBATIM from v18:572 because test_experiments_craze.py anchors on it.
-    busy_until=""  # datetime string â€” timestamp-based, not index
+    busy_until=""  # datetime string — timestamp-based, not index
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset

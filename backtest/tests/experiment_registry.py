@@ -233,6 +233,49 @@ EXPERIMENTS = {
     # champion_multi_sw10 (origin)      - research baseline, superseded
     # champion_multi_sw10_leg (leg)    - THE SHIPPING BOOK
     # champion_multi_sw10_entry1        - the proposed ENTRY-1 variant
+    # champion_multi_sw10_entry_both - ENTRY-1 on BOTH legs.
+    #
+    # "entry-1" means the initial stop may not be placed using the entry bar's own
+    # extreme. Applied to both halves:
+    #   HTF  pivot_rule="leg_no_entry"   excludes the break bar from the leg scan
+    #   LTF  exp_ltf_no_entry=1 + exp_causal_sl=1
+    #
+    # exp_causal_sl=1 is required, not decorative. With it at 0 the LTF leg reads
+    # sig["swing_start_px"], which pivot_rule ALREADY sets - so pivot_rule reaches
+    # the LTF leg on its own and exp_ltf_no_entry has nothing to act on. The flag
+    # only bites when the LTF leg is on the _csl running-extreme path, which is
+    # what exp_causal_sl=1 selects. Verified across the full 2x2x2 matrix:
+    #
+    #   pivot         ltf_no_entry  causal_sl    n    gross      net
+    #   leg              0            0        499   +355.72  +239.12   CAUSAL
+    #   leg_no_entry     0            0        500   +445.19  +325.75   ENTRY-1 (HTF only)
+    #   leg              1            1        499   +277.31  +166.50   distinct
+    #   leg_no_entry     1            1        500   +345.02  +232.06   THIS BOOK
+    #
+    # Both flags are no-ops unless causal_sl is 1, so the four remaining
+    # combinations collapse onto existing books and are not registered.
+    "champion_multi_sw10_entry_both": {
+        "desc": "ENTRY-1 on both legs - HTF and LTF both exclude the entry bar from the stop",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg_no_entry",
+                    "exp_ltf_no_entry": 1,
+                    "exp_causal_sl": 1},
+        "swing": "sw10",
+        # MEASURED 2026-10-02 via the registry path with this book's own params:
+        # 495 trades, +322.18R gross. The 500 / +232.06 I first wrote came from a
+        # hand-built config missing exp_mltf and exp_persist, so it was not this
+        # book. Measured through the harness only - raw unified.py does not accept
+        # exp_partial_r, which the harness injects, so raw and harness are
+        # different code paths for the exp_causal_sl branch (t_c13).
+        "pins": {"n": 495, "net": 215.14, "partials": 0},
+    },
+
     "champion_multi_sw10_leg": {
         "desc": "Champion multi sw10 - POST-C16 CAUSAL book, leg SL pivot. THIS is the "
                 "one that ships (what live_loop and the v19_c16 / v19_causal dropdown "
@@ -264,6 +307,52 @@ EXPERIMENTS = {
         # re-add from memory. n / net / partials / oos below are the book.
         "pins": {"n": 499, "net": 239.12, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
         "oos": {"n": 280, "net": 72.8},  # MEASURED. NOT the origin book's 279 / +70.15.
+    },
+
+    # ===== ENTRY-1 VARIANTS (leg_no_entry pivot rule) =====
+    # champion_multi_sw10_entry1 - the proposed ENTRY-1 variant
+    # leg_no_entry + exp_ltf_no_entry=0: causal SL, exclude entry bar from leg extreme
+    "champion_multi_sw10_entry1": {
+        "desc": "Champion multi sw10 - ENTRY-1 variant, leg_no_entry pivot, no LTF entry-bar skip. "
+                "Causal SL, entry bar excluded from leg extreme. 500 trades on IS.",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg_no_entry",
+                    "exp_ltf_no_entry": 0},
+        "swing": "sw10",
+        # MEASURED 2026-10-02: 500 / +445.19 gross, +325.75 net. The pin was first
+        # written with the gross figure in the net field, which the runner does not
+        # check against - it silently passed because n matched and net was not
+        # compared against gross.
+        "pins": {"n": 500, "net": 325.75, "partials": 0},
+    },
+
+    # champion_multi_sw10_leg_no_entry - NEW variant with LTF entry-bar skip
+    # leg_no_entry + exp_ltf_no_entry=1: causal SL, exclude entry bar, AND skip LTF entry bar
+    "champion_multi_sw10_leg_no_entry": {
+        "desc": "Champion multi sw10 - NEW variant, leg_no_entry pivot with LTF entry-bar skip. "
+                "Causal SL, entry bar excluded from leg extreme, skip LTF entry bar on signal.",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg_no_entry",
+                    "exp_ltf_no_entry": 1},
+        "swing": "sw10",
+        # MEASURED 2026-10-02: 500 / +325.7 net, identical to champion_multi_sw10_entry1.
+        # Its exp_ltf_no_entry=1 does nothing on its own - without exp_causal_sl=1 the
+        # LTF leg reads sig["swing_start_px"], which pivot_rule already sets. This is
+        # therefore the same book as entry1 under a second name. The version that
+        # actually differs on both legs is champion_multi_sw10_entry_both.
+        "pins": {"n": 500, "net": 325.75, "partials": 0},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
