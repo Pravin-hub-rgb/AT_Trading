@@ -451,7 +451,17 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_swingpause": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 357, "net": 174.8, "dd": 23.4},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # On this single base, what each mechanism is worth:
+        #   no cooldown, no swingpause     556 / +166.54R
+        #   cooldown_bars=8                499 / +239.12R
+        #   cooldown_bars=0 + swingpause   451 / +232.45R
+        # Swing pause recovers most of what the bar cooldown was worth, on 48
+        # fewer trades - it blocks re-entry into the same swing rather than
+        # waiting out N bars. Together they are slightly worse than cooldown
+        # alone, which is why the production champion keeps the cooldown.
+        "pins": {"n": 451, "net": 232.45},
     },
     "skipwinhalt_multi_sw10": {
         "desc": "king + skip the next HTF window after a HALT (3 straight losses)",
@@ -485,7 +495,17 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_swingpause": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 357, "net": 174.7, "dd": 23.4},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # On this single base, what each mechanism is worth:
+        #   no cooldown, no swingpause     556 / +166.54R
+        #   cooldown_bars=8                499 / +239.12R
+        #   cooldown_bars=0 + swingpause   451 / +232.45R
+        # Swing pause recovers most of what the bar cooldown was worth, on 48
+        # fewer trades - it blocks re-entry into the same swing rather than
+        # waiting out N bars. Together they are slightly worse than cooldown
+        # alone, which is why the production champion keeps the cooldown.
+        "pins": {"n": 451, "net": 232.45},
     },
     "swingpause_single_sw20": {
         "desc": "baseline single sw20 + swing-pause (fresh structure)",
