@@ -4257,60 +4257,6 @@ def book(key):
     return EXPERIMENTS[key]
 
 
-# ---------------------------------------------------------------------------
-# WHAT COUNTS AS A CANDIDATE
-# ---------------------------------------------------------------------------
-# Absolute R thresholds rot. The same book measured +325.78R in September and
-# +239.12R today on the same 500 trades, because the engine moved underneath it.
-# A bar written against today's numbers is wrong by the next engine change.
-#
-# So the bar is written against the SHIPPED CHAMPION, and moves with it. The
-# question a candidate has to answer is never "is it big" but "is it better than
-# the thing we already run".
-#
-#   IS  net  >= champion IS net     does it pay in the era we tuned on
-#   OOS net  >= champion OOS net    does it pay on data it never saw
-#   OOS dd   <  champion OOS dd     and does it do so with less risk
-#
-# All three, not one. An OOS win alone is not enough - cap24d and skip_decisive
-# both clear an OOS bar on one lane and collapse on the other. An IS win alone is
-# the mistake this whole registry exists to prevent.
-#
-# A book that fails any of these is not deleted and not a candidate. It is
-# status="reference" and stays measurable.
-CANDIDATE_RULES = {
-    "baseline_book": "champion_multi_sw10_leg",
-    "is_net_min": None,     # filled from the baseline at check time
-    "oos_net_min": None,
-    "oos_dd_max": None,
-}
-
-
-def is_candidate(key, _exp=None):
-    """True when the book beats the shipped champion on all three measures.
-
-    Looks the registry up through the caller's globals by default, so this works
-    whether it is called as experiment_registry.is_candidate(...) or after a
-    `from experiment_registry import *`.
-    """
-    r = _exp
-    if r is None:
-        import sys as _sys
-        r = _sys.modules[__name__]
-    base = r.EXPERIMENTS[CANDIDATE_RULES["baseline_book"]]
-    if base.get("status") == "reference":
-        return False
-    b = base["pins"]
-    cfg = r.EXPERIMENTS[key]
-    if not isinstance(cfg, dict) or cfg.get("status") == "reference":
-        return False
-    p = cfg.get("pins", {})
-    if not p.get("n"):
-        return False
-    return (p["net"] >= b["net"] and p["oos_net"] >= b["oos_net"]
-            and p["oos_dd_net"] < b["oos_dd_net"])
-
-
 def alias_of(key):
     """The surviving key if `key` is an alias, else None."""
     val = dict.__getitem__(EXPERIMENTS, key)
