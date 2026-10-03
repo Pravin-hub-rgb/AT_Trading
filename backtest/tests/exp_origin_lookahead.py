@@ -299,6 +299,32 @@ def check_registry_hygiene():
     # The rule for anything added from here: a negative or inert result goes in
     # a doc as one line, not into the registry.
     print()
+    # --- 6. the candidate rule must still select what it selected
+    #
+    # CANDIDATE_RULES is written against the shipped champion rather than against
+    # absolute R, because absolute numbers rot: this same book measured
+    # +325.78R in September and +239.12R today on the same 500 trades. If the
+    # champion changes, the bar moves with it, and this line is what notices if
+    # the rule and the board have drifted apart.
+    print()
+    print("  candidate rule (IS net, OOS net and OOS dd vs the shipped champion)")
+    try:
+        base = reg.EXPERIMENTS[reg.CANDIDATE_RULES["baseline_book"]]["pins"]
+        print("    baseline %-30s IS %+.2f  OOS %+.2f  OOS dd %.2f"
+              % (reg.CANDIDATE_RULES["baseline_book"], base["net"],
+                 base["oos_net"], base["oos_dd_net"]))
+        cands = [k for k in reg.EXPERIMENTS
+                 if isinstance(reg.EXPERIMENTS[k], dict) and reg.is_candidate(k)]
+        print("    %d book(s) beat the champion on all three" % len(cands))
+        for k in sorted(cands, key=lambda x: -reg.EXPERIMENTS[x]["pins"]["oos_net"])[:6]:
+            q = reg.EXPERIMENTS[k]["pins"]
+            print("      %-34s OOS %+7.2f  dd %5.2f" % (k, q["oos_net"], q["oos_dd_net"]))
+        if not cands:
+            problems.append("candidate rule selects nothing")
+    except Exception as e:
+        print("    could not evaluate the candidate rule: %r" % (e,))
+        problems.append("candidate rule failed")
+
     print("  candidate hygiene (a losing or inert book must be marked reference)")
     unmarked = []
     for key, cfg in reg.EXPERIMENTS.items():
