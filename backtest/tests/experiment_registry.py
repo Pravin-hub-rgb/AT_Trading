@@ -731,7 +731,9 @@ EXPERIMENTS = {
                     "exp_persist": 7, "exp_chop15_lo": 55.0,
                     "exp_chop15_hi": 61.0, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 432, "net": 350.7, "dd": 17.6},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count reproduces exactly, so
+        # the filter still admits the same trades - only what they are worth moved.
+        "pins": {"n": 432, "net": 268.79},
     },
     "chopband_swingpause_single_sw10": {
         "desc": "swingpause single + skip entries in the 15m-chop transition band [55,61)",
@@ -744,7 +746,11 @@ EXPERIMENTS = {
                     "exp_chop15_lo": 55.0, "exp_chop15_hi": 61.0,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 317, "net": 227.6, "dd": 20.0},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count moved, not just the
+        # value: the same band over the swingpause base books 78 more trades than
+        # its pin claimed, so this pin described a materially different book.
+        # dd not re-measured.
+        "pins": {"n": 395, "net": 241.65},
     },
     "atrr_swingpause_single_sw10": {
         "desc": "swingpause single + skip entries when 15m ATR5/ATR20 > 1.4 (vol blow-off)",
@@ -769,7 +775,11 @@ EXPERIMENTS = {
                     "exp_chop15_lo": 55.0, "exp_chop15_hi": 61.0,
                     "exp_atr_ratio_max": 1.4, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 269, "net": 215.1, "dd": 12.6},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count moved, not just the
+        # value: the same band over the swingpause base books 78 more trades than
+        # its pin claimed, so this pin described a materially different book.
+        # dd not re-measured.
+        "pins": {"n": 321, "net": 264.45},
     },
     "atrr_swingpause_single_sw20": {
         "desc": "VALIDATION: atrr gate on sw20 chain (cross-chain robustness)",
@@ -833,7 +843,9 @@ EXPERIMENTS = {
                     "exp_chop15_lo": 55.0, "exp_chop15_hi": 61.0,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 392, "net": 362.2, "dd": 18.1},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count reproduces exactly, so
+        # the filter still admits the same trades - only what they are worth moved.
+        "pins": {"n": 392, "net": 315.45},
     },
     "fullstack_atrr_utcsat_multi_sw10": {
         "desc": "EXP: utcsat multi + chop15 band + ATR ratio blow-off",
