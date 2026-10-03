@@ -155,6 +155,22 @@ def _collect_signals(
         if not brks:
             continue
         sdir = 1 if s.get("dir") == "up" else -1
+# FORBIDDEN as a stop source. Retained only so a book that asks for
+# pivot_rule="origin" still runs, and is never to be used again.
+#
+# seg_start is the swing's structural extreme. On a flip or B2 entry that
+# swing is still FORMING - its extreme is not final until the first-swing
+# print arrives, which is AFTER the entry bar. A stop taken from seg_start
+# can therefore only be computed with bars the trade did not have.
+#
+# This is the one stop source that fails "no SL may be placed after entry".
+# leg and leg_no_entry both read candles[swing_start : break_bar] and never
+# look past the break, so they are causal. origin reads a value that does not
+# exist yet.
+#
+# Both legs use this function, so both were affected: the HTF leg through
+# simulate_btc_trades_v7, the LTF leg through _collect_signals in
+# unified.py.
         seg_start = float(s["seg"]["start_px"])
         _end_px = s["seg"].get("end_px")
         seg_end = float(_end_px) if _end_px is not None else float("nan")
