@@ -14,19 +14,25 @@
 //   CAUSAT-SAT   CAUSAL + skip UTC Saturdays
 //   ENTRY1-SAT   ENTRY-1  + skip UTC Saturdays
 //
-// Two champion variants, each with and without the calendar filter:
-//
-// There were two champion books. They run the same engine and
-// differ in ONE thing: where the initial stop goes.
-//
 //   CAUSAL  (leg stop)         the leg extreme up to and including the entry
-//                               bar. 499 trades / +355.72R gross.
+//                               bar. 499 trades / +239.12R net.
 //   ENTRY-1 (leg minus entry)  the same extreme but the entry bar itself is
 //                               excluded, so the entry's own high or low can
-//                               never set the stop. 500 / +445.19R gross.
+//                               never set the stop. 500 / +325.75R net.
 //
 // Both are causal. The stop on each reads only bars that closed before the
 // entry. They differ on the bars where the entry itself extended the extreme.
+//
+// Figures here are NET R after costs (55bp fee/side, 2x, 5bp slippage, 1bp
+// funding, 1bp cost), re-measured on 2026-10-02 through run_experiment.py.
+// Earlier revisions of this file quoted gross R; the two are not comparable
+// and the gross numbers read roughly 120R higher.
+//
+// These four are not the highest-net books in the registry. dirmatch_multi_sw10
+// measures +444.21R net and age10_dirmatch_multi_sw10 +417.68R, both above the
+// champion. They are not offered here because champion is the book that has
+// been walked forward and audited; a higher in-sample net is not a reason to
+// change what ships. See backtest/docs/REGISTRY_BOARD.md for the full board.
 //
 // A third book, CHAMPION RETRO, used to be listed here. It placed the stop on
 // the swing's declared origin. It was described as lookahead and retired on
@@ -161,11 +167,11 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "champion_entry_minus_1",
-    label: "CHAMPION ENTRY-1 (leg extreme, entry bar excluded) - 500t +445.2R",
+    label: "CHAMPION ENTRY-1 (leg extreme, entry bar excluded) - 500t +325.8R net",
     shortLabel: "ENTRY-1",
     slMode: "causal",
     hint: "same as CAUSAL but the stop ignores the entry bar's own extreme - sits beside the RETRO book, not beside CAUSAL",
-    measured: { isN: 500, isNet: 0, oosN: 0, oosNet: 0 },
+    measured: { isN: 500, isNet: 325.75, oosN: 0, oosNet: 0 },
     config: { ...V19, version: "entry_minus_1" },
   },
   {
