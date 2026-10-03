@@ -41,6 +41,239 @@ BP = {**ENGINE_DEFAULTS, "chop_thresh": 58.0}
 
 EXPERIMENTS = {
 
+    # ===== P4 cap_days family (reproduced on unified.py 2026-10-02) =====
+    "cap1d": {
+        "desc": "cap_days 1 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 1},
+        "swing": "sw10",
+        "pins": {"n": 236, "net": -49.73, "dd": 84.28},
+    },
+    "cap4d": {
+        "desc": "cap_days 4 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 4},
+        "swing": "sw10",
+        "pins": {"n": 385, "net": -35.21, "dd": 57.45},
+    },
+    "cap8d": {
+        "desc": "cap_days 8 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 8},
+        "swing": "sw10",
+        "pins": {"n": 472, "net": 185.83, "dd": 47.32},
+    },
+    "cap12d": {
+        "desc": "cap_days 12 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 12},
+        "swing": "sw10",
+        "pins": {"n": 471, "net": 153.72, "dd": 46.71},
+    },
+    "cap16d": {
+        "desc": "cap_days 16 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 16},
+        "swing": "sw10",
+        # cap_days family, reproduced on unified.py 2026-10-02.
+        # CAPS_P49.md reported this direction but could not be reproduced here:
+        # cap_days=16 was hardcoded at all three HTF window call sites, so there
+        # was no knob to turn. It is now exp_cap_days, default still 16.
+        #
+        # Champion, cap_days -> n / net R / dd R:
+        #    1   236 /  -49.73 /  84.28      16  499 / +239.12 / 46.85
+        #    4   385 /  -35.21 /  57.45      20  498 / +269.60 / 46.03
+        #    8   472 / +185.83 /  47.32      24  510 / +248.83 / 46.68
+        #   12   471 / +153.72 /  46.71      32  522 / +375.53 / 48.39
+        #                                     48  556 / +351.27 / 54.25
+        #                                    999  592 / +360.87 / 54.25
+        # utcsat: 16 -> 453 / +279.47 / 35.54   999 -> 537 / +336.98 / 42.82
+        #
+        # P49's direction reproduces: removing the cap is positive on both books
+        # and ADDS trades (+93 champion, +84 utcsat) rather than removing them,
+        # which is the opposite of what a brake does. The cap was only ever
+        # truncating windows that were still open and still working.
+        #
+        # NOT an adoption, for the reasons P49 itself gives and which still hold.
+        # The sweep is not monotone - 12 is worse than 8, and 32 is the peak while
+        # 999 is lower. A non-monotone curve means any single good value is partly
+        # noise. The finding is the direction, not a number. Note also that the
+        # peak here is 32 (+375.53R), not "off" - so the honest reading is that
+        # 16 is simply too tight, not that no cap is best.
+        "pins": {"n": 499, "net": 239.12, "dd": 46.85},
+    },
+    "cap20d": {
+        "desc": "cap_days 20 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 20},
+        "swing": "sw10",
+        "pins": {"n": 498, "net": 269.60, "dd": 46.03},
+    },
+    "cap24d": {
+        "desc": "cap_days 24 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 24},
+        "swing": "sw10",
+        "pins": {"n": 510, "net": 248.83, "dd": 46.68},
+    },
+    "cap32d": {
+        "desc": "cap_days 32 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 32},
+        "swing": "sw10",
+        "pins": {"n": 522, "net": 375.53, "dd": 48.39},
+    },
+    "cap48d": {
+        "desc": "cap_days 48 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 48},
+        "swing": "sw10",
+        "pins": {"n": 556, "net": 351.27, "dd": 54.25},
+    },
+    "cap999_nocap": {
+        "desc": "cap_days no cap (999)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 999},
+        "swing": "sw10",
+        # cap_days family, reproduced on unified.py 2026-10-02.
+        # CAPS_P49.md reported this direction but could not be reproduced here:
+        # cap_days=16 was hardcoded at all three HTF window call sites, so there
+        # was no knob to turn. It is now exp_cap_days, default still 16.
+        #
+        # Champion, cap_days -> n / net R / dd R:
+        #    1   236 /  -49.73 /  84.28      16  499 / +239.12 / 46.85
+        #    4   385 /  -35.21 /  57.45      20  498 / +269.60 / 46.03
+        #    8   472 / +185.83 /  47.32      24  510 / +248.83 / 46.68
+        #   12   471 / +153.72 /  46.71      32  522 / +375.53 / 48.39
+        #                                     48  556 / +351.27 / 54.25
+        #                                    999  592 / +360.87 / 54.25
+        # utcsat: 16 -> 453 / +279.47 / 35.54   999 -> 537 / +336.98 / 42.82
+        #
+        # P49's direction reproduces: removing the cap is positive on both books
+        # and ADDS trades (+93 champion, +84 utcsat) rather than removing them,
+        # which is the opposite of what a brake does. The cap was only ever
+        # truncating windows that were still open and still working.
+        #
+        # NOT an adoption, for the reasons P49 itself gives and which still hold.
+        # The sweep is not monotone - 12 is worse than 8, and 32 is the peak while
+        # 999 is lower. A non-monotone curve means any single good value is partly
+        # noise. The finding is the direction, not a number. Note also that the
+        # peak here is 32 (+375.53R), not "off" - so the honest reading is that
+        # 16 is simply too tight, not that no cap is best.
+        "pins": {"n": 592, "net": 360.87, "dd": 54.25},
+    },
+    "utcsat_cap16d": {
+        "desc": "cap_days 16 days",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 16, "exp_skip_utc_sat": 1},
+        "swing": "sw10",
+        "pins": {"n": 453, "net": 279.47, "dd": 35.54},
+    },
+    "utcsat_cap999_nocap": {
+        "desc": "cap_days no cap (999)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cap_days": 999, "exp_skip_utc_sat": 1},
+        "swing": "sw10",
+        # cap_days family, reproduced on unified.py 2026-10-02.
+        # CAPS_P49.md reported this direction but could not be reproduced here:
+        # cap_days=16 was hardcoded at all three HTF window call sites, so there
+        # was no knob to turn. It is now exp_cap_days, default still 16.
+        #
+        # Champion, cap_days -> n / net R / dd R:
+        #    1   236 /  -49.73 /  84.28      16  499 / +239.12 / 46.85
+        #    4   385 /  -35.21 /  57.45      20  498 / +269.60 / 46.03
+        #    8   472 / +185.83 /  47.32      24  510 / +248.83 / 46.68
+        #   12   471 / +153.72 /  46.71      32  522 / +375.53 / 48.39
+        #                                     48  556 / +351.27 / 54.25
+        #                                    999  592 / +360.87 / 54.25
+        # utcsat: 16 -> 453 / +279.47 / 35.54   999 -> 537 / +336.98 / 42.82
+        #
+        # P49's direction reproduces: removing the cap is positive on both books
+        # and ADDS trades (+93 champion, +84 utcsat) rather than removing them,
+        # which is the opposite of what a brake does. The cap was only ever
+        # truncating windows that were still open and still working.
+        #
+        # NOT an adoption, for the reasons P49 itself gives and which still hold.
+        # The sweep is not monotone - 12 is worse than 8, and 32 is the peak while
+        # 999 is lower. A non-monotone curve means any single good value is partly
+        # noise. The finding is the direction, not a number. Note also that the
+        # peak here is 32 (+375.53R), not "off" - so the honest reading is that
+        # 16 is simply too tight, not that no cap is best.
+        "pins": {"n": 537, "net": 336.98, "dd": 42.82},
+    },
+
     # ===== OPTIMAL LANES (from exp37, fine fills, corrected engine) =====
 
     "opt_ml_cd0_mb10": {

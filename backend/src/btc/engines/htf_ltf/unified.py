@@ -319,14 +319,26 @@ def simulate_htf_ltf_streak_halt(
     # selected at all: v7_timecap binds _collect_signals at module import, so it
     # silently kept whatever the default was and the two halves diverged.
     pivot_rule="leg",
+    # P4 window time cap, in days, forwarded to the three HTF window builders.
+    #   16  = what has always shipped, and still the default here
+    #   999 = effectively off (v7 treats 0 as off too, so 0 is not a separate arm)
+    # This was hardcoded as cap_days=16 at all three call sites until 2026-10-02,
+    # which meant the whole cap_days family documented in CAPS_P49.md could not
+    # be reproduced on this engine at all - there was no knob to turn. CAPS_P49
+    # reports removing the cap at +75.3R IS / +55.1R OOS on the champion and
+    # +13.7R / +78.5R on utcsat, 4/4 positive, adding trades rather than removing
+    # them. That finding has never been reproduced here. It is a direction, not
+    # an adoption: P49 itself records that no arm beats 16 in both eras by more
+    # than noise, and that the sweep is non-monotonic.
+    exp_cap_days=16,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
     import bisect as bs
     # Build HTF intervals for both flip and decisive
-    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
-    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
-    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=16, pivot_rule=pivot_rule)
+    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     def to_intervals(trades):
         # Window end: "exit" = HTF trade exit (SL/target/cap) â€” default, best R.
