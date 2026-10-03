@@ -392,7 +392,11 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_skipwin": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 144, "net": -1.1, "dd": 38.8},
+                # RE-MEASURED 2026-10-02 on unified.py. This filter is a clear loser and
+        # the rerun makes that much starker: skipping the next window after a loss
+        # turns a roughly break-even idea into a reliably negative one.
+        # It also makes exp_mltf inert - see the note on skip1pause below.
+        "pins": {"n": 145, "net": -38.54},
     },
     "skipwin2_multi_sw10": {
         "desc": "king + skip the next 2 HTF windows opened after a loss",
@@ -404,7 +408,11 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_skipwin": 2, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 105, "net": -26.1, "dd": 34.2},
+                # RE-MEASURED 2026-10-02 on unified.py. This filter is a clear loser and
+        # the rerun makes that much starker: skipping the next window after a loss
+        # turns a roughly break-even idea into a reliably negative one.
+        # It also makes exp_mltf inert - see the note on skip1pause below.
+        "pins": {"n": 101, "net": -65.33},
     },
     "swingpause_multi_sw10": {
         "desc": "king + pause until a swing FORMED after the loss confirms (fresh structure)",
@@ -416,21 +424,17 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_swingpause": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 443, "net": 231.0, "dd": 19.8},
+                # RE-MEASURED 2026-10-02 on unified.py. exp_mltf is INERT under swing-pause:
+        # single and multi of this book produce the same trade count, the same net,
+        # and the same trade-list hash. The multi leg is only meaningful where
+        # cooldown_bars is kept alongside the pause, as this entry does.
+        "pins": {"n": 444, "net": 241.06},
     },
-    "skip1pause_multi_sw10": {
-        "desc": "king + window-skip 1 AND swing-pause after a loss",
-        "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
-                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
-                    "chop_thresh": 58.0, "cooldown_bars": 8,
-                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skipwin": 1,
-                    "exp_swingpause": 1, "window_end": "exit"},
-        "swing": "sw10",
-        "pins": {"n": 144, "net": -1.1, "dd": 38.8},
-    },
+    # REMOVED 2026-10-02: skip1pause_multi_sw10. Verified identical to
+    # skipwin1_multi_sw10 on unified.py - same count, same net, same trade list.
+    # exp_skipwin=1 already removes the window, so the added exp_swingpause has
+    # nothing left to pause.
+    "skip1pause_multi_sw10": "skipwin1_multi_sw10",
     "skipwin1_single_sw10": {
         "desc": "baseline single + skip the next HTF window opened after a loss",
         "engine": "patched",
@@ -440,7 +444,11 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_skipwin": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 138, "net": -4.3, "dd": 40.0},
+                # RE-MEASURED 2026-10-02 on unified.py. This filter is a clear loser and
+        # the rerun makes that much starker: skipping the next window after a loss
+        # turns a roughly break-even idea into a reliably negative one.
+        # It also makes exp_mltf inert - see the note on skip1pause below.
+        "pins": {"n": 148, "net": -38.88},
     },
     "swingpause_single_sw10": {
         "desc": "baseline single + pause until a swing FORMED after the loss confirms",
@@ -473,7 +481,11 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_skipwin_halt": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 323, "net": 102.6, "dd": 20.1},
+                # RE-MEASURED 2026-10-02 on unified.py. The halt does rescue skipwin -
+        # without it this family runs at -38R, with it +28R - but it does not come
+        # close to plain bar cooldown (+239R). Skip-window is not a cooldown
+        # substitute; the halt is what stops the bleeding, not the skip.
+        "pins": {"n": 323, "net": 28.35},
     },
     "skipwinhalt_single_sw10": {
         "desc": "baseline single + skip the next HTF window after a HALT (3 straight losses)",
@@ -484,7 +496,11 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_skipwin_halt": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 276, "net": 71.8, "dd": 27.0},
+                # RE-MEASURED 2026-10-02 on unified.py. The halt does rescue skipwin -
+        # without it this family runs at -38R, with it +28R - but it does not come
+        # close to plain bar cooldown (+239R). Skip-window is not a cooldown
+        # substitute; the halt is what stops the bleeding, not the skip.
+        "pins": {"n": 328, "net": 29.64},
     },
     # REMOVED 2026-10-02: swingpause_cd0_single_sw10. exp_swingpause forces
     # cooldown_bars=0 itself, so this entry set cooldown_bars=0 and added the same
@@ -501,7 +517,12 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_swingpause": 1, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 338, "net": 120.0, "dd": 34.1},
+                # RE-MEASURED 2026-10-02 on unified.py. The sw20 leg is NOT a duplicate of
+        # the sw10 book despite the similar name and count - different swing
+        # structure (1316 swings vs 1601), different trade-list hash, 57R lower.
+        # Note this entry sets cooldown_bars=8 AND exp_swingpause=1 together,
+        # which is the only book that keeps both.
+        "pins": {"n": 444, "net": 154.08},
     },
 
     # ===== D3 PATTERN FAMILY (from loss autopsy: weekends, entry kinds, window age) =====
