@@ -202,8 +202,12 @@ class HTFWindowPaneRenderer implements IPrimitivePaneRenderer {
         // returning here would abandon every remaining window, not just this one.
         if (!this.showRLevels) continue;
         if (it.yEntry == null || it.ySl == null) continue;
+        // A window's R levels belong to that window. Without a resolved end there
+        // is no window to belong to, so draw nothing - do not stretch to the canvas
+        // edge, which is what made these run off past the window.
+        if (it.closeX == null || it.closeX <= it.openX) continue;
         const x1 = Math.max(0, it.openX);
-        const x2 = it.closeX != null ? Math.min(W, it.closeX) : W;
+        const x2 = Math.min(W, it.closeX);
 
         ctx.lineWidth = 1;
         ctx.setLineDash([4, 4]);

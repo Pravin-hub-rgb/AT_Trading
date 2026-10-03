@@ -742,15 +742,33 @@ export default function BtcPage() {
   // 5m chart alike. Only the candles between the lines change.
   const htfWindowRects = useMemo(() => {
     const w = btData?.htf_windows;
-    if (!w || w.length === 0) return undefined;
-    return w.map((x) => ({
-      startTime: snapTs(x.startTime),
-      endTime: snapTs(x.endTime),
-      isLong: x.isLong,
-      entryPrice: x.entryPrice,
-      slPrice: x.slPrice,
-    }));
-  }, [btData, snapTs]);
+    const arr = candleTsList;
+    if (!w || w.length === 0 || arr.length === 0) return undefined;
+    const first = arr[0];
+    const last = arr[arr.length - 1];
+    const out: {
+      startTime: number; endTime: number; isLong: boolean;
+      entryPrice?: number; slPrice?: number;
+    }[] = [];
+    for (const x of w) {
+      // A window that ends past the chart's last candle has no end to draw.
+      // Snapping it onto that last candle is what made its entry/SL/3R lines
+      // appear to run off to the right edge: the primitive saw a real end, so
+      // it drew to it. Drop the window instead - it is not visible anyway.
+      if (x.endTime > last || x.startTime < first) continue;
+      const st = snapTs(x.startTime);
+      const en = snapTs(x.endTime);
+      if (en <= st) continue;
+      out.push({
+        startTime: st,
+        endTime: en,
+        isLong: x.isLong,
+        entryPrice: x.entryPrice,
+        slPrice: x.slPrice,
+      });
+    }
+    return out.length > 0 ? out : undefined;
+  }, [btData, snapTs, candleTsList]);
 
   const groupBtn = (
     active: boolean,
