@@ -5,7 +5,18 @@
 // complete config for its book, so picking one sets everything at once and there
 // is no second control that can get out of sync with it.
 //
-// There are two champion books in this dropdown. They run the same engine and
+// There are four champion books here. They all run the same engine and differ
+// in at most two knobs: where the initial stop goes, and whether UTC Saturdays
+// are skipped.
+//
+//   CAUSAL       leg extreme incl. entry bar
+//   ENTRY-1      leg extreme excl. entry bar
+//   CAUSAT-SAT   CAUSAL + skip UTC Saturdays
+//   ENTRY1-SAT   ENTRY-1  + skip UTC Saturdays
+//
+// Two champion variants, each with and without the calendar filter:
+//
+// There were two champion books. They run the same engine and
 // differ in ONE thing: where the initial stop goes.
 //
 //   CAUSAL  (leg stop)         the leg extreme up to and including the entry
@@ -129,6 +140,24 @@ export const BOOK_OPTIONS: BookOption[] = [
     hint: "stop at the leg extreme up to the entry bar - knowable live - the pinned shipping book",
     measured: { isN: 499, isNet: 239.12, oosN: 280, oosNet: 72.8 },
     config: { ...V19, version: "unified" },
+  },
+  {
+    id: "utcsat_causal",
+    label: "CHAMPION CAUSAL + skip UTC-Saturday - 453t +279.5R",
+    shortLabel: "CAUSAT-SAT",
+    slMode: "causal",
+    hint: "causal stop, UTC Saturdays skipped - 57 of the 86 removed entries were Saturday and losing",
+    measured: { isN: 453, isNet: 279.47, oosN: 0, oosNet: 0 },
+    config: { ...V19, version: "utcsat_causal" },
+  },
+  {
+    id: "utcsat_entry_minus_1",
+    label: "CHAMPION ENTRY-1 + skip UTC-Saturday - 454t +358.9R",
+    shortLabel: "ENTRY1-SAT",
+    slMode: "causal",
+    hint: "entry-bar excluded stop, UTC Saturdays skipped - both settled at the entry bar",
+    measured: { isN: 454, isNet: 358.92, oosN: 0, oosNet: 0 },
+    config: { ...V19, version: "utcsat_entry_minus_1" },
   },
   {
     id: "champion_entry_minus_1",

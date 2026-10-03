@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -147,6 +147,8 @@ VERSION_LABELS = {
     "v15": "v15 Recover 1R mode",
     "v16": "v16 Entry distance <=30% (rejected)",
     "v17": "v17 ATR<0.5% filter (rejected)",
+        "utcsat_causal": "CHAMPION CAUSAL + skip UTC Saturday (453t / +279.5R)",
+        "utcsat_entry_minus_1": "CHAMPION ENTRY-1 + skip UTC Saturday (454t / +358.9R)",
     "unified": "UNIFIED shipping book - champion_multi_sw10_leg on unified.py "
                 "(IS 499t / +239.12R, OOS 280 / +72.8R)",
 }
@@ -1374,6 +1376,44 @@ def btc_backtest(
             max_positions=0,
             exp_persist=7,
             pivot_rule="leg_no_entry",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "utcsat_causal":
+        # Causal champion plus one calendar knob: skip UTC Saturdays.
+        # 499 -> 453 trades, +239.12 -> +279.47R net. Both parts settled at the
+        # entry bar - leg reads candles[start..break+1], Saturday is a calendar test.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500, content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            sl_buf_atr=0.01, ext_stop_r=3.0, mode="atr_high",
+            chop_thresh=58.0, cooldown_bars=8, max_consecutive_losses=3,
+            htf_rr=3.0, window_end="exit",
+            max_positions=0, exp_persist=7,
+            pivot_rule="leg",
+            exp_skip_utc_sat=1,
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "utcsat_entry_minus_1":
+        # ENTRY-1 stop plus the same Saturday filter. 500 -> 454 trades,
+        # +325.75 -> +358.92R net. Both parts settled at the entry bar.
+        #
+        # Within 0.03R of the origin book under the same filter (454/+358.95):
+        # ENTRY-1 and origin read the same extreme for all but a few stops, so
+        # they are one book by two routes. What separates this from the champion
+        # is the stop rule, and that reads candles[start..break-1], never past.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500, content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            sl_buf_atr=0.01, ext_stop_r=3.0, mode="atr_high",
+            chop_thresh=58.0, cooldown_bars=8, max_consecutive_losses=3,
+            htf_rr=3.0, window_end="exit",
+            max_positions=0, exp_persist=7,
+            pivot_rule="leg_no_entry",
+            exp_skip_utc_sat=1,
         )
         trades = nested.get("ltf_trades", [])
     elif version == "unified":
