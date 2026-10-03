@@ -585,6 +585,35 @@ EXPERIMENTS = {
         "pins": {"n": 269, "net": 267.3, "dd": 17.2},
     },
 
+    # ENTRY-1 + UTC-Saturday. Both filters are settled at the entry bar:
+    # leg_no_entry reads candles[start..break-1], exp_skip_utc_sat is a
+    # calendar test. Neither can see the future.
+    #
+    # Measured 2026-10-02 on unified.py:
+    #   leg_no_entry, no Saturday filter     500 trades  +325.75 net
+    #   leg_no_entry + skip UTC Saturday      454 trades  +358.92 net
+    #
+    # Note where that lands. +358.92 is within 0.03R of the origin book with
+    # the same filter (454 / +358.95). That is not a coincidence and not a bug:
+    # ENTRY-1 and origin read the same extreme for all but a handful of stops,
+    # so they produce the same book. What separates this from the champion is
+    # the stop rule, and it is the settled one - see the rule at
+    # btc_engine.py and exp_origin_lookahead.py.
+    "utcsat_entry_minus_1": {
+        "desc": "ENTRY-1 stop + SKIP UTC-SATURDAY - both settled at the entry bar",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg_no_entry",
+                    "exp_skip_utc_sat": 1},
+        "swing": "sw10",
+        "pins": {"n": 454, "net": 358.92, "partials": 0},  # MEASURED 2026-10-02, Bybit perp
+    },
+
     "utcsat_multi_sw10": {
         "desc": "king multi + SKIP UTC-SATURDAY — causal SL (live-honest)",
         "engine": "patched",
