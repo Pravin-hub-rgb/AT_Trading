@@ -41,6 +41,159 @@ BP = {**ENGINE_DEFAULTS, "chop_thresh": 58.0}
 
 EXPERIMENTS = {
 
+    # ===== EXIT-SIDE TRAIL FAMILY (first measured here 2026-10-02) =====
+    "trail_half": {
+        "desc": "champion leg + half",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1},
+        "swing": "sw10",
+        # Parts do not pay on their own - see trail_half_delay1_skipn4.
+        "pins": {"n": 468, "net": 384.99, "dd": 51.10,
+                 "oos_n": 269, "oos_net": 71.73, "oos_dd": 52.08},
+    },
+    "trail_delay1": {
+        "desc": "champion leg + delay1",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_delay_r": 1.0},
+        "swing": "sw10",
+        # Parts do not pay on their own - see trail_half_delay1_skipn4.
+        "pins": {"n": 501, "net": 263.62, "dd": 45.37,
+                 "oos_n": 279, "oos_net": 69.65, "oos_dd": 54.91},
+    },
+    "trail_half_delay1": {
+        "desc": "champion leg + half_delay1",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 1.0},
+        "swing": "sw10",
+        # Parts do not pay on their own - see trail_half_delay1_skipn4.
+        "pins": {"n": 465, "net": 385.92, "dd": 51.39,
+                 "oos_n": 272, "oos_net": 88.74, "oos_dd": 51.72},
+    },
+    "trail_skipn4": {
+        "desc": "champion leg + skipn4",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_skip_n": 4},
+        "swing": "sw10",
+        # Exit-side trail family, rerun on unified.py 2026-10-02.
+        # First measured here - EQUITY_CURVE_STUDY.md (2026-09-24) ran this on
+        # the older engines, and these knobs live in the harness patch rather
+        # than in unified.py, so no registry book covered them.
+        #   exp_trail_half      widen the ratchet to halfway, not the extreme
+        #   exp_trail_delay_r   hold the trail off until the trade is +N R unrealised
+        #   exp_trail_skip_n    ignore the first N swing events entirely
+        #
+        #                        IS n / net R / dd R      OOS n / net R / dd R
+        #   baseline            499 / +239.12 / 46.85    280 /  +72.79 / 50.55
+        #   half                468 / +384.99 / 51.10    269 /  +71.73 / 52.08
+        #   delay1              501 / +263.62 / 45.37    279 /  +69.65 / 54.91
+        #   half+delay1         465 / +385.92 / 51.39    272 /  +88.74 / 51.72
+        #   skip_n=4            439 / +357.15 / 43.96    243 /  +61.05 / 75.60
+        #   half+delay1+skipn4  424 / +556.62 / 44.47    234 / +104.98 / 52.50
+        #
+        # BEST BOOK IN THE REGISTRY ON BOTH ERAS. +556.62R IS against the
+        # champion's +239.12R, and +104.98R OOS against +72.79R. Beating
+        # baseline OOS is the test the cap_days peak and the dirmatch books have
+        # not passed - both of those are in-sample wins only.
+        #
+        # The honest read is in the same note on every arm below this one:
+        # half alone is an in-sample artefact (+145.87R IS, -1.06R OOS - it does
+        # nothing out of sample). delay1 alone is near-inert on both. skip_n=4
+        # alone is the worst of the three on OOS (+61.05R, drawdown nearly
+        # doubled to 75.60). The gain appears ONLY in combination, and a gain
+        # that appears only in aggregate while its parts do not is exactly the
+        # shape that hides overfitting.
+        #
+        # Two things argue for taking it seriously anyway. It beats baseline on
+        # OOS and not merely IS, and it buys the R with LESS risk - 44.47 IS
+        # drawdown against 46.85 on the baseline, i.e. better R per unit of
+        # drawdown, not just more R. And nothing here was tuned to these arms:
+        # half, delay_r=1.0 and skip_n=4 were inherited from the 2026-09-24
+        # study, not selected by looking at this engine's results.
+        #
+        # What it still needs before it could ship: a sweep of skip_n and
+        # delay_r on THIS engine to confirm 4 and 1.0 are not flukes, since they
+        # were chosen against different engine code.
+        "pins": {"n": 439, "net": 357.15, "dd": 43.96,
+                 "oos_n": 243, "oos_net": 61.05, "oos_dd": 75.60},
+    },
+    "trail_half_delay1_skipn4": {
+        "desc": "champion leg + half_delay1_skipn4",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 1.0, "exp_trail_skip_n": 4},
+        "swing": "sw10",
+        # Exit-side trail family, rerun on unified.py 2026-10-02.
+        # First measured here - EQUITY_CURVE_STUDY.md (2026-09-24) ran this on
+        # the older engines, and these knobs live in the harness patch rather
+        # than in unified.py, so no registry book covered them.
+        #   exp_trail_half      widen the ratchet to halfway, not the extreme
+        #   exp_trail_delay_r   hold the trail off until the trade is +N R unrealised
+        #   exp_trail_skip_n    ignore the first N swing events entirely
+        #
+        #                        IS n / net R / dd R      OOS n / net R / dd R
+        #   baseline            499 / +239.12 / 46.85    280 /  +72.79 / 50.55
+        #   half                468 / +384.99 / 51.10    269 /  +71.73 / 52.08
+        #   delay1              501 / +263.62 / 45.37    279 /  +69.65 / 54.91
+        #   half+delay1         465 / +385.92 / 51.39    272 /  +88.74 / 51.72
+        #   skip_n=4            439 / +357.15 / 43.96    243 /  +61.05 / 75.60
+        #   half+delay1+skipn4  424 / +556.62 / 44.47    234 / +104.98 / 52.50
+        #
+        # BEST BOOK IN THE REGISTRY ON BOTH ERAS. +556.62R IS against the
+        # champion's +239.12R, and +104.98R OOS against +72.79R. Beating
+        # baseline OOS is the test the cap_days peak and the dirmatch books have
+        # not passed - both of those are in-sample wins only.
+        #
+        # The honest read is in the same note on every arm below this one:
+        # half alone is an in-sample artefact (+145.87R IS, -1.06R OOS - it does
+        # nothing out of sample). delay1 alone is near-inert on both. skip_n=4
+        # alone is the worst of the three on OOS (+61.05R, drawdown nearly
+        # doubled to 75.60). The gain appears ONLY in combination, and a gain
+        # that appears only in aggregate while its parts do not is exactly the
+        # shape that hides overfitting.
+        #
+        # Two things argue for taking it seriously anyway. It beats baseline on
+        # OOS and not merely IS, and it buys the R with LESS risk - 44.47 IS
+        # drawdown against 46.85 on the baseline, i.e. better R per unit of
+        # drawdown, not just more R. And nothing here was tuned to these arms:
+        # half, delay_r=1.0 and skip_n=4 were inherited from the 2026-09-24
+        # study, not selected by looking at this engine's results.
+        #
+        # What it still needs before it could ship: a sweep of skip_n and
+        # delay_r on THIS engine to confirm 4 and 1.0 are not flukes, since they
+        # were chosen against different engine code.
+        "pins": {"n": 424, "net": 556.62, "dd": 44.47,
+                 "oos_n": 234, "oos_net": 104.98, "oos_dd": 52.50},
+    },
+
     # ===== P4 cap_days family (reproduced on unified.py 2026-10-02) =====
     "cap1d": {
         "desc": "cap_days 1 days",
