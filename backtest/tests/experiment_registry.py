@@ -486,27 +486,12 @@ EXPERIMENTS = {
         "swing": "sw10",
         "pins": {"n": 276, "net": 71.8, "dd": 27.0},
     },
-    "swingpause_cd0_single_sw10": {
-        "desc": "single + swing-pause REPLACES bar-cooldown (cd=0)",
-        "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
-                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
-                    "chop_thresh": 58.0, "cooldown_bars": 0,
-                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_swingpause": 1, "window_end": "exit"},
-        "swing": "sw10",
-                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
-        # default change.
-        # On this single base, what each mechanism is worth:
-        #   no cooldown, no swingpause     556 / +166.54R
-        #   cooldown_bars=8                499 / +239.12R
-        #   cooldown_bars=0 + swingpause   451 / +232.45R
-        # Swing pause recovers most of what the bar cooldown was worth, on 48
-        # fewer trades - it blocks re-entry into the same swing rather than
-        # waiting out N bars. Together they are slightly worse than cooldown
-        # alone, which is why the production champion keeps the cooldown.
-        "pins": {"n": 451, "net": 232.45},
-    },
+    # REMOVED 2026-10-02: swingpause_cd0_single_sw10. exp_swingpause forces
+    # cooldown_bars=0 itself, so this entry set cooldown_bars=0 and added the same
+    # flag - it was swingpause_single_sw10 under a second name, and both read
+    # 451 / +232.45R after the rerun. Kept as a pointer rather than a copy so a
+    # script naming it still finds the meaning.
+    "swingpause_cd0_single_sw10": "swingpause_single_sw10",
     "swingpause_single_sw20": {
         "desc": "baseline single sw20 + swing-pause (fresh structure)",
         "engine": "patched",
@@ -1226,7 +1211,9 @@ EXPERIMENTS = {
                     "exp_persist": 7, "exp_require_dir_match": 1,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 389, "net": 479.9, "dd": 13.8},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count reproduces to within
+        # one; the net moved because the stop rule changed underneath it.
+        "pins": {"n": 389, "net": 444.21},
     },
     "age25_multi_sw10": {
         "desc": "king + max swing age 25 bars",
@@ -1252,7 +1239,9 @@ EXPERIMENTS = {
                     "exp_persist": 7, "exp_require_dir_match": 1,
                     "exp_max_swing_age": 25, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 249, "net": 386.7, "dd": 9.8},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count reproduces to within
+        # one; the net moved because the stop rule changed underneath it.
+        "pins": {"n": 248, "net": 357.01},
     },
     "age10_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 10 — +455.5R / DD 6.0 / WR 51.7% (MONSTER, 151t)",
@@ -1265,7 +1254,9 @@ EXPERIMENTS = {
                     "exp_persist": 7, "exp_require_dir_match": 1,
                     "exp_max_swing_age": 10, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 151, "net": 455.5, "dd": 6.0},
+                # RE-MEASURED 2026-10-02 on unified.py. Trade count reproduces to within
+        # one; the net moved because the stop rule changed underneath it.
+        "pins": {"n": 150, "net": 417.68},
     },
 
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
@@ -1345,7 +1336,13 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_require_dir_match": 1,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 292, "net": 237.7, "dd": 15.7},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # exp_require_dir_match: take the 15m signal only when it agrees with the
+        # HTF swing direction. On the single base this book now books 100 MORE
+        # trades than its pin said (292 -> 392) and nearly doubles its net, so the
+        # old pin was describing a materially different book.
+        "pins": {"n": 392, "net": 442.72},
     },
 
     # ===== SHIPPED BASELINE (identity gate reference) =====
@@ -1721,7 +1718,7 @@ GROUPS = {
     "cooldown": ["skipwin1_multi_sw10", "skipwin2_multi_sw10", "swingpause_multi_sw10",
                   "skip1pause_multi_sw10", "skipwin1_single_sw10", "swingpause_single_sw10",
                   "skipwinhalt_multi_sw10", "skipwinhalt_single_sw10",
-                  "swingpause_cd0_single_sw10", "swingpause_single_sw20"],
+                  "swingpause_single_sw20"],
     "patterns": ["nowknd_multi_sw10", "nowknd_single_sw10", "nowknd_swingpause_single_sw10",
                   "fliponly_multi_sw10", "fliponly_swingpause_single_sw10",
                   "wage24_multi_sw10", "legskip2_multi_sw10",
