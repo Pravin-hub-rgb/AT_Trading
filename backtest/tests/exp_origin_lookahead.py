@@ -27,6 +27,7 @@ Run:  cd backtest/tests && python exp_origin_lookahead.py
 """
 import pathlib
 import re
+import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 REGISTRY = ROOT / "backtest" / "tests" / "experiment_registry.py"
@@ -115,5 +116,122 @@ def main():
     return 0
 
 
+def check_registry_hygiene():
+    """Catches two silent-failure classes that both bit us on 2026-10-02.
+
+    1. A book key defined TWICE in the EXPERIMENTS literal. Python dicts are
+       last-wins, so the first copy becomes dead text that still reads as a
+       valid entry. The causalsl family was defined twice each and nobody could
+       see it by reading the file - the running config was the second copy and
+       the first was invisible.
+
+    2. A scope loader missing a swing key some books depend on.
+       exp_equity_quality.load_scope('oos') did not build sw20, so every sw20
+       book raised KeyError out of sample while its sw10 twin measured fine.
+       That failure looks like "this book cannot be tested OOS", which is
+       indistinguishable from a real answer unless you go looking for it.
+
+    Both are cheap to detect statically, so they are checked rather than left to
+    be rediscovered.
+    """
+    print("=" * 66)
+    print("REGISTRY HYGIENE - no duplicate keys, no missing scope keys")
+    print("=" * 66)
+
+    problems = []
+
+    # --- 1. duplicate entry keys -------------------------------------------
+    if REGISTRY.exists():
+        src = REGISTRY.read_text(encoding="utf-8", errors="replace")
+        keys = re.findall(r'\n    "([A-Za-z0-9_]+)":\s*[\{\"]', src)
+        counts = {}
+        for k in keys:
+            counts[k] = counts.get(k, 0) + 1
+        dupes = {k: v for k, v in counts.items() if v > 1}
+        print("  registry entries parsed : %d" % len(keys))
+        if dupes:
+            for k, v in sorted(dupes.items()):
+                print("  DUPLICATE KEY %-34s defined %d times" % (k, v))
+            problems.append("%d key(s) defined more than once" % len(dupes))
+        else:
+            print("  duplicate keys          : none")
+
+    # --- 2. every swing key a book uses must exist in every scope -----------
+    for p in ("backtest/tests", "backtest", "backend", ""):
+        sys.path.insert(0, str(ROOT / p) if p else str(ROOT))
+    try:
+        import experiment_registry as reg
+    except Exception as e:
+        print("  could not import registry: %r" % (e,))
+        return 1
+
+    needed = set()
+    for key, cfg in reg.EXPERIMENTS.items():
+        if isinstance(cfg, dict):
+            needed.add(cfg.get("swing"))
+    needed.discard(None)
+    print("  swing keys books use    : %s" % ", ".join(sorted(needed)))
+
+    try:
+        import run_experiment as re_
+        is_keys = set(re_.get_data().keys())
+    except Exception as e:
+        print("  IS loader failed: %r" % (e,))
+        problems.append("IS loader failed")
+        is_keys = None
+
+    if is_keys is not None:
+        miss = sorted(k for k in needed if k not in is_keys)
+        if miss:
+            for k in miss:
+                print("  MISSING IN IS LOADER    %s" % k)
+            problems.append("IS loader missing %s" % ", ".join(miss))
+        else:
+            print("  IS loader covers them   : yes")
+
+    # OOS loader source is inspected rather than called - calling it loads a
+    # second candle file, which is the expensive part.
+    try:
+        import inspect
+        import exp_equity_quality as EQ
+        src_oos = inspect.getsource(EQ.load_scope)
+        oos_keys = set(re.findall(r'"(\w+)":', src_oos))
+        oos_keys |= set(re.findall(r'^\s*(\w+)\s*=\s*_compute_swings', src_oos, re.M))
+    except Exception as e:
+        print("  could not read OOS loader: %r" % (e,))
+        oos_keys = None
+        problems.append("could not read OOS loader")
+
+    if oos_keys is not None:
+        miss = sorted(k for k in needed if k not in oos_keys)
+        if miss:
+            for k in miss:
+                print("  MISSING IN OOS LOADER  %-20s books needing it will raise"
+                      " KeyError on the OOS scope" % k)
+            problems.append("OOS loader missing %s" % ", ".join(miss))
+        else:
+            print("  OOS loader covers them  : yes")
+
+    bad_alias = {a: t for a, t in reg.ALIASES.items() if t not in reg.EXPERIMENTS}
+    if bad_alias:
+        for a, t in sorted(bad_alias.items()):
+            print("  BROKEN ALIAS %-34s -> %s" % (a, t))
+        problems.append("%d broken alias(es)" % len(bad_alias))
+    else:
+        print("  aliases resolve         : %s" % (reg.ALIASES or "none"))
+
+    print()
+    if problems:
+        print("RESULT: FAIL")
+        for p in problems:
+            print("        - %s" % p)
+        return 1
+    print("RESULT: PASS - no duplicate keys, and every scope loader builds every")
+    print("        swing key the registry asks for.")
+    return 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main() or check_registry_hygiene())
+
+

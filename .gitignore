@@ -49,3 +49,14 @@ backtest/tests/_*.txt
 # per-build temp modules written by test_experiments_craze._load_module
 backtest/tests/_craze_tmp_*.py
 backtest/tests/__pycache__/_craze_tmp*.pyc
+
+# Ad-hoc harness output dropped in the REPO ROOT. The project keeps results in
+# backtest/tests/_*_results.json; a bare _foo.json at the root is scratch that
+# escaped. Ignored rather than deleted, so a run in progress is never swept up by
+# a cleanup - but it must not be committed. The number belongs in the registry
+# pins or a board doc, not in a root-level blob.
+/_*.json
+/_*.txt
+/_*.py
+/_*.ps1
+/_*.jsonl
