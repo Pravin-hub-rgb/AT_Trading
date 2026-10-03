@@ -132,7 +132,7 @@ swingpause single +174.8/23.4/7.5):
 | legskip2 multi | 269 | +267.3 | 17.2 | 15.5 | near-king quality at 46% fewer trades (minY +57 vs +102) |
 | fliponly swingpause single | 237 | +179.7 | 21.9 | 8.2 | mild upgrade over swingpause single |
 | wage24 multi | 362 | +243.9 | 23.1 | 10.6 | DEAD — young windows carry the edge (-82R) |
-| nowknd multi | 400 | +307.8 | 17.1 | 17.9 | ~neutral on king (weekend bleed is a single-config effect) |
+| nowknd multi | 400 | +307.8 | 17.1 | 17.9 | RE-MEASURED 2026-10-02 on unified.py. The 400/+307.8 that was here predates the C16 default change and reproduced under no stop rule. Where the edge sits: skipping Saturday alone is +279.5R, skipping Sunday alone is +173.1R, against a +239.1R base - so Saturday carries the whole effect and Sunday is a profitable day the filter gives up. |
 | fliponly multi | 285 | +242.7 | 24.3 | 10.0 | worse (B2 earns its keep on multi) |
 | nowknd single (no pause) | 320 | +113.9 | 30.5 | 3.7 | WORSE — weekend skip only works ON TOP OF the swingpause |
 
