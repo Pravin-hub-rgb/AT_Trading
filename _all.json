@@ -1,0 +1,1090 @@
+{
+ "opt_ml_cd0_mb10": {
+  "pin": {},
+  "n": 510,
+  "net": 215.5,
+  "gross": 346.49,
+  "dd": 60.37,
+  "wr": 27.6
+ },
+ "opt_ml_cd10_mb10": {
+  "pin": {},
+  "n": 446,
+  "net": 198.09,
+  "gross": 309.89,
+  "dd": 44.56,
+  "wr": 28.9
+ },
+ "lb30_chop55_persist2": {
+  "pin": {},
+  "n": 429,
+  "net": 247.51,
+  "gross": 356.19,
+  "dd": 46.17,
+  "wr": 30.3
+ },
+ "lb30_persist5": {
+  "pin": {},
+  "n": 410,
+  "net": 267.3,
+  "gross": 368.99,
+  "dd": 49.18,
+  "wr": 32.4
+ },
+ "lb30_halt0": {
+  "pin": {},
+  "n": 484,
+  "net": 276.86,
+  "gross": 399.04,
+  "dd": 60.28,
+  "wr": 32.9
+ },
+ "lb30_halt6_cd0": {
+  "pin": {},
+  "n": 538,
+  "net": 140.96,
+  "gross": 276.39,
+  "dd": 84.06,
+  "wr": 28.4
+ },
+ "lb30_w24_ext1.5": {
+  "pin": {},
+  "n": 337,
+  "net": 336.67,
+  "gross": 425.66,
+  "dd": 35.92,
+  "wr": 36.8
+ },
+ "lb30_w24_ext2.0": {
+  "pin": {},
+  "n": 380,
+  "net": 344.61,
+  "gross": 441.61,
+  "dd": 36.58,
+  "wr": 35.8
+ },
+ "lb30_w24_ext2.5": {
+  "pin": {},
+  "n": 405,
+  "net": 315.08,
+  "gross": 419.56,
+  "dd": 42.82,
+  "wr": 35.3
+ },
+ "lb30_w24_ext3.0": {
+  "pin": {},
+  "n": 415,
+  "net": 314.51,
+  "gross": 420.18,
+  "dd": 42.27,
+  "wr": 35.4
+ },
+ "a4_w24_ext1.5": {
+  "pin": {},
+  "n": 300,
+  "net": 144.13,
+  "gross": 224.59,
+  "dd": 47.02,
+  "wr": 31.7
+ },
+ "a4_w24_ext3.0": {
+  "pin": {},
+  "n": 368,
+  "net": 133.69,
+  "gross": 225.06,
+  "dd": 48.14,
+  "wr": 31.0
+ },
+ "opt_cd10_w24": {
+  "pin": {},
+  "n": 300,
+  "net": 144.13,
+  "gross": 224.59,
+  "dd": 47.02,
+  "wr": 31.7
+ },
+ "champion_single_sw20": {
+  "pin": {
+   "n": 496,
+   "net": 196.28
+  },
+  "n": 496,
+  "net": 196.28,
+  "gross": 312.57,
+  "dd": 58.21,
+  "wr": 31.9
+ },
+ "champion_single_sw10": {
+  "pin": {
+   "n": 503,
+   "net": 170.91
+  },
+  "n": 503,
+  "net": 170.91,
+  "gross": 286.91,
+  "dd": 50.48,
+  "wr": 30.4
+ },
+ "champion_multi_sw20": {
+  "pin": {
+   "n": 493,
+   "net": 213.33
+  },
+  "n": 493,
+  "net": 213.33,
+  "gross": 329.42,
+  "dd": 50.64,
+  "wr": 31.8
+ },
+ "champion_multi_sw10": {
+  "pin": {
+   "n": 500,
+   "net": 325.78
+  },
+  "n": 500,
+  "net": 325.78,
+  "gross": 445.22,
+  "dd": 27.72,
+  "wr": 30.0
+ },
+ "champion_multi_sw10_entry_both": {
+  "pin": {
+   "n": 495,
+   "net": 215.09
+  },
+  "n": 495,
+  "net": 215.09,
+  "gross": 322.18,
+  "dd": 34.72,
+  "wr": 29.7
+ },
+ "champion_multi_sw10_leg": {
+  "pin": {
+   "n": 499,
+   "net": 239.12
+  },
+  "n": 499,
+  "net": 239.12,
+  "gross": 355.72,
+  "dd": 46.85,
+  "wr": 29.7
+ },
+ "champion_multi_sw10_entry1": {
+  "pin": {
+   "n": 500,
+   "net": 325.75
+  },
+  "n": 500,
+  "net": 325.75,
+  "gross": 445.19,
+  "dd": 27.72,
+  "wr": 30.0
+ },
+ "champion_multi_sw10_leg_no_entry": {
+  "pin": {
+   "n": 500,
+   "net": 325.75
+  },
+  "n": 500,
+  "net": 325.75,
+  "gross": 445.19,
+  "dd": 27.72,
+  "wr": 30.0
+ },
+ "baseline_no_partial_sw20": {
+  "pin": {
+   "n": 496,
+   "net": 232.38
+  },
+  "n": 496,
+  "net": 232.38,
+  "gross": 348.67,
+  "dd": 61.58,
+  "wr": 31.9
+ },
+ "baseline_no_partial_sw10": {
+  "pin": {
+   "n": 502,
+   "net": 238.45
+  },
+  "n": 502,
+  "net": 238.45,
+  "gross": 354.08,
+  "dd": 53.86,
+  "wr": 30.3
+ },
+ "skipwin1_multi_sw10": {
+  "pin": {
+   "n": 145,
+   "net": -38.54
+  },
+  "n": 145,
+  "net": -38.54,
+  "gross": -5.52,
+  "dd": 52.54,
+  "wr": 19.3
+ },
+ "skipwin2_multi_sw10": {
+  "pin": {
+   "n": 101,
+   "net": -65.33
+  },
+  "n": 101,
+  "net": -65.33,
+  "gross": -43.46,
+  "dd": 66.47,
+  "wr": 13.9
+ },
+ "swingpause_multi_sw10": {
+  "pin": {
+   "n": 444,
+   "net": 241.06
+  },
+  "n": 444,
+  "net": 241.06,
+  "gross": 346.75,
+  "dd": 41.6,
+  "wr": 28.8
+ },
+ "skip1pause_multi_sw10": {
+  "pin": {
+   "n": 145,
+   "net": -38.54
+  },
+  "n": 145,
+  "net": -38.54,
+  "gross": -5.52,
+  "dd": 52.54,
+  "wr": 19.3
+ },
+ "skipwin1_single_sw10": {
+  "pin": {
+   "n": 148,
+   "net": -38.88
+  },
+  "n": 148,
+  "net": -38.88,
+  "gross": -7.13,
+  "dd": 53.91,
+  "wr": 20.3
+ },
+ "swingpause_single_sw10": {
+  "pin": {
+   "n": 451,
+   "net": 232.45
+  },
+  "n": 451,
+  "net": 242.55,
+  "gross": 347.86,
+  "dd": 48.67,
+  "wr": 29.7
+ },
+ "skipwinhalt_multi_sw10": {
+  "pin": {
+   "n": 323,
+   "net": 28.35
+  },
+  "n": 323,
+  "net": 28.35,
+  "gross": 100.84,
+  "dd": 45.34,
+  "wr": 26.9
+ },
+ "skipwinhalt_single_sw10": {
+  "pin": {
+   "n": 328,
+   "net": 29.64
+  },
+  "n": 328,
+  "net": 29.64,
+  "gross": 102.02,
+  "dd": 60.09,
+  "wr": 27.4
+ },
+ "swingpause_cd0_single_sw10": {
+  "pin": {
+   "n": 451,
+   "net": 232.45
+  },
+  "n": 451,
+  "net": 242.55,
+  "gross": 347.86,
+  "dd": 48.67,
+  "wr": 29.7
+ },
+ "swingpause_single_sw20": {
+  "pin": {
+   "n": 444,
+   "net": 154.08
+  },
+  "n": 444,
+  "net": 154.08,
+  "gross": 258.19,
+  "dd": 57.93,
+  "wr": 30.9
+ },
+ "nowknd_multi_sw10": {
+  "pin": {},
+  "n": 403,
+  "net": 301.39,
+  "gross": 389.89,
+  "dd": 25.88,
+  "wr": 31.8
+ },
+ "nowknd_single_sw10": {
+  "pin": {
+   "n": 401,
+   "net": 278.06
+  },
+  "n": 401,
+  "net": 278.06,
+  "gross": 364.66,
+  "dd": 32.28,
+  "wr": 31.9
+ },
+ "nowknd_swingpause_single_sw10": {
+  "pin": {
+   "n": 365,
+   "net": 228.26
+  },
+  "n": 365,
+  "net": 228.26,
+  "gross": 308.44,
+  "dd": 30.31,
+  "wr": 31.2
+ },
+ "fliponly_multi_sw10": {
+  "pin": {
+   "n": 286,
+   "net": 202.45
+  },
+  "n": 286,
+  "net": 202.45,
+  "gross": 281.28,
+  "dd": 35.43,
+  "wr": 26.2
+ },
+ "fliponly_swingpause_single_sw10": {
+  "pin": {
+   "n": 268,
+   "net": 211.34
+  },
+  "n": 268,
+  "net": 211.34,
+  "gross": 282.78,
+  "dd": 29.5,
+  "wr": 28.0
+ },
+ "wage24_multi_sw10": {
+  "pin": {
+   "n": 364,
+   "net": 240.58
+  },
+  "n": 364,
+  "net": 240.58,
+  "gross": 326.35,
+  "dd": 31.33,
+  "wr": 32.4
+ },
+ "legskip2_multi_sw10": {
+  "pin": {
+   "n": 269,
+   "net": 235.96
+  },
+  "n": 269,
+  "net": 235.96,
+  "gross": 301.69,
+  "dd": 29.15,
+  "wr": 31.6
+ },
+ "utcsat_entry_minus_1": {
+  "pin": {
+   "n": 454,
+   "net": 358.92
+  },
+  "n": 454,
+  "net": 358.92,
+  "gross": 466.44,
+  "dd": 21.18,
+  "wr": 30.8
+ },
+ "utcsat_multi_sw10": {
+  "pin": {
+   "n": 453,
+   "net": 279.47
+  },
+  "n": 453,
+  "net": 279.47,
+  "gross": 384.34,
+  "dd": 35.54,
+  "wr": 30.5
+ },
+ "utcsat_swingpause_single_sw10": {
+  "pin": {
+   "n": 406,
+   "net": 245.7
+  },
+  "n": 406,
+  "net": 245.7,
+  "gross": 340.27,
+  "dd": 36.47,
+  "wr": 29.6
+ },
+ "utc_wknd_swingpause_single_sw10": {
+  "pin": {
+   "n": 350,
+   "net": 121.03
+  },
+  "n": 350,
+  "net": 121.03,
+  "gross": 196.56,
+  "dd": 40.49,
+  "wr": 29.1
+ },
+ "rmax15_swingpause_single_sw10": {
+  "pin": {
+   "n": 376,
+   "net": 187.78
+  },
+  "n": 376,
+  "net": 187.78,
+  "gross": 290.57,
+  "dd": 57.54,
+  "wr": 26.9
+ },
+ "rmax10_swingpause_single_sw10": {
+  "pin": {
+   "n": 294,
+   "net": 228.59
+  },
+  "n": 294,
+  "net": 228.59,
+  "gross": 323.62,
+  "dd": 47.91,
+  "wr": 23.8
+ },
+ "rmax15_multi_sw10": {
+  "pin": {
+   "n": 407,
+   "net": 255.56
+  },
+  "n": 407,
+  "net": 255.56,
+  "gross": 371.6,
+  "dd": 50.19,
+  "wr": 27.5
+ },
+ "chopband_multi_sw10": {
+  "pin": {
+   "n": 432,
+   "net": 268.79
+  },
+  "n": 432,
+  "net": 268.79,
+  "gross": 365.58,
+  "dd": 41.7,
+  "wr": 30.3
+ },
+ "chopband_swingpause_single_sw10": {
+  "pin": {
+   "n": 395,
+   "net": 241.65
+  },
+  "n": 395,
+  "net": 241.65,
+  "gross": 332.04,
+  "dd": 38.57,
+  "wr": 30.6
+ },
+ "atrr_swingpause_single_sw10": {
+  "pin": {
+   "n": 381,
+   "net": 241.57
+  },
+  "n": 381,
+  "net": 241.57,
+  "gross": 337.85,
+  "dd": 46.77,
+  "wr": 28.1
+ },
+ "chopband_atrr_swingpause_single_sw10": {
+  "pin": {
+   "n": 321,
+   "net": 264.45
+  },
+  "n": 321,
+  "net": 264.45,
+  "gross": 344.36,
+  "dd": 35.77,
+  "wr": 29.0
+ },
+ "atrr_swingpause_single_sw20": {
+  "pin": {},
+  "n": 390,
+  "net": 171.57,
+  "gross": 266.27,
+  "dd": 50.43,
+  "wr": 30.8
+ },
+ "atrr_cd0_swingpause_single_sw10": {
+  "pin": {},
+  "n": 385,
+  "net": 240.56,
+  "gross": 337.57,
+  "dd": 47.35,
+  "wr": 28.3
+ },
+ "chopband_swingpause_single_sw20": {
+  "pin": {},
+  "n": 388,
+  "net": 146.42,
+  "gross": 237.43,
+  "dd": 51.76,
+  "wr": 31.2
+ },
+ "chopband_atrr_swingpause_single_sw20": {
+  "pin": {},
+  "n": 329,
+  "net": 175.9,
+  "gross": 256.38,
+  "dd": 44.83,
+  "wr": 30.4
+ },
+ "utcsat_chopband_multi_sw10": {
+  "pin": {
+   "n": 392,
+   "net": 315.45
+  },
+  "n": 392,
+  "net": 315.45,
+  "gross": 407.37,
+  "dd": 36.41,
+  "wr": 31.6
+ },
+ "fullstack_atrr_utcsat_multi_sw10": {
+  "pin": {
+   "n": 311,
+   "net": 295.46
+  },
+  "n": 311,
+  "net": 295.46,
+  "gross": 373.24,
+  "dd": 26.61,
+  "wr": 29.9
+ },
+ "fullstack_swingpause_single_sw10": {
+  "pin": {
+   "n": 262,
+   "net": 268.27
+  },
+  "n": 262,
+  "net": 268.27,
+  "gross": 327.89,
+  "dd": 24.22,
+  "wr": 32.4
+ },
+ "fullstack_wage10_cd0_single_sw10": {
+  "pin": {
+   "n": 234,
+   "net": 316.64
+  },
+  "n": 234,
+  "net": 316.64,
+  "gross": 372.69,
+  "dd": 23.96,
+  "wr": 34.6
+ },
+ "wage12_swingpause_single_sw10": {
+  "pin": {
+   "n": 323,
+   "net": 262.31
+  },
+  "n": 323,
+  "net": 262.31,
+  "gross": 334.38,
+  "dd": 27.48,
+  "wr": 31.9
+ },
+ "wage8_swingpause_single_sw10": {
+  "pin": {
+   "n": 329,
+   "net": 247.85
+  },
+  "n": 329,
+  "net": 247.85,
+  "gross": 322.49,
+  "dd": 29.39,
+  "wr": 31.6
+ },
+ "wage10_swingpause_wskip_single_sw10": {
+  "pin": {
+   "n": 330,
+   "net": 308.65
+  },
+  "n": 330,
+  "net": 308.65,
+  "gross": 385.19,
+  "dd": 26.27,
+  "wr": 32.4
+ },
+ "wage16_swingpause_single_sw10": {
+  "pin": {
+   "n": 302,
+   "net": 244.8
+  },
+  "n": 302,
+  "net": 244.8,
+  "gross": 311.83,
+  "dd": 28.04,
+  "wr": 31.5
+ },
+ "wage20_swingpause_single_sw10": {
+  "pin": {
+   "n": 283,
+   "net": 205.35
+  },
+  "n": 283,
+  "net": 205.35,
+  "gross": 266.66,
+  "dd": 26.45,
+  "wr": 31.4
+ },
+ "wage12_swingpause_single_nowknd_sw10": {
+  "pin": {
+   "n": 392,
+   "net": 196.94
+  },
+  "n": 392,
+  "net": 196.94,
+  "gross": 287.92,
+  "dd": 41.23,
+  "wr": 30.1
+ },
+ "wage12_swingpause_single_sw20": {
+  "pin": {
+   "n": 394,
+   "net": 153.32
+  },
+  "n": 394,
+  "net": 153.32,
+  "gross": 245.75,
+  "dd": 43.96,
+  "wr": 32.2
+ },
+ "causalsl_multi_sw10": {
+  "pin": {},
+  "n": 493,
+  "net": 185.08,
+  "gross": 290.91,
+  "dd": 47.7,
+  "wr": 29.0
+ },
+ "causalsl_swingpause_single_sw10": {
+  "pin": {},
+  "n": 446,
+  "net": 195.67,
+  "gross": 294.31,
+  "dd": 45.42,
+  "wr": 29.6
+ },
+ "causalsl_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 448,
+  "net": 237.43,
+  "gross": 328.97,
+  "dd": 36.53,
+  "wr": 30.6
+ },
+ "bm05_multi_sw10": {
+  "pin": {},
+  "n": 456,
+  "net": 277.86,
+  "gross": 385.93,
+  "dd": 46.63,
+  "wr": 30.5
+ },
+ "bm08_multi_sw10": {
+  "pin": {},
+  "n": 391,
+  "net": 248.81,
+  "gross": 342.15,
+  "dd": 38.3,
+  "wr": 31.5
+ },
+ "bm05_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 420,
+  "net": 298.15,
+  "gross": 396.58,
+  "dd": 35.33,
+  "wr": 31.0
+ },
+ "bm08_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 359,
+  "net": 264.66,
+  "gross": 349.6,
+  "dd": 29.71,
+  "wr": 32.6
+ },
+ "bm05_swingpause_single_sw10": {
+  "pin": {
+   "n": 425,
+   "net": 243.81
+  },
+  "n": 425,
+  "net": 243.81,
+  "gross": 342.6,
+  "dd": 49.0,
+  "wr": 30.1
+ },
+ "bm05_multi_sw20": {
+  "pin": {},
+  "n": 458,
+  "net": 259.8,
+  "gross": 370.2,
+  "dd": 51.69,
+  "wr": 31.9
+ },
+ "trail10_swingpause_single": {
+  "pin": {},
+  "n": 328,
+  "net": -311.27,
+  "gross": -170.58,
+  "dd": 313.38,
+  "wr": 22.5
+ },
+ "trail06_swingpause_single": {
+  "pin": {},
+  "n": 233,
+  "net": -276.56,
+  "gross": -165.46,
+  "dd": 276.56,
+  "wr": 14.9
+ },
+ "trail10_multi": {
+  "pin": {},
+  "n": 246,
+  "net": -247.51,
+  "gross": -151.55,
+  "dd": 248.22,
+  "wr": 17.8
+ },
+ "dualunion_multi": {
+  "pin": {},
+  "n": 90,
+  "net": 201.7,
+  "gross": 228.26,
+  "dd": 9.04,
+  "wr": 48.9
+ },
+ "union_multi": {
+  "pin": {},
+  "n": 137,
+  "net": 245.39,
+  "gross": 288.15,
+  "dd": 16.45,
+  "wr": 44.5
+ },
+ "dirmatch_multi_sw10": {
+  "pin": {
+   "n": 389,
+   "net": 444.21
+  },
+  "n": 389,
+  "net": 444.21,
+  "gross": 533.97,
+  "dd": 24.01,
+  "wr": 38.8
+ },
+ "age25_multi_sw10": {
+  "pin": {
+   "n": 293,
+   "net": 319.22
+  },
+  "n": 293,
+  "net": 319.22,
+  "gross": 392.64,
+  "dd": 25.86,
+  "wr": 37.2
+ },
+ "age25_dirmatch_multi_sw10": {
+  "pin": {
+   "n": 248,
+   "net": 357.01
+  },
+  "n": 248,
+  "net": 357.01,
+  "gross": 416.47,
+  "dd": 21.47,
+  "wr": 43.5
+ },
+ "age10_dirmatch_multi_sw10": {
+  "pin": {
+   "n": 150,
+   "net": 417.68
+  },
+  "n": 150,
+  "net": 417.68,
+  "gross": 462.24,
+  "dd": 13.45,
+  "wr": 51.3
+ },
+ "dirmatch_swingpause_single_sw10": {
+  "pin": {
+   "n": 362,
+   "net": 273.84
+  },
+  "n": 362,
+  "net": 273.84,
+  "gross": 352.26,
+  "dd": 30.04,
+  "wr": 37.6
+ },
+ "age10_dirmatch_swingpause_single_sw10": {
+  "pin": {
+   "n": 149,
+   "net": 414.08
+  },
+  "n": 149,
+  "net": 414.08,
+  "gross": 457.69,
+  "dd": 12.9,
+  "wr": 53.7
+ },
+ "dirmatch_single_sw10": {
+  "pin": {
+   "n": 392,
+   "net": 442.72
+  },
+  "n": 392,
+  "net": 442.72,
+  "gross": 532.64,
+  "dd": 31.02,
+  "wr": 39.5
+ },
+ "b2doji_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 422,
+  "net": 295.7,
+  "gross": 393.87,
+  "dd": 36.16,
+  "wr": 31.0
+ },
+ "b2doji_swingpause_single_sw10": {
+  "pin": {},
+  "n": 414,
+  "net": 188.71,
+  "gross": 285.02,
+  "dd": 46.29,
+  "wr": 29.2
+ },
+ "age50_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 434,
+  "net": 261.4,
+  "gross": 366.64,
+  "dd": 37.95,
+  "wr": 28.8
+ },
+ "age50_swingpause_single_sw10": {
+  "pin": {},
+  "n": 429,
+  "net": 137.14,
+  "gross": 237.63,
+  "dd": 48.05,
+  "wr": 27.0
+ },
+ "combined_b2age_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 407,
+  "net": 265.38,
+  "gross": 363.28,
+  "dd": 36.0,
+  "wr": 29.7
+ },
+ "persist3_multi_sw10": {
+  "pin": {},
+  "n": 495,
+  "net": 229.45,
+  "gross": 344.06,
+  "dd": 53.26,
+  "wr": 29.1
+ },
+ "persist4_multi_sw10": {
+  "pin": {},
+  "n": 501,
+  "net": 231.7,
+  "gross": 347.93,
+  "dd": 46.85,
+  "wr": 29.5
+ },
+ "persist5_multi_sw10": {
+  "pin": {},
+  "n": 498,
+  "net": 239.0,
+  "gross": 354.53,
+  "dd": 46.85,
+  "wr": 29.5
+ },
+ "persist6_multi_sw10": {
+  "pin": {},
+  "n": 499,
+  "net": 239.12,
+  "gross": 355.72,
+  "dd": 46.85,
+  "wr": 29.7
+ },
+ "persist8_multi_sw10": {
+  "pin": {},
+  "n": 499,
+  "net": 239.12,
+  "gross": 355.72,
+  "dd": 46.85,
+  "wr": 29.7
+ },
+ "htfrr2_multi_sw10": {
+  "pin": {},
+  "n": 423,
+  "net": 292.86,
+  "gross": 397.5,
+  "dd": 35.68,
+  "wr": 29.6
+ },
+ "htfrr25_multi_sw10": {
+  "pin": {},
+  "n": 419,
+  "net": 221.11,
+  "gross": 324.69,
+  "dd": 34.27,
+  "wr": 27.9
+ },
+ "htfrr35_multi_sw10": {
+  "pin": {},
+  "n": 406,
+  "net": 202.29,
+  "gross": 303.14,
+  "dd": 41.04,
+  "wr": 28.1
+ },
+ "htfrr4_multi_sw10": {
+  "pin": {},
+  "n": 397,
+  "net": 222.36,
+  "gross": 321.93,
+  "dd": 38.81,
+  "wr": 29.2
+ },
+ "ext2_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 417,
+  "net": 301.86,
+  "gross": 402.41,
+  "dd": 41.77,
+  "wr": 32.6
+ },
+ "ext25_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 442,
+  "net": 281.3,
+  "gross": 385.83,
+  "dd": 36.18,
+  "wr": 30.8
+ },
+ "ext35_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 454,
+  "net": 279.16,
+  "gross": 384.11,
+  "dd": 35.54,
+  "wr": 30.4
+ },
+ "ext4_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 454,
+  "net": 279.16,
+  "gross": 384.11,
+  "dd": 35.54,
+  "wr": 30.4
+ },
+ "wage12_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 391,
+  "net": 273.7,
+  "gross": 365.61,
+  "dd": 31.66,
+  "wr": 31.5
+ },
+ "wage24_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 332,
+  "net": 273.8,
+  "gross": 353.29,
+  "dd": 21.7,
+  "wr": 33.4
+ },
+ "wage24_swingpause_single_sw10": {
+  "pin": {},
+  "n": 269,
+  "net": 228.4,
+  "gross": 284.68,
+  "dd": 20.87,
+  "wr": 34.2
+ },
+ "curfew624_utcsat_multi_sw10": {
+  "pin": {},
+  "n": 377,
+  "net": 304.72,
+  "gross": 393.15,
+  "dd": 31.95,
+  "wr": 32.4
+ },
+ "curfew624_swingpause_single_sw10": {
+  "pin": {},
+  "n": 300,
+  "net": 198.91,
+  "gross": 259.41,
+  "dd": 23.17,
+  "wr": 32.7
+ },
+ "partial1_multi_sw10": {
+  "pin": {},
+  "n": 553,
+  "net": 50.19,
+  "gross": 179.6,
+  "dd": 43.84,
+  "wr": 41.4
+ },
+ "partial2_multi_sw10": {
+  "pin": {},
+  "n": 528,
+  "net": 72.28,
+  "gross": 194.8,
+  "dd": 39.25,
+  "wr": 37.5
+ },
+ "partial3_multi_sw10": {
+  "pin": {},
+  "n": 513,
+  "net": 92.55,
+  "gross": 212.24,
+  "dd": 39.75,
+  "wr": 33.5
+ },
+ "partial4_multi_sw10": {
+  "pin": {},
+  "n": 506,
+  "net": 106.7,
+  "gross": 224.78,
+  "dd": 45.39,
+  "wr": 31.0
+ },
+ "partial5_multi_sw10": {
+  "pin": {},
+  "n": 501,
+  "net": 131.63,
+  "gross": 248.37,
+  "dd": 46.01,
+  "wr": 30.7
+ }
+}
