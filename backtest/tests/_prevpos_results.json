@@ -1,0 +1,158 @@
+{
+ "is|control": {
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85,
+  "prevpos": {
+   "evaluated": 0,
+   "had_open": 0,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 0,
+   "open_red": 0
+  }
+ },
+ "is|grey_all": {
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85,
+  "prevpos": {
+   "evaluated": 119,
+   "had_open": 119,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 119,
+   "open_red": 0
+  }
+ },
+ "is|skip_all": {
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85,
+  "prevpos": {
+   "evaluated": 119,
+   "had_open": 119,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 119,
+   "open_red": 0
+  }
+ },
+ "is|grey_any": {
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85,
+  "prevpos": {
+   "evaluated": 119,
+   "had_open": 119,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 119,
+   "open_red": 0
+  }
+ },
+ "is|skip_any": {
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85,
+  "prevpos": {
+   "evaluated": 119,
+   "had_open": 119,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 119,
+   "open_red": 0
+  }
+ },
+ "is|skip_all_rmin05": {
+  "n": 388,
+  "net": 111.65,
+  "dd": 48.14,
+  "prevpos": {
+   "evaluated": 134,
+   "had_open": 134,
+   "blocked": 134,
+   "flagged": 0,
+   "open_green": 0,
+   "open_red": 134
+  }
+ },
+ "oos|control": {
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55,
+  "prevpos": {
+   "evaluated": 0,
+   "had_open": 0,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 0,
+   "open_red": 0
+  }
+ },
+ "oos|grey_all": {
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55,
+  "prevpos": {
+   "evaluated": 68,
+   "had_open": 68,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 68,
+   "open_red": 0
+  }
+ },
+ "oos|skip_all": {
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55,
+  "prevpos": {
+   "evaluated": 68,
+   "had_open": 68,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 68,
+   "open_red": 0
+  }
+ },
+ "oos|grey_any": {
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55,
+  "prevpos": {
+   "evaluated": 68,
+   "had_open": 68,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 68,
+   "open_red": 0
+  }
+ },
+ "oos|skip_any": {
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55,
+  "prevpos": {
+   "evaluated": 68,
+   "had_open": 68,
+   "blocked": 0,
+   "flagged": 0,
+   "open_green": 68,
+   "open_red": 0
+  }
+ },
+ "oos|skip_all_rmin05": {
+  "n": 219,
+  "net": -11.76,
+  "dd": 45.91,
+  "prevpos": {
+   "evaluated": 83,
+   "had_open": 83,
+   "blocked": 83,
+   "flagged": 0,
+   "open_green": 0,
+   "open_red": 83
+  }
+ }
+}
