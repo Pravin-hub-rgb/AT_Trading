@@ -194,6 +194,417 @@ EXPERIMENTS = {
                  "oos_n": 234, "oos_net": 104.98, "oos_dd_net": 52.50},
     },
 
+    "gap_inert_event_shift": {
+        "desc": "champion leg + scheduled-event shift +/-24h, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_event_shift_min": 1440, "exp_event_mode": "shift"},
+        "swing": "sw10",
+        # Bit-for-bit the baseline on both eras. Shifting the scheduled-event
+        # window by a day either way changes nothing on this book, which is
+        # itself the answer to the question the script was asking.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+
+    # ===== TAIL OF SCRIPT-GRID SWEEP (2026-10-02) =====
+    "gap_campaign4": {
+        "desc": "champion leg + campaign max total 4",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_campaign_max_total": 4, "exp_campaign_max_addons": 4, "exp_campaign_block_mixed": 1},
+        "swing": "sw10",
+        # TAIL OF THE SCRIPT-GRID SWEEP. Two of the knobs these scripts set
+        # do not exist in the engine at all - see the note on
+        # gap_missing_regime_persist below, which is recorded as evidence rather
+        # than as a book because a book with a knob the engine does not accept
+        # would be a lie.
+        "pins": {"n": 369, "net": 100.55, "dd_net": 44.08,
+                 "oos_n": 216, "oos_net": 109.33, "oos_dd_net": 19.25},
+    },
+    "gap_campaign1": {
+        "desc": "champion leg + campaign max total 1",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_campaign_max_total": 1, "exp_campaign_max_addons": 1, "exp_campaign_block_mixed": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 183, "net": -34.78, "dd_net": 46.27,
+                 "oos_n": 96, "oos_net": 16.28, "oos_dd_net": 25.11},
+    },
+    "gap_campaign_markneg": {
+        "desc": "champion leg + campaign requires -0.5R marked",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_require_marked_r": -0.5},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 273, "net": 6.43, "dd_net": 51.84,
+                 "oos_n": 150, "oos_net": 83.41, "oos_dd_net": 10.08},
+    },
+    "gap_inert_cohort1": {
+        "desc": "champion leg + cohort gate n=1, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cohort_swingpause": 1, "exp_cohort_loss_n": 1, "exp_cohort_rearm": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    # exp_regime_persist (3, 5) and exp_window_quality (0.1, 0.2) are set by
+    # test_combos.py but ARE NOT PARAMETERS of the engine. Passing them raises
+    # TypeError: simulate_htf_ltf_streak_halt() got an unexpected keyword
+    # argument. So that script either measures something else, or measured these
+    # on an engine that had them and they were lost in the unification. Not
+    # recorded as books - a book whose knob the engine rejects is a fiction, and
+    # the knob-wiring gate would be right to flag it. Listed here instead so the
+    # fact is not lost.
+
+    # ===== SCRIPT-GRID SWEEP: knob/value pairs with no book (2026-10-02) =====
+    "gap_bm_min09": {
+        "desc": "champion leg + bias-momentum threshold 0.9",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_bias_momentum_min": 0.9},
+        "swing": "sw10",
+        # SCRIPT-GRID SWEEP 2026-10-02, second pass over the audit.
+        # The first pass asked which KNOBS had no book. This one asks which
+        # (knob, value) PAIRS a script actually ran but no book recorded - a
+        # finer net, because a knob can have one book and still have had three
+        # values tested by hand.
+        #
+        # 39 such pairs across 14 knobs, from exp_la11_extensions,
+        # exp_thesis_window_budget, exp_thesis_campaign_policy, test_combos,
+        # exp_forward_eval and others. All measured here, both eras.
+        #
+        # THE STANDOUT: exp_bias_momentum_min=0.9. A bias-momentum threshold
+        # sweep that four scripts ran (test_bm_monthly_dist,
+        # test_bm_single_headtohead and two more) and that no book captured.
+        #   IS  370 trades / +328.26R / dd 29.02
+        #   OOS 196 trades / +106.62R / dd 21.41
+        # Against the champion's +239.12 / +72.79 at drawdown 46.85 / 50.55,
+        # that is more R on both sides at roughly half the drawdown. It is the
+        # best both-era result found today that is NOT already a book.
+        #
+        # Also better on both eras: exp_window_entry_cap=3 (IS +27.63 but OOS
+        # +110.07 at dd 16.69 - IS is worse, OOS far better),
+        # exp_campaign_max_total=3 (OOS +105.95 at dd 20.23), wage_h=28
+        # (OOS +87.58), exp_window_r_cap=3 (OOS +80.16).
+        #
+        # INERT on both eras - measured, recorded so nobody re-runs them:
+        #   exp_window_win_kill_n at 2 and 3, exp_loss_streak_*, exp_cohort_*,
+        #   exp_curfew_a=4.0 with exp_curfew_b=4.0 (equal bounds = no window),
+        #   exp_persist=1.
+        # The curfew pair is a good example of why these were worth running:
+        # a=4.0/b=4.0 is a degenerate band that closes instantly, and the
+        # a=4.0/b=8.0 version of the same knob is active. Same knob, one value
+        # inert and one not - you cannot tell that from reading the knob.
+        "pins": {"n": 370, "net": 328.26, "dd_net": 29.02,
+                 "oos_n": 196, "oos_net": 106.62, "oos_dd_net": 21.41},
+    },
+    "gap_bm_min07": {
+        "desc": "champion leg + bias-momentum threshold 0.7",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_bias_momentum_min": 0.7},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 414, "net": 266.50, "dd_net": 41.29,
+                 "oos_n": 224, "oos_net": 84.81, "oos_dd_net": 32.89},
+    },
+    "gap_bm_min06": {
+        "desc": "champion leg + bias-momentum threshold 0.6",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_bias_momentum_min": 0.6},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 445, "net": 284.52, "dd_net": 43.68,
+                 "oos_n": 245, "oos_net": 82.81, "oos_dd_net": 32.65},
+    },
+    "gap_campaign3": {
+        "desc": "champion leg + campaign max total 3",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_campaign_max_total": 3, "exp_campaign_max_addons": 3, "exp_campaign_block_mixed": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 328, "net": 30.12, "dd_net": 37.79,
+                 "oos_n": 188, "oos_net": 105.95, "oos_dd_net": 20.23},
+    },
+    "gap_entry_cap3": {
+        "desc": "champion leg + 3 entries per window",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_entry_cap": 3},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 330, "net": 27.63, "dd_net": 38.85,
+                 "oos_n": 188, "oos_net": 110.07, "oos_dd_net": 16.69},
+    },
+    "gap_entry_cap2": {
+        "desc": "champion leg + 2 entries per window",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_entry_cap": 2},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 273, "net": 6.43, "dd_net": 51.84,
+                 "oos_n": 150, "oos_net": 83.41, "oos_dd_net": 10.08},
+    },
+    "gap_r_cap3": {
+        "desc": "champion leg + window R cap 3.0",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_r_cap": 3.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 459, "net": 198.53, "dd_net": 46.85,
+                 "oos_n": 270, "oos_net": 80.16, "oos_dd_net": 49.35},
+    },
+    "gap_r_cap1": {
+        "desc": "champion leg + window R cap 1.0",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_r_cap": 1.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 448, "net": 162.70, "dd_net": 46.85,
+                 "oos_n": 246, "oos_net": 66.10, "oos_dd_net": 48.53},
+    },
+    "gap_wage28": {
+        "desc": "champion leg + wage window 28h",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_wage_h": 28},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 341, "net": 223.08, "dd_net": 30.47,
+                 "oos_n": 208, "oos_net": 87.58, "oos_dd_net": 26.23},
+    },
+    "gap_wage32": {
+        "desc": "champion leg + wage window 32h",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_wage_h": 32},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 331, "net": 214.48, "dd_net": 31.77,
+                 "oos_n": 202, "oos_net": 76.96, "oos_dd_net": 26.04},
+    },
+    "gap_wage24": {
+        "desc": "champion leg + wage window 24h",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_wage_h": 24.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 364, "net": 240.58, "dd_net": 31.33,
+                 "oos_n": 218, "oos_net": 76.29, "oos_dd_net": 34.05},
+    },
+    "gap_persist1": {
+        "desc": "champion leg + exp_persist 1",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_persist": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 502, "net": 238.45, "dd_net": 53.86,
+                 "oos_n": 294, "oos_net": 78.35, "oos_dd_net": 46.46},
+    },
+    "gap_curfew_16_20": {
+        "desc": "champion leg + curfew 16h/20h",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_curfew_a": 16.0, "exp_curfew_b": 20.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 470, "net": 231.33, "dd_net": 49.95,
+                 "oos_n": 274, "oos_net": 61.84, "oos_dd_net": 46.58},
+    },
+    "gap_campaign_mark05": {
+        "desc": "champion leg + campaign requires +0.5R marked",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_require_marked_r": 0.5},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 267, "net": -4.69, "dd_net": 49.81,
+                 "oos_n": 148, "oos_net": 47.93, "oos_dd_net": 10.08},
+    },
+    "gap_inert_winkill2": {
+        "desc": "champion leg + win-kill at 2, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_win_kill_n": 2, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_winkill3": {
+        "desc": "champion leg + win-kill at 3, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_win_kill_n": 3, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_lossstreak": {
+        "desc": "champion leg + loss-streak halt at 3, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_loss_streak_n": 3, "exp_loss_streak_mode": "halt", "exp_loss_streak_action": "halt"},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_cohort2": {
+        "desc": "champion leg + cohort gate, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_cohort_swingpause": 1, "exp_cohort_loss_n": 2, "exp_cohort_rearm": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_curfew44": {
+        "desc": "champion leg + curfew 4h/4h, MEASURED INERT (degenerate band)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_curfew_a": 4.0, "exp_curfew_b": 4.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+
     # ===== KNOB-GAP SWEEP: live knobs with no book (2026-10-02) =====
     "gap_cooldown20": {
         "desc": "champion leg + cooldown_bars 20",

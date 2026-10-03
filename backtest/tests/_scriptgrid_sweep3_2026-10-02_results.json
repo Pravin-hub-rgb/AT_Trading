@@ -1,0 +1,44 @@
+{
+ "is|5m_confirm": {
+  "err": "TypeError('string indices must be integers')"
+ },
+ "is|event_shift1440": {
+  "extra": {
+   "exp_event_shift_min": 1440,
+   "exp_event_mode": "shift"
+  },
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85
+ },
+ "is|event_shiftneg": {
+  "extra": {
+   "exp_event_shift_min": -1440,
+   "exp_event_mode": "shift"
+  },
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85
+ },
+ "oos|5m_confirm": {
+  "err": "TypeError('string indices must be integers')"
+ },
+ "oos|event_shift1440": {
+  "extra": {
+   "exp_event_shift_min": 1440,
+   "exp_event_mode": "shift"
+  },
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55
+ },
+ "oos|event_shiftneg": {
+  "extra": {
+   "exp_event_shift_min": -1440,
+   "exp_event_mode": "shift"
+  },
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55
+ }
+}

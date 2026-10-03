@@ -1,0 +1,106 @@
+{
+ "is|campaign1": {
+  "extra": {
+   "exp_campaign_max_total": 1,
+   "exp_campaign_max_addons": 1,
+   "exp_campaign_block_mixed": 1
+  },
+  "n": 183,
+  "net": -34.78,
+  "dd": 46.27
+ },
+ "is|campaign4": {
+  "extra": {
+   "exp_campaign_max_total": 4,
+   "exp_campaign_max_addons": 4,
+   "exp_campaign_block_mixed": 1
+  },
+  "n": 369,
+  "net": 100.55,
+  "dd": 44.08
+ },
+ "is|campaign_markneg": {
+  "extra": {
+   "exp_campaign_max_total": 2,
+   "exp_campaign_max_addons": 2,
+   "exp_campaign_require_marked_r": -0.5
+  },
+  "n": 273,
+  "net": 6.43,
+  "dd": 51.84
+ },
+ "is|cohort1": {
+  "extra": {
+   "exp_cohort_swingpause": 1,
+   "exp_cohort_loss_n": 1,
+   "exp_cohort_rearm": 1
+  },
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85
+ },
+ "is|regime_persist3": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_regime_persist'\")"
+ },
+ "is|regime_persist5": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_regime_persist'\")"
+ },
+ "is|window_quality01": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_window_quality'\")"
+ },
+ "is|window_quality02": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_window_quality'\")"
+ },
+ "oos|campaign1": {
+  "extra": {
+   "exp_campaign_max_total": 1,
+   "exp_campaign_max_addons": 1,
+   "exp_campaign_block_mixed": 1
+  },
+  "n": 96,
+  "net": 16.28,
+  "dd": 25.11
+ },
+ "oos|campaign4": {
+  "extra": {
+   "exp_campaign_max_total": 4,
+   "exp_campaign_max_addons": 4,
+   "exp_campaign_block_mixed": 1
+  },
+  "n": 216,
+  "net": 109.33,
+  "dd": 19.25
+ },
+ "oos|campaign_markneg": {
+  "extra": {
+   "exp_campaign_max_total": 2,
+   "exp_campaign_max_addons": 2,
+   "exp_campaign_require_marked_r": -0.5
+  },
+  "n": 150,
+  "net": 83.41,
+  "dd": 10.08
+ },
+ "oos|cohort1": {
+  "extra": {
+   "exp_cohort_swingpause": 1,
+   "exp_cohort_loss_n": 1,
+   "exp_cohort_rearm": 1
+  },
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55
+ },
+ "oos|regime_persist3": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_regime_persist'\")"
+ },
+ "oos|regime_persist5": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_regime_persist'\")"
+ },
+ "oos|window_quality01": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_window_quality'\")"
+ },
+ "oos|window_quality02": {
+  "err": "TypeError(\"simulate_htf_ltf_streak_halt() got an unexpected keyword argument 'exp_window_quality'\")"
+ }
+}
