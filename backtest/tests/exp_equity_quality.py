@@ -55,8 +55,14 @@ def load_scope(scope):
         (c15, f15), (c1h, f1h) = load_unseen("15m"), load_unseen("1h")
         sw15 = _compute_swings(f15, "continuous", min_bars=SWING["min_bars_15m"])
         sw10 = _compute_swings(f1h, "continuous", min_bars=10)
+        # sw20 was missing here until 2026-10-02. Every registry book whose
+        # "swing" is sw20 raised KeyError('sw20') on OOS - 19 books - so they
+        # were silently unmeasurable out of sample while their sw10 twins were
+        # fine. get_data() builds sw20 with SWING["min_bars_1h"]; the OOS branch
+        # has to build it the same way or the two scopes measure different books.
+        sw20 = _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"])
         return {
-            "c15": c15, "sw15": sw15, "c1h": c1h, "sw10": sw10,
+            "c15": c15, "sw15": sw15, "c1h": c1h, "sw10": sw10, "sw20": sw20,
             "fine": load_fine_1m(c15[0]["ts"], c15[-1]["ts"]),
         }
     data = get_data()
