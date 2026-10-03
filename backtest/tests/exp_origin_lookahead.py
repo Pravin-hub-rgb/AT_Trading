@@ -299,6 +299,21 @@ def check_registry_hygiene():
     # The rule for anything added from here: a negative or inert result goes in
     # a doc as one line, not into the registry.
     print()
+    print("  shortlist (IS net >= %.0fR and OOS net >= %.0fR - a size filter, not a verdict)"
+          % (reg.SHORTLIST_IS_MIN, reg.SHORTLIST_OOS_MIN))
+    try:
+        live = [k for k, c in reg.EXPERIMENTS.items()
+                if isinstance(c, dict) and c.get("pins", {}).get("n")
+                and c.get("status") != "reference"]
+        sl = [k for k in live if reg.shortlisted(k)]
+        print("    %d of %d live books clear it" % (len(sl), len(live)))
+        for k in sorted(sl, key=lambda x: -reg.EXPERIMENTS[x]["pins"]["oos_net"])[:5]:
+            q = reg.EXPERIMENTS[k]["pins"]
+            print("      %-34s IS %+7.2f  OOS %+7.2f" % (k, q["net"], q["oos_net"]))
+    except Exception as e:
+        print("    could not evaluate the shortlist: %r" % (e,))
+        problems.append("shortlist failed")
+
     print("  candidate hygiene (a losing or inert book must be marked reference)")
     unmarked = []
     for key, cfg in reg.EXPERIMENTS.items():

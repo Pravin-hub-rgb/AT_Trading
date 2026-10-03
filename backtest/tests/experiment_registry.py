@@ -4257,6 +4257,33 @@ def book(key):
     return EXPERIMENTS[key]
 
 
+# ---------------------------------------------------------------------------
+# SHORTLIST - a size filter, and nothing more
+# ---------------------------------------------------------------------------
+# IS net >= 130R and OOS net >= 50R. A flat cut whose only purpose is to make a
+# 205-book registry readable. It says nothing about which of these is any good:
+# a book can clear it and still be curve-fitted, over-gated, or worse out of
+# sample than its headline suggests. That judgement is made per book, later, by
+# reading the equity curve and the IS-to-OOS retention.
+SHORTLIST_IS_MIN = 130.0
+SHORTLIST_OOS_MIN = 50.0
+
+
+def shortlisted(key, _exp=None):
+    """True when the book clears both size thresholds."""
+    r = _exp
+    if r is None:
+        import sys as _sys
+        r = _sys.modules[__name__]
+    cfg = r.EXPERIMENTS[key]
+    if not isinstance(cfg, dict):
+        return False
+    p = cfg.get("pins", {})
+    if not p.get("n"):
+        return False
+    return p["net"] >= SHORTLIST_IS_MIN and p["oos_net"] >= SHORTLIST_OOS_MIN
+
+
 def alias_of(key):
     """The surviving key if `key` is an alias, else None."""
     val = dict.__getitem__(EXPERIMENTS, key)
