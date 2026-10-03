@@ -222,14 +222,7 @@ class HTFWindowPaneRenderer implements IPrimitivePaneRenderer {
         ctx.lineTo(x2, it.ySl);
         ctx.stroke();
 
-        // +1.5R — always GREEN (profit)
-        if (it.yTp15 != null) {
-          ctx.strokeStyle = "rgba(34, 197, 94, 0.8)";
-          ctx.beginPath();
-          ctx.moveTo(x1, it.yTp15);
-          ctx.lineTo(x2, it.yTp15);
-          ctx.stroke();
-        }
+        // 1.5R deliberately not drawn - see the note at the constructor.
 
         // +3R — always YELLOW (extended profit)
         if (it.yTp3 != null) {

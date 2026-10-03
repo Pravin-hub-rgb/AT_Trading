@@ -1047,7 +1047,10 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       } catch {}
     }
 
-    const prim = new HTFWindowPrimitive(ser, htfWindows);
+    // R levels on: they are how the stop placement gets confirmed on the chart.
+  // The 1.5R line is dropped inside the primitive - entry, SL and 3R answer the
+  // question, and four lines per window is what made this unreadable before.
+  const prim = new HTFWindowPrimitive(ser, htfWindows, true);
     chart.panes()[0].attachPrimitive(prim);
     htfWindowPrimRef.current = prim;
 
