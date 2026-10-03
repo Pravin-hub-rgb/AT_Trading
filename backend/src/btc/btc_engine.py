@@ -218,6 +218,29 @@ def _collect_signals(
                 # so, and sweep_pref_fs.py:51 calls the stream path without it.
                 # Without a guard this indexes None and raises TypeError. The
                 # pre-C16 code read only seg_start, so it had no such dependency.
+# -----------------------------------------------------------------------------
+# THE STOP RULE. One sentence: the stop may only use values that are already
+# settled at the entry bar. Anything that settles later is not used.
+#
+# Two different things look like they are both 'past data' and only one is:
+#
+#   SETTLED   the extreme of the range from the swing start to the break bar.
+#            Every bar in that range has closed. Confirmed the moment the break
+#            prints. This is what leg and leg_no_entry read, and it is the only
+#            permitted stop source.
+#
+#   NOT SETTLED   seg_start, the swing's structural extreme. On a flip or B2
+#            entry the swing is still forming, and its extreme is not final
+#            until the first-swing print arrives - which is after the entry bar.
+#            Measured: the value does not revise afterwards, so it looks stable,
+#            but stability is not availability. At the entry it had not settled
+#            yet. That distinction is the whole rule.
+#
+# B1 and B2 need no first-swing print. The extreme of start..break needs none
+# either. Only the swing's own extreme does, and that is exactly the one that
+# is not used.
+#
+# There is no flag that relaxes this. It is not a default to be overridden.
                 if pivot_rule in ("leg", "leg_no_entry") and candles is not None:
                     _sw_idx = start_idx_fb if start_idx_fb >= 0 else 0
                     _br_idx = store.pos(b_time) if store else -1

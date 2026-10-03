@@ -1,72 +1,87 @@
-﻿"""Permanent check: the origin pivot is causal. Truncate the swing chain at
-each swing's confirmation and confirm seg.start_px does not change.
+"""STOP SOURCES: only values settled at the entry bar may set the stop.
+
+Rewritten 2026-10-02. The previous version truncated the swing chain at each
+swing's CONFIRMATION, found seg.start_px unchanged, and concluded the origin
+pivot was causal. That was the wrong question. After a swing confirms its chain
+is frozen by definition, so stability there is guaranteed and proves nothing.
+It also said the opposite of the rule this check enforces.
+
+The distinction that matters:
+
+    SETTLED at entry      the extreme of start..break. Every bar in that
+                          range has closed. leg and leg_no_entry read exactly
+                          this, and it is the only permitted stop source.
+
+    NOT settled at entry  seg_start, the swing structural extreme. At a flip or
+                          B2 entry the swing is still forming and its extreme
+                          is not final until the first-swing print, which is
+                          after the entry bar. It does not revise afterwards -
+                          that is what made it look safe - but stability is not
+                          availability.
+
+So the check no longer tries to prove a negative about a value. It asserts the
+rule: these two sources are permitted, and any book reaching for seg_start is
+failing regardless of what the number looks like afterwards.
 
 Run:  cd backtest/tests && python exp_origin_lookahead.py
 """
-import pathlib, sys
+import pathlib
+import re
+
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-for sub in ("backtest/tests", "backtest", "backend"):
-    sys.path.insert(0, str(ROOT / sub))
-sys.path.insert(0, str(ROOT))
-from src.btc.btc_config import load_btc_df
-from src.walker import FlowCandle
-from src.btc.btc_routes import _compute_swings
-SAMPLE = 40
-MIN_BARS = 50
-WARMUP = 3000
+REGISTRY = ROOT / "backtest" / "tests" / "experiment_registry.py"
+ROUTE = ROOT / "backend" / "src" / "btc" / "btc_routes.py"
+
+PERMITTED = ("leg", "leg_no_entry")
+# Research baseline, deliberately kept so the before/after comparison stays
+# reproducible. Not in the dropdown. Removing it removes this entry rather
+# than needing an edit to the check.
+RESEARCH_ONLY = {"champion_multi_sw10", "btc_routes.py:1441"}
+
 
 def main():
-    df = load_btc_df("15m", "BTCUSDT_BYBIT")
-    flow = [FlowCandle(date=r.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
-                       open=float(r.open), high=float(r.high),
-                       low=float(r.low), close=float(r.close)) for r in df.itertuples()]
-    full = _compute_swings(flow, "continuous", min_bars=MIN_BARS)
-    print("candles %d | swings %d" % (len(flow), len(full)))
+    print("=" * 66)
+    print("STOP SOURCE RULE - only entry-time-settled values may set a stop")
+    print("=" * 66)
+    print("permitted : pivot_rule in %s" % (PERMITTED,))
+    print("forbidden : seg_start / pivot_rule origin")
+    print("             the swing structural extreme is not settled at a flip or")
+    print("             B2 entry; it finalises on the first-swing print, after the")
+    print("             entry bar. It never revises, which is why it looked safe,")
+    print("             but it had not settled at the entry.")
     print()
-    print("%-20s %-7s %-11s %-11s %s" % ("confirmed", "start_i", "full px", "cut px", "verdict"))
-    same = diff = shown = 0
-    examples = []
-    for sw in full:
-        ci = sw.get("confirmed_at_idx"); conf = sw.get("confirmed_at_time")
-        seg = sw.get("seg") or {}
-        if ci is None or not conf or "start_idx" not in seg or ci < WARMUP:
-            continue
-        try:
-            cut = _compute_swings(flow[:ci + 1], "continuous", min_bars=MIN_BARS)
-        except Exception:
-            continue
-        m = [x for x in cut if (x.get("seg") or {}).get("start_idx") == seg["start_idx"]]
-        if not m:
-            continue
-        a = float(seg.get("start_px")); b = float((m[0].get("seg") or {}).get("start_px"))
-        ok = abs(a - b) < 1e-9
-        same += ok; diff += (not ok)
-        if not ok and len(examples) < 6:
-            examples.append((str(conf)[:16], seg["start_idx"], a, b))
-        if shown < 6:
-            print("%-20s %-7s %-11.2f %-11.2f %s" % (str(conf)[:16], seg["start_idx"], a, b,
-                                                       "SAME" if ok else "DIFFERS"))
-            shown += 1
-        if same + diff >= SAMPLE:
-            break
-    print()
-    print("compared                   : %d" % (same + diff))
-    print("start_px IDENTICAL         : %d" % same)
-    print("start_px CHANGED by future : %d" % diff)
-    for c, i, a, b in examples:
-        print("   %s start_idx=%d full=%.2f cut=%.2f" % (c, i, a, b))
-    print()
-    if diff:
-        print("RESULT: FAIL - %d swing(s) take a start price that needs bars after" % diff)
-        print("        their confirmation. The origin pivot IS lookahead for those." % ())
-        return 1
-    print("RESULT: PASS - the origin pivot is causal.")
-    print("        seg.start_px is identical with and without the future, so the")
-    print("        stop C16 calls a structural pivot is knowable at the entry bar.")
-    print("        What C16 changed was the risk denominator, not knowledge of the")
-    print("        future. 'Lookahead' overstated it; the rule itself still ships,")
-    print("        because the leg extreme is the right structure for a stop.")
+
+    findings = []
+    if REGISTRY.exists():
+        src = REGISTRY.read_text(encoding="utf-8", errors="replace")
+        for m in re.finditer(r'"([A-Za-z0-9_]+)"\s*:\s*\{(.*?)\n    \}', src, re.S):
+            key, body = m.group(1), m.group(2)
+            for rule in re.findall(r'"pivot_rule":\s*"([^"]+)"', body):
+                if rule not in PERMITTED:
+                    findings.append((key, "pivot_rule=" + rule))
+    if ROUTE.exists():
+        for i, line in enumerate(ROUTE.read_text(encoding="utf-8", errors="replace").split("\n"), 1):
+            for rule in re.findall(r'pivot_rule="([^"]+)"', line):
+                if rule not in PERMITTED:
+                    findings.append(("btc_routes.py:%d" % i, "pivot_rule=" + rule))
+
+    if findings:
+        for key, why in findings:
+            tag = "research baseline" if key in RESEARCH_ONLY else "UNAUTHORISED"
+            print("  %-32s %-24s [%s]" % (key, why, tag))
+        print()
+        bad = [f for f in findings if f[0] not in RESEARCH_ONLY]
+        if bad:
+            print("RESULT: FAIL - %d book(s) reach for a stop source that is not" % len(bad))
+            print("        settled at the entry bar.")
+            return 1
+        print("RESULT: PASS with exceptions - only the research baseline still names")
+        print("        a forbidden source, deliberately, so the comparison reproduces.")
+        return 0
+
+    print("RESULT: PASS - every stop source is settled at the entry bar.")
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
