@@ -36,7 +36,16 @@ PERMITTED = ("leg", "leg_no_entry")
 # Research baseline, deliberately kept so the before/after comparison stays
 # reproducible. Not in the dropdown. Removing it removes this entry rather
 # than needing an edit to the check.
-RESEARCH_ONLY = {"champion_multi_sw10", "btc_routes.py:1441"}
+#
+# These used to be keyed by line number ("btc_routes.py:1441"). That silently
+# rotted: the route file grew, pivot_rule="origin" moved to line 1481, the
+# allowlist no longer matched, and the gate started reporting a documented
+# exception as UNAUTHORISED. Key on the book key, and on the FILE for the
+# route, then assert the expected count so a NEW unauthorised use in that file
+# still fails instead of riding the blanket exemption.
+RESEARCH_BOOKS = {"champion_multi_sw10"}
+RESEARCH_FILES = {"btc_routes.py"}          # expect exactly this many
+RESEARCH_FILE_COUNT = {"btc_routes.py": 1}
 
 
 def main():
@@ -67,10 +76,33 @@ def main():
 
     if findings:
         for key, why in findings:
-            tag = "research baseline" if key in RESEARCH_ONLY else "UNAUTHORISED"
+            if key in RESEARCH_BOOKS:
+                tag = "research baseline"
+            elif key.split(":")[0] in RESEARCH_FILES:
+                tag = "research baseline (%s)" % key
+            else:
+                tag = "UNAUTHORISED"
             print("  %-32s %-24s [%s]" % (key, why, tag))
         print()
-        bad = [f for f in findings if f[0] not in RESEARCH_ONLY]
+
+        bad = [f for f in findings
+               if f[0] not in RESEARCH_BOOKS
+               and f[0].split(":")[0] not in RESEARCH_FILES]
+
+        # A file-level exemption must not become a blanket pass: if the route
+        # grows a second forbidden stop source, that one is unauthorised.
+        for fname, expected in RESEARCH_FILE_COUNT.items():
+            got = len([f for f in findings if f[0].split(":")[0] == fname])
+            if got > expected:
+                print("  NOTE %s now has %d forbidden stop sources, %d were"
+                      " documented as research-only." % (fname, got, expected))
+                for key, why in findings:
+                    if key.split(":")[0] == fname:
+                        print("       %s  %s" % (key, why))
+                print()
+                bad += [f for f in findings if f[0].split(":")[0] == fname
+                        and f not in bad]
+
         if bad:
             print("RESULT: FAIL - %d book(s) reach for a stop source that is not" % len(bad))
             print("        settled at the entry bar.")

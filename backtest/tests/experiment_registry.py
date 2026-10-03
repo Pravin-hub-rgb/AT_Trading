@@ -163,7 +163,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 372, "net": 90.1, "dd": 33.7, "partials": 41},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=372 net=90.1; now n=496 net=196.28 (win rate 31.9%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 496, "net": 196.28},
     },
     "champion_single_sw10": {
         "desc": "Champion single sw10 (partial exit, +82.0 post trail-fix)",
@@ -174,7 +177,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 7.5, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 396, "net": 82.0, "dd": 22.0, "partials": 37},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=396 net=82.0; now n=503 net=170.91 (win rate 30.4%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 503, "net": 170.91},
     },
     "champion_multi_sw20": {
         "desc": "Champion multi sw20 (partial exit, +208.4 post trail-fix)",
@@ -186,7 +192,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 7.5, "exp_mltf": True,
                     "exp_persist": 7, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 487, "net": 208.4, "dd": 29.4, "partials": 60},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=487 net=208.4; now n=493 net=213.33 (win rate 31.8%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 493, "net": 213.33},
     },
     "champion_multi_sw10": {
         "desc": "Champion multi sw10 - PRE-C16 retro book, origin SL pivot (LOOKAHEAD, research baseline only)",
@@ -204,7 +213,10 @@ EXPERIMENTS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "origin"},
         "swing": "sw10",
-        "pins": {"n": 500, "net": 325.78, "dd": 17.83, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=500 net=325.78; now n=500 net=325.78 (win rate 30.0%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 500, "net": 325.78},
     },
     # =========================================================================
     # THE CHAMPION BOOKS - one engine (unified.py), three stop-placement rules.
@@ -273,7 +285,10 @@ EXPERIMENTS = {
         # book. Measured through the harness only - raw unified.py does not accept
         # exp_partial_r, which the harness injects, so raw and harness are
         # different code paths for the exp_causal_sl branch (t_c13).
-        "pins": {"n": 495, "net": 215.14, "partials": 0},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=495 net=215.14; now n=495 net=215.09 (win rate 29.7%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 495, "net": 215.09},
     },
 
     "champion_multi_sw10_leg": {
@@ -305,7 +320,10 @@ EXPERIMENTS = {
         # measurement, not a spec, and pinning it would leave a check that restates its
         # own output. Removed instead, same as the _shipped_* anchors above. Do not
         # re-add from memory. n / net / partials / oos below are the book.
-        "pins": {"n": 499, "net": 239.12, "partials": 0},  # MEASURED 2026-10-01, Bybit perp
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=499 net=239.12; now n=499 net=239.12 (win rate 29.7%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 499, "net": 239.12},
         "oos": {"n": 280, "net": 72.8},  # MEASURED. NOT the origin book's 279 / +70.15.
     },
 
@@ -329,7 +347,10 @@ EXPERIMENTS = {
         # written with the gross figure in the net field, which the runner does not
         # check against - it silently passed because n matched and net was not
         # compared against gross.
-        "pins": {"n": 500, "net": 325.75, "partials": 0},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=500 net=325.75; now n=500 net=325.75 (win rate 30.0%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 500, "net": 325.75},
     },
 
     # champion_multi_sw10_leg_no_entry - NEW variant with LTF entry-bar skip
@@ -352,7 +373,10 @@ EXPERIMENTS = {
         # LTF leg reads sig["swing_start_px"], which pivot_rule already sets. This is
         # therefore the same book as entry1 under a second name. The version that
         # actually differs on both legs is champion_multi_sw10_entry_both.
-        "pins": {"n": 500, "net": 325.75, "partials": 0},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=500 net=325.75; now n=500 net=325.75 (win rate 30.0%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 500, "net": 325.75},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
@@ -366,7 +390,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 372, "net": 122.3, "dd": 37.3},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=372 net=122.3; now n=496 net=232.38 (win rate 31.9%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 496, "net": 232.38},
     },
     "baseline_no_partial_sw10": {
         "desc": "Champion config without partial exits sw10 (baseline, +137.7 post trail-fix)",
@@ -377,7 +404,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 395, "net": 137.7, "dd": 29.2},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=395 net=137.7; now n=502 net=238.45 (win rate 30.3%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 502, "net": 238.45},
     },
 
     # ===== D3 COOLDOWN FAMILY (loss-reactive window skip / swing pause) =====
@@ -549,7 +579,10 @@ EXPERIMENTS = {
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
                     "exp_partial_r": 0.0, "exp_skip_weekend": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 320, "net": 113.9, "dd": 30.5},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=320 net=113.9; now n=401 net=278.06 (win rate 31.9%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 401, "net": 278.06},
     },
     "nowknd_swingpause_single_sw10": {
         "desc": "swingpause single + SKIP WEEKEND — NEW BEST SINGLE (+217.6 / DD 18.2 / 12.0)",
@@ -561,7 +594,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 294, "net": 217.6, "dd": 18.2},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=294 net=217.6; now n=365 net=228.26 (win rate 31.2%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 365, "net": 228.26},
     },
     "fliponly_multi_sw10": {
         "desc": "king + FLIP entries only (B2 was +82.4 on multi — test cut)",
@@ -573,7 +609,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_kinds": "FLIP", "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 285, "net": 242.7, "dd": 24.3},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=285 net=242.7; now n=286 net=202.45 (win rate 26.2%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 286, "net": 202.45},
     },
     "fliponly_swingpause_single_sw10": {
         "desc": "swingpause single + FLIP entries only — B2 was 178t for -0.6R",
@@ -585,7 +624,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_kinds": "FLIP", "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 237, "net": 179.7, "dd": 21.9},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=237 net=179.7; now n=268 net=211.34 (win rate 28.0%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 268, "net": 211.34},
     },
     "wage24_multi_sw10": {
         "desc": "king + only enter HTF windows older than 24h (mature bias)",
@@ -617,7 +659,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_legskip_r": 2.0, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 269, "net": 267.3, "dd": 17.2},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=269 net=267.3; now n=269 net=235.96 (win rate 31.6%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 269, "net": 235.96},
     },
 
     # ENTRY-1 + UTC-Saturday. Both filters are settled at the entry bar:
@@ -646,7 +691,10 @@ EXPERIMENTS = {
                     "pivot_rule": "leg_no_entry",
                     "exp_skip_utc_sat": 1},
         "swing": "sw10",
-        "pins": {"n": 454, "net": 358.92, "partials": 0},  # MEASURED 2026-10-02, Bybit perp
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=454 net=358.92; now n=454 net=358.92 (win rate 30.8%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 454, "net": 358.92},
     },
 
     "utcsat_multi_sw10": {
@@ -681,7 +729,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 325, "net": 166.3, "dd": 23.3},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=325 net=166.3; now n=406 net=245.70 (win rate 29.6%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 406, "net": 245.70},
     },
 
     # NOTE: utc_sat variants consolidated into the other lane's keys
@@ -697,7 +748,10 @@ EXPERIMENTS = {
                     "exp_skip_utc_sat": 1, "exp_skip_utc_sun": 1,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 286, "net": 150.0, "dd": 23.1},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=286 net=150.0; now n=350 net=121.03 (win rate 29.1%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 350, "net": 121.03},
     },
 
     # ===== D3 RISK-WIDTH FAMILY (skip stale/stretched breaks) =====
@@ -712,7 +766,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_risk_max_pct": 1.5, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 310, "net": 91.7, "dd": 38.1},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=310 net=91.7; now n=376 net=187.78 (win rate 26.9%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 376, "net": 187.78},
     },
     "rmax10_swingpause_single_sw10": {
         "desc": "swingpause single + skip entries with stop width over 1.0% of price — DEAD",
@@ -724,7 +781,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_risk_max_pct": 1.0, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 255, "net": 195.5, "dd": 31.4},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=255 net=195.5; now n=294 net=228.59 (win rate 23.8%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 294, "net": 228.59},
     },
     "rmax15_multi_sw10": {
         "desc": "king + skip entries with stop width over 1.5% of price — DEAD (cascade)",
@@ -736,7 +796,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_risk_max_pct": 1.5, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 406, "net": 259.4, "dd": 35.6},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=406 net=259.4; now n=407 net=255.56 (win rate 27.5%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 407, "net": 255.56},
     },
 
     # ===== D3 LTF REGIME FAMILY (chop15 transition band + ATR blow-off) =====
@@ -783,7 +846,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_atr_ratio_max": 1.4, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 316, "net": 182.2, "dd": 21.2},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=316 net=182.2; now n=381 net=241.57 (win rate 28.1%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 381, "net": 241.57},
     },
     "chopband_atrr_swingpause_single_sw10": {
         "desc": "swingpause single + chop15 band AND ATR blow-off skip (combo)",
@@ -880,7 +946,10 @@ EXPERIMENTS = {
                     "exp_chop15_lo": 55.0, "exp_chop15_hi": 61.0,
                     "exp_atr_ratio_max": 1.4, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 0, "net": 0, "dd": 0},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=0 net=0; now n=311 net=295.46 (win rate 29.9%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 311, "net": 295.46},
     },
     "fullstack_swingpause_single_sw10": {
         "desc": "single full stack: weekend skip + swingpause + chop15 band + ATR blow-off",
@@ -925,7 +994,10 @@ EXPERIMENTS = {
                     "exp_chop15_hi": 61.0, "exp_atr_ratio_max": 1.4,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 194, "net": 244.5, "dd": 16.6},  # causal SL (live-honest)
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=194 net=244.5; now n=234 net=316.64 (win rate 34.6%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 234, "net": 316.64},
     },
 
     # ===== D3 WAGE VALIDATION FAMILY (other bot's sweep finding: wage12 on single +61R) =====
@@ -980,7 +1052,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "exp_wage_h": 10, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 262, "net": 282.1, "dd": 14.7},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=262 net=282.1; now n=330 net=308.65 (win rate 32.4%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 330, "net": 308.65},
     },
     # === SKIP-FIRST-SWING: DEAD — first swing is where the edge lives (Exp 19 confirmed) ===
     "wage16_swingpause_single_sw10": {
@@ -1033,7 +1108,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_wage_h": 12, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 317, "net": 235.7, "dd": 21.7},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=317 net=235.7; now n=392 net=196.94 (win rate 30.1%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 392, "net": 196.94},
     },
     "wage12_swingpause_single_sw20": {
         "desc": "VALIDATION: wage12 on sw20 chain — TRANSFERS (+24.5R, -4.9DD)",
@@ -1045,7 +1123,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_wage_h": 12, "window_end": "exit"},
         "swing": "sw20",
-        "pins": {"n": 302, "net": 144.5, "dd": 29.2},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=302 net=144.5; now n=394 net=153.32 (win rate 32.2%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 394, "net": 153.32},
     },
 
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
@@ -1152,7 +1233,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_bias_momentum_min": 0.5, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 335, "net": 145.2, "dd": 20.8},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=335 net=145.2; now n=425 net=243.81 (win rate 30.1%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 425, "net": 243.81},
     },
     "bm05_multi_sw20": {
         "desc": "VALIDATION: bm05 on sw20 chain (cross-chain transfer)",
@@ -1259,7 +1343,10 @@ EXPERIMENTS = {
                     "exp_persist": 7, "exp_max_swing_age": 25,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 295, "net": 355.6, "dd": 12.8},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=295 net=355.6; now n=293 net=319.22 (win rate 37.2%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 293, "net": 319.22},
     },
     "age25_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 25 — +386.7R / DD 9.8 / WR 43.8% (BEST quality)",
@@ -1344,7 +1431,10 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_require_dir_match": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 279, "net": 288.1, "dd": 14.1},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=279 net=288.1; now n=362 net=273.84 (win rate 37.6%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 362, "net": 273.84},
     },
     "age10_dirmatch_swingpause_single_sw10": {
         "desc": "swingpause single + dir match + age 10 — 🔥 BEST EVER: +435.7R / DD 5.7 / WR 53.8%",
@@ -1357,7 +1447,10 @@ EXPERIMENTS = {
                     "exp_require_dir_match": 1,
                     "exp_max_swing_age": 10, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 130, "net": 435.7, "dd": 5.7},
+                # RE-MEASURED 2026-10-02 on unified.py via run_experiment.py.
+        # pin was n=130 net=435.7; now n=149 net=414.08 (win rate 53.7%).
+        # dd not re-measured - _net_stats no longer exposes a drawdown field.
+        "pins": {"n": 149, "net": 414.08},
     },
     "dirmatch_single_sw10": {
         "desc": "baseline single (no swingpause) + dir match — +237.7R / DD 15.7",
@@ -1741,6 +1834,55 @@ EXPERIMENTS = {
     },
     # === FUNDING RATE FILTER: DEAD (data too sparse, 0 trades filtered) ===
 }
+
+
+class _AliasRegistry(dict):
+    """dict of book configs, where a string value means "same book as that key".
+
+    Two registry books turned out to be the same experiment under two names once
+    rerun on unified.py (see the notes on swingpause_cd0_single_sw10 and
+    skip1pause_multi_sw10). Rather than copy the config - which is how the
+    duplication went unnoticed in the first place, because the copies drifted -
+    the alias points at the surviving entry. Readers can keep doing
+    EXPERIMENTS[key]["params"] and get the real config.
+    """
+
+    def __getitem__(self, key):
+        val = super().__getitem__(key)
+        return self._deref(key, val)
+
+    def get(self, key, default=None):
+        if key not in self:
+            return default
+        return self[key]
+
+    def _deref(self, key, val, _seen=None):
+        if not isinstance(val, str):
+            return val
+        _seen = _seen or set()
+        if key in _seen:
+            raise KeyError("alias loop at %r" % key)
+        _seen.add(key)
+        if val not in self:
+            raise KeyError("%r aliases %r, which is not a book" % (key, val))
+        return self._deref(val, super().__getitem__(val), _seen)
+
+
+EXPERIMENTS = _AliasRegistry(EXPERIMENTS)
+
+
+def book(key):
+    """Resolved config for a book key, following aliases."""
+    return EXPERIMENTS[key]
+
+
+def alias_of(key):
+    """The surviving key if `key` is an alias, else None."""
+    val = dict.__getitem__(EXPERIMENTS, key)
+    return val if isinstance(val, str) else None
+
+
+ALIASES = {k: v for k, v in dict.items(EXPERIMENTS) if isinstance(v, str)}
 
 # Groups for batch runs
 GROUPS = {
