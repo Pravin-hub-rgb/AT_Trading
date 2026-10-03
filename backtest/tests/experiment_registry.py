@@ -511,7 +511,8 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_skip_weekend": 1, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 400, "net": 307.8, "dd": 17.1},
+        # MEASURED 2026-10-02 on unified.py. The previous pin was 400 / +307.8;
+        # it reproduced under no stop rule and predated the C16 default change.`n        #`n        # One knob over the causal champion, widened from Saturday to the whole`n        # weekend. Measured on the same base:`n        #   no calendar filter     499 trades  +239.12`n        #   skip Saturday only      453         +279.47`n        #   skip Sat+Sun            403         +301.39`n        #   skip Sunday only        438         +173.10`n        #`n        # Saturday is where the edge is: skipping it is worth +40R, skipping`n        # Sunday instead loses 66R. So the weekend filter works, but almost all`n        # of it is the Saturday half - Sunday is a profitable day.`n        "pins": {"n": 403, "net": 301.39},
     },
     "nowknd_single_sw10": {
         "desc": "baseline single + SKIP WEEKEND entries — isolate weekend effect",
