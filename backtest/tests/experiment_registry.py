@@ -571,7 +571,15 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_mltf": True,
                     "exp_persist": 7, "exp_wage_h": 24, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 362, "net": 243.9, "dd": 23.1},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # Window-age sweep on the swingpause single base, cap in hours:
+        #   none 444/+241.06   4h 417/+248.23   8h 399/+263.15
+        #   10h 392/+267.23  12h 384/+264.00  16h 362/+243.70
+        #   20h 338/+218.94  24h 323/+225.08
+        # One smooth peak around 10h, so the age cap is picking up a real
+        # concentration rather than one lucky bar. Past ~16h it turns against.
+        "pins": {"n": 364, "net": 240.58},
     },
     "legskip2_multi_sw10": {
         "desc": "king + skip entry if HTF leg already progressed 2R (tighter ext)",
@@ -894,7 +902,15 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "exp_wage_h": 12, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 259, "net": 278.6, "dd": 16.6},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # Window-age sweep on the swingpause single base, cap in hours:
+        #   none 444/+241.06   4h 417/+248.23   8h 399/+263.15
+        #   10h 392/+267.23  12h 384/+264.00  16h 362/+243.70
+        #   20h 338/+218.94  24h 323/+225.08
+        # One smooth peak around 10h, so the age cap is picking up a real
+        # concentration rather than one lucky bar. Past ~16h it turns against.
+        "pins": {"n": 323, "net": 262.31},
     },
     "wage8_swingpause_single_sw10": {
         "desc": "VALIDATION: wage neighborhood 8h",
@@ -906,7 +922,15 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "exp_wage_h": 8, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 264, "net": 265.7, "dd": 14.7},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # Window-age sweep on the swingpause single base, cap in hours:
+        #   none 444/+241.06   4h 417/+248.23   8h 399/+263.15
+        #   10h 392/+267.23  12h 384/+264.00  16h 362/+243.70
+        #   20h 338/+218.94  24h 323/+225.08
+        # One smooth peak around 10h, so the age cap is picking up a real
+        # concentration rather than one lucky bar. Past ~16h it turns against.
+        "pins": {"n": 329, "net": 247.85},
     },
     "wage10_swingpause_wskip_single_sw10": {
         "desc": "KING SINGLE: wage 10h + swing pause + IST weekend skip — cd=0 redundant with swingpause",
@@ -931,7 +955,15 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "exp_wage_h": 16, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 246, "net": 270.8, "dd": 15.3},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # Window-age sweep on the swingpause single base, cap in hours:
+        #   none 444/+241.06   4h 417/+248.23   8h 399/+263.15
+        #   10h 392/+267.23  12h 384/+264.00  16h 362/+243.70
+        #   20h 338/+218.94  24h 323/+225.08
+        # One smooth peak around 10h, so the age cap is picking up a real
+        # concentration rather than one lucky bar. Past ~16h it turns against.
+        "pins": {"n": 302, "net": 244.80},
     },
     "wage20_swingpause_single_sw10": {
         "desc": "VALIDATION: wage neighborhood 20h — declines past the plateau",
@@ -943,7 +975,15 @@ EXPERIMENTS = {
                     "exp_partial_r": 0.0, "exp_swingpause": 1,
                     "exp_skip_weekend": 1, "exp_wage_h": 20, "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 234, "net": 212.6, "dd": 15.1},
+                # RE-MEASURED 2026-10-02 on unified.py. Previous pin predated the C16
+        # default change.
+        # Window-age sweep on the swingpause single base, cap in hours:
+        #   none 444/+241.06   4h 417/+248.23   8h 399/+263.15
+        #   10h 392/+267.23  12h 384/+264.00  16h 362/+243.70
+        #   20h 338/+218.94  24h 323/+225.08
+        # One smooth peak around 10h, so the age cap is picking up a real
+        # concentration rather than one lucky bar. Past ~16h it turns against.
+        "pins": {"n": 283, "net": 205.35},
     },
     "wage12_swingpause_single_nowknd_sw10": {
         "desc": "VALIDATION: wage12 WITHOUT weekend skip (stack interaction) — wage works alone (+60.9R)",
