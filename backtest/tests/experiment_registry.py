@@ -194,6 +194,122 @@ EXPERIMENTS = {
                  "oos_n": 234, "oos_net": 104.98, "oos_dd": 52.50},
     },
 
+    # ===== TRAIL SWEEP SURFACE (swept 2026-10-02, IS+OOS) =====
+    "trail_half_skipn8_nodelay": {
+        "desc": "champion leg + half ratchet + skip first 8 swing events, NO delay",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 8},
+        "swing": "sw10",
+        # SWEPT 2026-10-02 on this engine, IS + OOS, 6x7 grid. half=1 held
+        # on throughout. Rows are exp_trail_delay_r, columns exp_trail_skip_n.
+        #
+        # IS net R                        OOS net R
+        #          sn=0   sn=2   sn=3   sn=4   sn=6   sn=8  sn=12      sn=0   sn=2   sn=3   sn=4   sn=6   sn=8  sn=12
+        # dr=0.0    385   518   562   550   589   589   573       71.7   70.4   98.6  105.2  103.9  113.3  117.1
+        # dr=0.5    391   525   572   557   589   589   573       68.8   69.2   98.2  104.9  103.9  113.3  117.1
+        # dr=1.0    386   525   572   557   589   589   573       88.7   89.0   97.7  105.0  100.1  104.0  107.3
+        # dr=1.5    393   540   583   576   606   593   580      111.7  113.6  106.7  114.1  109.0  108.4  110.7
+        # dr=2.0    379   527   569   565   589   577   580      114.7  117.7  114.5  128.9  117.9  118.2  110.6
+        # dr=3.0    417   563   592   587   615   608   594      123.6  117.8  122.4  130.4  118.9  119.3  111.0
+        #
+        # baseline (shipped): IS 499 / +239.12 / dd 46.85   OOS 280 / +72.79 / dd 50.55
+        #
+        # TWO THINGS THIS SWEEP CHANGED ABOUT THE EARLIER READING.
+        #
+        # 1. 38 of 42 cells beat the baseline on BOTH eras. That is a plateau,
+        #    not a spike, and it is the opposite shape to the cap_days result,
+        #    where one value peaked and its neighbours wobbled. A surface where
+        #    almost everywhere is better is very hard to produce by fitting the
+        #    knobs to the sample.
+        #
+        # 2. exp_trail_delay_r is nearly INERT, and the inherited arm over-valued
+        #    it. delay_r=1.0 was one of the two unverified values flagged as the
+        #    weak point of the result. It turns out dr=0.0 with skip_n=8 measures
+        #    IS +588.76 / OOS +113.28 against dr=1.0's +588.76 / +113.28 - the
+        #    same book. The whole gain is skip_n; the delay was carrying nothing.
+        #    The 2026-09-24 study paired them and the pair was read as one finding.
+        #
+        # The 4 cells that fail the both-era test are all small skip_n at low
+        # delay_r: (0,0), (0.5,0), (0,2), (0.5,2) - i.e. skip_n <= 2 with the
+        # delay off. skip_n >= 3 is where OOS starts working. So the requirement
+        # is on skip_n, not on the delay.
+        #
+        # Best combined cell is dr=3.0 sn=6 (IS +615.15 / OOS +118.86), but
+        # dr=3.0 is the edge of the swept range, so it is the least trustworthy
+        # point on the grid rather than the best. Nothing here should be adopted
+        # on the strength of the sweep alone - what it establishes is that the
+        # effect is broad and survives OOS, which the single inherited point could
+        # not show.
+        "pins": {"n": 383, "net": 588.76, "dd": 45.46,
+                 "oos_n": 211, "oos_net": 113.28, "oos_dd": 49.56},
+    },
+    "trail_half_skipn3_nodelay": {
+        "desc": "champion leg + half ratchet + skip first 3 swing events, NO delay",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 3},
+        "swing": "sw10",
+        # Part of the swept surface - see trail_half_skipn8_nodelay.
+        "pins": {"n": 449, "net": 561.98, "dd": 43.30,
+                 "oos_n": 253, "oos_net": 98.60, "oos_dd": 61.40},
+    },
+    "trail_half_skipn6_dr3": {
+        "desc": "champion leg + half ratchet + skip 6 events + delay to +3R",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 6, "exp_trail_delay_r": 3.0},
+        "swing": "sw10",
+        # Part of the swept surface - see trail_half_skipn8_nodelay.
+        "pins": {"n": 373, "net": 615.15, "dd": 46.15,
+                 "oos_n": 208, "oos_net": 118.86, "oos_dd": 45.50},
+    },
+    "trail_half_dr3_nodelay": {
+        "desc": "champion leg + half ratchet + delay to +3R, no skip_n",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 3.0},
+        "swing": "sw10",
+        # Part of the swept surface - see trail_half_skipn8_nodelay.
+        "pins": {"n": 412, "net": 416.92, "dd": 44.80,
+                 "oos_n": 232, "oos_net": 123.60, "oos_dd": 32.16},
+    },
+    "trail_half_skipn8_dr1": {
+        "desc": "champion leg + half ratchet + skip 8 + delay 1R (original arm family)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 8, "exp_trail_delay_r": 1.0},
+        "swing": "sw10",
+        # Part of the swept surface - see trail_half_skipn8_nodelay.
+        "pins": {"n": 383, "net": 588.76, "dd": 45.46,
+                 "oos_n": 216, "oos_net": 103.96, "oos_dd": 58.88},
+    },
+
     # ===== P4 cap_days family (reproduced on unified.py 2026-10-02) =====
     "cap1d": {
         "desc": "cap_days 1 days",

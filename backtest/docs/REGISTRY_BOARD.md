@@ -8,55 +8,55 @@ Every book in `experiment_registry.py`, re-measured on `unified.py` through
 
 `champion` is a book name, not a claim of highest net R.
 
-Books whose pins also carry `oos_*` were additionally measured on true OOS
-(2021-22). Everything else is IS only.
+OOS column is true out-of-sample 2021-22, measured only for the trail family.
+It is the column that matters: several books with high IS do not survive it.
 
-## Top 25 by net R (IS)
+## Top 25 by IS net R
 
-| # | book | n | net R | gross R | dd R | wr % | OOS net R |
-|---|------|--:|------:|--------:|-----:|----:|----------:|
-| 1 | `trail_half_delay1_skipn4` | 424 | +556.62 | +679.02 | 44.47 | 23.1 | +104.98 |
-| 2 | `dirmatch_multi_sw10` | 389 | +444.21 | +533.97 | 24.01 | 38.8 | - |
-| 3 | `dirmatch_single_sw10` | 392 | +442.72 | +532.64 | 31.02 | 39.5 | - |
-| 4 | `age10_dirmatch_multi_sw10` | 150 | +417.68 | +462.24 | 13.45 | 51.3 | - |
-| 5 | `age10_dirmatch_swingpause_single_sw10` | 149 | +414.08 | +457.69 | 12.90 | 53.7 | - |
-| 6 | `trail_half_delay1` | 465 | +385.92 | +507.75 | 51.39 | 27.3 | +88.74 |
-| 7 | `trail_half` | 468 | +384.99 | +508.78 | 51.10 | 26.9 | +71.73 |
-| 8 | `cap32d` | 522 | +375.53 | +499.86 | 48.39 | 30.5 | - |
-| 9 | `cap999_nocap` | 592 | +360.87 | +501.26 | 54.25 | 30.1 | - |
-| 10 | `utcsat_entry_minus_1` | 454 | +358.92 | +466.44 | 21.18 | 30.8 | - |
-| 11 | `trail_skipn4` | 439 | +357.15 | +472.87 | 43.96 | 23.9 | +61.05 |
-| 12 | `age25_dirmatch_multi_sw10` | 248 | +357.01 | +416.47 | 21.47 | 43.5 | - |
-| 13 | `cap48d` | 556 | +351.27 | +480.85 | 54.25 | 29.9 | - |
-| 14 | `lb30_w24_ext2.0` | 380 | +344.61 | +441.61 | 36.58 | 35.8 | - |
-| 15 | `utcsat_cap999_nocap` | 537 | +336.98 | +462.55 | 42.82 | 30.0 | - |
-| 16 | `lb30_w24_ext1.5` | 337 | +336.67 | +425.66 | 35.92 | 36.8 | - |
-| 17 | `champion_multi_sw10` | 500 | +325.78 | +445.22 | 27.72 | 30.0 | - |
-| 18 | `champion_multi_sw10_leg_no_entry` | 500 | +325.75 | +445.19 | 27.72 | 30.0 | - |
-| 19 | `champion_multi_sw10_entry1` | 500 | +325.75 | +445.19 | 27.72 | 30.0 | - |
-| 20 | `age25_multi_sw10` | 293 | +319.22 | +392.64 | 25.86 | 37.2 | - |
-| 21 | `fullstack_wage10_cd0_single_sw10` | 234 | +316.64 | +372.69 | 23.96 | 34.6 | - |
-| 22 | `utcsat_chopband_multi_sw10` | 392 | +315.45 | +407.37 | 36.41 | 31.6 | - |
-| 23 | `lb30_w24_ext2.5` | 405 | +315.08 | +419.56 | 42.82 | 35.3 | - |
-| 24 | `lb30_w24_ext3.0` | 415 | +314.51 | +420.18 | 42.27 | 35.4 | - |
-| 25 | `wage10_swingpause_wskip_single_sw10` | 330 | +308.65 | +385.19 | 26.27 | 32.4 | - |
+| # | book | IS n | IS net R | IS dd R | OOS n | OOS net R | OOS dd R |
+|---|------|------:|---------:|-------:|------:|----------:|---------:|
+| 1 | `trail_half_skipn6_dr3` | 373 | +615.15 | 46.15 | 208 | +118.86 | 45.50 |
+| 2 | `trail_half_skipn8_nodelay` | 383 | +588.76 | 45.46 | 211 | +113.28 | 49.56 |
+| 3 | `trail_half_skipn8_dr1` | 383 | +588.76 | 45.46 | 216 | +103.96 | 58.88 |
+| 4 | `trail_half_skipn3_nodelay` | 449 | +561.98 | 43.30 | 253 | +98.60 | 61.40 |
+| 5 | `trail_half_delay1_skipn4` | 424 | +556.62 | 44.47 | 234 | +104.98 | 52.50 |
+| 6 | `dirmatch_multi_sw10` | 389 | +444.21 | 24.01 | - | - | - |
+| 7 | `dirmatch_single_sw10` | 392 | +442.72 | 31.02 | - | - | - |
+| 8 | `age10_dirmatch_multi_sw10` | 150 | +417.68 | 13.45 | - | - | - |
+| 9 | `trail_half_dr3_nodelay` | 412 | +416.92 | 44.80 | 232 | +123.60 | 32.16 |
+| 10 | `age10_dirmatch_swingpause_single_sw10` | 149 | +414.08 | 12.90 | - | - | - |
+| 11 | `trail_half_delay1` | 465 | +385.92 | 51.39 | 272 | +88.74 | 51.72 |
+| 12 | `trail_half` | 468 | +384.99 | 51.10 | 269 | +71.73 | 52.08 |
+| 13 | `cap32d` | 522 | +375.53 | 48.39 | - | - | - |
+| 14 | `cap999_nocap` | 592 | +360.87 | 54.25 | - | - | - |
+| 15 | `utcsat_entry_minus_1` | 454 | +358.92 | 21.18 | - | - | - |
+| 16 | `trail_skipn4` | 439 | +357.15 | 43.96 | 243 | +61.05 | 75.60 |
+| 17 | `age25_dirmatch_multi_sw10` | 248 | +357.01 | 21.47 | - | - | - |
+| 18 | `cap48d` | 556 | +351.27 | 54.25 | - | - | - |
+| 19 | `lb30_w24_ext2.0` | 380 | +344.61 | 36.58 | - | - | - |
+| 20 | `utcsat_cap999_nocap` | 537 | +336.98 | 42.82 | - | - | - |
+| 21 | `lb30_w24_ext1.5` | 337 | +336.67 | 35.92 | - | - | - |
+| 22 | `champion_multi_sw10` | 500 | +325.78 | 27.72 | - | - | - |
+| 23 | `champion_multi_sw10_leg_no_entry` | 500 | +325.75 | 27.72 | - | - | - |
+| 24 | `champion_multi_sw10_entry1` | 500 | +325.75 | 27.72 | - | - | - |
+| 25 | `age25_multi_sw10` | 293 | +319.22 | 25.86 | - | - | - |
 
-## Bottom 12 by net R
+## Bottom 12 by IS net R
 
 | # | book | n | net R | dd R | wr % |
 |---|------|--:|------:|-----:|----:|
-| 121 | `partial1_multi_sw10` | 553 | +50.19 | 43.84 | 41.4 |
-| 122 | `skipwinhalt_single_sw10` | 328 | +29.64 | 60.09 | 27.4 |
-| 123 | `skipwinhalt_multi_sw10` | 323 | +28.35 | 45.34 | 26.9 |
-| 124 | `cap4d` | 385 | -35.21 | 57.45 | 26.8 |
-| 125 | `skipwin1_multi_sw10` | 145 | -38.54 | 52.54 | 19.3 |
-| 126 | `skip1pause_multi_sw10` | 145 | -38.54 | 52.54 | 19.3 |
-| 127 | `skipwin1_single_sw10` | 148 | -38.88 | 53.91 | 20.3 |
-| 128 | `cap1d` | 236 | -49.73 | 84.28 | 19.5 |
-| 129 | `skipwin2_multi_sw10` | 101 | -65.33 | 66.47 | 13.9 |
-| 130 | `trail10_multi` | 246 | -247.51 | 248.22 | 17.8 |
-| 131 | `trail06_swingpause_single` | 233 | -276.56 | 276.56 | 14.9 |
-| 132 | `trail10_swingpause_single` | 328 | -311.27 | 313.38 | 22.5 |
+| 126 | `partial1_multi_sw10` | 553 | +50.19 | 43.84 | 41.4 |
+| 127 | `skipwinhalt_single_sw10` | 328 | +29.64 | 60.09 | 27.4 |
+| 128 | `skipwinhalt_multi_sw10` | 323 | +28.35 | 45.34 | 26.9 |
+| 129 | `cap4d` | 385 | -35.21 | 57.45 | 26.8 |
+| 130 | `skipwin1_multi_sw10` | 145 | -38.54 | 52.54 | 19.3 |
+| 131 | `skip1pause_multi_sw10` | 145 | -38.54 | 52.54 | 19.3 |
+| 132 | `skipwin1_single_sw10` | 148 | -38.88 | 53.91 | 20.3 |
+| 133 | `cap1d` | 236 | -49.73 | 84.28 | 19.5 |
+| 134 | `skipwin2_multi_sw10` | 101 | -65.33 | 66.47 | 13.9 |
+| 135 | `trail10_multi` | 246 | -247.51 | 248.22 | 17.8 |
+| 136 | `trail06_swingpause_single` | 233 | -276.56 | 276.56 | 14.9 |
+| 137 | `trail10_swingpause_single` | 328 | -311.27 | 313.38 | 22.5 |
 
 ## Books with negative net
 
