@@ -1,0 +1,194 @@
+{
+ "is|champion_multi_sw10_leg|A_off": {
+  "n": 499,
+  "net": 239.12,
+  "dd": 46.85,
+  "mode": 0
+ },
+ "is|champion_multi_sw10_leg|B_block_buying": {
+  "n": 303,
+  "net": 263.9,
+  "dd": 30.18,
+  "mode": 1
+ },
+ "is|champion_multi_sw10_leg|C_block_selling": {
+  "n": 299,
+  "net": 154.64,
+  "dd": 34.02,
+  "mode": 2
+ },
+ "is|champion_multi_sw10_leg|D_own_side": {
+  "n": 353,
+  "net": 194.24,
+  "dd": 33.05,
+  "mode": 3
+ },
+ "is|champion_multi_sw10_leg|E_crossed": {
+  "n": 245,
+  "net": 254.21,
+  "dd": 28.76,
+  "mode": 4
+ },
+ "is|champion_multi_sw10_leg|F_allow_crossed": {
+  "n": 206,
+  "net": -43.62,
+  "dd": 66.8,
+  "mode": 5
+ },
+ "is|champion_multi_sw10_leg|G_allow_own": {
+  "n": 148,
+  "net": 40.92,
+  "dd": 57.57,
+  "mode": 7
+ },
+ "is|champion_multi_sw10_leg|H_allow_either": {
+  "n": 261,
+  "net": 17.03,
+  "dd": 59.13,
+  "mode": 8
+ },
+ "is|utcsat_multi_sw10|A_off": {
+  "n": 453,
+  "net": 279.47,
+  "dd": 35.54,
+  "mode": 0
+ },
+ "is|utcsat_multi_sw10|B_block_buying": {
+  "n": 270,
+  "net": 220.96,
+  "dd": 26.91,
+  "mode": 1
+ },
+ "is|utcsat_multi_sw10|C_block_selling": {
+  "n": 273,
+  "net": 173.31,
+  "dd": 30.16,
+  "mode": 2
+ },
+ "is|utcsat_multi_sw10|D_own_side": {
+  "n": 324,
+  "net": 150.08,
+  "dd": 32.45,
+  "mode": 3
+ },
+ "is|utcsat_multi_sw10|E_crossed": {
+  "n": 217,
+  "net": 250.36,
+  "dd": 25.9,
+  "mode": 4
+ },
+ "is|utcsat_multi_sw10|F_allow_crossed": {
+  "n": 191,
+  "net": -21.96,
+  "dd": 51.57,
+  "mode": 5
+ },
+ "is|utcsat_multi_sw10|G_allow_own": {
+  "n": 138,
+  "net": 50.72,
+  "dd": 41.95,
+  "mode": 7
+ },
+ "is|utcsat_multi_sw10|H_allow_either": {
+  "n": 246,
+  "net": 32.19,
+  "dd": 53.69,
+  "mode": 8
+ },
+ "oos|champion_multi_sw10_leg|A_off": {
+  "n": 280,
+  "net": 72.79,
+  "dd": 50.55,
+  "mode": 0
+ },
+ "oos|champion_multi_sw10_leg|B_block_buying": {
+  "n": 146,
+  "net": 70.97,
+  "dd": 16.32,
+  "mode": 1
+ },
+ "oos|champion_multi_sw10_leg|C_block_selling": {
+  "n": 166,
+  "net": 58.98,
+  "dd": 35.42,
+  "mode": 2
+ },
+ "oos|champion_multi_sw10_leg|D_own_side": {
+  "n": 176,
+  "net": 45.26,
+  "dd": 48.53,
+  "mode": 3
+ },
+ "oos|champion_multi_sw10_leg|E_crossed": {
+  "n": 139,
+  "net": 95.96,
+  "dd": 15.13,
+  "mode": 4
+ },
+ "oos|champion_multi_sw10_leg|F_allow_crossed": {
+  "n": 135,
+  "net": -29.3,
+  "dd": 37.55,
+  "mode": 5
+ },
+ "oos|champion_multi_sw10_leg|G_allow_own": {
+  "n": 108,
+  "net": -5.13,
+  "dd": 22.61,
+  "mode": 7
+ },
+ "oos|champion_multi_sw10_leg|H_allow_either": {
+  "n": 146,
+  "net": -21.82,
+  "dd": 41.72,
+  "mode": 8
+ },
+ "oos|utcsat_multi_sw10|A_off": {
+  "n": 254,
+  "net": 66.9,
+  "dd": 24.64,
+  "mode": 0
+ },
+ "oos|utcsat_multi_sw10|B_block_buying": {
+  "n": 128,
+  "net": 91.62,
+  "dd": 16.86,
+  "mode": 1
+ },
+ "oos|utcsat_multi_sw10|C_block_selling": {
+  "n": 142,
+  "net": 55.52,
+  "dd": 22.62,
+  "mode": 2
+ },
+ "oos|utcsat_multi_sw10|D_own_side": {
+  "n": 159,
+  "net": 70.77,
+  "dd": 19.73,
+  "mode": 3
+ },
+ "oos|utcsat_multi_sw10|E_crossed": {
+  "n": 118,
+  "net": 94.53,
+  "dd": 17.18,
+  "mode": 4
+ },
+ "oos|utcsat_multi_sw10|F_allow_crossed": {
+  "n": 122,
+  "net": -23.87,
+  "dd": 28.84,
+  "mode": 5
+ },
+ "oos|utcsat_multi_sw10|G_allow_own": {
+  "n": 94,
+  "net": 13.34,
+  "dd": 13.69,
+  "mode": 7
+ },
+ "oos|utcsat_multi_sw10|H_allow_either": {
+  "n": 132,
+  "net": -33.67,
+  "dd": 36.79,
+  "mode": 8
+ }
+}

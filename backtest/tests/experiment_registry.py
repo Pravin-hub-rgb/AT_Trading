@@ -194,6 +194,316 @@ EXPERIMENTS = {
                  "oos_n": 234, "oos_net": 104.98, "oos_dd": 52.50},
     },
 
+    # ===== P36 DECAY GATE (engine knob, measured 2026-10-02 IS+OOS) =====
+    "decayA_c": {
+        "desc": "champion leg + decay off (control)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg"},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 499, "net": 239.12, "dd": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd": 50.55},
+    },
+    "decayA_u": {
+        "desc": "utcsat + decay off (control)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg"},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 453, "net": 279.47, "dd": 35.54,
+                 "oos_n": 254, "oos_net": 66.90, "oos_dd": 24.64},
+    },
+    "decayB_c": {
+        "desc": "champion leg + decay block when BUYING decay >= 0.75",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 1},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 303, "net": 263.90, "dd": 30.18,
+                 "oos_n": 146, "oos_net": 70.97, "oos_dd": 16.32},
+    },
+    "decayB_u": {
+        "desc": "utcsat + decay block when BUYING decay >= 0.75",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 1},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 270, "net": 220.96, "dd": 26.91,
+                 "oos_n": 128, "oos_net": 91.62, "oos_dd": 16.86},
+    },
+    "decayC_c": {
+        "desc": "champion leg + decay block when SELLING decay >= 0.75",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 2},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 299, "net": 154.64, "dd": 34.02,
+                 "oos_n": 166, "oos_net": 58.98, "oos_dd": 35.42},
+    },
+    "decayC_u": {
+        "desc": "utcsat + decay block when SELLING decay >= 0.75",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 2},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 273, "net": 173.31, "dd": 30.16,
+                 "oos_n": 142, "oos_net": 55.52, "oos_dd": 22.62},
+    },
+    "decayD_c": {
+        "desc": "champion leg + decay block long on buying decay, short on selling decay",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 3},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 353, "net": 194.24, "dd": 33.05,
+                 "oos_n": 176, "oos_net": 45.26, "oos_dd": 48.53},
+    },
+    "decayD_u": {
+        "desc": "utcsat + decay block long on buying decay, short on selling decay",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 3},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 324, "net": 150.08, "dd": 32.45,
+                 "oos_n": 159, "oos_net": 70.77, "oos_dd": 19.73},
+    },
+    "decayE_c": {
+        "desc": "champion leg + decay block long on SELLING decay, short on buying decay (crossed)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 4},
+        "swing": "sw10",
+        # P36 DECAY GATE, measured as an ENTRY-TIME engine gate on 2026-10-02.
+        # Before this the decay rules existed only in exp_decay_*.py as a post-hoc
+        # filter over trades the engine had already booked, which is why no registry
+        # book existed for them. They are now real knobs (exp_decay_mode/thr/legs).
+        #
+        # Decay = of the last N CONFIRMED 15m legs in a direction, the fraction whose
+        # start level broke. An up-leg defends its start low. Causal: a leg is read
+        # only once confirmed at or before the entry bar.
+        #
+        # Rule          IS n / net / dd              OOS n / net / dd
+        # A off       499 / +239.12 / 46.85       280 /  +72.79 / 50.55
+        # B <-buying  303 / +263.90 / 30.18       146 /  +70.97 / 16.32
+        # C <-selling 299 / +154.64 / 34.02       166 /  +58.98 / 35.42
+        # D own side  353 / +194.24 / 33.05       176 /  +45.26 / 48.53
+        # E crossed   245 / +254.21 / 28.76       139 /  +95.96 / 15.13  <- best OOS
+        # F allow x   206 /  -43.62 / 66.80       135 /  -29.30 / 37.55
+        # G allow own 148 /  +40.92 / 57.57       108 /   -5.13 / 22.61
+        # H allow eith261 /  +17.03 / 59.13       146 /  -21.82 / 41.72
+        #
+        # Same shape on utcsat_multi_sw10: E crossed OOS +94.53 / dd 17.18 against
+        # the +66.90 / 24.64 baseline. E wins on BOTH books out of sample.
+        #
+        # Two things worth keeping in view. First, IS and OOS disagree about which
+        # rule is best - B is the best IS rule on both books and is roughly flat OOS,
+        # while E is mid-pack IS and the best OOS by a wide margin. Second, every
+        # ALLOW rule is bad, and F is the exact mirror of E differing only in sign,
+        # so the decay signal is directional: it tells you which side NOT to take.
+        # It is not a standalone entry signal.
+        "pins": {"n": 245, "net": 254.21, "dd": 28.76,
+                 "oos_n": 139, "oos_net": 95.96, "oos_dd": 15.13},
+    },
+    "decayE_u": {
+        "desc": "utcsat + decay block long on SELLING decay, short on buying decay (crossed)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 4},
+        "swing": "sw10",
+        # P36 DECAY GATE, measured as an ENTRY-TIME engine gate on 2026-10-02.
+        # Before this the decay rules existed only in exp_decay_*.py as a post-hoc
+        # filter over trades the engine had already booked, which is why no registry
+        # book existed for them. They are now real knobs (exp_decay_mode/thr/legs).
+        #
+        # Decay = of the last N CONFIRMED 15m legs in a direction, the fraction whose
+        # start level broke. An up-leg defends its start low. Causal: a leg is read
+        # only once confirmed at or before the entry bar.
+        #
+        # Rule          IS n / net / dd              OOS n / net / dd
+        # A off       499 / +239.12 / 46.85       280 /  +72.79 / 50.55
+        # B <-buying  303 / +263.90 / 30.18       146 /  +70.97 / 16.32
+        # C <-selling 299 / +154.64 / 34.02       166 /  +58.98 / 35.42
+        # D own side  353 / +194.24 / 33.05       176 /  +45.26 / 48.53
+        # E crossed   245 / +254.21 / 28.76       139 /  +95.96 / 15.13  <- best OOS
+        # F allow x   206 /  -43.62 / 66.80       135 /  -29.30 / 37.55
+        # G allow own 148 /  +40.92 / 57.57       108 /   -5.13 / 22.61
+        # H allow eith261 /  +17.03 / 59.13       146 /  -21.82 / 41.72
+        #
+        # Same shape on utcsat_multi_sw10: E crossed OOS +94.53 / dd 17.18 against
+        # the +66.90 / 24.64 baseline. E wins on BOTH books out of sample.
+        #
+        # Two things worth keeping in view. First, IS and OOS disagree about which
+        # rule is best - B is the best IS rule on both books and is roughly flat OOS,
+        # while E is mid-pack IS and the best OOS by a wide margin. Second, every
+        # ALLOW rule is bad, and F is the exact mirror of E differing only in sign,
+        # so the decay signal is directional: it tells you which side NOT to take.
+        # It is not a standalone entry signal.
+        "pins": {"n": 217, "net": 250.36, "dd": 25.90,
+                 "oos_n": 118, "oos_net": 94.53, "oos_dd": 17.18},
+    },
+    "decayF_c": {
+        "desc": "champion leg + decay ALLOW crossed only (mirror of E)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 5},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 206, "net": -43.62, "dd": 66.80,
+                 "oos_n": 135, "oos_net": -29.30, "oos_dd": 37.55},
+    },
+    "decayF_u": {
+        "desc": "utcsat + decay ALLOW crossed only (mirror of E)",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 5},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 191, "net": -21.96, "dd": 51.57,
+                 "oos_n": 122, "oos_net": -23.87, "oos_dd": 28.84},
+    },
+    "decayG_c": {
+        "desc": "champion leg + decay ALLOW own side only",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 7},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 148, "net": 40.92, "dd": 57.57,
+                 "oos_n": 108, "oos_net": -5.13, "oos_dd": 22.61},
+    },
+    "decayG_u": {
+        "desc": "utcsat + decay ALLOW own side only",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 7},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 138, "net": 50.72, "dd": 41.95,
+                 "oos_n": 94, "oos_net": 13.34, "oos_dd": 13.69},
+    },
+    "decayH_c": {
+        "desc": "champion leg + decay ALLOW either broken",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 8},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 261, "net": 17.03, "dd": 59.13,
+                 "oos_n": 146, "oos_net": -21.82, "oos_dd": 41.72},
+    },
+    "decayH_u": {
+        "desc": "utcsat + decay ALLOW either broken",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0, "cooldown_bars": 8,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg",
+                    "exp_decay_mode": 8},
+        "swing": "sw10",
+        # Part of the P36 decay grid - see decayE_*.
+        "pins": {"n": 246, "net": 32.19, "dd": 53.69,
+                 "oos_n": 132, "oos_net": -33.67, "oos_dd": 36.79},
+    },
+
     # ===== TRAIL SWEEP SURFACE (swept 2026-10-02, IS+OOS) =====
     "trail_half_skipn8_nodelay": {
         "desc": "champion leg + half ratchet + skip first 8 swing events, NO delay",

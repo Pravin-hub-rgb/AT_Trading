@@ -331,6 +331,16 @@ def simulate_htf_ltf_streak_halt(
     # an adoption: P49 itself records that no arm beats 16 in both eras by more
     # than noise, and that the sweep is non-monotonic.
     exp_cap_days=16,
+    # P36 decay gate. 0 = off, which is the default and keeps every historical
+    # book measured as-is. Modes are the P36 grid's rule letters: 1 block<-
+    # buying, 2 block<-selling, 3 own side, 4 crossed, 5-8 the ALLOW mirrors.
+    # The gate runs at the entry bar and reads only legs CONFIRMED by then, so
+    # it is causal in the same sense pivot_rule="leg" is.
+    exp_decay_mode=0,
+    # Fraction of the last N legs that must be broken to block. P36 used 0.75,
+    # i.e. three of four.
+    exp_decay_thr=0.75,
+    exp_decay_legs=4,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -391,6 +401,88 @@ def simulate_htf_ltf_streak_halt(
         j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
         if j>=0 and j < len(chop):
             chop_per_ltf[i]=chop[max(0,j)]
+    # --- DECAY GATE (P36) ---------------------------------------------------
+    # Of the last N CONFIRMED 15m legs in each direction, what fraction had
+    # their start level broken? An up-leg defends its start low, a down-leg
+    # defends its start high. High buying decay means recent buyers were
+    # stopped out, which is a reason not to buy.
+    #
+    # This lived only in exp_decay_*.py as a post-hoc filter over trades the
+    # engine had already booked. Written in as a real gate on 2026-10-02 so it
+    # can be a registry book and so the entry-time decision is the one that is
+    # recorded, rather than a trade being retroactively dropped.
+    #
+    # Strictly causal: a leg is read only once it is CONFIRMED at or before the
+    # entry bar, and the break scan runs from that confirmation to the entry bar
+    # and no further. Nothing here looks past the entry.
+    #
+    # Modes match the P36 grid's rule letters:
+    #   0 off
+    #   1 "both<-buying"  block when BUYING decay is high
+    #   2 "both<-selling" block when SELLING decay is high
+    #   3 "own side"      block a long on buying decay, a short on selling decay
+    #   4 "crossed"       block a long on SELLING decay, a short on buying decay
+    #   5-8 the ALLOW mirrors of 1-4. Kept because the grid measured them and
+    #      every one of them was badly negative - that is evidence, and an
+    #      evidence row should stay reproducible.
+    def _decay_legs(swings, want_dir):
+        # Own datetime import. The module's `import datetime as _dt` sits BELOW
+        # this block, so borrowing that name here is a NameError. Kept local
+        # rather than hoisting the module import so the ordering stays obvious.
+        import datetime as _dec_dt
+        out=[]
+        for sw in swings:
+            t=sw.get("confirmed_at_time","")
+            if isinstance(t,str) and len(t)>=19:
+                try: ts=int(_dec_dt.datetime.strptime(t[:19],"%Y-%m-%d %H:%M:%S").timestamp())
+                except Exception: continue
+            elif isinstance(t,(int,float)): ts=int(t)
+            else: continue
+            d=1 if sw.get("dir")=="up" else -1
+            if d!=want_dir: continue
+            seg=sw.get("seg",{}) or {}
+            px=float(seg.get("start_px",0) or 0)
+            if px<=0: continue
+            out.append((ts,px))
+        out.sort()
+        return out
+    _dec_up=_decay_legs(swings_ltf, 1)
+    _dec_dn=_decay_legs(swings_ltf, -1)
+    _dec_lo=[float(c["low"]) for c in candles_ltf]
+    _dec_hi=[float(c["high"]) for c in candles_ltf]
+    def _decay_frac(legs, series, is_low, t, n):
+        vis=[L for L in legs if L[0]<=t]
+        if not vis: return None
+        rec=vis[-n:]
+        j=bs.bisect_right(candle_ts_ltf,t)-1
+        if j<0: return None
+        br=0
+        for cts,px in rec:
+            a=bs.bisect_left(candle_ts_ltf,cts)
+            b=j
+            if b<a: continue
+            seg=series[a:b+1]
+            if not seg: continue
+            if is_low:
+                if min(seg)<px: br+=1
+            else:
+                if max(seg)>px: br+=1
+        return br/float(len(rec))
+    def _decay_blocks(mode, direction, t, thr, n):
+        if mode==0: return False
+        bu=_decay_frac(_dec_up,_dec_lo,True,t,n)
+        se=_decay_frac(_dec_dn,_dec_hi,False,t,n)
+        long_=direction>0
+        if mode==1: hit=bu is not None and bu>=thr
+        elif mode==2: hit=se is not None and se>=thr
+        elif mode==3: hit=(bu is not None and bu>=thr) if long_ else (se is not None and se>=thr)
+        elif mode==4: hit=(se is not None and se>=thr) if long_ else (bu is not None and bu>=thr)
+        elif mode==5: hit=bu is not None and bu<thr
+        elif mode==6: hit=se is not None and se<thr
+        elif mode==7: hit=(bu is not None and bu<thr) if long_ else (se is not None and se<thr)
+        elif mode==8: hit=(se is not None and se<thr) if long_ else (bu is not None and bu<thr)
+        else: return False
+        return bool(hit)
     # --- NEW MODE DATA: swing direction/magnitude per LTF bar ---
     import datetime as _dt
     def _sw_ts_dir_mag(swings):
@@ -524,6 +616,9 @@ def simulate_htf_ltf_streak_halt(
         bar=ltf_store.pos(bar_time)  # position via timestamp lookup
         if bar < 0 or bar >= len(candles_ltf): continue
         bar_ts=candle_ts_ltf[bar]
+        # P36 decay gate, evaluated at the entry bar on legs confirmed by then.
+        if _decay_blocks(exp_decay_mode, sig["dir"], bar_ts, exp_decay_thr, exp_decay_legs):
+            continue
         # regime at bar
         ch=chop_per_ltf[bar] if bar < len(chop_per_ltf) else 50.0
         atrp=atr_pct[bar] if bar < len(atr_pct) else 0.5
