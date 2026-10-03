@@ -57,7 +57,7 @@
   "pin_net": 239.12,
   "pin_dd_net": 46.85,
   "OK": true,
-  "secs": 11.8
+  "secs": 11.4
  },
  "gap_slbuf025": {
   "n": 497,
@@ -407,7 +407,7 @@
   "pin_net": 239.12,
   "pin_dd_net": 46.85,
   "OK": true,
-  "secs": 11.6
+  "secs": 11.7
  },
  "gap_window_r_cap2": {
   "n": 449,
@@ -1597,7 +1597,7 @@
   "pin_net": -311.27,
   "pin_dd_net": 313.38,
   "OK": true,
-  "secs": 20.7
+  "secs": 22.2
  },
  "trail06_swingpause_single": {
   "n": 233,

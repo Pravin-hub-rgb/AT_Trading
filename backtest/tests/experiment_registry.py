@@ -196,6 +196,7 @@ EXPERIMENTS = {
 
     "gap_inert_event_shift": {
         "desc": "champion leg + scheduled-event shift +/-24h, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -419,6 +420,7 @@ EXPERIMENTS = {
     },
     "gap_inert_chop52": {
         "desc": "champion leg + chop_thresh 52, MEASURED INERT under atr_high",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35,
@@ -434,6 +436,7 @@ EXPERIMENTS = {
     },
     "gap_inert_chop61": {
         "desc": "champion leg + chop_thresh 61, MEASURED INERT under atr_high",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35,
@@ -449,6 +452,7 @@ EXPERIMENTS = {
     },
     "gap_inert_lb50": {
         "desc": "champion leg + exp31_lb 50, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35,
@@ -464,6 +468,7 @@ EXPERIMENTS = {
     },
     "gap_inert_lb60": {
         "desc": "champion leg + exp31_lb 60, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35,
@@ -479,6 +484,7 @@ EXPERIMENTS = {
     },
     "gap_inert_htfrr3": {
         "desc": "champion leg + htf_rr 3.0 (shipped value, control)",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35,
@@ -515,6 +521,7 @@ EXPERIMENTS = {
     },
     "gap_campaign1": {
         "desc": "champion leg + campaign max total 1",
+        "status": "reference",   # dead: net -34.78R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -545,6 +552,7 @@ EXPERIMENTS = {
     },
     "gap_inert_cohort1": {
         "desc": "champion leg + cohort gate n=1, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -796,6 +804,7 @@ EXPERIMENTS = {
     },
     "gap_campaign_mark05": {
         "desc": "champion leg + campaign requires +0.5R marked",
+        "status": "reference",   # dead: net -4.69R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -811,6 +820,7 @@ EXPERIMENTS = {
     },
     "gap_inert_winkill2": {
         "desc": "champion leg + win-kill at 2, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -826,6 +836,7 @@ EXPERIMENTS = {
     },
     "gap_inert_winkill3": {
         "desc": "champion leg + win-kill at 3, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -841,6 +852,7 @@ EXPERIMENTS = {
     },
     "gap_inert_lossstreak": {
         "desc": "champion leg + loss-streak halt at 3, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -856,6 +868,7 @@ EXPERIMENTS = {
     },
     "gap_inert_cohort2": {
         "desc": "champion leg + cohort gate, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -871,6 +884,7 @@ EXPERIMENTS = {
     },
     "gap_inert_curfew44": {
         "desc": "champion leg + curfew 4h/4h, MEASURED INERT (degenerate band)",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1007,6 +1021,7 @@ EXPERIMENTS = {
     },
     "gap_loss_kill1": {
         "desc": "champion leg + kill window after 1 loss",
+        "status": "reference",   # dead: net -29.83R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1039,6 +1054,7 @@ EXPERIMENTS = {
     },
     "gap_ma_trail": {
         "desc": "champion leg + MA trail period 20",
+        "status": "reference",   # dead: net -67.38R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1071,6 +1087,7 @@ EXPERIMENTS = {
     },
     "gap_window_entry_cap1": {
         "desc": "champion leg + 1 entry per window",
+        "status": "reference",   # dead: net -33.79R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1150,6 +1167,7 @@ EXPERIMENTS = {
     },
     "gap_inert_geom": {
         "desc": "champion leg + geometry gates, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1166,6 +1184,7 @@ EXPERIMENTS = {
     },
     "gap_inert_kill": {
         "desc": "champion leg + streak gates, MEASURED INERT",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1182,6 +1201,7 @@ EXPERIMENTS = {
     },
     "gap_inert_chop65": {
         "desc": "champion leg + chop_thresh 65, MEASURED INERT under atr_high",
+        "status": "reference",   # measured inert - not a candidate.
         "engine": "patched",
         "params": {
                     "mode": "atr_high",
@@ -1419,6 +1439,7 @@ EXPERIMENTS = {
     },
     "decayF_c": {
         "desc": "champion leg + decay ALLOW crossed only (mirror of E)",
+        "status": "reference",   # dead: net -43.62R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1435,6 +1456,7 @@ EXPERIMENTS = {
     },
     "decayF_u": {
         "desc": "utcsat + decay ALLOW crossed only (mirror of E)",
+        "status": "reference",   # dead: net -21.96R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1633,6 +1655,7 @@ EXPERIMENTS = {
     # ===== P4 cap_days family (reproduced on unified.py 2026-10-02) =====
     "cap1d": {
         "desc": "cap_days 1 days",
+        "status": "reference",   # dead: net -49.73R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -1647,6 +1670,7 @@ EXPERIMENTS = {
     },
     "cap4d": {
         "desc": "cap_days 4 days",
+        "status": "reference",   # dead: net -35.21R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -2335,6 +2359,7 @@ EXPERIMENTS = {
 
     "skipwin1_multi_sw10": {
         "desc": "king + skip the next HTF window opened after a loss",
+        "status": "reference",   # dead: net -38.54R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -2354,6 +2379,7 @@ EXPERIMENTS = {
     },
     "skipwin2_multi_sw10": {
         "desc": "king + skip the next 2 HTF windows opened after a loss",
+        "status": "reference",   # dead: net -65.33R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -2399,6 +2425,7 @@ EXPERIMENTS = {
     "skip1pause_multi_sw10": "skipwin1_multi_sw10",
     "skipwin1_single_sw10": {
         "desc": "baseline single + skip the next HTF window opened after a loss",
+        "status": "reference",   # dead: net -38.88R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -3387,6 +3414,7 @@ EXPERIMENTS = {
 
     "trail10_swingpause_single": {
         "desc": "swingpause single + skip trail levels > 1.0% from entry",
+        "status": "reference",   # dead: net -311.27R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -3405,6 +3433,7 @@ EXPERIMENTS = {
     },
     "trail06_swingpause_single": {
         "desc": "swingpause single + skip trail levels > 0.6% from entry",
+        "status": "reference",   # dead: net -276.56R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
@@ -3423,6 +3452,7 @@ EXPERIMENTS = {
     },
     "trail10_multi": {
         "desc": "king + skip trail levels > 1.0% from entry",
+        "status": "reference",   # dead: net -247.51R - not a candidate.
         "engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,

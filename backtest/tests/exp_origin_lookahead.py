@@ -289,6 +289,41 @@ def check_registry_hygiene():
     # measured, so no pin was wrong - but the file does not describe itself, and
     # the next edit would be operating on a lie.
     print()
+    # --- 5. nothing that lost money or did nothing may be a CANDIDATE
+    #
+    # A registry book means "a thing worth acting on". Thirty books here measure
+    # a negative net or a knob that provably does not fire - they are kept,
+    # because the measurement is real and exp_pinverify still checks it, but
+    # they are status="reference" so nobody reads them as live candidates.
+    #
+    # The rule for anything added from here: a negative or inert result goes in
+    # a doc as one line, not into the registry.
+    print()
+    print("  candidate hygiene (a losing or inert book must be marked reference)")
+    unmarked = []
+    for key, cfg in reg.EXPERIMENTS.items():
+        if not isinstance(cfg, dict):
+            continue
+        p2 = cfg.get("pins", {})
+        if not p2.get("n"):
+            continue
+        if cfg.get("status") == "reference":
+            continue
+        if p2["net"] < 0 or "inert" in key:
+            unmarked.append(key)
+    if unmarked:
+        for k in sorted(unmarked):
+            print("    %-38s net %s but not marked reference"
+                  % (k, reg.EXPERIMENTS[k]["pins"]["net"]))
+        problems.append("%d losing/inert book(s) not marked reference" % len(unmarked))
+    else:
+        n_ref = sum(1 for c in reg.EXPERIMENTS.values()
+                    if isinstance(c, dict) and c.get("status") == "reference")
+        n_all = sum(1 for c in reg.EXPERIMENTS.values()
+                    if isinstance(c, dict) and c.get("pins", {}).get("n"))
+        print("    %d of %d books marked reference; the rest are candidates"
+              % (n_ref, n_all))
+
     print("  duplicate-params-key check (a repeated key silently keeps the last)")
     n_dup = 0
     cur_lines = src.split("\n")
