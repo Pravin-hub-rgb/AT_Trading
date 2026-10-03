@@ -280,6 +280,46 @@ def check_registry_hygiene():
     if not problems:
         print("    %d families checked, no book inherits a contested knob" % n_groups)
 
+    # --- 4. no params dict may name the same knob twice
+    #
+    # A Python dict literal silently keeps the LAST value for a repeated key, so
+    # a book written as {"cooldown_bars": 8, ..., "cooldown_bars": 15} measures 15
+    # and reads as 8 to anyone scanning the file. Seven books were written that
+    # way during this session. The values happened to match what the sweep
+    # measured, so no pin was wrong - but the file does not describe itself, and
+    # the next edit would be operating on a lie.
+    print()
+    print("  duplicate-params-key check (a repeated key silently keeps the last)")
+    n_dup = 0
+    cur_lines = src.split("\n")
+    starts = [i for i, l in enumerate(cur_lines)
+              if re.match(r'    "[A-Za-z0-9_.]+":\s*\{', l)]
+    for n2, st in enumerate(starts):
+        en = starts[n2 + 1] if n2 + 1 < len(starts) else len(cur_lines)
+        m2 = re.match(r'    "([A-Za-z0-9_.]+)"', cur_lines[st])
+        if not m2:
+            continue
+        for i in range(st, en):
+            if '"params":' not in cur_lines[i]:
+                continue
+            j = i
+            while j < en and not re.search(r'\}\s*,\s*$', cur_lines[j]):
+                j += 1
+            body = "\n".join(cur_lines[i:j + 1])
+            names = re.findall(r'"([a-z0-9_]+)":', body)
+            seen2 = set()
+            for nm in names:
+                if nm in seen2:
+                    print("    %-34s params names %r more than once"
+                          % (m2.group(1), nm))
+                    n_dup += 1
+                seen2.add(nm)
+            break
+    if not n_dup:
+        print("    no book names the same knob twice")
+    else:
+        problems.append("%d duplicate params key(s)" % n_dup)
+
     print()
     if problems:
         print("RESULT: FAIL")
