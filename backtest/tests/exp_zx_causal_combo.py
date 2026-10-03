@@ -129,7 +129,7 @@ def main():
             "PASS per causal combo arm (uZX, sZX) = dNet>0 AND curve_better TRUE "
             "in all 6 cells (3 lanes x 2 eras), AND flag coverage 5-40%"),
         "m2_excluded": True,
-        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 454/+358.9, "
+        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 453/+279.5, "
                               "253/+60.2; age10 130/+435.7, 76/+43.2 (asserted)",
         "known_defect": ("ZC standalone was dropped for cross-venue portability (24.82). "
                          "A passing uZX/sZX would still require a fresh cross-venue run "

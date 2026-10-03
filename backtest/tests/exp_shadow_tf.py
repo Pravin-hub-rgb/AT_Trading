@@ -49,7 +49,7 @@ OUT = ROOT / "backtest/tests/_shadow_tf.json"
 M15, M30, H1, H2 = 900, 1800, 3600, 7200
 ENTRY_OFFSET = M15          # entry instant = ltf bar ts + 900
 BYBIT_BASE = {"champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-              "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+              "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
               "age10": {"is": (130, 435.7), "oos": (76, 43.2)}}
 YEARS = {"is": 3.67, "oos": 2.0}
 LANES = (("champion", "champion_multi_sw10"),

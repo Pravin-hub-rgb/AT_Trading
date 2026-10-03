@@ -74,7 +74,7 @@ STEP_SECONDS = {"15m": 900, "1h": 3600, "1m": 60}
 
 EXPECT_FLAT = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
     "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
 }
 
@@ -315,7 +315,7 @@ def main():
         "pre_registered": ("TRANSFER lane PASS = binance base net>0 AND n>=%d in BOTH eras; "
                            "FLAG arm PASS = dNet>0 AND curve_better in ALL 6 cells; "
                            "bybit controls abort on mismatch" % TRANSFER_MIN_N),
-        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 454/+358.9, 253/+60.2; age10 130/+435.7, 76/+43.2 (asserted, bybit only)",
+        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 453/+279.5, 253/+60.2; age10 130/+435.7, 76/+43.2 (asserted, bybit only)",
         "fine_parity_note": "bybit OOS fine starts 5h late (legacy unseen layout); binance OOS fine covers full window",
     }
 

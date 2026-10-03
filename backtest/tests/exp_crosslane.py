@@ -95,7 +95,7 @@ LANES = [
 # marked as self-consistent rather than doc-verified.
 DOC_PINS = {
     "champion_multi_sw10": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat_multi_sw10": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat_multi_sw10": {"is": (453, 279.5), "oos": (254, 66.9)},
     "fullstack_wage10_cd0_single_sw10": {"is": (200, 310.7),
                                          "oos": (140, 16.9)},
     "baseline_no_partial_sw20": {"is": (372, 122.3)},

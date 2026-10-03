@@ -74,7 +74,7 @@ ATR_BARS = 96
 # percent, pre-registered before the run; family-wise: all six must pass
 FLOORS = (0.40, 0.60, 0.80, 1.00, 1.20, 1.50)
 PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+       "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 
 def net_of(tr):

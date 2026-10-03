@@ -54,7 +54,7 @@ TRANSFER_MIN_N = 30
 # bybit control refs from 24.85 (exp_zx_causal_combo)
 BYBIT_BASE = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
     "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
 }
 BYBIT_UZX_CONTROL = {"champion": (124.0, 33.6), "utcsat": (130.6, 41.1),

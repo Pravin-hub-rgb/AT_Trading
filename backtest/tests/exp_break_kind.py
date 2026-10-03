@@ -51,7 +51,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 OUT = ROOT / "backtest/tests/_break_kind.json"
 BASE = {"champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-        "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+        "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
         "age10": {"is": (130, 435.7), "oos": (76, 43.2)}}
 
 

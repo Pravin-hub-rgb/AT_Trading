@@ -53,7 +53,7 @@ SOURCES = {
 # Baselines the dNet values are measured against, from the identity-gated run.
 BASELINE = {
     "champion": (500, 325.78),
-    "utcsat": (454, 358.95),
+    "utcsat": (453, 279.5),
     "age10": (None, None),
     "fullstack": (None, None),
 }

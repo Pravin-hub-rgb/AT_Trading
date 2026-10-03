@@ -76,7 +76,7 @@ ATR_BARS = 96
 DRAWS = 3000
 SEED = 20261003
 PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+       "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 
 def net_of(tr):

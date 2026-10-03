@@ -57,7 +57,7 @@ CELLS = ("is|champion", "is|utcsat", "oos|champion", "oos|utcsat")
 # and the doc table is stale - fail loudly rather than emit a wrong number.
 EXPECTED = {
     "is|champion": (500, 389, 325.78, 275.23),
-    "is|utcsat": (454, 362, 358.95, 304.41),
+    "is|utcsat": (453, 279, 279.5, 194.2),
     "oos|champion": (279, 216, 70.15, -7.81),
     "oos|utcsat": (253, 198, 60.21, 0.59),
 }

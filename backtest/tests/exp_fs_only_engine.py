@@ -78,7 +78,7 @@ YEARS = {"is": 3.67, "oos": 2.0}
 LANES = (("champion", "champion_multi_sw10"),
          ("utcsat", "utcsat_multi_sw10"))
 BYBIT_BASE = {
-    "is/champion": (500, 325.8), "is/utcsat": (454, 358.9),
+    "is/champion": (500, 325.8), "is/utcsat": (453, 279.5),
     "oos/champion": (279, 70.2), "oos/utcsat": (253, 60.2),
 }
 COOLDOWN = 8

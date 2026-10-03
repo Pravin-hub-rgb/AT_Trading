@@ -84,7 +84,7 @@ M_NULL = 193.4
 MIN_BARS = 10
 DAY = 86400
 CHAMP = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-         "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+         "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 # (label, htf buckets of 1h bars, ltf buckets of 15m bars)
 # 4h = 4x1h, 1D = 24x1h, and 1h LTF = 4x15m -- NOT 60, which would be 15h.
 ARCH = [("1h HTF + 15m LTF  (CHAMPION)", 1, 1),

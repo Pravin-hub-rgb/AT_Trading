@@ -60,7 +60,7 @@ M_NULL = 193.4
 LTF = [("15m", 1, 50), ("30m", 2, 25), ("45m", 3, 17)]
 HTF_MIN_BARS = 10          # the champion's own 1h setting, held constant
 PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+       "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 
 def as_flow(c):

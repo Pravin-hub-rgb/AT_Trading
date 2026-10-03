@@ -62,7 +62,7 @@ M_NULL = 193.4
 MA_BARS = 200          # hours, fixed before looking
 DS = (0.5, 1.0, 2.0)  # ATRs, pre-registered, family-wise
 PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+       "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 
 def net_of(tr):

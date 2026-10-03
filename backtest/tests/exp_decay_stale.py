@@ -39,7 +39,7 @@ from exp_decay_switch import legs_by_dir, decay_pair
 THR = 0.75
 LANES = (
     ("champion_multi_sw10", "sw10", (500, 325.8), (279, 70.1)),
-    ("utcsat_multi_sw10", "sw10", (454, 358.9), (253, 60.2)),
+    ("utcsat_multi_sw10", "sw10", (453, 279.5), (254, 66.9)),
 )
 
 

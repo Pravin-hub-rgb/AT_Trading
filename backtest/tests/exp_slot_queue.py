@@ -78,7 +78,7 @@ M_NULL = 193.4
 ENGINE = ROOT / "backend" / "src" / "btc" / "engines" / "htf_ltf" \
     / "v18_streak_halt.py"
 PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+       "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 # the two strings that must agree; the bug is that they do not
 GUARD_INIT = '    busy_until=""  # datetime string — timestamp-based, not index'

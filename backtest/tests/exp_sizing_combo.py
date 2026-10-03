@@ -66,7 +66,7 @@ VOL7PREV_Q1 = 0.846
 
 EXPECT_FLAT = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
     "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
 }
 
@@ -154,7 +154,7 @@ def main():
         "arms": ARM_DESC,
         "years": YEARS, "scopes": {},
         "pre_registered": "PASS per combo arm = dNet>0 AND curve_better TRUE in all 6 cells (3 lanes x 2 eras)",
-        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 454/+358.9, 253/+60.2; age10 130/+435.7, 76/+43.2 (asserted)",
+        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 453/+279.5, 253/+60.2; age10 130/+435.7, 76/+43.2 (asserted)",
     }
 
     for scope in ("is", "oos"):

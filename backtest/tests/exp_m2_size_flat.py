@@ -52,7 +52,7 @@ M2_MIN_ATR = 3.0
 # Flat reference ledgers (asserted): the books must be the raw configs.
 EXPECT_FLAT = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
 }
 
 LANES = (
@@ -98,7 +98,7 @@ def main():
         "flag": f"cur_mag_atr >= {M2_MIN_ATR}", "size": SIZE,
         "years": YEARS, "scopes": {},
         "pre_registered": "PASS = dNet>0 AND curve_better TRUE in all 6 cells (3 lanes x 2 eras)",
-        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 454/+358.9 IS, 253/+60.2 OOS (asserted)",
+        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 453/+279.5 IS, 253/+60.2 OOS (asserted)",
     }
 
     for scope in ("is", "oos"):

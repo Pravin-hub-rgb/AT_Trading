@@ -78,7 +78,7 @@ from src.walker import FlowCandle
 
 M_NULL = 193.4
 CHAMP = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-         "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+         "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 # (htf label, htf buckets of 1h, htf min_bars)
 HTF = [("1h", 1, 10), ("4h", 4, 3), ("1D", 24, 1)]

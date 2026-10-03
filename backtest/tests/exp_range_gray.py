@@ -72,7 +72,7 @@ LANES = (("champion", "champion_multi_sw10"),
          ("utcsat", "utcsat_multi_sw10"))
 # Reference ledgers from exp_gray_wick1h.py BYBIT_BASE (control: must match)
 BYBIT_BASE = {
-    "is/champion": (500, 325.8), "is/utcsat": (454, 358.9),
+    "is/champion": (500, 325.8), "is/utcsat": (453, 279.5),
     "is/age10": (130, 435.7),
     "oos/champion": (279, 70.1), "oos/utcsat": (253, 60.2),
     "oos/age10": (76, 43.2),

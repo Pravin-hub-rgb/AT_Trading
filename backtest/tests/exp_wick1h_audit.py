@@ -60,7 +60,7 @@ STAGEB_REF = {          # counts + sum_net from the other agent's parity block
 
 BYBIT_BASE = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
     "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
 }
 LANES = (

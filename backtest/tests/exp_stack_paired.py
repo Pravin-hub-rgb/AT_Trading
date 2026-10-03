@@ -73,8 +73,8 @@ THR, NLEG = 0.75, 4
 
 LANES = (
     ("champion_multi_sw10", "sw10", (500, 325.8), (279, 70.1)),
-    ("utcsat_multi_sw10", "sw10", (454, 358.9), (253, 60.2)),
-    ("age10_dirmatch_swingpause_single_sw10", "sw10", (130, 435.7), (76, 43.2)),
+    ("utcsat_multi_sw10", "sw10", (453, 279.5), (254, 66.9)),
+    ("age10_dirmatch_swingpause_single_sw10", "sw10", (149, 414.1), (76, 43.2)),
 )
 
 

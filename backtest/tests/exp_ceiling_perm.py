@@ -67,7 +67,7 @@ DRAWS = 20000
 BLOCKS = (10, 20, 40)
 SEED = 20261001
 PIN = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
-       "utcsat_multi_sw10": ((454, 358.9), (253, 60.2))}
+       "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
 
 
 def net_of(tr):

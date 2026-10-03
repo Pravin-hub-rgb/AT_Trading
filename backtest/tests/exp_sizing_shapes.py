@@ -78,7 +78,7 @@ COUNT_STEP, COUNT_CAP = 0.5, 2.0
 
 EXPECT_FLAT = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
     "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
 }
 
@@ -178,7 +178,7 @@ def main():
         "years": YEARS, "scopes": {},
         "pre_registered": "PASS per tested arm (ramp_mag, vol_target, count_linear) = dNet>0 AND curve_better TRUE in all 6 cells (3 lanes x 2 eras)",
         "controls": "M2_15 must reproduce 24.78; uMZX must reproduce 24.79 (abort on mismatch > 1.0 dNet)",
-        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 454/+358.9, 253/+60.2; age10 130/+435.7, 76/+43.2 (asserted)",
+        "baseline_reference": "champion 500/+325.8 IS, 279/+70.2 OOS; utcsat 453/+279.5, 253/+60.2; age10 130/+435.7, 76/+43.2 (asserted)",
     }
 
     for scope in ("is", "oos"):

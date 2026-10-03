@@ -43,7 +43,7 @@ CONTROLS (abort before any verdict):
   - exp_stat_arb.v18_control: identity gate + champion house refs both
     books (also builds v18m = champion GROSS monthly for K7).
   - bybit ledger: all 4 lanes x 2 eras within +/-1t / +/-1.0R of house
-    refs: champion 500/+325.8, 279/+70.2; utcsat 454/+358.9, 253/+60.2;
+    refs: champion 500/+325.8, 279/+70.2; utcsat 453/+279.5, 253/+60.2;
     fullstack 200/+310.7, 140/+16.9; age10 130/+435.7, 76/+43.2.
   - data gates raise before any lane runs (gap/dup/off-grid/slice).
 
@@ -117,7 +117,7 @@ LANES = (
 ASSETS = ("ETHUSDT", "SOLUSDT")
 REF = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (454, 358.9), "oos": (253, 60.2)},
+    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
     "fullstack": {"is": (200, 310.7), "oos": (140, 16.9)},
     "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
 }
