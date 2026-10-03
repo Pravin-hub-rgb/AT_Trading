@@ -848,7 +848,23 @@ EXPERIMENTS = {
                     "exp_chop15_hi": 61.0, "exp_atr_ratio_max": 1.4,
                     "window_end": "exit"},
         "swing": "sw10",
-        "pins": {"n": 225, "net": 282.9, "dd": 12.5},
+        # MEASURED 2026-10-02 on unified.py, single position (no exp_mltf).
+        # Previous pin 225 / +282.9 predated the C16 default change.
+        #
+        # Decomposition on the same single base (502 trades / +238.45R with no
+        # filters), each knob alone:
+        #   weekend only      401  +278.06R   <- carries the most
+        #   chopband only     438  +271.88R
+        #   swingpause only   451  +242.55R
+        #   atr_ratio only    416  +241.94R   <- nearly free, cuts 86 trades for +3.5R
+        #   all four together 262  +268.27R   <- LESS than weekend alone
+        #
+        # The stack does not compound. Weekend alone is +278.1R and the full
+        # stack is +268.3R, so three of the four filters are costing more than
+        # they add once weekend is in. That is the finding: this book was named
+        # for being the best and it is not - it is the champion base plus a
+        # weekend filter with three filters stacked on top that dilute it.
+        "pins": {"n": 262, "net": 268.27},
     },
     "fullstack_wage10_cd0_single_sw10": {
         "desc": "KING SINGLE: fullstack + wage10 + cd=0 — chop15 band + ATR blow-off",
