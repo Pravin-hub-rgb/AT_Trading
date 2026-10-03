@@ -194,6 +194,305 @@ EXPERIMENTS = {
                  "oos_n": 234, "oos_net": 104.98, "oos_dd_net": 52.50},
     },
 
+    # ===== KNOB-GAP SWEEP: live knobs with no book (2026-10-02) =====
+    "gap_cooldown20": {
+        "desc": "champion leg + cooldown_bars 20",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "cooldown_bars": 20},
+        "swing": "sw10",
+        # KNOB-GAP SWEEP 2026-10-02. An exhaustive audit found 41 knobs that are
+        # LIVE in the engine (harness-patched or a real signature parameter) and
+        # are exercised by at least one exp_*.py, but which NO registry book sets.
+        # The trail family was exactly this shape and had never been measured, so
+        # the whole class was measured rather than only remembered knobs.
+        #
+        #   ACTIVE, beats champion on BOTH eras:
+        #     cooldown_bars=20    IS +278.45 dd 46.85   OOS  +87.36 dd 38.17
+        #     skip_decisive=1     IS +239.12 dd 46.85   OOS +104.12 dd 29.03
+        #     window_r_cap=2.0    IS +163.31 dd 46.85   OOS  +77.92 dd 50.33
+        #
+        #   ACTIVE but worse on at least one era: trail_delay_prevbar,
+        #   pivot_trail, profit_stage5, campaign_max2, loss_kill1,
+        #   window_entry_cap, ma_trail, curfew_a4_b8, cooldown4.
+        #
+        #   INERT - bit-for-bit the baseline on BOTH eras: exp_geom_b1_min,
+        #   exp_geom_mag_min_atr, exp_geom_start_dist_max_atr, exp_geom_b1_max,
+        #   exp_loss_streak_*, exp_window_win_kill_*, exp_cohort_*,
+        #   chop_thresh=65.0. Wired but not binding on this book at these values.
+        #   Recorded as measured-and-inert so nobody re-runs them.
+        #
+        #   skip_decisive is the odd one: bit-for-bit the baseline IN SAMPLE and
+        #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
+        #   present in 2021-22 and absent from 2023-26. An IS-only reading would
+        #   have called it inert and thrown away the best OOS number here.
+        "pins": {"n": 484, "net": 278.45, "dd_net": 46.85,
+                 "oos_n": 270, "oos_net": 87.36, "oos_dd_net": 38.17},
+    },
+    "gap_skip_decisive": {
+        "desc": "champion leg + skip decisive signals",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_skip_decisive": 1},
+        "swing": "sw10",
+        # KNOB-GAP SWEEP 2026-10-02. An exhaustive audit found 41 knobs that are
+        # LIVE in the engine (harness-patched or a real signature parameter) and
+        # are exercised by at least one exp_*.py, but which NO registry book sets.
+        # The trail family was exactly this shape and had never been measured, so
+        # the whole class was measured rather than only remembered knobs.
+        #
+        #   ACTIVE, beats champion on BOTH eras:
+        #     cooldown_bars=20    IS +278.45 dd 46.85   OOS  +87.36 dd 38.17
+        #     skip_decisive=1     IS +239.12 dd 46.85   OOS +104.12 dd 29.03
+        #     window_r_cap=2.0    IS +163.31 dd 46.85   OOS  +77.92 dd 50.33
+        #
+        #   ACTIVE but worse on at least one era: trail_delay_prevbar,
+        #   pivot_trail, profit_stage5, campaign_max2, loss_kill1,
+        #   window_entry_cap, ma_trail, curfew_a4_b8, cooldown4.
+        #
+        #   INERT - bit-for-bit the baseline on BOTH eras: exp_geom_b1_min,
+        #   exp_geom_mag_min_atr, exp_geom_start_dist_max_atr, exp_geom_b1_max,
+        #   exp_loss_streak_*, exp_window_win_kill_*, exp_cohort_*,
+        #   chop_thresh=65.0. Wired but not binding on this book at these values.
+        #   Recorded as measured-and-inert so nobody re-runs them.
+        #
+        #   skip_decisive is the odd one: bit-for-bit the baseline IN SAMPLE and
+        #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
+        #   present in 2021-22 and absent from 2023-26. An IS-only reading would
+        #   have called it inert and thrown away the best OOS number here.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 223, "oos_net": 104.12, "oos_dd_net": 29.03},
+    },
+    "gap_window_r_cap2": {
+        "desc": "champion leg + window R cap 2.0",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_r_cap": 2.0},
+        "swing": "sw10",
+        # KNOB-GAP SWEEP 2026-10-02. An exhaustive audit found 41 knobs that are
+        # LIVE in the engine (harness-patched or a real signature parameter) and
+        # are exercised by at least one exp_*.py, but which NO registry book sets.
+        # The trail family was exactly this shape and had never been measured, so
+        # the whole class was measured rather than only remembered knobs.
+        #
+        #   ACTIVE, beats champion on BOTH eras:
+        #     cooldown_bars=20    IS +278.45 dd 46.85   OOS  +87.36 dd 38.17
+        #     skip_decisive=1     IS +239.12 dd 46.85   OOS +104.12 dd 29.03
+        #     window_r_cap=2.0    IS +163.31 dd 46.85   OOS  +77.92 dd 50.33
+        #
+        #   ACTIVE but worse on at least one era: trail_delay_prevbar,
+        #   pivot_trail, profit_stage5, campaign_max2, loss_kill1,
+        #   window_entry_cap, ma_trail, curfew_a4_b8, cooldown4.
+        #
+        #   INERT - bit-for-bit the baseline on BOTH eras: exp_geom_b1_min,
+        #   exp_geom_mag_min_atr, exp_geom_start_dist_max_atr, exp_geom_b1_max,
+        #   exp_loss_streak_*, exp_window_win_kill_*, exp_cohort_*,
+        #   chop_thresh=65.0. Wired but not binding on this book at these values.
+        #   Recorded as measured-and-inert so nobody re-runs them.
+        #
+        #   skip_decisive is the odd one: bit-for-bit the baseline IN SAMPLE and
+        #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
+        #   present in 2021-22 and absent from 2023-26. An IS-only reading would
+        #   have called it inert and thrown away the best OOS number here.
+        "pins": {"n": 449, "net": 163.31, "dd_net": 46.85,
+                 "oos_n": 256, "oos_net": 77.92, "oos_dd_net": 50.33},
+    },
+    "gap_loss_kill1": {
+        "desc": "champion leg + kill window after 1 loss",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_loss_kill_n": 1, "exp_window_loss_kill_scope": "window", "exp_window_loss_kill_action": "close"},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 213, "net": -29.83, "dd_net": 38.88,
+                 "oos_n": 123, "oos_net": 113.16, "oos_dd_net": 30.00},
+    },
+    "gap_campaign_max2": {
+        "desc": "champion leg + campaign stacking capped at 2",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_block_mixed": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 272, "net": 7.48, "dd_net": 50.78,
+                 "oos_n": 149, "oos_net": 80.52, "oos_dd_net": 11.88},
+    },
+    "gap_ma_trail": {
+        "desc": "champion leg + MA trail period 20",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_ma_trail_period": 20},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 554, "net": -67.38, "dd_net": 105.97,
+                 "oos_n": 313, "oos_net": -52.02, "oos_dd_net": 53.65},
+    },
+    "gap_pivot_trail": {
+        "desc": "champion leg + pivot trail",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_pivot_trail": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 514, "net": 133.69, "dd_net": 44.89,
+                 "oos_n": 296, "oos_net": -4.57, "oos_dd_net": 41.79},
+    },
+    "gap_window_entry_cap1": {
+        "desc": "champion leg + 1 entry per window",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_entry_cap": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 183, "net": -33.79, "dd_net": 45.28,
+                 "oos_n": 96, "oos_net": 17.29, "oos_dd_net": 25.11},
+    },
+    "gap_profit_stage5": {
+        "desc": "champion leg + profit stage at 5R",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_profit_stage_r": 5.0, "exp_profit_stage_distance_r": 0.25},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 501, "net": 53.68, "dd_net": 43.32,
+                 "oos_n": 282, "oos_net": 15.29, "oos_dd_net": 44.80},
+    },
+    "gap_trail_prevbar": {
+        "desc": "champion leg + trail delay prev-bar variant",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_trail_delay_prevbar": 1, "exp_trail_delay_r": 1.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 501, "net": 263.62, "dd_net": 45.37,
+                 "oos_n": 279, "oos_net": 69.65, "oos_dd_net": 54.91},
+    },
+    "gap_curfew_a4_b8": {
+        "desc": "champion leg + curfew 4h/8h",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_curfew_a": 4.0, "exp_curfew_b": 8.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 470, "net": 209.93, "dd_net": 45.74,
+                 "oos_n": 269, "oos_net": 81.76, "oos_dd_net": 48.07},
+    },
+    "gap_cooldown4": {
+        "desc": "champion leg + cooldown_bars 4",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "cooldown_bars": 4},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 502, "net": 238.56, "dd_net": 46.47,
+                 "oos_n": 285, "oos_net": 70.69, "oos_dd_net": 50.73},
+    },
+    "gap_inert_geom": {
+        "desc": "champion leg + geometry gates, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_geom_b1_min": 96, "exp_geom_mag_min_atr": 4.0, "exp_geom_start_dist_max_atr": 1.0, "exp_geom_b1_max": 1},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_kill": {
+        "desc": "champion leg + streak gates, MEASURED INERT",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "exp_window_win_kill_n": 1, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+    "gap_inert_chop65": {
+        "desc": "champion leg + chop_thresh 65, MEASURED INERT under atr_high",
+        "engine": "patched",
+        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                    "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                    "chop_thresh": 58.0,
+                    "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                    "exp_partial_r": 0.0, "exp_mltf": True,
+                    "exp_persist": 7, "window_end": "exit",
+                    "pivot_rule": "leg", "chop_thresh": 65.0},
+        "swing": "sw10",
+        # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
+        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
+                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+    },
+
     # ===== P36 DECAY GATE (engine knob, measured 2026-10-02 IS+OOS) =====
     "decayA_c": {
         "desc": "champion leg + decay off (control)",
