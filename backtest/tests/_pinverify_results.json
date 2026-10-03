@@ -89,26 +89,6 @@
   "OK": true,
   "secs": 12.3
  },
- "gap_cd5": {
-  "n": 502,
-  "net": 238.56,
-  "dd_net": 46.47,
-  "pin_n": 502,
-  "pin_net": 238.56,
-  "pin_dd_net": 46.47,
-  "OK": true,
-  "secs": 10.5
- },
- "gap_mcl5": {
-  "n": 523,
-  "net": 240.02,
-  "dd_net": 43.35,
-  "pin_n": 523,
-  "pin_net": 240.02,
-  "pin_dd_net": 43.35,
-  "OK": true,
-  "secs": 11.0
- },
  "gap_b3k2": {
   "n": 167,
   "net": 41.78,
@@ -158,26 +138,6 @@
   "pin_dd_net": 23.72,
   "OK": true,
   "secs": 10.9
- },
- "gap_inert_chop52": {
-  "n": 499,
-  "net": 239.12,
-  "dd_net": 46.85,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": true,
-  "secs": 11.6
- },
- "gap_inert_chop61": {
-  "n": 499,
-  "net": 239.12,
-  "dd_net": 46.85,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": true,
-  "secs": 10.2
  },
  "gap_inert_lb50": {
   "n": 499,
@@ -358,16 +318,6 @@
   "pin_dd_net": 31.33,
   "OK": true,
   "secs": 9.8
- },
- "gap_persist1": {
-  "n": 502,
-  "net": 238.45,
-  "dd_net": 53.86,
-  "pin_n": 502,
-  "pin_net": 238.45,
-  "pin_dd_net": 53.86,
-  "OK": true,
-  "secs": 11.6
  },
  "gap_curfew_16_20": {
   "n": 470,
@@ -2048,5 +1998,55 @@
   "pin_dd_net": 46.85,
   "OK": true,
   "secs": 11.6
+ },
+ "gap_mcl5": {
+  "n": 523,
+  "net": 240.02,
+  "dd_net": 43.35,
+  "pin_n": 523,
+  "pin_net": 240.02,
+  "pin_dd_net": 43.35,
+  "OK": true,
+  "secs": 11.9
+ },
+ "gap_inert_chop52": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd_net": 46.85,
+  "OK": true,
+  "secs": 12.0
+ },
+ "gap_inert_chop61": {
+  "n": 499,
+  "net": 239.12,
+  "dd_net": 46.85,
+  "pin_n": 499,
+  "pin_net": 239.12,
+  "pin_dd_net": 46.85,
+  "OK": true,
+  "secs": 10.1
+ },
+ "gap_persist1": {
+  "n": 502,
+  "net": 238.45,
+  "dd_net": 53.86,
+  "pin_n": 502,
+  "pin_net": 238.45,
+  "pin_dd_net": 53.86,
+  "OK": true,
+  "secs": 10.0
+ },
+ "gap_cd5": {
+  "n": 502,
+  "net": 238.56,
+  "dd_net": 46.47,
+  "pin_n": 502,
+  "pin_net": 238.56,
+  "pin_dd_net": 46.47,
+  "OK": true,
+  "secs": 11.0
  }
 }
