@@ -166,7 +166,186 @@ knob and the harness patch entirely.
 
 ---
 
-# CLOSED 2026-10-04 — EXIT ON FIRST SWING. Every variant. Nothing worked.
+# CLOSED 2026-10-04 — `dirmatch` / `age` PREDICTS THE SWING DIRECTION. Dead.
+
+The owner found it by asking the right question: *"but how is that a look-ahead?"*
+The answer turned out to be one line of code and a date.
+
+## What the filter actually does
+
+`exp_require_dir_match` is an entry filter. It decides whether to take an LTF
+signal by asking which 15m swing contains the entry bar, and reading that
+swing's direction:
+
+```python
+for _gs in swings_ltf:
+    _gsi = _gs["seg"]["start_idx"]
+    if 0 <= _gsi <= i:            # swing started at or before the entry bar
+        _gen_dir = _gs["dir"]     # <-- the swing's FINAL direction
+if exp_require_dir_match and _gen_dir != direction:
+    continue                      # no match, no trade
+```
+
+A swing that has STARTED is not a swing yet. Its direction is final only when
+it confirms, at `confirmed_at_idx`. So the filter reads a label that becomes
+correct **after** the entry bar it is being used to judge.
+
+## The evidence, with dates
+
+`exp_dir_causal_evidence.py` on `dirmatch_multi_sw10`, in sample:
+
+| | |
+|---|---|
+| trades examined | 389 |
+| picks whose swing **confirms after entry** | **331 (85.1%)** |
+| dir label **differs** from the entry-bar truth | **176 (45.2%)** |
+| lookahead gap | p05 **+1h**, p50 **+8h**, p95 **+12h** |
+
+Twelve worst, largest confirmation delay. "pin" is the label the filter read,
+"known" is what a live process could have computed from candles up to entry:
+
+```
+entry             side   swing started     swing confirmed     gap h    pin  known
+2025-03-13 03:30  short  2025-03-13 03:15  2025-03-13 19:00   15.5     -1      1  <-- MOVED
+2025-12-17 19:45  long   2025-12-17 19:30  2025-12-18 10:45   15.0      1     -1  <-- MOVED
+2023-12-28 01:45  short  2023-12-28 01:00  2023-12-28 16:30   14.8     -1      1  <-- MOVED
+2024-12-16 16:00  long   2024-12-16 13:00  2024-12-17 06:30   14.5      1     -1  <-- MOVED
+2024-03-18 07:00  short  2024-03-18 05:45  2024-03-18 21:00   14.0     -1      1  <-- MOVED
+2025-02-06 15:00  short  2025-02-06 12:00  2025-02-07 04:30   13.5     -1      1  <-- MOVED
+```
+
+The 2025-03-13 row in full: the 15m swing began 03:15, the book entered short
+at 03:30, and the swing did not resolve until 19:00. The filter used **down**.
+At 03:30 the knowable answer was **up**. It applied a label from 15.5 hours in
+the future to a decision made at 03:30.
+
+## Why that makes it an oracle, not a filter
+
+| swing resolves | trade outcome |
+|---|---|
+| **with** the signal | trade wins |
+| **against** the signal | trade loses |
+
+"Is this swing going my way?" and "is this trade going to win?" are the same
+question. The filter was reading the answer. That is why it produced the two
+findings that made it look real and are quoted all over the older docs:
+
+- **125/125 "opposed" swings at 0% win rate** - every loser removed
+- **WR 51.7%**, the highest in the repo at the time
+  (`ANCHOR_BASIS_AUDIT.md:804`, `151t / +455.5R / DD 6.0 / WR 51.7%`)
+
+A filter cannot reach 0% by finding skill. It reaches 0% by looking.
+
+## Path-true, `exp_dir_causal=1`
+
+The guard adds one line: skip any swing not yet confirmed by the entry bar.
+Every number below is the engine, both eras, current code.
+
+| book | pinned (lookahead) | **path-true** | WR |
+|---|---|---|---|
+| `dirmatch_multi_sw10` | IS 389 / **+444.21R** | IS 257 / **+70.79R** | 24.9% |
+| `dirmatch_single_sw10` | IS 392 / +442.72 | IS 260 / **+75.66R** | 25.4% |
+| `age10_dirmatch_multi_sw10` | IS 150 / **+417.68R** | **0 trades** | — |
+| `age25_dirmatch_multi_sw10` | IS 249 / +357.01 | IS **9t / −4.66R** | 11.1% |
+| `age25_multi_sw10` | IS 249 / +319.22 | IS 31t / **+5.90R** | 29.0% |
+| `dirmatch_swingpause_single` | IS 362 / +273.84 | IS 254 / **+77.14R** | 24.8% |
+| `age10_dirmatch_swingpause_single` | IS 149 / **+414.08R** | **0 trades** | — |
+
+**The 51.7% win rate becomes 24.9%.** Two books stop trading entirely.
+
+### Why `age10` and `age25` go to zero
+
+`exp_max_swing_age` requires the swing to be at most 10 bars old at entry,
+while `exp_dir_causal` requires it to be already confirmed. A 15m swing needs
+`min_bars=50` to form. **A swing cannot be both confirmed and ten bars old.**
+The two conditions are mutually unsatisfiable, so the intersection is empty.
+That is not a tuning accident - it is the mechanism showing itself.
+
+## Also caught: two directional-FS books built on this base
+
+`fsent_dirmatch_long` / `fsent_dirmatch_short` (commit 539935c) inherited the
+contaminated base. They were pinned and `exp_fastcheck.py` called them OK -
+the checker verifies that the engine reproduces the pin, and it did. It cannot
+verify that the engine is causal.
+
+| book | pinned | **path-true** |
+|---|---|---|
+| `fsent_dirmatch_long` | IS 426 / +477.38R / DD 11.15 | IS 426 / **+322.67R** / DD 15.41 |
+| `fsent_dirmatch_short` | IS 417 / **+658.65R** / DD 11.60 | IS 402 / **+368.54R** / DD 19.29 |
+
+**The directional FS effect survives path-true in both eras** (+184.44 and
++185.13 OOS), so the FS signal is real and those books can be rebuilt on a clean
+base. For now they are reference, alongside the seven that are simply the
+artifact.
+
+## The lesson that matters more than the family
+
+**A pin is not a proof of correctness.** Every number here was re-derived from
+the engine and every check passed. The engine itself was reading the future.
+
+`exp_fastcheck.py` and `exp_pinverify.py` answer "does the engine produce this
+number?". They cannot answer "is this number allowed to exist?". Only an
+explicit causal guard - like `exp_dir_causal` - answers the second question,
+and it has to be applied by whoever writes the filter, not by whoever verifies
+the pin.
+
+## The family is dead too, not just the lookahead version
+
+The evidence above proves the leak. It does not answer the next question: does
+direction-matching survive when it is only allowed to read labels that exist at
+the entry bar? Measured, both eras, on a CLEAN base (`exp_dir_causal_rebuild.py`):
+
+| arm | IS n / net / WR | OOS n / net / WR |
+|---|---|---|
+| champion leg (control) | 499 / **+239.1R** / 27.5% | 280 / **+72.8R** / 27.1% |
+| **+ causal dirmatch** | 257 / **+70.8R** / 24.9% | 158 / **+62.8R** / 27.8% |
+
+**-168R in sample, -10R out of sample.** The causal version is not a weaker
+version of the artifact, it is a *harmful* filter: it drops 242 trades and
+loses money doing it.
+
+And the base turns out to have been carrying nothing. `dirmatch_multi_sw10`
+path-true measures 257t / +70.8R - **bit-for-bit identical** to champion plus
+the causal filter, and adding `exp_require_dir_match=1` on top of it changes
+the result by **+0.0R**. So `fsent_dirmatch_long` / `fsent_dirmatch_short` were
+never "dirmatch based"; they were champion + FS + dirmatch, and their numbers
+(+322.67R / +368.54R) are exactly champion + FS + causal dirmatch.
+
+**Which is worse than champion + FS alone:**
+
+| arm | IS | OOS |
+|---|---|---|
+| **champion + FS long** | 525 / **+528.9R** / **39.6%** | 310 / **+243.9R** |
+| champion + FS long + causal dirmatch | 426 / +322.7R / 38.3% | 254 / +184.4R |
+| **champion + FS short** | 531 / **+571.4R** / 36.5% | 309 / **+239.3R** |
+| champion + FS short + causal dirmatch | 402 / +368.5R / 36.1% | 228 / +185.1R |
+
+**There is nothing to rebuild.** The clean replacements already exist as
+`fsent_champ_long` / `fsent_champ_short`, at +528.9R and +571.4R in sample.
+
+### What replaced the 51.7% win rate, honestly
+
+| | WR | status |
+|---|---|---|
+| `age10_dirmatch_multi` (old champion claim) | 51.7% | **lookahead** - it read the answer |
+| champion leg | 27.5% | real |
+| **`fsent_champ_long`** | **39.6%** | **real and causal** |
+
+A 39.6% win rate that a live process can actually reproduce is worth more than
+a 51.7% that it cannot. The higher number was the artifact.
+
+## Do not retry
+
+Direction-matching by final swing label, in any form, on any timeframe. If a
+feature needs to know which way a swing resolves before it resolves, it is
+reading the outcome. The causal version of the same idea - wait for the
+confirmation and enter then - is what `exp_fs_entry_side` does, and it holds up:
+it changes **when the trade opens** instead of judging a trade that is already
+open.
+
+All nine books are `status: "reference"`, and `shortlisted()` now returns False
+for any reference book regardless of size, so a large contaminated number can
+never re-enter the candidate list on size alone.
 
 The user's proposal, taken seriously and measured four separate ways. The
 premise is sound - enter where the book already enters (B2/flip), leave when the

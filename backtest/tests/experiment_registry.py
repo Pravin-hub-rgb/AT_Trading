@@ -1331,7 +1331,13 @@ EXPERIMENTS = {
 
     "fsent_dirmatch_long": {
           "desc": "dirmatch multi + LONGS enter at swing FS",
-          "engine": "patched",
+                  "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
           "params": {
                        "mode": "atr_high",
                        "atr_high_thresh": 0.65,
@@ -1356,7 +1362,13 @@ EXPERIMENTS = {
 
     "fsent_dirmatch_short": {
           "desc": "dirmatch multi + SHORTS enter at swing FS",
-          "engine": "patched",
+                  "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
           "params": {
                        "mode": "atr_high",
                        "atr_high_thresh": 0.65,
@@ -1379,6 +1391,107 @@ EXPERIMENTS = {
                    "oos_n": 253, "oos_net": 235.14, "oos_dd_net": 12.30},
       },
 
+    # ===== SERIAL SIGNAL BOOKS (max_positions=1) + the 40% win-rate arm =====
+    # The bare serial single book is LOSING out of sample: -16.3R OOS on
+    # champion_single_sw10. One position at a time is the deployment shape here
+    # because capital does not allow concurrent losers. Directional FS entry
+    # turns that book positive in both eras. exp_fs_single.py, both eras.
+
+    "fsent_sig_sw10_short": {
+          "desc": "SERIAL signal book: one position at a time, SHORTS enter at swing FS",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_fs_entry_side": "short",
+                       "max_positions": 1},
+          "swing": "sw10",
+          # Base params copied from champion_single_sw10/sw20 verbatim.
+          # NOTE: the single books carry neither exp_mltf nor exp_persist.
+          # exp_fs_single.py, both eras.
+          "pins": {"n": 369, "net": 174.30, "dd_net": 16.620,
+                   "oos_n": 239, "oos_net": 100.94, "oos_dd_net": 11.820},
+      },
+
+    "fsent_sig_sw10_long": {
+          "desc": "SERIAL signal book: one position at a time, LONGS enter at swing FS",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_fs_entry_side": "long",
+                       "max_positions": 1},
+          "swing": "sw10",
+          # Base params copied from champion_single_sw10/sw20 verbatim.
+          # NOTE: the single books carry neither exp_mltf nor exp_persist.
+          # exp_fs_single.py, both eras.
+          "pins": {"n": 355, "net": 116.40, "dd_net": 21.10,
+                   "oos_n": 230, "oos_net": 80.50, "oos_dd_net": 13.50},
+      },
+
+    "fsent_sig_sw20_short": {
+          "desc": "SERIAL signal book on the sw20 chain, SHORTS enter at swing FS",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_fs_entry_side": "short",
+                       "max_positions": 1},
+          "swing": "sw20",
+          # Base params copied from champion_single_sw10/sw20 verbatim.
+          # NOTE: the single books carry neither exp_mltf nor exp_persist.
+          # exp_fs_single.py, both eras.
+          "pins": {"n": 343, "net": 146.90, "dd_net": 32.50,
+                   "oos_n": 203, "oos_net": 95.00, "oos_dd_net": 10.20},
+      },
+
+    "fsent_single_sw20_short_wr": {
+          "desc": "sw20 + SHORTS enter at swing FS - only >=40% win rate on the board",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_fs_entry_side": "short",
+                       "max_positions": 0},
+          "swing": "sw20",
+          # Base params copied from champion_single_sw10/sw20 verbatim.
+          # NOTE: the single books carry neither exp_mltf nor exp_persist.
+          # exp_fs_single.py, both eras.
+          "pins": {"n": 515, "net": 492.60, "dd_net": 14.20,
+                   "oos_n": 283, "oos_net": 179.80, "oos_dd_net": 8.50},
+      },
     "fsexit6_c": {
         "desc": "champion leg + exit at own-swing FS when it lands within 6h",
         "engine": "patched",
@@ -3681,7 +3794,13 @@ EXPERIMENTS = {
 
     "dirmatch_multi_sw10": {
         "desc": "king + REQUIRE forming swing direction match — +479.9R / DD 13.8 / WR 38.6%",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -3699,7 +3818,13 @@ EXPERIMENTS = {
     },
     "age25_multi_sw10": {
         "desc": "king + max swing age 25 bars",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -3718,7 +3843,13 @@ EXPERIMENTS = {
     },
     "age25_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 25 — +386.7R / DD 9.8 / WR 43.8% (BEST quality)",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -3736,7 +3867,13 @@ EXPERIMENTS = {
     },
     "age10_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 10 — +455.5R / DD 6.0 / WR 51.7% (MONSTER, 151t)",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -3757,7 +3894,13 @@ EXPERIMENTS = {
 
     "dirmatch_swingpause_single_sw10": {
         "desc": "swingpause single + dir match — +288.1R / DD 14.1 / WR 35.5%",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -3775,7 +3918,13 @@ EXPERIMENTS = {
     },
     "age10_dirmatch_swingpause_single_sw10": {
         "desc": "swingpause single + dir match + age 10 — 🔥 BEST EVER: +435.7R / DD 5.7 / WR 53.8%",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -3794,7 +3943,13 @@ EXPERIMENTS = {
     },
     "dirmatch_single_sw10": {
         "desc": "baseline single (no swingpause) + dir match — +237.7R / DD 15.7",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_require_dir_match / exp_max_swing_age read the swing FINAL
+                                  # direction, which is only final at confirmed_at_idx - median 8h AFTER
+                                  # the entry bar. That label IS the trade outcome, so the filter was
+                                  # reading the answer. Path-true (exp_dir_causal=1) numbers are in
+                                  # _dir_causal_pins.json. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
@@ -4441,13 +4596,24 @@ SHORTLIST_OOS_MIN = 50.0
 
 
 def shortlisted(key, _exp=None):
-    """True when the book clears both size thresholds."""
+    """True when the book clears both size thresholds AND is still a candidate.
+
+    A book marked "reference" is excluded regardless of its size: some of the
+    loudest numbers in this registry are artifacts, not edges. The
+    dirmatch/age family is the worked example - every one of those books clears
+    +130R IS and +50R OOS comfortably while reading a swing direction that is
+    only final ~8h after the entry bar (CLOSED_DO_NOT_REPEAT.md, 2026-10-04).
+    Size is not admissibility. Reference books are kept for the record and are
+    never a candidate for shipping, however large they measure.
+    """
     r = _exp
     if r is None:
         import sys as _sys
         r = _sys.modules[__name__]
     cfg = r.EXPERIMENTS[key]
     if not isinstance(cfg, dict):
+        return False
+    if cfg.get("status") == "reference":
         return False
     p = cfg.get("pins", {})
     if not p.get("n"):

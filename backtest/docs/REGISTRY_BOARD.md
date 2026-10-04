@@ -7,6 +7,43 @@ Generated from the registry. **2026-10-04.** Shipped champion: IS +239.12 / OOS 
 
 **215 entries. 213 pinned books. 123 shortlisted. 30 reference rows.**
 
+> **SUPERSEDED 2026-10-04 — see the graveyard section below. The shortlist is now
+> 102 books and the reference count is 39. Nine books were removed from the
+> candidate list on causality grounds, not on size.**
+
+---
+
+## Graveyard 2026-10-04 — `dirmatch` / `age` read the swing's FINAL direction
+
+`exp_require_dir_match` decides whether to take a trade by reading the
+direction of the swing it thinks contains the entry bar. A swing that has
+*started* is not a swing yet - its direction is final only at
+`confirmed_at_idx`, which is a **median 8 hours after the entry bar**. On
+`dirmatch_multi_sw10`, **331 of 389 picks (85.1%) confirmed after entry** and
+**176 (45.2%) carried a direction label that was the opposite of what was
+knowable at the entry.**
+
+"Is this swing going my way?" and "is this trade going to win?" are the same
+question, so the filter was reading the answer. That is where the old
+**51.7% win rate** and the **125/125 opposed swings at 0% WR** came from.
+
+| book | pinned (lookahead) | **path-true** |
+|---|---|---|
+| `dirmatch_multi_sw10` | IS 389 / +444.21R | IS 257 / **+70.79R** |
+| `age10_dirmatch_multi_sw10` | IS 150 / +417.68R | **0 trades** |
+| `age25_dirmatch_multi_sw10` | IS 249 / +357.01R | IS **9t / −4.66R** |
+| `fsent_dirmatch_long` | IS 426 / +477.38R | IS 426 / **+322.67R** |
+| `fsent_dirmatch_short` | IS 417 / **+658.65R** | IS 402 / **+368.54R** |
+
+All nine affected books are now `status: "reference"`. `shortlisted()` returns
+False for any reference book regardless of size, so a contaminated number
+cannot re-enter on size alone. Full evidence, dates and the path-true table in
+[`CLOSED_DO_NOT_REPEAT.md`](CLOSED_DO_NOT_REPEAT.md).
+
+**Note on the two FS books:** their base was contaminated but the directional FS
+effect survives path-true in both eras (+184.44 and +185.13 OOS), so the signal
+is real and they can be rebuilt on a clean base.
+
 ---
 
 ## New 2026-10-04 - DIRECTIONAL FS ENTRY (the strongest block on this board)
