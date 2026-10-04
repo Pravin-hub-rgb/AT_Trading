@@ -269,7 +269,11 @@ def _build_module():
     # to read the swing start unconditionally; the parameter now defaults to
     # "leg" and the anchor has to match the shipped line exactly or the whole
     # source-patching harness silently stops patching.
-    t6 = '    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)\n'
+    # unified.py now routes this through _lbreak so exp_fs_entry_side can swap
+    # the trigger to fs_long/fs_short/fs_both on one side. The routing lines
+    # come BEFORE the call, so the anchor is the call with _lbreak instead of
+    # the literal "decisive".
+    t6 = '    ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)\n'
     assert s.count(t6) == 1, "collect sigs"
     s = s.replace(t6, t6 +
                   '    _exp_weekly_state_rows=[]\n')

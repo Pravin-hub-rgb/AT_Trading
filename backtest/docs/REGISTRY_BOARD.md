@@ -1,13 +1,76 @@
 # Registry books - measured board
 
-Generated from the registry. 2026-10-02. Shipped champion: IS +239.12 / OOS +72.79.
+Generated from the registry. **2026-10-04.** Shipped champion: IS +239.12 / OOS +72.79.
 
 `net` after costs. `dd` is max drawdown in R on the NET equity curve.
 `champion` is a book name, not a claim of bestness.
 
+**215 entries. 213 pinned books. 123 shortlisted. 30 reference rows.**
+
 ---
 
-## Shortlist - IS net >= 130R and OOS net >= 50R (100 books)
+## New 2026-10-04 - DIRECTIONAL FS ENTRY (the strongest block on this board)
+
+`exp_fs_entry_side` in the production engine, default `""` = off. On ONE side the
+LTF entry waits for the swing's own FS print instead of firing on the break;
+the other side, the LTF cascade and every risk knob are untouched. This is the
+**opposite use** of the FS print to the FS-EXIT work below, which closes
+positions *at* FS and lost money in every arm.
+
+Causal: `fs_at_idx >= seg.end_idx` (`backend_check_wd_days.py:108`), so the bar
+has closed before the print is used.
+
+| book | base | side | IS n | IS net | IS dd | OOS n | OOS net | OOS dd |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| `fsent_dirmatch_short` | dirmatch | short | 418 | **+658.65** | 11.60 | 253 | +235.14 | 12.30 |
+| `fsent_champ_short` | champion leg | short | 532 | **+571.44** | 25.85 | 309 | +239.32 | 23.87 |
+| `fsent_utcsat_short` | utcsat entry-1 | short | 530 | +562.98 | 25.92 | 308 | +229.44 | 24.76 |
+| `fsent_champ_long` | champion leg | long | 525 | +528.87 | **14.19** | 310 | **+243.92** | **11.88** |
+| `fsent_utcsat_long` | utcsat entry-1 | long | 522 | +510.54 | 22.47 | 309 | +243.09 | 11.88 |
+| `fsent_dirmatch_long` | dirmatch | long | 426 | +477.38 | **11.15** | 237 | **+260.70** | **7.44** |
+
+Against their own controls:
+
+| base | control IS / dd | best arm IS / dd | control OOS / dd | best arm OOS / dd |
+|---|---|---|---|---|
+| champion leg | 499 / +239.12 / 46.85 | 532 / **+571.44** / 25.85 | 280 / +72.79 / 50.55 | 310 / **+243.92** / **11.88** |
+| utcsat entry-1 | 454 / +358.92 / 21.18 | 530 / **+562.98** / 25.92 | 253 / +60.21 / 29.38 | 309 / **+243.09** / **11.88** |
+| dirmatch | 389 / +444.21 / 15.40 | 418 / **+658.65** / 11.60 | 222 / +172.06 / 15.40 | 237 / **+260.70** / **7.44** |
+
+**One-sided arms beat their control in all six cells.** Profit factor on the
+champion goes 2.10 -> 3.98 in sample and 1.60 -> 3.31 out of sample. Applying
+FS to BOTH sides was measured and is consistently weaker (3 books x 2 eras), so
+it is not pinned. Full table and caveats in
+[`FS_EXIT_RULE.md`](FS_EXIT_RULE.md).
+
+**Not live, and the null/M gate has not been applied to these.** They are the
+top of the shortlist on size and drawdown; that is what the shortlist measures.
+
+---
+
+## New 2026-10-03 - FS-EXIT ladder (the one FS-EXIT arm that worked)
+
+`exit_fs_max_gap_h` in the production engine, default -1 = off. Enter exactly
+as the book does, then close the position when **its own swing** confirms -
+but only when that confirmation lands within the stated hours of the entry.
+
+| book | gap | IS n | IS net | IS dd | OOS n | OOS net | OOS dd |
+|---|---|---:|---:|---:|---:|---:|---:|
+| champion leg (control) | off | 499 | +239.12 | 46.85 | 280 | +72.79 | 50.55 |
+| `fsexit4_c` | 4h | 502 | **+289.98** | 42.34 | 287 | **+79.42** | 43.90 |
+| `fsexit6_c` | 6h | 508 | **+303.36** | 45.74 | 297 | **+80.30** | 45.00 |
+
+6h is the higher return in both eras, 4h the lower drawdown in both. The
+ladder and the diagnostic that chose the gap are in
+[`FS_EXIT_RULE.md`](FS_EXIT_RULE.md). **Exiting on any FS at all is the worst
+arm in the whole table** (+133.26 IS / +57.90 OOS).
+
+Every OTHER FS-exit variant - room threshold, breakeven-on-FS, higher-timeframe
+direction filter, and closing the HTF bias window at FS - failed in both eras
+and is recorded in
+[`CLOSED_DO_NOT_REPEAT.md`](CLOSED_DO_NOT_REPEAT.md).
+
+## Shortlist - IS net >= 130R and OOS net >= 50R (123 books)
 
 A **size filter, not a verdict**. Its only job is to make the registry
 readable. A book here can still be curve-fitted or hold up worse than its

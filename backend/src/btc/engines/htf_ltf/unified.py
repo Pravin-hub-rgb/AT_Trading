@@ -341,10 +341,48 @@ def simulate_htf_ltf_streak_halt(
     # i.e. three of four.
     exp_decay_thr=0.75,
     exp_decay_legs=4,
+    # Close the LTF position when its own swing confirms, but ONLY if the swing
+    # confirmed within this many hours of the entry. -1 (default) = off, which
+    # keeps every existing book byte-identical. 0 = exit on the first FS of any
+    # age, and that is much worse than doing nothing.
+    #
+    # Causal: fs_at_idx >= seg.end_idx (backend_check_wd_days) and the book only
+    # enters at a B2/flip break which sits before seg.end_idx, so the exit only
+    # reads a confirmation that already happened. No magnitude test -- the FS
+    # size buckets invert (FS_TIME_GEOMETRY).
+    #
+    # Measured on champion multi. The useful band is 2-6h; 8h+ stops paying on
+    # both eras, and 24h is worse than the control in sample.
+    #   gap   IS net R   OOS net R   IS DD   OOS DD
+    #   none  +239.12    +72.79      46.8    50.6
+    #   2h    +245.52    +75.37      43.6    50.4
+    #   4h    +289.98    +79.42      42.3    43.9
+    #   6h    +303.36    +80.30      45.7    45.0
+    #   8h    +264.59    +69.70      35.8    45.4
+    #   12h   +257.00    +76.90      34.4    49.6
+    #   24h   +209.38    +77.93      32.9    28.9
+    #   any    +133.26    +57.90      32.9    28.9
+    exit_fs_max_gap_h=-1.0,
+    exp_fs_entry_side="",   # DIRECTIONAL FS ENTRY on the LTF plane:
+                           # "long"  = LONGS enter at the swing FS print, shorts at break
+                           # "short" = SHORTS enter at the swing FS print, longs at break
+                           # "both"  = both sides at FS (measured weaker than either one)
+                           # "" (default) = off; every side enters at the break as before
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
     import bisect as bs
+    # exit_fs_max_gap_h needs the moment every HTF swing confirms, split by
+    # direction so a trade only ever exits on the FS that confirms its OWN
+    # swing. fs_at_idx indexes candles_htf, so the moment is
+    # candles_htf[fs_at_idx].ts. Built unconditionally and cheap, but the
+    # default -1 keeps every existing book byte-identical.
+    fs_up_ts=[]; fs_dn_ts=[]
+    for _s in swings_htf:
+        _fi=int(_s.get("fs_at_idx",-1))
+        if 0<=_fi<len(candles_htf):
+            (fs_up_ts if _s.get("dir")=="up" else fs_dn_ts).append(int(candles_htf[_fi]["ts"]))
+    fs_up_ts=sorted(set(fs_up_ts)); fs_dn_ts=sorted(set(fs_dn_ts))
     # Build HTF intervals for both flip and decisive
     htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
@@ -367,6 +405,7 @@ def simulate_htf_ltf_streak_halt(
                            1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
                 continue
             wend = _r_touch_end(t, fine_ltf, fine_ts, ext_stop_r) if window_end=="r_touch" else int(t["exit_ts"])
+
             iv.append([int(t["entry_ts"]), wend, 1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
         iv.sort(key=lambda x: x[0])
         if window_end=="bias_flip":
@@ -609,7 +648,15 @@ def simulate_htf_ltf_streak_halt(
     # LTF signals (decisive)
     from src.btc.btc_engine import CandleStore
     ltf_store = CandleStore(candles_ltf)
-    ltf_sigs=_collect_signals(swings_ltf, "decisive", skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)
+    _lbreak="decisive"
+    if exp_fs_entry_side:
+        # DIRECTIONAL FS ENTRY. On the chosen side(s) the LTF entry waits for
+        # the swing own FS print instead of firing on the decisive break; the
+        # other side falls through unchanged. Only the TRIGGER differs - an
+        # "up" swing still makes a long. Causal: fs_at_idx is at or after the
+        # swing end bar, so that bar has closed before the print is used.
+        _lbreak="fs_"+exp_fs_entry_side
+    ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)
     filtered=[]
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
@@ -955,6 +1002,14 @@ def simulate_htf_ltf_streak_halt(
             for k in range(f_start, len(fine_ltf)):
                 c=fine_ltf[k]
                 hi=float(c["high"]); lo=float(c["low"]); ts=int(c["ts"])
+                if exit_fs_max_gap_h>=0:
+                    _fsd=fs_up_ts if direction==1 else fs_dn_ts
+                    _fsl=bisect.bisect_left(_fsd, ts)
+                    if _fsl<len(_fsd) and _fsd[_fsl]==ts:
+                        _gap=(ts-bar_ts)/3600.0
+                        if exit_fs_max_gap_h<=0 or _gap<=float(exit_fs_max_gap_h):
+                            fk, exit_px_f, outcome_f = k, float(c["close"]), "fs_exit"
+                            break
                 if direction==1:
                     if hi>best_f: best_f=hi
                 else:

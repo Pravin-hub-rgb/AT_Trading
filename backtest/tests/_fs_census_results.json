@@ -1,0 +1,44 @@
+{
+ "is_1h": {
+  "closed": 499,
+  "linked": 499,
+  "unlinked": 0,
+  "agree_pct": 87.78,
+  "net_r": 239.12
+ },
+ "is_2h": {
+  "closed": 483,
+  "linked": 480,
+  "unlinked": 3,
+  "agree_pct": 84.17,
+  "net_r": 46.08
+ },
+ "is_4h": {
+  "closed": 401,
+  "linked": 401,
+  "unlinked": 0,
+  "agree_pct": 87.03,
+  "net_r": 121.51
+ },
+ "oos_1h": {
+  "closed": 280,
+  "linked": 280,
+  "unlinked": 0,
+  "agree_pct": 85.0,
+  "net_r": 72.79
+ },
+ "oos_2h": {
+  "closed": 254,
+  "linked": 254,
+  "unlinked": 0,
+  "agree_pct": 80.31,
+  "net_r": -55.66
+ },
+ "oos_4h": {
+  "closed": 266,
+  "linked": 265,
+  "unlinked": 1,
+  "agree_pct": 83.02,
+  "net_r": 34.87
+ }
+}

@@ -134,3 +134,114 @@ The champion's IS/OOS slices are the most-inspected data in this repo. An
 arm can pass everything above and still fail on a genuinely untouched
 dataset. Several candidates in this file were killed *only* by OOS or
 cross-venue, after looking excellent in IS.
+
+## The open-position gate (prevpos) — measured, never fired, code removed
+
+**Idea:** when entering, look at trades already running. If they are in profit,
+take the entry; if not, skip it or flag it. No open trades means take it
+normally. Both variants tested on the champion multi book, IS and OOS.
+
+| arm | IS n / net R | OOS n / net R | blocked IS / OOS |
+|---|---|---|---|
+| control | 499 / +239.12 | 280 / +72.79 | - / - |
+| grey, all / any | 499 / +239.12 | 280 / +72.79 | 0 / 0 |
+| skip, all / any | 499 / +239.12 | 280 / +72.79 | 0 / 0 |
+| skip, all, +0.5R | 388 / +111.65 | 219 / -11.76 | 134 / 83 |
+
+**Stronger null than "no effect."** The gate evaluated 119 entries in sample and
+68 out of sample - entries where a position genuinely was already running - and
+blocked **none**. In all 187 cases the open position was above its own entry.
+**When this engine adds to a position it only ever adds to a winner, so there is
+no "added to a loser" event for the gate to catch.**
+
+Forcing it with a +0.5R threshold does gate, and costs 111R in sample and turns
++72.79R out of sample into -11.76R. The trades it removed were carrying more
+than the threshold.
+
+**Do not retry on this book.** Third gate conditioned on "the last thing lost
+money" with nothing to attach to, after the cohort knob (needs two overlapping
+positions, cannot fire here) and chop_thresh (not read at all under
+mode=atr_high). Results in `_prevpos_results.json`; commit 77a4dc2 removed the
+knob and the harness patch entirely.
+
+---
+
+# CLOSED 2026-10-04 — EXIT ON FIRST SWING. Every variant. Nothing worked.
+
+The user's proposal, taken seriously and measured four separate ways. The
+premise is sound - enter where the book already enters (B2/flip), leave when the
+swing that opened the trade CONFIRMS, and the FS print is legal to read because
+it has already happened. **The premise was never the problem. Every way of
+acting on it lost money.**
+
+Entry is B2/flip throughout. This is NOT the closed FS-ENTRY experiment, which
+removed the B2/flip entry and waited for FS instead (`FS_ENTRY.md`). Different
+book, different denominator. The two must never be quoted as one result.
+
+## What was measured, all on the champion multi book, all on the engine
+
+| # | idea | IS net | OOS net | vs control |
+|---|---|---|---|---|
+| — | **control (shipped)** | **+239.12R** (499t) | **+72.79R** (280t) | — |
+| 1 | exit on **every** FS | +133.26R | +57.90R | worse, worse |
+| 2 | exit if FS lands within 2–6h | +245.52 … +303.36R | +75.37 … +80.30R | better, better |
+| 3 | exit if **room < threshold** (room = FS close vs entry, in R) | +103.57 … +241.60R | +47.40 … +69.22R | worse, worse |
+| 4 | **move SL to breakeven** at FS | +174.58R (518t) | +44.67R (301t) | −64.54R, −28.12R |
+| 5 | **4h swing direction** as a filter on 1h entries | +124.29R (277t) | +14.95R (150t) | −114.83R, −57.84R |
+| 6 | **`window_end="fs"`** — HTF bias window closes at the FS | **−36.12R** (79t) | **−22.94R** (39t) | −275R, −95.7R |
+
+Idea 2 is the one exception and it is already shipped as `fsexit4_c` /
+`fsexit6_c`. It closes a trade when the swing confirms FAST — a narrow window,
+never an unconditional exit.
+
+## Idea 6 in one line: the bias must OUTLIVE the swing that created it
+
+`window_end="fs"` is the user's own framing — HTF hands the LTF a bias window,
+LTF trades normally inside it, and the window ends at the FS. It killed 84% of
+the trades (499 → 79) and went negative in both eras. The bias window closing
+on confirmation is the single worst FS arm tested. A confirmed swing does not
+mean the bias is spent; that is where the book makes its money.
+
+## Idea 3 and 4: the information is retrospective, exactly like M2
+
+`FS_TIME_GEOMETRY.md` already closed the same trap with swing magnitude. Room
+and magnitude are the same kind of quantity: **descriptive of a move that has
+already finished.** The census that motivated idea 3 was real — room > +2R
+earned +2.21R/trade in IS and +1.76R in OOS — but that correlation is measured
+against the FINAL result, after the trade closed. It does not predict anything
+at the FS bar. Same failure, second instance.
+
+## THE PROCESS ERROR, WHICH IS THE PART WORTH REMEMBERING
+
+Idea 4 was first measured as a post-hoc overlay that re-scored trades rather
+than re-running the engine. It reported **IS +349.90R, OOS +125.93R, DD 46.9 →
+27.7** — a huge apparent win, quoted as a result. Promoted to the engine and
+measured properly it is **IS +174.58R, OOS +44.67R, and 518 trades instead of
+499.**
+
+The overlay never changed the trade set, so it never saw the second-order cost:
+closing a loser early frees the slot, `cooldown_bars=8` and
+`max_consecutive_losses=3` then admit NEW trades, and those trades displace
+winners. **A post-hoc re-score cannot see a change in what gets traded.** Every
+overlay number in the FS series is suspect for the same reason; the numbers in
+the table above are all engine runs.
+
+> **An overlay is not a result. If a rule changes which trades exist, it has to be
+> run in the engine. Re-scoring closed trades only measures the old book.**
+
+## Do not retry
+
+FS as an EXIT trigger is closed on this book: time-gated exit apart, the room
+rule, the breakeven rule, the higher-timeframe direction filter and the
+FS-closed bias window have all failed in both eras. The failure is structural,
+not a tuning problem — the swing's own geometry is settled by the time it is
+read, so there is nothing left to differentiate.
+
+`exit_fs_max_gap_h` stays in the engine because arm 2 clears control in both
+eras and is pinned. `exp_fs_move_to_be` and `window_end="fs"` have both been
+REMOVED from `unified.py` — neither is reachable, and neither is a knob anyone
+should re-add on the strength of this section alone. Run the engine first.
+
+Harnesses kept for the record: `exp_fs_census.py` (the direction/room census),
+`exp_fs_room_exit.py` (idea 3), `exp_fs_untested.py` (ideas 4/5/6),
+`exp_fs_be_books.py` (idea 4 across books). Results in `_fs_*_results.json`.

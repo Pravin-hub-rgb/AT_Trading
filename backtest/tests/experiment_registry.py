@@ -1224,6 +1224,177 @@ EXPERIMENTS = {
                  "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
     },
 
+    # ===== FS-EXIT (engine knob, measured 2026-10-03 IS+OOS) =====
+    # Enter exactly as the book does, then close the position when its own
+    # swing confirms - but only when that confirmation lands within a few
+    # hours of the entry. Causal: fs_at_idx >= seg.end_idx and the book enters
+    # at a B2/flip break which sits before that, so the exit only ever reads
+    # a confirmation that already happened.
+    #
+    # The band is a plateau at 2-6h, not a knife edge - every arm in it beats
+    # the control on BOTH eras. Exiting on ANY FS is far worse than doing
+    # nothing (+133.26 IS / +57.90 OOS vs +239.12 / +72.79), because the
+    # long-gap swings are where the runners live.
+    "fsexit4_c": {
+        "desc": "champion leg + exit at own-swing FS when it lands within 4h",
+        "engine": "patched",
+"params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                     "chop_thresh": 58.0, "cooldown_bars": 8,
+                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                     "exp_partial_r": 0.0, "exp_mltf": True,
+                     "exp_persist": 7, "window_end": "exit",
+                     "pivot_rule": "leg",
+                     "exit_fs_max_gap_h": 4.0},
+        "swing": "sw10",
+        # See the FS_EXIT ladder in exp_fs_exit.py.
+        "pins": {"n": 502, "net": 289.98, "dd_net": 42.34,
+                 "oos_n": 287, "oos_net": 79.42, "oos_dd_net": 43.91},
+    },
+    # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
+    # Measured 2026-10-04 by exp_fs_directional_leg.py on CAUSAL leg-family
+    # books, both eras. Only the ENTRY TRIGGER changes on one side; the other
+    # side, the LTF cascade and every risk knob are untouched. Do not confuse
+    # with the closed FS-EXIT work in CLOSED_DO_NOT_REPEAT.md: same FS print,
+    # but used to DELAY an entry instead of to close a position.
+    "fsent_champ_long": {
+          "desc": "champion leg + LONGS enter at swing FS (shorts unchanged)",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "window_end": "exit",
+                       "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          # Directional FS entry: ONE side enters at the swing FS print, the
+          # other side unchanged. exp_fs_directional_leg.py, both eras.
+          "pins": {"n": 525, "net": 528.87, "dd_net": 14.19,
+                   "oos_n": 310, "oos_net": 243.92, "oos_dd_net": 11.88},
+      },
+
+    "fsent_champ_short": {
+          "desc": "champion leg + SHORTS enter at swing FS (longs unchanged)",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "window_end": "exit",
+                       "pivot_rule": "leg",
+                       "exp_fs_entry_side": "short"},
+          "swing": "sw10",
+          # Directional FS entry: ONE side enters at the swing FS print, the
+          # other side unchanged. exp_fs_directional_leg.py, both eras.
+          "pins": {"n": 532, "net": 571.44, "dd_net": 25.85,
+                   "oos_n": 309, "oos_net": 239.32, "oos_dd_net": 23.87},
+      },
+    # Directional FS entry, continued: a second shipping-family book and the
+    # highest-OOS book in the registry. Same knob, different base book.
+
+    "fsent_utcsat_long": {
+          "desc": "utcsat entry-1 (leg_no_entry) + LONGS enter at swing FS",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "window_end": "exit",
+                       "pivot_rule": "leg_no_entry",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          # exp_fs_directional_leg.py, both eras. dd_net pending measure.
+          "pins": {"n": 522, "net": 510.54, "dd_net": 22.47,
+                   "oos_n": 309, "oos_net": 243.09, "oos_dd_net": 11.88},
+      },
+
+    "fsent_utcsat_short": {
+          "desc": "utcsat entry-1 (leg_no_entry) + SHORTS enter at swing FS",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "window_end": "exit",
+                       "pivot_rule": "leg_no_entry",
+                       "exp_fs_entry_side": "short"},
+          "swing": "sw10",
+          # exp_fs_directional_leg.py, both eras. dd_net pending measure.
+          "pins": {"n": 530, "net": 562.98, "dd_net": 25.92,
+                   "oos_n": 308, "oos_net": 229.44, "oos_dd_net": 24.76},
+      },
+
+    "fsent_dirmatch_long": {
+          "desc": "dirmatch multi + LONGS enter at swing FS",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0,
+                       "exp_mltf": True,
+                       "exp_persist": 7,
+                       "exp_require_dir_match": 1,
+                       "window_end": "exit",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          # Directional FS entry on the registry highest-OOS book.
+          # exp_fs_directional_leg.py, both eras.
+          "pins": {"n": 426, "net": 477.38, "dd_net": 11.15,
+                   "oos_n": 237, "oos_net": 260.70, "oos_dd_net": 7.44},
+      },
+
+    "fsent_dirmatch_short": {
+          "desc": "dirmatch multi + SHORTS enter at swing FS",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0,
+                       "exp_mltf": True,
+                       "exp_persist": 7,
+                       "exp_require_dir_match": 1,
+                       "window_end": "exit",
+                       "exp_fs_entry_side": "short"},
+          "swing": "sw10",
+          # Directional FS entry on the registry highest-OOS book.
+          # exp_fs_directional_leg.py, both eras.
+          "pins": {"n": 418, "net": 658.65, "dd_net": 11.60,
+                   "oos_n": 253, "oos_net": 235.14, "oos_dd_net": 12.30},
+      },
+
+    "fsexit6_c": {
+        "desc": "champion leg + exit at own-swing FS when it lands within 6h",
+        "engine": "patched",
+"params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                     "chop_thresh": 58.0, "cooldown_bars": 8,
+                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                     "exp_partial_r": 0.0, "exp_mltf": True,
+                     "exp_persist": 7, "window_end": "exit",
+                     "pivot_rule": "leg",
+                     "exit_fs_max_gap_h": 6.0},
+        "swing": "sw10",
+        # See the FS_EXIT ladder in exp_fs_exit.py.
+        "pins": {"n": 508, "net": 303.36, "dd_net": 45.74,
+                 "oos_n": 297, "oos_net": 80.30, "oos_dd_net": 45.00},
+    },
     # ===== P36 DECAY GATE (engine knob, measured 2026-10-02 IS+OOS) =====
     "decayA_c": {
         "desc": "champion leg + decay off (control)",

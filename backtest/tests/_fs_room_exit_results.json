@@ -1,0 +1,290 @@
+{
+ "1h|control (never exit at FS)": {
+  "is": {
+   "n": 499,
+   "net": 239.12,
+   "dd": 46.85,
+   "per": 0.479,
+   "fs_exits": 0
+  },
+  "oos": {
+   "n": 280,
+   "net": 72.79,
+   "dd": 50.55,
+   "per": 0.26,
+   "fs_exits": 0
+  }
+ },
+ "1h|exit at FS if room < -1.0R": {
+  "is": {
+   "n": 499,
+   "net": 234.06,
+   "dd": 47.46,
+   "per": 0.469,
+   "fs_exits": 22
+  },
+  "oos": {
+   "n": 280,
+   "net": 70.28,
+   "dd": 52.71,
+   "per": 0.251,
+   "fs_exits": 8
+  }
+ },
+ "1h|exit at FS if room < -0.5R": {
+  "is": {
+   "n": 499,
+   "net": 241.6,
+   "dd": 46.19,
+   "per": 0.484,
+   "fs_exits": 66
+  },
+  "oos": {
+   "n": 280,
+   "net": 69.22,
+   "dd": 55.11,
+   "per": 0.247,
+   "fs_exits": 30
+  }
+ },
+ "1h|exit at FS if room <  0.0R": {
+  "is": {
+   "n": 499,
+   "net": 226.61,
+   "dd": 39.47,
+   "per": 0.454,
+   "fs_exits": 140
+  },
+  "oos": {
+   "n": 280,
+   "net": 53.39,
+   "dd": 53.02,
+   "per": 0.191,
+   "fs_exits": 70
+  }
+ },
+ "1h|exit at FS if room < +0.5R": {
+  "is": {
+   "n": 499,
+   "net": 160.75,
+   "dd": 42.61,
+   "per": 0.322,
+   "fs_exits": 189
+  },
+  "oos": {
+   "n": 280,
+   "net": 56.1,
+   "dd": 49.73,
+   "per": 0.2,
+   "fs_exits": 102
+  }
+ },
+ "1h|exit at FS if room < +1.0R": {
+  "is": {
+   "n": 499,
+   "net": 137.91,
+   "dd": 39.1,
+   "per": 0.276,
+   "fs_exits": 227
+  },
+  "oos": {
+   "n": 280,
+   "net": 69.84,
+   "dd": 44.82,
+   "per": 0.249,
+   "fs_exits": 124
+  }
+ },
+ "1h|exit at FS if room < +1.5R": {
+  "is": {
+   "n": 499,
+   "net": 121.98,
+   "dd": 37.43,
+   "per": 0.244,
+   "fs_exits": 239
+  },
+  "oos": {
+   "n": 280,
+   "net": 69.97,
+   "dd": 40.94,
+   "per": 0.25,
+   "fs_exits": 138
+  }
+ },
+ "1h|exit at FS if room < +2.0R": {
+  "is": {
+   "n": 499,
+   "net": 106.93,
+   "dd": 37.38,
+   "per": 0.214,
+   "fs_exits": 253
+  },
+  "oos": {
+   "n": 280,
+   "net": 53.25,
+   "dd": 41.13,
+   "per": 0.19,
+   "fs_exits": 150
+  }
+ },
+ "1h|exit at FS if room < +3.0R": {
+  "is": {
+   "n": 499,
+   "net": 103.57,
+   "dd": 37.38,
+   "per": 0.208,
+   "fs_exits": 271
+  },
+  "oos": {
+   "n": 280,
+   "net": 47.4,
+   "dd": 41.13,
+   "per": 0.169,
+   "fs_exits": 156
+  }
+ },
+ "4h|control (never exit at FS)": {
+  "is": {
+   "n": 401,
+   "net": 121.51,
+   "dd": 40.55,
+   "per": 0.303,
+   "fs_exits": 0
+  },
+  "oos": {
+   "n": 266,
+   "net": 33.64,
+   "dd": 51.84,
+   "per": 0.126,
+   "fs_exits": 0
+  }
+ },
+ "4h|exit at FS if room < -1.0R": {
+  "is": {
+   "n": 401,
+   "net": 94.04,
+   "dd": 43.33,
+   "per": 0.235,
+   "fs_exits": 19
+  },
+  "oos": {
+   "n": 266,
+   "net": 28.98,
+   "dd": 52.71,
+   "per": 0.109,
+   "fs_exits": 10
+  }
+ },
+ "4h|exit at FS if room < -0.5R": {
+  "is": {
+   "n": 401,
+   "net": 95.63,
+   "dd": 43.05,
+   "per": 0.238,
+   "fs_exits": 37
+  },
+  "oos": {
+   "n": 266,
+   "net": 29.58,
+   "dd": 52.87,
+   "per": 0.111,
+   "fs_exits": 21
+  }
+ },
+ "4h|exit at FS if room <  0.0R": {
+  "is": {
+   "n": 401,
+   "net": 90.08,
+   "dd": 43.05,
+   "per": 0.225,
+   "fs_exits": 52
+  },
+  "oos": {
+   "n": 266,
+   "net": 32.79,
+   "dd": 51.38,
+   "per": 0.123,
+   "fs_exits": 31
+  }
+ },
+ "4h|exit at FS if room < +0.5R": {
+  "is": {
+   "n": 401,
+   "net": 96.56,
+   "dd": 43.04,
+   "per": 0.241,
+   "fs_exits": 68
+  },
+  "oos": {
+   "n": 266,
+   "net": 35.45,
+   "dd": 50.69,
+   "per": 0.133,
+   "fs_exits": 43
+  }
+ },
+ "4h|exit at FS if room < +1.0R": {
+  "is": {
+   "n": 401,
+   "net": 61.67,
+   "dd": 42.1,
+   "per": 0.154,
+   "fs_exits": 86
+  },
+  "oos": {
+   "n": 266,
+   "net": 34.15,
+   "dd": 50.75,
+   "per": 0.128,
+   "fs_exits": 48
+  }
+ },
+ "4h|exit at FS if room < +1.5R": {
+  "is": {
+   "n": 401,
+   "net": 67.33,
+   "dd": 41.94,
+   "per": 0.168,
+   "fs_exits": 98
+  },
+  "oos": {
+   "n": 266,
+   "net": 35.69,
+   "dd": 49.74,
+   "per": 0.134,
+   "fs_exits": 57
+  }
+ },
+ "4h|exit at FS if room < +2.0R": {
+  "is": {
+   "n": 401,
+   "net": 72.49,
+   "dd": 41.94,
+   "per": 0.181,
+   "fs_exits": 107
+  },
+  "oos": {
+   "n": 266,
+   "net": 40.71,
+   "dd": 49.74,
+   "per": 0.153,
+   "fs_exits": 60
+  }
+ },
+ "4h|exit at FS if room < +3.0R": {
+  "is": {
+   "n": 401,
+   "net": 75.46,
+   "dd": 40.58,
+   "per": 0.188,
+   "fs_exits": 119
+  },
+  "oos": {
+   "n": 266,
+   "net": 33.79,
+   "dd": 49.74,
+   "per": 0.127,
+   "fs_exits": 68
+  }
+ }
+}

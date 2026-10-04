@@ -148,6 +148,51 @@ def _collect_signals(
     seen: set = set()
     store = CandleStore(candles) if candles is not None else None
 
+    # DIRECTIONAL FS ENTRY. entry_break="fs_long" / "fs_short" / "fs_both":
+    # on the chosen side(s) enter at the swing FS print instead of on the
+    # B2/FLIP/decisive break; on the other side fall through to the normal
+    # break logic unchanged. Only the TRIGGER differs - an "up" swing still
+    # makes a long. Causal: fs_at_idx is at or after the swing end bar, so
+    # that bar has closed before the print is used.
+    if str(entry_break).startswith("fs_"):
+        _which = str(entry_break)[3:]
+        for si, s in enumerate(swings):
+            if skip_first and int(s.get("swing_index", 0)) < 1:
+                continue
+            _up = s.get("dir") == "up"
+            _use_fs = (_which == "both" or (_which == "long" and _up)
+                       or (_which == "short" and not _up))
+            if not _use_fs:
+                _seg0 = s.get("seg") or {}
+                _got = False
+                for _b in (s.get("breaks") or []):
+                    if _b.get("kind") in ("B2", "FLIP", "DECISIVE") and _b.get("time"):
+                        out.append({"bar": _b["time"],
+                                    "dir": 1 if _b.get("dir") == "up" else -1,
+                                    "swing_start_px": float(_seg0.get("start_px") or 0.0),
+                                    "swing_no": int(s.get("swing_index", si)),
+                                    "kind": _b.get("kind")})
+                        _got = True
+                        break
+                continue
+            _i = s.get("fs_at_idx")
+            fs_t = None
+            if store is not None and _i is not None:
+                _i = int(_i)
+                if 0 <= _i < len(store.candles):
+                    fs_t = store.candles[_i]["date"]
+            if not fs_t:
+                fs_t = s.get("fs_at_time") or s.get("confirmed_at_time") or ""
+            if fs_t:
+                _sg = s.get("seg") or {}
+                out.append({"bar": str(fs_t),
+                            "dir": 1 if _up else -1,
+                            "swing_start_px": float(_sg.get("start_px") or 0.0),
+                            "swing_no": int(s.get("swing_index", si)),
+                            "kind": "FS"})
+        out.sort(key=lambda x: x["bar"])
+        return out
+
     for si, s in enumerate(swings):
         if skip_first and int(s.get("swing_index", 0)) < 1:
             continue
