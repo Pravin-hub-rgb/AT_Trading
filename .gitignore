@@ -60,3 +60,15 @@ backtest/tests/__pycache__/_craze_tmp*.pyc
 /_*.py
 /_*.ps1
 /_*.jsonl
+
+# Stale engine copies. Each of these is a full snapshot of unified.py written
+# by some exp_*.py harness at runtime (_htf2h, _wick, _pyr, the 1h wick arms,
+# the v18 ctx pair, the green-r arm). Six of the nine are rewritten every time
+# their harness runs, so the committed copy was never the one under test - it
+# was a snapshot of an older engine sitting next to the harness. The other
+# three are orphans: _pyr_tmp is only ever an in-memory module NAME in
+# exp_pyramid_phase2.build_pyr_module, and the two _w1h ones were written once
+# by a harness that no longer exists. _w1h_gray_tmp is still cited by name in
+# a comment in unified.py as the copy that produced exp_fs_gray; the comment
+# is the provenance, the 94 KB file was not.
+backtest/tests/_*_tmp.py
