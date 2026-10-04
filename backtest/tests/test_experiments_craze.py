@@ -98,7 +98,10 @@ def _build_module():
                   '    exp_skipwin=0,\n'
                   '    exp_swingpause=0,\n'
                   '    exp_skipwin_halt=0,\n'
-                  '    exp_skip_weekend=0,\n'
+                  # exp_skip_weekend is NOT injected: unified.py owns it now.
+                  # Leaving it here would be a duplicate argument in the
+                  # generated signature - SyntaxError at build time, the same
+                  # way exp_causal_sl was, per the note below.
                   '    exp_kinds="",\n'
                   '    exp_skip_utc_sat=0,\n'
                   '    exp_skip_utc_sun=0,\n'
@@ -939,16 +942,13 @@ def _build_module():
     # 3d-3) D3 pattern gates from the loss autopsy: weekend skip + entry-kind filter.
     t_c5 = '    halt_ts=0\n'
     assert s.count(t_c5) == 1, "halt_ts init"
+    # _wd_cache / _is_weekend are NOT injected here any more: exp_skip_weekend
+    # now lives in unified.py, which owns both, and a second definition later in
+    # the text would SHADOW the engine's own - the port would be invisible to
+    # every pin and the injection would be the thing actually running. Only the
+    # UTC helper stays, because exp_skip_utc_sat / exp_skip_utc_sun are still
+    # harness-only knobs.
     s = s.replace(t_c5, t_c5 +
-                  '    _wd_cache={}\n'
-                  '    def _is_weekend(dstr):\n'
-                  '        _d = dstr[:10]\n'
-                  '        _w = _wd_cache.get(_d)\n'
-                  '        if _w is None:\n'
-                  '            import datetime as _dt\n'
-                  '            _w = _dt.date(int(_d[:4]), int(_d[5:7]), int(_d[8:10])).weekday()\n'
-                  '            _wd_cache[_d] = _w\n'
-                  '        return _w\n'
                   '    def _utc_wd(dstr):\n'
                   '        import datetime as _dt\n'
                   '        _p = _dt.datetime.strptime(dstr[:16], "%Y-%m-%d %H:%M")\n'
@@ -956,8 +956,6 @@ def _build_module():
     t_c6 = '        direction=int(sig["dir"])\n'
     assert s.count(t_c6) == 1, "walk dir2"
     s = s.replace(t_c6,
-                  '        if exp_skip_weekend and _is_weekend(candles_ltf[i]["date"]) >= 5:\n'
-                  '            continue\n'
                   '        if exp_skip_utc_sat and _utc_wd(candles_ltf[i]["date"]) == 5:\n'
                   '            if exp_shadow_book: _sr["reason"]="utc_saturday"\n'
                   '            continue\n'

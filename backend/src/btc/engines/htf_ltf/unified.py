@@ -373,6 +373,15 @@ def simulate_htf_ltf_streak_halt(
                            # "short" = SHORTS enter at the swing FS print, longs at break
                            # "both"  = both sides at FS (measured weaker than either one)
                            # "" (default) = off; every side enters at the break as before
+    # Weekend entry blackout, in the candle's OWN timezone (UTC), not the
+    # exchange-local one that exp_skip_utc_sat/sun use. This is the knob the
+    # signal book runs on (fsent_sig_full, and the whole fsent_sig_* ladder).
+    # Reads only candles_ltf[i]["date"] - the bar being evaluated for entry,
+    # which has already closed. No swing is read at all, so there is nothing
+    # here that can settle later than the decision bar: this filter cannot
+    # read the future. Default 0 = off, which is what keeps the shipped
+    # trade list byte-identical to every book measured before it existed.
+    exp_skip_weekend=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -894,6 +903,21 @@ def simulate_htf_ltf_streak_halt(
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
+    # Weekday helper for exp_skip_weekend, memoised per calendar DAY: the walk
+    # re-evaluates the same date once per LTF bar, and strptime/date() per bar
+    # is pure overhead on a 4-year replay. The cache is keyed on the date
+    # substring only, so it holds one int per distinct day and cannot grow per
+    # bar. A local function rather than a module-level one because the cache is
+    # per-simulate() call and must not be shared across books.
+    _wd_cache={}
+    def _is_weekend(dstr):
+        _d = dstr[:10]
+        _w = _wd_cache.get(_d)
+        if _w is None:
+            import datetime as _dt
+            _w = _dt.date(int(_d[:4]), int(_d[5:7]), int(_d[8:10])).weekday()
+            _wd_cache[_d] = _w
+        return _w
     # Window bounds for the audit trail, carried on every booked trade.
     # Captured into their own names rather than read from s/e at the append
     # site: the union branch (mode=="union") unpacks into _s/_e and only
@@ -924,6 +948,8 @@ def simulate_htf_ltf_streak_halt(
         if halt_skip_next:
             halt_skip_next=False
             consecutive_losses=0
+            continue
+        if exp_skip_weekend and _is_weekend(candles_ltf[i]["date"]) >= 5:
             continue
         direction=int(sig["dir"])
         entry=float(candles_ltf[i]["close"])
