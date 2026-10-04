@@ -1498,6 +1498,37 @@ EXPERIMENTS = {
     # Both fields are settled at or before confirmed_at_idx and the FS bar has
     # closed, so this is knowable - unlike the same quantity read at the entry
     # bar, which is M2 and is closed as retrospective. exp_fs_small_swing.py.
+    # ===== THE SIGNAL BOOK =====
+    # One position at a time. weekend + swingpause + shorts entering at the swing
+    # FS print. Both filters are period-level/structural, which is what survived
+    # validation in ANCHOR_BASIS_AUDIT.md; the per-trade indicators (chop15 band,
+    # atr-ratio) were rejected there and are deliberately absent here.
+    # Measured against the PURE BASELINE (same base knobs, zero filters), which
+    # is OOS +41.1R - this book is what makes a one-position book viable.
+    "fsent_sig_wk_pause_short": {
+          "desc": "SIGNAL book: one position, weekend+pause, SHORTS enter at swing FS",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_skip_weekend": 1,
+                       "exp_swingpause": 1,
+                       "exp_fs_entry_side": "short",
+                       "max_positions": 1},
+          "swing": "sw10",
+          # exp_fs_single.py / exp_fs_untested.py arm set, both eras.
+          # peak concurrent positions verified = 1.
+          "pins": {"n": 302, "net": 206.87, "dd_net": 10.6,
+                   "oos_n": 179, "oos_net": 128.77, "oos_dd_net": 10.5},
+      },
     "fsswing6_c": {
           "desc": "champion leg + exit at own-swing FS when its leg is under 6x ATR",
           "engine": "patched",
