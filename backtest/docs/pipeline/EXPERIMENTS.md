@@ -51,10 +51,40 @@ These are tools, not findings. They are the ones that must keep working.
 | `exp_pinverify.py` | does the engine reproduce **every** pin | ~30 min |
 | `exp_origin_lookahead.py` | the standing gates: stop source, hygiene, aliases | ~30s |
 | `exp_directional_evidence.py` | was the swing read here settled at the decision bar | slow |
+| `exp_port_differential.py` | shipped engine vs patched engine, same params | ~10 min |
+| `exp_registry_snapshot.py` | did a registry change alter any book | seconds |
 
 **`exp_fastcheck.py` is the one to reach for.** It names the books it checked
 *and the ones it did not*, on purpose. `exp_pinverify.py` remains the only thing
 that can discharge the registry-wide claim.
+
+### The registry is a package
+
+`experiment_registry.py` is now a ~40-line re-export. The 223 books live in
+`backtest/tests/registry/`:
+
+| module | what is in it |
+|---|---|
+| `base.py` | `ENGINE_DEFAULTS`, `BP` — the base every book inherits |
+| `signal.py` | the one-position books: FS exit, directional entry, the signal book |
+| `trail.py` | exit-side trail shapes, the trail sweep surface, trail quality |
+| `risk.py` | decay gates, window caps, risk width, entry quality, baselines |
+| `d3.py` | the loss-autopsy families |
+| `sweep.py` | the grid sweeps: final audit, script-grid, knob-gap |
+| `kingsweep.py` | the kingsweep, the optimal lanes, our champions |
+| `groups.py` | batch-run groups, copied verbatim |
+| `helpers.py` | alias resolution and the shortlist rule |
+| `__init__.py` | merges the families, derives `ALIASES`, re-exports the API |
+
+To add a book, drop the dict into the right family module — there is no index
+to update. `ALIASES` is derived *after* the merge, because it is a
+comprehension over the str-valued rows; building it per family yields a partial
+ALIASES that still imports cleanly and silently resolves less.
+
+`exp_registry_snapshot.py` compares the whole public surface before and after
+any registry change. A registry edit does not fail loudly when it goes wrong —
+it loses a book quietly, or an alias stops resolving — so run `write` before
+and `check` after.
 
 ## Causality audits
 
