@@ -15,18 +15,24 @@ represented, the marginal knob is a fit, not a filter.
 
 ## The eight families
 
-### 1. PLANE — single vs multi
+### 1. PLANE — signal vs multi
 
-Not a knob. The first decision, and the one that changes what "a trade" means.
+Not a knob in the same sense as the others. **Signal and multi are different
+books, not two settings of one book.** A multi book stays multi and is never
+converted into a signal book; a signal book is built for one position and carries
+its own filters, its own research and its own theory.
 
-| plane | positions | who can trade |
+| book type | positions | who it is for |
 |---|---|---|
-| **signal** (`max_positions=1`) | exactly one | an account that cannot carry concurrent losers |
-| **multi** (`max_positions=0`) | unlimited | an account that can |
+| **signal** | exactly one at a time | an account that cannot carry concurrent losers |
+| **multi** | several at once | an account that can |
 
-`max_positions` is the only knob in this family. Everything else is downstream of
-it: serialising throws trades away, so a knob that stacks well in multi can be
-useless in signal.
+`max_positions` is how a signal book is *built*, and it is downstream of
+everything else: holding one position throws trades away, so a knob that stacks
+well in a multi book may be useless in a signal book. The gate bites on the
+1h-only architecture and is inert on a cascade book (0/1/2/3 give identical
+books there), which is why every signal book today is 1h-only. That is a property
+of the engine, not a defect to chase — multi books stay multi.
 
 ### 2. PRICE ACTION — what the structure looks like
 

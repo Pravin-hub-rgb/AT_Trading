@@ -17,7 +17,7 @@ it takes. Generated from the registry; regenerate rather than hand-edit.
 | knob | books | what it does |
 |---|---:|---|
 | `exp_mltf` | 160 | enable the LTF cascade *(values: True)* |
-| `max_positions` | 4 | 1 = signal plane (one position), 0 = multi (unlimited) *(values: 0, 1)* |
+| `max_positions` | 4 | how a SIGNAL book is built: 1 = one position, 0 = unlimited. Multi books stay multi; this is not a converter *(values: 0, 1)* |
 
 ### Trigger
 

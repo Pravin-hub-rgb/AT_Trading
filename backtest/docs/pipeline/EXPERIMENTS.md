@@ -80,7 +80,7 @@ known failure rather than a gate.
 |---|---|---|
 | `exp_fs_census.py` | does the FS point the same way as the entry | census, no rule |
 | `exp_fs_directional_leg.py` | directional FS entry on causal leg books | became `exp_fs_entry_side` |
-| `exp_fs_single.py` | does it work on the single plane, and serial | became `exp_fs_entry_side` + `max_positions` |
+| `exp_fs_single.py` | does it work on the 1h-only architecture, and with one position | became `exp_fs_entry_side` + signal books |
 | `exp_fs_room_exit.py` | exit when the room from entry is small | failed |
 | `exp_fs_untested.py` | breakeven on FS, 4h filter, window closed at FS | all failed |
 | `exp_fs_small_swing.py` | exit when the swing's own leg is small | became `exp_fs_small_swing` |

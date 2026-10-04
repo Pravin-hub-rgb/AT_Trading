@@ -10,61 +10,62 @@ against 220 registry rows.
 
 ## The primary axis is POSITION
 
-The owner's word for this was "single": **one position at a time**. That is
-`max_positions`, and it is the axis that decides whether a book can be deployed
-at all.
+The owner's word for this was "single": **one position at a time**. That is the
+axis that decides what a book is for.
 
-| position gate | `max_positions` | books |
-|---|---|---:|
-| **SIGNAL** — exactly one position | 1 | **4** |
-| **MULTI** — unlimited concurrent | 0 | 216 |
+| book type | positions | `max_positions` | books |
+|---|---|---:|---:|
+| **SIGNAL** | exactly one | 1 | **4** |
+| **MULTI** | several at once | 0 | 216 |
 
-**A book that stacks positions cannot be deployed on an account that cannot
-carry concurrent losers.** That is a capital constraint, not a preference, and
-it is the question the live decision turns on.
+> **These are two different books, not two settings of one book.** A multi book
+> stays multi forever and is never converted into a signal book. A signal book
+> is built for one position and carries its own filters, its own research and its
+> own theory.
 
-### There is a second axis, and it is not the same thing
+**The deployment plan follows that split.** Ship a signal book first, because an
+account without capital for concurrent losers cannot run a multi book. Raise
+capital from it, and only then deploy the multi books, which were always going to
+be multi.
 
-`exp_mltf` selects the architecture: whether the 15m cascade runs inside each
-HTF bias window, or only the 1h book trades.
+### The second axis is architecture, not position
+
+`exp_mltf` selects whether the 15m cascade runs inside each HTF bias window or
+only the 1h book trades. That is a separate question from how many positions a
+book holds.
 
 | architecture | `exp_mltf` | books |
 |---|---|---:|
 | cascade | True | 160 |
 | 1h only | absent | 60 |
 
-The two are independent, and the cross-tab is the important part:
+The two axes are independent, and the cross-tab is:
 
 | | SIGNAL (1 position) | MULTI (unlimited) |
 |---|---:|---:|
 | **cascade** | **0** | 160 |
 | **1h only** | 3 | 57 |
 
-> **No cascade book exists on the signal plane. Not one, out of 160.**
+All four signal books are 1h-only, which is what makes them buildable today: the
+position gate bites on the 1h-only architecture and is inert on a cascade book
+(measured: 0/1/2/3 give byte-identical books at peak concurrency 6). That is a
+property of the engine, not a finding about cascade books — and it does not
+need fixing, because cascade books are going to stay multi anyway.
 
-## And the gate does not work on cascade books
+### The signal books already exist and work
 
-Measured on `champion_multi_sw10_leg`, sample:
+They are not a plan, they are measured and pinned:
 
-| `max_positions` | trades | net R | peak concurrent |
-|---:|---:|---:|---:|
-| 0 | 499 | +239.12 | **6** |
-| 1 | 499 | +239.12 | **6** |
-| 2 | 499 | +239.12 | **6** |
-| 3 | 499 | +239.12 | **6** |
+| book | IS | OOS |
+|---|---|---|
+| `fsent_sig_sw10_short` | 369 / +174.30 / DD 16.62 | 239 / +100.94 / DD 11.82 |
+| `fsent_sig_sw10_long` | 355 / +116.40 / DD 21.07 | 230 / +80.50 / DD 13.53 |
+| `fsent_sig_sw20_short` | 343 / +146.90 / DD 32.46 | 203 / +95.00 / DD 10.23 |
+| `fsent_single_sw20_short_wr` | 515 / +492.60 / DD 14.15 | 283 / +179.80 / DD 8.48 |
 
-**The position gate is inert on cascade books.** It only bites on the 1h-only
-architecture, where the same sweep gives 396 trades at peak concurrency 1. It is
-also all-or-nothing — 1, 2 and 3 produce identical books, so there is no partial
-concurrency control.
-
-**So the plan of "signal first, multi later" is blocked at the engine, not at
-the research.** Building a signal book today means building it on the 1h-only
-architecture. Making a cascade book signal-capable needs the gate wired into the
-cascade path, which is an engine change.
-
-Whether a cascade book's edge *is* the stacking is exactly what that change
-would answer. Right now the question cannot be asked.
+All of them hold exactly one position at a time. What is still open is *which*
+one to ship, and what filters to build on top of it — that is the next question,
+not the existence of the book type.
 
 ## Inside a plane, the filter families
 

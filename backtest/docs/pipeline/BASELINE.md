@@ -3,12 +3,18 @@
 Every comparison in this repo is against something. That something has to be the
 *pure* book, or the comparison is against an accident.
 
-## The two axes
+## The two book types
 
-**Plane** comes first, because it changes what a trade is. A **signal** book
-(`max_positions=1`) can hold one position; a **multi** book (`max_positions=0`)
-can hold many. These are different books with different denominators and their
-numbers must never be compared to each other.
+**Signal and multi are separate books, not two settings of one book.** A multi
+book holds several positions at once and stays that way; it is never converted
+into a signal book. A signal book is built to hold exactly one position
+(`max_positions=1`) and carries its own filters, its own research and its own
+theory. A **cascade** book (`exp_mltf`) is the architecture where the 15m
+cascade runs inside each HTF window; the position gate does not bite there, which
+is why every signal book today is 1h-only.
+
+Numbers from the two book types have different denominators and are never
+compared to each other.
 
 **Everything else** is a knob on the same engine. So the baseline is: HTF
 produces bias windows, LTF takes the trades, and *nothing else is added*.
