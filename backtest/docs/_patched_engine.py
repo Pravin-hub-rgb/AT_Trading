@@ -278,11 +278,9 @@ def simulate_htf_ltf_streak_halt(
     exp_curfew_b=0.0,
     exp_defer_h=0.0,
     exp_legskip_r=0.0,
-    exp_partial_r=0.0,
     exp_skipwin=0,
     exp_swingpause=0,
     exp_skipwin_halt=0,
-    exp_skip_weekend=0,
     exp_kinds="",
     exp_skip_utc_sat=0,
     exp_skip_utc_sun=0,
@@ -336,16 +334,9 @@ def simulate_htf_ltf_streak_halt(
     exp_entry_candle_min=0.0,
     exp_entry_swing_age_max=0,
     exp_entry_skip_b2_doji=0,
-    exp_bias_momentum_min=0.0,
-    exp_union_dual_only=0,
-    exp_bm_causal=0,
     exp_min_swing_ratio=0.0,
     exp_wick_reject=0.0,
     exp_trail_max_dist=0.0,
-    exp_trail_delay_r=0.0,
-    exp_trail_delay_prevbar=0,
-    exp_trail_skip_n=0,
-    exp_trail_half=0,
     exp_retest_fill=0.0,
     exp_retest_wait=240,
     exp_profit_stage_r=0.0,
@@ -485,6 +476,69 @@ def simulate_htf_ltf_streak_halt(
                            # "short" = SHORTS enter at the swing FS print, longs at break
                            # "both"  = both sides at FS (measured weaker than either one)
                            # "" (default) = off; every side enters at the break as before
+    # Weekend entry blackout, in the candle's OWN timezone (UTC), not the
+    # exchange-local one that exp_skip_utc_sat/sun use. This is the knob the
+    # signal book runs on (fsent_sig_full, and the whole fsent_sig_* ladder).
+    # Reads only candles_ltf[i]["date"] - the bar being evaluated for entry,
+    # which has already closed. No swing is read at all, so there is nothing
+    # here that can settle later than the decision bar: this filter cannot
+    # read the future. Default 0 = off, which is what keeps the shipped
+    # trade list byte-identical to every book measured before it existed.
+    exp_skip_weekend=0,
+    # Partial exit: take half off at a fixed R, let the rest run.
+    # exp_partial_r = the R level at which the half is sold. 0.0 (default) = off.
+    # The arm test reads only `best`, the running favourable extreme of the
+    # trade so far, at the bar being processed - so the trigger is knowable in
+    # real time and never reads a future high. The R that gets BOOKED is then
+    # half the trigger plus half the final move, i.e. the position is genuinely
+    # cut in half, not scored as if it were. Both halves are reported:
+    # partial_exit_price on the trade, and r_multiple blended.
+    # Note this is a position-size change, not an exit - the trade still runs to
+    # its own SL/target. 205 books set it, but 192 of those set 0.0.
+    exp_partial_r=0.0,
+    # Bias-momentum floor: only enter when the HTF bias has momentum behind
+    # it, measured as swing-over-swing leg magnitude on the 1h chain.
+    # exp_bias_momentum_min = the minimum ratio of this leg to the previous
+    # one. 0.0 (default) = off. Values used: 0.5 / 0.6 / 0.7 / 0.8.
+    # Reads swings_htf[i]["seg"].start_px / end_px for the RATIO, and the
+    # swing's own "breaks" list for WHEN the ratio became knowable. That is
+    # the causal question this knob has to answer, and it is the reason
+    # exp_bm_causal exists below: seg.start_px and end_px are only final once
+    # the leg completes, which is AFTER the entry bar.
+    #   exp_bm_causal = 0 (default): take the last break declared at or before
+    #     the entry bar, by break time.
+    #   exp_bm_causal = 1: additionally walk back until the swing that owns
+    #     that break had CONFIRMED (confirmed_at_idx -> candle_ts_htf + 1h)
+    #     by the entry instant, so only legs whose final label was already
+    #     settled may be read. This is the setting that makes the knob
+    #     defensible; the default keeps every historical pin reproducible.
+    # This is the runner-up filter in KNOB_SWEEP.md (d_oos +57.21 at 0.9) and
+    # it is one of the four the signal book cannot run without.
+    exp_bias_momentum_min=0.0,
+    exp_union_dual_only=0,
+    exp_bm_causal=0,
+    # Trail shaping - three knobs and a skip counter, all reading the trail
+    # event stream the engine already builds. They gate or soften the RATCHET,
+    # never the SL check, and the ratchet fires BEFORE the SL check on the same
+    # bar (D3 ordering, 2026-09-20), so a gated ratchet simply leaves the stop
+    # where it was for that event.
+    #   exp_trail_delay_r  - do not ratchet until unrealised R reaches this
+    #     (0.0 = never delay). Read from `best`, the running extreme.
+    #   exp_trail_half     - ratchet halfway to the candidate instead of all
+    #     the way (0 = full ratchet). Half is the setting that survived the
+    #     equity study; it tightens less, so it gives back less when the move
+    #     reverses.
+    #   exp_trail_delay_prevbar - measure the delay from the PREVIOUS bar's
+    #     best_f rather than the current one (0 = current bar). Fine path only.
+    #   exp_trail_skip_n   - drop the first N trail events outright, so a new
+    #     position's stop does not ratchet on the first few confirmations
+    #     (0 = never skip). This is the one the signal book runs at 2.
+    # Default 0 everywhere: the shipped ratchet is the full, immediate one, and
+    # every gate is inert until a book asks for it.
+    exp_trail_delay_r=0.0,
+    exp_trail_half=0,
+    exp_trail_delay_prevbar=0,
+    exp_trail_skip_n=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -557,6 +611,16 @@ def simulate_htf_ltf_streak_halt(
         _px = float(candles_ltf[_i]["close"])
         if _a20[_i] > 0:
             _ar15[_i] = _a5[_i] / _a20[_i]
+    # Bias-momentum precompute. Built once per call, before the entry walk,
+    # because the gate below bisects it per candidate signal. One tuple per
+    # HTF break, not per swing: a swing can print several breaks and each one
+    # is a separate moment the ratio became tradeable.
+    #   _bm_mags   - |end_px - start_px| per HTF swing, the leg magnitudes
+    #   _bm_breaks - (break_time[:19], ratio_vs_prev_leg, owner_confirmed_idx)
+    #   _bm_times  - the first field only, for bisect
+    # Built unconditionally rather than under `if exp_bias_momentum_min`, so
+    # the cost does not depend on which book is running and the default path
+    # stays byte-identical to a build with the block absent.
     _bm_mags=[]
     for _bm_s in swings_htf:
         _bm_seg=_bm_s.get("seg") or {}
@@ -1336,15 +1400,6 @@ def simulate_htf_ltf_streak_halt(
         _csh[_ci] = _chi
     last_loss_ts=0
     halt_ts=0
-    _wd_cache={}
-    def _is_weekend(dstr):
-        _d = dstr[:10]
-        _w = _wd_cache.get(_d)
-        if _w is None:
-            import datetime as _dt
-            _w = _dt.date(int(_d[:4]), int(_d[5:7]), int(_d[8:10])).weekday()
-            _wd_cache[_d] = _w
-        return _w
     def _utc_wd(dstr):
         import datetime as _dt
         _p = _dt.datetime.strptime(dstr[:16], "%Y-%m-%d %H:%M")
@@ -1368,6 +1423,21 @@ def simulate_htf_ltf_streak_halt(
     _exp_win_skip_used=False
     consecutive_losses=0
     halt_skip_rem=0  # >0: skip this many more entries after N-loss halt
+    # Weekday helper for exp_skip_weekend, memoised per calendar DAY: the walk
+    # re-evaluates the same date once per LTF bar, and strptime/date() per bar
+    # is pure overhead on a 4-year replay. The cache is keyed on the date
+    # substring only, so it holds one int per distinct day and cannot grow per
+    # bar. A local function rather than a module-level one because the cache is
+    # per-simulate() call and must not be shared across books.
+    _wd_cache={}
+    def _is_weekend(dstr):
+        _d = dstr[:10]
+        _w = _wd_cache.get(_d)
+        if _w is None:
+            import datetime as _dt
+            _w = _dt.date(int(_d[:4]), int(_d[5:7]), int(_d[8:10])).weekday()
+            _wd_cache[_d] = _w
+        return _w
     # Window bounds for the audit trail, carried on every booked trade.
     # Captured into their own names rather than read from s/e at the append
     # site: the union branch (mode=="union") unpacks into _s/_e and only
@@ -1429,6 +1499,19 @@ def simulate_htf_ltf_streak_halt(
             continue
         if exp_skip_decisive and use=="decisive":
             continue
+        if exp_skip_weekend and _is_weekend(candles_ltf[i]["date"]) >= 5:
+            continue
+        if exp_bias_momentum_min > 0 and _bm_breaks:
+            _bm_idx = bs.bisect_right(_bm_times, sig["bar"][:19]) - 1
+            if exp_bm_causal:
+                _bm_ets = candle_ts_ltf[i] + 900  # entry instant = signal bar close
+                while _bm_idx >= 0:
+                    _bm_c = _bm_breaks[_bm_idx][2]
+                    if 0 <= _bm_c < len(candle_ts_htf) and candle_ts_htf[_bm_c] + 3600 <= _bm_ets:
+                        break
+                    _bm_idx -= 1  # owner unconfirmed at entry: walk to last DECLARED break
+            if _bm_idx >= 0 and _bm_breaks[_bm_idx][1] < exp_bias_momentum_min:
+                continue
         if exp_skipwin > 0 and last_loss_ts > 0:
             if use == "flip":
                 _starts = starts_flip
@@ -1617,8 +1700,6 @@ def simulate_htf_ltf_streak_halt(
                 if _window_key in _exp_win_window_killed:
                     _exp_win_window_kill_stats["blocked_entries"]+=1
                     continue
-        if exp_skip_weekend and _is_weekend(candles_ltf[i]["date"]) >= 5:
-            continue
         if exp_skip_utc_sat and _utc_wd(candles_ltf[i]["date"]) == 5:
             if exp_shadow_book: _sr["reason"]="utc_saturday"
             continue
@@ -1632,17 +1713,6 @@ def simulate_htf_ltf_streak_halt(
             continue
         if exp_atr_ratio_max > 0 and _ar15[i] > exp_atr_ratio_max:
             continue
-        if exp_bias_momentum_min > 0 and _bm_breaks:
-            _bm_idx = bs.bisect_right(_bm_times, sig["bar"][:19]) - 1
-            if exp_bm_causal:
-                _bm_ets = candle_ts_ltf[i] + 900  # entry instant = signal bar close
-                while _bm_idx >= 0:
-                    _bm_c = _bm_breaks[_bm_idx][2]
-                    if 0 <= _bm_c < len(candle_ts_htf) and candle_ts_htf[_bm_c] + 3600 <= _bm_ets:
-                        break
-                    _bm_idx -= 1  # owner unconfirmed at entry: walk to last DECLARED break
-            if _bm_idx >= 0 and _bm_breaks[_bm_idx][1] < exp_bias_momentum_min:
-                continue
         if exp_min_swing_ratio > 0 and sig.get("swing_no") is not None:
             _sni = int(sig["swing_no"])
             if 0 <= _sni < len(swings_ltf):
@@ -1797,9 +1867,7 @@ def simulate_htf_ltf_streak_halt(
             i = bisect.bisect_right(candle_ts, fine_ts[_retest_fill_k]) - 1
             retest_stats["filled"] += 1
         sl0=sl; sl_cur=sl; best=entry
-        _partial_taken=False; _partial_r=0.0
         _profit_stage_fired=False
-        _trail_skip_rem=exp_trail_skip_n
         _exp_5m_entry_k=None
         if exp_5m_confirm>0 and fine_ltf and exp_5m_data:
             _exp_5m_stats["candidates"] += 1
@@ -1843,6 +1911,8 @@ def simulate_htf_ltf_streak_halt(
             target=entry+3.0*risk if direction==1 else entry-3.0*risk
             sl0=sl; sl_cur=sl; best=entry
             _exp_5m_stats["confirmed"] += 1; _exp_5m_stats["delayed"] += 1
+        _partial_taken=False; _partial_r=0.0
+        _trail_skip_rem=exp_trail_skip_n
         # Trail events: timestamp-based (confirmed_at_time â†’ position via store)
         want_dir = "up" if direction == 1 else "down"
         events = []
@@ -2074,14 +2144,11 @@ def simulate_htf_ltf_streak_halt(
                             fk, exit_px_f, outcome_f = k, float(c["close"]), "fs_exit"
                             break
                 _best_f_prev=best_f
+                _best_f_prev=best_f
                 if direction==1:
                     if hi>best_f: best_f=hi
                 else:
                     if lo<best_f: best_f=lo
-                if exp_partial_r>0 and not _partial_taken and risk>0:
-                    _cur_rf=(best_f-entry)*direction/risk
-                    if _cur_rf>=exp_partial_r:
-                        _partial_taken=True; _partial_r=exp_partial_r
                 if exp_profit_stage_r>0 and exp_profit_stage_distance_r>0 and risk>0:
                     _stage_prev_r=(_best_f_prev-entry)*direction/risk
                     if _stage_prev_r>=exp_profit_stage_r:
@@ -2091,6 +2158,10 @@ def simulate_htf_ltf_streak_halt(
                             if _stage_px>sl_cur_f: sl_cur_f=_stage_px
                         else:
                             if _stage_px<sl_cur_f: sl_cur_f=_stage_px
+                if exp_partial_r>0 and not _partial_taken and risk>0:
+                    _cur_rf=(best_f-entry)*direction/risk
+                    if _cur_rf>=exp_partial_r:
+                        _partial_taken=True; _partial_r=exp_partial_r
                 if direction==1:
                     # D3 ordering fix 2026-09-20: ratchet BEFORE the SL check â€”
                     # the stop is armed at the activation instant (bar open), so
@@ -2168,6 +2239,9 @@ def simulate_htf_ltf_streak_halt(
             exit_ts=int(candles_ltf[exit_idx]["ts"])
             exit_date=candles_ltf[exit_idx]["date"]
         move=(exit_px-entry) if direction==1 else (entry-exit_px)
+        # Partial accounting. When the half was taken, the booked R is half the
+        # trigger plus half the remaining move - the position really was cut, so
+        # scoring it as a whole position would overstate every partial book.
         _partial_exit_price=0.0
         if _partial_taken and risk>0:
             _partial_exit_price=entry+direction*_partial_r*risk
@@ -2212,6 +2286,9 @@ def simulate_htf_ltf_streak_halt(
             "outcome": outcome,
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,
+            # 0.0 when exp_partial_r never armed. run_experiment.py counts and
+            # reports partials off this field, so it has to be present even on
+            # the books that never take one.
             "partial_exit_price": round(_partial_exit_price, 2) if _partial_exit_price > 0 else 0.0,
             "window_key": _window_key,
             "loss_streak_at_entry": _exp_streak,

@@ -47,6 +47,13 @@ def _shortlisted():
     """The same rule the board uses: a size filter, not a verdict."""
     out = []
     for k, v in reg.EXPERIMENTS.items():
+        # EXPERIMENTS holds a few alias rows whose value is a STRING pointing
+        # at the real book. They are not books, so they have no pins and must
+        # not reach .get(). _pinned() already guards for this; this one did
+        # not, which made `exp_fastcheck --top N` raise AttributeError before
+        # checking anything.
+        if not isinstance(v, dict):
+            continue
         p = v.get("pins") or {}
         if not p.get("n"):
             continue
