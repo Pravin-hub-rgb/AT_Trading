@@ -8,47 +8,63 @@ against 220 registry rows.
 **The first question about any book is not "which knobs does it have", it is
 "which plane is it on".** Everything else nests inside that.
 
-## The two axes, and they are independent
+## The primary axis is POSITION
 
-A lot of confusion in this repo came from using the word "single" for two
-different things. They are separate axes and both are real.
+The owner's word for this was "single": **one position at a time**. That is
+`max_positions`, and it is the axis that decides whether a book can be deployed
+at all.
 
-### Axis 1 — PLANE (architecture). Set by `exp_mltf`.
-
-| plane | what runs | books |
+| position gate | `max_positions` | books |
 |---|---|---:|
-| **SINGLE** | the 1h book only. One swing chain, one set of trades. | 60 |
-| **MULTI** | the 1h book *plus* the 15m cascade inside each bias window. | 160 |
+| **SIGNAL** — exactly one position | 1 | **4** |
+| **MULTI** — unlimited concurrent | 0 | 216 |
 
-**A MULTI book is a different machine, not a filtered SINGLE book.** The bias
-window stops being a filter and becomes a container: the 1h trade is not the
-trade, it is the *permission*, and the 15m cascade supplies the trades. Numbers
-from the two planes have different denominators and are never comparable.
+**A book that stacks positions cannot be deployed on an account that cannot
+carry concurrent losers.** That is a capital constraint, not a preference, and
+it is the question the live decision turns on.
 
-### Axis 2 — POSITION GATE. Set by `max_positions`.
+### There is a second axis, and it is not the same thing
 
-| gate | meaning | books |
+`exp_mltf` selects the architecture: whether the 15m cascade runs inside each
+HTF bias window, or only the 1h book trades.
+
+| architecture | `exp_mltf` | books |
 |---|---|---:|
-| `max_positions=1` | **signal plane** — exactly one position at a time | **4** |
-| `max_positions=0` | unlimited concurrent positions | 216 |
+| cascade | True | 160 |
+| 1h only | absent | 60 |
 
-### The cross-tab, which is the whole point
+The two are independent, and the cross-tab is the important part:
 
-| | signal (1 position) | multi (unlimited) |
+| | SIGNAL (1 position) | MULTI (unlimited) |
 |---|---:|---:|
-| **SINGLE** | 3 | 57 |
-| **MULTI** | **0** | 160 |
+| **cascade** | **0** | 160 |
+| **1h only** | 3 | 57 |
 
-> **There is no MULTI book on the signal plane. Not one.** Every multi-timeframe
-> book in this repo can hold unlimited concurrent positions.
+> **No cascade book exists on the signal plane. Not one, out of 160.**
 
-That is not an oversight, it is the thing to decide next. A multi book is a
-stacking machine — its edge may *be* the stacking. If it is, it cannot be
-deployed on an account that cannot carry concurrent losers, and a signal-plane
-multi book is a different research question, not a configuration change.
+## And the gate does not work on cascade books
 
-`max_positions=1` on a MULTI book is not a one-flag experiment: serialising
-throws trades away, so every knob that stacks well may stop working.
+Measured on `champion_multi_sw10_leg`, sample:
+
+| `max_positions` | trades | net R | peak concurrent |
+|---:|---:|---:|---:|
+| 0 | 499 | +239.12 | **6** |
+| 1 | 499 | +239.12 | **6** |
+| 2 | 499 | +239.12 | **6** |
+| 3 | 499 | +239.12 | **6** |
+
+**The position gate is inert on cascade books.** It only bites on the 1h-only
+architecture, where the same sweep gives 396 trades at peak concurrency 1. It is
+also all-or-nothing — 1, 2 and 3 produce identical books, so there is no partial
+concurrency control.
+
+**So the plan of "signal first, multi later" is blocked at the engine, not at
+the research.** Building a signal book today means building it on the 1h-only
+architecture. Making a cascade book signal-capable needs the gate wired into the
+cascade path, which is an engine change.
+
+Whether a cascade book's edge *is* the stacking is exactly what that change
+would answer. Right now the question cannot be asked.
 
 ## Inside a plane, the filter families
 
