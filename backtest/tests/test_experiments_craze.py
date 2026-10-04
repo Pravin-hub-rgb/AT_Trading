@@ -155,7 +155,9 @@ def _build_module():
                   '    exp_entry_candle_min=0.0,\n'
                   '    exp_entry_swing_age_max=0,\n'
     '    exp_entry_skip_b2_doji=0,\n'
-    '    exp_bias_momentum_min=0.0,\n'
+    # exp_bias_momentum_min and exp_bm_causal are NOT injected: unified.py owns
+    # both, plus the _bm_breaks precompute this gate bisects. Re-injecting the
+    # kwarg is a duplicate-argument SyntaxError.
     '    exp_min_swing_ratio=0.0,\n'
     '    exp_wick_reject=0.0,\n'
     # PHASE 2, 2026-10-01: exp_causal_sl injection REMOVED. unified.py carries
@@ -1299,29 +1301,24 @@ def _build_module():
                   '        _a20[_i] = sum(_tr15[max(0, _i-19):_i+1]) / min(20, _i+1)\n'
                   '        _px = float(candles_ltf[_i]["close"])\n'
                   '        if _a20[_i] > 0:\n'
-                  '            _ar15[_i] = _a5[_i] / _a20[_i]\n'
-                  '    _bm_mags=[]\n'
-                  '    for _bm_s in swings_htf:\n'
-                  '        _bm_seg=_bm_s.get("seg") or {}\n'
-                  '        _bm_spx=float(_bm_seg.get("start_px",0) or 0)\n'
-                  '        _bm_epx=float(_bm_seg.get("end_px",0) or 0)\n'
-                  '        _bm_mags.append(abs(_bm_epx-_bm_spx))\n'
-                  '    _bm_breaks=[]\n'
-                  '    for _bmi in range(len(swings_htf)):\n'
-                  '        if _bmi<1 or _bm_mags[_bmi-1]<=0: continue\n'
-                  '        _bm_ratio=_bm_mags[_bmi]/_bm_mags[_bmi-1]\n'
-                  '        for _bmb in (swings_htf[_bmi].get("breaks") or []):\n'
-                  '            _bmbt=_bmb.get("time","")\n'
-                  '            if _bmbt: _bm_breaks.append((_bmbt[:19],_bm_ratio,int(swings_htf[_bmi].get("confirmed_at_idx",-1))))\n'
-                  '    _bm_breaks.sort(key=lambda z:z[0])\n'
-                  '    _bm_times=[z[0] for z in _bm_breaks]\n')
+                  '            _ar15[_i] = _a5[_i] / _a20[_i]\n')
+    # exp_bias_momentum_min's _bm_mags/_bm_breaks/_bm_times precompute is NOT
+    # injected: unified.py owns it, built just before candle_ts_ltf= so the
+    # entry walk can bisect it. The _ar15/chop15 series above stays - it feeds
+    # exp_atr_ratio_max and exp_chop15_*, which are still harness knobs.
     # 3g-5) D3 UNION DUAL-QUALIFICATION: track which window type matched
     #     (B2, FLIP, or BOTH) and optionally skip FLIP-only matches (the
     #     fragile cell from the 2x2 autopsy: FLIP-mark-in-FLIP-window is
     #     IS +79R but OOS -2R). exp_union_dual_only skips FLIP-only matches.
+    # exp_union_dual_only is injected onto the unified.py signature line that
+    # exp_bias_momentum_min now occupies. The old anchor for this was the
+    # INJECTED '    exp_bias_momentum_min=0.0,\n' above; that string is gone
+    # from both the engine and the harness, so the anchor has to move with it
+    # or exp_union_dual_only silently stops being injected. This is the second
+    # anchor in this port that a knob move breaks - the first was t_dict.
     t_u1 = '    exp_bias_momentum_min=0.0,\n'
-    assert t_u1 in s, "bm kwarg anchor"
-    s = s.replace(t_u1, t_u1 + '    exp_union_dual_only=0,\n    exp_bm_causal=0,\n')
+    assert s.count(t_u1) == 1, "bm kwarg anchor"
+    s = s.replace(t_u1, t_u1 + '    exp_union_dual_only=0,\n')
     t_u2 = ('            _union_matched=False\n'
             '            for _iv,_st in [(intervals_b2,starts_b2),(intervals_flip,starts_flip)]:\n'
             '                if not _iv: continue\n'
@@ -1353,6 +1350,9 @@ def _build_module():
                 '                continue\n')
     s = s.replace(t_u2, t_u2_new)
 
+    # exp_bias_momentum_min is NOT injected at this anchor: unified.py owns the
+    # gate, the exp_bm_causal branch and the _bm_breaks precompute. The chop15 /
+    # atr-ratio / min-swing-ratio gates around it stay.
     t_c11 = '        direction=int(sig["dir"])\n'
     assert s.count(t_c11) == 1, "walk dir4"
     s = s.replace(t_c11,
@@ -1360,17 +1360,6 @@ def _build_module():
                   '            continue\n'
                   '        if exp_atr_ratio_max > 0 and _ar15[i] > exp_atr_ratio_max:\n'
                   '            continue\n'
-                  '        if exp_bias_momentum_min > 0 and _bm_breaks:\n'
-                  '            _bm_idx = bs.bisect_right(_bm_times, sig["bar"][:19]) - 1\n'
-                  '            if exp_bm_causal:\n'
-                  '                _bm_ets = candle_ts_ltf[i] + 900  # entry instant = signal bar close\n'
-                  '                while _bm_idx >= 0:\n'
-                  '                    _bm_c = _bm_breaks[_bm_idx][2]\n'
-                  '                    if 0 <= _bm_c < len(candle_ts_htf) and candle_ts_htf[_bm_c] + 3600 <= _bm_ets:\n'
-                  '                        break\n'
-                  '                    _bm_idx -= 1  # owner unconfirmed at entry: walk to last DECLARED break\n'
-                  '            if _bm_idx >= 0 and _bm_breaks[_bm_idx][1] < exp_bias_momentum_min:\n'
-                  '                continue\n'
                   '        if exp_min_swing_ratio > 0 and sig.get("swing_no") is not None:\n'
                   '            _sni = int(sig["swing_no"])\n'
                   '            if 0 <= _sni < len(swings_ltf):\n'

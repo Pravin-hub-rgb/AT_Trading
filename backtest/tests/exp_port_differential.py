@@ -58,6 +58,17 @@ CASES = [
     # three that are still harness-only
     ("weekend + partial 1.0R",    {"exp_skip_weekend": 1,
                                    "exp_partial_r": 1.0}),
+    # bias momentum: 0.8 is what fsent_sig_full runs. exp_bm_causal=1 is the
+    # setting that makes the swing read defensible (it walks back to breaks
+    # whose owner swing had already CONFIRMED at the entry instant), so both
+    # arms are checked - the default is what the pins used, the causal one is
+    # what a future book would use and it MUST differ or the flag is a no-op.
+    ("bm 0.5",                    {"exp_bias_momentum_min": 0.5}),
+    ("bm 0.8",                    {"exp_bias_momentum_min": 0.8}),
+    ("bm 0.8 + causal",           {"exp_bias_momentum_min": 0.8,
+                                   "exp_bm_causal": 1}),
+    ("bm 0.9 + causal",           {"exp_bias_momentum_min": 0.9,
+                                   "exp_bm_causal": 1}),
 ]
 
 

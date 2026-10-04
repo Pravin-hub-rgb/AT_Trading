@@ -393,6 +393,26 @@ def simulate_htf_ltf_streak_halt(
     # Note this is a position-size change, not an exit - the trade still runs to
     # its own SL/target. 205 books set it, but 192 of those set 0.0.
     exp_partial_r=0.0,
+    # Bias-momentum floor: only enter when the HTF bias has momentum behind
+    # it, measured as swing-over-swing leg magnitude on the 1h chain.
+    # exp_bias_momentum_min = the minimum ratio of this leg to the previous
+    # one. 0.0 (default) = off. Values used: 0.5 / 0.6 / 0.7 / 0.8.
+    # Reads swings_htf[i]["seg"].start_px / end_px for the RATIO, and the
+    # swing's own "breaks" list for WHEN the ratio became knowable. That is
+    # the causal question this knob has to answer, and it is the reason
+    # exp_bm_causal exists below: seg.start_px and end_px are only final once
+    # the leg completes, which is AFTER the entry bar.
+    #   exp_bm_causal = 0 (default): take the last break declared at or before
+    #     the entry bar, by break time.
+    #   exp_bm_causal = 1: additionally walk back until the swing that owns
+    #     that break had CONFIRMED (confirmed_at_idx -> candle_ts_htf + 1h)
+    #     by the entry instant, so only legs whose final label was already
+    #     settled may be read. This is the setting that makes the knob
+    #     defensible; the default keeps every historical pin reproducible.
+    # This is the runner-up filter in KNOB_SWEEP.md (d_oos +57.21 at 0.9) and
+    # it is one of the four the signal book cannot run without.
+    exp_bias_momentum_min=0.0,
+    exp_bm_causal=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -451,6 +471,31 @@ def simulate_htf_ltf_streak_halt(
     # Regime series: chop 1h and atr% 15m mapped to LTF bar ts
     chop=_chop_series_1h(candles_htf, lb=14)
     atr_pct=_atr_pct_15m(candles_ltf)
+    # Bias-momentum precompute. Built once per call, before the entry walk,
+    # because the gate below bisects it per candidate signal. One tuple per
+    # HTF break, not per swing: a swing can print several breaks and each one
+    # is a separate moment the ratio became tradeable.
+    #   _bm_mags   - |end_px - start_px| per HTF swing, the leg magnitudes
+    #   _bm_breaks - (break_time[:19], ratio_vs_prev_leg, owner_confirmed_idx)
+    #   _bm_times  - the first field only, for bisect
+    # Built unconditionally rather than under `if exp_bias_momentum_min`, so
+    # the cost does not depend on which book is running and the default path
+    # stays byte-identical to a build with the block absent.
+    _bm_mags=[]
+    for _bm_s in swings_htf:
+        _bm_seg=_bm_s.get("seg") or {}
+        _bm_spx=float(_bm_seg.get("start_px",0) or 0)
+        _bm_epx=float(_bm_seg.get("end_px",0) or 0)
+        _bm_mags.append(abs(_bm_epx-_bm_spx))
+    _bm_breaks=[]
+    for _bmi in range(len(swings_htf)):
+        if _bmi<1 or _bm_mags[_bmi-1]<=0: continue
+        _bm_ratio=_bm_mags[_bmi]/_bm_mags[_bmi-1]
+        for _bmb in (swings_htf[_bmi].get("breaks") or []):
+            _bmbt=_bmb.get("time","")
+            if _bmbt: _bm_breaks.append((_bmbt[:19],_bm_ratio,int(swings_htf[_bmi].get("confirmed_at_idx",-1))))
+    _bm_breaks.sort(key=lambda z:z[0])
+    _bm_times=[z[0] for z in _bm_breaks]
     candle_ts_ltf=[int(c["ts"]) for c in candles_ltf]
     candle_ts_htf=[int(c["ts"]) for c in candles_htf]
     # C14: regime gate at the ENTRY INSTANT (signal bar close = next candle open).
@@ -962,6 +1007,17 @@ def simulate_htf_ltf_streak_halt(
             continue
         if exp_skip_weekend and _is_weekend(candles_ltf[i]["date"]) >= 5:
             continue
+        if exp_bias_momentum_min > 0 and _bm_breaks:
+            _bm_idx = bs.bisect_right(_bm_times, sig["bar"][:19]) - 1
+            if exp_bm_causal:
+                _bm_ets = candle_ts_ltf[i] + 900  # entry instant = signal bar close
+                while _bm_idx >= 0:
+                    _bm_c = _bm_breaks[_bm_idx][2]
+                    if 0 <= _bm_c < len(candle_ts_htf) and candle_ts_htf[_bm_c] + 3600 <= _bm_ets:
+                        break
+                    _bm_idx -= 1  # owner unconfirmed at entry: walk to last DECLARED break
+            if _bm_idx >= 0 and _bm_breaks[_bm_idx][1] < exp_bias_momentum_min:
+                continue
         direction=int(sig["dir"])
         entry=float(candles_ltf[i]["close"])
         # SL pivot. RETRO = the swing's true origin (lookahead). CAUSAL = the running
