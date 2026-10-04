@@ -69,6 +69,25 @@ CASES = [
                                    "exp_bm_causal": 1}),
     ("bm 0.9 + causal",           {"exp_bias_momentum_min": 0.9,
                                    "exp_bm_causal": 1}),
+    # trail: fsent_sig_full runs exp_trail_skip_n=2. delay_r and half are the
+    # other two the signal ladder leans on, and delay_prevbar only bites on the
+    # fine path - so the fine data is what proves it is not dead.
+    ("trail skip 2",             {"exp_trail_skip_n": 2}),
+    ("trail half",               {"exp_trail_half": 1}),
+    ("trail delay 1.0R",         {"exp_trail_delay_r": 1.0}),
+    ("trail delay+prevbar",      {"exp_trail_delay_r": 1.0,
+                                   "exp_trail_delay_prevbar": 1}),
+    ("trail skip2 + half",       {"exp_trail_skip_n": 2,
+                                   "exp_trail_half": 1}),
+    # the full champion shape - all four ported knobs, nothing harness-only
+    ("ALL PORTED (sig_full-ish)", {
+        "exp_fs_entry_side": "short",
+        "exp_skip_weekend": 1,
+        "exp_bias_momentum_min": 0.8,
+        "exp_partial_r": 0.0,
+        "exp_trail_skip_n": 2,
+        "exp_fs_small_swing": 6.0,
+    }),
 ]
 
 

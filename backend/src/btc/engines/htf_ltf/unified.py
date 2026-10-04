@@ -413,6 +413,28 @@ def simulate_htf_ltf_streak_halt(
     # it is one of the four the signal book cannot run without.
     exp_bias_momentum_min=0.0,
     exp_bm_causal=0,
+    # Trail shaping - three knobs and a skip counter, all reading the trail
+    # event stream the engine already builds. They gate or soften the RATCHET,
+    # never the SL check, and the ratchet fires BEFORE the SL check on the same
+    # bar (D3 ordering, 2026-09-20), so a gated ratchet simply leaves the stop
+    # where it was for that event.
+    #   exp_trail_delay_r  - do not ratchet until unrealised R reaches this
+    #     (0.0 = never delay). Read from `best`, the running extreme.
+    #   exp_trail_half     - ratchet halfway to the candidate instead of all
+    #     the way (0 = full ratchet). Half is the setting that survived the
+    #     equity study; it tightens less, so it gives back less when the move
+    #     reverses.
+    #   exp_trail_delay_prevbar - measure the delay from the PREVIOUS bar's
+    #     best_f rather than the current one (0 = current bar). Fine path only.
+    #   exp_trail_skip_n   - drop the first N trail events outright, so a new
+    #     position's stop does not ratchet on the first few confirmations
+    #     (0 = never skip). This is the one the signal book runs at 2.
+    # Default 0 everywhere: the shipped ratchet is the full, immediate one, and
+    # every gate is inert until a book asks for it.
+    exp_trail_delay_r=0.0,
+    exp_trail_half=0,
+    exp_trail_delay_prevbar=0,
+    exp_trail_skip_n=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -1044,6 +1066,7 @@ def simulate_htf_ltf_streak_halt(
             target=entry-3.0*risk
         sl0=sl; sl_cur=sl; best=entry
         _partial_taken=False; _partial_r=0.0
+        _trail_skip_rem=exp_trail_skip_n
         # Trail events: timestamp-based (confirmed_at_time â†’ position via store)
         want_dir = "up" if direction == 1 else "down"
         events = []
@@ -1078,8 +1101,17 @@ def simulate_htf_ltf_streak_halt(
                     ev_idx+=1
                     if events[ev_idx][0] < i: continue
                     cand=events[ev_idx][1]
-                    if sl_cur < cand:
-                        sl_cur=cand
+                    _tr_ok=True
+                    if _trail_skip_rem>0:
+                        _trail_skip_rem-=1; _tr_ok=False
+                    if _tr_ok and exp_trail_delay_r>0 and risk>0:
+                        if ((best-entry)*direction/risk) < exp_trail_delay_r:
+                            _tr_ok=False
+                    if _tr_ok:
+                        if exp_trail_half:
+                            if sl_cur < cand: sl_cur=0.5*(sl_cur+cand)
+                        elif sl_cur < cand:
+                            sl_cur=cand
                 if lo <= sl_cur:
                     fill=min(sl_cur, float(c["open"]))
                     exit_idx,exit_px=j,fill
@@ -1091,8 +1123,17 @@ def simulate_htf_ltf_streak_halt(
                     ev_idx+=1
                     if events[ev_idx][0] < i: continue
                     cand=events[ev_idx][1]
-                    if cand < sl_cur:
-                        sl_cur=cand
+                    _tr_ok=True
+                    if _trail_skip_rem>0:
+                        _trail_skip_rem-=1; _tr_ok=False
+                    if _tr_ok and exp_trail_delay_r>0 and risk>0:
+                        if ((best-entry)*direction/risk) < exp_trail_delay_r:
+                            _tr_ok=False
+                    if _tr_ok:
+                        if exp_trail_half:
+                            if cand < sl_cur: sl_cur=0.5*(sl_cur+cand)
+                        elif cand < sl_cur:
+                            sl_cur=cand
                 if hi >= sl_cur:
                     fill=max(sl_cur, float(c["open"]))
                     exit_idx,exit_px=j,fill
@@ -1152,6 +1193,7 @@ def simulate_htf_ltf_streak_halt(
                         if exit_fs_max_gap_h<=0 or _gap<=float(exit_fs_max_gap_h):
                             fk, exit_px_f, outcome_f = k, float(c["close"]), "fs_exit"
                             break
+                _best_f_prev=best_f
                 if direction==1:
                     if hi>best_f: best_f=hi
                 else:
@@ -1169,8 +1211,17 @@ def simulate_htf_ltf_streak_halt(
                     while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
                         ev_idx_f+=1
                         cand=events_ts[ev_idx_f][1]
-                        if sl_cur_f < cand:
-                            sl_cur_f=cand
+                        _tr_ok=True
+                        if _trail_skip_rem>0:
+                            _trail_skip_rem-=1; _tr_ok=False
+                        if _tr_ok and exp_trail_delay_r>0 and risk>0:
+                            if ((_best_f_prev if exp_trail_delay_prevbar else best_f)-entry)*direction/risk < exp_trail_delay_r:
+                                _tr_ok=False
+                        if _tr_ok:
+                            if exp_trail_half:
+                                if sl_cur_f < cand: sl_cur_f=0.5*(sl_cur_f+cand)
+                            elif sl_cur_f < cand:
+                                sl_cur_f=cand
                     if lo <= sl_cur_f:
                         fill=min(sl_cur_f, float(c["open"]))
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f <= sl0 else "trail")
@@ -1180,8 +1231,17 @@ def simulate_htf_ltf_streak_halt(
                     while ev_idx_f+1 < len(events_ts) and events_ts[ev_idx_f+1][0] <= ts:
                         ev_idx_f+=1
                         cand=events_ts[ev_idx_f][1]
-                        if cand < sl_cur_f:
-                            sl_cur_f=cand
+                        _tr_ok=True
+                        if _trail_skip_rem>0:
+                            _trail_skip_rem-=1; _tr_ok=False
+                        if _tr_ok and exp_trail_delay_r>0 and risk>0:
+                            if ((_best_f_prev if exp_trail_delay_prevbar else best_f)-entry)*direction/risk < exp_trail_delay_r:
+                                _tr_ok=False
+                        if _tr_ok:
+                            if exp_trail_half:
+                                if cand < sl_cur_f: sl_cur_f=0.5*(sl_cur_f+cand)
+                            elif cand < sl_cur_f:
+                                sl_cur_f=cand
                     if hi >= sl_cur_f:
                         fill=max(sl_cur_f, float(c["open"]))
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f >= sl0 else "trail")

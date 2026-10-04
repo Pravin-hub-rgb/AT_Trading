@@ -165,10 +165,8 @@ def _build_module():
     # argument in the generated signature - SyntaxError at build time.
     # This is the kwarg half of what t_c13 removed: the branch half.
     '    exp_trail_max_dist=0.0,\n'
-    '    exp_trail_delay_r=0.0,\n'
-    '    exp_trail_delay_prevbar=0,\n'
-    '    exp_trail_skip_n=0,\n'
-    '    exp_trail_half=0,\n'
+    # exp_trail_delay_r / _delay_prevbar / _skip_n / _half are NOT injected:
+    # unified.py owns the whole _tr_ok branch and the _trail_skip_rem init.
     '    exp_retest_fill=0.0,\n'
     '    exp_retest_wait=240,\n'
                   '    exp_profit_stage_r=0.0,\n'
@@ -1064,7 +1062,8 @@ def _build_module():
                   + t_pe_init)
     s = s.replace(t_pe_init, t_pe_init +
                    '        _profit_stage_fired=False\n'
-                  '        _trail_skip_rem=exp_trail_skip_n\n'
+                  # _trail_skip_rem init is engine-native: exp_trail_skip_n and
+                  # the whole _tr_ok branch now live in unified.py.
                   '        _exp_5m_entry_k=None\n'
                   '        if exp_5m_confirm>0 and fine_ltf and exp_5m_data:\n'
                   '            _exp_5m_stats["candidates"] += 1\n'
@@ -1509,80 +1508,14 @@ def _build_module():
                   '                if exp_trail_max_dist > 0 and _td > exp_trail_max_dist:\n'
                   '                    continue\n'
                    '                events.append((cidx, _tl))\n')
-    # 3g-6) Slower/wider trail: delay_r (only ratchet after unrealized R),
-    # skip_n (drop first N post-entry events), half (ratchet halfway).
-    t_tr_long = ('                    if events[ev_idx][0] < i: continue\n'
-                 '                    cand=events[ev_idx][1]\n'
-                 '                    if sl_cur < cand:\n'
-                 '                        sl_cur=cand\n')
-    assert s.count(t_tr_long) == 1, "trail long coarse"
-    s = s.replace(t_tr_long,
-                  '                    if events[ev_idx][0] < i: continue\n'
-                  '                    cand=events[ev_idx][1]\n'
-                  '                    _tr_ok=True\n'
-                  '                    if _trail_skip_rem>0:\n'
-                  '                        _trail_skip_rem-=1; _tr_ok=False\n'
-                  '                    if _tr_ok and exp_trail_delay_r>0 and risk>0:\n'
-                  '                        if ((best-entry)*direction/risk) < exp_trail_delay_r:\n'
-                  '                            _tr_ok=False\n'
-                  '                    if _tr_ok:\n'
-                  '                        if exp_trail_half:\n'
-                  '                            if sl_cur < cand: sl_cur=0.5*(sl_cur+cand)\n'
-                  '                        elif sl_cur < cand:\n'
-                  '                            sl_cur=cand\n')
-    t_tr_short = ('                    if events[ev_idx][0] < i: continue\n'
-                  '                    cand=events[ev_idx][1]\n'
-                  '                    if cand < sl_cur:\n'
-                  '                        sl_cur=cand\n')
-    assert s.count(t_tr_short) == 1, "trail short coarse"
-    s = s.replace(t_tr_short,
-                  '                    if events[ev_idx][0] < i: continue\n'
-                  '                    cand=events[ev_idx][1]\n'
-                  '                    _tr_ok=True\n'
-                  '                    if _trail_skip_rem>0:\n'
-                  '                        _trail_skip_rem-=1; _tr_ok=False\n'
-                  '                    if _tr_ok and exp_trail_delay_r>0 and risk>0:\n'
-                  '                        if ((best-entry)*direction/risk) < exp_trail_delay_r:\n'
-                  '                            _tr_ok=False\n'
-                  '                    if _tr_ok:\n'
-                  '                        if exp_trail_half:\n'
-                  '                            if cand < sl_cur: sl_cur=0.5*(sl_cur+cand)\n'
-                  '                        elif cand < sl_cur:\n'
-                  '                            sl_cur=cand\n')
-    t_tr_f_long = ('                        cand=events_ts[ev_idx_f][1]\n'
-                   '                        if sl_cur_f < cand:\n'
-                   '                            sl_cur_f=cand\n')
-    assert s.count(t_tr_f_long) == 1, "trail long fine"
-    s = s.replace(t_tr_f_long,
-                  '                        cand=events_ts[ev_idx_f][1]\n'
-                  '                        _tr_ok=True\n'
-                  '                        if _trail_skip_rem>0:\n'
-                  '                            _trail_skip_rem-=1; _tr_ok=False\n'
-                  '                        if _tr_ok and exp_trail_delay_r>0 and risk>0:\n'
-                  '                            if ((_best_f_prev if exp_trail_delay_prevbar else best_f)-entry)*direction/risk < exp_trail_delay_r:\n'
-                  '                                _tr_ok=False\n'
-                  '                        if _tr_ok:\n'
-                  '                            if exp_trail_half:\n'
-                  '                                if sl_cur_f < cand: sl_cur_f=0.5*(sl_cur_f+cand)\n'
-                  '                            elif sl_cur_f < cand:\n'
-                  '                                sl_cur_f=cand\n')
-    t_tr_f_short = ('                        cand=events_ts[ev_idx_f][1]\n'
-                    '                        if cand < sl_cur_f:\n'
-                    '                            sl_cur_f=cand\n')
-    assert s.count(t_tr_f_short) == 1, "trail short fine"
-    s = s.replace(t_tr_f_short,
-                  '                        cand=events_ts[ev_idx_f][1]\n'
-                  '                        _tr_ok=True\n'
-                  '                        if _trail_skip_rem>0:\n'
-                  '                            _trail_skip_rem-=1; _tr_ok=False\n'
-                  '                        if _tr_ok and exp_trail_delay_r>0 and risk>0:\n'
-                  '                            if ((_best_f_prev if exp_trail_delay_prevbar else best_f)-entry)*direction/risk < exp_trail_delay_r:\n'
-                  '                                _tr_ok=False\n'
-                  '                        if _tr_ok:\n'
-                  '                            if exp_trail_half:\n'
-                  '                                if cand < sl_cur_f: sl_cur_f=0.5*(sl_cur_f+cand)\n'
-                  '                            elif cand < sl_cur_f:\n'
-                  '                                sl_cur_f=cand\n')
+    # 3g-6) The slower/wider trail knobs - exp_trail_delay_r, exp_trail_half,
+    # exp_trail_delay_prevbar and exp_trail_skip_n - are NOT injected any more.
+    # unified.py owns all four and the _tr_ok branch that reads them, at all four
+    # sites (coarse long/short, fine long/short). They shared one branch, so
+    # exp_trail_skip_n could not have been moved without the other three; moving
+    # them together is what keeps the branch verbatim.
+    # _best_f_prev is likewise engine-native now - the fine trail reads it when
+    # exp_trail_delay_prevbar is set.
     t_ret = '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n            "ltf_trades": ltf_trades, "intervals": parent_intervals}'
     assert s.count(t_ret) == 1, "ret"
     s = s.replace(t_ret, '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n             "ltf_trades": ltf_trades, "intervals": parent_intervals,\n             "retest_stats": retest_stats,\n             "five_m_stats": _exp_5m_stats, "cohort_stats": _exp_cohort_stats,\n             "shadow_rows": _exp_shadow_rows, "weekly_state_rows": _exp_weekly_state_rows,\n             "event_stats": _exp_event_stats, "campaign_stats": _exp_campaign_stats,\n             "loss_window_kill_stats": _exp_loss_window_kill_stats,\n             "win_window_kill_stats": _exp_win_window_kill_stats}\n')
