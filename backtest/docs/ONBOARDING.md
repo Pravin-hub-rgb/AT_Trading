@@ -35,8 +35,8 @@ the old book. Run the engine.
 | `backtest/tests/exp_pinverify.py` | re-derive every pin (slow, authoritative) |
 | `backtest/tests/exp_fastcheck.py` | re-derive a chosen subset, both eras (fast) |
 | `backtest/tests/exp_origin_lookahead.py` | the standing hygiene gates |
-| `backtest/docs/pipeline/` | how to run an experiment; every knob, by family |
-| `backtest/docs/BOOK_CATEGORIES.md` | the plane × position × family map of the existing books |
+| `backtest/docs/pipeline/` | how to run a new experiment (procedure only, no results) |
+| `backtest/docs/BOOK_CATEGORIES.md` | the plane × position map of the books, plus the full knob catalog by family |
 | `backtest/docs/CLOSED_DO_NOT_REPEAT.md` | tried, measured, died |
 | `backtest/docs/REGISTRY_BOARD.md` | the shortlist, readable |
 | `backtest/experiments/` | per-experiment harnesses and their results |
@@ -53,7 +53,8 @@ the old book. Run the engine.
 - **B2 / FLIP** — the break marks the book enters on.
 - **bias window** — the HTF interval `[start, end, direction, entry_px, sl]`.
 - **gray** — holding the slot after an exit so nothing new can enter.
-- **knob** — one keyword argument. Families in `pipeline/KNOB_CATALOG.md`.
+- **knob** — one keyword argument. Every knob, with its family and what it
+  does, is in `BOOK_CATEGORIES.md`.
 - **book** — a named set of knobs, pinned in the registry.
 
 ## The one rule that settles most arguments
