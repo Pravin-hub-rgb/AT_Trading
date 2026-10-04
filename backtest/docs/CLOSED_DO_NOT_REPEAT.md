@@ -439,6 +439,67 @@ means anything has to hold the slot *past* the exit, and this one does not. Left
 in the engine as a default-off knob with an honest description rather than
 quietly removed.
 
+## The swingpause scare, and why the rest of the knob queue is clean
+
+`exp_swingpause` was briefly graveyarded on the strength of a generic
+measurement, and that was wrong. Recorded because the next person will hit the
+same tool.
+
+The measurement asks "is the swing that owns this trade settled at the entry
+bar?" and reported 451 of 451 unconfirmed on `swingpause_single_sw10`. But
+`exp_swingpause` never reads that swing:
+
+```python
+if exp_swingpause > 0 and last_loss_ts > 0:
+    _si = bisect_right(confs_ts, candle_ts[i]) - 1
+    if _si < 0 or pivs_ts[_si] <= last_loss_ts:
+        continue
+```
+
+`confs_ts` is the list of swings **confirmed** at or before bar `i`. Swings that
+confirm later sort after `i` and cannot move the index, so the answer at bar `i`
+is fixed by what existed at bar `i`. Checked directly - full chain against a
+chain rebuilt from candles up to `i`, 45 sampled bars, **0 differences.**
+
+It is a cooldown that waits for fresh structure after a loss, and it is causal.
+The 31 books were unmarked and are candidates again.
+
+**The distinction that matters is entirely in the selector:**
+
+| selector | picks a swing that | settled at entry? |
+|---|---|---|
+| `start_idx <= i` | **started** before entry - `exp_require_dir_match`, `exp_max_swing_age`, `exp_max_running_mag` | **no** |
+| `confirmed_at <= i` | **confirmed** before entry - `exp_swingpause`, `exp_causal_sl` | yes |
+
+Same "find a swing and read a field" shape. One implemented correctly, one not.
+
+### The rest of the queue, read line by line
+
+| knob | books | reads | verdict |
+|---|---|---|---|
+| `b3_k` | 5 | bars `i+1 .. i+k` | **causal** - deferred fill, see below |
+| `exp_entry_swing_age_max` | 3 | `seg.start_idx` | **causal** - a swing's start does not move |
+| `exp_pivot_trail` | 1 | `seg.end_px` | **causal** - read after the extreme, see below |
+| `exp_causal_sl` | 4 | `confirmed_at_idx`, `seg.end_idx` | **causal** - explicit `<= i` gate |
+
+`b3_k` looks forward at bars `i+1 .. i+k`, which is the only suspicious thing
+about it, and then **re-prices the entry at the bar it lands on**:
+`i = _jj; bar_time = candles_ltf[i]["date"]; entry = float(candles_ltf[i]["close"])`.
+That is a deferred fill - wait up to k bars for a better price, then enter at
+that bar's own close. A live process can do exactly this: the decision uses data
+up to `_jj` and the fill happens at `_jj`.
+
+`exp_pivot_trail` reads `end_px`, the same field `union_multi` was closed on,
+and it is still fine because of *when*. The trail event arms at the first bar
+`_j` **after** the extreme bar `_ei` at which price exceeds `_ep`. By bar `_j`
+the extreme has already printed. `end_px` is knowable from the moment its own
+bar closes, which is before the swing confirms. Reading it *after* the extreme
+has settled is fine; reading it *at* the entry bar, as `exp_min_swing_ratio`
+does, is not.
+
+Third and final instance of the same lesson in this repo: **the number is never
+the problem. The moment you read it is.**
+
 ## Do not retry
 
 Direction-matching by final swing label, in any form, on any timeframe. If a
