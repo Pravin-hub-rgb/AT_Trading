@@ -44,6 +44,20 @@ CASES = [
                                    "exp_skip_weekend": 0}),
     ("fs_short + weekend ON",     {"exp_fs_entry_side": "short",
                                    "exp_skip_weekend": 1}),
+    # partial: fsent_sig_full sets exp_partial_r=0.0, so it does NOT exercise
+    # this knob at all - the champion cannot be the acceptance test for it.
+    # These arms are what actually arm the partial, at 1R through 3R. The 5R
+    # and 7.5R arms live in the registry (partial5_multi_sw10,
+    # champion_sig_sw20) but need max_positions=1 / exp_mltf to pin, so they
+    # are checked by exp_fastcheck rather than here.
+    ("partial OFF",               {"exp_partial_r": 0.0}),
+    ("partial 1.0R",              {"exp_partial_r": 1.0}),
+    ("partial 2.0R",              {"exp_partial_r": 2.0}),
+    ("partial 3.0R",              {"exp_partial_r": 3.0}),
+    # both ported knobs together, which is the fsent_sig_full shape minus the
+    # three that are still harness-only
+    ("weekend + partial 1.0R",    {"exp_skip_weekend": 1,
+                                   "exp_partial_r": 1.0}),
 ]
 
 

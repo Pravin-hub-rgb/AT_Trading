@@ -382,6 +382,17 @@ def simulate_htf_ltf_streak_halt(
     # read the future. Default 0 = off, which is what keeps the shipped
     # trade list byte-identical to every book measured before it existed.
     exp_skip_weekend=0,
+    # Partial exit: take half off at a fixed R, let the rest run.
+    # exp_partial_r = the R level at which the half is sold. 0.0 (default) = off.
+    # The arm test reads only `best`, the running favourable extreme of the
+    # trade so far, at the bar being processed - so the trigger is knowable in
+    # real time and never reads a future high. The R that gets BOOKED is then
+    # half the trigger plus half the final move, i.e. the position is genuinely
+    # cut in half, not scored as if it were. Both halves are reported:
+    # partial_exit_price on the trade, and r_multiple blended.
+    # Note this is a position-size change, not an exit - the trade still runs to
+    # its own SL/target. 205 books set it, but 192 of those set 0.0.
+    exp_partial_r=0.0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -976,6 +987,7 @@ def simulate_htf_ltf_streak_halt(
             if risk<0.0005*entry: continue
             target=entry-3.0*risk
         sl0=sl; sl_cur=sl; best=entry
+        _partial_taken=False; _partial_r=0.0
         # Trail events: timestamp-based (confirmed_at_time â†’ position via store)
         want_dir = "up" if direction == 1 else "down"
         events = []
@@ -998,6 +1010,10 @@ def simulate_htf_ltf_streak_halt(
                 if hi>best: best=hi
             else:
                 if lo<best: best=lo
+            if exp_partial_r>0 and not _partial_taken and risk>0:
+                _cur_r=(best-entry)*direction/risk
+                if _cur_r>=exp_partial_r:
+                    _partial_taken=True; _partial_r=exp_partial_r
             if direction==1:
                 # D3 ordering fix 2026-09-20: the ratchet applies BEFORE the SL
                 # check â€” the stop is armed the instant the swing confirms (bar
@@ -1084,6 +1100,10 @@ def simulate_htf_ltf_streak_halt(
                     if hi>best_f: best_f=hi
                 else:
                     if lo<best_f: best_f=lo
+                if exp_partial_r>0 and not _partial_taken and risk>0:
+                    _cur_rf=(best_f-entry)*direction/risk
+                    if _cur_rf>=exp_partial_r:
+                        _partial_taken=True; _partial_r=exp_partial_r
                 if direction==1:
                     # D3 ordering fix 2026-09-20: ratchet BEFORE the SL check â€”
                     # the stop is armed at the activation instant (bar open), so
@@ -1133,7 +1153,16 @@ def simulate_htf_ltf_streak_halt(
             exit_ts=int(candles_ltf[exit_idx]["ts"])
             exit_date=candles_ltf[exit_idx]["date"]
         move=(exit_px-entry) if direction==1 else (entry-exit_px)
-        r_multiple=move/risk if risk>0 else 0
+        # Partial accounting. When the half was taken, the booked R is half the
+        # trigger plus half the remaining move - the position really was cut, so
+        # scoring it as a whole position would overstate every partial book.
+        _partial_exit_price=0.0
+        if _partial_taken and risk>0:
+            _partial_exit_price=entry+direction*_partial_r*risk
+            _rem_move=(exit_px-entry) if direction==1 else (entry-exit_px)
+            r_multiple=(_partial_r*0.5)+(_rem_move/risk)*0.5
+        else:
+            r_multiple=move/risk if risk>0 else 0
         # Streak halt (causal): book EVERY trade, then check streak
         if max_consecutive_losses > 0:
             if r_multiple <= 0:
@@ -1169,6 +1198,10 @@ def simulate_htf_ltf_streak_halt(
             "outcome": outcome,
             "r_multiple": round(float(r_multiple),3),
             "bars_held": exit_idx - i,
+            # 0.0 when exp_partial_r never armed. run_experiment.py counts and
+            # reports partials off this field, so it has to be present even on
+            # the books that never take one.
+            "partial_exit_price": round(_partial_exit_price, 2) if _partial_exit_price > 0 else 0.0,
         })
         busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
         if _gray_until and (not busy_until or _gray_until > busy_until):

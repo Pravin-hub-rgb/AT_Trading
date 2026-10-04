@@ -94,7 +94,7 @@ def _build_module():
                   '    exp_curfew_b=0.0,\n'
                   '    exp_defer_h=0.0,\n'
                   '    exp_legskip_r=0.0,\n'
-                  '    exp_partial_r=0.0,\n'
+                  # exp_partial_r is NOT injected: unified.py owns it.
                   '    exp_skipwin=0,\n'
                   '    exp_swingpause=0,\n'
                   '    exp_skipwin_halt=0,\n'
@@ -1061,7 +1061,6 @@ def _build_module():
                   '            retest_stats["filled"] += 1\n'
                   + t_pe_init)
     s = s.replace(t_pe_init, t_pe_init +
-                  '        _partial_taken=False; _partial_r=0.0\n'
                    '        _profit_stage_fired=False\n'
                   '        _trail_skip_rem=exp_trail_skip_n\n'
                   '        _exp_5m_entry_k=None\n'
@@ -1152,17 +1151,11 @@ def _build_module():
                   '                        if _mj>=i and candle_ts[_mj]+900==ts and _ma15[_mj] is not None and float(candles_ltf[_mj]["close"]) > _ma15[_mj]:\n'
                   '                            fk,exit_px_f,outcome_f=k,float(candles_ltf[_mj]["close"]),"ma_trail"\n'
                   '                            break\n')
-    t_pe_coarse = ('            if direction==1:\n'
-                   '                if hi>best: best=hi\n'
-                   '            else:\n'
-                   '                if lo<best: best=lo\n')
-    assert s.count(t_pe_coarse) == 1, "pe coarse"
-    s = s.replace(t_pe_coarse, t_pe_coarse +
-                  '            if exp_partial_r>0 and not _partial_taken and risk>0:\n'
-                  '                _cur_r=(best-entry)*direction/risk\n'
-                  '                if _cur_r>=exp_partial_r:\n'
-                  '                    _partial_taken=True; _partial_r=exp_partial_r\n')
-    #    Fine partial check: AFTER best_f-update, BEFORE fine SL check
+    # exp_partial_r is NOT injected: unified.py owns the knob, both arms and the
+    # blended R. Leaving it here would be a duplicate argument in the generated
+    # signature, and a shadowing second copy of the state init.
+    #    Fine: _best_f_prev=best_f STAYS - exp_profit_stage and
+    #    exp_trail_delay_prevbar both read it and are still harness knobs.
     t_pe_fine = ('                if direction==1:\n'
                   '                    if hi>best_f: best_f=hi\n'
                   '                else:\n'
@@ -1171,10 +1164,6 @@ def _build_module():
     s = s.replace(t_pe_fine,
                   '                _best_f_prev=best_f\n' +
                   t_pe_fine +
-                  '                if exp_partial_r>0 and not _partial_taken and risk>0:\n'
-                  '                    _cur_rf=(best_f-entry)*direction/risk\n'
-                  '                    if _cur_rf>=exp_partial_r:\n'
-                  '                        _partial_taken=True; _partial_r=exp_partial_r\n'
                   '                if exp_profit_stage_r>0 and exp_profit_stage_distance_r>0 and risk>0:\n'
                   '                    _stage_prev_r=(_best_f_prev-entry)*direction/risk\n'
                   '                    if _stage_prev_r>=exp_profit_stage_r:\n'
@@ -1184,24 +1173,18 @@ def _build_module():
                   '                            if _stage_px>sl_cur_f: sl_cur_f=_stage_px\n'
                   '                        else:\n'
                   '                            if _stage_px<sl_cur_f: sl_cur_f=_stage_px\n')
-    #    R calculation: 0.5*partial_r + (total_move/risk)*0.5  (50% sold at partial_r)
-    t_r = ('        move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
-            '        r_multiple=move/risk if risk>0 else 0\n')
-    assert s.count(t_r) == 1, "r calc"
-    s = s.replace(t_r,
-                  '        move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
-                  '        _partial_exit_price=0.0\n'
-                  '        if _partial_taken and risk>0:\n'
-                  '            _partial_exit_price=entry+direction*_partial_r*risk\n'
-                  '            _rem_move=(exit_px-entry) if direction==1 else (entry-exit_px)\n'
-                  '            r_multiple=(_partial_r*0.5)+(_rem_move/risk)*0.5\n'
-                  '        else:\n'
-                  '            r_multiple=move/risk if risk>0 else 0\n')
-    #    Trade dict: add partial_exit_price field
-    t_dict = '            "bars_held": exit_idx - i,\n        })'
+    #    The blended-R calculation and the partial_exit_price trade field are NOT
+    #    injected either - unified.py computes both, so injecting a second copy
+    #    would double-book the partial. Only the window_key / loss_streak /
+    #    opposite_override / profit_stage fields below are still the harness's.
+    #    Trade dict: add the harness-only audit fields. The anchor is the LAST
+    #    field before the closing }) - that was "bars_held" until exp_partial_r
+    #    moved into unified.py and partial_exit_price became the last one. It has
+    #    to track the tail, not a fixed name, or this assert fires on every port.
+    t_dict = ('            "partial_exit_price": round(_partial_exit_price, 2)'
+              ' if _partial_exit_price > 0 else 0.0,\n        })')
     assert s.count(t_dict) == 1, "trade dict"
     s = s.replace(t_dict,
-                  '            "bars_held": exit_idx - i,\n'
                   '            "partial_exit_price": round(_partial_exit_price, 2) if _partial_exit_price > 0 else 0.0,\n'
                   '            "window_key": _window_key,\n'
                    '            "loss_streak_at_entry": _exp_streak,\n'
