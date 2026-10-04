@@ -36,6 +36,7 @@ the old book. Run the engine.
 | `backtest/tests/exp_fastcheck.py` | re-derive a chosen subset, both eras (fast) |
 | `backtest/tests/exp_origin_lookahead.py` | the standing hygiene gates |
 | `backtest/docs/pipeline/` | how to run an experiment; every knob, by family |
+| `backtest/docs/BOOK_CATEGORIES.md` | the plane × position × family map of the existing books |
 | `backtest/docs/CLOSED_DO_NOT_REPEAT.md` | tried, measured, died |
 | `backtest/docs/REGISTRY_BOARD.md` | the shortlist, readable |
 | `backtest/experiments/` | per-experiment harnesses and their results |
