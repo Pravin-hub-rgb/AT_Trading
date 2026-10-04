@@ -389,6 +389,56 @@ it as a gate.** What works is the direct instrument: for each knob, find which
 swing field it reads, then measure whether that field was settled at the
 decision bar. That is what found `union_multi`.
 
+## SWING-SIZE EXIT AT FS — the owner's proposal. This one works.
+
+`exp_fs_small_swing`, default 0 = off. Enter at B2/flip exactly as the book
+does. When the swing that opened the trade CONFIRMS, measure that swing's own
+leg, `abs(seg.end_px - seg.start_px)` over ATR(20), and exit if it is under the
+threshold. `exp_fs_gray` additionally holds the slot after such an exit.
+
+**Why this quantity is legal here and was not legal before.** It is the same
+field `union_multi` was closed on and the same field M2 reads. The difference is
+*when*. `end_px` and `start_px` are both settled at or before `confirmed_at_idx`,
+and the FS bar has already closed when the rule reads them. At the FS bar this
+is a settled fact about the past. At the entry bar - which is where
+`exp_min_swing_ratio` and M2 read it - it is a fact about a bar that had not
+printed yet. **Same number, legal and illegal depending on when you look at
+it.**
+
+Measured, both eras, engine:
+
+| base book | arm | IS n / net / dd_net | OOS n / net / oos_dd_net |
+|---|---|---|---|
+| champion_multi_sw10_leg | control | 499 / +239.1 / 46.85 | 280 / +72.8 / 50.55 |
+| | **<= 6 ATR** | 502 / **+283.1** / **43.39** | 282 / **+94.2** / **44.17** |
+| champion_single_sw10 | control | 503 / +170.9 / 50.5 | 295 / +78.6 / 38.1 |
+| | **<= 6 ATR** | 508 / **+201.9** / **47.0** | 299 / **+94.4** / **35.5** |
+| champion_single_sw20 | control | 496 / +196.3 / 58.2 | 269 / **+6.7** / 48.5 |
+| | **<= 6 ATR** | 498 / **+199.4** / 55.6 | 274 / **+27.0** / **41.7** |
+| fsent_champ_long | control | 525 / **+528.9** / 14.2 | 310 / +243.9 / 11.9 |
+| | <= 6 ATR | 544 / +463.9 / 14.3 | 319 / +262.4 / 17.2 |
+
+**Every arm from 3 to 6 ATR beats its control on BOTH eras** - 16 of 16 cells
+across the three books that take it, and the effect is monotonic in the
+threshold. The sw20 single is the clearest: out of sample it goes from **+6.7R
+at a 48.5 drawdown to +27.0R at 41.7**.
+
+It fails on `fsent_champ_long`, which is coherent rather than surprising: in a
+directional-FS book the trade opens *at* the FS print, so by the time that swing
+confirms, the trade it opened is already over. The rule has nothing left to act
+on.
+
+### The gray half is a no-op, and the reason is worth recording
+
+`exp_fs_gray` arms `busy_until` on such an exit so no replacement trade can
+enter - aimed at the crossover that made `exp_fs_move_to_be` lose 64R (518 trades
+instead of 499). It changed **nothing**, byte-for-byte, on every book tested,
+serial ones included. The reason is that `busy_until` is already set to the
+exit bar, so arming it to the exit bar is a no-op by construction. A gray that
+means anything has to hold the slot *past* the exit, and this one does not. Left
+in the engine as a default-off knob with an honest description rather than
+quietly removed.
+
 ## Do not retry
 
 Direction-matching by final swing label, in any form, on any timeframe. If a

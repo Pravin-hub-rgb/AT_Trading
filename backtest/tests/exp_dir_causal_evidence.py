@@ -37,7 +37,10 @@ from src.walker import FlowCandle
 import experiment_registry as reg
 
 OUT = ROOT / "backtest" / "tests" / "_dir_causal_evidence.json"
-KEY = "dirmatch_multi_sw10"
+import sys as _sys
+KEY = _sys.argv[1] if len(_sys.argv) > 1 else "dirmatch_multi_sw10"
+# the selector this knob uses: it reads the swing OWNING the entry bar via sig["swing_no"]
+# when the harness has one, else the last swing whose start_idx <= i.
 
 
 def chain_at(c15, i):
@@ -77,10 +80,14 @@ def main():
         if i < 0:
             continue
         picked = None
-        for s in full:
-            si = int((s.get("seg") or {}).get("start_idx", -1))
-            if 0 <= si <= i:
-                picked = s           # last match wins, same as the harness loop
+        sn = t.get("swing_no")
+        if sn is not None and 0 <= int(sn) < len(full):
+            picked = full[int(sn)]      # the swing this trade actually belongs to
+        if picked is None:
+            for s in full:
+                si = int((s.get("seg") or {}).get("start_idx", -1))
+                if 0 <= si <= i:
+                    picked = s       # last match wins, same as the harness loop
         if picked is None:
             continue
         conf = int(picked.get("confirmed_at_idx", -1))

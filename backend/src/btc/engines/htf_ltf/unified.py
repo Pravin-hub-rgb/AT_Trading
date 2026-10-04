@@ -363,6 +363,11 @@ def simulate_htf_ltf_streak_halt(
     #   24h   +209.38    +77.93      32.9    28.9
     #   any    +133.26    +57.90      32.9    28.9
     exit_fs_max_gap_h=-1.0,
+    exp_fs_small_swing=0.0,   # exit at the swing FS when the swing is SMALL
+                           # value = threshold on |end_px-start_px| / ATR(20). 0 = off.
+                           # Gray mode (exp_fs_gray=1) keeps the slot occupied after
+                           # such an exit so no replacement trade can enter.
+    exp_fs_gray=False,
     exp_fs_entry_side="",   # DIRECTIONAL FS ENTRY on the LTF plane:
                            # "long"  = LONGS enter at the swing FS print, shorts at break
                            # "short" = SHORTS enter at the swing FS print, longs at break
@@ -837,6 +842,7 @@ def simulate_htf_ltf_streak_halt(
         atr15[_i]=sum(tr_l[_lo:_i+1])/(_i-_lo+1)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     ltf_trades=[]
+    _gray_until=""   # set only by an exp_fs_gray exit; empty means "slot is free"
     # v19 causal SL: running extreme since the last CONFIRMED swing.
     # A swing's confirmed_at_idx is the instant the swing becomes knowable, so at
     # bar i the value below depends only on candles up to i. Ported verbatim from
@@ -999,9 +1005,47 @@ def simulate_htf_ltf_streak_halt(
             events_ts=[(candle_ts[min(e+1,n-1)], px) for e,px in events if candle_ts[min(e+1,n-1)] > bar_ts]
             f_start=bisect.bisect_left(fine_ts, candle_ts[i+1])
             best_f=entry; sl_cur_f=sl_cur; ev_idx_f=-1; fk=None; exit_px_f=None; outcome_f="open"
+            _gray_until=""
             for k in range(f_start, len(fine_ltf)):
                 c=fine_ltf[k]
                 hi=float(c["high"]); lo=float(c["low"]); ts=int(c["ts"])
+                if exp_fs_small_swing>0:
+                    # OWNER PROPOSAL. Enter as the book does; when the swing that
+                    # opened the trade CONFIRMS, measure how big that swing turned
+                    # out to be and exit if it was small. Unlike the room-threshold
+                    # exit already closed (CLOSED_DO_NOT_REPEAT.md), the quantity
+                    # here is the swing's OWN leg, not the distance from our entry,
+                    # and - this is the point - it is genuinely knowable at the FS
+                    # bar: end_px and start_px are both settled at or before
+                    # confirmed_at_idx, and the FS bar has closed.
+                    #
+                    # Gray mode: closing early frees the slot, and with
+                    # cooldown_bars / max_consecutive_losses the next signal then
+                    # starts a brand-new trade that displaces the winners we were
+                    # protecting. That crossover is what made the earlier exit
+                    # arms lose. With exp_fs_gray the exit also arms busy_until so
+                    # the engine stays occupied and nothing new enters.
+                    _fsg=fs_up_ts if direction==1 else fs_dn_ts
+                    _fgi=bs.bisect_left(_fsg, ts)
+                    if _fgi<len(_fsg) and _fsg[_fgi]==ts:
+                        _swn=None
+                        for _ss in swings_ltf:
+                            _si2=int(_ss.get("fs_at_idx",-1))
+                            if _si2>=0 and _si2<len(candles_ltf) and int(candles_ltf[_si2]["ts"])==ts:
+                                _swn=_ss; break
+                        if _swn is not None:
+                            _sg2=_swn.get("seg",{}) or {}
+                            _sp2=float(_sg2.get("start_px",0) or 0)
+                            _ep2=float(_sg2.get("end_px",0) or 0)
+                            _as=max(0,i-19)
+                            _ah=max(float(candles_ltf[_q]["high"]) for _q in range(_as,i+1))
+                            _al=min(float(candles_ltf[_q]["low"]) for _q in range(_as,i+1))
+                            _atr2=(_ah-_al) if _ah>_al else 1.0
+                            if _atr2>0 and abs(_ep2-_sp2)/_atr2 < exp_fs_small_swing:
+                                fk, exit_px_f, outcome_f = k, float(c["close"]), "fs_small_swing"
+                                if exp_fs_gray:
+                                    _gray_until=c["date"]
+                                break
                 if exit_fs_max_gap_h>=0:
                     _fsd=fs_up_ts if direction==1 else fs_dn_ts
                     _fsl=bisect.bisect_left(_fsd, ts)
@@ -1101,6 +1145,8 @@ def simulate_htf_ltf_streak_halt(
             "bars_held": exit_idx - i,
         })
         busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
+        if _gray_until and (not busy_until or _gray_until > busy_until):
+            busy_until=_gray_until
         if cooldown_bars > 0 and r_multiple < 0:
             last_loss_bar = exit_idx
     # For each LTF trade, find its parent HTF interval.

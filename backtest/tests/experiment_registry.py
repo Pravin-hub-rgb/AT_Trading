@@ -1492,6 +1492,83 @@ EXPERIMENTS = {
           "pins": {"n": 515, "net": 492.60, "dd_net": 14.20,
                    "oos_n": 283, "oos_net": 179.80, "oos_dd_net": 8.50},
       },
+    # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
+    # Enter at B2/flip as the book does; when the swing CONFIRMS, measure that
+    # swing own leg |end_px - start_px| over ATR(20) and exit if it is small.
+    # Both fields are settled at or before confirmed_at_idx and the FS bar has
+    # closed, so this is knowable - unlike the same quantity read at the entry
+    # bar, which is M2 and is closed as retrospective. exp_fs_small_swing.py.
+    "fsswing6_c": {
+          "desc": "champion leg + exit at own-swing FS when its leg is under 6x ATR",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0,
+                       "exp_mltf": True,
+                       "exp_persist": 7,
+                       "window_end": "exit",
+                       "pivot_rule": "leg",
+                       "exp_fs_small_swing": 6.0},
+          "swing": "sw10",
+          # exp_fs_small_swing.py, both eras. Monotonic 3->6 ATR.
+          "pins": {"n": 502, "net": 283.09, "dd_net": 43.39,
+                   "oos_n": 282, "oos_net": 94.16, "oos_dd_net": 44.17},
+      },
+    # ===== SWING-SIZE EXIT AT FS, single plane =====
+    # Enter at B2/flip as the book does; when the swing CONFIRMS, measure that
+    # swing own leg |end_px - start_px| over ATR(20) and exit if it is small. Both
+    # fields settle at or before confirmed_at_idx, so this is knowable at the FS
+    # bar - unlike the same quantity read at the ENTRY bar, which is M2 and is
+    # closed as retrospective. exp_fs_small_swing.py.
+    "fsswing_single_sw10": {
+          "desc": "champion single sw10 + exit at FS when its swing leg is under 6x ATR",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_fs_small_swing": 6.0},
+          "swing": "sw10",
+          # Base params copied from the named single book verbatim.
+          # exp_fs_small_swing.py, both eras.
+          "pins": {"n": 508, "net": 201.90, "dd_net": 47.00,
+                   "oos_n": 299, "oos_net": 94.40, "oos_dd_net": 35.50},
+      },
+    "fsswing_single_sw20": {
+          "desc": "champion single sw20 + exit at FS when its swing leg is under 6x ATR",
+          "engine": "patched",
+          "params": {
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_partial_r": 7.5,
+                       "window_end": "exit",
+                       "exp_fs_small_swing": 6.0},
+          "swing": "sw20",
+          # Base params copied from the named single book verbatim.
+          # exp_fs_small_swing.py, both eras.
+          "pins": {"n": 498, "net": 199.40, "dd_net": 55.60,
+                   "oos_n": 274, "oos_net": 27.00, "oos_dd_net": 41.70},
+      },
     "fsexit6_c": {
         "desc": "champion leg + exit at own-swing FS when it lands within 6h",
         "engine": "patched",

@@ -1,0 +1,290 @@
+{
+ "champion_multi_sw10_leg|control": {
+  "is": {
+   "n": 499,
+   "net": 239.12,
+   "dd": 46.85,
+   "per": 0.479,
+   "exits": 0
+  },
+  "oos": {
+   "n": 280,
+   "net": 72.79,
+   "dd": 50.55,
+   "per": 0.26,
+   "exits": 0
+  }
+ },
+ "champion_multi_sw10_leg|swing < 3.0 ATR": {
+  "is": {
+   "n": 502,
+   "net": 265.75,
+   "dd": 43.39,
+   "per": 0.529,
+   "exits": 23
+  },
+  "oos": {
+   "n": 281,
+   "net": 81.06,
+   "dd": 45.84,
+   "per": 0.288,
+   "exits": 16
+  }
+ },
+ "champion_multi_sw10_leg|swing < 3.0 ATR + GRAY": {
+  "is": {
+   "n": 502,
+   "net": 265.75,
+   "dd": 43.39,
+   "per": 0.529,
+   "exits": 23
+  },
+  "oos": {
+   "n": 281,
+   "net": 81.06,
+   "dd": 45.84,
+   "per": 0.288,
+   "exits": 16
+  }
+ },
+ "champion_multi_sw10_leg|swing < 4.0 ATR": {
+  "is": {
+   "n": 502,
+   "net": 271.67,
+   "dd": 43.39,
+   "per": 0.541,
+   "exits": 26
+  },
+  "oos": {
+   "n": 282,
+   "net": 82.73,
+   "dd": 44.17,
+   "per": 0.293,
+   "exits": 17
+  }
+ },
+ "champion_multi_sw10_leg|swing < 4.0 ATR + GRAY": {
+  "is": {
+   "n": 502,
+   "net": 271.67,
+   "dd": 43.39,
+   "per": 0.541,
+   "exits": 26
+  },
+  "oos": {
+   "n": 282,
+   "net": 82.73,
+   "dd": 44.17,
+   "per": 0.293,
+   "exits": 17
+  }
+ },
+ "champion_multi_sw10_leg|swing < 5.0 ATR": {
+  "is": {
+   "n": 502,
+   "net": 274.32,
+   "dd": 43.39,
+   "per": 0.546,
+   "exits": 28
+  },
+  "oos": {
+   "n": 282,
+   "net": 90.69,
+   "dd": 44.17,
+   "per": 0.322,
+   "exits": 18
+  }
+ },
+ "champion_multi_sw10_leg|swing < 5.0 ATR + GRAY": {
+  "is": {
+   "n": 502,
+   "net": 274.32,
+   "dd": 43.39,
+   "per": 0.546,
+   "exits": 28
+  },
+  "oos": {
+   "n": 282,
+   "net": 90.69,
+   "dd": 44.17,
+   "per": 0.322,
+   "exits": 18
+  }
+ },
+ "champion_multi_sw10_leg|swing < 6.0 ATR": {
+  "is": {
+   "n": 502,
+   "net": 283.09,
+   "dd": 43.39,
+   "per": 0.564,
+   "exits": 30
+  },
+  "oos": {
+   "n": 282,
+   "net": 94.16,
+   "dd": 44.17,
+   "per": 0.334,
+   "exits": 19
+  }
+ },
+ "champion_multi_sw10_leg|swing < 6.0 ATR + GRAY": {
+  "is": {
+   "n": 502,
+   "net": 283.09,
+   "dd": 43.39,
+   "per": 0.564,
+   "exits": 30
+  },
+  "oos": {
+   "n": 282,
+   "net": 94.16,
+   "dd": 44.17,
+   "per": 0.334,
+   "exits": 19
+  }
+ },
+ "fsent_champ_long|control": {
+  "is": {
+   "n": 525,
+   "net": 528.87,
+   "dd": 14.19,
+   "per": 1.007,
+   "exits": 0
+  },
+  "oos": {
+   "n": 310,
+   "net": 243.92,
+   "dd": 11.88,
+   "per": 0.787,
+   "exits": 0
+  }
+ },
+ "fsent_champ_long|swing < 3.0 ATR": {
+  "is": {
+   "n": 543,
+   "net": 517.52,
+   "dd": 14.31,
+   "per": 0.953,
+   "exits": 37
+  },
+  "oos": {
+   "n": 318,
+   "net": 244.29,
+   "dd": 17.24,
+   "per": 0.768,
+   "exits": 19
+  }
+ },
+ "fsent_champ_long|swing < 3.0 ATR + GRAY": {
+  "is": {
+   "n": 543,
+   "net": 517.52,
+   "dd": 14.31,
+   "per": 0.953,
+   "exits": 37
+  },
+  "oos": {
+   "n": 318,
+   "net": 244.29,
+   "dd": 17.24,
+   "per": 0.768,
+   "exits": 19
+  }
+ },
+ "fsent_champ_long|swing < 4.0 ATR": {
+  "is": {
+   "n": 544,
+   "net": 466.89,
+   "dd": 14.31,
+   "per": 0.858,
+   "exits": 45
+  },
+  "oos": {
+   "n": 319,
+   "net": 243.98,
+   "dd": 17.24,
+   "per": 0.765,
+   "exits": 20
+  }
+ },
+ "fsent_champ_long|swing < 4.0 ATR + GRAY": {
+  "is": {
+   "n": 544,
+   "net": 466.89,
+   "dd": 14.31,
+   "per": 0.858,
+   "exits": 45
+  },
+  "oos": {
+   "n": 319,
+   "net": 243.98,
+   "dd": 17.24,
+   "per": 0.765,
+   "exits": 20
+  }
+ },
+ "fsent_champ_long|swing < 5.0 ATR": {
+  "is": {
+   "n": 544,
+   "net": 463.56,
+   "dd": 14.31,
+   "per": 0.852,
+   "exits": 49
+  },
+  "oos": {
+   "n": 319,
+   "net": 258.9,
+   "dd": 17.24,
+   "per": 0.812,
+   "exits": 22
+  }
+ },
+ "fsent_champ_long|swing < 5.0 ATR + GRAY": {
+  "is": {
+   "n": 544,
+   "net": 463.56,
+   "dd": 14.31,
+   "per": 0.852,
+   "exits": 49
+  },
+  "oos": {
+   "n": 319,
+   "net": 258.9,
+   "dd": 17.24,
+   "per": 0.812,
+   "exits": 22
+  }
+ },
+ "fsent_champ_long|swing < 6.0 ATR": {
+  "is": {
+   "n": 544,
+   "net": 463.93,
+   "dd": 14.31,
+   "per": 0.853,
+   "exits": 50
+  },
+  "oos": {
+   "n": 319,
+   "net": 262.37,
+   "dd": 17.24,
+   "per": 0.822,
+   "exits": 23
+  }
+ },
+ "fsent_champ_long|swing < 6.0 ATR + GRAY": {
+  "is": {
+   "n": 544,
+   "net": 463.93,
+   "dd": 14.31,
+   "per": 0.853,
+   "exits": 50
+  },
+  "oos": {
+   "n": 319,
+   "net": 262.37,
+   "dd": 17.24,
+   "per": 0.822,
+   "exits": 23
+  }
+ }
+}
