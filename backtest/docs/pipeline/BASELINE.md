@@ -60,7 +60,46 @@ the comparison reproduces. They are not shipping candidates and nothing should b
 measured on them. `exp_origin_lookahead.py` enforces this and fails if a new book
 appears with a forbidden source.
 
-## What a pure baseline is not
+## Two baselines, not one
+
+**A signal book cannot be compared against a multi-position book.** They are
+different objects. This page defines both, because getting it wrong produces a
+plausible-looking comparison that is off by a hundred R.
+
+### The multi-position baseline
+
+`champion_single_sw10` with zero filters: HTF plus LTF, one swing chain, no
+`exp_` filters at all.
+
+| | trades | net | DD | WR | peak concurrent |
+|---|---:|---:|---:|---:|---:|
+| IS | 503 | +170.91 | 50.5 | 28.0% | **6** |
+| OOS | 295 | +78.57 | 38.1 | 27.8% | 5 |
+
+Note the peak: **six positions at once.** The word "single" in that book name
+means *one swing chain*, not one position. That distinction is the single easiest
+thing to get wrong in this repo.
+
+### The signal baseline — the one a signal book is measured against
+
+The same book with `max_positions=1`. One position, peak concurrency 1:
+
+| | trades | net | DD | WR | peak concurrent |
+|---|---:|---:|---:|---:|---:|
+| IS | 396 | **+37.80** | 51.8 | 24.0% | 1 |
+| OOS | 231 | **−16.26** | 41.7 | 23.4% | 1 |
+
+> **Out of sample this is a losing book.** A signal book does not exist as a
+> business until something is added to it. Directional FS entry is not an
+> improvement on a working signal book; it is the reason a signal book works at
+> all.
+
+That is why the "pure baseline" question has two answers and picking the wrong
+one flatters the result: `fsent_sig_wk_pause_short` measures IS +206.9 /
+OOS +128.8, which is +50R against the multi-position baseline and **+145R against
+the one that matters.**
+
+## What a baseline is not
 
 - **Not the best book.** It is the floor. Every filter is measured against it.
 - **Not a book with the filters removed.** Most books were *built* by adding
