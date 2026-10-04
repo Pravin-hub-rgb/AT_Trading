@@ -334,6 +334,61 @@ never "dirmatch based"; they were champion + FS + dirmatch, and their numbers
 A 39.6% win rate that a live process can actually reproduce is worth more than
 a 51.7% that it cannot. The higher number was the artifact.
 
+## Also closed: `union_multi` / `dualunion_multi` read `end_px` — the M2 field
+
+Second family found by auditing which knob reads which swing field, rather than
+by guessing. `exp_min_swing_ratio`:
+
+```python
+_sw  = swings_ltf[int(sig["swing_no"])]
+_spx = _sw["seg"]["start_px"]
+_epx = _sw["seg"]["end_px"]          # the swing's FINAL structural extreme
+if abs(_epx - _spx) / atr < exp_min_swing_ratio:
+    continue                          # swing too small -> skip the trade
+```
+
+`end_px` is the extreme bar. It is settled at `confirmed_at_idx`, not at the
+entry bar, so "is this swing big enough?" is a question about a bar that had not
+printed yet. Measured:
+
+| book | trades | swing already settled at the entry bar |
+|---|---|---|
+| `union_multi` | 137 | **0 / 137 = 0.0%** |
+| `dualunion_multi` | 90 | **0 / 90 = 0.0%** |
+
+**Not one trade out of 227 had a settled swing.** This is the same field M2
+reads, and `FS_TIME_GEOMETRY.md` already closed it: *"M2's information is
+entirely retrospective."* A different knob, the same leak.
+
+Both books are `status: "reference"`. `exp_union_dual_only` (1 book) lives in
+the same code block and is closed with them.
+
+## The audit tool that does not work — do not trust it
+
+`exp_prefix_audit.py` corrupts the tail of the sample and checks whether the
+trades before the cut move. Good idea, and it **does not work**:
+
+```
+dirmatch_multi_sw10    changed=0 of 31  -> clean   <-- KNOWN LOOKAHEAD
+champion_multi_sw10_leg changed=0 of 39 -> clean
+fsent_champ_long       changed=0 of 38  -> clean
+fsent_champ_short      changed=0 of 36  -> clean
+trail_half_skipn6_dr3  changed=0 of 30  -> clean
+fsent_sig_sw10_short   changed=0 of 30  -> clean
+```
+
+**It cleared `dirmatch_multi_sw10`, which is proven contaminated.** A tool that
+misses a bug you already know about has proved nothing by passing. Its power is
+limited to long-range leaks: it only inspects trades within ~2 days of a
+corruption point, because that is as far as a look-ahead can reach. A median
+8-hour leak mostly lands the other side of that window by chance.
+
+Four versions were built before this was understood - truncation, wider bands,
+corruption, then multiple cuts. All four called `dirmatch` clean. **Do not use
+it as a gate.** What works is the direct instrument: for each knob, find which
+swing field it reads, then measure whether that field was settled at the
+decision bar. That is what found `union_multi`.
+
 ## Do not retry
 
 Direction-matching by final swing label, in any form, on any timeframe. If a

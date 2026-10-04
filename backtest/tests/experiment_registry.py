@@ -3759,7 +3759,14 @@ EXPERIMENTS = {
 
     "dualunion_multi": {
         "desc": "union + filters + DUAL-QUALIFIED only (skip FLIP-window-only matches)",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - end_px. See CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_min_swing_ratio measures abs(seg.end_px - seg.start_px) - the
+                                  # swing FINAL leg - to decide whether the trade is big enough. end_px
+                                  # is only settled at confirmed_at_idx. Measured: 0 of 137 trades
+                                  # (union_multi) and 0 of 90 (dualunion_multi) had a swing settled by
+                                  # the entry bar. This is the M2 field that FS_TIME_GEOMETRY.md already
+                                  # closed as retrospective. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "union", "ext_stop_r": 1.5, "chop_thresh": 61.8,
                     "cooldown_bars": 10, "exp_skip_weekend": 1,
                     "exp_min_swing_ratio": 3.0, "exp_bias_momentum_min": 0.5,
@@ -3775,7 +3782,14 @@ EXPERIMENTS = {
     },
     "union_multi": {
         "desc": "union + filters (no dual gate) — reference for dual comparison",
-        "engine": "patched",
+                "status": "reference",   # LOOKAHEAD - end_px. See CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                                  # exp_min_swing_ratio measures abs(seg.end_px - seg.start_px) - the
+                                  # swing FINAL leg - to decide whether the trade is big enough. end_px
+                                  # is only settled at confirmed_at_idx. Measured: 0 of 137 trades
+                                  # (union_multi) and 0 of 90 (dualunion_multi) had a swing settled by
+                                  # the entry bar. This is the M2 field that FS_TIME_GEOMETRY.md already
+                                  # closed as retrospective. Do not ship, do not cite.
+"engine": "patched",
         "params": {"mode": "union", "ext_stop_r": 1.5, "chop_thresh": 61.8,
                     "cooldown_bars": 10, "exp_skip_weekend": 1,
                     "exp_min_swing_ratio": 3.0, "exp_bias_momentum_min": 0.5,

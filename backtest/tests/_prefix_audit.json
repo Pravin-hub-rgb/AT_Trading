@@ -1,0 +1,44 @@
+{
+ "dirmatch_multi_sw10": {
+  "cuts": 5,
+  "band_trades": 31,
+  "changed": 0,
+  "identical": true,
+  "examples": []
+ },
+ "champion_multi_sw10_leg": {
+  "cuts": 5,
+  "band_trades": 39,
+  "changed": 0,
+  "identical": true,
+  "examples": []
+ },
+ "fsent_champ_long": {
+  "cuts": 5,
+  "band_trades": 38,
+  "changed": 0,
+  "identical": true,
+  "examples": []
+ },
+ "fsent_champ_short": {
+  "cuts": 5,
+  "band_trades": 36,
+  "changed": 0,
+  "identical": true,
+  "examples": []
+ },
+ "trail_half_skipn6_dr3": {
+  "cuts": 5,
+  "band_trades": 30,
+  "changed": 0,
+  "identical": true,
+  "examples": []
+ },
+ "fsent_sig_sw10_short": {
+  "cuts": 5,
+  "band_trades": 30,
+  "changed": 0,
+  "identical": true,
+  "examples": []
+ }
+}
