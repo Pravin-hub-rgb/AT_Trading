@@ -31,7 +31,7 @@ TOL = 0.5   # the runner's own tolerance; matches what run_experiment.py checks
 def main(argv):
     keys = argv[1:]
     books = [k for k, v in reg.EXPERIMENTS.items()
-             if isinstance(v, dict) and v.get("pins", {}).get("n")]
+             if isinstance(v, dict) and (v.get("pins") or {}).get("n")]
     if keys:
         unknown = [k for k in keys if k not in books]
         if unknown:

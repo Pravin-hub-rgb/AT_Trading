@@ -1,0 +1,146 @@
+{
+ "combo": {
+  "exp_fs_entry_side": "short",
+  "exp_bias_momentum_min": 0.8,
+  "exp_skip_decisive": 1,
+  "exp_entry_skip_b2_doji": 1,
+  "exp_decay_mode": 3,
+  "exp_legskip_r": 2.0,
+  "b3_k": 6
+ },
+ "history": [
+  {
+   "step": 1,
+   "knob": "exp_fs_entry_side",
+   "val": "short",
+   "is": {
+    "n": 368,
+    "net": 174.3,
+    "dd": 16.62,
+    "wr": 32.3
+   },
+   "oos": {
+    "n": 239,
+    "net": 100.94,
+    "dd": 11.82,
+    "wr": 31.0
+   },
+   "d_is": 136.5,
+   "d_oos": 117.28
+  },
+  {
+   "step": 2,
+   "knob": "exp_bias_momentum_min",
+   "val": 0.8,
+   "is": {
+    "n": 284,
+    "net": 208.16,
+    "dd": 9.79,
+    "wr": 37.3
+   },
+   "oos": {
+    "n": 189,
+    "net": 137.01,
+    "dd": 8.83,
+    "wr": 36.0
+   },
+   "d_is": 170.36,
+   "d_oos": 153.35
+  },
+  {
+   "step": 3,
+   "knob": "exp_skip_decisive",
+   "val": 1,
+   "is": {
+    "n": 272,
+    "net": 193.45,
+    "dd": 10.42,
+    "wr": 36.8
+   },
+   "oos": {
+    "n": 145,
+    "net": 132.54,
+    "dd": 9.56,
+    "wr": 34.5
+   },
+   "d_is": 155.64999999999998,
+   "d_oos": 148.88
+  },
+  {
+   "step": 4,
+   "knob": "exp_entry_skip_b2_doji",
+   "val": 1,
+   "is": {
+    "n": 266,
+    "net": 175.12,
+    "dd": 9.91,
+    "wr": 36.1
+   },
+   "oos": {
+    "n": 138,
+    "net": 101.32,
+    "dd": 13.16,
+    "wr": 32.6
+   },
+   "d_is": 137.32,
+   "d_oos": 117.66
+  },
+  {
+   "step": 5,
+   "knob": "exp_decay_mode",
+   "val": 3,
+   "is": {
+    "n": 219,
+    "net": 200.85,
+    "dd": 8.01,
+    "wr": 35.6
+   },
+   "oos": {
+    "n": 102,
+    "net": 80.54,
+    "dd": 12.73,
+    "wr": 30.4
+   },
+   "d_is": 163.05,
+   "d_oos": 96.88000000000001
+  },
+  {
+   "step": 6,
+   "knob": "exp_legskip_r",
+   "val": 2.0,
+   "is": {
+    "n": 93,
+    "net": 199.76,
+    "dd": 6.69,
+    "wr": 45.2
+   },
+   "oos": {
+    "n": 46,
+    "net": 39.55,
+    "dd": 9.95,
+    "wr": 41.3
+   },
+   "d_is": 161.95999999999998,
+   "d_oos": 55.89
+  },
+  {
+   "step": 7,
+   "knob": "b3_k",
+   "val": 6,
+   "is": {
+    "n": 64,
+    "net": 113.56,
+    "dd": 3.94,
+    "wr": 45.3
+   },
+   "oos": {
+    "n": 29,
+    "net": 23.19,
+    "dd": 10.21,
+    "wr": 37.9
+   },
+   "d_is": 75.76,
+   "d_oos": 39.53
+  }
+ ]
+}

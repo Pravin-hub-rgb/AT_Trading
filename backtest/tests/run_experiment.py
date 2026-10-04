@@ -278,7 +278,7 @@ def evaluate(key, tr):
     n = s["n"]
     gross = s["gross"]
     nt = net_r(tr)
-    pins = cfg.get("pins", {})
+    pins = cfg.get("pins") or {}
     partials = sum(1 for t in tr if t.get("partial_exit_price", 0.0) > 0)
 
     # Yearly breakdown

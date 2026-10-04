@@ -40,7 +40,7 @@ FIELDS = ("n", "net", "dd_net")
 
 def _pinned():
     return [k for k, v in reg.EXPERIMENTS.items()
-            if isinstance(v, dict) and v.get("pins", {}).get("n")]
+            if isinstance(v, dict) and (v.get("pins") or {}).get("n")]
 
 
 def _shortlisted():

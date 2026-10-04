@@ -1,0 +1,206 @@
+Comparing files BACKEND\SRC\BTC\ENGINES\HTF_LTF\unified.py and BACKTEST\DOCS\_PATCHED_ENGINE.PY
+Resync Failed.  Files are too different.
+***** BACKEND\SRC\BTC\ENGINES\HTF_LTF\unified.py
+  268:      *,
+  269:      sl_buf_atr=0.25, ext_stop_r=1.5,
+  270:      chop_thresh=61.8, atr_low_thresh=0.35, atr_high_thresh=0.65,
+  271:      mode="chop",  # chop, atr_low, atr_both, chop_or_atr, soft_chop, soft_atr, soft_ensemble, garch, garch_inv
+  272:      soft_width=4.0,  # Idea D: half-width of soft band (0 = hard switch)
+  273:      cooldown_bars=0,
+  274:      max_consecutive_losses=0,  # 0 = no halt, N = halt after N consecutive losses
+  275:      htf_rr=3.0,  # HTF (1h) fixed R target Ã¢â?¬â? controls when window closes
+  276:      window_end="exit",  # "exit" = HTF trade exit (SL/target/16-day cap) [default, +331R];
+  277:                          # "r_touch" = first touch of ext_stop_r 1.5R [tested: +200.6R, -130R vs exit]
+  278:      # v19: SL pivot source. 0 = RETROACTIVE (default, what the champion was measured
+  279:      # with): sl_pivot = sig["swing_start_px"], the swing's true origin. That origin is
+  280:      # only knowable once the leg has completed, so using it at the entry bar is
+  281:      # lookahead - commit 484fe2a quantified it at -63R to -78R on IS. It was never
+  282:      # applied to the engine; this flag is that fix, finally in the engine.
+  283:      # 1 = CAUSAL: sl_pivot = the running extreme since the last CONFIRMED swing, keyed
+  284:      # on confirmed_at_idx, so the value is knowable at the entry bar.
+  285:        # UNIFIED: LTF stop source, controlled separately from pivot_rule, which
+  286:        # selects the HTF side's pivot. The two halves were never linked.
+  287:        #   0  running extreme up to and INCLUDING the entry bar (current rule)
+  288:        #   1  the same, minus the entry bar - so a book can exclude the entry
+  289:        #      candle on BOTH legs, matching pivot_rule="leg_no_entry" on the HTF.
+  290:        # Default 0: identical to every measurement pinned before this existed.
+  291:        exp_ltf_no_entry=0,
+  292:        exp_causal_sl=0,
+  293:        # UNIFIED: position limit. 1 = serial (v18 behaviour, busy_until gate armed)
+  294:        #   0 = unlimited (v19 behaviour, gate never fires). This is the ONLY
+  295:        #   behavioural difference v19 introduced to the position path; everything
+  296:        #   else v19 added was exp_persist, exp_causal_sl and pivot_rule, all of which
+  297:        #   v18 already handled or already defaulted off.
+  298:        max_positions=0,
+  299:        # UNIFIED: regime hysteresis. v19 hardcoded PERSIST=7 in the function body,
+  300:        # so it could not be switched off and v18 could not share the code path.
+  301:        #
+  302:        # DEFAULT IS 0 = OFF, and that is deliberate. The engine default answers
+  303:        # "what does an unspecified knob do?", and the honest answer for a
+  304:        # stickiness filter is "nothing" - same reason max_positions defaults to
+  305:        # 0 and exp_causal_sl defaults to 0. Hysteresis is not part of the core
+  306:        # HTF->LTF theory; it is one book's config.
+  307:        #
+  308:        # The value 7 belongs to champion_multi_sw10_leg, which sets it in the
+  309:        # registry. It was hardcoded here before, which meant every book that did
+  310:        # not ask for hysteresis silently got it. Books that want it now say so.
+  311:        #   0 = off (v18 behaviour, and every historical book measured this way)
+  312:        #   N = hold the old regime for N consecutive disagreements before flip
+  313:        exp_persist=0,
+  314:      # C16 SL pivot rule, applied to BOTH halves of this engine.
+  315:      #   "leg"    (default) - the swing's own extreme up to and including the break
+  316:      #                       bar. Causal, live-computable. This is what ships.
+  317:      #   "origin"          - the swing's declared seg_start. Lookahead; retained
+  318:      #                       only so the pre-C16 baseline stays reproducible.
+  319:      # Forwarded to the three HTF windows (via simulate_btc_trades_v7) and to the
+  320:      # LTF signal collection. Before this was explicit, the HTF half could not be
+  321:      # selected at all: v7_timecap binds _collect_signals at module import, so it
+  322:      # silently kept whatever the default was and the two halves diverged.
+  323:      pivot_rule="leg",
+  324:      # P4 window time cap, in days, forwarded to the three HTF window builders.
+  325:      #   16  = what has always shipped, and still the default here
+  326:      #   999 = effectively off (v7 treats 0 as off too, so 0 is not a separate arm)
+  327:      # This was hardcoded as cap_days=16 at all three call sites until 2026-10-02,
+  328:      # which meant the whole cap_days family documented in CAPS_P49.md could not
+  329:      # be reproduced on this engine at all - there was no knob to turn. CAPS_P49
+  330:      # reports removing the cap at +75.3R IS / +55.1R OOS on the champion and
+  331:      # +13.7R / +78.5R on utcsat, 4/4 positive, adding trades rather than removing
+  332:      # them. That finding has never been reproduced here. It is a direction, not
+  333:      # an adoption: P49 itself records that no arm beats 16 in both eras by more
+  334:      # than noise, and that the sweep is non-monotonic.
+  335:      exp_cap_days=16,
+  336:      # P36 decay gate. 0 = off, which is the default and keeps every historical
+  337:      # book measured as-is. Modes are the P36 grid's rule letters: 1 block<-
+  338:      # buying, 2 block<-selling, 3 own side, 4 crossed, 5-8 the ALLOW mirrors.
+  339:      # The gate runs at the entry bar and reads only legs CONFIRMED by then, so
+  340:      # it is causal in the same sense pivot_rule="leg" is.
+  341:      exp_decay_mode=0,
+  342:      # Fraction of the last N legs that must be broken to block. P36 used 0.75,
+  343:      # i.e. three of four.
+  344:      exp_decay_thr=0.75,
+  345:      exp_decay_legs=4,
+  346:      # Close the LTF position when its own swing confirms, but ONLY if the swing
+  347:      # confirmed within this many hours of the entry. -1 (default) = off, which
+  348:      # keeps every existing book byte-identical. 0 = exit on the first FS of any
+  349:      # age, and that is much worse than doing nothing.
+  350:      #
+  351:      # Causal: fs_at_idx >= seg.end_idx (backend_check_wd_days) and the book only
+  352:      # enters at a B2/flip break which sits before seg.end_idx, so the exit only
+  353:      # reads a confirmation that already happened. No magnitude test -- the FS
+  354:      # size buckets invert (FS_TIME_GEOMETRY).
+  355:      #
+  356:      # Measured on champion multi. The useful band is 2-6h; 8h+ stops paying on
+  357:      # both eras, and 24h is worse than the control in sample.
+  358:      #   gap   IS net R   OOS net R   IS DD   OOS DD
+  359:      #   none  +239.12    +72.79      46.8    50.6
+  360:      #   2h    +245.52    +75.37      43.6    50.4
+  361:      #   4h    +289.98    +79.42      42.3    43.9
+  362:      #   6h    +303.36    +80.30      45.7    45.0
+  363:      #   8h    +264.59    +69.70      35.8    45.4
+  364:      #   12h   +257.00    +76.90      34.4    49.6
+  365:      #   24h   +209.38    +77.93      32.9    28.9
+  366:      #   any    +133.26    +57.90      32.9    28.9
+  367:      exit_fs_max_gap_h=-1.0,
+***** BACKTEST\DOCS\_PATCHED_ENGINE.PY
+  268:      *,
+  269:      swings_trail=None,
+  270:      exp_momentum=False,
+  271:      b3_k=0,
+  272:      b3_mode="close",
+  273:      exp18_arm=None,
+  274:      exp22_conv=False,
+  275:      exp_mltf=False,
+  276:      exp27_mode=None,
+  277:      exp31_lb=0,
+  278:      exp_wage_h=0,
+  279:      exp_curfew_a=0.0,
+  280:      exp_curfew_b=0.0,
+  281:      exp_defer_h=0.0,
+  282:      exp_legskip_r=0.0,
+  283:      exp_partial_r=0.0,
+  284:      exp_skipwin=0,
+  285:      exp_swingpause=0,
+  286:      exp_skipwin_halt=0,
+  287:      exp_skip_weekend=0,
+  288:      exp_kinds="",
+  289:      exp_skip_utc_sat=0,
+  290:      exp_skip_utc_sun=0,
+  291:      exp_risk_max_pct=0.0,
+  292:      exp_chop15_lo=0.0,
+  293:      exp_chop15_hi=0.0,
+  294:      exp_atr_ratio_max=0.0,
+  295:      exp_max_concurrent=0,
+  296:      exp_cohort_swingpause=0,
+  297:      exp_cohort_rearm=0,
+  298:      exp_cohort_loss_n=1,
+  299:      exp_5m_confirm=0,
+  300:      exp_5m_wait_min=240,
+  301:      exp_5m_data=None,
+  302:      exp_5m_stats=None,
+  303:      exp_window_r_cap=0.0,
+  304:      exp_window_entry_cap=0,
+  305:      exp_window_budget_mode="realized",
+  306:      exp_campaign_require_marked_r=None,
+  307:      exp_campaign_max_addons=0,
+  308:      exp_campaign_max_total=0,
+  309:      exp_campaign_block_mixed=0,
+  310:      exp_campaign_stats=None,
+  311:      exp_window_loss_kill_n=0,
+  312:      exp_window_loss_kill_scope="window",
+  313:      exp_window_loss_kill_action="soft",
+  314:      exp_window_win_kill_n=0,
+  315:      exp_window_win_kill_scope="window",
+  316:      exp_window_win_kill_action="soft",
+  317:      exp_window_win_kill_stats=None,
+  318:      exp_window_loss_kill_stats=None,
+  319:      exp_shadow_book=False,
+  320:      exp_geom_mode="",
+  321:      exp_geom_b1_max=-1,
+  322:      exp_geom_b1_min=-1,
+  323:      exp_geom_mag_min_atr=0.0,
+  324:      exp_geom_start_dist_max_atr=0.0,
+  325:      exp_geom_stats=None,
+  326:      exp_b1_b2_mode="",
+  327:      exp_b1_b2_stats=None,
+  328:      exp_ma_trail_period=0,
+  329:      exp_weekly_state_action="",
+  330:      exp_loss_streak_n=0,
+  331:      exp_loss_streak_mode="global",
+  332:      exp_loss_streak_action="",
+  333:      exp_event_mode="",
+  334:      exp_event_timestamps=(),
+  335:      exp_event_dates=(),
+  336:      exp_event_shift_min=0,
+  337:      exp_event_stats=None,
+  338:      exp_entry_candle_min=0.0,
+  339:      exp_entry_swing_age_max=0,
+  340:      exp_entry_skip_b2_doji=0,
+  341:      exp_bias_momentum_min=0.0,
+  342:      exp_union_dual_only=0,
+  343:      exp_bm_causal=0,
+  344:      exp_min_swing_ratio=0.0,
+  345:      exp_wick_reject=0.0,
+  346:      exp_trail_max_dist=0.0,
+  347:      exp_trail_delay_r=0.0,
+  348:      exp_trail_delay_prevbar=0,
+  349:      exp_trail_skip_n=0,
+  350:      exp_trail_half=0,
+  351:      exp_retest_fill=0.0,
+  352:      exp_retest_wait=240,
+  353:      exp_profit_stage_r=0.0,
+  354:      exp_profit_stage_distance_r=0.0,
+  355:      exp_require_dir_match=0,
+  356:      exp_dir_causal=0,
+  357:      exp_max_swing_age=0,
+  358:      exp_max_running_mag=0.0,
+  359:      exp_halt_skip_n=1,
+  360:      exp_skip_decisive=0,
+  361:      exp_flip_break=0,
+  362:      exp_regime_skip=0.0,
+  363:      exp_pivot_trail=0,
+  364:      exp_eth_skip=0.0,
+  365:      exp_eth_lb=24,
+  366:      exp_eth_closes=None,
+  367:      exp_vol_b2_rvol=0.0,
+*****
+

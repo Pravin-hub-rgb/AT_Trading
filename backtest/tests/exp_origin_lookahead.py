@@ -303,7 +303,7 @@ def check_registry_hygiene():
           % (reg.SHORTLIST_IS_MIN, reg.SHORTLIST_OOS_MIN))
     try:
         live = [k for k, c in reg.EXPERIMENTS.items()
-                if isinstance(c, dict) and c.get("pins", {}).get("n")
+                if isinstance(c, dict) and (c.get("pins") or {}).get("n")
                 and c.get("status") != "reference"]
         sl = [k for k in live if reg.shortlisted(k)]
         print("    %d of %d live books clear it" % (len(sl), len(live)))
@@ -319,7 +319,7 @@ def check_registry_hygiene():
     for key, cfg in reg.EXPERIMENTS.items():
         if not isinstance(cfg, dict):
             continue
-        p2 = cfg.get("pins", {})
+        p2 = cfg.get("pins") or {}
         if not p2.get("n"):
             continue
         if cfg.get("status") == "reference":
@@ -335,7 +335,7 @@ def check_registry_hygiene():
         n_ref = sum(1 for c in reg.EXPERIMENTS.values()
                     if isinstance(c, dict) and c.get("status") == "reference")
         n_all = sum(1 for c in reg.EXPERIMENTS.values()
-                    if isinstance(c, dict) and c.get("pins", {}).get("n"))
+                    if isinstance(c, dict) and (c.get("pins") or {}).get("n"))
         print("    %d of %d books marked reference; the rest are candidates"
               % (n_ref, n_all))
 

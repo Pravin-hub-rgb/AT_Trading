@@ -1469,10 +1469,10 @@ EXPERIMENTS = {
                    "oos_n": 203, "oos_net": 95.00, "oos_dd_net": 10.20},
       },
 
-    "fsent_single_sw20_short_wr": {
+    "fsent_sig_sw20_short_wr": {
           "desc": "sw20 + SHORTS enter at swing FS - only >=40% win rate on the board",
           "engine": "patched",
-          "params": {
+          "params": { "max_positions": 1,
                        "mode": "atr_high",
                        "atr_high_thresh": 0.65,
                        "atr_low_thresh": 0.35,
@@ -1483,14 +1483,12 @@ EXPERIMENTS = {
                        "ext_stop_r": 3.0,
                        "exp_partial_r": 7.5,
                        "window_end": "exit",
-                       "exp_fs_entry_side": "short",
-                       "max_positions": 0},
+                       "exp_fs_entry_side": "short"},
           "swing": "sw20",
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 515, "net": 492.60, "dd_net": 14.20,
-                   "oos_n": 283, "oos_net": 179.80, "oos_dd_net": 8.50},
+          "pins": None,
       },
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
     # Enter at B2/flip as the book does; when the swing CONFIRMS, measure that
@@ -1498,6 +1496,53 @@ EXPERIMENTS = {
     # Both fields are settled at or before confirmed_at_idx and the FS bar has
     # closed, so this is knowable - unlike the same quantity read at the entry
     # bar, which is M2 and is closed as retrospective. exp_fs_small_swing.py.
+    "fsent_sig_fs_mom": {
+          "desc": "THE SIGNAL BOOK. One position at a time. Weekend + swingpause + shorts entering at the swing FS print + a momentum floor on the bias.",
+          "engine": "patched",
+          "params": { "max_positions": 1,
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_fs_entry_side": "short",
+                       "exp_swingpause": 1,
+                       "exp_skip_weekend": 1,
+                       "exp_bias_momentum_min": 0.8,
+                       "window_end": "exit"},
+          "swing": "sw10",
+          # UNPINNED: this book's knobs were written from prose, not from the
+          # sweep artifact, and the fastcheck does NOT reproduce the recorded
+          # 285/+208.16. Do not cite it until the params are re-derived from
+          # _signal_filter_sweep.json / _signal_combo.json and it re-pins.
+          "pins": None,
+      },
+    "fsent_sig_full": {
+          "desc": "Best exhaustive candidate on the one-position signal ladder: FS-short + momentum + no partial + trail skip + small-swing exit at FS + weekend skip.",
+          "engine": "patched",
+          "params": { "max_positions": 1,
+                       "mode": "atr_high",
+                       "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35,
+                       "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0,
+                       "cooldown_bars": 8,
+                       "max_consecutive_losses": 3,
+                       "ext_stop_r": 3.0,
+                       "exp_fs_entry_side": "short",
+                       "exp_bias_momentum_min": 0.8,
+                       "exp_partial_r": 0.0,
+                       "exp_trail_skip_n": 2,
+                       "exp_fs_small_swing": 6.0,
+                       "exp_skip_weekend": 1,
+                       "window_end": "exit"},
+          "swing": "sw10",
+          "pins": {"n": 234, "net": 291.02, "dd": 10.78, "win": 0.56,
+                   "oos_n": 153, "oos_net": 190.93, "oos_dd": 6.96, "oos_win": 0.56},
+      },
     # ===== THE SIGNAL BOOK =====
     # One position at a time. weekend + swingpause + shorts entering at the swing
     # FS print. Both filters are period-level/structural, which is what survived
@@ -1558,10 +1603,10 @@ EXPERIMENTS = {
     # fields settle at or before confirmed_at_idx, so this is knowable at the FS
     # bar - unlike the same quantity read at the ENTRY bar, which is M2 and is
     # closed as retrospective. exp_fs_small_swing.py.
-    "fsswing_single_sw10": {
+    "fsswing_sig_sw10": {
           "desc": "champion single sw10 + exit at FS when its swing leg is under 6x ATR",
           "engine": "patched",
-          "params": {
+          "params": { "max_positions": 1,
                        "mode": "atr_high",
                        "atr_high_thresh": 0.65,
                        "atr_low_thresh": 0.35,
@@ -1576,13 +1621,12 @@ EXPERIMENTS = {
           "swing": "sw10",
           # Base params copied from the named single book verbatim.
           # exp_fs_small_swing.py, both eras.
-          "pins": {"n": 508, "net": 201.90, "dd_net": 47.00,
-                   "oos_n": 299, "oos_net": 94.40, "oos_dd_net": 35.50},
+          "pins": None,
       },
-    "fsswing_single_sw20": {
+    "fsswing_sig_sw20": {
           "desc": "champion single sw20 + exit at FS when its swing leg is under 6x ATR",
           "engine": "patched",
-          "params": {
+          "params": { "max_positions": 1,
                        "mode": "atr_high",
                        "atr_high_thresh": 0.65,
                        "atr_low_thresh": 0.35,
@@ -1597,8 +1641,7 @@ EXPERIMENTS = {
           "swing": "sw20",
           # Base params copied from the named single book verbatim.
           # exp_fs_small_swing.py, both eras.
-          "pins": {"n": 498, "net": 199.40, "dd_net": 55.60,
-                   "oos_n": 274, "oos_net": 27.00, "oos_dd_net": 41.70},
+          "pins": None,
       },
     "fsexit6_c": {
         "desc": "champion leg + exit at own-swing FS when it lands within 6h",
@@ -2457,10 +2500,10 @@ EXPERIMENTS = {
 
     # ===== OUR CHAMPIONS (partial exits) =====
 
-    "champion_single_sw20": {
+    "champion_sig_sw20": {
         "desc": "Champion single sw20 (partial exit, +90.1 post trail-fix)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2471,13 +2514,12 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=496 net=196.28. Full sweep incl. gross/dd/win-rate:
         #   gross +312.57R  net +196.28R  dd 58.21R  win 31.9%  n=496
-        "pins": {"n": 496, "net": 196.28, "dd_net": 58.21,
-                 "oos_n": 269, "oos_net": 6.73, "oos_dd_net": 48.49},
+        "pins": None,
     },
-    "champion_single_sw10": {
+    "champion_sig_sw10": {
         "desc": "Champion single sw10 (partial exit, +82.0 post trail-fix)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2488,8 +2530,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=503 net=170.91. Full sweep incl. gross/dd/win-rate:
         #   gross +286.91R  net +170.91R  dd 50.48R  win 30.4%  n=503
-        "pins": {"n": 503, "net": 170.91, "dd_net": 50.48,
-                 "oos_n": 295, "oos_net": 78.57, "oos_dd_net": 38.11},
+        "pins": None,
     },
     "champion_multi_sw20": {
         "desc": "Champion multi sw20 (partial exit, +208.4 post trail-fix)",
@@ -2815,11 +2856,11 @@ EXPERIMENTS = {
     # exp_skipwin=1 already removes the window, so the added exp_swingpause has
     # nothing left to pause.
     "skip1pause_multi_sw10": "skipwin1_multi_sw10",
-    "skipwin1_single_sw10": {
+    "skipwin1_sig_sw10": {
         "desc": "baseline single + skip the next HTF window opened after a loss",
         "status": "reference",   # dead: net -38.88R - not a candidate.
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2831,13 +2872,12 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=148 net=-38.88. Full sweep incl. gross/dd/win-rate:
         #   gross -7.13R  net -38.88R  dd 53.91R  win 20.3%  n=148
-        "pins": {"n": 148, "net": -38.88, "dd_net": 53.91,
-                 "oos_n": 91, "oos_net": 17.15, "oos_dd_net": 26.33},
+        "pins": None,
     },
-    "swingpause_single_sw10": {
+    "swingpause_sig_sw10": {
         "desc": "baseline single + pause until a swing FORMED after the loss confirms",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2857,8 +2897,7 @@ EXPERIMENTS = {
         # fewer trades - it blocks re-entry into the same swing rather than
         # waiting out N bars. Together they are slightly worse than cooldown
         # alone, which is why the production champion keeps the cooldown.
-        "pins": {"n": 451, "net": 242.55, "dd_net": 48.67,
-                 "oos_n": 269, "oos_net": 76.02, "oos_dd_net": 37.64},
+        "pins": None,
     },
     "skipwinhalt_multi_sw10": {
         "desc": "king + skip the next HTF window after a HALT (3 straight losses)",
@@ -2879,10 +2918,10 @@ EXPERIMENTS = {
         "pins": {"n": 323, "net": 28.35, "dd_net": 45.34,
                  "oos_n": 198, "oos_net": 73.56, "oos_dd_net": 44.34},
     },
-    "skipwinhalt_single_sw10": {
+    "skipwinhalt_sig_sw10": {
         "desc": "baseline single + skip the next HTF window after a HALT (3 straight losses)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2894,19 +2933,18 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=328 net=29.64. Full sweep incl. gross/dd/win-rate:
         #   gross +102.02R  net +29.64R  dd 60.09R  win 27.4%  n=328
-        "pins": {"n": 328, "net": 29.64, "dd_net": 60.09,
-                 "oos_n": 203, "oos_net": 106.37, "oos_dd_net": 22.57},
+        "pins": None,
     },
     # REMOVED 2026-10-02: swingpause_cd0_single_sw10. exp_swingpause forces
     # cooldown_bars=0 itself, so this entry set cooldown_bars=0 and added the same
     # flag - it was swingpause_single_sw10 under a second name, and both read
     # 451 / +232.45R after the rerun. Kept as a pointer rather than a copy so a
     # script naming it still finds the meaning.
-    "swingpause_cd0_single_sw10": "swingpause_single_sw10",
-    "swingpause_single_sw20": {
+    "swingpause_cd0_single_sw10": "swingpause_sig_sw10",
+    "swingpause_sig_sw20": {
         "desc": "baseline single sw20 + swing-pause (fresh structure)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2919,8 +2957,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=444 net=154.08. Full sweep incl. gross/dd/win-rate:
         #   gross +258.19R  net +154.08R  dd 57.93R  win 30.9%  n=444
-        "pins": {"n": 444, "net": 154.08, "dd_net": 57.93,
-                 "oos_n": 248, "oos_net": 6.80, "oos_dd_net": 52.53},
+        "pins": None,
     },
 
     # ===== D3 PATTERN FAMILY (from loss autopsy: weekends, entry kinds, window age) =====
@@ -2943,10 +2980,10 @@ EXPERIMENTS = {
         "pins": {"n": 403, "net": 301.39, "dd_net": 25.88,
                  "oos_n": 219, "oos_net": 24.76, "oos_dd_net": 29.76},
     },
-    "nowknd_single_sw10": {
+    "nowknd_sig_sw10": {
         "desc": "baseline single + SKIP WEEKEND entries — isolate weekend effect",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2957,13 +2994,12 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=401 net=278.06. Full sweep incl. gross/dd/win-rate:
         #   gross +364.66R  net +278.06R  dd 32.28R  win 31.9%  n=401
-        "pins": {"n": 401, "net": 278.06, "dd_net": 32.28,
-                 "oos_n": 230, "oos_net": 31.29, "oos_dd_net": 31.31},
+        "pins": None,
     },
-    "nowknd_swingpause_single_sw10": {
+    "nowknd_swingpause_sig_sw10": {
         "desc": "swingpause single + SKIP WEEKEND — NEW BEST SINGLE (+217.6 / DD 18.2 / 12.0)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -2975,8 +3011,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=365 net=228.26. Full sweep incl. gross/dd/win-rate:
         #   gross +308.44R  net +228.26R  dd 30.31R  win 31.2%  n=365
-        "pins": {"n": 365, "net": 228.26, "dd_net": 30.31,
-                 "oos_n": 205, "oos_net": 20.30, "oos_dd_net": 27.28},
+        "pins": None,
     },
     "fliponly_multi_sw10": {
         "desc": "king + FLIP entries only (B2 was +82.4 on multi — test cut)",
@@ -2996,10 +3031,10 @@ EXPERIMENTS = {
         "pins": {"n": 286, "net": 202.45, "dd_net": 35.43,
                  "oos_n": 155, "oos_net": -10.70, "oos_dd_net": 52.55},
     },
-    "fliponly_swingpause_single_sw10": {
+    "fliponly_swingpause_sig_sw10": {
         "desc": "swingpause single + FLIP entries only — B2 was 178t for -0.6R",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3011,8 +3046,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=268 net=211.34. Full sweep incl. gross/dd/win-rate:
         #   gross +282.78R  net +211.34R  dd 29.50R  win 28.0%  n=268
-        "pins": {"n": 268, "net": 211.34, "dd_net": 29.50,
-                 "oos_n": 164, "oos_net": 0.15, "oos_dd_net": 41.52},
+        "pins": None,
     },
     "wage24_multi_sw10": {
         "desc": "king + only enter HTF windows older than 24h (mature bias)",
@@ -3121,10 +3155,10 @@ EXPERIMENTS = {
         "pins": {"n": 453, "net": 279.47, "dd_net": 35.54,
                  "oos_n": 254, "oos_net": 66.90, "oos_dd_net": 24.64},
     },
-    "utcsat_swingpause_single_sw10": {
+    "utcsat_swingpause_sig_sw10": {
         "desc": "swingpause single + SKIP UTC-SATURDAY only (UTC Sun = +51.7R is KEPT)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3136,16 +3170,15 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=406 net=245.7. Full sweep incl. gross/dd/win-rate:
         #   gross +340.27R  net +245.70R  dd 36.47R  win 29.6%  n=406
-        "pins": {"n": 406, "net": 245.70, "dd_net": 36.47,
-                 "oos_n": 245, "oos_net": 85.04, "oos_dd_net": 18.54},
+        "pins": None,
     },
 
     # NOTE: utc_sat variants consolidated into the other lane's keys
     # (utcsat_multi_sw10 / utcsat_swingpause_single_sw10) — identical params.
-    "utc_wknd_swingpause_single_sw10": {
+    "utc_wknd_swingpause_sig_sw10": {
         "desc": "swingpause single + skip full UTC weekend (Sat+Sun) — for comparison vs Sat-only",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3158,16 +3191,15 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=350 net=121.03. Full sweep incl. gross/dd/win-rate:
         #   gross +196.56R  net +121.03R  dd 40.49R  win 29.1%  n=350
-        "pins": {"n": 350, "net": 121.03, "dd_net": 40.49,
-                 "oos_n": 197, "oos_net": -15.69, "oos_dd_net": 30.82},
+        "pins": None,
     },
 
     # ===== D3 RISK-WIDTH FAMILY (skip stale/stretched breaks) =====
 
-    "rmax15_swingpause_single_sw10": {
+    "rmax15_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries with stop width over 1.5% of price — DEAD (cascade)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3179,13 +3211,12 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=376 net=187.78. Full sweep incl. gross/dd/win-rate:
         #   gross +290.57R  net +187.78R  dd 57.54R  win 26.9%  n=376
-        "pins": {"n": 376, "net": 187.78, "dd_net": 57.54,
-                 "oos_n": 161, "oos_net": -5.83, "oos_dd_net": 45.76},
+        "pins": None,
     },
-    "rmax10_swingpause_single_sw10": {
+    "rmax10_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries with stop width over 1.0% of price — DEAD",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3197,8 +3228,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=294 net=228.59. Full sweep incl. gross/dd/win-rate:
         #   gross +323.62R  net +228.59R  dd 47.91R  win 23.8%  n=294
-        "pins": {"n": 294, "net": 228.59, "dd_net": 47.91,
-                 "oos_n": 92, "oos_net": 14.67, "oos_dd_net": 42.64},
+        "pins": None,
     },
     "rmax15_multi_sw10": {
         "desc": "king + skip entries with stop width over 1.5% of price — DEAD (cascade)",
@@ -3239,10 +3269,10 @@ EXPERIMENTS = {
         "pins": {"n": 432, "net": 268.79, "dd_net": 41.70,
                  "oos_n": 257, "oos_net": 85.94, "oos_dd_net": 42.74},
     },
-    "chopband_swingpause_single_sw10": {
+    "chopband_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries in the 15m-chop transition band [55,61)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3258,13 +3288,12 @@ EXPERIMENTS = {
         # value: the same band over the swingpause base books 78 more trades than
         # its pin claimed, so this pin described a materially different book.
         # dd not re-measured.
-        "pins": {"n": 395, "net": 241.65, "dd_net": 38.57,
-                 "oos_n": 238, "oos_net": 75.51, "oos_dd_net": 46.11},
+        "pins": None,
     },
-    "atrr_swingpause_single_sw10": {
+    "atrr_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries when 15m ATR5/ATR20 > 1.4 (vol blow-off)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3276,13 +3305,12 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=381 net=241.57. Full sweep incl. gross/dd/win-rate:
         #   gross +337.85R  net +241.57R  dd 46.77R  win 28.1%  n=381
-        "pins": {"n": 381, "net": 241.57, "dd_net": 46.77,
-                 "oos_n": 242, "oos_net": 26.97, "oos_dd_net": 39.49},
+        "pins": None,
     },
-    "chopband_atrr_swingpause_single_sw10": {
+    "chopband_atrr_swingpause_sig_sw10": {
         "desc": "swingpause single + chop15 band AND ATR blow-off skip (combo)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3298,13 +3326,12 @@ EXPERIMENTS = {
         # value: the same band over the swingpause base books 78 more trades than
         # its pin claimed, so this pin described a materially different book.
         # dd not re-measured.
-        "pins": {"n": 321, "net": 264.45, "dd_net": 35.77,
-                 "oos_n": 211, "oos_net": 35.66, "oos_dd_net": 37.85},
+        "pins": None,
     },
-    "atrr_swingpause_single_sw20": {
+    "atrr_swingpause_sig_sw20": {
         "desc": "VALIDATION: atrr gate on sw20 chain (cross-chain robustness)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3316,13 +3343,12 @@ EXPERIMENTS = {
         #   gross +266.27R  net +171.57R  dd 50.43R  win 30.8%  n=390
         # all 115 registry books in one pass.
         #   gross +266.27R  net +171.57R  dd 50.43R  win 30.8%  n=390
-        "pins": {"n": 390, "net": 171.57, "dd_net": 50.43,
-                 "oos_n": 223, "oos_net": -8.48, "oos_dd_net": 52.53},
+        "pins": None,
     },
-    "atrr_cd0_swingpause_single_sw10": {
+    "atrr_cd0_swingpause_sig_sw10": {
         "desc": "VALIDATION: atrr gate with cd=0 (pause-only cooldown)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 0,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3334,13 +3360,12 @@ EXPERIMENTS = {
         #   gross +337.57R  net +240.56R  dd 47.35R  win 28.3%  n=385
         # all 115 registry books in one pass.
         #   gross +337.57R  net +240.56R  dd 47.35R  win 28.3%  n=385
-        "pins": {"n": 385, "net": 240.56, "dd_net": 47.35,
-                 "oos_n": 245, "oos_net": 20.89, "oos_dd_net": 45.95},
+        "pins": None,
     },
-    "chopband_swingpause_single_sw20": {
+    "chopband_swingpause_sig_sw20": {
         "desc": "VALIDATION: chopband gate on sw20 chain (cross-chain robustness)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3353,13 +3378,12 @@ EXPERIMENTS = {
         #   gross +237.43R  net +146.42R  dd 51.76R  win 31.2%  n=388
         # all 115 registry books in one pass.
         #   gross +237.43R  net +146.42R  dd 51.76R  win 31.2%  n=388
-        "pins": {"n": 388, "net": 146.42, "dd_net": 51.76,
-                 "oos_n": 227, "oos_net": 22.17, "oos_dd_net": 43.11},
+        "pins": None,
     },
-    "chopband_atrr_swingpause_single_sw20": {
+    "chopband_atrr_swingpause_sig_sw20": {
         "desc": "VALIDATION: chopband + atrr combo on sw20 chain",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3372,8 +3396,7 @@ EXPERIMENTS = {
         #   gross +256.38R  net +175.90R  dd 44.83R  win 30.4%  n=329
         # all 115 registry books in one pass.
         #   gross +256.38R  net +175.90R  dd 44.83R  win 30.4%  n=329
-        "pins": {"n": 329, "net": 175.90, "dd_net": 44.83,
-                 "oos_n": 202, "oos_net": 12.34, "oos_dd_net": 42.67},
+        "pins": None,
     },
     "utcsat_chopband_multi_sw10": {
         "desc": "utcsat king + chop15 band skip — stack test",
@@ -3414,10 +3437,10 @@ EXPERIMENTS = {
         "pins": {"n": 311, "net": 295.46, "dd_net": 26.61,
                  "oos_n": 201, "oos_net": 36.07, "oos_dd_net": 31.36},
     },
-    "fullstack_swingpause_single_sw10": {
+    "fullstack_swingpause_sig_sw10": {
         "desc": "single full stack: weekend skip + swingpause + chop15 band + ATR blow-off",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3445,13 +3468,12 @@ EXPERIMENTS = {
         # they add once weekend is in. That is the finding: this book was named
         # for being the best and it is not - it is the champion base plus a
         # weekend filter with three filters stacked on top that dilute it.
-        "pins": {"n": 262, "net": 268.27, "dd_net": 24.22,
-                 "oos_n": 168, "oos_net": 24.93, "oos_dd_net": 28.54},
+        "pins": None,
     },
-    "fullstack_wage10_cd0_single_sw10": {
+    "fullstack_wage10_cd0_sig_sw10": {
         "desc": "KING SINGLE: fullstack + wage10 + cd=0 — chop15 band + ATR blow-off",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 0,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3466,16 +3488,15 @@ EXPERIMENTS = {
         #   gross +372.69R  net +316.64R  dd 23.96R  win 34.6%  n=234
         # pin was n=194 net=244.5; now n=234 net=316.64 (win rate 34.6%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
-        "pins": {"n": 234, "net": 316.64, "dd_net": 23.96,
-                 "oos_n": 158, "oos_net": 28.72, "oos_dd_net": 29.45},
+        "pins": None,
     },
 
     # ===== D3 WAGE VALIDATION FAMILY (other bot's sweep finding: wage12 on single +61R) =====
 
-    "wage12_swingpause_single_sw10": {
+    "wage12_swingpause_sig_sw10": {
         "desc": "REPLICATE other bot: nowknd_swingpause single + wage_h=12",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3494,13 +3515,12 @@ EXPERIMENTS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": {"n": 323, "net": 262.31, "dd_net": 27.48,
-                 "oos_n": 183, "oos_net": 2.28, "oos_dd_net": 34.44},
+        "pins": None,
     },
-    "wage8_swingpause_single_sw10": {
+    "wage8_swingpause_sig_sw10": {
         "desc": "VALIDATION: wage neighborhood 8h",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3519,13 +3539,12 @@ EXPERIMENTS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": {"n": 329, "net": 247.85, "dd_net": 29.39,
-                 "oos_n": 192, "oos_net": 22.87, "oos_dd_net": 27.65},
+        "pins": None,
     },
-    "wage10_swingpause_wskip_single_sw10": {
+    "wage10_swingpause_wskip_sig_sw10": {
         "desc": "KING SINGLE: wage 10h + swing pause + IST weekend skip — cd=0 redundant with swingpause",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 0,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3537,14 +3556,13 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=330 net=308.65. Full sweep incl. gross/dd/win-rate:
         #   gross +385.19R  net +308.65R  dd 26.27R  win 32.4%  n=330
-        "pins": {"n": 330, "net": 308.65, "dd_net": 26.27,
-                 "oos_n": 190, "oos_net": 25.00, "oos_dd_net": 27.59},
+        "pins": None,
     },
     # === SKIP-FIRST-SWING: DEAD — first swing is where the edge lives (Exp 19 confirmed) ===
-    "wage16_swingpause_single_sw10": {
+    "wage16_swingpause_sig_sw10": {
         "desc": "VALIDATION: wage neighborhood 16h",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3563,13 +3581,12 @@ EXPERIMENTS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": {"n": 302, "net": 244.80, "dd_net": 28.04,
-                 "oos_n": 176, "oos_net": 20.16, "oos_dd_net": 27.97},
+        "pins": None,
     },
-    "wage20_swingpause_single_sw10": {
+    "wage20_swingpause_sig_sw10": {
         "desc": "VALIDATION: wage neighborhood 20h — declines past the plateau",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3588,13 +3605,12 @@ EXPERIMENTS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": {"n": 283, "net": 205.35, "dd_net": 26.45,
-                 "oos_n": 170, "oos_net": 47.56, "oos_dd_net": 23.87},
+        "pins": None,
     },
-    "wage12_swingpause_single_nowknd_sw10": {
+    "wage12_swingpause_sig_nowknd_sw10": {
         "desc": "VALIDATION: wage12 WITHOUT weekend skip (stack interaction) — wage works alone (+60.9R)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3606,13 +3622,12 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=392 net=196.94. Full sweep incl. gross/dd/win-rate:
         #   gross +287.92R  net +196.94R  dd 41.23R  win 30.1%  n=392
-        "pins": {"n": 392, "net": 196.94, "dd_net": 41.23,
-                 "oos_n": 236, "oos_net": 58.09, "oos_dd_net": 56.84},
+        "pins": None,
     },
-    "wage12_swingpause_single_sw20": {
+    "wage12_swingpause_sig_sw20": {
         "desc": "VALIDATION: wage12 on sw20 chain — TRANSFERS (+24.5R, -4.9DD)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3624,8 +3639,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=394 net=153.32. Full sweep incl. gross/dd/win-rate:
         #   gross +245.75R  net +153.32R  dd 43.96R  win 32.2%  n=394
-        "pins": {"n": 394, "net": 153.32, "dd_net": 43.96,
-                 "oos_n": 215, "oos_net": 24.50, "oos_dd_net": 37.07},
+        "pins": None,
     },
 
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
@@ -3648,10 +3662,10 @@ EXPERIMENTS = {
         "pins": {"n": 493, "net": 185.08, "dd_net": 47.70,
                  "oos_n": 283, "oos_net": 82.65, "oos_dd_net": 43.92},
     },
-    "causalsl_swingpause_single_sw10": {
+    "causalsl_swingpause_sig_sw10": {
         "desc": "swingpause single + causal SL",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3663,8 +3677,7 @@ EXPERIMENTS = {
         #   gross +294.31R  net +195.67R  dd 45.42R  win 29.6%  n=446
         # all 115 registry books in one pass.
         #   gross +294.31R  net +195.67R  dd 45.42R  win 29.6%  n=446
-        "pins": {"n": 446, "net": 195.67, "dd_net": 45.42,
-                 "oos_n": 266, "oos_net": 82.76, "oos_dd_net": 27.83},
+        "pins": None,
     },
     "causalsl_utcsat_multi_sw10": {
         "desc": "utcsat king + causal SL",
@@ -3764,10 +3777,10 @@ EXPERIMENTS = {
         "pins": {"n": 359, "net": 264.66, "dd_net": 29.71,
                  "oos_n": 192, "oos_net": 91.58, "oos_dd_net": 19.02},
     },
-    "bm05_swingpause_single_sw10": {
+    "bm05_swingpause_sig_sw10": {
         "desc": "swingpause single + bias momentum min 0.5 — FAILS on single (-29.6R)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3779,8 +3792,7 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=425 net=243.81. Full sweep incl. gross/dd/win-rate:
         #   gross +342.60R  net +243.81R  dd 49.00R  win 30.1%  n=425
-        "pins": {"n": 425, "net": 243.81, "dd_net": 49.00,
-                 "oos_n": 253, "oos_net": 71.34, "oos_dd_net": 37.92},
+        "pins": None,
     },
     "bm05_multi_sw20": {
         "desc": "VALIDATION: bm05 on sw20 chain (cross-chain transfer)",
@@ -3804,11 +3816,11 @@ EXPERIMENTS = {
 
     # ===== D3 TRAIL QUALITY (skip far trail levels) =====
 
-    "trail10_swingpause_single": {
+    "trail10_swingpause_sig": {
         "desc": "swingpause single + skip trail levels > 1.0% from entry",
         "status": "reference",   # dead: net -311.27R - not a candidate.
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3820,14 +3832,13 @@ EXPERIMENTS = {
         #   gross -170.58R  net -311.27R  dd 313.38R  win 22.5%  n=328
         # all 115 registry books in one pass.
         #   gross -170.58R  net -311.27R  dd 313.38R  win 22.5%  n=328
-        "pins": {"n": 328, "net": -311.27, "dd_net": 313.38,
-                 "oos_n": 134, "oos_net": -112.82, "oos_dd_net": 112.82},
+        "pins": None,
     },
-    "trail06_swingpause_single": {
+    "trail06_swingpause_sig": {
         "desc": "swingpause single + skip trail levels > 0.6% from entry",
         "status": "reference",   # dead: net -276.56R - not a candidate.
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -3839,8 +3850,7 @@ EXPERIMENTS = {
         #   gross -165.46R  net -276.56R  dd 276.56R  win 14.9%  n=233
         # all 115 registry books in one pass.
         #   gross -165.46R  net -276.56R  dd 276.56R  win 14.9%  n=233
-        "pins": {"n": 233, "net": -276.56, "dd_net": 276.56,
-                 "oos_n": 116, "oos_net": -108.77, "oos_dd_net": 108.77},
+        "pins": None,
     },
     "trail10_multi": {
         "desc": "king + skip trail levels > 1.0% from entry",
@@ -4014,7 +4024,7 @@ EXPERIMENTS = {
 
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
 
-    "dirmatch_swingpause_single_sw10": {
+    "dirmatch_swingpause_sig_sw10": {
         "desc": "swingpause single + dir match — +288.1R / DD 14.1 / WR 35.5%",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
@@ -4023,7 +4033,7 @@ EXPERIMENTS = {
                                   # reading the answer. Path-true (exp_dir_causal=1) numbers are in
                                   # _dir_causal_pins.json. Do not ship, do not cite.
 "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4035,10 +4045,9 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=362 net=273.84. Full sweep incl. gross/dd/win-rate:
         #   gross +352.26R  net +273.84R  dd 30.04R  win 37.6%  n=362
-        "pins": {"n": 362, "net": 273.84, "dd_net": 30.04,
-                 "oos_n": 215, "oos_net": 133.90, "oos_dd_net": 15.96},
+        "pins": None,
     },
-    "age10_dirmatch_swingpause_single_sw10": {
+    "age10_dirmatch_swingpause_sig_sw10": {
         "desc": "swingpause single + dir match + age 10 — 🔥 BEST EVER: +435.7R / DD 5.7 / WR 53.8%",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
@@ -4047,7 +4056,7 @@ EXPERIMENTS = {
                                   # reading the answer. Path-true (exp_dir_causal=1) numbers are in
                                   # _dir_causal_pins.json. Do not ship, do not cite.
 "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4060,10 +4069,9 @@ EXPERIMENTS = {
         # all 115 registry books in one pass.
         # Was n=149 net=414.08. Full sweep incl. gross/dd/win-rate:
         #   gross +457.69R  net +414.08R  dd 12.90R  win 53.7%  n=149
-        "pins": {"n": 149, "net": 414.08, "dd_net": 12.90,
-                 "oos_n": 83, "oos_net": 63.65, "oos_dd_net": 8.50},
+        "pins": None,
     },
-    "dirmatch_single_sw10": {
+    "dirmatch_sig_sw10": {
         "desc": "baseline single (no swingpause) + dir match — +237.7R / DD 15.7",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
@@ -4072,7 +4080,7 @@ EXPERIMENTS = {
                                   # reading the answer. Path-true (exp_dir_causal=1) numbers are in
                                   # _dir_causal_pins.json. Do not ship, do not cite.
 "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4089,8 +4097,7 @@ EXPERIMENTS = {
         # HTF swing direction. On the single base this book now books 100 MORE
         # trades than its pin said (292 -> 392) and nearly doubles its net, so the
         # old pin was describing a materially different book.
-        "pins": {"n": 392, "net": 442.72, "dd_net": 31.02,
-                 "oos_n": 235, "oos_net": 140.64, "oos_dd_net": 18.19},
+        "pins": None,
     },
 
     # ===== SHIPPED BASELINE (identity gate reference) =====
@@ -4143,10 +4150,10 @@ EXPERIMENTS = {
         "pins": {"n": 422, "net": 295.70, "dd_net": 36.16,
                  "oos_n": 229, "oos_net": 63.18, "oos_dd_net": 28.56},
     },
-    "b2doji_swingpause_single_sw10": {
+    "b2doji_swingpause_sig_sw10": {
         "desc": "king single + skip B2 entries with doji candle (body/range < 0.3)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4158,8 +4165,7 @@ EXPERIMENTS = {
         #   gross +285.02R  net +188.71R  dd 46.29R  win 29.2%  n=414
         # all 115 registry books in one pass.
         #   gross +285.02R  net +188.71R  dd 46.29R  win 29.2%  n=414
-        "pins": {"n": 414, "net": 188.71, "dd_net": 46.29,
-                 "oos_n": 244, "oos_net": 17.68, "oos_dd_net": 52.68},
+        "pins": None,
     },
     "age50_utcsat_multi_sw10": {
         "desc": "king multi + skip entries on swings older than 50 bars",
@@ -4180,10 +4186,10 @@ EXPERIMENTS = {
         "pins": {"n": 434, "net": 261.40, "dd_net": 37.95,
                  "oos_n": 246, "oos_net": 71.71, "oos_dd_net": 23.44},
     },
-    "age50_swingpause_single_sw10": {
+    "age50_swingpause_sig_sw10": {
         "desc": "king single + skip entries on swings older than 50 bars",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4195,8 +4201,7 @@ EXPERIMENTS = {
         #   gross +237.63R  net +137.14R  dd 48.05R  win 27.0%  n=429
         # all 115 registry books in one pass.
         #   gross +237.63R  net +137.14R  dd 48.05R  win 27.0%  n=429
-        "pins": {"n": 429, "net": 137.14, "dd_net": 48.05,
-                 "oos_n": 264, "oos_net": 68.19, "oos_dd_net": 43.82},
+        "pins": None,
     },
     "combined_b2age_utcsat_multi_sw10": {
         "desc": "king multi + B2+doji skip + swing age 50 skip (combined entry quality)",
@@ -4514,10 +4519,10 @@ EXPERIMENTS = {
         "pins": {"n": 332, "net": 273.80, "dd_net": 21.70,
                  "oos_n": 199, "oos_net": 63.75, "oos_dd_net": 28.74},
     },
-    "wage24_swingpause_single_sw10": {
+    "wage24_swingpause_sig_sw10": {
         "desc": "best single + wage_h=24 (never tested on best single, current=0)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4530,8 +4535,7 @@ EXPERIMENTS = {
         #   gross +284.68R  net +228.40R  dd 20.87R  win 34.2%  n=269
         # all 115 registry books in one pass.
         #   gross +284.68R  net +228.40R  dd 20.87R  win 34.2%  n=269
-        "pins": {"n": 269, "net": 228.40, "dd_net": 20.87,
-                 "oos_n": 163, "oos_net": 33.80, "oos_dd_net": 30.46},
+        "pins": None,
     },
     "curfew624_utcsat_multi_sw10": {
         "desc": "utcsat king + skip age 6-24h band (never tested on king, current=0/0)",
@@ -4550,10 +4554,10 @@ EXPERIMENTS = {
         "pins": {"n": 377, "net": 304.72, "dd_net": 31.95,
                  "oos_n": 211, "oos_net": 51.72, "oos_dd_net": 26.83},
     },
-    "curfew624_swingpause_single_sw10": {
+    "curfew624_swingpause_sig_sw10": {
         "desc": "best single + skip age 6-24h band (never tested on best single, current=0/0)",
         "engine": "patched",
-        "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+        "params": { "max_positions": 1,"mode": "atr_high", "atr_high_thresh": 0.65,
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
@@ -4566,8 +4570,7 @@ EXPERIMENTS = {
         #   gross +259.41R  net +198.91R  dd 23.17R  win 32.7%  n=300
         # all 115 registry books in one pass.
         #   gross +259.41R  net +198.91R  dd 23.17R  win 32.7%  n=300
-        "pins": {"n": 300, "net": 198.91, "dd_net": 23.17,
-                 "oos_n": 176, "oos_net": 38.02, "oos_dd_net": 27.03},
+        "pins": None,
     },
 
     # --- partial_r fine sweep on king multi (current=0, only 7.5 tested on sw20) ---
@@ -4737,7 +4740,7 @@ def shortlisted(key, _exp=None):
         return False
     if cfg.get("status") == "reference":
         return False
-    p = cfg.get("pins", {})
+    p = cfg.get("pins") or {}
     if not p.get("n"):
         return False
     return p["net"] >= SHORTLIST_IS_MIN and p["oos_net"] >= SHORTLIST_OOS_MIN
