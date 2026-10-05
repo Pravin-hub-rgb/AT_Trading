@@ -1,0 +1,22 @@
+Recognise an era that arrives as a key, and report which files were not read.
+
+_walk iterated dict values, so a file shaped {"is": {...}, "oos": {...}} lost
+which half was which and every row came out with era=''. That is not cosmetic:
+the query that asks for the out-of-sample number returns nothing, and the
+database looks like it holds no out-of-sample data when it holds 358 rows of it.
+Walking the two era keys explicitly takes the result rows from 842 to 995.
+
+unmapped -v now lists files by name instead of printing a count. Of the 67 that
+contribute nothing, five are metadata rather than results (_rename_map,
+_prefix_audit, _craze_patch_gate, _docs_inventory, _dir_causal_evidence), one
+parse path covers them. The rest are three shapes that need their own handling
+rather than a looser matcher: per-book trade dumps - _deathpath_autopsy_results
+holds 500 champion trades and 349 lb30 trades, which is a ledger and not a
+result - studies that nest a lane per arm (_reclaim_walk_results, _win_spacing),
+and three thesis-stage files of 5 MB, 12 MB and 2.7 MB that are past the point
+where walking them is the right approach.
+
+Not one of those 67 holds a number any document is quoting, which check confirms:
+it still passes with 995 rows rather than 842. That is worth stating plainly.
+Widening what the ingester accepts did not manufacture agreement - the gate is
+not green because the net got looser.

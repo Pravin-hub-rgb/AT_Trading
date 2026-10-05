@@ -149,8 +149,18 @@ def _walk(node, book_hint: str, era_hint: str, harness: str, src: str,
                     avg_r=_canon_get(node, "avg_r"), extras=extras,
                     measured_at=src)
                 ok += 1
+        # An era is often a KEY rather than a value: {"is": {...}, "oos": {...}}.
+        # Iterating values alone loses which one was which, so every row came out
+        # with era='' - and the filter that asks for the out-of-sample number
+        # finds nothing. Fifty-eight files are shaped this way.
+        for era_key in rdb.ERAS:
+            if era_key in node and isinstance(node[era_key], (dict, list)):
+                ok += _walk(node[era_key], book_hint, era_key, harness, src,
+                            conn, depth + 1)
+
         for v in list(node.values())[:200]:
-            ok += _walk(v, book_hint, era_hint, harness, src, conn, depth + 1)
+            if isinstance(v, (dict, list)):
+                ok += _walk(v, book_hint, era_hint, harness, src, conn, depth + 1)
     elif isinstance(node, list):
         for v in node[:4000]:
             ok += _walk(v, book_hint, era_hint, harness, src, conn, depth + 1)
@@ -440,10 +450,17 @@ def main(argv=None) -> int:
 
     if a.cmd == "unmapped":
         n = conn.execute("SELECT COUNT(DISTINCT source_file) FROM results").fetchone()[0]
-        tot = len(list((ROOT / "backtest" / "tests").glob("_*.json")))
-        print("result JSONs on disk : %d" % tot)
+        files = sorted((ROOT / "backtest" / "tests").glob("_*.json"))
+        seen = {r["source_file"] for r in conn.execute(
+            "SELECT DISTINCT source_file FROM results")}
+        miss = [p for p in files if p.name not in seen]
+        print("result JSONs on disk : %d" % len(files))
         print("contributed a row    : %d" % n)
-        print("no row recognised    : %d" % (tot - n))
+        print("no row recognised    : %d" % len(miss))
+        if a.verbose:
+            print()
+            for p in miss:
+                print("  %-56s %8.1f KB" % (p.name, p.stat().st_size / 1024))
         return 0
 
     conn.execute("DELETE FROM results")
