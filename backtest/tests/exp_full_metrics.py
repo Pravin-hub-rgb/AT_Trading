@@ -108,12 +108,22 @@ def compute(rs, dates):
     k3 = sum(x for x in rs if x >= 3)
     return {
         "n": n,
+        "n_wins": len(wins),
+        "n_losses": len(losses),
         "net": round(sum(rs), 1),
         "avgR": round(sum(rs) / n, 4),
         "wr": round(100.0 * len(wins) / n, 1),
         "median": round(statistics.median(rs), 4),
         "trimmed": round(sum(s[k:n - k]) / max(n - 2 * k, 1), 4),
         "pf": round(gross_w / gross_l, 3) if gross_l > 1e-9 else None,
+        "avg_win": round(gross_w / len(wins), 4) if wins else None,
+        "avg_loss": round(-gross_l / len(losses), 4) if losses else None,
+        # gross_l is already positive (-sum(losses)), so dividing by it directly
+        # is what gives a positive payoff. Negating it here returned a negative
+        # payoff for a book whose trades were plainly profitable.
+        "payoff": round((gross_w / len(wins)) / (gross_l / len(losses)), 4)
+        if wins and losses and gross_l > 1e-9 else None,
+        "stdR": round(statistics.pstdev(rs), 4) if n > 1 else None,
         "max_dd": round(mdd, 1),
         "dd_dur": worst_dd_dur,
         "ulcer": round(ulcer, 2),

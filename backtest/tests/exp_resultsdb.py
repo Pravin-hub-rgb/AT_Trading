@@ -46,6 +46,11 @@ for p in ("backtest/tests", "backtest", "backend", ""):
 
 import results_db as rdb  # noqa: E402
 import experiment_registry as reg  # noqa: E402
+# The look-ahead list lives with the harness that proves it, so the database and
+# the metrics run cannot disagree about which books are poisoned.
+from exp_signal_metrics import (  # noqa: E402
+    GRAVEYARD_KNOBS, Q_NOTE, quarantine_reason,
+)
 
 # The three fields exp_fastcheck.py compares, plus the three every equity study
 # reports. Anything else goes to extras rather than into a mislabelled column.
@@ -57,7 +62,28 @@ CANON = {
     "pf": ("pf", "profit_factor"),
     "avg_r": ("avg_r", "avgR", "per", "expectancy"),
 }
-_CANON_KEYS = {k for v in CANON.values() for k in v}
+_EXTRA_METRIC_KEYS = {
+    "wins":            ("wins", "win_count"),
+    "losses":          ("losses", "loss_count"),
+    "max_dd":          ("max_dd", "dd"),
+    "avg_win":         ("avg_win",),
+    "avg_loss":        ("avg_loss",),
+    "payoff":          ("payoff",),
+    "median_r":        ("median", "median_r"),
+    "std_r":           ("std", "std_r"),
+    "max_win_streak":  ("max_win_streak",),
+    "max_loss_streak": ("max_loss_streak",),
+    "gross_r":         ("gross_r",),
+    "sum_r":           ("sum_r",),
+    "wr_pct":          ("wr_pct", "win_rate_pct"),
+}
+
+# Keys promoted to their own column. sum_r and median/std stay out of this set
+# because CANON already maps sum_r onto net; keeping both would let a row carry
+# two different values for what reads as the same number.
+_CANON_KEYS = {k for v in CANON.values() for k in v} | {
+    k for keys in _EXTRA_METRIC_KEYS.values() for k in keys
+}
 
 
 def _canon_get(d: dict, want: str):
@@ -77,8 +103,98 @@ def _canon_get(d: dict, want: str):
 
 
 def plane_of(params: dict, bp: dict) -> str:
+    """A book's plane, by the registry's own definition.
+
+    max_positions == 1 is the signal plane; everything else is multi. This is
+    the primary axis of the whole repository, per BOOK_CATEGORIES.md.
+    """
     mp = (params or {}).get("max_positions", bp.get("max_positions"))
     return "signal" if mp == 1 else "multi"
+
+
+def _extra_metrics(node: dict) -> dict:
+    """Lift the metrics the harnesses already compute out of extras.
+
+    The JSONs have carried wins, losses, max_dd, avg_win, avg_loss, payoff,
+    median, std and streak counts all along - 19k occurrences of max_loss_streak
+    in _ddseries.json alone. They were landing in extras as JSON, so "win rate"
+    and "average R per trade" could not be queried for most books. Anything not
+    listed keeps going to extras.
+    """
+    out = {}
+    for col, keys in _EXTRA_METRIC_KEYS.items():
+        for k in keys:
+            v = node.get(k) if isinstance(node, dict) else None
+            if v is not None:
+                try:
+                    out[col] = float(v)
+                except (TypeError, ValueError):
+                    pass
+                break
+    return out
+
+
+_EXTRA_METRIC_KEYS = {
+    "wins":            ("wins", "win_count"),
+    "losses":          ("losses", "loss_count"),
+    "max_dd":          ("max_dd", "dd"),
+    "avg_win":         ("avg_win",),
+    "avg_loss":        ("avg_loss",),
+    "payoff":          ("payoff",),
+    "median_r":        ("median", "median_r"),
+    "std_r":           ("std", "std_r"),
+    "max_win_streak":  ("max_win_streak",),
+    "max_loss_streak": ("max_loss_streak",),
+    "gross_r":         ("gross_r",),
+    "sum_r":           ("sum_r",),
+    "wr_pct":          ("wr_pct", "win_rate_pct"),
+}
+
+
+def plane_for(conn, book: str, scope: str):
+    """Resolve one row's plane: the scope first, then the registry, then unknown.
+
+    The scope outranks the registry because it is the row's own record of how the
+    measurement was taken, and the two disagree for champion_single_sw10, where
+    the registry knows a signal book and the scope says max_pos=0.
+
+    Falling back to the registry fills the 418 registry-sourced rows. What stays
+    blank is the experiment base - "champion_single_sw10 | dirmatch + FS-short" -
+    which is not a registered book at all. Those keep plane='' rather than
+    inheriting a guess, so a filtered query says what it left out.
+    """
+    p = plane_from_scope(scope)
+    if p:
+        return p
+    row = conn.execute("SELECT plane FROM books WHERE name=?", (str(book),)).fetchone()
+    if row and row[0]:
+        return row[0]
+    return ""
+
+
+def plane_from_scope(scope: str):
+    """A result's plane, from the scope the experiment recorded on the row.
+
+    The scopes in _fs_single.json and _fs_serial_filters.json say it outright -
+    "serial max_pos=1 | short" versus "multi max_pos=0 | short" - and that is
+    authoritative in a way the book NAME is not.
+
+    This matters because one name carries both meanings. champion_single_sw10 is
+    a signal book after the single-to-sig rename (champion_sig_sw10,
+    max_positions=1), and it is simultaneously the base of a multi-position
+    experiment recorded under its old name. Trusting the name filed 32 rows on
+    the wrong plane and left them with no plane at all, which is how "top
+    signal" came to return +426 and +492 for books holding several positions.
+
+    Returns None when the scope does not say, so the caller falls back to the
+    registry rather than guessing.
+    """
+    if not scope:
+        return None
+    m = re.search(r"max_pos\s*=\s*(\d+)", scope)
+    if not m:
+        return None
+    return "signal" if int(m.group(1)) == 1 else "multi"
 
 
 def ingest_books(conn) -> tuple[int, int]:
@@ -89,31 +205,44 @@ def ingest_books(conn) -> tuple[int, int]:
     put a row in the database for a book that does not exist.
     """
     bp = reg.BP
-    books = rows = 0
+    books = rows = quar = 0
     for name, v in reg.EXPERIMENTS.items():
         if not isinstance(v, dict):
             continue
         params = v.get("params") or {}
-        rdb.set_book(conn, name, plane_of(params, bp), v.get("status"), params=params)
+        # A book that reads a field not settled at its decision bar keeps its
+        # numbers in this database - they are the evidence that the look-ahead was
+        # caught - but they are flagged so a ranking cannot pick them. Left
+        # unflagged, a query returns +444R books that cannot be traded.
+        bad = quarantine_reason(params)
+        rdb.set_book(conn, name, plane_of(params, bp), v.get("status"),
+                     params=params,
+                     quarantined=bad or "", q_note=Q_NOTE if bad else None)
         books += 1
+        if bad:
+            quar += 1
         p = v.get("pins") or {}
         if not p.get("n"):
             continue
         # One registry row carries both eras, which is why the pins block uses
-        # an oos_ prefix rather than being a nested dict.
+        # an oos_ prefix rather than being a nested dict. The plane comes from
+        # the registry's own max_positions, computed once above.
         rdb.upsert_result(conn, book=name, era="is", scope="", harness="registry",
-                          source_file="experiment_registry", n=p.get("n"),
+                          source_file="experiment_registry",
+                          plane=plane_of(params, bp),
+                          n=p.get("n"),
                           net=p.get("net"), dd_net=p.get("dd_net"),
                           win=p.get("win"), measured_at="registry")
         rows += 1
         if p.get("oos_n") is not None:
             rdb.upsert_result(conn, book=name, era="oos", scope="",
                               harness="registry", source_file="experiment_registry",
+                              plane=plane_of(params, bp),
                               n=p.get("oos_n"), net=p.get("oos_net"),
                               dd_net=p.get("oos_dd_net"), win=p.get("oos_win"),
                               measured_at="registry")
             rows += 1
-    return books, rows
+    return books, rows, quar
 
 
 def _walk(node, book_hint: str, era_hint: str, harness: str, src: str,
@@ -144,9 +273,11 @@ def _walk(node, book_hint: str, era_hint: str, harness: str, src: str,
                 rdb.upsert_result(
                     conn, book=str(book), era=era if era in rdb.ERAS else "",
                     scope=scope, harness=harness, source_file=src,
+                    plane=plane_for(conn, book, scope),
                     n=n, net=net, dd_net=_canon_get(node, "dd_net"),
                     win=_canon_get(node, "win"), pf=_canon_get(node, "pf"),
                     avg_r=_canon_get(node, "avg_r"), extras=extras,
+                    **_extra_metrics(node),
                     measured_at=src)
                 ok += 1
         # An era is often a KEY rather than a value: {"is": {...}, "oos": {...}}.
@@ -217,12 +348,80 @@ def _ingest_keyed(conn, obj, harness: str, src: str) -> int:
                   if isinstance(v, (int, float, str, bool)) and k not in _CANON_KEYS}
         rdb.upsert_result(
             conn, book=book, era=era, scope=scope, harness=harness,
-            source_file=src, n=n, net=_canon_get(val, "net"),
+            source_file=src, plane=plane_for(conn, book, scope),
+            n=n, net=_canon_get(val, "net"),
             dd_net=_canon_get(val, "dd_net"), win=_canon_get(val, "win"),
             pf=_canon_get(val, "pf"), avg_r=_canon_get(val, "avg_r"),
-            extras=extras, measured_at=src)
+            extras=extras, measured_at=src,
+            **_extra_metrics(val))
         ok += 1
     return ok
+
+
+def _ingest_metrics_file(conn, src, harness: str) -> int:
+    """A per-book metrics JSON -> results rows on one harness name.
+
+    Both planes produce the same shape from the same compute(): 18 metrics per
+    (book, era), computed from the engine. exp_signal_metrics.py writes
+    _signal_metrics.json for the max_positions=1 books, exp_multi_metrics.py
+    writes _multi_metrics.json for the rest, and they land on different harness
+    names so the two planes are never joined by accident - a 500-trade multi book
+    and a 150-trade signal book are not comparable by total R.
+
+    These rows supersede the registry pins numerically, so a query that wants the
+    full metric set must read harness='signal_metrics' (or 'multi_metrics')
+    rather than 'registry'. Both are kept - the pin is the claim, this is the
+    re-measurement, and the difference between them is worth being able to ask
+    about.
+    """
+    if not src.exists():
+        return 0
+    payload = json.loads(src.read_text(encoding="utf-8"))
+    ok = 0
+    for era, books in (payload.get("configs") or {}).items():
+        if era not in rdb.ERAS:
+            continue
+        for book, m in (books or {}).items():
+            if not m or not m.get("n"):
+                continue
+            if m.get("error"):
+                continue
+            rdb.upsert_result(
+                conn, book=book, era=era, scope="",
+                harness=harness, source_file=src.name,
+                plane=plane_for(conn, book, ""),
+                n=m.get("n"), net=m.get("net"), dd_net=m.get("max_dd"),
+                win=(m["wr"] / 100.0) if m.get("wr") is not None else None,
+                pf=m.get("pf"), avg_r=m.get("avgR"),
+                median_r=m.get("median"), max_dd=m.get("max_dd"),
+                avg_win=m.get("avg_win"), avg_loss=m.get("avg_loss"),
+                payoff=m.get("payoff"), std_r=m.get("stdR"),
+                wins=m.get("n_wins"), losses=m.get("n_losses"),
+                max_loss_streak=m.get("max_streak"),
+                extras={k: v for k, v in m.items()
+                        if k not in ("n", "net", "wr", "pf", "avgR", "median",
+                                     "max_dd", "max_streak", "avg_win",
+                                     "avg_loss", "payoff", "stdR",
+                                     "n_wins", "n_losses", "error")},
+                measured_at=src.name)
+            ok += 1
+    return ok
+
+
+def ingest_signal_metrics(conn) -> int:
+    """_signal_metrics.json -> results rows on harness='signal_metrics'."""
+    src = ROOT / "backtest" / "tests" / "_signal_metrics.json"
+    return _ingest_metrics_file(conn, src, "signal_metrics")
+
+
+def ingest_multi_metrics(conn) -> int:
+    """_multi_metrics.json -> results rows on harness='multi_metrics'.
+
+    Separate from the signal rows on purpose: see _ingest_metrics_file. Missing
+    file is not an error - the plane simply has not been measured yet.
+    """
+    src = ROOT / "backtest" / "tests" / "_multi_metrics.json"
+    return _ingest_metrics_file(conn, src, "multi_metrics")
 
 
 def _graveyard() -> set[str]:
@@ -436,16 +635,44 @@ def main(argv=None) -> int:
         print("books by plane:")
         for r in conn.execute("SELECT plane, COUNT(*) c FROM books GROUP BY plane"):
             print("  %-8s %d" % (r["plane"], r["c"]))
+        qn = conn.execute("""SELECT COUNT(*) FROM books
+                             WHERE quarantined<>''""").fetchone()[0]
+        print("  of which quarantined (look-ahead, never rank): %d" % qn)
+        for r in conn.execute("""SELECT name, plane, quarantined FROM books
+                                 WHERE quarantined<>'' ORDER BY plane, name"""):
+            print("    %-40s %-7s %s" % (r["name"][:40], r["plane"], r["quarantined"]))
         print("\nresults by era:")
         for r in conn.execute("SELECT era, COUNT(*) c FROM results GROUP BY era"):
             print("  %-8s %d" % (r["era"] or "(none)", r["c"]))
-        print("\ntop signal books by OOS net:")
-        q = ("SELECT b.name, r.n, r.net, r.dd_net FROM results r"
-             " JOIN books b ON b.name=r.book"
-             " WHERE b.plane='signal' AND r.era='oos' AND r.scope=''"
-             " ORDER BY r.net DESC LIMIT 12")
+        print("\ntop signal books by OOS net, with the full metric set")
+        print("(signal plane, quarantined excluded, n>=30, metrics re-measured)")
+        q = ("SELECT i.book, i.n isn, i.net isnet, i.avg_r isavg, i.win iswin,"
+             " i.pf ispf, i.max_dd isdd,"
+             " json_extract(i.extras,'$.top5_share_pct') ist5,"
+             " o.n, o.net, o.avg_r, o.win, o.pf, o.max_dd,"
+             " json_extract(o.extras,'$.top5_share_pct') ost5"
+             " FROM results i JOIN results o"
+             "   ON o.book=i.book AND o.harness='signal_metrics' AND o.era='oos'"
+             " JOIN books b ON b.name=i.book"
+             " WHERE i.harness='signal_metrics' AND i.era='is'"
+             "   AND b.plane='signal' AND b.quarantined=''"
+             "   AND i.n>=30 AND o.n>=30"
+             " ORDER BY CAST(o.net AS REAL) DESC LIMIT 12")
+        print("  %-26s %5s %7s %6s %6s %5s %6s %4s | %5s %7s %6s %6s %5s %6s %4s"
+              % ("book", "ISn", "ISnet", "R/trd", "wr%", "PF", "DD", "t5",
+                 "OOSn", "OOSnet", "R/trd", "wr%", "PF", "DD", "t5"))
         for r in conn.execute(q):
-            print("  %-34s %5s %+9s dd %s" % (r["name"], r["n"], r["net"], r["dd_net"]))
+            def n(v, w, p=2):
+                return ("%*.*f" % (w, p, float(v))) if v not in (None, "") \
+                    else " " * w
+            def pc(v):
+                return "%5.1f%%" % (float(v) * 100) if v not in (None, "") else "    -"
+            print("  %-26s %5s %7s %6s %6s %5s %6s %4s | %5s %7s %6s %6s %5s %6s %4s"
+                  % (r["book"][:26], r["isn"], n(r["isnet"], 7, 1), n(r["isavg"], 6),
+                     pc(r["iswin"]), n(r["ispf"], 5), n(r["isdd"], 6, 1),
+                     n(r["ist5"], 4, 0),
+                     r["n"], n(r["net"], 7, 1), n(r["avg_r"], 6), pc(r["win"]),
+                     n(r["pf"], 5), n(r["max_dd"], 6, 1), n(r["ost5"], 4, 0)))
         return 0
 
     if a.cmd == "unmapped":
@@ -465,9 +692,10 @@ def main(argv=None) -> int:
 
     conn.execute("DELETE FROM results")
     conn.execute("DELETE FROM books")
-    b, r = ingest_books(conn)
+    b, r, quar = ingest_books(conn)
     conn.commit()
-    print("registry -> %d books, %d result rows" % (b, r))
+    print("registry -> %d books (%d quarantined), %d result rows"
+          % (b, quar, r))
     mapped = 0
     for jf in sorted((ROOT / "backtest" / "tests").glob("_*.json")):
         stem = jf.stem.lstrip("_")
@@ -477,6 +705,18 @@ def main(argv=None) -> int:
     tot = conn.execute("SELECT COUNT(*) FROM results").fetchone()[0]
     print("json    -> %d of %d files contributed, %d result rows total"
           % (mapped, len(list((ROOT / "backtest" / "tests").glob("_*.json"))), tot))
+    sm = ingest_signal_metrics(conn)
+    mm = ingest_multi_metrics(conn)
+    conn.commit()
+    tot = conn.execute("SELECT COUNT(*) FROM results").fetchone()[0]
+    print("metrics -> %d signal rows (_signal_metrics.json), "
+          "%d multi rows (_multi_metrics.json), %d total" % (sm, mm, tot))
+    if not sm:
+        print("metrics -> no _signal_metrics.json yet "
+              "(run: python backtest/tests/exp_signal_metrics.py)")
+    if not mm:
+        print("metrics -> no _multi_metrics.json yet "
+              "(run: python backtest/tests/exp_multi_metrics.py)")
     return 0
 
 

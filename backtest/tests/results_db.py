@@ -62,8 +62,11 @@ DB_PATH = ROOT / "backtest" / "tests" / "results.db"
 # a lens, a cohort, an arm.
 ERAS = ("is", "oos")
 
-RESULT_COLS = ("book", "era", "scope", "harness", "source_file",
+RESULT_COLS = ("book", "era", "scope", "harness", "source_file", "plane",
                "n", "net", "dd_net", "win", "pf", "avg_r",
+               "wins", "losses", "max_dd", "avg_win", "avg_loss", "payoff",
+               "median_r", "std_r", "max_win_streak", "max_loss_streak",
+               "gross_r", "sum_r", "wr_pct",
                "extras", "measured_at")
 
 SCHEMA = """
@@ -73,9 +76,21 @@ CREATE TABLE IF NOT EXISTS books (
     name        TEXT PRIMARY KEY,
     plane       TEXT,          -- signal | multi | shared | unknown
     status      TEXT,          -- '' | reference | free text
+
+    -- Set when a book's edge came from reading a field that is not settled at
+    -- the decision bar. Its numbers stay in the database on purpose - they are
+    -- the evidence that the look-ahead was caught - but they must never win a
+    -- ranking. A query that forgets to filter here will surface +444R books
+    -- that are provably untradeable.
+    quarantined TEXT DEFAULT '',      -- '' | look_ahead | <reason>
+    q_note      TEXT,
+
     note        TEXT,
     params_json TEXT           -- cache of registry params; gated for drift
 );
+
+CREATE INDEX IF NOT EXISTS idx_books_plane  ON books(plane);
+CREATE INDEX IF NOT EXISTS idx_books_quar   ON books(quarantined);
 
 CREATE TABLE IF NOT EXISTS results (
     id          INTEGER PRIMARY KEY,
@@ -85,6 +100,13 @@ CREATE TABLE IF NOT EXISTS results (
     harness     TEXT NOT NULL DEFAULT '',  -- which exp_*.py produced this
     source_file TEXT,                      -- the JSON it was ingested from
 
+    -- Which side of the repo this measurement belongs to. Stored per row rather
+    -- than inferred from the book name: champion_single_sw10 is a signal book
+    -- under its renamed identity and a multi-position experiment base under its
+    -- old one, so the name cannot answer this and every "top signal" query that
+    -- trusted it was wrong.
+    plane       TEXT,                      -- signal | multi | ''
+
     n           INTEGER,      -- trade count
     net         REAL,         -- net R, after costs
     dd_net      REAL,         -- max drawdown on the net curve
@@ -93,10 +115,28 @@ CREATE TABLE IF NOT EXISTS results (
     avg_r       REAL,         -- mean R per trade
     extras      TEXT,         -- anything else, as JSON
 
+    -- The rest of what the harnesses already measure. These were being written
+    -- into extras as JSON, which is why "win rate" and "average R per trade"
+    -- could not be queried for most books.
+    wins        INTEGER,
+    losses      INTEGER,
+    max_dd      REAL,
+    avg_win     REAL,
+    avg_loss    REAL,
+    payoff      REAL,
+    median_r    REAL,
+    std_r       REAL,
+    max_win_streak  INTEGER,
+    max_loss_streak INTEGER,
+    gross_r     REAL,
+    sum_r       REAL,
+    wr_pct      REAL,
+
     measured_at TEXT,
     UNIQUE(book, era, scope, harness)
 );
 
+CREATE INDEX IF NOT EXISTS idx_results_plane  ON results(plane, era, net DESC);
 CREATE INDEX IF NOT EXISTS idx_results_era_net ON results(era, net DESC);
 CREATE INDEX IF NOT EXISTS idx_results_book    ON results(book);
 CREATE INDEX IF NOT EXISTS idx_results_harness ON results(harness);
@@ -156,12 +196,14 @@ def upsert_result(conn: sqlite3.Connection, **kw) -> None:
 
 def set_book(conn: sqlite3.Connection, name: str, plane: str | None = None,
              status: str | None = None, note: str | None = None,
-             params: dict | None = None) -> None:
+             params: dict | None = None,
+             quarantined: str | None = None, q_note: str | None = None) -> None:
     conn.execute(
-        "INSERT OR REPLACE INTO books (name, plane, status, note, params_json)"
-        " VALUES (?,?,?,?,?)",
+        "INSERT OR REPLACE INTO books (name, plane, status, note, params_json,"
+        " quarantined, q_note) VALUES (?,?,?,?,?,?,?)",
         (name, plane or "", status or "", note or "",
-         json.dumps(params, sort_keys=True) if params is not None else None))
+         json.dumps(params, sort_keys=True) if params is not None else None,
+         quarantined or "", q_note or ""))
 
 
 def main(argv=None) -> int:
