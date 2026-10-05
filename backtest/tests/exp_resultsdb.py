@@ -242,6 +242,37 @@ def _graveyard() -> set[str]:
     return out
 
 
+ARTEFACTS_PATH = ROOT / "backtest" / "docs" / "_artefacts.json"
+
+
+def _artefacts() -> dict:
+    """Numbers a document quotes on purpose that are not measurements.
+
+    The reason field is mandatory and the loader drops any entry without one.
+    That is the whole point: an unexplained exemption is a number nobody has
+    vouched for, which is the same failure as the +492.60 in a smaller costume.
+    Suppressing a finding has to be written down, and written down where the next
+    person reads it.
+    """
+    if not ARTEFACTS_PATH.exists():
+        return {}
+    try:
+        data = json.loads(ARTEFACTS_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    out: dict = {}
+    for e in (data.get("entries") or []):
+        doc = (e.get("doc") or "").strip()
+        if not doc or not (e.get("reason") or "").strip():
+            continue
+        try:
+            num = round(float(e.get("number")), 2)
+        except (TypeError, ValueError):
+            continue
+        out.setdefault(doc, set()).add(num)
+    return out
+
+
 def _db_numbers(conn) -> set[float]:
     """Every number the database knows, at the tolerance the verifiers use."""
     out: set[float] = set()
@@ -283,19 +314,21 @@ _NUM = re.compile(r"(?<![A-Za-z0-9_.])[+-]?\d+\.\d{2}")
 
 
 def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
-                   exempt_books: set[str]):
+                   exempt_books: set[str], artefacts: set[float]):
     """Numbers on a line that also names a book or a result key.
 
     The context rule is the whole design. A doc is full of numbers that are not
     measurements - a bar count, a date, a percentage of something unrelated -
     and a gate that flags those gets switched off, which is worse than no gate.
 
-    Returns (hits, exempt). `exempt` is a number quoted next to a quarantined
-    book: genuinely absent from the database, and deliberately so.
+    Returns (hits, exempt). `exempt` covers a number quoted next to a quarantined
+    book - absent from the database by design - and a number the document has
+    registered as an artefact with a written reason.
     """
     hits = []
     exempt = []
     text = path.read_text(encoding="utf-8", errors="replace")
+    rmap = _rename_map()
     for lineno, line in enumerate(text.splitlines(), 1):
         if "|" not in line and not re.search(r"\b(net|R\b|dd|WR|PF)\b", line, re.I):
             continue
@@ -303,7 +336,6 @@ def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
         has_metric_word = re.search(r"\b(net|dd|wr|pf|win|trades|R)\b", line, re.I)
         if not names_here and not has_metric_word:
             continue
-        rmap = _rename_map()
         is_quarantine = any(n in exempt_books or rmap.get(n) in exempt_books
                             for n in names_here)
         for m in _NUM.finditer(line):
@@ -312,7 +344,10 @@ def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
                 continue
             rec = (lineno, m.group(0), (names_here[:1] or [""])[0],
                    line.strip()[:88])
-            (exempt if is_quarantine else hits).append(rec)
+            if is_quarantine or any(abs(v - a) <= tol for a in artefacts):
+                exempt.append(rec)
+            else:
+                hits.append(rec)
     return hits, exempt
 
 
@@ -351,9 +386,11 @@ def check(verbose: bool = False) -> int:
     known = _db_numbers(conn)
     names = _book_names()
     grave = _graveyard()
+    arts = _artefacts()
     total = exc = 0
     for md in sorted((ROOT / "backtest" / "docs").rglob("*.md")):
-        hits, ex = _quoted_numbers(md, names, known, 0.5, grave)
+        hits, ex = _quoted_numbers(md, names, known, 0.5, grave,
+                                    arts.get(md.name, set()))
         exc += len(ex)
         if hits:
             total += len(hits)

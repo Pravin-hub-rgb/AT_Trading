@@ -123,25 +123,39 @@ $plan += [pscustomobject]@{ Name = "exp_craze_patch_gate check"
                            Cost = "~20s"; Args = @("backtest/tests/exp_craze_patch_gate.py", "check") }
 $plan += [pscustomobject]@{ Name = "exp_origin_lookahead"
                            Cost = "~30s"; Args = @("backtest/tests/exp_origin_lookahead.py") }
-$regDirty = $false
-foreach ($f in $uncommitted) {
-    if ($f -like "backtest/tests/registry/*" -or
-        $f -eq "backtest/tests/experiment_registry.py") { $regDirty = $true; break }
-}
-$snap = "backtest/tests/_registry_before.json"
-
-if (-not $WhatIf -and $regDirty) {
-    if (-not (Test-Path $snap)) {
-        Write-Host "    note: registry edited but no baseline - writing one now." -ForegroundColor Yellow
-        & python backtest/tests/exp_registry_snapshot.py write $snap | Out-Null
+if ($registry) {
+    $snap = "backtest/tests/_registry_before.json"
+    $regDirty = $false
+    foreach ($f in $uncommitted) {
+        if ($f -like "backtest/tests/registry/*" -or
+            $f -eq "backtest/tests/experiment_registry.py") { $regDirty = $true; break }
+    }
+    if (-not $WhatIf -and $regDirty) {
+        if (-not (Test-Path $snap)) {
+            Write-Host "    note: registry edited but no baseline - writing one now." -ForegroundColor Yellow
+            & python backtest/tests/exp_registry_snapshot.py write $snap | Out-Null
+        }
+    }
+    if ($regDirty) {
+        $plan += [pscustomobject]@{ Name = "exp_registry_snapshot check (vs pre-edit baseline)"
+                                   Cost = "~3s"; Args = @("backtest/tests/exp_registry_snapshot.py", "check", $snap) }
+    } else {
+        $plan += [pscustomobject]@{ Name = "exp_registry_snapshot (re-anchor baseline to HEAD)"
+                                   Cost = "~3s"; Args = @("backtest/tests/exp_registry_snapshot.py", "write", $snap) }
     }
 }
-if ($regDirty) {
-    $plan += [pscustomobject]@{ Name = "exp_registry_snapshot check (vs pre-edit baseline)"
-                               Cost = "~3s"; Args = @("backtest/tests/exp_registry_snapshot.py", "check", $snap) }
-} else {
-    $plan += [pscustomobject]@{ Name = "exp_registry_snapshot (re-anchor baseline to HEAD)"
-                               Cost = "~3s"; Args = @("backtest/tests/exp_registry_snapshot.py", "write", $snap) }
+
+# Docs or the registry changed: the number gate has something new to judge.
+# It is only meaningful once the db exists, so it is skipped rather than failed
+# on a fresh clone - an absent db is not evidence of anything being wrong.
+$docsOrRegistry = $registry -or (Hit "backtest/docs/*") -or (Hit "backtest/tests/_artefacts.json")
+if ($docsOrRegistry) {
+    if (Test-Path "backtest/tests/results.db") {
+        $plan += [pscustomobject]@{ Name = "exp_resultsdb check (doc numbers vs the database)"
+                                   Cost = "~20s"; Args = @("backtest/tests/exp_resultsdb.py", "check") }
+    } else {
+        Write-Skip "exp_resultsdb check needs backtest/tests/results.db - run: python backtest/tests/exp_resultsdb.py ingest"
+    }
 }
 if ($engine) {
     $plan += [pscustomobject]@{ Name = "exp_port_differential"

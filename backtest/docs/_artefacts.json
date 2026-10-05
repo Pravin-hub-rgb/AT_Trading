@@ -1,0 +1,35 @@
+{
+ "_readme": [
+  "Numbers that a document deliberately quotes which are NOT measurements of a",
+  "book, and so are absent from the results database by design. Each entry needs",
+  "a reason: a suppression without one is the same failure as the +492.60, just",
+  "smaller and now blessed.",
+  "",
+  "The two real cases so far are PF 6195000000.00 - a divide-by-near-zero on a",
+  "two-trade sample, which OPEN_RESEARCH_QUEUE.md and STABILITY_FORWARD_P61.md",
+  "both say out loud - and derived quotients such as 2688.60/52.87, where the doc",
+  "is showing its arithmetic rather than a pinned figure."
+ ],
+ "entries": [
+  {
+   "doc": "OPEN_RESEARCH_QUEUE.md",
+   "number": "6195000000.00",
+   "reason": "document states it is a divide-by-near-zero artefact on n=2"
+  },
+  {
+   "doc": "STABILITY_FORWARD_P61.md",
+   "number": "6195000000.00",
+   "reason": "same artefact, explained in the document"
+  },
+  {
+   "doc": "C16_C18_SL_PIVOT_AUDIT.md",
+   "number": "2688.60",
+   "reason": "derived quotient shown to argue a point, not a book measurement"
+  },
+  {
+   "doc": "C16_FOUR_ARM_DIFF.md",
+   "number": "-86.66",
+   "reason": "single-arm experiment never promoted to a book; no pin exists"
+  }
+ ]
+}
