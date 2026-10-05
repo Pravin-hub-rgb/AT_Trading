@@ -82,3 +82,10 @@ backtest/tests/_*_tmp.py
 # is stale and regenerating it is one command. The result snapshots that ARE
 # evidence - _pinverify_results.json, _pinrefresh.json - are tracked.
 backtest/tests/_registry_before.json
+
+# The results database. Rebuildable from the registry + the result JSONs with
+# exp_resultsdb.py ingest, so it is generated rather than tracked. WAL and SHM
+# are SQLite's own sidecar files.
+backtest/tests/results.db
+backtest/tests/results.db-wal
+backtest/tests/results.db-shm
