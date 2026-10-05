@@ -452,6 +452,12 @@ def check_registry_hygiene():
         print("    (exp_swingpause reads confirmed_at, which IS settled at the")
         print("     entry bar, and is deliberately not on this list)")
 
+    # The graveyard is reported on every run, not only when --graveyard is
+    # passed. It is the state of the registry and it is the thing most likely
+    # to be forgotten - a buried book still imports, still runs, and still
+    # prints a number if you ask it to.
+    _graveyard_report(reg.EXPERIMENTS)
+
     print("  duplicate-params-key check (a repeated key silently keeps the last)")
     n_dup = 0
     cur_lines = src.split("\n")
@@ -494,9 +500,190 @@ def check_registry_hygiene():
     return 0
 
 
+GRAVEYARD_REASON = (
+    "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its "
+    "companions read a swing field that is not settled at the entry bar. "
+    "exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which "
+    "adds the one missing check (has this swing confirmed by the entry bar) "
+    "and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to "
+    "+70.79; on fsent_dirmatch_short, the largest number in this repo, IS "
+    "+658.65 to +368.54. The edge was the unconfirmed label. Do not quote "
+    "these numbers and do not copy a base from them. The causal "
+    "replacements already exist as fsent_champ_long / fsent_champ_short."
+)
+
+
+def _graveyard_book(key, cfg, hit):
+    """A contaminated book, rewritten so it can only be read as dead.
+
+    The pins are removed rather than left in place. A pin is the most quotable
+    object in this repo, and fsent_dirmatch_short carries +658.65 in sample -
+    the single largest number here. Leaving that on a book whose edge was a
+    swing label that had not printed yet is how the number gets quoted in a
+    later thread as the best result on the board.
+    """
+    out = dict(cfg)
+    out["pins"] = None
+    out["status"] = "reference"
+    out["graveyard"] = GRAVEYARD_REASON
+    out["graveyard_knobs"] = list(hit)
+    return out
+
+
+def _apply_graveyard(EXPERIMENTS):
+    """Move every book on a proved look-ahead knob into the graveyard.
+
+    Idempotent: a book already carrying a graveyard reason is left alone, so
+    running this twice cannot rewrite the reason or lose a hand-added note.
+    Takes the registry rather than importing it, so the function is testable
+    without the data - which is also how it is used, since --graveyard runs
+    before the registry module is imported by main().
+    """
+    moved = []
+    for key, cfg in list(EXPERIMENTS.items()):
+        if not isinstance(cfg, dict):
+            continue
+        if "graveyard" in cfg:
+            continue
+        params = cfg.get("params") or {}
+        hit = [k for k in PROVED_LOOKAHEAD if params.get(k)]
+        if not hit:
+            continue
+        EXPERIMENTS[key] = _graveyard_book(key, cfg, hit)
+        moved.append((key, hit))
+    return moved
+
+
+def _graveyard_report(EXPERIMENTS):
+    print()
+    print("  GRAVEYARD - books on a proved look-ahead knob")
+    buried = [(k, cfg) for k, cfg in EXPERIMENTS.items()
+              if isinstance(cfg, dict) and cfg.get("graveyard")]
+    if not buried:
+        print("    empty")
+        return
+    print("    %d book(s), pinned: none, status: reference, not shortlisted"
+          % len(buried))
+    for k, cfg in sorted(buried):
+        p = cfg.get("pins") or {}
+        was = "unpinned" if not p.get("net") else "pinned"
+        print("      %-40s %-30s was %s"
+              % (k, ",".join(cfg.get("graveyard_knobs", [])), was))
+    print()
+    print("    reason, once:")
+    for line in GRAVEYARD_REASON.split(". "):
+        print("      " + line.strip().rstrip("."))
+
+
+def _book_span(src, key):
+    """Byte span of a book entry's body, found by brace counting.
+
+    Not a regex on the closing brace: several books carry multi-line params
+    dicts and prose comments, so a terminator pattern either stops early or runs
+    on into the next book - and then writes nothing, silently.
+    """
+    q = '"'
+    k = src.find(q + key + q)
+    if k < 0:
+        return None
+    o = src.find("{", k)
+    depth, i = 0, o
+    while i < len(src):
+        if src[i] == "{":
+            depth += 1
+        elif src[i] == "}":
+            depth -= 1
+            if depth == 0:
+                return (o + 1, i)
+        i += 1
+    return None
+
+
+def _write_graveyard(regmod, moved):
+    """Persist the graveyard into the family modules that hold each book.
+
+    Writes into registry/*.py, not into the shim, so the change lands where the
+    books live and survives a re-run. Patches by brace span like the pin
+    refresher, for the same reason.
+    """
+    from registry import trail, sweep, signal, risk, d3, kingsweep
+    fams = {"trail": trail.BOOKS, "sweep": sweep.BOOKS, "signal": signal.BOOKS,
+            "risk": risk.BOOKS, "d3": d3.BOOKS, "kingsweep": kingsweep.BOOKS}
+    where = {}
+    for fam, books in fams.items():
+        for k in books:
+            where.setdefault(k, fam)
+    by_fam = {}
+    for key, hit in moved:
+        if key in where:
+            by_fam.setdefault(where[key], []).append((key, hit))
+    for fam, items in by_fam.items():
+        path = ROOT / "backtest" / "tests" / "registry" / ("%s.py" % fam)
+        src = path.read_text(encoding="utf-8")
+        n = 0
+        for key, hit in sorted(items):
+            span = _book_span(src, key)
+            if not span:
+                print("    !! %s not found in %s.py" % (key, fam))
+                continue
+            a, b = span
+            body = src[a:b]
+            if '"graveyard"' in body:
+                continue          # already buried; do not write a second note
+            # Drop the pins, whatever shape they are in: None, a dict, or a
+            # multi-line one. A pin that survives here is the whole risk.
+            body, nsub = re.subn(r'"pins"\s*:\s*(\{[^}]*\}|None)', '"pins": None',
+                                 body, count=1, flags=re.S)
+            if nsub == 0:
+                print("    !! no pins key in %s" % key)
+                continue
+            # Split the reason over several comment lines so the source stays
+            # readable; one 400-character comment line is worse than useless.
+            reason_lines = [ln.strip() for ln in _wrap(GRAVEYARD_REASON, 72)]
+            note = ['\n        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.',
+                    '        # Measured by exp_dirmatch_causality.py, not asserted.']
+            note += ['        # ' + ln for ln in reason_lines]
+            note += ['        "status": "reference",',
+                     '        "graveyard": "%s",' % _escape(GRAVEYARD_REASON),
+                     '        "graveyard_knobs": %r,' % (list(hit),)]
+            src = src[:a] + body.rstrip() + "\n" + "\n".join(note) + "\n" + src[b:]
+            n += 1
+        path.write_text(src, encoding="utf-8", newline="")
+        print("    registry/%s.py: buried %d book(s)" % (fam, n))
+    print("  written. Re-run without --write to verify.")
+
+
+def _wrap(text, width):
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        if cur and len(cur) + 1 + len(w) > width:
+            lines.append(cur)
+            cur = w
+        else:
+            cur = (cur + " " + w).strip()
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def _escape(s):
+    return s.replace("\\", "\\\\").replace('"', '\\"')
+
+
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
         raise SystemExit(_self_test())
+    if "--graveyard" in sys.argv:
+        sys.path.insert(0, str(ROOT / "backtest" / "tests"))
+        import experiment_registry as _reg
+        moved = _apply_graveyard(_reg.EXPERIMENTS)
+        print("buried %d book(s)" % len(moved))
+        for k, hit in sorted(moved):
+            print("  %-40s %s" % (k, ",".join(hit)))
+        _graveyard_report(_reg.EXPERIMENTS)
+        if "--write" in sys.argv:
+            _write_graveyard(_reg, moved)
+        raise SystemExit(0)
     raise SystemExit(main() or check_registry_hygiene())
 
 

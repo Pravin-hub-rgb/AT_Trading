@@ -139,9 +139,23 @@ BOOKS = {
           "swing": "sw10",
           # Directional FS entry on the registry highest-OOS book.
           # exp_fs_directional_leg.py, both eras.
-          "pins": {"n": 426, "net": 477.38, "dd_net": 11.15,
-                   "oos_n": 237, "oos_net": 260.70, "oos_dd_net": 7.44},
-      },
+          "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match'],
+},
 
     "fsent_dirmatch_short": {
           "desc": "dirmatch multi + SHORTS enter at swing FS",
@@ -170,9 +184,23 @@ BOOKS = {
           "swing": "sw10",
           # Directional FS entry on the registry highest-OOS book.
           # exp_fs_directional_leg.py, both eras.
-          "pins": {"n": 418, "net": 658.65, "dd_net": 11.60,
-                   "oos_n": 253, "oos_net": 235.14, "oos_dd_net": 12.30},
-      },
+          "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match'],
+},
 
     # ===== SERIAL SIGNAL BOOKS (max_positions=1) + the 40% win-rate arm =====
     # ===== SERIAL SIGNAL BOOKS (max_positions=1) + the 40% win-rate arm =====

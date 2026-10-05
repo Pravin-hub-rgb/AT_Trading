@@ -1031,9 +1031,23 @@ BOOKS = {
         #   gross +228.26R  net +201.70R  dd 9.04R  win 48.9%  n=90
         # all 115 registry books in one pass.
         #   gross +228.26R  net +201.70R  dd 9.04R  win 48.9%  n=90
-        "pins": {"n": 90, "net": 201.70, "dd_net": 9.04,
-                 "oos_n": 38, "oos_net": 39.74, "oos_dd_net": 7.91},
-    },
+        "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_min_swing_ratio'],
+},
     "union_multi": {
         "desc": "union + filters (no dual gate) — reference for dual comparison",
                 "status": "reference",   # LOOKAHEAD - end_px. See CLOSED_DO_NOT_REPEAT.md 2026-10-04
@@ -1054,9 +1068,23 @@ BOOKS = {
         #   gross +288.15R  net +245.39R  dd 16.45R  win 44.5%  n=137
         # all 115 registry books in one pass.
         #   gross +288.15R  net +245.39R  dd 16.45R  win 44.5%  n=137
-        "pins": {"n": 137, "net": 245.39, "dd_net": 16.45,
-                 "oos_n": 53, "oos_net": 54.03, "oos_dd_net": 6.11},
-    },
+        "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_min_swing_ratio'],
+},
 
     # ===== D3 STRUCTURAL ALIGNMENT (dir match + swing age + running magnitude) =====
     # ===== D3 STRUCTURAL ALIGNMENT (dir match + swing age + running magnitude) =====
@@ -1082,9 +1110,23 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=389 net=444.21. Full sweep incl. gross/dd/win-rate:
         #   gross +533.97R  net +444.21R  dd 24.01R  win 38.8%  n=389
-        "pins": {"n": 389, "net": 444.21, "dd_net": 24.01,
-                 "oos_n": 222, "oos_net": 172.06, "oos_dd_net": 15.36},
-    },
+        "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match'],
+},
     "age25_multi_sw10": {
         "desc": "king + max swing age 25 bars",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
@@ -1107,9 +1149,23 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=293 net=319.22. Full sweep incl. gross/dd/win-rate:
         #   gross +392.64R  net +319.22R  dd 25.86R  win 37.2%  n=293
-        "pins": {"n": 293, "net": 319.22, "dd_net": 25.86,
-                 "oos_n": 194, "oos_net": 130.15, "oos_dd_net": 12.42},
-    },
+        "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_max_swing_age'],
+},
     "age25_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 25 — +386.7R / DD 9.8 / WR 43.8% (BEST quality)",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
@@ -1131,9 +1187,23 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=248 net=357.01. Full sweep incl. gross/dd/win-rate:
         #   gross +416.47R  net +357.01R  dd 21.47R  win 43.5%  n=248
-        "pins": {"n": 248, "net": 357.01, "dd_net": 21.47,
-                 "oos_n": 167, "oos_net": 165.92, "oos_dd_net": 9.25},
-    },
+        "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match', 'exp_max_swing_age'],
+},
     "age10_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 10 — +455.5R / DD 6.0 / WR 51.7% (MONSTER, 151t)",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
@@ -1155,9 +1225,23 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=150 net=417.68. Full sweep incl. gross/dd/win-rate:
         #   gross +462.24R  net +417.68R  dd 13.45R  win 51.3%  n=150
-        "pins": {"n": 150, "net": 417.68, "dd_net": 13.45,
-                 "oos_n": 77, "oos_net": 61.11, "oos_dd_net": 7.51},
-    },
+        "pins": None,
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match', 'exp_max_swing_age'],
+},
 
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
@@ -1184,7 +1268,22 @@ BOOKS = {
         # Was n=362 net=273.84. Full sweep incl. gross/dd/win-rate:
         #   gross +352.26R  net +273.84R  dd 30.04R  win 37.6%  n=362
         "pins": None,
-    },
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match'],
+},
     "age10_dirmatch_swingpause_sig_sw10": {
         "desc": "swingpause single + dir match + age 10 — 🔥 BEST EVER: +435.7R / DD 5.7 / WR 53.8%",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
@@ -1208,7 +1307,22 @@ BOOKS = {
         # Was n=149 net=414.08. Full sweep incl. gross/dd/win-rate:
         #   gross +457.69R  net +414.08R  dd 12.90R  win 53.7%  n=149
         "pins": None,
-    },
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match', 'exp_max_swing_age'],
+},
     "dirmatch_sig_sw10": {
         "desc": "baseline single (no swingpause) + dir match — +237.7R / DD 15.7",
                 "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
@@ -1236,7 +1350,22 @@ BOOKS = {
         # trades than its pin said (292 -> 392) and nearly doubles its net, so the
         # old pin was describing a materially different book.
         "pins": None,
-    },
+
+        # GRAVEYARD - proved look-ahead. Not a candidate, never a base.
+        # Measured by exp_dirmatch_causality.py, not asserted.
+        # LOOK-AHEAD, measured not asserted: exp_require_dir_match and its
+        # companions read a swing field that is not settled at the entry bar.
+        # exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which
+        # adds the one missing check (has this swing confirmed by the entry bar)
+        # and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to
+        # +70.79; on fsent_dirmatch_short, the largest number in this repo, IS
+        # +658.65 to +368.54. The edge was the unconfirmed label. Do not quote
+        # these numbers and do not copy a base from them. The causal replacements
+        # already exist as fsent_champ_long / fsent_champ_short.
+        "status": "reference",
+        "graveyard": "LOOK-AHEAD, measured not asserted: exp_require_dir_match and its companions read a swing field that is not settled at the entry bar. exp_dirmatch_causality.py reruns the book with exp_dir_causal=1, which adds the one missing check (has this swing confirmed by the entry bar) and changes the result. On dirmatch_multi_sw10 that is IS +444.21 to +70.79; on fsent_dirmatch_short, the largest number in this repo, IS +658.65 to +368.54. The edge was the unconfirmed label. Do not quote these numbers and do not copy a base from them. The causal replacements already exist as fsent_champ_long / fsent_champ_short.",
+        "graveyard_knobs": ['exp_require_dir_match'],
+},
 
     # ===== SHIPPED BASELINE (identity gate reference) =====
 }
