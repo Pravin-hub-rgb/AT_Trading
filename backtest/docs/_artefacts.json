@@ -30,6 +30,76 @@
    "doc": "C16_FOUR_ARM_DIFF.md",
    "number": "-86.66",
    "reason": "single-arm experiment never promoted to a book; no pin exists"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "80000.00",
+   "reason": "synthetic price from a unit test ('Fake window long @ 80000'), not market data"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "79000.00",
+   "reason": "synthetic SL level in the same unit test"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "81500.00",
+   "reason": "synthetic target level in the same unit test"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "83000.00",
+   "reason": "synthetic level in the same unit test"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "358.02",
+   "reason": "GateSize sub-cell, an experiment arm that never became a book; no results JSON was kept for it"
+  },
+  {
+   "doc": "EXPERIMENT_LOG.md",
+   "number": "358.02",
+   "reason": "same GateSize arm recorded in the log at the time of the run; no results JSON kept"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "-28.06",
+   "reason": "wick-gate re-test arm (item 24.96), never promoted; no results JSON kept"
+  },
+  {
+   "doc": "CHECKLIST.md",
+   "number": "-25.67",
+   "reason": "same wick-gate re-test arm"
+  },
+  {
+   "doc": "CONCENTRATION_P107.md",
+   "number": "170.12",
+   "reason": "GROSS not net, from a run the document itself labels 'my earlier run'. The pinned sw10 net is 174.30; this is a pre-cost variant that exists nowhere else"
+  },
+  {
+   "doc": "EXPERIMENT_LOG_ENTRY1.md",
+   "number": "-215.14",
+   "reason": "ENTRY-1, an experiment rejected on its numbers and never added to the registry; the log is the only surviving copy"
+  },
+  {
+   "doc": "EXPERIMENT_LOG_ENTRY1.md",
+   "number": "-325.75",
+   "reason": "same ENTRY-1 arm, the against-case it was compared to"
   }
+ ],
+ "_gap": [
+  "Nine of the entries above share one cause: the run wrote its result into",
+  "CHECKLIST.md or EXPERIMENT_LOG.md and left no JSON behind. Those logs are now",
+  "the only surviving copy of those numbers.",
+  "",
+  "That is the same failure as +492.60 with the opposite cause. There a number",
+  "was invented and the source discarded; here the source was discarded and the",
+  "number kept. Registering these is not making them verified - it is recording",
+  "that they cannot be.",
+  "",
+  "The fix is a harness writing _results.json beside its output, which",
+  "docs/pipeline/README.md already asks for and which these runs skipped. Until",
+  "then EXPERIMENT_LOG.md is a second home for numbers, and that is the thing",
+  "this database exists to end."
  ]
 }
