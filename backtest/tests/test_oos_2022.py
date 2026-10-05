@@ -21,11 +21,13 @@ from test_experiments_craze import build_module, _compute_swings, stats
 from engine.v18_params import SWING, get_v18_params, V18_ENGINE
 from src.walker import FlowCandle
 from src.btc.btc_routes import _trade_costs
+from src.btc.btc_config import btc_bybit_oos_dir
 import pandas as pd
 
 INSTRUMENT = "BTCUSDT_BYBIT"
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60
-UNSEEN_DIR = ROOT / "data" / "unseen" / "bybit"
+# moved out of the repo: see btc_config.BTC_BYBIT_OOS_DATA_DIR
+UNSEEN_DIR = btc_bybit_oos_dir()
 
 STRATEGIES = {
     "single": {

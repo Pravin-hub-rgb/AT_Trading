@@ -11,10 +11,46 @@ from pathlib import Path
 
 import pandas as pd
 
+import os
+
 # btc_config.py -> parents: [0]=btc, [1]=src, [2]=backend, [3]=repo root
 BACKEND_DIR = Path(__file__).resolve().parents[2]
 ROOT_DIR = Path(__file__).resolve().parents[3]
 BTC_DATA_DIR = ROOT_DIR / "data" / "btc"
+
+# The Bybit datasets are the only ones every registry pin was measured against,
+# and the only ones that cannot be re-derived to match: Bybit revises historical
+# closes, so a fresh download no longer reproduces the recorded numbers.
+#
+# They used to live at <repo>/data/bybit and were lost, because `data/` is
+# gitignored - so they were untracked, and the one command that deletes
+# untracked files (`git clean -fdx`) deleted them. No commit, no branch and no
+# reflog could restore that. Moving them out of the repo is the actual fix.
+#
+# BTC_BYBIT_DATA_DIR -> <repo>/../btc_data/is  (IS,  2023-01-01 -> 2026-09-13)
+# BTC_BYBIT_OOS_DATA_DIR -> .../oos            (OOS, 2021-01-01 -> 2022-12-31)
+# Override the root with the BTC_BYBIT_DATA_DIR environment variable.
+# btc_csv_path / load_btc_df / btc_bybit_csv_path / btc_bybit_oos_dir
+# BTC_BYBIT_ROOT -> <repo>/../btc_data, overridable with BTC_BYBIT_DATA_DIR.
+#
+# The old location is still accepted first, so a checkout that still has its
+# data/ folder keeps working untouched. Only when that is missing does the new
+# outside-the-repo location get used. Nothing falls back to a fresh download:
+# Bybit revises historical closes, so a re-download produces different numbers
+# from every pin in the registry.
+BTC_BYBIT_ROOT = Path(os.environ.get("BTC_BYBIT_DATA_DIR", str(ROOT_DIR.parent / "btc_data")))
+_BTC_BYBIT_LEGACY = ROOT_DIR / "data" / "bybit"
+_BTC_BYBIT_OOS_LEGACY = ROOT_DIR / "data" / "unseen" / "bybit"
+BTC_BYBIT_DATA_DIR = _BTC_BYBIT_LEGACY if _BTC_BYBIT_LEGACY.is_dir() else BTC_BYBIT_ROOT / "is"
+BTC_BYBIT_OOS_DATA_DIR = (_BTC_BYBIT_OOS_LEGACY if _BTC_BYBIT_OOS_LEGACY.is_dir()
+                         else BTC_BYBIT_ROOT / "oos")
+
+
+def btc_bybit_oos_dir() -> Path:
+    """The out-of-sample Bybit directory. Named for the 9 harnesses that pin
+    UNSEEN_DIR by hand; use this instead of hardcoding the path."""
+    return BTC_BYBIT_OOS_DATA_DIR
+
 
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60  # 19800
 
@@ -23,7 +59,7 @@ SYMBOLS: dict[str, dict] = {
     "BTCUSDT": {"dir": ROOT_DIR / "data" / "btc", "label": "BTC Spot"},
     "BTCUSDT_PERP": {"dir": ROOT_DIR / "data" / "btc-fut", "label": "BTC Perp (Binance)"},
     "ETHUSDT_PERP": {"dir": ROOT_DIR / "data" / "eth-fut", "label": "ETH Perp (Binance)"},
-    "BTCUSDT_BYBIT": {"dir": ROOT_DIR / "data" / "bybit", "label": "BTC Perp (Bybit)"},
+    "BTCUSDT_BYBIT": {"dir": BTC_BYBIT_DATA_DIR, "label": "BTC Perp (Bybit)"},
 }
 
 # Default symbols for backward compat

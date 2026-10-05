@@ -150,10 +150,16 @@ if ($engine) {
 # An explicit -Book is a request, not a hint: run it even if no tracked file
 # changed. Otherwise a typo'd name or a wrong -Base silently skips the one gate
 # the user asked for, and the run still reports PASS.
-if ($Book.Count -gt 0) {
-    $plan += [pscustomobject]@{ Name = "exp_fastcheck $($Book -join ', ')"
+#
+# -Book a,b arrives here as ONE string, and passing that through verbatim makes
+# exp_fastcheck look for a book literally named "a,b" and report "not pinned
+# books". Split on commas and whitespace so both forms work.
+$bookNames = @()
+foreach ($b in $Book) { $bookNames += ($b -split '[,\s]+' | Where-Object { $_ }) }
+if ($bookNames.Count -gt 0) {
+    $plan += [pscustomobject]@{ Name = "exp_fastcheck $($bookNames -join ', ')"
                                Cost = "~50s/book"
-                               Args = (@("backtest/tests/exp_fastcheck.py") + $Book) }
+                               Args = (@("backtest/tests/exp_fastcheck.py") + $bookNames) }
 } elseif ($fastcheck -and $AllowAll) {
     $plan += [pscustomobject]@{ Name = "exp_fastcheck --all"
                                Cost = "~2 h"; Args = @("backtest/tests/exp_fastcheck.py", "--all") }

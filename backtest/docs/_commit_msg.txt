@@ -1,0 +1,51 @@
+The Bybit CSVs were gone. They were the only inputs every registry pin was
+measured against, they had never been in git, and they were deleted - not by
+the branch merge or the worktree cleanup, both of which only touch tracked
+files, but because `data/` is gitignored, which made the files untracked, which
+is exactly what `git clean -fdx` deletes. No commit, no branch and no reflog
+could have recovered them. A previous session's fastcheck still had data
+loaded, so the loss happened after it, in some session none of us can see.
+
+Re-downloaded 1m/15m/1h for both eras, then clipped in-sample to the repo's own
+CUTOFF_IST (2026-09-13 10:03, exp_forward_eval.py:46) because the pins were
+measured there and a fresh download runs to today. The out-of-sample window
+2021-01-01..2022-12-31 needed no clipping.
+
+They now live at <repo>/../btc_data/{is,oos}, outside the repo, so the class of
+loss cannot recur. btc_config picks the new location but still prefers the old
+one when it exists, so a checkout that still has its data/ folder keeps
+working untouched. BTC_BYBIT_DATA_DIR overrides the root. Nine harnesses that
+each hardcoded UNSEEN_DIR now call btc_bybit_oos_dir() instead, so the next move
+is one edit in one file rather than nine edits in nine places. Two of the nine
+have a different import block (btc_routes, not replay_harness) and needed the
+import added separately; all nine were import-checked afterwards, because the
+first pass silently left two of them with a NameError.
+
+Full verification on the re-downloaded data: 209 books, 203 exact, 3 books off
+by exactly one out-of-sample trade each and +1R net - fsent_champ_long,
+fsent_sig_sw10_long, fsent_utcsat_long. Every in-sample figure is exact. The
+one-trade signature is data vintage, and the repo already records it:
+exp_cross_asset_transfer.py notes "bybit OOS fine starts 5h late - legacy
+unseen layout; noted, not gated", and _htf2h_verify.json says "the residue is
+DATA VINTAGE, not construction ... OOS has close-only revisions". The pins
+themselves are not wrong and are not refreshed: a refresh would replace measured
+numbers with numbers from a different dataset, which is a larger change than
+the thing being fixed.
+
+Also fixes a concurrency bug the verification exposed. test_experiments_craze's
+temp module is named _craze_tmp_<name>_<counter>_<hash>.py, and the counter is
+per-process, so two batches running at once both reach counter 1, compute the
+same hash of the same source, and write the same path. Identical content makes
+it look harmless, but a reader can exec a half-written file and get a module
+whose tail is missing - which is precisely the "module 'craze_superset' has no
+attribute simulate_htf_ltf_streak_halt" that a previous fix in that same
+comment block was written to stop. That fix handled a stale .pyc across
+sequential runs; it did not handle concurrent ones. The pid is now in the
+filename. exp_craze_patch_gate still reports the patched engine byte-identical
+at aa189c5fe1acf881a631bbe69af50814558fd2d425890bef9f97fe534105bb18, because
+this changes only the temp file's name, never the patch.
+
+verify.ps1 also takes -Book a,b properly now. It was passing the comma through
+verbatim, so exp_fastcheck searched for a book literally named "a,b" and
+reported "not pinned books" - a FAIL that read like a data problem and was
+neither.

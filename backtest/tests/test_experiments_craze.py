@@ -11,7 +11,7 @@ Experiments:
   split_mb   : trail events from a slower/faster 15m swing chain (Exp 11)
   momentum   : 1h close vs 3-bar 1h MA agreement gate at entry (Exp 16)
 """
-import sys, time, importlib.util, hashlib
+import sys, time, importlib.util, hashlib, os
 from pathlib import Path
 from collections import defaultdict
 
@@ -46,9 +46,17 @@ def _load_module(text, name):
     # missing definitions it is supposed to have - which surfaced as
     # "module 'craze_superset' has no attribute simulate_htf_ltf_streak_halt".
     tag = hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()[:12]
+    # The pid is part of the filename because _N[0] is per-process: two
+    # exp_fastcheck batches running at once both reach counter 1, both compute
+    # the same tag for the same source text, and both write the SAME path. The
+    # content is identical so this looks harmless, but the reader can exec a
+    # half-written file and get a module whose tail is missing - which is
+    # exactly the "module 'craze_superset' has no attribute
+    # simulate_htf_ltf_streak_halt" this was originally about. The unique name
+    # fixes the sequential case, the pid fixes the concurrent one.
     _N[0] += 1
-    p = Path(ROOT / ("backtest/tests/_craze_tmp_%s_%d_%s.py"
-                     % (name.replace(".", "_"), _N[0], tag)))
+    p = Path(ROOT / ("backtest/tests/_craze_tmp_%s_%d_%d_%s.py"
+                     % (name.replace(".", "_"), os.getpid(), _N[0], tag)))
     p.write_text(text, encoding="utf-8")
     spec = importlib.util.spec_from_file_location(name, str(p))
     m = importlib.util.module_from_spec(spec)

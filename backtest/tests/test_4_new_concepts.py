@@ -13,11 +13,13 @@ import pandas as pd
 from test_experiments_craze import build_module, _compute_swings
 from engine.v18_params import SWING
 from replay_harness import INSTRUMENT
+from src.btc.btc_config import btc_bybit_oos_dir
 from src.walker import FlowCandle
 from run_experiment import get_data
 
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60
-UNSEEN_DIR = ROOT / "data" / "unseen" / "bybit"
+# moved out of the repo: see btc_config.BTC_BYBIT_OOS_DATA_DIR
+UNSEEN_DIR = btc_bybit_oos_dir()
 
 BASELINE = {"mode": "atr_high", "atr_high_thresh": 0.65, "atr_low_thresh": 0.35,
             "sl_buf_atr": 0.01, "chop_thresh": 58.0, "cooldown_bars": 0,

@@ -21,6 +21,10 @@ __pycache__/
 
 # runtime data
 data/
+#   The Bybit sets that every registry pin was measured against are NOT here any
+#   more. They were, and they were lost, because this rule made them untracked
+#   and `git clean -fdx` deletes untracked files. They now live outside the
+#   repo at <repo>/../btc_data/{is,oos} - see backend/src/btc/btc_config.py.
 
 # logs
 *.log

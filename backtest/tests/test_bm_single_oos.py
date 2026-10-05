@@ -12,10 +12,12 @@ import pandas as pd
 from test_experiments_craze import build_module, _compute_swings
 from engine.v18_params import SWING
 from replay_harness import INSTRUMENT
+from src.btc.btc_config import btc_bybit_oos_dir
 from src.walker import FlowCandle
 
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60
-UNSEEN_DIR = ROOT / "data" / "unseen" / "bybit"
+# moved out of the repo: see btc_config.BTC_BYBIT_OOS_DATA_DIR
+UNSEEN_DIR = btc_bybit_oos_dir()
 
 CONFIGS = {
     "bare_wage10_base": {
