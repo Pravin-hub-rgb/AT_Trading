@@ -70,8 +70,32 @@ def build_module():
     return _bigstack_run(_build_module)
 
 
-def _build_module():
+
+# ---------------------------------------------------------------------------
+# THE PATCH WALK
+#
+# One function per patch, applied in order. This was a single 1448-line
+# _build_module holding 58 sequential s.replace() calls; splitting it means a
+# failing assert names the patch instead of printing "walk dir2", and a patch
+# can be read on its own.
+#
+# Every function here is VERBATIM from that original function - no line was
+# retyped or reformatted. exp_craze_patch_gate.py hashes the patched engine
+# before and after a change to this file and requires the two to be identical,
+# so "this is only a refactor" is a checked claim rather than an intention.
+#
+# The order below is the order the patches must run in, and it is not
+# cosmetic: several patches anchor on text an earlier patch inserted, which is
+# why some functions here cover more than one of the original edits.
+# ---------------------------------------------------------------------------
+
+
+def _patch_001(s: str) -> str:
     s = SRC
+    return s
+
+
+def _patch_002_sig_star(s: str) -> str:
     # 1) extra kwargs (default-off)
     t1 = "    *,\n"
     assert s.count(t1) == 1, "sig star"
@@ -197,6 +221,10 @@ def _build_module():
     '    exp_mtf_mode=0,\n'
     '    exp_struct_mag_min=0.0,\n'
     '    exp_struct_freq_max=0.0,\n')
+    return s
+
+
+def _patch_003_bisect(s: str) -> str:
     # 2) split-mb: trail events from an optional second chain
     t2 = "    import bisect as bs\n"
     assert s.count(t2) == 1, "bisect"
@@ -204,6 +232,10 @@ def _build_module():
     t3 = "        for s in swings_ltf:\n"
     assert s.count(t3) == 1, "trail loop"
     s = s.replace(t3, "        for s in swings_trail:\n")
+    return s
+
+
+def _patch_004_htf_ts(s: str) -> str:
     # 3) momentum gate (C14-aligned 1h close vs 3-bar MA)
     t4 = 'candle_ts_htf=[int(c["ts"]) for c in candles_htf]\n'
     assert s.count(t4) == 1, "htf ts"
@@ -212,6 +244,10 @@ def _build_module():
                   '    closes_htf=[float(c["close"]) for c in candles_htf]\n'
                   '    htf_hi=[float(c["high"]) for c in candles_htf]\n'
                   '    htf_lo=[float(c["low"]) for c in candles_htf]\n')
+    return s
+
+
+def _patch_005_filtered_append(s: str) -> str:
     # A4 pullback gate: skip if pullback off leg extreme in [lo, hi] R.
     # Causal: leg anchor = first window of same-dir streak; HTF extreme known at bar_ts.
     # 2026-10-02: filtered entries now carry the window bounds, so the trade
@@ -340,6 +376,10 @@ def _build_module():
         '                    if i<_b2i:\n'
         '                        events.append((_b2i,float(_s2["seg"]["start_px"])))\n'
         '            events.sort(key=lambda x: x[0])\n')
+    return s
+
+
+def _patch_006_ev_init(s: str) -> str:
     # 3e) Exp 27: opposite-mark stop accelerator (audit Q7). While in a trade,
     # exit at the close of the bar where the first OPPOSITE-dir swing break
     # mark confirms. Modes: "all" = any opposite mark; "loss" = only if
@@ -374,6 +414,10 @@ def _build_module():
         '                if _eok:\n'
         '                    exit_idx, exit_px, outcome = j, float(c["close"]), "accel27"\n'
         '                    break\n')
+    return s
+
+
+def _patch_007_chop_lb_call(s: str) -> str:
     # 3f) Exp 31: HTF chop lookback (lb) sweep â€” regime-detection responsiveness.
     # Shipped default 14. exp31_lb=0 keeps shipped (identity).
     t6e = '    chop=_chop_series_1h(candles_htf, lb=14)\n'
@@ -510,6 +554,10 @@ def _build_module():
                   '            if not _allow: continue\n'
                   + t6h +
                   '    filtered.sort(key=lambda z: ltf_store.pos(z[0]["bar"]))\n')
+    return s
+
+
+def _patch_008_regime_skip_anchor(s: str) -> str:
     # 3j) Idea E: regime-TRANSITION skip — |Δchop| over last 4x15m bars > thresh
     # (defensive; skip while regime is CHANGING, not based on its state).
     t_e = '        filtered.append((sig, use, win_start, win_end))\n    filtered.sort'
@@ -595,6 +643,10 @@ def _build_module():
                   '                if _cl<=0:\n'
                   '                    exit_idx,exit_px,outcome=j,float(c["close"]),"volns"\n'
                   '                    break\n')
+    return s
+
+
+def _patch_009_fine_walk(s: str) -> str:
     # Fine walk (production): same dry/nospk logic on 15m index mapped by ts
     t_f = '            for k in range(f_start, len(fine_ltf)):\n'
     assert s.count(t_f) == 1, "fine walk"
@@ -623,6 +675,10 @@ def _build_module():
                   '                    if _cl<=0:\n'
                   '                        fk,exit_px_f,outcome_f=k,float(c["close"]),"volns"\n'
                   '                        break\n')
+    return s
+
+
+def _patch_010_chop_init_vol(s: str) -> str:
     # 3k2) Volume features: causal trailing 15m rvol + percentile (entry-bar only)
     t_v = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t_v) == 1, "chop init vol"
@@ -641,6 +697,10 @@ def _build_module():
                   '        _pct15[_vi]=100.0*sum(1 for _x in _win if _x<=_cur)/len(_win)\n'
                   '        _mean=(_vp[_vi]-_vp[_lo])/(_vi-_lo)\n'
                   '        if _mean>0: _rvol15[_vi]=_cur/_mean\n')
+    return s
+
+
+def _patch_011_chop_init(s: str) -> str:
     # 3k) Idea G: ETH/BTC ratio momentum — precompute eth_mom per LTF bar
     # (path-true: uses only closes up to bar_ts). Default exp_eth_skip=0 = no-op.
     t_em = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
@@ -656,6 +716,10 @@ def _build_module():
                   '            _j=bs.bisect_right(candle_ts_htf, candle_ts_ltf[_bi])-1\n'
                   '            _k=bs.bisect_right(candle_ts_htf, candle_ts_ltf[_bi]-_elb*3600)-1\n'
                   '            if _j>=0 and _k>=0 and _er[_k]>0: _eth_mom[_bi]=(_er[_j]/_er[_k])-1.0\n')
+    return s
+
+
+def _patch_012_chop_init(s: str) -> str:
     # 3d) their-lane ports: regime persistence hysteresis + multi-LTF (no busy)
     t8 = '    chop_per_ltf=[50.0]*len(candles_ltf)\n'
     assert s.count(t8) == 1, "chop init"
@@ -939,6 +1003,10 @@ def _build_module():
                    '                    _exp_win_window_kill_stats["blocked_entries"]+=1\n'
                    '                    continue\n'
                   + t_c4)
+    return s
+
+
+def _patch_013_halt_ts_init(s: str) -> str:
     # 3d-3) D3 pattern gates from the loss autopsy: weekend skip + entry-kind filter.
     t_c5 = '    halt_ts=0\n'
     assert s.count(t_c5) == 1, "halt_ts init"
@@ -992,11 +1060,19 @@ def _build_module():
         '                if _event_day in exp_event_dates:\n'
         '                    _exp_event_stats["blocked"] += 1\n'
         '                    continue\n' + t9)
+    return s
+
+
+def _patch_014_busy_gate(s: str) -> str:
     # Phase 2, 2026-10-01: ENGINE now points at unified.py, which restores the
     # v18 gate under a parameter. The bare v18 form no longer exists verbatim.
     t10 = '        if max_positions > 0 and busy_until and bar_time <= busy_until: continue\n'
     assert s.count(t10) == 1, "busy gate"
     s = s.replace(t10, '        if max_positions > 0 and (not exp_mltf) and busy_until and bar_time <= busy_until:\n            if exp_shadow_book: _sr["reason"]="busy"\n            continue\n')
+    return s
+
+
+def _patch_015_busy_until_init(s: str) -> str:
     # 4a) retest fill bookkeeping (per-sim-call counters, returned to harness)
     t_bu = '    busy_until=""  # datetime string — timestamp-based, not index\n'
     assert s.count(t_bu) == 1, "busy_until init"
@@ -1152,6 +1228,10 @@ def _build_module():
                   '                        if _mj>=i and candle_ts[_mj]+900==ts and _ma15[_mj] is not None and float(candles_ltf[_mj]["close"]) > _ma15[_mj]:\n'
                   '                            fk,exit_px_f,outcome_f=k,float(candles_ltf[_mj]["close"]),"ma_trail"\n'
                   '                            break\n')
+    return s
+
+
+def _patch_016_pe_fine(s: str) -> str:
     # exp_partial_r is NOT injected: unified.py owns the knob, both arms and the
     # blended R. Leaving it here would be a duplicate argument in the generated
     # signature, and a shadowing second copy of the state init.
@@ -1519,6 +1599,34 @@ def _build_module():
     t_ret = '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n            "ltf_trades": ltf_trades, "intervals": parent_intervals}'
     assert s.count(t_ret) == 1, "ret"
     s = s.replace(t_ret, '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n             "ltf_trades": ltf_trades, "intervals": parent_intervals,\n             "retest_stats": retest_stats,\n             "five_m_stats": _exp_5m_stats, "cohort_stats": _exp_cohort_stats,\n             "shadow_rows": _exp_shadow_rows, "weekly_state_rows": _exp_weekly_state_rows,\n             "event_stats": _exp_event_stats, "campaign_stats": _exp_campaign_stats,\n             "loss_window_kill_stats": _exp_loss_window_kill_stats,\n             "win_window_kill_stats": _exp_win_window_kill_stats}\n')
+    return s
+
+
+def _build_module():
+    s = SRC
+    # The patch walk, as an ordered list. The ORDER IS LOAD-BEARING:
+    # several patches anchor on text an earlier patch inserted, so this
+    # list is the program, not a convenience. A function whose assert
+    # fires names the patch instead of printing a two-word label.
+    for _patch in (
+        _patch_001,
+        _patch_002_sig_star,
+        _patch_003_bisect,
+        _patch_004_htf_ts,
+        _patch_005_filtered_append,
+        _patch_006_ev_init,
+        _patch_007_chop_lb_call,
+        _patch_008_regime_skip_anchor,
+        _patch_009_fine_walk,
+        _patch_010_chop_init_vol,
+        _patch_011_chop_init,
+        _patch_012_chop_init,
+        _patch_013_halt_ts_init,
+        _patch_014_busy_gate,
+        _patch_015_busy_until_init,
+        _patch_016_pe_fine,
+    ):
+        s = _patch(s)
     m, p = _load_module(s, "craze_superset")
     try:
         p.unlink()
