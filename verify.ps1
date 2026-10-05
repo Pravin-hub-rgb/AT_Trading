@@ -196,6 +196,20 @@ foreach ($p in $plan) {
 }
 
 Write-Host ("=" * 62)
+
+# Every gate in this repo writes its output next to whatever ran it, and this
+# script runs from the root, so a session leaves _gate.txt, _gatee.txt and a
+# _faN.txt per batch behind. They are all covered by .gitignore, which is
+# exactly why they pile up unnoticed - ignored is not cleaned. Two hundred and
+# eighteen had built up in this root before clean-root.ps1 existed, and the
+# Bybit CSVs were lost once already for being ignored in the wrong place.
+# Running the clear here means a verification leaves the root as it found it.
+$cleaner = Join-Path $PSScriptRoot "clean-root.ps1"
+if (Test-Path $cleaner) {
+    & powershell -ExecutionPolicy Bypass -File $cleaner 2>$null |
+        Select-Object -First 1 | ForEach-Object { Write-Host $_ -ForegroundColor DarkGray }
+}
+
 if ($failed.Count -eq 0) {
     Write-Host "PASS - $($plan.Count) gate(s) green." -ForegroundColor Green
     if (-not $AllowAll) {
