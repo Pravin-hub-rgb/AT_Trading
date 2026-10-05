@@ -272,7 +272,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": None,
+          "pins": {"n": 343, "net": 146.94, "dd_net": 32.46, "win": 0.362,
+                 "oos_n": 203, "oos_net": 95.0, "oos_dd_net": 10.23, "oos_win": 0.325},
       },
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
@@ -408,7 +409,8 @@ BOOKS = {
           "swing": "sw10",
           # Base params copied from the named single book verbatim.
           # exp_fs_small_swing.py, both eras.
-          "pins": None,
+          "pins": {"n": 404, "net": 31.25, "dd_net": 51.42, "win": 0.272,
+                 "oos_n": 237, "oos_net": 12.59, "oos_dd_net": 29.43, "oos_win": 0.266},
       },
     "fsswing_sig_sw20": {
           "desc": "champion single sw20 + exit at FS when its swing leg is under 6x ATR",
@@ -428,7 +430,8 @@ BOOKS = {
           "swing": "sw20",
           # Base params copied from the named single book verbatim.
           # exp_fs_small_swing.py, both eras.
-          "pins": None,
+          "pins": {"n": 384, "net": 98.39, "dd_net": 53.93, "win": 0.292,
+                 "oos_n": 211, "oos_net": 0.21, "oos_dd_net": 30.52, "oos_win": 0.275},
       },
     "fsexit6_c": {
         "desc": "champion leg + exit at own-swing FS when it lands within 6h",

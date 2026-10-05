@@ -190,7 +190,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=496 net=196.28. Full sweep incl. gross/dd/win-rate:
         #   gross +312.57R  net +196.28R  dd 58.21R  win 31.9%  n=496
-        "pins": None,
+        "pins": {"n": 377, "net": 89.35, "dd_net": 54.92, "win": 0.289,
+                 "oos_n": 208, "oos_net": -13.03, "oos_dd_net": 32.31, "oos_win": 0.264},
     },
     "champion_sig_sw10": {
         "desc": "Champion single sw10 (partial exit, +82.0 post trail-fix)",
@@ -206,7 +207,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=503 net=170.91. Full sweep incl. gross/dd/win-rate:
         #   gross +286.91R  net +170.91R  dd 50.48R  win 30.4%  n=503
-        "pins": None,
+        "pins": {"n": 396, "net": 37.8, "dd_net": 51.82, "win": 0.263,
+                 "oos_n": 231, "oos_net": -16.34, "oos_dd_net": 41.74, "oos_win": 0.238},
     },
     "champion_multi_sw20": {
         "desc": "Champion multi sw20 (partial exit, +208.4 post trail-fix)",
@@ -680,7 +682,8 @@ BOOKS = {
         #   gross +284.68R  net +228.40R  dd 20.87R  win 34.2%  n=269
         # all 115 registry books in one pass.
         #   gross +284.68R  net +228.40R  dd 20.87R  win 34.2%  n=269
-        "pins": None,
+        "pins": {"n": 220, "net": 225.25, "dd_net": 16.65, "win": 0.327,
+                 "oos_n": 136, "oos_net": 26.04, "oos_dd_net": 30.21, "oos_win": 0.265},
     },
     "curfew624_utcsat_multi_sw10": {
         "desc": "utcsat king + skip age 6-24h band (never tested on king, current=0/0)",
@@ -715,7 +718,8 @@ BOOKS = {
         #   gross +259.41R  net +198.91R  dd 23.17R  win 32.7%  n=300
         # all 115 registry books in one pass.
         #   gross +259.41R  net +198.91R  dd 23.17R  win 32.7%  n=300
-        "pins": None,
+        "pins": {"n": 250, "net": 176.56, "dd_net": 17.53, "win": 0.304,
+                 "oos_n": 149, "oos_net": 30.26, "oos_dd_net": 25.33, "oos_win": 0.268},
     },
 
     # --- partial_r fine sweep on king multi (current=0, only 7.5 tested on sw20) ---

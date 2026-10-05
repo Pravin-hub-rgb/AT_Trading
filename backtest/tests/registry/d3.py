@@ -115,7 +115,8 @@ BOOKS = {
         # fewer trades - it blocks re-entry into the same swing rather than
         # waiting out N bars. Together they are slightly worse than cooldown
         # alone, which is why the production champion keeps the cooldown.
-        "pins": None,
+        "pins": {"n": 356, "net": 137.51, "dd_net": 48.4, "win": 0.258,
+                 "oos_n": 214, "oos_net": -19.75, "oos_dd_net": 37.03, "oos_win": 0.243},
     },
     "skipwinhalt_multi_sw10": {
         "desc": "king + skip the next HTF window after a HALT (3 straight losses)",
@@ -151,7 +152,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=328 net=29.64. Full sweep incl. gross/dd/win-rate:
         #   gross +102.02R  net +29.64R  dd 60.09R  win 27.4%  n=328
-        "pins": None,
+        "pins": {"n": 276, "net": 37.68, "dd_net": 39.94, "win": 0.246,
+                 "oos_n": 159, "oos_net": -7.0, "oos_dd_net": 31.51, "oos_win": 0.226},
     },
     # REMOVED 2026-10-02: swingpause_cd0_single_sw10. exp_swingpause forces
     # cooldown_bars=0 itself, so this entry set cooldown_bars=0 and added the same
@@ -175,7 +177,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=444 net=154.08. Full sweep incl. gross/dd/win-rate:
         #   gross +258.19R  net +154.08R  dd 57.93R  win 30.9%  n=444
-        "pins": None,
+        "pins": {"n": 342, "net": 117.99, "dd_net": 53.69, "win": 0.304,
+                 "oos_n": 193, "oos_net": -10.72, "oos_dd_net": 30.27, "oos_win": 0.259},
     },
 
     # ===== D3 PATTERN FAMILY (from loss autopsy: weekends, entry kinds, window age) =====
@@ -213,7 +216,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=401 net=278.06. Full sweep incl. gross/dd/win-rate:
         #   gross +364.66R  net +278.06R  dd 32.28R  win 31.9%  n=401
-        "pins": None,
+        "pins": {"n": 321, "net": 107.64, "dd_net": 41.49, "win": 0.274,
+                 "oos_n": 192, "oos_net": 27.0, "oos_dd_net": 27.33, "oos_win": 0.26},
     },
     "nowknd_swingpause_sig_sw10": {
         "desc": "swingpause single + SKIP WEEKEND — NEW BEST SINGLE (+217.6 / DD 18.2 / 12.0)",
@@ -230,7 +234,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=365 net=228.26. Full sweep incl. gross/dd/win-rate:
         #   gross +308.44R  net +228.26R  dd 30.31R  win 31.2%  n=365
-        "pins": None,
+        "pins": {"n": 295, "net": 205.2, "dd_net": 27.15, "win": 0.295,
+                 "oos_n": 174, "oos_net": 24.61, "oos_dd_net": 23.14, "oos_win": 0.259},
     },
     "fliponly_multi_sw10": {
         "desc": "king + FLIP entries only (B2 was +82.4 on multi — test cut)",
@@ -265,7 +270,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=268 net=211.34. Full sweep incl. gross/dd/win-rate:
         #   gross +282.78R  net +211.34R  dd 29.50R  win 28.0%  n=268
-        "pins": None,
+        "pins": {"n": 237, "net": 140.8, "dd_net": 32.65, "win": 0.253,
+                 "oos_n": 146, "oos_net": -34.23, "oos_dd_net": 42.72, "oos_win": 0.171},
     },
     "wage24_multi_sw10": {
         "desc": "king + only enter HTF windows older than 24h (mature bias)",
@@ -389,7 +395,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=406 net=245.7. Full sweep incl. gross/dd/win-rate:
         #   gross +340.27R  net +245.70R  dd 36.47R  win 29.6%  n=406
-        "pins": None,
+        "pins": {"n": 323, "net": 134.24, "dd_net": 34.88, "win": 0.282,
+                 "oos_n": 198, "oos_net": 22.29, "oos_dd_net": 20.67, "oos_win": 0.278},
     },
 
     # NOTE: utc_sat variants consolidated into the other lane's keys
@@ -410,7 +417,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=350 net=121.03. Full sweep incl. gross/dd/win-rate:
         #   gross +196.56R  net +121.03R  dd 40.49R  win 29.1%  n=350
-        "pins": None,
+        "pins": {"n": 285, "net": 139.95, "dd_net": 42.4, "win": 0.291,
+                 "oos_n": 172, "oos_net": -26.32, "oos_dd_net": 35.55, "oos_win": 0.221},
     },
 
     # ===== D3 RISK-WIDTH FAMILY (skip stale/stretched breaks) =====
@@ -453,7 +461,8 @@ BOOKS = {
         # value: the same band over the swingpause base books 78 more trades than
         # its pin claimed, so this pin described a materially different book.
         # dd not re-measured.
-        "pins": None,
+        "pins": {"n": 320, "net": 183.75, "dd_net": 38.13, "win": 0.262,
+                 "oos_n": 197, "oos_net": -8.15, "oos_dd_net": 40.48, "oos_win": 0.249},
     },
     "atrr_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries when 15m ATR5/ATR20 > 1.4 (vol blow-off)",
@@ -470,7 +479,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=381 net=241.57. Full sweep incl. gross/dd/win-rate:
         #   gross +337.85R  net +241.57R  dd 46.77R  win 28.1%  n=381
-        "pins": None,
+        "pins": {"n": 316, "net": 150.79, "dd_net": 38.33, "win": 0.247,
+                 "oos_n": 198, "oos_net": -9.41, "oos_dd_net": 29.4, "oos_win": 0.242},
     },
     "chopband_atrr_swingpause_sig_sw10": {
         "desc": "swingpause single + chop15 band AND ATR blow-off skip (combo)",
@@ -491,7 +501,8 @@ BOOKS = {
         # value: the same band over the swingpause base books 78 more trades than
         # its pin claimed, so this pin described a materially different book.
         # dd not re-measured.
-        "pins": None,
+        "pins": {"n": 269, "net": 134.36, "dd_net": 33.04, "win": 0.257,
+                 "oos_n": 177, "oos_net": -4.23, "oos_dd_net": 42.84, "oos_win": 0.232},
     },
     "atrr_swingpause_sig_sw20": {
         "desc": "VALIDATION: atrr gate on sw20 chain (cross-chain robustness)",
@@ -508,7 +519,8 @@ BOOKS = {
         #   gross +266.27R  net +171.57R  dd 50.43R  win 30.8%  n=390
         # all 115 registry books in one pass.
         #   gross +266.27R  net +171.57R  dd 50.43R  win 30.8%  n=390
-        "pins": None,
+        "pins": {"n": 313, "net": 118.1, "dd_net": 49.66, "win": 0.291,
+                 "oos_n": 177, "oos_net": -4.86, "oos_dd_net": 32.29, "oos_win": 0.266},
     },
     "atrr_cd0_swingpause_sig_sw10": {
         "desc": "VALIDATION: atrr gate with cd=0 (pause-only cooldown)",
@@ -525,7 +537,8 @@ BOOKS = {
         #   gross +337.57R  net +240.56R  dd 47.35R  win 28.3%  n=385
         # all 115 registry books in one pass.
         #   gross +337.57R  net +240.56R  dd 47.35R  win 28.3%  n=385
-        "pins": None,
+        "pins": {"n": 317, "net": 149.0, "dd_net": 40.11, "win": 0.246,
+                 "oos_n": 198, "oos_net": -16.81, "oos_dd_net": 33.91, "oos_win": 0.232},
     },
     "chopband_swingpause_sig_sw20": {
         "desc": "VALIDATION: chopband gate on sw20 chain (cross-chain robustness)",
@@ -543,7 +556,8 @@ BOOKS = {
         #   gross +237.43R  net +146.42R  dd 51.76R  win 31.2%  n=388
         # all 115 registry books in one pass.
         #   gross +237.43R  net +146.42R  dd 51.76R  win 31.2%  n=388
-        "pins": None,
+        "pins": {"n": 309, "net": 91.03, "dd_net": 46.41, "win": 0.278,
+                 "oos_n": 181, "oos_net": -6.79, "oos_dd_net": 37.34, "oos_win": 0.26},
     },
     "chopband_atrr_swingpause_sig_sw20": {
         "desc": "VALIDATION: chopband + atrr combo on sw20 chain",
@@ -561,7 +575,8 @@ BOOKS = {
         #   gross +256.38R  net +175.90R  dd 44.83R  win 30.4%  n=329
         # all 115 registry books in one pass.
         #   gross +256.38R  net +175.90R  dd 44.83R  win 30.4%  n=329
-        "pins": None,
+        "pins": {"n": 277, "net": 109.26, "dd_net": 42.76, "win": 0.271,
+                 "oos_n": 159, "oos_net": -6.8, "oos_dd_net": 43.23, "oos_win": 0.252},
     },
     "utcsat_chopband_multi_sw10": {
         "desc": "utcsat king + chop15 band skip — stack test",
@@ -633,7 +648,8 @@ BOOKS = {
         # they add once weekend is in. That is the finding: this book was named
         # for being the best and it is not - it is the champion base plus a
         # weekend filter with three filters stacked on top that dilute it.
-        "pins": None,
+        "pins": {"n": 225, "net": 243.8, "dd_net": 23.41, "win": 0.307,
+                 "oos_n": 149, "oos_net": 31.24, "oos_dd_net": 31.3, "oos_win": 0.262},
     },
     "fullstack_wage10_cd0_sig_sw10": {
         "desc": "KING SINGLE: fullstack + wage10 + cd=0 — chop15 band + ATR blow-off",
@@ -653,7 +669,8 @@ BOOKS = {
         #   gross +372.69R  net +316.64R  dd 23.96R  win 34.6%  n=234
         # pin was n=194 net=244.5; now n=234 net=316.64 (win rate 34.6%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
-        "pins": None,
+        "pins": {"n": 199, "net": 273.18, "dd_net": 24.29, "win": 0.322,
+                 "oos_n": 139, "oos_net": 26.15, "oos_dd_net": 34.97, "oos_win": 0.252},
     },
 
     # ===== D3 WAGE VALIDATION FAMILY (other bot's sweep finding: wage12 on single +61R) =====
@@ -681,7 +698,8 @@ BOOKS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": None,
+        "pins": {"n": 259, "net": 267.3, "dd_net": 24.41, "win": 0.301,
+                 "oos_n": 155, "oos_net": 12.05, "oos_dd_net": 30.81, "oos_win": 0.252},
     },
     "wage8_swingpause_sig_sw10": {
         "desc": "VALIDATION: wage neighborhood 8h",
@@ -705,7 +723,8 @@ BOOKS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": None,
+        "pins": {"n": 265, "net": 250.36, "dd_net": 22.96, "win": 0.294,
+                 "oos_n": 161, "oos_net": 30.26, "oos_dd_net": 29.88, "oos_win": 0.267},
     },
     "wage10_swingpause_wskip_sig_sw10": {
         "desc": "KING SINGLE: wage 10h + swing pause + IST weekend skip — cd=0 redundant with swingpause",
@@ -722,7 +741,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=330 net=308.65. Full sweep incl. gross/dd/win-rate:
         #   gross +385.19R  net +308.65R  dd 26.27R  win 32.4%  n=330
-        "pins": None,
+        "pins": {"n": 262, "net": 270.8, "dd_net": 22.96, "win": 0.305,
+                 "oos_n": 158, "oos_net": 35.63, "oos_dd_net": 25.81, "oos_win": 0.272},
     },
     # === SKIP-FIRST-SWING: DEAD — first swing is where the edge lives (Exp 19 confirmed) ===
     "wage16_swingpause_sig_sw10": {
@@ -747,7 +767,8 @@ BOOKS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": None,
+        "pins": {"n": 246, "net": 256.74, "dd_net": 24.57, "win": 0.305,
+                 "oos_n": 147, "oos_net": 30.97, "oos_dd_net": 26.19, "oos_win": 0.272},
     },
     "wage20_swingpause_sig_sw10": {
         "desc": "VALIDATION: wage neighborhood 20h — declines past the plateau",
@@ -771,7 +792,8 @@ BOOKS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": None,
+        "pins": {"n": 234, "net": 209.51, "dd_net": 22.98, "win": 0.303,
+                 "oos_n": 143, "oos_net": 48.54, "oos_dd_net": 23.62, "oos_win": 0.287},
     },
     "wage12_swingpause_sig_nowknd_sw10": {
         "desc": "VALIDATION: wage12 WITHOUT weekend skip (stack interaction) — wage works alone (+60.9R)",
@@ -788,7 +810,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=392 net=196.94. Full sweep incl. gross/dd/win-rate:
         #   gross +287.92R  net +196.94R  dd 41.23R  win 30.1%  n=392
-        "pins": None,
+        "pins": {"n": 316, "net": 202.92, "dd_net": 42.31, "win": 0.275,
+                 "oos_n": 191, "oos_net": -5.93, "oos_dd_net": 40.24, "oos_win": 0.236},
     },
     "wage12_swingpause_sig_sw20": {
         "desc": "VALIDATION: wage12 on sw20 chain — TRANSFERS (+24.5R, -4.9DD)",
@@ -805,7 +828,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=394 net=153.32. Full sweep incl. gross/dd/win-rate:
         #   gross +245.75R  net +153.32R  dd 43.96R  win 32.2%  n=394
-        "pins": None,
+        "pins": {"n": 303, "net": 148.81, "dd_net": 45.64, "win": 0.307,
+                 "oos_n": 172, "oos_net": -5.26, "oos_dd_net": 35.9, "oos_win": 0.25},
     },
 
     # ===== D3 CAUSAL SL FAMILY (user's fix: running extreme SL) =====
@@ -844,7 +868,8 @@ BOOKS = {
         #   gross +294.31R  net +195.67R  dd 45.42R  win 29.6%  n=446
         # all 115 registry books in one pass.
         #   gross +294.31R  net +195.67R  dd 45.42R  win 29.6%  n=446
-        "pins": None,
+        "pins": {"n": 351, "net": 112.04, "dd_net": 52.68, "win": 0.271,
+                 "oos_n": 213, "oos_net": -9.56, "oos_dd_net": 26.26, "oos_win": 0.254},
     },
     "causalsl_utcsat_multi_sw10": {
         "desc": "utcsat king + causal SL",
@@ -960,7 +985,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=425 net=243.81. Full sweep incl. gross/dd/win-rate:
         #   gross +342.60R  net +243.81R  dd 49.00R  win 30.1%  n=425
-        "pins": None,
+        "pins": {"n": 336, "net": 106.52, "dd_net": 46.58, "win": 0.259,
+                 "oos_n": 204, "oos_net": -4.73, "oos_dd_net": 34.19, "oos_win": 0.25},
     },
     "bm05_multi_sw20": {
         "desc": "VALIDATION: bm05 on sw20 chain (cross-chain transfer)",

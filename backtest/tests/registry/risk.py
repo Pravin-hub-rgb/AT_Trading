@@ -686,7 +686,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=376 net=187.78. Full sweep incl. gross/dd/win-rate:
         #   gross +290.57R  net +187.78R  dd 57.54R  win 26.9%  n=376
-        "pins": None,
+        "pins": {"n": 310, "net": 126.57, "dd_net": 53.43, "win": 0.232,
+                 "oos_n": 154, "oos_net": -54.25, "oos_dd_net": 59.41, "oos_win": 0.123},
     },
     "rmax10_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries with stop width over 1.0% of price — DEAD",
@@ -703,7 +704,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=294 net=228.59. Full sweep incl. gross/dd/win-rate:
         #   gross +323.62R  net +228.59R  dd 47.91R  win 23.8%  n=294
-        "pins": None,
+        "pins": {"n": 255, "net": 184.36, "dd_net": 46.99, "win": 0.204,
+                 "oos_n": 88, "oos_net": -32.6, "oos_dd_net": 42.64, "oos_win": 0.102},
     },
     "rmax15_multi_sw10": {
         "desc": "king + skip entries with stop width over 1.5% of price — DEAD (cascade)",
@@ -791,7 +793,8 @@ BOOKS = {
         #   gross +285.02R  net +188.71R  dd 46.29R  win 29.2%  n=414
         # all 115 registry books in one pass.
         #   gross +285.02R  net +188.71R  dd 46.29R  win 29.2%  n=414
-        "pins": None,
+        "pins": {"n": 335, "net": 119.47, "dd_net": 53.38, "win": 0.263,
+                 "oos_n": 207, "oos_net": -12.73, "oos_dd_net": 35.12, "oos_win": 0.232},
     },
     "age50_utcsat_multi_sw10": {
         "desc": "king multi + skip entries on swings older than 50 bars",
@@ -827,7 +830,8 @@ BOOKS = {
         #   gross +237.63R  net +137.14R  dd 48.05R  win 27.0%  n=429
         # all 115 registry books in one pass.
         #   gross +237.63R  net +137.14R  dd 48.05R  win 27.0%  n=429
-        "pins": None,
+        "pins": {"n": 350, "net": 133.24, "dd_net": 47.43, "win": 0.24,
+                 "oos_n": 211, "oos_net": -23.89, "oos_dd_net": 41.18, "oos_win": 0.237},
     },
     "combined_b2age_utcsat_multi_sw10": {
         "desc": "king multi + B2+doji skip + swing age 50 skip (combined entry quality)",
