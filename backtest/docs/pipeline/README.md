@@ -64,6 +64,42 @@ python exp_origin_lookahead.py          # the standing hygiene gates
 Write the experiment as a script that prints a table and writes a JSON next to
 it. Put it in `backtest/experiments/` with a `_results.json` beside it.
 
+### Or just run `verify.ps1`
+
+The tools above answer different questions and cost between two seconds and two
+hours. Running all of them after every edit is mostly wasted time, and running
+the wrong one proves nothing. `verify.ps1` at the repo root reads what changed
+against git and runs only the gates that change can reach:
+
+```powershell
+.\verify.ps1 -WhatIf                      # show the plan, run nothing
+.\verify.ps1                              # the fast gates
+.\verify.ps1 -Book fsent_sig_full         # plus one book's fastcheck
+.\verify.ps1 -AllowAll                    # everything, ~2 h
+```
+
+It prints its plan with an estimated cost before running anything, and prints
+the cost of what it skipped. The mapping is deliberately one-directional: a
+change to a shared file runs every gate that reads it, including the slow ones,
+because being wrong that way wastes minutes and being wrong the other way ships
+an unchecked number.
+
+| Changed | Gates it runs | Cost |
+|---|---|---|
+| anything | `exp_craze_patch_gate` | ~20s |
+| anything | `exp_origin_lookahead` | ~30s |
+| `registry/` or `experiment_registry.py` | `exp_registry_snapshot` | ~3s |
+| `engines/htf_ltf/` | `exp_port_differential` | ~10 min |
+| engine, patch or registry | `exp_fastcheck`, scoped to `-Book` | ~50s/book |
+
+Pass `-Base <commit>` when the automatic merge-base is wrong. It is wrong when
+`main` has moved ahead of where this branch started: the diff then lists files
+the branch never touched, and the script concludes it must run everything.
+
+The snapshot gate needs a baseline from *before* the edit. If
+`_registry_before.json` does not exist the script writes one and says so, but a
+baseline written after the edit only proves the edit is self-consistent.
+
 ## 4. The three checks before a number is allowed out
 
 **a. Identity.** With your knob at its default, the patched engine must
