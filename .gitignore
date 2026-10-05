@@ -65,6 +65,21 @@ backtest/tests/__pycache__/_craze_tmp*.pyc
 /_*.ps1
 /_*.jsonl
 
+# A file literally named $null or 0 is a PowerShell redirection accident - a
+# command that wrote to `> $null` or `> 0` instead of discarding. Both were
+# committed before the rules above existed. They are ignored by name because
+# they have no pattern that catches them.
+$null
+/0
+
+# Thirty-two root-level _-prefixed files were tracked before the ignore rules
+# above took effect: TypeScript build logs (_ts_*), API snapshots (_api_aug27_*),
+# debug scripts (_debug_*, _check_*), run scripts (_run_*.ps1). They are
+# untracked, not deleted - the evidence in them is real, but a transient capture
+# does not belong in history and the root is not where a build artefact belongs.
+# Anything genuinely worth keeping belongs in backtest/tests with a name that
+# says what it is.
+
 # Stale engine copies. Each of these is a full snapshot of unified.py written
 # by some exp_*.py harness at runtime (_htf2h, _wick, _pyr, the 1h wick arms,
 # the v18 ctx pair, the green-r arm). Six of the nine are rewritten every time

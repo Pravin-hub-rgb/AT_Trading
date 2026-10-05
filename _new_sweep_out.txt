@@ -1,4 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\Pravin\Desktop\main\AT_Trading\backend\_sweep.py", line 8, in <module>
-    lines = open("../data/nifty_1min.csv", encoding="utf-8-sig").read().splitlines()
-FileNotFoundError: [Errno 2] No such file or directory: '../data/nifty_1min.csv'

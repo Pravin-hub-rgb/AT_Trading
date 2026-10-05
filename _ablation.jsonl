@@ -1,6 +1,0 @@
-{"arm": "C", "scope": "is", "lane": "champion_multi_sw10", "n": 500, "net": 325.78, "pf": 2.384, "maxconc": 6}
-{"arm": "A", "scope": "is", "lane": "champion_multi_sw10", "n": 395, "net": 137.72, "pf": 1.859, "maxconc": 1}
-{"arm": "B", "scope": "is", "lane": "champion_multi_sw10", "n": 387, "net": 150.4, "pf": 1.931, "maxconc": 1}
-{"arm": "C", "scope": "oos", "lane": "champion_multi_sw10", "n": 279, "net": 70.15, "pf": 1.591, "maxconc": 5}
-{"arm": "A", "scope": "oos", "lane": "champion_multi_sw10", "n": 230, "net": -13.26, "pf": 1.099, "maxconc": 1}
-{"arm": "B", "scope": "oos", "lane": "champion_multi_sw10", "n": 219, "net": -1.79, "pf": 1.181, "maxconc": 1}
