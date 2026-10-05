@@ -1,0 +1,3884 @@
+{
+ "total": 236,
+ "by_plane": {
+  "closed": 1,
+  "multi": 87,
+  "process": 15,
+  "shared": 122,
+  "signal": 11
+ },
+ "files_by_plane": {
+  "multi": [
+   "5M_CONFIRM.md",
+   "AI_BRAINSTORM_PROMPT.md",
+   "all combined experiment trade metric.md",
+   "ANCHOR_BASIS_AUDIT.md",
+   "backtest_checklist_v18.md",
+   "BASE_BOOK_NULL.md",
+   "BLEED_AUTOPSY.md",
+   "BOOK_CATEGORIES.md",
+   "BOT_REPLIES.md",
+   "BREAK_KIND.md",
+   "C16_FOUR_ARM_DIFF.md",
+   "CAMPAIGN_POLICY_AUTOPSY.md",
+   "CAPITAL_STAGE_PLAN.md",
+   "CHAMPION_CANONICAL_P102.md",
+   "CHAMPION_DEPLOYABILITY_P99.md",
+   "CONCENTRATION_P107.md",
+   "CONCURRENCY_P117_P120.md",
+   "CROSS_LANE.md",
+   "D3_ALIGNMENT_LOOKAHEAD_AUDIT.md",
+   "ENGINE_SHELF.md",
+   "EQUITY_CURVE_STUDY.md",
+   "EXP40C_EXP41_WAGE_EXT.md",
+   "EXPERIMENT_RESULTS.md",
+   "EXPERIMENT_SUMMARY.md",
+   "EXPERIMENTS.md",
+   "experiments_craze.md",
+   "FIVE_MINUTE_CONFIRM_COHORT_AUTOPSY.md",
+   "FIVE_MINUTE_MARK_MORPHOLOGY_AUTOPSY.md",
+   "FIVE_MINUTE_OPPOSITION_AUTOPSY.md",
+   "FORWARD_TEST_PLAN.md",
+   "FS_EXIT_RULE.md",
+   "HTF_ATTRIBUTION.md",
+   "HTF_DEEP_LAYER_AUTOPSY.md",
+   "HTF_STANDALONE_P3.md",
+   "leverage, liquidation.md",
+   "LIVE_PARITY_P104.md",
+   "LOSS_AUTOPSY.md",
+   "LOSS_TRIGGERED_WINDOW_KILL_AUTOPSY.md",
+   "MARGINAL_PREENTRY_ATLAS.md",
+   "MASTER_CANDIDATES_DRAFT_SUPERSEDED.md",
+   "MASTER_CANDIDATES_V2.md",
+   "MASTER_LEADERBOARD.md",
+   "MB_ARCHITECTURE_AUTOPSY.md",
+   "MLTF_GREEN_R.md",
+   "MULTI_INSTRUMENT_RESULTS.md",
+   "MULTISWING_BIAS_2OF3.md",
+   "new bugs.md",
+   "OOS_VALIDATION_2021_2022.md",
+   "OPEN_RESEARCH_QUEUE.md",
+   "ORACLE_EARLY.md",
+   "other bots proposal.md",
+   "P112_V19_REBUILD.md",
+   "P113_BREAKEVEN_CLAMP.md",
+   "P114_FLAG_ATTRIBUTION.md",
+   "PORT_SCOPE_P105.md",
+   "PROMPT_FOR_SECOND_RESEARCHER.md",
+   "PURE_V18_GEOMETRY_REPORT.md",
+   "PURE_V18_GEOMETRY_REPORT_CORRECTED.md",
+   "PYRAMID_PHASE2_DESIGN.md",
+   "RANGE_PEAK_GRAY.md",
+   "RANGE_POS_WIDTH.md",
+   "reality of champion followup.md",
+   "reality of champion.md",
+   "REGIME_STRUCTURE_AUTOPSY.md",
+   "REGISTRY_BOARD.md",
+   "RESEARCH_POLICY_CORRECTION.md",
+   "ROUND_INDEX_P55_P69.md",
+   "ROUND_SUMMARY_P55_P95.md",
+   "SCHEDULED_EVENTS_AUTOPSY.md",
+   "SECOND_RESEARCHER_REVIEW.md",
+   "SIZING_CANDIDATES.md",
+   "SL_RECLAIM_REENTRY.md",
+   "SMZX_LEVERAGE_AUDIT.md",
+   "STACK_BOOK.md",
+   "STACK_PAIRED.md",
+   "STRATEGY_SCORECARD.md",
+   "STRATEGY_STATE_OF_PLAY.md",
+   "STRUCTURE_VOLUME_AUTOPSY.md",
+   "SWING_GEOMETRY_AUTOPSY.md",
+   "TAIL_RISK_AUDIT.md",
+   "TRADE_EXPANSION_AUDIT.md",
+   "TRAIL_MECHANICS.md",
+   "WICK_1H_GATE_ADOPTION_RECORD.md",
+   "WICK_GATE_RULING_BRIEF.md",
+   "WIN_STREAK_AUTOPSY.md",
+   "WIN_STREAK_STACKING_AUTOPSY.md",
+   "WINNER_PATH_AUTOPSY.md"
+  ],
+  "shared": [
+   "ACF_TAIL_CHECK.md",
+   "AGE10_ALT_SWEEP.md",
+   "AGE_GATE.md",
+   "ATR_TREND_P86.md",
+   "B1_ENTRY.md",
+   "B1_ENTRY_P71.md",
+   "BARS_TO_WEND_P115.md",
+   "BIAS_WINDOW_THEORY.md",
+   "BOOTSTRAP_NULL_P63.md",
+   "BYBIT_PARAMS.md",
+   "BYBIT_V18_OPTIMIZATION.md",
+   "C16_C18_SL_PIVOT_AUDIT.md",
+   "CANDIDATE_P108.md",
+   "CAPS_P49.md",
+   "CEILING_FAMILY_P88.md",
+   "CEILING_PERM_P85.md",
+   "CEILING_REGCTRL_P87.md",
+   "CEILING_RELPRICE_P69.md",
+   "CHAMP_ROBUST_P83.md",
+   "CHAMPION_FLOOR_REJECTED.md",
+   "CHAMPION_GATE_IMPACT.md",
+   "CHOP_SCORE.md",
+   "CLUSTER_AUTOPSY.md",
+   "correct cost per trade.md",
+   "CROSS_INSTRUMENT_STATUS.md",
+   "CROSS_INSTRUMENT_V18.md",
+   "DD_DURATION_P92.md",
+   "DECAY_SWITCH.md",
+   "DECAY_THEORY.md",
+   "DECILE_WALK.md",
+   "DECOMPOSITION_NULL.md",
+   "DEEP_AUDIT_CHECKLIST.md",
+   "design.md",
+   "DIRECTIONAL_FS_P80.md",
+   "ENTRY_FILL_P90.md",
+   "ENTRY_TIME_AUTOPSY.md",
+   "EXP43_LOSS_AUTOPSY.md",
+   "EXP_LA4_TRAIL_TIGHTEN.md",
+   "FILL_ABSOLUTE_P91.md",
+   "FORWARD_NEED_P62.md",
+   "FS_ADD_VS_BASE.md",
+   "FS_DECOMP_P75.md",
+   "FS_ENTRY.md",
+   "FS_ENTRY_RISK_CONTROL.md",
+   "FS_MECHANISM_P78.md",
+   "FS_ONLY_AUDIT_P74.md",
+   "FS_ONLY_ENGINE.md",
+   "FS_ONLY_P73.md",
+   "FS_PERIOD_P77.md",
+   "FS_TIME_DECISION.md",
+   "FS_TIME_GEOMETRY.md",
+   "GREY_BOOK_BRUTAL.md",
+   "HALT_FIRING_RATE.md",
+   "HANDOFF_V19_ORDER_DEPENDENCE.md",
+   "HTF_2H_PLANE_TEST.md",
+   "HTF_GATE_AUDIT_P101.md",
+   "HTF_GEOMETRY_P54.md",
+   "HTF_ORACLE_P3B.md",
+   "HTF_TUNE_P52.md",
+   "INSIDE80_P95.md",
+   "IS_IT_RIGHT.md",
+   "KELLY_CONTINUOUS.md",
+   "KING_SINGLE_fullstack_wage10_cd0_RESEARCH_REPORT.md",
+   "LIVE_GATE_CONFIRMED.md",
+   "LONG_TREND_P84.md",
+   "MIN_BARS_FORENSIC.md",
+   "NESTING_P1.md",
+   "NESTING_PROBE.md",
+   "NET_AUDIT_P98.md",
+   "NEWBAR_SEARCH.md",
+   "NO_EXPIRY_P56.md",
+   "NONCIRCULAR_P103.md",
+   "NULL_SENSITIVITY.md",
+   "ONE_MIN_PATH_CONTEXT.md",
+   "OUTLIVE_STRATEGY_P94.md",
+   "P1P2_WAVE.md",
+   "P90_FILL_P109.md",
+   "PARENT_DEATH_P93.md",
+   "PERMUTATION_P82.md",
+   "PHASE0_1M_SWING_BLOCKER.md",
+   "PORTFOLIO_KILL_WEIGHT.md",
+   "POWELL_SPEECH_CALENDAR_AUDIT.md",
+   "PREFIX_INVARIANCE_P79.md",
+   "PROCESS_FIX_PROBES.md",
+   "QUANT_AUTOPSY.md",
+   "QUEUE_SWEEP.md",
+   "RATCHET_FREEZE.md",
+   "REBIAS_CONFIRMATION.md",
+   "REGIME_DETECT_P55.md",
+   "RETRACE_DEPTH.md",
+   "RETROSPECTIVE_AND_FORWARD.md",
+   "RISK_CONCURRENCY.md",
+   "RUNNER_LIVE.md",
+   "SCALP_1M_BOOK.md",
+   "SESSION_P20_P26.md",
+   "SHADOW_TIMEFRAME_IDEAS.md",
+   "SIDE_ASYM_P89.md",
+   "SL_TIGHTEN.md",
+   "SL_VARIANTS.md",
+   "SLOT_QUEUE_P97.md",
+   "SMOOTH_BOOK.md",
+   "SMZX_BINANCE_REPLICATION.md",
+   "SMZX_LOOKAHEAD_RETRACTION.md",
+   "SPOT_SIGNAL_PERP_EXECUTION.md",
+   "STABILITY_FORWARD_P61.md",
+   "STOP_DECOMPOSITION.md",
+   "STRUCTURAL_DECAY.md",
+   "SWEEP_ROADMAP.md",
+   "SYMMETRIC_DECAY.md",
+   "telegram setup.md",
+   "TF_INTERP_P66.md",
+   "TF_MATRIX_P58.md",
+   "TF_METRICS_TABLE.md",
+   "TIMEFRAME_ARCH_P57.md",
+   "TREND_SHARE.md",
+   "VOL_REGIME_P67.md",
+   "VOLFLOOR_P68.md",
+   "vps_requirements.md",
+   "WIN_SPACING.md",
+   "WINSTREAK_M_P65.md",
+   "ZIGZAG_CLOSED_P70.md",
+   "ZIGZAG_P64.md"
+  ],
+  "signal": [
+   "CAND_COST_P59.md",
+   "CANDIDATE_BUILD_SHEET.md",
+   "CONCURRENCY_GUARD_P96.md",
+   "CORRECTIONS_P106.md",
+   "LIVE_CONCURRENCY_P118.md",
+   "PORTFOLIO_LAYER.md",
+   "RISK_FEATURES.md",
+   "STRUCTURAL_CLOSURES.md",
+   "UNIFICATION_PHASE0.md",
+   "UNION_P60.md",
+   "WINDOW_LIFE.md"
+  ],
+  "process": [
+   "CHECKLIST.md",
+   "DOC_MAP.md",
+   "ENGINE_BOOK_ARCHITECTURE.md",
+   "EXPERIMENT_INVENTORY.md",
+   "EXPERIMENT_LOG.md",
+   "EXPERIMENT_LOG_ENTRY1.md",
+   "EXPERIMENT_PROCESS.md",
+   "HANDOVER_DECAY_SKIP.md",
+   "HANDOVER_PORT_AND_MODULARIZE.md",
+   "HANDOVER_SESSION.md",
+   "KNOB_SWEEP.md",
+   "NEXT_ROUND_BRIEF.md",
+   "ONBOARDING.md",
+   "THE_CHAMPION_HANDOFF.md",
+   "TRANSCRIPT_THESIS_BACKLOG.md"
+  ],
+  "closed": [
+   "CLOSED_DO_NOT_REPEAT.md"
+  ]
+ },
+ "docs": [
+  {
+   "file": "5M_CONFIRM.md",
+   "plane": "multi",
+   "bytes": 8767,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ACF_TAIL_CHECK.md",
+   "plane": "shared",
+   "bytes": 3784,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "AGE10_ALT_SWEEP.md",
+   "plane": "shared",
+   "bytes": 4424,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "AGE_GATE.md",
+   "plane": "shared",
+   "bytes": 4912,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "AI_BRAINSTORM_PROMPT.md",
+   "plane": "multi",
+   "bytes": 12973,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "all combined experiment trade metric.md",
+   "plane": "multi",
+   "bytes": 5265,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 6,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ANCHOR_BASIS_AUDIT.md",
+   "plane": "multi",
+   "bytes": 49946,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 43,
+    "verdict_headers": 14,
+    "result_rows": 1
+   },
+   "carries_results": true,
+   "books_named": [
+    "age10_dirmatch_multi_sw10",
+    "age25_dirmatch_multi_sw10",
+    "champion_multi_sw10",
+    "dirmatch_multi_sw10",
+    "dualunion_multi",
+    "union_multi",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 7
+  },
+  {
+   "file": "ATR_TREND_P86.md",
+   "plane": "shared",
+   "bytes": 4799,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "B1_ENTRY.md",
+   "plane": "shared",
+   "bytes": 3855,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "B1_ENTRY_P71.md",
+   "plane": "shared",
+   "bytes": 5618,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "backtest_checklist_v18.md",
+   "plane": "multi",
+   "bytes": 90732,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 37,
+    "result_rows": 7
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BARS_TO_WEND_P115.md",
+   "plane": "shared",
+   "bytes": 3413,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BASE_BOOK_NULL.md",
+   "plane": "multi",
+   "bytes": 6880,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "BIAS_WINDOW_THEORY.md",
+   "plane": "shared",
+   "bytes": 4567,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BLEED_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 25968,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 4,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "BOOK_CATEGORIES.md",
+   "plane": "multi",
+   "bytes": 15222,
+   "evidence": {
+    "sig_words": 13,
+    "multi_words": 24,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "fsent_sig_fs_mom",
+    "fsent_sig_sw10_long",
+    "fsent_sig_sw10_short",
+    "fsent_sig_sw20_short",
+    "fsent_sig_sw20_short_wr",
+    "trail_half"
+   ],
+   "books_named_count": 6
+  },
+  {
+   "file": "BOOTSTRAP_NULL_P63.md",
+   "plane": "shared",
+   "bytes": 5138,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BOT_REPLIES.md",
+   "plane": "multi",
+   "bytes": 10096,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 2,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BREAK_KIND.md",
+   "plane": "multi",
+   "bytes": 6967,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BYBIT_PARAMS.md",
+   "plane": "shared",
+   "bytes": 4000,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "BYBIT_V18_OPTIMIZATION.md",
+   "plane": "shared",
+   "bytes": 6130,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 4
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "C16_C18_SL_PIVOT_AUDIT.md",
+   "plane": "shared",
+   "bytes": 9552,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "C16_FOUR_ARM_DIFF.md",
+   "plane": "multi",
+   "bytes": 2794,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 3
+   },
+   "carries_results": true,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "CAMPAIGN_POLICY_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 5530,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 9,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "CAND_COST_P59.md",
+   "plane": "signal",
+   "bytes": 5789,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CANDIDATE_BUILD_SHEET.md",
+   "plane": "signal",
+   "bytes": 18590,
+   "evidence": {
+    "sig_words": 2,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "CANDIDATE_P108.md",
+   "plane": "shared",
+   "bytes": 1936,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CAPITAL_STAGE_PLAN.md",
+   "plane": "multi",
+   "bytes": 40643,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 19,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CAPS_P49.md",
+   "plane": "shared",
+   "bytes": 4896,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CEILING_FAMILY_P88.md",
+   "plane": "shared",
+   "bytes": 5292,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CEILING_PERM_P85.md",
+   "plane": "shared",
+   "bytes": 5870,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CEILING_REGCTRL_P87.md",
+   "plane": "shared",
+   "bytes": 6061,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CEILING_RELPRICE_P69.md",
+   "plane": "shared",
+   "bytes": 6635,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CHAMP_ROBUST_P83.md",
+   "plane": "shared",
+   "bytes": 6647,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CHAMPION_CANONICAL_P102.md",
+   "plane": "multi",
+   "bytes": 2923,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "CHAMPION_DEPLOYABILITY_P99.md",
+   "plane": "multi",
+   "bytes": 5129,
+   "evidence": {
+    "sig_words": 2,
+    "multi_words": 5,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "CHAMPION_FLOOR_REJECTED.md",
+   "plane": "shared",
+   "bytes": 4626,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CHAMPION_GATE_IMPACT.md",
+   "plane": "shared",
+   "bytes": 5254,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CHECKLIST.md",
+   "plane": "process",
+   "bytes": 221388,
+   "evidence": {
+    "sig_words": 2,
+    "multi_words": 81,
+    "verdict_headers": 32,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "trail_half_delay1",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 4
+  },
+  {
+   "file": "CHOP_SCORE.md",
+   "plane": "shared",
+   "bytes": 10859,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 6,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CLOSED_DO_NOT_REPEAT.md",
+   "plane": "closed",
+   "bytes": 33803,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 3,
+    "verdict_headers": 8,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "age10_dirmatch_multi_sw10",
+    "age25_dirmatch_multi_sw10",
+    "age25_multi_sw10",
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg",
+    "dirmatch_multi_sw10",
+    "dualunion_multi",
+    "fsent_champ_long",
+    "fsent_champ_short",
+    "fsent_dirmatch_long",
+    "fsent_dirmatch_short",
+    "fsent_sig_sw10_short",
+    "fsexit4_c",
+    "fsexit6_c",
+    "trail_half",
+    "trail_half_skipn6_dr3",
+    "union_multi"
+   ],
+   "books_named_count": 17
+  },
+  {
+   "file": "CLUSTER_AUTOPSY.md",
+   "plane": "shared",
+   "bytes": 4759,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CONCENTRATION_P107.md",
+   "plane": "multi",
+   "bytes": 3441,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "CONCURRENCY_GUARD_P96.md",
+   "plane": "signal",
+   "bytes": 5259,
+   "evidence": {
+    "sig_words": 2,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "CONCURRENCY_P117_P120.md",
+   "plane": "multi",
+   "bytes": 6689,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "correct cost per trade.md",
+   "plane": "shared",
+   "bytes": 19738,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CORRECTIONS_P106.md",
+   "plane": "signal",
+   "bytes": 3459,
+   "evidence": {
+    "sig_words": 2,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "CROSS_INSTRUMENT_STATUS.md",
+   "plane": "shared",
+   "bytes": 4023,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CROSS_INSTRUMENT_V18.md",
+   "plane": "shared",
+   "bytes": 2556,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "CROSS_LANE.md",
+   "plane": "multi",
+   "bytes": 5811,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 3,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "age25_dirmatch_multi_sw10",
+    "age25_multi_sw10",
+    "champion_multi_sw10",
+    "dirmatch_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 5
+  },
+  {
+   "file": "D3_ALIGNMENT_LOOKAHEAD_AUDIT.md",
+   "plane": "multi",
+   "bytes": 7022,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "dirmatch_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "DD_DURATION_P92.md",
+   "plane": "shared",
+   "bytes": 5251,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "DECAY_SWITCH.md",
+   "plane": "shared",
+   "bytes": 5761,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "DECAY_THEORY.md",
+   "plane": "shared",
+   "bytes": 5764,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "DECILE_WALK.md",
+   "plane": "shared",
+   "bytes": 9606,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "DECOMPOSITION_NULL.md",
+   "plane": "shared",
+   "bytes": 4627,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "DEEP_AUDIT_CHECKLIST.md",
+   "plane": "shared",
+   "bytes": 7803,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "design.md",
+   "plane": "shared",
+   "bytes": 23357,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "DIRECTIONAL_FS_P80.md",
+   "plane": "shared",
+   "bytes": 5669,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "DOC_MAP.md",
+   "plane": "process",
+   "bytes": 9936,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 5,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "ENGINE_BOOK_ARCHITECTURE.md",
+   "plane": "process",
+   "bytes": 5039,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "nowknd_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "ENGINE_SHELF.md",
+   "plane": "multi",
+   "bytes": 4286,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ENTRY_FILL_P90.md",
+   "plane": "shared",
+   "bytes": 8567,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "ENTRY_TIME_AUTOPSY.md",
+   "plane": "shared",
+   "bytes": 4443,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "EQUITY_CURVE_STUDY.md",
+   "plane": "multi",
+   "bytes": 14913,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 14,
+    "verdict_headers": 4,
+    "result_rows": 13
+   },
+   "carries_results": true,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "EXP40C_EXP41_WAGE_EXT.md",
+   "plane": "multi",
+   "bytes": 58395,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 15,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "baseline_no_partial_sw10",
+    "champion_multi_sw10",
+    "lb30_w24_ext2.0"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "EXP43_LOSS_AUTOPSY.md",
+   "plane": "shared",
+   "bytes": 6129,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "EXP_LA4_TRAIL_TIGHTEN.md",
+   "plane": "shared",
+   "bytes": 3536,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 4,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "EXPERIMENT_INVENTORY.md",
+   "plane": "process",
+   "bytes": 6600,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "gap_inert_chop65",
+    "gap_inert_cohort1",
+    "gap_inert_cohort2",
+    "gap_inert_curfew44",
+    "gap_inert_event_shift",
+    "gap_inert_geom",
+    "gap_inert_kill",
+    "gap_inert_lossstreak",
+    "gap_inert_winkill2",
+    "gap_inert_winkill3"
+   ],
+   "books_named_count": 10
+  },
+  {
+   "file": "EXPERIMENT_LOG.md",
+   "plane": "process",
+   "bytes": 358561,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 113,
+    "verdict_headers": 7,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "trail_half_delay1",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 4
+  },
+  {
+   "file": "EXPERIMENT_LOG_ENTRY1.md",
+   "plane": "process",
+   "bytes": 3115,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 4
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "EXPERIMENT_PROCESS.md",
+   "plane": "process",
+   "bytes": 4052,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "EXPERIMENT_RESULTS.md",
+   "plane": "multi",
+   "bytes": 86587,
+   "evidence": {
+    "sig_words": 18,
+    "multi_words": 61,
+    "verdict_headers": 19,
+    "result_rows": 12
+   },
+   "carries_results": true,
+   "books_named": [
+    "a4_w24_ext1.5",
+    "a4_w24_ext3.0",
+    "baseline_no_partial_sw10",
+    "baseline_no_partial_sw20",
+    "champion_multi_sw10",
+    "champion_multi_sw20",
+    "lb30_w24_ext1.5",
+    "lb30_w24_ext2.0",
+    "lb30_w24_ext2.5",
+    "lb30_w24_ext3.0",
+    "opt_cd10_w24",
+    "opt_ml_cd0_mb10",
+    "skip1pause_multi_sw10",
+    "skipwin1_multi_sw10",
+    "skipwin2_multi_sw10",
+    "skipwinhalt_multi_sw10",
+    "swingpause_cd0_single_sw10",
+    "swingpause_multi_sw10"
+   ],
+   "books_named_count": 18
+  },
+  {
+   "file": "EXPERIMENT_SUMMARY.md",
+   "plane": "multi",
+   "bytes": 50161,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 16,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "EXPERIMENTS.md",
+   "plane": "multi",
+   "bytes": 14337,
+   "evidence": {
+    "sig_words": 6,
+    "multi_words": 25,
+    "verdict_headers": 2,
+    "result_rows": 12
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "experiments_craze.md",
+   "plane": "multi",
+   "bytes": 72329,
+   "evidence": {
+    "sig_words": 5,
+    "multi_words": 32,
+    "verdict_headers": 26,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "skipwin1_multi_sw10",
+    "skipwin2_multi_sw10",
+    "skipwinhalt_multi_sw10",
+    "swingpause_cd0_single_sw10",
+    "swingpause_multi_sw10"
+   ],
+   "books_named_count": 5
+  },
+  {
+   "file": "FILL_ABSOLUTE_P91.md",
+   "plane": "shared",
+   "bytes": 7898,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FIVE_MINUTE_CONFIRM_COHORT_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 3778,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 7,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FIVE_MINUTE_MARK_MORPHOLOGY_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 5395,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 12,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FIVE_MINUTE_OPPOSITION_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 5316,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 18,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FORWARD_NEED_P62.md",
+   "plane": "shared",
+   "bytes": 3276,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FORWARD_TEST_PLAN.md",
+   "plane": "multi",
+   "bytes": 7917,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "FS_ADD_VS_BASE.md",
+   "plane": "shared",
+   "bytes": 5165,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_DECOMP_P75.md",
+   "plane": "shared",
+   "bytes": 5767,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_ENTRY.md",
+   "plane": "shared",
+   "bytes": 4632,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_ENTRY_RISK_CONTROL.md",
+   "plane": "shared",
+   "bytes": 4447,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 4,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_EXIT_RULE.md",
+   "plane": "multi",
+   "bytes": 14055,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 20
+   },
+   "carries_results": true,
+   "books_named": [
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg",
+    "dirmatch_multi_sw10",
+    "fsent_champ_long",
+    "fsent_champ_short",
+    "fsent_dirmatch_long",
+    "fsent_dirmatch_short",
+    "fsent_utcsat_long",
+    "fsent_utcsat_short",
+    "fsexit4_c",
+    "fsexit6_c",
+    "trail_half",
+    "utcsat_entry_minus_1"
+   ],
+   "books_named_count": 13
+  },
+  {
+   "file": "FS_MECHANISM_P78.md",
+   "plane": "shared",
+   "bytes": 5783,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_ONLY_AUDIT_P74.md",
+   "plane": "shared",
+   "bytes": 6810,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_ONLY_ENGINE.md",
+   "plane": "shared",
+   "bytes": 3352,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_ONLY_P73.md",
+   "plane": "shared",
+   "bytes": 8109,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_PERIOD_P77.md",
+   "plane": "shared",
+   "bytes": 5556,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_TIME_DECISION.md",
+   "plane": "shared",
+   "bytes": 4469,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "FS_TIME_GEOMETRY.md",
+   "plane": "shared",
+   "bytes": 4469,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "GREY_BOOK_BRUTAL.md",
+   "plane": "shared",
+   "bytes": 5753,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "HALT_FIRING_RATE.md",
+   "plane": "shared",
+   "bytes": 3613,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HANDOFF_V19_ORDER_DEPENDENCE.md",
+   "plane": "shared",
+   "bytes": 8997,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "HANDOVER_DECAY_SKIP.md",
+   "plane": "process",
+   "bytes": 5826,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HANDOVER_PORT_AND_MODULARIZE.md",
+   "plane": "process",
+   "bytes": 10678,
+   "evidence": {
+    "explicit_single": true,
+    "sig_words": 8,
+    "multi_words": 2,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "fsent_sig_fs_mom",
+    "fsent_sig_full"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "HANDOVER_SESSION.md",
+   "plane": "process",
+   "bytes": 19941,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "HTF_2H_PLANE_TEST.md",
+   "plane": "shared",
+   "bytes": 15914,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HTF_ATTRIBUTION.md",
+   "plane": "multi",
+   "bytes": 4677,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HTF_DEEP_LAYER_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 8758,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 9,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "HTF_GATE_AUDIT_P101.md",
+   "plane": "shared",
+   "bytes": 2414,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HTF_GEOMETRY_P54.md",
+   "plane": "shared",
+   "bytes": 4087,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HTF_ORACLE_P3B.md",
+   "plane": "shared",
+   "bytes": 4284,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HTF_STANDALONE_P3.md",
+   "plane": "multi",
+   "bytes": 4612,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 6,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "HTF_TUNE_P52.md",
+   "plane": "shared",
+   "bytes": 5420,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "INSIDE80_P95.md",
+   "plane": "shared",
+   "bytes": 7132,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "IS_IT_RIGHT.md",
+   "plane": "shared",
+   "bytes": 4273,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "KELLY_CONTINUOUS.md",
+   "plane": "shared",
+   "bytes": 4711,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "KING_SINGLE_fullstack_wage10_cd0_RESEARCH_REPORT.md",
+   "plane": "shared",
+   "bytes": 19367,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "KNOB_SWEEP.md",
+   "plane": "process",
+   "bytes": 5710,
+   "evidence": {
+    "explicit_single": true,
+    "sig_words": 2,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "fsent_sig_full",
+    "trail_half"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "leverage, liquidation.md",
+   "plane": "multi",
+   "bytes": 7077,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "LIVE_CONCURRENCY_P118.md",
+   "plane": "signal",
+   "bytes": 2549,
+   "evidence": {
+    "sig_words": 2,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "LIVE_GATE_CONFIRMED.md",
+   "plane": "shared",
+   "bytes": 4954,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "LIVE_PARITY_P104.md",
+   "plane": "multi",
+   "bytes": 2499,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "LONG_TREND_P84.md",
+   "plane": "shared",
+   "bytes": 4956,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "LOSS_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 24431,
+   "evidence": {
+    "sig_words": 6,
+    "multi_words": 10,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "LOSS_TRIGGERED_WINDOW_KILL_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 5747,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 15,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "MARGINAL_PREENTRY_ATLAS.md",
+   "plane": "multi",
+   "bytes": 9192,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 38,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "MASTER_CANDIDATES_DRAFT_SUPERSEDED.md",
+   "plane": "multi",
+   "bytes": 18434,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 25,
+    "verdict_headers": 0,
+    "result_rows": 17
+   },
+   "carries_results": true,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "MASTER_CANDIDATES_V2.md",
+   "plane": "multi",
+   "bytes": 10127,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "MASTER_LEADERBOARD.md",
+   "plane": "multi",
+   "bytes": 18350,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 16,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "MB_ARCHITECTURE_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 4633,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 14,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "MIN_BARS_FORENSIC.md",
+   "plane": "shared",
+   "bytes": 6337,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "MLTF_GREEN_R.md",
+   "plane": "multi",
+   "bytes": 4498,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "MULTI_INSTRUMENT_RESULTS.md",
+   "plane": "multi",
+   "bytes": 2890,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "MULTISWING_BIAS_2OF3.md",
+   "plane": "multi",
+   "bytes": 3394,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NESTING_P1.md",
+   "plane": "shared",
+   "bytes": 4083,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NESTING_PROBE.md",
+   "plane": "shared",
+   "bytes": 4268,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NET_AUDIT_P98.md",
+   "plane": "shared",
+   "bytes": 8268,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "new bugs.md",
+   "plane": "multi",
+   "bytes": 67626,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 1,
+    "result_rows": 2
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NEWBAR_SEARCH.md",
+   "plane": "shared",
+   "bytes": 5349,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NEXT_ROUND_BRIEF.md",
+   "plane": "process",
+   "bytes": 66300,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 4,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "NO_EXPIRY_P56.md",
+   "plane": "shared",
+   "bytes": 3910,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NONCIRCULAR_P103.md",
+   "plane": "shared",
+   "bytes": 3080,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "NULL_SENSITIVITY.md",
+   "plane": "shared",
+   "bytes": 2972,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "ONBOARDING.md",
+   "plane": "process",
+   "bytes": 3679,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ONE_MIN_PATH_CONTEXT.md",
+   "plane": "shared",
+   "bytes": 3110,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "OOS_VALIDATION_2021_2022.md",
+   "plane": "multi",
+   "bytes": 14781,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 21,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "OPEN_RESEARCH_QUEUE.md",
+   "plane": "multi",
+   "bytes": 31697,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 6,
+    "verdict_headers": 10,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "ORACLE_EARLY.md",
+   "plane": "multi",
+   "bytes": 5420,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "other bots proposal.md",
+   "plane": "multi",
+   "bytes": 112592,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 14,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "OUTLIVE_STRATEGY_P94.md",
+   "plane": "shared",
+   "bytes": 6149,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "P112_V19_REBUILD.md",
+   "plane": "multi",
+   "bytes": 4863,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "P113_BREAKEVEN_CLAMP.md",
+   "plane": "multi",
+   "bytes": 4899,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "P114_FLAG_ATTRIBUTION.md",
+   "plane": "multi",
+   "bytes": 3322,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 2,
+    "verdict_headers": 2,
+    "result_rows": 3
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "P1P2_WAVE.md",
+   "plane": "shared",
+   "bytes": 4331,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "P90_FILL_P109.md",
+   "plane": "shared",
+   "bytes": 2786,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PARENT_DEATH_P93.md",
+   "plane": "shared",
+   "bytes": 5319,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PERMUTATION_P82.md",
+   "plane": "shared",
+   "bytes": 6080,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 4,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PHASE0_1M_SWING_BLOCKER.md",
+   "plane": "shared",
+   "bytes": 5684,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 1
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PORT_SCOPE_P105.md",
+   "plane": "multi",
+   "bytes": 2814,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PORTFOLIO_KILL_WEIGHT.md",
+   "plane": "shared",
+   "bytes": 3629,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PORTFOLIO_LAYER.md",
+   "plane": "signal",
+   "bytes": 4003,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "POWELL_SPEECH_CALENDAR_AUDIT.md",
+   "plane": "shared",
+   "bytes": 2489,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PREFIX_INVARIANCE_P79.md",
+   "plane": "shared",
+   "bytes": 5481,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PROCESS_FIX_PROBES.md",
+   "plane": "shared",
+   "bytes": 4301,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PROMPT_FOR_SECOND_RESEARCHER.md",
+   "plane": "multi",
+   "bytes": 10160,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "PURE_V18_GEOMETRY_REPORT.md",
+   "plane": "multi",
+   "bytes": 8119,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 22,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PURE_V18_GEOMETRY_REPORT_CORRECTED.md",
+   "plane": "multi",
+   "bytes": 6842,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 16,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "PYRAMID_PHASE2_DESIGN.md",
+   "plane": "multi",
+   "bytes": 8462,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "QUANT_AUTOPSY.md",
+   "plane": "shared",
+   "bytes": 5444,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "QUEUE_SWEEP.md",
+   "plane": "shared",
+   "bytes": 4633,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "RANGE_PEAK_GRAY.md",
+   "plane": "multi",
+   "bytes": 6428,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 3,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "RANGE_POS_WIDTH.md",
+   "plane": "multi",
+   "bytes": 5431,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "RATCHET_FREEZE.md",
+   "plane": "shared",
+   "bytes": 4526,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "reality of champion followup.md",
+   "plane": "multi",
+   "bytes": 34029,
+   "evidence": {
+    "sig_words": 7,
+    "multi_words": 17,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "reality of champion.md",
+   "plane": "multi",
+   "bytes": 27259,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 9,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "REBIAS_CONFIRMATION.md",
+   "plane": "shared",
+   "bytes": 5266,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "REGIME_DETECT_P55.md",
+   "plane": "shared",
+   "bytes": 4279,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 2
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "REGIME_STRUCTURE_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 12732,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "REGISTRY_BOARD.md",
+   "plane": "multi",
+   "bytes": 20102,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 210
+   },
+   "carries_results": true,
+   "books_named": [
+    "a4_w24_ext1.5",
+    "a4_w24_ext3.0",
+    "age10_dirmatch_multi_sw10",
+    "age25_dirmatch_multi_sw10",
+    "age25_multi_sw10",
+    "age50_utcsat_multi_sw10",
+    "b2doji_utcsat_multi_sw10",
+    "baseline_no_partial_sw10",
+    "baseline_no_partial_sw20",
+    "bm05_multi_sw10",
+    "bm05_multi_sw20",
+    "bm05_utcsat_multi_sw10",
+    "bm08_multi_sw10",
+    "bm08_utcsat_multi_sw10",
+    "cap12d",
+    "cap16d",
+    "cap1d",
+    "cap20d",
+    "cap24d",
+    "cap32d",
+    "cap48d",
+    "cap4d",
+    "cap8d",
+    "cap999_nocap",
+    "causalsl_multi_sw10",
+    "causalsl_utcsat_multi_sw10",
+    "champion_multi_sw10",
+    "champion_multi_sw10_entry1",
+    "champion_multi_sw10_entry_both",
+    "champion_multi_sw10_leg",
+    "champion_multi_sw10_leg_no_entry",
+    "champion_multi_sw20",
+    "chopband_multi_sw10",
+    "combined_b2age_utcsat_multi_sw10",
+    "curfew624_utcsat_multi_sw10",
+    "decayA_c",
+    "decayA_u",
+    "decayB_c",
+    "decayB_u",
+    "decayC_c"
+   ],
+   "books_named_count": 173
+  },
+  {
+   "file": "RESEARCH_POLICY_CORRECTION.md",
+   "plane": "multi",
+   "bytes": 4495,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "RETRACE_DEPTH.md",
+   "plane": "shared",
+   "bytes": 4014,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "RETROSPECTIVE_AND_FORWARD.md",
+   "plane": "shared",
+   "bytes": 5155,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "RISK_CONCURRENCY.md",
+   "plane": "shared",
+   "bytes": 4319,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "RISK_FEATURES.md",
+   "plane": "signal",
+   "bytes": 4773,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 1,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ROUND_INDEX_P55_P69.md",
+   "plane": "multi",
+   "bytes": 9313,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "ROUND_SUMMARY_P55_P95.md",
+   "plane": "multi",
+   "bytes": 45632,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 9,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "RUNNER_LIVE.md",
+   "plane": "shared",
+   "bytes": 5198,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SCALP_1M_BOOK.md",
+   "plane": "shared",
+   "bytes": 5075,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SCHEDULED_EVENTS_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 4334,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 11,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SECOND_RESEARCHER_REVIEW.md",
+   "plane": "multi",
+   "bytes": 6096,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SESSION_P20_P26.md",
+   "plane": "shared",
+   "bytes": 7160,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SHADOW_TIMEFRAME_IDEAS.md",
+   "plane": "shared",
+   "bytes": 21018,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 5,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SIDE_ASYM_P89.md",
+   "plane": "shared",
+   "bytes": 6403,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SIZING_CANDIDATES.md",
+   "plane": "multi",
+   "bytes": 6983,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SL_RECLAIM_REENTRY.md",
+   "plane": "multi",
+   "bytes": 4836,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "SL_TIGHTEN.md",
+   "plane": "shared",
+   "bytes": 3772,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SL_VARIANTS.md",
+   "plane": "shared",
+   "bytes": 4396,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SLOT_QUEUE_P97.md",
+   "plane": "shared",
+   "bytes": 6322,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SMOOTH_BOOK.md",
+   "plane": "shared",
+   "bytes": 5007,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SMZX_BINANCE_REPLICATION.md",
+   "plane": "shared",
+   "bytes": 4464,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SMZX_LEVERAGE_AUDIT.md",
+   "plane": "multi",
+   "bytes": 5159,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 1,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SMZX_LOOKAHEAD_RETRACTION.md",
+   "plane": "shared",
+   "bytes": 5263,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SPOT_SIGNAL_PERP_EXECUTION.md",
+   "plane": "shared",
+   "bytes": 2889,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "STABILITY_FORWARD_P61.md",
+   "plane": "shared",
+   "bytes": 5175,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "STACK_BOOK.md",
+   "plane": "multi",
+   "bytes": 7302,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "trail_half",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 3
+  },
+  {
+   "file": "STACK_PAIRED.md",
+   "plane": "multi",
+   "bytes": 3439,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 3,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "STOP_DECOMPOSITION.md",
+   "plane": "shared",
+   "bytes": 4781,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "STRATEGY_SCORECARD.md",
+   "plane": "multi",
+   "bytes": 23848,
+   "evidence": {
+    "sig_words": 3,
+    "multi_words": 5,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "a4_w24_ext1.5",
+    "a4_w24_ext3.0",
+    "baseline_no_partial_sw10",
+    "baseline_no_partial_sw20",
+    "champion_multi_sw10",
+    "champion_multi_sw20",
+    "lb30_chop55_persist2",
+    "lb30_halt0",
+    "lb30_halt6_cd0",
+    "lb30_persist5",
+    "lb30_w24_ext1.5",
+    "lb30_w24_ext2.0",
+    "lb30_w24_ext2.5",
+    "lb30_w24_ext3.0",
+    "opt_cd10_w24",
+    "opt_ml_cd0_mb10",
+    "opt_ml_cd10_mb10",
+    "skipwin1_multi_sw10",
+    "skipwin2_multi_sw10",
+    "skipwinhalt_multi_sw10",
+    "swingpause_cd0_single_sw10",
+    "swingpause_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 23
+  },
+  {
+   "file": "STRATEGY_STATE_OF_PLAY.md",
+   "plane": "multi",
+   "bytes": 20813,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "STRUCTURAL_CLOSURES.md",
+   "plane": "signal",
+   "bytes": 4249,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 1,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "STRUCTURAL_DECAY.md",
+   "plane": "shared",
+   "bytes": 5263,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "STRUCTURE_VOLUME_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 2870,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 3,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "SWEEP_ROADMAP.md",
+   "plane": "shared",
+   "bytes": 25421,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 8
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "SWING_GEOMETRY_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 4389,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 7,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "SYMMETRIC_DECAY.md",
+   "plane": "shared",
+   "bytes": 4306,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "TAIL_RISK_AUDIT.md",
+   "plane": "multi",
+   "bytes": 8285,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "telegram setup.md",
+   "plane": "shared",
+   "bytes": 1998,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "TF_INTERP_P66.md",
+   "plane": "shared",
+   "bytes": 5836,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "TF_MATRIX_P58.md",
+   "plane": "shared",
+   "bytes": 6588,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "TF_METRICS_TABLE.md",
+   "plane": "shared",
+   "bytes": 9009,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 1
+   },
+   "carries_results": true,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "THE_CHAMPION_HANDOFF.md",
+   "plane": "process",
+   "bytes": 8989,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "TIMEFRAME_ARCH_P57.md",
+   "plane": "shared",
+   "bytes": 5772,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "TRADE_EXPANSION_AUDIT.md",
+   "plane": "multi",
+   "bytes": 5752,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 2,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "TRAIL_MECHANICS.md",
+   "plane": "multi",
+   "bytes": 4820,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 4,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "trail_half",
+    "trail_half_delay1"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "TRANSCRIPT_THESIS_BACKLOG.md",
+   "plane": "process",
+   "bytes": 8014,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 8,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "TREND_SHARE.md",
+   "plane": "shared",
+   "bytes": 5346,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "UNIFICATION_PHASE0.md",
+   "plane": "signal",
+   "bytes": 14754,
+   "evidence": {
+    "explicit_single": true,
+    "explicit_multi": true,
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 4,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "champion_multi_sw10_leg"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "UNION_P60.md",
+   "plane": "signal",
+   "bytes": 5547,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "VOL_REGIME_P67.md",
+   "plane": "shared",
+   "bytes": 6373,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "VOLFLOOR_P68.md",
+   "plane": "shared",
+   "bytes": 6661,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "vps_requirements.md",
+   "plane": "shared",
+   "bytes": 2105,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "WICK_1H_GATE_ADOPTION_RECORD.md",
+   "plane": "multi",
+   "bytes": 8150,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 8,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [
+    "champion_multi_sw10",
+    "utcsat_multi_sw10"
+   ],
+   "books_named_count": 2
+  },
+  {
+   "file": "WICK_GATE_RULING_BRIEF.md",
+   "plane": "multi",
+   "bytes": 6904,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 5,
+    "verdict_headers": 4,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "WIN_SPACING.md",
+   "plane": "shared",
+   "bytes": 5788,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 0,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "WIN_STREAK_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 7480,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 16,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "WIN_STREAK_STACKING_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 6216,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 11,
+    "verdict_headers": 3,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "WINDOW_LIFE.md",
+   "plane": "signal",
+   "bytes": 5463,
+   "evidence": {
+    "sig_words": 1,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "WINNER_PATH_AUTOPSY.md",
+   "plane": "multi",
+   "bytes": 14783,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 8,
+    "verdict_headers": 6,
+    "result_rows": 14
+   },
+   "carries_results": true,
+   "books_named": [
+    "champion_multi_sw10"
+   ],
+   "books_named_count": 1
+  },
+  {
+   "file": "WINSTREAK_M_P65.md",
+   "plane": "shared",
+   "bytes": 6001,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ZIGZAG_CLOSED_P70.md",
+   "plane": "shared",
+   "bytes": 5343,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 1,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  },
+  {
+   "file": "ZIGZAG_P64.md",
+   "plane": "shared",
+   "bytes": 4163,
+   "evidence": {
+    "sig_words": 0,
+    "multi_words": 0,
+    "verdict_headers": 2,
+    "result_rows": 0
+   },
+   "carries_results": false,
+   "books_named": [],
+   "books_named_count": 0
+  }
+ ]
+}

@@ -61,11 +61,33 @@ They are not a plan, they are measured and pinned:
 | `fsent_sig_sw10_short` | 369 / +174.30 / DD 16.62 | 239 / +100.94 / DD 11.82 |
 | `fsent_sig_sw10_long` | 355 / +116.40 / DD 21.07 | 230 / +80.50 / DD 13.53 |
 | `fsent_sig_sw20_short` | 343 / +146.90 / DD 32.46 | 203 / +95.00 / DD 10.23 |
-| `fsent_single_sw20_short_wr` | 515 / +492.60 / DD 14.15 | 283 / +179.80 / DD 8.48 |
+| `fsent_sig_sw20_short_wr` | 343 / +146.94 / DD 32.46 | 203 / +95.00 / DD 10.23 |
 
 All of them hold exactly one position at a time. What is still open is *which*
 one to ship, and what filters to build on top of it — that is the next question,
 not the existence of the book type.
+
+> **Corrected 2026-10-05.** This table previously carried a fourth row reading
+> `fsent_single_sw20_short_wr` at `515 / +492.60 / DD 14.15`. That row was wrong
+> twice over. The +492.60 appears nowhere in the repository - not in the
+> registry, not in any results JSON - and 515 trades is a multi-book trade count
+> wearing a signal book's name; the four real signal books run 343-369 in sample.
+> The book itself is also a duplicate: `fsent_sig_sw20_short_wr` and
+> `fsent_sig_sw20_short` carry identical `params`, identical `swing`, and pins
+> that differ only in rounding (146.94 vs 146.90). It is the same experiment
+> entered twice, not a fourth result, and the `_wr` suffix does not select
+> anything - there is no win-rate parameter differing between them.
+>
+> The number has been replaced with what the registry actually pins rather than
+> deleted, so the row still shows that a `_wr` twin exists and is not a result.
+> It is also a textbook instance of the fault this repo already has two of: a
+> measured number copied onto a book that did not produce it. See
+> `CLOSED_DO_NOT_REPEAT.md` for the twelve-book inheritance fault and
+> `fsent_sig_fs_mom`, where a pin was copied from a two-knob ladder onto a
+> four-knob book. A pin is a claim about a measurement, and copying one is
+> indistinguishable from making it until something re-derives it.
+
+**Three is the honest count, not four.**
 
 ## Inside a plane, the filter families
 
