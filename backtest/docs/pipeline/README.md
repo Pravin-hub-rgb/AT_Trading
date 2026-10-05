@@ -1,17 +1,17 @@
 # THE EXPERIMENT PIPELINE
 
 How to add a knob, run an experiment, record the result, and know whether the
-result is allowed to exist. Read [`../ONBOARDING.md`](../ONBOARDING.md) first.
+result is allowed to exist. Read [`../method/ONBOARDING.md`](../method/ONBOARDING.md) first.
 
 **No numbers appear in this folder.** A number here is wrong the moment the
 engine changes. Measured results live in `experiment_registry.py` and are read
-out by `REGISTRY_BOARD.md`.
+out by `method/REGISTRY_BOARD.md`.
 
 ---
 
 ## 1. Before you write anything
 
-**Read `CLOSED_DO_NOT_REPEAT.md`.** It is not a list of failures, it is a list of
+**Read `closed/CLOSED_DO_NOT_REPEAT.md`.** It is not a list of failures, it is a list of
 *mechanisms* that failed, with the reason. Three families shipped large numbers
 that were reading the future; if your idea is close to any of them, the reason it
 failed usually applies to yours too.
@@ -112,7 +112,7 @@ result.
 
 **c. Causality.** Say which field is read and when it settles. If the answer is
 "the swing's final label", it is read from the future at the entry bar and the
-whole family is closed — see `CLOSED_DO_NOT_REPEAT.md`.
+whole family is closed — see `closed/CLOSED_DO_NOT_REPEAT.md`.
 
 ## 5. Recording the result
 
@@ -127,7 +127,7 @@ python exp_fastcheck.py <new_book>
 `exp_fastcheck.py` prints how many books it did *not* check, on purpose. Its pass
 is about the books it names and nothing else.
 
-**If it loses:** one paragraph in `CLOSED_DO_NOT_REPEAT.md` with the numbers, both
+**If it loses:** one paragraph in `closed/CLOSED_DO_NOT_REPEAT.md` with the numbers, both
 eras, and the mechanism. Do not delete the harness — the next person will want
 to know it was tried. `exp_prefix_audit.py` is in that file as an example of a
 harness that is kept precisely because it does not work: it missed a leak that

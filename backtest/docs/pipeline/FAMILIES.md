@@ -44,7 +44,7 @@ us, has the swing been running long, is this candle a doji.
 
 **This is the family that produced every look-ahead leak in this repo.** All of
 them read a swing field that is not settled at the entry bar. See
-`CLOSED_DO_NOT_REPEAT.md`. Before adding anything here, state which field is
+`closed/CLOSED_DO_NOT_REPEAT.md`. Before adding anything here, state which field is
 read and when that field settles.
 
 ### 3. TIME — remove trades by the clock or by recency

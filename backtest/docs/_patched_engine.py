@@ -426,7 +426,7 @@ def simulate_htf_ltf_streak_halt(
     #   16  = what has always shipped, and still the default here
     #   999 = effectively off (v7 treats 0 as off too, so 0 is not a separate arm)
     # This was hardcoded as cap_days=16 at all three call sites until 2026-10-02,
-    # which meant the whole cap_days family documented in CAPS_P49.md could not
+    # which meant the whole cap_days family documented in method/CAPS_P49.md could not
     # be reproduced on this engine at all - there was no knob to turn. CAPS_P49
     # reports removing the cap at +75.3R IS / +55.1R OOS on the champion and
     # +13.7R / +78.5R on utcsat, 4/4 positive, adding trades rather than removing
@@ -512,7 +512,7 @@ def simulate_htf_ltf_streak_halt(
     #     by the entry instant, so only legs whose final label was already
     #     settled may be read. This is the setting that makes the knob
     #     defensible; the default keeps every historical pin reproducible.
-    # This is the runner-up filter in KNOB_SWEEP.md (d_oos +57.21 at 0.9) and
+    # This is the runner-up filter in method/KNOB_SWEEP.md (d_oos +57.21 at 0.9) and
     # it is one of the four the signal book cannot run without.
     exp_bias_momentum_min=0.0,
     exp_union_dual_only=0,
@@ -2102,7 +2102,7 @@ def simulate_htf_ltf_streak_halt(
                     # OWNER PROPOSAL. Enter as the book does; when the swing that
                     # opened the trade CONFIRMS, measure how big that swing turned
                     # out to be and exit if it was small. Unlike the room-threshold
-                    # exit already closed (CLOSED_DO_NOT_REPEAT.md), the quantity
+                    # exit already closed (closed/CLOSED_DO_NOT_REPEAT.md), the quantity
                     # here is the swing's OWN leg, not the distance from our entry,
                     # and - this is the point - it is genuinely knowable at the FS
                     # bar: end_px and start_px are both settled at or before

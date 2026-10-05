@@ -1,7 +1,7 @@
 # EXPERIMENTS INDEX — where every harness lives and what it produced
 
 **This file is a map, not a ledger.** It carries no results. Results live in
-`experiment_registry.py` for books that won, and in `CLOSED_DO_NOT_REPEAT.md`
+`experiment_registry.py` for books that won, and in `closed/CLOSED_DO_NOT_REPEAT.md`
 for ideas that died. This page answers only: *if I want to look at this
 experiment again, where do I go, and can I trust what it printed?*
 
@@ -121,5 +121,5 @@ known failure rather than a gate.
 ## Closed line
 
 The full record of what has been tried and died, with the mechanism and the
-numbers, is [`../CLOSED_DO_NOT_REPEAT.md`](../CLOSED_DO_NOT_REPEAT.md). When
+numbers, is [`../closed/CLOSED_DO_NOT_REPEAT.md`](../closed/CLOSED_DO_NOT_REPEAT.md). When
 starting something new, read it first — most ideas here have been tried.
