@@ -215,6 +215,33 @@ def _ingest_keyed(conn, obj, harness: str, src: str) -> int:
     return ok
 
 
+def _graveyard() -> set[str]:
+    """Books whose pins were deliberately removed.
+
+    A number belonging to one of these is ABSENT from the database by design,
+    and the documents that quote them are doing the right thing:
+    CLOSED_DO_NOT_REPEAT.md records what was measured before the family was
+    closed, and that record is why anyone can tell the next person not to redo
+    it. Flagging those lines would mean failing the documents whose entire job is
+    to remember a dead end, and a gate that fails that way gets switched off.
+
+    So a line naming a quarantined book is exempt - and counted separately, so
+    the exemption stays visible instead of quietly becoming invisible.
+    """
+    out = set()
+    for k, v in reg.EXPERIMENTS.items():
+        if not isinstance(v, dict):
+            continue
+        # Graveyard = pins removed because the family read the future.
+        # status reference = pins never written because the book loses in both
+        # eras. Both are deliberate, and both are quoted in the documents that
+        # record why they are not candidates.
+        if (v.get("graveyard") or v.get("graveyard_knobs")
+                or v.get("status") == "reference"):
+            out.add(k)
+    return out
+
+
 def _db_numbers(conn) -> set[float]:
     """Every number the database knows, at the tolerance the verifiers use."""
     out: set[float] = set()
@@ -237,18 +264,37 @@ def _book_names() -> set[str]:
     return names
 
 
+def _rename_map() -> dict:
+    rmp = ROOT / "backtest" / "tests" / "_rename_map.json"
+    if not rmp.exists():
+        return {}
+    try:
+        return json.loads(rmp.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
 # A number written as a measurement: an optional sign, digits, two decimals.
-_NUM = re.compile(r"[+-]?\d+\.\d{2}")
+# A leading - is a sign only when nothing touches it. In `abs(net-325.78)` and
+# `+291.02-146.90` the dash is an operator and the number is positive, and
+# reading it as negative makes the gate fire on the most-quoted number in the
+# repo. A letter or digit right before the dash is the tell.
+_NUM = re.compile(r"(?<![A-Za-z0-9_.])[+-]?\d+\.\d{2}")
 
 
-def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float):
+def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
+                   exempt_books: set[str]):
     """Numbers on a line that also names a book or a result key.
 
     The context rule is the whole design. A doc is full of numbers that are not
     measurements - a bar count, a date, a percentage of something unrelated -
     and a gate that flags those gets switched off, which is worse than no gate.
+
+    Returns (hits, exempt). `exempt` is a number quoted next to a quarantined
+    book: genuinely absent from the database, and deliberately so.
     """
     hits = []
+    exempt = []
     text = path.read_text(encoding="utf-8", errors="replace")
     for lineno, line in enumerate(text.splitlines(), 1):
         if "|" not in line and not re.search(r"\b(net|R\b|dd|WR|PF)\b", line, re.I):
@@ -257,12 +303,17 @@ def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float):
         has_metric_word = re.search(r"\b(net|dd|wr|pf|win|trades|R)\b", line, re.I)
         if not names_here and not has_metric_word:
             continue
+        rmap = _rename_map()
+        is_quarantine = any(n in exempt_books or rmap.get(n) in exempt_books
+                            for n in names_here)
         for m in _NUM.finditer(line):
             v = round(float(m.group(0)), 2)
-            if not any(abs(v - k) <= tol for k in known):
-                hits.append((lineno, m.group(0), (names_here[:1] or [""])[0],
-                             line.strip()[:88]))
-    return hits
+            if any(abs(v - k) <= tol for k in known):
+                continue
+            rec = (lineno, m.group(0), (names_here[:1] or [""])[0],
+                   line.strip()[:88])
+            (exempt if is_quarantine else hits).append(rec)
+    return hits, exempt
 
 
 def check(verbose: bool = False) -> int:
@@ -299,9 +350,11 @@ def check(verbose: bool = False) -> int:
     # 3. the doc gate
     known = _db_numbers(conn)
     names = _book_names()
-    total = 0
+    grave = _graveyard()
+    total = exc = 0
     for md in sorted((ROOT / "backtest" / "docs").rglob("*.md")):
-        hits = _quoted_numbers(md, names, known, 0.5)
+        hits, ex = _quoted_numbers(md, names, known, 0.5, grave)
+        exc += len(ex)
         if hits:
             total += len(hits)
             print("\n%s  (%d)" % (md.name, len(hits)))
@@ -310,7 +363,9 @@ def check(verbose: bool = False) -> int:
                       % (lineno, num, book or "(no book named)", line))
             if not verbose and len(hits) > 6:
                 print("   ... and %d more (use -v)" % (len(hits) - 6))
-    print("\ndoc numbers not in the database : %d" % total)
+    print("\ndoc numbers not in the database   : %d" % total)
+    print("exempt - quarantined books, history: %d  [%d books]"
+          % (exc, len(grave)))
     fail += total
     print("=" * 62)
     if fail:
