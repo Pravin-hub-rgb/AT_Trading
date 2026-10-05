@@ -49,6 +49,76 @@ RESEARCH_BOOKS = {"champion_multi_sw10"}
 RESEARCH_FILES = {"btc_routes.py"}          # expect exactly this many
 RESEARCH_FILE_COUNT = {"btc_routes.py": 1}
 
+# Knobs PROVED to read a swing field that is not settled at the entry bar.
+# Closed 2026-10-04, CLOSED_DO_NOT_REPEAT.md. A candidate book may not carry
+# one; a reference book may, because those are kept deliberately and the closed
+# doc quotes their numbers.
+#
+# Keyed by knob name, not by line number - the same rot that killed the
+# RESEARCH_BOOKS list above. Adding to this list is a decision, so it should be
+# a visible edit in one place, not a regex that quietly widens.
+#
+# exp_swingpause is deliberately NOT here: it reads confirmed_at_idx, which IS
+# settled at the entry bar. It has 37 books on it and is a live filter. The
+# distinction the closed doc draws is exactly this one - a knob that finds a
+# swing and reads a field is not automatically lookahead; reading a field that
+# has not settled yet is.
+PROVED_LOOKAHEAD = (
+    "exp_require_dir_match",   # containing swing's direction, final ~8h later
+    "exp_max_swing_age",       # seg.start_idx
+    "exp_max_running_mag",     # seg.end_px at the entry bar
+    "exp_min_swing_ratio",     # seg.end_px at the entry bar (0 of 137 settled)
+)
+
+
+def _lookahead_offenders(books):
+    """Candidate books carrying a proved look-ahead knob.
+
+    Split out and pure so it can be tested without the registry: a gate that is
+    only ever exercised against a clean registry proves nothing, because the
+    clean case and a broken check look identical. `main()`'s PASS on today's
+    registry is not evidence the check works; this function returning the right
+    answer on a known-bad input is.
+    """
+    out = []
+    for key, cfg in books.items():
+        if not isinstance(cfg, dict):
+            continue
+        if cfg.get("status") == "reference":
+            continue
+        params = cfg.get("params") or {}
+        hit = [k for k in PROVED_LOOKAHEAD if params.get(k)]
+        if hit:
+            out.append((key, hit))
+    return out
+
+
+def _self_test():
+    """Prove the gate fires. A gate only ever run against a clean registry is
+    indistinguishable from a check that does nothing."""
+    bad = {
+        "clean_book": {"params": {"exp_skip_weekend": 1}, "pins": {"n": 1}},
+        "clean_book2": {"params": {"exp_swingpause": 1}, "pins": {"n": 1}},
+        "ref_with_leak": {"status": "reference",
+                          "params": {"exp_require_dir_match": 1}},
+        "offender": {"params": {"exp_require_dir_match": 1}},
+        "offender_two": {"params": {"exp_min_swing_ratio": 3.0,
+                                    "exp_skip_weekend": 1}},
+        "zero_is_off": {"params": {"exp_max_swing_age": 0}},
+    }
+    got = _lookahead_offenders(bad)
+    want = [("offender", ["exp_require_dir_match"]),
+            ("offender_two", ["exp_min_swing_ratio"])]
+    if got != want:
+        print("SELF-TEST FAILED")
+        print("  got :", got)
+        print("  want:", want)
+        return 1
+    print("self-test OK: %d offender(s) found; reference books and zero-valued"
+          " knobs correctly exempt" % len(got))
+    print("            exp_swingpause correctly NOT flagged")
+    return 0
+
 
 def main():
     print("=" * 66)
@@ -339,6 +409,49 @@ def check_registry_hygiene():
         print("    %d of %d books marked reference; the rest are candidates"
               % (n_ref, n_all))
 
+    # --- 6. a proved look-ahead may not appear on a CANDIDATE book
+    #
+    # Every knob below was PROVED to read a swing field that settles after the
+    # entry bar, by the instrument in CLOSED_DO_NOT_REPEAT.md: name the field,
+    # then measure whether it was settled at the decision bar. They are not
+    # suspicious, they are closed.
+    #
+    #   exp_require_dir_match  reads the containing swing's direction. A 15m
+    #                         swing needs min_bars=50 to confirm, so the
+    #                         direction is final ~8h after the entry. Win rate
+    #                         51.7%, and the causal rebuild drops it to 24.9%
+    #                         and two books to ZERO trades.
+    #   exp_max_swing_age      reads seg.start_idx.
+    #   exp_max_running_mag    reads seg.end_px at the entry bar.
+    #   exp_min_swing_ratio    reads seg.end_px at the entry bar - settled in
+    #                         0 of 137 trades.
+    #
+    # This gate exists because status="reference" is a label, not a lock. The
+    # label was set by hand in one pass, and nothing failed when a later book
+    # was copied from a contaminated one - which is exactly what happened with
+    # fsent_dirmatch_long/short, whose pins verified fine because a pin proves
+    # the engine reproduces a number, never that the number is causal.
+    #
+    # Reference books are ALLOWED to carry these: they are kept deliberately,
+    # for the record, and the closed doc quotes their numbers. The gate is about
+    # candidates only.
+    print()
+    print("  proved-lookahead knobs (closed 2026-10-04) on candidate books")
+    offenders = _lookahead_offenders(reg.EXPERIMENTS)
+    if offenders:
+        for key, hit in sorted(offenders):
+            print("    %-38s uses %s" % (key, ", ".join(hit)))
+        problems.append("%d candidate book(s) carry a proved look-ahead knob"
+                        % len(offenders))
+    else:
+        n_users = sum(1 for k, c in reg.EXPERIMENTS.items()
+                      if isinstance(c, dict)
+                      and any((c.get("params") or {}).get(x) for x in PROVED_LOOKAHEAD))
+        print("    none. %d reference book(s) carry them, kept for the record"
+              % n_users)
+        print("    (exp_swingpause reads confirmed_at, which IS settled at the")
+        print("     entry bar, and is deliberately not on this list)")
+
     print("  duplicate-params-key check (a repeated key silently keeps the last)")
     n_dup = 0
     cur_lines = src.split("\n")
@@ -382,6 +495,8 @@ def check_registry_hygiene():
 
 
 if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        raise SystemExit(_self_test())
     raise SystemExit(main() or check_registry_hygiene())
 
 
