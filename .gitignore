@@ -72,3 +72,9 @@ backtest/tests/__pycache__/_craze_tmp*.pyc
 # a comment in unified.py as the copy that produced exp_fs_gray; the comment
 # is the provenance, the 94 KB file was not.
 backtest/tests/_*_tmp.py
+
+# exp_registry_snapshot.py 'write' output. A before-snapshot is only useful
+# against the change it was taken for; once that change is committed the file
+# is stale and regenerating it is one command. The result snapshots that ARE
+# evidence - _pinverify_results.json, _pinrefresh.json - are tracked.
+backtest/tests/_registry_before.json
