@@ -89,3 +89,9 @@ backtest/tests/_registry_before.json
 backtest/tests/results.db
 backtest/tests/results.db-wal
 backtest/tests/results.db-shm
+
+# Commit-message scratch files. These are written, used and deleted in one step,
+# and twice now one was `git add`-ed alongside the change it described because
+# the add and the commit ran in the same shell command.
+backtest/docs/_msg.txt
+backtest/docs/_commit_msg.txt
