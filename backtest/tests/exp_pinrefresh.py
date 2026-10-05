@@ -58,7 +58,17 @@ import experiment_registry as reg
 #    gets 235/+262.29. Pinning it would put a number in the registry that the
 #    engine does not produce, which is what a pin exists to prevent.
 NEVER_PIN = {
-    "fsent_sig_fs_mom",
+    # fsent_sig_fs_mom WAS here, and was removed after the diagnosis turned out
+    # to be backwards. The recorded 285/+208.16 was copied off step 2 of
+    # _signal_combo.json, which is a TWO-knob ladder - exp_fs_entry_side=short
+    # plus exp_bias_momentum_min=0.8. The book carries FOUR: those two plus
+    # exp_swingpause=1 and exp_skip_weekend=1, which that ladder never added. So
+    # the params were never wrong; the pin was, because it belonged to a
+    # different configuration. Blocking re-measurement on that basis blocked the
+    # one fix that was needed.
+    #
+    # The pin is regenerated from the engine and the old number is recorded
+    # beside it in the registry so the discrepancy stays visible.
 }
 
 # 2. Every book already marked status="reference". These measured LARGE -

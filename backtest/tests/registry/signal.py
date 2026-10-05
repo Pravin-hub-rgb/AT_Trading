@@ -328,11 +328,26 @@ BOOKS = {
                        "exp_bias_momentum_min": 0.8,
                        "window_end": "exit"},
           "swing": "sw10",
-          # UNPINNED: this book's knobs were written from prose, not from the
-          # sweep artifact, and the fastcheck does NOT reproduce the recorded
-          # 285/+208.16. Do not cite it until the params are re-derived from
-          # _signal_filter_sweep.json / _signal_combo.json and it re-pins.
-          "pins": None,
+          # Measured from the engine, both eras, by exp_pinrefresh.py.
+          #
+          # The pin this replaces read IS 285 / +208.16 and was WRONG - but the
+          # params were not. That number is step 2 of _signal_combo.json, a
+          # TWO-knob ladder: exp_fs_entry_side=short + exp_bias_momentum_min=0.8.
+          # This book carries FOUR knobs - those two plus exp_swingpause=1 and
+          # exp_skip_weekend=1, which that ladder never added. So the number
+          # belonged to a different configuration and was copied here by
+          # mistake. It is left in this comment rather than deleted, so that if
+          # anyone finds +208.16 quoted as this book, this is where it came from
+          # and why it is wrong.
+          #
+          # Which way the error ran is worth recording: the real book is BETTER
+          # in sample (+262.29 against +208.16) and the OOS was never recorded
+          # at all, so nothing downstream was harmed by believing the smaller
+          # number. That is luck, not a property of the process - the identical
+          # mistake in the other direction would have shipped an inflated book.
+          "pins": {"n": 235, "net": 262.29, "dd_net": 10.05, "win": 0.417,
+                   "oos_n": 152, "oos_net": 165.62, "oos_dd_net": 9.14,
+                   "oos_win": 0.421},
       },
     "fsent_sig_full": {
           "desc": "Best exhaustive candidate on the one-position signal ladder: FS-short + momentum + no partial + trail skip + small-swing exit at FS + weekend skip.",

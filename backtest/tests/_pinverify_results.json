@@ -2078,5 +2078,15 @@
   "pin_dd_net": 46.01,
   "OK": true,
   "secs": 7.9
+ },
+ "fsent_sig_fs_mom": {
+  "n": 235,
+  "net": 262.29,
+  "dd_net": 10.05,
+  "pin_n": 235,
+  "pin_net": 262.29,
+  "pin_dd_net": 10.05,
+  "OK": true,
+  "secs": 9.7
  }
 }
