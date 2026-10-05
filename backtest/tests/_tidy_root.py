@@ -48,8 +48,15 @@ NOTES = [
 ]
 DEBUG_RE = re.compile(r"^debug_.*\.ts$")
 DEBUG_EXTRA = ["codemod.cjs", "research_firstswing.cjs", "probe_upstox.py"]
-FRONTEND = ["backend.js", "dev.js", "start.bat"]
 ACCIDENTS = ["$null", "0", ".FullName"]
+
+# backend.js, dev.js and start.bat STAY IN THE ROOT, and the first version of
+# this script moved them to frontend/ - which broke npm run dev, npm run kb,
+# npm run sb and npm start, because package.json sits in the root and its
+# scripts are `node dev.js` and `node backend.js`. frontend/ has its own
+# package.json and is a different project. Node resolves an entry point from the
+# directory of the package.json that names it, not from wherever the framework
+# happens to live, so the root package.json means root-level node files.
 
 
 def build_plan():
@@ -59,14 +66,14 @@ def build_plan():
             plan[name] = "docs/notes"
     for p in sorted(ROOT.glob("debug_*.ts")):
         plan[p.name] = "debug"
-    for name in DEBUG_EXTRA + FRONTEND:
+    for name in DEBUG_EXTRA:
         if (ROOT / name).exists():
-            plan[name] = "debug" if name in DEBUG_EXTRA else "frontend"
+            plan[name] = "debug"
     return plan
 
 
 def apply(plan):
-    for sub in ("docs/notes", "debug", "frontend"):
+    for sub in ("docs/notes", "debug"):
         (ROOT / sub).mkdir(parents=True, exist_ok=True)
     moved = 0
     for name, dest in sorted(plan.items()):
@@ -102,7 +109,7 @@ def main():
     if a.apply:
         apply(plan)
         return 0
-    for dest in ("docs/notes", "debug", "frontend"):
+    for dest in ("docs/notes", "debug"):
         names = sorted(n for n, d in plan.items() if d == dest)
         print("%-12s %d" % (dest, len(names)))
         for n in names:
