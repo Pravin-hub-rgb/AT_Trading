@@ -45,7 +45,7 @@ def trial_inventory():
     """Reconstruct how many distinct configurations were actually scored."""
     reg = len(EXPERIMENTS)
     # documented arm counts from the experiment log (each log row = one family)
-    log = ROOT / "backtest/docs/EXPERIMENT_LOG.md"
+    log = ROOT / "backtest/docs/method/EXPERIMENT_LOG.md"
     harness_files = len(list((ROOT / "backtest/tests").glob("*.py")))
     exp_files = len([p for p in (ROOT / "backtest/tests").glob("*.py")
                      if p.name.startswith("exp_")])

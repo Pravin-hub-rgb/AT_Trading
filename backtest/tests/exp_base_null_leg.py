@@ -8,7 +8,7 @@ Why this is needed. M = 479.9R IS / 193.4R OOS was computed on the ORIGIN book's
 R sequence. C16 changed the shipped rule to the leg pivot, which has 499 trades
 instead of 500 and compressed risk denominators. M's value moves; its validity does
 not - a proposal's dNet is a difference over the same trade universe and belongs
-against that universe's reshuffle variance (BASE_BOOK_NULL.md).
+against that universe's reshuffle variance (method/BASE_BOOK_NULL.md).
 
 P5's own headline survives this either way: the book's net sits near the middle of
 a reshuffle of itself, because the tail is wide. Re-deriving M does not change

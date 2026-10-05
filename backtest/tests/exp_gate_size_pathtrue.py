@@ -1,6 +1,6 @@
 """Stage GateSize - PATH-TRUE gate + size combination (vol7_prev7<=1.20 x M2) (2026-09-26).
 
-Closes REGIME_STRUCTURE_AUTOPSY.md L143: "Sizing flag and gate can combine, but
+Closes signal/REGIME_STRUCTURE_AUTOPSY.md L143: "Sizing flag and gate can combine, but
 the combined effect is UNTESTED." Also closes the Stage-B rule gap for the Z3
 gate itself: Z3 (thr 1.20) was measured as a POST-PROCESS removal, and under
 exp_mltf a post-process skip is an UPPER BOUND never adoptable (LOG 80/81) -

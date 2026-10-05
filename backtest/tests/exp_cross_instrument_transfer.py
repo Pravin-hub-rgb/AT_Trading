@@ -1,6 +1,6 @@
 """Stage CrossInstrument - cross-instrument + flag transfer to Binance BTCUSDT perp (2026-09-26).
 
-Tests CROSS_INSTRUMENT_V18.md claims ("architecture universal, only knobs
+Tests method/CROSS_INSTRUMENT_V18.md claims ("architecture universal, only knobs
 differ" - single-period, no era split) with the CURRENT champion params,
 properly IS/OOS, plus flag transfer of the validated sizing flags.
 

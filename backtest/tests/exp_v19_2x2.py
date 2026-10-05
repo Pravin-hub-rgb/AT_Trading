@@ -1,4 +1,4 @@
-# P114 - the 2x2 that L75/L76 of reality of champion.md asked for.
+# P114 - the 2x2 that L75/L76 of method/reality of champion.md asked for.
 # Which of exp_mltf / exp_persist actually carries the R?
 import sys, os, pickle, types, inspect
 from pathlib import Path

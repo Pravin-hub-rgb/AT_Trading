@@ -75,7 +75,7 @@ NEVER_PIN = {
 #    age10_dirmatch_swingpause_sig_sw10 comes in at IS +397.95 / OOS +52.41 -
 #    which is exactly why they need to stay unpinned. exp_require_dir_match
 #    reads the swing's final direction, settled a median 8h AFTER the entry bar
-#    (CLOSED_DO_NOT_REPEAT.md), so the number is an artefact of reading the
+#    (closed/CLOSED_DO_NOT_REPEAT.md), so the number is an artefact of reading the
 #    future, not an edge. A pin is a claim that the engine reproduces a book;
 #    for a contaminated book it would be a claim that the leak is real and
 #    reproducible, and these numbers are the most quotable in the file. Leave

@@ -2,7 +2,7 @@
 
 Goal: find causal entry-time features that separate trades dying in <12 bars
 from the rest. Ceiling (post-filter skip <12 bars) = +100R on anchor per
-LOSS_AUTOPSY.md §LA3 — need a pre-entry proxy, not the post-filter itself.
+method/LOSS_AUTOPSY.md §LA3 — need a pre-entry proxy, not the post-filter itself.
 
 Features (all known at entry bar close, no lookahead):
   - regime (flip/b2/decisive use)

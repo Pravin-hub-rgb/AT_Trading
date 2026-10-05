@@ -19,12 +19,12 @@ PART 2 - the win-rate candidates the owner remembers
     Two books were quoted from the docs as high-win-rate and are NOT currently
     pinned with a WR field anywhere in the registry:
 
-      age10_dirmatch_multi_sw10  - ANCHOR_BASIS_AUDIT.md:804 quoted it as
+      age10_dirmatch_multi_sw10  - signal/ANCHOR_BASIS_AUDIT.md:804 quoted it as
         "151t / +455.5R / DD 6.0 / WR 51.7%" (NET-DD 75.9). The registry pin
         says IS 150t / +417.68R, which is a different number from the same book.
         That gap is exactly what has to be settled by running it.
 
-      B3 confirmation-entry - experiments_craze.md:154 "206t / +322.2 gross /
+      B3 confirmation-entry - signal/experiments_craze.md:154 "206t / +322.2 gross /
         +278.6 net / WR 40.8% / DD 13.1 / streak 8". Registered as
         `gap_b3k2` / `gap_b3k4` on the champion lane.
 

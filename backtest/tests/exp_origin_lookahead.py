@@ -50,7 +50,7 @@ RESEARCH_FILES = {"btc_routes.py"}          # expect exactly this many
 RESEARCH_FILE_COUNT = {"btc_routes.py": 1}
 
 # Knobs PROVED to read a swing field that is not settled at the entry bar.
-# Closed 2026-10-04, CLOSED_DO_NOT_REPEAT.md. A candidate book may not carry
+# Closed 2026-10-04, closed/CLOSED_DO_NOT_REPEAT.md. A candidate book may not carry
 # one; a reference book may, because those are kept deliberately and the closed
 # doc quotes their numbers.
 #
@@ -412,7 +412,7 @@ def check_registry_hygiene():
     # --- 6. a proved look-ahead may not appear on a CANDIDATE book
     #
     # Every knob below was PROVED to read a swing field that settles after the
-    # entry bar, by the instrument in CLOSED_DO_NOT_REPEAT.md: name the field,
+    # entry bar, by the instrument in closed/CLOSED_DO_NOT_REPEAT.md: name the field,
     # then measure whether it was settled at the decision bar. They are not
     # suspicious, they are closed.
     #

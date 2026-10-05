@@ -61,7 +61,7 @@ from src.walker import FlowCandle
 M_NULL = 193.4
 CHAMP = {"champion_multi_sw10": ((500, 325.8), (279, 70.1)),
          "utcsat_multi_sw10": ((453, 279.5), (254, 66.9))}
-HTF = {"1h": (1, 10), "4h": (4, 3)}    # lag-matched, per TF_MATRIX_P58.md
+HTF = {"1h": (1, 10), "4h": (4, 3)}    # lag-matched, per method/TF_MATRIX_P58.md
 LTF = {"15m": (1, 50), "1h": (4, 12)}
 
 

@@ -11,7 +11,7 @@ THE BUG, VERIFIED IN SOURCE BEFORE THIS RUN
     prefix, so "2026-09-30 14:00:00" <= "2026-09-30" is ALWAYS False.
 
     **The concurrency guard therefore never blocks a same-day re-entry.**
-    RISK_CONCURRENCY.md measured the consequence and recorded it in one
+    method/RISK_CONCURRENCY.md measured the consequence and recorded it in one
     line without acting: max concurrent open positions 6 / 5 / 6 / 3, against
     a design that intends one position. "Recorded, not fixed."
 
@@ -146,7 +146,7 @@ def main():
     print("  VERIFIED IN SOURCE: v18:743 writes a DATE, v18:577 compares it")
     print("  against a DATETIME, and '2026-09-30 14:00:00' <= '2026-09-30' is")
     print("  always False. The guard has never blocked a same-day re-entry.")
-    print("  RISK_CONCURRENCY.md: max concurrent 6/5/6/3, 'recorded, not")
+    print("  method/RISK_CONCURRENCY.md: max concurrent 6/5/6/3, 'recorded, not")
     print("  fixed'. M = %.1fR\n" % M_NULL)
 
     d = get_data()

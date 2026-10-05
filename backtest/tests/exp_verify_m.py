@@ -1,7 +1,7 @@
 """VERIFY, DON'T QUOTE - recompute M and the trail_half numbers FROM THE ENGINE.
 
 WHY THIS FILE EXISTS
-    BASE_BOOK_NULL.md states M = 381.7R IS / 205.5R OOS against the +239.1R leg
+    method/BASE_BOOK_NULL.md states M = 381.7R IS / 205.5R OOS against the +239.1R leg
     book, and quotes exp_trail_half as "IS +325.8 -> +429.6, OOS +70.2 -> +110.5,
     a +103.8R IS dNet and +40.3R OOS dNet, both inside the null." Those are
     DOCUMENT numbers. The engine has moved since they were written (the origin
@@ -31,7 +31,7 @@ HOW TO READ THE OUTPUT
     For each arm: observed net, the bootstrap null mean, M (p95), and the
     percentile of the observed value inside that arm's OWN null. An arm is
     "inside the null" when its percentile is below 95. Comparing an arm to
-    another arm's M is the error BASE_BOOK_NULL.md warns about - each book
+    another arm's M is the error method/BASE_BOOK_NULL.md warns about - each book
     generates its own null.
 
 BLOCK=20, DRAWS=10000, SEED=20260928 are pre-registered to match

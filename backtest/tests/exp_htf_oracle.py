@@ -28,7 +28,7 @@ THE MECHANISM, AND WHY IT IS NOT r_touch AGAIN
 CAUSALITY
     Fine 1m bars with ts <= t only.
 
-PRE-REGISTERED FALSIFIER (from OPEN_RESEARCH_QUEUE.md:227)
+PRE-REGISTERED FALSIFIER (from method/OPEN_RESEARCH_QUEUE.md:227)
     "ye live-oracle arm, wahi arm jo sirf window-open information use karti
     hai, se better hona chahiye - dono eras me."
     Part 3 builds a window-OPEN-ONLY arm at matched coverage and that

@@ -49,7 +49,7 @@ WHY THE E2 TEST IS A FALSE PASS - verified in source
          tested. N-1 pairs cannot detect a concurrency-6 book.
       2. It runs mode="b2_vs_flip_chop" - 330 trades. The champion is
          `multi_sw10`, 500 trades. The test certifies a different book.
-    fix/backtest_checklist_v18.md records this as "E2 PASS, 0 overlapping
+    fix/method/backtest_checklist_v18.md records this as "E2 PASS, 0 overlapping
     pairs". That PASS is evidence about a book we do not ship.
 
 WHAT IS NOT CLAIMED

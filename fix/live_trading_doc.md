@@ -9,7 +9,7 @@ And the report card at the end: +331R gross, PF 2.81, 4/4 years positive — whi
 "Backbencher" also carries the exact lesson of this whole project: the toppers-by-metrics (v16, v17, v19–v22 — every "looks better on one chart" candidate) flunked the A/B, and the backbencher v18 just quietly keeps winning. Let me make it official:
 
 *Created 2026-09-09. This is the journey log for moving v18 from validated
-backtest to live paper trading. Backtest master doc: `backtest_checklist_v18.md`.*
+backtest to live paper trading. Backtest master doc: `method/backtest_checklist_v18.md`.*
 
 **Codename — Backbencher:** the student who fails every win-rate exam
 (36.4%) yet tops the life game (+331R gross, PF 2.81, 4/4 years positive).

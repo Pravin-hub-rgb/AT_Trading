@@ -21,7 +21,7 @@ inventing another filter, MEASURE the structure. Research questions:
 
 Process rules (EXP40C doc §12): gates before results (identity gate + user
 coarse matrix + 8 fine pins to exp40c/exp42 Phase C), harness kept on disk,
-separate doc (EXP43_LOSS_AUTOPSY.md), fine NET everywhere, nothing deleted.
+separate doc (method/EXP43_method/LOSS_AUTOPSY.md), fine NET everywhere, nothing deleted.
 """
 import sys,time,json,bisect
 from pathlib import Path

@@ -2,7 +2,7 @@
 
 WHY THIS RUN EXISTS
 ===================
-The range study (RANGE_PEAK_GRAY.md) found that the "peak position in a
+The range study (method/RANGE_PEAK_GRAY.md) found that the "peak position in a
 narrow range" cohort is NOT a bad cohort to be removed - it is the book's
 HIGHEST hit-rate cohort (WR 41-42% vs the book's 27.8-29.1%) and it carries
 +107R / +127R in IS. So the productive question is not "which trades do we

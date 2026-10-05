@@ -2,7 +2,7 @@
 
 Fine fills, full metric set. Costs distributed uniformly per trade (c2/n) so
 NET-based metrics (per-trade, per-year, DD, H1/H2) stay consistent.
-Writes backtest/docs/'all combined experiment trade metric.md'.
+Writes backtest/docs/'method/all combined experiment trade metric.md'.
 """
 import sys, time, json
 from pathlib import Path

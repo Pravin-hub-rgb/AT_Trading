@@ -136,7 +136,7 @@ def test_baseline():
     # live, where the stop is armed at the activation instant. Same data, same
     # trade count, -26.31R gross / -26.33R net, -0.113 PF. The old PF bar of 2.0
     # cleared the pre-fix 2.020 by only 0.02. Win rate never moved across that
-    # fix - only exit magnitude did. See backtest/docs/new bugs.md -> REBASELINE
+    # fix - only exit magnitude did. See backtest/docs/method/new bugs.md -> REBASELINE
     # NOTE (2026-09-26).
     #
     # All figures above are Bybit perp. BTCUSDT is Binance spot and is not traded

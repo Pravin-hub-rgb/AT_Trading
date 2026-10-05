@@ -1,4 +1,4 @@
-"""FORWARD TEST evaluator — pre-registered contract in FORWARD_TEST_PLAN.md.
+"""FORWARD TEST evaluator — pre-registered contract in method/FORWARD_TEST_PLAN.md.
 
 Scores ONLY trades entered at/after the hard forward cutoff. Data after
 2026-09-13 10:03 IST has never been used to select anything.
@@ -160,7 +160,7 @@ def split_trades(trades):
 
 
 def pre_registered_verdict(name, summ, n):
-    """R2/R4/R5 — fixed in FORWARD_TEST_PLAN.md before any forward data was scored."""
+    """R2/R4/R5 — fixed in method/FORWARD_TEST_PLAN.md before any forward data was scored."""
     net = summ["net"]; pf = summ["net"]["pf"]; dd = summ["net"]["max_dd"]
     r2 = net["sum_r"] > 0 and net["avg_r"] > 0.20 and pf > 1.20
     kill = KILL_LINE_PCT[name]
@@ -199,7 +199,7 @@ def main():
 
     result = {"stage": "FORWARD", "instrument": "BTCUSDT_BYBIT",
               "cutoff_ist": CUTOFF_IST, "cutoff_ts": CUTOFF_TS,
-              "contract": "backtest/docs/FORWARD_TEST_PLAN.md",
+              "contract": "backtest/docs/method/FORWARD_TEST_PLAN.md",
               "combined_15m_bars": len(c15), "combined_1h_bars": len(c1h),
               "fine_1m_bars": len(fine), "candidates": {}}
 

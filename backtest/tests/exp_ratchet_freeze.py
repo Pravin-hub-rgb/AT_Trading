@@ -27,7 +27,7 @@ and it is also why it is the most plausible remaining route to the
 SMOOTHNESS the user asked for, since P16 showed entry filters improve
 every ratio but leave r_std ABOVE the champion.
 
-WHY IT COULD SMOOTH: variance lives in the runners. RUNNER_LIVE.md
+WHY IT COULD SMOOTH: variance lives in the runners. method/RUNNER_LIVE.md
 measured that the 10R+ cohort is 3.4% of trades carrying +95% of gross.
 If freezing the ratchet after N raises lets more of the mid-sized trades
 become runners, the outcome distribution stretches upward and the losing

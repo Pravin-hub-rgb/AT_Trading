@@ -11,7 +11,7 @@ what a check would have caught, it is an experiment.
 
 | check | what it catches | what it does NOT catch |
 |---|---|---|
-| `exp_sweep_static.py` | syntax errors, pre-C16 net-R pins, Binance-spot venue loads, registry `pivot_rule` coverage, documented-red harnesses | **net-R anchors only.** It cannot see a stale AUC or trade count, which is how `INSIDE80_P95.md` sat clean while its headline was dead |
+| `exp_sweep_static.py` | syntax errors, pre-C16 net-R pins, Binance-spot venue loads, registry `pivot_rule` coverage, documented-red harnesses | **net-R anchors only.** It cannot see a stale AUC or trade count, which is how `method/INSIDE80_P95.md` sat clean while its headline was dead |
 | `exp_engine_knobs.py` | `exp_*` names referenced by `test_experiments_craze.py` that **no engine implements** — harness patches that read as real knobs | **existence, not correctness.** `exp_max_concurrent` passed this check by name while its enforcement used the wrong reference. Existence is necessary, not sufficient |
 
 Both are under `exp_` because that is the repo's existing convention, not because
@@ -65,7 +65,7 @@ construction. The three candidates were checked anyway and are all accounted for
 `_r_touch_end` is engine-native and the r_touch arm is rejected (`v18_params`
 ships `window_end="exit"`); the trail/breakeven path carries the D3 ordering fix
 at three sites with its rebaseline documented; `exp_partial_r` is harness-only
-and already closed in `CANDIDATE_BUILD_SHEET.md` Tier D.
+and already closed in `method/CANDIDATE_BUILD_SHEET.md` Tier D.
 
 **Expected yield was zero and was zero. Do not re-propose this audit** — it was
 proposed twice this session and closed twice by query.
@@ -77,7 +77,7 @@ proposed twice this session and closed twice by query.
 `exp_engine_knobs.py` proves a knob **exists**. It does not prove the knob is
 **correct** — `exp_max_concurrent` passed it by name while its enforcement was
 under active suspicion. `exp_sweep_static.py` matches **net-R shapes**; it cannot
-see a dead AUC or trade count, which is how `INSIDE80_P95.md` sat clean for weeks.
+see a dead AUC or trade count, which is how `method/INSIDE80_P95.md` sat clean for weeks.
 And an **overlap audit** that reads the same `exit_ts` / `entry_ts` the engine
 reads is not independent verification at all — both would be wrong together. That
 argument was used to reject a `+900` clock claim and was itself circular; P120

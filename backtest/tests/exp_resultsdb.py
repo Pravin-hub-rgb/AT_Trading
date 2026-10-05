@@ -230,7 +230,7 @@ def _graveyard() -> set[str]:
 
     A number belonging to one of these is ABSENT from the database by design,
     and the documents that quote them are doing the right thing:
-    CLOSED_DO_NOT_REPEAT.md records what was measured before the family was
+    closed/CLOSED_DO_NOT_REPEAT.md records what was measured before the family was
     closed, and that record is why anyone can tell the next person not to redo
     it. Flagging those lines would mean failing the documents whose entire job is
     to remember a dead end, and a gate that fails that way gets switched off.

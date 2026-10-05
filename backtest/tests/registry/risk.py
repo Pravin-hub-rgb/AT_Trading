@@ -390,7 +390,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_cap_days": 16},
         "swing": "sw10",
         # cap_days family, reproduced on unified.py 2026-10-02.
-        # CAPS_P49.md reported this direction but could not be reproduced here:
+        # method/CAPS_P49.md reported this direction but could not be reproduced here:
         # cap_days=16 was hardcoded at all three HTF window call sites, so there
         # was no knob to turn. It is now exp_cap_days, default still 16.
         #
@@ -485,7 +485,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_cap_days": 999},
         "swing": "sw10",
         # cap_days family, reproduced on unified.py 2026-10-02.
-        # CAPS_P49.md reported this direction but could not be reproduced here:
+        # method/CAPS_P49.md reported this direction but could not be reproduced here:
         # cap_days=16 was hardcoded at all three HTF window call sites, so there
         # was no knob to turn. It is now exp_cap_days, default still 16.
         #
@@ -538,7 +538,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_cap_days": 999, "exp_skip_utc_sat": 1},
         "swing": "sw10",
         # cap_days family, reproduced on unified.py 2026-10-02.
-        # CAPS_P49.md reported this direction but could not be reproduced here:
+        # method/CAPS_P49.md reported this direction but could not be reproduced here:
         # cap_days=16 was hardcoded at all three HTF window call sites, so there
         # was no knob to turn. It is now exp_cap_days, default still 16.
         #
@@ -748,7 +748,7 @@ BOOKS = {
     # What legitimately survives as a spec, and is NOT here: v18's
     # COUNT_BAND=(348,358), an independent band that is still checked.
     #
-    # History: docs/ANCHOR_BASIS_AUDIT.md records why the single original pin
+    # History: docs/signal/ANCHOR_BASIS_AUDIT.md records why the single original pin
     # {351, +225.3R} was split into two - n came from the fine+chop58 run while
     # gross came from the coarse+chop61.8 run. exp_crosslane.py still listed both
     # rows as reference lanes and was updated alongside this removal.

@@ -94,7 +94,7 @@ EXPECT_FLAT = {
     "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
     "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
 }
-# published sMZX dNet per lane (is,oos) from CAPITAL_STAGE_PLAN.md row 2
+# published sMZX dNet per lane (is,oos) from method/CAPITAL_STAGE_PLAN.md row 2
 PUB_SMZX_IS = {"champion": (346.5, 130.4), "utcsat": (341.2, 146.6)}
 
 def load_scope(scope):

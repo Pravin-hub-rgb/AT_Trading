@@ -438,7 +438,7 @@ def _patch_007_chop_lb_call(s: str) -> str:
     #     window's flip/b2 1h entry-bar OPEN; no +2700 shift). This is the
     #     FINAL convention: validated 4/4 exact vs the user's coarse matrix
     #     (265/294/304/307t) and 4/4 vs the user's fine table (196.3/
-    #     231.1/197.2/179.1). See docs/EXP40C_EXP41_WAGE_EXT.md sections
+    #     231.1/197.2/179.1). See docs/method/EXP40C_EXP41_WAGE_EXT.md sections
     #     3.1 and 4.3. The deleted Exp40/41 harness's N5 rows (275t/+224.5
     #     etc.) used an unrecoverable convention and are non-authoritative;
     #     earlier +2700, closed-candle, canonical-parent and leg-anchor

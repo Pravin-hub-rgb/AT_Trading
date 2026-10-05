@@ -1,8 +1,8 @@
 """Static sweep: which exp_* knobs exist in an engine, and which are harness-only?
 
 WHY THIS FILE EXISTS. `exp_max_concurrent` was described in three documents as a
-real feature - "ALIVE deployment enabler" in ANCHOR_BASIS_AUDIT.md:346-347,
-"untested" in ENGINE_SHELF.md:25, "max concurrent 3-6" in RISK_CONCURRENCY.md - and
+real feature - "ALIVE deployment enabler" in signal/ANCHOR_BASIS_AUDIT.md:346-347,
+"untested" in method/ENGINE_SHELF.md:25, "max concurrent 3-6" in method/RISK_CONCURRENCY.md - and
 it has ZERO occurrences anywhere under backend/src. It exists only as a source
 patch injected by test_experiments_craze.py:106 (the default) and :760-763 (the
 enforcement block).

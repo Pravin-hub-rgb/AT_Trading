@@ -52,7 +52,7 @@ def shortlisted(EXPERIMENTS, key):
     A book marked "reference" is excluded regardless of its size: some of the
     loudest numbers in this registry are artifacts, not edges - the dirmatch/age
     family reads a swing direction that is only final ~8h after the entry bar
-    (CLOSED_DO_NOT_REPEAT.md). Size is not admissibility; reference books are
+    (closed/CLOSED_DO_NOT_REPEAT.md). Size is not admissibility; reference books are
     kept for the record and are never shipping candidates however large.
     """
     cfg = EXPERIMENTS[key]

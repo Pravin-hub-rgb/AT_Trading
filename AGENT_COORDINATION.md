@@ -188,7 +188,7 @@ Any feature built from **prior trade outcomes** must count a trade only when
 lookahead whenever positions overlap (`exp_mltf=True`, `busy_until`).
 
 This exact bug shipped a false "4/4 PASS" once. See
-`verify_bleed_causality.py` and `BLEED_AUTOPSY.md` §9.9. Run a closed-only
+`verify_bleed_causality.py` and `method/BLEED_AUTOPSY.md` §9.9. Run a closed-only
 audit before trusting any chain- or streak-state feature.
 
 ## Sizing exemption - post-process IS path-true here (added 2026-09-26)
@@ -214,7 +214,7 @@ in `exp_thesis_campaign_policy.py`. It is **default-off and not adopted**. If an
 R-aggregate gate is ever turned on, sizing starts feeding back into selection
 and every sizing result above must be re-run path-true.
 
-`CHECKLIST.md` 24.58 says "sizes ARE engine state" and asks for a path-true M2
+`method/CHECKLIST.md` 24.58 says "sizes ARE engine state" and asks for a path-true M2
 arm. That caution is superseded for the champion config by the three checks
 above; it would still apply to a config carrying an R-gate.
 
@@ -270,7 +270,7 @@ agent has uncommitted, that is the old workflow; stop and check the branch.
 ## HTF plane is 1h and that is a fixed assumption (added 2026-09-27)
 
 Tested and rejected the 2h parent plane. **2h loses 6/6** and the way it loses
-rules out the easy explanation. See `docs/HTF_2H_PLANE_TEST.md`, log #104.
+rules out the easy explanation. See `docs/method/HTF_2H_PLANE_TEST.md`, log #104.
 
 | Cell | 1h net | 2h net | 1h DD | 2h DD |
 |---|---|---|---|---|
@@ -405,7 +405,7 @@ the 1h bar must already be closed before a 15m entry is legal. 30m is a strict
 sub-interval of 1h, which makes it a *half-bar checkpoint* on the existing chain
 — genuinely interesting, and genuinely unable to act earlier. If early entry from
 30m is ever tested it needs its own pre-registration and its own review; do not
-smuggle it in as a "filter". See `docs/SHADOW_TIMEFRAME_IDEAS.md`.
+smuggle it in as a "filter". See `docs/method/SHADOW_TIMEFRAME_IDEAS.md`.
 
 **Rule 11 — a consistent-but-backwards pattern is still a null.** Log 108 found
 trades pushing *against* the 2h context were better in 6/6 cells (both eras, all
@@ -519,7 +519,7 @@ off, all untested: `exp_chop15_lo/hi`, `exp_max_concurrent`,
   `five_m_stats`; a harness that routes through it will report
   `candidates=0` for a gate that is demonstrably firing. Call the engine
   directly when you need the diagnostics.
-- Inventory: `docs/ENGINE_SHELF.md`. Testing one of these is *not* covered by
+- Inventory: `docs/method/ENGINE_SHELF.md`. Testing one of these is *not* covered by
   Rule 17 — they are exposure brakes and queue rules, not 30m/2h agreement
 **Rule 21 — a signal's internal state label is not an edge, and this has now
 been shown twice by the same trap.** B1/B2/FLIP were decomposed in log 112 at
@@ -599,7 +599,7 @@ data defect; do not "fix" it by admitting half-formed 2h candles.
   structural assumption. Found the causality trap: `candle_ts_htf_close` at
   v18:269 must move with the plane or the engine reads 2h bars an hour early.
   Runtime patch only, `backend/` clean. See "HTF plane is 1h" above and
-  `docs/HTF_2H_PLANE_TEST.md`.
+  `docs/method/HTF_2H_PLANE_TEST.md`.
 
   4/4 (4f97f90), ruling brief (b7be019), independent audit + two harness
   fixes (c18ffbb, eb12934). HOLD on the forward gate (5/50) only; age10 =
@@ -628,4 +628,4 @@ data defect; do not "fix" it by admitting half-formed 2h candles.
   proven non-binding by falsification, not assumption. 1h confirmed, 2h
   rejected on a different ground than first stated. No adoption; engine stays
   1h/min_bars 20. See "HTF plane is 1h" above and
-  `docs/HTF_2H_PLANE_TEST.md`.
+  `docs/method/HTF_2H_PLANE_TEST.md`.

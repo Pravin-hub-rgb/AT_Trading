@@ -27,7 +27,7 @@ THE ONE-LINE TEST
     because the book uses both.
 
 WHY THE REPO ALREADY SUSPECTS THE BAD ANSWER
-    TRANSCRIPT_THESIS_BACKLOG.md line 37 records: "Prefix audit remains
+    method/TRANSCRIPT_THESIS_BACKLOG.md line 37 records: "Prefix audit remains
     non-invariant for baseline and age-2 candidate because of the shared
     full-history swing-chain boundary caveat. Gate-level mark lookup is
     causal, but live replay equivalence still needs dedicated validation."

@@ -8,7 +8,7 @@ the single best trade and IS goes to -11.3, OOS to -4.1. Median add -0.55R, win
 rate 22-29%. Verdict then: thin pass, not robust. This runs the family in the
 actual engine so the offline walk's optimism can be measured, not assumed.
 
-DESIGN: docs/PYRAMID_PHASE2_DESIGN.md - Model A (child trades).
+DESIGN: docs/signal/PYRAMID_PHASE2_DESIGN.md - Model A (child trades).
 ----------------------------------------------------------------
 While a parent trade is open, each add-trigger creates a CHILD entry with its own
 risk (0.5x base) and its own SL (add-price -/+ 1R, or none = rides the parent).
@@ -31,7 +31,7 @@ shipped file is never modified. This module does the same with a
 pyramid-only super-set, so the shared engine and the other agents' super-set
 stay untouched. The identity gate below proves defaults == shipped byte-identical.
 
-PRE-REGISTERED BEFORE THE RUN (2026-09-26), per docs/PYRAMID_PHASE2_DESIGN.md:
+PRE-REGISTERED BEFORE THE RUN (2026-09-26), per docs/signal/PYRAMID_PHASE2_DESIGN.md:
   Arms (all reported, no best-of hiding):
     V0  base reference (ledger assert)
     V1  r_mile, add-SL fixed 1R, levels (0.5,1.0,2.0)   Phase-1 parity arm

@@ -251,9 +251,9 @@ WantedBy=multi-user.target
 
 ## References
 
-- `docs/design.md` - Complete architecture design
+- `docs/method/design.md` - Complete architecture design
 - `docs/live_trading_doc.md` - Journey log and decisions
-- `docs/backtest_checklist_v18.md` - v18 backtest validation
+- `docs/method/backtest_checklist_v18.md` - v18 backtest validation
 - `docs/design_challenge.md` - Original challenge sent to AIs
 
 ---

@@ -27,7 +27,7 @@ If NONE hold, the lift is broad-based and the 2.18x is a real venue effect.
 
 This is DIAGNOSTIC ONLY. It cannot promote age10 into the queue and cannot
 demote M2; it only characterizes one number already recorded in
-CAPITAL_STAGE_PLAN.md section 4c.
+method/CAPITAL_STAGE_PLAN.md section 4c.
 """
 from __future__ import annotations
 

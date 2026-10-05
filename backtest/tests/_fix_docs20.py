@@ -1,5 +1,5 @@
 import io
-p = "backtest/docs/EXP40C_EXP41_WAGE_EXT.md"
+p = "backtest/docs/method/EXP40C_EXP41_WAGE_EXT.md"
 L = io.open(p, encoding="utf-8").read().splitlines(True)
 # title: append / 49
 ti = next(i for i, l in enumerate(L) if l.startswith("# EXP 40c"))

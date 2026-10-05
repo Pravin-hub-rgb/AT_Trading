@@ -8,7 +8,7 @@ so either the 1h window contributes none of that 325R, or we are
 missing something."
 
 That is testable, and it is P3's falsifier in plain language.
-BIAS_WINDOW_THEORY.md showed the 1h book standalone is ~zero (mean
+method/BIAS_WINDOW_THEORY.md showed the 1h book standalone is ~zero (mean
 +0.08R IS / -0.09R OOS, median exactly -1.00R). So the cascade's R must
 come from the 15m layer. But "the 1h legs are coin-flips" is NOT the
 same as "the 1h window adds nothing" - the window could still be a
@@ -70,7 +70,7 @@ def main():
     print("=" * 88)
     print("  P3-A  DOES THE 1h WINDOW EARN ANY OF THE CASCADE'S R?")
     print("=" * 88)
-    print("  Premise: 1h standalone is ~zero (BIAS_WINDOW_THEORY.md).")
+    print("  Premise: 1h standalone is ~zero (method/BIAS_WINDOW_THEORY.md).")
     print("  Is the window still a USEFUL permission slice, or decoration?\n")
 
     for scope in ("is", "oos"):

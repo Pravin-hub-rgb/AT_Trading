@@ -1013,12 +1013,12 @@ BOOKS = {
 
     "dualunion_multi": {
         "desc": "union + filters + DUAL-QUALIFIED only (skip FLIP-window-only matches)",
-                "status": "reference",   # LOOKAHEAD - end_px. See CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - end_px. See closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_min_swing_ratio measures abs(seg.end_px - seg.start_px) - the
                                   # swing FINAL leg - to decide whether the trade is big enough. end_px
                                   # is only settled at confirmed_at_idx. Measured: 0 of 137 trades
                                   # (union_multi) and 0 of 90 (dualunion_multi) had a swing settled by
-                                  # the entry bar. This is the M2 field that FS_TIME_GEOMETRY.md already
+                                  # the entry bar. This is the M2 field that method/FS_TIME_GEOMETRY.md already
                                   # closed as retrospective. Do not ship, do not cite.
 "engine": "patched",
         "params": {"mode": "union", "ext_stop_r": 1.5, "chop_thresh": 61.8,
@@ -1050,12 +1050,12 @@ BOOKS = {
 },
     "union_multi": {
         "desc": "union + filters (no dual gate) — reference for dual comparison",
-                "status": "reference",   # LOOKAHEAD - end_px. See CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - end_px. See closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_min_swing_ratio measures abs(seg.end_px - seg.start_px) - the
                                   # swing FINAL leg - to decide whether the trade is big enough. end_px
                                   # is only settled at confirmed_at_idx. Measured: 0 of 137 trades
                                   # (union_multi) and 0 of 90 (dualunion_multi) had a swing settled by
-                                  # the entry bar. This is the M2 field that FS_TIME_GEOMETRY.md already
+                                  # the entry bar. This is the M2 field that method/FS_TIME_GEOMETRY.md already
                                   # closed as retrospective. Do not ship, do not cite.
 "engine": "patched",
         "params": {"mode": "union", "ext_stop_r": 1.5, "chop_thresh": 61.8,
@@ -1091,7 +1091,7 @@ BOOKS = {
 
     "dirmatch_multi_sw10": {
         "desc": "king + REQUIRE forming swing direction match — +479.9R / DD 13.8 / WR 38.6%",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -1129,7 +1129,7 @@ BOOKS = {
 },
     "age25_multi_sw10": {
         "desc": "king + max swing age 25 bars",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -1168,7 +1168,7 @@ BOOKS = {
 },
     "age25_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 25 — +386.7R / DD 9.8 / WR 43.8% (BEST quality)",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -1206,7 +1206,7 @@ BOOKS = {
 },
     "age10_dirmatch_multi_sw10": {
         "desc": "king + dir match + age 10 — +455.5R / DD 6.0 / WR 51.7% (MONSTER, 151t)",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -1248,7 +1248,7 @@ BOOKS = {
 
     "dirmatch_swingpause_sig_sw10": {
         "desc": "swingpause single + dir match — +288.1R / DD 14.1 / WR 35.5%",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -1286,7 +1286,7 @@ BOOKS = {
 },
     "age10_dirmatch_swingpause_sig_sw10": {
         "desc": "swingpause single + dir match + age 10 — 🔥 BEST EVER: +435.7R / DD 5.7 / WR 53.8%",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -1325,7 +1325,7 @@ BOOKS = {
 },
     "dirmatch_sig_sw10": {
         "desc": "baseline single (no swingpause) + dir match — +237.7R / DD 15.7",
-                "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was

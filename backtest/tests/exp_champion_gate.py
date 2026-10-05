@@ -4,7 +4,7 @@ THE HONESTY PROBLEM THIS FILE EXISTS TO FIX
 ===========================================
 P3-C was run at `mode="atr_high"`, which is NOT the shipped config. It
 produced IS +227.5R / OOS +22.7R. The user's champion is IS +325.8R /
-OOS +70.2R (AGENT_COORDINATION.md:244-246, EXPERIMENT_LOG.md:341). Those
+OOS +70.2R (AGENT_COORDINATION.md:244-246, method/EXPERIMENT_LOG.md:341). Those
 are different books on different settings, so P3-C says NOTHING about what
 the gate does to 325R. Answering that question from P3-C's numbers would
 be exactly the "shape vs meaning" mistake this session keeps making.

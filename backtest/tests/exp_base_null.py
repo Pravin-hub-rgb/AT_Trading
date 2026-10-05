@@ -16,7 +16,7 @@ published either way.
 
 METHOD, and why block bootstrap and not shuffle
 =============================================
-A plain shuffle destroys the one thing that matters here. `IS_IT_RIGHT.md`
+A plain shuffle destroys the one thing that matters here. `method/IS_IT_RIGHT.md`
 already reports OOS ACF lag-1 = +0.498, and the champion's own trades are
 serial: 500 IS trades containing a 30% win rate clustered into runs of
 10R+ winners. A shuffle destroys that clustering, so it would UNDERSTATE
@@ -38,7 +38,7 @@ a one-sided test would be the wrong test:
 
 STEP 1 IS A PIN REPRODUCTION, ALWAYS
 ====================================
-`CHAMPION_FLOOR_REJECTED.md` records that three experiments today were run
+`method/CHAMPION_FLOOR_REJECTED.md` records that three experiments today were run
 against a book that was not the champion, because the config and the
 metric were guessed. This file does not guess them: it imports
 `EXPERIMENTS["champion_multi_sw10"]` and `net_r()` directly, and refuses

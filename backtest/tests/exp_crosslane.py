@@ -89,8 +89,8 @@ LANES = [
 # The registry's own pins are a "causal SL" variant (+248.0R for the
 # champion) and are NOT the +325.8R champion this session has been
 # measuring. Using them produced UNVERIFIED on the first three lanes, so
-# the pins that count are the DOCUMENTED ledgers from CHECKLIST.md 24.11 /
-# EXPERIMENT_LOG.md 341, which is where +325.8R / +358.9R / +310.7R come
+# the pins that count are the DOCUMENTED ledgers from method/CHECKLIST.md 24.11 /
+# method/EXPERIMENT_LOG.md 341, which is where +325.8R / +358.9R / +310.7R come
 # from. Anything not listed here is reported with its registry pin and
 # marked as self-consistent rather than doc-verified.
 DOC_PINS = {

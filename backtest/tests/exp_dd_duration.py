@@ -7,7 +7,7 @@ FROM THE BRIEF, SPACE BUNNY'S P91
      trades it takes to get back."
 
 AND IT IS A NUMBER THIS PROGRAMME PROMISED AND DID NOT DELIVER
-    CHAMP_ROBUST_P83.md states, in its own limitations: "Recovery time after
+    method/CHAMP_ROBUST_P83.md states, in its own limitations: "Recovery time after
     the max drawdown is not reported... and that number matters more than
     the depth to anyone holding the bot." It was left out because the
     harness computed peak and trough but never exercised the recovery loop.

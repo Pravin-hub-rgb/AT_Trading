@@ -2,7 +2,7 @@
 
 WHY THIS FILE EXISTS
 ====================
-`ONE_MIN_PATH_CONTEXT.md` recorded a -325.8R "result" that was really the
+`method/ONE_MIN_PATH_CONTEXT.md` recorded a -325.8R "result" that was really the
 whole book deleted: the gate grayed 658 of 660 signals. The probe showed
 why - ctx_extend had a MEDIAN of 8.7 while the thresholds were 0.5/1.0:
 

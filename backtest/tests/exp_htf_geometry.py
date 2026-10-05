@@ -1,7 +1,7 @@
 """P54 - THE 1h SWING GEOMETRY GATE AT WINDOW OPEN. The queue's last untested
 Nemotron item, and the only remaining idea for making the 1h layer better.
 
-THE ITEM (OPEN_RESEARCH_QUEUE.md:420, still open)
+THE ITEM (method/OPEN_RESEARCH_QUEUE.md:420, still open)
     "1h swing geometry gate at bias-window open - magnitude / duration /
     confirmation source, all known at the swing's confirmation instant.
     Overlaps the graveyard's 'range width' row, so it must be

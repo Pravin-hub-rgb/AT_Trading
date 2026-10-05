@@ -52,7 +52,7 @@ sys.path.insert(0, str(ROOT / "backtest"))
 sys.path.insert(0, str(ROOT / "backend"))
 
 OUT = ROOT / "backtest/tests/_mb_forensic.json"
-TBL = ROOT / "backtest/docs/TF_METRICS_TABLE.md"
+TBL = ROOT / "backtest/docs/method/TF_METRICS_TABLE.md"
 M15, M30, H1, H2 = 900, 1800, 3600, 7200
 BOOT_N = 20000
 SEED = 20260927

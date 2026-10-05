@@ -30,7 +30,7 @@ THE TEST - ABSOLUTE PRICE RETURN, NOT R-MULTIPLE
     which is the NEGATIVE of PnL for a short. `abs_return()` below did not
     check t["dir"] at all, so the short totals came out negative and were read
     as losses. They were profits. P91's central claim - "every short book loses
-    money in absolute terms" - is retracted; see FILL_ABSOLUTE_P91.md and
+    money in absolute terms" - is retracted; see method/FILL_ABSOLUTE_P91.md and
     exp_p121_short_absolute.py.
 
     The old line also asserted that the two measures "can diverge arbitrarily

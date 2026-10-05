@@ -1,7 +1,7 @@
 """REPRODUCE the documented Stage-B stack book. Not a new idea — a verification.
 
-The 2026-09-24/26 docs (EQUITY_CURVE_STUDY.md, TRAIL_MECHANICS.md,
-CAPITAL_STAGE_PLAN.md) record an exit-side candidate stack that was measured,
+The 2026-09-24/26 docs (signal/EQUITY_CURVE_STUDY.md, method/TRAIL_MECHANICS.md,
+method/CAPITAL_STAGE_PLAN.md) record an exit-side candidate stack that was measured,
 causality-audited, and left **default-off**:
 
     half+delay1   exp_trail_half=1, exp_trail_delay_r=1.0   (wider, delayed trail)
@@ -16,7 +16,7 @@ Those numbers are 1-3 days old and were produced by a different harness. This
 re-runs them through the current engine build to answer one question: **is the
 single best documented configuration still exactly what the docs claim?**
 
-That matters more than any new experiment, because the audit in IS_IT_RIGHT.md
+That matters more than any new experiment, because the audit in method/IS_IT_RIGHT.md
 concluded the shipped book's OOS edge is three trades wide with a 53.2R DD. If
 the stack book reproduces, the fix is already sitting in the repo, fully
 causality-audited, and needs no new research — only a deployment decision.
@@ -59,8 +59,8 @@ ARM_DEFS = (
     ("STACK",         {"exp_trail_half": 1, "exp_trail_delay_r": 1.0,
                        "exp_skip_decisive": 1}),
 )
-# SOURCE: EQUITY_CURVE_STUDY.md sections 2/3, TRAIL_MECHANICS.md results table,
-# CAPITAL_STAGE_PLAN.md section 2 line 46 (the 429.6/110.5 stack-book figures).
+# SOURCE: signal/EQUITY_CURVE_STUDY.md sections 2/3, method/TRAIL_MECHANICS.md results table,
+# method/CAPITAL_STAGE_PLAN.md section 2 line 46 (the 429.6/110.5 stack-book figures).
 EXPECTED = {
     ("is", "champion"):  {"baseline": 325.8, "half": 428.6, "half+delay1": 429.6,
                           "skip_decisive": 325.8, "STACK": 429.6},

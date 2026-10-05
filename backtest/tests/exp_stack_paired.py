@@ -2,7 +2,7 @@
 
 WHAT I GOT WRONG, IN TWO PLACES
 ===============================
-1. **I dismissed the exit family.** `SMOOTH_BOOK.md` says "the entire exit
+1. **I dismissed the exit family.** `method/SMOOTH_BOOK.md` says "the entire exit
    family is closed - trail/half/delay/tighten/partial are all rejected"
    and points at entry filters instead. That is **false**. `exp_trail_half`
    + `exp_trail_delay_r` + `exp_skip_decisive` (the STACK) is the single
@@ -13,7 +13,7 @@ WHAT I GOT WRONG, IN TWO PLACES
    cleared any bar, and I concluded "the grid is exhausted". **The grid was
    never exhausted; I was looking on one side of the book.**
 
-2. **`BASE_BOOK_NULL.md` scored it with the wrong test.** It took
+2. **`method/BASE_BOOK_NULL.md` scored it with the wrong test.** It took
    +103.8R IS dNet against `M` = 479.9R and called it "inside the null".
    But `M` is a move-block bootstrap of the book's own **level** - the right
    question for "is this book distinguishable from a reshuffle of itself",

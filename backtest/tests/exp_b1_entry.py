@@ -9,7 +9,7 @@ WHAT "B1 ENTRY" MEANS
                      "flip": ("FLIP",)}.get(entry_break, ("B2","FLIP"))
 
     B1 is in NO entry set. Every B1 mark is read, checked, and skipped.
-    CLOSED_DO_NOT_REPEAT.md records this as "still open (not closed)": no
+    closed/CLOSED_DO_NOT_REPEAT.md records this as "still open (not closed)": no
     kwarg fires an entry on B1.
 
     That makes it the cleanest item left - a gap in the engine rather than a

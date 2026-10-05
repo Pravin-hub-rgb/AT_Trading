@@ -1,6 +1,6 @@
 """Inventory every backtest/docs/*.md so the docs can be filed rather than guessed at.
 
-The signal-vs-multi split in BOOK_CATEGORIES.md is the primary axis: a signal
+The signal-vs-multi split in method/BOOK_CATEGORIES.md is the primary axis: a signal
 book holds exactly one position (max_positions=1), a multi book holds several.
 This script decides which plane a document is about from what the document
 actually says - verdict headers, the plane tables, the words it uses for the
@@ -8,7 +8,7 @@ two book types - and reports the evidence for each decision so a wrong call can
 be argued with rather than believed.
 
 It also flags the thing that has already gone wrong once: a document carrying
-measured numbers. The repo rule is in BOOK_CATEGORIES.md - "No results here, a
+measured numbers. The repo rule is in method/BOOK_CATEGORIES.md - "No results here, a
 number lives in experiment_registry.py and nowhere else" - and the +492.60 that
 sat in that same file is what the rule exists to prevent.
 

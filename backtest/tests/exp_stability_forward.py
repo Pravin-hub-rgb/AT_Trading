@@ -54,7 +54,7 @@ from test_experiments_craze import _compute_swings
 from src.walker import FlowCandle
 
 M_NULL = 193.4
-HTF = {"1h": (1, 10), "4h": (4, 3)}     # lag-matched, per TF_MATRIX_P58.md
+HTF = {"1h": (1, 10), "4h": (4, 3)}     # lag-matched, per method/TF_MATRIX_P58.md
 LTF = {"15m": (1, 50), "1h": (4, 12)}
 FWD = ROOT / "data" / "forward" / "bybit"
 

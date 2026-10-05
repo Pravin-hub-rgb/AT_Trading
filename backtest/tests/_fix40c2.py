@@ -11,7 +11,7 @@ new_block = (
     "    #     window's flip/b2 1h entry-bar OPEN; no +2700 shift). This is the\n"
     "    #     FINAL convention: validated 4/4 exact vs the user's coarse matrix\n"
     "    #     (265/294/304/307t) and 4/4 vs the user's fine table (196.3/\n"
-    "    #     231.1/197.2/179.1). See docs/EXP40C_EXP41_WAGE_EXT.md sections\n"
+    "    #     231.1/197.2/179.1). See docs/method/EXP40C_EXP41_WAGE_EXT.md sections\n"
     "    #     3.1 and 4.3. The deleted Exp40/41 harness's N5 rows (275t/+224.5\n"
     "    #     etc.) used an unrecoverable convention and are non-authoritative;\n"
     "    #     earlier +2700, closed-candle, canonical-parent and leg-anchor\n"
@@ -24,7 +24,7 @@ io.open(p1, "w", encoding="utf-8", newline="").write("".join(lines))
 print("craze comment fixed")
 
 # --- 2) doc: mojibake cleanup, file-map note, rewrite tail (sections 10-12) ---
-p2 = "backtest/docs/EXP40C_EXP41_WAGE_EXT.md"
+p2 = "backtest/docs/method/EXP40C_EXP41_WAGE_EXT.md"
 txt = io.open(p2, encoding="utf-8").read()
 for a, b in (("\u00c2\u00a7", "\u00a7"), ("\u00e2\u20ac\u201d", "\u2014"),
              ("\u00e2\u20ac\u201c", "\u2013"), ("\u00e2\u2020\u2019", "\u2192"),

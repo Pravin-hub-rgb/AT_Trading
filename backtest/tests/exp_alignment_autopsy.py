@@ -6,7 +6,7 @@ had the forming 15m swing OPPOSED to the trade direction -- ALL 125 lost
 
 This harness reproduces the full autopsy (7 pre-entry features bucketed vs
 trade outcome) so the other bot can verify every table in
-docs/ANCHOR_BASIS_AUDIT.md section 3k.
+docs/signal/ANCHOR_BASIS_AUDIT.md section 3k.
 
 Features measured (all causal, computable at entry bar close):
   1. swing age at entry     (bars from forming swing pivot to entry)

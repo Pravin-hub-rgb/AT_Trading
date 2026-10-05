@@ -52,6 +52,6 @@ L.append("- halt4 cliff on OPTIMAL (Exp 28 Q5): single-halt sensitivity exists; 
 L.append("- NOT yet done: true re-optimizing walk-forward (fixed-config 3-cut stability passed for OPTIMAL/B3-OPT); cd=0 live latency validation; concurrency-cap variants (cap 2/3).")
 L.append("- Decisions DEFERRED until experiment list exhausted (user process).")
 
-out = ROOT / "backtest/docs/all combined experiment trade metric.md"
+out = ROOT / "backtest/docs/method/all combined experiment trade metric.md"
 out.write_text("\n".join(L) + "\n", encoding="utf-8")
 print("doc written: %s (%d lines)" % (out, len(L)))

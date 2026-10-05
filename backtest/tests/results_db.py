@@ -5,7 +5,7 @@ WHY THIS EXISTS
     Measured results were scattered across 347 JSON files in backtest/tests with
     no shared schema: about 28 followed one shape and the rest were each their
     own. Sixteen markdown files carried result tables as well, and one of them -
-    BOOK_CATEGORIES.md - carried a number (+492.60 for
+    method/BOOK_CATEGORIES.md - carried a number (+492.60 for
     fsent_single_sw20_short_wr) that appears nowhere else in the repository, on
     a book that turned out to be a duplicate of another. A number with one home
     is a number that can be checked. A number written into prose is a number

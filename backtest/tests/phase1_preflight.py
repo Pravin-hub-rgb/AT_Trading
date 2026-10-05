@@ -2,7 +2,7 @@
 
 WHY THIS FILE EXISTS
 ====================
-`HANDOVER_SESSION.md` section 7 calls Phase 1 "wiring, not a new concept":
+`method/HANDOVER_SESSION.md` section 7 calls Phase 1 "wiring, not a new concept":
 add a kwarg substituting `swings_ltf` with 1m swings, reuse the existing
 `_collect_signals` call. Phase 0 removed the compute blocker, so this is
 next - but reading the engine says the substitution is NOT self-contained,

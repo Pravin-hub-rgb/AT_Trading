@@ -34,7 +34,7 @@ PRE-REGISTERED, before the run:
       2026-10-01, on the grounds that P91 had shown R misleads on shorts. P121
       then RETRACTED P91's central claim as a sign-convention error - for a short,
       (exit-entry)/entry is the negative of PnL, so P91 read profitable shorts as
-      losses. See FILL_ABSOLUTE_P91.md. There is no absolute-vs-R divergence on
+      losses. See method/FILL_ABSOLUTE_P91.md. There is no absolute-vs-R divergence on
       shorts, so the caveat rested on a false premise and has been removed.
 
       Standing caveat is the narrower true one: the absolute figure for the

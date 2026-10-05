@@ -38,7 +38,7 @@ BOOKS = {
     # Measured 2026-10-04 by exp_fs_directional_leg.py on CAUSAL leg-family
     # books, both eras. Only the ENTRY TRIGGER changes on one side; the other
     # side, the LTF cascade and every risk knob are untouched. Do not confuse
-    # with the closed FS-EXIT work in CLOSED_DO_NOT_REPEAT.md: same FS print,
+    # with the closed FS-EXIT work in closed/CLOSED_DO_NOT_REPEAT.md: same FS print,
     # but used to DELAY an entry instead of to close a position.
     "fsent_champ_long": {
           "desc": "champion leg + LONGS enter at swing FS (shorts unchanged)",
@@ -114,7 +114,7 @@ BOOKS = {
 
     "fsent_dirmatch_long": {
           "desc": "dirmatch multi + LONGS enter at swing FS",
-                  "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                  "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -159,7 +159,7 @@ BOOKS = {
 
     "fsent_dirmatch_short": {
           "desc": "dirmatch multi + SHORTS enter at swing FS",
-                  "status": "reference",   # LOOKAHEAD - see CLOSED_DO_NOT_REPEAT.md 2026-10-04
+                  "status": "reference",   # LOOKAHEAD - see closed/CLOSED_DO_NOT_REPEAT.md 2026-10-04
                                   # exp_require_dir_match / exp_max_swing_age read the swing FINAL
                                   # direction, which is only final at confirmed_at_idx - median 8h AFTER
                                   # the entry bar. That label IS the trade outcome, so the filter was
@@ -376,7 +376,7 @@ BOOKS = {
     # ===== THE SIGNAL BOOK =====
     # One position at a time. weekend + swingpause + shorts entering at the swing
     # FS print. Both filters are period-level/structural, which is what survived
-    # validation in ANCHOR_BASIS_AUDIT.md; the per-trade indicators (chop15 band,
+    # validation in signal/ANCHOR_BASIS_AUDIT.md; the per-trade indicators (chop15 band,
     # atr-ratio) were rejected there and are deliberately absent here.
     # Measured against the PURE BASELINE (same base knobs, zero filters), which
     # is OOS +41.1R - this book is what makes a one-position book viable.

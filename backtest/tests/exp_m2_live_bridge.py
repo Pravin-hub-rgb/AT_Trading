@@ -7,7 +7,7 @@ Binance transfer) is POST-PROCESS. The sizing exemption makes those numbers
 valid as backtest numbers because scaling never changes which trades fire. But
 the exemption says nothing about whether the flag can be READ AT ORDER TIME.
 
-CAPITAL_STAGE_PLAN.md section 4a lists this as the one hard engineering blocker
+method/CAPITAL_STAGE_PLAN.md section 4a lists this as the one hard engineering blocker
 before any live sizing, and it is correct: nothing in this repo has ever
 computed cur_mag_atr from the state available at send time.
 

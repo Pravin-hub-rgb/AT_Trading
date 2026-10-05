@@ -2,7 +2,7 @@
 
 WHY THIS EXISTS
 ---------------
-The capital queue (CAPITAL_STAGE_PLAN.md) holds five sizing levers: M2, uMZX,
+The capital queue (method/CAPITAL_STAGE_PLAN.md) holds five sizing levers: M2, uMZX,
 sMZX, ramp_mag, count_linear. Four of them (M2, ramp_mag, and the M2 component
 of uMZX/sMZX/count_linear) key off `cur_mag_atr`, which uses `seg.end_px`.
 `backend_check_wd_days.py:108` asserts `fs_at_idx >= seg.end_idx`, so a swing's

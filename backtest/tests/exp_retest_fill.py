@@ -1,6 +1,6 @@
 """Phase B — retest limit-below-entry fill (fill-price improvement), path-true IS + OOS.
 
-Pre-registered in WINNER_PATH_AUTOPSY.md (no post-hoc changes):
+Pre-registered in signal/WINNER_PATH_AUTOPSY.md (no post-hoc changes):
   arms     : baseline / limit@(entry-0.10R) / limit@(entry-0.25R)
   wait     : 240 min (4h) from signal close, then CANCEL (no trade)
   configs  : champion_multi_sw10 + age10_dirmatch_swingpause_single_sw10

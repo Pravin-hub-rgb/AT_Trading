@@ -1,6 +1,6 @@
 """PHASE 0 DIAGNOSTIC - why 1-minute swing computation dies.
 
-THE BLOCKER (HANDOVER_SESSION.md section 7)
+THE BLOCKER (method/HANDOVER_SESSION.md section 7)
 ==========================================
     _compute_swings(fine, "continuous", min_bars=N) over the full
     1,946,026 one-minute bars did not finish in ~2 minutes and the

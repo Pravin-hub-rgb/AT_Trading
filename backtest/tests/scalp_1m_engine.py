@@ -12,7 +12,7 @@ champion already uses. The champion's 15m ledger must come out bit-identical
 or the run aborts - that is the control gate.
 
 This is deliberately NOT the "Phase 1" patch described in
-PHASE0_1M_SWING_BLOCKER.md. That one swapped `swings_ltf` for 1m swings
+method/PHASE0_1M_SWING_BLOCKER.md. That one swapped `swings_ltf` for 1m swings
 inside the shipped engine, which is index-coupled to `candles_ltf` and
 silently drops 91% of signals. A SEPARATE book has no such coupling: it
 carries its own candles, its own swings, its own ATR, its own slots. So the
@@ -50,7 +50,7 @@ MARK KINDS
 key to `_collect_signals`, which the shipped engine does NOT have - done
 here by rebuilding btc_engine in memory, never editing the shared file
 (same pattern as exp_b1_entry.py). B1 on 1m is a genuinely new trigger:
-on 15m it failed hard (B1_ENTRY.md), but 1m has 15x the bars and a much
+on 15m it failed hard (method/B1_ENTRY.md), but 1m has 15x the bars and a much
 finer swing structure, so it is worth one honest test rather than an
 assumption.
 

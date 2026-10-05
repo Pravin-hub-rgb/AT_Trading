@@ -1,6 +1,6 @@
 """P122 - THE PHASE 0 GATE. Do v18/v19 ek hi param set pe, serial aur unlimited.
 
-BACKGROUND. UNIFICATION_PHASE0.md proposes merging v18_streak_halt.py and
+BACKGROUND. method/UNIFICATION_PHASE0.md proposes merging v18_streak_halt.py and
 v19_champion.py into one engine. The proposal's verification was two pins:
 
     serial    + leg -> 352t / +146.55R   (claimed: v18 today)

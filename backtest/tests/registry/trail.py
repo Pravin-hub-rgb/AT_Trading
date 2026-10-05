@@ -65,7 +65,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_skip_n": 4},
         "swing": "sw10",
         # Exit-side trail family, rerun on unified.py 2026-10-02.
-        # First measured here - EQUITY_CURVE_STUDY.md (2026-09-24) ran this on
+        # First measured here - signal/EQUITY_CURVE_STUDY.md (2026-09-24) ran this on
         # the older engines, and these knobs live in the harness patch rather
         # than in unified.py, so no registry book covered them.
         #   exp_trail_half      widen the ratchet to halfway, not the extreme
@@ -118,7 +118,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 1.0, "exp_trail_skip_n": 4},
         "swing": "sw10",
         # Exit-side trail family, rerun on unified.py 2026-10-02.
-        # First measured here - EQUITY_CURVE_STUDY.md (2026-09-24) ran this on
+        # First measured here - signal/EQUITY_CURVE_STUDY.md (2026-09-24) ran this on
         # the older engines, and these knobs live in the harness patch rather
         # than in unified.py, so no registry book covered them.
         #   exp_trail_half      widen the ratchet to halfway, not the extreme

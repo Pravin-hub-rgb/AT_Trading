@@ -2,7 +2,7 @@
 
 WHY THIS RUN EXISTS
 ===================
-`SMZX_LEVERAGE_AUDIT.md` showed sMZX is real selection (4/4) rather than a
+`method/SMZX_LEVERAGE_AUDIT.md` showed sMZX is real selection (4/4) rather than a
 leverage trap, on Bybit. But Bybit IS and OOS are the exact slices this repo
 has now inspected dozens of times, so that result is real but not yet
 INDEPENDENT. The standing rule in this repo is that an arm must clear an

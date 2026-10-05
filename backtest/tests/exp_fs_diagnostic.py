@@ -4,7 +4,7 @@ swing_no and swing_index are different counters, and fs_at_time carries only
 HH:MM. But fs_at_idx is an index into the 1h candles, so a swing's FS moment is
 candles_1h[fs_at_idx].ts. For each booked entry, the swing that confirms it is
 the first swing in the SAME direction whose FS lands at or after the entry -
-which is exactly the relationship FS_TIME_GEOMETRY.md measured as "FS always
+which is exactly the relationship method/FS_TIME_GEOMETRY.md measured as "FS always
 lands after the entry".
 
 Read-only. The engine is not modified.

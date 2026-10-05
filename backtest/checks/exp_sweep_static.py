@@ -19,7 +19,7 @@ What it does catch, in seconds:
 
 SCOPE LIMIT, stated so nobody trusts it further than it goes. Item 2 matches on
   net-R anchors only. It cannot catch a stale claim that quotes an AUC or a trade
-  count, because those shapes never appear in RETRACTED_ANCHORS. INSIDE80_P95.md was
+  count, because those shapes never appear in RETRACTED_ANCHORS. method/INSIDE80_P95.md was
   reported clean by this sweep while its headline "0.847 / separates" was dead -
   the same blind spot as a check matching on the wrong shape, which is what the
   `if PERP in t: continue` bug was. An honest scope beats an implied one.
@@ -69,7 +69,7 @@ for sub in ("backend/src", "backend/tests", "backtest/tests", "backtest/engine",
         try:
           # FOURTH BLIND SPOT, found 2026-10-01: this check does not detect a
           # document that PROPOSES a knob it elsewhere reports as CLOSED.
-          # ROUND_SUMMARY_P55_P95.md:292 ranked exp_window_entry_cap as Rank 1
+          # method/ROUND_SUMMARY_P55_P95.md:292 ranked exp_window_entry_cap as Rank 1
           # while :416 of the same file recorded that it had already run and was
           # "OOS-only, NOT ROBUST". Both readable, neither marked. That is a
           # third variant of the stale-claim family - not a wrong number, not a

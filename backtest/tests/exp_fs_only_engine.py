@@ -2,7 +2,7 @@
 
 THE GAP, quoted from the repo's own doc
 ======================================
-`FS_ENTRY.md`:
+`method/FS_ENTRY.md`:
 
     "2900 swings exist in IS and 1634 in OOS, all with an FS - so a *true*
      FS-only engine could in principle take swings that never produced a
@@ -20,7 +20,7 @@ WHAT IS AN FS
 =============
 Every swing carries `fs_at_idx` / `fs_at_time` - the FIRST SWING: the
 opposing pivot-break that COMPLETES the swing, i.e. the moment the swing
-leg is declared done. `FS_ENTRY.md` measured FS-entry and found it
+leg is declared done. `method/FS_ENTRY.md` measured FS-entry and found it
 profitable but SMALLER: 314t +151.1R gross in IS against the B2/flip book's
 500t +445.2R, because 36-37% of the book is lost while waiting for a B2/flip.
 

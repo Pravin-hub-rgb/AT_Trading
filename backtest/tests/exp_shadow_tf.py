@@ -1,6 +1,6 @@
 """Shadow timeframes: 30m and 2h as EVIDENCE on the shipped 15m/1h book.
 
-Pre-registered in docs/SHADOW_TIMEFRAME_IDEAS.md before this file existed. Read
+Pre-registered in docs/method/SHADOW_TIMEFRAME_IDEAS.md before this file existed. Read
 that doc first - it fixes the arms, the hit criteria and the honesty limits.
 
 WHAT THIS IS NOT
@@ -238,7 +238,7 @@ def main():
     t0 = time.time()
     print("=" * 100, flush=True)
     print("  Shadow timeframes - 30m / 2h as EVIDENCE on the shipped 15m/1h book", flush=True)
-    print("  Phase 1 = COMPOSITION only. See docs/SHADOW_TIMEFRAME_IDEAS.md", flush=True)
+    print("  Phase 1 = COMPOSITION only. See docs/method/SHADOW_TIMEFRAME_IDEAS.md", flush=True)
     print("=" * 100, flush=True)
     selftest()
 

@@ -8,7 +8,7 @@ Two questions, one of which is a backtest and one of which is NOT:
   B  Can the live bot hold 5 positions?  -> OUT OF SCOPE. This programme is
      backtesting only. An earlier version of this harness treated B as a
      deployability gate and reported champion-at-cap-1 as "the config the bot can
-     execute". That was a category error; see LIVE_CONCURRENCY_P118.md, retracted.
+     execute". That was a category error; see method/LIVE_CONCURRENCY_P118.md, retracted.
      The live engine runs v18, a different book, which is serial NATIVELY because
      v18_streak_halt.py has no concurrency parameter at all.
 
@@ -26,8 +26,8 @@ passes. Prior: MASTER_CANDIDATES_V2 measured top-5% at 144.8% IS / 221.7% OOS. S
 P119 for the ex-top-5% and half-year partition that decides it.
 
 Prior art is origin-era, cited only as prior art:
-  ANCHOR_BASIS_AUDIT.md:343-347  cap=5 multi FREE, "use for live risk"
-  ANCHOR_BASIS_AUDIT.md:105-107  the cap1..cap5 grid
+  signal/ANCHOR_BASIS_AUDIT.md:343-347  cap=5 multi FREE, "use for live risk"
+  signal/ANCHOR_BASIS_AUDIT.md:105-107  the cap1..cap5 grid
 
 PRE-REGISTERED FALSIFIER: if cap=5 costs more than noise on the leg book, then
 :346-347 is stale in its CONCLUSION, not merely in its numbers. "Stale numbers" is
@@ -109,7 +109,7 @@ def main():
     print("=" * 92)
     print("  P118: the live bot is structurally cap-1. cap=4/5/6 are not executable")
     print("  today. A = grid transfer (this run).  B = capability (already NO).")
-    print("  Prior art ANCHOR_BASIS_AUDIT.md:343-347 is ORIGIN-era.\n")
+    print("  Prior art signal/ANCHOR_BASIS_AUDIT.md:343-347 is ORIGIN-era.\n")
 
     rows = {}
     for scope in ("is", "oos"):

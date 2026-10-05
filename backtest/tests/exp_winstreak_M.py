@@ -1,14 +1,14 @@
 """P65 - STAGE 64 PUT THROUGH THE PROGRAMME'S OWN BAR.
 
 THE CANDIDATE THAT WAS NEVER PUT THROUGH IT
-    TRANSCRIPT_THESIS_BACKLOG.md line 43 carries a live research candidate:
+    method/TRANSCRIPT_THESIS_BACKLOG.md line 43 carries a live research candidate:
 
       "Champion default + global_soft_n3 improves IS +325.8->+331.7R and
        reused OOS +70.2->+90.0R, with better R/trade, PF, and drawdown
        while preserving the OOS 10R+ tail."
 
     Stage 64's own hit bar was a delta on a single axis. It never met M =
-    193.4R, and WIN_STREAK_STACKING_AUTOPSY.md contains no reference to the
+    193.4R, and method/WIN_STREAK_STACKING_AUTOPSY.md contains no reference to the
     null at all. Nor did it get the P61 period partition. So a candidate
     with a better risk profile AND better return in both eras has been
     sitting in the backlog, untested against the standard this programme

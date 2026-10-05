@@ -2,7 +2,7 @@
 
 WHY THIS EXPERIMENT
 ===================
-`CROSS_INSTRUMENT_STATUS.md`: stage 24.95 passed 6/8 transfer units on
+`method/CROSS_INSTRUMENT_STATUS.md`: stage 24.95 passed 6/8 transfer units on
 ETH/SOL, but ONLY `age10` was kills-clean on both. age10 is also the
 smallest lane (n=130 IS / 76 OOS on BTC) and it returned +273.5R IS /
 +136.4R OOS on SOL.

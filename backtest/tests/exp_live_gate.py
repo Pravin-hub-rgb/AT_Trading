@@ -2,7 +2,7 @@
 
 WHY A PATCHED COPY AND NOT THE POST-HOC FILTER
 ==============================================
-ORACLE_EARLY.md found `live_R >= 0` improves WR, PF and trimmed mean in
+method/ORACLE_EARLY.md found `live_R >= 0` improves WR, PF and trimmed mean in
 BOTH eras. That was a post-hoc screen over trades the engine had already
 decided to take. Screening cannot prove a gate works, because the engine
 never had to decide anything. So this runs it as a genuine backtest: the

@@ -20,7 +20,7 @@
 
 ## Context
 
-While validating v18 (see `backtest_checklist_v18.md`), Test A1 (HTF Window Check) exposed that
+While validating v18 (see `method/backtest_checklist_v18.md`), Test A1 (HTF Window Check) exposed that
 the HTF window definition had never been explicitly tested. The engine used:
 
 ```
@@ -179,7 +179,7 @@ both alternatives are implemented in the engine behind `window_end=` and preserv
 | `backend/debug/test_a1_v2.py` | A1 window validation (independent rebuild) |
 | `backend/debug/test_v19_bias_flip.py` | r_touch vs bias_flip A/B stats |
 | `backend/debug/test_v19_bias_flip_risk.py` | DD / IS-OOS / t-stat analysis |
-| `fix/backtest_checklist_v18.md` | Validation checklist + changelog |
+| `fix/method/backtest_checklist_v18.md` | Validation checklist + changelog |
 
 ---
 

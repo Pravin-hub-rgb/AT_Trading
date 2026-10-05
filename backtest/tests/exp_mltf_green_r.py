@@ -8,7 +8,7 @@ THE USER'S OTHER 1m IDEA, AND WHY IT IS THE ONE TO RUN NOW
   (A) a 1m SETUP/ENTRY LAYER - detect and enter on 1m. That is Phase 1/2 of
       HANDOVER section 7. It is BLOCKED, and Phase 0 proved why: the naive
       patch drops 91% of signals and rescales every bar-counted param 15x.
-      See PHASE0_1M_SWING_BLOCKER.md, "Phase 1 as written".
+      See method/PHASE0_1M_SWING_BLOCKER.md, "Phase 1 as written".
 
   (B) the 1m ADD-ON / SCALING that ALREADY SHIPS as `exp_mltf=True`. It
       needs no 1m swing layer at all and is live in the champion today.
@@ -47,7 +47,7 @@ TIME-threshold on the regime channel. The run answers a real question: does
 
 WHY THIS IS THE RIGHT FIRST MOVE
 ================================
-Stage 44 (MARGINAL_PREENTRY_ATLAS.md) already measured this cohort: when the
+Stage 44 (signal/MARGINAL_PREENTRY_ATLAS.md) already measured this cohort: when the
 HTF trade is in profit the add-on is profitable in all six cells - champion
 +109.6R IS / +42.2R OOS, with higher WR and PF than first trades. The user's
 instinct was right and it is VALIDATED. What was never run is the path-true

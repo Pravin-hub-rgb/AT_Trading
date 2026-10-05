@@ -1,7 +1,7 @@
 """P72 - A TRUE FS-ONLY ENGINE. Enter when structure confirms, not when it breaks.
 
 THE OPEN ITEM
-    CLOSED_DO_NOT_REPEAT.md, still open:
+    closed/CLOSED_DO_NOT_REPEAT.md, still open:
 
         "True FS-only engine. 2900/1634 confirmed swings exist; only the
          314/179 that produced a B2/flip entry have been priced. An FS-only

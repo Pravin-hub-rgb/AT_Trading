@@ -2,7 +2,7 @@
 
 WHY THIS EXISTS
 ===============
-HTF_ATTRIBUTION.md found the 1h window is a QUALITY ORACLE, not a
+method/HTF_ATTRIBUTION.md found the 1h window is a QUALITY ORACLE, not a
 permission slice. Its verdict splits the 15m book into a 55.7%-WR cohort
 (+231R) and an 8.6%-WR cohort (-134R). But that verdict is read only at
 the window's EXIT - a median 1.1 days late. The user's question was
