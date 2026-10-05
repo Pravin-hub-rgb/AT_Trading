@@ -354,8 +354,8 @@ BOOKS = {
                        "exp_skip_weekend": 1,
                        "window_end": "exit"},
           "swing": "sw10",
-          "pins": {"n": 234, "net": 291.02, "dd": 10.78, "win": 0.56,
-                   "oos_n": 153, "oos_net": 190.93, "oos_dd": 6.96, "oos_win": 0.56},
+          "pins": {"n": 234, "net": 291.02, "dd_net": 10.78, "win": 0.56,
+                   "oos_n": 153, "oos_net": 190.93, "oos_dd_net": 6.96, "oos_win": 0.56},
       },
     # ===== THE SIGNAL BOOK =====
     # ===== THE SIGNAL BOOK =====
