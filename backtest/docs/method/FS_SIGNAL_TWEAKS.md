@@ -1,0 +1,84 @@
+# FS signal tweaks — trail_half / decay / both-side
+
+Measured 2026-10-06 by `backtest/tests/_sig_fs_tweaks.py`, reading both eras
+from the engine (closed trades only, same `net_r` basis as the pins). Nothing is
+transcribed by hand; raw card at `backtest/tests/_sig_fs_tweaks.json`, table at
+`backtest/tests/_sig_fs_tweaks.md`.
+
+## Question
+
+`fsent_sig_full` is short-only and long by every OOS metric (152 trd, +190.9,
+avgR +1.256, PF 3.35, DD 7.0). Two ideas on the table:
+
+1. Add the *trailing-half* family (`exp_trail_half=1`, optionally
+   `exp_trail_delay_r=1.0`) on top of the same stack.
+2. Add the P36 *decay gate* (`exp_decay_mode` 1/3/4, thr 0.75, legs 4) on top
+   of the same stack, or stacked with trail_half.
+3. Rescue the *both-side* lane (`exp_fs_entry_side="both"`, same stack) with
+   the same two levers.
+
+## Result — short_full
+
+| arm | IS n | IS net | OOS n | OOS net | OOS R/trd | OOS PF | OOS DD |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| base | 234 | +291.0 | 152 | +190.9 | +1.256 | 3.35 | 7.0 |
+| trail_half | 203 | +427.4 | 128 | +154.0 | +1.203 | 3.02 | 7.5 |
+| trail_half+delay1 | 199 | +414.1 | 123 | +179.5 | +1.460 | 3.45 | 7.5 |
+| decay_own_side | 190 | +332.7 | 110 | +139.3 | +1.267 | 3.52 | 6.3 |
+| decay_crossed | 104 | +186.8 | 67 | +128.2 | +1.913 | 4.60 | 7.4 |
+| decay_buying_block | 133 | +331.8 | 72 | +92.3 | +1.282 | 3.57 | 5.4 |
+| half+own_side | 166 | +485.0 | 94 | +121.3 | +1.291 | 3.26 | 7.3 |
+| half+crossed | 97 | +332.2 | 62 | +141.0 | +2.274 | 4.85 | 7.3 |
+
+## Result — both_full
+
+| arm | IS n | IS net | OOS n | OOS net | OOS R/trd | OOS PF | OOS DD |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| base | 294 | +41.3 | 168 | +70.6 | +0.420 | 1.74 | 17.6 |
+| trail_half | 255 | +75.5 | 141 | +96.9 | +0.687 | 2.15 | 14.8 |
+| trail_half+delay1 | 246 | +67.0 | 131 | +90.0 | +0.687 | 2.10 | 13.7 |
+| decay_own_side | 238 | −6.1 | 141 | +77.7 | +0.551 | 1.99 | 14.5 |
+| decay_crossed | 126 | +48.2 | 68 | +60.7 | +0.892 | 2.51 | 7.4 |
+| decay_buying_block | 185 | +29.2 | 103 | +39.1 | +0.380 | 1.66 | 16.2 |
+| half+own_side | 209 | +34.8 | 116 | +92.2 | +0.794 | 2.35 | 10.6 |
+| half+crossed | 114 | +68.1 | 64 | +55.7 | +0.870 | 2.31 | 11.5 |
+
+## Read
+
+1. **`trail_half` does not lift the champion's OOS total.** IS +427.4 is real,
+   OOS total +154.0 is below base (+190.9) with fewer trades. `trail_half +
+   delay1` is the one cell that improves OOS R/trd (+1.460, n=123) and PF
+   (3.45) — a per-trade lift bought with a 19% trade-count cut, not a total-R
+   improvement. Keep watching, do not adopt.
+2. **The decay gate is the interesting one.** `decay_crossed` takes the book
+   from avgR +1.26 to +1.91 and PF 3.35 to 4.60, with DD unchanged at 7.4 and
+   OOS total still +128.2 on n=67. `half+crossed` (trail_half + decay_crossed)
+   pushes R/trd to +2.27 at n=62 with IS +332 (above base). These are
+   *trade-filter* shapes: they half the book but keep it profitable and
+   smoother. Whether that survives a sample this small is the open question,
+   and it is why nothing is pinned.
+3. **The both-side lane does not rescue.** Base +70.6 OOS; trail_half +96.9 is
+   the best cell, still below the short-only book, and `decay_own_side` cuts IS
+   to −6.1. The lane stays weak; no tweak measured here changes that.
+4. **`fsent_sig_full` base is still the OOS-net leader.** Nothing here beats
+   +190.9 with comparable trade count and drawdown. That is the honest headline.
+
+## Follow-up — mirror check
+
+`backtest/tests/_sig_fs_mirror.py` ran the three interesting cells on the two
+sibling books (`fsent_sig_fs_mom`, `fsent_sig_wk_pause_short`). Raw card:
+`backtest/tests/_sig_fs_mirror.json` / `.md`.
+
+| book | OOS base | half+delay1 | decay_crossed | half+crossed |
+|---|---|---|---|---|
+| fsent_sig_full | +190.9 / +1.256 / PF 3.35 | +179.5 / +1.460 / 3.45 | +128.2 / +1.913 / 4.60 | +141.0 / +2.274 / 4.85 |
+| fsent_sig_fs_mom | +165.6 / +1.090 / PF 3.31 | +150.6 / +1.369 / 3.25 | +117.2 / +1.750 / 4.57 | +130.4 / +2.103 / 4.56 |
+| fsent_sig_wk_pause_short | +128.8 / +0.719 / PF 2.41 | +123.9 / +0.953 / 2.56 | +87.5 / +1.055 / 2.96 | +91.4 / +1.252 / 3.00 |
+
+The shape repeats on all three books: trail_half+delay1 lifts R/trd ~+25%,
+decay_crossed ~+55-70%, half+crossed ~+75%, each trading OOS total net and
+trade count for a sharper book. That is a real family-level effect, not a
+curve-fit on one book. It is still a filter shape, not a free lunch — the
+totals come down, so adopting it means choosing "same edge, fewer trades,
+smoother curve" over "more total R". Nothing is pinned.
+
