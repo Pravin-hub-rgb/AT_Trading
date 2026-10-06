@@ -55,7 +55,7 @@ BOOKS = {
           # Directional FS entry: ONE side enters at the swing FS print, the
           # other side unchanged. exp_fs_directional_leg.py, both eras.
           "pins": {"n": 525, "net": 528.87, "dd_net": 14.19,
-                   "oos_n": 310, "oos_net": 243.92, "oos_dd_net": 11.88},
+                   "oos_n": 309, "oos_net": 244.98, "oos_dd_net": 11.88},
       },
 
     "fsent_champ_short": {
@@ -92,7 +92,7 @@ BOOKS = {
           "swing": "sw10",
           # exp_fs_directional_leg.py, both eras. dd_net pending measure.
           "pins": {"n": 522, "net": 510.54, "dd_net": 22.47,
-                   "oos_n": 309, "oos_net": 243.09, "oos_dd_net": 11.88},
+                   "oos_n": 308, "oos_net": 244.15, "oos_dd_net": 11.88},
       },
 
     "fsent_utcsat_short": {
