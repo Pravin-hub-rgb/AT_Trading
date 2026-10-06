@@ -55,6 +55,7 @@ Run: $env:PYTHONIOENCODING='utf-8'; python -u exp_tf_family.py
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -156,7 +157,12 @@ def build_family_module():
                   "    _knowwin = htf_bar_secs - ltf_bar_secs  # C15: HTF close - LTF close\n"
                   + anchor)
 
-    p = ROOT / "backtest/tests/_tffam_tmp.py"
+    # Per-process file name: exp_signal_metrics.py and exp_multi_metrics.py
+    # were launched together once and both wrote this fixed path - the second
+    # truncation landed mid-import of the first, which got a module with no
+    # entrypoint (AttributeError: simulate_htf_ltf_streak_halt) and died. The
+    # _*_tmp.py ignore rule covers _tffam_<pid>_tmp.py by shape, on purpose.
+    p = ROOT / ("backtest/tests/_tffam_%d_tmp.py" % os.getpid())
     p.write_text(s, encoding="utf-8")
     spec = importlib.util.spec_from_file_location("v18_tf_family", str(p))
     m = importlib.util.module_from_spec(spec)

@@ -151,9 +151,16 @@ def main() -> int:
                 payload["configs"].setdefault(era, {})[key] = {"error": str(e)}
                 continue
             tr = out["ltf_trades"] if isinstance(out, dict) else out
-            rs = [net_r([t]) for t in tr]
-            ds = [t.get("entry_date", "") for t in tr]
+            # OPEN TRADES ARE NOT IN THE PIN'S NET (see exp_multi_metrics.py):
+            # _net_stats/_net_dd count only outcome != "open", net_r() has no
+            # such filter, and a book with positions open at the era boundary
+            # (fsent_sig_sw10_long OOS: +1.0R drift) read high without one
+            # number being wrong anywhere else. Closed trades only, like the pins.
+            cl = [t for t in tr if t.get("outcome") != "open"]
+            rs = [net_r([t]) for t in cl]
+            ds = [t.get("entry_date", "") for t in cl]
             m = compute(rs, ds)
+            m["n_open"] = len(tr) - len(cl)
             # Compare against the pin instead of trusting the run. A mismatch is
             # printed, not swallowed: the whole point is that nothing is hidden.
             pin = (cfg.get("pins") or {}).get("net") if era == "is" else \

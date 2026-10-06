@@ -277,7 +277,14 @@ def evaluate(key, tr):
     s = stats(tr)
     n = s["n"]
     gross = s["gross"]
-    nt = net_r(tr)
+    # NET IS CLOSED-TRADES ONLY, the same basis as _net_stats, _net_dd and
+    # every registry pin. net_r() sums every trade dict, including positions
+    # still open at the era boundary; trail10_multi carries ten of those
+    # (multi-year, +1040.6R of paper R) and unfiltered this line reported
+    # net=793.1 against a pin of -247.5 - a FAIL the pin did nothing wrong to
+    # earn. n and gross keep their old all-trades meaning: that is what the
+    # pins' n counts and what the legacy gross pins were written on.
+    nt = net_r([t for t in tr if t.get("outcome") != "open"])
     pins = cfg.get("pins") or {}
     partials = sum(1 for t in tr if t.get("partial_exit_price", 0.0) > 0)
 

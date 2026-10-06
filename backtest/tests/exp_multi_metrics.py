@@ -114,9 +114,20 @@ def main() -> int:
                 payload["configs"].setdefault(era, {})[key] = {"error": str(e)}
                 continue
             tr = out["ltf_trades"] if isinstance(out, dict) else out
-            rs = [net_r([t]) for t in tr]
-            ds = [t.get("entry_date", "") for t in tr]
+            # OPEN TRADES ARE NOT IN THE PIN'S NET. The engine emits positions
+            # still open at the era boundary with a mark-to-market r_multiple.
+            # _net_stats/_net_dd - and therefore every registry pin - count only
+            # outcome != "open"; net_r() has no such filter. Counting them here
+            # is what made trail10_multi read +793.1 against a pin of -247.51
+            # (ten open multi-year positions worth +1040.6R IS / +181.3R OOS),
+            # and the smaller <=1.1 flags were the same effect at book scale.
+            # n below is closed trades; n_open records the rest (the pin's n
+            # includes both, so board n can sit above this n while net matches).
+            cl = [t for t in tr if t.get("outcome") != "open"]
+            rs = [net_r([t]) for t in cl]
+            ds = [t.get("entry_date", "") for t in cl]
             m = compute(rs, ds)
+            m["n_open"] = len(tr) - len(cl)
             # Compare against the pin instead of trusting the run. A mismatch is
             # printed, not swallowed: the whole point is that nothing is hidden.
             pin = (cfg.get("pins") or {}).get("net") if era == "is" else \

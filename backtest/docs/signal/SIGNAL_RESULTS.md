@@ -14,6 +14,11 @@ they hold 400-600 trades at once and are a different question.
 it before `net` — a book at 700% has a handful of lucky trades and
 everything else in the book loses money.
 
+`n` counts CLOSED trades: the registry's net pins exclude positions
+still open at the era boundary (their r is mark-to-market, not
+realized), so `n` here can sit under the board's n while `net`
+matches its pin. `n_open` in the source JSON holds the difference.
+
 ## Summary
 
 | | count |
@@ -45,10 +50,10 @@ trades | `med` median R (negative means most trades lose) |
 
 | book | ISn | IS net | R/trd | wr% | PF | DD | top5% | med | strk | OOSn | **OOS net** | R/trd | wr% | PF | DD | top5% |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `fsent_sig_full` | 234 | +291.0 | +1.244 | 41.0% | 3.00 | 10.8 | 82 | -1.01 | 10 | 153 | **+190.5** | +1.245 | 45.1% | 3.33 | 7.0 | 66 |
+| `fsent_sig_full` | 234 | +291.0 | +1.244 | 41.0% | 3.00 | 10.8 | 82 | -1.01 | 10 | 152 | **+190.9** | +1.256 | 45.4% | 3.35 | 7.0 | 66 |
 | `fsent_sig_fs_mom` | 235 | +262.3 | +1.116 | 38.7% | 3.02 | 10.1 | 88 | -0.33 | 11 | 152 | **+165.6** | +1.090 | 40.1% | 3.31 | 9.1 | 75 |
 | `fsent_sig_wk_pause_short` | 302 | +206.9 | +0.685 | 35.8% | 2.18 | 10.6 | 93 | -0.53 | 8 | 179 | **+128.8** | +0.719 | 35.2% | 2.41 | 10.5 | 73 |
-| `fsent_sig_sw10_short` | 369 | +174.1 | +0.472 | 32.2% | 1.77 | 16.6 | 117 | -0.63 | 9 | 239 | **+100.9** | +0.422 | 31.0% | 1.72 | 11.8 | 110 |
+| `fsent_sig_sw10_short` | 368 | +174.3 | +0.474 | 32.3% | 1.77 | 16.6 | 117 | -0.63 | 9 | 239 | **+100.9** | +0.422 | 31.0% | 1.72 | 11.8 | 110 |
 | `fsent_sig_sw20_short` | 343 | +146.9 | +0.428 | 34.1% | 1.71 | 32.5 | 107 | -0.64 | 11 | 203 | **+95.0** | +0.468 | 31.5% | 1.81 | 10.2 | 107 |
 | `fsent_sig_sw20_short_wr` | 343 | +146.9 | +0.428 | 34.1% | 1.71 | 32.5 | 107 | -0.64 | 11 | 203 | **+95.0** | +0.468 | 31.5% | 1.81 | 10.2 | 107 |
 | `fsent_sig_sw10_long` | 355 | +116.4 | +0.328 | 32.7% | 1.55 | 21.1 | 130 | -0.52 | 10 | 229 | **+81.5** | +0.356 | 30.1% | 1.63 | 13.5 | 107 |
@@ -97,8 +102,8 @@ is a few trades, not an edge.
 
 | book | ISn | IS net | PF | OOSn | OOS net | PF |
 |---|---:|---:|---:|---:|---:|---:|
-| `trail06_swingpause_sig` | 2 | +2173.2 | 1592.74 | 53 | -38.0 | 0.24 |
-| `trail10_swingpause_sig` | 3 | +376.6 | 276.84 | 56 | -38.3 | 0.24 |
+| `trail10_swingpause_sig` | 2 | +2.1 | 2.54 | 55 | -50.1 | 0.01 |
+| `trail06_swingpause_sig` | 1 | -1.4 | 0.00 | 52 | -49.8 | 0.00 |
 
 ## What separates them
 
