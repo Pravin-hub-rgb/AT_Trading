@@ -76,9 +76,33 @@ sibling books (`fsent_sig_fs_mom`, `fsent_sig_wk_pause_short`). Raw card:
 | fsent_sig_wk_pause_short | +128.8 / +0.719 / PF 2.41 | +123.9 / +0.953 / 2.56 | +87.5 / +1.055 / 2.96 | +91.4 / +1.252 / 3.00 |
 
 The shape repeats on all three books: trail_half+delay1 lifts R/trd ~+25%,
-decay_crossed ~+55-70%, half+crossed ~+75%, each trading OOS total net and
+decay_crossed ~+55-75%, half+crossed ~+75%, each trading OOS total net and
 trade count for a sharper book. That is a real family-level effect, not a
 curve-fit on one book. It is still a filter shape, not a free lunch — the
 totals come down, so adopting it means choosing "same edge, fewer trades,
 smoother curve" over "more total R". Nothing is pinned.
+
+## Multi-plane check on the FS leader pair (2026-10-06)
+
+Same lens on `fsent_champ_long` / `fsent_utcsat_long` (`_multi_half.py`,
+cards in `_multi_half.json/.md`):
+
+| book | arm | IS net | OOS n | OOS net | OOS R/trd | PF | DD |
+|---|---|---:|---:|---:|---:|---:|---:|
+| fsent_champ_long | base | +528.9 | 309 | +245.0 | +0.793 | 2.76 | 11.9 |
+| | **trail_half** | +530.7 | 278 | **+287.0** | +1.032 | 3.00 | 16.5 |
+| | half+delay1 | +644.4 | 257 | +256.2 | +0.997 | 2.75 | 15.3 |
+| | decay_crossed | +208.5 | 136 | +135.3 | +0.995 | 2.94 | 8.3 |
+| fsent_utcsat_long | base | +510.5 | 308 | +244.2 | +0.793 | 2.75 | 11.9 |
+| | **trail_half** | +532.0 | 277 | **+286.4** | +1.034 | 3.00 | 16.5 |
+| | half+delay1 | +605.0 | 256 | +255.6 | +0.999 | 2.74 | 15.3 |
+| | decay_crossed | +192.3 | 135 | +134.5 | +0.996 | 2.92 | 8.3 |
+
+On this family plain `exp_trail_half=1` **lifts** OOS net ~+17% (+245 → +287)
+with R/trd ~+30%, PF 2.76→3.00, at the cost of DD 11.9→16.5 and ~10% fewer
+trades. It repeats on both mirrors, so it is not one book. This is *opposite*
+to the signal-plane read (trail_half cut the totals there). It is now a
+candidate, not an adopted change; a proper gate (re-run exp_port_differential,
+cohort autopsy, path-true check) is the precondition before adopting.
+
 
