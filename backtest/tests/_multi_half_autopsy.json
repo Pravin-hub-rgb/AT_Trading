@@ -1,0 +1,82 @@
+{
+  "is": {
+    "fsent_champ_long": {
+      "shared": 442,
+      "removed": 83,
+      "added": 51,
+      "same_exit": 13,
+      "improved": 78,
+      "degraded": 351,
+      "delta_gross": 16.1,
+      "net_base": 528.9,
+      "net_half": 530.7,
+      "gap3R_base": [
+        73,
+        18
+      ],
+      "gap3R_half": [
+        68,
+        1
+      ]
+    },
+    "fsent_utcsat_long": {
+      "shared": 442,
+      "removed": 80,
+      "added": 50,
+      "same_exit": 11,
+      "improved": 78,
+      "degraded": 353,
+      "delta_gross": 15.9,
+      "net_base": 510.5,
+      "net_half": 532.0,
+      "gap3R_base": [
+        72,
+        14
+      ],
+      "gap3R_half": [
+        68,
+        1
+      ]
+    }
+  },
+  "oos": {
+    "fsent_champ_long": {
+      "shared": 244,
+      "removed": 65,
+      "added": 34,
+      "same_exit": 10,
+      "improved": 45,
+      "degraded": 189,
+      "delta_gross": 42.1,
+      "net_base": 245.0,
+      "net_half": 287.0,
+      "gap3R_base": [
+        34,
+        2
+      ],
+      "gap3R_half": [
+        36,
+        26
+      ]
+    },
+    "fsent_utcsat_long": {
+      "shared": 243,
+      "removed": 65,
+      "added": 34,
+      "same_exit": 10,
+      "improved": 45,
+      "degraded": 188,
+      "delta_gross": 42.3,
+      "net_base": 244.2,
+      "net_half": 286.4,
+      "gap3R_base": [
+        34,
+        2
+      ],
+      "gap3R_half": [
+        36,
+        26
+      ]
+    }
+  }
+}

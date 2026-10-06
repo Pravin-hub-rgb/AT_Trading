@@ -105,4 +105,35 @@ to the signal-plane read (trail_half cut the totals there). It is now a
 candidate, not an adopted change; a proper gate (re-run exp_port_differential,
 cohort autopsy, path-true check) is the precondition before adopting.
 
+### The gate (run 2026-10-06)
+
+**1. `exp_port_differential.py`: PASS.** The ladder's `trail half` case -
+which wraps `exp_trail_half=1` - is MATCH both eras, n=414/+282.41 IS,
+n=214/+70.71 OOS: the shipped engine books the same trades in the same order
+as the patched one. So `trail_half` is in the shipped binary and can be run in
+production. The decay gate is **not yet in that ladder** (no `exp_decay_mode`
+case), which is why the decay cells above are candidate-only by default.
+
+**2. Cohort autopsy** (`_multi_half_autopsy.py`, `_multi_half_autopsy.json`):
+trail_half does not change the entry trigger. Matching entries: fsent_champ_long
+OOS 244 of 309 base trades survive, 65 removed, 34 added - the ratchet's
+freed-slot + timeout interplay. Of the surviving trades, only 10 exit
+identically; 234 exit differently: improved=45, degraded=189, median exit delta
+−0.10R. The improved ones are big and win the sum: +42.1R on OOS exit-side
+alone, matching the +245.0→+287.0 total lift. fsent_utcsat_long is the same
+picture to a digit (+42.3R exit-delta, improved=45/degraded=188).
+
+So the recipe is not "trailing catches more". It is: **most exits trimmed a
+little (med −0.10R), a few exits much better (tail capture), and the freed/
+added slot dynamics net out**. The equity cost: winners get more spaced out -
+3R+ winner gaps OOS median 2 bars → 26 bars, same count (~34) - i.e. the
+smoother-draw boosting comes from letting fewer trades run further, not from
+more wins. That is exactly WHY it trades tail timing for total R, and why the
+DD widened to 16.5. It is a trade you can size and it is reproducible.
+
+**Adoption gate: still NOT adopted.** The OOS lift is carried by exit-tail
+capture plus added/removed slot dynamics - a 3R+-gap widening from 2 to 26
+bars - so we want one more check before shipping: `exp_fastcheck` on
+`fsent_champ_trailhalf` / `fsent_utcsat_trailhalf` themselves, plus a
+forward-period replay if a buffer exists.
 
