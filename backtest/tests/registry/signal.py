@@ -107,6 +107,38 @@ BOOKS = {
     # this change is not what makes the book differ. And omitting the key would
     # NOT mean "off" - BP carries ext_stop_r=1.5, and 1.5 is a live filter that
     # blocks 122 IS / 86 OOS signals. Write 0.0, never nothing.
+    #
+    # ===== GOVERNANCE: why the MAIN book keeps the 3-loss halt =====
+    # fsent_champ_long runs max_consecutive_losses=3. Removing it measured
+    # CHEAPER on both eras, and we kept it anyway. Written here so the next
+    # reader does not have to rediscover it from git log, and so nobody
+    # "fixes" the main book by deleting the halt because a table said so.
+    #
+    # What the measurement says (current engine, post-C17; artifacts
+    # _fsent_ablation.md "no_streak3", _strip.md "no_halt_only",
+    # _halt_sweep.md rows persist=7/ext=0.0 at halt=0 vs halt=3):
+    #
+    #   halt off : IS 575 / +566.6   OOS 337 / +270.9   PF 2.77   biggest drop 14.2
+    #   halt on  : IS 528 / +533.4   OOS 311 / +239.6   PF 2.69   biggest drop 11.9
+    #   delta    : +33.2R in sample, +31.3R out of sample
+    #
+    # So the data disagrees with the decision, on both eras, by about 30R.
+    # That is recorded, not hidden. What we accept in exchange:
+    #   - longest run of losses in a row goes from 15 trades to 16
+    #   - biggest drop from peak goes from 11.9R to 14.2R
+    #   - 26 more trades out of sample, and a slightly busier book
+    #
+    # WHY WE KEEP IT ANYWAY - this is a governance call, not a data call.
+    # The halt is a brake whose benefit is a worst-case bound, not an average.
+    # Its cost is certain and measured. Its benefit is what it does in the one
+    # stretch we have not lived through yet. Paying a certain ~30R for a bound
+    # on the unbounded case is the trade we are making on purpose; if the
+    # capital behind this book can absorb a 16-trade losing run, the cheaper
+    # book below is the better one and this note is the thing to overturn.
+    #
+    # Do not "correct" the main book from the tables. The counter-book
+    # fsent_champ_long_nohalt below is registered and pinned so the trade-off
+    # stays measurable by anyone, rather than being argued in prose.
     "fsent_champ_long_nohalt": {
           "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed) and ext_stop_r=0.0 (provably inert since C17, written explicitly because omitting the key would inherit BP's 1.5). Every behavioural knob identical to the base.",
           "engine": "patched",
