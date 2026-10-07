@@ -143,24 +143,41 @@ behaviour. Recorded so it is a known coupling and not a surprise.
 the re-test evidence written into the entry. Verified: pins unchanged, 0
 mismatches.
 
-**Not changed, on purpose:** `atr_low_thresh`, `chop_thresh` and `exp_mltf` are
-left written out at their current values.
+**Also changed, 2026-10-07: the four INERT keys were removed.** `chop_thresh`,
+`atr_low_thresh`, `exp_mltf` and `window_end` are gone from the entry. The
+earlier version of this file argued for keeping them written out, on the grounds
+that an inert knob written explicitly is pinned. That argument was right about
+the principle and wrong about these four, because **omitting them inherits an
+identical value in every case**:
 
-An inert knob written explicitly is pinned. The same knob omitted inherits
-`BP`, and `BP` is shared by every book in the repo and does move - its
-`chop_thresh` is already overridden once, to 58.0, precisely because that is a
-production tuning. Deleting these fields would buy tidiness and pay with a silent
-dependency on a global that other work is known to change. The one knob that
-genuinely had to move is `ext_stop_r`, and it moved to an explicit `0.0` - never
-to nothing, because `BP` carries `1.5` and that value binds for 51 trades IS and
-36 OOS.
+    chop_thresh      book 58.0  ->  BP 58.0    identical
+    atr_low_thresh   book 0.35  ->  BP 0.35    identical
+    window_end       book exit  ->  BP exit    identical
+    exp_mltf         book True  ->  BP absent  -> engine default, which is what
+                                                this book already did
 
-The `chop_thresh` correction above turns this from a tidiness argument into a
-measured one: 13 books reach that knob through `BP`'s `mode` default, and it
-carries +105R to +163R on the four sampled. A knob that heavy does not belong in
-a "delete the redundant fields" cleanup, and the fact that this book does not use
-it says nothing about the thirteen that do.
+Verified by removing all four and re-running: trade lists **byte-identical on both
+eras**, 528 / +533.37 IS and 311 / +239.59 OOS. The counter-book
+`fsent_champ_long_nohalt` also re-derives exactly (575 / +566.58 / 15.13 IS,
+337 / +270.91 / 14.16 OOS). The entry is now 10 keys instead of 14.
 
-`exp_knob_binds.py` now prints the mode census above the verdict table and flags
-any book that omits `mode`, so a future audit cannot produce an INERT row whose
-scope has been dropped.
+**The principle is unchanged, and it is why `ext_stop_r` was NOT removed.**
+Omitting a key is not the same as turning it off. `BP` carries `ext_stop_r=1.5`,
+which is a live filter blocking 51 IS / 36 OOS trades, so that one must be
+written as an explicit `0.0`. Three of the four removed keys happened to be safe
+only because nobody had moved their BP default yet — that is a fact about
+today's `BP`, not a fact about the key, and it is the reason the comparison
+above is worth running before deleting rather than after.
+
+**When any of the four comes back:**
+- `chop_thresh` / `atr_low_thresh` — if `mode` on this book ever changes to a
+  chop- or atr_low-reading mode. 13 registry books already reach chop_thresh this
+  way, carrying +105R to +163R.
+- `exp_mltf` — if this book ever runs at `max_positions=1`, where it removes 173
+  of 528 trades.
+- `window_end` — if `ext_stop_r` ever rises above `htf_rr`, where "exit" and
+  "r_touch" stop resolving to the same path.
+
+`exp_knob_binds.py` prints the mode census above the verdict table and flags any
+book that omits `mode`, so a future audit cannot produce an INERT row whose scope
+has been dropped.

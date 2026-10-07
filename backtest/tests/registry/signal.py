@@ -44,11 +44,11 @@ BOOKS = {
           "desc": "champion leg + LONGS enter at swing FS (shorts unchanged)",
           "engine": "patched",
           "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
-                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
-                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "sl_buf_atr": 0.01,
+                       "cooldown_bars": 8,
                        "max_consecutive_losses": 3, "ext_stop_r": 0.0,
-                       "exp_partial_r": 0.0, "exp_mltf": True,
-                       "exp_persist": 7, "window_end": "exit",
+                       "exp_partial_r": 0.0,
+                       "exp_persist": 7,
                        "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
@@ -92,14 +92,29 @@ BOOKS = {
     # The point of registering it rather than folding it into the base is
     # attribution.
     #
-    # chop_thresh stays at 58.0 - NOT because it is inert everywhere, because it is
-    # inert ON THIS BOOK only. mode="atr_high" routes on atr_high_thresh alone
-    # and never reads chop_thresh. That is NOT a registry-wide fact: 13 registry
-    # books omit `mode`, inherit BP's "b2_vs_flip_chop", and DO read it, and on
-    # the four sampled it carries +105R to +163R. One of those 13 is named
-    # lb30_chop55_persist2. See docs/method/KNOB_BINDS_AUDIT.md. Written out
-    # explicitly so a future mode change cannot silently drop this book onto BP's
-    # chop_thresh.
+    # FOUR KEYS REMOVED 2026-10-07 - chop_thresh, atr_low_thresh, exp_mltf,
+    # window_end. All four were measured INERT on this book (exp_knob_binds.py)
+    # and all four omit cleanly: this book's own value equalled the BP default in
+    # every case except exp_mltf, where BP has no value at all. Verified by
+    # removing all four and re-running: trade lists byte-identical on both eras,
+    # 528 / +533.37 IS and 311 / +239.59 OOS.
+    #
+    # chop_thresh - mode="atr_high" routes on atr_high_thresh alone and never
+    # reads chop_thresh. Removed because BP's default is ALSO 58.0, so there is
+    # nothing to inherit differently. That is NOT a registry-wide fact: 13
+    # registry books omit `mode`, inherit BP's "b2_vs_flip_chop", and DO read it,
+    # carrying +105R to +163R on the four sampled; one is named
+    # lb30_chop55_persist2. See docs/method/KNOB_BINDS_AUDIT.md. If `mode` on
+    # this book ever changes to a chop-reading mode, this key must come back, and
+    # the audit that says so is the mode census in exp_knob_binds.py.
+    # atr_low_thresh - same mode-gating, same reasoning, BP default 0.35.
+    # exp_mltf - inert ONLY at this book's max_positions=0. At max_positions=1 it
+    # removes 173 of 528 trades, so it is not dead code and would bite anyone who
+    # made the book serial. BP carries no value for it, so omitting it means
+    # "engine default", which is what this book already does.
+    # window_end - value-collapsed: at ext_stop_r=0.0 both "exit" and "r_touch"
+    # resolve to the same code path. It reappears if ext_stop_r ever goes above
+    # htf_rr. BP default is "exit".
     #
     # ext_stop_r is set to 0.0 explicitly rather than dropped, for two reasons.
     # It is provably inert since C17: 3.0 and 0.0 produce byte-identical trade
