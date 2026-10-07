@@ -49,16 +49,6 @@
   "OK": true,
   "secs": 9.8
  },
- "gap_inert_event_shift": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.3
- },
  "trail_half_skipn8_nodelay": {
   "n": 386,
   "net": 600.43,
@@ -108,16 +98,6 @@
   "pin_dd_net": 55.03,
   "OK": true,
   "secs": 9.6
- },
- "trail10_multi": {
-  "n": 235,
-  "net": -230.38,
-  "dd_net": 233.48,
-  "pin_n": 246,
-  "pin_net": -247.51,
-  "pin_dd_net": 248.22,
-  "OK": false,
-  "secs": 17.9
  },
  "gap_slbuf025": {
   "n": 502,
@@ -219,56 +199,6 @@
   "OK": true,
   "secs": 8.5
  },
- "gap_inert_chop52": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.4
- },
- "gap_inert_chop61": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.3
- },
- "gap_inert_lb50": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.6
- },
- "gap_inert_lb60": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.5
- },
- "gap_inert_htfrr3": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 10.0
- },
  "gap_campaign4": {
   "n": 377,
   "net": 75.52,
@@ -279,16 +209,6 @@
   "OK": true,
   "secs": 9.0
  },
- "gap_campaign1": {
-  "n": 189,
-  "net": -67.29,
-  "dd_net": 68.13,
-  "pin_n": 183,
-  "pin_net": -34.78,
-  "pin_dd_net": 46.27,
-  "OK": false,
-  "secs": 8.4
- },
  "gap_campaign_markneg": {
   "n": 278,
   "net": -16.73,
@@ -298,16 +218,6 @@
   "pin_dd_net": 66.45,
   "OK": true,
   "secs": 8.7
- },
- "gap_inert_cohort1": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 10.7
  },
  "gap_bm_min09": {
   "n": 376,
@@ -439,66 +349,6 @@
   "OK": true,
   "secs": 9.3
  },
- "gap_campaign_mark05": {
-  "n": 273,
-  "net": -15.0,
-  "dd_net": 63.69,
-  "pin_n": 267,
-  "pin_net": -4.69,
-  "pin_dd_net": 49.81,
-  "OK": false,
-  "secs": 8.6
- },
- "gap_inert_winkill2": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.3
- },
- "gap_inert_winkill3": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 8.3
- },
- "gap_inert_lossstreak": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.2
- },
- "gap_inert_cohort2": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.4
- },
- "gap_inert_curfew44": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.3
- },
  "gap_cooldown20": {
   "n": 487,
   "net": 244.09,
@@ -529,16 +379,6 @@
   "OK": true,
   "secs": 10.6
  },
- "gap_loss_kill1": {
-  "n": 220,
-  "net": -69.58,
-  "dd_net": 74.87,
-  "pin_n": 213,
-  "pin_net": -29.83,
-  "pin_dd_net": 38.88,
-  "OK": false,
-  "secs": 9.4
- },
  "gap_campaign_max2": {
   "n": 277,
   "net": -15.67,
@@ -549,16 +389,6 @@
   "OK": true,
   "secs": 9.8
  },
- "gap_ma_trail": {
-  "n": 571,
-  "net": -60.86,
-  "dd_net": 102.06,
-  "pin_n": 554,
-  "pin_net": -67.38,
-  "pin_dd_net": 105.97,
-  "OK": false,
-  "secs": 10.2
- },
  "gap_pivot_trail": {
   "n": 523,
   "net": 136.08,
@@ -568,16 +398,6 @@
   "pin_dd_net": 47.86,
   "OK": true,
   "secs": 13.2
- },
- "gap_window_entry_cap1": {
-  "n": 189,
-  "net": -68.34,
-  "dd_net": 69.18,
-  "pin_n": 183,
-  "pin_net": -33.79,
-  "pin_dd_net": 45.28,
-  "OK": false,
-  "secs": 8.9
  },
  "gap_profit_stage5": {
   "n": 506,
@@ -619,36 +439,6 @@
   "OK": true,
   "secs": 9.7
  },
- "gap_inert_geom": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 9.9
- },
- "gap_inert_kill": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 10.2
- },
- "gap_inert_chop65": {
-  "n": 503,
-  "net": 288.52,
-  "dd_net": 43.2,
-  "pin_n": 499,
-  "pin_net": 239.12,
-  "pin_dd_net": 46.85,
-  "OK": false,
-  "secs": 10.4
- },
  "fsexit4_c": {
   "n": 507,
   "net": 298.0,
@@ -667,7 +457,7 @@
   "pin_net": 533.37,
   "pin_dd_net": 13.42,
   "OK": true,
-  "secs": 11.0
+  "secs": 12.2
  },
  "fsent_champ_short": {
   "n": 533,
@@ -677,7 +467,7 @@
   "pin_net": 600.6,
   "pin_dd_net": 17.6,
   "OK": true,
-  "secs": 10.1
+  "secs": 11.0
  },
  "fsent_utcsat_long": {
   "n": 525,
@@ -687,7 +477,7 @@
   "pin_net": 465.0,
   "pin_dd_net": 20.66,
   "OK": true,
-  "secs": 10.7
+  "secs": 11.0
  },
  "fsent_utcsat_short": {
   "n": 531,
@@ -899,26 +689,6 @@
   "OK": true,
   "secs": 8.8
  },
- "decayF_c": {
-  "n": 212,
-  "net": -45.19,
-  "dd_net": 75.05,
-  "pin_n": 206,
-  "pin_net": -43.62,
-  "pin_dd_net": 66.8,
-  "OK": false,
-  "secs": 9.0
- },
- "decayF_u": {
-  "n": 194,
-  "net": -16.1,
-  "dd_net": 50.08,
-  "pin_n": 191,
-  "pin_net": -21.96,
-  "pin_dd_net": 51.57,
-  "OK": false,
-  "secs": 8.8
- },
  "decayG_c": {
   "n": 154,
   "net": 42.27,
@@ -958,26 +728,6 @@
   "pin_dd_net": 45.9,
   "OK": true,
   "secs": 8.8
- },
- "cap1d": {
-  "n": 245,
-  "net": -31.25,
-  "dd_net": 76.27,
-  "pin_n": 236,
-  "pin_net": -49.73,
-  "pin_dd_net": 84.28,
-  "OK": false,
-  "secs": 8.7
- },
- "cap4d": {
-  "n": 391,
-  "net": -43.42,
-  "dd_net": 65.91,
-  "pin_n": 385,
-  "pin_net": -35.21,
-  "pin_dd_net": 57.45,
-  "OK": false,
-  "secs": 9.2
  },
  "cap8d": {
   "n": 474,
@@ -1198,26 +948,6 @@
   "pin_dd_net": 35.79,
   "OK": true,
   "secs": 10.3
- },
- "skipwin1_multi_sw10": {
-  "n": 150,
-  "net": -32.04,
-  "dd_net": 54.15,
-  "pin_n": 145,
-  "pin_net": -38.54,
-  "pin_dd_net": 52.54,
-  "OK": false,
-  "secs": 8.8
- },
- "skipwin2_multi_sw10": {
-  "n": 105,
-  "net": -60.72,
-  "dd_net": 63.81,
-  "pin_n": 101,
-  "pin_net": -65.33,
-  "pin_dd_net": 66.47,
-  "OK": false,
-  "secs": 7.9
  },
  "swingpause_multi_sw10": {
   "n": 449,
@@ -2148,5 +1878,15 @@
   "pin_dd_net": 31.43,
   "OK": true,
   "secs": 9.7
+ },
+ "fsent_champ_long_nohalt": {
+  "n": 575,
+  "net": 566.58,
+  "dd_net": 15.13,
+  "pin_n": 575,
+  "pin_net": 566.6,
+  "pin_dd_net": 15.1,
+  "OK": true,
+  "secs": 13.4
  }
 }
