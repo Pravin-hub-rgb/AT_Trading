@@ -1,0 +1,85 @@
+{
+  "book": "fsent_champ_long",
+  "mode": "atr_high",
+  "atr_high_thresh": 0.65,
+  "chop_thresh": 58.0,
+  "overlap": {
+    "is": {
+      "total": 129715,
+      "cells": {
+        "chop_low  / atr_low  ": 97241,
+        "chop_HIGH / atr_low  ": 23993,
+        "chop_low  / atr_HIGH ": 7930,
+        "chop_HIGH / atr_HIGH ": 551
+      }
+    },
+    "oos": {
+      "total": 70058,
+      "cells": {
+        "chop_low  / atr_HIGH ": 14071,
+        "chop_low  / atr_low  ": 43391,
+        "chop_HIGH / atr_low  ": 10804,
+        "chop_HIGH / atr_HIGH ": 1792
+      }
+    }
+  },
+  "percell": {
+    "is": {
+      "chop_low  / atr_low  ": {
+        "n": 425,
+        "net": 387.91,
+        "mean": 0.913,
+        "win_pct": 39.8
+      },
+      "chop_low  / atr_HIGH ": {
+        "n": 24,
+        "net": 12.55,
+        "mean": 0.523,
+        "win_pct": 29.2
+      },
+      "chop_HIGH / atr_low  ": {
+        "n": 75,
+        "net": 131.98,
+        "mean": 1.76,
+        "win_pct": 45.3
+      },
+      "chop_HIGH / atr_HIGH ": {
+        "n": 4,
+        "net": 0.92,
+        "mean": 0.23,
+        "win_pct": 25.0
+      }
+    },
+    "oos": {
+      "chop_low  / atr_HIGH ": {
+        "n": 70,
+        "net": 30.76,
+        "mean": 0.439,
+        "win_pct": 34.3
+      },
+      "chop_low  / atr_low  ": {
+        "n": 195,
+        "net": 97.35,
+        "mean": 0.499,
+        "win_pct": 36.4
+      },
+      "chop_HIGH / atr_low  ": {
+        "n": 42,
+        "net": 109.51,
+        "mean": 2.607,
+        "win_pct": 42.9
+      },
+      "chop_HIGH / atr_HIGH ": {
+        "n": 4,
+        "net": 1.96,
+        "mean": 0.491,
+        "win_pct": 50.0
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "f4b7468",
+    "measured": "2026-10-07",
+    "harness": "exp_mode_regime.py"
+  }
+}

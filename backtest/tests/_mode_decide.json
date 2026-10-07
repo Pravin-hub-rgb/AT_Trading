@@ -1,0 +1,175 @@
+{
+  "book": "fsent_champ_long",
+  "rows": [
+    {
+      "arm": "atr_high (shipping)",
+      "mode": "atr_high",
+      "chop_thresh": 58.0,
+      "is": {
+        "n": 528,
+        "net": 533.4,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 311,
+        "net": 239.6,
+        "dd": 11.9
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=30",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 30,
+      "is": {
+        "n": 664,
+        "net": 657.7,
+        "dd": 31.1
+      },
+      "oos": {
+        "n": 359,
+        "net": 190.6,
+        "dd": 16.6
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=40",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 40,
+      "is": {
+        "n": 664,
+        "net": 657.7,
+        "dd": 31.1
+      },
+      "oos": {
+        "n": 359,
+        "net": 190.6,
+        "dd": 16.6
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=50",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 50,
+      "is": {
+        "n": 577,
+        "net": 574.6,
+        "dd": 28.2
+      },
+      "oos": {
+        "n": 325,
+        "net": 258.2,
+        "dd": 11.6
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=55",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 55,
+      "is": {
+        "n": 526,
+        "net": 575.6,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 297,
+        "net": 248.5,
+        "dd": 11.9
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=58",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 58,
+      "is": {
+        "n": 528,
+        "net": 533.4,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 294,
+        "net": 244.4,
+        "dd": 11.9
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=62",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 62,
+      "is": {
+        "n": 528,
+        "net": 533.4,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 294,
+        "net": 244.4,
+        "dd": 11.9
+      }
+    },
+    {
+      "arm": "decisive_vs_flip_chop ch=70",
+      "mode": "decisive_vs_flip_chop",
+      "chop_thresh": 70,
+      "is": {
+        "n": 528,
+        "net": 533.4,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 294,
+        "net": 244.4,
+        "dd": 11.9
+      }
+    },
+    {
+      "arm": "chop_or_atr_low",
+      "mode": "chop_or_atr_low",
+      "chop_thresh": 58.0,
+      "is": {
+        "n": 640,
+        "net": 645.0,
+        "dd": 28.9
+      },
+      "oos": {
+        "n": 313,
+        "net": 182.9,
+        "dd": 14.6
+      }
+    },
+    {
+      "arm": "chop_and_atr_low",
+      "mode": "chop_and_atr_low",
+      "chop_thresh": 58.0,
+      "is": {
+        "n": 528,
+        "net": 533.4,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 294,
+        "net": 244.4,
+        "dd": 11.9
+      }
+    },
+    {
+      "arm": "soft_chop",
+      "mode": "soft_chop",
+      "chop_thresh": 58.0,
+      "is": {
+        "n": 525,
+        "net": 529.4,
+        "dd": 13.4
+      },
+      "oos": {
+        "n": 297,
+        "net": 248.5,
+        "dd": 11.9
+      }
+    }
+  ],
+  "_provenance": {
+    "engine": "f4b7468",
+    "measured": "2026-10-07",
+    "harness": "exp_mode_decide.py"
+  }
+}
