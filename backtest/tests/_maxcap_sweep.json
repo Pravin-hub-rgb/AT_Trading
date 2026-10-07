@@ -1,0 +1,258 @@
+{
+  "book": "fsent_champ_long",
+  "rows": [
+    {
+      "cap": 0,
+      "is": {
+        "n": 528,
+        "net": 533.4,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 16.79,
+        "max_streak": 11,
+        "pf": 3.088,
+        "pos_month": 71.1,
+        "peak": 11,
+        "top": 48.636,
+        "without_top": 484.73
+      },
+      "oos": {
+        "n": 311,
+        "net": 239.6,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.23,
+        "max_streak": 15,
+        "pf": 2.688,
+        "pos_month": 70.8,
+        "peak": 6,
+        "top": 26.13,
+        "without_top": 213.46
+      },
+      "d_is": 0.0,
+      "d_oos": 0.0
+    },
+    {
+      "cap": 2,
+      "is": {
+        "n": 456,
+        "net": 307.6,
+        "max_dd": 16.0,
+        "dd_dur": 47,
+        "ulcer": 18.67,
+        "max_streak": 10,
+        "pf": 2.256,
+        "pos_month": 75.6,
+        "peak": 2,
+        "top": 48.485,
+        "without_top": 259.11
+      },
+      "oos": {
+        "n": 273,
+        "net": 128.2,
+        "max_dd": 11.4,
+        "dd_dur": 29,
+        "ulcer": 19.04,
+        "max_streak": 14,
+        "pf": 1.947,
+        "pos_month": 66.7,
+        "peak": 2,
+        "top": 21.257,
+        "without_top": 106.9
+      },
+      "d_is": -225.8,
+      "d_oos": -111.4
+    },
+    {
+      "cap": 3,
+      "is": {
+        "n": 493,
+        "net": 408.8,
+        "max_dd": 12.5,
+        "dd_dur": 10,
+        "ulcer": 17.6,
+        "max_streak": 11,
+        "pf": 2.627,
+        "pos_month": 71.1,
+        "peak": 3,
+        "top": 48.636,
+        "without_top": 360.19
+      },
+      "oos": {
+        "n": 295,
+        "net": 201.2,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.01,
+        "max_streak": 14,
+        "pf": 2.451,
+        "pos_month": 70.8,
+        "peak": 3,
+        "top": 21.257,
+        "without_top": 179.95
+      },
+      "d_is": -124.6,
+      "d_oos": -38.4
+    },
+    {
+      "cap": 4,
+      "is": {
+        "n": 508,
+        "net": 456.6,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 17.15,
+        "max_streak": 11,
+        "pf": 2.803,
+        "pos_month": 71.1,
+        "peak": 4,
+        "top": 48.636,
+        "without_top": 408.0
+      },
+      "oos": {
+        "n": 306,
+        "net": 209.5,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.34,
+        "max_streak": 14,
+        "pf": 2.488,
+        "pos_month": 70.8,
+        "peak": 4,
+        "top": 21.257,
+        "without_top": 188.26
+      },
+      "d_is": -76.8,
+      "d_oos": -30.1
+    },
+    {
+      "cap": 5,
+      "is": {
+        "n": 516,
+        "net": 501.2,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 17.0,
+        "max_streak": 11,
+        "pf": 2.969,
+        "pos_month": 71.1,
+        "peak": 5,
+        "top": 48.636,
+        "without_top": 452.53
+      },
+      "oos": {
+        "n": 309,
+        "net": 235.7,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.25,
+        "max_streak": 14,
+        "pf": 2.67,
+        "pos_month": 70.8,
+        "peak": 5,
+        "top": 26.13,
+        "without_top": 209.58
+      },
+      "d_is": -32.2,
+      "d_oos": -3.9
+    },
+    {
+      "cap": 6,
+      "is": {
+        "n": 522,
+        "net": 515.5,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 16.9,
+        "max_streak": 11,
+        "pf": 3.016,
+        "pos_month": 71.1,
+        "peak": 6,
+        "top": 48.636,
+        "without_top": 466.9
+      },
+      "oos": {
+        "n": 311,
+        "net": 239.6,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.23,
+        "max_streak": 15,
+        "pf": 2.688,
+        "pos_month": 70.8,
+        "peak": 6,
+        "top": 26.13,
+        "without_top": 213.46
+      },
+      "d_is": -17.9,
+      "d_oos": 0.0
+    },
+    {
+      "cap": 7,
+      "is": {
+        "n": 524,
+        "net": 528.1,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 16.86,
+        "max_streak": 11,
+        "pf": 3.069,
+        "pos_month": 71.1,
+        "peak": 7,
+        "top": 48.636,
+        "without_top": 479.49
+      },
+      "oos": {
+        "n": 311,
+        "net": 239.6,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.23,
+        "max_streak": 15,
+        "pf": 2.688,
+        "pos_month": 70.8,
+        "peak": 6,
+        "top": 26.13,
+        "without_top": 213.46
+      },
+      "d_is": -5.3,
+      "d_oos": 0.0
+    },
+    {
+      "cap": 8,
+      "is": {
+        "n": 525,
+        "net": 530.0,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 16.84,
+        "max_streak": 11,
+        "pf": 3.076,
+        "pos_month": 71.1,
+        "peak": 8,
+        "top": 48.636,
+        "without_top": 481.33
+      },
+      "oos": {
+        "n": 311,
+        "net": 239.6,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.23,
+        "max_streak": 15,
+        "pf": 2.688,
+        "pos_month": 70.8,
+        "peak": 6,
+        "top": 26.13,
+        "without_top": 213.46
+      },
+      "d_is": -3.4,
+      "d_oos": 0.0
+    }
+  ],
+  "_provenance": {
+    "engine": "d57c595",
+    "measured": "2026-10-07",
+    "harness": "exp_maxcap_sweep.py"
+  }
+}

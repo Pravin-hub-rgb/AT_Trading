@@ -293,7 +293,20 @@ def simulate_htf_ltf_streak_halt(
       #   behavioural difference v19 introduced to the position path; everything
       #   else v19 added was exp_persist, exp_causal_sl and pivot_rule, all of which
       #   v18 already handled or already defaulted off.
-      max_positions=0,
+max_positions=0,
+      # UNIFIED: cap on SIMULTANEOUSLY OPEN positions, as distinct from
+      # max_positions which is the serial 1/0 gate above. Needed because
+      # max_positions>0 uses the single `busy_until` timestamp, which cannot
+      # express "at most N open" - it only knows when the last booked trade
+      # closed. N=0 (the default) disables the cap entirely and must reproduce
+      # every shipped pin exactly; it adds no gate of any kind.
+      #
+      # Reads the booked trades' own entry_ts/exit_ts, both of which are settled
+      # before the NEXT entry is considered, so a position is never counted as
+      # open using a number that was not knowable when the entry decision was
+      # made. Counts a trade as open on [entry_ts, exit_ts] inclusive, matching
+      # how the concurrency census in exp_maxcap_sweep.py counts it.
+      exp_max_concurrent=0,
       # UNIFIED: regime hysteresis. v19 hardcoded PERSIST=7 in the function body,
       # so it could not be switched off and v18 could not share the code path.
       #
@@ -992,6 +1005,9 @@ def simulate_htf_ltf_streak_halt(
     # this line raises UnboundLocalError on the first entry. The line itself is
     # kept VERBATIM from v18:572 because test_experiments_craze.py anchors on it.
     busy_until=""  # datetime string — timestamp-based, not index
+    # UNIFIED: booked-trade intervals backing exp_max_concurrent. Stays empty at
+    # N=0 so the gate never fires and the shipped pins are untouched.
+    _open_ivs=[]  # (entry_ts:int, exit_ts:int) for trades booked so far
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
@@ -1029,6 +1045,15 @@ def simulate_htf_ltf_streak_halt(
         # UNIFIED: the position gate, restored from v18:582 under a parameter.
         # max_positions=1 reproduces v18 exactly; 0 is v19 (unlimited).
         if max_positions > 0 and busy_until and bar_time <= busy_until: continue
+        # UNIFIED: simultaneous-open cap. Distinct from the serial gate above,
+        # which knows only when the last booked trade closed. Counts trades
+        # already booked whose [entry_ts, exit_ts] contains this entry bar.
+        # Causal: every exit_ts in _open_ivs was settled before this entry was
+        # considered, since trades are booked in stream order.
+        if exp_max_concurrent > 0 and _open_ivs:
+            _bt=int(candles_ltf[i]["ts"])
+            _nopen=sum(1 for (_a,_b) in _open_ivs if _a <= _bt <= _b)
+            if _nopen >= exp_max_concurrent: continue
         # CRAZE ANCHOR: the line above is the v18 gate restored verbatim, so
         # test_experiments_craze.py's t10 anchor (which rewrites the bare
         # `if busy_until and bar_time <= busy_until: continue` form) does not
@@ -1334,6 +1359,10 @@ def simulate_htf_ltf_streak_halt(
             "partial_exit_price": round(_partial_exit_price, 2) if _partial_exit_price > 0 else 0.0,
         })
         busy_until=candles_ltf[exit_idx]["date"] if exit_idx is not None and exit_idx < n else ""
+        if exp_max_concurrent > 0:
+            _open_ivs.append((int(candles_ltf[i]["ts"]),
+                              int(candles_ltf[exit_idx]["ts"]) if exit_idx is not None and exit_idx < n
+                              else int(candles_ltf[i]["ts"])))
         if _gray_until and (not busy_until or _gray_until > busy_until):
             busy_until=_gray_until
         if cooldown_bars > 0 and r_multiple < 0:

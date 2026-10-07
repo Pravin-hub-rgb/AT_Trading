@@ -141,7 +141,13 @@ def _patch_002_sig_star(s: str) -> str:
                   '    exp_chop15_lo=0.0,\n'
                   '    exp_chop15_hi=0.0,\n'
                   '    exp_atr_ratio_max=0.0,\n'
-                  '    exp_max_concurrent=0,\n'
+                  # exp_max_concurrent REMOVED from this injected-params list
+                  # 2026-10-07: it is now a real engine keyword in unified.py,
+                  # so listing it here too made the generated superset a Python
+                  # SyntaxError (duplicate argument). It was never a harness-only
+                  # knob - the harness only supplied it because the engine lacked
+                  # it. The gate lines further down still reference the name and
+                  # still work, since the engine now provides it.
                   '    exp_cohort_swingpause=0,\n'
                   '    exp_cohort_rearm=0,\n'
                   '    exp_cohort_loss_n=1,\n'
