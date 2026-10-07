@@ -457,7 +457,7 @@
   "pin_net": 533.37,
   "pin_dd_net": 13.42,
   "OK": true,
-  "secs": 12.2
+  "secs": 10.1
  },
  "fsent_champ_short": {
   "n": 533,
@@ -1887,6 +1887,6 @@
   "pin_net": 566.6,
   "pin_dd_net": 15.1,
   "OK": true,
-  "secs": 13.4
+  "secs": 10.2
  }
 }
