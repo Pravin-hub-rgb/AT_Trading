@@ -48,6 +48,7 @@ BOOKS = {
                        "cooldown_bars": 8,
                        "max_consecutive_losses": 3, "ext_stop_r": 0.0,
                        "exp_partial_r": 0.0,
+                       "exp_mltf": True,
                        "exp_persist": 7,
                        "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
@@ -108,10 +109,32 @@ BOOKS = {
     # this book ever changes to a chop-reading mode, this key must come back, and
     # the audit that says so is the mode census in exp_knob_binds.py.
     # atr_low_thresh - same mode-gating, same reasoning, BP default 0.35.
-    # exp_mltf - inert ONLY at this book's max_positions=0. At max_positions=1 it
-    # removes 173 of 528 trades, so it is not dead code and would bite anyone who
-    # made the book serial. BP carries no value for it, so omitting it means
-    # "engine default", which is what this book already does.
+    # exp_mltf is BACK, and the reason it left is worth recording because it was my
+    # error. It was removed 2026-10-07 in a cleanup of the four inert keys, on the
+    # grounds that it is INERT at max_positions=0 and that BP carries no value for
+    # it. Both halves of that are true and together they were misleading: the
+    # engine default for the key is 0, so omitting it happened to reproduce the
+    # pinned trade lists exactly, which made removal look safe.
+    #
+    # It is NOT dead. It is the multi-timeframe gate and this book is a MULTI
+    # position book, so the knob matters the moment anyone flips the book to
+    # max_positions=1. Measured, post-C17, this book's config:
+    #
+    #   max_positions=1, exp_mltf off   IS 355 / +166.31   OOS 220 / +66.99
+    #   max_positions=1, exp_mltf on    IS 528 / +533.37   OOS 311 / +239.59
+    #
+    # A 69% loss of return if the book is made serial without restoring this key.
+    # At the shipped max_positions=0 the key is genuinely inert - restoring it
+    # changes nothing, trade lists byte-identical both eras - so it costs one line
+    # and removes a live trap.
+    #
+    # THE LESSON, which is the generalisable part: "INERT" from exp_knob_binds.py
+    # is scoped to the config it was measured on, and that config includes
+    # max_positions. Deleting a key whose inertness depends on ANOTHER setting is
+    # only safe if the other setting cannot change. Three of the four keys removed
+    # that day were safe because their BP default was identical; this one was safe
+    # only because max_positions=0 happened to be true today. Do not generalise
+    # from "it omitted cleanly" to "it is unnecessary".
     # window_end - value-collapsed: at ext_stop_r=0.0 both "exit" and "r_touch"
     # resolve to the same code path. It reappears if ext_stop_r ever goes above
     # htf_rr. BP default is "exit".
