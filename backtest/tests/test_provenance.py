@@ -58,6 +58,22 @@ def test_read_returns_none_when_unstamped(tmp_path):
     assert pv.read(f) is None
 
 
+def test_harness_field_may_contain_spaces(tmp_path):
+    # A stamp may record that the harness was deleted, not just its name. With
+    # \S+ in the pattern such a stamp was written and then read back as None,
+    # which is indistinguishable from "never stamped" - the one wrong answer this
+    # file must not give.
+    f = tmp_path / "a.md"
+    f.write_text(
+        "<!-- prov: engine=abc1234 measured=2026-10-07 harness=recorded, harnesses deleted -->\n"
+        "# R\n", encoding="utf-8")
+    rec = pv.read(f)
+    assert rec is not None
+    assert rec["engine"] == "abc1234"
+    assert rec["measured"] == "2026-10-07"
+    assert "deleted" in rec["harness"]
+
+
 def test_read_returns_none_on_malformed_json(tmp_path):
     f = tmp_path / "_c.json"
     f.write_text("{not json", encoding="utf-8")

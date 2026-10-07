@@ -54,10 +54,16 @@ MD_MARK = "<!-- prov:"
 JSON_KEY = "_provenance"
 
 # <!-- prov: engine=abc1234 measured=2026-10-07 harness=exp_foo.py -->
+#
+# The harness field accepts spaces (a stamp may say "harnesses deleted") and is
+# delimited by "-->" rather than by whitespace, so a free-text value cannot stop
+# the pattern matching. It was \S+ and a stamp written with a multi-word harness
+# was silently unreadable - which reads as "no provenance" and is the one answer
+# this file must never give wrongly.
 _MD_RE = re.compile(
     r"<!--\s*prov:\s*engine=(?P<engine>[0-9a-f]{7,40})\s+"
     r"measured=(?P<measured>\d{4}-\d{2}-\d{2})"
-    r"(?:\s+harness=(?P<harness>\S+))?\s*-->"
+    r"(?:\s+harness=(?P<harness>[^>]*?))?\s*-->"
 )
 
 
@@ -144,9 +150,15 @@ def artifacts() -> list[Path]:
     for base in (ROOT / "backtest" / "docs", ROOT / "backtest" / "tests"):
         if not base.exists():
             continue
-        out += [p for p in base.rglob("*.md") if not p.name.startswith("_")]
+        # Every markdown under these trees carries numbers, prose or scratch:
+        #   method/*.md      hand-written write-ups
+        #   _*.md, _*.json   scratch artifacts a harness writes beside itself
+        # The `_`-prefixed markdown family was missing from this inventory, so a
+        # stamped file in it was invisible to verify(). A stamp that can never be
+        # checked is not a stamp.
+        out += list(base.rglob("*.md"))
         out += list(base.rglob("_*.json"))
-    return sorted(out)
+    return sorted(set(out))
 
 
 def verify(paths: list[Path] | None = None, quiet: bool = False) -> int:

@@ -1,4 +1,4 @@
-<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_cell_tables.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=recorded, harnesses deleted -->
 # The experiments - three new books, all FAILED
 
 Your original book is the "before" row. Everything else was built today and none

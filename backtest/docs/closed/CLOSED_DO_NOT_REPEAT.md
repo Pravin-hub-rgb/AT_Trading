@@ -602,3 +602,70 @@ should re-add on the strength of this section alone. Run the engine first.
 Harnesses kept for the record: `exp_fs_census.py` (the direction/room census),
 `exp_fs_room_exit.py` (idea 3), `exp_fs_untested.py` (ideas 4/5/6),
 `exp_fs_be_books.py` (idea 4 across books). Results in `_fs_*_results.json`.
+
+## REGIME ROUTING ON CHOP — closed 2026-10-07, nothing adopted
+
+The owner asked whether `chop_thresh` could be used on `fsent_champ_long`, since
+the knob is reported INERT there. It is not inert because it does nothing in
+general — the book runs `mode="atr_high"` and never reads it. Answered: **no
+routing on chop beats the shipping router, and the owner closed it.**
+
+`fsent_champ_long` as shipped: IS 528 / +533.37 / dd 13.42, OOS 311 / +239.59 /
+dd 11.88. **That book is unchanged. The three `mode` branches added to test this
+have been reverted out of `unified.py`.**
+
+**Why it looked worth trying.** Two indicators, genuinely different variables:
+`chop_thresh` is the CHOP index on 1h (direction efficiency — high means
+one-directional travel), `atr_high_thresh` is ATR% of price on 15m (bar size,
+direction-blind). They disagree on 24.6% of IS bars and 35.5% of OOS bars, and
+in opposite directions on exactly the bars that matter. The joint cell where chop
+reads HIGH and atr_pct reads LOW is the book's best region in **both** eras: mean
+R +1.76 IS / +2.61 OOS against +1.01 / +0.77 for the whole book, at max DD 7.6R
+/ 4.7R against 13.4R / 11.9R, longest losing run 6 / 5 against 11 / 15. It
+survives the outlier bar — +83.4R in both eras with its single largest trade
+removed, +41.3 / +45.6 with its top three.
+
+**What failed, with the mechanism:**
+
+| attempt | result | why |
+|---|---|---|
+| `decisive_vs_flip_chop` ch=30,40 | IS +124R, OOS **−49R** | era split, the seventh appearance |
+| `decisive_vs_flip_chop` ch=50 | +41R IS / +18.6R OOS | one added trade supplies +46.24R; without it **−2.4R**. IS drawdown 13.4R → **28.2R** |
+| `decisive_vs_flip_chop` ch=55 | +42R IS, **2 trades removed** | 21R per trade. A threshold excluding two known trades is a fit to them |
+| `chop_or_atr_low` | IS +112R, OOS **−56.7R** | era split |
+| gate: take only the cell | IS 144 trades +116R, OOS 58 trades +37.6R | win rate collapses to **20.7%** OOS against the book's 37.0%. 58 trades cannot wait for a tail |
+| union: book + cell | OOS net +239.6 → **+217.3R** | the added trades are **−19.0R** OOS |
+
+**The mechanism, which is the part worth keeping.** The cell's win rate is only
+5.9 points better than the book's (42.9% vs 37.0%). That cannot produce +1.84R
+of mean. It comes from the right tail — the cell's 90th-percentile trade is
+**+9.42R** against the book's +3.23R, and 9 of its 42 OOS trades clear +3R against
+the book's 33 of 311 — while the cell's **median** trade is *worse* than the
+book's (−0.262 vs −0.224). It does not win more often; it wins bigger, rarely.
+A book cannot wait for that on 42 trades, and halving those trades still leaves
+full-size losses behind. Its monthly R is +0.65 to +0.69 correlated with the
+whole book, so sizing it as a sleeve buys no diversification either.
+
+**Two structural facts found on the way, both reusable:**
+
+1. **A "union" written as `if not (A or B): continue` is not a union.** `continue`
+   drops the signal, so it removes every trade the ordinary router would have
+   taken — it measured **−392R IS / −194R OOS**. A union has to fall through to
+   the router (`use="flip"` in the else), not skip past it. This is the same shape
+   of mistake as the `prevpos` gate above, and it is worth checking every gate for.
+2. **`exp_persist` is structurally inert on any gate-shaped `mode`.** A gate
+   `continue`s before `use` is assigned, so the v19 hysteresis state
+   (`_rg_s`/`_rg_c`) never advances and every persist value 0–7 returns
+   byte-identical results. Sweeping it on a gate is not a question the engine can
+   answer.
+
+**Do not re-add these `mode` branches.** `chop_hi_atr_lo`,
+`chop_hi_atr_lo_gate` and `atr_high_or_chop_hi_atr_lo` were added, measured and
+then reverted. If someone wants the cell again, the missing piece is not a
+threshold — `chop_thresh` is flat from 58 to 70 and cliffs at 30 — it is a
+condition on the **trade** that picks the tail directly, rather than a regime
+condition on the bar before it that picks the tail as a side effect.
+
+Harnesses deleted per the owner's instruction rather than kept per the policy
+above. The numbers are all here, and the shipping book was verified unchanged
+after the revert (`exp_fastcheck.py fsent_champ_long` PASS on both eras).

@@ -20,6 +20,34 @@ deduplicated below.
 
 ## DONE THIS SESSION
 
+- `[x]` **Regime routing on `chop` for `fsent_champ_long`** — closed by the
+  owner after measurement, nothing adopted. `chop` and `atr_high` are different
+  variables (direction efficiency vs bar size) and disagree on ~25-35% of bars,
+  but every routing mode built on the disagreeing cell loses in at least one era:
+  best arm buys +42R IS by removing two trades at 21R each, next one supplies
+  +46R of its +41R from a single trade while doubling IS drawdown. Gate and union
+  both fail on 58 and 307 OOS trades. Mechanism: the cell's win rate is only 5.9
+  points better, its edge is the top decile (p90 +9.42R vs +3.23R) and its median
+  trade is *worse* than the book's, so it cannot be waited for at that size.
+  Engine modes reverted; shipping book verified unchanged. **Numbers and the two
+  structural traps in `closed/CLOSED_DO_NOT_REPEAT.md`.** Table:
+  `_experiments_failed.md`
+- `[x]` **Remove `ext_stop_r` from `fsent_champ_long`** — set to explicit
+  `0.0`. Provably inert since C17: 3.0 and 0.0 give byte-identical trade lists
+  and an identical equity curve in all four cells. Never omitted, because `BP`
+  carries `1.5` and that binds for 51 IS / 36 OOS trades.
+  `method/EXT_STOP_R_RIDGE.md`
+- `[x]` **Is `exp_persist=7` still tuned right after C17?** — swept 0-7 against
+  the shipping base. No value beats 7 in both eras, and the one candidate
+  (persist=5, byte-identical IS, +3.2R OOS) rests on a single 2.2-day long worth
+  +7.6R; drop it and persist=5 is 4.5R worse. 7 stands.
+  `_persist_sweep.md`
+- `[x]` **Halt flip trigger** — written as a rule rather than a verdict: halt
+  stays ON while the live max-DD budget does not comfortably cover the book's own
+  tail (need 14.16R, the halt-off OOS max_dd). Not "when we can afford more
+  losses", which re-decides itself with the owner's mood. Counter-book registered
+  and pinned so the flip needs no re-run.
+  `method/EQUITY_LENS_EXT_AND_NOHALT.md`
 - `[x]` **P1/P2 wave labelling (Elliott)** — closed. The swing chain is
   sequential with a mean 10.3-bar gap, so no nested wave pair exists. One
   candidate in 2,900 swings. `method/P1P2_WAVE.md`
