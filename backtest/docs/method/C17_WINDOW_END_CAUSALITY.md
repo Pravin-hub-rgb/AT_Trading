@@ -163,8 +163,17 @@ future change to this gate ever reduces R, that is not a reason to revert it.
 
 ## STILL OPEN
 
-- 214 pins are stale and need re-deriving in **both** eras. `exp_pinrefresh.py`
-  does not do this: it selects on `pins is None`, i.e. absent, not stale.
-- Docs quoting the old pins need updating.
-- `ext_stop_r` can now be removed from a book's config at zero behavioural
-  cost. That is a separate decision and was deliberately not taken here.
+- ~~214 pins need re-deriving in both eras~~ **done**, 188/188 non-reference
+  books verified by `exp_pinverify.py`; see `exp_repin_stale.py` and
+  `exp_apply_repin.py`. The 27 that still mismatch are all `status: reference`,
+  which by policy must never be pinned.
+- ~~Docs quoting the old pins~~ **done**. The three generated ranking docs were
+  re-measured and regenerated; 20 hand-written docs carry a dated C17 notice via
+  `exp_doc_c17_notice.py`. See `EXT_STOP_R_RIDGE.md`.
+- `ext_stop_r` was re-tested at 2.0 while this was open, because a coarse sweep
+  had made it look like a +16R in-sample lift. It is not: **no threshold beats
+  OFF in both eras**, and the autopsy shows the removed cohort is break-even in
+  IS and **profitable** in OOS (+9.6R over 19 trades), with the in-sample move
+  coming from re-sequencing, not from the filter. Closed, nothing adopted - see
+  `EXT_STOP_R_RIDGE.md`. Dropping `ext_stop_r` from a book's config remains free
+  of behavioural cost, and is still a separate decision.
