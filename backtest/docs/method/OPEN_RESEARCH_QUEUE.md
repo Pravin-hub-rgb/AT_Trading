@@ -444,6 +444,23 @@ A block-length sensitivity sweep is the obvious next check.
 
 ## OPEN — the real queue
 
+- `[ ]` **KING_SINGLE report quotes three different nets for one book, and the
+  book is not in the registry** *(found 2026-10-07, by the doc gate)*.
+  `signal/KING_SINGLE_fullstack_wage10_cd0_RESEARCH_REPORT.md` is dated
+  2026-09-22 and self-contradicts. Its own causal-SL disclaimer says the change
+  moved the book **from +310.7R to +244.5R** in sample, and both metric tables
+  (line 88 and line 505) say **NET R +360.61**, which is neither figure. On top
+  of that the config it names, `fullstack_wage10_cd0_single_sw10`, **is not in
+  `EXPERIMENTS` at all** — so there is no pin to say which number was ever true.
+  Do not "fix" it by refreshing the tables: that is a guess about which of
+  +310.7, +244.5 and +360.61 is meant to be current. What it needs is a decision
+  about what happened to that config — retired, renamed, or never pinned — and
+  then one number chosen on purpose. Left in place deliberately: it has been in
+  the tree long enough that a fresh reader will land on it and trust one of the
+  three. The gate now suppresses it rather than flagging it (the config is not
+  in the registry, so there is no pin to have gone stale), so this entry is the
+  only thing pointing at it.
+
 - `[x]` **Multi-swing 1h bias confirmation (2-of-3)** *(Nemotron)* —
   closed **by the probe, no run needed**. The rule keeps 1,599/1,599 IS and
   901/901 OOS swings: the direction chain is built in same-direction PAIRS
