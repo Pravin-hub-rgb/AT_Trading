@@ -144,11 +144,20 @@ def build_family_module():
     # A line-based search of v18 alone misses them, which is how the earlier 2h runs
     # shipped a leak while looking carefully inspected. They also differ in SPACING
     # ("+2700" vs "+ 2700"), so sweeping on the operator alone catches only half -
-    # sweep the bare literal. 7 offsets exist in the built text; all must move.
+    # sweep the bare literal.
+    #
+    # 2026-10-07 (C17): this count was 7 and is now 3. The window END no longer
+    # carries a shift at all - it is stored knowable by _wend_settle in unified.py,
+    # because the old end-side shift was reusing the START's offset and admitting
+    # LTF entries on windows that were already closed (4 IS / 3 OOS on
+    # fsent_champ_long). The four removed literals were end-side only: the two
+    # engine gates plus the two gates test_experiments_craze.py injects, all
+    # fixed the same way. Every literal that remains is a window START and must
+    # move: the union gate, the main gate, and the injected window-budget gate.
     swept = s.count("2700")
     s = s.replace("2700", "_knowwin")
     assert s.count("2700") == 0, f"stray 2700 remains: {s.count('2700')}"
-    assert swept == 7, f"expected 7 C15 window-gate offsets, got {swept}"
+    assert swept == 3, f"expected 3 C15 window-START offsets, got {swept}"
 
     # define the gate once, immediately before its first use
     anchor = "    candle_ts_ltf=[int(c[\"ts\"]) for c in candles_ltf]"

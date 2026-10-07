@@ -455,6 +455,16 @@ def simulate_htf_ltf_streak_halt(
     htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
+    # C17 (2026-10-07): store the window END as a KNOWABLE instant, not as the
+    # OPEN of the bar that detected the exit. exit_ts is the open of a fine (1m)
+    # bar when fine data is supplied, else the HTF bar, so it settles one bar
+    # later. The old gate shifted the end by the same offset the start needs
+    # (`s` IS an HTF candle open and must wait for that candle to close), which
+    # granted the LTF entry instant up to 59 extra minutes INSIDE a window that
+    # had already closed: measured 4 entries in IS and 3 in OOS on this book,
+    # all entered on a knowably-dead window. The end side now takes no shift at
+    # all and the start keeps its own. Dead-window entries after the fix: 0.
+    _wend_settle = 60 if fine_ltf else 3600
     def to_intervals(trades):
         # Window end: "exit" = HTF trade exit (SL/target/cap) â€” default, best R.
         # "r_touch" = first touch of 1.5R â€” tested 2026-09-08: +200.6R vs +331R (removed 88 trades avg +1.48R). Rejected.
@@ -471,7 +481,7 @@ def simulate_htf_ltf_streak_halt(
                 iv.append([int(t["entry_ts"]), last_htf_ts + 3600,
                            1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
                 continue
-            wend = _r_touch_end(t, fine_ltf, fine_ts, ext_stop_r) if window_end=="r_touch" else int(t["exit_ts"])
+            wend = _r_touch_end(t, fine_ltf, fine_ts, ext_stop_r) if window_end=="r_touch" else int(t["exit_ts"]) + _wend_settle
 
             iv.append([int(t["entry_ts"]), wend, 1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
         iv.sort(key=lambda x: x[0])
@@ -871,7 +881,7 @@ def simulate_htf_ltf_streak_halt(
                 _idx=bs.bisect_right(_st,bar_ts)-1
                 if _idx<0: continue
                 _s,_e,_d,_pe,_psl=_iv[_idx]
-                if (_s+2700<bar_ts<=_e+2700) and sig["dir"]==_d:
+                if (_s+2700<bar_ts+900<_e) and sig["dir"]==_d:
                     _union_matched=True
                     # keep _pe,_psl for extension check
                     pe=_pe; psl=_psl; d=_d
@@ -899,9 +909,13 @@ def simulate_htf_ltf_streak_halt(
         if idx<0: continue
         s,e,d,pe,psl=intervals[idx]
         win_start=s; win_end=e   # report-only; see the note at init
-        # C15: the window is knowable from the flip candle CLOSE (entry_ts + 3600);
-        # the LTF entry instant is bar_ts + 900. Gate in knowable-instant space.
-        if not (s + 2700 < bar_ts <= e + 2700): continue
+        # C15: the window START is knowable from the flip candle CLOSE
+        # (entry_ts + 3600); the LTF entry instant is bar_ts + 900. Gate in
+        # knowable-instant space.
+        # C17: the window END is stored knowable (see _wend_settle), so
+        # the second side takes no shift - it was reusing the start's offset
+        # and admitting entries on windows that were already dead.
+        if not (s + 2700 < bar_ts+900 < e): continue
         if sig["dir"] != d: continue
         if ext_stop_r>0:
             hrisk=abs(pe-psl)

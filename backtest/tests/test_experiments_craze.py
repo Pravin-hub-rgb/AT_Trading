@@ -443,7 +443,7 @@ def _patch_007_chop_lb_call(s: str) -> str:
     #     etc.) used an unrecoverable convention and are non-authoritative;
     #     earlier +2700, closed-candle, canonical-parent and leg-anchor
     #     variants were all tested and rejected (audit trail: doc sec 4.3).
-    t6f = '        if not (s + 2700 < bar_ts <= e + 2700): continue\n'
+    t6f = '        if not (s + 2700 < bar_ts+900 < e): continue\n'
     assert s.count(t6f) == 1, "window membership"
     s = s.replace(t6f, t6f +
                   '        if exp_wage_h>0 and (bar_ts-s)/3600.0 < exp_wage_h: continue\n'
@@ -471,7 +471,7 @@ def _patch_007_chop_lb_call(s: str) -> str:
                   '            if _age < exp_defer_h:\n'
                   '                _tsd=int(s)+int(exp_defer_h*3600)\n'
                   '                _k=bs.bisect_left(candle_ts_ltf,_tsd)\n'
-                  '                if _k<len(candles_ltf) and candle_ts_ltf[_k]<=e+2700 and _k>bar:\n'
+                  '                if _k<len(candles_ltf) and candle_ts_ltf[_k]+900<e and _k>bar:\n'
                   '                    _slp=float(sig["swing_start_px"])\n'
                   '                    _dead=False\n'
                   '                    for _q in range(bar+1,_k+1):\n'
@@ -861,7 +861,7 @@ def _patch_012_chop_init(s: str) -> str:
                    '        _wb_idx = bs.bisect_right(_wb_starts, candle_ts[i]) - 1\n'
                    '        if _wb_idx >= 0:\n'
                    '            _wb = _wb_ivs[_wb_idx]\n'
-                   '            if int(_wb[0]) + 2700 < candle_ts[i] <= int(_wb[1]) + 2700 and int(_wb[2]) == int(sig.get("_exp_htf_dir", sig["dir"])):\n'
+                   '            if int(_wb[0]) + 2700 < candle_ts[i]+900 < int(_wb[1]) and int(_wb[2]) == int(sig.get("_exp_htf_dir", sig["dir"])):\n'
                    '                _window_key="%s:%d:%d:%d" % (use, int(_wb[0]), int(_wb[1]), int(_wb[2]))\n'
                    '        if _window_key is not None and (exp_window_r_cap > 0 or exp_window_entry_cap > 0):\n'
                    '            _ws = _window_budget.setdefault(_window_key, {"entries": 0, "realized_r": 0.0})\n'
@@ -1412,7 +1412,7 @@ def _patch_016_pe_fine(s: str) -> str:
             '                _idx=bs.bisect_right(_st,bar_ts)-1\n'
             '                if _idx<0: continue\n'
             '                _s,_e,_d,_pe,_psl=_iv[_idx]\n'
-            '                if (_s+2700<bar_ts<=_e+2700) and sig["dir"]==_d:\n'
+            '                if (_s+2700<bar_ts+900<_e) and sig["dir"]==_d:\n'
             '                    _union_matched=True\n'
             '                    # keep _pe,_psl for extension check\n'
             '                    pe=_pe; psl=_psl; d=_d\n'
@@ -1427,7 +1427,7 @@ def _patch_016_pe_fine(s: str) -> str:
                 '                _idx=bs.bisect_right(_st,bar_ts)-1\n'
                 '                if _idx<0: continue\n'
                 '                _s,_e,_d,_pe,_psl=_iv[_idx]\n'
-                '                if (_s+2700<bar_ts<=_e+2700) and sig["dir"]==_d:\n'
+                '                if (_s+2700<bar_ts+900<_e) and sig["dir"]==_d:\n'
                 '                    _union_matched=True\n'
                 '                    if _typ=="b2": _matched_b2=True\n'
                 '                    else: _matched_flip=True\n'
