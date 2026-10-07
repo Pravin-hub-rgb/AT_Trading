@@ -452,6 +452,52 @@ def _graveyard() -> set[str]:
 
 
 ARTEFACTS_PATH = ROOT / "backtest" / "docs" / "_artefacts.json"
+QUEUE_PATH = ROOT / "backtest" / "docs" / "method" / "OPEN_RESEARCH_QUEUE.md"
+
+# An open queue item must point somewhere a reader can go. Either it cites a
+# locatable artifact, or it declares `anchor: none` to say the gap is known.
+# The gate checks for the DECLARATION, not for the quality of the reason that
+# usually follows it - that is a judgement, and a regex should not pretend to
+# make one. Typing the declaration is enough: it forces the author to notice
+# the missing path instead of omitting it by accident.
+#
+# WHY THIS EXISTS. The doc gate suppresses a line when the config it names is
+# absent from the registry (SUPPRESS_NO_BOOK). This file names absent configs on
+# purpose - that is what a queue of known-broken things is - so the gate stopped
+# looking at it entirely, silently. A file whose job is to record problems had
+# become invisible to the thing that detects problems, which is the same failure
+# as an empty database reporting PASS: absent data read as verified data. The
+# fix is not to exempt the queue from the pin rule, which does not fit it. It is
+# to give the queue the rule it actually needs, which is "every open item must be
+# reachable".
+_ANCHOR = re.compile(r"[\w./\\-]+\.(?:md|py|json)\b")
+_DECLARED_NONE = re.compile(r"anchor\s*:\s*none", re.I)
+_OPEN_ITEM = re.compile(r"^\s*-\s*`\[ \]`")
+_ANY_ITEM = re.compile(r"^\s*-\s*`\[[ xX]\]")
+
+
+def queue_unanchored(path: Path | None = None) -> list[tuple[int, str]]:
+    """Open queue items with no reachable anchor. Empty list means every item
+    can be followed to the thing that is wrong."""
+    p = path or QUEUE_PATH
+    if not p.exists():
+        return []
+    lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
+    starts = [i for i, l in enumerate(lines) if _OPEN_ITEM.match(l)]
+    bad = []
+    for n, i in enumerate(starts):
+        end = starts[n + 1] if n + 1 < len(starts) else len(lines)
+        block = []
+        for j in range(i, end):
+            # stop at the next heading or the next item of either state
+            if j > i and (_ANY_ITEM.match(lines[j]) or lines[j].startswith("#")):
+                break
+            block.append(lines[j])
+        blob = "\n".join(block)
+        if _ANCHOR.search(blob) or _DECLARED_NONE.search(blob):
+            continue
+        bad.append((i + 1, lines[i].strip()[:96]))
+    return bad
 
 
 def _artefacts() -> dict:
@@ -696,6 +742,19 @@ def check(verbose: bool = False, db=None) -> int:
                     print("     %s:%-5d %-10s near %-22s | %s"
                           % (name, lineno, num, book or "(no book named)", line))
 
+    # 4. the queue gate
+    #
+    # Its own rule, because the pin rule does not fit it: this file names
+    # configs that are NOT in the registry on purpose, so SUPPRESS_NO_BOOK hides
+    # the whole file from the scan above. Every open item has to be reachable.
+    unanchored = queue_unanchored()
+    print("\nopen queue items with no anchor  : %d" % len(unanchored))
+    if unanchored:
+        for lineno, title in unanchored:
+            print("   line %-5d %s" % (lineno, title))
+            print("      needs a file path, or the literal 'anchor: none' plus why.")
+    fail += len(unanchored)
+
     print("\ndoc numbers not in the database   : %d" % total)
     print("exempt - quarantined books, history: %d  [%d books]"
           % (exc, len(grave)))
@@ -704,7 +763,7 @@ def check(verbose: bool = False, db=None) -> int:
     if fail:
         print("FAIL - %d problem(s)" % fail)
         return 1
-    print("PASS - database agrees with the registry and the docs.")
+    print("PASS - database agrees with the registry, the docs, and the queue.")
     return 0
 
 

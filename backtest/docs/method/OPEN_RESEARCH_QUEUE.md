@@ -495,7 +495,9 @@ A block-length sensitivity sweep is the obvious next check.
 - `[ ]` **Bybit perp alt data** — the transfer census (7/13 passing, 5/6
   kills-clean) is on Binance fapi and therefore does not answer a Bybit
   question. Fetching Bybit alts is the precondition for the whole
-  multi-instrument thread, and for P6 above.
+  multi-instrument thread, and for P6 above. The two figures live at
+  `method/AGE10_ALT_SWEEP.md` (7/13, harness `exp_age10_alt_sweep.py`) and
+  `method/PORTFOLIO_KILL_WEIGHT.md` (5/6, harness `exp_portfolio_kill_weight.py`).
 - `[x]` ~~**ZigZag re-count over `normal_highs`/`normal_lows`**~~ —
   **CLOSED at P70, dead.** `method/ZIGZAG_CLOSED_P70.md`. The integration finished:
   the engine's contract is in `_collect_signals` (`btc_engine.py`), and the
