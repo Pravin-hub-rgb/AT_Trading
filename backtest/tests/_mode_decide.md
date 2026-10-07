@@ -1,4 +1,4 @@
-<!-- prov: engine=f4b7468 measured=2026-10-07 harness=exp_mode_decide.py -->
+<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_mode_decide.py -->
 # mode decision - fsent_champ_long (post-C17)
 
 Only `mode` moves; everything else fixed. Shipping is `atr_high`.

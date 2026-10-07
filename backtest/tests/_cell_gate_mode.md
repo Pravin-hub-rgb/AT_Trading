@@ -1,4 +1,4 @@
-<!-- prov: engine=f4b7468 measured=2026-10-07 harness=exp_cell_gate_mode.py -->
+<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_cell_gate_mode.py -->
 # cell gate mode - 'chop_hi_atr_lo_gate' on fsent_champ_long (post-C17)
 
 Take only chop>58.0 AND atrp<0.65. Thresholds are the book's own.

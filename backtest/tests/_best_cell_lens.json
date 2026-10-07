@@ -962,7 +962,7 @@
     "chop": 58.0
   },
   "_provenance": {
-    "engine": "f4b7468",
+    "engine": "13e46ea",
     "measured": "2026-10-07",
     "harness": "exp_best_cell_lens.py"
   }

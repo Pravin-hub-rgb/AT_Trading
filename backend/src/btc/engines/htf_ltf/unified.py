@@ -805,6 +805,26 @@ def simulate_htf_ltf_streak_halt(
             # targeting check. This one admits ONLY the measured cell.
             if not (ch > chop_thresh and atrp < atr_high_thresh): continue
             use="decisive"
+        elif mode=="atr_high_or_chop_hi_atr_lo":
+            # UNION of the shipping arm and the measured cell, as a permission
+            # rather than a restriction. The book already takes decisive windows
+            # when atrp > atr_high_thresh; this adds them also where chop is HIGH
+            # and atrp is LOW - efficient 1h travel inside quiet bars, a trend the
+            # size-only router cannot see. Because the shipping arm is kept, every
+            # trade it takes is still taken and only the ADDITIONS are in
+            # question. exp_cell_filter.py; see CELL_GATE_NOT_A_BOOK.md.
+            #
+            # STRUCTURE, learned the hard way. The first version of this wrote
+            #     if not (A or B): continue
+            #     use="decisive"
+            # and measured -392R IS / -194R OOS. That looks like a union and is
+            # not one: `continue` drops the signal entirely, so it removed every
+            # flip-branch trade the book depends on. A union has to fall THROUGH
+            # to the ordinary router, not skip it. Hence use="" -> use="flip".
+            if atrp > atr_high_thresh or (ch > chop_thresh and atrp < atr_high_thresh):
+                use="decisive"
+            else:
+                use="flip"
         elif mode=="chop_hi_atr_lo":
             # The joint cell where the book earns its best mean R: efficient
             # 1h travel (chop high) but quiet 15m bars (atr_pct low). Both

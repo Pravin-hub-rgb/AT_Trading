@@ -1,0 +1,203 @@
+{
+  "book": "fsent_champ_long",
+  "gate": "chop_hi_atr_lo_gate",
+  "rows": [
+    {
+      "persist": 0,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 1,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 2,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 3,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 4,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 5,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 6,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    },
+    {
+      "persist": 7,
+      "is": {
+        "n": 144,
+        "net": 116.0,
+        "max_dd": 25.2,
+        "dd_dur": 34,
+        "ulcer": 642.09,
+        "max_streak": 12
+      },
+      "oos": {
+        "n": 58,
+        "net": 37.6,
+        "max_dd": 11.0,
+        "dd_dur": 14.0,
+        "ulcer": 14.99,
+        "max_streak": 13
+      },
+      "d_is": -417.4,
+      "d_oos": -202.0,
+      "verdict": "worse",
+      "is_without_top": 67.39,
+      "oos_without_top": 18.1
+    }
+  ],
+  "_provenance": {
+    "engine": "13e46ea",
+    "measured": "2026-10-07",
+    "harness": "exp_cell_shape.py"
+  }
+}
