@@ -522,20 +522,63 @@ def _rename_map() -> dict:
 _NUM = re.compile(r"(?<![A-Za-z0-9_.])[+-]?\d+\.\d{2}")
 
 
+C17_MARKER = "<!-- C17-NOTICE -->"
+
+
+def _carries_c17_banner(path: Path) -> bool:
+    """True if this document opted out of being read as current.
+
+    exp_doc_c17_notice.py inserts the marker at the top of a doc whose pins C17
+    invalidated, and that doc's numbers are historical by construction - every
+    registry pin in it is a before-column. This is the reversible opt-out: a doc
+    that wants to make current claims again deletes the banner and the gate comes
+    back for it. It is deliberately an explicit marker rather than a date in the
+    text, so that "is this document current?" is one greppable fact.
+    """
+    try:
+        head = path.read_text(encoding="utf-8", errors="replace")[:4000]
+    except OSError:
+        return False
+    return C17_MARKER in head
+
+
+# Why a number was not compared. Both are suppressions, so both are printed on
+# every run - a quieter gate is only acceptable while it stays accountable about
+# what it stopped looking at.
+SUPPRESS_BANNER = "banner: dated-record opt-out"
+SUPPRESS_NO_BOOK = "no registry book named on the line"
+
+
 def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
-                   exempt_books: set[str], artefacts: set[float]):
+                    exempt_books: set[str], artefacts: set[float]):
     """Numbers on a line that also names a book or a result key.
 
     The context rule is the whole design. A doc is full of numbers that are not
     measurements - a bar count, a date, a percentage of something unrelated -
     and a gate that flags those gets switched off, which is worse than no gate.
 
-    Returns (hits, exempt). `exempt` covers a number quoted next to a quarantined
-    book - absent from the database by design - and a number the document has
-    registered as an artefact with a written reason.
+    Returns (hits, exempt, suppressed).
+      `exempt` covers a number quoted next to a quarantined book - absent from
+      the database by design - and a number the document has registered as an
+      artefact with a written reason.
+      `suppressed` is the two cases below. Both narrow what counts as a failure;
+      neither can turn a wrong CURRENT claim into a pass, which is the property
+      that matters when you make a gate quieter.
+
+    1. The document carries the C17 banner. It has declared itself a dated
+       record, so its pins are before-columns. See _carries_c17_banner.
+
+    2. The line names no config that exists in the registry. A stale registry
+       pin has to name a registry book; if the config is absent the line is
+       prose, a retired config or a typo, and there is no pin to have gone
+       stale. This is what retires the pivot_rule="origin" references - origin
+       is the stop source retired as lookahead - where refreshing the number
+       would make a retired lookahead look reproducible.
     """
     hits = []
     exempt = []
+    suppressed = []
+    banner = _carries_c17_banner(path)
     text = path.read_text(encoding="utf-8", errors="replace")
     rmap = _rename_map()
     for lineno, line in enumerate(text.splitlines(), 1):
@@ -555,9 +598,13 @@ def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
                    line.strip()[:88])
             if is_quarantine or any(abs(v - a) <= tol for a in artefacts):
                 exempt.append(rec)
+            elif banner:
+                suppressed.append((SUPPRESS_BANNER, rec))
+            elif not names_here:
+                suppressed.append((SUPPRESS_NO_BOOK, rec))
             else:
                 hits.append(rec)
-    return hits, exempt
+    return hits, exempt, suppressed
 
 
 def check(verbose: bool = False, db=None) -> int:
@@ -616,10 +663,13 @@ def check(verbose: bool = False, db=None) -> int:
     grave = _graveyard()
     arts = _artefacts()
     total = exc = 0
+    supp: dict[str, dict[str, list]] = {}
     for md in sorted((ROOT / "backtest" / "docs").rglob("*.md")):
-        hits, ex = _quoted_numbers(md, names, known, 0.5, grave,
-                                    arts.get(md.name, set()))
+        hits, ex, sup = _quoted_numbers(md, names, known, 0.5, grave,
+                                        arts.get(md.name, set()))
         exc += len(ex)
+        for reason, rec in sup:
+            supp.setdefault(reason, {}).setdefault(md.name, []).append(rec)
         if hits:
             total += len(hits)
             print("\n%s  (%d)" % (md.name, len(hits)))
@@ -628,6 +678,24 @@ def check(verbose: bool = False, db=None) -> int:
                       % (lineno, num, book or "(no book named)", line))
             if not verbose and len(hits) > 6:
                 print("   ... and %d more (use -v)" % (len(hits) - 6))
+
+    # The suppressions, stated every run whether or not -v was passed. A gate that
+    # got quieter has to say what it stopped looking at, or the quiet is
+    # indistinguishable from the gate being broken.
+    for reason in (SUPPRESS_BANNER, SUPPRESS_NO_BOOK):
+        files = supp.get(reason) or {}
+        if not files:
+            continue
+        n = sum(len(v) for v in files.values())
+        print("\nSUPPRESSED - %s" % reason)
+        print("   %d line(s) across %d file(s): %s"
+              % (n, len(files), ", ".join(files)))
+        if verbose:
+            for name, recs in files.items():
+                for lineno, num, book, line in recs:
+                    print("     %s:%-5d %-10s near %-22s | %s"
+                          % (name, lineno, num, book or "(no book named)", line))
+
     print("\ndoc numbers not in the database   : %d" % total)
     print("exempt - quarantined books, history: %d  [%d books]"
           % (exc, len(grave)))

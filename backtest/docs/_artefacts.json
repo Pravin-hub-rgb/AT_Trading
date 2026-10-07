@@ -85,6 +85,11 @@
    "doc": "EXPERIMENT_LOG_ENTRY1.md",
    "number": "-325.75",
    "reason": "same ENTRY-1 arm, the against-case it was compared to"
+  },
+  {
+   "doc": "C17_WINDOW_END_CAUSALITY.md",
+   "number": "528.87",
+   "reason": "deliberate before-column: this doc is the record of what C17 changed, and its table header is pin | after C17, so 525 / +528.87 is the pre-C17 pin and 528 / +533.37 is what the engine produces now. It is the only evidence in the repo that C17 moved anything. This doc is deliberately NOT banner-d by exp_doc_c17_notice.py for the same reason - a whole-file banner would also suppress its current after-column."
   }
  ],
  "_gap": [
