@@ -54,6 +54,15 @@ BOOKS = {
           "swing": "sw10",
           # Directional FS entry: ONE side enters at the swing FS print, the
           # other side unchanged. exp_fs_directional_leg.py, both eras.
+          #
+          # ext_stop_r=3.0 is INERT here and is left at 3.0 because this key is
+          # the shipped champion: nine harnesses read it and ten books cite it by
+          # name, so its params must keep describing what actually ran. Since C17
+          # it produces a byte-identical trade list and an identical equity curve
+          # to 0.0, both eras - see method/EQUITY_LENS_EXT_AND_NOHALT.md. Do not
+          # "fix" this to 0.0 here; fsent_champ_long_nohalt is where the inert
+          # knob is set to 0.0, explicitly, because omitting the key would
+          # silently inherit BP's 1.5 and that IS a live filter.
           "pins": {"n": 528, "net": 533.37, "dd_net": 13.42,
                    "oos_n": 311, "oos_net": 239.59, "oos_dd_net": 11.88},
       },
