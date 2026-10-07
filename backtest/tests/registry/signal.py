@@ -137,8 +137,11 @@ BOOKS = {
     # book below is the better one and this note is the thing to overturn.
     #
     # Do not "correct" the main book from the tables. The counter-book
-    # fsent_champ_long_nohalt below is registered and pinned so the trade-off
-    # stays measurable by anyone, rather than being argued in prose.
+    # fsent_champ_long_nohalt below is REGISTERED AND PINNED, with the halt off
+    # at 575 / +566.6 IS and 337 / +270.9 OOS, so whoever overturns this
+    # decision starts from a re-derivable measurement instead of prose to
+    # reconstruct one from. That is what makes the decision revisable rather
+    # than permanent by inertia: the counter-book is a book, not a claim.
     "fsent_champ_long_nohalt": {
           "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed) and ext_stop_r=0.0 (provably inert since C17, written explicitly because omitting the key would inherit BP's 1.5). Every behavioural knob identical to the base.",
           "engine": "patched",
