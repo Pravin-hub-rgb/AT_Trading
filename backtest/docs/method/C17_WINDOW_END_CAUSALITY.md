@@ -177,3 +177,33 @@ future change to this gate ever reduces R, that is not a reason to revert it.
   coming from re-sequencing, not from the filter. Closed, nothing adopted - see
   `EXT_STOP_R_RIDGE.md`. Dropping `ext_stop_r` from a book's config remains free
   of behavioural cost, and is still a separate decision.
+- ~~Which artifacts describe the current engine?~~ **tooling now answers it, for
+  new work only.** See the provenance note below.
+
+## HOW A FUTURE CHANGE FINDS THE ARTIFACTS IT INVALIDATED
+
+This bug cost more than the gate fix. Four committed artifacts turned out to
+describe a different engine than the one in the tree, and nobody could tell
+which four without remembering. `_halt_sweep` was only caught because it
+happened to still be uncommitted. The re-runs were then discovered by hand.
+
+The missing fact was never recorded, so it could not be recovered afterwards
+either. `exp_provenance.py` records it going forward:
+
+    python exp_provenance.py stamp <file> --harness exp_foo.py   # measured now
+    python exp_provenance.py verify                               # drift report
+
+An artifact carries the engine commit it was measured against, and `verify`
+compares that to the current engine and **exits 1** on a mismatch. It is a
+cheap check, not a re-run.
+
+Two deliberate limits. The 629 existing artifacts are **not** backfilled: a
+stamp written today for a number measured weeks ago is a lie with a
+machine-readable shape, so they stay unrecorded and `verify` reports them as a
+warning that does not fail the run. And `stamp_current` has no flag to record a
+different engine - it only ever writes the live commit, so the tool cannot be
+used to manufacture a passing stamp.
+
+The four artifacts C17 actually invalidated were re-run and committed, so they
+are correct by measurement rather than by stamp. Provenance does not describe
+the present repo accurately; it makes the next such change cheap.
