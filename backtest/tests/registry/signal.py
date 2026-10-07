@@ -46,7 +46,7 @@ BOOKS = {
           "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                        "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                        "chop_thresh": 58.0, "cooldown_bars": 8,
-                       "max_consecutive_losses": 3, "ext_stop_r": 3.0,
+                       "max_consecutive_losses": 3, "ext_stop_r": 0.0,
                        "exp_partial_r": 0.0, "exp_mltf": True,
                        "exp_persist": 7, "window_end": "exit",
                        "pivot_rule": "leg",
@@ -55,14 +55,35 @@ BOOKS = {
           # Directional FS entry: ONE side enters at the swing FS print, the
           # other side unchanged. exp_fs_directional_leg.py, both eras.
           #
-          # ext_stop_r=3.0 is INERT here and is left at 3.0 because this key is
-          # the shipped champion: nine harnesses read it and ten books cite it by
-          # name, so its params must keep describing what actually ran. Since C17
-          # it produces a byte-identical trade list and an identical equity curve
-          # to 0.0, both eras - see method/EQUITY_LENS_EXT_AND_NOHALT.md. Do not
-          # "fix" this to 0.0 here; fsent_champ_long_nohalt is where the inert
-          # knob is set to 0.0, explicitly, because omitting the key would
-          # silently inherit BP's 1.5 and that IS a live filter.
+          # ext_stop_r = 0.0. It ran at 3.0 until 2026-10-07 and was removed
+          # because it no longer does anything, not because it was found harmful.
+          # Measured, both eras: 3.0 and 0.0 produce a BYTE-IDENTICAL trade list
+          # and an identical equity curve, and every field of the equity lens
+          # (ulcer, sortino, calmar, uw_pct, max_dd_dur, max_uw, max_streak,
+          # pos_month_pct, worst_month) compares equal. See
+          # method/EQUITY_LENS_EXT_AND_NOHALT.md, harness exp_equity_lens.py.
+          #
+          # WHY IT STOPPED MATTERING - C17, same day. ext_stop_r=3.0 and
+          # htf_rr=3.0 are the same level, 1h_entry + 3 x |1h_entry - 1h_sl|,
+          # so the HTF window gate already removed everything beyond it. What the
+          # knob was still blocking was the straddle: a 15m bar that opened before
+          # the 1m exit and closed after it, so its close crossed 3R on a thesis
+          # that had already died. C17 fixed that gate and the straddle cannot
+          # occur, which left the knob blocking zero signals. The threshold was
+          # never re-tuned after that - 3.0 was simply the top of a dead plateau,
+          # and 4.0 measures identically to it.
+          #
+          # WRITE 0.0, NEVER OMIT THE KEY. BP carries ext_stop_r=1.5, so deleting
+          # the field would not mean "off", it would inherit 1.5 - which is a live
+          # filter blocking 122 IS and 86 OOS signals on this book. That silent
+          # default is the one way this line can be broken by accident.
+          #
+          # RE-TESTED AND REJECTED, do not redo it. A coarse sweep made 2.0 look
+          # like a +16R in-sample lift. A 19-point fine sweep found NO threshold
+          # that beats 0.0 in both eras, and the cohort autopsy showed the filter
+          # removes a cohort worth -1.5R in IS and +9.6R in OOS - it deletes
+          # profitable trades out of sample. The in-sample move was re-sequencing,
+          # not selection. Closed in method/EXT_STOP_R_RIDGE.md.
           "pins": {"n": 528, "net": 533.37, "dd_net": 13.42,
                    "oos_n": 311, "oos_net": 239.59, "oos_dd_net": 11.88},
       },
