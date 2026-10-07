@@ -58,6 +58,32 @@ BOOKS = {
                    "oos_n": 311, "oos_net": 239.59, "oos_dd_net": 11.88},
       },
 
+    # SINGLE-VARIANT ABLATION of fsent_champ_long: the 3-loss streak halt off,
+    # nothing else changed. The point of registering it rather than folding it in
+    # is attribution - ext_stop_r and chop_thresh are ALSO inert in this book
+    # (chop_thresh is never read under mode="atr_high"; ext_stop_r=3.0 and 0.0
+    # produce byte-identical trade lists since C17, see
+    # method/C17_WINDOW_END_CAUSALITY.md), so dropping those too would leave a
+    # book whose delta from the base is untraceable. One knob, one comparison.
+    #
+    # ext_stop_r stays at 3.0 even though it is provably inert, precisely so this
+    # entry differs from its base by exactly one value.
+    "fsent_champ_long_nohalt": {
+          "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed). Single-variable ablation; every other knob identical to the base.",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 0, "ext_stop_r": 3.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "window_end": "exit",
+                       "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          "pins": {"n": 575, "net": 566.6, "dd_net": 15.1,
+                   "oos_n": 337, "oos_net": 270.9, "oos_dd_net": 14.2},
+      },
+
     "fsent_champ_short": {
           "desc": "champion leg + SHORTS enter at swing FS (longs unchanged)",
           "engine": "patched",
