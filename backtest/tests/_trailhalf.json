@@ -1,0 +1,109 @@
+{
+  "books": {
+    "fsent_champ_trailhalf": {
+      "is": {
+        "on": {
+          "n": 495,
+          "net": 536.2,
+          "pf": 2.992,
+          "max_dd": 31.7,
+          "max_streak": 15,
+          "ulcer": 37.25,
+          "sortino": 1.4
+        },
+        "off": {
+          "n": 528,
+          "net": 533.4,
+          "pf": 3.088,
+          "max_dd": 13.4,
+          "max_streak": 11,
+          "ulcer": 16.79,
+          "sortino": 1.4
+        },
+        "d_n": -33,
+        "d_net": 2.8,
+        "on_without_top": 488.07,
+        "off_without_top": 484.73
+      },
+      "oos": {
+        "on": {
+          "n": 280,
+          "net": 282.1,
+          "pf": 2.923,
+          "max_dd": 16.4,
+          "max_streak": 14,
+          "ulcer": 23.42,
+          "sortino": 1.4
+        },
+        "off": {
+          "n": 311,
+          "net": 239.6,
+          "pf": 2.688,
+          "max_dd": 11.9,
+          "max_streak": 15,
+          "ulcer": 14.23,
+          "sortino": 1.1
+        },
+        "d_n": -31,
+        "d_net": 42.5,
+        "on_without_top": 236.74,
+        "off_without_top": 213.46
+      }
+    },
+    "fsent_utcsat_trailhalf": {
+      "is": {
+        "on": {
+          "n": 496,
+          "net": 534.5,
+          "pf": 2.97,
+          "max_dd": 31.3,
+          "max_streak": 15,
+          "ulcer": 36.41,
+          "sortino": 1.4
+        },
+        "off": {
+          "n": 525,
+          "net": 465.0,
+          "pf": 2.807,
+          "max_dd": 20.7,
+          "max_streak": 14,
+          "ulcer": 21.59,
+          "sortino": 1.2
+        },
+        "d_n": -29,
+        "d_net": 69.5,
+        "on_without_top": 486.34,
+        "off_without_top": 416.36
+      },
+      "oos": {
+        "on": {
+          "n": 279,
+          "net": 281.5,
+          "pf": 2.919,
+          "max_dd": 16.4,
+          "max_streak": 14,
+          "ulcer": 23.45,
+          "sortino": 1.4
+        },
+        "off": {
+          "n": 310,
+          "net": 238.8,
+          "pf": 2.682,
+          "max_dd": 11.9,
+          "max_streak": 15,
+          "ulcer": 14.26,
+          "sortino": 1.1
+        },
+        "d_n": -31,
+        "d_net": 42.7,
+        "on_without_top": 236.15,
+        "off_without_top": 212.63
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "d57c595",
+    "measured": "2026-10-07",
+    "harness": "exp_trailhalf.py"
+  }
+}
