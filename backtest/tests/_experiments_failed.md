@@ -1,4 +1,4 @@
-<!-- prov: engine=2c463e9 measured=2026-10-07 harness=recorded, harnesses deleted -->
+<!-- prov: engine=d57c595 measured=2026-10-07 harness=recorded, harnesses deleted -->
 # The experiments - three new books, all FAILED
 
 Your original book is the "before" row. Everything else was built today and none

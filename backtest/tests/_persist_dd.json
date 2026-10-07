@@ -1,0 +1,49 @@
+{
+  "book": "fsent_champ_long",
+  "window": [
+    "2021-01-06 03:15:00",
+    "2021-09-26 22:00:00"
+  ],
+  "mdd": 11.877410436224103,
+  "arms": {
+    "persist=7 (shipping)": {
+      "n": 311,
+      "net": 239.59,
+      "mdd": 11.88
+    },
+    "persist=0": {
+      "n": 325,
+      "net": 234.55,
+      "mdd": 13.18
+    }
+  },
+  "inside_outside": {
+    "inside worst stretch": {
+      "p7": 38.62,
+      "p0": 35.48,
+      "d": 3.14,
+      "n7": 120,
+      "n0": 129
+    },
+    "outside it": {
+      "p7": 200.97,
+      "p0": 199.07,
+      "d": 1.9,
+      "n7": 191,
+      "n0": 196
+    }
+  },
+  "placement": {
+    "only7": 51,
+    "only0": 65,
+    "only7_inside": 16,
+    "only0_inside": 25
+  },
+  "n_inside_window": 120,
+  "n_total": 311,
+  "_provenance": {
+    "engine": "d57c595",
+    "measured": "2026-10-07",
+    "harness": "exp_persist_drawdown.py"
+  }
+}

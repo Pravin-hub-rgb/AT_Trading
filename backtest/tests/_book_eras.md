@@ -1,4 +1,4 @@
-<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_fastcheck.py -->
+<!-- prov: engine=d57c595 measured=2026-10-07 harness=exp_fastcheck.py -->
 # fsent_champ_long - your book, both eras in one row
 
 Every number here is ONE book: `fsent_champ_long`, the one you trade.

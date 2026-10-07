@@ -50,6 +50,15 @@ that is fitting the knob to one trade.
 Read this alongside the binds audit: `exp_persist` BINDS, it is just not finely
 tuned, and 7 is a defensible point inside a flat region rather than a sharp peak.
 
+**This is not the strongest argument for 7, and there is a stronger one.**
+The reasoning above is entirely about tuning, and it would have held even if the
+knob did nothing useful. `method/PERSIST_DRAWDOWN_ROLE.md` measures what persist
+actually does in OOS's worst stretch and finds something the grid cannot see:
+persist=7 leaves the drawdown **11.88R** deep and it ends **2021-09-26**, while
+persist=0 leaves it **13.18R** deep and it ends **2022-02-01** — shallower, and
+five months shorter. That is what 7 bars of regime hysteresis is for, and no
+amount of grid tuning is a substitute for it.
+
 ## Why the -5.0R OOS in the audit row above was not left to stand
 
 The audit table probes `exp_persist` with **0**, and reports -66.1R IS / -5.0R
