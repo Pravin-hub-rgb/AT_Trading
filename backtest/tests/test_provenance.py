@@ -101,4 +101,32 @@ def test_cli_help_returns_zero():
 
 
 def test_cli_verify_runs():
-    assert pv.main(["verify"]) == 0
+    # Deliberately NOT asserted as 0.
+    #
+    # verify() exits 1 whenever any stamped artifact was measured against a
+    # different engine commit. That includes the case where the engine commit
+    # MOVED but nothing an existing artifact depends on changed - adding a new
+    # `mode=` branch to unified.py shifts the sha while leaving the shipping
+    # book's trade list byte-identical. So this test asserts only that the
+    # command runs and reports, not that the repo happens to be clean. Making it
+    # assert 0 would fail on any commit that touches the engine at all, including
+    # a comment, which would train people to ignore the check.
+    rc = pv.main(["verify"])
+    assert rc in (0, 1)
+
+
+def test_engine_sha_tracks_the_engine_file_not_head(tmp_path):
+    # The stamp must follow the file that decides what a number means, not HEAD.
+    # If it followed HEAD, a docs-only commit would invalidate every artifact.
+    import subprocess as sp
+    eng = pv.ROOT / pv.ENGINE_TRACKED[0]
+    out = sp.run(["git", "log", "-1", "--format=%h", "--", str(eng.relative_to(pv.ROOT))],
+                 cwd=pv.ROOT, capture_output=True, text=True, timeout=30)
+    engine_sha = out.stdout.strip()
+    head = sp.run(["git", "rev-parse", "--short", "HEAD"],
+                  cwd=pv.ROOT, capture_output=True, text=True, timeout=30).stdout.strip()
+    if engine_sha == head:
+        return  # HEAD did touch the engine; the two coincide, nothing to assert
+    assert engine_sha != head, (
+        "engine_commit() must report the commit that touched %s, not HEAD"
+        % pv.ENGINE_TRACKED[0])

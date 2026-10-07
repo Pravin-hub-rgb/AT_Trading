@@ -1,4 +1,4 @@
-<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_cell_sleeve.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_cell_sleeve.md -->
 # cell sensitivity - fsent_champ_long
 
 How much of the book's monthly return sits in the gated cell.

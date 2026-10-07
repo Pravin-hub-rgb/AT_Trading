@@ -180,12 +180,19 @@ def verify(paths: list[Path] | None = None, quiet: bool = False) -> int:
         print("artifacts with no provenance recorded : %d" % len(unrec))
         print("artifacts measured against OTHER engines: %d" % len(stale))
         if stale:
-            print("\nSTALE - these numbers were measured against a different engine:")
+            print("\nSTALE - measured against a different engine commit:")
             for p, rec in stale:
                 print("   %-58s engine=%s measured=%s"
                       % (rel(p), rec.get("engine"), rec.get("measured")))
             print("\n   Re-run their harness, or the numbers in them are describing an")
             print("   engine that is not the one in the tree.")
+            print()
+            print("   NOTE, and this is a real limitation of this check: a stale stamp")
+            print("   means the engine file moved, NOT that the numbers are wrong. Adding a")
+            print("   new mode= branch to unified.py shifts the commit every artifact is")
+            print("   stamped against while leaving existing books byte-identical. Re-run")
+            print("   the cheap ones and compare before assuming damage: if the numbers")
+            print("   come back the same, re-stamp them.")
         if unrec and not quiet:
             print("\nunrecorded (warning, not a failure):")
             for p in unrec[:25]:

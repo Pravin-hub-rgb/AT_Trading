@@ -1,4 +1,4 @@
-<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_cell_filter.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_cell_filter.py -->
 # cell as permission - 'atr_high_or_chop_hi_atr_lo' on fsent_champ_long
 
 Union of the shipping arm and the measured cell.

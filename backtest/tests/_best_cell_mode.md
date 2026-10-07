@@ -1,4 +1,4 @@
-<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_best_cell_mode.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_best_cell_mode.py -->
 # best-cell mode - 'chop_hi_atr_lo' on fsent_champ_long (post-C17)
 
 New rule: decisive ONLY where chop > 58.0 AND atr_pct < 0.65.

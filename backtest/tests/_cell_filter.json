@@ -232,7 +232,7 @@
     ]
   },
   "_provenance": {
-    "engine": "13e46ea",
+    "engine": "2c463e9",
     "measured": "2026-10-07",
     "harness": "exp_cell_filter.py"
   }

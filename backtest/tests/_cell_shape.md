@@ -1,4 +1,4 @@
-<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_cell_shape.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_cell_shape.py -->
 # gate shape - 'chop_hi_atr_lo_gate' on fsent_champ_long
 
 ## persist grid, both eras

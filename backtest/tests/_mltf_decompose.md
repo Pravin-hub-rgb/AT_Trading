@@ -1,4 +1,4 @@
-<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_mltf_decompose.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_mltf_decompose.py -->
 # exp_mltf decompose - fsent_champ_long
 
 Trade counts per (exp_mltf, mode), and target-cell population.

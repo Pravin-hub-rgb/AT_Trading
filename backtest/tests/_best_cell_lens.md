@@ -1,4 +1,4 @@
-<!-- prov: engine=13e46ea measured=2026-10-07 harness=exp_best_cell_lens.py -->
+<!-- prov: engine=2c463e9 measured=2026-10-07 harness=exp_best_cell_lens.py -->
 # best-cell lens - fsent_champ_long, chop_HIGH / atr_low (post-C17)
 
 The book's top mean-R joint cell in both eras, measured alone.
