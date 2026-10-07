@@ -100,7 +100,13 @@ def measure(sim, data, cfg):
         "n": len(tr),
         "net": round(ns["net_total_r"], 2),
         "dd_net": round(re_._net_dd(tr), 2),
-        "win": round(ns.get("win_rate", 0.0), 4),
+        # UNIT: _net_stats reports win_rate as a PERCENT with one decimal
+        # (round(100.0*wins/n, 1), btc_routes.py:407). All 86 win / oos_win
+        # values in registry/*.py are FRACTIONS with three decimals, so the
+        # raw percent would rewrite 0.24 as 24.1. Found while building
+        # exp_repin_stale.py (2026-10-07); no book was ever pinned through this
+        # path with a win field, so the registry still holds zero of them.
+        "win": round(ns.get("win_rate", 0.0) / 100.0, 3),
     }
 
 

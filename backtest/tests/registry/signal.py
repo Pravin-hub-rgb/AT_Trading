@@ -30,8 +30,8 @@ BOOKS = {
                      "exit_fs_max_gap_h": 4.0},
         "swing": "sw10",
         # See the FS_EXIT ladder in exp_fs_exit.py.
-        "pins": {"n": 502, "net": 289.98, "dd_net": 42.34,
-                 "oos_n": 287, "oos_net": 79.42, "oos_dd_net": 43.91},
+        "pins": {"n": 507, "net": 298.0, "dd_net": 40.91,
+                 "oos_n": 295, "oos_net": 68.92, "oos_dd_net": 48.72},
     },
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
@@ -54,8 +54,8 @@ BOOKS = {
           "swing": "sw10",
           # Directional FS entry: ONE side enters at the swing FS print, the
           # other side unchanged. exp_fs_directional_leg.py, both eras.
-          "pins": {"n": 525, "net": 528.87, "dd_net": 14.19,
-                   "oos_n": 309, "oos_net": 244.98, "oos_dd_net": 11.88},
+          "pins": {"n": 528, "net": 533.37, "dd_net": 13.42,
+                   "oos_n": 311, "oos_net": 239.59, "oos_dd_net": 11.88},
       },
 
     "fsent_champ_short": {
@@ -72,8 +72,8 @@ BOOKS = {
           "swing": "sw10",
           # Directional FS entry: ONE side enters at the swing FS print, the
           # other side unchanged. exp_fs_directional_leg.py, both eras.
-          "pins": {"n": 532, "net": 571.44, "dd_net": 25.85,
-                   "oos_n": 309, "oos_net": 239.32, "oos_dd_net": 23.87},
+          "pins": {"n": 533, "net": 600.6, "dd_net": 17.6,
+                   "oos_n": 312, "oos_net": 239.53, "oos_dd_net": 23.87},
       },
     # Directional FS entry, continued: a second shipping-family book and the
     # highest-OOS book in the registry. Same knob, different base book.
@@ -91,8 +91,8 @@ BOOKS = {
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
           # exp_fs_directional_leg.py, both eras. dd_net pending measure.
-          "pins": {"n": 522, "net": 510.54, "dd_net": 22.47,
-                   "oos_n": 308, "oos_net": 244.15, "oos_dd_net": 11.88},
+          "pins": {"n": 525, "net": 465.0, "dd_net": 20.66,
+                   "oos_n": 310, "oos_net": 238.76, "oos_dd_net": 11.88},
       },
 
     "fsent_utcsat_short": {
@@ -108,8 +108,8 @@ BOOKS = {
                        "exp_fs_entry_side": "short"},
           "swing": "sw10",
           # exp_fs_directional_leg.py, both eras. dd_net pending measure.
-          "pins": {"n": 530, "net": 562.98, "dd_net": 25.92,
-                    "oos_n": 308, "oos_net": 229.44, "oos_dd_net": 24.76},
+          "pins": {"n": 531, "net": 596.71, "dd_net": 17.6,
+                    "oos_n": 311, "oos_net": 229.65, "oos_dd_net": 24.63},
       },
     "fsent_champ_trailhalf": {
         "desc": "CANDIDATE: fsent_champ_long + exp_trail_half=1. Multi check on 2026-10-06: OOS +287.0 / avgR 1.032 / PF 3.00 / DD 16.5 vs base +245.0 / 0.793 / 2.76 / 11.9. Lifts total and per-trade, at DD cost. NOT adopted - needs exp_port_differential parity + cohort autopsy first.",
@@ -124,8 +124,8 @@ BOOKS = {
                        "exp_fs_entry_side": "long",
                        "exp_trail_half": 1},
         "swing": "sw10",
-        "pins": {"n": 493, "net": 530.7, "dd_net": 34.1,
-                 "oos_n": 278, "oos_net": 287.0, "oos_dd_net": 16.5},
+        "pins": {"n": 496, "net": 536.19, "dd_net": 31.68,
+                 "oos_n": 282, "oos_net": 282.08, "oos_dd_net": 16.45},
     },
     "fsent_utcsat_trailhalf": {
         "desc": "CANDIDATE: fsent_utcsat_long + exp_trail_half=1. Repeats the fsent_champ_trailhalf lift (OOS +286.4 / avgR 1.034 / PF 3.00 / DD 16.5 vs base +244.2 / 0.793 / 2.75 / 11.9). NOT adopted.",
@@ -140,8 +140,8 @@ BOOKS = {
                        "exp_fs_entry_side": "long",
                        "exp_trail_half": 1},
         "swing": "sw10",
-        "pins": {"n": 492, "net": 532.0, "dd_net": 32.7,
-                 "oos_n": 277, "oos_net": 286.4, "oos_dd_net": 16.5},
+        "pins": {"n": 497, "net": 534.46, "dd_net": 31.29,
+                 "oos_n": 281, "oos_net": 281.49, "oos_dd_net": 16.45},
     },
 
     "fsent_dirmatch_long": {
@@ -261,8 +261,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 369, "net": 174.30, "dd_net": 16.620,
-                   "oos_n": 239, "oos_net": 100.94, "oos_dd_net": 11.820},
+          "pins": {"n": 374, "net": 175.41, "dd_net": 16.620,
+                   "oos_n": 239, "oos_net": 103.31, "oos_dd_net": 11.820},
       },
 
     "fsent_sig_sw10_long": {
@@ -285,8 +285,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 355, "net": 116.40, "dd_net": 21.10,
-                   "oos_n": 230, "oos_net": 80.50, "oos_dd_net": 13.50},
+          "pins": {"n": 353, "net": 121.23, "dd_net": 21.07,
+                   "oos_n": 232, "oos_net": 74.15, "oos_dd_net": 13.33},
       },
 
     "fsent_sig_sw20_short": {
@@ -309,8 +309,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 343, "net": 146.90, "dd_net": 32.50,
-                   "oos_n": 203, "oos_net": 95.00, "oos_dd_net": 10.20},
+          "pins": {"n": 343, "net": 146.2, "dd_net": 30.8,
+                   "oos_n": 203, "oos_net": 97.0, "oos_dd_net": 8.9},
       },
 
     "fsent_sig_sw20_short_wr": {
@@ -332,8 +332,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 343, "net": 146.94, "dd_net": 32.46, "win": 0.362,
-                 "oos_n": 203, "oos_net": 95.0, "oos_dd_net": 10.23, "oos_win": 0.325},
+          "pins": {"n": 343, "net": 146.2, "dd_net": 30.8, "win": 0.362,
+                 "oos_n": 203, "oos_net": 97.0, "oos_dd_net": 8.9, "oos_win": 0.325},
       },
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
@@ -377,9 +377,9 @@ BOOKS = {
           # at all, so nothing downstream was harmed by believing the smaller
           # number. That is luck, not a property of the process - the identical
           # mistake in the other direction would have shipped an inflated book.
-          "pins": {"n": 235, "net": 262.29, "dd_net": 10.05, "win": 0.417,
-                   "oos_n": 152, "oos_net": 165.62, "oos_dd_net": 9.14,
-                   "oos_win": 0.421},
+          "pins": {"n": 235, "net": 268.37, "dd_net": 8.96, "win": 0.426,
+                   "oos_n": 153, "oos_net": 166.8, "oos_dd_net": 9.14,
+                   "oos_win": 0.425},
       },
     "fsent_sig_full": {
           "desc": "Best exhaustive candidate on the one-position signal ladder: FS-short + momentum + no partial + trail skip + small-swing exit at FS + weekend skip.",
@@ -401,8 +401,8 @@ BOOKS = {
                        "exp_skip_weekend": 1,
                        "window_end": "exit"},
           "swing": "sw10",
-          "pins": {"n": 234, "net": 291.02, "dd_net": 10.78, "win": 0.56,
-                   "oos_n": 153, "oos_net": 190.93, "oos_dd_net": 6.96, "oos_win": 0.56},
+          "pins": {"n": 234, "net": 295.83, "dd_net": 10.78, "win": 0.44,
+                   "oos_n": 152, "oos_net": 194.44, "oos_dd_net": 6.96, "oos_win": 0.477},
       },
     # ===== FS TWEAKS — registered as candidate books, measured 2026-10-06 =====
     # Same stack as fsent_sig_full (and its both-side mirror), one lever added
@@ -432,8 +432,8 @@ BOOKS = {
                    "exp_trail_half": 1,
                    "exp_trail_delay_r": 1.0},
         "swing": "sw10",
-        "pins": {"n": 199, "net": 414.1, "dd_net": 13.3, "win": 0.342,
-                 "oos_n": 123, "oos_net": 179.5, "oos_dd_net": 7.5, "oos_win": 0.407},
+        "pins": {"n": 199, "net": 418.51, "dd_net": 13.34, "win": 0.382,
+                 "oos_n": 123, "oos_net": 182.01, "oos_dd_net": 7.54, "oos_win": 0.426},
     },
     "fsent_sig_decay_crossed": {
         "desc": "fsent_sig_full + P36 decay gate, mode 'crossed', thr 0.75, legs 4. Halves the book; OOS R/trd +1.91, PF 4.60, DD ~base — filter shape, half the trades.",
@@ -458,8 +458,8 @@ BOOKS = {
                    "exp_decay_thr": 0.75,
                    "exp_decay_legs": 4},
         "swing": "sw10",
-        "pins": {"n": 104, "net": 186.8, "dd_net": 8.6, "win": 0.442,
-                 "oos_n": 67, "oos_net": 128.2, "oos_dd_net": 7.4, "oos_win": 0.478},
+        "pins": {"n": 104, "net": 195.59, "dd_net": 8.64, "win": 0.481,
+                 "oos_n": 67, "oos_net": 130.28, "oos_dd_net": 7.39, "oos_win": 0.507},
     },
     "fsent_sig_half_crossed": {
         "desc": "fsent_sig_full + trail_half + decay_crossed. The sharpest shape: OOS avgR +2.27, PF 4.85, on n=62. NOT adopted — smallest sample of the three, OOS total well below base.",
@@ -485,8 +485,8 @@ BOOKS = {
                    "exp_decay_thr": 0.75,
                    "exp_decay_legs": 4},
         "swing": "sw10",
-        "pins": {"n": 97, "net": 332.2, "dd_net": 9.1, "win": 0.361,
-                 "oos_n": 62, "oos_net": 141.0, "oos_dd_net": 7.3, "oos_win": 0.403},
+        "pins": {"n": 97, "net": 340.9, "dd_net": 8.46, "win": 0.423,
+                 "oos_n": 63, "oos_net": 142.09, "oos_dd_net": 7.26, "oos_win": 0.435},
     },
     "fsent_both_trail_half": {
         "desc": "fsent_sig_full stack with exp_fs_entry_side='both' + exp_trail_half. Best measured both-side tweak here, but OOS +96.9 on n=141 — the lane stays far below the short-only book. Keep as the ceiling on 'both'.",
@@ -509,8 +509,8 @@ BOOKS = {
                    "window_end": "exit",
                    "exp_trail_half": 1},
         "swing": "sw10",
-        "pins": {"n": 255, "net": 75.5, "dd_net": 31.4, "win": 0.271,
-                 "oos_n": 141, "oos_net": 96.9, "oos_dd_net": 14.8, "oos_win": 0.326},
+        "pins": {"n": 253, "net": 77.69, "dd_net": 31.43, "win": 0.296,
+                 "oos_n": 142, "oos_net": 96.91, "oos_dd_net": 14.81, "oos_win": 0.34},
     },
     # ===== THE SIGNAL BOOK =====
     # ===== THE SIGNAL BOOK =====
@@ -541,8 +541,8 @@ BOOKS = {
           "swing": "sw10",
           # exp_fs_single.py / exp_fs_untested.py arm set, both eras.
           # peak concurrent positions verified = 1.
-          "pins": {"n": 302, "net": 206.87, "dd_net": 10.6,
-                   "oos_n": 179, "oos_net": 128.77, "oos_dd_net": 10.5},
+          "pins": {"n": 306, "net": 203.26, "dd_net": 10.6,
+                   "oos_n": 180, "oos_net": 129.95, "oos_dd_net": 10.53},
       },
     "fsswing6_c": {
           "desc": "champion leg + exit at own-swing FS when its leg is under 6x ATR",
@@ -564,8 +564,8 @@ BOOKS = {
                        "exp_fs_small_swing": 6.0},
           "swing": "sw10",
           # exp_fs_small_swing.py, both eras. Monotonic 3->6 ATR.
-          "pins": {"n": 502, "net": 283.09, "dd_net": 43.39,
-                   "oos_n": 282, "oos_net": 94.16, "oos_dd_net": 44.17},
+          "pins": {"n": 510, "net": 322.18, "dd_net": 41.77,
+                   "oos_n": 290, "oos_net": 82.61, "oos_dd_net": 54.27},
       },
     # ===== SWING-SIZE EXIT AT FS, single plane =====
     # ===== SWING-SIZE EXIT AT FS, single plane =====
@@ -592,8 +592,8 @@ BOOKS = {
           "swing": "sw10",
           # Base params copied from the named single book verbatim.
           # exp_fs_small_swing.py, both eras.
-          "pins": {"n": 404, "net": 31.25, "dd_net": 51.42, "win": 0.272,
-                 "oos_n": 237, "oos_net": 12.59, "oos_dd_net": 29.43, "oos_win": 0.266},
+          "pins": {"n": 404, "net": 42.54, "dd_net": 45.11, "win": 0.272,
+                 "oos_n": 245, "oos_net": 11.21, "oos_dd_net": 34.62, "oos_win": 0.265},
       },
     "fsswing_sig_sw20": {
           "desc": "champion single sw20 + exit at FS when its swing leg is under 6x ATR",
@@ -613,8 +613,8 @@ BOOKS = {
           "swing": "sw20",
           # Base params copied from the named single book verbatim.
           # exp_fs_small_swing.py, both eras.
-          "pins": {"n": 384, "net": 98.39, "dd_net": 53.93, "win": 0.292,
-                 "oos_n": 211, "oos_net": 0.21, "oos_dd_net": 30.52, "oos_win": 0.275},
+          "pins": {"n": 382, "net": 99.19, "dd_net": 50.05, "win": 0.296,
+                 "oos_n": 218, "oos_net": 0.42, "oos_dd_net": 35.97, "oos_win": 0.266},
       },
     "fsexit6_c": {
         "desc": "champion leg + exit at own-swing FS when it lands within 6h",
@@ -629,8 +629,8 @@ BOOKS = {
                      "exit_fs_max_gap_h": 6.0},
         "swing": "sw10",
         # See the FS_EXIT ladder in exp_fs_exit.py.
-        "pins": {"n": 508, "net": 303.36, "dd_net": 45.74,
-                 "oos_n": 297, "oos_net": 80.30, "oos_dd_net": 45.00},
+        "pins": {"n": 516, "net": 310.62, "dd_net": 46.66,
+                 "oos_n": 302, "oos_net": 75.7, "oos_dd_net": 45.81},
     },
     # ===== P36 DECAY GATE (engine knob, measured 2026-10-02 IS+OOS) =====
 }

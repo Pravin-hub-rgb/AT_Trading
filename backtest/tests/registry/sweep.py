@@ -40,8 +40,8 @@ BOOKS = {
         # The b3_k ladder is a fifth sibling of the decay conclusion: b3_k=2
         # gives IS +41.78 / OOS +25.70 on 167 and 79 trades. Small, low drawdown
         # on both sides, and nowhere near the champion - the arm is real and weak.
-        "pins": {"n": 497, "net": 188.41, "dd_net": 44.69,
-                 "oos_n": 279, "oos_net": 82.53, "oos_dd_net": 31.78},
+        "pins": {"n": 502, "net": 265.13, "dd_net": 41.27,
+                 "oos_n": 286, "oos_net": 76.36, "oos_dd_net": 32.71},
     },
     "gap_slbuf010": {
         "desc": "champion leg + sl_buf_atr 0.10",
@@ -55,8 +55,8 @@ BOOKS = {
                     "pivot_rule": "leg", "sl_buf_atr": 0.10},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 497, "net": 214.36, "dd_net": 45.99,
-                 "oos_n": 278, "oos_net": 62.66, "oos_dd_net": 51.65},
+        "pins": {"n": 502, "net": 302.28, "dd_net": 42.44,
+                 "oos_n": 286, "oos_net": 57.78, "oos_dd_net": 55.52},
     },
     "gap_cd15": {
         "desc": "champion leg + cooldown_bars 15",
@@ -77,8 +77,8 @@ BOOKS = {
                 },
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 488, "net": 298.14, "dd_net": 46.85,
-                 "oos_n": 273, "oos_net": 74.67, "oos_dd_net": 46.67},
+        "pins": {"n": 491, "net": 263.79, "dd_net": 42.8,
+                 "oos_n": 281, "oos_net": 60.0, "oos_dd_net": 56.93},
     },
     "gap_cd5": {
         "desc": "champion leg + cooldown_bars 5",
@@ -99,8 +99,8 @@ BOOKS = {
                 },
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 502, "net": 238.56, "dd_net": 46.47,
-                 "oos_n": 284, "oos_net": 68.59, "oos_dd_net": 52.83},
+        "pins": {"n": 506, "net": 287.97, "dd_net": 42.82,
+                 "oos_n": 292, "oos_net": 61.84, "oos_dd_net": 57.65},
     },
     "gap_mcl5": {
         "desc": "champion leg + max_consecutive_losses 5",
@@ -114,8 +114,8 @@ BOOKS = {
                     "pivot_rule": "leg", "max_consecutive_losses": 5},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 523, "net": 240.02, "dd_net": 43.35,
-                 "oos_n": 302, "oos_net": 72.73, "oos_dd_net": 54.16},
+        "pins": {"n": 531, "net": 253.82, "dd_net": 39.94,
+                 "oos_n": 309, "oos_net": 63.07, "oos_dd_net": 61.37},
     },
     "gap_b3k2": {
         "desc": "champion leg + b3_k 2",
@@ -129,8 +129,8 @@ BOOKS = {
                     "pivot_rule": "leg", "b3_k": 2},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 167, "net": 41.78, "dd_net": 19.07,
-                 "oos_n": 79, "oos_net": 25.70, "oos_dd_net": 15.92},
+        "pins": {"n": 169, "net": 43.03, "dd_net": 19.07,
+                 "oos_n": 81, "oos_net": 23.59, "oos_dd_net": 17.02},
     },
     "gap_b3k4": {
         "desc": "champion leg + b3_k 4",
@@ -144,8 +144,8 @@ BOOKS = {
                     "pivot_rule": "leg", "b3_k": 4},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 207, "net": 67.39, "dd_net": 19.78,
-                 "oos_n": 107, "oos_net": 14.21, "oos_dd_net": 17.11},
+        "pins": {"n": 210, "net": 69.57, "dd_net": 18.99,
+                 "oos_n": 109, "oos_net": 12.1, "oos_dd_net": 17.11},
     },
     "gap_b3k6": {
         "desc": "champion leg + b3_k 6",
@@ -159,8 +159,8 @@ BOOKS = {
                     "pivot_rule": "leg", "b3_k": 6},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 220, "net": 62.40, "dd_net": 26.06,
-                 "oos_n": 122, "oos_net": 19.81, "oos_dd_net": 18.85},
+        "pins": {"n": 222, "net": 65.59, "dd_net": 24.1,
+                 "oos_n": 124, "oos_net": 17.7, "oos_dd_net": 18.85},
     },
     "gap_b3k8": {
         "desc": "champion leg + b3_k 8",
@@ -174,8 +174,8 @@ BOOKS = {
                     "pivot_rule": "leg", "b3_k": 8},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 233, "net": 55.36, "dd_net": 26.53,
-                 "oos_n": 128, "oos_net": 18.60, "oos_dd_net": 20.03},
+        "pins": {"n": 236, "net": 59.18, "dd_net": 24.57,
+                 "oos_n": 131, "oos_net": 16.5, "oos_dd_net": 20.03},
     },
     "gap_b3k10": {
         "desc": "champion leg + b3_k 10",
@@ -189,8 +189,8 @@ BOOKS = {
                     "pivot_rule": "leg", "b3_k": 10},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 241, "net": 65.65, "dd_net": 23.72,
-                 "oos_n": 135, "oos_net": 20.27, "oos_dd_net": 21.12},
+        "pins": {"n": 247, "net": 65.73, "dd_net": 22.87,
+                 "oos_n": 138, "oos_net": 16.3, "oos_dd_net": 21.12},
     },
     "gap_inert_chop52": {
         "desc": "champion leg + chop_thresh 52, MEASURED INERT under atr_high",
@@ -291,8 +291,8 @@ BOOKS = {
         # gap_missing_regime_persist below, which is recorded as evidence rather
         # than as a book because a book with a knob the engine does not accept
         # would be a lie.
-        "pins": {"n": 369, "net": 100.55, "dd_net": 44.08,
-                 "oos_n": 216, "oos_net": 109.33, "oos_dd_net": 19.25},
+        "pins": {"n": 377, "net": 75.52, "dd_net": 40.43,
+                 "oos_n": 218, "oos_net": 96.15, "oos_dd_net": 27.15},
     },
     "gap_campaign1": {
         "desc": "champion leg + campaign max total 1",
@@ -322,8 +322,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_require_marked_r": -0.5},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 273, "net": 6.43, "dd_net": 51.84,
-                 "oos_n": 150, "oos_net": 83.41, "oos_dd_net": 10.08},
+        "pins": {"n": 278, "net": -16.73, "dd_net": 66.45,
+                 "oos_n": 154, "oos_net": 76.67, "oos_dd_net": 13.59},
     },
     "gap_inert_cohort1": {
         "desc": "champion leg + cohort gate n=1, MEASURED INERT",
@@ -395,8 +395,8 @@ BOOKS = {
         # a=4.0/b=4.0 is a degenerate band that closes instantly, and the
         # a=4.0/b=8.0 version of the same knob is active. Same knob, one value
         # inert and one not - you cannot tell that from reading the knob.
-        "pins": {"n": 370, "net": 328.26, "dd_net": 29.02,
-                 "oos_n": 196, "oos_net": 106.62, "oos_dd_net": 21.41},
+        "pins": {"n": 376, "net": 284.0, "dd_net": 35.71,
+                 "oos_n": 199, "oos_net": 103.59, "oos_dd_net": 22.47},
     },
     "gap_bm_min07": {
         "desc": "champion leg + bias-momentum threshold 0.7",
@@ -410,8 +410,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_bias_momentum_min": 0.7},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 414, "net": 266.50, "dd_net": 41.29,
-                 "oos_n": 224, "oos_net": 84.81, "oos_dd_net": 32.89},
+        "pins": {"n": 423, "net": 308.96, "dd_net": 38.53,
+                 "oos_n": 229, "oos_net": 78.7, "oos_dd_net": 34.18},
     },
     "gap_bm_min06": {
         "desc": "champion leg + bias-momentum threshold 0.6",
@@ -425,8 +425,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_bias_momentum_min": 0.6},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 445, "net": 284.52, "dd_net": 43.68,
-                 "oos_n": 245, "oos_net": 82.81, "oos_dd_net": 32.65},
+        "pins": {"n": 457, "net": 335.38, "dd_net": 37.69,
+                 "oos_n": 251, "oos_net": 76.81, "oos_dd_net": 34.35},
     },
     "gap_campaign3": {
         "desc": "champion leg + campaign max total 3",
@@ -440,8 +440,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_campaign_max_total": 3, "exp_campaign_max_addons": 3, "exp_campaign_block_mixed": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 328, "net": 30.12, "dd_net": 37.79,
-                 "oos_n": 188, "oos_net": 105.95, "oos_dd_net": 20.23},
+        "pins": {"n": 336, "net": 68.25, "dd_net": 38.2,
+                 "oos_n": 192, "oos_net": 97.04, "oos_dd_net": 31.75},
     },
     "gap_entry_cap3": {
         "desc": "champion leg + 3 entries per window",
@@ -455,8 +455,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_entry_cap": 3},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 330, "net": 27.63, "dd_net": 38.85,
-                 "oos_n": 188, "oos_net": 110.07, "oos_dd_net": 16.69},
+        "pins": {"n": 338, "net": 65.76, "dd_net": 39.26,
+                 "oos_n": 193, "oos_net": 93.13, "oos_dd_net": 29.89},
     },
     "gap_entry_cap2": {
         "desc": "champion leg + 2 entries per window",
@@ -470,8 +470,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_entry_cap": 2},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 273, "net": 6.43, "dd_net": 51.84,
-                 "oos_n": 150, "oos_net": 83.41, "oos_dd_net": 10.08},
+        "pins": {"n": 278, "net": -16.73, "dd_net": 66.45,
+                 "oos_n": 154, "oos_net": 76.67, "oos_dd_net": 13.59},
     },
     "gap_r_cap3": {
         "desc": "champion leg + window R cap 3.0",
@@ -485,8 +485,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_r_cap": 3.0},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 459, "net": 198.53, "dd_net": 46.85,
-                 "oos_n": 270, "oos_net": 80.16, "oos_dd_net": 49.35},
+        "pins": {"n": 463, "net": 253.83, "dd_net": 43.2,
+                 "oos_n": 278, "oos_net": 73.42, "oos_dd_net": 54.54},
     },
     "gap_r_cap1": {
         "desc": "champion leg + window R cap 1.0",
@@ -500,8 +500,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_r_cap": 1.0},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 448, "net": 162.70, "dd_net": 46.85,
-                 "oos_n": 246, "oos_net": 66.10, "oos_dd_net": 48.53},
+        "pins": {"n": 449, "net": 221.96, "dd_net": 43.2,
+                 "oos_n": 256, "oos_net": 63.86, "oos_dd_net": 49.21},
     },
     "gap_wage28": {
         "desc": "champion leg + wage window 28h",
@@ -515,7 +515,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_wage_h": 28},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 341, "net": 223.08, "dd_net": 30.47,
+        "pins": {"n": 339, "net": 212.53, "dd_net": 30.47,
                  "oos_n": 208, "oos_net": 87.58, "oos_dd_net": 26.23},
     },
     "gap_wage32": {
@@ -530,8 +530,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_wage_h": 32},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 331, "net": 214.48, "dd_net": 31.77,
-                 "oos_n": 202, "oos_net": 76.96, "oos_dd_net": 26.04},
+        "pins": {"n": 329, "net": 218.94, "dd_net": 31.77,
+                 "oos_n": 201, "oos_net": 78.01, "oos_dd_net": 26.04},
     },
     "gap_wage24": {
         "desc": "champion leg + wage window 24h",
@@ -545,7 +545,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_wage_h": 24.0},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 364, "net": 240.58, "dd_net": 31.33,
+        "pins": {"n": 362, "net": 230.03, "dd_net": 31.33,
                  "oos_n": 218, "oos_net": 76.29, "oos_dd_net": 34.05},
     },
     "gap_persist1": {
@@ -560,8 +560,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_persist": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 502, "net": 238.45, "dd_net": 53.86,
-                 "oos_n": 294, "oos_net": 78.35, "oos_dd_net": 46.46},
+        "pins": {"n": 506, "net": 282.67, "dd_net": 50.21,
+                 "oos_n": 303, "oos_net": 70.84, "oos_dd_net": 51.65},
     },
     "gap_curfew_16_20": {
         "desc": "champion leg + curfew 16h/20h",
@@ -575,8 +575,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_curfew_a": 16.0, "exp_curfew_b": 20.0},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 470, "net": 231.33, "dd_net": 49.95,
-                 "oos_n": 274, "oos_net": 61.84, "oos_dd_net": 46.58},
+        "pins": {"n": 479, "net": 234.9, "dd_net": 46.3,
+                 "oos_n": 280, "oos_net": 48.77, "oos_dd_net": 56.54},
     },
     "gap_campaign_mark05": {
         "desc": "champion leg + campaign requires +0.5R marked",
@@ -713,8 +713,8 @@ BOOKS = {
         #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
         #   present in 2021-22 and absent from 2023-26. An IS-only reading would
         #   have called it inert and thrown away the best OOS number here.
-        "pins": {"n": 484, "net": 278.45, "dd_net": 46.85,
-                 "oos_n": 270, "oos_net": 87.36, "oos_dd_net": 38.17},
+        "pins": {"n": 487, "net": 244.09, "dd_net": 42.8,
+                 "oos_n": 276, "oos_net": 76.62, "oos_dd_net": 47.43},
     },
     "gap_skip_decisive": {
         "desc": "champion leg + skip decisive signals",
@@ -753,8 +753,8 @@ BOOKS = {
         #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
         #   present in 2021-22 and absent from 2023-26. An IS-only reading would
         #   have called it inert and thrown away the best OOS number here.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 223, "oos_net": 104.12, "oos_dd_net": 29.03},
+        "pins": {"n": 503, "net": 288.52, "dd_net": 43.2,
+                 "oos_n": 230, "oos_net": 98.49, "oos_dd_net": 33.85},
     },
     "gap_window_r_cap2": {
         "desc": "champion leg + window R cap 2.0",
@@ -793,8 +793,8 @@ BOOKS = {
         #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
         #   present in 2021-22 and absent from 2023-26. An IS-only reading would
         #   have called it inert and thrown away the best OOS number here.
-        "pins": {"n": 449, "net": 163.31, "dd_net": 46.85,
-                 "oos_n": 256, "oos_net": 77.92, "oos_dd_net": 50.33},
+        "pins": {"n": 458, "net": 250.62, "dd_net": 43.2,
+                 "oos_n": 266, "oos_net": 75.69, "oos_dd_net": 51.01},
     },
     "gap_loss_kill1": {
         "desc": "champion leg + kill window after 1 loss",
@@ -826,8 +826,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_block_mixed": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 272, "net": 7.48, "dd_net": 50.78,
-                 "oos_n": 149, "oos_net": 80.52, "oos_dd_net": 11.88},
+        "pins": {"n": 277, "net": -15.67, "dd_net": 65.4,
+                 "oos_n": 152, "oos_net": 74.89, "oos_dd_net": 13.59},
     },
     "gap_ma_trail": {
         "desc": "champion leg + MA trail period 20",
@@ -859,8 +859,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_pivot_trail": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 514, "net": 133.69, "dd_net": 44.89,
-                 "oos_n": 296, "oos_net": -4.57, "oos_dd_net": 41.79},
+        "pins": {"n": 523, "net": 136.08, "dd_net": 47.86,
+                 "oos_n": 303, "oos_net": 0.92, "oos_dd_net": 47.66},
     },
     "gap_window_entry_cap1": {
         "desc": "champion leg + 1 entry per window",
@@ -892,8 +892,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_profit_stage_r": 5.0, "exp_profit_stage_distance_r": 0.25},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 501, "net": 53.68, "dd_net": 43.32,
-                 "oos_n": 282, "oos_net": 15.29, "oos_dd_net": 44.80},
+        "pins": {"n": 506, "net": 55.66, "dd_net": 39.71,
+                 "oos_n": 290, "oos_net": 9.54, "oos_dd_net": 48.61},
     },
     "gap_trail_prevbar": {
         "desc": "champion leg + trail delay prev-bar variant",
@@ -908,8 +908,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_delay_prevbar": 1, "exp_trail_delay_r": 1.0},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 501, "net": 263.62, "dd_net": 45.37,
-                 "oos_n": 279, "oos_net": 69.65, "oos_dd_net": 54.91},
+        "pins": {"n": 505, "net": 311.28, "dd_net": 42.97,
+                 "oos_n": 285, "oos_net": 66.65, "oos_dd_net": 59.73},
     },
     "gap_curfew_a4_b8": {
         "desc": "champion leg + curfew 4h/8h",
@@ -924,8 +924,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_curfew_a": 4.0, "exp_curfew_b": 8.0},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 470, "net": 209.93, "dd_net": 45.74,
-                 "oos_n": 269, "oos_net": 81.76, "oos_dd_net": 48.07},
+        "pins": {"n": 476, "net": 253.17, "dd_net": 41.26,
+                 "oos_n": 274, "oos_net": 62.13, "oos_dd_net": 51.9},
     },
     "gap_cooldown4": {
         "desc": "champion leg + cooldown_bars 4",
@@ -939,8 +939,8 @@ BOOKS = {
                     "pivot_rule": "leg", "cooldown_bars": 4},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 502, "net": 238.56, "dd_net": 46.47,
-                 "oos_n": 285, "oos_net": 70.69, "oos_dd_net": 50.73},
+        "pins": {"n": 506, "net": 287.97, "dd_net": 42.82,
+                 "oos_n": 293, "oos_net": 63.95, "oos_dd_net": 55.55},
     },
     "gap_inert_geom": {
         "desc": "champion leg + geometry gates, MEASURED INERT",

@@ -20,8 +20,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1},
         "swing": "sw10",
         # Parts do not pay on their own - see trail_half_delay1_skipn4.
-        "pins": {"n": 468, "net": 384.99, "dd_net": 51.10,
-                 "oos_n": 269, "oos_net": 71.73, "oos_dd_net": 52.08},
+        "pins": {"n": 472, "net": 351.43, "dd_net": 53.15,
+                 "oos_n": 277, "oos_net": 62.89, "oos_dd_net": 57.07},
     },
     "trail_delay1": {
         "desc": "champion leg + delay1",
@@ -35,8 +35,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_delay_r": 1.0},
         "swing": "sw10",
         # Parts do not pay on their own - see trail_half_delay1_skipn4.
-        "pins": {"n": 501, "net": 263.62, "dd_net": 45.37,
-                 "oos_n": 279, "oos_net": 69.65, "oos_dd_net": 54.91},
+        "pins": {"n": 505, "net": 311.28, "dd_net": 42.97,
+                 "oos_n": 285, "oos_net": 66.65, "oos_dd_net": 59.73},
     },
     "trail_half_delay1": {
         "desc": "champion leg + half_delay1",
@@ -50,8 +50,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 1.0},
         "swing": "sw10",
         # Parts do not pay on their own - see trail_half_delay1_skipn4.
-        "pins": {"n": 465, "net": 385.92, "dd_net": 51.39,
-                 "oos_n": 272, "oos_net": 88.74, "oos_dd_net": 51.72},
+        "pins": {"n": 470, "net": 352.7, "dd_net": 53.45,
+                 "oos_n": 278, "oos_net": 83.06, "oos_dd_net": 56.89},
     },
     "trail_skipn4": {
         "desc": "champion leg + skipn4",
@@ -103,8 +103,8 @@ BOOKS = {
         # What it still needs before it could ship: a sweep of skip_n and
         # delay_r on THIS engine to confirm 4 and 1.0 are not flukes, since they
         # were chosen against different engine code.
-        "pins": {"n": 439, "net": 357.15, "dd_net": 43.96,
-                 "oos_n": 243, "oos_net": 61.05, "oos_dd_net": 75.60},
+        "pins": {"n": 446, "net": 349.29, "dd_net": 57.02,
+                 "oos_n": 246, "oos_net": 31.02, "oos_dd_net": 81.36},
     },
     "trail_half_delay1_skipn4": {
         "desc": "champion leg + half_delay1_skipn4",
@@ -156,8 +156,8 @@ BOOKS = {
         # What it still needs before it could ship: a sweep of skip_n and
         # delay_r on THIS engine to confirm 4 and 1.0 are not flukes, since they
         # were chosen against different engine code.
-        "pins": {"n": 424, "net": 556.62, "dd_net": 44.47,
-                 "oos_n": 234, "oos_net": 104.98, "oos_dd_net": 52.50},
+        "pins": {"n": 431, "net": 601.08, "dd_net": 39.39,
+                 "oos_n": 237, "oos_net": 69.7, "oos_dd_net": 56.36},
     },
 
     "gap_inert_event_shift": {
@@ -251,8 +251,8 @@ BOOKS = {
         # on the strength of the sweep alone - what it establishes is that the
         # effect is broad and survives OOS, which the single inherited point could
         # not show.
-        "pins": {"n": 383, "net": 588.76, "dd_net": 45.46,
-                 "oos_n": 211, "oos_net": 113.28, "oos_dd_net": 49.56},
+        "pins": {"n": 386, "net": 600.43, "dd_net": 55.03,
+                 "oos_n": 212, "oos_net": 101.23, "oos_dd_net": 49.56},
     },
     "trail_half_skipn3_nodelay": {
         "desc": "champion leg + half ratchet + skip first 3 swing events, NO delay",
@@ -266,8 +266,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 3},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 449, "net": 561.98, "dd_net": 43.30,
-                 "oos_n": 253, "oos_net": 98.60, "oos_dd_net": 61.40},
+        "pins": {"n": 452, "net": 567.11, "dd_net": 47.36,
+                 "oos_n": 258, "oos_net": 76.67, "oos_dd_net": 65.26},
     },
     "trail_half_skipn6_dr3": {
         "desc": "champion leg + half ratchet + skip 6 events + delay to +3R",
@@ -281,8 +281,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 6, "exp_trail_delay_r": 3.0},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 373, "net": 615.15, "dd_net": 46.15,
-                 "oos_n": 208, "oos_net": 118.86, "oos_dd_net": 45.50},
+        "pins": {"n": 379, "net": 634.44, "dd_net": 41.22,
+                 "oos_n": 208, "oos_net": 80.81, "oos_dd_net": 45.51},
     },
     "trail_half_dr3_nodelay": {
         "desc": "champion leg + half ratchet + delay to +3R, no skip_n",
@@ -296,8 +296,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 3.0},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 412, "net": 416.92, "dd_net": 44.80,
-                 "oos_n": 232, "oos_net": 123.60, "oos_dd_net": 32.16},
+        "pins": {"n": 414, "net": 420.67, "dd_net": 38.83,
+                 "oos_n": 237, "oos_net": 107.22, "oos_dd_net": 36.38},
     },
     "trail_half_skipn8_dr1": {
         "desc": "champion leg + half ratchet + skip 8 + delay 1R (original arm family)",
@@ -311,8 +311,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 8, "exp_trail_delay_r": 1.0},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 383, "net": 588.76, "dd_net": 45.46,
-                 "oos_n": 216, "oos_net": 103.96, "oos_dd_net": 58.88},
+        "pins": {"n": 386, "net": 600.43, "dd_net": 55.03,
+                 "oos_n": 217, "oos_net": 91.91, "oos_dd_net": 58.88},
     },
 
     # ===== P4 cap_days family (reproduced on unified.py 2026-10-02) =====
