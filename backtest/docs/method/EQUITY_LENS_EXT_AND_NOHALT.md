@@ -77,3 +77,32 @@ lengthened the longest losing streak out of sample and deepened the worst
 drawdown. If live capital has a drawdown budget or a consecutive-loss limit, this
 costs that budget. It buys total R and a smoother typical path by taking more
 trades, not by taking less risk.
+
+## THE DECISION RULE (owner, 2026-10-07)
+
+The halt stays in `fsent_champ_long`. The rule that flips it is deliberately
+keyed to one number the owner actually controls, and it is recorded here so the
+next reader does not have to infer it:
+
+> Halt stays ON while the live max-drawdown budget does not comfortably cover
+> this book's own tail. **Budget need: 14.16R** — the OOS max_dd of
+> `fsent_champ_long_nohalt`, the deepest drop measured on the halt-off book.
+> Base book is 11.88R.
+
+When the budget absorbs 14.16R with room to spare, flip the base book to the
+nohalt params. Nothing further needs measuring: the counter-book is registered
+and pinned at 575 / +566.6 IS and 337 / +270.9 OOS, so that decision is already
+a re-derivable measurement rather than a fresh argument.
+
+**Why not "when we have more margin money".** More capital does not change this
+book's behaviour — it takes more trades either way, so its max DD is ~14R on a
+small account and a large one alike. Only the *budget* moves. A trigger phrased
+as "we can afford to lose more" therefore re-decides itself every time the
+owner's sense of the account changes, which is the inertia a written rule is
+supposed to prevent.
+
+**Why not the 16-trade losing streak.** That is the strongest argument *for* the
+halt, but it cannot serve as the threshold. The backtest has never observed a
+live losing run, so 16 is a lower bound on the tail, not its size. Setting a
+capital decision by a figure known only from backtest would claim a precision
+nobody has. The drawdown budget is a number the owner sets and knows.

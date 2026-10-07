@@ -142,6 +142,36 @@ BOOKS = {
     # decision starts from a re-derivable measurement instead of prose to
     # reconstruct one from. That is what makes the decision revisable rather
     # than permanent by inertia: the counter-book is a book, not a claim.
+    #
+    # ===== THE RULE THAT FLIPS IT - owner's decision, 2026-10-07 =====
+    # This is not "keep the halt until we feel richer". The trigger is ONE
+    # measured number, so it cannot be argued into or out of by mood:
+    #
+    #   Halt stays ON while the live max-drawdown budget does NOT comfortably
+    #   cover this book's own tail.
+    #
+    #   Current budget need: 14.16R OOS max_dd of fsent_champ_long_nohalt,
+    #   which is the deepest drop measured on the halt-off book in either
+    #   era. Base book sits at 11.88R.
+    #
+    #   When the budget can absorb 14.16R with room to spare, flip
+    #   fsent_champ_long to the nohalt params. No further evidence is needed
+    #   and no re-run is required: the counter-book's pins already hold that
+    #   measurement.
+    #
+    # WHY THE TRIGGER IS NOT "more capital". More capital does not change
+    # this book's behaviour - it takes MORE trades either way, so its max DD
+    # is ~14R whether the account is small or large. Only the budget moves.
+    # A rule keyed on "we can afford to lose more" silently re-decides itself
+    # every time the owner's feeling about the account changes, which is
+    # exactly the inertia this note exists to prevent.
+    #
+    # WHY NOT 16 CONSECUTIVE LOSSES AS THE TRIGGER. The 15 -> 16 OOS streak is
+    # the real argument for the halt, but it is not a usable threshold: the
+    # backtest has never seen a live losing run, so 16 is a lower bound on
+    # the tail and not its size. Keying a capital decision to a number known
+    # only from backtest would be pretending to a precision nobody has. The
+    # max-dd budget is a number the owner actually sets and actually knows.
     "fsent_champ_long_nohalt": {
           "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed) and ext_stop_r=0.0 (provably inert since C17, written explicitly because omitting the key would inherit BP's 1.5). Every behavioural knob identical to the base.",
           "engine": "patched",
