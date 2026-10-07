@@ -579,6 +579,18 @@ heavily inspected and is not untouched validation for anything new (Rule 4).
 
 # Experiment Log — All Tests (Pass & Fail)
 
+
+<!-- C17-NOTICE -->
+> **C17 NOTICE (2026-10-07).** The figures in this document were measured before
+> the C17 gate fix, which removed a lookahead from the HTF window gate and
+> invalidated 214 of 215 registry pins. They are kept as the dated record they
+> were, and they are **not** what the engine produces today - do not quote them
+> as current. Current numbers: `python exp_pinverify.py` (re-derives every pin),
+> `docs/method/C17_WINDOW_END_CAUSALITY.md` (what changed and why),
+> `docs/multi/MULTI_RANKINGS.md` and `docs/signal/SIGNAL_RANKINGS.md`
+> (regenerated from a post-C17 measurement).
+------------------------------------------------------------------------------
+
 > Every experiment ever tested. If you think of something, check here FIRST.
 > Date tested, result, and why it died. No repeats.
 

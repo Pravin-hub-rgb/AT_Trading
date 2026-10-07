@@ -1,6 +1,18 @@
 # Registry books - measured board
 
-Generated from the registry. **2026-10-04.** Shipped champion: IS +239.12 / OOS +72.79.
+
+<!-- C17-NOTICE -->
+> **C17 NOTICE (2026-10-07).** The figures in this document were measured before
+> the C17 gate fix, which removed a lookahead from the HTF window gate and
+> invalidated 214 of 215 registry pins. They are kept as the dated record they
+> were, and they are **not** what the engine produces today - do not quote them
+> as current. Current numbers: `python exp_pinverify.py` (re-derives every pin),
+> `docs/method/C17_WINDOW_END_CAUSALITY.md` (what changed and why),
+> `docs/multi/MULTI_RANKINGS.md` and `docs/signal/SIGNAL_RANKINGS.md`
+> (regenerated from a post-C17 measurement).
+------------------------------------------------------------------------------
+
+Generated from the registry. **2026-10-04, pins refreshed 2026-10-07 after C17.** Shipped champion `champion_multi_sw10_leg`: IS 503 / +288.52 / dd 43.20   OOS 288 / +66.04 / dd 55.37.
 
 `net` after costs. `dd` is max drawdown in R on the NET equity curve.
 `champion` is a book name, not a claim of bestness.

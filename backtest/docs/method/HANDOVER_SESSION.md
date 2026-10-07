@@ -1,5 +1,17 @@
 # HANDOVER — full session context, for a fresh agent
 
+
+<!-- C17-NOTICE -->
+> **C17 NOTICE (2026-10-07).** The figures in this document were measured before
+> the C17 gate fix, which removed a lookahead from the HTF window gate and
+> invalidated 214 of 215 registry pins. They are kept as the dated record they
+> were, and they are **not** what the engine produces today - do not quote them
+> as current. Current numbers: `python exp_pinverify.py` (re-derives every pin),
+> `docs/method/C17_WINDOW_END_CAUSALITY.md` (what changed and why),
+> `docs/multi/MULTI_RANKINGS.md` and `docs/signal/SIGNAL_RANKINGS.md`
+> (regenerated from a post-C17 measurement).
+------------------------------------------------------------------------------
+
 Written 2026-09-28 at commit `c34286b`. Read this before touching anything.
 
 This is a **single-instrument (BTCUSDT_BYBIT) swing-trend system** with

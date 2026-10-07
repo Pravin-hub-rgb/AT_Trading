@@ -1,5 +1,17 @@
 # BOOK CATEGORIES — position first, then family
 
+
+<!-- C17-NOTICE -->
+> **C17 NOTICE (2026-10-07).** The figures in this document were measured before
+> the C17 gate fix, which removed a lookahead from the HTF window gate and
+> invalidated 214 of 215 registry pins. They are kept as the dated record they
+> were, and they are **not** what the engine produces today - do not quote them
+> as current. Current numbers: `python exp_pinverify.py` (re-derives every pin),
+> `docs/method/C17_WINDOW_END_CAUSALITY.md` (what changed and why),
+> `docs/multi/MULTI_RANKINGS.md` and `docs/signal/SIGNAL_RANKINGS.md`
+> (regenerated from a post-C17 measurement).
+------------------------------------------------------------------------------
+
 **Where this belongs.** Not in `pipeline/`. `pipeline/` is the procedure for
 running a *new* experiment. This page is a map of the books that already exist,
 so that "which one do we ship" can be asked against a structure rather than

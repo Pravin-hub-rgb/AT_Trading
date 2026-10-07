@@ -1,5 +1,17 @@
 # FS signal tweaks — trail_half / decay / both-side
 
+
+<!-- C17-NOTICE -->
+> **C17 NOTICE (2026-10-07).** The figures in this document were measured before
+> the C17 gate fix, which removed a lookahead from the HTF window gate and
+> invalidated 214 of 215 registry pins. They are kept as the dated record they
+> were, and they are **not** what the engine produces today - do not quote them
+> as current. Current numbers: `python exp_pinverify.py` (re-derives every pin),
+> `docs/method/C17_WINDOW_END_CAUSALITY.md` (what changed and why),
+> `docs/multi/MULTI_RANKINGS.md` and `docs/signal/SIGNAL_RANKINGS.md`
+> (regenerated from a post-C17 measurement).
+------------------------------------------------------------------------------
+
 Measured 2026-10-06 by `backtest/tests/_sig_fs_tweaks.py`, reading both eras
 from the engine (closed trades only, same `net_r` basis as the pins). Nothing is
 transcribed by hand; raw card at `backtest/tests/_sig_fs_tweaks.json`, table at

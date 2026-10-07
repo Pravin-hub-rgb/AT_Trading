@@ -1,5 +1,17 @@
 # CONCURRENCY — P117 (grid), P119 (survivors), P120 (clock). One thread.
 
+
+<!-- C17-NOTICE -->
+> **C17 NOTICE (2026-10-07).** The figures in this document were measured before
+> the C17 gate fix, which removed a lookahead from the HTF window gate and
+> invalidated 214 of 215 registry pins. They are kept as the dated record they
+> were, and they are **not** what the engine produces today - do not quote them
+> as current. Current numbers: `python exp_pinverify.py` (re-derives every pin),
+> `docs/method/C17_WINDOW_END_CAUSALITY.md` (what changed and why),
+> `docs/multi/MULTI_RANKINGS.md` and `docs/signal/SIGNAL_RANKINGS.md`
+> (regenerated from a post-C17 measurement).
+------------------------------------------------------------------------------
+
 Branch: agents/champion-reality-audit · 2026-10-01 · backtesting only
 Harnesses: `exp_p117_slot_grid.py`, `exp_p119_cap1_tail.py`, `exp_p120_cap_clock.py`
 Book throughout: **`champion_multi_sw10_leg`** — 499t / +239.1R IS, 280t / +72.8R OOS
