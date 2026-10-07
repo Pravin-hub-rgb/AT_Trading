@@ -560,9 +560,28 @@ def _quoted_numbers(path: Path, names: set[str], known: set[float], tol: float,
     return hits, exempt
 
 
-def check(verbose: bool = False) -> int:
-    conn = rdb.init()
+def check(verbose: bool = False, db=None) -> int:
+    conn = rdb.init(db)
     fail = 0
+
+    # 0. AN EMPTY DATABASE IS NOT A PASS.
+    #
+    # rdb.init() only runs executescript(SCHEMA): it creates tables, it does
+    # not ingest. So on a fresh clone - or after results.db is deleted - the
+    # books table has no rows, the params-drift loop below never executes once,
+    # drift is 0 by arithmetic rather than by agreement, and this function
+    # prints PASS. Meanwhile multi_books() and signal_books() read their entire
+    # work lists out of that same empty table, so exp_multi_metrics.py and
+    # exp_signal_metrics.py would sweep zero books and still report success.
+    # A green check here used to mean "I have nothing to disagree with".
+    # Refuse to return 0 on an empty database.
+    n_books = conn.execute("SELECT COUNT(*) FROM books").fetchone()[0]
+    if not n_books:
+        print("EMPTY DATABASE - 0 books, so nothing below can disagree with"
+              " anything.")
+        print("  rdb.init() creates tables, it does not ingest. Run:")
+        print("      python exp_resultsdb.py ingest")
+        return 1
 
     # 1. params drift
     drift = 0

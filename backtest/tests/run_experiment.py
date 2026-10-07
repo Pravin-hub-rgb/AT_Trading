@@ -1,6 +1,16 @@
 """Single entry point for all experiments.
 
+ONCE ON A FRESH CLONE, run this first:
+
+    python exp_resultsdb.py ingest
+
+    results.db is gitignored, so a fresh clone has none, and the database is
+    what holds the book list - multi_books() and signal_books() read it, so
+    exp_multi_metrics.py and exp_signal_metrics.py sweep zero books without it.
+    The check command refuses to pass on an empty database for the same reason.
+
 Usage:
+    python exp_resultsdb.py ingest      # ONCE on a fresh clone, before anything else
     python run_experiment.py <key>          run one experiment
     python run_experiment.py --all          run all visible experiments
     python run_experiment.py --group <name> run a named group
