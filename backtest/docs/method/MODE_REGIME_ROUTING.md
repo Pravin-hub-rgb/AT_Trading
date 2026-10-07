@@ -86,6 +86,11 @@ identically. That is a routing gap, not a missing feature.
 
 ## Part 3 — does routing on chop actually fix it? No, and the reason matters
 
+> **Continued in `CELL_GATE_NOT_A_BOOK.md`.** The per-cell finding below turned
+> out to be real — it survives its outlier bar, unlike every routing arm built
+> on it — but trading the cell *alone* yields 58 OOS trades and worse IS drawdown
+> than the whole book. Read that file before acting on this one.
+
 `exp_mode_decide.py`, only `mode` moving. Shipping is `atr_high`.
 
 | arm | IS | OOS | verdict |

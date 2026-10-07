@@ -267,6 +267,15 @@ def simulate_htf_ltf_streak_halt(
     sl_buf_atr=0.25, ext_stop_r=1.5,
     chop_thresh=61.8, atr_low_thresh=0.35, atr_high_thresh=0.65,
     mode="chop",  # chop, atr_low, atr_both, chop_or_atr, soft_chop, soft_atr, soft_ensemble, garch, garch_inv
+                  # chop_hi_atr_lo: decisive ONLY where chop reads HIGH and atr_pct
+                  # reads LOW. The one joint cell fsent_champ_long earns its best
+                  # mean R in (+1.76 IS / +2.61 OOS against +1.01/+0.77 for the
+                  # whole book), which mode="atr_high" routes to flip because it
+                  # picks the branch on atr_high alone and that cell reads low.
+                  # Note this uses atr_high_thresh, not atr_low_thresh, so it is
+                  # NOT the same as the existing chop_and_atr_low. Reads
+                  # chop[j] from the last 1h CLOSED by ts+900 (C14) and
+                  # atr_pct[bar]; both settle before the entry instant.
     soft_width=4.0,  # Idea D: half-width of soft band (0 = hard switch)
     cooldown_bars=0,
     max_consecutive_losses=0,  # 0 = no halt, N = halt after N consecutive losses
@@ -788,6 +797,20 @@ def simulate_htf_ltf_streak_halt(
             use="b2" if ch > chop_thresh else "flip"
         elif mode=="decisive_vs_flip_chop":
             use="decisive" if ch > chop_thresh else "flip"
+        elif mode=="chop_hi_atr_lo_gate":
+            # Same measurement, but as a GATE rather than a router. Every router
+            # branch in this function is "decisive else flip", so it always
+            # admits flip-branch trades and can never be a subset of one cell -
+            # which is why the first version of this rule failed its own
+            # targeting check. This one admits ONLY the measured cell.
+            if not (ch > chop_thresh and atrp < atr_high_thresh): continue
+            use="decisive"
+        elif mode=="chop_hi_atr_lo":
+            # The joint cell where the book earns its best mean R: efficient
+            # 1h travel (chop high) but quiet 15m bars (atr_pct low). Both
+            # readings settle before the entry instant - chop from the last 1h
+            # CLOSED by ts+900, atr_pct on the entry bar itself.
+            use="decisive" if (ch > chop_thresh and atrp < atr_high_thresh) else "flip"
         elif mode=="htf_dir":
             use="b2" if htf_dir_per_ltf[bar]==1 else "flip"
         elif mode=="htf_mag":
