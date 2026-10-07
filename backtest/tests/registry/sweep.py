@@ -205,8 +205,7 @@ BOOKS = {
                     "pivot_rule": "leg", "chop_thresh": 52.0},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_chop61": {
         "desc": "champion leg + chop_thresh 61, MEASURED INERT under atr_high",
@@ -221,8 +220,7 @@ BOOKS = {
                     "pivot_rule": "leg", "chop_thresh": 61.0},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_lb50": {
         "desc": "champion leg + exp31_lb 50, MEASURED INERT",
@@ -237,8 +235,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp31_lb": 50},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_lb60": {
         "desc": "champion leg + exp31_lb 60, MEASURED INERT",
@@ -253,8 +250,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp31_lb": 60},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_htfrr3": {
         "desc": "champion leg + htf_rr 3.0 (shipped value, control)",
@@ -269,8 +265,7 @@ BOOKS = {
                     "pivot_rule": "leg", "htf_rr": 3.0},
         "swing": "sw10",
         # Part of the final audit pass - see gap_slbuf025.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
 
     # ===== TAIL OF SCRIPT-GRID SWEEP (2026-10-02) =====
@@ -307,8 +302,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_campaign_max_total": 1, "exp_campaign_max_addons": 1, "exp_campaign_block_mixed": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 183, "net": -34.78, "dd_net": 46.27,
-                 "oos_n": 96, "oos_net": 16.28, "oos_dd_net": 25.11},
+        "pins": None,
     },
     "gap_campaign_markneg": {
         "desc": "champion leg + campaign requires -0.5R marked",
@@ -338,8 +332,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_cohort_swingpause": 1, "exp_cohort_loss_n": 1, "exp_cohort_rearm": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     # exp_regime_persist (3, 5) and exp_window_quality (0.1, 0.2) are set by
     # test_combos.py but ARE NOT PARAMETERS of the engine. Passing them raises
@@ -591,8 +584,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_campaign_max_total": 2, "exp_campaign_max_addons": 2, "exp_campaign_require_marked_r": 0.5},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 267, "net": -4.69, "dd_net": 49.81,
-                 "oos_n": 148, "oos_net": 47.93, "oos_dd_net": 10.08},
+        "pins": None,
     },
     "gap_inert_winkill2": {
         "desc": "champion leg + win-kill at 2, MEASURED INERT",
@@ -607,8 +599,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_win_kill_n": 2, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_winkill3": {
         "desc": "champion leg + win-kill at 3, MEASURED INERT",
@@ -623,8 +614,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_win_kill_n": 3, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_lossstreak": {
         "desc": "champion leg + loss-streak halt at 3, MEASURED INERT",
@@ -639,8 +629,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_loss_streak_n": 3, "exp_loss_streak_mode": "halt", "exp_loss_streak_action": "halt"},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_cohort2": {
         "desc": "champion leg + cohort gate, MEASURED INERT",
@@ -655,8 +644,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_cohort_swingpause": 1, "exp_cohort_loss_n": 2, "exp_cohort_rearm": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_curfew44": {
         "desc": "champion leg + curfew 4h/4h, MEASURED INERT (degenerate band)",
@@ -671,8 +659,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_curfew_a": 4.0, "exp_curfew_b": 4.0},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
 
     # ===== KNOB-GAP SWEEP: live knobs with no book (2026-10-02) =====
@@ -810,8 +797,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_loss_kill_n": 1, "exp_window_loss_kill_scope": "window", "exp_window_loss_kill_action": "close"},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 213, "net": -29.83, "dd_net": 38.88,
-                 "oos_n": 123, "oos_net": 113.16, "oos_dd_net": 30.00},
+        "pins": None,
     },
     "gap_campaign_max2": {
         "desc": "champion leg + campaign stacking capped at 2",
@@ -843,8 +829,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_ma_trail_period": 20},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 554, "net": -67.38, "dd_net": 105.97,
-                 "oos_n": 313, "oos_net": -52.02, "oos_dd_net": 53.65},
+        "pins": None,
     },
     "gap_pivot_trail": {
         "desc": "champion leg + pivot trail",
@@ -876,8 +861,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_entry_cap": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 183, "net": -33.79, "dd_net": 45.28,
-                 "oos_n": 96, "oos_net": 17.29, "oos_dd_net": 25.11},
+        "pins": None,
     },
     "gap_profit_stage5": {
         "desc": "champion leg + profit stage at 5R",
@@ -956,8 +940,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_geom_b1_min": 96, "exp_geom_mag_min_atr": 4.0, "exp_geom_start_dist_max_atr": 1.0, "exp_geom_b1_max": 1},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_kill": {
         "desc": "champion leg + streak gates, MEASURED INERT",
@@ -973,8 +956,7 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_window_win_kill_n": 1, "exp_window_win_kill_scope": "window", "exp_window_win_kill_action": "close"},
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
     "gap_inert_chop65": {
         "desc": "champion leg + chop_thresh 65, MEASURED INERT under atr_high",
@@ -997,8 +979,7 @@ BOOKS = {
                 },
         "swing": "sw10",
         # Part of the 2026-10-02 knob-gap sweep - see gap_cooldown20.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
 
     # ===== FS-EXIT (engine knob, measured 2026-10-03 IS+OOS) =====

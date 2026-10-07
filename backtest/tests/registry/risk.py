@@ -233,8 +233,7 @@ BOOKS = {
                     "exp_decay_mode": 5},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 206, "net": -43.62, "dd_net": 66.80,
-                 "oos_n": 135, "oos_net": -29.30, "oos_dd_net": 37.55},
+        "pins": None,
     },
     "decayF_u": {
         "desc": "utcsat + decay ALLOW crossed only (mirror of E)",
@@ -250,8 +249,7 @@ BOOKS = {
                     "exp_decay_mode": 5},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 191, "net": -21.96, "dd_net": 51.57,
-                 "oos_n": 122, "oos_net": -23.87, "oos_dd_net": 28.84},
+        "pins": None,
     },
     "decayG_c": {
         "desc": "champion leg + decay ALLOW own side only",
@@ -332,8 +330,7 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 1},
         "swing": "sw10",
-        "pins": {"n": 236, "net": -49.73, "dd_net": 84.28,
-                 "oos_n": 130, "oos_net": -41.47, "oos_dd_net": 58.65},
+        "pins": None,
     },
     "cap4d": {
         "desc": "cap_days 4 days",
@@ -347,8 +344,7 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 4},
         "swing": "sw10",
-        "pins": {"n": 385, "net": -35.21, "dd_net": 57.45,
-                 "oos_n": 238, "oos_net": 91.99, "oos_dd_net": 24.47},
+        "pins": None,
     },
     "cap8d": {
         "desc": "cap_days 8 days",

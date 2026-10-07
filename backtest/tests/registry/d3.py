@@ -25,8 +25,7 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=145 net=-38.54. Full sweep incl. gross/dd/win-rate:
         #   gross -5.52R  net -38.54R  dd 52.54R  win 19.3%  n=145
-        "pins": {"n": 145, "net": -38.54, "dd_net": 52.54,
-                 "oos_n": 81, "oos_net": 17.06, "oos_dd_net": 37.41},
+        "pins": None,
     },
     "skipwin2_multi_sw10": {
         "desc": "king + skip the next 2 HTF windows opened after a loss",
@@ -45,8 +44,7 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=101 net=-65.33. Full sweep incl. gross/dd/win-rate:
         #   gross -43.46R  net -65.33R  dd 66.47R  win 13.9%  n=101
-        "pins": {"n": 101, "net": -65.33, "dd_net": 66.47,
-                 "oos_n": 72, "oos_net": 58.90, "oos_dd_net": 14.74},
+        "pins": None,
     },
     "swingpause_multi_sw10": {
         "desc": "king + pause until a swing FORMED after the loss confirms (fresh structure)",

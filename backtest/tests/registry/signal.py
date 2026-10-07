@@ -58,23 +58,27 @@ BOOKS = {
                    "oos_n": 311, "oos_net": 239.59, "oos_dd_net": 11.88},
       },
 
-    # SINGLE-VARIANT ABLATION of fsent_champ_long: the 3-loss streak halt off,
-    # nothing else changed. The point of registering it rather than folding it in
-    # is attribution - ext_stop_r and chop_thresh are ALSO inert in this book
-    # (chop_thresh is never read under mode="atr_high"; ext_stop_r=3.0 and 0.0
-    # produce byte-identical trade lists since C17, see
-    # method/C17_WINDOW_END_CAUSALITY.md), so dropping those too would leave a
-    # book whose delta from the base is untraceable. One knob, one comparison.
+    # SINGLE-VARIANT ABLATION of fsent_champ_long: the 3-loss streak halt off.
+    # The point of registering it rather than folding it into the base is
+    # attribution.
     #
-    # ext_stop_r stays at 3.0 even though it is provably inert, precisely so this
-    # entry differs from its base by exactly one value.
+    # chop_thresh stays at 58.0 even though it is dead code here - mode="atr_high"
+    # never reads it - so that this entry differs from its base by exactly one
+    # BEHAVIOURAL knob and the delta is traceable to the halt alone.
+    #
+    # ext_stop_r is set to 0.0 explicitly rather than dropped, for two reasons.
+    # It is provably inert since C17: 3.0 and 0.0 produce byte-identical trade
+    # lists AND an identical equity curve, both eras (exp_equity_lens.py Q1), so
+    # this change is not what makes the book differ. And omitting the key would
+    # NOT mean "off" - BP carries ext_stop_r=1.5, and 1.5 is a live filter that
+    # blocks 122 IS / 86 OOS signals. Write 0.0, never nothing.
     "fsent_champ_long_nohalt": {
-          "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed). Single-variable ablation; every other knob identical to the base.",
+          "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed) and ext_stop_r=0.0 (provably inert since C17, written explicitly because omitting the key would inherit BP's 1.5). Every behavioural knob identical to the base.",
           "engine": "patched",
           "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
                        "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                        "chop_thresh": 58.0, "cooldown_bars": 8,
-                       "max_consecutive_losses": 0, "ext_stop_r": 3.0,
+                       "max_consecutive_losses": 0, "ext_stop_r": 0.0,
                        "exp_partial_r": 0.0, "exp_mltf": True,
                        "exp_persist": 7, "window_end": "exit",
                        "pivot_rule": "leg",

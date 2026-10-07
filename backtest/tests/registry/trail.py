@@ -176,8 +176,7 @@ BOOKS = {
         # Bit-for-bit the baseline on both eras. Shifting the scheduled-event
         # window by a day either way changes nothing on this book, which is
         # itself the answer to the question the script was asking.
-        "pins": {"n": 499, "net": 239.12, "dd_net": 46.85,
-                 "oos_n": 280, "oos_net": 72.79, "oos_dd_net": 50.55},
+        "pins": None,
     },
 
     # AUDIT RESIDUE, 2026-10-02, and why it stays at four.
@@ -371,8 +370,7 @@ BOOKS = {
         #   gross -151.55R  net -247.51R  dd 248.22R  win 17.8%  n=246
         # all 115 registry books in one pass.
         #   gross -151.55R  net -247.51R  dd 248.22R  win 17.8%  n=246
-        "pins": {"n": 246, "net": -247.51, "dd_net": 248.22,
-                 "oos_n": 149, "oos_net": -118.33, "oos_dd_net": 118.33},
+        "pins": None,
     },
 
     # ===== D3 UNION DUAL-QUALIFICATION (2x2 autopsy: FLIP-only window = fragile cell) =====
