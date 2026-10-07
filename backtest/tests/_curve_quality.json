@@ -1,0 +1,730 @@
+{
+  "fsent_champ_long": {
+    "is": {
+      "n": 528,
+      "net": 533.37,
+      "spacing": {
+        "3.0": {
+          "count": 72,
+          "n": 71,
+          "mean": 6.2,
+          "median": 4,
+          "max": 41,
+          "p90": 18
+        },
+        "5.0": {
+          "count": 46,
+          "n": 45,
+          "mean": 10.36,
+          "median": 7,
+          "max": 57,
+          "p90": 28
+        },
+        "10.0": {
+          "count": 14,
+          "n": 13,
+          "mean": 34.38,
+          "median": 21,
+          "max": 120,
+          "p90": 103
+        },
+        "20.0": {
+          "count": 6,
+          "n": 5,
+          "mean": 81.4,
+          "median": 103,
+          "max": 176,
+          "p90": 176
+        }
+      },
+      "temporal": {
+        "year": {
+          "2023": {
+            "n": 124,
+            "net": 172.43
+          },
+          "2024": {
+            "n": 165,
+            "net": 114.17
+          },
+          "2025": {
+            "n": 140,
+            "net": 137.53
+          },
+          "2026": {
+            "n": 99,
+            "net": 109.24
+          }
+        },
+        "quarter": {
+          "2023Q1": {
+            "n": 30,
+            "net": 17.2
+          },
+          "2023Q2": {
+            "n": 34,
+            "net": 11.77
+          },
+          "2023Q3": {
+            "n": 24,
+            "net": 5.11
+          },
+          "2023Q4": {
+            "n": 36,
+            "net": 138.34
+          },
+          "2024Q1": {
+            "n": 31,
+            "net": 41.21
+          },
+          "2024Q2": {
+            "n": 44,
+            "net": 17.63
+          },
+          "2024Q3": {
+            "n": 50,
+            "net": 52.08
+          },
+          "2024Q4": {
+            "n": 40,
+            "net": 3.25
+          },
+          "2025Q1": {
+            "n": 36,
+            "net": 2.17
+          },
+          "2025Q2": {
+            "n": 24,
+            "net": -2.86
+          },
+          "2025Q3": {
+            "n": 41,
+            "net": 83.08
+          },
+          "2025Q4": {
+            "n": 39,
+            "net": 55.14
+          },
+          "2026Q1": {
+            "n": 36,
+            "net": 54.79
+          },
+          "2026Q2": {
+            "n": 36,
+            "net": 1.42
+          },
+          "2026Q3": {
+            "n": 27,
+            "net": 53.03
+          }
+        }
+      },
+      "tail": {
+        "top1_removed": {
+          "net": 484.73,
+          "mean": 0.92,
+          "trades_left": 527
+        },
+        "top3_removed": {
+          "net": 404.02,
+          "mean": 0.77,
+          "trades_left": 525
+        },
+        "top5_removed": {
+          "net": 342.48,
+          "mean": 0.655,
+          "trades_left": 523
+        },
+        "top10_removed": {
+          "net": 250.32,
+          "mean": 0.483,
+          "trades_left": 518
+        },
+        "top05_pct_removed": {
+          "net": 105.64,
+          "mean": 0.21,
+          "trades_left": 502
+        },
+        "top10_pct_removed": {
+          "net": -42.85,
+          "mean": -0.09,
+          "trades_left": 476
+        },
+        "top5_share_pct": 35.79
+      },
+      "gaps": {
+        "gaps": 4,
+        "gap_net_mean": 65.78,
+        "gap_net_median": 60.64,
+        "gap_net_min": 32.55,
+        "gaps_positive": 4,
+        "gaps_positive_pct": 100.0,
+        "worst_gap_mdd": 13.42,
+        "detail": [
+          {
+            "from_idx": 109,
+            "to_idx": 128,
+            "len": 18,
+            "net": 34.43,
+            "max_dd": 4.15,
+            "wins": 11,
+            "losses": 7
+          },
+          {
+            "from_idx": 128,
+            "to_idx": 232,
+            "len": 103,
+            "net": 32.55,
+            "max_dd": 8.08,
+            "wins": 37,
+            "losses": 66
+          },
+          {
+            "from_idx": 232,
+            "to_idx": 409,
+            "len": 176,
+            "net": 109.28,
+            "max_dd": 13.42,
+            "wins": 71,
+            "losses": 105
+          },
+          {
+            "from_idx": 409,
+            "to_idx": 520,
+            "len": 110,
+            "net": 86.85,
+            "max_dd": 12.68,
+            "wins": 47,
+            "losses": 63
+          }
+        ]
+      }
+    },
+    "oos": {
+      "n": 311,
+      "net": 239.59,
+      "spacing": {
+        "3.0": {
+          "count": 33,
+          "n": 32,
+          "mean": 7.66,
+          "median": 1.0,
+          "max": 39,
+          "p90": 25
+        },
+        "5.0": {
+          "count": 20,
+          "n": 19,
+          "mean": 12.21,
+          "median": 3,
+          "max": 69,
+          "p90": 39
+        },
+        "10.0": {
+          "count": 6,
+          "n": 5,
+          "mean": 32.6,
+          "median": 26,
+          "max": 80,
+          "p90": 80
+        },
+        "20.0": {
+          "count": 2,
+          "n": 1,
+          "mean": 85,
+          "median": 85,
+          "max": 85,
+          "p90": 85
+        }
+      },
+      "temporal": {
+        "year": {
+          "2021": {
+            "n": 162,
+            "net": 78.33
+          },
+          "2022": {
+            "n": 149,
+            "net": 161.26
+          }
+        },
+        "quarter": {
+          "2021Q1": {
+            "n": 46,
+            "net": 9.02
+          },
+          "2021Q2": {
+            "n": 38,
+            "net": 34.65
+          },
+          "2021Q3": {
+            "n": 40,
+            "net": 17.02
+          },
+          "2021Q4": {
+            "n": 38,
+            "net": 17.64
+          },
+          "2022Q1": {
+            "n": 45,
+            "net": 49.01
+          },
+          "2022Q2": {
+            "n": 34,
+            "net": 43.41
+          },
+          "2022Q3": {
+            "n": 33,
+            "net": 5.82
+          },
+          "2022Q4": {
+            "n": 37,
+            "net": 63.02
+          }
+        }
+      },
+      "tail": {
+        "top1_removed": {
+          "net": 213.46,
+          "mean": 0.689,
+          "trades_left": 310
+        },
+        "top3_removed": {
+          "net": 172.72,
+          "mean": 0.561,
+          "trades_left": 308
+        },
+        "top5_removed": {
+          "net": 135.67,
+          "mean": 0.443,
+          "trades_left": 306
+        },
+        "top10_removed": {
+          "net": 82.85,
+          "mean": 0.275,
+          "trades_left": 301
+        },
+        "top05_pct_removed": {
+          "net": 45.27,
+          "mean": 0.153,
+          "trades_left": 296
+        },
+        "top10_pct_removed": {
+          "net": -28.06,
+          "mean": -0.1,
+          "trades_left": 280
+        },
+        "top5_share_pct": 43.38
+      },
+      "gaps": {
+        "gaps": 1,
+        "gap_net_mean": 80.48,
+        "gap_net_median": 80.48,
+        "gap_net_min": 80.48,
+        "gaps_positive": 1,
+        "gaps_positive_pct": 100.0,
+        "worst_gap_mdd": 10.12,
+        "detail": [
+          {
+            "from_idx": 204,
+            "to_idx": 290,
+            "len": 85,
+            "net": 80.48,
+            "max_dd": 10.12,
+            "wins": 34,
+            "losses": 51
+          }
+        ]
+      }
+    }
+  },
+  "fsent_champ_trailhalf": {
+    "is": {
+      "n": 495,
+      "net": 536.19,
+      "spacing": {
+        "3.0": {
+          "count": 63,
+          "n": 62,
+          "mean": 6.73,
+          "median": 2.0,
+          "max": 33,
+          "p90": 19
+        },
+        "5.0": {
+          "count": 41,
+          "n": 40,
+          "mean": 10.97,
+          "median": 1.5,
+          "max": 70,
+          "p90": 49
+        },
+        "10.0": {
+          "count": 18,
+          "n": 17,
+          "mean": 22.41,
+          "median": 11,
+          "max": 108,
+          "p90": 102
+        },
+        "20.0": {
+          "count": 10,
+          "n": 9,
+          "mean": 43.22,
+          "median": 27,
+          "max": 158,
+          "p90": 158
+        }
+      },
+      "temporal": {
+        "year": {
+          "2023": {
+            "n": 116,
+            "net": 171.07
+          },
+          "2024": {
+            "n": 158,
+            "net": 88.54
+          },
+          "2025": {
+            "n": 124,
+            "net": 142.37
+          },
+          "2026": {
+            "n": 97,
+            "net": 134.21
+          }
+        },
+        "quarter": {
+          "2023Q1": {
+            "n": 28,
+            "net": 13.48
+          },
+          "2023Q2": {
+            "n": 30,
+            "net": -11.67
+          },
+          "2023Q3": {
+            "n": 24,
+            "net": -7.06
+          },
+          "2023Q4": {
+            "n": 34,
+            "net": 176.31
+          },
+          "2024Q1": {
+            "n": 31,
+            "net": 30.04
+          },
+          "2024Q2": {
+            "n": 47,
+            "net": 12.88
+          },
+          "2024Q3": {
+            "n": 45,
+            "net": 38.61
+          },
+          "2024Q4": {
+            "n": 35,
+            "net": 7.01
+          },
+          "2025Q1": {
+            "n": 33,
+            "net": 3.69
+          },
+          "2025Q2": {
+            "n": 21,
+            "net": -3.47
+          },
+          "2025Q3": {
+            "n": 34,
+            "net": 79.62
+          },
+          "2025Q4": {
+            "n": 36,
+            "net": 62.53
+          },
+          "2026Q1": {
+            "n": 35,
+            "net": 60.89
+          },
+          "2026Q2": {
+            "n": 37,
+            "net": 36.13
+          },
+          "2026Q3": {
+            "n": 25,
+            "net": 37.19
+          }
+        }
+      },
+      "tail": {
+        "top1_removed": {
+          "net": 488.07,
+          "mean": 0.988,
+          "trades_left": 494
+        },
+        "top3_removed": {
+          "net": 406.46,
+          "mean": 0.826,
+          "trades_left": 492
+        },
+        "top5_removed": {
+          "net": 348.81,
+          "mean": 0.712,
+          "trades_left": 490
+        },
+        "top10_removed": {
+          "net": 229.28,
+          "mean": 0.473,
+          "trades_left": 485
+        },
+        "top05_pct_removed": {
+          "net": 72.54,
+          "mean": 0.154,
+          "trades_left": 471
+        },
+        "top10_pct_removed": {
+          "net": -73.19,
+          "mean": -0.164,
+          "trades_left": 446
+        },
+        "top5_share_pct": 34.95
+      },
+      "gaps": {
+        "gaps": 7,
+        "gap_net_mean": 34.84,
+        "gap_net_median": 25.51,
+        "gap_net_min": 1.87,
+        "gaps_positive": 7,
+        "gaps_positive_pct": 100.0,
+        "worst_gap_mdd": 15.69,
+        "detail": [
+          {
+            "from_idx": 90,
+            "to_idx": 103,
+            "len": 12,
+            "net": 49.21,
+            "max_dd": 1.93,
+            "wins": 8,
+            "losses": 4
+          },
+          {
+            "from_idx": 104,
+            "to_idx": 119,
+            "len": 14,
+            "net": 30.4,
+            "max_dd": 3.35,
+            "wins": 7,
+            "losses": 7
+          },
+          {
+            "from_idx": 119,
+            "to_idx": 222,
+            "len": 102,
+            "net": 18.06,
+            "max_dd": 13.53,
+            "wins": 38,
+            "losses": 64
+          },
+          {
+            "from_idx": 222,
+            "to_idx": 381,
+            "len": 158,
+            "net": 110.89,
+            "max_dd": 13.44,
+            "wins": 66,
+            "losses": 92
+          },
+          {
+            "from_idx": 381,
+            "to_idx": 409,
+            "len": 27,
+            "net": 1.87,
+            "max_dd": 15.69,
+            "wins": 7,
+            "losses": 20
+          },
+          {
+            "from_idx": 409,
+            "to_idx": 450,
+            "len": 40,
+            "net": 25.51,
+            "max_dd": 9.78,
+            "wins": 17,
+            "losses": 23
+          },
+          {
+            "from_idx": 450,
+            "to_idx": 487,
+            "len": 36,
+            "net": 7.91,
+            "max_dd": 8.56,
+            "wins": 13,
+            "losses": 23
+          }
+        ]
+      }
+    },
+    "oos": {
+      "n": 280,
+      "net": 282.08,
+      "spacing": {
+        "3.0": {
+          "count": 36,
+          "n": 35,
+          "mean": 5.97,
+          "median": 1,
+          "max": 38,
+          "p90": 19
+        },
+        "5.0": {
+          "count": 20,
+          "n": 19,
+          "mean": 11.84,
+          "median": 1,
+          "max": 54,
+          "p90": 37
+        },
+        "10.0": {
+          "count": 11,
+          "n": 10,
+          "mean": 20.8,
+          "median": 0.0,
+          "max": 74,
+          "p90": 74
+        },
+        "20.0": {
+          "count": 6,
+          "n": 5,
+          "mean": 30,
+          "median": 21,
+          "max": 75,
+          "p90": 75
+        }
+      },
+      "temporal": {
+        "year": {
+          "2021": {
+            "n": 142,
+            "net": 130.9
+          },
+          "2022": {
+            "n": 138,
+            "net": 151.19
+          }
+        },
+        "quarter": {
+          "2021Q1": {
+            "n": 41,
+            "net": 6.3
+          },
+          "2021Q2": {
+            "n": 31,
+            "net": 48.36
+          },
+          "2021Q3": {
+            "n": 38,
+            "net": 50.2
+          },
+          "2021Q4": {
+            "n": 32,
+            "net": 26.04
+          },
+          "2022Q1": {
+            "n": 46,
+            "net": 33.22
+          },
+          "2022Q2": {
+            "n": 29,
+            "net": 44.93
+          },
+          "2022Q3": {
+            "n": 32,
+            "net": -2.12
+          },
+          "2022Q4": {
+            "n": 31,
+            "net": 75.16
+          }
+        }
+      },
+      "tail": {
+        "top1_removed": {
+          "net": 236.74,
+          "mean": 0.849,
+          "trades_left": 279
+        },
+        "top3_removed": {
+          "net": 181.64,
+          "mean": 0.656,
+          "trades_left": 277
+        },
+        "top5_removed": {
+          "net": 136.44,
+          "mean": 0.496,
+          "trades_left": 275
+        },
+        "top10_removed": {
+          "net": 59.04,
+          "mean": 0.219,
+          "trades_left": 270
+        },
+        "top05_pct_removed": {
+          "net": 22.77,
+          "mean": 0.086,
+          "trades_left": 266
+        },
+        "top10_pct_removed": {
+          "net": -50.81,
+          "mean": -0.202,
+          "trades_left": 252
+        },
+        "top5_share_pct": 51.63
+      },
+      "gaps": {
+        "gaps": 3,
+        "gap_net_mean": 21.24,
+        "gap_net_median": 23.98,
+        "gap_net_min": 5.28,
+        "gaps_positive": 3,
+        "gaps_positive_pct": 100.0,
+        "worst_gap_mdd": 12.6,
+        "detail": [
+          {
+            "from_idx": 109,
+            "to_idx": 185,
+            "len": 75,
+            "net": 34.47,
+            "max_dd": 12.6,
+            "wins": 26,
+            "losses": 49
+          },
+          {
+            "from_idx": 185,
+            "to_idx": 207,
+            "len": 21,
+            "net": 23.98,
+            "max_dd": 11.06,
+            "wins": 5,
+            "losses": 16
+          },
+          {
+            "from_idx": 207,
+            "to_idx": 262,
+            "len": 54,
+            "net": 5.28,
+            "max_dd": 9.9,
+            "wins": 22,
+            "losses": 32
+          }
+        ]
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "d57c595",
+    "measured": "2026-10-07",
+    "harness": "exp_curve_quality.py"
+  }
+}
