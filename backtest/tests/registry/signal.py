@@ -92,9 +92,14 @@ BOOKS = {
     # The point of registering it rather than folding it into the base is
     # attribution.
     #
-    # chop_thresh stays at 58.0 even though it is dead code here - mode="atr_high"
-    # never reads it - so that this entry differs from its base by exactly one
-    # BEHAVIOURAL knob and the delta is traceable to the halt alone.
+    # chop_thresh stays at 58.0 - NOT because it is inert everywhere, because it is
+    # inert ON THIS BOOK only. mode="atr_high" routes on atr_high_thresh alone
+    # and never reads chop_thresh. That is NOT a registry-wide fact: 13 registry
+    # books omit `mode`, inherit BP's "b2_vs_flip_chop", and DO read it, and on
+    # the four sampled it carries +105R to +163R. One of those 13 is named
+    # lb30_chop55_persist2. See docs/method/KNOB_BINDS_AUDIT.md. Written out
+    # explicitly so a future mode change cannot silently drop this book onto BP's
+    # chop_thresh.
     #
     # ext_stop_r is set to 0.0 explicitly rather than dropped, for two reasons.
     # It is provably inert since C17: 3.0 and 0.0 produce byte-identical trade

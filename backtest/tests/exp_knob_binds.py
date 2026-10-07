@@ -55,6 +55,16 @@ PROBES = {
 FIELDS = ("entry_ts", "dir", "entry_price", "sl", "exit_ts", "exit_price",
           "outcome", "r_multiple")
 
+# unified.py's regime router: which mode branches compare `ch` against
+# chop_thresh. Read off the source (lines 776-857) and held here so the census
+# does not have to re-grep the engine to know a mode binds the knob.
+MODES_THAT_READ_CHOP = {
+    "chop", "chop_or_atr_low", "chop_and_atr_low", "b2_vs_flip_chop",
+    "decisive_vs_flip_chop", "htf_mag", "htf_mag_inv", "dynamic_chop",
+    "entropy", "entropy_inv", "fd", "fd_inv", "hmm", "hmm_inv",
+    "garch", "garch_inv", "soft_chop", "soft_ensemble", "flip_quality",
+}
+
 
 def sig(trades):
     return {tuple(t.get(f) for f in FIELDS) for t in trades}
@@ -90,6 +100,44 @@ def main() -> int:
     print("base config:")
     for k, v in sorted(cfg["params"].items()):
         print("    %-22s %s" % (k, v))
+    print()
+
+    # ---------------------------------------------------------------------
+    # MODE CENSUS. An INERT verdict here is scoped to THIS book's mode, and
+    # that scope has to be stated or the result gets quoted as a property of the
+    # registry. chop_thresh was nearly written up as globally dead: it is inert
+    # on mode="atr_high" and on mode="union", but BP's default mode is
+    # "b2_vs_flip_chop", which reads it - and 13 books omit `mode` entirely and
+    # therefore inherit that default. One of them is named lb30_chop55_persist2.
+    # ---------------------------------------------------------------------
+    import collections
+    import experiment_registry as _reg
+    named = collections.Counter()
+    omitters = []
+    for _k, _v in _reg.EXPERIMENTS.items():
+        if not isinstance(_v, dict):
+            continue
+        _m = (_v.get("params") or {}).get("mode")
+        if _m is None:
+            omitters.append(_k)
+        else:
+            named[_m] += 1
+    bp_mode = BP.get("mode")
+    print("registry mode census (%d books):" % len([v for v in _reg.EXPERIMENTS.values()
+                                                   if isinstance(v, dict)]))
+    for _m, _c in named.most_common():
+        _reads = "READS chop_thresh" if _m in MODES_THAT_READ_CHOP else "inert for chop_thresh"
+        print("    mode=%-22s %3d book(s)   %s" % (_m, _c, _reads))
+    print("    mode omitted               %3d book(s)   inherit BP's mode=%s%s"
+          % (len(omitters), bp_mode,
+             "  <- READS chop_thresh" if bp_mode in MODES_THAT_READ_CHOP else ""))
+    mine = (cfg.get("params") or {}).get("mode")
+    if mine is None:
+        print("    ** THIS BOOK OMITS mode and inherits %r. Its chop_thresh verdict "
+              "is not safe to quote until that is written down. **" % bp_mode)
+    else:
+        print("    this book names mode=%r, so its INERT verdicts are about THIS "
+              "configuration only." % mine)
     print()
 
     base_sig, base_m = {}, {}

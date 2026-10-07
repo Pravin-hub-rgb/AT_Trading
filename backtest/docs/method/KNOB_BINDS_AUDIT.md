@@ -14,12 +14,15 @@ weight in the book.
 INERT (4)
 =========
 
+All four verdicts are scoped to **this book's configuration**, and for
+`chop_thresh` that scope is load-bearing - see the correction below.
+
 | knob | book value | probe | verdict |
 |---|---|---|---|
-| `atr_low_thresh` | 0.35 | 0.99 | INERT |
-| `chop_thresh` | 58.0 | 0.0 | INERT |
+| `atr_low_thresh` | 0.35 | 0.99 | INERT (mode-gated) |
+| `chop_thresh` | 58.0 | 0.0 | INERT **on mode="atr_high" only** |
 | `exp_mltf` | True | False | INERT **at max_positions=0 only** |
-| `window_end` | "exit" | "r_touch" | INERT - see the coupling below |
+| `window_end` | "exit" | "r_touch" | INERT - value-collapsed, see below |
 
 BINDS (10), with the cost of breaking each
 ==========================================
@@ -60,6 +63,41 @@ describing that as dead would be a lie that costs someone a strategy later.
 The engine reads each only under the mode that uses it. This book runs
 `mode="atr_high"`, which routes on `atr_high_thresh` alone, so both are inert by
 construction. They come alive if `mode` changes, not if the threshold does.
+
+### CORRECTION - `chop_thresh` is NOT dead in this registry
+
+The first version of this file wrote the finding as a property of the repository
+and that was wrong. It is a property of `mode="atr_high"`, and the difference is
+worth +105R to +163R. Caught by the owner asking whether chop_thresh was really
+being used here, which turned out to be the right question.
+
+`chop_thresh` is read by eighteen `mode` branches in the router, among them
+`mode="b2_vs_flip_chop"`. The registry census:
+
+    mode=atr_high                215 book(s)   inert for chop_thresh
+    mode=union                     2 book(s)   inert for chop_thresh
+    mode OMITTED                   13 book(s)   inherit BP's mode=b2_vs_flip_chop
+                                                        <- READS chop_thresh
+
+`BP` carries `mode="b2_vs_flip_chop"`, and 13 books do not name `mode` at all, so
+they inherit it and reach the branch at `unified.py:788`:
+
+    elif mode=="b2_vs_flip_chop":
+        use="b2" if ch > chop_thresh else "flip"
+
+Measured on four of the 13, `chop_thresh` against 0.0, IS era:
+
+    book                    mode inherited    as booked      chop=0.0     delta
+    lb30_chop55_persist2    b2_vs_flip_chop   432 / +247.1   504 / +141.5  +105.6R
+    lb30_w24_ext3.0         b2_vs_flip_chop   414 / +313.3   461 / +149.8  +163.5R
+    lb30_halt0              b2_vs_flip_chop   485 / +280.5   551 / +154.2  +126.3R
+    a4_w24_ext3.0           b2_vs_flip_chop   367 / +132.5   461 / +149.8   +17.3R
+
+`lb30_chop55_persist2` is the clearest: the "chop55" in its name is
+`chop_thresh=55`, and it carries +105R. So **13 registry books reach a live
+`chop_thresh` by silent inheritance, and one of them is named after the knob.**
+`exp_knob_binds.py` now prints this census before its verdict table so that an
+INERT row can never again be read as a registry-wide claim.
 
 **2. `exp_mltf` is knob-gated, and is LIVE.** This is the one that would have
 been got wrong by trusting the audit table:
@@ -107,6 +145,12 @@ genuinely had to move is `ext_stop_r`, and it moved to an explicit `0.0` - never
 to nothing, because `BP` carries `1.5` and that value binds for 51 trades IS and
 36 OOS.
 
-The audit's value is that nobody has to re-derive this. `chop_thresh` in
-particular has been re-measured at least four times across this repo's history;
-it is inert for a reason that is now written down in one place.
+The `chop_thresh` correction above turns this from a tidiness argument into a
+measured one: 13 books reach that knob through `BP`'s `mode` default, and it
+carries +105R to +163R on the four sampled. A knob that heavy does not belong in
+a "delete the redundant fields" cleanup, and the fact that this book does not use
+it says nothing about the thirteen that do.
+
+`exp_knob_binds.py` now prints the mode census above the verdict table and flags
+any book that omits `mode`, so a future audit cannot produce an INERT row whose
+scope has been dropped.
