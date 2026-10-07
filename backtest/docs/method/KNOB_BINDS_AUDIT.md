@@ -44,6 +44,16 @@ The three that carry the book are `exp_fs_entry_side` (the whole thesis -245R
 without it), `cooldown_bars` (-172R IS) and `sl_buf_atr` (-94R IS). `ext_stop_r`
 at 1.5 costs 31-61R, which is the trap described in the registry entry.
 
+**Every delta above is measured against the SHIPPING configuration** -
+`max_consecutive_losses=3`, `exp_persist=7`, `ext_stop_r=0.0` - each knob probed
+alone from that base. That base matters and it is not a detail. The same probe
+against a different base gives a different number: dropping `exp_persist` from
+the shipping book costs 66.1R IS, but from the halt-off book it costs 61.7R IS,
+because the halt re-sequences which trades the persist filter is even asked
+about. Reading a delta off the wrong row of a grid is how a correct table gets
+argued into a wrong number - the `exp_persist` row here and the halt row below
+it are both true, and they are both true only against the base stated above.
+
 NOT IN THE EFFECTIVE CONFIG: `exp_cap_days`, `sl_mode`. They are engine function
 defaults, absent from `BP`, so they are not carried by the book and cannot drift.
 
