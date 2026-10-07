@@ -33,7 +33,7 @@ BINDS (10), with the cost of breaking each
 | `cooldown_bars` | 0 | +153 / +95 | **-172.1 / -99.2** |
 | `exp_fs_entry_side` | "" | -25 / -23 | **-244.9 / -173.6** |
 | `exp_partial_r` | 1.0 | +83 / +40 | -261.0 / -100.9 |
-| `exp_persist` | 0 | -3 / +14 | **-66.1 / -5.0** |
+| `exp_persist` | 0 | -3 / +14 | **-66.1 / -5.0** (see the sweep note below) |
 | `ext_stop_r` | 1.5 | -51 / -36 | -31.2 / -61.0 |
 | `htf_rr` | 2.0 | -30 / -22 | +8.6 / -55.9 |
 | `max_consecutive_losses` | 0 | +47 / +26 | +33.2 / +31.3 |
