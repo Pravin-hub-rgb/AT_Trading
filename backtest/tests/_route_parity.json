@@ -1,0 +1,98 @@
+{
+  "route_params": {
+    "sl_buf_atr": 0.01,
+    "ext_stop_r": 0.0,
+    "atr_high_thresh": 0.65,
+    "atr_low_thresh": 0.35,
+    "cooldown_bars": 8,
+    "max_consecutive_losses": 3,
+    "max_positions": 0,
+    "exp_partial_r": 0.0,
+    "exp_persist": 7,
+    "exp_fs_entry_side": "long",
+    "pivot_rule": "leg"
+  },
+  "books": {
+    "fsent_champ_long": {
+      "is": {
+        "got": [
+          528,
+          533.37,
+          13.42
+        ],
+        "want": [
+          528,
+          533.37,
+          13.42
+        ],
+        "ok": true,
+        "real": [
+          528,
+          533.37,
+          true
+        ]
+      },
+      "oos": {
+        "got": [
+          311,
+          239.59,
+          11.88
+        ],
+        "want": [
+          311,
+          239.59,
+          11.88
+        ],
+        "ok": true,
+        "real": [
+          311,
+          239.59,
+          true
+        ]
+      }
+    },
+    "fsent_champ_long_mode_atr_low": {
+      "is": {
+        "got": [
+          641,
+          721.34,
+          28.88
+        ],
+        "want": [
+          641,
+          721.3,
+          28.9
+        ],
+        "ok": true,
+        "real": [
+          641,
+          721.34,
+          true
+        ]
+      },
+      "oos": {
+        "got": [
+          315,
+          280.72,
+          14.56
+        ],
+        "want": [
+          315,
+          280.7,
+          14.6
+        ],
+        "ok": true,
+        "real": [
+          315,
+          280.72,
+          true
+        ]
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_route_parity.py"
+  }
+}

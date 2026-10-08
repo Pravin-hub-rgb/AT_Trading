@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -128,8 +128,11 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
 #   v19_causal   - exp_causal_sl=1 on the pre-C16 rule; a DIFFERENT book, 494t
 #   v19_c16      - pivot_rule="leg"
 #   unified      - the pinned shipping book, champion_multi_sw10_leg, 499t
+#   fsent_champ_long        - DIRECTIONAL FS entry, long side only, atr_high
+#   fsent_champ_long_atr_low - the same book with the regime sign flipped
 STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified",
-                              "entry_minus_1"}
+                              "entry_minus_1", "fsent_champ_long",
+                              "fsent_champ_long_atr_low"}
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -151,6 +154,10 @@ VERSION_LABELS = {
         "utcsat_entry_minus_1": "CHAMPION ENTRY-1 + skip UTC Saturday (454t / +358.9R)",
     "unified": "UNIFIED shipping book - champion_multi_sw10_leg on unified.py "
                 "(IS 499t / +239.12R, OOS 280 / +72.8R)",
+    "fsent_champ_long": "FSENT CHAMP LONG - FS entry on longs only, atr_high. "
+                        "IS 528t / +533.37R / DD 13.42R, OOS 311t / +239.59R / DD 11.88R",
+    "fsent_champ_long_atr_low": "FSENT CHAMP LONG + atr_low (regime sign flipped). "
+                        "IS 641t / +721.30R / DD 28.90R, OOS 315t / +280.70R / DD 14.60R",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -1447,6 +1454,56 @@ def btc_backtest(
             window_end="exit",
             max_positions=0,
             exp_persist=7,
+            pivot_rule="leg",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version in ("fsent_champ_long", "fsent_champ_long_atr_low"):
+        # THE FSENT FAMILY, added 2026-10-08 so the chart can show the book the
+        # registry actually pins. Both are ONE knob apart:
+        #     mode="atr_high"  vs  mode="atr_low"
+        # Everything else is identical, which is what makes the comparison real.
+        #
+        # WHY `exp_mltf` IS NOT PASSED HERE, AND THIS IS NOT AN OMISSION.
+        # The registry records `exp_mltf=True` on these books, but `exp_mltf` is
+        # NOT a parameter of the real engine - inspect.signature on
+        # simulate_htf_ltf_streak_halt returns 38 named params and no **kwargs,
+        # so passing it raises TypeError. The harness creates it by patching the
+        # engine source text (exp_tf_family.build_family_module injects
+        # htf_bar_secs/ltf_bar_secs the same way).
+        #
+        # What exp_mltf=True actually does is allow overlapping positions, i.e.
+        # it DISARMS the busy_until slot gate. The real engine expresses that
+        # same thing as `max_positions=0` ("0 = unlimited (v19 behaviour), the
+        # gate never fires" - unified.py). So max_positions=0 IS exp_mltf=True
+        # here, and that is why the existing "unified" branch above also carries
+        # max_positions=0 and never passes exp_mltf.
+        #
+        # This equivalence is asserted by measurement, not assumed:
+        # backtest/tests/exp_route_parity.py re-derives both books through this
+        # route's parameter set and requires the registry pins to reproduce.
+        # Pinned IS 528 / +533.37 / 13.42 and OOS 311 / +239.59 / 11.88 for the
+        # atr_high book; IS 641 / +721.30 / 28.90 and OOS 315 / +280.70 / 14.60
+        # for atr_low.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=0.0,
+            mode=("atr_high" if version == "fsent_champ_long" else "atr_low"),
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            exp_fs_entry_side="long",
             pivot_rule="leg",
         )
         trades = nested.get("ltf_trades", [])

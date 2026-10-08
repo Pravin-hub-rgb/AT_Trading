@@ -137,7 +137,51 @@ const V19 = {
   window_end: "exit",
 };
 
+// ---------------------------------------------------------------------------
+// THE FSENT PAIR - prepended 2026-10-08 so they sit at the TOP of the dropdown.
+//
+// These two are ONE knob apart and nothing else:
+//     fsent_champ_long          mode="atr_high"
+//     fsent_champ_long_atr_low  mode="atr_low"
+// Every other config value, both books, comes from V19 and is shared with the
+// rest of the list. That is what makes them worth comparing side by side on one
+// chart: same risk model, same costs, same swing definition, opposite sign on the
+// regime selector.
+//
+// Neither is a drop-in for the old shipping entry. "unified" is
+// champion_multi_sw10_leg, 499t / +239.12R, and it has NO directional FS entry -
+// it trades the FS print on neither side. These two set
+// exp_fs_entry_side="long": longs enter at the swing FS print, shorts still enter
+// at the break. That single change is why the trade count moves from 499 to 528.
+//
+// The registry pins are the numbers in `measured` and the reason the dropdown
+// label repeats them: this list is hand-maintained and independent of the Python
+// registry, so the figures are quoted here rather than fetched.
+//
+// OWNER'S DRAWDOWN BUDGET IS 29R (set 2026-10-08). Both books fit: the base at
+// 13.42R IS / 11.88R OOS, atr_low at 28.90R IS / 14.60R OOS. Neither is promoted -
+// see method/OWNER_SCORECARD_MODES.md and method/MODE_DURATION_CALENDAR.md.
+// ---------------------------------------------------------------------------
+
 export const BOOK_OPTIONS: BookOption[] = [
+  {
+    id: "fsent_champ_long",
+    label: "FSENT CHAMP LONG (FS entry on longs) - IS 528t +533.4R dd13.4 | OOS 311t +239.6R dd11.9",
+    shortLabel: "FSENT-LONG",
+    slMode: "causal",
+    hint: "longs enter at the swing FS print, shorts at the break - regime atr_high - the base of the pair",
+    measured: { isN: 528, isNet: 533.37, oosN: 311, oosNet: 239.59 },
+    config: { ...V19, version: "fsent_champ_long", ext_stop_r: 0.0 },
+  },
+  {
+    id: "fsent_champ_long_atr_low",
+    label: "FSENT CHAMP LONG + atr_low (regime sign flipped) - IS 641t +721.3R dd28.9 | OOS 315t +280.7R dd14.6",
+    shortLabel: "FSENT-ATRLOW",
+    slMode: "causal",
+    hint: "one knob from the book above: atr_high -> atr_low, so decisive windows are taken when 15m bars are QUIET instead of big - more trades, more R, deeper drawdown",
+    measured: { isN: 641, isNet: 721.30, oosN: 315, oosNet: 280.70 },
+    config: { ...V19, version: "fsent_champ_long_atr_low", ext_stop_r: 0.0 },
+  },
   {
     id: "champion_causal",
     label: "CHAMPION CAUSAL (leg stop) - ships - IS 499t +239.1R",
@@ -218,8 +262,15 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
 ];
 
-// The shipping book. Was "v19_retro", which was the 500t origin-pivot book -
-// the wrong default to ship, and an id that no longer exists here.
+// The book the chart opens on. Was "v19_retro", which was the 500t origin-pivot
+// book - the wrong default to ship, and an id that no longer exists here.
+//
+// Unchanged deliberately on 2026-10-08 when the fsent pair was prepended: the
+// dropdown opening on the pair is the point of adding it, but silently moving
+// everyone's landing book is not. Note that getBook() below falls back to
+// BOOK_OPTIONS[0], which is now "fsent_champ_long" - so an id that no longer
+// resolves lands on the fsent base rather than on champion_causal. That is the
+// intended fallback, but it is a behaviour change and it is stated here.
 export const DEFAULT_BOOK = "champion_causal";
 
 export function getBook(id: string): BookOption {
