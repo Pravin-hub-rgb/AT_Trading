@@ -226,10 +226,23 @@ BOOKS = {
     #
     # NONE is adoptable, for two measured reasons, not for lack of evidence:
     #
-    #   1. Three of the four spend drawdown. The halt governance rule above is a
-    #      budget test and the base book sits at 11.88R OOS. Only flip_quality
-    #      holds it, and only by being flat on both - which point 3 then shows is
-    #      not enough.
+    #   1. Drawdown, ON THE OWNER'S BUDGET. Corrected 2026-10-08: the earlier note
+    #      here said "every one spends drawdown" and cited a rule requiring DD
+    #      <= the base book's 11.88R. That rule was MINE and it is not in the
+    #      owner's framework (docs/learn/finding optimal book.md), which treats
+    #      drawdown as an input to a trade rather than a veto and names
+    #      Net R / Max DD as the measure for that trade. It is withdrawn.
+    #      The owner has since set a 20R drawdown budget, so the real test is
+    #      against 20R, and it still bites:
+    #        atr_low   28.9R IS  OVER   82 trades to make, 460 underwater
+    #        union     23.8R IS  OVER   46 to make, 771 underwater
+    #        fd/flip   13.4R IS  PASS   identical to base
+    #      Note this reverses my own framing: union's OOS DD is 18.2R, which
+    #      PASSED my invented 11.88R gate on the number I was citing, and it is
+    #      still rejected - on the in-sample 23.8R, on 771 trades underwater,
+    #      on Net R / Max DD being LAST of the five (24.37 IS vs base 39.80), and
+    #      on the top 5% of trades carrying 95.0% of in-sample profit with only
+    #      3.9% surviving their removal. See method/OWNER_SCORECARD_MODES.md.
     #   2. Lane test. The first version of this note used champion_multi_sw10 /
     #      utcsat_multi_sw10 as "the second lane" and all four failed there out
     #      of sample. Those books are a DIFFERENT architecture - pivot_rule=origin,
@@ -291,7 +304,7 @@ BOOKS = {
     # from a pin instead of prose. Do not promote one from this table.
     # See method/MODE_CONFIRM_FOUR_CANDIDATES.md.
     "fsent_champ_long_mode_atr_low": {
-          "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='atr_low' - the atr_high inversion: decisive windows when 15m bars are QUIET, not big. Only mode changes; every other knob identical. Blocked on two things: drawdown 28.9R IS / 14.6R OOS against the base 13.4R / 11.9R, and it fails out of sample on both second lanes.",
+          "desc": "CANDIDATE, NOT ADOPTED - blocked on drawdown against the owner's 20R budget, not on the invented 11.88R gate (withdrawn 2026-10-08 as mine, not the framework's). fsent_champ_long with mode='atr_low' - the atr_high inversion: decisive windows when 15m bars are QUIET, not big. Only the mode changes; every other knob identical. This is the strongest of the four on the framework's own buckets: it WINS bucket 1 outright in both eras - IS 641t / +721.3R / expectancy 1.125 / PF 3.22 against the base 528t / +533.4R / 1.010 / 3.09, and OOS 315t / +280.7R / 0.891 / 2.96 against 311t / +239.6R / 0.770 / 2.69 - on MORE trades than the base, so more evidence and not less. Its out-of-sample tail is also the healthiest in the set (top 5% contributes 71.2% against the base's 81.1%; removing the top 10% still leaves -4.6% against -11.7%; removing the top 5% leaves 26.3% against 16.3%) and its DD expansion is 0.51, i.e. half its out-of-sample drawdown is in-sample. It is blocked purely on bucket 2 and bucket 9: 28.9R max DD in sample against the owner's 20R budget, 82 trades to make the drawdown, 460 trades underwater against the base's 286, and a 16-trade losing streak against the base's 11. Its own threshold swept 0.20-0.60 and the OOS gain peaks sharply at 0.35 (+41.1R) and is NEGATIVE everywhere else - one point, not a region, which is exactly the grid-peak failure P69 warns about. This is the one candidate worth keeping open, and the open question is whether a 20R budget can stretch to 29R - the owner's call, not the registry's. See method/OWNER_SCORECARD_MODES.md.",
           "engine": "patched",
           "params": {"mode": "atr_low", "atr_high_thresh": 0.65,
                        "sl_buf_atr": 0.01, "cooldown_bars": 8,
