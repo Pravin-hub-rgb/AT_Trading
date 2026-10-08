@@ -1,0 +1,119 @@
+{
+  "book": "fsent_sig_full",
+  "eras": {
+    "is": {
+      "n": 234,
+      "net": 295.83,
+      "spacing": {
+        "3.0": {
+          "count": 36,
+          "mean": 5.54,
+          "median": 4,
+          "max": 27
+        },
+        "5.0": {
+          "count": 26,
+          "mean": 8.16,
+          "median": 7,
+          "max": 27
+        },
+        "10.0": {
+          "count": 10,
+          "mean": 24.44,
+          "median": 19,
+          "max": 65
+        },
+        "20.0": {
+          "count": 4,
+          "mean": 33.67,
+          "median": 30,
+          "max": 57
+        }
+      },
+      "years": {
+        "2023": 91.58,
+        "2024": 114.29,
+        "2025": 55.4,
+        "2026": 34.56
+      },
+      "gaps": [
+        {
+          "len": 57,
+          "net": 38.7,
+          "max_dd": 10.78,
+          "wins": 21,
+          "losses": 36
+        },
+        {
+          "len": 30,
+          "net": 19.29,
+          "max_dd": 5.71,
+          "wins": 11,
+          "losses": 19
+        },
+        {
+          "len": 14,
+          "net": -4.04,
+          "max_dd": 5.69,
+          "wins": 4,
+          "losses": 10
+        }
+      ]
+    },
+    "oos": {
+      "n": 151,
+      "net": 194.44,
+      "spacing": {
+        "3.0": {
+          "count": 26,
+          "mean": 4.92,
+          "median": 4,
+          "max": 23
+        },
+        "5.0": {
+          "count": 18,
+          "mean": 7.24,
+          "median": 4,
+          "max": 23
+        },
+        "10.0": {
+          "count": 5,
+          "mean": 34,
+          "median": 28.5,
+          "max": 75
+        },
+        "20.0": {
+          "count": 3,
+          "mean": 28.5,
+          "median": 28.5,
+          "max": 37
+        }
+      },
+      "years": {
+        "2021": 75.35,
+        "2022": 119.09
+      },
+      "gaps": [
+        {
+          "len": 20,
+          "net": 6.5,
+          "max_dd": 4.06,
+          "wins": 9,
+          "losses": 11
+        },
+        {
+          "len": 37,
+          "net": 11.38,
+          "max_dd": 5.77,
+          "wins": 14,
+          "losses": 23
+        }
+      ]
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_sig_full_quality.py"
+  }
+}
