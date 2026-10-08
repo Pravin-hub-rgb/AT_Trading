@@ -98,24 +98,79 @@ file cannot be edited back into a state that breaks alias resolution.
 
 ## counts after the prune
 
-| | before | after |
-|---|---:|---:|
-| registry entries | 236 | **203** |
-| pinned books | 193 | 160 |
-| `KEEP` | 105 | 105 |
-| `LOW_OOS` (0 ≤ OOS < 60) | 56 | 56 |
-| `NEG` | 32 | 0 |
-| `NO_PINS` | 41 | 41 |
+| | before | after bar 1 | after bar 2 |
+|---|---:|---:|---:|
+| registry entries | 236 | 203 | **151** |
+| pinned books | 193 | 160 | 126 |
+| `KEEP` | 105 | 105 | 105 |
+| `LOW_OOS` (0 ≤ OOS < 60) | 56 | 56 | 4 |
+| `NEG` | 32 | 0 | 0 |
+| `NO_PINS` | 41 | 41 | 41 |
 
-**56 books at 0 ≤ OOS < 60R are untouched.** That is the owner's second bar and it
-has not been applied. Applying it would leave **147**.
+**Bar 2 applied at the owner's 50R cap, not 60R.** That retires 52 books and leaves
+**151**. The lowest out-of-sample net among survivors is **+53.97R**, so the 50R
+line is doing exactly what it was asked to do. Four books remain in the 50–60
+band because the cap was lowered from 60 to 50.
 
-**41 books carry no pins** and cannot be judged by either bar.
+## the archive — retired, not deleted
+
+The owner was explicit about what "hatana" means:
+
+> "ye book se hat rahi hai archive mai hongi he - jaise kabhi experiment karna ho
+> toh waha kaam aaye harness ka code wagera"
+
+So the requirement is not "remember the numbers", it is **be able to run it again**.
+A markdown table of pins does not satisfy that; a retired book has to come back
+with its parameter dict intact.
+
+**No config was ever copied anywhere.** The definitions never left their family
+modules — `registry/retired.py` holds keys, and `archived()` reads the live config
+objects back out at call time. That means one source of truth, no snapshot to go
+stale, and the harness code for every retired book still runs.
+
+`exp_archive_list.py` writes `_archive_list.md`, `_archive_list.json` (every
+retired book's full config and pins) and `docs/method/BOOK_ARCHIVE.md`.
+
+### proof the archive is runnable, not just recorded
+
+Three retired books were pulled straight out of `archived()` and run, with the
+registry untouched:
+
+| book | era | archived run | pinned | |
+|---|---|---|---|---|
+| `cap24d` | IS | 515t / +303.49R | 515t / +303.49R | OK |
+| `cap24d` | OOS | 301t / −6.51R | 301t / −6.51R | OK |
+| `gap_campaign_markneg` | IS | 278t / −16.73R | 278t / −16.73R | OK |
+| `gap_campaign_markneg` | OOS | 154t / +76.67R | 154t / +76.67R | OK |
+| `trail_skipn4` | IS | 446t / +349.29R | 446t / +349.29R | OK |
+| `trail_skipn4` | OOS | **245t** / **+31.02R** | **246t** / +31.02R | 1 trade, same net |
+
+**The one mismatch is recorded rather than smoothed over.** `trail_skipn4` out of
+sample returns 245 trades against a pinned 246, with **identical net R**. The
+filter here drops trades whose `outcome` is still `"open"` at the era boundary; the
+pin counted it. That is a boundary-trade convention, not a config problem — the
+book is faithfully reproduced — but it is a real difference and it is why this was
+run at all.
+
+### restoring one
+
+```
+# delete the key from the right set in registry/retired.py, fix the assert count
+$env:PYTHONIOENCODING='utf-8'
+python exp_registry_snapshot.py write _registry_before.json
+python exp_fastcheck.py <book>
+```
+
+Or run it without restoring anything, from `_archive_list.json`:
+
+```
+sim(c1h, sw, c15, sw15, fine_ltf=fine, **cfg["params"])   # cfg["swing"] picks the series
+```
 
 ## verification
 
-- `exp_registry_snapshot.py check` — PASS, 203 rows, re-anchored
-- `exp_fastcheck.py` — PASS, all four fsent books re-derive every pinned field
+- `exp_registry_snapshot.py check` — PASS, 151 rows, re-anchored
+- `exp_fastcheck.py` — PASS on all 7 surviving fsent books
 - `exp_origin_lookahead.py` — PASS, no duplicate keys, every swing key builds
 - `exp_resultsdb.py check` — PASS, registry, docs and queue agree
 - `book()`, `shortlisted()`, `alias_of()` all still work; every key resolves

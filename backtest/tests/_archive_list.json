@@ -1,0 +1,2592 @@
+{
+  "a4_w24_ext1.5": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "A4 w24 ext1.5 (fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "chop_thresh": 55.0,
+        "exp_persist": 2,
+        "exp_wage_h": 24,
+        "ext_stop_r": 1.5
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 299,
+        "net": 142.9,
+        "dd_net": 47.02,
+        "oos_n": 145,
+        "oos_net": 12.7,
+        "oos_dd_net": 34.9
+      }
+    }
+  },
+  "a4_w24_ext3.0": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "A4 w24 ext3.0 (fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "chop_thresh": 55.0,
+        "exp_persist": 2,
+        "exp_wage_h": 24,
+        "ext_stop_r": 3.0
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 367,
+        "net": 132.46,
+        "dd_net": 48.14,
+        "oos_n": 187,
+        "oos_net": 28.37,
+        "oos_dd_net": 38.4
+      }
+    }
+  },
+  "age50_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "king single + skip entries on swings older than 50 bars",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_entry_swing_age_max": 50,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 352,
+        "net": 137.77,
+        "dd_net": 48.08,
+        "win": 0.241,
+        "oos_n": 215,
+        "oos_net": -18.71,
+        "oos_dd_net": 46.94,
+        "oos_win": 0.237
+      }
+    }
+  },
+  "atrr_cd0_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "VALIDATION: atrr gate with cd=0 (pause-only cooldown)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 0,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 319,
+        "net": 152.21,
+        "dd_net": 41.74,
+        "win": 0.251,
+        "oos_n": 203,
+        "oos_net": -10.55,
+        "oos_dd_net": 36.01,
+        "oos_win": 0.232
+      }
+    }
+  },
+  "atrr_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + skip entries when 15m ATR5/ATR20 > 1.4 (vol blow-off)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 318,
+        "net": 153.99,
+        "dd_net": 41.74,
+        "win": 0.252,
+        "oos_n": 202,
+        "oos_net": -8.99,
+        "oos_dd_net": 34.45,
+        "oos_win": 0.238
+      }
+    }
+  },
+  "atrr_swingpause_sig_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "VALIDATION: atrr gate on sw20 chain (cross-chain robustness)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 317,
+        "net": 117.97,
+        "dd_net": 49.39,
+        "win": 0.29,
+        "oos_n": 181,
+        "oos_net": -6.85,
+        "oos_dd_net": 32.76,
+        "oos_win": 0.265
+      }
+    }
+  },
+  "b2doji_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "king single + skip B2 entries with doji candle (body/range < 0.3)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_entry_skip_b2_doji": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 332,
+        "net": 97.58,
+        "dd_net": 61.98,
+        "win": 0.274,
+        "oos_n": 210,
+        "oos_net": -12.36,
+        "oos_dd_net": 32.81,
+        "oos_win": 0.233
+      }
+    }
+  },
+  "baseline_no_partial_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "Champion config without partial exits sw20 (baseline, +122.3 post trail-fix)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 497,
+        "net": 236.65,
+        "dd_net": 56.34,
+        "oos_n": 275,
+        "oos_net": -11.82,
+        "oos_dd_net": 61.17
+      }
+    }
+  },
+  "bm05_multi_sw20": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "VALIDATION: bm05 on sw20 chain (cross-chain transfer)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "exp_bias_momentum_min": 0.5,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 459,
+        "net": 261.89,
+        "dd_net": 52.8,
+        "oos_n": 253,
+        "oos_net": 18.57,
+        "oos_dd_net": 42.43
+      }
+    }
+  },
+  "bm05_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + bias momentum min 0.5 — FAILS on single (-29.6R)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_bias_momentum_min": 0.5,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 336,
+        "net": 83.06,
+        "dd_net": 52.24,
+        "win": 0.262,
+        "oos_n": 209,
+        "oos_net": -3.75,
+        "oos_dd_net": 37.92,
+        "oos_win": 0.249
+      }
+    }
+  },
+  "cap24d": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "cap_days 24 days",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_cap_days": 24
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 515,
+        "net": 303.49,
+        "dd_net": 43.49,
+        "oos_n": 301,
+        "oos_net": -6.51,
+        "oos_dd_net": 54.76
+      }
+    }
+  },
+  "cap8d": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "cap_days 8 days",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_cap_days": 8
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 474,
+        "net": 165.56,
+        "dd_net": 41.02,
+        "oos_n": 277,
+        "oos_net": 49.57,
+        "oos_dd_net": 58.4
+      }
+    }
+  },
+  "causalsl_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "swingpause single + causal SL",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_causal_sl": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 355,
+        "net": 71.9,
+        "dd_net": 81.9,
+        "win": 0.265,
+        "oos_n": 218,
+        "oos_net": 7.0,
+        "oos_dd_net": 26.37,
+        "oos_win": 0.252
+      }
+    }
+  },
+  "champion_multi_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "Champion multi sw20 (partial exit, +208.4 post trail-fix)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 7.5,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 493,
+        "net": 214.74,
+        "dd_net": 45.4,
+        "oos_n": 270,
+        "oos_net": -1.45,
+        "oos_dd_net": 51.47
+      }
+    }
+  },
+  "champion_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "Champion single sw10 (partial exit, +82.0 post trail-fix)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 7.5,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 395,
+        "net": 48.63,
+        "dd_net": 48.5,
+        "win": 0.261,
+        "oos_n": 238,
+        "oos_net": -18.06,
+        "oos_dd_net": 44.97,
+        "oos_win": 0.235
+      }
+    }
+  },
+  "champion_sig_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "Champion single sw20 (partial exit, +90.1 post trail-fix)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 7.5,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 374,
+        "net": 91.64,
+        "dd_net": 51.62,
+        "win": 0.291,
+        "oos_n": 215,
+        "oos_net": -13.11,
+        "oos_dd_net": 37.75,
+        "oos_win": 0.26
+      }
+    }
+  },
+  "chopband_atrr_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + chop15 band AND ATR blow-off skip (combo)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 270,
+        "net": 120.74,
+        "dd_net": 43.06,
+        "win": 0.252,
+        "oos_n": 181,
+        "oos_net": -2.01,
+        "oos_dd_net": 43.88,
+        "oos_win": 0.232
+      }
+    }
+  },
+  "chopband_atrr_swingpause_sig_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "VALIDATION: chopband + atrr combo on sw20 chain",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 281,
+        "net": 102.1,
+        "dd_net": 42.5,
+        "win": 0.27,
+        "oos_n": 162,
+        "oos_net": -5.23,
+        "oos_dd_net": 43.0,
+        "oos_win": 0.253
+      }
+    }
+  },
+  "chopband_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + skip entries in the 15m-chop transition band [55,61)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 320,
+        "net": 193.2,
+        "dd_net": 38.01,
+        "win": 0.272,
+        "oos_n": 200,
+        "oos_net": -9.37,
+        "oos_dd_net": 41.84,
+        "oos_win": 0.245
+      }
+    }
+  },
+  "chopband_swingpause_sig_sw20": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "VALIDATION: chopband gate on sw20 chain (cross-chain robustness)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 314,
+        "net": 86.85,
+        "dd_net": 47.75,
+        "win": 0.277,
+        "oos_n": 182,
+        "oos_net": 0.39,
+        "oos_dd_net": 36.27,
+        "oos_win": 0.264
+      }
+    }
+  },
+  "curfew624_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "best single + skip age 6-24h band (never tested on best single, current=0/0)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_curfew_a": 6,
+        "exp_curfew_b": 24,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 256,
+        "net": 181.02,
+        "dd_net": 18.03,
+        "win": 0.301,
+        "oos_n": 153,
+        "oos_net": 30.75,
+        "oos_dd_net": 26.6,
+        "oos_win": 0.268
+      }
+    }
+  },
+  "decayD_c": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + decay block long on buying decay, short on selling decay",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_decay_mode": 3
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 352,
+        "net": 204.23,
+        "dd_net": 33.05,
+        "oos_n": 178,
+        "oos_net": 44.55,
+        "oos_dd_net": 49.32
+      }
+    }
+  },
+  "decayG_c": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "champion leg + decay ALLOW own side only",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_decay_mode": 7
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 154,
+        "net": 42.27,
+        "dd_net": 57.96,
+        "oos_n": 112,
+        "oos_net": -18.25,
+        "oos_dd_net": 34.73
+      }
+    }
+  },
+  "decayG_u": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "utcsat + decay ALLOW own side only",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_skip_utc_sat": 1,
+        "exp_decay_mode": 7
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 145,
+        "net": 52.88,
+        "dd_net": 43.38,
+        "oos_n": 97,
+        "oos_net": 9.54,
+        "oos_dd_net": 17.49
+      }
+    }
+  },
+  "decayH_c": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "champion leg + decay ALLOW either broken",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_decay_mode": 8
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 266,
+        "net": 23.63,
+        "dd_net": 54.02,
+        "oos_n": 148,
+        "oos_net": -24.44,
+        "oos_dd_net": 44.42
+      }
+    }
+  },
+  "decayH_u": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "utcsat + decay ALLOW either broken",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_skip_utc_sat": 1,
+        "exp_decay_mode": 8
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 250,
+        "net": 43.24,
+        "dd_net": 45.9,
+        "oos_n": 134,
+        "oos_net": -32.59,
+        "oos_dd_net": 39.49
+      }
+    }
+  },
+  "fliponly_multi_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "king + FLIP entries only (B2 was +82.4 on multi — test cut)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "exp_kinds": "FLIP",
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 290,
+        "net": 206.11,
+        "dd_net": 33.75,
+        "oos_n": 160,
+        "oos_net": -8.62,
+        "oos_dd_net": 56.39
+      }
+    }
+  },
+  "fliponly_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + FLIP entries only — B2 was 178t for -0.6R",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_kinds": "FLIP",
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 237,
+        "net": 149.48,
+        "dd_net": 32.65,
+        "win": 0.257,
+        "oos_n": 147,
+        "oos_net": -30.71,
+        "oos_dd_net": 39.21,
+        "oos_win": 0.177
+      }
+    }
+  },
+  "fsswing_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion single sw10 + exit at FS when its swing leg is under 6x ATR",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 7.5,
+        "window_end": "exit",
+        "exp_fs_small_swing": 6.0
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 404,
+        "net": 42.54,
+        "dd_net": 45.11,
+        "win": 0.272,
+        "oos_n": 245,
+        "oos_net": 11.21,
+        "oos_dd_net": 34.62,
+        "oos_win": 0.265
+      }
+    }
+  },
+  "fsswing_sig_sw20": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion single sw20 + exit at FS when its swing leg is under 6x ATR",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 7.5,
+        "window_end": "exit",
+        "exp_fs_small_swing": 6.0
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 382,
+        "net": 99.19,
+        "dd_net": 50.05,
+        "win": 0.296,
+        "oos_n": 218,
+        "oos_net": 0.42,
+        "oos_dd_net": 35.97,
+        "oos_win": 0.266
+      }
+    }
+  },
+  "fullstack_atrr_utcsat_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "EXP: utcsat multi + chop15 band + ATR ratio blow-off",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "exp_skip_utc_sat": 1,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 312,
+        "net": 292.19,
+        "dd_net": 27.1,
+        "oos_n": 206,
+        "oos_net": 28.6,
+        "oos_dd_net": 36.05
+      }
+    }
+  },
+  "fullstack_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "single full stack: weekend skip + swingpause + chop15 band + ATR blow-off",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 229,
+        "net": 242.44,
+        "dd_net": 23.15,
+        "win": 0.306,
+        "oos_n": 152,
+        "oos_net": 32.02,
+        "oos_dd_net": 33.84,
+        "oos_win": 0.263
+      }
+    }
+  },
+  "fullstack_wage10_cd0_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "KING SINGLE: fullstack + wage10 + cd=0 — chop15 band + ATR blow-off",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 0,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 10,
+        "exp_chop15_lo": 55.0,
+        "exp_chop15_hi": 61.0,
+        "exp_atr_ratio_max": 1.4,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 199,
+        "net": 273.18,
+        "dd_net": 24.29,
+        "win": 0.322,
+        "oos_n": 139,
+        "oos_net": 26.15,
+        "oos_dd_net": 34.97,
+        "oos_win": 0.252
+      }
+    }
+  },
+  "gap_b3k10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + b3_k 10",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "b3_k": 10
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 247,
+        "net": 65.73,
+        "dd_net": 22.87,
+        "oos_n": 138,
+        "oos_net": 16.3,
+        "oos_dd_net": 21.12
+      }
+    }
+  },
+  "gap_b3k2": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + b3_k 2",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "b3_k": 2
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 169,
+        "net": 43.03,
+        "dd_net": 19.07,
+        "oos_n": 81,
+        "oos_net": 23.59,
+        "oos_dd_net": 17.02
+      }
+    }
+  },
+  "gap_b3k4": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + b3_k 4",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "b3_k": 4
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 210,
+        "net": 69.57,
+        "dd_net": 18.99,
+        "oos_n": 109,
+        "oos_net": 12.1,
+        "oos_dd_net": 17.11
+      }
+    }
+  },
+  "gap_b3k6": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + b3_k 6",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "b3_k": 6
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 222,
+        "net": 65.59,
+        "dd_net": 24.1,
+        "oos_n": 124,
+        "oos_net": 17.7,
+        "oos_dd_net": 18.85
+      }
+    }
+  },
+  "gap_b3k8": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + b3_k 8",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "b3_k": 8
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 236,
+        "net": 59.18,
+        "dd_net": 24.57,
+        "oos_n": 131,
+        "oos_net": 16.5,
+        "oos_dd_net": 20.03
+      }
+    }
+  },
+  "gap_campaign_markneg": {
+    "bar": "bar1_inverse_IS_neg_OOS_pos",
+    "config": {
+      "desc": "champion leg + campaign requires -0.5R marked",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_campaign_max_total": 2,
+        "exp_campaign_max_addons": 2,
+        "exp_campaign_require_marked_r": -0.5
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 278,
+        "net": -16.73,
+        "dd_net": 66.45,
+        "oos_n": 154,
+        "oos_net": 76.67,
+        "oos_dd_net": 13.59
+      }
+    }
+  },
+  "gap_campaign_max2": {
+    "bar": "bar1_inverse_IS_neg_OOS_pos",
+    "config": {
+      "desc": "champion leg + campaign stacking capped at 2",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "cooldown_bars": 8,
+        "pivot_rule": "leg",
+        "exp_campaign_max_total": 2,
+        "exp_campaign_max_addons": 2,
+        "exp_campaign_block_mixed": 1
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 277,
+        "net": -15.67,
+        "dd_net": 65.4,
+        "oos_n": 152,
+        "oos_net": 74.89,
+        "oos_dd_net": 13.59
+      }
+    }
+  },
+  "gap_curfew_16_20": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + curfew 16h/20h",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_curfew_a": 16.0,
+        "exp_curfew_b": 20.0
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 479,
+        "net": 234.9,
+        "dd_net": 46.3,
+        "oos_n": 280,
+        "oos_net": 48.77,
+        "oos_dd_net": 56.54
+      }
+    }
+  },
+  "gap_entry_cap2": {
+    "bar": "bar1_inverse_IS_neg_OOS_pos",
+    "config": {
+      "desc": "champion leg + 2 entries per window",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_window_entry_cap": 2
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 278,
+        "net": -16.73,
+        "dd_net": 66.45,
+        "oos_n": 154,
+        "oos_net": 76.67,
+        "oos_dd_net": 13.59
+      }
+    }
+  },
+  "gap_pivot_trail": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + pivot trail",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "cooldown_bars": 8,
+        "pivot_rule": "leg",
+        "exp_pivot_trail": 1
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 523,
+        "net": 136.08,
+        "dd_net": 47.86,
+        "oos_n": 303,
+        "oos_net": 0.92,
+        "oos_dd_net": 47.66
+      }
+    }
+  },
+  "gap_profit_stage5": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + profit stage at 5R",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "cooldown_bars": 8,
+        "pivot_rule": "leg",
+        "exp_profit_stage_r": 5.0,
+        "exp_profit_stage_distance_r": 0.25
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 506,
+        "net": 55.66,
+        "dd_net": 39.71,
+        "oos_n": 290,
+        "oos_net": 9.54,
+        "oos_dd_net": 48.61
+      }
+    }
+  },
+  "htfrr2_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + htf_rr=2.0 (re-sweep post-fix, current=3.0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "htf_rr": 2.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 431,
+        "net": 245.36,
+        "dd_net": 32.96,
+        "oos_n": 236,
+        "oos_net": 23.56,
+        "oos_dd_net": 47.17
+      }
+    }
+  },
+  "htfrr35_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + htf_rr=3.5 (re-sweep post-fix, current=3.0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "htf_rr": 3.5,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 416,
+        "net": 242.56,
+        "dd_net": 40.74,
+        "oos_n": 232,
+        "oos_net": 33.8,
+        "oos_dd_net": 50.66
+      }
+    }
+  },
+  "lb30_chop55_persist2": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 chop55 persist2 mb10 (exp37 A4)",
+      "engine": "patched",
+      "params": {
+        "cooldown_bars": 10,
+        "exp31_lb": 30,
+        "chop_thresh": 55.0,
+        "exp_persist": 2
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 432,
+        "net": 247.07,
+        "dd_net": 45.77,
+        "oos_n": 227,
+        "oos_net": 21.69,
+        "oos_dd_net": 46.74
+      }
+    }
+  },
+  "lb30_halt0": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 no halt (exp37 B0)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "max_consecutive_losses": 0
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 485,
+        "net": 280.55,
+        "dd_net": 58.93,
+        "oos_n": 241,
+        "oos_net": 42.34,
+        "oos_dd_net": 50.9
+      }
+    }
+  },
+  "lb30_halt6_cd0": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 halt6 cd0 (exp37 B3)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "max_consecutive_losses": 6,
+        "cooldown_bars": 0
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 547,
+        "net": 136.85,
+        "dd_net": 76.83,
+        "oos_n": 259,
+        "oos_net": 9.73,
+        "oos_dd_net": 78.79
+      }
+    }
+  },
+  "lb30_persist5": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 persist5 mb20 (exp37 A3/A5)",
+      "engine": "patched",
+      "params": {
+        "max_consecutive_losses": 3,
+        "exp31_lb": 30,
+        "exp_persist": 5
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 415,
+        "net": 266.92,
+        "dd_net": 48.33,
+        "oos_n": 198,
+        "oos_net": 1.28,
+        "oos_dd_net": 38.98
+      }
+    }
+  },
+  "lb30_w24_ext1.5": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 w24 ext1.5 (fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "exp_wage_h": 24,
+        "ext_stop_r": 1.5
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 336,
+        "net": 335.44,
+        "dd_net": 35.92,
+        "oos_n": 143,
+        "oos_net": 15.01,
+        "oos_dd_net": 40.73
+      }
+    }
+  },
+  "lb30_w24_ext2.0": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 w24 ext2.0 (fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "exp_wage_h": 24,
+        "ext_stop_r": 2.0
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 379,
+        "net": 343.38,
+        "dd_net": 36.58,
+        "oos_n": 176,
+        "oos_net": 32.84,
+        "oos_dd_net": 41.0
+      }
+    }
+  },
+  "lb30_w24_ext2.5": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 w24 ext2.5 (fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "exp_wage_h": 24,
+        "ext_stop_r": 2.5
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 404,
+        "net": 313.85,
+        "dd_net": 42.82,
+        "oos_n": 178,
+        "oos_net": 43.34,
+        "oos_dd_net": 41.06
+      }
+    }
+  },
+  "lb30_w24_ext3.0": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "lb30 w24 ext3.0 (fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "exp_wage_h": 24,
+        "ext_stop_r": 3.0
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 414,
+        "net": 313.29,
+        "dd_net": 42.27,
+        "oos_n": 183,
+        "oos_net": 36.09,
+        "oos_dd_net": 45.09
+      }
+    }
+  },
+  "legskip2_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king + skip entry if HTF leg already progressed 2R (tighter ext)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "exp_legskip_r": 2.0,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 274,
+        "net": 236.41,
+        "dd_net": 26.87,
+        "oos_n": 165,
+        "oos_net": 12.88,
+        "oos_dd_net": 39.21
+      }
+    }
+  },
+  "nowknd_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king + SKIP WEEKEND entries (Sat/Sun) — autopsy: 110t for -1.9R",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "exp_skip_weekend": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 404,
+        "net": 307.31,
+        "dd_net": 25.67,
+        "oos_n": 219,
+        "oos_net": 26.57,
+        "oos_dd_net": 29.19
+      }
+    }
+  },
+  "nowknd_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "baseline single + SKIP WEEKEND entries — isolate weekend effect",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_skip_weekend": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 319,
+        "net": 124.18,
+        "dd_net": 40.23,
+        "win": 0.282,
+        "oos_n": 194,
+        "oos_net": 39.88,
+        "oos_dd_net": 22.84,
+        "oos_win": 0.273
+      }
+    }
+  },
+  "nowknd_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "swingpause single + SKIP WEEKEND — NEW BEST SINGLE (+217.6 / DD 18.2 / 12.0)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 292,
+        "net": 216.31,
+        "dd_net": 27.43,
+        "win": 0.301,
+        "oos_n": 173,
+        "oos_net": 34.6,
+        "oos_dd_net": 22.97,
+        "oos_win": 0.272
+      }
+    }
+  },
+  "opt_cd10_w24": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "OPT cd10 w24 ext1.5 (their champion multi, fine fills)",
+      "engine": "patched",
+      "params": {
+        "exp31_lb": 30,
+        "chop_thresh": 55.0,
+        "exp_persist": 2,
+        "exp_wage_h": 24,
+        "cooldown_bars": 10,
+        "exp_mltf": true,
+        "ext_stop_r": 1.5
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 299,
+        "net": 142.9,
+        "dd_net": 47.02,
+        "oos_n": 145,
+        "oos_net": 12.7,
+        "oos_dd_net": 34.9
+      }
+    }
+  },
+  "opt_ml_cd0_mb10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "OPT mltf cd0 chop55 persist2 mb10 (exp37 C1, their OPTIMAL)",
+      "engine": "patched",
+      "params": {
+        "chop_thresh": 55.0,
+        "exp_persist": 2,
+        "cooldown_bars": 0,
+        "exp_mltf": true
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 526,
+        "net": 250.89,
+        "dd_net": 65.83,
+        "oos_n": 257,
+        "oos_net": -5.97,
+        "oos_dd_net": 61.8
+      }
+    }
+  },
+  "opt_ml_cd10_mb10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "OPT mltf cd10 chop55 persist2 mb10 (exp37 C2)",
+      "engine": "patched",
+      "params": {
+        "chop_thresh": 55.0,
+        "exp_persist": 2,
+        "cooldown_bars": 10,
+        "exp_mltf": true
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 452,
+        "net": 229.38,
+        "dd_net": 50.29,
+        "oos_n": 220,
+        "oos_net": 15.8,
+        "oos_dd_net": 47.71
+      }
+    }
+  },
+  "partial1_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + partial_r=1.0 (fine sweep, current=0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 1.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 567,
+        "net": 65.91,
+        "dd_net": 42.51,
+        "oos_n": 328,
+        "oos_net": 2.16,
+        "oos_dd_net": 48.9
+      }
+    }
+  },
+  "partial2_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + partial_r=2.0 (fine sweep, current=0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 2.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 534,
+        "net": 88.52,
+        "dd_net": 39.56,
+        "oos_n": 307,
+        "oos_net": 11.4,
+        "oos_dd_net": 51.03
+      }
+    }
+  },
+  "partial3_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + partial_r=3.0 (fine sweep, current=0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 3.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 518,
+        "net": 109.91,
+        "dd_net": 39.89,
+        "oos_n": 292,
+        "oos_net": 7.5,
+        "oos_dd_net": 52.89
+      }
+    }
+  },
+  "partial4_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + partial_r=4.0 (fine sweep, current=0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 4.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 511,
+        "net": 131.6,
+        "dd_net": 41.74,
+        "oos_n": 291,
+        "oos_net": 26.11,
+        "oos_dd_net": 54.43
+      }
+    }
+  },
+  "partial5_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + partial_r=5.0 (fine sweep, current=0)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 5.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 506,
+        "net": 156.53,
+        "dd_net": 42.36,
+        "oos_n": 290,
+        "oos_net": 37.37,
+        "oos_dd_net": 51.97
+      }
+    }
+  },
+  "persist8_multi_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "king multi + persist=8 (fine sweep, current=7)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 8,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 503,
+        "net": 288.52,
+        "dd_net": 43.2,
+        "oos_n": 289,
+        "oos_net": 31.68,
+        "oos_dd_net": 55.21
+      }
+    }
+  },
+  "rmax10_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + skip entries with stop width over 1.0% of price — DEAD",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_risk_max_pct": 1.0,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 258,
+        "net": 180.04,
+        "dd_net": 53.09,
+        "win": 0.202,
+        "oos_n": 91,
+        "oos_net": -31.84,
+        "oos_dd_net": 45.17,
+        "oos_win": 0.11
+      }
+    }
+  },
+  "rmax15_multi_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "king + skip entries with stop width over 1.5% of price — DEAD (cascade)",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "exp_risk_max_pct": 1.5,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 412,
+        "net": 266.92,
+        "dd_net": 49.35,
+        "oos_n": 170,
+        "oos_net": -3.58,
+        "oos_dd_net": 46.67
+      }
+    }
+  },
+  "rmax15_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + skip entries with stop width over 1.5% of price — DEAD (cascade)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_risk_max_pct": 1.5,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 314,
+        "net": 132.0,
+        "dd_net": 49.01,
+        "win": 0.236,
+        "oos_n": 156,
+        "oos_net": -51.65,
+        "oos_dd_net": 56.81,
+        "oos_win": 0.128
+      }
+    }
+  },
+  "skipwinhalt_sig_sw10": {
+    "bar": "bar1_both_negative",
+    "config": {
+      "desc": "baseline single + skip the next HTF window after a HALT (3 straight losses)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_skipwin_halt": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 280,
+        "net": -1.5,
+        "dd_net": 67.48,
+        "win": 0.239,
+        "oos_n": 162,
+        "oos_net": -4.24,
+        "oos_dd_net": 34.03,
+        "oos_win": 0.228
+      }
+    }
+  },
+  "swingpause_cd0_single_sw10": {
+    "bar": "alias_of_retired",
+    "config": "swingpause_sig_sw10"
+  },
+  "swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "baseline single + pause until a swing FORMED after the loss confirms",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 358,
+        "net": 108.74,
+        "dd_net": 55.07,
+        "win": 0.26,
+        "oos_n": 219,
+        "oos_net": -14.88,
+        "oos_dd_net": 41.68,
+        "oos_win": 0.242
+      }
+    }
+  },
+  "swingpause_sig_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "baseline single sw20 + swing-pause (fresh structure)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 341,
+        "net": 120.08,
+        "dd_net": 53.41,
+        "win": 0.305,
+        "oos_n": 198,
+        "oos_net": -12.43,
+        "oos_dd_net": 36.9,
+        "oos_win": 0.258
+      }
+    }
+  },
+  "trail_skipn4": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "champion leg + skipn4",
+      "engine": "patched",
+      "params": {
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_mltf": true,
+        "exp_persist": 7,
+        "window_end": "exit",
+        "pivot_rule": "leg",
+        "exp_trail_skip_n": 4
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 446,
+        "net": 349.29,
+        "dd_net": 57.02,
+        "oos_n": 246,
+        "oos_net": 31.02,
+        "oos_dd_net": 81.36
+      }
+    }
+  },
+  "utc_wknd_swingpause_sig_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "swingpause single + skip full UTC weekend (Sat+Sun) — for comparison vs Sat-only",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_utc_sat": 1,
+        "exp_skip_utc_sun": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 285,
+        "net": 148.56,
+        "dd_net": 38.65,
+        "win": 0.298,
+        "oos_n": 173,
+        "oos_net": -24.27,
+        "oos_dd_net": 33.88,
+        "oos_win": 0.225
+      }
+    }
+  },
+  "utcsat_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "swingpause single + SKIP UTC-SATURDAY only (UTC Sun = +51.7R is KEPT)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_utc_sat": 1,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 327,
+        "net": 94.28,
+        "dd_net": 45.13,
+        "win": 0.275,
+        "oos_n": 203,
+        "oos_net": 13.55,
+        "oos_dd_net": 24.36,
+        "oos_win": 0.271
+      }
+    }
+  },
+  "wage10_swingpause_wskip_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "KING SINGLE: wage 10h + swing pause + IST weekend skip — cd=0 redundant with swingpause",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 0,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 10,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 261,
+        "net": 268.92,
+        "dd_net": 22.96,
+        "win": 0.303,
+        "oos_n": 158,
+        "oos_net": 35.63,
+        "oos_dd_net": 25.81,
+        "oos_win": 0.272
+      }
+    }
+  },
+  "wage12_swingpause_sig_nowknd_sw10": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "VALIDATION: wage12 WITHOUT weekend skip (stack interaction) — wage works alone (+60.9R)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_wage_h": 12,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 313,
+        "net": 205.66,
+        "dd_net": 38.35,
+        "win": 0.275,
+        "oos_n": 191,
+        "oos_net": -5.93,
+        "oos_dd_net": 40.24,
+        "oos_win": 0.236
+      }
+    }
+  },
+  "wage12_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "REPLICATE other bot: nowknd_swingpause single + wage_h=12",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 12,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 258,
+        "net": 266.07,
+        "dd_net": 24.41,
+        "win": 0.298,
+        "oos_n": 155,
+        "oos_net": 12.05,
+        "oos_dd_net": 30.81,
+        "oos_win": 0.252
+      }
+    }
+  },
+  "wage12_swingpause_sig_sw20": {
+    "bar": "bar1_era_fitted",
+    "config": {
+      "desc": "VALIDATION: wage12 on sw20 chain — TRANSFERS (+24.5R, -4.9DD)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_wage_h": 12,
+        "window_end": "exit"
+      },
+      "swing": "sw20",
+      "pins": {
+        "n": 302,
+        "net": 147.58,
+        "dd_net": 45.64,
+        "win": 0.305,
+        "oos_n": 172,
+        "oos_net": -5.26,
+        "oos_dd_net": 35.9,
+        "oos_win": 0.25
+      }
+    }
+  },
+  "wage16_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "VALIDATION: wage neighborhood 16h",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 16,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 245,
+        "net": 249.27,
+        "dd_net": 24.57,
+        "win": 0.302,
+        "oos_n": 147,
+        "oos_net": 30.97,
+        "oos_dd_net": 26.19,
+        "oos_win": 0.272
+      }
+    }
+  },
+  "wage20_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "VALIDATION: wage neighborhood 20h — declines past the plateau",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 20,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 233,
+        "net": 202.04,
+        "dd_net": 22.98,
+        "win": 0.3,
+        "oos_n": 143,
+        "oos_net": 48.54,
+        "oos_dd_net": 23.62,
+        "oos_win": 0.287
+      }
+    }
+  },
+  "wage24_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "best single + wage_h=24 (never tested on best single, current=0)",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 24,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 219,
+        "net": 224.02,
+        "dd_net": 16.65,
+        "win": 0.324,
+        "oos_n": 136,
+        "oos_net": 26.04,
+        "oos_dd_net": 30.21,
+        "oos_win": 0.265
+      }
+    }
+  },
+  "wage8_swingpause_sig_sw10": {
+    "bar": "bar2_oos_under_50",
+    "config": {
+      "desc": "VALIDATION: wage neighborhood 8h",
+      "engine": "patched",
+      "params": {
+        "max_positions": 1,
+        "mode": "atr_high",
+        "atr_high_thresh": 0.65,
+        "atr_low_thresh": 0.35,
+        "sl_buf_atr": 0.01,
+        "chop_thresh": 58.0,
+        "cooldown_bars": 8,
+        "max_consecutive_losses": 3,
+        "ext_stop_r": 3.0,
+        "exp_partial_r": 0.0,
+        "exp_swingpause": 1,
+        "exp_skip_weekend": 1,
+        "exp_wage_h": 8,
+        "window_end": "exit"
+      },
+      "swing": "sw10",
+      "pins": {
+        "n": 263,
+        "net": 250.31,
+        "dd_net": 22.96,
+        "win": 0.293,
+        "oos_n": 161,
+        "oos_net": 30.26,
+        "oos_dd_net": 29.88,
+        "oos_win": 0.267
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_archive_list.py"
+  }
+}
