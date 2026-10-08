@@ -22,6 +22,7 @@ refactor that could have passed a naive smoke test and still been wrong.
 """
 from .base import ENGINE_DEFAULTS, BP
 from .groups import GROUPS
+from .retired import RETIRED
 from . import trail, sweep, signal, risk, d3, kingsweep
 from .helpers import (_AliasRegistry, SHORTLIST_IS_MIN, SHORTLIST_OOS_MIN,
                       book as _book, shortlisted as _shortlisted,
@@ -31,6 +32,24 @@ from .helpers import (_AliasRegistry, SHORTLIST_IS_MIN, SHORTLIST_OOS_MIN,
 EXPERIMENTS = {}
 for _mod in (trail, sweep, signal, risk, d3, kingsweep):
     EXPERIMENTS.update(_mod.BOOKS)
+
+# Retired keys are dropped HERE, after the merge and before ALIASES is derived.
+# The definitions stay in their family modules - retired.py holds keys, not
+# copies - so a retired book is one line to restore. Dropping before the merge
+# instead would silently no-op for any key that appears in two modules, which is
+# exactly the duplicate-key case the merge order comment above warns about.
+_retired_hits = sorted(RETIRED & set(EXPERIMENTS))
+if _retired_hits != sorted(RETIRED):
+    # A RETIRED key that no family module defines is a typo, not a retirement,
+    # and it must not pass silently: the count would still be right while the
+    # registry quietly kept the book.
+    missing = sorted(RETIRED - set(EXPERIMENTS))
+    raise AssertionError(
+        f"RETIRED lists {len(missing)} key(s) no family module defines: {missing}. "
+        "A typo here means the book is still in the registry and the prune "
+        "silently did nothing.")
+for _k in _retired_hits:
+    del EXPERIMENTS[_k]
 
 # Aliases are the str-valued rows. Derived last, from the merged dict.
 ALIASES = {k: v for k, v in EXPERIMENTS.items() if isinstance(v, str)}
