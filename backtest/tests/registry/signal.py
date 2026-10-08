@@ -210,6 +210,94 @@ BOOKS = {
     # the tail and not its size. Keying a capital decision to a number known
     # only from backtest would be pretending to a precision nobody has. The
     # max-dd budget is a number the owner actually sets and actually knows.
+    #
+    # ===== FOUR MODE CANDIDATES - registered and pinned, NOT promoted =====
+    # Added 2026-10-08. exp_mode_sweep.py ran all 27 router branches against
+    # this book for the first time; 25 of them had no book anywhere in the
+    # registry. Four beat mode="atr_high" in BOTH eras and survived removing the
+    # top 5 and top 10 trades:
+    #
+    #   book                        IS             OOS            IS dd  OOS dd
+    #   fsent_champ_long (shipping) 528 / +533.4   311 / +239.6   13.4   11.9
+    #   ..._mode_atr_low            641 / +721.3   315 / +280.7   28.9   14.6
+    #   ..._mode_fd                 529 / +534.8   295 / +276.8   13.4   12.2
+    #   ..._mode_flip_quality       527 / +534.8   294 / +244.4   13.4   11.9
+    #   ..._mode_union              813 / +580.0   442 / +303.8   23.8   18.2
+    #
+    # NONE is adoptable, for two measured reasons, not for lack of evidence:
+    #
+    #   1. Every one spends drawdown. The halt governance rule above is a budget
+    #      test and the base book sits at 11.88R OOS. Only flip_quality holds it,
+    #      and only by being flat on both.
+    #   2. ALL FOUR fail on the second lane, out of sample, on BOTH lanes - the
+    #      same failure every regime-conditional tweak in this repo has run into.
+    #      On champion_multi_sw10 the OOS deltas are -8.4R (atr_low), -0.9R
+    #      (fd), -7.0R (flip_quality), -73.8R (union). On utcsat_multi_sw10
+    #      the same. That is the era-split pattern and it is disqualifying.
+    #
+    # mode="atr_low" is the interesting one and the reason it is worth keeping
+    # registered: it is an INVERSION, not a tuning. atr_high takes decisive
+    # windows when bars are big; atr_low takes them when bars are quiet. Same
+    # variable, sign flipped, worth +187.9R in sample. Its own threshold was
+    # swept 0.20-0.60 and the OOS gain peaks sharply at 0.35 (+41.1R) and is
+    # NEGATIVE everywhere else - one point, not a region, which is exactly the
+    # grid-peak failure P69 warns about.
+    #
+    # Registered so the measurements are re-derivable and the next round starts
+    # from a pin instead of prose. Do not promote one from this table.
+    # See method/MODE_CONFIRM_FOUR_CANDIDATES.md.
+    "fsent_champ_long_mode_atr_low": {
+          "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='atr_low' - the atr_high inversion: decisive windows when 15m bars are QUIET, not big. Only mode changes; every other knob identical. Blocked on two things: drawdown 28.9R IS / 14.6R OOS against the base 13.4R / 11.9R, and it fails out of sample on both second lanes.",
+          "engine": "patched",
+          "params": {"mode": "atr_low", "atr_high_thresh": 0.65,
+                       "sl_buf_atr": 0.01, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 0.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          "pins": {"n": 641, "net": 721.30, "dd_net": 28.90,
+                   "oos_n": 315, "oos_net": 280.70, "oos_dd_net": 14.60},
+    },
+    "fsent_champ_long_mode_fd": {
+          "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='fd' - fractional-dimension regime: low FD=trend->flip, high FD=range->B2. Closest drawdown of the four (13.4R IS / 12.2R OOS) but still worse than base, and fails out of sample on both second lanes.",
+          "engine": "patched",
+          "params": {"mode": "fd", "atr_high_thresh": 0.65,
+                       "sl_buf_atr": 0.01, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 0.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          "pins": {"n": 529, "net": 534.80, "dd_net": 13.40,
+                   "oos_n": 295, "oos_net": 276.80, "oos_dd_net": 12.20},
+    },
+    "fsent_champ_long_mode_flip_quality": {
+          "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='flip_quality' - B2/flip by chop AND a HTF-magnitude floor, so it filters the chop branch. The only candidate that holds the base drawdown exactly (13.4R IS / 11.9R OOS), which is why it is the closest to adoptable. It gains only +1.4R IS / +4.8R OOS and fails out of sample on both second lanes (-7.0R champion, -4.1R utcsat).",
+          "engine": "patched",
+          "params": {"mode": "flip_quality", "atr_high_thresh": 0.65,
+                       "sl_buf_atr": 0.01, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 0.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          "pins": {"n": 527, "net": 534.80, "dd_net": 13.40,
+                   "oos_n": 294, "oos_net": 244.40, "oos_dd_net": 11.90},
+    },
+    "fsent_champ_long_mode_union": {
+          "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='union' - admits either HTF interval set. Highest net of the four (813 / +580.0 IS, 442 / +303.8 OOS) and the WORST shape: mean R 0.69 against the base 0.77, drawdown 23.8R / 18.2R, and it loses on both second lanes in both eras. A bigger book, not a better one.",
+          "engine": "patched",
+          "params": {"mode": "union", "atr_high_thresh": 0.65,
+                       "sl_buf_atr": 0.01, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "ext_stop_r": 0.0,
+                       "exp_partial_r": 0.0, "exp_mltf": True,
+                       "exp_persist": 7, "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "sw10",
+          "pins": {"n": 813, "net": 580.00, "dd_net": 23.80,
+                   "oos_n": 442, "oos_net": 303.80, "oos_dd_net": 18.20},
+    },
     "fsent_champ_long_nohalt": {
           "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed) and ext_stop_r=0.0 (provably inert since C17, written explicitly because omitting the key would inherit BP's 1.5). Every behavioural knob identical to the base.",
           "engine": "patched",
