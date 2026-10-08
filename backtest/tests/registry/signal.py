@@ -226,20 +226,53 @@ BOOKS = {
     #
     # NONE is adoptable, for two measured reasons, not for lack of evidence:
     #
-    #   1. Every one spends drawdown. The halt governance rule above is a budget
-    #      test and the base book sits at 11.88R OOS. Only flip_quality holds it,
-    #      and only by being flat on both.
-    #   2. Lane test, CORRECTED 2026-10-08. The first version of this note used
-    #      champion_multi_sw10 / utcsat_multi_sw10 as "the second lane" and all
-    #      four failed there out of sample. Those books are a DIFFERENT
-    #      architecture - pivot_rule=origin, no exp_fs_entry_side, no exp_mltf -
-    #      so that was the wrong family to judge a change to THIS book on, and
-    #      the shipping book was never tested anywhere in that run at all.
-    #      Re-run on the family that does share the architecture -
-    #      fsent_champ_long / fsent_utcsat_long / fsent_champ_short, all three
-    #      netting about 239R OOS - only flip_quality holds: ahead on all three
-    #      (+4.8R / +4.8R / +54.0R) with drawdown flat or better on each.
+    #   1. Three of the four spend drawdown. The halt governance rule above is a
+    #      budget test and the base book sits at 11.88R OOS. Only flip_quality
+    #      holds it, and only by being flat on both - which point 3 then shows is
+    #      not enough.
+    #   2. Lane test. The first version of this note used champion_multi_sw10 /
+    #      utcsat_multi_sw10 as "the second lane" and all four failed there out
+    #      of sample. Those books are a DIFFERENT architecture - pivot_rule=origin,
+    #      no exp_fs_entry_side, no exp_mltf - so that was the wrong family to
+    #      judge a change to THIS book on, and the shipping book was never tested
+    #      anywhere in that run at all. Re-run on the family that does share the
+    #      architecture - fsent_champ_long / fsent_utcsat_long / fsent_champ_short,
+    #      all three netting about 239R OOS - only flip_quality held: ahead on all
+    #      three (+4.8R / +4.8R / +54.0R) with drawdown flat or better on each.
     #      See method/MODE_CONFIRM2_RIGHT_LANES.md.
+    #   3. PERIOD CONTROL, 2026-10-08 - all four are dead, including flip_quality.
+    #      Step 2 measured NET on a total that the base and the arm share almost
+    #      entirely. exp_flip_period.py fitted R = a + b*cohort + half-year
+    #      fixed effect - the framework's own discriminator, the one every prior
+    #      regime-conditional tweak in this repo failed - on the DISAGREEMENT set
+    #      only (NEW trades vs DROPPED trades).
+    #      The mode is IN-SAMPLE INERT on all three books. In IS the arm and the
+    #      base take the SAME trades: 0 new, 0 dropped on utcsat_long and
+    #      champ_short; on champ_long the entire +1.41R is ONE dropped trade. All
+    #      three IS cells are therefore non-estimable - there is no disagreement
+    #      to measure. Every R of the mode's effect is out of sample.
+    #      On the two long books b is +0.2122 against an MDE of 0.8569: inside
+    #      the noise floor, 96% of the raw gap explained by the calendar. The one
+    #      powered cell is fsent_champ_short OOS (b +1.3963, t 2.016) - the
+    #      FS-short mirror, a different architecture with 23.9R drawdown, and the
+    #      source of the whole +54.01R. One cell of one architecture on one era
+    #      cannot carry the other five.
+    #      VERDICT: flip_quality is DISQUALIFIED as a regime proxy - the exact
+    #      case this framework exists to catch. Its drawdown-neutral property is
+    #      still true and still not sufficient: harmless is not useful. Step 2's
+    #      3-of-3 was real and was not enough.
+    #      See method/FLIP_QUALITY_PERIOD_CONTROL.md.
+    #
+    # Two bugs in the first version of that harness are recorded in the doc
+    # because both flattered the arm: survivors were labelled cohort=1 (giving a
+    # meaningless t of 7.672), and the half-year partition compared the base
+    # against itself (printing 8 of 8 on a cell where both books were identical).
+    #
+    # So this whole table is now CLOSED. Four modes swept, four registered, four
+    # rejected - three on drawdown, and flip_quality on era. Step 2's 3-of-3 was
+    # a real measurement and was not sufficient, and neither was holding the
+    # drawdown flat. The router is not where the next gain is; see
+    # method/REPO_MAP.md for what the map says has never been touched.
     #
     # So the blockers below are per-candidate and were REVISED, not uniform. On
     # the correct family flip_quality is not lane-blocked at all; atr_low and fd
@@ -284,7 +317,7 @@ BOOKS = {
                    "oos_n": 295, "oos_net": 276.80, "oos_dd_net": 12.20},
     },
     "fsent_champ_long_mode_flip_quality": {
-          "desc": "CANDIDATE, NOT ADOPTED - closest of the four. fsent_champ_long with mode='flip_quality' - B2/flip by chop AND a HTF-magnitude floor, so it filters the chop branch. It is the ONLY candidate that does not raise drawdown: 13.4R IS / 11.9R OOS, identical to the base. On the family that shares this book's architecture it beats its own base on ALL THREE (champ_long +4.8R, utcsat_long +4.8R, champ_short +54.0R, drawdown flat or better on each). CORRECTION 2026-10-08: an earlier version of this entry said it 'fails out of sample on both second lanes (-7.0R, -4.1R)'. Those numbers are real but were measured on champion_multi_sw10/utcsat_multi_sw10, which are a DIFFERENT architecture (pivot_rule=origin, no FS side, no exp_mltf). On the correct family it wins 3 of 3. Still not adopted: the gain is +4.8R on 239.6R (2%) on both long books, the three books are the same data so agreement is not independence, no half-year period control has been run, and the branch READS chop_thresh - a key removed from this book on 2026-10-07, so this is not the base plus a mode string. See method/MODE_CONFIRM2_RIGHT_LANES.md.",
+          "desc": "CANDIDATE, NOT ADOPTED - DISQUALIFIED 2026-10-08 as a regime proxy. fsent_champ_long with mode='flip_quality' - B2/flip by chop AND a HTF-magnitude floor, so it filters the chop branch. It held the base drawdown exactly (13.4R IS / 11.9R OOS) and was ahead on all three books of its family in the lane test (+4.8R / +4.8R / +54.0R), which is why it was the closest of the four. Period control then disqualified it: the mode is IN-SAMPLE INERT on all three books. In IS the arm and the base take the SAME trades - 0 new, 0 dropped on fsent_utcsat_long and fsent_champ_short, and on this book the entire +1.41R is ONE dropped trade - so all three IS cells are non-estimable and every R of the mode's effect is out of sample. Out of sample b after a half-year fixed effect is +0.2122 against an MDE of 0.8569: inside the noise floor, 96% of the raw gap explained by the calendar. The one powered cell is fsent_champ_short OOS (b +1.3963, t 2.016) - the FS-short mirror, a different architecture with 23.9R drawdown, and the source of the whole +54.01R - and one cell of one architecture on one era cannot carry the other five. The earlier 3-of-3 lane result was real and was not sufficient; being drawdown-neutral is not the same as being useful. Two corrections recorded on 2026-10-08: the 'fails on both second lanes (-7.0R, -4.1R)' sentence was measured on champion_multi_sw10/utcsat_multi_sw10, a DIFFERENT architecture (pivot_rule=origin, no FS side, no exp_mltf), and the first period-control harness labelled survivors as cohort=1, which produced a meaningless t of 7.672. Remains registered and pinned so the measurements are re-derivable. The branch also READS chop_thresh, which is not in this book's config, so it was never the base plus a mode string. See method/FLIP_QUALITY_PERIOD_CONTROL.md, method/MODE_CONFIRM2_RIGHT_LANES.md.",
           "engine": "patched",
           "params": {"mode": "flip_quality", "atr_high_thresh": 0.65,
                        "sl_buf_atr": 0.01, "cooldown_bars": 8,

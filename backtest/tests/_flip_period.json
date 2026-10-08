@@ -1,0 +1,202 @@
+{
+  "arm": "flip_quality",
+  "report": {
+    "fsent_champ_long": {
+      "is": {
+        "dnet": 1.41,
+        "recon": 1.41,
+        "surv_n": 527,
+        "surv_cost": 0.0,
+        "new_n": 0,
+        "new_sum": 0,
+        "drop_n": 1,
+        "drop_sum": -1.41,
+        "raw_gap_per_trade": null,
+        "b": null,
+        "t": null,
+        "se": null,
+        "mde": null,
+        "b_boot_month": null,
+        "b_boot_half": null,
+        "shrink_pct": null,
+        "estimable": false,
+        "partition": {},
+        "partition_wins": 0,
+        "partition_cells": 0,
+        "note": "no disagreement between arm and base in this cell"
+      },
+      "oos": {
+        "dnet": 4.82,
+        "recon": 4.82,
+        "surv_n": 263,
+        "surv_cost": 0.0,
+        "new_n": 31,
+        "new_sum": 12.11,
+        "drop_n": 48,
+        "drop_sum": 7.29,
+        "raw_gap_per_trade": 0.061,
+        "b": 0.2122,
+        "t": 0.485,
+        "se": 0.4372,
+        "mde": 0.8569,
+        "b_boot_month": 0.1528,
+        "b_boot_half": 0.1225,
+        "shrink_pct": 95.6,
+        "partition": {
+          "2021-H1": [
+            47.4,
+            43.7
+          ],
+          "2021-H2": [
+            34.7,
+            34.7
+          ],
+          "2022-H1": [
+            98.2,
+            92.4
+          ],
+          "2022-H2": [
+            64.2,
+            68.8
+          ]
+        },
+        "partition_wins": 2,
+        "partition_cells": 4,
+        "estimable": true
+      }
+    },
+    "fsent_utcsat_long": {
+      "is": {
+        "dnet": 0.0,
+        "recon": 0.0,
+        "surv_n": 525,
+        "surv_cost": 0.0,
+        "new_n": 0,
+        "new_sum": 0,
+        "drop_n": 0,
+        "drop_sum": 0,
+        "raw_gap_per_trade": null,
+        "b": null,
+        "t": null,
+        "se": null,
+        "mde": null,
+        "b_boot_month": null,
+        "b_boot_half": null,
+        "shrink_pct": null,
+        "estimable": false,
+        "partition": {},
+        "partition_wins": 0,
+        "partition_cells": 0,
+        "note": "no disagreement between arm and base in this cell"
+      },
+      "oos": {
+        "dnet": 4.82,
+        "recon": 4.82,
+        "surv_n": 262,
+        "surv_cost": 0.0,
+        "new_n": 31,
+        "new_sum": 12.11,
+        "drop_n": 48,
+        "drop_sum": 7.29,
+        "raw_gap_per_trade": 0.061,
+        "b": 0.2122,
+        "t": 0.485,
+        "se": 0.4372,
+        "mde": 0.8569,
+        "b_boot_month": 0.1528,
+        "b_boot_half": 0.1225,
+        "shrink_pct": 95.6,
+        "partition": {
+          "2021-H1": [
+            46.6,
+            42.8
+          ],
+          "2021-H2": [
+            34.7,
+            34.7
+          ],
+          "2022-H1": [
+            98.2,
+            92.4
+          ],
+          "2022-H2": [
+            64.2,
+            68.8
+          ]
+        },
+        "partition_wins": 2,
+        "partition_cells": 4,
+        "estimable": true
+      }
+    },
+    "fsent_champ_short": {
+      "is": {
+        "dnet": 0.0,
+        "recon": 0.0,
+        "surv_n": 532,
+        "surv_cost": 0.0,
+        "new_n": 0,
+        "new_sum": 0,
+        "drop_n": 0,
+        "drop_sum": 0,
+        "raw_gap_per_trade": null,
+        "b": null,
+        "t": null,
+        "se": null,
+        "mde": null,
+        "b_boot_month": null,
+        "b_boot_half": null,
+        "shrink_pct": null,
+        "estimable": false,
+        "partition": {},
+        "partition_wins": 0,
+        "partition_cells": 0,
+        "note": "no disagreement between arm and base in this cell"
+      },
+      "oos": {
+        "dnet": 54.01,
+        "recon": 54.01,
+        "surv_n": 257,
+        "surv_cost": 0.0,
+        "new_n": 37,
+        "new_sum": 52.77,
+        "drop_n": 55,
+        "drop_sum": -1.25,
+        "raw_gap_per_trade": 0.5871,
+        "b": 1.3963,
+        "t": 2.016,
+        "se": 0.6928,
+        "mde": 1.3578,
+        "b_boot_month": 1.2552,
+        "b_boot_half": 1.2891,
+        "shrink_pct": 97.4,
+        "partition": {
+          "2021-H1": [
+            45.4,
+            2.3
+          ],
+          "2021-H2": [
+            37.5,
+            30.1
+          ],
+          "2022-H1": [
+            111.0,
+            107.5
+          ],
+          "2022-H2": [
+            99.7,
+            99.7
+          ]
+        },
+        "partition_wins": 3,
+        "partition_cells": 4,
+        "estimable": true
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_flip_period.py"
+  }
+}
