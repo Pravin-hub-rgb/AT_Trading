@@ -89,10 +89,5 @@
         ]
       }
     }
-  },
-  "_provenance": {
-    "engine": "ddd31dc",
-    "measured": "2026-10-08",
-    "harness": "exp_route_parity.py"
   }
 }

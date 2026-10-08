@@ -307,6 +307,49 @@ max_positions=0,
       # made. Counts a trade as open on [entry_ts, exit_ts] inclusive, matching
       # how the concurrency census in exp_maxcap_sweep.py counts it.
       exp_max_concurrent=0,
+      # UNIFIED: MINIMUM STOP DISTANCE, as a fraction of entry price. 0.0 = off,
+      # which is the shipped behaviour and reproduces every pin exactly.
+      #
+      # WHY IT EXISTS. The engine already refuses a stop inside 0.05% of price
+      # (`risk < 0.0005*entry -> continue`), and that floor is far too small to
+      # trade: on BTC at 40k that is $20, so round-trip fees and any sane
+      # slippage eat the whole edge of the trade. This knob makes that floor a
+      # stated, sweepable number instead of an accident of the pivot's geometry.
+      #
+      # SEMANTICS: SKIP, not widen. A stop that is too tight is not a trade with a
+      # small stop, it is a trade that cannot be placed - widening it would move
+      # the risk and the 3R target with it and silently turn the sweep into a
+      # different book. Skipping keeps every kept trade's geometry exactly what
+      # the pivot said it was.
+      #
+      #   0.0     off (shipped)
+      #   0.002   0.20% - roughly $80 at 40k
+      #   0.004   0.40%
+      #   0.006   0.60%
+      #   0.010   1.00%
+      exp_min_sl_pct=0.0,
+      # UNIFIED: OPPOSITE-DIRECTION LOCK. 0 = off (shipped). 1 = while any trade
+      # is open, refuse a NEW entry in the opposite direction; same-direction
+      # entries stay allowed.
+      #
+      # This is NOT exp_max_concurrent and NOT max_positions. max_positions>0
+      # serialises on `busy_until`, which blocks EVERY entry while a trade is
+      # open, in either direction - strictly stronger than what is asked for
+      # here. exp_max_concurrent caps the count but ignores direction. Neither
+      # can express "flat and long may coexist, long and short may not".
+      #
+      # The owner's reason for wanting it is live, not statistical: holding a
+      # long and a short at the same time on one symbol nets to roughly zero
+      # price exposure while paying two lots of fees, so the pair cancels the
+      # book instead of compounding it. On a single-position book this cannot
+      # arise; on the unlimited-concurrency book it does, on the same symbol.
+      #
+      # Causal: a position counts as open on [entry_ts, exit_ts] inclusive, and
+      # both ends are settled before the next entry is considered - the same
+      # interval convention exp_max_concurrent uses, and the same one
+      # exp_maxcap_sweep.py counts with. Direction is the direction of the trade
+      # being BLOCKED, compared against every currently-open trade.
+      exp_no_opposite=0,
       # UNIFIED: regime hysteresis. v19 hardcoded PERSIST=7 in the function body,
       # so it could not be switched off and v18 could not share the code path.
       #
@@ -1008,6 +1051,13 @@ max_positions=0,
     # UNIFIED: booked-trade intervals backing exp_max_concurrent. Stays empty at
     # N=0 so the gate never fires and the shipped pins are untouched.
     _open_ivs=[]  # (entry_ts:int, exit_ts:int) for trades booked so far
+    # UNIFIED: same intervals but carrying direction, backing exp_no_opposite.
+    # Kept separate from _open_ivs rather than widening that one because
+    # _open_ivs' 2-tuple shape is read by the exp_max_concurrent gate and by
+    # harnesses that unpack it positionally; adding a third element would break
+    # both for no benefit. Filled under the same "never populate when the knob is
+    # off" rule so the shipped path allocates nothing extra per entry.
+    _open_dirs=[]  # (entry_ts:int, exit_ts:int, dir:int)
     last_loss_bar=-999999
     consecutive_losses=0
     halt_skip_next=False  # True after Nth loss: skip NEXT entry, then reset
@@ -1054,6 +1104,16 @@ max_positions=0,
             _bt=int(candles_ltf[i]["ts"])
             _nopen=sum(1 for (_a,_b) in _open_ivs if _a <= _bt <= _b)
             if _nopen >= exp_max_concurrent: continue
+        # UNIFIED: opposite-direction lock. A new entry is refused only if a trade
+        # in the OTHER direction is open right now; trades in the same direction
+        # do not block it. Placed after the position gates because those are
+        # stronger and cheaper, and before the signal's direction is read below
+        # only in the sense that it uses sig["dir"] directly.
+        if exp_no_opposite and _open_dirs:
+            _bt2=int(candles_ltf[i]["ts"])
+            _d2=int(sig["dir"])
+            if any(_dd != _d2 and _a <= _bt2 <= _b for (_a,_b,_dd) in _open_dirs):
+                continue
         # CRAZE ANCHOR: the line above is the v18 gate restored verbatim, so
         # test_experiments_craze.py's t10 anchor (which rewrites the bare
         # `if busy_until and bar_time <= busy_until: continue` form) does not
@@ -1096,12 +1156,23 @@ max_positions=0,
             if sl>=entry: continue
             risk=entry-sl
             if risk<0.0005*entry: continue
+            # UNIFIED: minimum stop distance, exp_min_sl_pct as a fraction of
+            # entry price. Kept as its OWN line so the shipped guard above stays
+            # byte-identical: test_experiments_craze.py anchors on that exact
+            # line and asserts it appears twice, then injects the D3 risk-width
+            # gate after it. Folding the two together broke that contract and the
+            # harness caught it. The two are additive - both must pass.
+            if exp_min_sl_pct>0 and risk<exp_min_sl_pct*entry: continue
             target=entry+3.0*risk
         else:
             sl=sl_pivot + sl_buf_atr*atr15[i] if sl_buf_atr>0 else sl_pivot
             if sl<=entry: continue
             risk=sl-entry
             if risk<0.0005*entry: continue
+            # UNIFIED: same minimum stop distance as the long branch above, and
+            # the same reason it is a separate line - the harness anchor counts
+            # the `risk<0.0005*entry` line twice across the function.
+            if exp_min_sl_pct>0 and risk<exp_min_sl_pct*entry: continue
             target=entry-3.0*risk
         sl0=sl; sl_cur=sl; best=entry
         _partial_taken=False; _partial_r=0.0
@@ -1363,6 +1434,11 @@ max_positions=0,
             _open_ivs.append((int(candles_ltf[i]["ts"]),
                               int(candles_ltf[exit_idx]["ts"]) if exit_idx is not None and exit_idx < n
                               else int(candles_ltf[i]["ts"])))
+        if exp_no_opposite:
+            _open_dirs.append((int(candles_ltf[i]["ts"]),
+                               int(candles_ltf[exit_idx]["ts"]) if exit_idx is not None and exit_idx < n
+                               else int(candles_ltf[i]["ts"]),
+                               direction))
         if _gray_until and (not busy_until or _gray_until > busy_until):
             busy_until=_gray_until
         if cooldown_bars > 0 and r_multiple < 0:

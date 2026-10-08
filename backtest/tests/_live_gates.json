@@ -1,0 +1,555 @@
+{
+  "BASE": {
+    "is": {
+      "n": 528,
+      "minsl": [
+        {
+          "floor_pct": 0.0,
+          "kept": 528,
+          "dropped": 0,
+          "net": 533.37,
+          "expectancy": 1.0102,
+          "dd": 13.42,
+          "keptR_lost": 0,
+          "base_net": 533.37,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.1,
+          "kept": 528,
+          "dropped": 0,
+          "net": 533.37,
+          "expectancy": 1.0102,
+          "dd": 13.42,
+          "keptR_lost": 0,
+          "base_net": 533.37,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.2,
+          "kept": 526,
+          "dropped": 2,
+          "net": 470.76,
+          "expectancy": 0.895,
+          "dd": 13.42,
+          "keptR_lost": 76.82,
+          "base_net": 533.37,
+          "net_delta": -62.61
+        },
+        {
+          "floor_pct": 0.25,
+          "kept": 522,
+          "dropped": 6,
+          "net": 425.71,
+          "expectancy": 0.8155,
+          "dd": 13.42,
+          "keptR_lost": 121.12,
+          "base_net": 533.37,
+          "net_delta": -107.66
+        },
+        {
+          "floor_pct": 0.3,
+          "kept": 517,
+          "dropped": 11,
+          "net": 417.29,
+          "expectancy": 0.8071,
+          "dd": 13.42,
+          "keptR_lost": 127.1,
+          "base_net": 533.37,
+          "net_delta": -116.08
+        },
+        {
+          "floor_pct": 0.4,
+          "kept": 497,
+          "dropped": 31,
+          "net": 346.82,
+          "expectancy": 0.6978,
+          "dd": 12.26,
+          "keptR_lost": 193.4,
+          "base_net": 533.37,
+          "net_delta": -186.55
+        },
+        {
+          "floor_pct": 0.5,
+          "kept": 478,
+          "dropped": 50,
+          "net": 321.73,
+          "expectancy": 0.6731,
+          "dd": 14.13,
+          "keptR_lost": 218.33,
+          "base_net": 533.37,
+          "net_delta": -211.64
+        },
+        {
+          "floor_pct": 0.6,
+          "kept": 449,
+          "dropped": 79,
+          "net": 316.16,
+          "expectancy": 0.7042,
+          "dd": 12.8,
+          "keptR_lost": 239.22,
+          "base_net": 533.37,
+          "net_delta": -217.2
+        },
+        {
+          "floor_pct": 0.8,
+          "kept": 402,
+          "dropped": 126,
+          "net": 220.23,
+          "expectancy": 0.5478,
+          "dd": 10.91,
+          "keptR_lost": 328.36,
+          "base_net": 533.37,
+          "net_delta": -313.13
+        },
+        {
+          "floor_pct": 1.0,
+          "kept": 360,
+          "dropped": 168,
+          "net": 139.97,
+          "expectancy": 0.3888,
+          "dd": 17.5,
+          "keptR_lost": 402.49,
+          "base_net": 533.37,
+          "net_delta": -393.4
+        },
+        {
+          "floor_pct": 1.5,
+          "kept": 237,
+          "dropped": 291,
+          "net": 56.29,
+          "expectancy": 0.2375,
+          "dd": 14.46,
+          "keptR_lost": 475.26,
+          "base_net": 533.37,
+          "net_delta": -477.08
+        }
+      ],
+      "opposite": {
+        "base_n": 528,
+        "opposite_overlaps": 8,
+        "same_overlaps": 351,
+        "net_base": 533.37,
+        "net_locked": 534.34,
+        "dd_base": 13.42,
+        "dd_locked": 13.42,
+        "n_locked": 525
+      }
+    },
+    "oos": {
+      "n": 311,
+      "minsl": [
+        {
+          "floor_pct": 0.0,
+          "kept": 311,
+          "dropped": 0,
+          "net": 239.59,
+          "expectancy": 0.7704,
+          "dd": 11.88,
+          "keptR_lost": 0,
+          "base_net": 239.59,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.1,
+          "kept": 311,
+          "dropped": 0,
+          "net": 239.59,
+          "expectancy": 0.7704,
+          "dd": 11.88,
+          "keptR_lost": 0,
+          "base_net": 239.59,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.2,
+          "kept": 310,
+          "dropped": 1,
+          "net": 243.58,
+          "expectancy": 0.7857,
+          "dd": 11.88,
+          "keptR_lost": -4.06,
+          "base_net": 239.59,
+          "net_delta": 3.99
+        },
+        {
+          "floor_pct": 0.25,
+          "kept": 309,
+          "dropped": 2,
+          "net": 217.45,
+          "expectancy": 0.7037,
+          "dd": 11.88,
+          "keptR_lost": 22.07,
+          "base_net": 239.59,
+          "net_delta": -22.14
+        },
+        {
+          "floor_pct": 0.3,
+          "kept": 308,
+          "dropped": 3,
+          "net": 218.92,
+          "expectancy": 0.7108,
+          "dd": 11.88,
+          "keptR_lost": 20.6,
+          "base_net": 239.59,
+          "net_delta": -20.67
+        },
+        {
+          "floor_pct": 0.4,
+          "kept": 305,
+          "dropped": 6,
+          "net": 226.84,
+          "expectancy": 0.7437,
+          "dd": 11.88,
+          "keptR_lost": 20.32,
+          "base_net": 239.59,
+          "net_delta": -12.75
+        },
+        {
+          "floor_pct": 0.5,
+          "kept": 302,
+          "dropped": 9,
+          "net": 226.14,
+          "expectancy": 0.7488,
+          "dd": 11.88,
+          "keptR_lost": 19.93,
+          "base_net": 239.59,
+          "net_delta": -13.45
+        },
+        {
+          "floor_pct": 0.6,
+          "kept": 290,
+          "dropped": 21,
+          "net": 203.91,
+          "expectancy": 0.7031,
+          "dd": 11.88,
+          "keptR_lost": 43.82,
+          "base_net": 239.59,
+          "net_delta": -35.68
+        },
+        {
+          "floor_pct": 0.8,
+          "kept": 272,
+          "dropped": 39,
+          "net": 158.72,
+          "expectancy": 0.5835,
+          "dd": 11.22,
+          "keptR_lost": 93.48,
+          "base_net": 239.59,
+          "net_delta": -80.87
+        },
+        {
+          "floor_pct": 1.0,
+          "kept": 260,
+          "dropped": 51,
+          "net": 124.85,
+          "expectancy": 0.4802,
+          "dd": 12.69,
+          "keptR_lost": 115.6,
+          "base_net": 239.59,
+          "net_delta": -114.74
+        },
+        {
+          "floor_pct": 1.5,
+          "kept": 215,
+          "dropped": 96,
+          "net": 65.39,
+          "expectancy": 0.3042,
+          "dd": 8.83,
+          "keptR_lost": 163.14,
+          "base_net": 239.59,
+          "net_delta": -174.2
+        }
+      ],
+      "opposite": {
+        "base_n": 311,
+        "opposite_overlaps": 4,
+        "same_overlaps": 158,
+        "net_base": 239.59,
+        "net_locked": 240.64,
+        "dd_base": 11.88,
+        "dd_locked": 11.88,
+        "n_locked": 308
+      }
+    }
+  },
+  "atr_low": {
+    "is": {
+      "n": 641,
+      "minsl": [
+        {
+          "floor_pct": 0.0,
+          "kept": 641,
+          "dropped": 0,
+          "net": 721.34,
+          "expectancy": 1.1253,
+          "dd": 28.88,
+          "keptR_lost": 0,
+          "base_net": 721.34,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.1,
+          "kept": 641,
+          "dropped": 0,
+          "net": 721.34,
+          "expectancy": 1.1253,
+          "dd": 28.88,
+          "keptR_lost": 0,
+          "base_net": 721.34,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.2,
+          "kept": 635,
+          "dropped": 6,
+          "net": 636.2,
+          "expectancy": 1.0019,
+          "dd": 28.88,
+          "keptR_lost": 85.51,
+          "base_net": 721.34,
+          "net_delta": -85.14
+        },
+        {
+          "floor_pct": 0.25,
+          "kept": 632,
+          "dropped": 9,
+          "net": 573.1,
+          "expectancy": 0.9068,
+          "dd": 28.88,
+          "keptR_lost": 147.37,
+          "base_net": 721.34,
+          "net_delta": -148.25
+        },
+        {
+          "floor_pct": 0.3,
+          "kept": 628,
+          "dropped": 13,
+          "net": 553.62,
+          "expectancy": 0.8816,
+          "dd": 24.32,
+          "keptR_lost": 171.42,
+          "base_net": 721.34,
+          "net_delta": -167.72
+        },
+        {
+          "floor_pct": 0.4,
+          "kept": 610,
+          "dropped": 31,
+          "net": 479.76,
+          "expectancy": 0.7865,
+          "dd": 21.41,
+          "keptR_lost": 249.6,
+          "base_net": 721.34,
+          "net_delta": -241.59
+        },
+        {
+          "floor_pct": 0.5,
+          "kept": 587,
+          "dropped": 54,
+          "net": 379.96,
+          "expectancy": 0.6473,
+          "dd": 22.56,
+          "keptR_lost": 329.7,
+          "base_net": 721.34,
+          "net_delta": -341.39
+        },
+        {
+          "floor_pct": 0.6,
+          "kept": 547,
+          "dropped": 94,
+          "net": 352.54,
+          "expectancy": 0.6445,
+          "dd": 26.16,
+          "keptR_lost": 368.4,
+          "base_net": 721.34,
+          "net_delta": -368.8
+        },
+        {
+          "floor_pct": 0.8,
+          "kept": 495,
+          "dropped": 146,
+          "net": 281.49,
+          "expectancy": 0.5687,
+          "dd": 25.11,
+          "keptR_lost": 452.18,
+          "base_net": 721.34,
+          "net_delta": -439.86
+        },
+        {
+          "floor_pct": 1.0,
+          "kept": 440,
+          "dropped": 201,
+          "net": 181.85,
+          "expectancy": 0.4133,
+          "dd": 20.85,
+          "keptR_lost": 541.5,
+          "base_net": 721.34,
+          "net_delta": -539.5
+        },
+        {
+          "floor_pct": 1.5,
+          "kept": 302,
+          "dropped": 339,
+          "net": 71.78,
+          "expectancy": 0.2377,
+          "dd": 14.44,
+          "keptR_lost": 654.59,
+          "base_net": 721.34,
+          "net_delta": -649.57
+        }
+      ],
+      "opposite": {
+        "base_n": 641,
+        "opposite_overlaps": 22,
+        "same_overlaps": 478,
+        "net_base": 721.34,
+        "net_locked": 720.02,
+        "dd_base": 28.88,
+        "dd_locked": 28.62,
+        "n_locked": 633
+      }
+    },
+    "oos": {
+      "n": 315,
+      "minsl": [
+        {
+          "floor_pct": 0.0,
+          "kept": 315,
+          "dropped": 0,
+          "net": 280.72,
+          "expectancy": 0.8912,
+          "dd": 14.56,
+          "keptR_lost": 0,
+          "base_net": 280.72,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.1,
+          "kept": 315,
+          "dropped": 0,
+          "net": 280.72,
+          "expectancy": 0.8912,
+          "dd": 14.56,
+          "keptR_lost": 0,
+          "base_net": 280.72,
+          "net_delta": 0.0
+        },
+        {
+          "floor_pct": 0.2,
+          "kept": 315,
+          "dropped": 0,
+          "net": 290.54,
+          "expectancy": 0.9224,
+          "dd": 12.51,
+          "keptR_lost": -4.06,
+          "base_net": 280.72,
+          "net_delta": 9.82
+        },
+        {
+          "floor_pct": 0.25,
+          "kept": 314,
+          "dropped": 1,
+          "net": 264.41,
+          "expectancy": 0.8421,
+          "dd": 12.51,
+          "keptR_lost": 22.07,
+          "base_net": 280.72,
+          "net_delta": -16.31
+        },
+        {
+          "floor_pct": 0.3,
+          "kept": 314,
+          "dropped": 1,
+          "net": 264.41,
+          "expectancy": 0.8421,
+          "dd": 12.51,
+          "keptR_lost": 22.07,
+          "base_net": 280.72,
+          "net_delta": -16.31
+        },
+        {
+          "floor_pct": 0.4,
+          "kept": 310,
+          "dropped": 5,
+          "net": 260.65,
+          "expectancy": 0.8408,
+          "dd": 12.51,
+          "keptR_lost": 25.83,
+          "base_net": 280.72,
+          "net_delta": -20.08
+        },
+        {
+          "floor_pct": 0.5,
+          "kept": 305,
+          "dropped": 10,
+          "net": 266.12,
+          "expectancy": 0.8725,
+          "dd": 12.51,
+          "keptR_lost": 19.12,
+          "base_net": 280.72,
+          "net_delta": -14.6
+        },
+        {
+          "floor_pct": 0.6,
+          "kept": 297,
+          "dropped": 18,
+          "net": 239.84,
+          "expectancy": 0.8075,
+          "dd": 12.51,
+          "keptR_lost": 45.93,
+          "base_net": 280.72,
+          "net_delta": -40.89
+        },
+        {
+          "floor_pct": 0.8,
+          "kept": 276,
+          "dropped": 39,
+          "net": 181.79,
+          "expectancy": 0.6587,
+          "dd": 12.16,
+          "keptR_lost": 96.03,
+          "base_net": 280.72,
+          "net_delta": -98.93
+        },
+        {
+          "floor_pct": 1.0,
+          "kept": 262,
+          "dropped": 53,
+          "net": 146.46,
+          "expectancy": 0.559,
+          "dd": 14.71,
+          "keptR_lost": 127.71,
+          "base_net": 280.72,
+          "net_delta": -134.26
+        },
+        {
+          "floor_pct": 1.5,
+          "kept": 215,
+          "dropped": 100,
+          "net": 80.79,
+          "expectancy": 0.3758,
+          "dd": 9.63,
+          "keptR_lost": 188.48,
+          "base_net": 280.72,
+          "net_delta": -199.93
+        }
+      ],
+      "opposite": {
+        "base_n": 315,
+        "opposite_overlaps": 11,
+        "same_overlaps": 170,
+        "net_base": 280.72,
+        "net_locked": 285.62,
+        "dd_base": 14.56,
+        "dd_locked": 12.51,
+        "n_locked": 307
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_live_gates.py"
+  }
+}
