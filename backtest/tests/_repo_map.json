@@ -1,0 +1,64 @@
+{
+  "books": {
+    "registered": 230,
+    "pinned": 189,
+    "reference": 41,
+    "signal_named": 25,
+    "dupe_param_groups": 11
+  },
+  "params": {
+    "engine_keywords": 38,
+    "set_by_books": 82,
+    "never_set": [
+      "candles_htf",
+      "candles_ltf",
+      "exp_bm_causal",
+      "exp_fs_gray",
+      "exp_max_concurrent",
+      "fine_ltf",
+      "soft_width",
+      "swings_htf",
+      "swings_ltf"
+    ]
+  },
+  "modes": {
+    "branches": 27,
+    "used": {
+      "atr_high": 215,
+      "union": 2,
+      "null": 13
+    },
+    "no_book": [
+      "atr_low",
+      "b2_vs_flip_chop",
+      "chop",
+      "chop_and_atr_low",
+      "chop_or_atr_low",
+      "decisive_vs_flip_chop",
+      "dynamic_chop",
+      "entropy",
+      "entropy_inv",
+      "fd",
+      "fd_inv",
+      "flip_quality",
+      "garch",
+      "garch_inv",
+      "hmm",
+      "hmm_inv",
+      "htf_dir",
+      "htf_mag",
+      "htf_mag_inv",
+      "ltf_dir",
+      "session",
+      "session_flip",
+      "soft_atr",
+      "soft_chop",
+      "soft_ensemble"
+    ]
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_repo_map.py"
+  }
+}
