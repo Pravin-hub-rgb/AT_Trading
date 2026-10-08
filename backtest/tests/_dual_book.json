@@ -1,0 +1,181 @@
+{
+  "A": "fsent_champ_long",
+  "B": "fsent_sig_full",
+  "report": {
+    "is": {
+      "corr": 0.153,
+      "months": 45,
+      "A": {
+        "n": 528,
+        "net": 533.4,
+        "max_dd": 13.4,
+        "dd_dur": 22,
+        "ulcer": 16.79,
+        "pf": 3.088,
+        "wr": 40.0
+      },
+      "B": {
+        "n": 234,
+        "net": 295.8,
+        "max_dd": 10.8,
+        "dd_dur": 13,
+        "ulcer": 3.77,
+        "pf": 3.078,
+        "wr": 41.5
+      },
+      "overlap": 0,
+      "blend": [
+        {
+          "net": 533.37,
+          "months": 45,
+          "max_dd": 7.95,
+          "dd_dur": 5,
+          "ulcer": 2.77,
+          "w": 0.0,
+          "n": 762,
+          "without_top1": 772.83,
+          "without_top5": 607.83,
+          "top5_share_pct": 26.7
+        },
+        {
+          "net": 473.98,
+          "months": 45,
+          "max_dd": 6.6,
+          "dd_dur": 4,
+          "ulcer": 2.04,
+          "w": 0.25,
+          "n": 762,
+          "without_top1": 772.83,
+          "without_top5": 607.83,
+          "top5_share_pct": 26.7
+        },
+        {
+          "net": 414.6,
+          "months": 45,
+          "max_dd": 6.41,
+          "dd_dur": 2,
+          "ulcer": 1.73,
+          "w": 0.5,
+          "n": 762,
+          "without_top1": 772.83,
+          "without_top5": 607.83,
+          "top5_share_pct": 26.7
+        },
+        {
+          "net": 355.21,
+          "months": 45,
+          "max_dd": 7.48,
+          "dd_dur": 2,
+          "ulcer": 1.79,
+          "w": 0.75,
+          "n": 762,
+          "without_top1": 772.83,
+          "without_top5": 607.83,
+          "top5_share_pct": 26.7
+        },
+        {
+          "net": 295.83,
+          "months": 45,
+          "max_dd": 8.55,
+          "dd_dur": 3,
+          "ulcer": 2.18,
+          "w": 1.0,
+          "n": 762,
+          "without_top1": 772.83,
+          "without_top5": 607.83,
+          "top5_share_pct": 26.7
+        }
+      ]
+    },
+    "oos": {
+      "corr": 0.423,
+      "months": 24,
+      "A": {
+        "n": 311,
+        "net": 239.6,
+        "max_dd": 11.9,
+        "dd_dur": 29,
+        "ulcer": 14.23,
+        "pf": 2.688,
+        "wr": 37.0
+      },
+      "B": {
+        "n": 151,
+        "net": 194.4,
+        "max_dd": 7.0,
+        "dd_dur": 8,
+        "ulcer": 5.6,
+        "pf": 3.475,
+        "wr": 46.4
+      },
+      "overlap": 0,
+      "blend": [
+        {
+          "net": 239.59,
+          "months": 24,
+          "max_dd": 8.1,
+          "dd_dur": 1,
+          "ulcer": 2.58,
+          "w": 0.0,
+          "n": 462,
+          "without_top1": 401.8,
+          "without_top5": 305.24,
+          "top5_share_pct": 29.67
+        },
+        {
+          "net": 228.3,
+          "months": 24,
+          "max_dd": 5.18,
+          "dd_dur": 1,
+          "ulcer": 1.34,
+          "w": 0.25,
+          "n": 462,
+          "without_top1": 401.8,
+          "without_top5": 305.24,
+          "top5_share_pct": 29.67
+        },
+        {
+          "net": 217.01,
+          "months": 24,
+          "max_dd": 2.27,
+          "dd_dur": 1,
+          "ulcer": 0.7,
+          "w": 0.5,
+          "n": 462,
+          "without_top1": 401.8,
+          "without_top5": 305.24,
+          "top5_share_pct": 29.67
+        },
+        {
+          "net": 205.73,
+          "months": 24,
+          "max_dd": 2.63,
+          "dd_dur": 2,
+          "ulcer": 0.87,
+          "w": 0.75,
+          "n": 462,
+          "without_top1": 401.8,
+          "without_top5": 305.24,
+          "top5_share_pct": 29.67
+        },
+        {
+          "net": 194.44,
+          "months": 24,
+          "max_dd": 3.59,
+          "dd_dur": 2,
+          "ulcer": 1.51,
+          "w": 1.0,
+          "n": 462,
+          "without_top1": 401.8,
+          "without_top5": 305.24,
+          "top5_share_pct": 29.67
+        }
+      ]
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_dual_book.py"
+  }
+}
