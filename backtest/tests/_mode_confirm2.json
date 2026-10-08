@@ -1,0 +1,446 @@
+{
+  "family": [
+    "fsent_champ_long",
+    "fsent_utcsat_long",
+    "fsent_champ_short"
+  ],
+  "report": {
+    "fsent_champ_long": {
+      "base": {
+        "is": {
+          "n": 528,
+          "net": 533.4,
+          "max_dd": 13.4,
+          "mean": 1.01,
+          "pf": 3.088,
+          "wr": 40.0,
+          "ulcer": 16.79,
+          "streak": 11,
+          "dd_dur": 22,
+          "minus_top5": 342.48,
+          "minus_top10": 250.32
+        },
+        "oos": {
+          "n": 311,
+          "net": 239.6,
+          "max_dd": 11.9,
+          "mean": 0.77,
+          "pf": 2.688,
+          "wr": 37.0,
+          "ulcer": 14.23,
+          "streak": 15,
+          "dd_dur": 29,
+          "minus_top5": 135.67,
+          "minus_top10": 82.85
+        }
+      },
+      "arms": {
+        "atr_low": {
+          "is": {
+            "n": 641,
+            "net": 721.3,
+            "max_dd": 28.9,
+            "mean": 1.125,
+            "pf": 3.221,
+            "wr": 39.2,
+            "ulcer": 20.48,
+            "streak": 16,
+            "dd_dur": 82,
+            "minus_top5": 514.73,
+            "minus_top10": 399.63
+          },
+          "oos": {
+            "n": 315,
+            "net": 280.7,
+            "max_dd": 14.6,
+            "mean": 0.891,
+            "pf": 2.957,
+            "wr": 38.1,
+            "ulcer": 64.29,
+            "streak": 15,
+            "dd_dur": 26,
+            "minus_top5": 176.8,
+            "minus_top10": 121.0
+          }
+        },
+        "fd": {
+          "is": {
+            "n": 529,
+            "net": 534.8,
+            "max_dd": 13.4,
+            "mean": 1.011,
+            "pf": 3.068,
+            "wr": 39.9,
+            "ulcer": 54.78,
+            "streak": 11,
+            "dd_dur": 22,
+            "minus_top5": 343.93,
+            "minus_top10": 251.76
+          },
+          "oos": {
+            "n": 295,
+            "net": 276.8,
+            "max_dd": 12.2,
+            "mean": 0.938,
+            "pf": 3.051,
+            "wr": 36.6,
+            "ulcer": 65.7,
+            "streak": 15,
+            "dd_dur": 31,
+            "minus_top5": 172.91,
+            "minus_top10": 108.94
+          }
+        },
+        "flip_quality": {
+          "is": {
+            "n": 527,
+            "net": 534.8,
+            "max_dd": 13.4,
+            "mean": 1.015,
+            "pf": 3.105,
+            "wr": 40.0,
+            "ulcer": 16.43,
+            "streak": 11,
+            "dd_dur": 24,
+            "minus_top5": 343.89,
+            "minus_top10": 251.73
+          },
+          "oos": {
+            "n": 294,
+            "net": 244.4,
+            "max_dd": 11.9,
+            "mean": 0.831,
+            "pf": 2.873,
+            "wr": 37.4,
+            "ulcer": 77.58,
+            "streak": 15,
+            "dd_dur": 29,
+            "minus_top5": 140.49,
+            "minus_top10": 87.67
+          }
+        },
+        "union": {
+          "is": {
+            "n": 813,
+            "net": 580.0,
+            "max_dd": 23.8,
+            "mean": 0.713,
+            "pf": 2.404,
+            "wr": 37.4,
+            "ulcer": 16.59,
+            "streak": 16,
+            "dd_dur": 46,
+            "minus_top5": 389.16,
+            "minus_top10": 291.26
+          },
+          "oos": {
+            "n": 442,
+            "net": 303.8,
+            "max_dd": 18.2,
+            "mean": 0.687,
+            "pf": 2.454,
+            "wr": 34.4,
+            "ulcer": 10.83,
+            "streak": 15,
+            "dd_dur": 36,
+            "minus_top5": 199.88,
+            "minus_top10": 135.29
+          }
+        }
+      }
+    },
+    "fsent_utcsat_long": {
+      "base": {
+        "is": {
+          "n": 525,
+          "net": 465.0,
+          "max_dd": 20.7,
+          "mean": 0.886,
+          "pf": 2.807,
+          "wr": 39.8,
+          "ulcer": 21.59,
+          "streak": 14,
+          "dd_dur": 41,
+          "minus_top5": 299.93,
+          "minus_top10": 222.53
+        },
+        "oos": {
+          "n": 310,
+          "net": 238.8,
+          "max_dd": 11.9,
+          "mean": 0.77,
+          "pf": 2.682,
+          "wr": 36.8,
+          "ulcer": 14.26,
+          "streak": 15,
+          "dd_dur": 29,
+          "minus_top5": 134.84,
+          "minus_top10": 82.03
+        }
+      },
+      "arms": {
+        "atr_low": {
+          "is": {
+            "n": 642,
+            "net": 720.6,
+            "max_dd": 28.9,
+            "mean": 1.122,
+            "pf": 3.213,
+            "wr": 39.1,
+            "ulcer": 21.35,
+            "streak": 16,
+            "dd_dur": 82,
+            "minus_top5": 513.94,
+            "minus_top10": 398.85
+          },
+          "oos": {
+            "n": 314,
+            "net": 279.9,
+            "max_dd": 14.6,
+            "mean": 0.891,
+            "pf": 2.951,
+            "wr": 37.9,
+            "ulcer": 64.39,
+            "streak": 15,
+            "dd_dur": 26,
+            "minus_top5": 175.97,
+            "minus_top10": 120.18
+          }
+        },
+        "fd": {
+          "is": {
+            "n": 527,
+            "net": 472.5,
+            "max_dd": 13.9,
+            "mean": 0.897,
+            "pf": 2.814,
+            "wr": 39.8,
+            "ulcer": 54.99,
+            "streak": 11,
+            "dd_dur": 39,
+            "minus_top5": 307.45,
+            "minus_top10": 230.05
+          },
+          "oos": {
+            "n": 294,
+            "net": 276.0,
+            "max_dd": 12.2,
+            "mean": 0.939,
+            "pf": 3.045,
+            "wr": 36.4,
+            "ulcer": 65.76,
+            "streak": 15,
+            "dd_dur": 31,
+            "minus_top5": 172.08,
+            "minus_top10": 108.11
+          }
+        },
+        "flip_quality": {
+          "is": {
+            "n": 525,
+            "net": 465.0,
+            "max_dd": 20.7,
+            "mean": 0.886,
+            "pf": 2.807,
+            "wr": 39.8,
+            "ulcer": 21.59,
+            "streak": 14,
+            "dd_dur": 41,
+            "minus_top5": 299.93,
+            "minus_top10": 222.53
+          },
+          "oos": {
+            "n": 293,
+            "net": 243.6,
+            "max_dd": 11.9,
+            "mean": 0.831,
+            "pf": 2.867,
+            "wr": 37.2,
+            "ulcer": 77.71,
+            "streak": 15,
+            "dd_dur": 29,
+            "minus_top5": 139.66,
+            "minus_top10": 86.84
+          }
+        },
+        "union": {
+          "is": {
+            "n": 813,
+            "net": 564.6,
+            "max_dd": 36.6,
+            "mean": 0.694,
+            "pf": 2.363,
+            "wr": 37.3,
+            "ulcer": 27.21,
+            "streak": 16,
+            "dd_dur": 80,
+            "minus_top5": 373.72,
+            "minus_top10": 277.62
+          },
+          "oos": {
+            "n": 440,
+            "net": 300.6,
+            "max_dd": 18.2,
+            "mean": 0.683,
+            "pf": 2.442,
+            "wr": 34.1,
+            "ulcer": 11.0,
+            "streak": 15,
+            "dd_dur": 36,
+            "minus_top5": 196.66,
+            "minus_top10": 132.07
+          }
+        }
+      }
+    },
+    "fsent_champ_short": {
+      "base": {
+        "is": {
+          "n": 532,
+          "net": 600.6,
+          "max_dd": 17.6,
+          "mean": 1.129,
+          "pf": 3.067,
+          "wr": 37.0,
+          "ulcer": 4.33,
+          "streak": 12,
+          "dd_dur": 20,
+          "minus_top5": 399.46,
+          "minus_top10": 262.89
+        },
+        "oos": {
+          "n": 312,
+          "net": 239.5,
+          "max_dd": 23.9,
+          "mean": 0.768,
+          "pf": 2.456,
+          "wr": 35.6,
+          "ulcer": 46.14,
+          "streak": 14,
+          "dd_dur": 58,
+          "minus_top5": 109.46,
+          "minus_top10": 49.38
+        }
+      },
+      "arms": {
+        "atr_low": {
+          "is": {
+            "n": 621,
+            "net": 825.0,
+            "max_dd": 32.3,
+            "mean": 1.329,
+            "pf": 3.429,
+            "wr": 37.8,
+            "ulcer": 8.11,
+            "streak": 14,
+            "dd_dur": 69,
+            "minus_top5": 595.12,
+            "minus_top10": 454.77
+          },
+          "oos": {
+            "n": 301,
+            "net": 283.8,
+            "max_dd": 20.1,
+            "mean": 0.943,
+            "pf": 2.784,
+            "wr": 36.2,
+            "ulcer": 11.45,
+            "streak": 12,
+            "dd_dur": 43,
+            "minus_top5": 153.75,
+            "minus_top10": 86.19
+          }
+        },
+        "fd": {
+          "is": {
+            "n": 540,
+            "net": 552.9,
+            "max_dd": 17.6,
+            "mean": 1.024,
+            "pf": 2.877,
+            "wr": 37.0,
+            "ulcer": 4.26,
+            "streak": 8,
+            "dd_dur": 20,
+            "minus_top5": 357.25,
+            "minus_top10": 230.06
+          },
+          "oos": {
+            "n": 302,
+            "net": 291.2,
+            "max_dd": 17.9,
+            "mean": 0.964,
+            "pf": 2.823,
+            "wr": 36.4,
+            "ulcer": 10.74,
+            "streak": 14,
+            "dd_dur": 40,
+            "minus_top5": 161.14,
+            "minus_top10": 93.59
+          }
+        },
+        "flip_quality": {
+          "is": {
+            "n": 532,
+            "net": 600.6,
+            "max_dd": 17.6,
+            "mean": 1.129,
+            "pf": 3.067,
+            "wr": 37.0,
+            "ulcer": 4.33,
+            "streak": 12,
+            "dd_dur": 20,
+            "minus_top5": 399.46,
+            "minus_top10": 262.89
+          },
+          "oos": {
+            "n": 294,
+            "net": 293.5,
+            "max_dd": 19.3,
+            "mean": 0.998,
+            "pf": 2.919,
+            "wr": 36.7,
+            "ulcer": 10.87,
+            "streak": 12,
+            "dd_dur": 40,
+            "minus_top5": 163.47,
+            "minus_top10": 95.91
+          }
+        },
+        "union": {
+          "is": {
+            "n": 821,
+            "net": 604.4,
+            "max_dd": 24.2,
+            "mean": 0.736,
+            "pf": 2.344,
+            "wr": 34.3,
+            "ulcer": 12.0,
+            "streak": 19,
+            "dd_dur": 54,
+            "minus_top5": 431.53,
+            "minus_top10": 294.93
+          },
+          "oos": {
+            "n": 441,
+            "net": 267.5,
+            "max_dd": 27.4,
+            "mean": 0.607,
+            "pf": 2.173,
+            "wr": 32.7,
+            "ulcer": 21.08,
+            "streak": 16,
+            "dd_dur": 61,
+            "minus_top5": 137.41,
+            "minus_top10": 66.62
+          }
+        }
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "ddd31dc",
+    "measured": "2026-10-08",
+    "harness": "exp_mode_confirm2.py"
+  }
+}

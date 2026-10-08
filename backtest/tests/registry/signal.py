@@ -229,11 +229,22 @@ BOOKS = {
     #   1. Every one spends drawdown. The halt governance rule above is a budget
     #      test and the base book sits at 11.88R OOS. Only flip_quality holds it,
     #      and only by being flat on both.
-    #   2. ALL FOUR fail on the second lane, out of sample, on BOTH lanes - the
-    #      same failure every regime-conditional tweak in this repo has run into.
-    #      On champion_multi_sw10 the OOS deltas are -8.4R (atr_low), -0.9R
-    #      (fd), -7.0R (flip_quality), -73.8R (union). On utcsat_multi_sw10
-    #      the same. That is the era-split pattern and it is disqualifying.
+    #   2. Lane test, CORRECTED 2026-10-08. The first version of this note used
+    #      champion_multi_sw10 / utcsat_multi_sw10 as "the second lane" and all
+    #      four failed there out of sample. Those books are a DIFFERENT
+    #      architecture - pivot_rule=origin, no exp_fs_entry_side, no exp_mltf -
+    #      so that was the wrong family to judge a change to THIS book on, and
+    #      the shipping book was never tested anywhere in that run at all.
+    #      Re-run on the family that does share the architecture -
+    #      fsent_champ_long / fsent_utcsat_long / fsent_champ_short, all three
+    #      netting about 239R OOS - only flip_quality holds: ahead on all three
+    #      (+4.8R / +4.8R / +54.0R) with drawdown flat or better on each.
+    #      See method/MODE_CONFIRM2_RIGHT_LANES.md.
+    #
+    # So the blockers below are per-candidate and were REVISED, not uniform. On
+    # the correct family flip_quality is not lane-blocked at all; atr_low and fd
+    # each hold on 1 of 3 and both spend drawdown on the two long books; union
+    # fails all three on drawdown alone.
     #
     # mode="atr_low" is the interesting one and the reason it is worth keeping
     # registered: it is an INVERSION, not a tuning. atr_high takes decisive
@@ -273,7 +284,7 @@ BOOKS = {
                    "oos_n": 295, "oos_net": 276.80, "oos_dd_net": 12.20},
     },
     "fsent_champ_long_mode_flip_quality": {
-          "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='flip_quality' - B2/flip by chop AND a HTF-magnitude floor, so it filters the chop branch. The only candidate that holds the base drawdown exactly (13.4R IS / 11.9R OOS), which is why it is the closest to adoptable. It gains only +1.4R IS / +4.8R OOS and fails out of sample on both second lanes (-7.0R champion, -4.1R utcsat).",
+          "desc": "CANDIDATE, NOT ADOPTED - closest of the four. fsent_champ_long with mode='flip_quality' - B2/flip by chop AND a HTF-magnitude floor, so it filters the chop branch. It is the ONLY candidate that does not raise drawdown: 13.4R IS / 11.9R OOS, identical to the base. On the family that shares this book's architecture it beats its own base on ALL THREE (champ_long +4.8R, utcsat_long +4.8R, champ_short +54.0R, drawdown flat or better on each). CORRECTION 2026-10-08: an earlier version of this entry said it 'fails out of sample on both second lanes (-7.0R, -4.1R)'. Those numbers are real but were measured on champion_multi_sw10/utcsat_multi_sw10, which are a DIFFERENT architecture (pivot_rule=origin, no FS side, no exp_mltf). On the correct family it wins 3 of 3. Still not adopted: the gain is +4.8R on 239.6R (2%) on both long books, the three books are the same data so agreement is not independence, no half-year period control has been run, and the branch READS chop_thresh - a key removed from this book on 2026-10-07, so this is not the base plus a mode string. See method/MODE_CONFIRM2_RIGHT_LANES.md.",
           "engine": "patched",
           "params": {"mode": "flip_quality", "atr_high_thresh": 0.65,
                        "sl_buf_atr": 0.01, "cooldown_bars": 8,
