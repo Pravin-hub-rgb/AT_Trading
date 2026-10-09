@@ -347,6 +347,22 @@ BOOKS = {
     # period control: 99% of the raw gap survives a half-year fixed effect in BOTH
     # eras, and it is ahead in 12 of 12 half-year cells. See
     # method/SIG_MULTI_STUDY.md for the full gates, and the caveat below.
+    "fsent_champ_long_mcloff_htf15": {
+          "desc": "CANDIDATE, NOT ADOPTED - the best NON-degenerate arm found, and the two findings that actually changed the picture, stacked. It is fsent_champ_long_mcloff (max_consecutive_losses=0) on the htf15 1h swing series. MEASURED against the parent 528 / +533.37 / 13.42 IS and 311 / +239.59 / 11.88 OOS: IS 560t / +616.17R / DD 15.13R / WR 41.1%, OOS 299t / +277.35R / DD 13.64R / WR 38.1%. It beats the parent in BOTH eras by more than mcloff alone (+82.80R IS, +37.76R OOS) and beats mcloff in both eras as well (+49.59R IS, +6.44R OOS), for 1.00R of extra in-sample drawdown. ZERO negative half-years out of 12. WHY THIS IS THE RECOMMENDATION AND NOT htf15 OR htfesmcl4: it does not use exp_htf_fs_entry, so it keeps the flip/decisive/b2 regime buckets distinct and is NOT the degenerate all-fs_entered configuration that the completion sweep's highest arms all turn out to be. The 12-arm joint grid over max_consecutive_losses x HTF leg length x HTF FS entry produced a +1321.41R arm, and that arm collapses the regime distinction - see method/HTF_FS_ENTRY_REJECTED.md. This one reaches +616.17R while staying honest about what a regime is. Still NOT adopted: the period control has not been run on this exact combination, no arm in the family has forward evidence, and 12 observations of a half-year table is not a guarantee. See method/RESEARCH_COMPLETE.md.",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 0,
+                       "max_positions": 0,
+                       "ext_stop_r": 3.0, "exp_partial_r": 0.0,
+                       "exp_mltf": True, "exp_persist": 7,
+                       "pivot_rule": "leg", "exp_fs_entry_side": "long"},
+          "swing": "htf15",
+          "pins": {"n": 560, "net": 616.17, "dd_net": 15.13, "win": 0.411,
+                   "oos_n": 299, "oos_net": 277.35, "oos_dd_net": 13.64,
+                   "oos_win": 0.381},
+    },
     "fsent_champ_long_mcloff": {
           "desc": "CANDIDATE, NOT ADOPTED - and the best-EVIDENCED one in the registry. It changes ONE INTEGER: max_consecutive_losses from 3 to 0, which turns the loss-run cutoff OFF. The autopsy of the parent's negative half-year found 2025-H1 was not a disaster but a coin flip that landed red: 60 trades, net -0.69R, mean -0.011R per trade, 20 winners making +29.6R against 40 losers making -30.3R. In that exact situation the cutoff is not protecting the book, it is cutting winners - it stops the book right before the recovery trade that follows every streak. MEASURED against the parent 528 / +533.37 / 13.42 IS and 311 / +239.59 / 11.88 OOS: IS 575t / +566.58R / DD 15.13R / WR 39.7%, OOS 337t / +270.91R / DD 14.16R / WR 37.1%. IT DOMINATES THE PARENT ON RETURN IN BOTH ERAS (+33.21R IS, +31.32R OOS) on 47 and 26 MORE trades, for 1.71R and 2.28R of extra drawdown. ZERO negative half-years out of 12. PERIOD CONTROL IS THE REASON TO TRUST IT - this is the only arm in the whole family whose effect is SIGN HOLDS and POWERED in BOTH eras: b = +1.21 (t = 3.37, MDE 0.70) IS and b = +1.86 (t = 3.97, MDE 0.92) OOS, cluster-bootstrap b_boot +1.28 and +1.92. Compare fsent_champ_long_htf15 (underpowered), fsent_champ_long_biasmom05 (b NEGATIVE and significant at t = -9.63 OOS) and htf_fs=all (underpowered). Still NOT adopted: the period control compares this arm to champ_long, NOT to absolute zero, and a book that is meaningfully better than its parent can still be negative in some unseen half-year. The cutoff also has a real purpose under position sizing, which is a risk decision and not a signal decision. Forward evidence does not exist for it yet. See method/MAXCONSEC_LOSSES_FINDING.md.",
           "engine": "patched",

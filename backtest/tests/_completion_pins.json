@@ -1,0 +1,55 @@
+{
+  "fsent_champ_long_mcloff_htf15": {
+    "swing": "htf15",
+    "over": {
+      "max_consecutive_losses": 0
+    },
+    "pins": {
+      "n": 560,
+      "net": 616.17,
+      "dd_net": 15.13,
+      "win": 0.41100000000000003,
+      "oos_n": 299,
+      "oos_net": 277.35,
+      "oos_dd_net": 13.64,
+      "oos_win": 0.381
+    }
+  },
+  "fsent_champ_long_mcl4_htf15": {
+    "swing": "htf15",
+    "over": {
+      "max_consecutive_losses": 4
+    },
+    "pins": {
+      "n": 534,
+      "net": 588.18,
+      "dd_net": 15.95,
+      "win": 0.406,
+      "oos_n": 288,
+      "oos_net": 277.5,
+      "oos_dd_net": 13.91,
+      "oos_win": 0.385
+    }
+  },
+  "fsent_champ_long_cap21": {
+    "swing": "sw10",
+    "over": {
+      "exp_cap_days": 21
+    },
+    "pins": {
+      "n": 537,
+      "net": 581.49,
+      "dd_net": 17.65,
+      "win": 0.4,
+      "oos_n": 320,
+      "oos_net": 254.44,
+      "oos_dd_net": 13.84,
+      "oos_win": 0.375
+    }
+  },
+  "_provenance": {
+    "engine": "1f9f359",
+    "measured": "2026-10-09",
+    "harness": "exp_register_completion.py"
+  }
+}
