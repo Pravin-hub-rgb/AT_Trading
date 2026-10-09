@@ -17,6 +17,8 @@ interface Metric {
   label: string;
   group: Group;
   lowerBetter?: boolean;
+  /** neither end is optimal - never marked as a winner (trade count) */
+  neutral?: boolean;
   dp?: number;
   suffix?: string;
   /** short plain-language meaning, shown on hover */
@@ -61,6 +63,7 @@ const METRICS: Metric[] = [
 
 const GROUPS: Group[] = ["Return", "Risk", "Smoothness", "Consistency", "Tail", "Costs", "Size"];
 
+
 const TAG_META: Record<BookTag, { label: string; tone: string; hint: string }> = {
   "zero-negative": { label: "zero-negative", tone: "ok", hint: "No negative half-year in any of the 12 cells." },
   "low-DD": { label: "low-DD", tone: "ok", hint: "Max drawdown under 60% of the 29R budget." },
@@ -99,6 +102,17 @@ function fmt(m: Metric, v: unknown): string {
       : s + (m.suffix ?? "");
   }
   return String(v);
+}
+
+/** Winners are compared at DISPLAY precision, not raw precision. Two books whose
+ *  ulcer is 8.701 and 8.704 both print as 8.70; marking one of them the winner
+ *  would be picking a tie that only exists in digits nobody can see. */
+function isBest(m: Metric, v: number | null, best: number | null): boolean {
+  if (v === null || v === undefined || best === null || best === undefined) return false;
+  const dp = m.dp ?? 2;
+  const scale = Math.pow(10, dp);
+  if (Math.round(v * scale) !== Math.round(best * scale)) return false;
+  return m.lowerBetter ? v <= best + 1e-9 : v >= best - 1e-9;
 }
 
 /* ----------------------------------------------------------------- chart */
@@ -164,7 +178,9 @@ export default function ResultsPanel() {
   const [busy, setBusy] = useState(true);
   const [family, setFamily] = useState<"all" | "multi" | "sig">("all");
   const [selected, setSelected] = useState<string[]>(DEFAULT_SELECTED);
-  const [sortKey, setSortKey] = useState<keyof ResultBook>("net");
+  // "__wins" sorts by the per-view best-in-column tally, which is not a book
+  // field, so the sort key is widened here rather than pretending it is one.
+  const [sortKey, setSortKey] = useState<keyof ResultBook | "__wins">("net");
   const [sortDir, setSortDir] = useState<1 | -1>(-1);
   const [group, setGroup] = useState<Group>("Return");
 
@@ -205,12 +221,62 @@ export default function ResultsPanel() {
     };
   }, []);
 
+  // Split in two on purpose. `filtered` is the unsorted set the reader is looking at;
+// the winner pass and the win tally are computed from it because "best in column"
+// is meaningless against books that are filtered off screen. Only then is the list
+// sorted. Doing it the other way round makes books depend on winCounts while
+// winCounts depends on books, which is a dependency cycle.
+const filtered = useMemo(() => {
+  if (!data) return [];
+  return family === "all" ? data.books : data.books.filter((b) => b.family === family);
+}, [data, family]);
+
+  const shownMetrics = useMemo(() => METRICS.filter((m) => m.group === group), [group]);
+
+  // The best value in each column, across the books currently in view. Recomputed
+  // from the filtered set rather than a fixed top-N, so switching the family
+  // filter re-decides what "best" means instead of comparing a long book against
+  // a short one that is not on screen.
+  const bestByKey = useMemo(() => {
+    const out: Record<string, number | null> = {};
+    for (const m of shownMetrics) {
+      let best: number | null = null;
+      for (const b of filtered) {
+        const v = b[m.key as keyof ResultBook];
+        if (typeof v !== "number") continue;
+        if (best === null) best = v;
+        else if (m.lowerBetter ? v < best : v > best) best = v;
+      }
+      out[String(m.key)] = best;
+    }
+    return out;
+  }, [filtered, shownMetrics]);
+
+  // How many of the metrics that are open right now each book tops. This is the
+  // "which book is optimal at what" answer in one sortable column, and it counts
+  // only what the reader is currently looking at rather than a hidden composite.
+  const winCounts = useMemo(() => {
+    const tally: Record<string, number> = {};
+    for (const b of filtered) {
+      let c = 0;
+      for (const m of shownMetrics) {
+        const v = b[m.key as keyof ResultBook];
+        if (typeof v === "number" && isBest(m, v, bestByKey[String(m.key)] ?? null)) c += 1;
+      }
+      tally[b.name] = c;
+    }
+    return tally;
+  }, [filtered, shownMetrics, bestByKey]);
+
+  const topWinCount = useMemo(() => Math.max(0, ...Object.values(winCounts)), [winCounts]);
+
   const books = useMemo(() => {
-    if (!data) return [];
-    const f = family === "all" ? data.books : data.books.filter((b) => b.family === family);
     const m = METRICS.find((x) => x.key === sortKey);
     const dir = sortDir;
-    return [...f].sort((a, b) => {
+    return [...filtered].sort((a, b) => {
+      // "__wins" is not a book field, it is the per-view best-in-column tally.
+      if (sortKey === "__wins")
+        return dir * ((winCounts[a.name] ?? 0) - (winCounts[b.name] ?? 0));
       const x = a[sortKey] as never as number | null;
       const y = b[sortKey] as never as number | null;
       if (x === null || x === undefined) return 1;
@@ -218,9 +284,7 @@ export default function ResultsPanel() {
       const lo = m?.lowerBetter ? dir : -dir;
       return typeof x === "number" && typeof y === "number" ? lo * (x - y) : 0;
     });
-  }, [data, family, sortKey, sortDir]);
-
-  const shownMetrics = useMemo(() => METRICS.filter((m) => m.group === group), [group]);
+  }, [filtered, sortKey, sortDir, winCounts]);
   const chartBooks = useMemo(
     () => books.filter((b) => selected.includes(b.name)),
     [books, selected]
@@ -246,7 +310,7 @@ export default function ResultsPanel() {
   const toggle = (name: string) =>
     setSelected((s) => (s.includes(name) ? s.filter((x) => x !== name) : [...s, name].slice(-8)));
 
-  const onSort = (k: keyof ResultBook) => {
+  const onSort = (k: keyof ResultBook | "__wins") => {
     if (k === sortKey) setSortDir((d) => (d === 1 ? -1 : 1));
     else {
       setSortKey(k);
@@ -400,6 +464,20 @@ export default function ResultsPanel() {
                   </button>
                 </th>
               ))}
+              <th className="px-3 py-2 text-right">
+                <button
+                  onClick={() => onSort("__wins")}
+                  title={"How many of the metrics open right now this book has the best value on. Only counts what is on screen, so switching the group changes the answer on purpose."}
+                  className={`text-xs font-semibold ${
+                    sortKey === "__wins"
+                      ? "text-[#6366f1]"
+                      : "text-[#8b949e] hover:text-[#e6edf3]"
+                  }`}
+                >
+                  ★ best on
+                  {sortKey === "__wins" ? (sortDir === 1 ? " ↑" : " ↓") : ""}
+                </button>
+              </th>
               <th className="px-3 py-2 text-right text-xs font-semibold text-[#8b949e]">tags</th>
             </tr>
           </thead>
@@ -451,28 +529,53 @@ export default function ResultsPanel() {
                     const v = b[m.key];
                     const num = typeof v === "number" ? v : null;
                     const isNet = m.key === "net" || m.key === "cost_2x" || m.key === "cost_3x";
+                    // Amber flags a value that is legal but worth a look: a tail
+                    // concentration in the framework's warning zone, or OOS
+                    // retention that has decayed more than a third.
                     const bad =
                       num !== null &&
                       ((isNet && num < 0) ||
                         (m.key === "top5_contrib" && num >= 90) ||
                         (m.key === "retention" && num < 70));
+                    const isTop = isBest(m, num, bestByKey[String(m.key)] ?? null);
                     return (
                       <td
                         key={String(m.key)}
+                        title={isTop ? `Best ${m.lowerBetter ? "lowest" : "highest"} ${m.label} of the ${books.length} books in view` : undefined}
                         className={`px-3 py-1.5 text-right tabular-nums ${
-                          isNet && num !== null
-                            ? num >= 0
-                              ? "text-[#3fb950]"
-                              : "text-[#f85149]"
-                            : bad
-                              ? "text-[#d29922]"
-                              : "text-[#e6edf3]"
+                          isTop
+                            ? "bg-[#1b2330] font-semibold text-[#3fb950]"
+                            : isNet && num !== null
+                              ? num >= 0
+                                ? "text-[#3fb950]"
+                                : "text-[#f85149]"
+                              : bad
+                                ? "text-[#d29922]"
+                                : "text-[#e6edf3]"
                         }`}
                       >
+                        {isTop && (
+                          <span className="mr-0.5 text-[#3fb950]" aria-label="best in column">
+                            ★
+                          </span>
+                        )}
                         {fmt(m, v)}
                       </td>
                     );
                   })}
+                  <td className="px-3 py-1.5 text-right tabular-nums">
+                    <span
+                      className={`inline-block min-w-[1.6rem] rounded px-1.5 py-0.5 text-xs font-semibold ${
+                        winCounts[b.name] > 0
+                          ? winCounts[b.name] === topWinCount
+                            ? "bg-[#12351c] text-[#3fb950]"
+                            : "bg-[#161b22] text-[#8b949e]"
+                          : "text-[#6e7681]"
+                      }`}
+                    >
+                      {winCounts[b.name]}/{shownMetrics.length}
+                    </span>
+                  </td>
                   <td className="px-3 py-1.5 text-right">
                     <span className="inline-flex flex-wrap justify-end gap-1">
                       {b.tags
