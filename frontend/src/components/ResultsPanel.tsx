@@ -55,7 +55,6 @@ const METRICS: Metric[] = [
   { key: "cost_2x", label: "2x costs", group: "Costs", dp: 0, suffix: "R", hint: "Net if fees doubled. Below zero means fees kill it." },
   { key: "cost_3x", label: "3x costs", group: "Costs", dp: 0, suffix: "R", hint: "Net at triple fees." },
 
-  { key: "n", label: "Trades", group: "Size", dp: 0, hint: "Trade count. 25 trades and 900 trades are not equivalent evidence." },
   { key: "tuned", label: "Knobs", group: "Size", lowerBetter: true, dp: 0, hint: "Non-default parameters. Each one is another chance to fit noise." },
   { key: "sd", label: "Trade SD", group: "Size", lowerBetter: true, dp: 2, hint: "How much a single trade swings. Large SD means many trades are needed to be sure." },
 ];
@@ -365,6 +364,22 @@ export default function ResultsPanel() {
               <th className="sticky left-0 bg-[#161b22] px-3 py-2 text-left text-xs font-semibold text-[#8b949e]">
                 book
               </th>
+              {/* Trades is always visible, whatever group is open. It is the one
+                  number that changes how every other number should be read: 25
+                  trades and 900 trades producing the same net are not equivalent
+                  evidence, and hiding it behind a tab buries that. */}
+              <th className="px-3 py-2 text-right">
+                <button
+                  onClick={() => onSort("n")}
+                  title="Trade count. 25 trades and 900 trades making the same net are not equivalent evidence."
+                  className={`text-xs font-semibold ${
+                    sortKey === "n" ? "text-[#6366f1]" : "text-[#8b949e] hover:text-[#e6edf3]"
+                  }`}
+                >
+                  Trades
+                  {sortKey === "n" ? (sortDir === 1 ? " ↑" : " ↓") : ""}
+                </button>
+              </th>
               {shownMetrics.map((m) => (
                 <th key={String(m.key)} className="px-3 py-2 text-right">
                   <button
@@ -375,7 +390,13 @@ export default function ResultsPanel() {
                     }`}
                   >
                     {m.label}
-                    {m.lowerBetter ? " ↓" : ""}
+                    {sortKey === m.key
+                      ? sortDir === 1
+                        ? " ↑"
+                        : " ↓"
+                      : m.lowerBetter
+                        ? " ↓"
+                        : ""}
                   </button>
                 </th>
               ))}
@@ -418,6 +439,13 @@ export default function ResultsPanel() {
                           ? "1 at a time"
                           : "not stated"}
                     </span>
+                  </td>
+                  <td
+                    className={`px-3 py-1.5 text-right tabular-nums ${
+                      on ? "bg-[#161b22]" : "bg-[#0d1117]"
+                    }`}
+                  >
+                    {b.n}
                   </td>
                   {shownMetrics.map((m) => {
                     const v = b[m.key];
