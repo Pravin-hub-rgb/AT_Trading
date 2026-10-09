@@ -137,10 +137,89 @@ Append-only. Newest last.
 | date | window start | n trades | candidate | net R | R/trade | PF | maxDD% | verdict |
 |---|---|---|---|---|---|---|---|---|
 | _pending_ | 2026-09-13 | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ | _pending_ |
+
+### 2026-10-08 — candidate list amended BEFORE any new forward window
+
+No forward window exists on this machine (`data/forward/bybit/` is absent), so
+nothing is burned and the pre-registered list can be extended today at zero cost.
+Rule 3 burns a window only when a change is proposed BECAUSE of forward results;
+no such result has been produced since 2026-09-25.
+
+Added, with the reason each is on the list and not a claim that it will win:
+
+| id | config | status before forward | why it is here |
+|---|---|---|---|
+| `FSENT_CHAMP_LONG` | `fsent_champ_long` as shipped | reference anchor | the current multi shipping book on the fsent architecture — the anchor `sig_multi` must beat, and the anchor this line of work departs from |
+| `FSENT_SIG_MULTI` | `fsent_sig_multi` (sig filters + `max_positions=0`) | IS +484.59R / 2021-22 +219.82R, dd 13.39 / 7.64, WR 45.6% / 47.2% | best candidate this repo has produced. 99% of its gap survives a half-year fixed effect in both eras, 12 of 12 half-year cells, tail dependence improves in every cell. Blocked ONLY on forward data — see `method/OOS_IS_NOT_A_HOLDOUT.md` for the correction that withdrew the earlier "underpowered OOS" objection, which was a measurement of the 2021-22 window and not a forward verdict |
+
+Deliberately NOT added, and why:
+
+| not added | reason |
+|---|---|
+| `fsent_champ_long_mode_union` | 23.8R in-sample dd is over the owner's 20R budget and its top 5% of trades carry 96.1% of in-sample profit |
+| `fsent_champ_long_mode_atr_low` | in-sample dd 28.9R over budget; its extra return retains only 21.9% out of the 2021-22 window |
+| `fsent_sig_trail_delay1` and `mp0+trail` | exit-timing changes, not entry changes — 90–100% of the gain sits inside trades both books take, so the cohort instrument does not apply. The +678.9R in-sample figure is the largest in the repo and it is not an entry effect |
+| every other fsent variant | adding marginal candidates raises selection risk faster than evidence, which is this contract's own stated reasoning |
+
+The `FSENT_SIG_MULTI` row is a commitment to TEST, not a prediction. A negative
+forward result gets the same documentation weight as a positive one (rule 4).
 | 2026-09-25 | 2026-09-13 10:03 IST | 5 | `CHAMPION_BASE` | -3.83 | -0.765 | 0.22 | 3.83 | R2 FAIL, R4 PASS, **NO VERDICT (n<50)** |
 | 2026-09-25 | 2026-09-13 10:03 IST | 5 | `CHAMPION_N3` | -3.83 | -0.765 | 0.22 | 3.83 | R2 FAIL, R3 n/a, **NO VERDICT (n<50)** |
 | 2026-09-25 | 2026-09-13 10:03 IST | 5 | `KING_BASE` | -3.83 | -0.765 | 0.22 | 3.83 | R2 FAIL, R4 PASS, **NO VERDICT (n<50)** |
 | 2026-09-25 | 2026-09-13 10:03 IST | 5 | `KING_WN3` | -3.83 | -0.765 | 0.22 | 3.83 | R2 FAIL, **NO VERDICT (n<50)** |
+| 2026-10-09 | 2026-09-13 10:03 IST | 6 | `CHAMPION_BASE` | -5.06 | -0.843 | 0.30 | 5.1R | R2 FAIL, R4 PASS, **NO VERDICT (n<50)** |
+| 2026-10-09 | 2026-09-13 10:03 IST | 6 | `CHAMPION_N3` | -5.06 | -0.843 | 0.30 | 5.1R | R2 FAIL, R3 n/a, **NO VERDICT (n<50)** |
+| 2026-10-09 | 2026-09-13 10:03 IST | 6 | `KING_BASE` | -5.06 | -0.843 | 0.30 | 5.1R | R2 FAIL, R4 PASS, **NO VERDICT (n<50)** |
+| 2026-10-09 | 2026-09-13 10:03 IST | 6 | `KING_WN3` | -5.06 | -0.843 | 0.30 | 5.1R | R2 FAIL, **NO VERDICT (n<50)** |
+| 2026-10-09 | 2026-09-13 10:03 IST | 5 | `FSENT_SIG_MULTI` | **-1.26** | -0.253 | 0.61 | **2.2R** | R2 FAIL, R4 PASS, **NO VERDICT (n<50)** |
+| 2026-10-09 | 2026-09-13 10:03 IST | 4 | `FSENT_CHAMP_LONG` | -0.93 | -0.233 | 0.77 | **2.0R** | R2 FAIL, R4 PASS, **NO VERDICT (n<50)** |
+
+### 2026-10-09 window — what it does and does not say
+
+Forward data was re-fetched after 2026-09-13 10:03 IST and now runs to
+**2026-10-09 10:30** — 2498 bars of 15m, 625 of 1h, 37468 of 1m. R1 parity holds:
+pre-cutoff ledgers reproduce exactly (`FSENT_SIG_MULTI` 329t / +547.7 gross /
++484.6 net, matching its registry pin).
+
+**R1 parity: PASS for all six candidates.**
+
+**The four original candidates produce the identical six trades** again, so this
+window tests the shared base architecture and not the N3 variants.
+
+**On absolute numbers every candidate is negative and every candidate is
+`NO VERDICT`.** Five to six trades. The contract's own n≥50 gate says so, and the
+owner's instruction today was the same thing: *"we have to wait for at least four
+months."*
+
+**The only comparison the window supports is depth of loss, and it points one way
+but is not a verdict:**
+
+| candidate | n | net R | net avg | PF | forward max DD |
+|---|---:|---:|---:|---:|---:|
+| `CHAMPION_BASE` / `N3` / `KING_BASE` / `WN3` | 6 | −5.06 | −0.843 | 0.30 | 5.1R |
+| **`FSENT_SIG_MULTI`** | 5 | **−1.26** | **−0.253** | **0.61** | **2.2R** |
+| `FSENT_CHAMP_LONG` | 4 | −0.93 | −0.233 | 0.77 | 2.0R |
+
+The fsent pair lost **a quarter of what the champion family lost**, with **twice
+the win rate** and **under half the drawdown**. On five trades that is noise, and
+it is recorded as noise. It is not evidence for adoption and it is not evidence
+against. **R3 was not evaluated** because the anchor is not positive on forward,
+which is the contract's own instruction for that case.
+
+**Window length:** 26 days. At the realized rate in this window the n≥50 gate is
+still roughly **four months** out and n≥150 roughly **a year** out. Nothing
+recorded here should be revisited before then — and if it is revisited before
+then, the window is burned under rule 3 and a new one must start.
+
+### Harness bug fixed to run any of this
+
+`exp_forward_eval.py` pointed `IS_DIR` at `data/bybit/`, which **no longer exists** —
+the Bybit IS slice was moved out of the repo and resolves through
+`btc_config.BTC_BYBIT_DATA_DIR` to `btc_data/is`. The path now resolves through
+that config with the old path kept as a fallback. The symptom was a `KeyError:
+'sum_r'`, which reads like a reporting bug and was actually an empty dataset: with
+no IS bars, `pre` was empty and `stats([])` has no `sum_r`. It would have failed
+the same way on any machine that ran this harness after the data move.
 
 ### R1 - Execution parity: PASS
 

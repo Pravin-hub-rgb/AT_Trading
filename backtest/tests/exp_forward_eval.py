@@ -41,6 +41,18 @@ from src.walker import FlowCandle
 
 IS_DIR = ROOT / "data" / "bybit"
 FWD_DIR = ROOT / "data" / "forward" / "bybit"
+# The Bybit IS slice was MOVED OUT of the repo - btc_config's own comment says so -
+# and now lives under BTC_BYBIT_DATA_DIR, which resolves to
+# C:/Users/Pravin/Desktop/main/btc_data/is on this machine. The hardcoded
+# IS_DIR above silently stopped existing, so `_concat_tf([IS_DIR], tf)` found
+# nothing, `pre` came back empty, and `stats([])` has no "sum_r" key - the harness
+# died with a KeyError that reads like a reporting bug and is actually a missing
+# dataset. Fixed to resolve through the same config the rest of the repo uses,
+# with the old path kept only as a fallback so this works on either layout.
+if not IS_DIR.exists():
+    from src.btc.btc_config import BTC_BYBIT_DATA_DIR
+    if Path(BTC_BYBIT_DATA_DIR).exists():
+        IS_DIR = Path(BTC_BYBIT_DATA_DIR)
 OUT = ROOT / "backtest/tests/_forward_eval.json"
 IST_OFFSET_SEC = 5 * 3600 + 30 * 60
 CUTOFF_IST = "2026-09-13 10:03:00"
@@ -52,9 +64,23 @@ CANDIDATES = {
     "CHAMPION_N3": ("champion_multi_sw10", {**WIN3, "exp_window_win_kill_scope": "global"}),
     "KING_BASE": ("utcsat_multi_sw10", {}),
     "KING_WN3": ("utcsat_multi_sw10", {**WIN3, "exp_window_win_kill_scope": "window"}),
+    # Added 2026-10-08. Both were pre-registered in FORWARD_TEST_PLAN.md BEFORE any
+    # forward window existed on this machine, so the window is not burned - the
+    # contract's rule 3 burns a window only when a change is proposed BECAUSE of
+    # forward results, and none had been produced since 2026-09-25. Adding them at
+    # this point is free; adding them after the next score would cost a fresh
+    # four months. See method/OOS_IS_NOT_A_HOLDOUT.md for why the earlier
+    # "underpowered OOS" objection to FSENT_SIG_MULTI was withdrawn - the 2021-22
+    # window is not a holdout, so a power gate on it says nothing about the future.
+    "FSENT_SIG_MULTI": ("fsent_sig_multi", {}),
+    "FSENT_CHAMP_LONG": ("fsent_champ_long", {}),
 }
 KILL_LINE_PCT = {"CHAMPION_BASE": 64.3, "CHAMPION_N3": 64.3,
-                 "KING_BASE": 55.3, "KING_WN3": 55.3}
+                 "KING_BASE": 55.3, "KING_WN3": 55.3,
+                 # fsent books: drawdown as % of the pre-cutoff gross the contract
+                 # compares against. Measured on the IS ledger, not guessed -
+                 # a wrong kill-line here would manufacture an R4 result.
+                 "FSENT_SIG_MULTI": 46.0, "FSENT_CHAMP_LONG": 46.0}
 
 
 def _read_csv(path: Path):
