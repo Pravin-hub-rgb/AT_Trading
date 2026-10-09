@@ -342,6 +342,27 @@ BOOKS = {
           "pins": {"n": 527, "net": 534.80, "dd_net": 13.40,
                    "oos_n": 294, "oos_net": 244.40, "oos_dd_net": 11.90},
     },
+    # fsent_sig_multi is the sig book's WHOLE filter set with max_positions 1 -> 0.
+    # It is the only candidate in this file whose out-of-sample effect survives the
+    # period control: 99% of the raw gap survives a half-year fixed effect in BOTH
+    # eras, and it is ahead in 12 of 12 half-year cells. See
+    # method/SIG_MULTI_STUDY.md for the full gates, and the caveat below.
+    "fsent_sig_multi": {
+          "desc": "CANDIDATE, NOT ADOPTED - the strongest non-shipping result in the repo, and still not an adoption. fsent_sig_full's entire filter set (bias_momentum 0.8, fs_small_swing 6.0, trail_skip_n 2, weekends skipped, FS entry on shorts, ext_stop_r 3.0, halt on 3) with max_positions 1 -> 0, i.e. the single-slot gate removed and concurrency enabled. ONE value differs from fsent_sig_full; the other 15 are identical. WHAT IT IS, in plain terms: the same signals, and the book simply stops standing aside. Of 50 extra out-of-sample trades, 48 were taken while a serial position was already open and only 2 after it closed; 47 of the 50 joined a position in the SAME direction, so this is adding to an existing bet rather than hedging. Those extras earned +25.1R at a 46% win rate, against -0.3R given up on trades the serial book took instead. In sample the same mechanism gives 108 extras earning +186.2R for a net +188.8R. MEASURED: IS 329t / +484.59R / DD 13.39R / WR 45.6%, OOS 195t / +219.82R / DD 7.64R / WR 47.2%. Against the shipping book out of sample that is 92% of the net on 63% of the trades, at 64% of the drawdown, with a 10-point better win rate, and BOTH direction columns stay alive (+136.7R long, +83.1R short) which matters because the FS-side autopsy found the two families pointing in opposite directions. GATES: period control positive in both eras with 99% of the raw gap surviving, so this is NOT a regime proxy - the ATR% ceiling's signature does not appear. The half-year partition is 12 of 12. Tail dependence IMPROVES in every cell of both eras: removing the top 10 trades leaves 40.1% of in-sample profit against the parent's 22.0%, and 30.7% out of sample against 22.4%, which is the opposite of mode_union's 96%. WHY IT IS NOT ADOPTED: in sample the magnitude is powered (b +2.1619, t +2.240, MDE 1.8920, month-cluster bootstrap +1.8501) but out of sample it is NOT (b +0.3303 against an MDE of 2.1999 - roughly a seventh of what the test can detect). The arm does not stop working out of sample, it works about 6x less per trade, on 50 new trades. The tightest partition cells matter: 2021-H1 is +39.6 against +39.9 and 2021-H2 +35.8 against +40.5, so the FIRST out-of-sample half-year is worth almost nothing and the gain is concentrated in 2022-H1 and 2022-H2. DO NOT carry the in-sample +2.16R per trade as a forward expectation; the honest figure is roughly +0.33R and even that is not established. Concurrency shape: depth 5 in sample, 4 out, but 69% of entries happen with nothing else open, so this is the same book that occasionally takes a second position, not a crowded one. A cap of 3 costs 1.5R in sample, nothing out of sample, and lowers drawdown in both eras - a free bound on the tail. Two notes on measurement, both of which cost real time and are recorded so they are not repeated: the sibling sweep on the multi books returns BYTE-IDENTICAL results because those books carry exp_mltf=True, which bypasses the max_positions gate entirely in the harness - so this knob is inert on them and meaningful only on the serial sig book; and max_positions must be set alongside the regime knobs rather than alone, since a 0.40% min-stop floor on this book costs 4.1% of the long book's net in sample against 4.1% gained out of sample. See method/SIG_MULTI_STUDY.md.",
+          "engine": "patched",
+          "params": {"mode": "atr_high", "atr_high_thresh": 0.65,
+                       "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
+                       "chop_thresh": 58.0, "cooldown_bars": 8,
+                       "max_consecutive_losses": 3, "max_positions": 0,
+                       "ext_stop_r": 3.0, "exp_partial_r": 0.0,
+                       "exp_fs_entry_side": "short", "exp_bias_momentum_min": 0.8,
+                       "exp_trail_skip_n": 2, "exp_fs_small_swing": 6.0,
+                       "exp_skip_weekend": 1, "window_end": "exit"},
+          "swing": "sw10",
+          "pins": {"n": 329, "net": 484.59, "dd_net": 13.39, "win": 0.456,
+                   "oos_n": 195, "oos_net": 219.82, "oos_dd_net": 7.64,
+                   "oos_win": 0.472},
+    },
     "fsent_champ_long_mode_union": {
           "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='union' - admits either HTF interval set. Highest net of the four (813 / +580.0 IS, 442 / +303.8 OOS) and the WORST shape: mean R 0.69 against the base 0.77, drawdown 23.8R / 18.2R, and it loses on both second lanes in both eras. A bigger book, not a better one.",
           "engine": "patched",
