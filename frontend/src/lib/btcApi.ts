@@ -4,7 +4,7 @@ import { API_BASE } from "./api";
 
 export type BtcTf = "1m" | "5m" | "15m" | "1h" | "4h";
 export type BtcMode = "continuous" | "daily";
-export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19_champion" | "v19_causal" | "v19_c16" | "unified" | "entry_minus_1" | "utcsat_causal" | "utcsat_entry_minus_1" | "fsent_champ_long" | "fsent_champ_long_atr_low" | "fsent_sig_full";
+export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19_champion" | "v19_causal" | "v19_c16" | "unified" | "entry_minus_1" | "utcsat_causal" | "utcsat_entry_minus_1" | "fsent_champ_long" | "fsent_champ_long_atr_low" | "fsent_sig_full" | "fsent_sig_trail_delay1";
 
 export interface BtcCandle {
   date: string;

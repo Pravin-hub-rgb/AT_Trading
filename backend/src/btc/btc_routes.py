@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -132,7 +132,8 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
 #   fsent_champ_long_atr_low - the same book with the regime sign flipped
 STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified",
                               "entry_minus_1", "fsent_champ_long",
-                              "fsent_champ_long_atr_low", "fsent_sig_full"}
+                              "fsent_champ_long_atr_low", "fsent_sig_full",
+                              "fsent_sig_trail_delay1", "fsent_champ_short"}
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -160,6 +161,12 @@ VERSION_LABELS = {
                         "IS 641t / +721.30R / DD 28.90R, OOS 315t / +280.70R / DD 14.60R",
     "fsent_sig_full": "FSENT SIG FULL - serial one-position book, FS entry on the SHORT "
                       "side. IS 234t / +295.83R / DD 10.78R, OOS 152t / +194.44R / DD 6.96R",
+    "fsent_sig_trail_delay1": "FSENT SIG TRAIL DELAY1 - sig_full + half profit + trail "
+                              "delayed to +1R. IS 199t / +418.51R / DD 13.34R, "
+                              "OOS 123t / +182.01R / DD 7.54R",
+    "fsent_champ_short": "FSENT CHAMP SHORT - the champ_long MIRROR: shorts enter at "
+                         "the FS print. IS 533t / +600.60R / DD 17.60R, OOS 312t / "
+                         "+239.53R / DD 23.87R",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -1557,6 +1564,80 @@ def btc_backtest(
             exp_fs_small_swing=6.0,
             exp_skip_weekend=1,
             window_end="exit",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_trail_delay1":
+        # fsent_sig_full + exp_trail_half=1 + exp_trail_delay_r=1.0. Two knobs, and
+        # they are the only difference - the other 16 are identical to the sig book
+        # above, which is why this branch duplicates it rather than branching on a
+        # shared config dict: a shared dict would let the next person change the
+        # sig book by editing one place and silently move both pins.
+        #
+        # WHAT IT DOES. exp_trail_half takes half the profit at the midpoint, and
+        # exp_trail_delay_r holds the trailing stop back until the trade is +1R.
+        # Together they convert "ride it to the target or nothing" into "bank half,
+        # then trail the rest" - which is why the trade count FALLS (234 -> 199 in
+        # sample, 152 -> 123 out) while the net RISES. Trades that used to round
+        # trip to the stop now close at the half.
+        #
+        # Pinned IS 199 / +418.51 / 13.34 and OOS 123 / +182.01 / 7.54.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=1,          # SERIAL, same as the sig book
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_fs_entry_side="short",
+            exp_bias_momentum_min=0.8,
+            exp_trail_skip_n=2,
+            exp_fs_small_swing=6.0,
+            exp_skip_weekend=1,
+            exp_trail_half=1,         # <- the only difference from fsent_sig_full
+            exp_trail_delay_r=1.0,    # <- and the other one
+            window_end="exit",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_short":
+        # The fsent_champ_long MIRROR - identical knobs, one value flipped:
+        # exp_fs_entry_side="short" instead of "long". Longs then enter at the break
+        # and shorts at the FS print, which is the only difference. Added because
+        # the mirror is the natural control for any claim about which side the FS
+        # print helps, and it was in the registry but not selectable.
+        # Pinned IS 533 / +600.60 / 17.60 and OOS 312 / +239.53 / 23.87.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=0.0,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            exp_fs_entry_side="short",   # <- the only difference from fsent_champ_long
+            pivot_rule="leg",
         )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_champion":

@@ -87,6 +87,30 @@ SIG_FULL_PARAMS = {
     "exp_skip_weekend": 1,
     "window_end": "exit",
 }
+# fsent_sig_trail_delay1 is fsent_sig_full with exactly two extra knobs. Deriving
+# it as a copy rather than restating 18 literals means a change to the sig book
+# moves this one too - which is what "these two differ by two knobs" means, and
+# which a hand-copied dict would silently stop meaning.
+SIG_TRAIL_DELAY1_PARAMS = dict(SIG_FULL_PARAMS, exp_trail_half=1, exp_trail_delay_r=1.0)
+assert set(SIG_TRAIL_DELAY1_PARAMS) - set(SIG_FULL_PARAMS) == {"exp_trail_half", "exp_trail_delay_r"}, \
+    "trail_delay1 must differ from sig_full by exactly two knobs"
+
+# fsent_champ_short is fsent_champ_long with ONE value flipped, so it is derived
+# from the pair's dict rather than restated. "The mirror" is only meaningful if
+# it really is the same book with the side swapped, and that is asserted here
+# instead of being a comment that can rot.
+CHAMP_SHORT_PARAMS = dict(ROUTE_PARAMS, exp_fs_entry_side="short")
+assert ROUTE_PARAMS["exp_fs_entry_side"] == "long", \
+    "ROUTE_PARAMS no longer has the long FS side - the mirror assertion is stale"
+# Compare VALUES over the union of keys. The first version used a symmetric
+# difference on the key SETS, which is empty whenever both dicts carry the same
+# keys - and these always do, because the mirror overrides rather than adds. The
+# assertion therefore passed vacuously on a wrong value and failed on a correct
+# one, which is worse than having no assertion at all.
+_diff = sorted(k for k in set(ROUTE_PARAMS) | set(CHAMP_SHORT_PARAMS)
+               if ROUTE_PARAMS.get(k) != CHAMP_SHORT_PARAMS.get(k))
+assert _diff == ["exp_fs_entry_side"], \
+    f"champ_short must differ from champ_long in exactly one value, got {_diff}"
 
 
 def real_engine_signature():
@@ -122,7 +146,8 @@ def main():
 
     # The route's own params must all be real-engine params. This is the check
     # that would have caught a TypeError before a user's request hit it.
-    for label, pr in (("pair", ROUTE_PARAMS), ("sig_full", SIG_FULL_PARAMS)):
+    for label, pr in (("pair", ROUTE_PARAMS), ("sig_full", SIG_FULL_PARAMS),
+                      ("sig_trail_delay1", SIG_TRAIL_DELAY1_PARAMS)):
         unknown = sorted(set(pr) - set(sig.parameters))
         if unknown:
             P("  FAIL: %s route passes params the real engine does not accept: %s"
@@ -158,7 +183,9 @@ def main():
                 "dd": round(_net_dd(tr), 2)}
 
     ALL = ([(bk, mode, ROUTE_PARAMS) for bk, mode in BOOKS.items()]
-           + [("fsent_sig_full", None, SIG_FULL_PARAMS)])
+           + [("fsent_sig_full", None, SIG_FULL_PARAMS),
+              ("fsent_sig_trail_delay1", None, SIG_TRAIL_DELAY1_PARAMS),
+              ("fsent_champ_short", None, CHAMP_SHORT_PARAMS)])
     for era in ("is", "oos"):
         d = load_era(era)
         sw = get_swings(d, "sw10")
