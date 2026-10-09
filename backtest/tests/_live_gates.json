@@ -548,8 +548,8 @@
     }
   },
   "_provenance": {
-    "engine": "ddd31dc",
-    "measured": "2026-10-08",
+    "engine": "439a4f9",
+    "measured": "2026-10-09",
     "harness": "exp_live_gates.py"
   }
 }

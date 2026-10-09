@@ -1,0 +1,11 @@
+============================================================================================================
+  ROUTE PARITY - the chart branches must reproduce the registry pins
+============================================================================================================
+  real engine simulate_htf_ltf_streak_halt: 40 named params, **kwargs = False
+  'exp_mltf' in real signature: False   <- if False, passing it would TypeError
+  'max_positions' in real signature: True
+
+  OK: every param both routes pass is a real engine parameter.
+
+data loaded (17s)
+  fsent_champ_long                   IS   got  528t /  +533.37R / dd 13.42R   want  528t /  +533.37R / dd 13.42R   OK

@@ -64,6 +64,29 @@ BOOKS = {
     "fsent_champ_long": "atr_high",
     "fsent_champ_long_mode_atr_low": "atr_low",
 }
+# fsent_sig_full is NOT one of the pair above - different params entirely, and
+# max_positions=1 rather than 0. It gets its own route-param set and its own
+# check, because folding it into the pair's dict would silently assert that the
+# signal book's pins reproduce under the multi-book's concurrency setting, which
+# they do not and must not.
+SIG_FULL_PARAMS = {
+    "sl_buf_atr": 0.01,
+    "chop_thresh": 58.0,
+    "cooldown_bars": 8,
+    "max_consecutive_losses": 3,
+    "max_positions": 1,          # SERIAL - the busy_until gate is armed
+    "mode": "atr_high",
+    "atr_high_thresh": 0.65,
+    "atr_low_thresh": 0.35,
+    "ext_stop_r": 3.0,           # not 0.0 - this is a different book
+    "exp_partial_r": 0.0,
+    "exp_fs_entry_side": "short",
+    "exp_bias_momentum_min": 0.8,
+    "exp_trail_skip_n": 2,
+    "exp_fs_small_swing": 6.0,
+    "exp_skip_weekend": 1,
+    "window_end": "exit",
+}
 
 
 def real_engine_signature():
@@ -74,9 +97,11 @@ def real_engine_signature():
 
 def main():
     from exp_tf_family import build_family_module
-    from run_experiment import net_r, get_swings
+    from run_experiment import net_r, get_swings, _net_dd
     from exp_signal_metrics import load_era
     from experiment_registry import EXPERIMENTS
+    from src.btc.btc_routes import _trade_costs, _net_stats
+    from src.btc.btc_engine import trade_stats
     from src.btc.engines.htf_ltf import unified as real
 
     sig = real_engine_signature()
@@ -97,50 +122,69 @@ def main():
 
     # The route's own params must all be real-engine params. This is the check
     # that would have caught a TypeError before a user's request hit it.
-    unknown = sorted(set(ROUTE_PARAMS) - set(sig.parameters))
-    if unknown:
-        P("  FAIL: route passes params the real engine does not accept: %s" % unknown)
-        return 1
-    P("  OK: every param the route passes is a real engine parameter.")
+    for label, pr in (("pair", ROUTE_PARAMS), ("sig_full", SIG_FULL_PARAMS)):
+        unknown = sorted(set(pr) - set(sig.parameters))
+        if unknown:
+            P("  FAIL: %s route passes params the real engine does not accept: %s"
+              % (label, unknown))
+            return 1
+    P("  OK: every param both routes pass is a real engine parameter.")
     P()
 
     sim = build_family_module()
     payload = {}
     rc = 0
+
+    def metrics(tr):
+        """Reproduce the PIN CONVENTION exactly, by calling the same helpers
+        exp_fastcheck calls.
+
+        This function existed in its own form in the first version of this file
+        and got fsent_sig_full's out-of-sample count wrong by one: it filtered
+        `outcome == "open"` before counting, while `exp_fastcheck` does NOT - it
+        returns `n = len(tr)` on the raw list, and only `_net_dd` skips open
+        trades. So the pin says 152 and a filtered count says 151, with the net
+        identical to the cent.
+
+        That is not a rounding detail, it is two different definitions of "how
+        many trades did this book make", and it has already produced two false
+        mismatches in this repo (trail_skipn4 hit the same thing during the prune).
+        Rather than restate the convention a third time and hope, this calls the
+        same code the pins were written by. Agreement is then structural.
+        """
+        _trade_costs(tr, 0.055, 2, 0.005, 0.01, 0.01)
+        return {"n": len(tr),
+                "net": round(_net_stats(trade_stats(tr), tr)["net_total_r"], 2),
+                "dd": round(_net_dd(tr), 2)}
+
+    ALL = ([(bk, mode, ROUTE_PARAMS) for bk, mode in BOOKS.items()]
+           + [("fsent_sig_full", None, SIG_FULL_PARAMS)])
     for era in ("is", "oos"):
         d = load_era(era)
         sw = get_swings(d, "sw10")
-        for book, mode in BOOKS.items():
+        for book, mode, route_params in ALL:
             cfg = EXPERIMENTS[book]
             pins = cfg["pins"]
             # registry params minus exp_mltf, plus exactly what the route passes.
             pr = {k: v for k, v in cfg["params"].items() if k != "exp_mltf"}
-            pr.update(ROUTE_PARAMS)
-            pr["mode"] = mode
+            pr.update(route_params)
+            if mode:
+                pr["mode"] = mode
             o = sim(d["c1h"], sw, d["c15"], d["sw15"], fine_ltf=d["fine"], **pr)
-            tr = [t for t in o["ltf_trades"] if t.get("outcome") != "open"]
-            net = round(sum(net_r([t]) for t in tr), 2)
-            # max dd in R, same definition the registry pins use
-            cum = peak = 0.0
-            mdd = 0.0
-            for t in tr:
-                cum += net_r([t])
-                if cum > peak:
-                    peak = cum
-                mdd = max(mdd, peak - cum)
-            mdd = round(mdd, 2)
+            m = metrics(o["ltf_trades"])
 
             if era == "is":
                 exp_n, exp_net, exp_dd = pins["n"], pins["net"], pins["dd_net"]
             else:
                 exp_n, exp_net, exp_dd = pins["oos_n"], pins["oos_net"], pins["oos_dd_net"]
-            ok = (len(tr) == exp_n and abs(net - exp_net) < 0.05
-                  and abs(mdd - exp_dd) < 0.05)
+            ok = (m["n"] == exp_n and abs(m["net"] - exp_net) < 0.05
+                  and abs(m["dd"] - exp_dd) < 0.05)
             P("  %-34s %-4s got %4dt / %+8.2fR / dd %5.2fR   want %4dt / %+8.2fR / dd %5.2fR   %s"
-              % (book, era.upper(), len(tr), net, mdd, exp_n, exp_net, exp_dd,
+              % (book, era.upper(), m["n"], m["net"], m["dd"], exp_n, exp_net, exp_dd,
                  "OK" if ok else "MISMATCH"))
             payload.setdefault(book, {})[era] = {
-                "got": [len(tr), net, mdd], "want": [exp_n, exp_net, exp_dd], "ok": ok}
+                "got": [m["n"], m["net"], m["dd"]],
+                "want": [exp_n, exp_net, exp_dd], "ok": ok}
             if not ok:
                 rc = 1
 
@@ -151,19 +195,19 @@ def main():
     for era in ("is", "oos"):
         d = load_era(era)
         sw = get_swings(d, "sw10")
-        for book, mode in BOOKS.items():
+        for book, mode, route_params in ALL:
             pr = {k: v for k, v in EXPERIMENTS[book]["params"].items() if k != "exp_mltf"}
-            pr.update(ROUTE_PARAMS)
-            pr["mode"] = mode
+            pr.update(route_params)
+            if mode:
+                pr["mode"] = mode
             out = real.simulate_htf_ltf_streak_halt(
                 d["c1h"], sw, d["c15"], d["sw15"], fine_ltf=d["fine"], **pr)
-            rtr = [t for t in out["ltf_trades"] if t.get("outcome") != "open"]
-            net = round(sum(net_r([t]) for t in rtr), 2)
+            m = metrics(out["ltf_trades"])
             want = payload[book][era]["want"]
-            ok = len(rtr) == want[0] and abs(net - want[1]) < 0.05
+            ok = m["n"] == want[0] and abs(m["net"] - want[1]) < 0.05
             P("    %-34s %-4s real engine %4dt / %+8.2fR   %s"
-              % (book, era.upper(), len(rtr), net, "OK" if ok else "MISMATCH"))
-            payload[book][era]["real"] = [len(rtr), net, ok]
+              % (book, era.upper(), m["n"], m["net"], "OK" if ok else "MISMATCH"))
+            payload[book][era]["real"] = [m["n"], m["net"], ok]
             if not ok:
                 rc = 1
 

@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -132,7 +132,7 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
 #   fsent_champ_long_atr_low - the same book with the regime sign flipped
 STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified",
                               "entry_minus_1", "fsent_champ_long",
-                              "fsent_champ_long_atr_low"}
+                              "fsent_champ_long_atr_low", "fsent_sig_full"}
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -158,6 +158,8 @@ VERSION_LABELS = {
                         "IS 528t / +533.37R / DD 13.42R, OOS 311t / +239.59R / DD 11.88R",
     "fsent_champ_long_atr_low": "FSENT CHAMP LONG + atr_low (regime sign flipped). "
                         "IS 641t / +721.30R / DD 28.90R, OOS 315t / +280.70R / DD 14.60R",
+    "fsent_sig_full": "FSENT SIG FULL - serial one-position book, FS entry on the SHORT "
+                      "side. IS 234t / +295.83R / DD 10.78R, OOS 152t / +194.44R / DD 6.96R",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -1505,6 +1507,56 @@ def btc_backtest(
             exp_persist=7,
             exp_fs_entry_side="long",
             pivot_rule="leg",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_full":
+        # THE SIG BOOK, added 2026-10-08 so the chart can show it. It is the only
+        # surviving book in the registry with the lowest drawdown in the set, and
+        # it is NOT the same object as any other dropdown entry.
+        #
+        # Two things make it different, and both are visible on the chart:
+        #
+        # 1. max_positions=1 - SERIAL. It never holds two positions at once, so
+        #    the opposite-direction question does not arise for it at all. The
+        #    839 trades are strictly one after another. Every other book in this
+        #    dropdown overlaps.
+        #
+        # 2. exp_fs_entry_side="short" - the FS print is used as the entry for
+        #    SHORTS; longs still enter at the break. Worth being precise about
+        #    what that does and does not mean, because it is easy to read the flag
+        #    as "this book trades shorts": it does not. In sample the LONGS
+        #    produce +293.3R of the book's +295.8R and the shorts +2.5R. The
+        #    flag changes WHERE shorts enter, not which side carries the P&L.
+        #
+        # The rest is the signal book's own ladder: bias_momentum floor 0.8,
+        # fs_small_swing 6.0, trail_skip_n 2, weekends skipped. ext_stop_r is
+        # 3.0 here, NOT the 0.0 the fsent pair uses - these are different books.
+        # Pinned IS 234 / +295.83 / 10.78 and OOS 152 / +194.44 / 6.96.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=1,          # SERIAL - the busy_until gate is armed
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_fs_entry_side="short",
+            exp_bias_momentum_min=0.8,
+            exp_trail_skip_n=2,
+            exp_fs_small_swing=6.0,
+            exp_skip_weekend=1,
+            window_end="exit",
         )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_champion":

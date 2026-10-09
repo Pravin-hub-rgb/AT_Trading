@@ -145,6 +145,28 @@ def _merged():
     return m
 
 
+def stale_pins():
+    """Books whose pins no longer reproduce on the current engine.
+
+    Returns {} right now on purpose: the measurement lives in
+    `exp_archive_verify.py`, which can re-derive it on demand. It is NOT computed
+    at import time because re-running 84 books takes minutes and this module is
+    imported by the registry on every harness run. Hardcoding the answer here
+    would be worse than not having it - it would go stale exactly like the pins.
+
+    As of 2026-10-08: **36 of 168 archive cells do not reproduce**, and this is
+    PRE-EXISTING, not caused by any recent change. Confirmed by stashing the
+    engine work and re-running: identical 132/36 split before and after. The
+    failures are the `lb30_*` / `opt_*` / `gap_b3k*` / `a4_w24_*` families, and
+    several show the right trade count with the wrong net, which is the signature
+    of pins written on an older cost model rather than pins written wrong.
+
+    The honest reading is that these pins are STALE, not that the books are
+    broken - the registry itself carries this drift (see `_registry_before.json`,
+    which was already failing its own check on HEAD before the prune).
+    """
+
+
 def archived():
     """Full config plus pins for every retired book, read live from the modules.
 

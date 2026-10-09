@@ -183,6 +183,20 @@ export const BOOK_OPTIONS: BookOption[] = [
     config: { ...V19, version: "fsent_champ_long_atr_low", ext_stop_r: 0.0 },
   },
   {
+    id: "fsent_sig_full",
+    label: "FSENT SIG FULL (serial, FS entry on shorts) - IS 234t +295.8R dd10.8 | OOS 152t +194.4R dd7.0",
+    shortLabel: "FSENT-SIG",
+    slMode: "causal",
+    hint: "one position at a time, never overlapping - the lowest drawdown in the set; shorts enter at the FS print but the LONGS carry the P&L",
+    measured: { isN: 234, isNet: 295.83, oosN: 152, oosNet: 194.44 },
+    config: {
+      ...V19,
+      version: "fsent_sig_full",
+      ext_stop_r: 3.0,        // NOT 0.0 - this is a different book from the pair above
+      max_consecutive_losses: 3,
+    },
+  },
+  {
     id: "champion_causal",
     label: "CHAMPION CAUSAL (leg stop) - ships - IS 499t +239.1R",
     shortLabel: "CAUSAL",
