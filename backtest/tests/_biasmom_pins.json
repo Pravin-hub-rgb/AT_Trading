@@ -1,0 +1,35 @@
+{
+  "fsent_champ_long_biasmom05": {
+    "swing": "sw10",
+    "bias_momentum_min": 0.5,
+    "pins": {
+      "n": 488,
+      "net": 501.48,
+      "dd_net": 13.42,
+      "win": 0.395,
+      "oos_n": 287,
+      "oos_net": 217.13,
+      "oos_dd_net": 13.47,
+      "oos_win": 0.376
+    }
+  },
+  "fsent_champ_long_htf15_biasmom05": {
+    "swing": "htf15",
+    "bias_momentum_min": 0.5,
+    "pins": {
+      "n": 480,
+      "net": 547.88,
+      "dd_net": 21.61,
+      "win": 0.41,
+      "oos_n": 254,
+      "oos_net": 228.75,
+      "oos_dd_net": 13.46,
+      "oos_win": 0.39
+    }
+  },
+  "_provenance": {
+    "engine": "439a4f9",
+    "measured": "2026-10-09",
+    "harness": "exp_register_biasmom.py"
+  }
+}

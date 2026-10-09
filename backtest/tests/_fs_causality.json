@@ -1,0 +1,157 @@
+{
+  "fsent_champ_long": {
+    "note": "the shipping book",
+    "eras": {
+      "is": {
+        "trades": 528,
+        "fs_trades": 352,
+        "joined": 352,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1369860
+      },
+      "oos": {
+        "trades": 311,
+        "fs_trades": 206,
+        "joined": 206,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1368960
+      }
+    }
+  },
+  "fsent_champ_short": {
+    "note": "the short-side mirror",
+    "eras": {
+      "is": {
+        "trades": 532,
+        "fs_trades": 298,
+        "joined": 298,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1377960
+      },
+      "oos": {
+        "trades": 312,
+        "fs_trades": 170,
+        "joined": 170,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1272660
+      }
+    }
+  },
+  "fsent_utcsat_long": {
+    "note": "the sibling",
+    "eras": {
+      "is": {
+        "trades": 525,
+        "fs_trades": 346,
+        "joined": 346,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1369860
+      },
+      "oos": {
+        "trades": 310,
+        "fs_trades": 206,
+        "joined": 206,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1368960
+      }
+    }
+  },
+  "fsent_sig_full": {
+    "note": "the serial sig book",
+    "eras": {
+      "is": {
+        "trades": 234,
+        "fs_trades": 126,
+        "joined": 126,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1377960
+      },
+      "oos": {
+        "trades": 151,
+        "fs_trades": 79,
+        "joined": 79,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1209660
+      }
+    }
+  },
+  "fsent_sig_multi": {
+    "note": "the registered candidate",
+    "eras": {
+      "is": {
+        "trades": 329,
+        "fs_trades": 185,
+        "joined": 185,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1377960
+      },
+      "oos": {
+        "trades": 194,
+        "fs_trades": 105,
+        "joined": 105,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1363560
+      }
+    }
+  },
+  "fsent_champ_long_htf15": {
+    "note": "the htf15 candidate",
+    "eras": {
+      "is": {
+        "trades": 528,
+        "fs_trades": 352,
+        "joined": 352,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1369860
+      },
+      "oos": {
+        "trades": 311,
+        "fs_trades": 206,
+        "joined": 206,
+        "unjoinable": 0,
+        "C1_entry_before_own_fs": 0,
+        "C2_sl_swing_not_fs": 0,
+        "C3_entry_before_window_start": 0,
+        "max_lead_before_window_end_s": 1368960
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "439a4f9",
+    "measured": "2026-10-09",
+    "harness": "exp_fs_causality.py"
+  }
+}
