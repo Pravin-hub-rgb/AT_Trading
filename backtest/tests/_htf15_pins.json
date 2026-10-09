@@ -1,0 +1,15 @@
+{
+  "n": 520,
+  "net": 567.57,
+  "dd_net": 17.28,
+  "win": 0.41200000000000003,
+  "oos_n": 280,
+  "oos_net": 254.88,
+  "oos_dd_net": 16.86,
+  "oos_win": 0.371,
+  "_provenance": {
+    "engine": "439a4f9",
+    "measured": "2026-10-09",
+    "harness": "exp_register_htf15.py"
+  }
+}

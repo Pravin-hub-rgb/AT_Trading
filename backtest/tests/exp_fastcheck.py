@@ -66,7 +66,8 @@ def _shortlisted():
 
 def measure(sim, data, cfg):
     """Re-run the engine for one book and return its pinned fields."""
-    sw = data["sw10"] if cfg["swing"] == "sw10" else data["sw20"]
+    sw = {"sw10": data["sw10"], "sw20": data["sw20"],
+          "sw15": data["sw15"], "htf15": data["htf15"]}[cfg["swing"]]
     fine = data["fine"] if cfg.get("basis", "fine") == "fine" else []
     tr = sim(data["c1h"], sw, data["c15"], data["sw15"],
              fine_ltf=fine, **{**dict(re_.BP), **cfg["params"]})["ltf_trades"]

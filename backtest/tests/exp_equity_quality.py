@@ -61,8 +61,17 @@ def load_scope(scope):
         # fine. get_data() builds sw20 with SWING["min_bars_1h"]; the OOS branch
         # has to build it the same way or the two scopes measure different books.
         sw20 = _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"])
+        # htf15: the 1h series at min_bars=15 that fsent_champ_long_htf15 points
+        # at. This loader is exp_fastcheck's OOS path, and the sw20 note above
+        # says exactly what happens when a swing key is missing here instead:
+        # every book using it raises KeyError on OOS while IS passes. htf15 is
+        # built on both eras for that reason - it must exist in exp_signal_metrics
+        # (IS), here (OOS) and run_experiment.get_data (IS), and the assertion
+        # below fails loudly rather than letting that recur silently.
+        htf15 = _compute_swings(f1h, "continuous", min_bars=15)
         return {
             "c15": c15, "sw15": sw15, "c1h": c1h, "sw10": sw10, "sw20": sw20,
+            "htf15": htf15,
             "fine": load_fine_1m(c15[0]["ts"], c15[-1]["ts"]),
         }
     data = get_data()

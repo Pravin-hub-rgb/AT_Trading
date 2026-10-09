@@ -201,6 +201,16 @@ def get_data():
     sw15 = _compute_swings(f15, "continuous", min_bars=MB15)
     sw20 = _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"])
     sw10 = _compute_swings(f1h, "continuous", min_bars=10)
+    # htf15: the 1h swing series at min_bars=15, for the HTF-sweep candidate.
+    # The HTF plane is engine slot 2, and this series feeds the leg ratio, the
+    # bias-momentum breaks, the bias flips and _sw_ts_dir_mag (the flip/decisive
+    # classification). sw10 is min_bars=10 and is what every registered book
+    # ships on; this is the longer-leg variant that removes the single negative
+    # half-year - see method/HTF_SWEEP_OWNER_RULE.md. It is a separate key rather
+    # than a params entry because the swing series is chosen by the registry's
+    # `swing` FIELD, not by an engine parameter, so a new HTF length needs a new
+    # series here before a book can point at it.
+    htf15 = _compute_swings(f1h, "continuous", min_bars=15)
     fine = _load_fine_1m(
         min(c1h[0]["ts"], c15[0]["ts"]),
         max(c1h[-1]["ts"], c15[-1]["ts"]),
@@ -208,7 +218,7 @@ def get_data():
     )
     _cache["loaded"] = {
         "c15": c15, "f15": f15, "c1h": c1h, "f1h": f1h,
-        "sw15": sw15, "sw20": sw20, "sw10": sw10, "fine": fine,
+        "sw15": sw15, "htf15": htf15, "sw20": sw20, "sw10": sw10, "fine": fine,
     }
     print("data loaded (%.0fs)" % (time.time() - t0), flush=True)
     return _cache["loaded"]
@@ -227,6 +237,10 @@ def get_swings(data, key):
         return data["sw20"]
     elif key == "sw10":
         return data["sw10"]
+    elif key == "htf15":
+        # 1h swings at min_bars=15 - the HTF plane at a longer leg. See the
+        # construction note in get_data.
+        return data["htf15"]
     elif key == "sw15":
         return data["sw15"]
     raise ValueError("unknown swing key: %s" % key)

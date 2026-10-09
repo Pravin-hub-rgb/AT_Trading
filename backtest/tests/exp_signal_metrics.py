@@ -98,6 +98,13 @@ def load_era(era: str) -> dict:
             "sw15": _compute_swings(f15, "continuous", min_bars=SWING["min_bars_15m"]),
             "sw10": _compute_swings(f1h, "continuous", min_bars=10),
             "sw20": _compute_swings(f1h, "continuous", min_bars=SWING["min_bars_1h"]),
+            # htf15: 1h swings at min_bars=15. The HTF series for
+            # fsent_champ_long_htf15 - see run_experiment.get_data for why this is
+            # a separate key rather than a params entry. It has to exist on BOTH
+            # eras: get_data covers IS and this loader covers OOS, so a series
+            # added to only one of them raises KeyError on the other and the book
+            # verifies on one era and errors on the other.
+            "htf15": _compute_swings(f1h, "continuous", min_bars=15),
             "fine": load_fine(c15[0]["ts"], c15[-1]["ts"]),
         }
     raise ValueError("unknown era %r" % era)
