@@ -1,0 +1,170 @@
+{
+  "champ_long mcl=4": {
+    "pins": {
+      "n": 552,
+      "net": 544.34,
+      "dd_net": 15.06,
+      "win": 0.395,
+      "oos_n": 320,
+      "oos_net": 272.76,
+      "oos_dd_net": 12.66,
+      "oos_win": 0.366
+    },
+    "neg": [],
+    "period": {
+      "is": {
+        "b": 0.05756343810158605,
+        "t": 0.17500820163397993,
+        "se": 0.3289185167560137,
+        "mde": 0.6446802928417869,
+        "b_boot": 0.08169623716684805,
+        "n_groups": 8,
+        "n_clusters": 8,
+        "all_sign": true,
+        "new": 68,
+        "drop": 44,
+        "surv": 484,
+        "surv_cost": 0.0,
+        "new_sum": 7.608383921122188,
+        "drop_sum": -3.361378867372795
+      },
+      "oos": {
+        "b": 1.0260168456151733,
+        "t": 1.624753879340685,
+        "se": 0.6314906267720527,
+        "mde": 1.2377216284732233,
+        "b_boot": 1.0066939825030838,
+        "n_groups": 4,
+        "n_clusters": 4,
+        "all_sign": true,
+        "new": 34,
+        "drop": 25,
+        "surv": 286,
+        "surv_cost": 0.0,
+        "new_sum": 22.812670518847156,
+        "drop_sum": -10.356911770444498
+      }
+    },
+    "survives": true,
+    "powered": false
+  },
+  "champ_long mcl=off": {
+    "pins": {
+      "n": 575,
+      "net": 566.58,
+      "dd_net": 15.13,
+      "win": 0.397,
+      "oos_n": 337,
+      "oos_net": 270.91,
+      "oos_dd_net": 14.16,
+      "oos_win": 0.371
+    },
+    "neg": [],
+    "period": {
+      "is": {
+        "b": 1.2056865516692157,
+        "t": 3.374689694393391,
+        "se": 0.3572733083199642,
+        "mde": 0.7002556843071298,
+        "b_boot": 1.2796487184185514,
+        "n_groups": 8,
+        "n_clusters": 8,
+        "all_sign": true,
+        "new": 58,
+        "drop": 11,
+        "surv": 517,
+        "surv_cost": 0.0,
+        "new_sum": 19.878013984452895,
+        "drop_sum": -13.33875243856222
+      },
+      "oos": {
+        "b": 1.8571946614734451,
+        "t": 3.966202754726055,
+        "se": 0.4682550984718181,
+        "mde": 0.9177799930047635,
+        "b_boot": 1.9248595858296433,
+        "n_groups": 4,
+        "n_clusters": 4,
+        "all_sign": true,
+        "new": 32,
+        "drop": 6,
+        "surv": 305,
+        "surv_cost": 0.0,
+        "new_sum": 25.056868202866507,
+        "drop_sum": -6.262769824583689
+      }
+    },
+    "survives": true,
+    "powered": true
+  },
+  "htf_fs=all + mcl=4": {
+    "pins": {
+      "n": 793,
+      "net": 917.8,
+      "dd_net": 27.74,
+      "win": 0.43,
+      "oos_n": 437,
+      "oos_net": 326.22,
+      "oos_dd_net": 14.2,
+      "oos_win": 0.37799999999999995
+    },
+    "neg": [],
+    "period": {
+      "is": {
+        "b": 0.5632340432156113,
+        "t": 2.547663371460216,
+        "se": 0.22107867527756964,
+        "mde": 0.4333142035440365,
+        "b_boot": 0.5585461692574932,
+        "n_groups": 8,
+        "n_clusters": 8,
+        "all_sign": true,
+        "new": 528,
+        "drop": 263,
+        "surv": 265,
+        "surv_cost": 0.0,
+        "new_sum": 490.07009808543654,
+        "drop_sum": 105.63425009279905
+      },
+      "oos": {
+        "b": 0.02686762756990536,
+        "t": 0.045487141993593425,
+        "se": 0.590664227127954,
+        "mde": 1.1577018851707896,
+        "b_boot": -0.027525987138919156,
+        "n_groups": 4,
+        "n_clusters": 4,
+        "all_sign": false,
+        "new": 272,
+        "drop": 146,
+        "surv": 165,
+        "surv_cost": 0.0,
+        "new_sum": 187.35022662311388,
+        "drop_sum": 100.71976611984147
+      }
+    },
+    "survives": false,
+    "powered": false
+  },
+  "htf15 (proper base)": {
+    "pins": {
+      "n": 520,
+      "net": 567.57,
+      "dd_net": 17.28,
+      "win": 0.41200000000000003,
+      "oos_n": 280,
+      "oos_net": 254.88,
+      "oos_dd_net": 16.86,
+      "oos_win": 0.371
+    },
+    "neg": [],
+    "period": {},
+    "survives": false,
+    "powered": false
+  },
+  "_provenance": {
+    "engine": "1f9f359",
+    "measured": "2026-10-09",
+    "harness": "exp_mcl_arms.py"
+  }
+}
