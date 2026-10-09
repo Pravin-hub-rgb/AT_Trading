@@ -293,7 +293,8 @@ export default function ResultsPanel() {
           </button>
         ))}
         <span className="ml-2 text-xs text-[#6e7681]">
-          multi = unlimited concurrent positions · sig = serial signal ladder
+          &ldquo;many at once&rdquo; = several trades can be open together · &ldquo;1 at a
+          time&rdquo; = the next one waits for the last to close
         </span>
       </div>
 
@@ -405,11 +406,17 @@ export default function ResultsPanel() {
                       className="ml-1.5 text-[10px] text-[#6e7681]"
                       title={
                         b.position_explicit
-                          ? `Explicitly ${b.position_mode}-position`
-                          : "Position mode not stated in the registry — engine default"
+                          ? b.position_mode === "multi"
+                            ? "Can hold several trades open at the same time"
+                            : "One trade at a time - the next waits for the last to close"
+                          : "The registry does not say - the engine default decides"
                       }
                     >
-                      {b.position_mode === "multi" ? "multi" : b.position_mode === "single" ? "serial" : "inherit"}
+                      {b.position_mode === "multi"
+                        ? "many at once"
+                        : b.position_mode === "single"
+                          ? "1 at a time"
+                          : "not stated"}
                     </span>
                   </td>
                   {shownMetrics.map((m) => {
