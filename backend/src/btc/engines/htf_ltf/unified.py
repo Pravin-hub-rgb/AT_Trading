@@ -288,6 +288,24 @@ def simulate_htf_ltf_streak_halt(
       # Default 0: identical to every measurement pinned before this existed.
       exp_ltf_no_entry=0,
       exp_causal_sl=0,
+      # HTF-SIDE FS ENTRY - "the window opens on FS" (owner ask 2026-10-09).
+      #   "" (default) = off. The HTF side enters on the flip/decisive/b2 BREAK,
+      #     exactly as before, so every book pinned before this exists is
+      #     byte-identical.
+      #   "flip" / "all" = the HTF side enters on the swing FS PRINT instead of
+      #     the break, using the same machinery the LTF plane already uses via
+      #     exp_fs_entry_side. This closes a real asymmetry: on the LTF plane we
+      #     enter at the swing FS, on the HTF plane we enter at the break. The
+      #     measured gap is large - the HTF window opens a MEDIAN 25 HOURS after
+      #     the FS print of its own direction (p75 55h, max 355h), and only
+      #     1 window in 528 opens exactly on its FS. So "trade on FS" is true
+      #     on one plane and false on the other.
+      #     "flip" moves only the flip bucket (the one the shipping books use);
+      #     "all" moves all three buckets, which collapses the flip/decisive/b2
+      #     distinction into one set of FS-entered windows.
+      #     Causal: fs_at_idx is at or after the swing end bar, so that bar has
+      #     closed before the print is used. Same guarantee the LTF side relies on.
+      exp_htf_fs_entry="",
       # UNIFIED: position limit. 1 = serial (v18 behaviour, busy_until gate armed)
       #   0 = unlimited (v19 behaviour, gate never fires). This is the ONLY
       #   behavioural difference v19 introduced to the position path; everything
@@ -507,9 +525,14 @@ max_positions=0,
             (fs_up_ts if _s.get("dir")=="up" else fs_dn_ts).append(int(candles_htf[_fi]["ts"]))
     fs_up_ts=sorted(set(fs_up_ts)); fs_dn_ts=sorted(set(fs_dn_ts))
     # Build HTF intervals for both flip and decisive
-    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="flip", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
-    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="decisive", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
-    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break="b2", sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    _hfs = str(exp_htf_fs_entry or "")
+    _hfs_on = _hfs in ("flip", "all")
+    _fb_flip = ("fs_both" if _hfs_on and _hfs == "all" else "flip")
+    _fb_dec = ("fs_both" if _hfs_on and _hfs == "all" else "decisive")
+    _fb_b2 = ("fs_both" if _hfs_on and _hfs == "all" else "b2")
+    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_flip, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_dec, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_b2, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     # C17 (2026-10-07): store the window END as a KNOWABLE instant, not as the
     # OPEN of the bar that detected the exit. exit_ts is the open of a fine (1m)
