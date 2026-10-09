@@ -1,0 +1,3038 @@
+{
+  "ok": 132,
+  "bad": 36,
+  "total": 168,
+  "cells": {
+    "a4_w24_ext1.5": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 416,
+          "net": 175.98,
+          "dd": 52.78
+        },
+        "want": {
+          "n": 299,
+          "net": 142.9,
+          "dd": 47.02
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 197,
+          "net": -9.57,
+          "dd": 45.49
+        },
+        "want": {
+          "n": 145,
+          "net": 12.7,
+          "dd": 34.9
+        },
+        "ok": false
+      }
+    },
+    "a4_w24_ext3.0": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 512,
+          "net": 139.13,
+          "dd": 55.17
+        },
+        "want": {
+          "n": 367,
+          "net": 132.46,
+          "dd": 48.14
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 258,
+          "net": -7.12,
+          "dd": 62.14
+        },
+        "want": {
+          "n": 187,
+          "net": 28.37,
+          "dd": 38.4
+        },
+        "ok": false
+      }
+    },
+    "age50_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 352,
+          "net": 137.77,
+          "dd": 48.08
+        },
+        "want": {
+          "n": 352,
+          "net": 137.77,
+          "dd": 48.08
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 215,
+          "net": -18.71,
+          "dd": 46.94
+        },
+        "want": {
+          "n": 215,
+          "net": -18.71,
+          "dd": 46.94
+        },
+        "ok": true
+      }
+    },
+    "atrr_cd0_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 319,
+          "net": 152.21,
+          "dd": 41.74
+        },
+        "want": {
+          "n": 319,
+          "net": 152.21,
+          "dd": 41.74
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 203,
+          "net": -10.55,
+          "dd": 36.01
+        },
+        "want": {
+          "n": 203,
+          "net": -10.55,
+          "dd": 36.01
+        },
+        "ok": true
+      }
+    },
+    "atrr_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 318,
+          "net": 153.99,
+          "dd": 41.74
+        },
+        "want": {
+          "n": 318,
+          "net": 153.99,
+          "dd": 41.74
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 202,
+          "net": -8.99,
+          "dd": 34.45
+        },
+        "want": {
+          "n": 202,
+          "net": -8.99,
+          "dd": 34.45
+        },
+        "ok": true
+      }
+    },
+    "atrr_swingpause_sig_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 317,
+          "net": 117.97,
+          "dd": 49.39
+        },
+        "want": {
+          "n": 317,
+          "net": 117.97,
+          "dd": 49.39
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 181,
+          "net": -6.85,
+          "dd": 32.76
+        },
+        "want": {
+          "n": 181,
+          "net": -6.85,
+          "dd": 32.76
+        },
+        "ok": true
+      }
+    },
+    "b2doji_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 332,
+          "net": 97.58,
+          "dd": 61.98
+        },
+        "want": {
+          "n": 332,
+          "net": 97.58,
+          "dd": 61.98
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 210,
+          "net": -12.36,
+          "dd": 32.81
+        },
+        "want": {
+          "n": 210,
+          "net": -12.36,
+          "dd": 32.81
+        },
+        "ok": true
+      }
+    },
+    "baseline_no_partial_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 497,
+          "net": 236.65,
+          "dd": 56.34
+        },
+        "want": {
+          "n": 497,
+          "net": 236.65,
+          "dd": 56.34
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 275,
+          "net": -11.82,
+          "dd": 61.17
+        },
+        "want": {
+          "n": 275,
+          "net": -11.82,
+          "dd": 61.17
+        },
+        "ok": true
+      }
+    },
+    "bm05_multi_sw20": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 459,
+          "net": 261.89,
+          "dd": 52.8
+        },
+        "want": {
+          "n": 459,
+          "net": 261.89,
+          "dd": 52.8
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 253,
+          "net": 18.57,
+          "dd": 42.43
+        },
+        "want": {
+          "n": 253,
+          "net": 18.57,
+          "dd": 42.43
+        },
+        "ok": true
+      }
+    },
+    "bm05_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 336,
+          "net": 83.06,
+          "dd": 52.24
+        },
+        "want": {
+          "n": 336,
+          "net": 83.06,
+          "dd": 52.24
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 209,
+          "net": -3.75,
+          "dd": 37.92
+        },
+        "want": {
+          "n": 209,
+          "net": -3.75,
+          "dd": 37.92
+        },
+        "ok": true
+      }
+    },
+    "cap24d": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 515,
+          "net": 303.49,
+          "dd": 43.49
+        },
+        "want": {
+          "n": 515,
+          "net": 303.49,
+          "dd": 43.49
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 301,
+          "net": -6.51,
+          "dd": 54.76
+        },
+        "want": {
+          "n": 301,
+          "net": -6.51,
+          "dd": 54.76
+        },
+        "ok": true
+      }
+    },
+    "cap8d": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 474,
+          "net": 165.56,
+          "dd": 41.02
+        },
+        "want": {
+          "n": 474,
+          "net": 165.56,
+          "dd": 41.02
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 277,
+          "net": 49.57,
+          "dd": 58.4
+        },
+        "want": {
+          "n": 277,
+          "net": 49.57,
+          "dd": 58.4
+        },
+        "ok": true
+      }
+    },
+    "causalsl_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 355,
+          "net": 71.9,
+          "dd": 81.9
+        },
+        "want": {
+          "n": 355,
+          "net": 71.9,
+          "dd": 81.9
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 218,
+          "net": 7.0,
+          "dd": 26.37
+        },
+        "want": {
+          "n": 218,
+          "net": 7.0,
+          "dd": 26.37
+        },
+        "ok": true
+      }
+    },
+    "champion_multi_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 493,
+          "net": 214.74,
+          "dd": 45.4
+        },
+        "want": {
+          "n": 493,
+          "net": 214.74,
+          "dd": 45.4
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 270,
+          "net": -1.45,
+          "dd": 51.47
+        },
+        "want": {
+          "n": 270,
+          "net": -1.45,
+          "dd": 51.47
+        },
+        "ok": true
+      }
+    },
+    "champion_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 395,
+          "net": 48.63,
+          "dd": 48.5
+        },
+        "want": {
+          "n": 395,
+          "net": 48.63,
+          "dd": 48.5
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 238,
+          "net": -18.06,
+          "dd": 44.97
+        },
+        "want": {
+          "n": 238,
+          "net": -18.06,
+          "dd": 44.97
+        },
+        "ok": true
+      }
+    },
+    "champion_sig_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 374,
+          "net": 91.64,
+          "dd": 51.62
+        },
+        "want": {
+          "n": 374,
+          "net": 91.64,
+          "dd": 51.62
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 215,
+          "net": -13.11,
+          "dd": 37.75
+        },
+        "want": {
+          "n": 215,
+          "net": -13.11,
+          "dd": 37.75
+        },
+        "ok": true
+      }
+    },
+    "chopband_atrr_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 270,
+          "net": 120.74,
+          "dd": 43.06
+        },
+        "want": {
+          "n": 270,
+          "net": 120.74,
+          "dd": 43.06
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 181,
+          "net": -2.01,
+          "dd": 43.88
+        },
+        "want": {
+          "n": 181,
+          "net": -2.01,
+          "dd": 43.88
+        },
+        "ok": true
+      }
+    },
+    "chopband_atrr_swingpause_sig_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 281,
+          "net": 102.1,
+          "dd": 42.5
+        },
+        "want": {
+          "n": 281,
+          "net": 102.1,
+          "dd": 42.5
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 162,
+          "net": -5.23,
+          "dd": 43.0
+        },
+        "want": {
+          "n": 162,
+          "net": -5.23,
+          "dd": 43.0
+        },
+        "ok": true
+      }
+    },
+    "chopband_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 320,
+          "net": 193.2,
+          "dd": 38.01
+        },
+        "want": {
+          "n": 320,
+          "net": 193.2,
+          "dd": 38.01
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 200,
+          "net": -9.37,
+          "dd": 41.84
+        },
+        "want": {
+          "n": 200,
+          "net": -9.37,
+          "dd": 41.84
+        },
+        "ok": true
+      }
+    },
+    "chopband_swingpause_sig_sw20": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 314,
+          "net": 86.85,
+          "dd": 47.75
+        },
+        "want": {
+          "n": 314,
+          "net": 86.85,
+          "dd": 47.75
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 182,
+          "net": 0.39,
+          "dd": 36.27
+        },
+        "want": {
+          "n": 182,
+          "net": 0.39,
+          "dd": 36.27
+        },
+        "ok": true
+      }
+    },
+    "curfew624_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 256,
+          "net": 181.02,
+          "dd": 18.03
+        },
+        "want": {
+          "n": 256,
+          "net": 181.02,
+          "dd": 18.03
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 153,
+          "net": 30.75,
+          "dd": 26.6
+        },
+        "want": {
+          "n": 153,
+          "net": 30.75,
+          "dd": 26.6
+        },
+        "ok": true
+      }
+    },
+    "decayD_c": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 352,
+          "net": 204.23,
+          "dd": 33.05
+        },
+        "want": {
+          "n": 352,
+          "net": 204.23,
+          "dd": 33.05
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 178,
+          "net": 44.55,
+          "dd": 49.32
+        },
+        "want": {
+          "n": 178,
+          "net": 44.55,
+          "dd": 49.32
+        },
+        "ok": true
+      }
+    },
+    "decayG_c": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 154,
+          "net": 42.27,
+          "dd": 57.96
+        },
+        "want": {
+          "n": 154,
+          "net": 42.27,
+          "dd": 57.96
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 112,
+          "net": -18.25,
+          "dd": 34.73
+        },
+        "want": {
+          "n": 112,
+          "net": -18.25,
+          "dd": 34.73
+        },
+        "ok": true
+      }
+    },
+    "decayG_u": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 145,
+          "net": 52.88,
+          "dd": 43.38
+        },
+        "want": {
+          "n": 145,
+          "net": 52.88,
+          "dd": 43.38
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 97,
+          "net": 9.54,
+          "dd": 17.49
+        },
+        "want": {
+          "n": 97,
+          "net": 9.54,
+          "dd": 17.49
+        },
+        "ok": true
+      }
+    },
+    "decayH_c": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 266,
+          "net": 23.63,
+          "dd": 54.02
+        },
+        "want": {
+          "n": 266,
+          "net": 23.63,
+          "dd": 54.02
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 148,
+          "net": -24.44,
+          "dd": 44.42
+        },
+        "want": {
+          "n": 148,
+          "net": -24.44,
+          "dd": 44.42
+        },
+        "ok": true
+      }
+    },
+    "decayH_u": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 250,
+          "net": 43.24,
+          "dd": 45.9
+        },
+        "want": {
+          "n": 250,
+          "net": 43.24,
+          "dd": 45.9
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 134,
+          "net": -32.59,
+          "dd": 39.49
+        },
+        "want": {
+          "n": 134,
+          "net": -32.59,
+          "dd": 39.49
+        },
+        "ok": true
+      }
+    },
+    "fliponly_multi_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 290,
+          "net": 206.11,
+          "dd": 33.75
+        },
+        "want": {
+          "n": 290,
+          "net": 206.11,
+          "dd": 33.75
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 160,
+          "net": -8.62,
+          "dd": 56.39
+        },
+        "want": {
+          "n": 160,
+          "net": -8.62,
+          "dd": 56.39
+        },
+        "ok": true
+      }
+    },
+    "fliponly_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 237,
+          "net": 149.48,
+          "dd": 32.65
+        },
+        "want": {
+          "n": 237,
+          "net": 149.48,
+          "dd": 32.65
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 147,
+          "net": -30.71,
+          "dd": 39.21
+        },
+        "want": {
+          "n": 147,
+          "net": -30.71,
+          "dd": 39.21
+        },
+        "ok": true
+      }
+    },
+    "fsswing_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 404,
+          "net": 42.54,
+          "dd": 45.11
+        },
+        "want": {
+          "n": 404,
+          "net": 42.54,
+          "dd": 45.11
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 245,
+          "net": 11.21,
+          "dd": 34.62
+        },
+        "want": {
+          "n": 245,
+          "net": 11.21,
+          "dd": 34.62
+        },
+        "ok": true
+      }
+    },
+    "fsswing_sig_sw20": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 382,
+          "net": 99.19,
+          "dd": 50.05
+        },
+        "want": {
+          "n": 382,
+          "net": 99.19,
+          "dd": 50.05
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 218,
+          "net": 0.42,
+          "dd": 35.97
+        },
+        "want": {
+          "n": 218,
+          "net": 0.42,
+          "dd": 35.97
+        },
+        "ok": true
+      }
+    },
+    "fullstack_atrr_utcsat_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 312,
+          "net": 292.19,
+          "dd": 27.1
+        },
+        "want": {
+          "n": 312,
+          "net": 292.19,
+          "dd": 27.1
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 206,
+          "net": 28.6,
+          "dd": 36.05
+        },
+        "want": {
+          "n": 206,
+          "net": 28.6,
+          "dd": 36.05
+        },
+        "ok": true
+      }
+    },
+    "fullstack_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 229,
+          "net": 242.44,
+          "dd": 23.15
+        },
+        "want": {
+          "n": 229,
+          "net": 242.44,
+          "dd": 23.15
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 152,
+          "net": 32.02,
+          "dd": 33.84
+        },
+        "want": {
+          "n": 152,
+          "net": 32.02,
+          "dd": 33.84
+        },
+        "ok": true
+      }
+    },
+    "fullstack_wage10_cd0_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 199,
+          "net": 273.18,
+          "dd": 24.29
+        },
+        "want": {
+          "n": 199,
+          "net": 273.18,
+          "dd": 24.29
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 139,
+          "net": 26.15,
+          "dd": 34.97
+        },
+        "want": {
+          "n": 139,
+          "net": 26.15,
+          "dd": 34.97
+        },
+        "ok": true
+      }
+    },
+    "gap_b3k10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 245,
+          "net": 59.86,
+          "dd": 22.18
+        },
+        "want": {
+          "n": 247,
+          "net": 65.73,
+          "dd": 22.87
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 138,
+          "net": 23.15,
+          "dd": 16.27
+        },
+        "want": {
+          "n": 138,
+          "net": 16.3,
+          "dd": 21.12
+        },
+        "ok": false
+      }
+    },
+    "gap_b3k2": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 169,
+          "net": 34.31,
+          "dd": 18.52
+        },
+        "want": {
+          "n": 169,
+          "net": 43.03,
+          "dd": 19.07
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 81,
+          "net": 22.16,
+          "dd": 16.44
+        },
+        "want": {
+          "n": 81,
+          "net": 23.59,
+          "dd": 17.02
+        },
+        "ok": false
+      }
+    },
+    "gap_b3k4": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 208,
+          "net": 63.34,
+          "dd": 18.38
+        },
+        "want": {
+          "n": 210,
+          "net": 69.57,
+          "dd": 18.99
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 108,
+          "net": 15.56,
+          "dd": 16.11
+        },
+        "want": {
+          "n": 109,
+          "net": 12.1,
+          "dd": 17.11
+        },
+        "ok": false
+      }
+    },
+    "gap_b3k6": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 220,
+          "net": 60.14,
+          "dd": 23.25
+        },
+        "want": {
+          "n": 222,
+          "net": 65.59,
+          "dd": 24.1
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 123,
+          "net": 24.04,
+          "dd": 17.18
+        },
+        "want": {
+          "n": 124,
+          "net": 17.7,
+          "dd": 18.85
+        },
+        "ok": false
+      }
+    },
+    "gap_b3k8": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 234,
+          "net": 53.79,
+          "dd": 23.69
+        },
+        "want": {
+          "n": 236,
+          "net": 59.18,
+          "dd": 24.57
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 131,
+          "net": 23.57,
+          "dd": 16.27
+        },
+        "want": {
+          "n": 131,
+          "net": 16.5,
+          "dd": 20.03
+        },
+        "ok": false
+      }
+    },
+    "gap_campaign_markneg": {
+      "is": {
+        "bar": "bar1_inverse_IS_neg_OOS_pos",
+        "got": {
+          "n": 278,
+          "net": -16.73,
+          "dd": 66.45
+        },
+        "want": {
+          "n": 278,
+          "net": -16.73,
+          "dd": 66.45
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_inverse_IS_neg_OOS_pos",
+        "got": {
+          "n": 154,
+          "net": 76.67,
+          "dd": 13.59
+        },
+        "want": {
+          "n": 154,
+          "net": 76.67,
+          "dd": 13.59
+        },
+        "ok": true
+      }
+    },
+    "gap_campaign_max2": {
+      "is": {
+        "bar": "bar1_inverse_IS_neg_OOS_pos",
+        "got": {
+          "n": 277,
+          "net": -15.67,
+          "dd": 65.4
+        },
+        "want": {
+          "n": 277,
+          "net": -15.67,
+          "dd": 65.4
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_inverse_IS_neg_OOS_pos",
+        "got": {
+          "n": 152,
+          "net": 74.89,
+          "dd": 13.59
+        },
+        "want": {
+          "n": 152,
+          "net": 74.89,
+          "dd": 13.59
+        },
+        "ok": true
+      }
+    },
+    "gap_curfew_16_20": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 479,
+          "net": 234.9,
+          "dd": 46.3
+        },
+        "want": {
+          "n": 479,
+          "net": 234.9,
+          "dd": 46.3
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 280,
+          "net": 48.77,
+          "dd": 56.54
+        },
+        "want": {
+          "n": 280,
+          "net": 48.77,
+          "dd": 56.54
+        },
+        "ok": true
+      }
+    },
+    "gap_entry_cap2": {
+      "is": {
+        "bar": "bar1_inverse_IS_neg_OOS_pos",
+        "got": {
+          "n": 278,
+          "net": -16.73,
+          "dd": 66.45
+        },
+        "want": {
+          "n": 278,
+          "net": -16.73,
+          "dd": 66.45
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_inverse_IS_neg_OOS_pos",
+        "got": {
+          "n": 154,
+          "net": 76.67,
+          "dd": 13.59
+        },
+        "want": {
+          "n": 154,
+          "net": 76.67,
+          "dd": 13.59
+        },
+        "ok": true
+      }
+    },
+    "gap_pivot_trail": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 523,
+          "net": 136.08,
+          "dd": 47.86
+        },
+        "want": {
+          "n": 523,
+          "net": 136.08,
+          "dd": 47.86
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 303,
+          "net": 0.92,
+          "dd": 47.66
+        },
+        "want": {
+          "n": 303,
+          "net": 0.92,
+          "dd": 47.66
+        },
+        "ok": true
+      }
+    },
+    "gap_profit_stage5": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 506,
+          "net": 55.66,
+          "dd": 39.71
+        },
+        "want": {
+          "n": 506,
+          "net": 55.66,
+          "dd": 39.71
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 290,
+          "net": 9.54,
+          "dd": 48.61
+        },
+        "want": {
+          "n": 290,
+          "net": 9.54,
+          "dd": 48.61
+        },
+        "ok": true
+      }
+    },
+    "htfrr2_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 431,
+          "net": 245.36,
+          "dd": 32.96
+        },
+        "want": {
+          "n": 431,
+          "net": 245.36,
+          "dd": 32.96
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 236,
+          "net": 23.56,
+          "dd": 47.17
+        },
+        "want": {
+          "n": 236,
+          "net": 23.56,
+          "dd": 47.17
+        },
+        "ok": true
+      }
+    },
+    "htfrr35_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 416,
+          "net": 242.56,
+          "dd": 40.74
+        },
+        "want": {
+          "n": 416,
+          "net": 242.56,
+          "dd": 40.74
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 232,
+          "net": 33.8,
+          "dd": 50.66
+        },
+        "want": {
+          "n": 232,
+          "net": 33.8,
+          "dd": 50.66
+        },
+        "ok": true
+      }
+    },
+    "lb30_chop55_persist2": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 499,
+          "net": 281.25,
+          "dd": 47.85
+        },
+        "want": {
+          "n": 432,
+          "net": 247.07,
+          "dd": 45.77
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 268,
+          "net": 59.32,
+          "dd": 44.37
+        },
+        "want": {
+          "n": 227,
+          "net": 21.69,
+          "dd": 46.74
+        },
+        "ok": false
+      }
+    },
+    "lb30_halt0": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 562,
+          "net": 117.5,
+          "dd": 74.14
+        },
+        "want": {
+          "n": 485,
+          "net": 280.55,
+          "dd": 58.93
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 271,
+          "net": -52.52,
+          "dd": 64.88
+        },
+        "want": {
+          "n": 241,
+          "net": 42.34,
+          "dd": 50.9
+        },
+        "ok": false
+      }
+    },
+    "lb30_halt6_cd0": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 536,
+          "net": 79.71,
+          "dd": 75.01
+        },
+        "want": {
+          "n": 547,
+          "net": 136.85,
+          "dd": 76.83
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 254,
+          "net": -48.14,
+          "dd": 67.06
+        },
+        "want": {
+          "n": 259,
+          "net": 9.73,
+          "dd": 78.79
+        },
+        "ok": false
+      }
+    },
+    "lb30_persist5": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 471,
+          "net": 94.39,
+          "dd": 54.88
+        },
+        "want": {
+          "n": 415,
+          "net": 266.92,
+          "dd": 48.33
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 224,
+          "net": -39.04,
+          "dd": 47.69
+        },
+        "want": {
+          "n": 198,
+          "net": 1.28,
+          "dd": 38.98
+        },
+        "ok": false
+      }
+    },
+    "lb30_w24_ext1.5": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 404,
+          "net": 172.3,
+          "dd": 51.77
+        },
+        "want": {
+          "n": 336,
+          "net": 335.44,
+          "dd": 35.92
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 176,
+          "net": -15.95,
+          "dd": 42.92
+        },
+        "want": {
+          "n": 143,
+          "net": 15.01,
+          "dd": 40.73
+        },
+        "ok": false
+      }
+    },
+    "lb30_w24_ext2.0": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 460,
+          "net": 161.02,
+          "dd": 52.41
+        },
+        "want": {
+          "n": 379,
+          "net": 343.38,
+          "dd": 36.58
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 219,
+          "net": -8.66,
+          "dd": 59.2
+        },
+        "want": {
+          "n": 176,
+          "net": 32.84,
+          "dd": 41.0
+        },
+        "ok": false
+      }
+    },
+    "lb30_w24_ext2.5": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 493,
+          "net": 142.96,
+          "dd": 55.39
+        },
+        "want": {
+          "n": 404,
+          "net": 313.85,
+          "dd": 42.82
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 232,
+          "net": -11.43,
+          "dd": 61.76
+        },
+        "want": {
+          "n": 178,
+          "net": 43.34,
+          "dd": 41.06
+        },
+        "ok": false
+      }
+    },
+    "lb30_w24_ext3.0": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 504,
+          "net": 135.39,
+          "dd": 54.86
+        },
+        "want": {
+          "n": 414,
+          "net": 313.29,
+          "dd": 42.27
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 239,
+          "net": -10.17,
+          "dd": 61.76
+        },
+        "want": {
+          "n": 183,
+          "net": 36.09,
+          "dd": 45.09
+        },
+        "ok": false
+      }
+    },
+    "legskip2_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 274,
+          "net": 236.41,
+          "dd": 26.87
+        },
+        "want": {
+          "n": 274,
+          "net": 236.41,
+          "dd": 26.87
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 165,
+          "net": 12.88,
+          "dd": 39.21
+        },
+        "want": {
+          "n": 165,
+          "net": 12.88,
+          "dd": 39.21
+        },
+        "ok": true
+      }
+    },
+    "nowknd_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 404,
+          "net": 307.31,
+          "dd": 25.67
+        },
+        "want": {
+          "n": 404,
+          "net": 307.31,
+          "dd": 25.67
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 219,
+          "net": 26.57,
+          "dd": 29.19
+        },
+        "want": {
+          "n": 219,
+          "net": 26.57,
+          "dd": 29.19
+        },
+        "ok": true
+      }
+    },
+    "nowknd_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 319,
+          "net": 124.18,
+          "dd": 40.23
+        },
+        "want": {
+          "n": 319,
+          "net": 124.18,
+          "dd": 40.23
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 194,
+          "net": 39.88,
+          "dd": 22.84
+        },
+        "want": {
+          "n": 194,
+          "net": 39.88,
+          "dd": 22.84
+        },
+        "ok": true
+      }
+    },
+    "nowknd_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 292,
+          "net": 216.31,
+          "dd": 27.43
+        },
+        "want": {
+          "n": 292,
+          "net": 216.31,
+          "dd": 27.43
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 173,
+          "net": 34.6,
+          "dd": 22.97
+        },
+        "want": {
+          "n": 173,
+          "net": 34.6,
+          "dd": 22.97
+        },
+        "ok": true
+      }
+    },
+    "opt_cd10_w24": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 354,
+          "net": 229.46,
+          "dd": 39.94
+        },
+        "want": {
+          "n": 299,
+          "net": 142.9,
+          "dd": 47.02
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 175,
+          "net": 11.55,
+          "dd": 32.37
+        },
+        "want": {
+          "n": 145,
+          "net": 12.7,
+          "dd": 34.9
+        },
+        "ok": false
+      }
+    },
+    "opt_ml_cd0_mb10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 624,
+          "net": 93.59,
+          "dd": 81.97
+        },
+        "want": {
+          "n": 526,
+          "net": 250.89,
+          "dd": 65.83
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 316,
+          "net": -16.65,
+          "dd": 74.78
+        },
+        "want": {
+          "n": 257,
+          "net": -5.97,
+          "dd": 61.8
+        },
+        "ok": false
+      }
+    },
+    "opt_ml_cd10_mb10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 512,
+          "net": 193.15,
+          "dd": 48.19
+        },
+        "want": {
+          "n": 452,
+          "net": 229.38,
+          "dd": 50.29
+        },
+        "ok": false
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 265,
+          "net": 36.31,
+          "dd": 46.17
+        },
+        "want": {
+          "n": 220,
+          "net": 15.8,
+          "dd": 47.71
+        },
+        "ok": false
+      }
+    },
+    "partial1_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 567,
+          "net": 65.91,
+          "dd": 42.51
+        },
+        "want": {
+          "n": 567,
+          "net": 65.91,
+          "dd": 42.51
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 328,
+          "net": 2.16,
+          "dd": 48.9
+        },
+        "want": {
+          "n": 328,
+          "net": 2.16,
+          "dd": 48.9
+        },
+        "ok": true
+      }
+    },
+    "partial2_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 534,
+          "net": 88.52,
+          "dd": 39.56
+        },
+        "want": {
+          "n": 534,
+          "net": 88.52,
+          "dd": 39.56
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 307,
+          "net": 11.4,
+          "dd": 51.03
+        },
+        "want": {
+          "n": 307,
+          "net": 11.4,
+          "dd": 51.03
+        },
+        "ok": true
+      }
+    },
+    "partial3_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 518,
+          "net": 109.91,
+          "dd": 39.89
+        },
+        "want": {
+          "n": 518,
+          "net": 109.91,
+          "dd": 39.89
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 292,
+          "net": 7.5,
+          "dd": 52.89
+        },
+        "want": {
+          "n": 292,
+          "net": 7.5,
+          "dd": 52.89
+        },
+        "ok": true
+      }
+    },
+    "partial4_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 511,
+          "net": 131.6,
+          "dd": 41.74
+        },
+        "want": {
+          "n": 511,
+          "net": 131.6,
+          "dd": 41.74
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 291,
+          "net": 26.11,
+          "dd": 54.43
+        },
+        "want": {
+          "n": 291,
+          "net": 26.11,
+          "dd": 54.43
+        },
+        "ok": true
+      }
+    },
+    "partial5_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 506,
+          "net": 156.53,
+          "dd": 42.36
+        },
+        "want": {
+          "n": 506,
+          "net": 156.53,
+          "dd": 42.36
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 290,
+          "net": 37.37,
+          "dd": 51.97
+        },
+        "want": {
+          "n": 290,
+          "net": 37.37,
+          "dd": 51.97
+        },
+        "ok": true
+      }
+    },
+    "persist8_multi_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 503,
+          "net": 288.52,
+          "dd": 43.2
+        },
+        "want": {
+          "n": 503,
+          "net": 288.52,
+          "dd": 43.2
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 289,
+          "net": 31.68,
+          "dd": 55.21
+        },
+        "want": {
+          "n": 289,
+          "net": 31.68,
+          "dd": 55.21
+        },
+        "ok": true
+      }
+    },
+    "rmax10_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 258,
+          "net": 180.04,
+          "dd": 53.09
+        },
+        "want": {
+          "n": 258,
+          "net": 180.04,
+          "dd": 53.09
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 91,
+          "net": -31.84,
+          "dd": 45.17
+        },
+        "want": {
+          "n": 91,
+          "net": -31.84,
+          "dd": 45.17
+        },
+        "ok": true
+      }
+    },
+    "rmax15_multi_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 412,
+          "net": 266.92,
+          "dd": 49.35
+        },
+        "want": {
+          "n": 412,
+          "net": 266.92,
+          "dd": 49.35
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 170,
+          "net": -3.58,
+          "dd": 46.67
+        },
+        "want": {
+          "n": 170,
+          "net": -3.58,
+          "dd": 46.67
+        },
+        "ok": true
+      }
+    },
+    "rmax15_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 314,
+          "net": 132.0,
+          "dd": 49.01
+        },
+        "want": {
+          "n": 314,
+          "net": 132.0,
+          "dd": 49.01
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 156,
+          "net": -51.65,
+          "dd": 56.81
+        },
+        "want": {
+          "n": 156,
+          "net": -51.65,
+          "dd": 56.81
+        },
+        "ok": true
+      }
+    },
+    "skipwinhalt_sig_sw10": {
+      "is": {
+        "bar": "bar1_both_negative",
+        "got": {
+          "n": 280,
+          "net": -1.5,
+          "dd": 67.48
+        },
+        "want": {
+          "n": 280,
+          "net": -1.5,
+          "dd": 67.48
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_both_negative",
+        "got": {
+          "n": 162,
+          "net": -4.24,
+          "dd": 34.03
+        },
+        "want": {
+          "n": 162,
+          "net": -4.24,
+          "dd": 34.03
+        },
+        "ok": true
+      }
+    },
+    "swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 358,
+          "net": 108.74,
+          "dd": 55.07
+        },
+        "want": {
+          "n": 358,
+          "net": 108.74,
+          "dd": 55.07
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 219,
+          "net": -14.88,
+          "dd": 41.68
+        },
+        "want": {
+          "n": 219,
+          "net": -14.88,
+          "dd": 41.68
+        },
+        "ok": true
+      }
+    },
+    "swingpause_sig_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 341,
+          "net": 120.08,
+          "dd": 53.41
+        },
+        "want": {
+          "n": 341,
+          "net": 120.08,
+          "dd": 53.41
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 198,
+          "net": -12.43,
+          "dd": 36.9
+        },
+        "want": {
+          "n": 198,
+          "net": -12.43,
+          "dd": 36.9
+        },
+        "ok": true
+      }
+    },
+    "trail_skipn4": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 446,
+          "net": 349.29,
+          "dd": 57.02
+        },
+        "want": {
+          "n": 446,
+          "net": 349.29,
+          "dd": 57.02
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 246,
+          "net": 31.02,
+          "dd": 81.36
+        },
+        "want": {
+          "n": 246,
+          "net": 31.02,
+          "dd": 81.36
+        },
+        "ok": true
+      }
+    },
+    "utc_wknd_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 285,
+          "net": 148.56,
+          "dd": 38.65
+        },
+        "want": {
+          "n": 285,
+          "net": 148.56,
+          "dd": 38.65
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 173,
+          "net": -24.27,
+          "dd": 33.88
+        },
+        "want": {
+          "n": 173,
+          "net": -24.27,
+          "dd": 33.88
+        },
+        "ok": true
+      }
+    },
+    "utcsat_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 327,
+          "net": 94.28,
+          "dd": 45.13
+        },
+        "want": {
+          "n": 327,
+          "net": 94.28,
+          "dd": 45.13
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 203,
+          "net": 13.55,
+          "dd": 24.36
+        },
+        "want": {
+          "n": 203,
+          "net": 13.55,
+          "dd": 24.36
+        },
+        "ok": true
+      }
+    },
+    "wage10_swingpause_wskip_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 261,
+          "net": 268.92,
+          "dd": 22.96
+        },
+        "want": {
+          "n": 261,
+          "net": 268.92,
+          "dd": 22.96
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 158,
+          "net": 35.63,
+          "dd": 25.81
+        },
+        "want": {
+          "n": 158,
+          "net": 35.63,
+          "dd": 25.81
+        },
+        "ok": true
+      }
+    },
+    "wage12_swingpause_sig_nowknd_sw10": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 313,
+          "net": 205.66,
+          "dd": 38.35
+        },
+        "want": {
+          "n": 313,
+          "net": 205.66,
+          "dd": 38.35
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 191,
+          "net": -5.93,
+          "dd": 40.24
+        },
+        "want": {
+          "n": 191,
+          "net": -5.93,
+          "dd": 40.24
+        },
+        "ok": true
+      }
+    },
+    "wage12_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 258,
+          "net": 266.07,
+          "dd": 24.41
+        },
+        "want": {
+          "n": 258,
+          "net": 266.07,
+          "dd": 24.41
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 155,
+          "net": 12.05,
+          "dd": 30.81
+        },
+        "want": {
+          "n": 155,
+          "net": 12.05,
+          "dd": 30.81
+        },
+        "ok": true
+      }
+    },
+    "wage12_swingpause_sig_sw20": {
+      "is": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 302,
+          "net": 147.58,
+          "dd": 45.64
+        },
+        "want": {
+          "n": 302,
+          "net": 147.58,
+          "dd": 45.64
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar1_era_fitted",
+        "got": {
+          "n": 172,
+          "net": -5.26,
+          "dd": 35.9
+        },
+        "want": {
+          "n": 172,
+          "net": -5.26,
+          "dd": 35.9
+        },
+        "ok": true
+      }
+    },
+    "wage16_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 245,
+          "net": 249.27,
+          "dd": 24.57
+        },
+        "want": {
+          "n": 245,
+          "net": 249.27,
+          "dd": 24.57
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 147,
+          "net": 30.97,
+          "dd": 26.19
+        },
+        "want": {
+          "n": 147,
+          "net": 30.97,
+          "dd": 26.19
+        },
+        "ok": true
+      }
+    },
+    "wage20_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 233,
+          "net": 202.04,
+          "dd": 22.98
+        },
+        "want": {
+          "n": 233,
+          "net": 202.04,
+          "dd": 22.98
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 143,
+          "net": 48.54,
+          "dd": 23.62
+        },
+        "want": {
+          "n": 143,
+          "net": 48.54,
+          "dd": 23.62
+        },
+        "ok": true
+      }
+    },
+    "wage24_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 219,
+          "net": 224.02,
+          "dd": 16.65
+        },
+        "want": {
+          "n": 219,
+          "net": 224.02,
+          "dd": 16.65
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 136,
+          "net": 26.04,
+          "dd": 30.21
+        },
+        "want": {
+          "n": 136,
+          "net": 26.04,
+          "dd": 30.21
+        },
+        "ok": true
+      }
+    },
+    "wage8_swingpause_sig_sw10": {
+      "is": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 263,
+          "net": 250.31,
+          "dd": 22.96
+        },
+        "want": {
+          "n": 263,
+          "net": 250.31,
+          "dd": 22.96
+        },
+        "ok": true
+      },
+      "oos": {
+        "bar": "bar2_oos_under_50",
+        "got": {
+          "n": 161,
+          "net": 30.26,
+          "dd": 29.88
+        },
+        "want": {
+          "n": 161,
+          "net": 30.26,
+          "dd": 29.88
+        },
+        "ok": true
+      }
+    }
+  },
+  "fails": [
+    {
+      "book": "a4_w24_ext1.5",
+      "era": "is",
+      "got": [
+        416,
+        175.98,
+        52.78
+      ],
+      "want": [
+        299,
+        142.9,
+        47.02
+      ]
+    },
+    {
+      "book": "a4_w24_ext3.0",
+      "era": "is",
+      "got": [
+        512,
+        139.13,
+        55.17
+      ],
+      "want": [
+        367,
+        132.46,
+        48.14
+      ]
+    },
+    {
+      "book": "gap_b3k10",
+      "era": "is",
+      "got": [
+        245,
+        59.86,
+        22.18
+      ],
+      "want": [
+        247,
+        65.73,
+        22.87
+      ]
+    },
+    {
+      "book": "gap_b3k2",
+      "era": "is",
+      "got": [
+        169,
+        34.31,
+        18.52
+      ],
+      "want": [
+        169,
+        43.03,
+        19.07
+      ]
+    },
+    {
+      "book": "gap_b3k4",
+      "era": "is",
+      "got": [
+        208,
+        63.34,
+        18.38
+      ],
+      "want": [
+        210,
+        69.57,
+        18.99
+      ]
+    },
+    {
+      "book": "gap_b3k6",
+      "era": "is",
+      "got": [
+        220,
+        60.14,
+        23.25
+      ],
+      "want": [
+        222,
+        65.59,
+        24.1
+      ]
+    },
+    {
+      "book": "gap_b3k8",
+      "era": "is",
+      "got": [
+        234,
+        53.79,
+        23.69
+      ],
+      "want": [
+        236,
+        59.18,
+        24.57
+      ]
+    },
+    {
+      "book": "lb30_chop55_persist2",
+      "era": "is",
+      "got": [
+        499,
+        281.25,
+        47.85
+      ],
+      "want": [
+        432,
+        247.07,
+        45.77
+      ]
+    },
+    {
+      "book": "lb30_halt0",
+      "era": "is",
+      "got": [
+        562,
+        117.5,
+        74.14
+      ],
+      "want": [
+        485,
+        280.55,
+        58.93
+      ]
+    },
+    {
+      "book": "lb30_halt6_cd0",
+      "era": "is",
+      "got": [
+        536,
+        79.71,
+        75.01
+      ],
+      "want": [
+        547,
+        136.85,
+        76.83
+      ]
+    },
+    {
+      "book": "lb30_persist5",
+      "era": "is",
+      "got": [
+        471,
+        94.39,
+        54.88
+      ],
+      "want": [
+        415,
+        266.92,
+        48.33
+      ]
+    },
+    {
+      "book": "lb30_w24_ext1.5",
+      "era": "is",
+      "got": [
+        404,
+        172.3,
+        51.77
+      ],
+      "want": [
+        336,
+        335.44,
+        35.92
+      ]
+    },
+    {
+      "book": "lb30_w24_ext2.0",
+      "era": "is",
+      "got": [
+        460,
+        161.02,
+        52.41
+      ],
+      "want": [
+        379,
+        343.38,
+        36.58
+      ]
+    },
+    {
+      "book": "lb30_w24_ext2.5",
+      "era": "is",
+      "got": [
+        493,
+        142.96,
+        55.39
+      ],
+      "want": [
+        404,
+        313.85,
+        42.82
+      ]
+    },
+    {
+      "book": "lb30_w24_ext3.0",
+      "era": "is",
+      "got": [
+        504,
+        135.39,
+        54.86
+      ],
+      "want": [
+        414,
+        313.29,
+        42.27
+      ]
+    },
+    {
+      "book": "opt_cd10_w24",
+      "era": "is",
+      "got": [
+        354,
+        229.46,
+        39.94
+      ],
+      "want": [
+        299,
+        142.9,
+        47.02
+      ]
+    },
+    {
+      "book": "opt_ml_cd0_mb10",
+      "era": "is",
+      "got": [
+        624,
+        93.59,
+        81.97
+      ],
+      "want": [
+        526,
+        250.89,
+        65.83
+      ]
+    },
+    {
+      "book": "opt_ml_cd10_mb10",
+      "era": "is",
+      "got": [
+        512,
+        193.15,
+        48.19
+      ],
+      "want": [
+        452,
+        229.38,
+        50.29
+      ]
+    },
+    {
+      "book": "a4_w24_ext1.5",
+      "era": "oos",
+      "got": [
+        197,
+        -9.57,
+        45.49
+      ],
+      "want": [
+        145,
+        12.7,
+        34.9
+      ]
+    },
+    {
+      "book": "a4_w24_ext3.0",
+      "era": "oos",
+      "got": [
+        258,
+        -7.12,
+        62.14
+      ],
+      "want": [
+        187,
+        28.37,
+        38.4
+      ]
+    },
+    {
+      "book": "gap_b3k10",
+      "era": "oos",
+      "got": [
+        138,
+        23.15,
+        16.27
+      ],
+      "want": [
+        138,
+        16.3,
+        21.12
+      ]
+    },
+    {
+      "book": "gap_b3k2",
+      "era": "oos",
+      "got": [
+        81,
+        22.16,
+        16.44
+      ],
+      "want": [
+        81,
+        23.59,
+        17.02
+      ]
+    },
+    {
+      "book": "gap_b3k4",
+      "era": "oos",
+      "got": [
+        108,
+        15.56,
+        16.11
+      ],
+      "want": [
+        109,
+        12.1,
+        17.11
+      ]
+    },
+    {
+      "book": "gap_b3k6",
+      "era": "oos",
+      "got": [
+        123,
+        24.04,
+        17.18
+      ],
+      "want": [
+        124,
+        17.7,
+        18.85
+      ]
+    },
+    {
+      "book": "gap_b3k8",
+      "era": "oos",
+      "got": [
+        131,
+        23.57,
+        16.27
+      ],
+      "want": [
+        131,
+        16.5,
+        20.03
+      ]
+    },
+    {
+      "book": "lb30_chop55_persist2",
+      "era": "oos",
+      "got": [
+        268,
+        59.32,
+        44.37
+      ],
+      "want": [
+        227,
+        21.69,
+        46.74
+      ]
+    },
+    {
+      "book": "lb30_halt0",
+      "era": "oos",
+      "got": [
+        271,
+        -52.52,
+        64.88
+      ],
+      "want": [
+        241,
+        42.34,
+        50.9
+      ]
+    },
+    {
+      "book": "lb30_halt6_cd0",
+      "era": "oos",
+      "got": [
+        254,
+        -48.14,
+        67.06
+      ],
+      "want": [
+        259,
+        9.73,
+        78.79
+      ]
+    },
+    {
+      "book": "lb30_persist5",
+      "era": "oos",
+      "got": [
+        224,
+        -39.04,
+        47.69
+      ],
+      "want": [
+        198,
+        1.28,
+        38.98
+      ]
+    },
+    {
+      "book": "lb30_w24_ext1.5",
+      "era": "oos",
+      "got": [
+        176,
+        -15.95,
+        42.92
+      ],
+      "want": [
+        143,
+        15.01,
+        40.73
+      ]
+    },
+    {
+      "book": "lb30_w24_ext2.0",
+      "era": "oos",
+      "got": [
+        219,
+        -8.66,
+        59.2
+      ],
+      "want": [
+        176,
+        32.84,
+        41.0
+      ]
+    },
+    {
+      "book": "lb30_w24_ext2.5",
+      "era": "oos",
+      "got": [
+        232,
+        -11.43,
+        61.76
+      ],
+      "want": [
+        178,
+        43.34,
+        41.06
+      ]
+    },
+    {
+      "book": "lb30_w24_ext3.0",
+      "era": "oos",
+      "got": [
+        239,
+        -10.17,
+        61.76
+      ],
+      "want": [
+        183,
+        36.09,
+        45.09
+      ]
+    },
+    {
+      "book": "opt_cd10_w24",
+      "era": "oos",
+      "got": [
+        175,
+        11.55,
+        32.37
+      ],
+      "want": [
+        145,
+        12.7,
+        34.9
+      ]
+    },
+    {
+      "book": "opt_ml_cd0_mb10",
+      "era": "oos",
+      "got": [
+        316,
+        -16.65,
+        74.78
+      ],
+      "want": [
+        257,
+        -5.97,
+        61.8
+      ]
+    },
+    {
+      "book": "opt_ml_cd10_mb10",
+      "era": "oos",
+      "got": [
+        265,
+        36.31,
+        46.17
+      ],
+      "want": [
+        220,
+        15.8,
+        47.71
+      ]
+    }
+  ],
+  "_provenance": {
+    "engine": "439a4f9",
+    "measured": "2026-10-09",
+    "harness": "exp_archive_verify.py"
+  }
+}
