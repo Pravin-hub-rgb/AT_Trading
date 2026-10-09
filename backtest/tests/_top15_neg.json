@@ -1,0 +1,108 @@
+{
+ "fsent_champ_long_htfesmcl4": {
+  "neg": 0,
+  "cells": [],
+  "net": 1244.03,
+  "ddIS": 27.74
+ },
+ "fsent_champ_long_mode_atr_low": {
+  "neg": 0,
+  "cells": [],
+  "net": 1002.06,
+  "ddIS": 28.9
+ },
+ "fsent_champ_long_mcloff_htf15": {
+  "neg": 0,
+  "cells": [],
+  "net": 893.52,
+  "ddIS": 15.13
+ },
+ "fsent_champ_long_mode_union": {
+  "neg": 0,
+  "cells": [],
+  "net": 883.85,
+  "ddIS": 23.8
+ },
+ "fsent_champ_short": {
+  "neg": 0,
+  "cells": [],
+  "net": 840.13,
+  "ddIS": 17.6
+ },
+ "fsent_champ_long_nohalt": {
+  "neg": 0,
+  "cells": [],
+  "net": 837.5,
+  "ddIS": 15.1
+ },
+ "fsent_champ_long_mcloff": {
+  "neg": 0,
+  "cells": [],
+  "net": 837.5,
+  "ddIS": 15.13
+ },
+ "fsent_utcsat_short": {
+  "neg": 1,
+  "cells": [
+   "2021-H1"
+  ],
+  "net": 826.36,
+  "ddIS": 17.6
+ },
+ "fsent_champ_long_htf15": {
+  "neg": 0,
+  "cells": [],
+  "net": 822.45,
+  "ddIS": 17.28
+ },
+ "fsent_champ_trailhalf": {
+  "neg": 0,
+  "cells": [],
+  "net": 818.28,
+  "ddIS": 31.68
+ },
+ "fsent_utcsat_trailhalf": {
+  "neg": 1,
+  "cells": [
+   "2025-H1"
+  ],
+  "net": 815.95,
+  "ddIS": 31.29
+ },
+ "fsent_champ_long_mode_fd": {
+  "neg": 1,
+  "cells": [
+   "2025-H1"
+  ],
+  "net": 766.98,
+  "ddIS": 13.4
+ },
+ "fsent_champ_long": {
+  "neg": 1,
+  "cells": [
+   "2025-H1"
+  ],
+  "net": 772.96,
+  "ddIS": 13.42
+ },
+ "fsent_champ_long_biasmom05": {
+  "neg": 0,
+  "cells": [],
+  "net": 718.61,
+  "ddIS": 13.42
+ },
+ "fsent_sig_multi": {
+  "neg": 0,
+  "cells": [],
+  "net": 696.18,
+  "ddIS": 13.39
+ },
+ "fsent_utcsat_long": {
+  "neg": 1,
+  "cells": [
+   "2025-H1"
+  ],
+  "net": 703.76,
+  "ddIS": 20.66
+ }
+}
