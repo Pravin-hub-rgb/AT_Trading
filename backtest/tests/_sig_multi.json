@@ -1,0 +1,178 @@
+{
+  "is": {
+    "sig_full (serial)": {
+      "n": 234,
+      "net": 295.83,
+      "dd": 10.78,
+      "wr": 41.5,
+      "expectancy": 1.2642,
+      "net_per_dd": 27.44,
+      "long_n": 108,
+      "long_r": 293.32,
+      "short_n": 126,
+      "short_r": 2.51
+    },
+    "sig+mp0  <-- THIS": {
+      "n": 329,
+      "net": 484.59,
+      "dd": 13.39,
+      "wr": 45.6,
+      "expectancy": 1.4729,
+      "net_per_dd": 36.19,
+      "long_n": 144,
+      "long_r": 465.9,
+      "short_n": 185,
+      "short_r": 18.69
+    },
+    "champ_long (multi)": {
+      "n": 528,
+      "net": 533.37,
+      "dd": 13.42,
+      "wr": 40.0,
+      "expectancy": 1.0102,
+      "net_per_dd": 39.74,
+      "long_n": 352,
+      "long_r": 343.45,
+      "short_n": 176,
+      "short_r": 189.92
+    },
+    "period": {
+      "estimable": true,
+      "surv": 221,
+      "new": 108,
+      "drop": 13,
+      "raw_gap": 1.56,
+      "b": 2.1619,
+      "t": 2.24,
+      "se": 0.9653,
+      "mde": 1.892,
+      "b_boot": 1.8501
+    },
+    "partition_wins": 8,
+    "partition_cells": 8,
+    "serial": {
+      "tail": {
+        "drop_top1": 80.9,
+        "drop_top5": 47.1,
+        "drop_top10": 22.0,
+        "contrib_top1pct": 31.1,
+        "contrib_top5pct": 84.1
+      },
+      "concurrency": {
+        "max": 1,
+        "hist": {
+          "1": 234
+        }
+      }
+    },
+    "sig+mp0": {
+      "tail": {
+        "drop_top1": 88.4,
+        "drop_top5": 59.0,
+        "drop_top10": 40.1,
+        "contrib_top1pct": 30.3,
+        "contrib_top5pct": 75.2
+      },
+      "concurrency": {
+        "max": 5,
+        "hist": {
+          "1": 226,
+          "2": 69,
+          "3": 21,
+          "4": 9,
+          "5": 4
+        }
+      }
+    }
+  },
+  "oos": {
+    "sig_full (serial)": {
+      "n": 151,
+      "net": 194.44,
+      "dd": 6.96,
+      "wr": 46.4,
+      "expectancy": 1.2877,
+      "net_per_dd": 27.94,
+      "long_n": 72,
+      "long_r": 129.81,
+      "short_n": 79,
+      "short_r": 64.63
+    },
+    "sig+mp0  <-- THIS": {
+      "n": 194,
+      "net": 219.82,
+      "dd": 7.64,
+      "wr": 47.4,
+      "expectancy": 1.1331,
+      "net_per_dd": 28.77,
+      "long_n": 89,
+      "long_r": 136.72,
+      "short_n": 105,
+      "short_r": 83.1
+    },
+    "champ_long (multi)": {
+      "n": 311,
+      "net": 239.59,
+      "dd": 11.88,
+      "wr": 37.0,
+      "expectancy": 0.7704,
+      "net_per_dd": 20.17,
+      "long_n": 206,
+      "long_r": 96.61,
+      "short_n": 105,
+      "short_r": 142.98
+    },
+    "period": {
+      "estimable": true,
+      "surv": 144,
+      "new": 50,
+      "drop": 7,
+      "raw_gap": 0.4452,
+      "b": 0.3303,
+      "t": 0.294,
+      "se": 1.1224,
+      "mde": 2.1999,
+      "b_boot": 0.2847
+    },
+    "partition_wins": 4,
+    "partition_cells": 4,
+    "serial": {
+      "tail": {
+        "drop_top1": 83.4,
+        "drop_top5": 45.0,
+        "drop_top10": 22.4,
+        "contrib_top1pct": 31.2,
+        "contrib_top5pct": 69.4
+      },
+      "concurrency": {
+        "max": 1,
+        "hist": {
+          "1": 151
+        }
+      }
+    },
+    "sig+mp0": {
+      "tail": {
+        "drop_top1": 85.3,
+        "drop_top5": 51.3,
+        "drop_top10": 30.7,
+        "contrib_top1pct": 27.6,
+        "contrib_top5pct": 69.3
+      },
+      "concurrency": {
+        "max": 4,
+        "hist": {
+          "1": 146,
+          "2": 35,
+          "3": 10,
+          "4": 3
+        }
+      }
+    }
+  },
+  "_provenance": {
+    "engine": "439a4f9",
+    "measured": "2026-10-09",
+    "harness": "exp_sig_multi.py"
+  }
+}
