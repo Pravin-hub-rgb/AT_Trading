@@ -1,0 +1,29 @@
+{
+  "inert": [
+    "atr_low_thresh",
+    "chop_thresh",
+    "exp_ltf_no_entry"
+  ],
+  "live": [
+    "cooldown_bars",
+    "exp_cap_days",
+    "exp_causal_sl",
+    "exp_htf_fs_entry",
+    "exp_min_sl_pct",
+    "exp_no_opposite",
+    "exp_partial_r",
+    "exp_persist",
+    "exp_skip_utc_sat",
+    "exp_skip_utc_sun",
+    "ext_stop_r",
+    "max_consecutive_losses",
+    "pivot_rule",
+    "sl_buf_atr",
+    "window_end"
+  ],
+  "_provenance": {
+    "engine": "1f9f359",
+    "measured": "2026-10-09",
+    "harness": "exp_grid_period.py"
+  }
+}
