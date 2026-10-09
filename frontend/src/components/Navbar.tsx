@@ -11,6 +11,7 @@ const links = [
   { href: "/download", label: "Download Data" },
   { href: "/chart", label: "Chart" },
   { href: "/btc", label: "BTC" },
+  { href: "/results", label: "Results" },
 ];
 
 export default function Navbar() {

@@ -25,6 +25,7 @@ from src import bias as bias_svc
 from src import intraday as intraday_svc
 from src import firstswing as fs_engine
 from src.btc.btc_routes import router as btc_router
+from src.btc.btc_results_routes import router as btc_results_router
 
 active_operations: dict = {}
 
@@ -207,6 +208,11 @@ app.add_middleware(
 
 # BTC swing engine (self-contained subpackage, zero Nifty coupling)
 app.include_router(btc_router)
+
+# /results comparison page. Reads the committed artifact that
+# backtest/tests/exp_results_export.py writes - it imports nothing from backtest,
+# only reads the file, so the server process stays free of the test harness.
+app.include_router(btc_results_router)
 
 
 def _new_op_id(prefix: str) -> str:
