@@ -541,10 +541,28 @@ max_positions=0,
     fs_up_ts=sorted(set(fs_up_ts)); fs_dn_ts=sorted(set(fs_dn_ts))
     # Build HTF intervals for both flip and decisive
     _hfs = str(exp_htf_fs_entry or "")
-    _hfs_on = _hfs in ("flip", "all")
-    _fb_flip = ("fs_both" if _hfs_on and _hfs == "all" else "flip")
-    _fb_dec = ("fs_both" if _hfs_on and _hfs == "all" else "decisive")
-    _fb_b2 = ("fs_both" if _hfs_on and _hfs == "all" else "b2")
+    # Which HTF regime buckets open on the FS print instead of on the break.
+    #
+    # The old table tested _hfs_on and _hfs == "all" together, so "flip" set
+    # _hfs_on true and then still fell through to the shipped value for all three
+    # buckets. It measured identical to off because it WAS off: the mode named
+    # for the bucket it moves moved nothing. Naming the set directly removes the
+    # conjunction that made that possible - a mode either moves its buckets or
+    # does not exist.
+    #
+    # "dec" is the selective arm that mirrors what the LTF side does with
+    # exp_fs_entry_side: one bucket on FS, the rest on break. In "all" the three
+    # buckets collapse into a single fs_both set and the book stops
+    # distinguishing regimes at all, which is what killed that arm. "dec"
+    # keeps flip and b2 on their breaks, so the regime distinction survives.
+    _hfs_move = {"flip": {"flip"},
+                 "dec": {"decisive"},
+                 "b2": {"b2"},
+                 "all": {"flip", "decisive", "b2"}}
+    _move = _hfs_move.get(_hfs, set())
+    _fb_flip = ("fs_both" if "flip" in _move else "flip")
+    _fb_dec = ("fs_both" if "decisive" in _move else "decisive")
+    _fb_b2 = ("fs_both" if "b2" in _move else "b2")
     htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_flip, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_dec, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_b2, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)

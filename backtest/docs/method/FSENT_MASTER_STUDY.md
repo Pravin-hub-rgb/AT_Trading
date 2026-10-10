@@ -376,5 +376,42 @@ retraction first.
 
 ---
 
+## 2026-10-10 — HTF-side FS entry, corrected and extended
+
+`method/HTF_FS_ENTRY_CORRECTED.md`. `exp_htf_fs_grid.py`, 4 books × 5 modes.
+
+**Two axes that had never been measured.** `exp_htf_fs_entry="flip"` was a no-op by
+construction — the bucket table tested `_hfs_on and _hfs == "all"` together, so the
+mode named for the bucket it moves moved nothing, and its "IDENTICAL to off"
+measurement was off. It is now real, and `dec`/`b2` were added. Separately, **every
+one of the 31 fsent books was `mode="atr_high"`**; `mode="chop"` had never been
+registered. It turns out not to matter: `fsent_champ_long_mode_chop` is
+**byte-identical to the shipping book in sample** — same n, net and drawdown, and
+**p = 1.0000**, because the permutation is the parent against itself. The regime
+classifier is not a live axis on this book.
+
+**The 2026-10-09 rejection rested partly on a broken test.** Its period control
+averaged `per_h[c][0]` — the **first trade** of each half-year — where the
+negative-cell check beside it used `sum(per_h[c])`. It reported "better in 2 of 6
+years"; on the half-year net it is 5 of 6 with t = +3.42. Six single trades
+decided a family-wide verdict. The rejection still stands on the negative cell
+and the drawdown, both of which reproduce.
+
+**Best arm in the family on the owner's rule: `fsent_champ_long_htffs`** (flip
+bucket on FS, decisive and b2 on their breaks) — IS 770 / **+897.94R** / DD 19.78,
+OOS 415 / +300.43 / 14.35. Inside the 29R budget and it does **not** bring back
+the negative half-year that sank `all`. Also registered: `htf15_htffs` (highest
+net in the family at +925.79R, disqualified by DD 29.62R over the ceiling),
+`sig_multi_htffs`, `mode_chop`.
+
+**No new book clears a null in both eras.** `htf15_htffs` holds the strongest
+in-sample p in the family at 0.0105, paired with 0.4904 out of sample;
+`htffs` is 0.0272 / 0.5956. `mcloff` remains the only book significant in both
+eras. `sig_multi_htffs` has the best out-of-sample risk numbers anywhere and the
+weakest evidence, with a negative out-of-sample gap — good risk profile is not
+evidence of edge.
+
+---
+
 *Shipping book unchanged: 528 / +533.37 / 13.42 IS, 311 / +239.59 / 11.88 OOS,
 one negative half-year, `max_consecutive_losses=3` untouched.*

@@ -1,3 +1,19 @@
+> **PARTIALLY SUPERSEDED 2026-10-10 — see `HTF_FS_ENTRY_CORRECTED.md`.**
+>
+> The REJECTION of `htf_fs=all` still stands, on the negative half-year and the
+> drawdown, and both of those reproduce exactly. But one of its three reasons
+> does not survive: the period control quoted here — "better in 2 of 6 years",
+> "the gain does not survive a half-year fixed effect" — was computed on
+> `per_h[c][0]`, the **first trade** of each half-year, while the negative-cell
+> check on the line below it correctly used `sum(per_h[c])`. Six single trades
+> decided a family-wide rejection. On the half-year net the same arm is better in
+> 5 of 6 years with t = +3.42. Reproduced in `exp_period_control_recheck.py`.
+>
+> Also: the `flip` mode measured here as "IDENTICAL to off" was a no-op **by
+> construction** — the table tested `_hfs_on and _hfs == "all"` together, so
+> "flip" moved nothing. It is now a real mode and it is the strongest arm in the
+> family. Nothing on this page ever measured the selective arm.
+
 # HTF-side FS entry — "window opens on FS"
 
 Date: 2026-10-09. Harness: `exp_htf_fs_entry.py`. Knob: `exp_htf_fs_entry`.

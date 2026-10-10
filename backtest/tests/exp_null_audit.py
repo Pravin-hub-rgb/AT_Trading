@@ -54,6 +54,14 @@ BLOCK = 20
 SHIP = "fsent_champ_long"
 
 CANDIDATES = [
+    # 2026-10-10: the HTF-FS grid books. fsent_champ_long_htffs is the one to
+    # watch - it is the first arm in the family that adds return without adding a
+    # negative half-year, so it needs the same paired test as mcloff before anyone
+    # treats it as a candidate rather than a big number.
+    'fsent_champ_long_htffs',
+    'fsent_sig_multi_htffs',
+    'fsent_champ_long_htf15_htffs',
+    'fsent_champ_long_mode_chop',
     'fsent_champ_long_htfesmcl4',
     'fsent_champ_long_mode_atr_low',
     'fsent_champ_long_mcloff_htf15',
