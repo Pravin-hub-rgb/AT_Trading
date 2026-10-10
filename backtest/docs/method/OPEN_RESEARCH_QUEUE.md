@@ -92,7 +92,7 @@ deduplicated below.
 
 Both follow from `method/BIAS_WINDOW_THEORY.md`. Neither has been run.
 
-### `[ ]` W1 — window duration as a feature
+### `[~]` W1 — window duration as a feature - **ANSWERED 2026-10-10, not closed. `method/WINDOW_FLOOR_AND_AGE.md`.** Median window age at entry is 2.2-2.4 days on every book and flat; R per trade is NOT flat and moves 3x between age buckets, and the direction is OPPOSITE between families - the champ books earn most from young windows (1.46 and 1.82 R/trade in the first 36h) while `sig_multi` earns almost nothing there (0.53) and most from the oldest bucket (4.47 R/trade on 55 trades, 58% win). Age is a real feature with no single extractable rule. **NOT a candidate:** the strongest cell rests on n=55 and the buckets were chosen after the result existed, which is how `biasmom05` got killed. Closing it needs the treatment `mcloff` got - re-derive, then a period control - plus forward confirmation of the direction.
 
 Median window is **1.17d IS / 1.06d OOS**, p75 ~3.8d. Two arms:
 
@@ -271,7 +271,7 @@ of the one `RANGE_PEAK_GRAY` already showed is the book's BEST (WR 41-42%
 vs 27.8%), nesting is re-discovering range position and fails 4/4 the
 same way.
 
-### `[ ]` P4 — sweep `cap_days`
+### `[x]` P4 — sweep `cap_days` - **CLOSED 2026-10-10.** Swept 3/7/10/14/21. 21 clears the negative half-year (+835.93R, 0 negative, against +680.52R at the default 10). The adjacent question - how long after a window OPENS you may enter - was a hardcoded literal and is now `method/WINDOW_FLOOR_AND_AGE.md`: raising it to 5400 adds +5 to +8R on every champ book, and only `champ_long` needs 7200 to clear its cell. **Neither is a new book; both refine a lever the loss-run cutoff already provides.**
 
 The one window parameter never swept — a literal inside three calls with
 no kwarg. `method/BIAS_WINDOW_THEORY.md` shows it binds on 5-7% of windows, so
