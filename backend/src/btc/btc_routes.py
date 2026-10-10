@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -134,7 +134,8 @@ STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified
                               "entry_minus_1", "fsent_champ_long",
                               "fsent_champ_long_atr_low", "fsent_sig_full",
                               "fsent_sig_trail_delay1", "fsent_champ_short",
-                              "fsent_champ_long_htfesmcl4"}
+                              "fsent_champ_long_htfesmcl4",
+                              "fsent_champ_long_mcloff"}
 _HTF_CLOSE_OFFSET = 3600   # a 1h candle's open -> its close
 
 VERSION_LABELS = {
@@ -170,6 +171,18 @@ VERSION_LABELS = {
     "fsent_champ_short": "FSENT CHAMP SHORT - the champ_long MIRROR: shorts enter at "
                          "the FS print. IS 533t / +600.60R / DD 17.60R, OOS 312t / "
                          "+239.53R / DD 23.87R",
+    "fsent_champ_long_mcloff": "FSENT CHAMP LONG MCL-OFF - the base book with ONE integer "
+                                "changed: max_consecutive_losses 3 -> 0, so the loss-run "
+                                "halt stops cutting the recovery trade that follows every "
+                                "streak. IS 573t / +566.20R / DD 15.13R, OOS 334t / "
+                                "+274.36R / DD 14.16R. Zero negative half-years. THE ONLY "
+                                "BOOK HERE THAT CLEARS A NULL IN BOTH ERAS - paired "
+                                "permutation p = 0.0312 IS and p = 0.0117 OOS - and the "
+                                "only one whose period control is powered in both, b = "
+                                "+1.21 at t = 3.37 and b = +1.86 at t = 3.97. Earns LESS "
+                                "than the base in sample by design and MORE out of "
+                                "sample. Its 2021-22 era is reused old data, not a "
+                                "holdout. See method/NULL_AUDIT_P5.md.",
     "fsent_champ_long_htfesmcl4": "FSENT CHAMP LONG HTF-FS + MCL4 - the HTF side enters "
                                   "on its FS print instead of the break, and the loss-run "
                                   "cutoff is 4 not 3. IS 793t / +917.80R / DD 27.74R, OOS "
@@ -1616,6 +1629,47 @@ def btc_backtest(
             exp_trail_half=1,         # <- the only difference from fsent_sig_full
             exp_trail_delay_r=1.0,    # <- and the other one
             window_end="exit",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_mcloff":
+        # The base book with ONE integer changed: max_consecutive_losses 3 -> 0.
+        # The 3-loss halt was cutting the recovery trade that follows every
+        # losing streak, which is why removing it earns less in sample and more
+        # out of sample rather than simply more of both.
+        #
+        # This is the book the whole cycle converged on. It is the ONLY one in the
+        # family that clears a null in BOTH eras (paired permutation p = 0.0312 IS,
+        # p = 0.0117 OOS) and the only one whose period control is powered in both
+        # (b = +1.21 at t = 3.37, b = +1.86 at t = 3.97). Zero negative
+        # half-years out of 12. Added to the dropdown 2026-10-10 because the most
+        # supported candidate in the registry was the one book you could not look
+        # at on the chart.
+        #
+        # ext_stop_r is 3.0, matching the registry pin. The champion branch above
+        # passes 0.0, which measures identically here, but the pin is written at
+        # 3.0 and the branch should read as the pin does.
+        # Pinned IS 573 / +566.20 / 15.13 and OOS 334 / +274.36 / 14.16.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            cooldown_bars=8,
+            max_consecutive_losses=0,     # <- the only difference from champ_long
+            max_positions=0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            exp_fs_entry_side="long",
+            pivot_rule="leg",
         )
         trades = nested.get("ltf_trades", [])
     elif version == "fsent_champ_short":

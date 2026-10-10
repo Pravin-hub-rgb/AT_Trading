@@ -183,6 +183,15 @@ export const BOOK_OPTIONS: BookOption[] = [
     config: { ...V19, version: "fsent_champ_long_atr_low", ext_stop_r: 0.0 },
   },
   {
+    id: "fsent_champ_long_mcloff",
+    label: "FSENT CHAMP LONG MCL-OFF (loss-run cutoff OFF) - IS 573t +566.2R dd15.1 | OOS 334t +274.4R dd14.2",
+    shortLabel: "MCL-OFF",
+    slMode: "causal",
+    hint: "the base book with ONE integer changed: max_consecutive_losses 3 -> 0, so the 3-loss halt stops cutting the recovery trade that follows every streak. This is the ONLY book in the family that clears a null in BOTH eras - paired permutation p = 0.0312 in sample and 0.0117 out of sample (exp_null_audit.py, 4000 draws) - and the only one whose period control is POWERED in both eras, b = +1.21 at t = 3.37 and b = +1.86 at t = 3.97. Zero negative half-years out of 12. Earns LESS than the base in sample by design (-32.8R IS) and MORE out of sample (+34.6R). Its out-of-sample era is 2021-22, reused old data, NOT a holdout - see method/OOS_IS_NOT_A_HOLDOUT.md",
+    measured: { isN: 573, isNet: 566.20, oosN: 334, oosNet: 274.36 },
+    config: { ...V19, version: "fsent_champ_long_mcloff", ext_stop_r: 3.0, max_consecutive_losses: 0 },
+  },
+  {
     id: "fsent_champ_long_htfesmcl4",
     label: "FSENT CHAMP LONG HTF-FS + MCL4 - IS 793t +917.8R dd27.7 | OOS 437t +326.2R dd14.2",
     shortLabel: "HTF-FS+MCL4",
