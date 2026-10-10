@@ -135,6 +135,8 @@ STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified
                               "fsent_champ_long_atr_low", "fsent_sig_full",
                               "fsent_sig_trail_delay1", "fsent_champ_short",
                               "fsent_champ_long_htfesmcl4"}
+_HTF_CLOSE_OFFSET = 3600   # a 1h candle's open -> its close
+
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -1823,8 +1825,20 @@ def btc_backtest(
     # shape; assigning [] unconditionally here would have silently emptied it
     # for every htf_ltf="15m" book.
     if version in STANDALONE_HTF_LTF_VERSIONS:
+        # The window START is drawn at the instant it becomes KNOWABLE, not at the
+        # candle that opened it. iv[0] is the 1h candle's OPEN, and the window's
+        # existence is not knowable until that candle closes, 3600s later. Drawing
+        # the line at iv[0] tells the reader the window opened an hour before it
+        # could have been observed, and on 10 Mar 2025 it put the line at 18:30 for
+        # a window whose first knowable instant is 19:30 - the same 19:30 the trade
+        # itself was taken on, which is exactly why a reviewer looking at the chart
+        # reads it as a lookahead and is right to be suspicious.
+        #
+        # The END is already correct and needs no change: the engine stores it
+        # knowable via _wend_settle (exit_ts + 60 with 1m data), which is C17's
+        # finding. Only the start side was drawing the raw candle open.
         htf_windows = [
-            {"startTime": int(iv[0]), "endTime": int(iv[1]),
+            {"startTime": int(iv[0]) + _HTF_CLOSE_OFFSET, "endTime": int(iv[1]),
              "isLong": int(iv[2]) == 1,
              "entryPrice": float(iv[3]), "slPrice": float(iv[4])}
             for iv in nested.get("intervals", [])

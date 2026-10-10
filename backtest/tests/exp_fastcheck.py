@@ -125,9 +125,18 @@ def main(argv=None):
     print("=" * 70)
 
     t0 = time.time()
-    sim = re_.build_module()
-    data = {s: EQ.load_scope(s) for s in scopes}
+    from progress import Announce, Bar
+    n_scope = len(scopes)
+    per = 25                       # measured: ~25s per book per scope on this box
+    est = int(per * len(books) * n_scope)
+    with Announce("loading candles + swings",
+                  "%ds" % (est // 3),
+                  "engine build + 1h/15m swing chains"):
+        sim = re_.build_module()
+        data = {s: EQ.load_scope(s) for s in scopes}
     print("data loaded (%.0fs)\n" % (time.time() - t0))
+    print("  estimating ~%ds total (%ds/book/scope). bar below.\n" % (est, per))
+    bar = Bar(max(1, len(books) * n_scope), "starting")
 
     fails, rows = [], []
     for i, name in enumerate(books, 1):
@@ -140,16 +149,19 @@ def main(argv=None):
             except Exception as e:
                 book_bad.append("%s raised %s" % (scope, repr(e)[:70]))
                 rows.append({"book": name, "scope": scope, "err": repr(e)[:120]})
+                bar.update("%s/%s ERR" % (name, scope))
                 continue
             bad = compare(scope, wanted(scope, p), got)
             rows.append({"book": name, "scope": scope, "OK": not bad,
                          **{k: round(float(v), 2) for k, v in got.items()},
                          "bad": bad})
             book_bad += ["%s %s" % (scope, b) for b in bad]
+            bar.update("%s %s" % (name, scope))
         fails += ["%s: %s" % (name, b) for b in book_bad]
         print("  [%2d/%2d] %-40s %s (%.0fs)"
               % (i, len(books), name, "OK" if not book_bad else "FAIL  " + "; ".join(book_bad),
                  time.time() - t0))
+    bar.close("done")
 
     print()
     for r in rows:
