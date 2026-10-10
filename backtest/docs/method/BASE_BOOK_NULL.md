@@ -1,3 +1,35 @@
+
+> ## !! SUPERSEDED 2026-10-10 - the M in this file is WRONG BY ~2x
+>
+> `method/NULL_AUDIT_P5.md` re-derived the null on the book this file NAMES but
+> does not use. Three separate problems, any one of which invalidates the bar:
+>
+> 1. **The pins quoted here belong to a different book.** This file's first
+>    paragraph says "IS 500t / +325.8R NET, OOS 279t / +70.1R NET". That is
+>    `champion_multi_sw10`. The shipping book `fsent_champ_long` is 528t / +533.37R
+>    IS and 311t / +239.59R OOS. The quoted pins do not match the registry either -
+>    `champion_multi_sw10` reads 502 / +279.33 there.
+> 2. **M is roughly half the correct size.** Re-derived on the real book:
+>    **M = 771.09R IS and 384.36R OOS**, against the 381.7 / 205.5 quoted below.
+>    Every dNet in the repo has been judged against a bar half its real size, and
+>    the error runs in the permissive direction.
+> 3. **M is an absolute R figure and cannot be a portable bar.** A null's width
+>    scales with the book's trade count and its per-trade spread -
+>    `BOOTSTRAP_NULL_P63.md` already says that comparing a fixed null against a
+>    different-length run "is comparing two different things", and the registry
+>    then went on quoting M as a fixed threshold anyway.
+>
+> **On the absolute test nothing in the fsent family clears the corrected bar,
+> which is expected and is not the interesting result.** The shipping book sits at
+> the 58th and 45th percentile of a reshuffle of its own trades. The question a
+> candidate actually needs answered is whether swapping the parent's trades for its
+> own beats swapping them at random. That is the paired permutation, and there
+> `fsent_champ_long_mcloff` returns p = 0.0312 IS and p = 0.0117 OOS - the only
+> book in the family significant in both eras.
+>
+> The original run below is kept as history. It is correct for the book it was
+> measured on and it is not a bar for the book that ships.
+
 # P5 — the base-book null. M is larger than the book.
 
 > **UPDATED 2026-10-01. M has been re-derived on the shipping book. Read the
