@@ -56,32 +56,42 @@ All 29 registered `fsent_*` books. **N** = in-sample net 2023-01→2026-09-13,
 **O** = 2021-22 (NOT a holdout — reused data, see `OOS_IS_NOT_A_HOLDOUT.md`).
 
 | book | n IS | N IS | dd IS | n O | N O | dd O | swing |
+> ## ?? PINS UPDATED 2026-10-10
+>
+> The C15 window-gate bug was fixed and **every fsent pin in this document was
+> re-derived**. The leaderboard below is current. Any figure quoted in the body
+> text from before that date is the pre-fix measurement and is 0-5 trades stale.
+> See `C15_START_SIDE_FIX.md`.
 |---|---:|---:|---:|---:|---:|---:|---|
-| `fsent_champ_long_htfesmcl4` | 793 | **+917.80** | 27.74 | 437 | +326.22 | 14.20 | sw10 |
-| `fsent_champ_long_mode_atr_low` | 641 | +721.30 | 28.90 | 315 | +280.70 | 14.60 | sw10 |
-| `fsent_champ_long_mode_union` | 813 | +580.00 | 23.80 | 442 | **+303.80** | 18.20 | sw10 |
-| `fsent_champ_short` | 533 | +600.60 | 17.60 | 312 | +239.53 | 23.87 | sw10 |
-| **`fsent_champ_long_nohalt`** | **575** | **+566.60** | **15.10** | **337** | **+270.90** | **14.20** | sw10 |
-| **`fsent_champ_long_mcloff`** | **575** | **+566.58** | **15.13** | **337** | **+270.91** | **14.16** | sw10 |
-| `fsent_utcsat_short` | 531 | +596.71 | 17.60 | 311 | +229.65 | 24.63 | sw10 |
-| `fsent_champ_long_htf15` | 520 | +567.57 | 17.28 | 280 | +254.88 | 16.86 | **htf15** |
-| `fsent_champ_trailhalf` | 496 | +536.19 | 31.68 | 282 | +282.08 | 16.45 | sw10 |
-| `fsent_champ_long_mode_fd` | 529 | +534.80 | 13.40 | 295 | +276.80 | 12.20 | sw10 |
-| **`fsent_champ_long` (shipping)** | 528 | **+533.37** | **13.42** | 311 | **+239.59** | **11.88** | sw10 |
-| `fsent_champ_long_biasmom05` | 488 | +501.48 | 13.42 | 287 | +217.13 | 13.47 | sw10 |
-| `fsent_sig_multi` | 329 | +484.59 | 13.39 | 195 | +219.82 | **7.64** | sw10 |
-| `fsent_utcsat_long` | 525 | +465.00 | 20.66 | 310 | +238.76 | 11.88 | sw10 |
-| `fsent_sig_trail_delay1` | 199 | +418.51 | 13.34 | 123 | +182.01 | 7.54 | sw10 |
-| `fsent_sig_half_crossed` | 97 | +340.90 | 8.46 | 63 | +142.09 | 7.26 | sw10 |
-| `fsent_sig_full` | 234 | +295.83 | 10.78 | 152 | +194.44 | 6.96 | sw10 |
-| `fsent_sig_fs_mom` | 235 | +268.37 | 8.96 | 153 | +166.80 | 9.14 | sw10 |
-| `fsent_sig_wk_pause_short` | 306 | +203.26 | 10.60 | 180 | +129.95 | 10.53 | sw10 |
-| `fsent_sig_decay_crossed` | 104 | +195.59 | 8.64 | 67 | +130.28 | 7.39 | sw10 |
-| `fsent_sig_sw10_short` | 374 | +175.41 | 16.62 | 239 | +103.31 | 11.82 | sw10 |
-| `fsent_sig_sw20_short` | 343 | +146.20 | 30.80 | 203 | +97.00 | 8.90 | sw20 |
-| `fsent_sig_sw20_short_wr` | 343 | +146.20 | 30.80 | 203 | +97.00 | 8.90 | sw20 |
-| `fsent_sig_sw10_long` | 353 | +121.23 | 21.07 | 232 | +74.15 | 13.33 | sw10 |
-| `fsent_both_trail_half` | 253 | +77.69 | 31.43 | 142 | +96.91 | 14.81 | sw10 |
+| \champ_long_htfesmcl4\ | 789 | +907.59 | 28.00 | 437 | +326.22 | 14.20 |
+| \champ_long_mode_atr_low\ | 639 | +673.68 | 28.98 | 311 | +276.60 | 14.56 |
+| \champ_long_mcloff_htf15\ | 558 | +615.85 | 15.13 | 296 | +279.98 | 11.45 |
+| \champ_long_mode_union\ | 813 | +580.04 | 23.85 | 442 | +303.81 | 18.23 |
+| \champ_long_mcloff\ | 573 | +566.20 | 15.13 | 334 | +274.36 | 14.16 |
+| \champ_long_nohalt\ | 574 | +565.45 | 15.13 | 336 | +272.50 | 14.16 |
+| \champ_long_htf15\ | 517 | +568.46 | 16.06 | 277 | +262.00 | 13.77 |
+| \utcsat_trailhalf\ | 493 | +534.12 | 30.53 | 279 | +286.63 | 16.51 |
+| \champ_trailhalf\ | 494 | +532.81 | 32.00 | 280 | +287.23 | 16.51 |
+| \champ_short\ | 531 | +573.47 | 25.85 | 309 | +239.31 | 23.87 |
+| \champ_long_mode_fd\ | 526 | +533.34 | 13.42 | 295 | +277.50 | 12.18 |
+| \utcsat_short\ | 529 | +564.92 | 25.92 | 308 | +229.43 | 24.76 |
+| \champ_long_mode_flip_quality\ | 525 | +535.28 | 13.42 | 294 | +248.61 | 11.88 |
+| \champ_long\ | 526 | +533.87 | 13.42 | 311 | +243.80 | 11.88 |
+| \champ_long_causalfloor\ | 513 | +526.63 | 13.62 | 306 | +233.68 | 11.88 |
+| \utcsat_long\ | 522 | +513.57 | 19.44 | 308 | +244.84 | 11.88 |
+| \champ_long_biasmom05\ | 485 | +499.91 | 13.42 | 287 | +216.93 | 13.66 |
+| \sig_multi\ | 329 | +479.78 | 13.39 | 193 | +218.63 | 7.64 |
+| \sig_trail_delay1\ | 199 | +414.11 | 13.34 | 124 | +179.51 | 7.54 |
+| \sig_full\ | 234 | +291.02 | 10.78 | 153 | +190.72 | 6.96 |
+| \sig_half_crossed\ | 97 | +332.15 | 9.08 | 63 | +140.99 | 7.26 |
+| \sig_fs_mom\ | 235 | +262.29 | 10.05 | 152 | +165.62 | 9.14 |
+| \sig_wk_pause_short\ | 302 | +206.87 | 10.60 | 179 | +128.77 | 10.53 |
+| \sig_decay_crossed\ | 104 | +186.83 | 8.64 | 67 | +128.17 | 7.39 |
+| \sig_sw10_short\ | 369 | +174.30 | 16.62 | 239 | +100.74 | 11.82 |
+| \sig_sw20_short\ | 343 | +146.94 | 32.46 | 202 | +96.42 | 10.23 |
+| \sig_sw20_short_wr\ | 343 | +146.94 | 32.46 | 202 | +96.42 | 10.23 |
+| \sig_sw10_long\ | 354 | +117.53 | 21.07 | 229 | +81.06 | 13.53 |
+| \both_trail_half\ | 254 | +76.58 | 31.43 | 142 | +96.91 | 14.81 |
 | `fsent_dirmatch_long` / `_short` | — | (no pins) | | | | | |
 
 ---

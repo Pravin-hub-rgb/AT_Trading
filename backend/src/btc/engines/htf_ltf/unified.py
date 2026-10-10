@@ -1031,7 +1031,25 @@ max_positions=0,
                 if _i >= 0:
                     _fs_t = int(_arr[_i])
                     _floor = _fs_t if exp_window_floor_mode == "fs" else max(_floor, _fs_t)
-        if not (_floor < bar_ts+900 < e): continue
+        # C15 START-SIDE FIX RESTORED (2026-10-10). The gate compared
+        # `_floor < bar_ts + 900`, i.e. s + 2700 against the LTF bar's CLOSE.
+        # C15's own identity is the other way round:
+        #
+        #     s + 2700 < bar_ts   <=>   s + 3600 < bar_ts + 900
+        #
+        # i.e. the 2700 absorbs the 900 so the comparison is "the HTF candle
+        # closes before the LTF bar closes". Applying the 2700 to bar_ts and THEN
+        # adding another 900 double-counts the settle and loosens the gate by a
+        # full 900 seconds: it admitted entries up to 30 minutes before the window
+        # candle closed. Measured, 6 trades in fsent_champ_long entered exactly
+        # 900s early, and on 2025-03-10 the entry was taken at 82639 inside the
+        # very 1h candle that went on to print a low of 81366.
+        #
+        # entry_ts IS candles_ltf[i]["ts"], the 15m bar's OPEN - so comparing
+        # against bar_ts is the right side. The engine's own comment on the trade
+        # record says "window_start + 3600 is the earliest instant the trade could
+        # have been known", and this line now enforces exactly that.
+        if not (_floor < bar_ts < e): continue
         if sig["dir"] != d: continue
         if ext_stop_r>0:
             hrisk=abs(pe-psl)

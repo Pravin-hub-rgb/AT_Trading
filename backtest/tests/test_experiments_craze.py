@@ -449,13 +449,14 @@ def _patch_007_chop_lb_call(s: str) -> str:
     #     etc.) used an unrecoverable convention and are non-authoritative;
     #     earlier +2700, closed-candle, canonical-parent and leg-anchor
     #     variants were all tested and rejected (audit trail: doc sec 4.3).
-    # The membership gate moved on 2026-10-10 when the hardcoded +2700 floor became
-    # exp_window_floor_s / exp_window_floor_mode (unified.py). The floor is now
-    # computed into _floor just above, so the gate reads _floor instead of the
-    # literal. Everything inserted below still keys off `s`, the raw window start,
-    # which is unchanged - so only the ANCHOR LINE moved, not the convention the
-    # wage/curfew/legskip gates were validated against.
-    t6f = '        if not (_floor < bar_ts+900 < e): continue\n'
+    # 2026-10-10, second move of this line in one day. The first was the hardcoded
+    # floor becoming exp_window_floor_s; this is the C15 start-side fix being
+    # RESTORED, removing the double-counted +900 from the entry side so the gate
+    # reads `_floor < bar_ts` instead of `_floor < bar_ts + 900`. The gates
+    # inserted below still key off `s`, the raw window start, which is unchanged,
+    # so the convention they were validated against did not move - only the anchor
+    # line and, below it, the correctness of the membership test itself.
+    t6f = '        if not (_floor < bar_ts < e): continue\n'
     assert s.count(t6f) == 1, "window membership"
     s = s.replace(t6f, t6f +
                   '        if exp_wage_h>0 and (bar_ts-s)/3600.0 < exp_wage_h: continue\n'

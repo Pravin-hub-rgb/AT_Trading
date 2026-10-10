@@ -154,17 +154,28 @@ def build_family_module():
     # engine gates plus the two gates test_experiments_craze.py injects, all
     # fixed the same way. Every literal that remains is a window START and must
     # move: the union gate, the main gate, and the injected window-budget gate.
-    # 2026-10-10: the hardcoded gate moved into a parameter, `exp_window_floor_s`.
-    # Its default is written 2_700 rather than 2700 so this count still sees only
-    # the 3 live gate sites. That is not cosmetic: the count asserts there are
-    # exactly 3 places to sweep for a 2h plane, and the signature is not one of
-    # them - the default has to stay 2700 so every pinned 1h/15m book reproduces
-    # byte-identically. Same value, different spelling, so the two jobs do not
-    # fight.
+    # 2026-10-10, twice. The hardcoded gate became exp_window_floor_s, and then the
+    # C15 start-side fix was restored. Both times this count moved and both times
+    # the honest fix was NOT to reword a comment - it is to stop counting comments
+    # at all. The count exists to find the GATE SITES that must move for a 2h
+    # plane; a prose mention of 2700 is not a gate and patching it would corrupt a
+    # sentence into nonsense.
+    #
+    # So comment lines are neutralised for the count AND for the replacement, then
+    # restored. That is why the engine's default is written 2_700: it keeps the
+    # signature out of the count without needing this masking to also cover it.
+    import re as _re
+    _saved = []
+    for _ln in _re.findall(r'^[^\S\n]*#[^\n]*$', s, _re.M):
+        if "2700" in _ln:
+            _saved.append(_ln)
+            s = s.replace(_ln, _ln.replace("2700", "@@C27@@"))
     swept = s.count("2700")
     s = s.replace("2700", "_knowwin")
     assert s.count("2700") == 0, f"stray 2700 remains: {s.count('2700')}"
     assert swept == 3, f"expected 3 C15 window-START offsets, got {swept}"
+    for _ln in _saved:
+        s = s.replace(_ln.replace("2700", "@@C27@@"), _ln)
 
     # define the gate once, immediately before its first use
     anchor = "    candle_ts_ltf=[int(c[\"ts\"]) for c in candles_ltf]"
