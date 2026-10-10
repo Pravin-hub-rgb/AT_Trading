@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff", "fsent_sig_multi", "fsent_sig_multi_htffs", "fsent_champ_long_htffs", "fsent_champ_long_mcloff_htf15"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff", "fsent_sig_multi", "fsent_sig_multi_htffs", "fsent_champ_long_htffs", "fsent_champ_long_mcloff_htf15", "fsent_champ_long_B1PATCH"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -143,7 +143,7 @@ STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified
                                # made them unjudgeable. Added 2026-10-10.
                                "fsent_sig_multi", "fsent_sig_multi_htffs",
                                "fsent_champ_long_htffs",
-                               "fsent_champ_long_mcloff_htf15"}
+                               "fsent_champ_long_mcloff_htf15", "fsent_champ_long_B1PATCH"}
 _HTF_CLOSE_OFFSET = 3600   # a 1h candle's open -> its close
 
 VERSION_LABELS = {
@@ -251,14 +251,24 @@ def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT"):
     return (candles, flow), None
 
 
-def _compute_swings(flow: list[FlowCandle], mode: str, min_bars: int = 14) -> list[dict]:
+def _compute_swings(flow: list[FlowCandle], mode: str, min_bars: int = 14,
+                    patched: bool = False) -> list[dict]:
     """Swing chain for a window.
 
     continuous: ONE 24/7 chain, swing_index never resets
     daily:      per-calendar-day chains (NSE-style); slice idx values are
                 offset back to window positions
     min_bars:   SwingEngine minBars (sweep winner: 20 > 14 > 7 on BTC)
+    patched:    compute the chain with the B1 arming patch instead of the shipped
+                engine. See src/btc/patched_swings.py for what the patch is and why
+                it is a drop-in rather than an edit to firstswing.py. Only ever
+                True for the *_B1PATCH dropdown entries, which exist so the owner
+                can put the shipped chain and the patched chain side by side on two
+                monitors.
     """
+    if patched:
+        from .patched_swings import compute_swings_patched
+        return compute_swings_patched(flow, mode, min_bars)
     opts = {"minBars": max(2, int(min_bars))}
     cap = max(1, len(flow) // 2)  # no 1000-swing cap â€” full chain like the sweep
     if mode == "continuous":
@@ -775,7 +785,14 @@ def btc_backtest(
         return err
     candles, flow = win
 
-    swings = _compute_swings(flow, mode, min_bars=min_bars)
+    # The B1PATCH dropdown entries run the same strategy against a swing chain
+    # built by the arming-patched engine, so the two can be compared in two browser
+    # windows over identical candles. Everything else in the request is untouched.
+    _patched = version.endswith("_B1PATCH")
+    if _patched:
+        version = version[: -len("_B1PATCH")]
+
+    swings = _compute_swings(flow, mode, min_bars=min_bars, patched=_patched)
 
     # HTF leg is genuinely a different timeframe. It used to be fed the SAME
     # candles and swings as the LTF leg, so the 1h window gate was deciding on
@@ -789,7 +806,8 @@ def btc_backtest(
         if herr is not None:
             return herr
         candles_htf, hflow = hwin
-        swings_htf = _compute_swings(hflow, mode, min_bars=htf_min_bars)
+        swings_htf = _compute_swings(hflow, mode, min_bars=htf_min_bars,
+                                    patched=_patched)
 
     # 1m-precise exit fills: walk 1m candles for SL/target/trail/BE instead of
     # the signal TF's bars (no hidden intrabar stops). tf=1m already exact.

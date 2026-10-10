@@ -200,6 +200,15 @@ export const BOOK_OPTIONS: BookOption[] = [
       // The top five by that score were all in the sig family and three of them
       // had never been visible on this page. They are here because a book you
       // cannot look at is not a candidate you can judge.
+      id: "fsent_champ_long_B1PATCH",
+      label: "CHAMP LONG + B1 ARMING PATCH (comparison build, not a book)",
+      shortLabel: "B1-PATCH",
+      slMode: "causal",
+      hint: "COMPARE BUILD. Identical strategy, identical candles, one difference: the swing chain is built by an engine that no longer suppresses a break merely because it coincides with a pending arm. The shipped engine drops ANY break while arming is deferred; the only case that rule was written for is breaking a pivot sealed on that very bar, which is circular. Measured on the real chain, 4,102 breaks were dropped while not armed and 3,941 of them (96%) broke a pivot sealed an EARLIER bar. On this book: IS 528 trades / +533.4R becomes 542 / +649.4R, OOS +239.6R becomes +266.7R. NOT PINNED AND NOT ADOPTED. If the marks look right on the chart, every number in the family has to be re-derived before any of it means anything.",
+      measured: { isN: 542, isNet: 649.41, oosN: 311, oosNet: 266.70 },
+      config: { ...V19, version: "fsent_champ_long_B1PATCH", ext_stop_r: 3.0 },
+    },
+    {
       id: "fsent_sig_multi",
       label: "SIG MULTI (serial, FS on shorts) - IS 329t +484.6R dd13.4 | OOS 195t +219.8R dd7.6",
       shortLabel: "SIG-MULTI",

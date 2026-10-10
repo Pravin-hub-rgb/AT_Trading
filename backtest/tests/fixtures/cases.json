@@ -1,0 +1,37 @@
+{
+ "cases": [
+  {
+   "name": "marked_down",
+   "bar_ist": "2026-08-14 05:15",
+   "dir": "down",
+   "swing_index": 2836,
+   "marked": true,
+   "why": "the owner's mirror case - a break that DID produce a B1",
+   "window_idx": 405,
+   "ohlc": {
+    "open": 63426.1,
+    "high": 63462.0,
+    "low": 63360.8,
+    "close": 63461.9
+   }
+  },
+  {
+   "name": "missing_up",
+   "bar_ist": "2026-08-14 22:45",
+   "dir": "up",
+   "swing_index": 2837,
+   "marked": false,
+   "why": "same day, opposite direction, no B1 - the case under investigation",
+   "window_idx": 475,
+   "ohlc": {
+    "open": 63151.7,
+    "high": 63218.0,
+    "low": 63134.3,
+    "close": 63170.6
+   }
+  }
+ ],
+ "engine_opts": {
+  "minBars": 50
+ }
+}

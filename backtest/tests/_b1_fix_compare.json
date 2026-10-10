@@ -1,0 +1,45 @@
+{
+ "old": {
+  "is": {
+   "n": 528,
+   "net": 533.37,
+   "dd": 13.42,
+   "win_pct": 39.96,
+   "expect": 1.0102
+  },
+  "oos": {
+   "n": 311,
+   "net": 239.59,
+   "dd": 11.88,
+   "win_pct": 36.98,
+   "expect": 0.7704
+  }
+ },
+ "patched": {
+  "is": {
+   "n": 542,
+   "net": 649.41,
+   "dd": 15.6,
+   "win_pct": 40.41,
+   "expect": 1.1982
+  },
+  "oos": {
+   "n": 311,
+   "net": 266.7,
+   "dd": 14.93,
+   "win_pct": 37.3,
+   "expect": 0.8575
+  }
+ },
+ "book": "fsent_champ_long",
+ "chain_sizes": {
+  "old": {
+   "ltf": 2,
+   "htf": 2
+  },
+  "patched": {
+   "ltf": 2,
+   "htf": 2
+  }
+ }
+}
