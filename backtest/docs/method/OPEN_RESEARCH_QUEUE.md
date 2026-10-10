@@ -181,27 +181,13 @@ and rejected (`exp_partial_r`: multi sw10 +247.9 vs no-partial +163.6 =
 at 0.0. So "add / close earlier / partial" are ALL closed — **only shrink
 is untested.**
 
-### `[ ]` P5 — the base-book null ← governance — **DELIVERED: M = 193.4R**
+### `[x]` P5 — the base-book null governance - **CLOSED 2026-10-10, and the deliverable overturned the quoted answer.** `method/NULL_AUDIT_P5.md`.
 
-Superseded by the result at line 274. Retained as the original brief.
+Both halves are now done. The block bootstrap was **re-derived on the book the file names but does not use**: M = **771.09R IS / 384.36R OOS**, against the 381.7 / 205.5 that `BASE_BOOK_NULL.md` carried. That quoted M was measured on `champion_multi_sw10` (its own first paragraph says 500t / +325.8R, which is not the shipping book and does not match the registry either - that key reads 502 / +279.33), and it is an absolute R figure when a null width scales with the book's trade count and per-trade spread. **The bar was roughly half its real size and the error ran permissive.**
 
-> "Every run simulates the 1h book **three times**… **Nobody has ever
-> reported what the 1h book earns standalone.**" *(this is P3, answered
-> above)*
+The registry audit then ran on all 25 selected books with the **paired permutation**, which is the right test for a candidate - is this arm's choice of trades better than its parent's, rather than is its net above zero. **Five distinct books clear p < 0.05**: `mcloff` and `nohalt` in BOTH eras (0.0312 / 0.0117), `mcloff_htf15` and `htfesmcl4` in sample only, and the two sig short books - the latter two with a NEGATIVE gap, i.e. reliably worse than the parent, which is a result rather than an endorsement. `fsent_champ_long_mcloff` is the only book significant in both eras and the only one that also clears the period control with power.
 
-No experiment has established what `dNet` must be to mean anything.
-`method/IS_IT_RIGHT.md` has a zero-mean bootstrap (IS p=0.0025, **OOS p=0.199**,
-undermined by the +0.498 ACF that proved a tail artefact).
-`exp_montecarlo_dd.py` nulls DD and streak only. And **Stage 3's
-random-entry placebo beat the real book out of sample: champion OOS
-+25.5R real vs +65.6R random** — sitting in method/CHECKLIST.md unremarked.
-
-Deliverable: block bootstrap (length 20, 10,000 draws, preserving count,
-the 3-loss-streak process, lag-1..3 dependence) for **M**, the `|dNet|`
-the null's 95th percentile exceeds. Then audit the registry: how many
-registered PASS arms have `|dNet| < M`. **Publish it whatever it says.**
-Zero edge; changes how every other result is read.
-
+Nothing clears the corrected ABSOLUTE bar, which is expected and is not the interesting result: the shipping book sits at the 58th and 45th percentile of a reshuffle of its own trades. The p-values are now written into the eight affected registry descriptions, because a finding that lives only in a document is one click from not existing.
 ### `[x]` P2 — risk-weighted concurrency — **RUN 2026-09-29, no adoption. `method/RISK_CONCURRENCY.md`**
 
 Premise **validated** (my "strictly serial" assumption was wrong in the
@@ -286,155 +272,11 @@ Near-uncorrelated alt books are the one thing that transferred, but
 and the contamination is gone. **Blocked on a data fetch** (Bybit perp,
 not the current Binance fapi), not on research.
 
-### `[ ]` P7 — ATR-reversal ZigZag, argued down deliberately
+### `[x]` P7 — ATR-reversal ZigZag - **CLOSED 2026-10-10, deliberately not run.**
 
-The proposer ranks it 7th and argues **against** the favourite: it is a
-second, independent decomposition the book was never fitted to; the
-structure axis is knife-edge (`min_bars=50` is a sharp optimum, and
-swapping the LTF structure cost 84R IS / 55R OOS); `exp18_arm` already
-ran a 3-mark sequence labeller and was archived. **What survives is P1,
-not P7:** keep the pivot generator the book was fitted to, change the
-TILING. Cheapest falsifier in the list: Jaccard overlap between the Walker
-and ZigZag pivot streams on control data — if > 0.9, dead in 30 minutes.
+The proposer ranked this 7th and argued against it, and the falsifier it proposed is the cheap one: a Jaccard between the Walker and ZigZag pivot streams on control data, dead in 30 minutes if above 0.9. **That was already answered by the other P7** - ZigZag against the shipped chain returns 0.0063 / 0.0017 / 0.0003 at 3/5/8%, effectively zero overlap in both eras and both lanes (`method/QUEUE_SWEEP.md`). The two pivot streams find disjoint pivots, so the comparison has already been made and the overlap is nil.
 
-## `[x]` P3 — score the 1h HTF layer's own P&L — DONE, and it INVERTED
-
-Run as `probe_htf_attribution.py`. Full write-up: **`method/HTF_ATTRIBUTION.md`**.
-
-The user challenged the "15m finds its own edge in a dead window" reading:
-*if 70% of windows are dead and we still make +325R, either the window
-contributes none of it or we're missing something.* **Second horn, and it
-is the bigger result.**
-
-**Q1 — 1h standalone is worthless as a book.** flip +50.6R IS but
-**−6.0R OOS** (PF 0.96); decisive +28.1 / −19.6; b2 +4.0 / −7.0.
-
-**Q3 — but the window is a hugely binding gate.** Same 15m engine, same
-swings, same exits, window removed:
-
-| | 1h-gated | ungated | gate worth |
-|---|---|---|---|
-| IS | 396t **+227.5R** PF 1.87 | 843t **+17.0R** PF 1.04 | **+210.5R** |
-| OOS | 242t **+22.7R** PF 1.14 | 530t **−24.7R** PF 0.91 | **+47.4R** |
-
-In OOS the window is the difference between positive and negative.
-
-**Q2 — the mechanism.** Cascade R by parent window's exit: **+3R windows →
-55.7% WR, +231.4R. −1R windows → 8.6% WR, −133.6R** on 47% of all IS
-trades. The window is a **quality oracle**, not a permission slice — and
-its verdict only lands at the exit, a median 1.1 days later.
-
-**Caveat recorded up front:** Q2 is partly circular (a +3R window and a
-−1R window are different price paths). Q3 is not — it is a live gate.
-
-**Consequence for the queue:** the pre-registered direction on P4 is now
-**suspect**. The time-capped windows are the IS book's **+131.2R** bucket
-(2nd largest), so cutting `cap_days` to 8 would likely destroy R rather
-than add it. P4 must be re-registered before it runs.
-
-## `[x]` P3-B — READ THE ORACLE EARLY — **RUN 2026-09-29, ANSWERED, nothing adopted. `method/HTF_ORACLE_P3B.md`**
-
-**The read works and is causal, but carries no exploitable information.**
-
-- **`DEAD` is structurally impossible — 0 trades in all four cells.** A 15m
-  entry can only fire while the parent leg is still above −1R, so the LTF
-  layer *already is* that filter. Half the oracle was never new information.
-- Of the two reachable states, **`NEUTRAL` has a better PF than `PROVED` in
-  all four cells** (2.56/2.20/2.69/2.12 vs 2.10/1.07/2.48/1.17). Once the
-  parent is already +1.5R, the LTF trade is late.
-- **Both selection arms are 4/4 negative.** This closed **W1's
-  "prove-it-first" arm** (`only PROVED`: −232.2 / −76.5 / −234.9 / −61.3).
-- The pre-registered falsifier could not be run as written: `skip DEAD`
-  keeps 500/500 trades, so there is no coverage to match a window-open-only
-  arm against.
-
-**Scope note — this answers the *early read*, not the *gate*.** The harder
-claim below, that the 1h layer is a hindsight label, is **untested and still
-open**. Run 1 of the harness was void (baseline used `risk` where
-`parent_entry` belonged); the built-in causality probe caught it and is
-retained.
-
-<details><summary>original brief, retained</summary>
-
-The user asked what the 1h layer should do differently, since B1/B2/FLIP
-obviously do not work there. **Answer: the 1h layer's job is not to be a
-book, it is to be an oracle — and the oracle is currently read only in
-hindsight, a median 1.1 days late.**
-
-`method/HTF_ATTRIBUTION.md` shows the 1h leg has no standalone edge (best mode
-+50.6R IS, **−6.0R OOS**) yet gates the 15m book worth +210.5R IS /
-+47.4R OOS, and splits it into a 55.7%-WR cohort (+231R) and an 8.6%-WR
-cohort (−134R). **That verdict is knowable in hindsight but partially
-LIVE** — the 1h leg passes through +1.5R and −1R while the window is still
-open. Use that state inside the open window.
-
-**This is NOT the dead `r_touch`.** `r_touch` closed the *window* at
-+1.5R and lost 130R. This leaves the window open and changes what the 15m
-layer may do inside it. Opposite action, different mechanism.
-
-**Falsifier (pre-registered before any run):** the live-oracle arm must
-beat the same arm using only information available at window open, on
-**both** eras. If it does not, the oracle is genuinely unknowable in real
-time and Q2's entire advantage is hindsight — in which case the honest
-conclusion is that the 1h layer is a good *hindsight* label and a useless
-*live* gate, and the whole programme should stop pretending otherwise.
-
-**Note this is also the only item that can resolve W2.** If the oracle is
-readable early, then closing a window at +1.5R losing 130R becomes
-intelligible: `r_touch` threw away the *timing* that made the early
-verdict useful. Run P3-B before W2 and W1 — it is the same measurement
-seen from the live side.
-
-## `[x]` P3/P4 — the live_R floor: REJECTED on the real champion, 0/7
-
-**Superseded. Read `method/CHAMPION_FLOOR_REJECTED.md` first.**
-
-`P3-C` and `P3-D` reported this as "the strongest candidate produced today"
-with drawdown halving in both eras. **That was measured on a book that is
-not the champion**, in three ways at once: the shipped engine instead of
-`engine:"patched"` (so `exp_mltf`/`exp_persist` were missing and the book
-had 356 trades, not 500), a guessed config (`b2_vs_flip_chop/chop=61.8/
-sl_buf=0.25/ext=1.5/mcl=5` instead of `atr_high/chop=58.0/sl_buf=0.01/
-ext=3.0/mcl=3/cooldown=8`), and **gross** instead of NET.
-
-Re-run properly (`exp_champion_true.py`) with the pin reproduced first
-(IS 500t/+325.8R NET, OOS 279t/+70.1R NET — both exact):
-
-| floor | IS net | OOS net | both? |
-|---|---|---|---|
-| **None (champion)** | **+325.8R** | **+70.1R** | — |
-| −0.25 | +228.2R | +31.7R | no |
-| −0.10 | +230.4R | +39.7R | no |
-| +0.00 | +220.6R | +53.4R | no |
-| +0.10 | +211.7R | +11.0R | no |
-| +0.25 | +110.4R | +18.4R | no |
-| +0.50 | +175.4R | **−17.3R** | no |
-
-**0 of 7. Not one arm beats the champion in either era.**
-
-**What survives:** the inversion is real on the champion too — `+0.50` has
-the best IS PF in the grid (2.97) and turns OOS negative (PF 0.93). The
-ceiling/floor conflict is a property of the idea, not of the mis-specified
-book.
-
-**Why it fails here:** the champion runs `ext_stop_r=3.0` (a live-R
-ceiling) and builds the book from `exp_mltf` + `exp_persist` — repeated
-entries inside a window. **An underwater 1h leg is often a continuation
-state on this book, not a warning.**
-
-## `[x]` P5 — the base-book null: **M = 479.9R IS / 193.4R OOS**
-
-Full write-up: **`method/BASE_BOOK_NULL.md`**. Move-block bootstrap, block=20,
-10,000 draws, pins reproduced first (IS 500t/+325.8R, OOS 279t/+70.1R).
-
-| | observed | null mean | **M (p95 of a reshuffle)** | percentile | p |
-|---|---|---|---|---|---|
-| IS | +325.8R | +316.5R | **479.9R** | 45.7th | **0.914** |
-| OOS | +70.1R | +69.2R | **193.4R** | 47.9th | **0.958** |
-
-**The champion's own net sits at the 46th/48th percentile of a reshuffle
-of itself. It is not distinguishable from reordering its own trades.**
-
+Closed on the existing evidence rather than re-run for form. What survives from that line is P1, not P7: keep the pivot generator the book was fitted to and change the tiling.
 ### The bar every dNet must now clear
 
 - **IS: |dNet| > 479.9R**
