@@ -183,6 +183,20 @@ export const BOOK_OPTIONS: BookOption[] = [
     config: { ...V19, version: "fsent_champ_long_atr_low", ext_stop_r: 0.0 },
   },
   {
+    id: "fsent_champ_long_htfesmcl4",
+    label: "FSENT CHAMP LONG HTF-FS + MCL4 - IS 793t +917.8R dd27.7 | OOS 437t +326.2R dd14.2",
+    shortLabel: "HTF-FS+MCL4",
+    slMode: "causal",
+    hint: "the highest-net book here - but read this: it trades 1.47x more than FSENT-LONG at only 1.10x the R per trade, and that 1.10x has a t of 0.46, so nearly all the extra return is MORE BETS rather than a better bet. It also collapses the HTF flip/decisive/b2 regime buckets into one set, so the book stops telling regimes apart. Drawdown nearly doubles to 27.7R. Look at it on the chart, not as a winner.",
+    measured: { isN: 793, isNet: 917.80, oosN: 437, oosNet: 326.22 },
+    config: {
+      ...V19,
+      version: "fsent_champ_long_htfesmcl4",
+      ext_stop_r: 3.0,          // matches the registry pin for THIS book
+      max_consecutive_losses: 4,
+    },
+  },
+  {
     id: "fsent_sig_full",
     label: "FSENT SIG FULL (serial, FS entry on shorts) - IS 234t +295.8R dd10.8 | OOS 152t +194.4R dd7.0",
     shortLabel: "FSENT-SIG",

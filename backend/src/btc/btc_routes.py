@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -133,7 +133,8 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
 STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified",
                               "entry_minus_1", "fsent_champ_long",
                               "fsent_champ_long_atr_low", "fsent_sig_full",
-                              "fsent_sig_trail_delay1", "fsent_champ_short"}
+                              "fsent_sig_trail_delay1", "fsent_champ_short",
+                              "fsent_champ_long_htfesmcl4"}
 VERSION_LABELS = {
     "v1": "v1 Honest (touchable + one-swing-one-trade) â€” cap 16d for 1h Flip",
     "v2": "v2 Chandelier ATR k=3.0",
@@ -167,6 +168,11 @@ VERSION_LABELS = {
     "fsent_champ_short": "FSENT CHAMP SHORT - the champ_long MIRROR: shorts enter at "
                          "the FS print. IS 533t / +600.60R / DD 17.60R, OOS 312t / "
                          "+239.53R / DD 23.87R",
+    "fsent_champ_long_htfesmcl4": "FSENT CHAMP LONG HTF-FS + MCL4 - the HTF side enters "
+                                  "on its FS print instead of the break, and the loss-run "
+                                  "cutoff is 4 not 3. IS 793t / +917.80R / DD 27.74R, OOS "
+                                  "437t / +326.22R / DD 14.20R. Highest net in the set, "
+                                  "and 1.47x the trades of the book it came from.",
 }
 
 router = APIRouter(prefix="/api/btc")
@@ -1638,6 +1644,48 @@ def btc_backtest(
             exp_persist=7,
             exp_fs_entry_side="short",   # <- the only difference from fsent_champ_long
             pivot_rule="leg",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_htfesmcl4":
+        # champ_long with TWO knobs changed: the HTF side enters at its own FS
+        # print (exp_htf_fs_entry="all") instead of the break, and the loss-run
+        # cutoff is 4 instead of 3. Pinned IS 793 / +917.80 / 27.74 and OOS
+        # 437 / +326.22 / 14.20.
+        #
+        # READ THIS BEFORE TRUSTING THE HEADLINE. +917.80R is the highest in the
+        # dropdown and it is 1.47x the trades of the book it came from, bought at
+        # 1.10x the R per trade - and that 1.10x has a t of 0.46, so the per-trade
+        # improvement is noise. Almost all of the extra return is more bets, not a
+        # better bet. It also collapses the flip/decisive/b2 HTF regime buckets
+        # into one fs_entered set, so this book stops distinguishing regimes, and
+        # its OOS period-control effect is underpowered (b = +0.03, t = 0.05). It is
+        # here to be LOOKED AT on the chart, not because it won.
+        #
+        # ext_stop_r is 3.0, matching the registry entry. The other fsent branches
+        # above pass 0.0, which measures identically for 3.0/0.0/4.0/5.0 on this
+        # architecture, but 3.0 is what the pin was written against.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            sl_buf_atr=0.01,
+            ext_stop_r=3.0,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            cooldown_bars=8,
+            max_consecutive_losses=4,     # <- was 3 in the book above
+            max_positions=0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            exp_fs_entry_side="long",
+            pivot_rule="leg",
+            exp_htf_fs_entry="all",       # <- the second change: HTF enters on FS
         )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_champion":
