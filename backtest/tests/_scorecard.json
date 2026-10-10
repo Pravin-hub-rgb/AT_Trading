@@ -1,1830 +1,1835 @@
 {
- "fsent_champ_long": {
-  "name": "fsent_champ_long",
-  "t1": {
-   "n": 837,
-   "net": 777.67,
-   "expectancy": 0.9291,
-   "pf": 2.968,
-   "wr": 38.9,
-   "avg_win": 3.598,
-   "avg_loss": -0.773,
-   "max_win": 48.64,
-   "max_loss": -2.1
-  },
-  "t2": {
-   "max_dd": 13.42,
-   "net_to_dd": 57.96,
-   "dd_as_pct_of_net": 1.7,
-   "longest_underwater": 48,
-   "avg_underwater": 8.1,
-   "n_dd_periods": 82,
-   "worst_roll20": -12.68,
-   "worst_roll50": -8.68,
-   "worst_roll100": -0.91,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 21,
-     "max": 41
-    },
-    "5.0": {
-     "median": 8,
-     "p90": 29,
-     "max": 70
-    },
-    "10.0": {
-     "median": 28,
-     "p90": 81,
-     "max": 120
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 93.7,
-   "net_drop_top1": 729.04,
-   "drop_top3": 83.4,
-   "net_drop_top3": 648.32,
-   "drop_top5": 75.5,
-   "net_drop_top5": 586.79,
-   "drop_top10": 61.5,
-   "net_drop_top10": 478.45,
-   "tail": {
-    "top0.5%": {
-     "k": 4,
-     "contrib": 20.6,
-     "remains": 79.4,
-     "net_remains": 617.3
-    },
-    "top1%": {
-     "k": 8,
-     "contrib": 33.6,
-     "remains": 66.4,
-     "net_remains": 516.73
-    },
-    "top2%": {
-     "k": 17,
-     "contrib": 53.6,
-     "remains": 46.4,
-     "net_remains": 360.72
-    },
-    "top5%": {
-     "k": 42,
-     "contrib": 81.0,
-     "remains": 19.0,
-     "net_remains": 147.97
-    },
-    "top10%": {
-     "k": 84,
-     "contrib": 109.2,
-     "remains": -9.2,
-     "net_remains": -71.75
-    },
-    "top20%": {
-     "k": 167,
-     "contrib": 136.4,
-     "remains": -36.4,
-     "net_remains": -283.32
-    }
-   },
-   "caps": {
-    "cap5R": 337.89,
-    "cap10R": 526.59,
-    "cap15R": 614.71,
-    "cap20R": 676.73
-   }
-  },
-  "t4": {
-   "1.0x": 777.67,
-   "1.5x": 735.82,
-   "2.0x": 693.97,
-   "3.0x": 610.27
-  },
-  "t5": {
-   "2021": 78.33,
-   "2022": 165.47,
-   "2023": 171.34,
-   "2024": 114.45,
-   "2025": 137.88,
-   "2026": 110.21,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 11,
-   "tuned": 9,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 526,
-    "net": 533.88,
-    "dd": 13.42,
-    "expectancy": 1.015,
-    "pf": 3.095,
-    "wr": 39.9
-   },
-   "oos": {
-    "n": 311,
-    "net": 243.8,
-    "dd": 11.88,
-    "expectancy": 0.7839,
-    "pf": 2.737,
-    "wr": 37.3
-   }
-  },
-  "halfs": {
-   "2021-H1": 43.67,
-   "2021-H2": 34.66,
-   "2022-H1": 92.87,
-   "2022-H2": 72.6,
-   "2023-H1": 27.89,
-   "2023-H2": 143.45,
-   "2024-H1": 59.12,
-   "2024-H2": 55.33,
-   "2025-H1": -0.35,
-   "2025-H2": 138.22,
-   "2026-H1": 58.18,
-   "2026-H2": 52.03
-  },
-  "neg_cells": [
-   "2025-H1"
-  ],
-  "sd": 4.295,
-  "tstat": 6.26
- },
- "fsent_champ_long_mcloff": {
-  "name": "fsent_champ_long_mcloff",
-  "t1": {
-   "n": 907,
-   "net": 840.57,
-   "expectancy": 0.9268,
-   "pf": 2.959,
-   "wr": 38.8,
-   "avg_win": 3.607,
-   "avg_loss": -0.773,
-   "max_win": 48.64,
-   "max_loss": -2.1
-  },
-  "t2": {
-   "max_dd": 15.13,
-   "net_to_dd": 55.56,
-   "dd_as_pct_of_net": 1.8,
-   "longest_underwater": 53,
-   "avg_underwater": 8.6,
-   "n_dd_periods": 84,
-   "worst_roll20": -12.71,
-   "worst_roll50": -10.98,
-   "worst_roll100": 5.28,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 21,
-     "max": 44
-    },
-    "5.0": {
-     "median": 8,
-     "p90": 27,
-     "max": 74
-    },
-    "10.0": {
-     "median": 22,
-     "p90": 86,
-     "max": 134
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 94.2,
-   "net_drop_top1": 791.93,
-   "drop_top3": 84.6,
-   "net_drop_top3": 711.22,
-   "drop_top5": 77.3,
-   "net_drop_top5": 649.68,
-   "drop_top10": 64.4,
-   "net_drop_top10": 541.35,
-   "tail": {
-    "top0.5%": {
-     "k": 5,
-     "contrib": 22.7,
-     "remains": 77.3,
-     "net_remains": 649.68
-    },
-    "top1%": {
-     "k": 9,
-     "contrib": 33.4,
-     "remains": 66.6,
-     "net_remains": 560.14
-    },
-    "top2%": {
-     "k": 18,
-     "contrib": 51.5,
-     "remains": 48.5,
-     "net_remains": 407.52
-    },
-    "top5%": {
-     "k": 45,
-     "contrib": 79.6,
-     "remains": 20.4,
-     "net_remains": 171.22
-    },
-    "top10%": {
-     "k": 91,
-     "contrib": 109.2,
-     "remains": -9.2,
-     "net_remains": -77.27
-    },
-    "top20%": {
-     "k": 181,
-     "contrib": 136.6,
-     "remains": -36.6,
-     "net_remains": -307.24
-    }
-   },
-   "caps": {
-    "cap5R": 368.26,
-    "cap10R": 583.34,
-    "cap15R": 676.5,
-    "cap20R": 739.62
-   }
-  },
-  "t4": {
-   "1.0x": 840.57,
-   "1.5x": 795.22,
-   "2.0x": 749.87,
-   "3.0x": 659.17
-  },
-  "t5": {
-   "2021": 91.01,
-   "2022": 183.36,
-   "2023": 183.94,
-   "2024": 115.38,
-   "2025": 144.75,
-   "2026": 122.14,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 14,
-   "tuned": 11,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 573,
-    "net": 566.2,
-    "dd": 15.13,
-    "expectancy": 0.9881,
-    "pf": 3.022,
-    "wr": 39.6
-   },
-   "oos": {
-    "n": 334,
-    "net": 274.36,
-    "dd": 14.16,
-    "expectancy": 0.8215,
-    "pf": 2.839,
-    "wr": 37.4
-   }
-  },
-  "halfs": {
-   "2021-H1": 40.89,
-   "2021-H2": 50.12,
-   "2022-H1": 108.66,
-   "2022-H2": 74.7,
-   "2023-H1": 27.08,
-   "2023-H2": 156.86,
-   "2024-H1": 60.14,
-   "2024-H2": 55.24,
-   "2025-H1": 1.99,
-   "2025-H2": 142.76,
-   "2026-H1": 71.41,
-   "2026-H2": 50.73
-  },
-  "neg_cells": [],
-  "sd": 4.226,
-  "tstat": 6.6
- },
- "fsent_champ_long_mcloff_htf15": {
-  "name": "fsent_champ_long_mcloff_htf15",
-  "t1": {
-   "n": 854,
-   "net": 895.83,
-   "expectancy": 1.049,
-   "pf": 3.248,
-   "wr": 40.2,
-   "avg_win": 3.774,
-   "avg_loss": -0.78,
-   "max_win": 48.64,
-   "max_loss": -2.1
-  },
-  "t2": {
-   "max_dd": 15.13,
-   "net_to_dd": 59.21,
-   "dd_as_pct_of_net": 1.7,
-   "longest_underwater": 49,
-   "avg_underwater": 8.0,
-   "n_dd_periods": 83,
-   "worst_roll20": -12.71,
-   "worst_roll50": -4.25,
-   "worst_roll100": 11.55,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 21,
-     "max": 36
-    },
-    "5.0": {
-     "median": 5,
-     "p90": 28,
-     "max": 72
-    },
-    "10.0": {
-     "median": 30,
-     "p90": 77,
-     "max": 113
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 94.6,
-   "net_drop_top1": 847.19,
-   "drop_top3": 85.6,
-   "net_drop_top3": 766.48,
-   "drop_top5": 78.7,
-   "net_drop_top5": 704.94,
-   "drop_top10": 66.6,
-   "net_drop_top10": 596.61,
-   "tail": {
-    "top0.5%": {
-     "k": 4,
-     "contrib": 17.9,
-     "remains": 82.1,
-     "net_remains": 735.46
-    },
-    "top1%": {
-     "k": 9,
-     "contrib": 31.3,
-     "remains": 68.7,
-     "net_remains": 615.4
-    },
-    "top2%": {
-     "k": 17,
-     "contrib": 46.8,
-     "remains": 53.2,
-     "net_remains": 476.77
-    },
-    "top5%": {
-     "k": 43,
-     "contrib": 74.4,
-     "remains": 25.6,
-     "net_remains": 229.09
-    },
-    "top10%": {
-     "k": 85,
-     "contrib": 101.9,
-     "remains": -1.9,
-     "net_remains": -17.38
-    },
-    "top20%": {
-     "k": 171,
-     "contrib": 129.1,
-     "remains": -29.1,
-     "net_remains": -260.85
-    }
-   },
-   "caps": {
-    "cap5R": 404.08,
-    "cap10R": 631.47,
-    "cap15R": 731.77,
-    "cap20R": 794.89
-   }
-  },
-  "t4": {
-   "1.0x": 895.83,
-   "1.5x": 853.13,
-   "2.0x": 810.43,
-   "3.0x": 725.03
-  },
-  "t5": {
-   "2021": 96.83,
-   "2022": 183.15,
-   "2023": 179.18,
-   "2024": 133.95,
-   "2025": 179.31,
-   "2026": 123.41,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 14,
-   "tuned": 11,
-   "swing": "htf15"
-  },
-  "eras": {
-   "is": {
-    "n": 558,
-    "net": 615.85,
-    "dd": 15.13,
-    "expectancy": 1.1037,
-    "pf": 3.286,
-    "wr": 41.0
-   },
-   "oos": {
-    "n": 296,
-    "net": 279.98,
-    "dd": 11.45,
-    "expectancy": 0.9459,
-    "pf": 3.168,
-    "wr": 38.5
-   }
-  },
-  "halfs": {
-   "2021-H1": 45.93,
-   "2021-H2": 50.9,
-   "2022-H1": 116.5,
-   "2022-H2": 66.65,
-   "2023-H1": 18.73,
-   "2023-H2": 160.46,
-   "2024-H1": 61.06,
-   "2024-H2": 72.89,
-   "2025-H1": 35.71,
-   "2025-H2": 143.6,
-   "2026-H1": 72.67,
-   "2026-H2": 50.73
-  },
-  "neg_cells": [],
-  "sd": 4.383,
-  "tstat": 6.99
- },
- "fsent_sig_multi": {
-  "name": "fsent_sig_multi",
-  "t1": {
-   "n": 521,
-   "net": 698.42,
-   "expectancy": 1.3405,
-   "pf": 3.521,
-   "wr": 45.9,
-   "avg_win": 4.082,
-   "avg_loss": -0.983,
-   "max_win": 56.36,
-   "max_loss": -3.39
-  },
-  "t2": {
-   "max_dd": 13.39,
-   "net_to_dd": 52.15,
-   "dd_as_pct_of_net": 1.9,
-   "longest_underwater": 24,
-   "avg_underwater": 5.4,
-   "n_dd_periods": 69,
-   "worst_roll20": -7.13,
-   "worst_roll50": 7.75,
-   "worst_roll100": 53.47,
-   "winner_gaps": {
-    "3.0": {
-     "median": 5,
-     "p90": 13,
-     "max": 19
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 20,
-     "max": 38
-    },
-    "10.0": {
-     "median": 17,
-     "p90": 48,
-     "max": 91
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 56.36,
-   "drop_top1": 91.9,
-   "net_drop_top1": 642.05,
-   "drop_top3": 79.0,
-   "net_drop_top3": 551.62,
-   "drop_top5": 70.3,
-   "net_drop_top5": 490.86,
-   "drop_top10": 54.0,
-   "net_drop_top10": 377.44,
-   "tail": {
-    "top0.5%": {
-     "k": 3,
-     "contrib": 21.0,
-     "remains": 79.0,
-     "net_remains": 551.62
-    },
-    "top1%": {
-     "k": 5,
-     "contrib": 29.7,
-     "remains": 70.3,
-     "net_remains": 490.86
-    },
-    "top2%": {
-     "k": 10,
-     "contrib": 46.0,
-     "remains": 54.0,
-     "net_remains": 377.44
-    },
-    "top5%": {
-     "k": 26,
-     "contrib": 74.2,
-     "remains": 25.8,
-     "net_remains": 180.32
-    },
-    "top10%": {
-     "k": 52,
-     "contrib": 99.3,
-     "remains": 0.7,
-     "net_remains": 4.57
-    },
-    "top20%": {
-     "k": 104,
-     "contrib": 124.7,
-     "remains": -24.7,
-     "net_remains": -172.86
-    }
-   },
-   "caps": {
-    "cap5R": 263.36,
-    "cap10R": 436.95,
-    "cap15R": 521.53,
-    "cap20R": 576.64
-   }
-  },
-  "t4": {
-   "1.0x": 698.42,
-   "1.5x": 672.37,
-   "2.0x": 646.32,
-   "3.0x": 594.22
-  },
-  "t5": {
-   "2021": 80.38,
-   "2022": 138.25,
-   "2023": 139.59,
-   "2024": 140.83,
-   "2025": 103.57,
-   "2026": 95.79,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 16,
-   "tuned": 13,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 329,
-    "net": 479.78,
-    "dd": 13.39,
-    "expectancy": 1.4583,
-    "pf": 3.634,
-    "wr": 45.3
-   },
-   "oos": {
-    "n": 192,
-    "net": 218.63,
-    "dd": 7.64,
-    "expectancy": 1.1387,
-    "pf": 3.304,
-    "wr": 46.9
-   }
-  },
-  "halfs": {
-   "2021-H1": 39.85,
-   "2021-H2": 40.53,
-   "2022-H1": 78.99,
-   "2022-H2": 59.27,
-   "2023-H1": 91.1,
-   "2023-H2": 48.49,
-   "2024-H1": 67.63,
-   "2024-H2": 73.2,
-   "2025-H1": 37.97,
-   "2025-H2": 65.61,
-   "2026-H1": 28.08,
-   "2026-H2": 67.71
-  },
-  "neg_cells": [],
-  "sd": 5.522,
-  "tstat": 5.54
- },
- "fsent_sig_full": {
-  "name": "fsent_sig_full",
-  "t1": {
-   "n": 386,
-   "net": 481.74,
-   "expectancy": 1.248,
-   "pf": 3.123,
-   "wr": 42.7,
-   "avg_win": 4.295,
-   "avg_loss": -1.027,
-   "max_win": 56.36,
-   "max_loss": -3.39
-  },
-  "t2": {
-   "max_dd": 10.78,
-   "net_to_dd": 44.67,
-   "dd_as_pct_of_net": 2.2,
-   "longest_underwater": 22,
-   "avg_underwater": 5.5,
-   "n_dd_periods": 53,
-   "worst_roll20": -4.93,
-   "worst_roll50": 7.57,
-   "worst_roll100": 64.99,
-   "winner_gaps": {
-    "3.0": {
-     "median": 5,
-     "p90": 13,
-     "max": 28
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 18,
-     "max": 28
-    },
-    "10.0": {
-     "median": 22,
-     "p90": 38,
-     "max": 76
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 56.36,
-   "drop_top1": 88.3,
-   "net_drop_top1": 425.37,
-   "drop_top3": 74.2,
-   "net_drop_top3": 357.49,
-   "drop_top5": 63.4,
-   "net_drop_top5": 305.45,
-   "drop_top10": 43.4,
-   "net_drop_top10": 209.2,
-   "tail": {
-    "top0.5%": {
-     "k": 2,
-     "contrib": 19.1,
-     "remains": 80.9,
-     "net_remains": 389.71
-    },
-    "top1%": {
-     "k": 4,
-     "contrib": 31.7,
-     "remains": 68.3,
-     "net_remains": 328.96
-    },
-    "top2%": {
-     "k": 8,
-     "contrib": 49.4,
-     "remains": 50.6,
-     "net_remains": 243.76
-    },
-    "top5%": {
-     "k": 19,
-     "contrib": 77.8,
-     "remains": 22.2,
-     "net_remains": 106.79
-    },
-    "top10%": {
-     "k": 39,
-     "contrib": 106.9,
-     "remains": -6.9,
-     "net_remains": -33.09
-    },
-    "top20%": {
-     "k": 77,
-     "contrib": 133.8,
-     "remains": -33.8,
-     "net_remains": -162.77
-    }
-   },
-   "caps": {
-    "cap5R": 160.46,
-    "cap10R": 293.95,
-    "cap15R": 357.85,
-    "cap20R": 402.96
-   }
-  },
-  "t4": {
-   "1.0x": 481.74,
-   "1.5x": 462.44,
-   "2.0x": 443.14,
-   "3.0x": 404.54
-  },
-  "t5": {
-   "2021": 75.35,
-   "2022": 115.37,
-   "2023": 91.58,
-   "2024": 114.29,
-   "2025": 52.86,
-   "2026": 32.29,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 16,
-   "tuned": 13,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 234,
-    "net": 291.02,
-    "dd": 10.78,
-    "expectancy": 1.2437,
-    "pf": 2.997,
-    "wr": 41.0
-   },
-   "oos": {
-    "n": 152,
-    "net": 190.72,
-    "dd": 6.96,
-    "expectancy": 1.2547,
-    "pf": 3.35,
-    "wr": 45.4
-   }
-  },
-  "halfs": {
-   "2021-H1": 39.55,
-   "2021-H2": 35.8,
-   "2022-H1": 56.71,
-   "2022-H2": 58.65,
-   "2023-H1": 59.35,
-   "2023-H2": 32.23,
-   "2024-H1": 66.62,
-   "2024-H2": 47.67,
-   "2025-H1": 17.84,
-   "2025-H2": 35.02,
-   "2026-H1": 18.82,
-   "2026-H2": 13.47
-  },
-  "neg_cells": [],
-  "sd": 5.385,
-  "tstat": 4.55
- },
- "fsent_champ_long_htf15": {
-  "name": "fsent_champ_long_htf15",
-  "t1": {
-   "n": 794,
-   "net": 830.46,
-   "expectancy": 1.0459,
-   "pf": 3.209,
-   "wr": 40.1,
-   "avg_win": 3.794,
-   "avg_loss": -0.79,
-   "max_win": 48.64,
-   "max_loss": -2.1
-  },
-  "t2": {
-   "max_dd": 16.06,
-   "net_to_dd": 51.71,
-   "dd_as_pct_of_net": 1.9,
-   "longest_underwater": 38,
-   "avg_underwater": 8.1,
-   "n_dd_periods": 77,
-   "worst_roll20": -12.68,
-   "worst_roll50": -10.92,
-   "worst_roll100": 2.25,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 20,
-     "max": 35
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 28,
-     "max": 65
-    },
-    "10.0": {
-     "median": 28,
-     "p90": 76,
-     "max": 103
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 94.1,
-   "net_drop_top1": 781.83,
-   "drop_top3": 84.4,
-   "net_drop_top3": 701.12,
-   "drop_top5": 77.0,
-   "net_drop_top5": 639.58,
-   "drop_top10": 64.0,
-   "net_drop_top10": 531.25,
-   "tail": {
-    "top0.5%": {
-     "k": 4,
-     "contrib": 19.3,
-     "remains": 80.7,
-     "net_remains": 670.09
-    },
-    "top1%": {
-     "k": 8,
-     "contrib": 31.4,
-     "remains": 68.6,
-     "net_remains": 569.52
-    },
-    "top2%": {
-     "k": 16,
-     "contrib": 48.5,
-     "remains": 51.5,
-     "net_remains": 427.5
-    },
-    "top5%": {
-     "k": 40,
-     "contrib": 76.0,
-     "remains": 24.0,
-     "net_remains": 199.19
-    },
-    "top10%": {
-     "k": 79,
-     "contrib": 103.1,
-     "remains": -3.1,
-     "net_remains": -25.66
-    },
-    "top20%": {
-     "k": 159,
-     "contrib": 130.3,
-     "remains": -30.3,
-     "net_remains": -251.85
-    }
-   },
-   "caps": {
-    "cap5R": 365.79,
-    "cap10R": 572.2,
-    "cap15R": 667.5,
-    "cap20R": 729.52
-   }
-  },
-  "t4": {
-   "1.0x": 830.46,
-   "1.5x": 790.76,
-   "2.0x": 751.06,
-   "3.0x": 671.66
-  },
-  "t5": {
-   "2021": 87.58,
-   "2022": 174.42,
-   "2023": 155.34,
-   "2024": 127.15,
-   "2025": 176.47,
-   "2026": 109.5,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 14,
-   "tuned": 12,
-   "swing": "htf15"
-  },
-  "eras": {
-   "is": {
-    "n": 517,
-    "net": 568.46,
-    "dd": 16.06,
-    "expectancy": 1.0995,
-    "pf": 3.255,
-    "wr": 41.2
-   },
-   "oos": {
-    "n": 277,
-    "net": 262.0,
-    "dd": 13.77,
-    "expectancy": 0.9458,
-    "pf": 3.116,
-    "wr": 37.9
-   }
-  },
-  "halfs": {
-   "2021-H1": 46.67,
-   "2021-H2": 40.91,
-   "2022-H1": 108.76,
-   "2022-H2": 65.66,
-   "2023-H1": 8.55,
-   "2023-H2": 146.79,
-   "2024-H1": 61.32,
-   "2024-H2": 65.83,
-   "2025-H1": 37.4,
-   "2025-H2": 139.06,
-   "2026-H1": 57.47,
-   "2026-H2": 52.03
-  },
-  "neg_cells": [],
-  "sd": 4.459,
-  "tstat": 6.61
- },
- "fsent_champ_short": {
-  "name": "fsent_champ_short",
-  "t1": {
-   "n": 839,
-   "net": 812.78,
-   "expectancy": 0.9687,
-   "pf": 2.782,
-   "wr": 36.1,
-   "avg_win": 4.187,
-   "avg_loss": -0.851,
-   "max_win": 54.78,
-   "max_loss": -3.36
-  },
-  "t2": {
-   "max_dd": 25.85,
-   "net_to_dd": 31.44,
-   "dd_as_pct_of_net": 3.2,
-   "longest_underwater": 79,
-   "avg_underwater": 11.2,
-   "n_dd_periods": 62,
-   "worst_roll20": -17.6,
-   "worst_roll50": -23.51,
-   "worst_roll100": 6.62,
-   "winner_gaps": {
-    "3.0": {
-     "median": 6,
-     "p90": 18,
-     "max": 44
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 28,
-     "max": 52
-    },
-    "10.0": {
-     "median": 17,
-     "p90": 61,
-     "max": 102
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 54.78,
-   "drop_top1": 93.3,
-   "net_drop_top1": 758.0,
-   "drop_top3": 83.5,
-   "net_drop_top3": 678.96,
-   "drop_top5": 75.2,
-   "net_drop_top5": 611.07,
-   "drop_top10": 56.8,
-   "net_drop_top10": 461.63,
-   "tail": {
-    "top0.5%": {
-     "k": 4,
-     "contrib": 20.9,
-     "remains": 79.1,
-     "net_remains": 643.3
-    },
-    "top1%": {
-     "k": 8,
-     "contrib": 36.2,
-     "remains": 63.8,
-     "net_remains": 518.38
-    },
-    "top2%": {
-     "k": 17,
-     "contrib": 62.1,
-     "remains": 37.9,
-     "net_remains": 307.93
-    },
-    "top5%": {
-     "k": 42,
-     "contrib": 94.7,
-     "remains": 5.3,
-     "net_remains": 43.39
-    },
-    "top10%": {
-     "k": 84,
-     "contrib": 121.7,
-     "remains": -21.7,
-     "net_remains": -176.51
-    },
-    "top20%": {
-     "k": 168,
-     "contrib": 146.5,
-     "remains": -46.5,
-     "net_remains": -378.06
-    }
-   },
-   "caps": {
-    "cap5R": 232.26,
-    "cap10R": 443.32,
-    "cap15R": 561.53,
-    "cap20R": 645.0
-   }
-  },
-  "t4": {
-   "1.0x": 812.78,
-   "1.5x": 770.83,
-   "2.0x": 728.88,
-   "3.0x": 644.98
-  },
-  "t5": {
-   "2021": 31.76,
-   "2022": 207.54,
-   "2023": 165.44,
-   "2024": 122.91,
-   "2025": 160.26,
-   "2026": 124.85,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 14,
-   "tuned": 13,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 530,
-    "net": 573.47,
-    "dd": 25.85,
-    "expectancy": 1.082,
-    "pf": 2.958,
-    "wr": 36.6
-   },
-   "oos": {
-    "n": 309,
-    "net": 239.31,
-    "dd": 23.87,
-    "expectancy": 0.7745,
-    "pf": 2.467,
-    "wr": 35.3
-   }
-  },
-  "halfs": {
-   "2021-H1": 2.25,
-   "2021-H2": 29.51,
-   "2022-H1": 107.84,
-   "2022-H2": 99.71,
-   "2023-H1": 42.73,
-   "2023-H2": 122.71,
-   "2024-H1": 63.97,
-   "2024-H2": 58.94,
-   "2025-H1": 26.71,
-   "2025-H2": 133.55,
-   "2026-H1": 61.37,
-   "2026-H2": 63.48
-  },
-  "neg_cells": [],
-  "sd": 4.981,
-  "tstat": 5.63
- },
- "fsent_champ_long_mode_union": {
-  "name": "fsent_champ_long_mode_union",
-  "t1": {
-   "n": 1255,
-   "net": 883.85,
-   "expectancy": 0.7043,
-   "pf": 2.421,
-   "wr": 36.3,
-   "avg_win": 3.303,
-   "avg_loss": -0.779,
-   "max_win": 48.64,
-   "max_loss": -2.71
-  },
-  "t2": {
-   "max_dd": 23.85,
-   "net_to_dd": 37.06,
-   "dd_as_pct_of_net": 2.7,
-   "longest_underwater": 117,
-   "avg_underwater": 11.9,
-   "n_dd_periods": 89,
-   "worst_roll20": -14.47,
-   "worst_roll50": -18.88,
-   "worst_roll100": -15.33,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 24,
-     "max": 63
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 38,
-     "max": 80
-    },
-    "10.0": {
-     "median": 29,
-     "p90": 87,
-     "max": 195
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 94.5,
-   "net_drop_top1": 835.21,
-   "drop_top3": 85.4,
-   "net_drop_top3": 754.5,
-   "drop_top5": 78.4,
-   "net_drop_top5": 692.97,
-   "drop_top10": 65.9,
-   "net_drop_top10": 582.47,
-   "tail": {
-    "top0.5%": {
-     "k": 6,
-     "contrib": 24.6,
-     "remains": 75.4,
-     "net_remains": 666.83
-    },
-    "top1%": {
-     "k": 13,
-     "contrib": 40.4,
-     "remains": 59.6,
-     "net_remains": 526.81
-    },
-    "top2%": {
-     "k": 25,
-     "contrib": 59.4,
-     "remains": 40.6,
-     "net_remains": 358.78
-    },
-    "top5%": {
-     "k": 63,
-     "contrib": 92.8,
-     "remains": 7.2,
-     "net_remains": 63.78
-    },
-    "top10%": {
-     "k": 126,
-     "contrib": 126.7,
-     "remains": -26.7,
-     "net_remains": -235.56
-    },
-    "top20%": {
-     "k": 251,
-     "contrib": 157.0,
-     "remains": -57.0,
-     "net_remains": -503.55
-    }
-   },
-   "caps": {
-    "cap5R": 363.52,
-    "cap10R": 608.78,
-    "cap15R": 710.01,
-    "cap20R": 781.96
-   }
-  },
-  "t4": {
-   "1.0x": 883.85,
-   "1.5x": 821.1,
-   "2.0x": 758.35,
-   "3.0x": 632.85
-  },
-  "t5": {
-   "2021": 95.01,
-   "2022": 208.8,
-   "2023": 183.92,
-   "2024": 162.4,
-   "2025": 143.68,
-   "2026": 90.04,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 11,
-   "tuned": 9,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 813,
-    "net": 580.04,
-    "dd": 23.85,
-    "expectancy": 0.7135,
-    "pf": 2.404,
-    "wr": 37.4
-   },
-   "oos": {
-    "n": 442,
-    "net": 303.81,
-    "dd": 18.23,
-    "expectancy": 0.6873,
-    "pf": 2.454,
-    "wr": 34.4
-   }
-  },
-  "halfs": {
-   "2021-H1": 46.16,
-   "2021-H2": 48.85,
-   "2022-H1": 154.69,
-   "2022-H2": 54.11,
-   "2023-H1": 22.02,
-   "2023-H2": 161.9,
-   "2024-H1": 81.2,
-   "2024-H2": 81.2,
-   "2025-H1": 27.24,
-   "2025-H2": 116.44,
-   "2026-H1": 50.92,
-   "2026-H2": 39.12
-  },
-  "neg_cells": [],
-  "sd": 3.802,
-  "tstat": 6.56
- },
- "fsent_champ_long_mode_atr_low": {
-  "name": "fsent_champ_long_mode_atr_low",
-  "t1": {
-   "n": 950,
-   "net": 950.28,
-   "expectancy": 1.0003,
-   "pf": 3.047,
-   "wr": 38.7,
-   "avg_win": 3.844,
-   "avg_loss": -0.798,
-   "max_win": 48.64,
-   "max_loss": -2.28
-  },
-  "t2": {
-   "max_dd": 28.98,
-   "net_to_dd": 32.79,
-   "dd_as_pct_of_net": 3.0,
-   "longest_underwater": 98,
-   "avg_underwater": 8.7,
-   "n_dd_periods": 86,
-   "worst_roll20": -17.53,
-   "worst_roll50": -26.41,
-   "worst_roll100": -15.7,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 18,
-     "max": 57
-    },
-    "5.0": {
-     "median": 6,
-     "p90": 29,
-     "max": 67
-    },
-    "10.0": {
-     "median": 13,
-     "p90": 80,
-     "max": 123
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 94.9,
-   "net_drop_top1": 901.64,
-   "drop_top3": 86.6,
-   "net_drop_top3": 823.18,
-   "drop_top5": 80.1,
-   "net_drop_top5": 761.64,
-   "drop_top10": 68.1,
-   "net_drop_top10": 647.61,
-   "tail": {
-    "top0.5%": {
-     "k": 5,
-     "contrib": 19.9,
-     "remains": 80.1,
-     "net_remains": 761.64
-    },
-    "top1%": {
-     "k": 10,
-     "contrib": 31.9,
-     "remains": 68.1,
-     "net_remains": 647.61
-    },
-    "top2%": {
-     "k": 19,
-     "contrib": 48.7,
-     "remains": 51.3,
-     "net_remains": 487.56
-    },
-    "top5%": {
-     "k": 48,
-     "contrib": 79.9,
-     "remains": 20.1,
-     "net_remains": 190.6
-    },
-    "top10%": {
-     "k": 95,
-     "contrib": 108.3,
-     "remains": -8.3,
-     "net_remains": -79.19
-    },
-    "top20%": {
-     "k": 190,
-     "contrib": 135.3,
-     "remains": -35.3,
-     "net_remains": -335.84
-    }
-   },
-   "caps": {
-    "cap5R": 391.37,
-    "cap10R": 647.11,
-    "cap15R": 771.35,
-    "cap20R": 847.1
-   }
-  },
-  "t4": {
-   "1.0x": 950.28,
-   "1.5x": 902.78,
-   "2.0x": 855.28,
-   "3.0x": 760.28
-  },
-  "t5": {
-   "2021": 98.32,
-   "2022": 178.28,
-   "2023": 234.64,
-   "2024": 157.77,
-   "2025": 90.78,
-   "2026": 190.49,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 11,
-   "tuned": 9,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 639,
-    "net": 673.68,
-    "dd": 28.98,
-    "expectancy": 1.0543,
-    "pf": 3.08,
-    "wr": 39.1
-   },
-   "oos": {
-    "n": 311,
-    "net": 276.6,
-    "dd": 14.56,
-    "expectancy": 0.8894,
-    "pf": 2.971,
-    "wr": 37.9
-   }
-  },
-  "halfs": {
-   "2021-H1": 47.45,
-   "2021-H2": 50.86,
-   "2022-H1": 121.9,
-   "2022-H2": 56.38,
-   "2023-H1": 12.09,
-   "2023-H2": 222.55,
-   "2024-H1": 19.95,
-   "2024-H2": 137.83,
-   "2025-H1": 16.52,
-   "2025-H2": 74.26,
-   "2026-H1": 91.79,
-   "2026-H2": 98.69
-  },
-  "neg_cells": [],
-  "sd": 4.368,
-  "tstat": 7.06
- },
- "fsent_champ_long_biasmom05": {
-  "name": "fsent_champ_long_biasmom05",
-  "t1": {
-   "n": 772,
-   "net": 716.85,
-   "expectancy": 0.9286,
-   "pf": 2.916,
-   "wr": 38.7,
-   "avg_win": 3.649,
-   "avg_loss": -0.791,
-   "max_win": 48.64,
-   "max_loss": -2.1
-  },
-  "t2": {
-   "max_dd": 13.66,
-   "net_to_dd": 52.46,
-   "dd_as_pct_of_net": 1.9,
-   "longest_underwater": 43,
-   "avg_underwater": 8.1,
-   "n_dd_periods": 76,
-   "worst_roll20": -12.1,
-   "worst_roll50": -4.52,
-   "worst_roll100": 4.23,
-   "winner_gaps": {
-    "3.0": {
-     "median": 4,
-     "p90": 21,
-     "max": 38
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 29,
-     "max": 68
-    },
-    "10.0": {
-     "median": 30,
-     "p90": 75,
-     "max": 108
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 93.2,
-   "net_drop_top1": 668.21,
-   "drop_top3": 82.0,
-   "net_drop_top3": 587.5,
-   "drop_top5": 73.4,
-   "net_drop_top5": 525.96,
-   "drop_top10": 58.3,
-   "net_drop_top10": 417.8,
-   "tail": {
-    "top0.5%": {
-     "k": 4,
-     "contrib": 22.4,
-     "remains": 77.6,
-     "net_remains": 556.47
-    },
-    "top1%": {
-     "k": 8,
-     "contrib": 36.4,
-     "remains": 63.6,
-     "net_remains": 455.9
-    },
-    "top2%": {
-     "k": 15,
-     "contrib": 53.1,
-     "remains": 46.9,
-     "net_remains": 336.1
-    },
-    "top5%": {
-     "k": 39,
-     "contrib": 82.1,
-     "remains": 17.9,
-     "net_remains": 128.44
-    },
-    "top10%": {
-     "k": 77,
-     "contrib": 109.7,
-     "remains": -9.7,
-     "net_remains": -69.56
-    },
-    "top20%": {
-     "k": 154,
-     "contrib": 137.6,
-     "remains": -37.6,
-     "net_remains": -269.42
-    }
-   },
-   "caps": {
-    "cap5R": 305.36,
-    "cap10R": 481.97,
-    "cap15R": 560.09,
-    "cap20R": 615.9
-   }
-  },
-  "t4": {
-   "1.0x": 716.85,
-   "1.5x": 678.25,
-   "2.0x": 639.65,
-   "3.0x": 562.45
-  },
-  "t5": {
-   "2021": 68.26,
-   "2022": 148.67,
-   "2023": 155.85,
-   "2024": 125.9,
-   "2025": 98.34,
-   "2026": 119.82,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 15,
-   "tuned": 13,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 485,
-    "net": 499.91,
-    "dd": 13.42,
-    "expectancy": 1.0307,
-    "pf": 3.058,
-    "wr": 39.4
-   },
-   "oos": {
-    "n": 287,
-    "net": 216.93,
-    "dd": 13.66,
-    "expectancy": 0.7559,
-    "pf": 2.654,
-    "wr": 37.6
-   }
-  },
-  "halfs": {
-   "2021-H1": 39.27,
-   "2021-H2": 28.99,
-   "2022-H1": 74.73,
-   "2022-H2": 73.94,
-   "2023-H1": 25.61,
-   "2023-H2": 130.24,
-   "2024-H1": 65.04,
-   "2024-H2": 60.86,
-   "2025-H1": 4.25,
-   "2025-H2": 94.09,
-   "2026-H1": 68.8,
-   "2026-H2": 51.02
-  },
-  "neg_cells": [],
-  "sd": 4.358,
-  "tstat": 5.92
- },
- "fsent_champ_long_htfesmcl4": {
-  "name": "fsent_champ_long_htfesmcl4",
-  "t1": {
-   "n": 1226,
-   "net": 1233.81,
-   "expectancy": 1.0064,
-   "pf": 3.166,
-   "wr": 40.9,
-   "avg_win": 3.592,
-   "avg_loss": -0.787,
-   "max_win": 48.64,
-   "max_loss": -2.71
-  },
-  "t2": {
-   "max_dd": 28.0,
-   "net_to_dd": 44.06,
-   "dd_as_pct_of_net": 2.3,
-   "longest_underwater": 104,
-   "avg_underwater": 9.1,
-   "n_dd_periods": 105,
-   "worst_roll20": -12.97,
-   "worst_roll50": -16.14,
-   "worst_roll100": -17.13,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 21,
-     "max": 71
-    },
-    "5.0": {
-     "median": 4,
-     "p90": 31,
-     "max": 104
-    },
-    "10.0": {
-     "median": 16,
-     "p90": 83,
-     "max": 144
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 96.1,
-   "net_drop_top1": 1185.17,
-   "drop_top3": 88.3,
-   "net_drop_top3": 1089.01,
-   "drop_top5": 81.8,
-   "net_drop_top5": 1008.84,
-   "drop_top10": 69.6,
-   "net_drop_top10": 858.68,
-   "tail": {
-    "top0.5%": {
-     "k": 6,
-     "contrib": 20.8,
-     "remains": 79.2,
-     "net_remains": 976.62
-    },
-    "top1%": {
-     "k": 12,
-     "contrib": 34.2,
-     "remains": 65.8,
-     "net_remains": 811.52
-    },
-    "top2%": {
-     "k": 25,
-     "contrib": 51.9,
-     "remains": 48.1,
-     "net_remains": 592.87
-    },
-    "top5%": {
-     "k": 61,
-     "contrib": 78.5,
-     "remains": 21.5,
-     "net_remains": 265.01
-    },
-    "top10%": {
-     "k": 123,
-     "contrib": 105.7,
-     "remains": -5.7,
-     "net_remains": -70.61
-    },
-    "top20%": {
-     "k": 245,
-     "contrib": 131.0,
-     "remains": -31.0,
-     "net_remains": -382.19
-    }
-   },
-   "caps": {
-    "cap5R": 533.01,
-    "cap10R": 830.13,
-    "cap15R": 963.17,
-    "cap20R": 1050.58
-   }
-  },
-  "t4": {
-   "1.0x": 1233.81,
-   "1.5x": 1172.51,
-   "2.0x": 1111.21,
-   "3.0x": 988.61
-  },
-  "t5": {
-   "2021": 144.4,
-   "2022": 181.82,
-   "2023": 293.32,
-   "2024": 277.99,
-   "2025": 148.3,
-   "2026": 187.97,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 15,
-   "tuned": 13,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 789,
-    "net": 907.59,
-    "dd": 28.0,
-    "expectancy": 1.1503,
-    "pf": 3.433,
-    "wr": 42.7
-   },
-   "oos": {
-    "n": 437,
-    "net": 326.22,
-    "dd": 14.2,
-    "expectancy": 0.7465,
-    "pf": 2.66,
-    "wr": 37.8
-   }
-  },
-  "halfs": {
-   "2021-H1": 53.51,
-   "2021-H2": 90.89,
-   "2022-H1": 180.17,
-   "2022-H2": 1.64,
-   "2023-H1": 97.87,
-   "2023-H2": 195.45,
-   "2024-H1": 134.51,
-   "2024-H2": 143.49,
-   "2025-H1": 12.75,
-   "2025-H2": 135.55,
-   "2026-H1": 108.15,
-   "2026-H2": 79.82
-  },
-  "neg_cells": [],
-  "sd": 4.517,
-  "tstat": 7.8
- },
- "fsent_champ_long_mode_fd": {
-  "name": "fsent_champ_long_mode_fd",
-  "t1": {
-   "n": 819,
-   "net": 767.36,
-   "expectancy": 0.9369,
-   "pf": 2.987,
-   "wr": 38.6,
-   "avg_win": 3.651,
-   "avg_loss": -0.768,
-   "max_win": 48.64,
-   "max_loss": -2.1
-  },
-  "t2": {
-   "max_dd": 13.42,
-   "net_to_dd": 57.19,
-   "dd_as_pct_of_net": 1.7,
-   "longest_underwater": 48,
-   "avg_underwater": 8.3,
-   "n_dd_periods": 79,
-   "worst_roll20": -12.68,
-   "worst_roll50": -8.68,
-   "worst_roll100": -0.91,
-   "winner_gaps": {
-    "3.0": {
-     "median": 3,
-     "p90": 20,
-     "max": 41
-    },
-    "5.0": {
-     "median": 7,
-     "p90": 29,
-     "max": 72
-    },
-    "10.0": {
-     "median": 29,
-     "p90": 77,
-     "max": 120
-    }
-   }
-  },
-  "t3": {
-   "max_winner": 48.64,
-   "drop_top1": 93.7,
-   "net_drop_top1": 718.72,
-   "drop_top3": 83.1,
-   "net_drop_top3": 638.01,
-   "drop_top5": 75.1,
-   "net_drop_top5": 576.47,
-   "drop_top10": 61.0,
-   "net_drop_top10": 468.14,
-   "tail": {
-    "top0.5%": {
-     "k": 4,
-     "contrib": 20.9,
-     "remains": 79.1,
-     "net_remains": 606.98
-    },
-    "top1%": {
-     "k": 8,
-     "contrib": 34.0,
-     "remains": 66.0,
-     "net_remains": 506.41
-    },
-    "top2%": {
-     "k": 16,
-     "contrib": 52.5,
-     "remains": 47.5,
-     "net_remains": 364.39
-    },
-    "top5%": {
-     "k": 41,
-     "contrib": 81.2,
-     "remains": 18.8,
-     "net_remains": 143.97
-    },
-    "top10%": {
-     "k": 82,
-     "contrib": 109.7,
-     "remains": -9.7,
-     "net_remains": -74.67
-    },
-    "top20%": {
-     "k": 164,
-     "contrib": 136.9,
-     "remains": -36.9,
-     "net_remains": -282.95
-    }
-   },
-   "caps": {
-    "cap5R": 326.16,
-    "cap10R": 516.27,
-    "cap15R": 604.39,
-    "cap20R": 666.41
-   }
-  },
-  "t4": {
-   "1.0x": 767.36,
-   "1.5x": 726.41,
-   "2.0x": 685.46,
-   "3.0x": 603.56
-  },
-  "t5": {
-   "2021": 76.0,
-   "2022": 166.54,
-   "2023": 165.62,
-   "2024": 114.45,
-   "2025": 137.88,
-   "2026": 106.87,
-   "_years_positive": "6 of 6"
-  },
-  "t6": {
-   "params": 11,
-   "tuned": 9,
-   "swing": "sw10"
-  },
-  "eras": {
-   "is": {
-    "n": 528,
-    "net": 524.82,
-    "dd": 13.42,
-    "expectancy": 0.994,
-    "pf": 3.043,
-    "wr": 39.4
-   },
-   "oos": {
-    "n": 291,
-    "net": 242.54,
-    "dd": 11.88,
-    "expectancy": 0.8335,
-    "pf": 2.875,
-    "wr": 37.1
-   }
-  },
-  "halfs": {
-   "2021-H1": 47.45,
-   "2021-H2": 28.55,
-   "2022-H1": 98.6,
-   "2022-H2": 67.93,
-   "2023-H1": 22.17,
-   "2023-H2": 143.45,
-   "2024-H1": 59.12,
-   "2024-H2": 55.33,
-   "2025-H1": -0.35,
-   "2025-H2": 138.22,
-   "2026-H1": 54.84,
-   "2026-H2": 52.03
-  },
-  "neg_cells": [
-   "2025-H1"
-  ],
-  "sd": 4.336,
-  "tstat": 6.18
- }
+  "fsent_champ_long": {
+    "name": "fsent_champ_long",
+    "t1": {
+      "n": 839,
+      "net": 772.96,
+      "expectancy": 0.9213,
+      "pf": 2.945,
+      "wr": 38.9,
+      "avg_win": 3.59,
+      "avg_loss": -0.775,
+      "max_win": 48.64,
+      "max_loss": -2.1
+    },
+    "t2": {
+      "max_dd": 13.42,
+      "net_to_dd": 57.6,
+      "dd_as_pct_of_net": 1.7,
+      "longest_underwater": 49,
+      "avg_underwater": 8.3,
+      "n_dd_periods": 81,
+      "worst_roll20": -12.68,
+      "worst_roll50": -8.34,
+      "worst_roll100": -1.88,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 21,
+          "max": 42
+        },
+        "5.0": {
+          "median": 8,
+          "p90": 29,
+          "max": 70
+        },
+        "10.0": {
+          "median": 27,
+          "p90": 81,
+          "max": 121
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 93.7,
+      "net_drop_top1": 724.32,
+      "drop_top3": 83.3,
+      "net_drop_top3": 643.61,
+      "drop_top5": 75.3,
+      "net_drop_top5": 582.07,
+      "drop_top10": 61.3,
+      "net_drop_top10": 473.74,
+      "tail": {
+        "top0.5%": {
+          "k": 4,
+          "contrib": 20.7,
+          "remains": 79.3,
+          "net_remains": 612.59
+        },
+        "top1%": {
+          "k": 8,
+          "contrib": 33.8,
+          "remains": 66.2,
+          "net_remains": 512.02
+        },
+        "top2%": {
+          "k": 17,
+          "contrib": 53.9,
+          "remains": 46.1,
+          "net_remains": 356.01
+        },
+        "top5%": {
+          "k": 42,
+          "contrib": 81.5,
+          "remains": 18.5,
+          "net_remains": 143.26
+        },
+        "top10%": {
+          "k": 84,
+          "contrib": 109.9,
+          "remains": -9.9,
+          "net_remains": -76.46
+        },
+        "top20%": {
+          "k": 168,
+          "contrib": 137.4,
+          "remains": -37.4,
+          "net_remains": -288.71
+        }
+      },
+      "caps": {
+        "cap5R": 333.17,
+        "cap10R": 521.87,
+        "cap15R": 610.0,
+        "cap20R": 672.02
+      }
+    },
+    "t4": {
+      "1.0x": 772.96,
+      "1.5x": 731.01,
+      "2.0x": 689.06,
+      "3.0x": 605.16
+    },
+    "t5": {
+      "2021": 78.33,
+      "2022": 161.26,
+      "2023": 172.43,
+      "2024": 114.17,
+      "2025": 137.53,
+      "2026": 109.24,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 11,
+      "tuned": 9,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 528,
+        "net": 533.37,
+        "dd": 13.42,
+        "expectancy": 1.0102,
+        "pf": 3.088,
+        "wr": 40.0
+      },
+      "oos": {
+        "n": 311,
+        "net": 239.59,
+        "dd": 11.88,
+        "expectancy": 0.7704,
+        "pf": 2.688,
+        "wr": 37.0
+      }
+    },
+    "halfs": {
+      "2021-H1": 43.67,
+      "2021-H2": 34.66,
+      "2022-H1": 92.42,
+      "2022-H2": 68.84,
+      "2023-H1": 28.97,
+      "2023-H2": 143.45,
+      "2024-H1": 58.84,
+      "2024-H2": 55.33,
+      "2025-H1": -0.69,
+      "2025-H2": 138.22,
+      "2026-H1": 56.21,
+      "2026-H2": 53.03
+    },
+    "neg_cells": [
+      "2025-H1"
+    ],
+    "sd": 4.291,
+    "tstat": 6.22
+  },
+  "fsent_champ_long_mcloff": {
+    "name": "fsent_champ_long_mcloff",
+    "t1": {
+      "n": 912,
+      "net": 837.5,
+      "expectancy": 0.9183,
+      "pf": 2.933,
+      "wr": 38.7,
+      "avg_win": 3.6,
+      "avg_loss": -0.775,
+      "max_win": 48.64,
+      "max_loss": -2.1
+    },
+    "t2": {
+      "max_dd": 15.13,
+      "net_to_dd": 55.35,
+      "dd_as_pct_of_net": 1.8,
+      "longest_underwater": 54,
+      "avg_underwater": 8.7,
+      "n_dd_periods": 84,
+      "worst_roll20": -12.71,
+      "worst_roll50": -11.8,
+      "worst_roll100": 4.83,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 21,
+          "max": 45
+        },
+        "5.0": {
+          "median": 8,
+          "p90": 27,
+          "max": 74
+        },
+        "10.0": {
+          "median": 22,
+          "p90": 85,
+          "max": 135
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 94.2,
+      "net_drop_top1": 788.86,
+      "drop_top3": 84.6,
+      "net_drop_top3": 708.15,
+      "drop_top5": 77.2,
+      "net_drop_top5": 646.61,
+      "drop_top10": 64.3,
+      "net_drop_top10": 538.28,
+      "tail": {
+        "top0.5%": {
+          "k": 5,
+          "contrib": 22.8,
+          "remains": 77.2,
+          "net_remains": 646.61
+        },
+        "top1%": {
+          "k": 9,
+          "contrib": 33.5,
+          "remains": 66.5,
+          "net_remains": 557.07
+        },
+        "top2%": {
+          "k": 18,
+          "contrib": 51.7,
+          "remains": 48.3,
+          "net_remains": 404.45
+        },
+        "top5%": {
+          "k": 46,
+          "contrib": 80.8,
+          "remains": 19.2,
+          "net_remains": 161.01
+        },
+        "top10%": {
+          "k": 91,
+          "contrib": 109.6,
+          "remains": -9.6,
+          "net_remains": -80.34
+        },
+        "top20%": {
+          "k": 182,
+          "contrib": 137.3,
+          "remains": -37.3,
+          "net_remains": -311.97
+        }
+      },
+      "caps": {
+        "cap5R": 365.19,
+        "cap10R": 580.27,
+        "cap15R": 673.43,
+        "cap20R": 736.55
+      }
+    },
+    "t4": {
+      "1.0x": 837.5,
+      "1.5x": 791.9,
+      "2.0x": 746.3,
+      "3.0x": 655.1
+    },
+    "t5": {
+      "2021": 91.01,
+      "2022": 179.9,
+      "2023": 185.07,
+      "2024": 114.69,
+      "2025": 143.68,
+      "2026": 123.14,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 14,
+      "tuned": 11,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 575,
+        "net": 566.59,
+        "dd": 15.13,
+        "expectancy": 0.9854,
+        "pf": 3.019,
+        "wr": 39.7
+      },
+      "oos": {
+        "n": 337,
+        "net": 270.91,
+        "dd": 14.16,
+        "expectancy": 0.8039,
+        "pf": 2.775,
+        "wr": 37.1
+      }
+    },
+    "halfs": {
+      "2021-H1": 40.89,
+      "2021-H2": 50.12,
+      "2022-H1": 107.39,
+      "2022-H2": 72.51,
+      "2023-H1": 28.21,
+      "2023-H2": 156.86,
+      "2024-H1": 59.46,
+      "2024-H2": 55.24,
+      "2025-H1": 0.92,
+      "2025-H2": 142.76,
+      "2026-H1": 71.41,
+      "2026-H2": 51.73
+    },
+    "neg_cells": [],
+    "sd": 4.217,
+    "tstat": 6.58
+  },
+  "fsent_champ_long_mcloff_htf15": {
+    "name": "fsent_champ_long_mcloff_htf15",
+    "t1": {
+      "n": 859,
+      "net": 893.52,
+      "expectancy": 1.0402,
+      "pf": 3.224,
+      "wr": 40.0,
+      "avg_win": 3.766,
+      "avg_loss": -0.78,
+      "max_win": 48.64,
+      "max_loss": -2.1
+    },
+    "t2": {
+      "max_dd": 15.13,
+      "net_to_dd": 59.06,
+      "dd_as_pct_of_net": 1.7,
+      "longest_underwater": 40,
+      "avg_underwater": 8.1,
+      "n_dd_periods": 83,
+      "worst_roll20": -12.71,
+      "worst_roll50": -4.25,
+      "worst_roll100": 11.55,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 21,
+          "max": 38
+        },
+        "5.0": {
+          "median": 5,
+          "p90": 28,
+          "max": 72
+        },
+        "10.0": {
+          "median": 30,
+          "p90": 78,
+          "max": 113
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 94.6,
+      "net_drop_top1": 844.88,
+      "drop_top3": 85.5,
+      "net_drop_top3": 764.17,
+      "drop_top5": 78.6,
+      "net_drop_top5": 702.64,
+      "drop_top10": 66.5,
+      "net_drop_top10": 594.3,
+      "tail": {
+        "top0.5%": {
+          "k": 4,
+          "contrib": 17.9,
+          "remains": 82.1,
+          "net_remains": 733.15
+        },
+        "top1%": {
+          "k": 9,
+          "contrib": 31.4,
+          "remains": 68.6,
+          "net_remains": 613.09
+        },
+        "top2%": {
+          "k": 17,
+          "contrib": 46.9,
+          "remains": 53.1,
+          "net_remains": 474.46
+        },
+        "top5%": {
+          "k": 43,
+          "contrib": 74.6,
+          "remains": 25.4,
+          "net_remains": 226.78
+        },
+        "top10%": {
+          "k": 86,
+          "contrib": 102.7,
+          "remains": -2.7,
+          "net_remains": -23.98
+        },
+        "top20%": {
+          "k": 172,
+          "contrib": 129.7,
+          "remains": -29.7,
+          "net_remains": -265.0
+        }
+      },
+      "caps": {
+        "cap5R": 401.77,
+        "cap10R": 629.16,
+        "cap15R": 729.46,
+        "cap20R": 792.58
+      }
+    },
+    "t4": {
+      "1.0x": 893.52,
+      "1.5x": 850.57,
+      "2.0x": 807.62,
+      "3.0x": 721.72
+    },
+    "t5": {
+      "2021": 97.66,
+      "2022": 179.7,
+      "2023": 179.18,
+      "2024": 133.27,
+      "2025": 179.31,
+      "2026": 124.41,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 14,
+      "tuned": 11,
+      "swing": "htf15"
+    },
+    "eras": {
+      "is": {
+        "n": 560,
+        "net": 616.17,
+        "dd": 15.13,
+        "expectancy": 1.1003,
+        "pf": 3.282,
+        "wr": 41.1
+      },
+      "oos": {
+        "n": 299,
+        "net": 277.35,
+        "dd": 13.64,
+        "expectancy": 0.9276,
+        "pf": 3.104,
+        "wr": 38.1
+      }
+    },
+    "halfs": {
+      "2021-H1": 46.76,
+      "2021-H2": 50.9,
+      "2022-H1": 115.23,
+      "2022-H2": 64.47,
+      "2023-H1": 18.73,
+      "2023-H2": 160.46,
+      "2024-H1": 60.38,
+      "2024-H2": 72.89,
+      "2025-H1": 35.71,
+      "2025-H2": 143.6,
+      "2026-H1": 72.67,
+      "2026-H2": 51.73
+    },
+    "neg_cells": [],
+    "sd": 4.373,
+    "tstat": 6.97
+  },
+  "fsent_sig_multi": {
+    "name": "fsent_sig_multi",
+    "t1": {
+      "n": 523,
+      "net": 704.41,
+      "expectancy": 1.3469,
+      "pf": 3.574,
+      "wr": 46.3,
+      "avg_win": 4.042,
+      "avg_loss": -0.974,
+      "max_win": 56.36,
+      "max_loss": -2.15
+    },
+    "t2": {
+      "max_dd": 13.39,
+      "net_to_dd": 52.6,
+      "dd_as_pct_of_net": 1.9,
+      "longest_underwater": 24,
+      "avg_underwater": 5.4,
+      "n_dd_periods": 69,
+      "worst_roll20": -7.13,
+      "worst_roll50": 10.02,
+      "worst_roll100": 55.75,
+      "winner_gaps": {
+        "3.0": {
+          "median": 5,
+          "p90": 13,
+          "max": 19
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 20,
+          "max": 38
+        },
+        "10.0": {
+          "median": 17,
+          "p90": 48,
+          "max": 91
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 56.36,
+      "drop_top1": 92.0,
+      "net_drop_top1": 648.04,
+      "drop_top3": 79.2,
+      "net_drop_top3": 557.61,
+      "drop_top5": 70.5,
+      "net_drop_top5": 496.85,
+      "drop_top10": 54.4,
+      "net_drop_top10": 383.44,
+      "tail": {
+        "top0.5%": {
+          "k": 3,
+          "contrib": 20.8,
+          "remains": 79.2,
+          "net_remains": 557.61
+        },
+        "top1%": {
+          "k": 5,
+          "contrib": 29.5,
+          "remains": 70.5,
+          "net_remains": 496.85
+        },
+        "top2%": {
+          "k": 10,
+          "contrib": 45.6,
+          "remains": 54.4,
+          "net_remains": 383.44
+        },
+        "top5%": {
+          "k": 26,
+          "contrib": 73.5,
+          "remains": 26.5,
+          "net_remains": 186.32
+        },
+        "top10%": {
+          "k": 52,
+          "contrib": 98.5,
+          "remains": 1.5,
+          "net_remains": 10.56
+        },
+        "top20%": {
+          "k": 105,
+          "contrib": 124.0,
+          "remains": -24.0,
+          "net_remains": -168.99
+        }
+      },
+      "caps": {
+        "cap5R": 269.36,
+        "cap10R": 442.95,
+        "cap15R": 527.52,
+        "cap20R": 582.63
+      }
+    },
+    "t4": {
+      "1.0x": 704.41,
+      "1.5x": 678.26,
+      "2.0x": 652.11,
+      "3.0x": 599.81
+    },
+    "t5": {
+      "2021": 80.38,
+      "2022": 139.44,
+      "2023": 139.59,
+      "2024": 140.83,
+      "2025": 106.11,
+      "2026": 98.06,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 16,
+      "tuned": 13,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 329,
+        "net": 484.59,
+        "dd": 13.39,
+        "expectancy": 1.4729,
+        "pf": 3.71,
+        "wr": 45.6
+      },
+      "oos": {
+        "n": 194,
+        "net": 219.82,
+        "dd": 7.64,
+        "expectancy": 1.1331,
+        "pf": 3.316,
+        "wr": 47.4
+      }
+    },
+    "halfs": {
+      "2021-H1": 39.85,
+      "2021-H2": 40.53,
+      "2022-H1": 80.17,
+      "2022-H2": 59.27,
+      "2023-H1": 91.1,
+      "2023-H2": 48.49,
+      "2024-H1": 67.63,
+      "2024-H2": 73.2,
+      "2025-H1": 40.51,
+      "2025-H2": 65.61,
+      "2026-H1": 28.08,
+      "2026-H2": 69.99
+    },
+    "neg_cells": [],
+    "sd": 5.507,
+    "tstat": 5.59
+  },
+  "fsent_sig_full": {
+    "name": "fsent_sig_full",
+    "t1": {
+      "n": 385,
+      "net": 490.27,
+      "expectancy": 1.2734,
+      "pf": 3.219,
+      "wr": 43.4,
+      "avg_win": 4.259,
+      "avg_loss": -1.013,
+      "max_win": 56.36,
+      "max_loss": -2.15
+    },
+    "t2": {
+      "max_dd": 10.78,
+      "net_to_dd": 45.46,
+      "dd_as_pct_of_net": 2.2,
+      "longest_underwater": 22,
+      "avg_underwater": 5.2,
+      "n_dd_periods": 55,
+      "worst_roll20": -4.9,
+      "worst_roll50": 9.84,
+      "worst_roll100": 69.61,
+      "winner_gaps": {
+        "3.0": {
+          "median": 5,
+          "p90": 13,
+          "max": 28
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 18,
+          "max": 28
+        },
+        "10.0": {
+          "median": 21,
+          "p90": 38,
+          "max": 76
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 56.36,
+      "drop_top1": 88.5,
+      "net_drop_top1": 433.9,
+      "drop_top3": 74.7,
+      "net_drop_top3": 366.02,
+      "drop_top5": 64.0,
+      "net_drop_top5": 313.98,
+      "drop_top10": 44.4,
+      "net_drop_top10": 217.73,
+      "tail": {
+        "top0.5%": {
+          "k": 2,
+          "contrib": 18.8,
+          "remains": 81.2,
+          "net_remains": 398.25
+        },
+        "top1%": {
+          "k": 4,
+          "contrib": 31.2,
+          "remains": 68.8,
+          "net_remains": 337.49
+        },
+        "top2%": {
+          "k": 8,
+          "contrib": 48.5,
+          "remains": 51.5,
+          "net_remains": 252.29
+        },
+        "top5%": {
+          "k": 19,
+          "contrib": 76.5,
+          "remains": 23.5,
+          "net_remains": 115.32
+        },
+        "top10%": {
+          "k": 38,
+          "contrib": 103.9,
+          "remains": -3.9,
+          "net_remains": -19.02
+        },
+        "top20%": {
+          "k": 77,
+          "contrib": 131.5,
+          "remains": -31.5,
+          "net_remains": -154.24
+        }
+      },
+      "caps": {
+        "cap5R": 168.99,
+        "cap10R": 302.48,
+        "cap15R": 366.38,
+        "cap20R": 411.49
+      }
+    },
+    "t4": {
+      "1.0x": 490.27,
+      "1.5x": 471.02,
+      "2.0x": 451.77,
+      "3.0x": 413.27
+    },
+    "t5": {
+      "2021": 75.35,
+      "2022": 119.09,
+      "2023": 91.58,
+      "2024": 114.29,
+      "2025": 55.4,
+      "2026": 34.56,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 16,
+      "tuned": 13,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 234,
+        "net": 295.83,
+        "dd": 10.78,
+        "expectancy": 1.2642,
+        "pf": 3.078,
+        "wr": 41.5
+      },
+      "oos": {
+        "n": 151,
+        "net": 194.44,
+        "dd": 6.96,
+        "expectancy": 1.2877,
+        "pf": 3.475,
+        "wr": 46.4
+      }
+    },
+    "halfs": {
+      "2021-H1": 39.55,
+      "2021-H2": 35.8,
+      "2022-H1": 60.43,
+      "2022-H2": 58.65,
+      "2023-H1": 59.35,
+      "2023-H2": 32.23,
+      "2024-H1": 66.62,
+      "2024-H2": 47.67,
+      "2025-H1": 20.37,
+      "2025-H2": 35.02,
+      "2026-H1": 18.82,
+      "2026-H2": 15.75
+    },
+    "neg_cells": [],
+    "sd": 5.384,
+    "tstat": 4.64
+  },
+  "fsent_champ_long_htf15": {
+    "name": "fsent_champ_long_htf15",
+    "t1": {
+      "n": 800,
+      "net": 822.45,
+      "expectancy": 1.0281,
+      "pf": 3.151,
+      "wr": 39.8,
+      "avg_win": 3.789,
+      "avg_loss": -0.793,
+      "max_win": 48.64,
+      "max_loss": -2.1
+    },
+    "t2": {
+      "max_dd": 17.28,
+      "net_to_dd": 47.61,
+      "dd_as_pct_of_net": 2.1,
+      "longest_underwater": 38,
+      "avg_underwater": 8.3,
+      "n_dd_periods": 76,
+      "worst_roll20": -15.47,
+      "worst_roll50": -10.9,
+      "worst_roll100": 1.39,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 20,
+          "max": 36
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 28,
+          "max": 65
+        },
+        "10.0": {
+          "median": 28,
+          "p90": 77,
+          "max": 103
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 94.1,
+      "net_drop_top1": 773.81,
+      "drop_top3": 84.3,
+      "net_drop_top3": 693.1,
+      "drop_top5": 76.8,
+      "net_drop_top5": 631.56,
+      "drop_top10": 63.6,
+      "net_drop_top10": 523.23,
+      "tail": {
+        "top0.5%": {
+          "k": 4,
+          "contrib": 19.5,
+          "remains": 80.5,
+          "net_remains": 662.07
+        },
+        "top1%": {
+          "k": 8,
+          "contrib": 31.7,
+          "remains": 68.3,
+          "net_remains": 561.5
+        },
+        "top2%": {
+          "k": 16,
+          "contrib": 49.0,
+          "remains": 51.0,
+          "net_remains": 419.48
+        },
+        "top5%": {
+          "k": 40,
+          "contrib": 76.8,
+          "remains": 23.2,
+          "net_remains": 191.18
+        },
+        "top10%": {
+          "k": 80,
+          "contrib": 104.6,
+          "remains": -4.6,
+          "net_remains": -37.97
+        },
+        "top20%": {
+          "k": 160,
+          "contrib": 131.7,
+          "remains": -31.7,
+          "net_remains": -260.94
+        }
+      },
+      "caps": {
+        "cap5R": 357.78,
+        "cap10R": 564.18,
+        "cap15R": 659.48,
+        "cap20R": 721.5
+      }
+    },
+    "t4": {
+      "1.0x": 822.45,
+      "1.5x": 782.45,
+      "2.0x": 742.45,
+      "3.0x": 662.45
+    },
+    "t5": {
+      "2021": 86.53,
+      "2022": 168.35,
+      "2023": 154.12,
+      "2024": 126.47,
+      "2025": 176.47,
+      "2026": 110.5,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 14,
+      "tuned": 12,
+      "swing": "htf15"
+    },
+    "eras": {
+      "is": {
+        "n": 520,
+        "net": 567.57,
+        "dd": 17.28,
+        "expectancy": 1.0915,
+        "pf": 3.235,
+        "wr": 41.2
+      },
+      "oos": {
+        "n": 280,
+        "net": 254.88,
+        "dd": 16.86,
+        "expectancy": 0.9103,
+        "pf": 2.986,
+        "wr": 37.1
+      }
+    },
+    "halfs": {
+      "2021-H1": 45.62,
+      "2021-H2": 40.91,
+      "2022-H1": 107.49,
+      "2022-H2": 60.86,
+      "2023-H1": 7.33,
+      "2023-H2": 146.79,
+      "2024-H1": 60.65,
+      "2024-H2": 65.83,
+      "2025-H1": 37.4,
+      "2025-H2": 139.06,
+      "2026-H1": 57.47,
+      "2026-H2": 53.03
+    },
+    "neg_cells": [],
+    "sd": 4.445,
+    "tstat": 6.54
+  },
+  "fsent_champ_short": {
+    "name": "fsent_champ_short",
+    "t1": {
+      "n": 844,
+      "net": 840.13,
+      "expectancy": 0.9954,
+      "pf": 2.846,
+      "wr": 36.5,
+      "avg_win": 4.205,
+      "avg_loss": -0.849,
+      "max_win": 54.78,
+      "max_loss": -3.36
+    },
+    "t2": {
+      "max_dd": 23.87,
+      "net_to_dd": 35.2,
+      "dd_as_pct_of_net": 2.8,
+      "longest_underwater": 80,
+      "avg_underwater": 10.5,
+      "n_dd_periods": 66,
+      "worst_roll20": -17.6,
+      "worst_roll50": -19.67,
+      "worst_roll100": 8.22,
+      "winner_gaps": {
+        "3.0": {
+          "median": 6,
+          "p90": 19,
+          "max": 44
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 29,
+          "max": 43
+        },
+        "10.0": {
+          "median": 22,
+          "p90": 61,
+          "max": 84
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 54.78,
+      "drop_top1": 93.5,
+      "net_drop_top1": 785.35,
+      "drop_top3": 84.1,
+      "net_drop_top3": 706.31,
+      "drop_top5": 76.0,
+      "net_drop_top5": 638.43,
+      "drop_top10": 58.2,
+      "net_drop_top10": 488.98,
+      "tail": {
+        "top0.5%": {
+          "k": 4,
+          "contrib": 20.2,
+          "remains": 79.8,
+          "net_remains": 670.65
+        },
+        "top1%": {
+          "k": 8,
+          "contrib": 35.0,
+          "remains": 65.0,
+          "net_remains": 545.73
+        },
+        "top2%": {
+          "k": 17,
+          "contrib": 60.5,
+          "remains": 39.5,
+          "net_remains": 331.6
+        },
+        "top5%": {
+          "k": 42,
+          "contrib": 93.4,
+          "remains": 6.6,
+          "net_remains": 55.72
+        },
+        "top10%": {
+          "k": 84,
+          "contrib": 119.9,
+          "remains": -19.9,
+          "net_remains": -167.6
+        },
+        "top20%": {
+          "k": 169,
+          "contrib": 144.7,
+          "remains": -44.7,
+          "net_remains": -375.17
+        }
+      },
+      "caps": {
+        "cap5R": 242.76,
+        "cap10R": 458.83,
+        "cap15R": 582.03,
+        "cap20R": 670.5
+      }
+    },
+    "t4": {
+      "1.0x": 840.13,
+      "1.5x": 797.93,
+      "2.0x": 755.73,
+      "3.0x": 671.33
+    },
+    "t5": {
+      "2021": 32.35,
+      "2022": 207.18,
+      "2023": 189.94,
+      "2024": 123.77,
+      "2025": 161.69,
+      "2026": 125.2,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 14,
+      "tuned": 13,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 532,
+        "net": 600.6,
+        "dd": 17.6,
+        "expectancy": 1.1289,
+        "pf": 3.067,
+        "wr": 37.0
+      },
+      "oos": {
+        "n": 312,
+        "net": 239.53,
+        "dd": 23.87,
+        "expectancy": 0.7677,
+        "pf": 2.456,
+        "wr": 35.6
+      }
+    },
+    "halfs": {
+      "2021-H1": 2.25,
+      "2021-H2": 30.09,
+      "2022-H1": 107.48,
+      "2022-H2": 99.71,
+      "2023-H1": 67.23,
+      "2023-H2": 122.71,
+      "2024-H1": 63.97,
+      "2024-H2": 59.8,
+      "2025-H1": 28.14,
+      "2025-H2": 133.55,
+      "2026-H1": 61.53,
+      "2026-H2": 63.67
+    },
+    "neg_cells": [],
+    "sd": 5.019,
+    "tstat": 5.76
+  },
+  "fsent_champ_long_mode_union": {
+    "name": "fsent_champ_long_mode_union",
+    "t1": {
+      "n": 1255,
+      "net": 883.85,
+      "expectancy": 0.7043,
+      "pf": 2.421,
+      "wr": 36.3,
+      "avg_win": 3.303,
+      "avg_loss": -0.779,
+      "max_win": 48.64,
+      "max_loss": -2.71
+    },
+    "t2": {
+      "max_dd": 23.85,
+      "net_to_dd": 37.06,
+      "dd_as_pct_of_net": 2.7,
+      "longest_underwater": 117,
+      "avg_underwater": 11.9,
+      "n_dd_periods": 89,
+      "worst_roll20": -14.47,
+      "worst_roll50": -18.88,
+      "worst_roll100": -15.33,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 24,
+          "max": 63
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 38,
+          "max": 80
+        },
+        "10.0": {
+          "median": 29,
+          "p90": 87,
+          "max": 195
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 94.5,
+      "net_drop_top1": 835.21,
+      "drop_top3": 85.4,
+      "net_drop_top3": 754.5,
+      "drop_top5": 78.4,
+      "net_drop_top5": 692.97,
+      "drop_top10": 65.9,
+      "net_drop_top10": 582.47,
+      "tail": {
+        "top0.5%": {
+          "k": 6,
+          "contrib": 24.6,
+          "remains": 75.4,
+          "net_remains": 666.83
+        },
+        "top1%": {
+          "k": 13,
+          "contrib": 40.4,
+          "remains": 59.6,
+          "net_remains": 526.81
+        },
+        "top2%": {
+          "k": 25,
+          "contrib": 59.4,
+          "remains": 40.6,
+          "net_remains": 358.78
+        },
+        "top5%": {
+          "k": 63,
+          "contrib": 92.8,
+          "remains": 7.2,
+          "net_remains": 63.78
+        },
+        "top10%": {
+          "k": 126,
+          "contrib": 126.7,
+          "remains": -26.7,
+          "net_remains": -235.56
+        },
+        "top20%": {
+          "k": 251,
+          "contrib": 157.0,
+          "remains": -57.0,
+          "net_remains": -503.55
+        }
+      },
+      "caps": {
+        "cap5R": 363.52,
+        "cap10R": 608.78,
+        "cap15R": 710.01,
+        "cap20R": 781.96
+      }
+    },
+    "t4": {
+      "1.0x": 883.85,
+      "1.5x": 821.1,
+      "2.0x": 758.35,
+      "3.0x": 632.85
+    },
+    "t5": {
+      "2021": 95.01,
+      "2022": 208.8,
+      "2023": 183.92,
+      "2024": 162.4,
+      "2025": 143.68,
+      "2026": 90.04,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 11,
+      "tuned": 9,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 813,
+        "net": 580.04,
+        "dd": 23.85,
+        "expectancy": 0.7135,
+        "pf": 2.404,
+        "wr": 37.4
+      },
+      "oos": {
+        "n": 442,
+        "net": 303.81,
+        "dd": 18.23,
+        "expectancy": 0.6873,
+        "pf": 2.454,
+        "wr": 34.4
+      }
+    },
+    "halfs": {
+      "2021-H1": 46.16,
+      "2021-H2": 48.85,
+      "2022-H1": 154.69,
+      "2022-H2": 54.11,
+      "2023-H1": 22.02,
+      "2023-H2": 161.9,
+      "2024-H1": 81.2,
+      "2024-H2": 81.2,
+      "2025-H1": 27.24,
+      "2025-H2": 116.44,
+      "2026-H1": 50.92,
+      "2026-H2": 39.12
+    },
+    "neg_cells": [],
+    "sd": 3.802,
+    "tstat": 6.56
+  },
+  "fsent_champ_long_mode_atr_low": {
+    "name": "fsent_champ_long_mode_atr_low",
+    "t1": {
+      "n": 956,
+      "net": 1002.06,
+      "expectancy": 1.0482,
+      "pf": 3.14,
+      "wr": 38.8,
+      "avg_win": 3.963,
+      "avg_loss": -0.8,
+      "max_win": 48.64,
+      "max_loss": -2.28
+    },
+    "t2": {
+      "max_dd": 28.88,
+      "net_to_dd": 34.7,
+      "dd_as_pct_of_net": 2.9,
+      "longest_underwater": 98,
+      "avg_underwater": 8.9,
+      "n_dd_periods": 85,
+      "worst_roll20": -16.31,
+      "worst_roll50": -26.41,
+      "worst_roll100": -17.95,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 19,
+          "max": 57
+        },
+        "5.0": {
+          "median": 6,
+          "p90": 29,
+          "max": 67
+        },
+        "10.0": {
+          "median": 10,
+          "p90": 81,
+          "max": 123
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 95.1,
+      "net_drop_top1": 953.43,
+      "drop_top3": 85.7,
+      "net_drop_top3": 858.7,
+      "drop_top5": 79.4,
+      "net_drop_top5": 795.45,
+      "drop_top10": 66.9,
+      "net_drop_top10": 670.4,
+      "tail": {
+        "top0.5%": {
+          "k": 5,
+          "contrib": 20.6,
+          "remains": 79.4,
+          "net_remains": 795.45
+        },
+        "top1%": {
+          "k": 10,
+          "contrib": 33.1,
+          "remains": 66.9,
+          "net_remains": 670.4
+        },
+        "top2%": {
+          "k": 19,
+          "contrib": 49.4,
+          "remains": 50.6,
+          "net_remains": 506.95
+        },
+        "top5%": {
+          "k": 48,
+          "contrib": 79.9,
+          "remains": 20.1,
+          "net_remains": 201.63
+        },
+        "top10%": {
+          "k": 96,
+          "contrib": 107.6,
+          "remains": -7.6,
+          "net_remains": -76.22
+        },
+        "top20%": {
+          "k": 191,
+          "contrib": 133.6,
+          "remains": -33.6,
+          "net_remains": -336.32
+        }
+      },
+      "caps": {
+        "cap5R": 399.67,
+        "cap10R": 660.41,
+        "cap15R": 789.65,
+        "cap20R": 870.4
+      }
+    },
+    "t4": {
+      "1.0x": 1002.06,
+      "1.5x": 954.26,
+      "2.0x": 906.46,
+      "3.0x": 810.86
+    },
+    "t5": {
+      "2021": 98.32,
+      "2022": 182.4,
+      "2023": 234.93,
+      "2024": 204.39,
+      "2025": 90.78,
+      "2026": 191.24,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 11,
+      "tuned": 9,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 641,
+        "net": 721.34,
+        "dd": 28.88,
+        "expectancy": 1.1253,
+        "pf": 3.221,
+        "wr": 39.2
+      },
+      "oos": {
+        "n": 315,
+        "net": 280.72,
+        "dd": 14.56,
+        "expectancy": 0.8912,
+        "pf": 2.957,
+        "wr": 38.1
+      }
+    },
+    "halfs": {
+      "2021-H1": 47.45,
+      "2021-H2": 50.86,
+      "2022-H1": 126.11,
+      "2022-H2": 56.3,
+      "2023-H1": 12.38,
+      "2023-H2": 222.55,
+      "2024-H1": 66.56,
+      "2024-H2": 137.83,
+      "2025-H1": 16.52,
+      "2025-H2": 74.26,
+      "2026-H1": 92.55,
+      "2026-H2": 98.69
+    },
+    "neg_cells": [],
+    "sd": 4.62,
+    "tstat": 7.01
+  },
+  "fsent_champ_long_biasmom05": {
+    "name": "fsent_champ_long_biasmom05",
+    "t1": {
+      "n": 775,
+      "net": 718.61,
+      "expectancy": 0.9272,
+      "pf": 2.921,
+      "wr": 38.8,
+      "avg_win": 3.63,
+      "avg_loss": -0.789,
+      "max_win": 48.64,
+      "max_loss": -2.1
+    },
+    "t2": {
+      "max_dd": 13.47,
+      "net_to_dd": 53.36,
+      "dd_as_pct_of_net": 1.9,
+      "longest_underwater": 44,
+      "avg_underwater": 8.0,
+      "n_dd_periods": 77,
+      "worst_roll20": -11.92,
+      "worst_roll50": -4.32,
+      "worst_roll100": 4.45,
+      "winner_gaps": {
+        "3.0": {
+          "median": 4,
+          "p90": 21,
+          "max": 38
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 29,
+          "max": 68
+        },
+        "10.0": {
+          "median": 30,
+          "p90": 75,
+          "max": 109
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 93.2,
+      "net_drop_top1": 669.98,
+      "drop_top3": 82.0,
+      "net_drop_top3": 589.26,
+      "drop_top5": 73.4,
+      "net_drop_top5": 527.73,
+      "drop_top10": 58.4,
+      "net_drop_top10": 419.57,
+      "tail": {
+        "top0.5%": {
+          "k": 4,
+          "contrib": 22.3,
+          "remains": 77.7,
+          "net_remains": 558.24
+        },
+        "top1%": {
+          "k": 8,
+          "contrib": 36.3,
+          "remains": 63.7,
+          "net_remains": 457.67
+        },
+        "top2%": {
+          "k": 16,
+          "contrib": 54.7,
+          "remains": 45.3,
+          "net_remains": 325.34
+        },
+        "top5%": {
+          "k": 39,
+          "contrib": 81.9,
+          "remains": 18.1,
+          "net_remains": 130.2
+        },
+        "top10%": {
+          "k": 78,
+          "contrib": 110.0,
+          "remains": -10.0,
+          "net_remains": -71.6
+        },
+        "top20%": {
+          "k": 155,
+          "contrib": 137.5,
+          "remains": -37.5,
+          "net_remains": -269.32
+        }
+      },
+      "caps": {
+        "cap5R": 307.12,
+        "cap10R": 483.73,
+        "cap15R": 561.85,
+        "cap20R": 617.67
+      }
+    },
+    "t4": {
+      "1.0x": 718.61,
+      "1.5x": 679.86,
+      "2.0x": 641.11,
+      "3.0x": 563.61
+    },
+    "t5": {
+      "2021": 68.46,
+      "2022": 148.67,
+      "2023": 156.98,
+      "2024": 125.63,
+      "2025": 98.06,
+      "2026": 120.82,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 15,
+      "tuned": 13,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 488,
+        "net": 501.48,
+        "dd": 13.42,
+        "expectancy": 1.0276,
+        "pf": 3.063,
+        "wr": 39.5
+      },
+      "oos": {
+        "n": 287,
+        "net": 217.13,
+        "dd": 13.47,
+        "expectancy": 0.7565,
+        "pf": 2.658,
+        "wr": 37.6
+      }
+    },
+    "halfs": {
+      "2021-H1": 39.27,
+      "2021-H2": 29.19,
+      "2022-H1": 74.73,
+      "2022-H2": 73.94,
+      "2023-H1": 26.74,
+      "2023-H2": 130.24,
+      "2024-H1": 64.76,
+      "2024-H2": 60.86,
+      "2025-H1": 3.97,
+      "2025-H2": 94.09,
+      "2026-H1": 68.8,
+      "2026-H2": 52.02
+    },
+    "neg_cells": [],
+    "sd": 4.35,
+    "tstat": 5.93
+  },
+  "fsent_champ_long_htfesmcl4": {
+    "name": "fsent_champ_long_htfesmcl4",
+    "t1": {
+      "n": 1230,
+      "net": 1244.03,
+      "expectancy": 1.0114,
+      "pf": 3.184,
+      "wr": 41.1,
+      "avg_win": 3.584,
+      "avg_loss": -0.787,
+      "max_win": 48.64,
+      "max_loss": -2.71
+    },
+    "t2": {
+      "max_dd": 27.74,
+      "net_to_dd": 44.84,
+      "dd_as_pct_of_net": 2.2,
+      "longest_underwater": 105,
+      "avg_underwater": 9.1,
+      "n_dd_periods": 106,
+      "worst_roll20": -13.03,
+      "worst_roll50": -15.35,
+      "worst_roll100": -15.73,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 21,
+          "max": 71
+        },
+        "5.0": {
+          "median": 3,
+          "p90": 31,
+          "max": 104
+        },
+        "10.0": {
+          "median": 16,
+          "p90": 83,
+          "max": 145
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 96.1,
+      "net_drop_top1": 1195.39,
+      "drop_top3": 88.4,
+      "net_drop_top3": 1099.23,
+      "drop_top5": 81.9,
+      "net_drop_top5": 1019.06,
+      "drop_top10": 69.8,
+      "net_drop_top10": 868.9,
+      "tail": {
+        "top0.5%": {
+          "k": 6,
+          "contrib": 20.7,
+          "remains": 79.3,
+          "net_remains": 986.83
+        },
+        "top1%": {
+          "k": 12,
+          "contrib": 33.9,
+          "remains": 66.1,
+          "net_remains": 821.74
+        },
+        "top2%": {
+          "k": 25,
+          "contrib": 51.5,
+          "remains": 48.5,
+          "net_remains": 603.09
+        },
+        "top5%": {
+          "k": 62,
+          "contrib": 78.4,
+          "remains": 21.6,
+          "net_remains": 268.24
+        },
+        "top10%": {
+          "k": 123,
+          "contrib": 105.0,
+          "remains": -5.0,
+          "net_remains": -62.3
+        },
+        "top20%": {
+          "k": 246,
+          "contrib": 130.6,
+          "remains": -30.6,
+          "net_remains": -380.12
+        }
+      },
+      "caps": {
+        "cap5R": 542.3,
+        "cap10R": 840.34,
+        "cap15R": 973.39,
+        "cap20R": 1060.79
+      }
+    },
+    "t4": {
+      "1.0x": 1244.03,
+      "1.5x": 1182.53,
+      "2.0x": 1121.03,
+      "3.0x": 998.03
+    },
+    "t5": {
+      "2021": 144.4,
+      "2022": 181.82,
+      "2023": 293.59,
+      "2024": 287.88,
+      "2025": 148.37,
+      "2026": 187.97,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 15,
+      "tuned": 13,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 793,
+        "net": 917.8,
+        "dd": 27.74,
+        "expectancy": 1.1574,
+        "pf": 3.46,
+        "wr": 43.0
+      },
+      "oos": {
+        "n": 437,
+        "net": 326.22,
+        "dd": 14.2,
+        "expectancy": 0.7465,
+        "pf": 2.66,
+        "wr": 37.8
+      }
+    },
+    "halfs": {
+      "2021-H1": 53.51,
+      "2021-H2": 90.89,
+      "2022-H1": 180.17,
+      "2022-H2": 1.64,
+      "2023-H1": 97.87,
+      "2023-H2": 195.71,
+      "2024-H1": 138.46,
+      "2024-H2": 149.41,
+      "2025-H1": 12.82,
+      "2025-H2": 135.55,
+      "2026-H1": 108.15,
+      "2026-H2": 79.82
+    },
+    "neg_cells": [],
+    "sd": 4.513,
+    "tstat": 7.86
+  },
+  "fsent_champ_long_mode_fd": {
+    "name": "fsent_champ_long_mode_fd",
+    "t1": {
+      "n": 822,
+      "net": 766.98,
+      "expectancy": 0.9331,
+      "pf": 2.98,
+      "wr": 38.7,
+      "avg_win": 3.63,
+      "avg_loss": -0.769,
+      "max_win": 48.64,
+      "max_loss": -2.1
+    },
+    "t2": {
+      "max_dd": 13.42,
+      "net_to_dd": 57.16,
+      "dd_as_pct_of_net": 1.7,
+      "longest_underwater": 49,
+      "avg_underwater": 8.5,
+      "n_dd_periods": 77,
+      "worst_roll20": -12.68,
+      "worst_roll50": -8.34,
+      "worst_roll100": -1.88,
+      "winner_gaps": {
+        "3.0": {
+          "median": 3,
+          "p90": 20,
+          "max": 42
+        },
+        "5.0": {
+          "median": 7,
+          "p90": 29,
+          "max": 72
+        },
+        "10.0": {
+          "median": 28,
+          "p90": 78,
+          "max": 121
+        }
+      }
+    },
+    "t3": {
+      "max_winner": 48.64,
+      "drop_top1": 93.7,
+      "net_drop_top1": 718.34,
+      "drop_top3": 83.1,
+      "net_drop_top3": 637.63,
+      "drop_top5": 75.1,
+      "net_drop_top5": 576.09,
+      "drop_top10": 61.0,
+      "net_drop_top10": 467.76,
+      "tail": {
+        "top0.5%": {
+          "k": 4,
+          "contrib": 20.9,
+          "remains": 79.1,
+          "net_remains": 606.6
+        },
+        "top1%": {
+          "k": 8,
+          "contrib": 34.0,
+          "remains": 66.0,
+          "net_remains": 506.03
+        },
+        "top2%": {
+          "k": 16,
+          "contrib": 52.5,
+          "remains": 47.5,
+          "net_remains": 364.01
+        },
+        "top5%": {
+          "k": 41,
+          "contrib": 81.3,
+          "remains": 18.7,
+          "net_remains": 143.59
+        },
+        "top10%": {
+          "k": 82,
+          "contrib": 109.8,
+          "remains": -9.8,
+          "net_remains": -75.05
+        },
+        "top20%": {
+          "k": 164,
+          "contrib": 136.8,
+          "remains": -36.8,
+          "net_remains": -282.34
+        }
+      },
+      "caps": {
+        "cap5R": 325.78,
+        "cap10R": 515.89,
+        "cap15R": 604.01,
+        "cap20R": 666.03
+      }
+    },
+    "t4": {
+      "1.0x": 766.98,
+      "1.5x": 725.88,
+      "2.0x": 684.78,
+      "3.0x": 602.58
+    },
+    "t5": {
+      "2021": 76.0,
+      "2022": 162.33,
+      "2023": 166.71,
+      "2024": 114.17,
+      "2025": 137.53,
+      "2026": 110.22,
+      "_years_positive": "6 of 6"
+    },
+    "t6": {
+      "params": 11,
+      "tuned": 9,
+      "swing": "sw10"
+    },
+    "eras": {
+      "is": {
+        "n": 531,
+        "net": 528.64,
+        "dd": 13.42,
+        "expectancy": 0.9956,
+        "pf": 3.062,
+        "wr": 39.7
+      },
+      "oos": {
+        "n": 291,
+        "net": 238.33,
+        "dd": 11.88,
+        "expectancy": 0.819,
+        "pf": 2.82,
+        "wr": 36.8
+      }
+    },
+    "halfs": {
+      "2021-H1": 47.45,
+      "2021-H2": 28.55,
+      "2022-H1": 98.15,
+      "2022-H2": 64.18,
+      "2023-H1": 23.26,
+      "2023-H2": 143.45,
+      "2024-H1": 58.84,
+      "2024-H2": 55.33,
+      "2025-H1": -0.69,
+      "2025-H2": 138.22,
+      "2026-H1": 57.19,
+      "2026-H2": 53.03
+    },
+    "neg_cells": [
+      "2025-H1"
+    ],
+    "sd": 4.328,
+    "tstat": 6.18
+  },
+  "_provenance": {
+    "engine": "dc26876",
+    "measured": "2026-10-10",
+    "harness": "exp_scorecard.py"
+  }
 }
