@@ -183,7 +183,9 @@ is untested.**
 
 ### `[x]` P5 — the base-book null governance - **CLOSED 2026-10-10, and the deliverable overturned the quoted answer.** `method/NULL_AUDIT_P5.md`.
 
-Both halves are now done. The block bootstrap was **re-derived on the book the file names but does not use**: M = **771.09R IS / 384.36R OOS**, against the 381.7 / 205.5 that `BASE_BOOK_NULL.md` carried. That quoted M was measured on `champion_multi_sw10` (its own first paragraph says 500t / +325.8R, which is not the shipping book and does not match the registry either - that key reads 502 / +279.33), and it is an absolute R figure when a null width scales with the book's trade count and per-trade spread. **The bar was roughly half its real size and the error ran permissive.**
+the shipping book, not the one it quotes. The corrected figure is
+**M = 771.09R IS / 384.36R OOS**, against the 381.7 / 205.5 that
+`BASE_BOOK_NULL.md` carried.
 
 The registry audit then ran on all 25 selected books with the **paired permutation**, which is the right test for a candidate - is this arm's choice of trades better than its parent's, rather than is its net above zero. **Five distinct books clear p < 0.05**: `mcloff` and `nohalt` in BOTH eras (0.0312 / 0.0117), `mcloff_htf15` and `htfesmcl4` in sample only, and the two sig short books - the latter two with a NEGATIVE gap, i.e. reliably worse than the parent, which is a result rather than an endorsement. `fsent_champ_long_mcloff` is the only book significant in both eras and the only one that also clears the period control with power.
 
