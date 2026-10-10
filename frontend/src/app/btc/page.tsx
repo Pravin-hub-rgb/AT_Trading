@@ -378,7 +378,11 @@ export default function BtcPage() {
   useEffect(() => {
     if (!hydrated) return;
     let cancelled = false;
-    const cacheKey = `${symbol}|${tf}|${mode}|${limit}|${strategyChainMinBars}`;
+    // version is part of the key, not just a request param. B1-PATCH returns the
+    // SAME candles and a DIFFERENT swing chain, so a key without it serves the
+    // shipped chain's cached marks after a dropdown switch and the two windows
+    // agree on everything - which looks like "the patch did nothing".
+    const cacheKey = `${symbol}|${tf}|${mode}|${limit}|${strategyChainMinBars}|${version}`;
     // instant restore from cache on tab switch — no loading flash
     const cached = getCachedChart(cacheKey);
     if (cached && !cancelled) {
@@ -388,7 +392,7 @@ export default function BtcPage() {
       setLoading(true);
     }
     setError(null);
-    getBtcChart(tf, mode, limit, strategyChainMinBars, symbol)
+    getBtcChart(tf, mode, limit, strategyChainMinBars, symbol, version)
       .then((res) => {
         if (!cancelled) {
           setData(res);
@@ -407,7 +411,7 @@ export default function BtcPage() {
     return () => {
       cancelled = true;
     };
-  }, [tf, mode, limit, symbol, strategyChainMinBars, hydrated]);
+  }, [tf, mode, limit, symbol, strategyChainMinBars, version, hydrated]);
 
   const changeTf = (v: BtcTf) => {
     window.localStorage.setItem(TF_KEY, v);

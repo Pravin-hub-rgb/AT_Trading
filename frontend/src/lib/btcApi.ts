@@ -63,6 +63,10 @@ export interface BtcChartResponse {
   count: number;
   first_ts: string | null;
   last_ts: string | null;
+  /** suffix stripped back to the base version; identical for the comparison pair */
+  version?: string;
+  /** true when the swing chain came from the B1 arming-patched engine */
+  b1_patch?: boolean;
   candles: BtcCandle[];
   swings: BtcSwing[];
   flow: BtcFlowSegment[];
@@ -86,8 +90,10 @@ export async function getBtcChart(
   limit: number | null,
   minBars?: number,
   symbol: BtcSymbol = "BTCUSDT",
+  version = "",
 ): Promise<BtcChartResponse> {
   const params = new URLSearchParams({ tf, mode, symbol });
+  if (version) params.set("version", version);
   if (limit && limit > 0) params.set("limit", String(limit));
   if (minBars && minBars >= 2) params.set("min_bars", String(minBars));
   const res = await fetch(`${API_BASE}/api/btc/chart?${params.toString()}`, {

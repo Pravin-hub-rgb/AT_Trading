@@ -658,12 +658,20 @@ def btc_chart(
     limit: int | None = None,
     min_bars: int = 14,
     symbol: str = "BTCUSDT",
+    version: str = "",
 ):
     """Candles + REAL swing chain (B1/B2/FLIP/FS-SUS) for ONE window.
 
     Swings are computed on exactly the candle window returned - the chart's
     OWN timeframe (15m chart -> 15m swings; never a lower-TF projection) -
     so swing idx values equal array positions in `candles`.
+
+    `version` exists ONLY so the B1PATCH comparison entries can draw a different
+    swing chain here. Without it this endpoint shipped the same chain for every
+    version, so picking B1-PATCH in the dropdown moved the TRADES (which come
+    from /backtest) while the swing overlay stayed on the shipped chain - the two
+    windows would have looked identical and the comparison would have meant
+    nothing. The suffix is stripped and otherwise ignored.
     """
     err = _validate_tf_mode(tf, mode)
     if err:
@@ -677,16 +685,21 @@ def btc_chart(
     if err:
         return err
     candles, flow = win
+    _patched = version.endswith("_B1PATCH")
+    if _patched:
+        version = version[: -len("_B1PATCH")]
 
     return {
         "tf": tf,
         "mode": mode,
         "symbol": symbol,
+        "version": version,
+        "b1_patch": _patched,
         "count": len(candles),
         "first_ts": candles[0]["date"] if candles else None,
         "last_ts": candles[-1]["date"] if candles else None,
         "candles": candles,
-        "swings": _compute_swings(flow, mode, min_bars=min_bars),
+        "swings": _compute_swings(flow, mode, min_bars=min_bars, patched=_patched),
         "flow": compute_btc_flow(flow, mode),
     }
 
