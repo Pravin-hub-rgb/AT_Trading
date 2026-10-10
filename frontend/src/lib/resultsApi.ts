@@ -60,6 +60,19 @@ export interface ResultBook {
   worst_roll20: number;
   worst_roll50: number;
   worst_roll100: number;
+  // Drawdown as a percentage. A bare R figure is not comparable across books of
+  // different size - 29.62R on a book that ended at +295R and 29.62R on one that
+  // ended at +1,230R are different things. dd_pct_1/2 assume 1R risks 1% (or 2%)
+  // of the account; dd_pct_of_peak is the standard (equity - peak) / peak, and
+  // dd_recover_pct is what it costs to get back, which is asymmetric.
+  dd_pct_1: number;
+  dd_pct_2: number;
+  dd_pct_of_peak: number | null;
+  dd_recover_pct: number | null;
+  // Share of k-trade rolling windows that ended profitable.
+  roll10_prof_pct: number;
+  roll20_prof_pct: number;
+  roll50_prof_pct: number;
   top1_contrib: number | null;
   top5_contrib: number | null;
   top10_contrib: number | null;

@@ -10,7 +10,7 @@ import {
 
 /* ------------------------------------------------------------------ config */
 
-type Group = "Significance" | "Return" | "Risk" | "Smoothness" | "Consistency" | "Tail" | "Costs" | "Size";
+type Group = "Significance" | "Return" | "Risk" | "Drawdown %" | "Smoothness" | "Consistency" | "Tail" | "Costs" | "Size";
 
 interface Metric {
   key: keyof ResultBook;
@@ -46,8 +46,15 @@ const METRICS: Metric[] = [
 
   { key: "worst_roll50", label: "Worst 50", group: "Consistency", dp: 1, suffix: "R", hint: "Worst net across any 50 consecutive trades. Positive means it has never had a bad 50." },
   { key: "worst_roll100", label: "Worst 100", group: "Consistency", dp: 1, suffix: "R", hint: "Same over any 100 consecutive trades." },
+  { key: "roll50_prof_pct", label: "50-trade windows +", group: "Consistency", dp: 0, suffix: "%", hint: "Share of 50-trade windows that ended profitable. 100% means it has NEVER lost a 50-trade stretch - that is roughly five months of holding." },
+  { key: "roll20_prof_pct", label: "20-trade windows +", group: "Consistency", dp: 0, suffix: "%", hint: "Same over any 20 consecutive trades, about two months." },
   { key: "retention", label: "OOS retention", group: "Consistency", dp: 0, suffix: "%", hint: "Out-of-sample R/trade as a share of in-sample. Above 100% means it did better OOS." },
   { key: "years_positive", label: "Years +", group: "Consistency", dp: 0, suffix: "%", hint: "Share of calendar years that were profitable." },
+
+  { key: "dd_pct_1", label: "DD @1%", group: "Drawdown %", lowerBetter: true, dp: 1, suffix: "%", hint: "Max drawdown as a share of the account, assuming each R risks 1% of it. Hurst/Ooi/Pedersen put trend following at 20-40%." },
+  { key: "dd_pct_2", label: "DD @2%", group: "Drawdown %", lowerBetter: true, dp: 1, suffix: "%", hint: "Same at 2% risk per R. The position size is what decides how deep this actually is." },
+  { key: "dd_pct_of_peak", label: "DD of peak", group: "Drawdown %", lowerBetter: true, dp: 2, suffix: "%", hint: "The standard measure: (equity - peak) / peak. This is what separates a 29R dip on a 1230R book from a 29R dip on a 295R one." },
+  { key: "dd_recover_pct", label: "Recover cost", group: "Drawdown %", lowerBetter: true, dp: 1, suffix: "%", hint: "Gain needed to climb back to the peak, which is asymmetric - a 30% fall needs 42.9%. Arithmetic, not a forecast." },
 
   { key: "top1_contrib", label: "Top 1%", group: "Tail", dp: 0, suffix: "%", hint: "Share of profit from the best 1% of trades. High means a few trades carry it." },
   { key: "top5_contrib", label: "Top 5%", group: "Tail", dp: 0, suffix: "%", hint: "40-60% is normal for trend following. 70-90% is a warning zone." },

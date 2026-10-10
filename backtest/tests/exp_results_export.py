@@ -152,11 +152,14 @@ def build(sim, E, name):
     cum = pk = 0.0
     dds = []
     peak_i = 0
+    peak_r = 0.0
     for i, r in enumerate(allrs):
         cum += r
         if cum > pk:
             pk = cum
             peak_i = i
+        if cum > peak_r:
+            peak_r = cum
         dds.append(pk - cum)
     runs, cur = [], 0
     for d in dds:
@@ -178,6 +181,18 @@ def build(sim, E, name):
             c += allrs[i] - allrs[i - k]
             m = min(m, c)
         return round(m, 2)
+
+    def roll_prof(k):
+        """Share of k-trade windows that ended profitable."""
+        if n < k:
+            return 0.0
+        c = sum(allrs[:k])
+        pos = 1 if c > 0 else 0
+        for i in range(k, n):
+            c += allrs[i] - allrs[i - k]
+            if c > 0:
+                pos += 1
+        return 100.0 * pos / (n - k + 1)
 
     def tail_at(pct):
         k = max(1, int(round(n * pct / 100.0)))
@@ -232,6 +247,24 @@ def build(sim, E, name):
         worst_roll20=worst_roll(20),
         worst_roll50=worst_roll(50),
         worst_roll100=worst_roll(100),
+        # DRAWDOWN AS A PERCENTAGE. The owner was right that a bare R ceiling is
+        # not comparable across books of different size: 29.62R on a book that
+        # ended at +295R and 29.62R on one that ended at +1,230R are different
+        # things. Industry standard is (equity - peak) / peak, and a percentage
+        # needs a position size, so 1% of account per R is stated rather than
+        # assumed. Hurst/Ooi/Pedersen put trend following at 20-40% max DD.
+        dd_pct_1=round(max(dds), 2) if dds else 0.0,
+        dd_pct_2=round(max(dds) * 2.0, 2) if dds else 0.0,
+        dd_pct_of_peak=round(100.0 * max(dds) / peak_r, 2) if dds and peak_r > 0 else None,
+        dd_recover_pct=(round(100.0 * max(dds) / (100.0 - max(dds)), 1)
+                        if dds and max(dds) < 100 else None),
+        # ROLLING PROFITABILITY. A book can make money across the whole sample and
+        # still bleed inside every 20-trade stretch; since it is held a year at a
+        # time, what matters is how many rolling windows are profitable, not just
+        # the single worst one.
+        roll10_prof_pct=round(roll_prof(10), 1),
+        roll20_prof_pct=round(roll_prof(20), 1),
+        roll50_prof_pct=round(roll_prof(50), 1),
         # tail
         top1_contrib=tail_at(1)["contrib"],
         top5_contrib=k5["contrib"],
