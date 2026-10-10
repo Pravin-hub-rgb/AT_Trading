@@ -82,19 +82,42 @@ substituted the wrong R values for half the pool and produced a plausible p-valu
 | book | dNet IS | **p IS** | dNet OOS | **p OOS** | significant |
 |---|---:|---:|---:|---:|---|
 | **`fsent_champ_long_mcloff`** | +33.22 | **0.0312** | +31.32 | **0.0117** | **BOTH** |
+| **`fsent_champ_long_nohalt`** | +33.22 | **0.0312** | +31.32 | **0.0117** | **BOTH** (same book) |
 | `fsent_champ_long_mcloff_htf15` | +82.80 | **0.0115** | +37.76 | 0.1445 | IS only |
 | `fsent_champ_long_htfesmcl4` | +384.44 | **0.0285** | +86.63 | 0.5311 | IS only |
+| **`fsent_sig_sw20_short`** | −114.86 | **0.0177** | −57.58 | 0.1570 | IS only |
+| **`fsent_sig_sw20_short_wr`** | −114.86 | **0.0177** | −57.58 | 0.1570 | IS only (same book) |
+| **`fsent_sig_sw10_short`** | −62.44 | **0.0267** | −50.34 | 0.1137 | IS only |
+| `fsent_champ_long_causalfloor` | −3.52 | 0.7256 | +9.31 | **0.0230** | OOS only |
 | `fsent_champ_long_htf15` | +34.20 | 0.1927 | +15.29 | 0.5021 | no |
 | `fsent_champ_long_mode_atr_low` | +187.97 | 0.1045 | +41.13 | 0.0987 | no |
 | `fsent_champ_long_mode_union` | +46.67 | 0.7276 | +64.22 | 0.2104 | no |
 | `fsent_champ_long_mode_fd` | +1.44 | 0.9153 | +37.24 | 0.2362 | no |
+| `fsent_champ_long_mode_flip_quality` | +1.41 | *(no permutation)* | +4.82 | 0.7673 | no |
 | `fsent_champ_long_biasmom05` | −31.89 | 0.2414 | −22.46 | 0.2632 | no |
 | `fsent_champ_short` | +67.23 | 0.6888 | −0.06 | 0.9993 | no |
 | `fsent_utcsat_short` | +63.34 | 0.7061 | −9.94 | 0.9180 | no |
 | `fsent_utcsat_long` | −68.37 | 0.2247 | −0.83 | 1.0000 | no |
+| `fsent_utcsat_trailhalf` | +1.09 | 0.9800 | +41.90 | 0.5114 | no |
 | `fsent_champ_trailhalf` | +2.82 | 0.9378 | +42.49 | 0.4974 | no |
 | `fsent_sig_full` | −237.54 | 0.7428 | −45.15 | 0.9223 | no |
 | `fsent_sig_multi` | −48.78 | 0.9283 | −19.77 | 0.9138 | no |
+| `fsent_sig_trail_delay1` | −114.86 | 0.9398 | −57.58 | 0.9330 | no |
+| `fsent_sig_half_crossed` | −192.47 | 0.9878 | −97.50 | 0.9923 | no |
+| `fsent_sig_fs_mom` | −264.99 | 0.6476 | −72.79 | 0.7991 | no |
+| `fsent_sig_wk_pause_short` | −330.11 | 0.1367 | −109.64 | 0.4414 | no |
+| `fsent_sig_decay_crossed` | −337.78 | 0.9215 | −109.31 | 0.9823 | no |
+| `fsent_champ_long` (control, itself) | 0.00 | 1.0000 | 0.00 | 1.0000 | no — correct |
+
+**A note on the three sig_short books.** They are significant in sample with a
+NEGATIVE dNet — they are reliably *worse* than the shipping book, which is a real
+result and not a contradiction. Significance says the trade swap is not random; it
+does not say the swap is an improvement. Two of the three are the same book.
+
+**And on `causalfloor`:** its p_OOS of 0.0230 is a positive dNet on a book that is
+worse in sample. Its own description says the name is misleading now that the
+window-gate bug it was built to work around is reverted — worth keeping that in
+mind when reading the row.
 
 ## `mcloff` is the only book significant in both eras
 

@@ -264,10 +264,36 @@ def build(sim, E, name):
     return m
 
 
+def load_null_audit():
+    """Pull the paired-permutation p-values in from exp_null_audit.py.
+
+    These are the only numbers in the family that answer the question a candidate
+    actually faces - is this arm's CHOICE OF TRADES better than its parent's, or a
+    reshuffle of the same trades - so they belong on the comparison page. Without
+    them the page ranks books on net and drawdown, which is exactly what let a
+    +917R book and a +33R book look like peers until a null separated them.
+
+    The audit is optional. If it has not been run the page still works, it just
+    shows no significance column - which is honest, because an absent p-value and a
+    p-value of 0.5 are not the same thing and only one of them is a measurement.
+    """
+    try:
+        with open("_null_audit.json", "r", encoding="utf-8") as f:
+            audit = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for r in audit.get("rows", []):
+        b = out.setdefault(r["book"], {})
+        b[r["era"]] = dict(dnet=r.get("dnet"), p=r.get("p"), sig=r.get("sig"))
+    return out
+
+
 def main():
     sim = build_family_module()
     from exp_signal_metrics import load_era
     E = {e: load_era(e) for e in ("is", "oos")}
+    nulls = load_null_audit()
     multi, sig = select()
     names = multi + sig
     print("selected %d multi + %d sig = %d books" % (len(multi), len(sig), len(names)))
@@ -277,10 +303,21 @@ def main():
            "books": []}
     for i, n in enumerate(names, 1):
         m = build(sim, E, n)
+        na = nulls.get(n, {})
+        m["null_p_is"] = (na.get("is") or {}).get("p")
+        m["null_p_oos"] = (na.get("oos") or {}).get("p")
+        m["null_dnet_is"] = round((na.get("is") or {}).get("dnet") or 0.0, 2)
+        m["null_dnet_oos"] = round((na.get("oos") or {}).get("dnet") or 0.0, 2)
+        m["null_sig_is"] = bool((na.get("is") or {}).get("sig"))
+        m["null_sig_oos"] = bool((na.get("oos") or {}).get("sig"))
+        m["null_sig"] = m["null_sig_is"] or m["null_sig_oos"]
         out["books"].append(m)
-        print("  %2d/%d  %-34s n=%4d net=%+8.1f dd=%5.2f ulcer=%5.2f tags=%s"
+        print("  %2d/%d  %-34s n=%4d net=%+8.1f dd=%5.2f ulcer=%5.2f  "
+              "p(IS/OOS)=%s%s  %s"
               % (i, len(names), n, m["n"], m["net"], m["max_dd"], m["ulcer"],
-                 ",".join(m["tags"])))
+                 ("%.4f" % m["null_p_is"]) if m["null_p_is"] is not None else "n/a",
+                 ("/%.4f" % m["null_p_oos"]) if m["null_p_oos"] is not None else "",
+                 "*** SIGNIFICANT" if m["null_sig"] else ""))
     with open("_results.json", "w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
     import os

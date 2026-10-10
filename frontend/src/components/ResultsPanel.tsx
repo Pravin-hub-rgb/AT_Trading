@@ -10,7 +10,7 @@ import {
 
 /* ------------------------------------------------------------------ config */
 
-type Group = "Return" | "Risk" | "Smoothness" | "Consistency" | "Tail" | "Costs" | "Size";
+type Group = "Significance" | "Return" | "Risk" | "Smoothness" | "Consistency" | "Tail" | "Costs" | "Size";
 
 interface Metric {
   key: keyof ResultBook;
@@ -57,11 +57,16 @@ const METRICS: Metric[] = [
   { key: "cost_2x", label: "2x costs", group: "Costs", dp: 0, suffix: "R", hint: "Net if fees doubled. Below zero means fees kill it." },
   { key: "cost_3x", label: "3x costs", group: "Costs", dp: 0, suffix: "R", hint: "Net at triple fees." },
 
+  { key: "null_p_is", label: "p IS", group: "Significance", lowerBetter: true, dp: 4, hint: "Paired permutation, in sample. Under the null this arm's trades could have been shuffled against the shipping book's by chance and produced the same gap. Below 0.05 means no." },
+  { key: "null_p_oos", label: "p OOS", group: "Significance", lowerBetter: true, dp: 4, hint: "The same test out of sample (2021-22, reused data - not a holdout). The column that matters: an arm can be significant in sample and fail here." },
+  { key: "null_dnet_is", label: "gap IS", group: "Significance", dp: 0, suffix: "R", hint: "Net the arm gains over the shipping book, in sample. The size of the effect the p-value is testing." },
+  { key: "null_dnet_oos", label: "gap OOS", group: "Significance", dp: 0, suffix: "R", hint: "Same, out of sample." },
+
   { key: "tuned", label: "Knobs", group: "Size", lowerBetter: true, dp: 0, hint: "Non-default parameters. Each one is another chance to fit noise." },
   { key: "sd", label: "Trade SD", group: "Size", lowerBetter: true, dp: 2, hint: "How much a single trade swings. Large SD means many trades are needed to be sure." },
 ];
 
-const GROUPS: Group[] = ["Return", "Risk", "Smoothness", "Consistency", "Tail", "Costs", "Size"];
+const GROUPS: Group[] = ["Significance", "Return", "Risk", "Smoothness", "Consistency", "Tail", "Costs", "Size"];
 
 
 const TAG_META: Record<BookTag, { label: string; tone: string; hint: string }> = {
@@ -182,7 +187,7 @@ export default function ResultsPanel() {
   // field, so the sort key is widened here rather than pretending it is one.
   const [sortKey, setSortKey] = useState<keyof ResultBook | "__wins">("net");
   const [sortDir, setSortDir] = useState<1 | -1>(-1);
-  const [group, setGroup] = useState<Group>("Return");
+  const [group, setGroup] = useState<Group>("Significance");
 
   const load = (refresh = false) => {
     setBusy(true);
@@ -403,6 +408,26 @@ const filtered = useMemo(() => {
         ))}
       </div>
 
+      {/* tags legend */}
+      <div className="flex flex-wrap items-center gap-1.5 text-xs">
+        <span
+          title="Paired permutation against the shipping book, below p = 0.05 in at least one era."
+          className="rounded bg-[#12351c] px-1.5 py-0.5 font-semibold text-[#3fb950]"
+        >
+          ✓ beats parent
+        </span>
+        <span
+          title="Not significant in either era. The book may still be good - the change to it is what failed the test."
+          className="rounded bg-[#21262d] px-1.5 py-0.5 text-[#6e7681]"
+        >
+          — no difference from parent
+        </span>
+        <span className="text-[#6e7681]">
+          (p is a chance measure, not a quality score — low is meaningful, high is
+          not damning)
+        </span>
+      </div>
+
       {/* group tabs */}
       <div className="flex flex-wrap gap-1 border-b border-[#21262d]">
         {GROUPS.map((g) => (
@@ -474,11 +499,14 @@ const filtered = useMemo(() => {
                       : "text-[#8b949e] hover:text-[#e6edf3]"
                   }`}
                 >
-                  ★ best on
+                   best on
                   {sortKey === "__wins" ? (sortDir === 1 ? " ↑" : " ↓") : ""}
                 </button>
               </th>
-              <th className="px-3 py-2 text-right text-xs font-semibold text-[#8b949e]">tags</th>
+              <th className="px-3 py-2 text-right text-xs font-semibold text-[#8b949e]">
+                    sig
+                  </th>
+<th className="px-3 py-2 text-right text-xs font-semibold text-[#8b949e]">tags</th>
             </tr>
           </thead>
           <tbody>
@@ -555,14 +583,53 @@ const filtered = useMemo(() => {
                         }`}
                       >
                         {isTop && (
-                          <span className="mr-0.5 text-[#3fb950]" aria-label="best in column">
-                            ★
-                          </span>
+                          <span className="mr-0.5 text-[#3fb950]" aria-label="best in column"></span>
                         )}
                         {fmt(m, v)}
                       </td>
                     );
                   })}
+                  <td className="px-3 py-1.5 text-right">
+                    {b.null_sig ? (
+                      <span
+                        title={`significant in ${
+                          b.null_sig_is && b.null_sig_oos
+                            ? "BOTH eras"
+                            : b.null_sig_is
+                              ? "sample only"
+                              : "out of sample only"
+                        }`}
+                        className="inline-block rounded bg-[#12351c] px-1.5 py-0.5 text-[10px] font-semibold text-[#3fb950]"
+                      >
+                        SIG</span>
+                    ) : (
+                      <span className="text-[10px] text-[#6e7681]">--</span>
+                    )}
+                  </td>
+                  <td className="px-3 py-1.5 text-right">
+                    <span className="inline-flex flex-wrap justify-end gap-1">
+                      {b.tags
+                        .filter((tg) => tg !== "2x-cost-death")
+                        .slice(0, 3)
+                        .map((tg) => (
+                          <span
+                            key={tg}
+                            title={TAG_META[tg]?.hint}
+                            className="rounded bg-[#12351c] px-1 py-0.5 text-[10px] text-[#3fb950] opacity-70"
+                          >
+                            {TAG_META[tg]?.label ?? tg}
+                          </span>
+                        ))}
+                      {b.tags.includes("2x-cost-death") && (
+                        <span
+                          title={TAG_META["2x-cost-death"].hint}
+                          className="rounded bg-[#3a1a1c] px-1 py-0.5 text-[10px] text-[#f85149]"
+                        >
+                          2x-cost-DEATH
+                        </span>
+                      )}
+                    </span>
+                  </td>
                   <td className="px-3 py-1.5 text-right tabular-nums">
                     <span
                       className={`inline-block min-w-[1.6rem] rounded px-1.5 py-0.5 text-xs font-semibold ${

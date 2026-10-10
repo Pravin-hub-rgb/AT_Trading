@@ -85,6 +85,17 @@ export interface ResultBook {
   position_mode: "multi" | "single" | "inherit";
   position_explicit: boolean;
   tags: BookTag[];
+
+  /** Paired-permutation p-values against the shipping book. A p below 0.05 means
+   *  this arm's CHOICE OF TRADES beats its parent's by more than reshuffling the
+   *  same trades would. null is "not measured", which is NOT the same as 0.5. */
+  null_p_is: number | null;
+  null_p_oos: number | null;
+  null_dnet_is: number;
+  null_dnet_oos: number;
+  null_sig_is: boolean;
+  null_sig_oos: boolean;
+  null_sig: boolean;
 }
 
 export interface ResultsPayload {

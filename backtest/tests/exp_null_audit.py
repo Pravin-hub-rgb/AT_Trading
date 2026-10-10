@@ -54,12 +54,31 @@ BLOCK = 20
 SHIP = "fsent_champ_long"
 
 CANDIDATES = [
-    "fsent_champ_long_mcloff", "fsent_champ_long_mcloff_htf15",
-    "fsent_champ_long_htf15", "fsent_champ_long_htfesmcl4",
-    "fsent_champ_long_mode_atr_low", "fsent_champ_long_mode_union",
-    "fsent_champ_long_mode_fd", "fsent_champ_long_biasmom05",
-    "fsent_champ_short", "fsent_utcsat_short", "fsent_utcsat_long",
-    "fsent_champ_trailhalf", "fsent_sig_full", "fsent_sig_multi",
+    'fsent_champ_long_htfesmcl4',
+    'fsent_champ_long_mode_atr_low',
+    'fsent_champ_long_mcloff_htf15',
+    'fsent_champ_long_mode_union',
+    'fsent_champ_short',
+    'fsent_champ_long_nohalt',
+    'fsent_champ_long_mcloff',
+    'fsent_utcsat_short',
+    'fsent_champ_long_htf15',
+    'fsent_champ_trailhalf',
+    'fsent_utcsat_trailhalf',
+    'fsent_champ_long_mode_fd',
+    'fsent_champ_long_mode_flip_quality',
+    'fsent_champ_long_causalfloor',
+    'fsent_champ_long',
+    'fsent_sig_multi',
+    'fsent_sig_trail_delay1',
+    'fsent_sig_full',
+    'fsent_sig_half_crossed',
+    'fsent_sig_fs_mom',
+    'fsent_sig_wk_pause_short',
+    'fsent_sig_decay_crossed',
+    'fsent_sig_sw10_short',
+    'fsent_sig_sw20_short_wr',
+    'fsent_sig_sw20_short',
 ]
 
 
@@ -223,9 +242,11 @@ def main():
         if not r or "is" not in r or "oos" not in r:
             continue
         sig = r["is"]["sig"] or r["oos"]["sig"]
-        print("  %-34s %+10.2f %9.4f %+10.2f %9.4f %8s"
-              % (name[:34], r["is"]["dnet"], r["is"]["p"] or -1,
-                 r["oos"]["dnet"], r["oos"]["p"] or -1,
+        def _p(x):
+            return "  none " if x is None else ("%9.4f" % x)
+        print("  %-34s %+10.2f %s %+10.2f %s %8s"
+              % (name[:34], r["is"]["dnet"], _p(r["is"]["p"]),
+                 r["oos"]["dnet"], _p(r["oos"]["p"]),
                  "YES" if sig else "no"))
     bar.close("done")
 
