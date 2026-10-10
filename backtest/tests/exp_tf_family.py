@@ -48,7 +48,10 @@ run at min_bars_15m = 50 (count-preserved) and 25 (duration-preserved, since
 shipped).
 
 ADOPTION: none. Diagnostic only. Engine stays 15m / 1h / min_bars 20.
-age10 reported separately.
+(age10 lane removed 2026-10-10 - every age10_* key is retired from the
+registry, so the lane raised KeyError and never produced a cell. The grid
+question is about the LADDER, which two lanes still answer; what is lost
+is a third independent read.)
 
 Run: $env:PYTHONIOENCODING='utf-8'; python -u exp_tf_family.py
 """
@@ -79,16 +82,32 @@ CELLS = {
 # min_bars_15m variants: (label, mb15m)
 MB_VARIANTS = (("mb50_count", 50), ("mb25_duration", 25))
 
+# The control expectations are READ FROM THE REGISTRY, not written here. They used
+# to be literals (champion 500 / +325.8) and they were stale: the control produced
+# 502 / +279.3, the harness declared a failure, and the failure looked like engine
+# drift when it was the other way round - the run was right and the expectation was
+# wrong. A control gate whose expected values are hand-copied will eventually fail
+# for a reason that has nothing to do with what it exists to detect.
+#
+# That is the same shape as the two earlier harness bugs this cycle: plausible wrong
+# numbers, caught only by asking whether the failure made sense. Tying it to the
+# registry means the gate can still fail - if the engine drifts, the run stops
+# matching the pins - but it cannot fail because a note went out of date.
+def _expected_pins(book: str) -> dict:
+    from experiment_registry import EXPERIMENTS as _X
+    p = (_X[book].get("pins") or {})
+    return {"is": (p.get("n"), p.get("net")),
+            "oos": (p.get("oos_n"), p.get("oos_net"))}
+
+
 BYBIT_BASE = {
-    "champion": {"is": (500, 325.8), "oos": (279, 70.2)},
-    "utcsat": {"is": (453, 279.5), "oos": (254, 66.9)},
-    "age10": {"is": (130, 435.7), "oos": (76, 43.2)},
+    "champion": _expected_pins("champion_multi_sw10"),
+    "utcsat": _expected_pins("utcsat_multi_sw10"),
 }
 YEARS = {"is": 3.67, "oos": 2.0}
 LANES = (
     ("champion", "champion_multi_sw10"),
     ("utcsat", "utcsat_multi_sw10"),
-    ("age10", "age10_dirmatch_swingpause_single_sw10"),
 )
 
 
@@ -299,7 +318,7 @@ def main():
                 print(f"  {mblabel:<12} {cell:<22} ladder={htf_s/ltf_s:>4.1f}:1 "
                       f"gate={htf_s-ltf_s:<5} champ {b['champion']['net']:>+7.1f} "
                       f"PF {b['champion']['pf']:>4.2f} | utcsat {b['utcsat']['net']:>+7.1f} "
-                      f"PF {b['utcsat']['pf']:>4.2f} | age10 {b['age10']['net']:>+7.1f}", flush=True)
+                      f"PF {b['utcsat']['pf']:>4.2f}", flush=True)
         print(f"  {'':<12} {'':<22} CONTROL: {payload['controls'][scope]}", flush=True)
 
     payload["elapsed_sec"] = round(time.time() - t0, 2)

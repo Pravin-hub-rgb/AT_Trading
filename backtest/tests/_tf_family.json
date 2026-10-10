@@ -1,0 +1,354 @@
+{
+  "stage": "tf_family",
+  "question": "is the 4:1 ladder what matters, or the specific 15m/1h pair?",
+  "bug_fixed": "C15 window gate was hard-coded 2700 (=3600-900); on 2h it must be 6300. Earlier 2h numbers ran with a 1h gate and are recomputed here.",
+  "gate_formula": "htf_bar_secs - ltf_bar_secs",
+  "cells": {
+    "is/mb50_count/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 502,
+          "net": 279.3,
+          "max_dd": 39.2973,
+          "pf": 1.701
+        },
+        "utcsat": {
+          "n": 462,
+          "net": 321.4,
+          "max_dd": 36.4469,
+          "pf": 1.8936
+        }
+      }
+    },
+    "is/mb50_count/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 279,
+          "net": 187.7,
+          "max_dd": 30.9212,
+          "pf": 1.9157
+        },
+        "utcsat": {
+          "n": 257,
+          "net": 151.3,
+          "max_dd": 28.916,
+          "pf": 1.8287
+        }
+      }
+    },
+    "is/mb50_count/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 482,
+          "net": 42.8,
+          "max_dd": 60.5743,
+          "pf": 1.1136
+        },
+        "utcsat": {
+          "n": 439,
+          "net": 61.6,
+          "max_dd": 42.0797,
+          "pf": 1.1858
+        }
+      }
+    },
+    "is/mb50_count/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 233,
+          "net": 150.7,
+          "max_dd": 27.487,
+          "pf": 1.9237
+        },
+        "utcsat": {
+          "n": 211,
+          "net": 104.9,
+          "max_dd": 22.808,
+          "pf": 1.7091
+        }
+      }
+    },
+    "is/mb25_duration/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 824,
+          "net": 282.9,
+          "max_dd": 65.8907,
+          "pf": 1.4319
+        },
+        "utcsat": {
+          "n": 762,
+          "net": 198.7,
+          "max_dd": 64.8946,
+          "pf": 1.3263
+        }
+      }
+    },
+    "is/mb25_duration/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 453,
+          "net": 183.6,
+          "max_dd": 55.4674,
+          "pf": 1.5636
+        },
+        "utcsat": {
+          "n": 424,
+          "net": 140.6,
+          "max_dd": 59.8277,
+          "pf": 1.4539
+        }
+      }
+    },
+    "is/mb25_duration/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 778,
+          "net": 124.4,
+          "max_dd": 81.538,
+          "pf": 1.2099
+        },
+        "utcsat": {
+          "n": 700,
+          "net": 22.3,
+          "max_dd": 77.2844,
+          "pf": 1.0411
+        }
+      }
+    },
+    "is/mb25_duration/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 413,
+          "net": 135.0,
+          "max_dd": 36.0164,
+          "pf": 1.4352
+        },
+        "utcsat": {
+          "n": 378,
+          "net": 73.6,
+          "max_dd": 41.9622,
+          "pf": 1.2548
+        }
+      }
+    },
+    "oos/mb50_count/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 287,
+          "net": 63.4,
+          "max_dd": 58.0061,
+          "pf": 1.2961
+        },
+        "utcsat": {
+          "n": 260,
+          "net": 75.3,
+          "max_dd": 28.0423,
+          "pf": 1.3922
+        }
+      }
+    },
+    "oos/mb50_count/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 159,
+          "net": -18.9,
+          "max_dd": 44.2332,
+          "pf": 0.8376
+        },
+        "utcsat": {
+          "n": 148,
+          "net": 23.1,
+          "max_dd": 21.6961,
+          "pf": 1.2328
+        }
+      }
+    },
+    "oos/mb50_count/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 255,
+          "net": -69.7,
+          "max_dd": 98.4735,
+          "pf": 0.6705
+        },
+        "utcsat": {
+          "n": 229,
+          "net": -53.9,
+          "max_dd": 82.4741,
+          "pf": 0.7191
+        }
+      }
+    },
+    "oos/mb50_count/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 50,
+      "books": {
+        "champion": {
+          "n": 136,
+          "net": 2.9,
+          "max_dd": 45.4445,
+          "pf": 1.0277
+        },
+        "utcsat": {
+          "n": 124,
+          "net": 0.7,
+          "max_dd": 39.9751,
+          "pf": 1.0077
+        }
+      }
+    },
+    "oos/mb25_duration/F0_control_15m_1h": {
+      "ltf_secs": 900,
+      "htf_secs": 3600,
+      "ladder": 4.0,
+      "gate": 2700,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 535,
+          "net": 118.5,
+          "max_dd": 50.3884,
+          "pf": 1.3029
+        },
+        "utcsat": {
+          "n": 477,
+          "net": 49.1,
+          "max_dd": 48.4196,
+          "pf": 1.1384
+        }
+      }
+    },
+    "oos/mb25_duration/F1_ltf_only_30m_1h": {
+      "ltf_secs": 1800,
+      "htf_secs": 3600,
+      "ladder": 2.0,
+      "gate": 1800,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 280,
+          "net": 98.2,
+          "max_dd": 22.7926,
+          "pf": 1.53
+        },
+        "utcsat": {
+          "n": 249,
+          "net": 63.5,
+          "max_dd": 21.6893,
+          "pf": 1.3788
+        }
+      }
+    },
+    "oos/mb25_duration/F2_htf_only_15m_2h": {
+      "ltf_secs": 900,
+      "htf_secs": 7200,
+      "ladder": 8.0,
+      "gate": 6300,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 460,
+          "net": -32.6,
+          "max_dd": 71.374,
+          "pf": 0.9073
+        },
+        "utcsat": {
+          "n": 415,
+          "net": -99.5,
+          "max_dd": 100.0649,
+          "pf": 0.6961
+        }
+      }
+    },
+    "oos/mb25_duration/F3_family_30m_2h": {
+      "ltf_secs": 1800,
+      "htf_secs": 7200,
+      "ladder": 4.0,
+      "gate": 5400,
+      "mb15": 25,
+      "books": {
+        "champion": {
+          "n": 253,
+          "net": -42.7,
+          "max_dd": 75.6413,
+          "pf": 0.7798
+        },
+        "utcsat": {
+          "n": 235,
+          "net": -35.1,
+          "max_dd": 60.9914,
+          "pf": 0.7977
+        }
+      }
+    }
+  },
+  "controls": {
+    "is": "EXACT - all 3 lanes reproduced",
+    "oos": "EXACT - all 3 lanes reproduced"
+  },
+  "elapsed_sec": 252.8,
+  "_provenance": {
+    "engine": "dc26876",
+    "measured": "2026-10-10",
+    "harness": "exp_tf_family.py"
+  }
+}
