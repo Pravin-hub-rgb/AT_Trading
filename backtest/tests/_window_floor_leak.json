@@ -1,0 +1,90 @@
+{
+  "leak": {
+    "n": 6,
+    "net": -4.73,
+    "book_net": 772.96
+  },
+  "floor_fix": {
+    "2700": {
+      "n": 839,
+      "net": 772.96,
+      "dd_is": 13.42,
+      "dd_oos": 11.88,
+      "neg": [
+        "2025-H1"
+      ]
+    },
+    "3600": {
+      "n": 833,
+      "net": 778.69,
+      "dd_is": 13.42,
+      "dd_oos": 11.88,
+      "neg": [
+        "2025-H1"
+      ]
+    },
+    "5400": {
+      "n": 829,
+      "net": 780.57,
+      "dd_is": 13.42,
+      "dd_oos": 11.88,
+      "neg": [
+        "2025-H1"
+      ]
+    },
+    "7200": {
+      "n": 821,
+      "net": 778.74,
+      "dd_is": 13.62,
+      "dd_oos": 11.88,
+      "neg": []
+    }
+  },
+  "leaks": {
+    "fsent_champ_long": {
+      "n": 839,
+      "lookaheads": 6,
+      "leak_net": -4.73
+    },
+    "fsent_champ_long_mcloff": {
+      "n": 912,
+      "lookaheads": 7,
+      "leak_net": -5.29
+    },
+    "fsent_champ_long_mcloff_htf15": {
+      "n": 859,
+      "lookaheads": 7,
+      "leak_net": -4.45
+    },
+    "fsent_sig_multi": {
+      "n": 523,
+      "lookaheads": 2,
+      "leak_net": -0.2
+    },
+    "fsent_sig_full": {
+      "n": 385,
+      "lookaheads": 2,
+      "leak_net": -0.2
+    },
+    "fsent_champ_short": {
+      "n": 844,
+      "lookaheads": 6,
+      "leak_net": 3.87
+    },
+    "fsent_champ_long_htf15": {
+      "n": 800,
+      "lookaheads": 6,
+      "leak_net": -4.38
+    },
+    "fsent_champ_long_htfesmcl4": {
+      "n": 1230,
+      "lookaheads": 4,
+      "leak_net": 8.8
+    }
+  },
+  "_provenance": {
+    "engine": "1f9f359",
+    "measured": "2026-10-10",
+    "harness": "exp_window_floor.py"
+  }
+}

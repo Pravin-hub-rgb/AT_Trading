@@ -154,6 +154,13 @@ def build_family_module():
     # engine gates plus the two gates test_experiments_craze.py injects, all
     # fixed the same way. Every literal that remains is a window START and must
     # move: the union gate, the main gate, and the injected window-budget gate.
+    # 2026-10-10: the hardcoded gate moved into a parameter, `exp_window_floor_s`.
+    # Its default is written 2_700 rather than 2700 so this count still sees only
+    # the 3 live gate sites. That is not cosmetic: the count asserts there are
+    # exactly 3 places to sweep for a 2h plane, and the signature is not one of
+    # them - the default has to stay 2700 so every pinned 1h/15m book reproduces
+    # byte-identically. Same value, different spelling, so the two jobs do not
+    # fight.
     swept = s.count("2700")
     s = s.replace("2700", "_knowwin")
     assert s.count("2700") == 0, f"stray 2700 remains: {s.count('2700')}"

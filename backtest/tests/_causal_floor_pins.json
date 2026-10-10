@@ -1,0 +1,17 @@
+{
+  "fsent_champ_long_causal3600": {
+    "n": 513,
+    "net": 529.84,
+    "dd_net": 13.62,
+    "win": 0.396,
+    "oos_n": 308,
+    "oos_net": 248.9,
+    "oos_dd_net": 11.88,
+    "oos_win": 0.38
+  },
+  "_provenance": {
+    "engine": "1f9f359",
+    "measured": "2026-10-10",
+    "harness": "exp_window_floor.py"
+  }
+}

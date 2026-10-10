@@ -306,6 +306,21 @@ def simulate_htf_ltf_streak_halt(
       #     Causal: fs_at_idx is at or after the swing end bar, so that bar has
       #     closed before the print is used. Same guarantee the LTF side relies on.
       exp_htf_fs_entry="",
+      # WINDOW FLOOR - how long after an HTF window OPENS must you wait before it
+      # is tradeable. Was a hardcoded 45-minute wait and was never a
+      # parameter, so it was the one axis of the HTF window that could not be
+      # swept at all. This is a different axis from exp_htf_fs_entry: that changes
+      # WHEN the window opens (FS print vs break), this changes how long you wait
+      # after it opened.
+      exp_window_floor_s=2_700,  # default reproduces the original gate exactly. Written 2_700, not 2700, so the 2h-plane patcher in exp_tf_family.py can count its own gate sites without tripping on the signature.
+      #   "fixed" = s + exp_window_floor_s, the original behaviour.
+      #   "fs"    = the FS print of the swing governing the window, i.e. the window
+      #             becomes tradeable the moment its own structure confirmed.
+      #   "max"   = whichever of the two is later. Strictly tighter than either
+      #             alone, so it cannot admit anything they would reject.
+      # Causal: fs_at_idx is at or after the swing end bar, so that bar has closed
+      # before the print is used - the same guarantee exp_fs_entry_side relies on.
+      exp_window_floor_mode="fixed",
       # UNIFIED: position limit. 1 = serial (v18 behaviour, busy_until gate armed)
       #   0 = unlimited (v19 behaviour, gate never fires). This is the ONLY
       #   behavioural difference v19 introduced to the position path; everything
@@ -994,7 +1009,29 @@ max_positions=0,
         # C17: the window END is stored knowable (see _wend_settle), so
         # the second side takes no shift - it was reusing the start's offset
         # and admitting entries on windows that were already dead.
-        if not (s + 2700 < bar_ts+900 < e): continue
+        #
+        # WINDOW FLOOR. Was a hardcoded 45-minute wait and never a parameter,
+        # so it was the one axis of the HTF window nobody could sweep. It answers
+        # "how long after a window opens must you wait before trading it", which is
+        # a different question from exp_htf_fs_entry ("does the window open at the
+        # FS print or at the break"). Changing the trigger moves s; this moves the
+        # wait after s. Two axes, and only one had been tested.
+        #
+        # mode "fixed"  - the original behaviour, s + exp_window_floor_s.
+        # mode "fs"     - the floor is the FS print of the swing that governs this
+        #   window, so a window is tradeable from the moment its own structure
+        #   confirmed rather than 45 minutes after the break that opened it.
+        # mode "max"    - whichever is later. Strictly tighter than either alone,
+        #   so it cannot admit anything the other two would reject.
+        _floor = s + exp_window_floor_s
+        if exp_window_floor_mode in ("fs", "max"):
+            _arr = fs_up_ts if d > 0 else fs_dn_ts
+            if _arr:
+                _i = bs.bisect_right(_arr, s) - 1
+                if _i >= 0:
+                    _fs_t = int(_arr[_i])
+                    _floor = _fs_t if exp_window_floor_mode == "fs" else max(_floor, _fs_t)
+        if not (_floor < bar_ts+900 < e): continue
         if sig["dir"] != d: continue
         if ext_stop_r>0:
             hrisk=abs(pe-psl)
