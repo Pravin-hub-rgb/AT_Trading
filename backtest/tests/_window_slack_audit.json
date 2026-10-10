@@ -1,0 +1,477 @@
+{
+ "gate_line": "unified.py:1034  if not (_floor < bar_ts+900 < e): continue",
+ "gate_permits": "slack > -900",
+ "books_audited": 29,
+ "trades_audited": 22154,
+ "totals": {
+  "LOOKAHEAD_decision_before_window_close": 15,
+  "boundary_simultaneous": 147,
+  "tight_inside_window_candle": 0,
+  "comfortable_after_close": 21992
+ },
+ "tightest": {
+  "slack_s": -2700,
+  "book": "fsent_champ_long_mode_union",
+  "era": "oos",
+  "trade_no": 38
+ },
+ "violations": [
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 24,
+   "entry_bar_closes_ist": "2023-02-21 14:15",
+   "window_closes_ist": "2023-02-21 14:30",
+   "slack_s": -900,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 250,
+   "entry_bar_closes_ist": "2024-03-14 10:15",
+   "window_closes_ist": "2024-03-14 10:30",
+   "slack_s": -900,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 433,
+   "entry_bar_closes_ist": "2024-12-09 09:00",
+   "window_closes_ist": "2024-12-09 09:30",
+   "slack_s": -1800,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 492,
+   "entry_bar_closes_ist": "2025-03-10 19:00",
+   "window_closes_ist": "2025-03-10 19:30",
+   "slack_s": -1800,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 529,
+   "entry_bar_closes_ist": "2025-05-20 12:00",
+   "window_closes_ist": "2025-05-20 12:30",
+   "slack_s": -1800,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 547,
+   "entry_bar_closes_ist": "2025-06-20 19:15",
+   "window_closes_ist": "2025-06-20 19:30",
+   "slack_s": -900,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 610,
+   "entry_bar_closes_ist": "2025-10-10 13:15",
+   "window_closes_ist": "2025-10-10 13:30",
+   "slack_s": -900,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 644,
+   "entry_bar_closes_ist": "2025-12-07 20:00",
+   "window_closes_ist": "2025-12-07 20:30",
+   "slack_s": -1800,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 676,
+   "entry_bar_closes_ist": "2026-02-01 21:00",
+   "window_closes_ist": "2026-02-01 21:30",
+   "slack_s": -1800,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "is",
+   "trade_no": 809,
+   "entry_bar_closes_ist": "2026-09-04 18:15",
+   "window_closes_ist": "2026-09-04 18:30",
+   "slack_s": -900,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "oos",
+   "trade_no": 38,
+   "entry_bar_closes_ist": "2021-03-05 05:45",
+   "window_closes_ist": "2021-03-05 06:30",
+   "slack_s": -2700,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "oos",
+   "trade_no": 217,
+   "entry_bar_closes_ist": "2021-12-19 22:45",
+   "window_closes_ist": "2021-12-19 23:30",
+   "slack_s": -2700,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "oos",
+   "trade_no": 265,
+   "entry_bar_closes_ist": "2022-03-07 04:45",
+   "window_closes_ist": "2022-03-07 05:30",
+   "slack_s": -2700,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "oos",
+   "trade_no": 321,
+   "entry_bar_closes_ist": "2022-05-30 18:00",
+   "window_closes_ist": "2022-05-30 18:30",
+   "slack_s": -1800,
+   "net_r": null
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "era": "oos",
+   "trade_no": 421,
+   "entry_bar_closes_ist": "2022-11-13 14:45",
+   "window_closes_ist": "2022-11-13 15:30",
+   "slack_s": -2700,
+   "net_r": null
+  }
+ ],
+ "verdict": "LOOKAHEAD PRESENT. 15 trade(s) decide before their window candle closes. Any pinned number that includes them is contaminated.",
+ "per_book": [
+  {
+   "book": "fsent_both_trail_half",
+   "n": 581,
+   "min_slack_s": 2700,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 0,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 581
+   }
+  },
+  {
+   "book": "fsent_champ_long",
+   "n": 839,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 833
+   }
+  },
+  {
+   "book": "fsent_champ_long_biasmom05",
+   "n": 775,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 2,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 773
+   }
+  },
+  {
+   "book": "fsent_champ_long_causalfloor",
+   "n": 821,
+   "min_slack_s": 4500,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 0,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 821
+   }
+  },
+  {
+   "book": "fsent_champ_long_htf15",
+   "n": 839,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 833
+   }
+  },
+  {
+   "book": "fsent_champ_long_htfesmcl4",
+   "n": 1230,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 4,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 1226
+   }
+  },
+  {
+   "book": "fsent_champ_long_mcloff",
+   "n": 912,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 7,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 905
+   }
+  },
+  {
+   "book": "fsent_champ_long_mcloff_htf15",
+   "n": 912,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 7,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 905
+   }
+  },
+  {
+   "book": "fsent_champ_long_mode_atr_low",
+   "n": 956,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 950
+   }
+  },
+  {
+   "book": "fsent_champ_long_mode_fd",
+   "n": 822,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 816
+   }
+  },
+  {
+   "book": "fsent_champ_long_mode_flip_quality",
+   "n": 820,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 814
+   }
+  },
+  {
+   "book": "fsent_champ_long_mode_union",
+   "n": 1255,
+   "min_slack_s": -2700,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 15,
+    "boundary_simultaneous": 3,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 1237
+   }
+  },
+  {
+   "book": "fsent_champ_long_nohalt",
+   "n": 912,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 7,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 905
+   }
+  },
+  {
+   "book": "fsent_champ_short",
+   "n": 844,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 838
+   }
+  },
+  {
+   "book": "fsent_champ_trailhalf",
+   "n": 775,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 7,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 768
+   }
+  },
+  {
+   "book": "fsent_sig_decay_crossed",
+   "n": 200,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 4,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 196
+   }
+  },
+  {
+   "book": "fsent_sig_fs_mom",
+   "n": 498,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 3,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 495
+   }
+  },
+  {
+   "book": "fsent_sig_full",
+   "n": 520,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 5,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 515
+   }
+  },
+  {
+   "book": "fsent_sig_half_crossed",
+   "n": 194,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 4,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 190
+   }
+  },
+  {
+   "book": "fsent_sig_multi",
+   "n": 520,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 5,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 515
+   }
+  },
+  {
+   "book": "fsent_sig_sw10_long",
+   "n": 841,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 835
+   }
+  },
+  {
+   "book": "fsent_sig_sw10_short",
+   "n": 847,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 841
+   }
+  },
+  {
+   "book": "fsent_sig_sw20_short",
+   "n": 847,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 841
+   }
+  },
+  {
+   "book": "fsent_sig_sw20_short_wr",
+   "n": 847,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 841
+   }
+  },
+  {
+   "book": "fsent_sig_trail_delay1",
+   "n": 476,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 4,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 472
+   }
+  },
+  {
+   "book": "fsent_sig_wk_pause_short",
+   "n": 620,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 614
+   }
+  },
+  {
+   "book": "fsent_utcsat_long",
+   "n": 835,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 829
+   }
+  },
+  {
+   "book": "fsent_utcsat_short",
+   "n": 841,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 6,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 835
+   }
+  },
+  {
+   "book": "fsent_utcsat_trailhalf",
+   "n": 775,
+   "min_slack_s": 0,
+   "counts": {
+    "LOOKAHEAD_decision_before_window_close": 0,
+    "boundary_simultaneous": 7,
+    "tight_inside_window_candle": 0,
+    "comfortable_after_close": 768
+   }
+  }
+ ]
+}

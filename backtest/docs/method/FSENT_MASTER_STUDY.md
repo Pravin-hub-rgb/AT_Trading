@@ -354,5 +354,27 @@ Both entries are kept, since the pins differ slightly and `mcloff` states
 
 ---
 
+## 2026-10-10 — window slack audit
+
+`method/WINDOW_SLACK_AUDIT.md`. The retraction of the lookahead claim left two
+contradictory statements standing and neither was airtight: the withdrawn one
+claimed the gate let entries run up to 900s early, the retraction claimed the
+gate's arithmetic was correct. The gate is in fact permissive by 899s; what it
+permits is a different question from what anything uses.
+
+Measured over 29 books, both eras, **22,154 trades**: the minimum slack anywhere
+in the family is **0**. 21,992 trades sit at ≥900s of clearance, 147 exactly on
+the boundary, and **none between** — so no pinned number is contaminated.
+
+The 15 trades the first run flagged are all `fsent_champ_long_mode_union` and are
+a **reporting** defect in that book's `window_start` field, not lookahead:
+`exp_union_gate_truth.py` instruments the gate and shows the shipping book
+satisfies its own gate 311 of 311. `fsent_champ_long_causalfloor`'s description,
+which still asserted the retracted claim and linked to two deleted documents, was
+rewritten to say what the parameter does — a longer wait — and to state the
+retraction first.
+
+---
+
 *Shipping book unchanged: 528 / +533.37 / 13.42 IS, 311 / +239.59 / 11.88 OOS,
 one negative half-year, `max_consecutive_losses=3` untouched.*
