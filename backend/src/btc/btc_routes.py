@@ -116,7 +116,7 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff", "fsent_sig_multi", "fsent_sig_multi_htffs", "fsent_champ_long_htffs", "fsent_champ_long_mcloff_htf15"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -134,8 +134,16 @@ STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified
                               "entry_minus_1", "fsent_champ_long",
                               "fsent_champ_long_atr_low", "fsent_sig_full",
                               "fsent_sig_trail_delay1", "fsent_champ_short",
-                              "fsent_champ_long_htfesmcl4",
-                              "fsent_champ_long_mcloff"}
+"fsent_champ_long_htfesmcl4",
+                               "fsent_champ_long_mcloff",
+                               # top contenders from the rolling-weighted ranking
+                               # (exp_startup_yearly.py, 35 books). The top five by
+                               # that score were all sig-family and three of them
+                               # were not reachable from the dropdown at all, which
+                               # made them unjudgeable. Added 2026-10-10.
+                               "fsent_sig_multi", "fsent_sig_multi_htffs",
+                               "fsent_champ_long_htffs",
+                               "fsent_champ_long_mcloff_htf15"}
 _HTF_CLOSE_OFFSET = 3600   # a 1h candle's open -> its close
 
 VERSION_LABELS = {
@@ -171,6 +179,10 @@ VERSION_LABELS = {
     "fsent_champ_short": "FSENT CHAMP SHORT - the champ_long MIRROR: shorts enter at "
                          "the FS print. IS 533t / +600.60R / DD 17.60R, OOS 312t / "
                          "+239.53R / DD 23.87R",
+    "fsent_sig_multi": "SIG MULTI - fsent_sig_full with ONE field changed: max_positions 1 -> 0, so positions OVERLAP instead of running strictly one after another. Ranked #1 of 35 on the rolling-weighted score (exp_startup_yearly.py). Every rolling 50-trade window in the sample is profitable - the worst 50-trade stretch is still +10.0R. Zero negative half-years across all eleven, zero negative financial years, and zero startup drawdown: it has never once gone below where it started. From ANY start date its median one-year drawdown is 8.95% and its bad-luck tail (p10) is 6.95%, against 12.48% and 10.65% for fsent_champ_long. THE CAVEAT IS REAL AND IT IS HERE: paired permutation p 0.9283 in sample and 0.9138 out of sample. This is a candidate on BEHAVIOUR; there is no edge in it distinguishable from reshuffling the parent.",
+    "fsent_sig_multi_htffs": "SIG MULTI + HTF-FS - fsent_sig_multi with ONE parameter added, exp_htf_fs_entry='flip', so the HTF flip-bucket window opens on the swing's FS print instead of on the break while decisive and b2 keep their breaks. The newest arm in the family and the most holdable object in it: zero negative half-years, zero negative years, every rolling 50 and rolling 100 window profitable, zero startup drawdown, and one of only five books in the family that survives deleting its best 10% of trades (+85.3R, best in the family by a wide margin). From any start date the worst one-year drawdown is 17.82% but the 10th percentile is 6.85%, the shallowest bad-luck tail among the large books. Causality is clean and measured, not asserted: the gap between window_start and its own FS print is 0.0h at min, median and max, and zero entries precede their window_start. CAVEAT: p 0.5091 / 0.9708 - excellent behaviour, no distinguishable edge.",
+    "fsent_champ_long_htffs": "FSENT CHAMP LONG HTF-FS - fsent_champ_long with exp_htf_fs_entry='flip'. The strongest single arm in the family on RETURN TO DRAWDOWN: 45.4 net per unit of drawdown against mcloff's 37.4 and sig_full's 27.4, at the same five-parameter complexity. All eight in-sample half-years positive, which is exactly what htf_fs='all' could not manage. TWO REASONS NOT TO READ THE NET AS A VERDICT: it recovers its own worst drawdown (19.78R, Rs 98,909 at 1% risk on Rs 5 lakh) in TWO TRADES - a very sharp shallow dip, not a deep slow one; and out-of-sample permutation is 0.5956 with tail dependence that DEGRADES out of sample, the top 10% of trades contributing 116.9% there, the worst in the family, leaving -50.7R when they are deleted. IS 770t / +897.94R / dd19.8, OOS 415t / +300.43R / dd14.4.",
+    "fsent_champ_long_mcloff_htf15": "MCL-OFF + HTF15 - fsent_champ_long with TWO differences: max_consecutive_losses 3 -> 0 (the three-loss halt stops cutting the recovery trade that follows every streak), and the HTF plane swings at min_bars=15 instead of 10, so the hour-chart windows are fewer and longer. Ranked #9 of 35 on the rolling-weighted score. Zero negative half-years, zero negative years, median one-year drawdown from any start date 13.14%. Of every book here with zero negative half-years this has the strongest in-sample permutation at 0.0115, and the best out-of-sample figure any zero-negative-half-year book has on the far side at 0.1445 - still short of 0.05, so it is the book to WATCH rather than the book to adopt.",
     "fsent_champ_long_mcloff": "FSENT CHAMP LONG MCL-OFF - the base book with ONE integer "
                                 "changed: max_consecutive_losses 3 -> 0, so the loss-run "
                                 "halt stops cutting the recovery trade that follows every "
@@ -1585,6 +1597,186 @@ def btc_backtest(
             exp_fs_small_swing=6.0,
             exp_skip_weekend=1,
             window_end="exit",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_multi":
+        # SIG FULL with the serial gate turned OFF. One field: max_positions 1 -> 0.
+        #
+        # It ranks #1 of 35 on the rolling-weighted score and it is a different
+        # object from everything else on this page in a way the chart will show
+        # you immediately: positions OVERLAP, so several can be open at once.
+        #
+        # What the ranking actually rests on: every rolling 50-trade window in
+        # the sample is profitable, worst 50-trade stretch still +10.0R. Zero
+        # negative half-years across all eleven, zero negative financial years,
+        # and zero startup drawdown - it has never gone below where it started.
+        # From ANY start date its median one-year drawdown is 8.95% and its bad
+        # luck tail (p10) is 6.95%, against 12.48% and 10.65% for fsent_champ_long.
+        #
+        # The honest caveat, and it belongs in the code and not only on the page:
+        # the paired permutation is p 0.9283 in sample and 0.9138 out of sample.
+        # This is a candidate on BEHAVIOUR. There is no edge in it that can be
+        # told apart from reshuffling the parent.
+        #
+        # Everything else is sig_full's own ladder - bias_momentum_min 0.8,
+        # fs_small_swing 6.0, trail_skip_n 2, weekends skipped, window_end exit.
+        # Pinned IS 329 / +484.59 / 13.39 and OOS 195 / +219.82 / 7.64.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=0,          # OVERLAPPING - the only change from sig_full
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_fs_entry_side="short",
+            exp_bias_momentum_min=0.8,
+            exp_trail_skip_n=2,
+            exp_fs_small_swing=6.0,
+            exp_skip_weekend=1,
+            window_end="exit",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_multi_htffs":
+        # fsent_sig_multi + ONE parameter: exp_htf_fs_entry="flip", so the HTF
+        # flip-bucket window opens on the swing's FS print instead of on the
+        # break, while decisive and b2 keep their breaks.
+        #
+        # This is the newest arm in the family and the most holdable object in it.
+        # Zero negative half-years, zero negative years, every rolling 50 and
+        # rolling 100 window profitable, zero startup drawdown, and one of only
+        # five books in the family that survives deleting its best 10% of trades
+        # (+85.3R, the best in the family by a wide margin).
+        #
+        # CAUSALITY: an FS-anchored window opens exactly at its own print. The
+        # gap between window_start and its FS is 0.0h at min, median and max, and
+        # zero entries precede their window_start - measured in
+        # HTF_FS_ENTRY_REJECTED.md, not asserted.
+        #
+        # The caveat is the same one as sig_multi above and it is not small: p
+        # 0.5091 / 0.9708. Excellent behaviour, no distinguishable edge.
+        # Pinned IS 434 / +666.32 / 17.82 and OOS 221 / +234.48 / 7.99.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=0,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_fs_entry_side="short",
+            exp_bias_momentum_min=0.8,
+            exp_trail_skip_n=2,
+            exp_fs_small_swing=6.0,
+            exp_skip_weekend=1,
+            window_end="exit",
+            exp_htf_fs_entry="flip",    # <- the only difference from sig_multi
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_htffs":
+        # fsent_champ_long + exp_htf_fs_entry="flip". The HTF flip-bucket window
+        # opens on the swing's FS print instead of on the break.
+        #
+        # The strongest single arm in the family on RETURN TO DRAWDOWN: 45.4 net
+        # per unit of drawdown against mcloff's 37.4 and sig_full's 27.4. Five
+        # parameters, the same complexity as mcloff. All eight in-sample
+        # half-years positive, which is what htf_fs="all" could not manage.
+        #
+        # Two reasons not to read the +897.94R as a verdict, both of which are
+        # why this is on the page rather than in the shipping slot:
+        #   - it recovers its own worst drawdown (19.78R, Rs 98,909 at 1% risk on
+        #     Rs 5 lakh) in TWO TRADES. That is a very sharp shallow dip, not a
+        #     deep slow one, and it is not what a drawdown number implies.
+        #   - out-of-sample permutation 0.5956, and its tail dependence DEGRADES
+        #     out of sample: the top 10% of trades contribute 116.9% there, the
+        #     worst in the family, and deleting them leaves -50.7R.
+        # Pinned IS 770 / +897.94 / 19.78 and OOS 415 / +300.43 / 14.35.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=0,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            pivot_rule="leg",
+            exp_fs_entry_side="long",
+            exp_htf_fs_entry="flip",    # <- the only difference from champ_long
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_mcloff_htf15":
+        # TWO differences from fsent_champ_long, and both are visible:
+        #   max_consecutive_losses 3 -> 0. The three-loss halt stops cutting the
+        #     recovery trade that follows every streak.
+        #   the HTF plane swings at min_bars=15 instead of 10 (htf_min_bars=15 on
+        #     the request). A longer leg on the hour chart, so the HTF windows
+        #     are fewer and longer.
+        #
+        # Ranked #9 of 35 on the rolling-weighted score. Zero negative
+        # half-years, zero negative years, median one-year drawdown from any
+        # start date 13.14%.
+        #
+        # Of every book here with zero negative half-years, this has the strongest
+        # in-sample permutation, 0.0115 - and the best out-of-sample figure any
+        # zero-negative-half-year book has on the far side at 0.1445. Still short
+        # of 0.05, so it is the book to WATCH rather than the book to adopt.
+        # Pinned IS 560 / +616.17 / 15.13 and OOS 299 / +277.35 / 13.64.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=0,   # <- differs from champ_long
+            max_positions=0,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            pivot_rule="leg",
+            exp_fs_entry_side="long",
         )
         trades = nested.get("ltf_trades", [])
     elif version == "fsent_sig_trail_delay1":

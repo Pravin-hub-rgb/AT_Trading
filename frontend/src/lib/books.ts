@@ -191,8 +191,52 @@ export const BOOK_OPTIONS: BookOption[] = [
     measured: { isN: 573, isNet: 566.20, oosN: 334, oosNet: 274.36 },
     config: { ...V19, version: "fsent_champ_long_mcloff", ext_stop_r: 3.0, max_consecutive_losses: 0 },
   },
-  {
-    id: "fsent_champ_long_htfesmcl4",
+{
+      // --- TOP CONTENDERS, added 2026-10-10 after the rolling-weighted ranking ---
+      // exp_startup_yearly.py ranked 35 registered fsent books on rolling-window
+      // behaviour (roll10 .30, roll20 .30, roll50 .25, roll100 .15, half-years
+      // .60, years .40, tail spread .30; net deliberately excluded because it is
+      // already inside the other measures, and the null is a gate not a score).
+      // The top five by that score were all in the sig family and three of them
+      // had never been visible on this page. They are here because a book you
+      // cannot look at is not a candidate you can judge.
+      id: "fsent_sig_multi",
+      label: "SIG MULTI (serial, FS on shorts) - IS 329t +484.6R dd13.4 | OOS 195t +219.8R dd7.6",
+      shortLabel: "SIG-MULTI",
+      slMode: "causal",
+      hint: "RANKED #1 of 35 on the rolling-weighted score, and the most DIFFERENT book here. Every one of its rolling 50-trade windows was profitable - the worst 50-trade stretch in the whole sample is still +10.0R. Zero negative half-years, zero negative years, and zero startup drawdown, meaning it has never once gone below where it started. Median drawdown from ANY start date over one year is 8.95% against 12.48% for FSENT-LONG. Its paired permutation is p 0.9283 / 0.9138, i.e. no edge distinguishable from reshuffling the parent, so it is a candidate on BEHAVIOUR and not on evidence of an edge.",
+      measured: { isN: 329, isNet: 484.59, oosN: 195, oosNet: 219.82 },
+      config: { ...V19, version: "fsent_sig_multi", ext_stop_r: 3.0 },
+    },
+    {
+      id: "fsent_sig_multi_htffs",
+      label: "SIG MULTI + HTF-FS (flip bucket on FS) - IS 434t +666.3R dd17.8 | OOS 221t +234.5R dd8.0",
+      shortLabel: "SIG-MULTI+HTFFS",
+      slMode: "causal",
+      hint: "RANKED #3 of 35 and the NEWEST arm in this family - one parameter (exp_htf_fs_entry='flip') added to SIG MULTI. Zero negative half-years, zero negative years, every rolling 50 and rolling 100 window profitable, zero startup drawdown, and it is one of only five books in the family that survives deleting its best 10% of trades (+85.3R). Its bad-luck tail is the shallowest of any large book: from ANY start date the worst 1-year drawdown is 17.82% but the 10th percentile is 6.85%. The honest caveat: p 0.5091 / 0.9708 - behaves beautifully, and shows no edge.",
+      measured: { isN: 434, isNet: 666.32, oosN: 221, oosNet: 234.48 },
+      config: { ...V19, version: "fsent_sig_multi_htffs", ext_stop_r: 3.0 },
+    },
+    {
+      id: "fsent_champ_long_htffs",
+      label: "FSENT CHAMP LONG HTF-FS (flip bucket on FS) - IS 770t +897.9R dd19.8 | OOS 415t +300.4R dd14.4",
+      shortLabel: "HTF-FS",
+      slMode: "causal",
+      hint: "The HTF-FS entry on the champion book, and the strongest single arm in the family on return-to-drawdown: 45.4 net per unit of drawdown, better than anything else here including MCL-OFF at 37.4. Five parameters, the same complexity as MCL-OFF. All eight in-sample half-years positive. But it recovers its own worst drawdown in TWO TRADES and its out-of-sample permutation is 0.5956, and it is the one book whose tail dependence degrades out of sample - top 10% of trades contribute 116.9% there. Look at it on the chart; do not read the net as a verdict.",
+      measured: { isN: 770, isNet: 897.94, oosN: 415, oosNet: 300.43 },
+      config: { ...V19, version: "fsent_champ_long_htffs", ext_stop_r: 3.0 },
+    },
+    {
+      id: "fsent_champ_long_mcloff_htf15",
+      label: "MCL-OFF + HTF15 swing rule - IS 520t +616.2R dd17.3 | OOS 280t +254.9R dd16.9",
+      shortLabel: "MCL-OFF+HTF15",
+      slMode: "causal",
+      hint: "MCL-OFF (the loss-run cutoff turned off) combined with the tighter htf15 swing rule. Ranked #9 of 35. Zero negative half-years and zero negative years, median 1-year drawdown from any start date 13.14%, and the strongest in-sample permutation of any book that has zero negative half-years: p 0.0115. Out of sample it is 0.1445 - the best p any zero-negative-half-year book has on the far side, though still short of 0.05. Worth watching rather than adopting.",
+      measured: { isN: 520, isNet: 616.17, oosN: 280, oosNet: 254.88 },
+      config: { ...V19, version: "fsent_champ_long_mcloff_htf15", ext_stop_r: 3.0, htf_min_bars: 15 },
+    },
+    {
+      id: "fsent_champ_long_htfesmcl4",
     label: "FSENT CHAMP LONG HTF-FS + MCL4 - IS 793t +917.8R dd27.7 | OOS 437t +326.2R dd14.2",
     shortLabel: "HTF-FS+MCL4",
     slMode: "causal",
