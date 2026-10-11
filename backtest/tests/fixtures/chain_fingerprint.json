@@ -1,0 +1,9 @@
+{
+ "tf": "15m",
+ "symbol": "BTCUSDT_BYBIT",
+ "min_bars": 50,
+ "candles": 129715,
+ "swings": 2952,
+ "marks": 7993,
+ "sha256": "87a103eacf552fa55333c2a3a930b681ecf6db0ff7b24055fd987aedce3a1b98"
+}
