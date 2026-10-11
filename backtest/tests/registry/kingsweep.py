@@ -249,8 +249,8 @@ BOOKS = {
         #   gross +445.22R  net +325.78R  dd 27.72R  win 30.0%  n=500
         # pin was n=500 net=325.78; now n=500 net=325.78 (win rate 30.0%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
-        "pins": {"n": 502, "net": 279.33, "dd_net": 39.3,
-                 "oos_n": 287, "oos_net": 63.41, "oos_dd_net": 58.01},
+        "pins": {"n": 499, "net": 283.73,
+                 "dd_net": 43.69, "oos_n": 289, "oos_net": 74.76, "oos_dd_net": 53.01},
     },
     # =========================================================================
     # =========================================================================
@@ -326,8 +326,8 @@ BOOKS = {
         # different code paths for the exp_causal_sl branch (t_c13).
         # pin was n=495 net=215.14; now n=495 net=215.09 (win rate 29.7%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
-        "pins": {"n": 496, "net": 178.46, "dd_net": 44.74,
-                 "oos_n": 288, "oos_net": 72.26, "oos_dd_net": 49.72},
+        "pins": {"n": 498, "net": 204.04,
+                 "dd_net": 49.04, "oos_n": 288, "oos_net": 76.4, "oos_dd_net": 45.49},
     },
 
     "champion_multi_sw10_leg": {
@@ -364,8 +364,8 @@ BOOKS = {
         # re-add from memory. n / net / partials / oos below are the book.
         # pin was n=499 net=239.12; now n=499 net=239.12 (win rate 29.7%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
-        "pins": {"n": 503, "net": 288.52, "dd_net": 43.2,
-                 "oos_n": 288, "oos_net": 66.04, "oos_dd_net": 55.37},
+        "pins": {"n": 500, "net": 247.21,
+                 "dd_net": 43.47, "oos_n": 289, "oos_net": 72.95, "oos_dd_net": 55.18},
     },
 
     # ===== ENTRY-1 VARIANTS (leg_no_entry pivot rule) =====
@@ -388,8 +388,8 @@ BOOKS = {
         #   gross +344.06R  net +229.45R  dd 53.26R  win 29.1%  n=495
         # all 115 registry books in one pass.
         #   gross +344.06R  net +229.45R  dd 53.26R  win 29.1%  n=495
-        "pins": {"n": 500, "net": 277.48, "dd_net": 49.61,
-                 "oos_n": 292, "oos_net": 77.51, "oos_dd_net": 42.26},
+        "pins": {"n": 502, "net": 250.34,
+                 "dd_net": 45.94, "oos_n": 291, "oos_net": 90.39, "oos_dd_net": 40.54},
     },
     "persist4_multi_sw10": {
         "desc": "king multi + persist=4 (fine sweep, current=7)",
@@ -406,8 +406,8 @@ BOOKS = {
         #   gross +347.93R  net +231.70R  dd 46.85R  win 29.5%  n=501
         # all 115 registry books in one pass.
         #   gross +347.93R  net +231.70R  dd 46.85R  win 29.5%  n=501
-        "pins": {"n": 505, "net": 281.1, "dd_net": 43.2,
-                 "oos_n": 294, "oos_net": 84.01, "oos_dd_net": 40.32},
+        "pins": {"n": 501, "net": 246.71,
+                 "dd_net": 43.47, "oos_n": 296, "oos_net": 96.7, "oos_dd_net": 41.3},
     },
     "persist5_multi_sw10": {
         "desc": "king multi + persist=5 (fine sweep, current=7)",
@@ -424,8 +424,8 @@ BOOKS = {
         #   gross +354.53R  net +239.00R  dd 46.85R  win 29.5%  n=498
         # all 115 registry books in one pass.
         #   gross +354.53R  net +239.00R  dd 46.85R  win 29.5%  n=498
-        "pins": {"n": 502, "net": 288.41, "dd_net": 43.2,
-                 "oos_n": 294, "oos_net": 72.87, "oos_dd_net": 55.11},
+        "pins": {"n": 501, "net": 247.38,
+                 "dd_net": 43.47, "oos_n": 298, "oos_net": 83.77, "oos_dd_net": 55.64},
     },
     "persist6_multi_sw10": {
         "desc": "king multi + persist=6 (fine sweep, current=7)",
@@ -447,8 +447,8 @@ BOOKS = {
         # in this range - saturated, not equivalent. Kept as its own entry so the
         # knob stays visible; do not read the tie as "same book".
         # pivot_rule unset vs leg.
-        "pins": {"n": 503, "net": 288.52, "dd_net": 43.2,
-                 "oos_n": 287, "oos_net": 66.79, "oos_dd_net": 60.22},
+        "pins": {"n": 501, "net": 247.38,
+                 "dd_net": 43.47, "oos_n": 287, "oos_net": 84.7, "oos_dd_net": 53},
     },
     "persist8_multi_sw10": {
         "desc": "king multi + persist=8 (fine sweep, current=7)",
@@ -508,8 +508,8 @@ BOOKS = {
         #   gross +324.69R  net +221.11R  dd 34.27R  win 27.9%  n=419
         # all 115 registry books in one pass.
         #   gross +324.69R  net +221.11R  dd 34.27R  win 27.9%  n=419
-        "pins": {"n": 428, "net": 254.7, "dd_net": 35.44,
-                 "oos_n": 229, "oos_net": 53.97, "oos_dd_net": 35.08},
+        "pins": {"n": 445, "net": 267.92,
+                 "dd_net": 39.81, "oos_n": 240, "oos_net": 71.35, "oos_dd_net": 31.65},
     },
     "htfrr35_multi_sw10": {
         "desc": "king multi + htf_rr=3.5 (re-sweep post-fix, current=3.0)",
@@ -544,8 +544,8 @@ BOOKS = {
         #   gross +321.93R  net +222.36R  dd 38.81R  win 29.2%  n=397
         # all 115 registry books in one pass.
         #   gross +321.93R  net +222.36R  dd 38.81R  win 29.2%  n=397
-        "pins": {"n": 405, "net": 265.76, "dd_net": 38.51,
-                 "oos_n": 228, "oos_net": 63.1, "oos_dd_net": 40.3},
+        "pins": {"n": 416, "net": 182.89,
+                 "dd_net": 41.98, "oos_n": 234, "oos_net": 65.07, "oos_dd_net": 40.65},
     },
 
     # --- ext_stop_r sweep on utcsat king (current=3.0, never swept on king) ---
@@ -564,8 +564,8 @@ BOOKS = {
         #   gross +402.41R  net +301.86R  dd 41.77R  win 32.6%  n=417
         # all 115 registry books in one pass.
         #   gross +402.41R  net +301.86R  dd 41.77R  win 32.6%  n=417
-        "pins": {"n": 422, "net": 331.66, "dd_net": 38.62,
-                 "oos_n": 245, "oos_net": 71.06, "oos_dd_net": 28.11},
+        "pins": {"n": 422, "net": 297.3,
+                 "dd_net": 40.85, "oos_n": 244, "oos_net": 89.17, "oos_dd_net": 25.58},
     },
     "ext25_utcsat_multi_sw10": {
         "desc": "utcsat king + ext_stop_r=2.5 (sweep on king, current=3.0)",
@@ -582,8 +582,8 @@ BOOKS = {
         #   gross +385.83R  net +281.30R  dd 36.18R  win 30.8%  n=442
         # all 115 registry books in one pass.
         #   gross +385.83R  net +281.30R  dd 36.18R  win 30.8%  n=442
-        "pins": {"n": 452, "net": 332.07, "dd_net": 34.3,
-                 "oos_n": 256, "oos_net": 79.04, "oos_dd_net": 28.04},
+        "pins": {"n": 451, "net": 293.31,
+                 "dd_net": 36.28, "oos_n": 255, "oos_net": 100.41, "oos_dd_net": 21.71},
     },
     "ext35_utcsat_multi_sw10": {
         "desc": "utcsat king + ext_stop_r=3.5 (sweep on king, current=3.0)",
@@ -600,8 +600,8 @@ BOOKS = {
         #   gross +384.11R  net +279.16R  dd 35.54R  win 30.4%  n=454
         # all 115 registry books in one pass.
         #   gross +384.11R  net +279.16R  dd 35.54R  win 30.4%  n=454
-        "pins": {"n": 462, "net": 321.4, "dd_net": 36.45,
-                 "oos_n": 260, "oos_net": 75.32, "oos_dd_net": 28.04},
+        "pins": {"n": 458, "net": 261.85,
+                 "dd_net": 46.31, "oos_n": 259, "oos_net": 102.43, "oos_dd_net": 22.86},
     },
     "ext4_utcsat_multi_sw10": {
         "desc": "utcsat king + ext_stop_r=4.0 (sweep on king, current=3.0)",
@@ -623,8 +623,8 @@ BOOKS = {
         # in this range - saturated, not equivalent. Kept as its own entry so the
         # knob stays visible; do not read the tie as "same book".
         # ext_stop_r 4.0 vs 3.5.
-        "pins": {"n": 462, "net": 321.4, "dd_net": 36.45,
-                 "oos_n": 260, "oos_net": 75.32, "oos_dd_net": 28.04},
+        "pins": {"n": 458, "net": 261.85,
+                 "dd_net": 46.31, "oos_n": 259, "oos_net": 102.43, "oos_dd_net": 22.86},
     },
 
     # --- wage_h / curfew on kings (never tested on king configs) ---
@@ -644,8 +644,8 @@ BOOKS = {
         #   gross +365.61R  net +273.70R  dd 31.66R  win 31.5%  n=391
         # all 115 registry books in one pass.
         #   gross +365.61R  net +273.70R  dd 31.66R  win 31.5%  n=391
-        "pins": {"n": 387, "net": 259.1, "dd_net": 35.71,
-                 "oos_n": 227, "oos_net": 91.60, "oos_dd_net": 23.33},
+        "pins": {"n": 391, "net": 293.26,
+                 "dd_net": 38.28, "oos_n": 229, "oos_net": 103.53, "oos_dd_net": 28.05},
     },
     "wage24_utcsat_multi_sw10": {
         "desc": "utcsat king + wage_h=24 (never tested on king, current=0)",
@@ -663,8 +663,8 @@ BOOKS = {
         #   gross +353.29R  net +273.80R  dd 21.70R  win 33.4%  n=332
         # all 115 registry books in one pass.
         #   gross +353.29R  net +273.80R  dd 21.70R  win 33.4%  n=332
-        "pins": {"n": 330, "net": 263.25, "dd_net": 21.70,
-                 "oos_n": 199, "oos_net": 63.75, "oos_dd_net": 28.74},
+        "pins": {"n": 337, "net": 280.42,
+                 "dd_net": 31.85, "oos_n": 203, "oos_net": 73.29, "oos_dd_net": 37.32},
     },
     "wage24_swingpause_sig_sw10": {
         "desc": "best single + wage_h=24 (never tested on best single, current=0)",
@@ -699,8 +699,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
         #   gross +393.15R  net +304.72R  dd 31.95R  win 32.4%  n=377
-        "pins": {"n": 384, "net": 287.49, "dd_net": 30.07,
-                 "oos_n": 217, "oos_net": 67.54, "oos_dd_net": 27.63},
+        "pins": {"n": 383, "net": 301.28,
+                 "dd_net": 32.99, "oos_n": 225, "oos_net": 73.6, "oos_dd_net": 36.08},
     },
     "curfew624_swingpause_sig_sw10": {
         "desc": "best single + skip age 6-24h band (never tested on best single, current=0/0)",

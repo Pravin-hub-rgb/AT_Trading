@@ -1,0 +1,416 @@
+{
+ "fsent_both_trail_half": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 28.67,
+   "n": 258,
+   "net": 75.81,
+   "oos_dd_net": 13.22,
+   "oos_n": 146,
+   "oos_net": 68.46,
+   "oos_win": 0.31,
+   "win": 0.291
+  },
+  "old": {
+   "dd_net": 28.67,
+   "n": 258,
+   "net": 75.81,
+   "oos_dd_net": 13.22,
+   "oos_n": 146,
+   "oos_net": 68.46,
+   "oos_win": 0.31,
+   "win": 0.29
+  }
+ },
+ "fsent_champ_long_biasmom05": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 15.37,
+   "n": 499,
+   "net": 525.85,
+   "oos_dd_net": 15.72,
+   "oos_n": 290,
+   "oos_net": 228.64,
+   "oos_win": 0.39,
+   "win": 0.423
+  },
+  "old": {
+   "dd_net": 15.37,
+   "n": 499,
+   "net": 525.85,
+   "oos_dd_net": 15.72,
+   "oos_n": 290,
+   "oos_net": 228.64,
+   "oos_win": 0.39,
+   "win": 0.42
+  }
+ },
+ "fsent_champ_long_causalfloor": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 15.9,
+   "n": 522,
+   "net": 569.57,
+   "oos_dd_net": 17.06,
+   "oos_n": 305,
+   "oos_net": 258.13,
+   "oos_win": 0.393,
+   "win": 0.423
+  },
+  "old": {
+   "dd_net": 15.9,
+   "n": 522,
+   "net": 569.57,
+   "oos_dd_net": 17.06,
+   "oos_n": 305,
+   "oos_net": 258.13,
+   "oos_win": 0.39,
+   "win": 0.42
+  }
+ },
+ "fsent_champ_long_htf15": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 20.08,
+   "n": 529,
+   "net": 589.54,
+   "oos_dd_net": 16.53,
+   "oos_n": 300,
+   "oos_net": 300.73,
+   "oos_win": 0.41,
+   "win": 0.427
+  },
+  "old": {
+   "dd_net": 20.08,
+   "n": 529,
+   "net": 589.54,
+   "oos_dd_net": 16.53,
+   "oos_n": 300,
+   "oos_net": 300.73,
+   "oos_win": 0.41,
+   "win": 0.43
+  }
+ },
+ "fsent_champ_long_htf15_htffs": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 21.98,
+   "n": 778,
+   "net": 945.91,
+   "oos_dd_net": 10.37,
+   "oos_n": 418,
+   "oos_net": 359.98,
+   "oos_win": 0.4,
+   "win": 0.447
+  },
+  "old": {
+   "dd_net": 21.98,
+   "n": 778,
+   "net": 945.91,
+   "oos_dd_net": 10.37,
+   "oos_n": 418,
+   "oos_net": 359.98,
+   "oos_win": 0.4,
+   "win": 0.45
+  }
+ },
+ "fsent_champ_long_htfesmcl4": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 22.16,
+   "n": 806,
+   "net": 941.42,
+   "oos_dd_net": 14.33,
+   "oos_n": 436,
+   "oos_net": 286.22,
+   "oos_win": 0.378,
+   "win": 0.447
+  },
+  "old": {
+   "dd_net": 22.16,
+   "n": 806,
+   "net": 941.42,
+   "oos_dd_net": 14.33,
+   "oos_n": 436,
+   "oos_net": 286.22,
+   "oos_win": 0.38,
+   "win": 0.45
+  }
+ },
+ "fsent_champ_long_htffs": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 21.79,
+   "n": 787,
+   "net": 908.14,
+   "oos_dd_net": 14.34,
+   "oos_n": 408,
+   "oos_net": 286.97,
+   "oos_win": 0.373,
+   "win": 0.439
+  },
+  "old": {
+   "dd_net": 21.79,
+   "n": 787,
+   "net": 908.14,
+   "oos_dd_net": 14.34,
+   "oos_n": 408,
+   "oos_net": 286.97,
+   "oos_win": 0.37,
+   "win": 0.44
+  }
+ },
+ "fsent_champ_long_mcloff": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 15.63,
+   "n": 574,
+   "net": 589.12,
+   "oos_dd_net": 16.8,
+   "oos_n": 336,
+   "oos_net": 279.76,
+   "oos_win": 0.39,
+   "win": 0.423
+  },
+  "old": {
+   "dd_net": 15.63,
+   "n": 574,
+   "net": 589.12,
+   "oos_dd_net": 16.8,
+   "oos_n": 336,
+   "oos_net": 279.76,
+   "oos_win": 0.39,
+   "win": 0.42
+  }
+ },
+ "fsent_champ_long_mcloff_htf15": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 15.07,
+   "n": 565,
+   "net": 637.39,
+   "oos_dd_net": 15.79,
+   "oos_n": 321,
+   "oos_net": 319.35,
+   "oos_win": 0.414,
+   "win": 0.43
+  },
+  "old": {
+   "dd_net": 15.07,
+   "n": 565,
+   "net": 637.39,
+   "oos_dd_net": 15.79,
+   "oos_n": 321,
+   "oos_net": 319.35,
+   "oos_win": 0.41,
+   "win": 0.43
+  }
+ },
+ "fsent_champ_long_mode_chop": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 15.31,
+   "n": 536,
+   "net": 553.3,
+   "oos_dd_net": 16.86,
+   "oos_n": 291,
+   "oos_net": 234.08,
+   "oos_win": 0.375,
+   "win": 0.425
+  },
+  "old": {
+   "dd_net": 15.31,
+   "n": 536,
+   "net": 553.3,
+   "oos_dd_net": 16.86,
+   "oos_n": 291,
+   "oos_net": 234.08,
+   "oos_win": 0.38,
+   "win": 0.42
+  }
+ },
+ "fsent_sig_decay_crossed": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 8.62,
+   "n": 103,
+   "net": 219.52,
+   "oos_dd_net": 7.11,
+   "oos_n": 69,
+   "oos_net": 113.12,
+   "oos_win": 0.493,
+   "win": 0.456
+  },
+  "old": {
+   "dd_net": 8.62,
+   "n": 103,
+   "net": 219.52,
+   "oos_dd_net": 7.11,
+   "oos_n": 69,
+   "oos_net": 113.12,
+   "oos_win": 0.49,
+   "win": 0.46
+  }
+ },
+ "fsent_sig_fs_mom": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 11.45,
+   "n": 249,
+   "net": 291.24,
+   "oos_dd_net": 9.45,
+   "oos_n": 152,
+   "oos_net": 154.35,
+   "oos_win": 0.414,
+   "win": 0.39
+  },
+  "old": {
+   "dd_net": 11.45,
+   "n": 249,
+   "net": 291.24,
+   "oos_dd_net": 9.45,
+   "oos_n": 152,
+   "oos_net": 154.35,
+   "oos_win": 0.41,
+   "win": 0.39
+  }
+ },
+ "fsent_sig_full": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 12.31,
+   "n": 248,
+   "net": 340.66,
+   "oos_dd_net": 7.8,
+   "oos_n": 156,
+   "oos_net": 170.6,
+   "oos_win": 0.465,
+   "win": 0.407
+  },
+  "old": {
+   "dd_net": 12.31,
+   "n": 248,
+   "net": 340.66,
+   "oos_dd_net": 7.8,
+   "oos_n": 156,
+   "oos_net": 170.6,
+   "oos_win": 0.47,
+   "win": 0.41
+  }
+ },
+ "fsent_sig_half_crossed": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 8.75,
+   "n": 98,
+   "net": 368.63,
+   "oos_dd_net": 8.09,
+   "oos_n": 64,
+   "oos_net": 123.93,
+   "oos_win": 0.422,
+   "win": 0.398
+  },
+  "old": {
+   "dd_net": 8.75,
+   "n": 98,
+   "net": 368.63,
+   "oos_dd_net": 8.09,
+   "oos_n": 64,
+   "oos_net": 123.93,
+   "oos_win": 0.42,
+   "win": 0.4
+  }
+ },
+ "fsent_sig_multi": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 13.84,
+   "n": 337,
+   "net": 464.6,
+   "oos_dd_net": 9.76,
+   "oos_n": 200,
+   "oos_net": 190.5,
+   "oos_win": 0.477,
+   "win": 0.457
+  },
+  "old": {
+   "dd_net": 13.84,
+   "n": 337,
+   "net": 464.6,
+   "oos_dd_net": 9.76,
+   "oos_n": 200,
+   "oos_net": 190.5,
+   "oos_win": 0.48,
+   "win": 0.46
+  }
+ },
+ "fsent_sig_multi_htffs": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 16.37,
+   "n": 433,
+   "net": 710.13,
+   "oos_dd_net": 7.88,
+   "oos_n": 220,
+   "oos_net": 208.78,
+   "oos_win": 0.479,
+   "win": 0.487
+  },
+  "old": {
+   "dd_net": 16.37,
+   "n": 433,
+   "net": 710.13,
+   "oos_dd_net": 7.88,
+   "oos_n": 220,
+   "oos_net": 208.78,
+   "oos_win": 0.48,
+   "win": 0.49
+  }
+ },
+ "fsent_sig_sw20_short_wr": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 20.52,
+   "n": 347,
+   "net": 207.0,
+   "oos_dd_net": 12.11,
+   "oos_n": 205,
+   "oos_net": 95.07,
+   "oos_win": 0.312,
+   "win": 0.372
+  },
+  "old": {
+   "dd_net": 20.52,
+   "n": 347,
+   "net": 207,
+   "oos_dd_net": 12.11,
+   "oos_n": 205,
+   "oos_net": 95.07,
+   "oos_win": 0.31,
+   "win": 0.37
+  }
+ },
+ "fsent_sig_trail_delay1": {
+  "file": "signal.py",
+  "new": {
+   "dd_net": 13.41,
+   "n": 214,
+   "net": 435.11,
+   "oos_dd_net": 8.41,
+   "oos_n": 126,
+   "oos_net": 161.41,
+   "oos_win": 0.408,
+   "win": 0.35
+  },
+  "old": {
+   "dd_net": 13.41,
+   "n": 214,
+   "net": 435.11,
+   "oos_dd_net": 8.41,
+   "oos_n": 126,
+   "oos_net": 161.41,
+   "oos_win": 0.41,
+   "win": 0.35
+  }
+ }
+}

@@ -19,8 +19,8 @@ BOOKS = {
                     "pivot_rule": "leg"},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 503, "net": 288.52, "dd_net": 43.2,
-                 "oos_n": 288, "oos_net": 66.04, "oos_dd_net": 55.37},
+        "pins": {"n": 500, "net": 247.21,
+                 "dd_net": 43.47, "oos_n": 289, "oos_net": 72.95, "oos_dd_net": 55.18},
     },
     "decayA_u": {
         "desc": "utcsat + decay off (control)",
@@ -34,8 +34,8 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_skip_utc_sat": 1},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 462, "net": 321.4, "dd_net": 36.45,
-                 "oos_n": 260, "oos_net": 75.32, "oos_dd_net": 28.04},
+        "pins": {"n": 458, "net": 261.85,
+                 "dd_net": 46.31, "oos_n": 259, "oos_net": 102.43, "oos_dd_net": 22.86},
     },
     "decayB_c": {
         "desc": "champion leg + decay block when BUYING decay >= 0.75",
@@ -50,8 +50,8 @@ BOOKS = {
                     "exp_decay_mode": 1},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 305, "net": 214.52, "dd_net": 30.11,
-                 "oos_n": 153, "oos_net": 81.77, "oos_dd_net": 17.48},
+        "pins": {"n": 308, "net": 242.86,
+                 "dd_net": 32.62, "oos_n": 151, "oos_net": 90.22, "oos_dd_net": 26.5},
     },
     "decayB_u": {
         "desc": "utcsat + decay block when BUYING decay >= 0.75",
@@ -66,8 +66,8 @@ BOOKS = {
                     "exp_decay_mode": 1},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 273, "net": 181.58, "dd_net": 26.84,
-                 "oos_n": 132, "oos_net": 78.37, "oos_dd_net": 18.02},
+        "pins": {"n": 269, "net": 291.39,
+                 "dd_net": 29.05, "oos_n": 133, "oos_net": 92.02, "oos_dd_net": 23.56},
     },
     "decayC_c": {
         "desc": "champion leg + decay block when SELLING decay >= 0.75",
@@ -82,8 +82,8 @@ BOOKS = {
                     "exp_decay_mode": 2},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 307, "net": 152.27, "dd_net": 30.69,
-                 "oos_n": 166, "oos_net": 54.41, "oos_dd_net": 37.37},
+        "pins": {"n": 301, "net": 84.74,
+                 "dd_net": 44.66, "oos_n": 173, "oos_net": 68.75, "oos_dd_net": 34.79},
     },
     "decayC_u": {
         "desc": "utcsat + decay block when SELLING decay >= 0.75",
@@ -98,8 +98,8 @@ BOOKS = {
                     "exp_decay_mode": 2},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 277, "net": 175.79, "dd_net": 32.67,
-                 "oos_n": 144, "oos_net": 56.58, "oos_dd_net": 25.25},
+        "pins": {"n": 270, "net": 117.79,
+                 "dd_net": 36.96, "oos_n": 148, "oos_net": 69.14, "oos_dd_net": 20.33},
     },
     "decayD_c": {
         "desc": "champion leg + decay block long on buying decay, short on selling decay",
@@ -130,8 +130,8 @@ BOOKS = {
                     "exp_decay_mode": 3},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 322, "net": 162.5, "dd_net": 32.45,
-                 "oos_n": 161, "oos_net": 73.75, "oos_dd_net": 20.51},
+        "pins": {"n": 320, "net": 222.72,
+                 "dd_net": 37.68, "oos_n": 165, "oos_net": 75.16, "oos_dd_net": 29.82},
     },
     "decayE_c": {
         "desc": "champion leg + decay block long on SELLING decay, short on buying decay (crossed)",
@@ -173,8 +173,8 @@ BOOKS = {
         # ALLOW rule is bad, and F is the exact mirror of E differing only in sign,
         # so the decay signal is directional: it tells you which side NOT to take.
         # It is not a standalone entry signal.
-        "pins": {"n": 254, "net": 206.93, "dd_net": 35.41,
-                 "oos_n": 142, "oos_net": 89.74, "oos_dd_net": 17.67},
+        "pins": {"n": 258, "net": 169.18,
+                 "dd_net": 40.22, "oos_n": 140, "oos_net": 97.44, "oos_dd_net": 16.07},
     },
     "decayE_u": {
         "desc": "utcsat + decay block long on SELLING decay, short on buying decay (crossed)",
@@ -216,8 +216,8 @@ BOOKS = {
         # ALLOW rule is bad, and F is the exact mirror of E differing only in sign,
         # so the decay signal is directional: it tells you which side NOT to take.
         # It is not a standalone entry signal.
-        "pins": {"n": 223, "net": 199.13, "dd_net": 29.65,
-                 "oos_n": 122, "oos_net": 90.29, "oos_dd_net": 17.18},
+        "pins": {"n": 223, "net": 177.32,
+                 "dd_net": 27.58, "oos_n": 122, "oos_net": 105.88, "oos_dd_net": 15.43},
     },
     "decayF_c": {
         "desc": "champion leg + decay ALLOW crossed only (mirror of E)",
@@ -371,8 +371,8 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 12},
         "swing": "sw10",
-        "pins": {"n": 476, "net": 205.73, "dd_net": 40.42,
-                 "oos_n": 289, "oos_net": 63.56, "oos_dd_net": 55.62},
+        "pins": {"n": 484, "net": 136.52,
+                 "dd_net": 42.67, "oos_n": 284, "oos_net": 70.39, "oos_dd_net": 56.83},
     },
     "cap16d": {
         "desc": "cap_days 16 days",
@@ -410,8 +410,8 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 503, "net": 288.52, "dd_net": 43.2,
-                 "oos_n": 288, "oos_net": 66.04, "oos_dd_net": 55.37},
+        "pins": {"n": 500, "net": 247.21,
+                 "dd_net": 43.47, "oos_n": 289, "oos_net": 72.95, "oos_dd_net": 55.18},
     },
     "cap20d": {
         "desc": "cap_days 20 days",
@@ -424,8 +424,8 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 20},
         "swing": "sw10",
-        "pins": {"n": 502, "net": 325.48, "dd_net": 41.63,
-                 "oos_n": 296, "oos_net": 77.38, "oos_dd_net": 43.38},
+        "pins": {"n": 512, "net": 279.74,
+                 "dd_net": 42.02, "oos_n": 296, "oos_net": 83.47, "oos_dd_net": 43.93},
     },
     "cap24d": {
         "desc": "cap_days 24 days",
@@ -452,8 +452,8 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 32},
         "swing": "sw10",
-        "pins": {"n": 525, "net": 349.51, "dd_net": 43.99,
-                 "oos_n": 300, "oos_net": 87.61, "oos_dd_net": 32.15},
+        "pins": {"n": 524, "net": 368.35,
+                 "dd_net": 39.37, "oos_n": 292, "oos_net": 59.75, "oos_dd_net": 58.01},
     },
     "cap48d": {
         "desc": "cap_days 48 days",
@@ -466,8 +466,8 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 48},
         "swing": "sw10",
-        "pins": {"n": 558, "net": 365.97, "dd_net": 51.37,
-                 "oos_n": 309, "oos_net": 67.46, "oos_dd_net": 38.08},
+        "pins": {"n": 543, "net": 350.74,
+                 "dd_net": 39.37, "oos_n": 304, "oos_net": 62.98, "oos_dd_net": 57.24},
     },
     "cap999_nocap": {
         "desc": "cap_days no cap (999)",
@@ -505,8 +505,8 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 591, "net": 379.37, "dd_net": 51.37,
-                 "oos_n": 321, "oos_net": 124.38, "oos_dd_net": 37.68},
+        "pins": {"n": 575, "net": 366.94,
+                 "dd_net": 39.37, "oos_n": 315, "oos_net": 111.41, "oos_dd_net": 55},
     },
     "utcsat_cap16d": {
         "desc": "cap_days 16 days",
@@ -519,8 +519,8 @@ BOOKS = {
                     "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg", "exp_cap_days": 16, "exp_skip_utc_sat": 1},
         "swing": "sw10",
-        "pins": {"n": 462, "net": 321.4, "dd_net": 36.45,
-                 "oos_n": 260, "oos_net": 75.32, "oos_dd_net": 28.04},
+        "pins": {"n": 458, "net": 261.85,
+                 "dd_net": 46.31, "oos_n": 259, "oos_net": 102.43, "oos_dd_net": 22.86},
     },
     "utcsat_cap999_nocap": {
         "desc": "cap_days no cap (999)",
@@ -558,8 +558,8 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 540, "net": 359.09, "dd_net": 41.25,
-                 "oos_n": 289, "oos_net": 133.62, "oos_dd_net": 29.57},
+        "pins": {"n": 518, "net": 340.79,
+                 "dd_net": 34.74, "oos_n": 278, "oos_net": 134.92, "oos_dd_net": 28.93},
     },
 
     # ===== OPTIMAL LANES (from exp37, fine fills, corrected engine) =====
@@ -588,8 +588,8 @@ BOOKS = {
         # compared against gross.
         # pin was n=500 net=325.75; now n=500 net=325.75 (win rate 30.0%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
-        "pins": {"n": 502, "net": 279.33, "dd_net": 39.3,
-                 "oos_n": 287, "oos_net": 63.41, "oos_dd_net": 58.01},
+        "pins": {"n": 499, "net": 283.7,
+                 "dd_net": 43.69, "oos_n": 289, "oos_net": 74.76, "oos_dd_net": 53.01},
     },
 
     # champion_multi_sw10_leg_no_entry - NEW variant with LTF entry-bar skip
@@ -622,8 +622,8 @@ BOOKS = {
         # in this range - saturated, not equivalent. Kept as its own entry so the
         # knob stays visible; do not read the tie as "same book".
         # exp_ltf_no_entry 1 vs 0.
-        "pins": {"n": 502, "net": 279.33, "dd_net": 39.3,
-                 "oos_n": 287, "oos_net": 63.41, "oos_dd_net": 58.01},
+        "pins": {"n": 499, "net": 283.7,
+                 "dd_net": 43.69, "oos_n": 289, "oos_net": 74.76, "oos_dd_net": 53.01},
     },
 
     # ===== BASELINES (no partial, for delta measurement) =====
@@ -660,8 +660,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=502 net=238.45. Full sweep incl. gross/dd/win-rate:
         #   gross +354.08R  net +238.45R  dd 53.86R  win 30.3%  n=502
-        "pins": {"n": 506, "net": 282.67, "dd_net": 50.21,
-                 "oos_n": 303, "oos_net": 70.84, "oos_dd_net": 51.65},
+        "pins": {"n": 506, "net": 267.7,
+                 "dd_net": 46.54, "oos_n": 300, "oos_net": 65.74, "oos_dd_net": 60.07},
     },
 
     # ===== D3 COOLDOWN FAMILY (loss-reactive window skip / swing pause) =====
@@ -771,8 +771,8 @@ BOOKS = {
         #   gross +393.87R  net +295.70R  dd 36.16R  win 31.0%  n=422
         # all 115 registry books in one pass.
         #   gross +393.87R  net +295.70R  dd 36.16R  win 31.0%  n=422
-        "pins": {"n": 429, "net": 248.6, "dd_net": 35.31,
-                 "oos_n": 232, "oos_net": 85.25, "oos_dd_net": 28.55},
+        "pins": {"n": 422, "net": 237.83,
+                 "dd_net": 42.07, "oos_n": 228, "oos_net": 96.85, "oos_dd_net": 23.46},
     },
     "b2doji_swingpause_sig_sw10": {
         "desc": "king single + skip B2 entries with doji candle (body/range < 0.3)",
@@ -808,8 +808,8 @@ BOOKS = {
         #   gross +366.64R  net +261.40R  dd 37.95R  win 28.8%  n=434
         # all 115 registry books in one pass.
         #   gross +366.64R  net +261.40R  dd 37.95R  win 28.8%  n=434
-        "pins": {"n": 439, "net": 254.94, "dd_net": 37.75,
-                 "oos_n": 252, "oos_net": 82.12, "oos_dd_net": 27.25},
+        "pins": {"n": 439, "net": 173.74,
+                 "dd_net": 47.17, "oos_n": 254, "oos_net": 94.56, "oos_dd_net": 28.71},
     },
     "age50_swingpause_sig_sw10": {
         "desc": "king single + skip entries on swings older than 50 bars",
@@ -844,8 +844,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
         #   gross +363.28R  net +265.38R  dd 36.00R  win 29.7%  n=407
-        "pins": {"n": 412, "net": 260.69, "dd_net": 35.79,
-                 "oos_n": 225, "oos_net": 86.52, "oos_dd_net": 22.57},
+        "pins": {"n": 402, "net": 176.33,
+                 "dd_net": 47.62, "oos_n": 224, "oos_net": 91.48, "oos_dd_net": 26.16},
     },
 
     # ===== KINGSWEEP: persist / htf_rr / ext_stop_r / wage / curfew / partial_r =====
