@@ -1,0 +1,8055 @@
+{
+ "legs": 2953,
+ "missing": [
+  {
+   "seed": "2023-01-03 12:15",
+   "green": false,
+   "extreme": 16731.0,
+   "want": "up",
+   "first_break": "2023-01-03 15:00",
+   "first_break_idx": 230,
+   "b1": "down@221",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-08 01:45",
+   "green": false,
+   "extreme": 16942.0,
+   "want": "up",
+   "first_break": "2023-01-08 05:30",
+   "first_break_idx": 672,
+   "b1": "down@661",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-08 15:00",
+   "green": false,
+   "extreme": 16962.0,
+   "want": "up",
+   "first_break": "2023-01-08 21:15",
+   "first_break_idx": 735,
+   "b1": "down@719",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-09 11:00",
+   "green": false,
+   "extreme": 17225.5,
+   "want": "up",
+   "first_break": "2023-01-09 15:00",
+   "first_break_idx": 806,
+   "b1": "down@795",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-10 04:45",
+   "green": true,
+   "extreme": 17152.5,
+   "want": "down",
+   "first_break": "2023-01-10 08:00",
+   "first_break_idx": 874,
+   "b1": "up@866",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-17 02:15",
+   "green": false,
+   "extreme": 21333.5,
+   "want": "up",
+   "first_break": "2023-01-17 17:45",
+   "first_break_idx": 1585,
+   "b1": "down@1540",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-18 06:00",
+   "green": true,
+   "extreme": 21146.0,
+   "want": "down",
+   "first_break": "2023-01-18 08:00",
+   "first_break_idx": 1642,
+   "b1": "up@1636",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-23 16:30",
+   "green": false,
+   "extreme": 22930.0,
+   "want": "up",
+   "first_break": "2023-01-23 18:15",
+   "first_break_idx": 2163,
+   "b1": "down@2160",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-30 07:45",
+   "green": true,
+   "extreme": 23591.0,
+   "want": "down",
+   "first_break": "2023-01-30 13:45",
+   "first_break_idx": 2817,
+   "b1": "up@2795",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-01-31 13:45",
+   "green": false,
+   "extreme": 22959.0,
+   "want": "up",
+   "first_break": "2023-01-31 19:00",
+   "first_break_idx": 2934,
+   "b1": "down@2923",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-02 12:00",
+   "green": true,
+   "extreme": 23734.0,
+   "want": "down",
+   "first_break": "2023-02-02 19:15",
+   "first_break_idx": 3127,
+   "b1": "up@3105",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-03 13:45",
+   "green": true,
+   "extreme": 23351.0,
+   "want": "down",
+   "first_break": "2023-02-03 19:00",
+   "first_break_idx": 3222,
+   "b1": "up@3213",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-05 06:30",
+   "green": true,
+   "extreme": 23264.5,
+   "want": "down",
+   "first_break": "2023-02-05 18:15",
+   "first_break_idx": 3411,
+   "b1": "up@3368",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-07 16:00",
+   "green": false,
+   "extreme": 23045.5,
+   "want": "up",
+   "first_break": "2023-02-07 23:00",
+   "first_break_idx": 3622,
+   "b1": "down@3596",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-09 09:45",
+   "green": true,
+   "extreme": 22516.0,
+   "want": "down",
+   "first_break": "2023-02-09 21:45",
+   "first_break_idx": 3809,
+   "b1": "up@3767",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-11 08:45",
+   "green": false,
+   "extreme": 21708.0,
+   "want": "up",
+   "first_break": "2023-02-11 17:30",
+   "first_break_idx": 3984,
+   "b1": "down@3953",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-12 15:30",
+   "green": false,
+   "extreme": 21904.8,
+   "want": "up",
+   "first_break": "2023-02-12 20:00",
+   "first_break_idx": 4090,
+   "b1": "down@4082",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-13 03:45",
+   "green": true,
+   "extreme": 21681.5,
+   "want": "down",
+   "first_break": "2023-02-13 06:00",
+   "first_break_idx": 4130,
+   "b1": "up@4124",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-13 16:00",
+   "green": true,
+   "extreme": 21508.1,
+   "want": "down",
+   "first_break": "2023-02-13 21:45",
+   "first_break_idx": 4193,
+   "b1": "up@4173",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-17 18:15",
+   "green": false,
+   "extreme": 23903.2,
+   "want": "up",
+   "first_break": "2023-02-17 19:45",
+   "first_break_idx": 4569,
+   "b1": "down@4565",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-18 02:00",
+   "green": false,
+   "extreme": 24966.5,
+   "want": "up",
+   "first_break": "2023-02-19 20:45",
+   "first_break_idx": 4765,
+   "b1": "down@4597",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-20 15:45",
+   "green": false,
+   "extreme": 24978.3,
+   "want": "up",
+   "first_break": "2023-02-20 19:45",
+   "first_break_idx": 4857,
+   "b1": "down@4846",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-23 17:45",
+   "green": true,
+   "extreme": 23725.0,
+   "want": "down",
+   "first_break": "2023-02-24 19:00",
+   "first_break_idx": 5238,
+   "b1": "up@5139",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-25 18:15",
+   "green": true,
+   "extreme": 22860.0,
+   "want": "down",
+   "first_break": "2023-02-26 02:15",
+   "first_break_idx": 5363,
+   "b1": "up@5334",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-26 05:00",
+   "green": false,
+   "extreme": 23179.7,
+   "want": "up",
+   "first_break": "2023-02-26 08:15",
+   "first_break_idx": 5387,
+   "b1": "down@5376",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-26 15:30",
+   "green": false,
+   "extreme": 23270.0,
+   "want": "up",
+   "first_break": "2023-02-26 19:45",
+   "first_break_idx": 5433,
+   "b1": "down@5418",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-27 02:15",
+   "green": false,
+   "extreme": 23649.5,
+   "want": "up",
+   "first_break": "2023-02-27 19:00",
+   "first_break_idx": 5526,
+   "b1": "down@5462",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-02-28 13:45",
+   "green": true,
+   "extreme": 23231.0,
+   "want": "down",
+   "first_break": "2023-03-01 00:45",
+   "first_break_idx": 5645,
+   "b1": "up@5604",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-03 02:30",
+   "green": false,
+   "extreme": 23471.2,
+   "want": "up",
+   "first_break": "2023-03-03 03:45",
+   "first_break_idx": 5849,
+   "b1": "down@5846",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-08 11:15",
+   "green": true,
+   "extreme": 21907.4,
+   "want": "down",
+   "first_break": "2023-03-08 20:30",
+   "first_break_idx": 6396,
+   "b1": "up@6377",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-10 22:15",
+   "green": false,
+   "extreme": 20095.7,
+   "want": "up",
+   "first_break": "2023-03-11 03:15",
+   "first_break_idx": 6615,
+   "b1": "down@6603",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-12 13:30",
+   "green": true,
+   "extreme": 20325.2,
+   "want": "down",
+   "first_break": "2023-03-12 17:30",
+   "first_break_idx": 6768,
+   "b1": "up@6756",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-13 00:15",
+   "green": false,
+   "extreme": 21247.6,
+   "want": "up",
+   "first_break": "2023-03-13 02:00",
+   "first_break_idx": 6802,
+   "b1": "down@6797",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-13 06:30",
+   "green": false,
+   "extreme": 22469.6,
+   "want": "up",
+   "first_break": "2023-03-13 11:30",
+   "first_break_idx": 6840,
+   "b1": "down@6822",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-14 10:45",
+   "green": false,
+   "extreme": 24730.7,
+   "want": "up",
+   "first_break": "2023-03-14 16:45",
+   "first_break_idx": 6957,
+   "b1": "down@6942",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-16 03:45",
+   "green": false,
+   "extreme": 24599.9,
+   "want": "up",
+   "first_break": "2023-03-16 12:15",
+   "first_break_idx": 7131,
+   "b1": "down@7102",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-16 16:30",
+   "green": false,
+   "extreme": 24932.0,
+   "want": "up",
+   "first_break": "2023-03-16 20:15",
+   "first_break_idx": 7163,
+   "b1": "down@7150",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-17 17:30",
+   "green": false,
+   "extreme": 26933.0,
+   "want": "up",
+   "first_break": "2023-03-18 03:00",
+   "first_break_idx": 7286,
+   "b1": "down@7258",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-18 06:45",
+   "green": false,
+   "extreme": 27494.4,
+   "want": "up",
+   "first_break": "2023-03-18 11:00",
+   "first_break_idx": 7318,
+   "b1": "down@7307",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-22 03:15",
+   "green": false,
+   "extreme": 28055.7,
+   "want": "up",
+   "first_break": "2023-03-22 04:45",
+   "first_break_idx": 7677,
+   "b1": "down@7674",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-22 11:15",
+   "green": false,
+   "extreme": 28214.1,
+   "want": "up",
+   "first_break": "2023-03-22 12:30",
+   "first_break_idx": 7708,
+   "b1": "down@7705",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-24 01:00",
+   "green": true,
+   "extreme": 27831.0,
+   "want": "down",
+   "first_break": "2023-03-24 17:15",
+   "first_break_idx": 7919,
+   "b1": "up@7869",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-24 17:30",
+   "green": true,
+   "extreme": 27531.8,
+   "want": "down",
+   "first_break": "2023-03-24 22:45",
+   "first_break_idx": 7941,
+   "b1": "up@7928",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-26 22:30",
+   "green": true,
+   "extreme": 27642.6,
+   "want": "down",
+   "first_break": "2023-03-27 11:30",
+   "first_break_idx": 8184,
+   "b1": "up@8136",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-27 11:45",
+   "green": true,
+   "extreme": 27716.1,
+   "want": "down",
+   "first_break": "2023-03-27 18:15",
+   "first_break_idx": 8211,
+   "b1": "up@8187",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-27 20:45",
+   "green": true,
+   "extreme": 26650.0,
+   "want": "down",
+   "first_break": "2023-03-28 16:00",
+   "first_break_idx": 8298,
+   "b1": "up@8224",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-29 01:30",
+   "green": false,
+   "extreme": 27475.8,
+   "want": "up",
+   "first_break": "2023-03-29 10:00",
+   "first_break_idx": 8370,
+   "b1": "down@8341",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-29 22:30",
+   "green": true,
+   "extreme": 28130.5,
+   "want": "down",
+   "first_break": "2023-03-30 08:30",
+   "first_break_idx": 8460,
+   "b1": "up@8427",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-30 08:45",
+   "green": true,
+   "extreme": 28310.0,
+   "want": "down",
+   "first_break": "2023-03-30 19:30",
+   "first_break_idx": 8504,
+   "b1": "up@8465",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-31 06:45",
+   "green": false,
+   "extreme": 28292.0,
+   "want": "up",
+   "first_break": "2023-03-31 18:45",
+   "first_break_idx": 8597,
+   "b1": "down@8567",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-03-31 20:30",
+   "green": false,
+   "extreme": 28577.1,
+   "want": "up",
+   "first_break": "2023-04-01 03:15",
+   "first_break_idx": 8631,
+   "b1": "down@8613",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-05 22:00",
+   "green": true,
+   "extreme": 27868.8,
+   "want": "down",
+   "first_break": "2023-04-06 06:45",
+   "first_break_idx": 9125,
+   "b1": "up@9092",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-06 07:00",
+   "green": true,
+   "extreme": 27870.8,
+   "want": "down",
+   "first_break": "2023-04-06 13:30",
+   "first_break_idx": 9152,
+   "b1": "up@9133",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-06 16:15",
+   "green": true,
+   "extreme": 27765.0,
+   "want": "down",
+   "first_break": "2023-04-06 19:00",
+   "first_break_idx": 9174,
+   "b1": "up@9169",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-07 04:00",
+   "green": true,
+   "extreme": 27907.5,
+   "want": "down",
+   "first_break": "2023-04-07 11:00",
+   "first_break_idx": 9238,
+   "b1": "up@9217",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-07 18:15",
+   "green": false,
+   "extreme": 27941.9,
+   "want": "up",
+   "first_break": "2023-04-07 19:45",
+   "first_break_idx": 9273,
+   "b1": "down@9269",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-09 00:30",
+   "green": true,
+   "extreme": 27860.0,
+   "want": "down",
+   "first_break": "2023-04-09 12:15",
+   "first_break_idx": 9435,
+   "b1": "up@9391",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-10 11:00",
+   "green": true,
+   "extreme": 28219.1,
+   "want": "down",
+   "first_break": "2023-04-10 19:00",
+   "first_break_idx": 9558,
+   "b1": "up@9536",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-12 01:00",
+   "green": false,
+   "extreme": 30414.9,
+   "want": "up",
+   "first_break": "2023-04-12 18:00",
+   "first_break_idx": 9746,
+   "b1": "down@9705",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-12 20:45",
+   "green": true,
+   "extreme": 29777.8,
+   "want": "down",
+   "first_break": "2023-04-13 00:45",
+   "first_break_idx": 9773,
+   "b1": "up@9759",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-13 08:15",
+   "green": false,
+   "extreme": 30146.6,
+   "want": "up",
+   "first_break": "2023-04-13 14:00",
+   "first_break_idx": 9826,
+   "b1": "down@9819",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-13 20:45",
+   "green": true,
+   "extreme": 30283.3,
+   "want": "down",
+   "first_break": "2023-04-13 22:15",
+   "first_break_idx": 9859,
+   "b1": "up@9856",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-16 13:15",
+   "green": false,
+   "extreme": 30358.5,
+   "want": "up",
+   "first_break": "2023-04-16 21:00",
+   "first_break_idx": 10142,
+   "b1": "down@10114",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-20 05:00",
+   "green": true,
+   "extreme": 28625.9,
+   "want": "down",
+   "first_break": "2023-04-20 08:30",
+   "first_break_idx": 10476,
+   "b1": "up@10465",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-22 04:15",
+   "green": true,
+   "extreme": 27210.0,
+   "want": "down",
+   "first_break": "2023-04-22 06:30",
+   "first_break_idx": 10660,
+   "b1": "up@10654",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-24 22:45",
+   "green": true,
+   "extreme": 27245.2,
+   "want": "down",
+   "first_break": "2023-04-25 13:00",
+   "first_break_idx": 10974,
+   "b1": "up@10921",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-04-27 06:00",
+   "green": false,
+   "extreme": 29450.0,
+   "want": "up",
+   "first_break": "2023-04-27 20:45",
+   "first_break_idx": 11197,
+   "b1": "down@11140",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-02 21:15",
+   "green": false,
+   "extreme": 28696.9,
+   "want": "up",
+   "first_break": "2023-05-02 23:30",
+   "first_break_idx": 11688,
+   "b1": "down@11683",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-03 07:45",
+   "green": true,
+   "extreme": 28390.1,
+   "want": "down",
+   "first_break": "2023-05-03 18:00",
+   "first_break_idx": 11762,
+   "b1": "up@11725",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-04 04:00",
+   "green": false,
+   "extreme": 29214.4,
+   "want": "up",
+   "first_break": "2023-05-04 11:30",
+   "first_break_idx": 11832,
+   "b1": "down@11806",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-04 19:15",
+   "green": true,
+   "extreme": 28663.1,
+   "want": "down",
+   "first_break": "2023-05-05 00:00",
+   "first_break_idx": 11882,
+   "b1": "up@11865",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-07 17:00",
+   "green": true,
+   "extreme": 28744.0,
+   "want": "down",
+   "first_break": "2023-05-08 03:15",
+   "first_break_idx": 12183,
+   "b1": "up@12146",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-08 07:30",
+   "green": true,
+   "extreme": 28116.1,
+   "want": "down",
+   "first_break": "2023-05-08 09:00",
+   "first_break_idx": 12206,
+   "b1": "up@12203",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-08 14:30",
+   "green": true,
+   "extreme": 27667.5,
+   "want": "down",
+   "first_break": "2023-05-08 20:00",
+   "first_break_idx": 12250,
+   "b1": "up@12236",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-10 07:00",
+   "green": false,
+   "extreme": 27747.8,
+   "want": "up",
+   "first_break": "2023-05-10 18:00",
+   "first_break_idx": 12434,
+   "b1": "down@12394",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-10 23:00",
+   "green": true,
+   "extreme": 27108.9,
+   "want": "down",
+   "first_break": "2023-05-11 02:45",
+   "first_break_idx": 12469,
+   "b1": "up@12460",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-11 13:45",
+   "green": false,
+   "extreme": 27429.2,
+   "want": "up",
+   "first_break": "2023-05-11 15:15",
+   "first_break_idx": 12519,
+   "b1": "down@12516",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-12 01:30",
+   "green": true,
+   "extreme": 26788.7,
+   "want": "down",
+   "first_break": "2023-05-12 08:00",
+   "first_break_idx": 12586,
+   "b1": "up@12581",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-12 20:00",
+   "green": false,
+   "extreme": 26456.6,
+   "want": "up",
+   "first_break": "2023-05-13 01:15",
+   "first_break_idx": 12655,
+   "b1": "down@12637",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-14 20:45",
+   "green": false,
+   "extreme": 27122.7,
+   "want": "up",
+   "first_break": "2023-05-15 07:00",
+   "first_break_idx": 12870,
+   "b1": "down@12834",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-17 01:30",
+   "green": true,
+   "extreme": 26884.6,
+   "want": "down",
+   "first_break": "2023-05-17 13:15",
+   "first_break_idx": 13087,
+   "b1": "up@13044",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-18 12:00",
+   "green": true,
+   "extreme": 27158.9,
+   "want": "down",
+   "first_break": "2023-05-18 20:15",
+   "first_break_idx": 13211,
+   "b1": "up@13182",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-20 21:15",
+   "green": false,
+   "extreme": 26950.0,
+   "want": "up",
+   "first_break": "2023-05-20 23:00",
+   "first_break_idx": 13414,
+   "b1": "down@13409",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-24 20:45",
+   "green": true,
+   "extreme": 26134.1,
+   "want": "down",
+   "first_break": "2023-05-25 06:45",
+   "first_break_idx": 13829,
+   "b1": "up@13806",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-26 11:45",
+   "green": true,
+   "extreme": 26348.5,
+   "want": "down",
+   "first_break": "2023-05-26 18:00",
+   "first_break_idx": 13970,
+   "b1": "up@13947",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-27 06:30",
+   "green": true,
+   "extreme": 26637.9,
+   "want": "down",
+   "first_break": "2023-05-27 19:15",
+   "first_break_idx": 14071,
+   "b1": "up@14027",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-28 09:45",
+   "green": false,
+   "extreme": 27235.0,
+   "want": "up",
+   "first_break": "2023-05-28 16:45",
+   "first_break_idx": 14157,
+   "b1": "down@14131",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-29 16:30",
+   "green": true,
+   "extreme": 27831.0,
+   "want": "down",
+   "first_break": "2023-05-29 20:00",
+   "first_break_idx": 14266,
+   "b1": "up@14255",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-29 22:45",
+   "green": true,
+   "extreme": 27611.1,
+   "want": "down",
+   "first_break": "2023-05-30 00:15",
+   "first_break_idx": 14283,
+   "b1": "up@14279",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-30 09:00",
+   "green": false,
+   "extreme": 27867.5,
+   "want": "up",
+   "first_break": "2023-05-30 14:45",
+   "first_break_idx": 14341,
+   "b1": "down@14324",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-05-31 11:45",
+   "green": true,
+   "extreme": 27036.3,
+   "want": "down",
+   "first_break": "2023-05-31 16:30",
+   "first_break_idx": 14444,
+   "b1": "up@14429",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-02 18:15",
+   "green": false,
+   "extreme": 27149.0,
+   "want": "up",
+   "first_break": "2023-06-03 00:15",
+   "first_break_idx": 14667,
+   "b1": "down@14645",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-03 01:15",
+   "green": false,
+   "extreme": 27277.9,
+   "want": "up",
+   "first_break": "2023-06-03 04:00",
+   "first_break_idx": 14682,
+   "b1": "down@14673",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-06 05:15",
+   "green": false,
+   "extreme": 25796.6,
+   "want": "up",
+   "first_break": "2023-06-06 10:30",
+   "first_break_idx": 14996,
+   "b1": "down@14979",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-07 21:45",
+   "green": true,
+   "extreme": 26239.4,
+   "want": "down",
+   "first_break": "2023-06-08 03:15",
+   "first_break_idx": 15159,
+   "b1": "up@15141",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-08 13:15",
+   "green": false,
+   "extreme": 26459.5,
+   "want": "up",
+   "first_break": "2023-06-08 16:00",
+   "first_break_idx": 15210,
+   "b1": "down@15204",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-08 21:30",
+   "green": false,
+   "extreme": 26718.0,
+   "want": "up",
+   "first_break": "2023-06-09 18:45",
+   "first_break_idx": 15317,
+   "b1": "down@15273",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-14 18:30",
+   "green": false,
+   "extreme": 26013.5,
+   "want": "up",
+   "first_break": "2023-06-14 23:15",
+   "first_break_idx": 15815,
+   "b1": "down@15798",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-15 02:30",
+   "green": true,
+   "extreme": 24813.4,
+   "want": "down",
+   "first_break": "2023-06-15 16:45",
+   "first_break_idx": 15885,
+   "b1": "up@15842",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-16 23:45",
+   "green": false,
+   "extreme": 26478.9,
+   "want": "up",
+   "first_break": "2023-06-17 11:00",
+   "first_break_idx": 16054,
+   "b1": "down@16012",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-06-19 04:45",
+   "green": false,
+   "extreme": 26425.8,
+   "want": "up",
+   "first_break": "2023-06-19 07:15",
+   "first_break_idx": 16231,
+   "b1": "down@16227",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-01 18:45",
+   "green": false,
+   "extreme": 30590.0,
+   "want": "up",
+   "first_break": "2023-07-01 20:15",
+   "first_break_idx": 17435,
+   "b1": "down@17432",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-01 20:45",
+   "green": true,
+   "extreme": 30530.0,
+   "want": "down",
+   "first_break": "2023-07-02 07:45",
+   "first_break_idx": 17481,
+   "b1": "up@17449",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-05 23:45",
+   "green": false,
+   "extreme": 30529.9,
+   "want": "up",
+   "first_break": "2023-07-06 07:30",
+   "first_break_idx": 17864,
+   "b1": "down@17839",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-07 11:15",
+   "green": false,
+   "extreme": 30279.9,
+   "want": "up",
+   "first_break": "2023-07-07 18:00",
+   "first_break_idx": 18002,
+   "b1": "down@17980",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-08 22:15",
+   "green": false,
+   "extreme": 30286.0,
+   "want": "up",
+   "first_break": "2023-07-09 05:30",
+   "first_break_idx": 18144,
+   "b1": "down@18120",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-09 06:45",
+   "green": false,
+   "extreme": 30388.9,
+   "want": "up",
+   "first_break": "2023-07-09 20:00",
+   "first_break_idx": 18202,
+   "b1": "down@18154",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-11 12:30",
+   "green": false,
+   "extreme": 30634.2,
+   "want": "up",
+   "first_break": "2023-07-11 20:45",
+   "first_break_idx": 18397,
+   "b1": "down@18369",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-11 21:00",
+   "green": true,
+   "extreme": 30470.0,
+   "want": "down",
+   "first_break": "2023-07-12 00:00",
+   "first_break_idx": 18410,
+   "b1": "up@18403",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-12 13:15",
+   "green": false,
+   "extreme": 30813.5,
+   "want": "up",
+   "first_break": "2023-07-12 17:45",
+   "first_break_idx": 18481,
+   "b1": "down@18475",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-13 16:30",
+   "green": false,
+   "extreme": 30579.5,
+   "want": "up",
+   "first_break": "2023-07-13 18:15",
+   "first_break_idx": 18579,
+   "b1": "down@18574",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-15 07:15",
+   "green": false,
+   "extreme": 30357.9,
+   "want": "up",
+   "first_break": "2023-07-15 15:45",
+   "first_break_idx": 18761,
+   "b1": "down@18732",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-15 22:00",
+   "green": true,
+   "extreme": 30237.9,
+   "want": "down",
+   "first_break": "2023-07-16 07:45",
+   "first_break_idx": 18825,
+   "b1": "up@18794",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-18 22:30",
+   "green": true,
+   "extreme": 29658.7,
+   "want": "down",
+   "first_break": "2023-07-19 01:15",
+   "first_break_idx": 19087,
+   "b1": "up@19078",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-19 20:45",
+   "green": true,
+   "extreme": 29829.3,
+   "want": "down",
+   "first_break": "2023-07-20 04:30",
+   "first_break_idx": 19196,
+   "b1": "up@19172",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-22 00:15",
+   "green": false,
+   "extreme": 30005.8,
+   "want": "up",
+   "first_break": "2023-07-23 22:45",
+   "first_break_idx": 19557,
+   "b1": "down@19485",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-24 09:45",
+   "green": true,
+   "extreme": 29706.7,
+   "want": "down",
+   "first_break": "2023-07-24 15:00",
+   "first_break_idx": 19622,
+   "b1": "up@19605",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-25 15:15",
+   "green": false,
+   "extreme": 29212.6,
+   "want": "up",
+   "first_break": "2023-07-25 19:00",
+   "first_break_idx": 19734,
+   "b1": "down@19726",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-26 00:15",
+   "green": false,
+   "extreme": 29295.1,
+   "want": "up",
+   "first_break": "2023-07-26 08:30",
+   "first_break_idx": 19788,
+   "b1": "down@19757",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-26 08:45",
+   "green": false,
+   "extreme": 29310.0,
+   "want": "up",
+   "first_break": "2023-07-26 12:00",
+   "first_break_idx": 19802,
+   "b1": "down@19793",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-07-28 00:15",
+   "green": false,
+   "extreme": 29188.8,
+   "want": "up",
+   "first_break": "2023-07-28 03:00",
+   "first_break_idx": 19958,
+   "b1": "down@19950",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-01 01:30",
+   "green": true,
+   "extreme": 29106.7,
+   "want": "down",
+   "first_break": "2023-08-01 07:30",
+   "first_break_idx": 20360,
+   "b1": "up@20341",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-07 03:00",
+   "green": false,
+   "extreme": 29173.5,
+   "want": "up",
+   "first_break": "2023-08-07 06:45",
+   "first_break_idx": 20933,
+   "b1": "down@20930",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-09 08:30",
+   "green": true,
+   "extreme": 29657.4,
+   "want": "down",
+   "first_break": "2023-08-09 11:45",
+   "first_break_idx": 21145,
+   "b1": "up@21136",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-11 08:30",
+   "green": true,
+   "extreme": 29347.5,
+   "want": "down",
+   "first_break": "2023-08-11 15:30",
+   "first_break_idx": 21352,
+   "b1": "up@21330",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-13 11:00",
+   "green": true,
+   "extreme": 29372.5,
+   "want": "down",
+   "first_break": "2023-08-13 17:00",
+   "first_break_idx": 21550,
+   "b1": "up@21531",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-16 22:00",
+   "green": true,
+   "extreme": 28954.1,
+   "want": "down",
+   "first_break": "2023-08-17 01:45",
+   "first_break_idx": 21873,
+   "b1": "up@21864",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-17 06:30",
+   "green": true,
+   "extreme": 28533.9,
+   "want": "down",
+   "first_break": "2023-08-17 14:30",
+   "first_break_idx": 21924,
+   "b1": "up@21896",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-30 09:00",
+   "green": true,
+   "extreme": 27322.2,
+   "want": "down",
+   "first_break": "2023-08-30 15:00",
+   "first_break_idx": 23174,
+   "b1": "up@23155",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-08-30 20:30",
+   "green": true,
+   "extreme": 27025.0,
+   "want": "down",
+   "first_break": "2023-08-31 17:30",
+   "first_break_idx": 23280,
+   "b1": "up@23220",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-01 08:15",
+   "green": false,
+   "extreme": 26087.0,
+   "want": "up",
+   "first_break": "2023-09-01 17:45",
+   "first_break_idx": 23377,
+   "b1": "down@23346",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-02 03:15",
+   "green": true,
+   "extreme": 25739.0,
+   "want": "down",
+   "first_break": "2023-09-02 04:30",
+   "first_break_idx": 23420,
+   "b1": "up@23417",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-04 02:30",
+   "green": false,
+   "extreme": 26062.2,
+   "want": "up",
+   "first_break": "2023-09-04 08:45",
+   "first_break_idx": 23629,
+   "b1": "down@23609",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-09 11:30",
+   "green": true,
+   "extreme": 25830.0,
+   "want": "down",
+   "first_break": "2023-09-09 18:45",
+   "first_break_idx": 24149,
+   "b1": "up@24131",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-10 10:00",
+   "green": true,
+   "extreme": 25755.3,
+   "want": "down",
+   "first_break": "2023-09-10 20:15",
+   "first_break_idx": 24251,
+   "b1": "up@24213",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-11 04:15",
+   "green": false,
+   "extreme": 25873.6,
+   "want": "up",
+   "first_break": "2023-09-11 11:00",
+   "first_break_idx": 24310,
+   "b1": "down@24289",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-15 06:45",
+   "green": true,
+   "extreme": 26443.7,
+   "want": "down",
+   "first_break": "2023-09-15 17:15",
+   "first_break_idx": 24719,
+   "b1": "up@24680",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-19 15:15",
+   "green": false,
+   "extreme": 27339.2,
+   "want": "up",
+   "first_break": "2023-09-19 20:45",
+   "first_break_idx": 25117,
+   "b1": "down@25111",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-19 21:15",
+   "green": true,
+   "extreme": 27222.1,
+   "want": "down",
+   "first_break": "2023-09-19 22:30",
+   "first_break_idx": 25124,
+   "b1": "up@25121",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-26 02:00",
+   "green": false,
+   "extreme": 26343.0,
+   "want": "up",
+   "first_break": "2023-09-26 08:15",
+   "first_break_idx": 25739,
+   "b1": "down@25718",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-09-26 16:45",
+   "green": true,
+   "extreme": 26176.3,
+   "want": "down",
+   "first_break": "2023-09-26 19:00",
+   "first_break_idx": 25782,
+   "b1": "up@25776",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-01 23:30",
+   "green": true,
+   "extreme": 27051.0,
+   "want": "down",
+   "first_break": "2023-10-02 01:30",
+   "first_break_idx": 26288,
+   "b1": "up@26285",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-02 14:15",
+   "green": false,
+   "extreme": 28377.0,
+   "want": "up",
+   "first_break": "2023-10-02 18:45",
+   "first_break_idx": 26357,
+   "b1": "down@26350",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-04 15:30",
+   "green": false,
+   "extreme": 27631.9,
+   "want": "up",
+   "first_break": "2023-10-05 00:30",
+   "first_break_idx": 26572,
+   "b1": "down@26549",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-09 18:45",
+   "green": true,
+   "extreme": 27406.4,
+   "want": "down",
+   "first_break": "2023-10-09 21:30",
+   "first_break_idx": 27040,
+   "b1": "up@27033",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-11 00:30",
+   "green": true,
+   "extreme": 27300.3,
+   "want": "down",
+   "first_break": "2023-10-11 08:00",
+   "first_break_idx": 27178,
+   "b1": "up@27152",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-12 08:30",
+   "green": false,
+   "extreme": 26902.5,
+   "want": "up",
+   "first_break": "2023-10-12 12:00",
+   "first_break_idx": 27290,
+   "b1": "down@27280",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-14 02:45",
+   "green": true,
+   "extreme": 26836.0,
+   "want": "down",
+   "first_break": "2023-10-14 04:15",
+   "first_break_idx": 27451,
+   "b1": "up@27447",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-15 14:45",
+   "green": false,
+   "extreme": 26908.5,
+   "want": "up",
+   "first_break": "2023-10-15 18:45",
+   "first_break_idx": 27605,
+   "b1": "down@27591",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-19 22:00",
+   "green": false,
+   "extreme": 28734.2,
+   "want": "up",
+   "first_break": "2023-10-20 01:00",
+   "first_break_idx": 28014,
+   "b1": "down@28005",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-21 04:45",
+   "green": false,
+   "extreme": 29754.4,
+   "want": "up",
+   "first_break": "2023-10-21 15:15",
+   "first_break_idx": 28167,
+   "b1": "down@28130",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-21 23:45",
+   "green": true,
+   "extreme": 29958.0,
+   "want": "down",
+   "first_break": "2023-10-22 01:45",
+   "first_break_idx": 28209,
+   "b1": "up@28203",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-22 13:15",
+   "green": true,
+   "extreme": 29708.3,
+   "want": "down",
+   "first_break": "2023-10-23 03:15",
+   "first_break_idx": 28311,
+   "b1": "up@28259",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-10-23 11:45",
+   "green": false,
+   "extreme": 30906.0,
+   "want": "up",
+   "first_break": "2023-10-23 20:45",
+   "first_break_idx": 28381,
+   "b1": "down@28347",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-03 21:00",
+   "green": false,
+   "extreme": 34859.3,
+   "want": "up",
+   "first_break": "2023-11-04 11:30",
+   "first_break_idx": 29496,
+   "b1": "down@29445",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-05 19:30",
+   "green": true,
+   "extreme": 34805.0,
+   "want": "down",
+   "first_break": "2023-11-06 03:00",
+   "first_break_idx": 29654,
+   "b1": "up@29626",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-07 00:00",
+   "green": true,
+   "extreme": 34891.5,
+   "want": "down",
+   "first_break": "2023-11-07 06:00",
+   "first_break_idx": 29762,
+   "b1": "up@29741",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-07 08:30",
+   "green": true,
+   "extreme": 34817.5,
+   "want": "down",
+   "first_break": "2023-11-07 15:00",
+   "first_break_idx": 29798,
+   "b1": "up@29775",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-07 17:45",
+   "green": true,
+   "extreme": 34585.0,
+   "want": "down",
+   "first_break": "2023-11-07 22:30",
+   "first_break_idx": 29828,
+   "b1": "up@29815",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-10 08:45",
+   "green": false,
+   "extreme": 36940.6,
+   "want": "up",
+   "first_break": "2023-11-10 16:30",
+   "first_break_idx": 30092,
+   "b1": "down@30064",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-11 08:00",
+   "green": true,
+   "extreme": 36980.1,
+   "want": "down",
+   "first_break": "2023-11-11 09:45",
+   "first_break_idx": 30161,
+   "b1": "up@30158",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-12 03:45",
+   "green": true,
+   "extreme": 36801.0,
+   "want": "down",
+   "first_break": "2023-11-12 06:15",
+   "first_break_idx": 30243,
+   "b1": "up@30239",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-14 06:30",
+   "green": true,
+   "extreme": 36241.2,
+   "want": "down",
+   "first_break": "2023-11-14 17:30",
+   "first_break_idx": 30480,
+   "b1": "up@30440",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-14 18:15",
+   "green": true,
+   "extreme": 36308.7,
+   "want": "down",
+   "first_break": "2023-11-14 20:45",
+   "first_break_idx": 30493,
+   "b1": "up@30486",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-15 18:15",
+   "green": false,
+   "extreme": 36328.8,
+   "want": "up",
+   "first_break": "2023-11-15 21:15",
+   "first_break_idx": 30591,
+   "b1": "down@30586",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-20 05:15",
+   "green": false,
+   "extreme": 37510.0,
+   "want": "up",
+   "first_break": "2023-11-20 20:15",
+   "first_break_idx": 31067,
+   "b1": "down@31022",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-21 23:00",
+   "green": false,
+   "extreme": 37340.0,
+   "want": "up",
+   "first_break": "2023-11-23 00:30",
+   "first_break_idx": 31276,
+   "b1": "down@31194",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-24 07:00",
+   "green": false,
+   "extreme": 37476.3,
+   "want": "up",
+   "first_break": "2023-11-24 13:15",
+   "first_break_idx": 31423,
+   "b1": "down@31400",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-24 17:15",
+   "green": false,
+   "extreme": 38014.7,
+   "want": "up",
+   "first_break": "2023-11-24 20:45",
+   "first_break_idx": 31453,
+   "b1": "down@31443",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-25 04:45",
+   "green": true,
+   "extreme": 37592.5,
+   "want": "down",
+   "first_break": "2023-11-25 17:00",
+   "first_break_idx": 31534,
+   "b1": "up@31487",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-26 07:45",
+   "green": true,
+   "extreme": 37712.0,
+   "want": "down",
+   "first_break": "2023-11-26 09:30",
+   "first_break_idx": 31600,
+   "b1": "up@31595",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-27 17:15",
+   "green": false,
+   "extreme": 37153.9,
+   "want": "up",
+   "first_break": "2023-11-28 04:30",
+   "first_break_idx": 31772,
+   "b1": "down@31733",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-11-28 23:30",
+   "green": false,
+   "extreme": 38250.0,
+   "want": "up",
+   "first_break": "2023-11-29 01:00",
+   "first_break_idx": 31854,
+   "b1": "down@31851",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-01 10:15",
+   "green": false,
+   "extreme": 38237.4,
+   "want": "up",
+   "first_break": "2023-12-01 12:30",
+   "first_break_idx": 32092,
+   "b1": "down@32088",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-01 22:15",
+   "green": true,
+   "extreme": 38636.1,
+   "want": "down",
+   "first_break": "2023-12-02 00:45",
+   "first_break_idx": 32141,
+   "b1": "up@32137",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-02 19:30",
+   "green": false,
+   "extreme": 38866.1,
+   "want": "up",
+   "first_break": "2023-12-02 23:45",
+   "first_break_idx": 32233,
+   "b1": "down@32219",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-04 16:45",
+   "green": true,
+   "extreme": 41339.0,
+   "want": "down",
+   "first_break": "2023-12-04 21:00",
+   "first_break_idx": 32414,
+   "b1": "up@32401",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-06 17:15",
+   "green": true,
+   "extreme": 43614.3,
+   "want": "down",
+   "first_break": "2023-12-07 03:00",
+   "first_break_idx": 32630,
+   "b1": "up@32594",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-10 05:15",
+   "green": true,
+   "extreme": 43671.0,
+   "want": "down",
+   "first_break": "2023-12-10 15:00",
+   "first_break_idx": 32966,
+   "b1": "up@32931",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-11 07:45",
+   "green": true,
+   "extreme": 41557.1,
+   "want": "down",
+   "first_break": "2023-12-11 11:15",
+   "first_break_idx": 33047,
+   "b1": "up@33037",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-12 14:30",
+   "green": false,
+   "extreme": 42066.2,
+   "want": "up",
+   "first_break": "2023-12-12 19:00",
+   "first_break_idx": 33174,
+   "b1": "down@33162",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-14 19:15",
+   "green": true,
+   "extreme": 42351.6,
+   "want": "down",
+   "first_break": "2023-12-14 20:45",
+   "first_break_idx": 33373,
+   "b1": "up@33369",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-17 08:30",
+   "green": true,
+   "extreme": 41882.7,
+   "want": "down",
+   "first_break": "2023-12-17 11:00",
+   "first_break_idx": 33622,
+   "b1": "up@33617",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-18 08:15",
+   "green": true,
+   "extreme": 40850.0,
+   "want": "down",
+   "first_break": "2023-12-18 14:45",
+   "first_break_idx": 33733,
+   "b1": "up@33713",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-19 07:45",
+   "green": false,
+   "extreme": 43241.8,
+   "want": "up",
+   "first_break": "2023-12-19 16:00",
+   "first_break_idx": 33834,
+   "b1": "down@33804",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-21 14:15",
+   "green": false,
+   "extreme": 43930.0,
+   "want": "up",
+   "first_break": "2023-12-21 15:30",
+   "first_break_idx": 34024,
+   "b1": "down@34021",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-22 07:30",
+   "green": false,
+   "extreme": 44195.0,
+   "want": "up",
+   "first_break": "2023-12-22 10:45",
+   "first_break_idx": 34101,
+   "b1": "down@34094",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-26 15:30",
+   "green": true,
+   "extreme": 42398.0,
+   "want": "down",
+   "first_break": "2023-12-26 21:15",
+   "first_break_idx": 34527,
+   "b1": "up@34509",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-27 16:45",
+   "green": false,
+   "extreme": 43197.9,
+   "want": "up",
+   "first_break": "2023-12-27 21:45",
+   "first_break_idx": 34625,
+   "b1": "down@34607",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-28 22:00",
+   "green": true,
+   "extreme": 42348.6,
+   "want": "down",
+   "first_break": "2023-12-29 06:30",
+   "first_break_idx": 34756,
+   "b1": "up@34725",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-29 09:15",
+   "green": false,
+   "extreme": 42826.9,
+   "want": "up",
+   "first_break": "2023-12-29 15:30",
+   "first_break_idx": 34792,
+   "b1": "down@34773",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2023-12-29 23:30",
+   "green": true,
+   "extreme": 41814.0,
+   "want": "down",
+   "first_break": "2023-12-30 03:45",
+   "first_break_idx": 34841,
+   "b1": "up@34829",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-01 07:15",
+   "green": false,
+   "extreme": 42767.9,
+   "want": "up",
+   "first_break": "2024-01-01 16:15",
+   "first_break_idx": 35083,
+   "b1": "down@35051",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-01 18:15",
+   "green": false,
+   "extreme": 42800.1,
+   "want": "up",
+   "first_break": "2024-01-01 21:00",
+   "first_break_idx": 35102,
+   "b1": "down@35096",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-02 09:15",
+   "green": false,
+   "extreme": 45489.1,
+   "want": "up",
+   "first_break": "2024-01-02 12:45",
+   "first_break_idx": 35165,
+   "b1": "down@35154",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-02 21:00",
+   "green": true,
+   "extreme": 44924.2,
+   "want": "down",
+   "first_break": "2024-01-03 00:45",
+   "first_break_idx": 35213,
+   "b1": "up@35203",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-03 17:45",
+   "green": true,
+   "extreme": 41828.8,
+   "want": "down",
+   "first_break": "2024-01-04 00:15",
+   "first_break_idx": 35307,
+   "b1": "up@35283",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-06 13:00",
+   "green": true,
+   "extreme": 43551.0,
+   "want": "down",
+   "first_break": "2024-01-06 18:15",
+   "first_break_idx": 35571,
+   "b1": "up@35553",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-07 00:30",
+   "green": false,
+   "extreme": 44028.0,
+   "want": "up",
+   "first_break": "2024-01-07 05:45",
+   "first_break_idx": 35617,
+   "b1": "down@35600",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-11 05:00",
+   "green": false,
+   "extreme": 46997.8,
+   "want": "up",
+   "first_break": "2024-01-11 16:45",
+   "first_break_idx": 36045,
+   "b1": "down@36000",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-11 23:00",
+   "green": true,
+   "extreme": 45780.9,
+   "want": "down",
+   "first_break": "2024-01-12 13:15",
+   "first_break_idx": 36127,
+   "b1": "up@36074",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-12 15:00",
+   "green": true,
+   "extreme": 45551.7,
+   "want": "down",
+   "first_break": "2024-01-12 20:00",
+   "first_break_idx": 36154,
+   "b1": "up@36139",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-15 19:30",
+   "green": false,
+   "extreme": 42884.8,
+   "want": "up",
+   "first_break": "2024-01-15 23:45",
+   "first_break_idx": 36457,
+   "b1": "down@36443",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-16 15:00",
+   "green": false,
+   "extreme": 43165.2,
+   "want": "up",
+   "first_break": "2024-01-16 18:15",
+   "first_break_idx": 36531,
+   "b1": "down@36525",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-17 13:45",
+   "green": true,
+   "extreme": 42630.0,
+   "want": "down",
+   "first_break": "2024-01-17 15:30",
+   "first_break_idx": 36616,
+   "b1": "up@36612",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-19 02:15",
+   "green": false,
+   "extreme": 41314.9,
+   "want": "up",
+   "first_break": "2024-01-19 04:00",
+   "first_break_idx": 36762,
+   "b1": "down@36757",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-22 10:45",
+   "green": true,
+   "extreme": 40820.6,
+   "want": "down",
+   "first_break": "2024-01-22 14:00",
+   "first_break_idx": 37090,
+   "b1": "up@37082",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-24 06:30",
+   "green": false,
+   "extreme": 40174.0,
+   "want": "up",
+   "first_break": "2024-01-24 12:45",
+   "first_break_idx": 37277,
+   "b1": "down@37255",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-26 23:45",
+   "green": true,
+   "extreme": 41823.3,
+   "want": "down",
+   "first_break": "2024-01-27 02:15",
+   "first_break_idx": 37523,
+   "b1": "up@37520",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-28 11:00",
+   "green": false,
+   "extreme": 42641.1,
+   "want": "up",
+   "first_break": "2024-01-28 15:00",
+   "first_break_idx": 37670,
+   "b1": "down@37656",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-29 02:00",
+   "green": true,
+   "extreme": 41765.0,
+   "want": "down",
+   "first_break": "2024-01-29 04:00",
+   "first_break_idx": 37722,
+   "b1": "up@37719",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-29 09:15",
+   "green": false,
+   "extreme": 42438.5,
+   "want": "up",
+   "first_break": "2024-01-29 21:15",
+   "first_break_idx": 37791,
+   "b1": "down@37749",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-29 22:30",
+   "green": false,
+   "extreme": 43289.5,
+   "want": "up",
+   "first_break": "2024-01-30 05:00",
+   "first_break_idx": 37822,
+   "b1": "down@37799",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-30 08:15",
+   "green": false,
+   "extreme": 43773.6,
+   "want": "up",
+   "first_break": "2024-01-30 17:45",
+   "first_break_idx": 37873,
+   "b1": "down@37841",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-01-30 19:45",
+   "green": true,
+   "extreme": 43158.6,
+   "want": "down",
+   "first_break": "2024-01-31 04:45",
+   "first_break_idx": 37917,
+   "b1": "up@37885",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-01 03:00",
+   "green": true,
+   "extreme": 42256.1,
+   "want": "down",
+   "first_break": "2024-02-01 06:00",
+   "first_break_idx": 38018,
+   "b1": "up@38014",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-02 21:45",
+   "green": false,
+   "extreme": 43372.0,
+   "want": "up",
+   "first_break": "2024-02-03 05:45",
+   "first_break_idx": 38209,
+   "b1": "down@38182",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-03 17:45",
+   "green": true,
+   "extreme": 43004.6,
+   "want": "down",
+   "first_break": "2024-02-03 19:30",
+   "first_break_idx": 38264,
+   "b1": "up@38260",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-05 13:45",
+   "green": false,
+   "extreme": 43114.5,
+   "want": "up",
+   "first_break": "2024-02-05 15:30",
+   "first_break_idx": 38440,
+   "b1": "down@38435",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-11 18:00",
+   "green": false,
+   "extreme": 48404.5,
+   "want": "up",
+   "first_break": "2024-02-11 22:30",
+   "first_break_idx": 39044,
+   "b1": "down@39029",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-12 06:15",
+   "green": false,
+   "extreme": 48689.1,
+   "want": "up",
+   "first_break": "2024-02-12 20:15",
+   "first_break_idx": 39131,
+   "b1": "down@39081",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-12 23:15",
+   "green": false,
+   "extreme": 50089.3,
+   "want": "up",
+   "first_break": "2024-02-13 02:15",
+   "first_break_idx": 39155,
+   "b1": "down@39146",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-14 15:30",
+   "green": false,
+   "extreme": 51625.5,
+   "want": "up",
+   "first_break": "2024-02-14 17:15",
+   "first_break_idx": 39311,
+   "b1": "down@39308",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-15 06:15",
+   "green": false,
+   "extreme": 52461.3,
+   "want": "up",
+   "first_break": "2024-02-15 17:00",
+   "first_break_idx": 39406,
+   "b1": "down@39390",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-16 20:45",
+   "green": true,
+   "extreme": 51643.0,
+   "want": "down",
+   "first_break": "2024-02-17 15:30",
+   "first_break_idx": 39592,
+   "b1": "up@39519",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-17 16:00",
+   "green": true,
+   "extreme": 51601.0,
+   "want": "down",
+   "first_break": "2024-02-17 18:00",
+   "first_break_idx": 39602,
+   "b1": "up@39598",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-18 15:45",
+   "green": false,
+   "extreme": 51998.0,
+   "want": "up",
+   "first_break": "2024-02-18 20:15",
+   "first_break_idx": 39707,
+   "b1": "down@39692",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-19 04:00",
+   "green": false,
+   "extreme": 52450.3,
+   "want": "up",
+   "first_break": "2024-02-19 06:00",
+   "first_break_idx": 39746,
+   "b1": "down@39742",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-22 05:30",
+   "green": false,
+   "extreme": 51906.3,
+   "want": "up",
+   "first_break": "2024-02-22 12:45",
+   "first_break_idx": 40061,
+   "b1": "down@40038",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-22 15:30",
+   "green": false,
+   "extreme": 51975.0,
+   "want": "up",
+   "first_break": "2024-02-23 01:45",
+   "first_break_idx": 40113,
+   "b1": "down@40078",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-23 14:30",
+   "green": true,
+   "extreme": 50903.9,
+   "want": "down",
+   "first_break": "2024-02-23 20:00",
+   "first_break_idx": 40186,
+   "b1": "up@40169",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-25 22:30",
+   "green": true,
+   "extreme": 51380.0,
+   "want": "down",
+   "first_break": "2024-02-26 13:00",
+   "first_break_idx": 40446,
+   "b1": "up@40396",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-27 07:45",
+   "green": false,
+   "extreme": 56708.8,
+   "want": "up",
+   "first_break": "2024-02-27 15:00",
+   "first_break_idx": 40550,
+   "b1": "down@40527",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-02-27 18:30",
+   "green": true,
+   "extreme": 56628.0,
+   "want": "down",
+   "first_break": "2024-02-27 21:15",
+   "first_break_idx": 40575,
+   "b1": "up@40570",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-01 00:30",
+   "green": true,
+   "extreme": 60707.3,
+   "want": "down",
+   "first_break": "2024-03-01 03:00",
+   "first_break_idx": 40790,
+   "b1": "up@40787",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-02 15:15",
+   "green": true,
+   "extreme": 61767.6,
+   "want": "down",
+   "first_break": "2024-03-02 19:30",
+   "first_break_idx": 40952,
+   "b1": "up@40938",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-07 06:45",
+   "green": true,
+   "extreme": 65775.3,
+   "want": "down",
+   "first_break": "2024-03-07 09:30",
+   "first_break_idx": 41392,
+   "b1": "up@41383",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-09 03:30",
+   "green": true,
+   "extreme": 68000.5,
+   "want": "down",
+   "first_break": "2024-03-09 06:30",
+   "first_break_idx": 41572,
+   "b1": "up@41562",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-11 04:30",
+   "green": true,
+   "extreme": 68400.1,
+   "want": "down",
+   "first_break": "2024-03-11 06:00",
+   "first_break_idx": 41762,
+   "b1": "up@41759",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-18 22:45",
+   "green": true,
+   "extreme": 66780.0,
+   "want": "down",
+   "first_break": "2024-03-19 06:30",
+   "first_break_idx": 42532,
+   "b1": "up@42516",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-24 20:00",
+   "green": false,
+   "extreme": 65882.6,
+   "want": "up",
+   "first_break": "2024-03-25 00:00",
+   "first_break_idx": 43082,
+   "b1": "down@43068",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-25 11:15",
+   "green": false,
+   "extreme": 67504.9,
+   "want": "up",
+   "first_break": "2024-03-25 19:15",
+   "first_break_idx": 43159,
+   "b1": "down@43130",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-27 06:45",
+   "green": false,
+   "extreme": 70790.0,
+   "want": "up",
+   "first_break": "2024-03-27 18:30",
+   "first_break_idx": 43348,
+   "b1": "down@43303",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-28 14:45",
+   "green": false,
+   "extreme": 70857.0,
+   "want": "up",
+   "first_break": "2024-03-28 16:15",
+   "first_break_idx": 43435,
+   "b1": "down@43431",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-29 09:00",
+   "green": true,
+   "extreme": 70338.1,
+   "want": "down",
+   "first_break": "2024-03-29 10:45",
+   "first_break_idx": 43509,
+   "b1": "up@43505",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-30 07:15",
+   "green": false,
+   "extreme": 70116.1,
+   "want": "up",
+   "first_break": "2024-03-30 10:15",
+   "first_break_idx": 43603,
+   "b1": "down@43595",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-30 10:45",
+   "green": false,
+   "extreme": 70302.8,
+   "want": "up",
+   "first_break": "2024-03-30 18:30",
+   "first_break_idx": 43636,
+   "b1": "down@43608",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-30 22:30",
+   "green": false,
+   "extreme": 70248.7,
+   "want": "up",
+   "first_break": "2024-03-31 10:30",
+   "first_break_idx": 43700,
+   "b1": "down@43656",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-03-31 11:30",
+   "green": false,
+   "extreme": 70472.0,
+   "want": "up",
+   "first_break": "2024-03-31 13:45",
+   "first_break_idx": 43713,
+   "b1": "down@43710",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-01 00:30",
+   "green": true,
+   "extreme": 70727.4,
+   "want": "down",
+   "first_break": "2024-04-01 03:00",
+   "first_break_idx": 43766,
+   "b1": "up@43758",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-01 21:45",
+   "green": true,
+   "extreme": 68260.0,
+   "want": "down",
+   "first_break": "2024-04-01 23:00",
+   "first_break_idx": 43846,
+   "b1": "up@43843",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-05 11:00",
+   "green": true,
+   "extreme": 66490.2,
+   "want": "down",
+   "first_break": "2024-04-05 14:45",
+   "first_break_idx": 44197,
+   "b1": "up@44184",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-08 01:30",
+   "green": true,
+   "extreme": 68969.0,
+   "want": "down",
+   "first_break": "2024-04-08 03:30",
+   "first_break_idx": 44440,
+   "b1": "up@44436",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-09 06:45",
+   "green": true,
+   "extreme": 70938.0,
+   "want": "down",
+   "first_break": "2024-04-09 12:00",
+   "first_break_idx": 44570,
+   "b1": "up@44552",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-11 04:00",
+   "green": false,
+   "extreme": 71164.7,
+   "want": "up",
+   "first_break": "2024-04-11 12:45",
+   "first_break_idx": 44765,
+   "b1": "down@44735",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-16 00:45",
+   "green": true,
+   "extreme": 62550.0,
+   "want": "down",
+   "first_break": "2024-04-16 09:30",
+   "first_break_idx": 45232,
+   "b1": "up@45217",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-16 10:30",
+   "green": true,
+   "extreme": 62335.5,
+   "want": "down",
+   "first_break": "2024-04-16 15:45",
+   "first_break_idx": 45257,
+   "b1": "up@45240",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-16 16:15",
+   "green": true,
+   "extreme": 62244.6,
+   "want": "down",
+   "first_break": "2024-04-16 19:15",
+   "first_break_idx": 45271,
+   "b1": "up@45263",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-17 03:30",
+   "green": false,
+   "extreme": 64045.0,
+   "want": "up",
+   "first_break": "2024-04-17 06:15",
+   "first_break_idx": 45315,
+   "b1": "down@45312",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-20 23:15",
+   "green": false,
+   "extreme": 65340.0,
+   "want": "up",
+   "first_break": "2024-04-21 08:00",
+   "first_break_idx": 45706,
+   "b1": "down@45681",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-24 22:15",
+   "green": true,
+   "extreme": 64590.9,
+   "want": "down",
+   "first_break": "2024-04-25 00:00",
+   "first_break_idx": 46058,
+   "b1": "up@46054",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-25 02:00",
+   "green": true,
+   "extreme": 63862.2,
+   "want": "down",
+   "first_break": "2024-04-25 04:30",
+   "first_break_idx": 46076,
+   "b1": "up@46068",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-26 21:45",
+   "green": true,
+   "extreme": 63414.5,
+   "want": "down",
+   "first_break": "2024-04-27 06:00",
+   "first_break_idx": 46274,
+   "b1": "up@46245",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-04-27 20:00",
+   "green": false,
+   "extreme": 63244.0,
+   "want": "up",
+   "first_break": "2024-04-27 23:00",
+   "first_break_idx": 46342,
+   "b1": "down@46333",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-02 00:30",
+   "green": false,
+   "extreme": 59243.7,
+   "want": "up",
+   "first_break": "2024-05-02 20:00",
+   "first_break_idx": 46810,
+   "b1": "down@46737",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-04 07:00",
+   "green": false,
+   "extreme": 63564.1,
+   "want": "up",
+   "first_break": "2024-05-04 16:00",
+   "first_break_idx": 46986,
+   "b1": "down@46954",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-07 01:00",
+   "green": true,
+   "extreme": 62811.0,
+   "want": "down",
+   "first_break": "2024-05-07 09:00",
+   "first_break_idx": 47246,
+   "b1": "up@47217",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-09 05:00",
+   "green": true,
+   "extreme": 60923.9,
+   "want": "down",
+   "first_break": "2024-05-09 15:00",
+   "first_break_idx": 47462,
+   "b1": "up@47428",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-09 16:45",
+   "green": true,
+   "extreme": 60865.2,
+   "want": "down",
+   "first_break": "2024-05-09 19:15",
+   "first_break_idx": 47479,
+   "b1": "up@47472",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-10 04:30",
+   "green": false,
+   "extreme": 63300.0,
+   "want": "up",
+   "first_break": "2024-05-10 12:45",
+   "first_break_idx": 47549,
+   "b1": "down@47521",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-11 17:00",
+   "green": true,
+   "extreme": 60629.7,
+   "want": "down",
+   "first_break": "2024-05-11 18:15",
+   "first_break_idx": 47667,
+   "b1": "up@47664",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-11 21:00",
+   "green": true,
+   "extreme": 60871.1,
+   "want": "down",
+   "first_break": "2024-05-12 01:45",
+   "first_break_idx": 47697,
+   "b1": "up@47681",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-12 05:15",
+   "green": true,
+   "extreme": 60732.4,
+   "want": "down",
+   "first_break": "2024-05-12 13:00",
+   "first_break_idx": 47742,
+   "b1": "up@47731",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-13 03:00",
+   "green": true,
+   "extreme": 60974.2,
+   "want": "down",
+   "first_break": "2024-05-13 08:00",
+   "first_break_idx": 47818,
+   "b1": "up@47804",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-16 05:45",
+   "green": false,
+   "extreme": 66380.8,
+   "want": "up",
+   "first_break": "2024-05-16 13:30",
+   "first_break_idx": 48128,
+   "b1": "down@48102",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-22 05:00",
+   "green": false,
+   "extreme": 70387.6,
+   "want": "up",
+   "first_break": "2024-05-22 07:45",
+   "first_break_idx": 48681,
+   "b1": "down@48676",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-22 10:30",
+   "green": true,
+   "extreme": 69561.0,
+   "want": "down",
+   "first_break": "2024-05-22 18:15",
+   "first_break_idx": 48723,
+   "b1": "up@48696",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-26 08:30",
+   "green": true,
+   "extreme": 68883.9,
+   "want": "down",
+   "first_break": "2024-05-26 21:15",
+   "first_break_idx": 49119,
+   "b1": "up@49079",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-28 10:15",
+   "green": true,
+   "extreme": 67624.7,
+   "want": "down",
+   "first_break": "2024-05-28 13:30",
+   "first_break_idx": 49280,
+   "b1": "up@49270",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-29 21:45",
+   "green": true,
+   "extreme": 67221.6,
+   "want": "down",
+   "first_break": "2024-05-30 01:30",
+   "first_break_idx": 49424,
+   "b1": "up@49421",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-30 10:15",
+   "green": false,
+   "extreme": 68257.3,
+   "want": "up",
+   "first_break": "2024-05-30 18:00",
+   "first_break_idx": 49490,
+   "b1": "down@49464",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-05-31 15:00",
+   "green": true,
+   "extreme": 67890.0,
+   "want": "down",
+   "first_break": "2024-05-31 19:30",
+   "first_break_idx": 49592,
+   "b1": "up@49576",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-01 11:30",
+   "green": false,
+   "extreme": 67767.9,
+   "want": "up",
+   "first_break": "2024-06-01 14:00",
+   "first_break_idx": 49666,
+   "b1": "down@49661",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-01 23:30",
+   "green": false,
+   "extreme": 67850.0,
+   "want": "up",
+   "first_break": "2024-06-02 03:00",
+   "first_break_idx": 49718,
+   "b1": "down@49708",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-02 08:30",
+   "green": true,
+   "extreme": 67747.0,
+   "want": "down",
+   "first_break": "2024-06-02 11:15",
+   "first_break_idx": 49751,
+   "b1": "up@49745",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-03 12:15",
+   "green": false,
+   "extreme": 69230.0,
+   "want": "up",
+   "first_break": "2024-06-03 13:45",
+   "first_break_idx": 49857,
+   "b1": "down@49853",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-04 06:00",
+   "green": true,
+   "extreme": 68803.4,
+   "want": "down",
+   "first_break": "2024-06-04 14:30",
+   "first_break_idx": 49956,
+   "b1": "up@49924",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-05 13:15",
+   "green": false,
+   "extreme": 71420.0,
+   "want": "up",
+   "first_break": "2024-06-05 20:45",
+   "first_break_idx": 50077,
+   "b1": "down@50050",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-07 11:30",
+   "green": false,
+   "extreme": 71400.0,
+   "want": "up",
+   "first_break": "2024-06-07 15:30",
+   "first_break_idx": 50248,
+   "b1": "down@50234",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-13 01:30",
+   "green": true,
+   "extreme": 67420.4,
+   "want": "down",
+   "first_break": "2024-06-13 08:45",
+   "first_break_idx": 50797,
+   "b1": "up@50773",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-13 09:15",
+   "green": true,
+   "extreme": 67194.5,
+   "want": "down",
+   "first_break": "2024-06-13 15:00",
+   "first_break_idx": 50822,
+   "b1": "up@50815",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-15 11:45",
+   "green": false,
+   "extreme": 66376.8,
+   "want": "up",
+   "first_break": "2024-06-15 20:45",
+   "first_break_idx": 51037,
+   "b1": "down@51005",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-16 19:45",
+   "green": false,
+   "extreme": 66753.1,
+   "want": "up",
+   "first_break": "2024-06-17 03:30",
+   "first_break_idx": 51160,
+   "b1": "down@51131",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-17 09:30",
+   "green": true,
+   "extreme": 66140.2,
+   "want": "down",
+   "first_break": "2024-06-17 11:45",
+   "first_break_idx": 51193,
+   "b1": "up@51187",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-18 07:45",
+   "green": true,
+   "extreme": 64747.1,
+   "want": "down",
+   "first_break": "2024-06-18 19:00",
+   "first_break_idx": 51318,
+   "b1": "up@51281",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-20 22:00",
+   "green": true,
+   "extreme": 64530.1,
+   "want": "down",
+   "first_break": "2024-06-21 09:15",
+   "first_break_idx": 51567,
+   "b1": "up@51527",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-23 22:30",
+   "green": true,
+   "extreme": 63890.3,
+   "want": "down",
+   "first_break": "2024-06-24 02:00",
+   "first_break_idx": 51826,
+   "b1": "up@51821",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-25 00:00",
+   "green": false,
+   "extreme": 60465.7,
+   "want": "up",
+   "first_break": "2024-06-25 05:45",
+   "first_break_idx": 51937,
+   "b1": "down@51916",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-25 20:00",
+   "green": false,
+   "extreme": 62100.0,
+   "want": "up",
+   "first_break": "2024-06-26 00:15",
+   "first_break_idx": 52011,
+   "b1": "down@52008",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-26 16:30",
+   "green": true,
+   "extreme": 61225.8,
+   "want": "down",
+   "first_break": "2024-06-26 20:30",
+   "first_break_idx": 52092,
+   "b1": "up@52080",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-27 02:00",
+   "green": true,
+   "extreme": 60704.6,
+   "want": "down",
+   "first_break": "2024-06-27 11:30",
+   "first_break_idx": 52152,
+   "b1": "up@52119",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-28 13:45",
+   "green": true,
+   "extreme": 61283.9,
+   "want": "down",
+   "first_break": "2024-06-28 18:00",
+   "first_break_idx": 52274,
+   "b1": "up@52259",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-06-29 13:15",
+   "green": false,
+   "extreme": 61095.0,
+   "want": "up",
+   "first_break": "2024-06-29 17:00",
+   "first_break_idx": 52366,
+   "b1": "down@52357",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-02 13:45",
+   "green": true,
+   "extreme": 62420.3,
+   "want": "down",
+   "first_break": "2024-07-02 19:30",
+   "first_break_idx": 52664,
+   "b1": "up@52644",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-02 21:45",
+   "green": true,
+   "extreme": 61796.6,
+   "want": "down",
+   "first_break": "2024-07-03 07:15",
+   "first_break_idx": 52711,
+   "b1": "up@52678",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-04 02:45",
+   "green": true,
+   "extreme": 59731.3,
+   "want": "down",
+   "first_break": "2024-07-04 07:00",
+   "first_break_idx": 52806,
+   "b1": "up@52795",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-07 13:15",
+   "green": true,
+   "extreme": 57204.2,
+   "want": "down",
+   "first_break": "2024-07-07 18:00",
+   "first_break_idx": 53138,
+   "b1": "up@53123",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-11 09:00",
+   "green": true,
+   "extreme": 57290.2,
+   "want": "down",
+   "first_break": "2024-07-11 21:15",
+   "first_break_idx": 53535,
+   "b1": "up@53495",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-12 22:15",
+   "green": true,
+   "extreme": 57891.1,
+   "want": "down",
+   "first_break": "2024-07-13 00:45",
+   "first_break_idx": 53645,
+   "b1": "up@53642",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-13 22:00",
+   "green": false,
+   "extreme": 58741.2,
+   "want": "up",
+   "first_break": "2024-07-13 23:30",
+   "first_break_idx": 53736,
+   "b1": "down@53733",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-15 03:30",
+   "green": false,
+   "extreme": 61360.1,
+   "want": "up",
+   "first_break": "2024-07-15 06:30",
+   "first_break_idx": 53860,
+   "b1": "down@53855",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-16 21:45",
+   "green": false,
+   "extreme": 64744.6,
+   "want": "up",
+   "first_break": "2024-07-16 23:45",
+   "first_break_idx": 54025,
+   "b1": "down@54020",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-17 22:15",
+   "green": true,
+   "extreme": 63885.5,
+   "want": "down",
+   "first_break": "2024-07-18 05:30",
+   "first_break_idx": 54144,
+   "b1": "up@54118",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-18 07:45",
+   "green": true,
+   "extreme": 64202.6,
+   "want": "down",
+   "first_break": "2024-07-18 19:45",
+   "first_break_idx": 54201,
+   "b1": "up@54169",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-19 01:00",
+   "green": true,
+   "extreme": 63350.0,
+   "want": "down",
+   "first_break": "2024-07-19 06:45",
+   "first_break_idx": 54245,
+   "b1": "up@54227",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-19 11:45",
+   "green": false,
+   "extreme": 64430.0,
+   "want": "up",
+   "first_break": "2024-07-19 18:30",
+   "first_break_idx": 54292,
+   "b1": "down@54267",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-20 07:30",
+   "green": true,
+   "extreme": 66292.1,
+   "want": "down",
+   "first_break": "2024-07-20 18:45",
+   "first_break_idx": 54389,
+   "b1": "up@54348",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-20 23:00",
+   "green": true,
+   "extreme": 67173.6,
+   "want": "down",
+   "first_break": "2024-07-21 01:00",
+   "first_break_idx": 54414,
+   "b1": "up@54411",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-22 14:45",
+   "green": true,
+   "extreme": 67208.8,
+   "want": "down",
+   "first_break": "2024-07-22 19:15",
+   "first_break_idx": 54583,
+   "b1": "up@54567",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-23 13:15",
+   "green": true,
+   "extreme": 66449.8,
+   "want": "down",
+   "first_break": "2024-07-23 16:45",
+   "first_break_idx": 54669,
+   "b1": "up@54662",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-24 01:30",
+   "green": true,
+   "extreme": 65453.8,
+   "want": "down",
+   "first_break": "2024-07-24 07:45",
+   "first_break_idx": 54729,
+   "b1": "up@54707",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-26 08:45",
+   "green": false,
+   "extreme": 67367.0,
+   "want": "up",
+   "first_break": "2024-07-26 15:00",
+   "first_break_idx": 54950,
+   "b1": "down@54934",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-29 08:45",
+   "green": false,
+   "extreme": 69538.3,
+   "want": "up",
+   "first_break": "2024-07-29 10:45",
+   "first_break_idx": 55221,
+   "b1": "down@55216",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-07-31 01:45",
+   "green": true,
+   "extreme": 65656.8,
+   "want": "down",
+   "first_break": "2024-07-31 10:00",
+   "first_break_idx": 55410,
+   "b1": "up@55382",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-01 10:30",
+   "green": true,
+   "extreme": 63535.5,
+   "want": "down",
+   "first_break": "2024-08-01 20:45",
+   "first_break_idx": 55549,
+   "b1": "up@55514",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-02 08:15",
+   "green": true,
+   "extreme": 64107.2,
+   "want": "down",
+   "first_break": "2024-08-02 11:00",
+   "first_break_idx": 55606,
+   "b1": "up@55599",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-04 02:45",
+   "green": true,
+   "extreme": 60105.0,
+   "want": "down",
+   "first_break": "2024-08-04 13:30",
+   "first_break_idx": 55808,
+   "b1": "up@55784",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-04 13:45",
+   "green": true,
+   "extreme": 60180.0,
+   "want": "down",
+   "first_break": "2024-08-04 20:00",
+   "first_break_idx": 55834,
+   "b1": "up@55813",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-05 12:00",
+   "green": true,
+   "extreme": 49986.9,
+   "want": "down",
+   "first_break": "2024-08-05 18:00",
+   "first_break_idx": 55922,
+   "b1": "up@55905",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-05 22:00",
+   "green": false,
+   "extreme": 55419.9,
+   "want": "up",
+   "first_break": "2024-08-06 05:45",
+   "first_break_idx": 55969,
+   "b1": "down@55945",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-06 06:45",
+   "green": false,
+   "extreme": 56201.0,
+   "want": "up",
+   "first_break": "2024-08-06 19:30",
+   "first_break_idx": 56024,
+   "b1": "down@55984",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-08 21:45",
+   "green": false,
+   "extreme": 59826.6,
+   "want": "up",
+   "first_break": "2024-08-09 03:00",
+   "first_break_idx": 56246,
+   "b1": "down@56228",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-10 06:00",
+   "green": false,
+   "extreme": 61015.2,
+   "want": "up",
+   "first_break": "2024-08-10 15:00",
+   "first_break_idx": 56390,
+   "b1": "down@56359",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-12 13:00",
+   "green": true,
+   "extreme": 58259.4,
+   "want": "down",
+   "first_break": "2024-08-12 14:15",
+   "first_break_idx": 56579,
+   "b1": "up@56576",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-13 23:15",
+   "green": false,
+   "extreme": 61522.0,
+   "want": "up",
+   "first_break": "2024-08-14 17:45",
+   "first_break_idx": 56785,
+   "b1": "down@56713",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-16 15:30",
+   "green": false,
+   "extreme": 58650.4,
+   "want": "up",
+   "first_break": "2024-08-16 18:45",
+   "first_break_idx": 56981,
+   "b1": "down@56972",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-17 22:30",
+   "green": false,
+   "extreme": 59656.7,
+   "want": "up",
+   "first_break": "2024-08-18 06:00",
+   "first_break_idx": 57122,
+   "b1": "down@57095",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-23 12:30",
+   "green": false,
+   "extreme": 61238.3,
+   "want": "up",
+   "first_break": "2024-08-23 14:15",
+   "first_break_idx": 57635,
+   "b1": "down@57631",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-24 14:45",
+   "green": true,
+   "extreme": 64158.0,
+   "want": "down",
+   "first_break": "2024-08-24 16:15",
+   "first_break_idx": 57739,
+   "b1": "up@57735",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-28 04:00",
+   "green": true,
+   "extreme": 58682.5,
+   "want": "down",
+   "first_break": "2024-08-28 13:15",
+   "first_break_idx": 58111,
+   "b1": "up@58077",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-08-30 03:45",
+   "green": true,
+   "extreme": 59040.3,
+   "want": "down",
+   "first_break": "2024-08-30 06:45",
+   "first_break_idx": 58277,
+   "b1": "up@58268",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-01 11:15",
+   "green": true,
+   "extreme": 57854.7,
+   "want": "down",
+   "first_break": "2024-09-01 16:15",
+   "first_break_idx": 58507,
+   "b1": "up@58490",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-01 19:45",
+   "green": true,
+   "extreme": 57413.8,
+   "want": "down",
+   "first_break": "2024-09-02 03:45",
+   "first_break_idx": 58553,
+   "b1": "up@58527",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-02 17:00",
+   "green": false,
+   "extreme": 58645.0,
+   "want": "up",
+   "first_break": "2024-09-02 20:00",
+   "first_break_idx": 58618,
+   "b1": "down@58613",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-03 20:30",
+   "green": true,
+   "extreme": 57594.5,
+   "want": "down",
+   "first_break": "2024-09-03 23:30",
+   "first_break_idx": 58728,
+   "b1": "up@58725",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-05 12:00",
+   "green": true,
+   "extreme": 56703.9,
+   "want": "down",
+   "first_break": "2024-09-05 15:00",
+   "first_break_idx": 58886,
+   "b1": "up@58878",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-08 14:45",
+   "green": false,
+   "extreme": 54688.0,
+   "want": "up",
+   "first_break": "2024-09-09 03:45",
+   "first_break_idx": 59225,
+   "b1": "down@59175",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-11 11:00",
+   "green": true,
+   "extreme": 56073.0,
+   "want": "down",
+   "first_break": "2024-09-11 19:15",
+   "first_break_idx": 59479,
+   "b1": "up@59448",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-12 00:00",
+   "green": false,
+   "extreme": 57939.9,
+   "want": "up",
+   "first_break": "2024-09-12 07:15",
+   "first_break_idx": 59527,
+   "b1": "down@59508",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-14 17:30",
+   "green": true,
+   "extreme": 59596.3,
+   "want": "down",
+   "first_break": "2024-09-14 23:30",
+   "first_break_idx": 59784,
+   "b1": "up@59763",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-15 07:00",
+   "green": false,
+   "extreme": 60249.9,
+   "want": "up",
+   "first_break": "2024-09-15 18:45",
+   "first_break_idx": 59861,
+   "b1": "down@59816",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-16 08:30",
+   "green": true,
+   "extreme": 58190.0,
+   "want": "down",
+   "first_break": "2024-09-16 19:00",
+   "first_break_idx": 59958,
+   "b1": "up@59925",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-18 21:45",
+   "green": true,
+   "extreme": 59461.2,
+   "want": "down",
+   "first_break": "2024-09-19 01:30",
+   "first_break_idx": 60176,
+   "b1": "up@60166",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-21 02:45",
+   "green": false,
+   "extreme": 63272.1,
+   "want": "up",
+   "first_break": "2024-09-21 05:45",
+   "first_break_idx": 60385,
+   "b1": "down@60381",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-24 07:45",
+   "green": true,
+   "extreme": 62699.8,
+   "want": "down",
+   "first_break": "2024-09-24 20:00",
+   "first_break_idx": 60730,
+   "b1": "up@60695",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-25 23:30",
+   "green": true,
+   "extreme": 63106.3,
+   "want": "down",
+   "first_break": "2024-09-26 04:00",
+   "first_break_idx": 60858,
+   "b1": "up@60851",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-28 19:00",
+   "green": true,
+   "extreme": 65453.0,
+   "want": "down",
+   "first_break": "2024-09-29 02:45",
+   "first_break_idx": 61141,
+   "b1": "up@61112",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-09-30 15:45",
+   "green": true,
+   "extreme": 63226.6,
+   "want": "down",
+   "first_break": "2024-09-30 23:45",
+   "first_break_idx": 61321,
+   "b1": "up@61291",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-02 13:15",
+   "green": false,
+   "extreme": 61900.0,
+   "want": "up",
+   "first_break": "2024-10-02 21:30",
+   "first_break_idx": 61504,
+   "b1": "down@61477",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-08 13:00",
+   "green": true,
+   "extreme": 62094.4,
+   "want": "down",
+   "first_break": "2024-10-08 21:00",
+   "first_break_idx": 62078,
+   "b1": "up@62049",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-09 01:00",
+   "green": true,
+   "extreme": 62042.4,
+   "want": "down",
+   "first_break": "2024-10-09 04:45",
+   "first_break_idx": 62109,
+   "b1": "up@62099",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-09 06:15",
+   "green": true,
+   "extreme": 61982.8,
+   "want": "down",
+   "first_break": "2024-10-09 18:00",
+   "first_break_idx": 62162,
+   "b1": "up@62134",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-12 00:45",
+   "green": false,
+   "extreme": 63242.0,
+   "want": "up",
+   "first_break": "2024-10-12 16:45",
+   "first_break_idx": 62445,
+   "b1": "down@62391",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-16 07:45",
+   "green": false,
+   "extreme": 67492.0,
+   "want": "up",
+   "first_break": "2024-10-16 15:15",
+   "first_break_idx": 62823,
+   "b1": "down@62796",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-18 07:30",
+   "green": false,
+   "extreme": 68126.5,
+   "want": "up",
+   "first_break": "2024-10-18 11:45",
+   "first_break_idx": 63001,
+   "b1": "down@62990",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-20 06:00",
+   "green": false,
+   "extreme": 68383.1,
+   "want": "up",
+   "first_break": "2024-10-20 12:15",
+   "first_break_idx": 63195,
+   "b1": "down@63175",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-20 14:00",
+   "green": false,
+   "extreme": 68468.9,
+   "want": "up",
+   "first_break": "2024-10-20 19:15",
+   "first_break_idx": 63223,
+   "b1": "down@63218",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-22 06:15",
+   "green": true,
+   "extreme": 66959.9,
+   "want": "down",
+   "first_break": "2024-10-22 13:45",
+   "first_break_idx": 63393,
+   "b1": "up@63365",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-23 18:15",
+   "green": true,
+   "extreme": 66290.6,
+   "want": "down",
+   "first_break": "2024-10-23 20:30",
+   "first_break_idx": 63516,
+   "b1": "up@63509",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-24 06:45",
+   "green": false,
+   "extreme": 67608.0,
+   "want": "up",
+   "first_break": "2024-10-24 18:30",
+   "first_break_idx": 63604,
+   "b1": "down@63580",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-26 15:00",
+   "green": false,
+   "extreme": 67196.0,
+   "want": "up",
+   "first_break": "2024-10-27 01:30",
+   "first_break_idx": 63824,
+   "b1": "down@63786",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-27 02:15",
+   "green": false,
+   "extreme": 67306.9,
+   "want": "up",
+   "first_break": "2024-10-27 09:15",
+   "first_break_idx": 63855,
+   "b1": "down@63830",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-27 09:30",
+   "green": false,
+   "extreme": 67297.9,
+   "want": "up",
+   "first_break": "2024-10-27 17:45",
+   "first_break_idx": 63889,
+   "b1": "down@63878",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-29 08:00",
+   "green": false,
+   "extreme": 71514.5,
+   "want": "up",
+   "first_break": "2024-10-29 17:00",
+   "first_break_idx": 64078,
+   "b1": "down@64046",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-30 02:15",
+   "green": true,
+   "extreme": 72160.0,
+   "want": "down",
+   "first_break": "2024-10-30 06:15",
+   "first_break_idx": 64131,
+   "b1": "up@64122",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-10-30 06:45",
+   "green": true,
+   "extreme": 72050.3,
+   "want": "down",
+   "first_break": "2024-10-30 17:15",
+   "first_break_idx": 64175,
+   "b1": "up@64136",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-03 08:15",
+   "green": true,
+   "extreme": 67856.4,
+   "want": "down",
+   "first_break": "2024-11-03 19:45",
+   "first_break_idx": 64569,
+   "b1": "up@64529",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-05 14:45",
+   "green": false,
+   "extreme": 68995.3,
+   "want": "up",
+   "first_break": "2024-11-05 19:45",
+   "first_break_idx": 64761,
+   "b1": "down@64744",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-08 02:00",
+   "green": false,
+   "extreme": 76692.0,
+   "want": "up",
+   "first_break": "2024-11-09 00:00",
+   "first_break_idx": 65066,
+   "b1": "down@64981",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-09 08:00",
+   "green": true,
+   "extreme": 76200.0,
+   "want": "down",
+   "first_break": "2024-11-09 21:45",
+   "first_break_idx": 65153,
+   "b1": "up@65109",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-10 11:15",
+   "green": false,
+   "extreme": 79744.3,
+   "want": "up",
+   "first_break": "2024-11-10 16:00",
+   "first_break_idx": 65226,
+   "b1": "down@65210",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-11 00:00",
+   "green": false,
+   "extreme": 81027.8,
+   "want": "up",
+   "first_break": "2024-11-11 03:45",
+   "first_break_idx": 65273,
+   "b1": "down@65265",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-12 04:45",
+   "green": false,
+   "extreme": 89732.9,
+   "want": "up",
+   "first_break": "2024-11-12 12:15",
+   "first_break_idx": 65403,
+   "b1": "down@65376",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-15 17:45",
+   "green": false,
+   "extreme": 90778.8,
+   "want": "up",
+   "first_break": "2024-11-16 01:15",
+   "first_break_idx": 65743,
+   "b1": "down@65716",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-16 18:00",
+   "green": true,
+   "extreme": 90783.1,
+   "want": "down",
+   "first_break": "2024-11-16 19:15",
+   "first_break_idx": 65815,
+   "b1": "up@65812",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-20 04:15",
+   "green": true,
+   "extreme": 91592.8,
+   "want": "down",
+   "first_break": "2024-11-20 08:30",
+   "first_break_idx": 66156,
+   "b1": "up@66141",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-27 13:30",
+   "green": false,
+   "extreme": 93666.6,
+   "want": "up",
+   "first_break": "2024-11-27 15:45",
+   "first_break_idx": 66857,
+   "b1": "down@66852",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-11-28 15:45",
+   "green": true,
+   "extreme": 94770.7,
+   "want": "down",
+   "first_break": "2024-11-29 02:15",
+   "first_break_idx": 66995,
+   "b1": "up@66958",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-01 19:00",
+   "green": false,
+   "extreme": 97436.3,
+   "want": "up",
+   "first_break": "2024-12-01 23:30",
+   "first_break_idx": 67272,
+   "b1": "down@67258",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-02 18:30",
+   "green": true,
+   "extreme": 94852.0,
+   "want": "down",
+   "first_break": "2024-12-02 23:15",
+   "first_break_idx": 67367,
+   "b1": "up@67353",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-02 23:30",
+   "green": true,
+   "extreme": 94540.5,
+   "want": "down",
+   "first_break": "2024-12-03 18:45",
+   "first_break_idx": 67445,
+   "b1": "up@67375",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-04 15:15",
+   "green": false,
+   "extreme": 97040.0,
+   "want": "up",
+   "first_break": "2024-12-05 01:15",
+   "first_break_idx": 67567,
+   "b1": "down@67530",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-05 02:30",
+   "green": false,
+   "extreme": 98962.3,
+   "want": "up",
+   "first_break": "2024-12-05 04:45",
+   "first_break_idx": 67581,
+   "b1": "down@67574",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-06 07:30",
+   "green": false,
+   "extreme": 98218.6,
+   "want": "up",
+   "first_break": "2024-12-06 10:45",
+   "first_break_idx": 67701,
+   "b1": "down@67691",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-07 11:30",
+   "green": true,
+   "extreme": 99111.0,
+   "want": "down",
+   "first_break": "2024-12-07 19:45",
+   "first_break_idx": 67833,
+   "b1": "up@67802",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-08 02:45",
+   "green": false,
+   "extreme": 100314.4,
+   "want": "up",
+   "first_break": "2024-12-08 05:00",
+   "first_break_idx": 67870,
+   "b1": "down@67867",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-09 17:45",
+   "green": true,
+   "extreme": 98133.6,
+   "want": "down",
+   "first_break": "2024-12-09 21:00",
+   "first_break_idx": 68030,
+   "b1": "up@68019",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-10 09:00",
+   "green": true,
+   "extreme": 95734.2,
+   "want": "down",
+   "first_break": "2024-12-10 21:15",
+   "first_break_idx": 68127,
+   "b1": "up@68082",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-12 03:45",
+   "green": false,
+   "extreme": 101615.0,
+   "want": "up",
+   "first_break": "2024-12-12 08:15",
+   "first_break_idx": 68267,
+   "b1": "down@68255",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-13 01:30",
+   "green": true,
+   "extreme": 99444.3,
+   "want": "down",
+   "first_break": "2024-12-13 07:15",
+   "first_break_idx": 68359,
+   "b1": "up@68338",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-14 19:00",
+   "green": true,
+   "extreme": 101003.1,
+   "want": "down",
+   "first_break": "2024-12-14 23:15",
+   "first_break_idx": 68519,
+   "b1": "up@68506",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-17 14:30",
+   "green": false,
+   "extreme": 107508.6,
+   "want": "up",
+   "first_break": "2024-12-17 18:45",
+   "first_break_idx": 68789,
+   "b1": "down@68776",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-18 12:30",
+   "green": true,
+   "extreme": 103669.1,
+   "want": "down",
+   "first_break": "2024-12-18 20:30",
+   "first_break_idx": 68892,
+   "b1": "up@68863",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-21 05:30",
+   "green": false,
+   "extreme": 97757.3,
+   "want": "up",
+   "first_break": "2024-12-21 11:00",
+   "first_break_idx": 69142,
+   "b1": "down@69126",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-22 10:45",
+   "green": true,
+   "extreme": 95883.0,
+   "want": "down",
+   "first_break": "2024-12-22 19:45",
+   "first_break_idx": 69273,
+   "b1": "up@69241",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-22 21:30",
+   "green": true,
+   "extreme": 95140.1,
+   "want": "down",
+   "first_break": "2024-12-23 01:15",
+   "first_break_idx": 69295,
+   "b1": "up@69288",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-23 09:45",
+   "green": false,
+   "extreme": 96395.9,
+   "want": "up",
+   "first_break": "2024-12-23 16:15",
+   "first_break_idx": 69355,
+   "b1": "down@69332",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-24 05:00",
+   "green": false,
+   "extreme": 95083.5,
+   "want": "up",
+   "first_break": "2024-12-24 19:00",
+   "first_break_idx": 69462,
+   "b1": "down@69415",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-25 16:00",
+   "green": false,
+   "extreme": 99127.4,
+   "want": "up",
+   "first_break": "2024-12-26 00:45",
+   "first_break_idx": 69581,
+   "b1": "down@69551",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-26 15:45",
+   "green": true,
+   "extreme": 95203.4,
+   "want": "down",
+   "first_break": "2024-12-26 20:15",
+   "first_break_idx": 69659,
+   "b1": "up@69643",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-26 22:30",
+   "green": false,
+   "extreme": 96509.6,
+   "want": "up",
+   "first_break": "2024-12-27 09:30",
+   "first_break_idx": 69712,
+   "b1": "down@69672",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2024-12-30 07:15",
+   "green": true,
+   "extreme": 93360.3,
+   "want": "down",
+   "first_break": "2024-12-30 10:15",
+   "first_break_idx": 70003,
+   "b1": "up@69996",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-10 13:30",
+   "green": true,
+   "extreme": 94342.1,
+   "want": "down",
+   "first_break": "2025-01-10 19:00",
+   "first_break_idx": 71094,
+   "b1": "up@71076",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-11 17:15",
+   "green": false,
+   "extreme": 94707.4,
+   "want": "up",
+   "first_break": "2025-01-12 02:45",
+   "first_break_idx": 71221,
+   "b1": "down@71188",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-12 21:00",
+   "green": false,
+   "extreme": 95294.6,
+   "want": "up",
+   "first_break": "2025-01-13 05:45",
+   "first_break_idx": 71329,
+   "b1": "down@71296",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-14 15:30",
+   "green": false,
+   "extreme": 97181.8,
+   "want": "up",
+   "first_break": "2025-01-14 19:00",
+   "first_break_idx": 71478,
+   "b1": "down@71467",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-15 09:45",
+   "green": false,
+   "extreme": 97385.6,
+   "want": "up",
+   "first_break": "2025-01-15 12:45",
+   "first_break_idx": 71549,
+   "b1": "down@71540",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-15 21:00",
+   "green": false,
+   "extreme": 99691.0,
+   "want": "up",
+   "first_break": "2025-01-16 01:15",
+   "first_break_idx": 71599,
+   "b1": "down@71586",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-19 12:30",
+   "green": false,
+   "extreme": 105580.6,
+   "want": "up",
+   "first_break": "2025-01-19 19:45",
+   "first_break_idx": 71961,
+   "b1": "down@71934",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-20 02:30",
+   "green": false,
+   "extreme": 106394.8,
+   "want": "up",
+   "first_break": "2025-01-20 12:15",
+   "first_break_idx": 72027,
+   "b1": "down@71991",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-22 15:45",
+   "green": true,
+   "extreme": 104738.0,
+   "want": "down",
+   "first_break": "2025-01-22 19:00",
+   "first_break_idx": 72246,
+   "b1": "up@72237",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-22 22:15",
+   "green": true,
+   "extreme": 103330.6,
+   "want": "down",
+   "first_break": "2025-01-23 05:45",
+   "first_break_idx": 72289,
+   "b1": "up@72264",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-25 06:30",
+   "green": true,
+   "extreme": 104340.0,
+   "want": "down",
+   "first_break": "2025-01-25 10:30",
+   "first_break_idx": 72500,
+   "b1": "up@72489",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-28 05:45",
+   "green": false,
+   "extreme": 102496.1,
+   "want": "up",
+   "first_break": "2025-01-28 09:00",
+   "first_break_idx": 72782,
+   "b1": "down@72773",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-01-30 02:15",
+   "green": false,
+   "extreme": 104441.9,
+   "want": "up",
+   "first_break": "2025-01-30 06:45",
+   "first_break_idx": 72965,
+   "b1": "down@72951",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-01 03:15",
+   "green": true,
+   "extreme": 101692.3,
+   "want": "down",
+   "first_break": "2025-02-01 15:00",
+   "first_break_idx": 73190,
+   "b1": "up@73152",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-02 09:45",
+   "green": true,
+   "extreme": 99024.7,
+   "want": "down",
+   "first_break": "2025-02-02 16:45",
+   "first_break_idx": 73293,
+   "b1": "up@73269",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-03 00:15",
+   "green": true,
+   "extreme": 96779.3,
+   "want": "down",
+   "first_break": "2025-02-03 03:00",
+   "first_break_idx": 73334,
+   "b1": "up@73326",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-03 07:45",
+   "green": false,
+   "extreme": 94883.0,
+   "want": "up",
+   "first_break": "2025-02-03 13:15",
+   "first_break_idx": 73375,
+   "b1": "down@73361",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-04 14:15",
+   "green": true,
+   "extreme": 97812.9,
+   "want": "down",
+   "first_break": "2025-02-05 02:30",
+   "first_break_idx": 73524,
+   "b1": "up@73481",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-05 06:45",
+   "green": false,
+   "extreme": 98641.9,
+   "want": "up",
+   "first_break": "2025-02-05 17:45",
+   "first_break_idx": 73585,
+   "b1": "down@73545",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-10 16:00",
+   "green": false,
+   "extreme": 97890.4,
+   "want": "up",
+   "first_break": "2025-02-10 19:15",
+   "first_break_idx": 74071,
+   "b1": "down@74060",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-12 14:30",
+   "green": false,
+   "extreme": 96338.7,
+   "want": "up",
+   "first_break": "2025-02-12 17:15",
+   "first_break_idx": 74255,
+   "b1": "down@74249",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-13 04:15",
+   "green": false,
+   "extreme": 98014.4,
+   "want": "up",
+   "first_break": "2025-02-13 07:15",
+   "first_break_idx": 74311,
+   "b1": "down@74302",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-13 14:30",
+   "green": true,
+   "extreme": 95719.3,
+   "want": "down",
+   "first_break": "2025-02-13 17:15",
+   "first_break_idx": 74351,
+   "b1": "up@74342",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-14 03:15",
+   "green": false,
+   "extreme": 96612.3,
+   "want": "up",
+   "first_break": "2025-02-14 05:30",
+   "first_break_idx": 74400,
+   "b1": "down@74395",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-14 09:45",
+   "green": false,
+   "extreme": 96957.2,
+   "want": "up",
+   "first_break": "2025-02-14 12:45",
+   "first_break_idx": 74429,
+   "b1": "down@74422",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-15 08:45",
+   "green": false,
+   "extreme": 97881.0,
+   "want": "up",
+   "first_break": "2025-02-15 19:00",
+   "first_break_idx": 74550,
+   "b1": "down@74512",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-15 23:15",
+   "green": true,
+   "extreme": 97269.6,
+   "want": "down",
+   "first_break": "2025-02-16 13:15",
+   "first_break_idx": 74623,
+   "b1": "up@74571",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-18 14:30",
+   "green": true,
+   "extreme": 95107.2,
+   "want": "down",
+   "first_break": "2025-02-18 22:00",
+   "first_break_idx": 74850,
+   "b1": "up@74823",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-19 08:30",
+   "green": false,
+   "extreme": 95800.0,
+   "want": "up",
+   "first_break": "2025-02-19 13:15",
+   "first_break_idx": 74911,
+   "b1": "down@74897",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-23 00:45",
+   "green": true,
+   "extreme": 96434.6,
+   "want": "down",
+   "first_break": "2025-02-23 07:00",
+   "first_break_idx": 75270,
+   "b1": "up@75250",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-23 11:45",
+   "green": true,
+   "extreme": 96200.2,
+   "want": "down",
+   "first_break": "2025-02-23 16:00",
+   "first_break_idx": 75306,
+   "b1": "up@75293",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-23 23:15",
+   "green": true,
+   "extreme": 95512.9,
+   "want": "down",
+   "first_break": "2025-02-24 08:45",
+   "first_break_idx": 75373,
+   "b1": "up@75337",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-24 10:15",
+   "green": true,
+   "extreme": 95246.0,
+   "want": "down",
+   "first_break": "2025-02-24 20:00",
+   "first_break_idx": 75418,
+   "b1": "up@75386",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-24 21:30",
+   "green": true,
+   "extreme": 94202.2,
+   "want": "down",
+   "first_break": "2025-02-25 00:15",
+   "first_break_idx": 75435,
+   "b1": "up@75429",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-25 05:45",
+   "green": true,
+   "extreme": 90902.7,
+   "want": "down",
+   "first_break": "2025-02-25 12:30",
+   "first_break_idx": 75484,
+   "b1": "up@75459",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-26 03:45",
+   "green": false,
+   "extreme": 89147.6,
+   "want": "up",
+   "first_break": "2025-02-26 08:15",
+   "first_break_idx": 75563,
+   "b1": "down@75552",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-26 13:45",
+   "green": true,
+   "extreme": 88207.3,
+   "want": "down",
+   "first_break": "2025-02-26 17:45",
+   "first_break_idx": 75601,
+   "b1": "up@75595",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-02-28 02:15",
+   "green": true,
+   "extreme": 83000.0,
+   "want": "down",
+   "first_break": "2025-02-28 07:00",
+   "first_break_idx": 75750,
+   "b1": "up@75733",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-02 07:45",
+   "green": false,
+   "extreme": 86346.9,
+   "want": "up",
+   "first_break": "2025-03-02 11:45",
+   "first_break_idx": 75961,
+   "b1": "down@75953",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-03 14:30",
+   "green": true,
+   "extreme": 91174.0,
+   "want": "down",
+   "first_break": "2025-03-03 20:00",
+   "first_break_idx": 76090,
+   "b1": "up@76073",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-05 03:00",
+   "green": false,
+   "extreme": 88770.0,
+   "want": "up",
+   "first_break": "2025-03-05 15:00",
+   "first_break_idx": 76262,
+   "b1": "down@76221",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-05 18:15",
+   "green": false,
+   "extreme": 90653.7,
+   "want": "up",
+   "first_break": "2025-03-06 05:00",
+   "first_break_idx": 76318,
+   "b1": "down@76278",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-08 23:00",
+   "green": true,
+   "extreme": 85788.0,
+   "want": "down",
+   "first_break": "2025-03-09 00:30",
+   "first_break_idx": 76588,
+   "b1": "up@76584",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-10 15:00",
+   "green": false,
+   "extreme": 83324.2,
+   "want": "up",
+   "first_break": "2025-03-10 17:15",
+   "first_break_idx": 76751,
+   "b1": "down@76745",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-12 07:30",
+   "green": false,
+   "extreme": 83285.9,
+   "want": "up",
+   "first_break": "2025-03-12 17:45",
+   "first_break_idx": 76945,
+   "b1": "down@76910",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-14 08:30",
+   "green": false,
+   "extreme": 82213.1,
+   "want": "up",
+   "first_break": "2025-03-14 13:00",
+   "first_break_idx": 77118,
+   "b1": "down@77102",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-16 17:30",
+   "green": true,
+   "extreme": 82338.0,
+   "want": "down",
+   "first_break": "2025-03-17 03:30",
+   "first_break_idx": 77368,
+   "b1": "up@77332",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-18 12:30",
+   "green": true,
+   "extreme": 82309.5,
+   "want": "down",
+   "first_break": "2025-03-18 18:15",
+   "first_break_idx": 77523,
+   "b1": "up@77506",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-18 20:00",
+   "green": true,
+   "extreme": 81451.4,
+   "want": "down",
+   "first_break": "2025-03-18 23:00",
+   "first_break_idx": 77542,
+   "b1": "up@77534",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-23 02:45",
+   "green": false,
+   "extreme": 84057.6,
+   "want": "up",
+   "first_break": "2025-03-23 06:45",
+   "first_break_idx": 77957,
+   "b1": "down@77947",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-25 20:45",
+   "green": false,
+   "extreme": 88030.0,
+   "want": "up",
+   "first_break": "2025-03-25 22:30",
+   "first_break_idx": 78212,
+   "b1": "down@78208",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-26 09:30",
+   "green": true,
+   "extreme": 86997.9,
+   "want": "down",
+   "first_break": "2025-03-26 19:15",
+   "first_break_idx": 78295,
+   "b1": "up@78258",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-29 17:30",
+   "green": true,
+   "extreme": 82086.9,
+   "want": "down",
+   "first_break": "2025-03-29 22:30",
+   "first_break_idx": 78596,
+   "b1": "up@78580",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-03-30 09:00",
+   "green": false,
+   "extreme": 83311.1,
+   "want": "up",
+   "first_break": "2025-03-30 14:15",
+   "first_break_idx": 78659,
+   "b1": "down@78647",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-01 16:00",
+   "green": false,
+   "extreme": 84400.0,
+   "want": "up",
+   "first_break": "2025-04-01 20:30",
+   "first_break_idx": 78876,
+   "b1": "down@78862",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-01 21:30",
+   "green": false,
+   "extreme": 85455.0,
+   "want": "up",
+   "first_break": "2025-04-02 05:00",
+   "first_break_idx": 78910,
+   "b1": "down@78888",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-03 05:45",
+   "green": true,
+   "extreme": 82655.0,
+   "want": "down",
+   "first_break": "2025-04-03 17:45",
+   "first_break_idx": 79057,
+   "b1": "up@79012",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-03 20:45",
+   "green": true,
+   "extreme": 81519.1,
+   "want": "down",
+   "first_break": "2025-04-03 23:45",
+   "first_break_idx": 79081,
+   "b1": "up@79071",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-04 17:15",
+   "green": true,
+   "extreme": 81875.0,
+   "want": "down",
+   "first_break": "2025-04-04 20:15",
+   "first_break_idx": 79163,
+   "b1": "up@79154",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-06 07:15",
+   "green": false,
+   "extreme": 83496.4,
+   "want": "up",
+   "first_break": "2025-04-06 10:30",
+   "first_break_idx": 79316,
+   "b1": "down@79307",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-09 01:15",
+   "green": true,
+   "extreme": 76391.0,
+   "want": "down",
+   "first_break": "2025-04-09 04:00",
+   "first_break_idx": 79578,
+   "b1": "up@79570",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-09 13:15",
+   "green": false,
+   "extreme": 77899.5,
+   "want": "up",
+   "first_break": "2025-04-09 19:30",
+   "first_break_idx": 79640,
+   "b1": "down@79626",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-12 03:00",
+   "green": false,
+   "extreme": 83862.3,
+   "want": "up",
+   "first_break": "2025-04-12 13:30",
+   "first_break_idx": 79904,
+   "b1": "down@79864",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-12 13:45",
+   "green": false,
+   "extreme": 83966.9,
+   "want": "up",
+   "first_break": "2025-04-12 18:30",
+   "first_break_idx": 79924,
+   "b1": "down@79909",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-13 02:15",
+   "green": false,
+   "extreme": 85787.6,
+   "want": "up",
+   "first_break": "2025-04-13 06:45",
+   "first_break_idx": 79973,
+   "b1": "down@79958",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-13 19:30",
+   "green": true,
+   "extreme": 83457.6,
+   "want": "down",
+   "first_break": "2025-04-14 01:00",
+   "first_break_idx": 80046,
+   "b1": "up@80026",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-14 08:15",
+   "green": false,
+   "extreme": 85480.0,
+   "want": "up",
+   "first_break": "2025-04-14 20:00",
+   "first_break_idx": 80122,
+   "b1": "down@80086",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-15 11:15",
+   "green": false,
+   "extreme": 85794.3,
+   "want": "up",
+   "first_break": "2025-04-15 13:30",
+   "first_break_idx": 80192,
+   "b1": "down@80187",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-16 06:45",
+   "green": true,
+   "extreme": 83212.1,
+   "want": "down",
+   "first_break": "2025-04-16 10:45",
+   "first_break_idx": 80277,
+   "b1": "up@80263",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-17 13:15",
+   "green": false,
+   "extreme": 84768.9,
+   "want": "up",
+   "first_break": "2025-04-17 17:30",
+   "first_break_idx": 80400,
+   "b1": "down@80385",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-19 10:15",
+   "green": false,
+   "extreme": 85177.7,
+   "want": "up",
+   "first_break": "2025-04-19 12:45",
+   "first_break_idx": 80573,
+   "b1": "down@80565",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-25 06:45",
+   "green": false,
+   "extreme": 94200.0,
+   "want": "up",
+   "first_break": "2025-04-25 17:00",
+   "first_break_idx": 81166,
+   "b1": "down@81128",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-26 11:00",
+   "green": true,
+   "extreme": 94502.0,
+   "want": "down",
+   "first_break": "2025-04-26 13:15",
+   "first_break_idx": 81247,
+   "b1": "up@81240",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-04-29 22:30",
+   "green": true,
+   "extreme": 94601.4,
+   "want": "down",
+   "first_break": "2025-04-30 02:30",
+   "first_break_idx": 81588,
+   "b1": "up@81575",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-02 09:45",
+   "green": false,
+   "extreme": 97162.0,
+   "want": "up",
+   "first_break": "2025-05-02 18:30",
+   "first_break_idx": 81844,
+   "b1": "down@81813",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-07 20:15",
+   "green": false,
+   "extreme": 97261.4,
+   "want": "up",
+   "first_break": "2025-05-08 03:15",
+   "first_break_idx": 82359,
+   "b1": "down@82336",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-08 10:00",
+   "green": false,
+   "extreme": 99340.0,
+   "want": "up",
+   "first_break": "2025-05-08 13:00",
+   "first_break_idx": 82398,
+   "b1": "down@82391",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-11 17:45",
+   "green": false,
+   "extreme": 104800.0,
+   "want": "up",
+   "first_break": "2025-05-12 00:15",
+   "first_break_idx": 82731,
+   "b1": "down@82709",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-14 14:45",
+   "green": true,
+   "extreme": 103063.1,
+   "want": "down",
+   "first_break": "2025-05-14 19:45",
+   "first_break_idx": 83001,
+   "b1": "up@82988",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-14 23:00",
+   "green": true,
+   "extreme": 102788.1,
+   "want": "down",
+   "first_break": "2025-05-15 08:45",
+   "first_break_idx": 83053,
+   "b1": "up@83017",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-15 23:15",
+   "green": false,
+   "extreme": 104100.0,
+   "want": "up",
+   "first_break": "2025-05-16 07:30",
+   "first_break_idx": 83144,
+   "b1": "down@83117",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-18 02:45",
+   "green": false,
+   "extreme": 103362.9,
+   "want": "up",
+   "first_break": "2025-05-18 06:15",
+   "first_break_idx": 83331,
+   "b1": "down@83322",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-18 13:45",
+   "green": true,
+   "extreme": 103778.8,
+   "want": "down",
+   "first_break": "2025-05-18 15:45",
+   "first_break_idx": 83369,
+   "b1": "up@83365",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-19 01:45",
+   "green": true,
+   "extreme": 103607.7,
+   "want": "down",
+   "first_break": "2025-05-19 09:15",
+   "first_break_idx": 83439,
+   "b1": "up@83414",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-19 22:45",
+   "green": true,
+   "extreme": 104900.0,
+   "want": "down",
+   "first_break": "2025-05-20 00:00",
+   "first_break_idx": 83498,
+   "b1": "up@83495",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-21 02:30",
+   "green": false,
+   "extreme": 107194.2,
+   "want": "up",
+   "first_break": "2025-05-21 05:45",
+   "first_break_idx": 83617,
+   "b1": "down@83609",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-23 12:30",
+   "green": true,
+   "extreme": 110468.0,
+   "want": "down",
+   "first_break": "2025-05-23 17:00",
+   "first_break_idx": 83854,
+   "b1": "up@83841",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-25 06:45",
+   "green": true,
+   "extreme": 107118.1,
+   "want": "down",
+   "first_break": "2025-05-25 14:15",
+   "first_break_idx": 84035,
+   "b1": "up@84012",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-28 08:00",
+   "green": true,
+   "extreme": 108369.4,
+   "want": "down",
+   "first_break": "2025-05-28 15:30",
+   "first_break_idx": 84328,
+   "b1": "up@84303",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-28 21:30",
+   "green": true,
+   "extreme": 107071.4,
+   "want": "down",
+   "first_break": "2025-05-29 01:00",
+   "first_break_idx": 84366,
+   "b1": "up@84356",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-29 08:30",
+   "green": false,
+   "extreme": 108390.7,
+   "want": "up",
+   "first_break": "2025-05-29 14:15",
+   "first_break_idx": 84419,
+   "b1": "down@84398",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-30 06:30",
+   "green": true,
+   "extreme": 104859.0,
+   "want": "down",
+   "first_break": "2025-05-30 13:15",
+   "first_break_idx": 84511,
+   "b1": "up@84488",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-30 15:15",
+   "green": true,
+   "extreme": 105012.6,
+   "want": "down",
+   "first_break": "2025-05-30 19:45",
+   "first_break_idx": 84537,
+   "b1": "up@84522",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-05-30 22:30",
+   "green": true,
+   "extreme": 103817.0,
+   "want": "down",
+   "first_break": "2025-05-31 04:30",
+   "first_break_idx": 84572,
+   "b1": "up@84551",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-01 07:45",
+   "green": true,
+   "extreme": 103901.1,
+   "want": "down",
+   "first_break": "2025-06-01 15:00",
+   "first_break_idx": 84710,
+   "b1": "up@84687",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-02 05:00",
+   "green": false,
+   "extreme": 105767.3,
+   "want": "up",
+   "first_break": "2025-06-02 13:45",
+   "first_break_idx": 84801,
+   "b1": "down@84768",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-03 07:45",
+   "green": false,
+   "extreme": 106202.3,
+   "want": "up",
+   "first_break": "2025-06-03 20:00",
+   "first_break_idx": 84922,
+   "b1": "down@84880",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-04 06:15",
+   "green": true,
+   "extreme": 105163.4,
+   "want": "down",
+   "first_break": "2025-06-04 17:00",
+   "first_break_idx": 85006,
+   "b1": "up@84968",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-05 12:30",
+   "green": true,
+   "extreme": 104353.1,
+   "want": "down",
+   "first_break": "2025-06-05 19:15",
+   "first_break_idx": 85111,
+   "b1": "up@85088",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-09 03:30",
+   "green": false,
+   "extreme": 106313.0,
+   "want": "up",
+   "first_break": "2025-06-09 15:00",
+   "first_break_idx": 85478,
+   "b1": "down@85447",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-10 14:30",
+   "green": true,
+   "extreme": 109035.0,
+   "want": "down",
+   "first_break": "2025-06-10 19:00",
+   "first_break_idx": 85590,
+   "b1": "up@85581",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-12 04:00",
+   "green": true,
+   "extreme": 108086.1,
+   "want": "down",
+   "first_break": "2025-06-12 08:45",
+   "first_break_idx": 85741,
+   "b1": "up@85729",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-13 22:00",
+   "green": false,
+   "extreme": 105810.5,
+   "want": "up",
+   "first_break": "2025-06-14 04:15",
+   "first_break_idx": 85915,
+   "b1": "down@85897",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-26 08:45",
+   "green": false,
+   "extreme": 108065.2,
+   "want": "up",
+   "first_break": "2025-06-26 13:45",
+   "first_break_idx": 87105,
+   "b1": "down@87088",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-26 21:15",
+   "green": true,
+   "extreme": 106862.4,
+   "want": "down",
+   "first_break": "2025-06-27 03:00",
+   "first_break_idx": 87158,
+   "b1": "up@87140",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-27 06:45",
+   "green": true,
+   "extreme": 106773.1,
+   "want": "down",
+   "first_break": "2025-06-27 13:30",
+   "first_break_idx": 87200,
+   "b1": "up@87177",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-28 13:30",
+   "green": false,
+   "extreme": 107443.0,
+   "want": "up",
+   "first_break": "2025-06-28 21:15",
+   "first_break_idx": 87327,
+   "b1": "down@87299",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-28 21:30",
+   "green": false,
+   "extreme": 107470.0,
+   "want": "up",
+   "first_break": "2025-06-28 23:15",
+   "first_break_idx": 87335,
+   "b1": "down@87331",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-06-29 17:30",
+   "green": false,
+   "extreme": 108484.2,
+   "want": "up",
+   "first_break": "2025-06-30 05:45",
+   "first_break_idx": 87457,
+   "b1": "down@87410",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-02 01:45",
+   "green": true,
+   "extreme": 105399.1,
+   "want": "down",
+   "first_break": "2025-07-02 04:30",
+   "first_break_idx": 87644,
+   "b1": "up@87637",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-02 16:30",
+   "green": false,
+   "extreme": 107786.1,
+   "want": "up",
+   "first_break": "2025-07-02 19:15",
+   "first_break_idx": 87703,
+   "b1": "down@87697",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-04 14:00",
+   "green": true,
+   "extreme": 108662.0,
+   "want": "down",
+   "first_break": "2025-07-04 18:15",
+   "first_break_idx": 87891,
+   "b1": "up@87876",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-05 10:15",
+   "green": false,
+   "extreme": 108183.6,
+   "want": "up",
+   "first_break": "2025-07-05 11:45",
+   "first_break_idx": 87961,
+   "b1": "down@87958",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-05 15:00",
+   "green": true,
+   "extreme": 107841.5,
+   "want": "down",
+   "first_break": "2025-07-05 22:00",
+   "first_break_idx": 88002,
+   "b1": "up@87978",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-08 19:30",
+   "green": false,
+   "extreme": 109023.8,
+   "want": "up",
+   "first_break": "2025-07-08 23:15",
+   "first_break_idx": 88295,
+   "b1": "down@88283",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-10 01:30",
+   "green": false,
+   "extreme": 111914.2,
+   "want": "up",
+   "first_break": "2025-07-10 21:45",
+   "first_break_idx": 88481,
+   "b1": "down@88470",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-12 21:30",
+   "green": true,
+   "extreme": 117007.3,
+   "want": "down",
+   "first_break": "2025-07-13 02:15",
+   "first_break_idx": 88691,
+   "b1": "up@88677",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-16 06:45",
+   "green": false,
+   "extreme": 117950.6,
+   "want": "up",
+   "first_break": "2025-07-16 10:30",
+   "first_break_idx": 89012,
+   "b1": "down@89000",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-16 16:00",
+   "green": false,
+   "extreme": 119192.6,
+   "want": "up",
+   "first_break": "2025-07-16 20:15",
+   "first_break_idx": 89051,
+   "b1": "down@89042",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-18 14:15",
+   "green": true,
+   "extreme": 118464.0,
+   "want": "down",
+   "first_break": "2025-07-18 19:45",
+   "first_break_idx": 89241,
+   "b1": "up@89222",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-20 14:45",
+   "green": false,
+   "extreme": 118205.0,
+   "want": "up",
+   "first_break": "2025-07-20 18:15",
+   "first_break_idx": 89427,
+   "b1": "down@89415",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-23 15:45",
+   "green": true,
+   "extreme": 117858.9,
+   "want": "down",
+   "first_break": "2025-07-23 18:15",
+   "first_break_idx": 89715,
+   "b1": "up@89709",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-23 21:30",
+   "green": false,
+   "extreme": 118589.2,
+   "want": "up",
+   "first_break": "2025-07-24 03:45",
+   "first_break_idx": 89753,
+   "b1": "down@89732",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-24 09:15",
+   "green": false,
+   "extreme": 118937.3,
+   "want": "up",
+   "first_break": "2025-07-24 20:15",
+   "first_break_idx": 89819,
+   "b1": "down@89778",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-24 20:45",
+   "green": false,
+   "extreme": 119286.1,
+   "want": "up",
+   "first_break": "2025-07-24 23:15",
+   "first_break_idx": 89831,
+   "b1": "down@89826",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-26 16:15",
+   "green": false,
+   "extreme": 118199.0,
+   "want": "up",
+   "first_break": "2025-07-26 18:45",
+   "first_break_idx": 90005,
+   "b1": "down@89997",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-27 01:30",
+   "green": false,
+   "extreme": 118235.3,
+   "want": "up",
+   "first_break": "2025-07-27 03:45",
+   "first_break_idx": 90041,
+   "b1": "down@90036",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-27 12:30",
+   "green": false,
+   "extreme": 118261.3,
+   "want": "up",
+   "first_break": "2025-07-27 16:15",
+   "first_break_idx": 90091,
+   "b1": "down@90079",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-27 22:15",
+   "green": false,
+   "extreme": 119450.0,
+   "want": "up",
+   "first_break": "2025-07-28 03:30",
+   "first_break_idx": 90136,
+   "b1": "down@90117",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-30 09:45",
+   "green": false,
+   "extreme": 118215.6,
+   "want": "up",
+   "first_break": "2025-07-30 12:00",
+   "first_break_idx": 90362,
+   "b1": "down@90356",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-07-30 20:45",
+   "green": false,
+   "extreme": 118431.2,
+   "want": "up",
+   "first_break": "2025-07-31 06:15",
+   "first_break_idx": 90435,
+   "b1": "down@90408",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-02 01:45",
+   "green": true,
+   "extreme": 113140.2,
+   "want": "down",
+   "first_break": "2025-08-02 04:00",
+   "first_break_idx": 90618,
+   "b1": "up@90614",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-03 00:45",
+   "green": true,
+   "extreme": 112000.0,
+   "want": "down",
+   "first_break": "2025-08-03 06:00",
+   "first_break_idx": 90722,
+   "b1": "up@90711",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-06 05:15",
+   "green": false,
+   "extreme": 114150.0,
+   "want": "up",
+   "first_break": "2025-08-06 11:00",
+   "first_break_idx": 91030,
+   "b1": "down@91013",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-07 17:15",
+   "green": false,
+   "extreme": 116744.4,
+   "want": "up",
+   "first_break": "2025-08-07 21:15",
+   "first_break_idx": 91167,
+   "b1": "down@91154",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-08 16:30",
+   "green": true,
+   "extreme": 116498.5,
+   "want": "down",
+   "first_break": "2025-08-08 18:00",
+   "first_break_idx": 91250,
+   "b1": "up@91246",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-10 20:45",
+   "green": false,
+   "extreme": 118938.1,
+   "want": "up",
+   "first_break": "2025-08-11 03:45",
+   "first_break_idx": 91481,
+   "b1": "down@91461",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-11 08:00",
+   "green": true,
+   "extreme": 121321.5,
+   "want": "down",
+   "first_break": "2025-08-11 13:30",
+   "first_break_idx": 91520,
+   "b1": "up@91500",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-11 18:45",
+   "green": true,
+   "extreme": 119420.0,
+   "want": "down",
+   "first_break": "2025-08-11 23:30",
+   "first_break_idx": 91560,
+   "b1": "up@91546",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-13 02:30",
+   "green": false,
+   "extreme": 120174.7,
+   "want": "up",
+   "first_break": "2025-08-13 04:45",
+   "first_break_idx": 91677,
+   "b1": "down@91671",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-13 19:45",
+   "green": false,
+   "extreme": 122166.0,
+   "want": "up",
+   "first_break": "2025-08-14 00:45",
+   "first_break_idx": 91757,
+   "b1": "down@91739",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-15 00:00",
+   "green": true,
+   "extreme": 117760.3,
+   "want": "down",
+   "first_break": "2025-08-15 01:30",
+   "first_break_idx": 91856,
+   "b1": "up@91853",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-16 07:30",
+   "green": false,
+   "extreme": 117777.5,
+   "want": "up",
+   "first_break": "2025-08-16 10:00",
+   "first_break_idx": 91986,
+   "b1": "down@91983",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-17 15:00",
+   "green": false,
+   "extreme": 118346.3,
+   "want": "up",
+   "first_break": "2025-08-17 19:15",
+   "first_break_idx": 92119,
+   "b1": "down@92104",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-18 00:30",
+   "green": true,
+   "extreme": 117415.0,
+   "want": "down",
+   "first_break": "2025-08-18 05:15",
+   "first_break_idx": 92159,
+   "b1": "up@92151",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-22 08:00",
+   "green": false,
+   "extreme": 113478.3,
+   "want": "up",
+   "first_break": "2025-08-22 19:30",
+   "first_break_idx": 92600,
+   "b1": "down@92558",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-23 09:30",
+   "green": true,
+   "extreme": 115503.9,
+   "want": "down",
+   "first_break": "2025-08-23 16:30",
+   "first_break_idx": 92684,
+   "b1": "up@92661",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-24 19:45",
+   "green": true,
+   "extreme": 114385.2,
+   "want": "down",
+   "first_break": "2025-08-24 21:30",
+   "first_break_idx": 92800,
+   "b1": "up@92795",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-26 18:15",
+   "green": false,
+   "extreme": 110662.2,
+   "want": "up",
+   "first_break": "2025-08-27 00:00",
+   "first_break_idx": 93002,
+   "b1": "down@92982",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-27 20:15",
+   "green": false,
+   "extreme": 112126.7,
+   "want": "up",
+   "first_break": "2025-08-27 22:15",
+   "first_break_idx": 93091,
+   "b1": "down@93086",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-30 21:15",
+   "green": false,
+   "extreme": 108900.0,
+   "want": "up",
+   "first_break": "2025-08-31 06:00",
+   "first_break_idx": 93410,
+   "b1": "down@93383",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-08-31 18:45",
+   "green": true,
+   "extreme": 108141.0,
+   "want": "down",
+   "first_break": "2025-09-01 05:00",
+   "first_break_idx": 93502,
+   "b1": "up@93464",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-01 15:15",
+   "green": false,
+   "extreme": 109810.3,
+   "want": "up",
+   "first_break": "2025-09-02 08:15",
+   "first_break_idx": 93611,
+   "b1": "down@93589",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-02 20:15",
+   "green": false,
+   "extreme": 111586.0,
+   "want": "up",
+   "first_break": "2025-09-03 05:45",
+   "first_break_idx": 93697,
+   "b1": "down@93662",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-03 06:00",
+   "green": false,
+   "extreme": 111640.7,
+   "want": "up",
+   "first_break": "2025-09-03 16:30",
+   "first_break_idx": 93740,
+   "b1": "down@93710",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-03 20:15",
+   "green": false,
+   "extreme": 112472.0,
+   "want": "up",
+   "first_break": "2025-09-03 23:15",
+   "first_break_idx": 93767,
+   "b1": "down@93757",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-05 04:45",
+   "green": false,
+   "extreme": 111399.9,
+   "want": "up",
+   "first_break": "2025-09-05 07:30",
+   "first_break_idx": 93896,
+   "b1": "down@93891",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-05 13:30",
+   "green": false,
+   "extreme": 112959.0,
+   "want": "up",
+   "first_break": "2025-09-05 18:00",
+   "first_break_idx": 93938,
+   "b1": "down@93923",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-05 23:15",
+   "green": true,
+   "extreme": 110265.3,
+   "want": "down",
+   "first_break": "2025-09-06 21:30",
+   "first_break_idx": 94048,
+   "b1": "up@93965",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-09 13:15",
+   "green": true,
+   "extreme": 112692.2,
+   "want": "down",
+   "first_break": "2025-09-09 15:45",
+   "first_break_idx": 94313,
+   "b1": "up@94306",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-10 02:45",
+   "green": false,
+   "extreme": 111620.6,
+   "want": "up",
+   "first_break": "2025-09-10 11:00",
+   "first_break_idx": 94390,
+   "b1": "down@94359",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-11 12:30",
+   "green": false,
+   "extreme": 114282.5,
+   "want": "up",
+   "first_break": "2025-09-11 17:30",
+   "first_break_idx": 94512,
+   "b1": "down@94500",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-12 17:45",
+   "green": true,
+   "extreme": 114777.0,
+   "want": "down",
+   "first_break": "2025-09-12 19:00",
+   "first_break_idx": 94614,
+   "b1": "up@94611",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-13 07:30",
+   "green": true,
+   "extreme": 115609.8,
+   "want": "down",
+   "first_break": "2025-09-13 11:15",
+   "first_break_idx": 94679,
+   "b1": "up@94668",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-14 07:45",
+   "green": false,
+   "extreme": 116052.5,
+   "want": "up",
+   "first_break": "2025-09-14 15:00",
+   "first_break_idx": 94790,
+   "b1": "down@94764",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-14 20:15",
+   "green": true,
+   "extreme": 115123.2,
+   "want": "down",
+   "first_break": "2025-09-15 05:15",
+   "first_break_idx": 94847,
+   "b1": "up@94817",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-18 09:15",
+   "green": false,
+   "extreme": 117750.0,
+   "want": "up",
+   "first_break": "2025-09-18 19:45",
+   "first_break_idx": 95193,
+   "b1": "down@95153",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-19 05:00",
+   "green": true,
+   "extreme": 116760.2,
+   "want": "down",
+   "first_break": "2025-09-19 09:30",
+   "first_break_idx": 95248,
+   "b1": "up@95233",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-20 13:30",
+   "green": false,
+   "extreme": 115931.2,
+   "want": "up",
+   "first_break": "2025-09-20 20:15",
+   "first_break_idx": 95387,
+   "b1": "down@95363",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-21 08:00",
+   "green": true,
+   "extreme": 115453.6,
+   "want": "down",
+   "first_break": "2025-09-21 14:45",
+   "first_break_idx": 95461,
+   "b1": "up@95448",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-21 22:30",
+   "green": true,
+   "extreme": 115185.9,
+   "want": "down",
+   "first_break": "2025-09-22 02:30",
+   "first_break_idx": 95508,
+   "b1": "up@95495",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-22 11:45",
+   "green": false,
+   "extreme": 113128.5,
+   "want": "up",
+   "first_break": "2025-09-22 19:30",
+   "first_break_idx": 95576,
+   "b1": "down@95551",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-23 14:45",
+   "green": false,
+   "extreme": 113200.0,
+   "want": "up",
+   "first_break": "2025-09-23 19:30",
+   "first_break_idx": 95672,
+   "b1": "down@95660",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-24 02:15",
+   "green": true,
+   "extreme": 111617.3,
+   "want": "down",
+   "first_break": "2025-09-24 09:15",
+   "first_break_idx": 95727,
+   "b1": "up@95704",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-25 12:45",
+   "green": true,
+   "extreme": 111527.0,
+   "want": "down",
+   "first_break": "2025-09-25 15:15",
+   "first_break_idx": 95847,
+   "b1": "up@95840",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-25 23:45",
+   "green": true,
+   "extreme": 109066.2,
+   "want": "down",
+   "first_break": "2025-09-26 02:00",
+   "first_break_idx": 95890,
+   "b1": "up@95883",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-29 02:15",
+   "green": false,
+   "extreme": 110904.6,
+   "want": "up",
+   "first_break": "2025-09-29 03:30",
+   "first_break_idx": 96184,
+   "b1": "down@96181",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-09-30 02:15",
+   "green": false,
+   "extreme": 114348.9,
+   "want": "up",
+   "first_break": "2025-09-30 05:30",
+   "first_break_idx": 96288,
+   "b1": "down@96281",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-01 02:45",
+   "green": false,
+   "extreme": 114500.0,
+   "want": "up",
+   "first_break": "2025-10-01 07:15",
+   "first_break_idx": 96391,
+   "b1": "down@96377",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-02 05:45",
+   "green": false,
+   "extreme": 119143.6,
+   "want": "up",
+   "first_break": "2025-10-02 18:00",
+   "first_break_idx": 96530,
+   "b1": "down@96502",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-03 22:15",
+   "green": false,
+   "extreme": 123791.0,
+   "want": "up",
+   "first_break": "2025-10-05 08:00",
+   "first_break_idx": 96778,
+   "b1": "down@96647",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-05 22:30",
+   "green": false,
+   "extreme": 123483.0,
+   "want": "up",
+   "first_break": "2025-10-06 05:00",
+   "first_break_idx": 96862,
+   "b1": "down@96840",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-08 03:00",
+   "green": false,
+   "extreme": 122202.1,
+   "want": "up",
+   "first_break": "2025-10-08 14:00",
+   "first_break_idx": 97090,
+   "b1": "down@97052",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-09 08:30",
+   "green": true,
+   "extreme": 121541.1,
+   "want": "down",
+   "first_break": "2025-10-09 13:45",
+   "first_break_idx": 97185,
+   "b1": "up@97169",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-12 02:45",
+   "green": true,
+   "extreme": 109876.3,
+   "want": "down",
+   "first_break": "2025-10-12 05:45",
+   "first_break_idx": 97441,
+   "b1": "up@97434",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-12 17:45",
+   "green": false,
+   "extreme": 112083.2,
+   "want": "up",
+   "first_break": "2025-10-12 20:15",
+   "first_break_idx": 97499,
+   "b1": "down@97494",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-16 09:00",
+   "green": false,
+   "extreme": 111694.7,
+   "want": "up",
+   "first_break": "2025-10-16 12:30",
+   "first_break_idx": 97852,
+   "b1": "down@97842",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-19 16:45",
+   "green": false,
+   "extreme": 108137.3,
+   "want": "up",
+   "first_break": "2025-10-19 19:15",
+   "first_break_idx": 98167,
+   "b1": "down@98159",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-19 23:00",
+   "green": true,
+   "extreme": 108960.3,
+   "want": "down",
+   "first_break": "2025-10-20 00:30",
+   "first_break_idx": 98188,
+   "b1": "up@98185",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-20 23:15",
+   "green": true,
+   "extreme": 109870.4,
+   "want": "down",
+   "first_break": "2025-10-21 07:15",
+   "first_break_idx": 98311,
+   "b1": "up@98281",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-23 12:30",
+   "green": false,
+   "extreme": 110222.9,
+   "want": "up",
+   "first_break": "2025-10-23 22:15",
+   "first_break_idx": 98563,
+   "b1": "down@98532",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-23 23:45",
+   "green": false,
+   "extreme": 110879.8,
+   "want": "up",
+   "first_break": "2025-10-24 09:45",
+   "first_break_idx": 98609,
+   "b1": "down@98572",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-25 18:30",
+   "green": false,
+   "extreme": 111907.0,
+   "want": "up",
+   "first_break": "2025-10-26 14:45",
+   "first_break_idx": 98821,
+   "b1": "down@98748",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-28 03:15",
+   "green": false,
+   "extreme": 114573.6,
+   "want": "up",
+   "first_break": "2025-10-28 14:30",
+   "first_break_idx": 99012,
+   "b1": "down@98971",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-29 02:45",
+   "green": true,
+   "extreme": 112500.0,
+   "want": "down",
+   "first_break": "2025-10-29 06:15",
+   "first_break_idx": 99075,
+   "b1": "up@99066",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-29 13:45",
+   "green": false,
+   "extreme": 113400.0,
+   "want": "up",
+   "first_break": "2025-10-29 18:45",
+   "first_break_idx": 99125,
+   "b1": "down@99110",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-10-30 00:15",
+   "green": true,
+   "extreme": 109600.0,
+   "want": "down",
+   "first_break": "2025-10-30 09:45",
+   "first_break_idx": 99185,
+   "b1": "up@99155",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-01 22:30",
+   "green": false,
+   "extreme": 110450.0,
+   "want": "up",
+   "first_break": "2025-11-02 01:45",
+   "first_break_idx": 99441,
+   "b1": "down@99431",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-02 15:00",
+   "green": false,
+   "extreme": 110918.9,
+   "want": "up",
+   "first_break": "2025-11-02 17:00",
+   "first_break_idx": 99502,
+   "b1": "down@99498",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-03 16:30",
+   "green": true,
+   "extreme": 106923.5,
+   "want": "down",
+   "first_break": "2025-11-03 20:45",
+   "first_break_idx": 99613,
+   "b1": "up@99599",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-05 10:45",
+   "green": false,
+   "extreme": 102270.4,
+   "want": "up",
+   "first_break": "2025-11-05 17:45",
+   "first_break_idx": 99793,
+   "b1": "down@99767",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-08 13:00",
+   "green": true,
+   "extreme": 101958.5,
+   "want": "down",
+   "first_break": "2025-11-08 17:00",
+   "first_break_idx": 100078,
+   "b1": "up@100066",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-09 05:15",
+   "green": false,
+   "extreme": 102331.8,
+   "want": "up",
+   "first_break": "2025-11-09 17:45",
+   "first_break_idx": 100177,
+   "b1": "down@100139",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-18 01:45",
+   "green": true,
+   "extreme": 91349.5,
+   "want": "down",
+   "first_break": "2025-11-18 06:00",
+   "first_break_idx": 100994,
+   "b1": "up@100979",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-19 11:30",
+   "green": true,
+   "extreme": 90225.1,
+   "want": "down",
+   "first_break": "2025-11-19 21:15",
+   "first_break_idx": 101151,
+   "b1": "up@101148",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-24 06:00",
+   "green": true,
+   "extreme": 86208.2,
+   "want": "down",
+   "first_break": "2025-11-24 14:45",
+   "first_break_idx": 101605,
+   "b1": "up@101576",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-25 15:00",
+   "green": true,
+   "extreme": 86639.2,
+   "want": "down",
+   "first_break": "2025-11-25 20:00",
+   "first_break_idx": 101722,
+   "b1": "up@101706",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-25 23:15",
+   "green": false,
+   "extreme": 87941.8,
+   "want": "up",
+   "first_break": "2025-11-26 07:00",
+   "first_break_idx": 101766,
+   "b1": "down@101738",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-27 08:30",
+   "green": false,
+   "extreme": 91555.6,
+   "want": "up",
+   "first_break": "2025-11-27 14:45",
+   "first_break_idx": 101893,
+   "b1": "down@101870",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-11-30 14:00",
+   "green": true,
+   "extreme": 90880.9,
+   "want": "down",
+   "first_break": "2025-12-01 02:30",
+   "first_break_idx": 102228,
+   "b1": "up@102197",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-05 01:00",
+   "green": true,
+   "extreme": 91232.6,
+   "want": "down",
+   "first_break": "2025-12-05 15:00",
+   "first_break_idx": 102662,
+   "b1": "up@102608",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-05 15:15",
+   "green": true,
+   "extreme": 90951.1,
+   "want": "down",
+   "first_break": "2025-12-05 18:45",
+   "first_break_idx": 102677,
+   "b1": "up@102668",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-05 22:15",
+   "green": true,
+   "extreme": 88280.2,
+   "want": "down",
+   "first_break": "2025-12-07 19:45",
+   "first_break_idx": 102873,
+   "b1": "up@102777",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-11 08:45",
+   "green": true,
+   "extreme": 89468.4,
+   "want": "down",
+   "first_break": "2025-12-11 20:15",
+   "first_break_idx": 103259,
+   "b1": "up@103216",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-12 22:15",
+   "green": true,
+   "extreme": 89562.0,
+   "want": "down",
+   "first_break": "2025-12-14 16:30",
+   "first_break_idx": 103532,
+   "b1": "up@103370",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-15 08:00",
+   "green": false,
+   "extreme": 89679.7,
+   "want": "up",
+   "first_break": "2025-12-15 10:15",
+   "first_break_idx": 103603,
+   "b1": "down@103598",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-17 11:00",
+   "green": true,
+   "extreme": 86183.9,
+   "want": "down",
+   "first_break": "2025-12-17 15:30",
+   "first_break_idx": 103816,
+   "b1": "up@103806",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-23 02:00",
+   "green": true,
+   "extreme": 88000.0,
+   "want": "down",
+   "first_break": "2025-12-23 08:30",
+   "first_break_idx": 104364,
+   "b1": "up@104342",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-23 12:00",
+   "green": true,
+   "extreme": 87052.2,
+   "want": "down",
+   "first_break": "2025-12-23 20:15",
+   "first_break_idx": 104411,
+   "b1": "up@104396",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-24 15:15",
+   "green": true,
+   "extreme": 86743.8,
+   "want": "down",
+   "first_break": "2025-12-24 20:00",
+   "first_break_idx": 104506,
+   "b1": "up@104497",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-25 16:15",
+   "green": true,
+   "extreme": 87255.4,
+   "want": "down",
+   "first_break": "2025-12-26 05:00",
+   "first_break_idx": 104638,
+   "b1": "up@104594",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-26 06:15",
+   "green": true,
+   "extreme": 86881.6,
+   "want": "down",
+   "first_break": "2025-12-26 20:30",
+   "first_break_idx": 104700,
+   "b1": "up@104669",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-28 05:30",
+   "green": false,
+   "extreme": 87935.0,
+   "want": "up",
+   "first_break": "2025-12-28 14:00",
+   "first_break_idx": 104866,
+   "b1": "down@104848",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-29 18:00",
+   "green": true,
+   "extreme": 87135.9,
+   "want": "down",
+   "first_break": "2025-12-29 19:15",
+   "first_break_idx": 104983,
+   "b1": "up@104980",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2025-12-30 03:45",
+   "green": true,
+   "extreme": 87094.9,
+   "want": "down",
+   "first_break": "2025-12-30 06:00",
+   "first_break_idx": 105026,
+   "b1": "up@105020",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-01 23:15",
+   "green": false,
+   "extreme": 88420.0,
+   "want": "up",
+   "first_break": "2026-01-02 03:30",
+   "first_break_idx": 105304,
+   "b1": "down@105292",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-02 09:15",
+   "green": false,
+   "extreme": 89100.0,
+   "want": "up",
+   "first_break": "2026-01-02 14:00",
+   "first_break_idx": 105346,
+   "b1": "down@105331",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-03 20:00",
+   "green": false,
+   "extreme": 90200.0,
+   "want": "up",
+   "first_break": "2026-01-04 02:00",
+   "first_break_idx": 105490,
+   "b1": "down@105471",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-05 07:15",
+   "green": false,
+   "extreme": 93223.7,
+   "want": "up",
+   "first_break": "2026-01-05 20:00",
+   "first_break_idx": 105658,
+   "b1": "down@105617",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-07 15:30",
+   "green": true,
+   "extreme": 91541.1,
+   "want": "down",
+   "first_break": "2026-01-07 19:30",
+   "first_break_idx": 105848,
+   "b1": "up@105834",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-10 08:00",
+   "green": false,
+   "extreme": 90755.7,
+   "want": "up",
+   "first_break": "2026-01-10 15:45",
+   "first_break_idx": 106121,
+   "b1": "down@106092",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-11 20:30",
+   "green": false,
+   "extreme": 91116.2,
+   "want": "up",
+   "first_break": "2026-01-11 22:00",
+   "first_break_idx": 106242,
+   "b1": "down@106238",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-13 15:00",
+   "green": false,
+   "extreme": 92551.1,
+   "want": "up",
+   "first_break": "2026-01-13 19:00",
+   "first_break_idx": 106422,
+   "b1": "down@106416",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-14 23:00",
+   "green": false,
+   "extreme": 97491.0,
+   "want": "up",
+   "first_break": "2026-01-15 00:45",
+   "first_break_idx": 106541,
+   "b1": "down@106536",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-15 09:15",
+   "green": true,
+   "extreme": 95783.9,
+   "want": "down",
+   "first_break": "2026-01-15 20:00",
+   "first_break_idx": 106618,
+   "b1": "up@106580",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-16 02:15",
+   "green": true,
+   "extreme": 95073.3,
+   "want": "down",
+   "first_break": "2026-01-16 10:15",
+   "first_break_idx": 106675,
+   "b1": "up@106649",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-16 10:30",
+   "green": true,
+   "extreme": 95200.0,
+   "want": "down",
+   "first_break": "2026-01-16 20:00",
+   "first_break_idx": 106714,
+   "b1": "up@106678",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-17 13:45",
+   "green": true,
+   "extreme": 95118.2,
+   "want": "down",
+   "first_break": "2026-01-17 16:00",
+   "first_break_idx": 106794,
+   "b1": "up@106790",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-21 01:15",
+   "green": true,
+   "extreme": 89324.4,
+   "want": "down",
+   "first_break": "2026-01-21 04:00",
+   "first_break_idx": 107130,
+   "b1": "up@107121",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-21 11:30",
+   "green": false,
+   "extreme": 89917.2,
+   "want": "up",
+   "first_break": "2026-01-21 20:00",
+   "first_break_idx": 107194,
+   "b1": "down@107162",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-22 08:00",
+   "green": false,
+   "extreme": 90242.1,
+   "want": "up",
+   "first_break": "2026-01-22 19:00",
+   "first_break_idx": 107286,
+   "b1": "down@107246",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-25 09:15",
+   "green": true,
+   "extreme": 88802.2,
+   "want": "down",
+   "first_break": "2026-01-25 11:30",
+   "first_break_idx": 107544,
+   "b1": "up@107538",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-26 14:00",
+   "green": false,
+   "extreme": 88192.8,
+   "want": "up",
+   "first_break": "2026-01-26 20:00",
+   "first_break_idx": 107674,
+   "b1": "down@107655",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-28 11:00",
+   "green": true,
+   "extreme": 88850.1,
+   "want": "down",
+   "first_break": "2026-01-28 14:15",
+   "first_break_idx": 107843,
+   "b1": "up@107835",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-29 08:30",
+   "green": true,
+   "extreme": 87720.0,
+   "want": "down",
+   "first_break": "2026-01-29 17:15",
+   "first_break_idx": 107951,
+   "b1": "up@107923",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-01-31 14:15",
+   "green": true,
+   "extreme": 82669.6,
+   "want": "down",
+   "first_break": "2026-01-31 18:30",
+   "first_break_idx": 108148,
+   "b1": "up@108134",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-01 06:00",
+   "green": false,
+   "extreme": 79184.0,
+   "want": "up",
+   "first_break": "2026-02-01 15:30",
+   "first_break_idx": 108232,
+   "b1": "down@108219",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-03 08:45",
+   "green": true,
+   "extreme": 77750.0,
+   "want": "down",
+   "first_break": "2026-02-03 20:00",
+   "first_break_idx": 108442,
+   "b1": "up@108402",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-05 11:00",
+   "green": true,
+   "extreme": 70294.1,
+   "want": "down",
+   "first_break": "2026-02-05 16:45",
+   "first_break_idx": 108621,
+   "b1": "up@108604",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-06 02:30",
+   "green": false,
+   "extreme": 64778.7,
+   "want": "up",
+   "first_break": "2026-02-06 04:30",
+   "first_break_idx": 108668,
+   "b1": "down@108664",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-07 04:45",
+   "green": false,
+   "extreme": 71086.1,
+   "want": "up",
+   "first_break": "2026-02-07 09:30",
+   "first_break_idx": 108784,
+   "b1": "down@108767",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-07 18:00",
+   "green": false,
+   "extreme": 69970.0,
+   "want": "up",
+   "first_break": "2026-02-08 13:45",
+   "first_break_idx": 108897,
+   "b1": "down@108826",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-09 05:15",
+   "green": false,
+   "extreme": 70788.9,
+   "want": "up",
+   "first_break": "2026-02-09 06:45",
+   "first_break_idx": 108965,
+   "b1": "down@108962",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-09 16:15",
+   "green": true,
+   "extreme": 68391.2,
+   "want": "down",
+   "first_break": "2026-02-09 19:30",
+   "first_break_idx": 109016,
+   "b1": "up@109006",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-11 20:45",
+   "green": true,
+   "extreme": 65850.0,
+   "want": "down",
+   "first_break": "2026-02-11 22:30",
+   "first_break_idx": 109220,
+   "b1": "up@109216",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-12 03:15",
+   "green": false,
+   "extreme": 67985.1,
+   "want": "up",
+   "first_break": "2026-02-12 07:00",
+   "first_break_idx": 109254,
+   "b1": "down@109244",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-12 11:00",
+   "green": true,
+   "extreme": 66827.2,
+   "want": "down",
+   "first_break": "2026-02-12 21:30",
+   "first_break_idx": 109312,
+   "b1": "up@109286",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-14 17:30",
+   "green": false,
+   "extreme": 70507.0,
+   "want": "up",
+   "first_break": "2026-02-15 11:45",
+   "first_break_idx": 109561,
+   "b1": "down@109493",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-17 21:15",
+   "green": true,
+   "extreme": 66958.5,
+   "want": "down",
+   "first_break": "2026-02-17 23:00",
+   "first_break_idx": 109798,
+   "b1": "up@109794",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-18 14:00",
+   "green": false,
+   "extreme": 68278.3,
+   "want": "up",
+   "first_break": "2026-02-18 21:00",
+   "first_break_idx": 109886,
+   "b1": "down@109865",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-20 19:15",
+   "green": true,
+   "extreme": 66588.0,
+   "want": "down",
+   "first_break": "2026-02-20 20:45",
+   "first_break_idx": 110077,
+   "b1": "up@110073",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-21 04:45",
+   "green": false,
+   "extreme": 68056.5,
+   "want": "up",
+   "first_break": "2026-02-21 08:00",
+   "first_break_idx": 110122,
+   "b1": "down@110113",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-24 02:00",
+   "green": true,
+   "extreme": 63953.6,
+   "want": "down",
+   "first_break": "2026-02-24 06:45",
+   "first_break_idx": 110405,
+   "b1": "up@110390",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-24 11:00",
+   "green": true,
+   "extreme": 62678.9,
+   "want": "down",
+   "first_break": "2026-02-24 19:00",
+   "first_break_idx": 110454,
+   "b1": "up@110424",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-27 10:00",
+   "green": false,
+   "extreme": 67930.0,
+   "want": "up",
+   "first_break": "2026-02-27 13:30",
+   "first_break_idx": 110720,
+   "b1": "down@110711",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-02-28 06:00",
+   "green": true,
+   "extreme": 65701.1,
+   "want": "down",
+   "first_break": "2026-02-28 09:30",
+   "first_break_idx": 110800,
+   "b1": "up@110794",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-02 06:45",
+   "green": false,
+   "extreme": 66983.2,
+   "want": "up",
+   "first_break": "2026-03-02 09:00",
+   "first_break_idx": 110990,
+   "b1": "down@110983",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-05 14:00",
+   "green": true,
+   "extreme": 71753.3,
+   "want": "down",
+   "first_break": "2026-03-05 20:30",
+   "first_break_idx": 111324,
+   "b1": "up@111302",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-05 23:30",
+   "green": true,
+   "extreme": 70623.0,
+   "want": "down",
+   "first_break": "2026-03-06 06:45",
+   "first_break_idx": 111365,
+   "b1": "up@111338",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-08 01:30",
+   "green": true,
+   "extreme": 67031.1,
+   "want": "down",
+   "first_break": "2026-03-08 08:15",
+   "first_break_idx": 111563,
+   "b1": "up@111553",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-09 15:15",
+   "green": false,
+   "extreme": 68405.9,
+   "want": "up",
+   "first_break": "2026-03-09 18:30",
+   "first_break_idx": 111700,
+   "b1": "down@111693",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-10 15:00",
+   "green": false,
+   "extreme": 71293.2,
+   "want": "up",
+   "first_break": "2026-03-10 20:15",
+   "first_break_idx": 111803,
+   "b1": "down@111786",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-14 12:15",
+   "green": true,
+   "extreme": 70380.0,
+   "want": "down",
+   "first_break": "2026-03-14 15:15",
+   "first_break_idx": 112167,
+   "b1": "up@112158",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-15 23:30",
+   "green": false,
+   "extreme": 71856.8,
+   "want": "up",
+   "first_break": "2026-03-16 02:00",
+   "first_break_idx": 112306,
+   "b1": "down@112298",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-18 20:45",
+   "green": true,
+   "extreme": 70977.5,
+   "want": "down",
+   "first_break": "2026-03-19 00:15",
+   "first_break_idx": 112587,
+   "b1": "up@112575",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-19 01:45",
+   "green": true,
+   "extreme": 70684.8,
+   "want": "down",
+   "first_break": "2026-03-19 09:45",
+   "first_break_idx": 112625,
+   "b1": "up@112621",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-19 13:00",
+   "green": true,
+   "extreme": 69760.0,
+   "want": "down",
+   "first_break": "2026-03-19 17:30",
+   "first_break_idx": 112656,
+   "b1": "up@112645",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-21 03:45",
+   "green": false,
+   "extreme": 70844.0,
+   "want": "up",
+   "first_break": "2026-03-21 12:45",
+   "first_break_idx": 112829,
+   "b1": "down@112796",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-21 13:00",
+   "green": false,
+   "extreme": 70842.4,
+   "want": "up",
+   "first_break": "2026-03-21 19:30",
+   "first_break_idx": 112856,
+   "b1": "down@112833",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-21 22:45",
+   "green": true,
+   "extreme": 70206.5,
+   "want": "down",
+   "first_break": "2026-03-22 04:30",
+   "first_break_idx": 112892,
+   "b1": "up@112873",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-22 05:45",
+   "green": true,
+   "extreme": 68610.1,
+   "want": "down",
+   "first_break": "2026-03-22 13:45",
+   "first_break_idx": 112929,
+   "b1": "up@112905",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-22 17:30",
+   "green": true,
+   "extreme": 68158.2,
+   "want": "down",
+   "first_break": "2026-03-23 01:15",
+   "first_break_idx": 112975,
+   "b1": "up@112948",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-23 16:45",
+   "green": false,
+   "extreme": 71247.2,
+   "want": "up",
+   "first_break": "2026-03-23 19:00",
+   "first_break_idx": 113046,
+   "b1": "down@113039",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-27 00:00",
+   "green": true,
+   "extreme": 68144.4,
+   "want": "down",
+   "first_break": "2026-03-27 14:00",
+   "first_break_idx": 113410,
+   "b1": "up@113358",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-27 20:00",
+   "green": true,
+   "extreme": 65697.4,
+   "want": "down",
+   "first_break": "2026-03-27 23:00",
+   "first_break_idx": 113446,
+   "b1": "up@113437",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-28 13:30",
+   "green": false,
+   "extreme": 66534.8,
+   "want": "up",
+   "first_break": "2026-03-28 19:00",
+   "first_break_idx": 113526,
+   "b1": "down@113506",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-29 09:00",
+   "green": false,
+   "extreme": 66979.3,
+   "want": "up",
+   "first_break": "2026-03-29 17:15",
+   "first_break_idx": 113615,
+   "b1": "down@113587",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-03-29 23:00",
+   "green": true,
+   "extreme": 66203.2,
+   "want": "down",
+   "first_break": "2026-03-30 03:30",
+   "first_break_idx": 113656,
+   "b1": "up@113641",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-01 19:15",
+   "green": true,
+   "extreme": 67900.0,
+   "want": "down",
+   "first_break": "2026-04-02 06:30",
+   "first_break_idx": 113956,
+   "b1": "up@113917",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-02 10:15",
+   "green": true,
+   "extreme": 66224.3,
+   "want": "down",
+   "first_break": "2026-04-02 15:30",
+   "first_break_idx": 113992,
+   "b1": "up@113977",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-05 21:15",
+   "green": false,
+   "extreme": 67433.3,
+   "want": "up",
+   "first_break": "2026-04-06 00:45",
+   "first_break_idx": 114317,
+   "b1": "down@114306",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-07 07:45",
+   "green": true,
+   "extreme": 68377.8,
+   "want": "down",
+   "first_break": "2026-04-07 16:15",
+   "first_break_idx": 114475,
+   "b1": "up@114444",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-08 20:30",
+   "green": true,
+   "extreme": 70788.6,
+   "want": "down",
+   "first_break": "2026-04-09 06:00",
+   "first_break_idx": 114626,
+   "b1": "up@114593",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-09 07:00",
+   "green": true,
+   "extreme": 70552.9,
+   "want": "down",
+   "first_break": "2026-04-09 19:45",
+   "first_break_idx": 114681,
+   "b1": "up@114633",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-13 23:15",
+   "green": false,
+   "extreme": 72460.0,
+   "want": "up",
+   "first_break": "2026-04-14 00:45",
+   "first_break_idx": 115085,
+   "b1": "down@115081",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-15 13:30",
+   "green": true,
+   "extreme": 73630.1,
+   "want": "down",
+   "first_break": "2026-04-15 21:00",
+   "first_break_idx": 115262,
+   "b1": "up@115243",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-16 04:15",
+   "green": false,
+   "extreme": 75177.9,
+   "want": "up",
+   "first_break": "2026-04-16 08:15",
+   "first_break_idx": 115307,
+   "b1": "down@115294",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-17 20:15",
+   "green": false,
+   "extreme": 78031.1,
+   "want": "up",
+   "first_break": "2026-04-17 21:45",
+   "first_break_idx": 115457,
+   "b1": "down@115454",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-20 18:00",
+   "green": false,
+   "extreme": 75428.2,
+   "want": "up",
+   "first_break": "2026-04-20 19:45",
+   "first_break_idx": 115737,
+   "b1": "down@115733",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-22 11:00",
+   "green": false,
+   "extreme": 78323.1,
+   "want": "up",
+   "first_break": "2026-04-22 17:00",
+   "first_break_idx": 115918,
+   "b1": "down@115898",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-23 09:15",
+   "green": true,
+   "extreme": 77496.3,
+   "want": "down",
+   "first_break": "2026-04-23 14:30",
+   "first_break_idx": 116004,
+   "b1": "up@115987",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-25 04:15",
+   "green": true,
+   "extreme": 77248.4,
+   "want": "down",
+   "first_break": "2026-04-25 05:45",
+   "first_break_idx": 116161,
+   "b1": "up@116157",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-04-26 11:00",
+   "green": false,
+   "extreme": 78154.9,
+   "want": "up",
+   "first_break": "2026-04-26 14:00",
+   "first_break_idx": 116290,
+   "b1": "down@116281",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-01 09:00",
+   "green": false,
+   "extreme": 77255.5,
+   "want": "up",
+   "first_break": "2026-05-01 13:45",
+   "first_break_idx": 116769,
+   "b1": "down@116753",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-01 19:30",
+   "green": false,
+   "extreme": 78840.6,
+   "want": "up",
+   "first_break": "2026-05-03 03:00",
+   "first_break_idx": 116918,
+   "b1": "down@116818",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-03 17:45",
+   "green": false,
+   "extreme": 78828.8,
+   "want": "up",
+   "first_break": "2026-05-04 01:45",
+   "first_break_idx": 117009,
+   "b1": "down@116981",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-04 23:30",
+   "green": false,
+   "extreme": 80401.4,
+   "want": "up",
+   "first_break": "2026-05-05 07:30",
+   "first_break_idx": 117128,
+   "b1": "down@117099",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-06 02:45",
+   "green": false,
+   "extreme": 81600.0,
+   "want": "up",
+   "first_break": "2026-05-06 08:45",
+   "first_break_idx": 117229,
+   "b1": "down@117210",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-07 16:00",
+   "green": true,
+   "extreme": 80574.8,
+   "want": "down",
+   "first_break": "2026-05-07 19:00",
+   "first_break_idx": 117366,
+   "b1": "up@117360",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-07 23:00",
+   "green": true,
+   "extreme": 79617.1,
+   "want": "down",
+   "first_break": "2026-05-08 02:30",
+   "first_break_idx": 117396,
+   "b1": "up@117386",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-08 08:45",
+   "green": true,
+   "extreme": 79431.0,
+   "want": "down",
+   "first_break": "2026-05-08 11:30",
+   "first_break_idx": 117432,
+   "b1": "up@117424",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-08 18:15",
+   "green": false,
+   "extreme": 80183.1,
+   "want": "up",
+   "first_break": "2026-05-08 19:45",
+   "first_break_idx": 117465,
+   "b1": "down@117462",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-10 23:30",
+   "green": false,
+   "extreme": 81466.3,
+   "want": "up",
+   "first_break": "2026-05-11 03:45",
+   "first_break_idx": 117689,
+   "b1": "down@117681",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-11 20:15",
+   "green": true,
+   "extreme": 80665.7,
+   "want": "down",
+   "first_break": "2026-05-12 07:00",
+   "first_break_idx": 117798,
+   "b1": "up@117759",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-17 16:00",
+   "green": false,
+   "extreme": 78503.4,
+   "want": "up",
+   "first_break": "2026-05-17 18:00",
+   "first_break_idx": 118322,
+   "b1": "down@118316",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-23 01:15",
+   "green": true,
+   "extreme": 75650.0,
+   "want": "down",
+   "first_break": "2026-05-23 04:00",
+   "first_break_idx": 118842,
+   "b1": "up@118835",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-24 02:45",
+   "green": false,
+   "extreme": 77076.9,
+   "want": "up",
+   "first_break": "2026-05-24 15:45",
+   "first_break_idx": 118985,
+   "b1": "down@118938",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-26 09:00",
+   "green": true,
+   "extreme": 76517.2,
+   "want": "down",
+   "first_break": "2026-05-26 20:45",
+   "first_break_idx": 119197,
+   "b1": "up@119153",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-27 10:15",
+   "green": true,
+   "extreme": 75300.0,
+   "want": "down",
+   "first_break": "2026-05-27 18:45",
+   "first_break_idx": 119285,
+   "b1": "up@119255",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-27 23:45",
+   "green": true,
+   "extreme": 74665.2,
+   "want": "down",
+   "first_break": "2026-05-28 03:00",
+   "first_break_idx": 119318,
+   "b1": "up@119312",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-05-31 20:00",
+   "green": true,
+   "extreme": 73522.6,
+   "want": "down",
+   "first_break": "2026-05-31 21:45",
+   "first_break_idx": 119681,
+   "b1": "up@119677",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-01 21:45",
+   "green": true,
+   "extreme": 70794.4,
+   "want": "down",
+   "first_break": "2026-06-02 07:00",
+   "first_break_idx": 119814,
+   "b1": "up@119781",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-03 01:15",
+   "green": true,
+   "extreme": 66833.0,
+   "want": "down",
+   "first_break": "2026-06-03 04:00",
+   "first_break_idx": 119898,
+   "b1": "up@119891",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-03 09:30",
+   "green": true,
+   "extreme": 65797.2,
+   "want": "down",
+   "first_break": "2026-06-03 21:45",
+   "first_break_idx": 119969,
+   "b1": "up@119924",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-03 22:00",
+   "green": true,
+   "extreme": 65556.4,
+   "want": "down",
+   "first_break": "2026-06-04 00:45",
+   "first_break_idx": 119981,
+   "b1": "up@119974",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-04 07:45",
+   "green": true,
+   "extreme": 62109.7,
+   "want": "down",
+   "first_break": "2026-06-05 11:30",
+   "first_break_idx": 120120,
+   "b1": "up@120016",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-06 14:15",
+   "green": false,
+   "extreme": 61450.1,
+   "want": "up",
+   "first_break": "2026-06-07 06:45",
+   "first_break_idx": 120293,
+   "b1": "down@120230",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-07 07:00",
+   "green": false,
+   "extreme": 61624.8,
+   "want": "up",
+   "first_break": "2026-06-07 08:45",
+   "first_break_idx": 120301,
+   "b1": "down@120297",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-07 14:30",
+   "green": false,
+   "extreme": 62872.9,
+   "want": "up",
+   "first_break": "2026-06-08 03:30",
+   "first_break_idx": 120376,
+   "b1": "down@120330",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-08 04:00",
+   "green": true,
+   "extreme": 62753.2,
+   "want": "down",
+   "first_break": "2026-06-08 06:45",
+   "first_break_idx": 120389,
+   "b1": "up@120383",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-09 22:15",
+   "green": true,
+   "extreme": 61136.8,
+   "want": "down",
+   "first_break": "2026-06-10 10:30",
+   "first_break_idx": 120596,
+   "b1": "up@120553",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-10 21:30",
+   "green": false,
+   "extreme": 62620.0,
+   "want": "up",
+   "first_break": "2026-06-11 09:15",
+   "first_break_idx": 120687,
+   "b1": "down@120643",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-12 15:15",
+   "green": false,
+   "extreme": 63917.9,
+   "want": "up",
+   "first_break": "2026-06-12 20:15",
+   "first_break_idx": 120827,
+   "b1": "down@120817",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-13 02:30",
+   "green": true,
+   "extreme": 63405.8,
+   "want": "down",
+   "first_break": "2026-06-13 04:45",
+   "first_break_idx": 120861,
+   "b1": "up@120857",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-13 14:15",
+   "green": false,
+   "extreme": 63847.0,
+   "want": "up",
+   "first_break": "2026-06-13 16:00",
+   "first_break_idx": 120906,
+   "b1": "down@120903",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-14 12:45",
+   "green": true,
+   "extreme": 64192.0,
+   "want": "down",
+   "first_break": "2026-06-14 19:45",
+   "first_break_idx": 121017,
+   "b1": "up@120991",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-17 07:00",
+   "green": true,
+   "extreme": 65512.7,
+   "want": "down",
+   "first_break": "2026-06-17 12:45",
+   "first_break_idx": 121277,
+   "b1": "up@121257",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-18 03:45",
+   "green": true,
+   "extreme": 64030.0,
+   "want": "down",
+   "first_break": "2026-06-18 09:30",
+   "first_break_idx": 121360,
+   "b1": "up@121341",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-18 23:00",
+   "green": true,
+   "extreme": 62468.0,
+   "want": "down",
+   "first_break": "2026-06-19 08:45",
+   "first_break_idx": 121453,
+   "b1": "up@121417",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-20 10:45",
+   "green": false,
+   "extreme": 63806.4,
+   "want": "up",
+   "first_break": "2026-06-20 20:15",
+   "first_break_idx": 121595,
+   "b1": "down@121559",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-20 21:00",
+   "green": false,
+   "extreme": 64180.0,
+   "want": "up",
+   "first_break": "2026-06-21 03:45",
+   "first_break_idx": 121625,
+   "b1": "down@121600",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-21 14:15",
+   "green": true,
+   "extreme": 63896.4,
+   "want": "down",
+   "first_break": "2026-06-22 02:15",
+   "first_break_idx": 121715,
+   "b1": "up@121672",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-23 12:00",
+   "green": true,
+   "extreme": 62655.6,
+   "want": "down",
+   "first_break": "2026-06-23 13:30",
+   "first_break_idx": 121856,
+   "b1": "up@121853",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-23 14:00",
+   "green": true,
+   "extreme": 61988.1,
+   "want": "down",
+   "first_break": "2026-06-23 18:45",
+   "first_break_idx": 121877,
+   "b1": "up@121864",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-27 10:00",
+   "green": false,
+   "extreme": 60418.9,
+   "want": "up",
+   "first_break": "2026-06-27 12:15",
+   "first_break_idx": 122235,
+   "b1": "down@122232",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-28 11:00",
+   "green": true,
+   "extreme": 59758.1,
+   "want": "down",
+   "first_break": "2026-06-28 21:45",
+   "first_break_idx": 122369,
+   "b1": "up@122331",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-06-29 12:00",
+   "green": false,
+   "extreme": 60182.4,
+   "want": "up",
+   "first_break": "2026-06-29 15:30",
+   "first_break_idx": 122440,
+   "b1": "down@122432",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-01 10:30",
+   "green": false,
+   "extreme": 59355.3,
+   "want": "up",
+   "first_break": "2026-07-01 19:15",
+   "first_break_idx": 122647,
+   "b1": "down@122616",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-01 21:00",
+   "green": false,
+   "extreme": 60357.0,
+   "want": "up",
+   "first_break": "2026-07-02 02:30",
+   "first_break_idx": 122676,
+   "b1": "down@122659",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-02 19:45",
+   "green": false,
+   "extreme": 62188.7,
+   "want": "up",
+   "first_break": "2026-07-03 19:15",
+   "first_break_idx": 122839,
+   "b1": "down@122753",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-04 12:00",
+   "green": true,
+   "extreme": 62403.9,
+   "want": "down",
+   "first_break": "2026-07-04 15:00",
+   "first_break_idx": 122918,
+   "b1": "up@122914",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-07 10:45",
+   "green": true,
+   "extreme": 62778.3,
+   "want": "down",
+   "first_break": "2026-07-07 20:00",
+   "first_break_idx": 123226,
+   "b1": "up@123194",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-09 23:45",
+   "green": false,
+   "extreme": 63399.8,
+   "want": "up",
+   "first_break": "2026-07-10 07:00",
+   "first_break_idx": 123462,
+   "b1": "down@123435",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-10 11:15",
+   "green": false,
+   "extreme": 64163.3,
+   "want": "up",
+   "first_break": "2026-07-10 13:45",
+   "first_break_idx": 123489,
+   "b1": "down@123483",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-11 07:00",
+   "green": false,
+   "extreme": 64246.9,
+   "want": "up",
+   "first_break": "2026-07-11 11:45",
+   "first_break_idx": 123577,
+   "b1": "down@123560",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-11 21:15",
+   "green": true,
+   "extreme": 63980.9,
+   "want": "down",
+   "first_break": "2026-07-12 04:45",
+   "first_break_idx": 123645,
+   "b1": "up@123621",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-12 20:30",
+   "green": false,
+   "extreme": 64234.6,
+   "want": "up",
+   "first_break": "2026-07-13 01:15",
+   "first_break_idx": 123727,
+   "b1": "down@123710",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-14 00:00",
+   "green": true,
+   "extreme": 61869.4,
+   "want": "down",
+   "first_break": "2026-07-14 03:00",
+   "first_break_idx": 123830,
+   "b1": "up@123821",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-14 11:00",
+   "green": false,
+   "extreme": 62854.9,
+   "want": "up",
+   "first_break": "2026-07-14 16:15",
+   "first_break_idx": 123883,
+   "b1": "down@123866",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-16 18:15",
+   "green": true,
+   "extreme": 63825.1,
+   "want": "down",
+   "first_break": "2026-07-17 04:45",
+   "first_break_idx": 124125,
+   "b1": "up@124088",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-20 17:30",
+   "green": false,
+   "extreme": 64981.8,
+   "want": "up",
+   "first_break": "2026-07-20 20:45",
+   "first_break_idx": 124477,
+   "b1": "down@124469",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-22 22:15",
+   "green": false,
+   "extreme": 66266.0,
+   "want": "up",
+   "first_break": "2026-07-23 05:45",
+   "first_break_idx": 124705,
+   "b1": "down@124677",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-26 22:15",
+   "green": false,
+   "extreme": 64808.5,
+   "want": "up",
+   "first_break": "2026-07-27 02:45",
+   "first_break_idx": 125077,
+   "b1": "down@125065",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-27 11:45",
+   "green": false,
+   "extreme": 65616.0,
+   "want": "up",
+   "first_break": "2026-07-27 19:00",
+   "first_break_idx": 125142,
+   "b1": "down@125115",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-29 15:30",
+   "green": false,
+   "extreme": 64694.2,
+   "want": "up",
+   "first_break": "2026-07-29 23:30",
+   "first_break_idx": 125352,
+   "b1": "down@125329",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-30 19:30",
+   "green": false,
+   "extreme": 65023.6,
+   "want": "up",
+   "first_break": "2026-07-31 05:00",
+   "first_break_idx": 125470,
+   "b1": "down@125436",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-07-31 08:45",
+   "green": true,
+   "extreme": 64185.4,
+   "want": "down",
+   "first_break": "2026-07-31 12:15",
+   "first_break_idx": 125499,
+   "b1": "up@125487",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-04 10:30",
+   "green": false,
+   "extreme": 64035.1,
+   "want": "up",
+   "first_break": "2026-08-04 18:00",
+   "first_break_idx": 125906,
+   "b1": "down@125879",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-06 10:45",
+   "green": false,
+   "extreme": 64972.2,
+   "want": "up",
+   "first_break": "2026-08-06 14:15",
+   "first_break_idx": 126083,
+   "b1": "down@126072",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-08 03:15",
+   "green": false,
+   "extreme": 65010.9,
+   "want": "up",
+   "first_break": "2026-08-08 09:00",
+   "first_break_idx": 126254,
+   "b1": "down@126234",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-09 09:00",
+   "green": true,
+   "extreme": 64743.5,
+   "want": "down",
+   "first_break": "2026-08-09 11:15",
+   "first_break_idx": 126359,
+   "b1": "up@126352",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-09 20:30",
+   "green": false,
+   "extreme": 65247.2,
+   "want": "up",
+   "first_break": "2026-08-10 03:30",
+   "first_break_idx": 126424,
+   "b1": "down@126401",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-10 06:15",
+   "green": true,
+   "extreme": 64813.4,
+   "want": "down",
+   "first_break": "2026-08-10 18:15",
+   "first_break_idx": 126483,
+   "b1": "up@126437",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-10 22:30",
+   "green": true,
+   "extreme": 63786.9,
+   "want": "down",
+   "first_break": "2026-08-11 00:00",
+   "first_break_idx": 126506,
+   "b1": "up@126502",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-11 02:15",
+   "green": false,
+   "extreme": 64149.9,
+   "want": "up",
+   "first_break": "2026-08-11 08:45",
+   "first_break_idx": 126541,
+   "b1": "down@126522",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-13 11:00",
+   "green": false,
+   "extreme": 63950.8,
+   "want": "up",
+   "first_break": "2026-08-13 20:00",
+   "first_break_idx": 126778,
+   "b1": "down@126755",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-16 22:15",
+   "green": false,
+   "extreme": 63265.2,
+   "want": "up",
+   "first_break": "2026-08-17 08:00",
+   "first_break_idx": 127114,
+   "b1": "down@127077",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-18 00:00",
+   "green": false,
+   "extreme": 64486.7,
+   "want": "up",
+   "first_break": "2026-08-18 05:00",
+   "first_break_idx": 127198,
+   "b1": "down@127180",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-21 07:30",
+   "green": false,
+   "extreme": 75160.0,
+   "want": "up",
+   "first_break": "2026-08-21 10:30",
+   "first_break_idx": 127508,
+   "b1": "down@127498",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-24 10:30",
+   "green": true,
+   "extreme": 76831.0,
+   "want": "down",
+   "first_break": "2026-08-24 13:45",
+   "first_break_idx": 127809,
+   "b1": "up@127800",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-25 19:30",
+   "green": true,
+   "extreme": 78495.0,
+   "want": "down",
+   "first_break": "2026-08-26 02:00",
+   "first_break_idx": 127954,
+   "b1": "up@127934",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-26 02:45",
+   "green": true,
+   "extreme": 78156.0,
+   "want": "down",
+   "first_break": "2026-08-26 18:00",
+   "first_break_idx": 128018,
+   "b1": "up@127977",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-27 15:15",
+   "green": false,
+   "extreme": 80253.3,
+   "want": "up",
+   "first_break": "2026-08-27 20:00",
+   "first_break_idx": 128122,
+   "b1": "down@128111",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-28 10:45",
+   "green": true,
+   "extreme": 79529.6,
+   "want": "down",
+   "first_break": "2026-08-28 14:15",
+   "first_break_idx": 128195,
+   "b1": "up@128184",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-28 22:00",
+   "green": true,
+   "extreme": 77477.0,
+   "want": "down",
+   "first_break": "2026-08-28 23:45",
+   "first_break_idx": 128233,
+   "b1": "up@128228",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-29 20:30",
+   "green": false,
+   "extreme": 77980.0,
+   "want": "up",
+   "first_break": "2026-08-29 21:45",
+   "first_break_idx": 128321,
+   "b1": "down@128318",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-08-30 12:30",
+   "green": false,
+   "extreme": 78264.3,
+   "want": "up",
+   "first_break": "2026-08-30 17:30",
+   "first_break_idx": 128400,
+   "b1": "down@128386",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-09-02 09:00",
+   "green": false,
+   "extreme": 77632.1,
+   "want": "up",
+   "first_break": "2026-09-02 10:45",
+   "first_break_idx": 128661,
+   "b1": "down@128656",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-09-04 13:45",
+   "green": true,
+   "extreme": 80745.2,
+   "want": "down",
+   "first_break": "2026-09-04 18:00",
+   "first_break_idx": 128882,
+   "b1": "up@128869",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-09-06 12:45",
+   "green": true,
+   "extreme": 79638.3,
+   "want": "down",
+   "first_break": "2026-09-06 19:45",
+   "first_break_idx": 129081,
+   "b1": "up@129056",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-09-07 13:15",
+   "green": true,
+   "extreme": 79240.2,
+   "want": "down",
+   "first_break": "2026-09-07 15:15",
+   "first_break_idx": 129159,
+   "b1": "up@129154",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-09-07 21:15",
+   "green": true,
+   "extreme": 78660.1,
+   "want": "down",
+   "first_break": "2026-09-08 10:15",
+   "first_break_idx": 129235,
+   "b1": "up@129186",
+   "earlier_b1": true
+  },
+  {
+   "seed": "2026-09-11 14:15",
+   "green": false,
+   "extreme": 77389.5,
+   "want": "up",
+   "first_break": "2026-09-11 18:00",
+   "first_break_idx": 129554,
+   "b1": "down@129548",
+   "earlier_b1": true
+  }
+ ]
+}
