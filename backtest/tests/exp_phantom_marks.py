@@ -79,9 +79,17 @@ def _probe_hook(state, kind, dir_):
         reasons.append("same-bar")
     if not crossed_pivot:
         reasons.append("extreme-only")
+    # The LEVEL that was actually broken, and where that level was set. The
+    # owner reads the chart, so he needs both: a level can be legitimate either
+    # because it is a sealed pivot, or because it is the extreme of the FIRST
+    # candle of the leg, where the white flow line has not started yet and no
+    # pivot can exist ("the pivot is at 8:30 but the extreme is 7:15's high").
+    lvl_idx = state.e_hi_prev.idx if up else state.e_lo_prev.idx
     _RECORDS.append({
         "kind": kind, "dir": dir_, "idx": state.g_idx, "time": state.t,
-        "piv_px": piv_px, "piv_idx": piv_idx, "bars_seen": state.bars_seen,        "bar_hi": bar_hi, "bar_lo": bar_lo,
+        "piv_px": piv_px, "piv_idx": piv_idx, "bars_seen": state.bars_seen,
+        "bar_hi": bar_hi, "bar_lo": bar_lo,
+        "lvl_idx": lvl_idx, "seed_idx": state.seed_idx,
         "genuine": not reasons, "reasons": reasons,
     })
 
