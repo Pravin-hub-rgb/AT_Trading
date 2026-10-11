@@ -166,12 +166,24 @@ const V19 = {
 export const BOOK_OPTIONS: BookOption[] = [
   {
     id: "fsent_champ_long",
-    label: "FSENT CHAMP LONG (FS entry on longs) - IS 528t +533.4R dd13.4 | OOS 311t +239.6R dd11.9",
-    shortLabel: "FSENT-LONG",
+    label: "1. FSENT CHAMP LONG  —  OLD ENGINE (UNPATCHED) - IS 528t +533.4R dd13.4 | OOS 311t +239.6R dd11.9",
+    shortLabel: "OLD ENGINE",
     slMode: "causal",
-    hint: "longs enter at the swing FS print, shorts at the break - regime atr_high - the base of the pair",
+    hint: "UNPATCHED - the shipping engine, unchanged. Its swing marks come from firstswing.py exactly as it ships today. Compare this against entry 2 below.",
     measured: { isN: 528, isNet: 533.37, oosN: 311, oosNet: 239.59 },
     config: { ...V19, version: "fsent_champ_long", ext_stop_r: 0.0 },
+  },
+  {
+    // ---- THE PAIRED SECOND HALF. Entry 1 above vs entry 2 below is the whole
+    // ---- comparison: same candles, same strategy, same parameters. ONE thing
+    // ---- differs - which engine built the swing chain.
+    id: "fsent_champ_long_B1PATCH",
+    label: "2. FSENT CHAMP LONG  —  NEW ENGINE (B1 ARMING PATCHED) - IS 542t +649.4R dd15.6 | OOS 311t +266.7R dd14.9",
+    shortLabel: "NEW ENGINE",
+    slMode: "causal",
+    hint: "PATCHED - only the B1 arming rule in the swing chain is different. firstswing.py is NOT modified; the patched engine is built alongside it. A break that used to be suppressed while arming was deferred is now accepted when the pivot it broke was sealed on an earlier bar. Open this in one window and OLD ENGINE in the other and compare the B1 marks directly.",
+    measured: { isN: 542, isNet: 649.41, oosN: 311, oosNet: 266.70 },
+    config: { ...V19, version: "fsent_champ_long_B1PATCH", ext_stop_r: 0.0 },
   },
   {
     id: "fsent_champ_long_atr_low",
@@ -191,23 +203,6 @@ export const BOOK_OPTIONS: BookOption[] = [
     measured: { isN: 573, isNet: 566.20, oosN: 334, oosNet: 274.36 },
     config: { ...V19, version: "fsent_champ_long_mcloff", ext_stop_r: 3.0, max_consecutive_losses: 0 },
   },
-{
-      // --- TOP CONTENDERS, added 2026-10-10 after the rolling-weighted ranking ---
-      // exp_startup_yearly.py ranked 35 registered fsent books on rolling-window
-      // behaviour (roll10 .30, roll20 .30, roll50 .25, roll100 .15, half-years
-      // .60, years .40, tail spread .30; net deliberately excluded because it is
-      // already inside the other measures, and the null is a gate not a score).
-      // The top five by that score were all in the sig family and three of them
-      // had never been visible on this page. They are here because a book you
-      // cannot look at is not a candidate you can judge.
-      id: "fsent_champ_long_B1PATCH",
-      label: "CHAMP LONG + B1 ARMING PATCH (comparison build, not a book)",
-      shortLabel: "B1-PATCH",
-      slMode: "causal",
-      hint: "COMPARE BUILD. Identical strategy, identical candles, one difference: the swing chain is built by an engine that no longer suppresses a break merely because it coincides with a pending arm. The shipped engine drops ANY break while arming is deferred; the only case that rule was written for is breaking a pivot sealed on that very bar, which is circular. Measured on the real chain, 4,102 breaks were dropped while not armed and 3,941 of them (96%) broke a pivot sealed an EARLIER bar. On this book: IS 528 trades / +533.4R becomes 542 / +649.4R, OOS +239.6R becomes +266.7R. NOT PINNED AND NOT ADOPTED. If the marks look right on the chart, every number in the family has to be re-derived before any of it means anything.",
-      measured: { isN: 542, isNet: 649.41, oosN: 311, oosNet: 266.70 },
-      config: { ...V19, version: "fsent_champ_long_B1PATCH", ext_stop_r: 3.0 },
-    },
     {
       id: "fsent_sig_multi",
       label: "SIG MULTI (serial, FS on shorts) - IS 329t +484.6R dd13.4 | OOS 195t +219.8R dd7.6",
