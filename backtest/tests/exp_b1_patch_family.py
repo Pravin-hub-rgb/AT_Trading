@@ -98,18 +98,28 @@ def run_side(state: dict, side: str, books: list[str], limit: int) -> None:
     from experiment_registry import EXPERIMENTS
     from exp_full_metrics import compute
 
-    if side == "new":
-        from src.btc.patched_swings import compute_swings_patched
-
-        def _patched(flow, mode, min_bars=14, _p=False):
-            return compute_swings_patched(flow, mode, min_bars)
-
-        R._compute_swings = _patched
-    sim = build_family_module()
-    todo = [b for b in books if b not in (state.get(side, {}).get("__all__", {}))]
-    if limit:
-        todo = todo[:limit]
+    # ARM15. The swap is a process-wide mutation, so anything between installing it
+    # and the try-block used to be unprotected: build_family_module() writes and
+    # imports a generated engine module, and a failure there - disk full, a lock, a
+    # syntax error - propagated out without ever reaching the restore below. The
+    # process then kept the patched builder installed for the rest of its life, and
+    # a later run on the "old" side would have reported shipped-chain numbers while
+    # measuring the patched chain. Nothing about that output would look wrong.
+    #
+    # So the install moves inside the try. That is the whole fix: the try now opens
+    # one line earlier than the code it was protecting.
     try:
+        if side == "new":
+            from src.btc.patched_swings import compute_swings_patched
+
+            def _patched(flow, mode, min_bars=14, _p=False):
+                return compute_swings_patched(flow, mode, min_bars)
+
+            R._compute_swings = _patched
+        sim = build_family_module()
+        todo = [b for b in books if b not in (state.get(side, {}).get("__all__", {}))]
+        if limit:
+            todo = todo[:limit]
         for era in ERAS:
             state.setdefault(side, {}).setdefault(era, {})
             need = [b for b in todo if b not in state[side][era]]
