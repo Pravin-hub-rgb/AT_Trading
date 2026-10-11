@@ -78,7 +78,15 @@ def stale_from_pinverify():
 
 
 def measure(sim, data, cfg):
-    sw = data["sw10"] if cfg["swing"] == "sw10" else data["sw20"]
+    # Was: data["sw10"] if cfg["swing"] == "sw10" else data["sw20"]. That silently
+    # ran every htf15 book on the sw20 chain instead of erroring, so the three
+    # htf15 books measured the wrong strategy and reported a confident number for
+    # it. Two of them - fsent_champ_long_htf15_htffs and
+    # fsent_champ_long_mcloff_htf15 - are the top two multi books by pinned IS net,
+    # so the books that matter most were the ones measured wrong. A KeyError here
+    # is the correct outcome for an unknown swing key.
+    sw = {"sw10": data["sw10"], "sw20": data["sw20"],
+          "sw15": data["sw15"], "htf15": data["htf15"]}[cfg["swing"]]
     fine = data["fine"] if cfg.get("basis", "fine") == "fine" else []
     tr = sim(data["c1h"], sw, data["c15"], data["sw15"],
              fine_ltf=fine, **{**dict(re_.BP), **cfg["params"]})["ltf_trades"]
