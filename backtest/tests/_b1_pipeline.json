@@ -1,0 +1,14 @@
+{
+ "tf": "15m",
+ "min_bars": 50,
+ "limit": 200000,
+ "swings": 2952,
+ "marks": 7993,
+ "B1": 2952,
+ "B2": 2523,
+ "FLIP": 2518,
+ "never_stood": [],
+ "no_cross": [],
+ "late": [],
+ "b2_orphan": []
+}
