@@ -141,19 +141,38 @@ IS 528t / +533.37R and OOS 311t / +239.59R. Still stale everywhere else — see 
 pivot, which is exactly what `exp_arming_cost.py` classified with. Implementation and
 measurement finally refer to the same field.
 
-### [ ] ARM3 — The family harness never patched the IS era
+### [x] ARM3 — The family harness never patched the IS era — **CLOSED, DORMANT. DO NOT REUSE**
 
-`exp_b1_patch_family.py` rebinds `src.btc.btc_routes._compute_swings`. The IS loader
-`run_experiment.get_data()` holds its own module-global binding, imported at import
-time — rebinding the route attribute does not reach it. `get_data()` additionally
-memoises its chains, and the **old** side runs first and fills that cache.
+**Closed with a warning rather than fixed, and the reason is the point.**
 
-Visible in the artifact already on disk: IS cells are identical across sides, only
-OOS moves.
+The defect: `exp_b1_patch_family.py` rebinds `src.btc.btc_routes._compute_swings` to
+swap chains. The IS loader `run_experiment.get_data()` does not call that name — it
+holds its own module-global binding, taken at import time via
+`test_experiments_craze._compute_swings` (`run_experiment.py:60-63`, used at `:201-213`).
+Rebinding the route attribute never reaches it, and `get_data()` additionally memoises
+its chains in `_cache["loaded"]` with the **old** side running first and filling it.
 
-- **Bot A fix:** clear the loader cache between sides and bind the flag where the
-  IS loader actually resolves it.
-- **Owner check:** none — this one is objectively a harness defect, no chart needed.
+So of the four cells that harness reported — OLD-IS, NEW-IS, OLD-OOS, NEW-OOS — three
+were right and NEW-IS was the old engine again. Visible in the artifact on disk:
+
+    age50_utcsat_multi_sw10/is    old 439/+254.9   new 439/+254.9   identical
+    age50_utcsat_multi_sw10/oos   old 252/+82.1    new 254/+80.3    moved
+
+and the harness's own pin check passed because it only ever compared the OLD column,
+then printed "the patched column is trustworthy".
+
+**Why it is closed and not fixed.** That harness existed for one job: compare two
+engines. There is one engine now — the fix is inside `firstswing.py`, and IS and OOS
+both run it, with only the data differing, which is the correct arrangement and what
+the owner said when he asked. With nothing to compare, the swap never happens and the
+defect cannot fire.
+
+**THE WARNING, which is the part that matters.** Do not use `exp_b1_patch_family.py`
+for any two-version comparison. It will report a comparison that was never run, in
+exactly the way it did here, and nothing about its output will look wrong. If a
+future task needs to compare two chains, write a harness that binds the flag where
+the IS loader actually resolves it and that clears `_cache` between sides — and
+validate it by confirming the IS cells actually move.
 
 ### [ ] ARM4 — Count what the patch ACTUALLY adds, split honestly
 
