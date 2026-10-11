@@ -50,27 +50,51 @@ is the single list both bots work from.
 
 ### [x] ARM1 — The guard is a no-op. It never rejects anything.
 
-**DONE, and owner-confirmed on the chart.** The same-direction break is accepted
-whenever the pivot it broke was sealed on an EARLIER bar; the phantom (pivot sealed
-on this very bar) stays suppressed. Promoted into `backend/src/firstswing.py` itself.
+**CLOSED.** Owner-confirmed on the chart, twice — once while walking the
+disagreement list, once after promotion into the shipping engine.
 
-Owner at the top of the chart, 2023-01-03:
+Owner at 2023-01-03, the case at the top of the chart:
 
 > now we have a pivot at 12:30. Whatever breaks it would be considered as a B1, and
-> 12:45 clearly breaks it ... So this seems like patched. This is correct here.
+> 12:45 clearly breaks it. So this seems like patched. This is correct here.
 
-Then re-confirmed after promotion: *"on both engine, 12:45 is marked as a B1."*
+Then, after the fix went into `firstswing.py`:
 
-Verified on the promoted chain: `2023-01-03 12:45` B1 down 16713.0, `13:00` none,
-`2023-02-05 07:00` none, `2023-03-11 08:00` none, `2023-01-14 06:45` B1 down,
-`2026-08-14 22:45` B1 up. `test_1h_parity_deep` still passes.
+> on both engine, 12:45 is marked as a B1, so this is good.
 
-Unpatched and patched are now the same chain (7975 marks). `patched_swings.py` returns
-the shipped chain instead of generating a redundant second copy.
+And on 2023-02-04 15:45, where the probe had wrongly called it a phantom:
 
-**Scope note — ARM1 was the arming guard only.** Marks firing on the normal
-(non-pending) arming path were never in scope. 97 of them still fail the owner's own
-rule. That is ARM25, not a reopening of ARM1.
+> the swing calculation starts from 11:45 … we had a pivot at 12:30, and the 12:30
+> pivot was broken at 15:45. So this is correct.
+
+Traced at that mark: `g_idx=3305 seed_idx=3289` (11:45), `e_hi_pivot_prev = 23371.5
+@ 3292` (the 12:30 pivot), bar high `23378.0`. Both of the owner's numbers.
+
+**Final verification — `exp_arm1_final_check.py`, all 7975 marks, verified against
+the raw candles rather than engine state:**
+
+| check | result |
+|---|---|
+| chain equality, shipped vs B1PATCH | identical, 7975 each |
+| level existed before its own bar | 0 violations |
+| real crossing (and not already crossed earlier) | 0 violations |
+| self-breaks (bar breaking its own extreme) | 0 |
+| mirroring, up vs down | B1 1451/1498 (0.969), B2 1259/1259 |
+| candles the owner adjudicated | all six as he ruled |
+
+**Cost of the fix, stated plainly:** IS 528t/+533.4R → 535t/+553.0R, OOS 311t/+239.6R
+→ 310t/+240.4R. The out-of-sample figure is flat, not negative. The owner's call:
+
+> The B1 was wrong, so we have to fix it, even if it was giving us minus 100R. We
+> cannot just for our sake say this is giving us minus 100R … we have to fix it.
+
+The larger IS number that circulated earlier (+649.4R, 542 trades) came from a build
+whose guard never rejected anything — it armed on every pending-arm break. Those
+extra marks were the ones the owner rejected on the chart, and they carried +96.4R
+in sample. Reproduced and confirmed here so the number cannot come back.
+
+**Both engines are now one engine.** The OLD/NEW dropdown pair is retired;
+`fsent_champ_long_B1PATCH` remains as a server-side alias so old links keep working.
 
 ### [x] ARM2 — The measurement and the patch use different fields
 
@@ -111,38 +135,26 @@ The phantom bucket is the one that decides whether ARM1's fix should suppress or
 
 ---
 
-## 3. OPEN — marks still in the wrong place, outside the arming guard
+## 4. CLOSED — marks still in the wrong place, outside the arming guard
 
-### [ ] ARM25 — 97 marks still fail the owner's own rule
+### [x] ARM25 — 97 marks still fail the owner's own rule — **NOT REAL, probe was wrong**
 
-ARM1 fixed the **arming guard** path. Marks that fire on the **normal** (non-pending)
-arming path were never in its scope, and a pass of the owner's own rule over the whole
-promoted chain still leaves these behind.
+**Closed as a false alarm.** These 97 were produced by `exp_phantom_marks` comparing
+each break against `e_hi_pivot`, which **the same bar's own seal refreshes** further up
+in `process_bar`. So every mark looked like it sat on a pivot sealed on its own bar,
+and 97 came out as violations.
 
-The rule, as the owner states it: a mark is legitimate if it broke **either** a pivot
-sealed on an earlier bar **or** the extreme of the leg's first candle (the white flow
-line has not been drawn yet, so the first candle's extreme substitutes).
+Read `e_hi_pivot_prev` instead — the pivot standing *before* this bar's seal — and the
+count is zero. The owner caught this by hand on 2023-02-04 15:45, where the probe said
+"same-bar phantom" and he said the 12:30 pivot had been broken, which was correct.
 
-```
-pivot-break        7728
-first-candle-ext     152
-WRONG                 97      <- B1: 34   FLIP: 63
-```
+`exp_arm1_final_check.py` re-does the whole thing from the raw candles, trusting
+neither the engine state nor the probe. Result: 0 of 7975 marks fail any limb of the
+owner's rule.
 
-Every one of the 97 has `piv_idx == g_idx`: the mark sits on a pivot that was sealed on
-its own bar, and the bar did not cross the sealed pivot level either. Both rules
-reject it.
-
-- **Earliest remaining wrong B1:** `2023-02-04 15:45 IST`, B1 up, pivot 23378.0 sealed
-  on that same bar. The candle's own high *is* 23378.0, so the "break" is against its
-  own extreme.
-- **Earliest remaining wrong mark of any kind:** `2023-01-02 17:00 IST`, FLIP down.
-- Full list: `backtest/tests/_arm1_remaining_wrong.json`.
-
-- **Owner check:** is `2023-02-04 15:45` a correct B1 up or not? The answer decides
-  whether the normal arming path needs the same `piv.idx < g_idx` guard the pending
-  path now has, and whether FLIP is in or out of scope.
-- **Owner check:** is `2023-01-02 17:00` a correct FLIP down?
+Kept as a closed item rather than deleted because the failure mode is the dangerous
+one: a validator that reads a field the current bar has already overwritten produces
+confident, wrong counts, and it did so twice.
 
 ## 4. Wiring — the patch must apply everywhere, or nowhere
 ### [ ] ARM5 — `/api/btc/summary` never strips the suffix

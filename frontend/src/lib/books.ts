@@ -165,25 +165,20 @@ const V19 = {
 
 export const BOOK_OPTIONS: BookOption[] = [
   {
+    // ---- The OLD/NEW ENGINE pair is retired. The B1 arming fix was promoted into
+    // ---- firstswing.py once the owner confirmed the marks on the chart
+    // ---- (2023-01-03 12:45 and 2023-02-04 15:45 correct; 2023-02-05 07:00 and
+    // ---- 2023-03-11 08:00 phantom and gone). Both entries now produce the same
+    // ---- chain, 7975 marks, so there was nothing left to compare. The B1PATCH
+    // ---- id still resolves server-side so old links keep working - it is an
+    // ---- alias for this book now, not a second chain.
     id: "fsent_champ_long",
-    label: "1. FSENT CHAMP LONG  —  OLD ENGINE (UNPATCHED) - IS 528t +533.4R dd13.4 | OOS 311t +239.6R dd11.9",
-    shortLabel: "OLD ENGINE",
+    label: "FSENT CHAMP LONG - IS 535t +553.0R dd11.4 | OOS 310t +240.4R dd16.6",
+    shortLabel: "FSENT-LONG",
     slMode: "causal",
-    hint: "UNPATCHED - the shipping engine, unchanged. Its swing marks come from firstswing.py exactly as it ships today. Compare this against entry 2 below.",
-    measured: { isN: 528, isNet: 533.37, oosN: 311, oosNet: 239.59 },
+    hint: "The shipping book, on the B1 arming fix. A break that used to be suppressed while arming was deferred is now accepted when the pivot it broke was sealed on an EARLIER bar; the phantom - breaking a level sealed on that very bar - stays suppressed. Marks were verified one by one against the candles: 0 marks sit on a level that did not already exist, 0 fail to actually cross their level, 0 are self-breaks, and up/down are balanced. Note the out-of-sample figure is flat versus the pre-fix pin (+240.4R against +239.6R): this fix was made because the marks were wrong, not because it added edge.",
+    measured: { isN: 535, isNet: 552.95, oosN: 310, oosNet: 240.40 },
     config: { ...V19, version: "fsent_champ_long", ext_stop_r: 0.0 },
-  },
-  {
-    // ---- THE PAIRED SECOND HALF. Entry 1 above vs entry 2 below is the whole
-    // ---- comparison: same candles, same strategy, same parameters. ONE thing
-    // ---- differs - which engine built the swing chain.
-    id: "fsent_champ_long_B1PATCH",
-    label: "2. FSENT CHAMP LONG  —  NEW ENGINE (B1 ARMING PATCHED) - IS 542t +649.4R dd15.6 | OOS 311t +266.7R dd14.9",
-    shortLabel: "NEW ENGINE",
-    slMode: "causal",
-    hint: "PATCHED - only the B1 arming rule in the swing chain is different. firstswing.py is NOT modified; the patched engine is built alongside it. A break that used to be suppressed while arming was deferred is now accepted when the pivot it broke was sealed on an earlier bar. Open this in one window and OLD ENGINE in the other and compare the B1 marks directly.",
-    measured: { isN: 542, isNet: 649.41, oosN: 311, oosNet: 266.70 },
-    config: { ...V19, version: "fsent_champ_long_B1PATCH", ext_stop_r: 0.0 },
   },
   {
     id: "fsent_champ_long_atr_low",
