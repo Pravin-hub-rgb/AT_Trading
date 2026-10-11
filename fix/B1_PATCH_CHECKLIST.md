@@ -250,109 +250,82 @@ shape, opposite outcome:
 The old guard asked whether `e_hi_pivot` was older than the bar. It could not see that
 21822.4 also broke 21814.1, the 04:00 candle's high, which the owner confirmed by eye.
 
-## 4. Wiring — the patch must apply everywhere, or nowhere
-### [ ] ARM5 — `/api/btc/summary` never strips the suffix
+## 4. CLOSED BY CLEANUP — every item in this section died with the comparison build
 
-`btc_routes.py` computes `_patched` and threads it into both chain builds, but never
-does `version = version[:-len("_B1PATCH")]`. The suffixed id reaches `_run_preset`
-(which branches on exact string equality) and is echoed in the response.
+**The B1 comparison build is deleted** — `patched_swings.py` and the two modules it
+generated are gone, along with the `_B1PATCH` suffix in `BTC_VERSIONS`, in
+`STANDALONE_HTF_LTF_VERSIONS`, in all nine `_compute_swings` call sites, and in
+`/chart`, `/backtest` and `/summary`.
 
-Harmless today only by coincidence: both ids miss every `_run_preset` branch and land
-on the generic `else`. The day someone adds an `fsent_champ_long` branch there, the
-patched window silently runs a different engine.
+This was not only tidying. Checking these items first found the build was still
+**live and serving the wrong chain**: `/api/btc/chart?version=fsent_champ_long_B1PATCH`
+returned 7975 marks while the normal route returned 7993. `patched_swings` had a guard
+meant to switch the build off once the fix reached `firstswing.py` —
 
-- **Bot A fix:** strip it. **Bot B:** verify no other consumer wanted the full id.
+    if "if self.e_hi_pivot.idx < g_idx:" in firstswing.py: return shipped chain
 
-### [ ] ARM6 — Suffix handled three times, three different rules
+— and ARM1 rewrote exactly that line to `_seal_h_idx`. The guard's marker ceased to
+exist, so it returned False forever, the build regenerated, and the generated file
+came out carrying both branch sets with the old ones shadowing the new.
 
-| endpoint | validates | strips | order |
-|---|---|---|---|
-| `/chart` | **no validation at all** | yes | n/a |
-| `/backtest` | yes | yes | **validate before strip** |
-| `/summary` | yes | **never** | **validate before strip** |
+`/chart` also took **no version check at all**, so after the id left `BTC_VERSIONS` a
+bookmarked link kept returning 200 with ordinary candles. It now returns 400 like the
+other two endpoints, so a retired id fails visibly.
 
-`"fsent_champ_long_B1PATCH"` is hand-appended to `BTC_VERSIONS` purely so the
-unstripped string passes validation. Nothing enforces that sync.
+### [x] ARM5 — `/api/btc/summary` never strips the suffix — **gone with the suffix**
+### [x] ARM6 — Suffix handled three times with three rules — **gone with the suffix**
+### [x] ARM7 — `_load()` not thread-safe, can cache a broken module — **function deleted**
+### [x] ARM8 — Staleness check dead after first load — **check deleted; this is what it cost**
+### [x] ARM9 — Generation writes into the source tree on a request path — **code deleted**
+### [x] ARM10 — `localStorage` shared between the two windows — **there are not two windows**
+### [x] ARM13 — no `VERSION_LABELS` entry for the patched id — **that id no longer exists**
+### [x] ARM14 — `BtcVersion` union omits ids — **those ids no longer exist**
 
-- **Bot A fix:** one helper, one rule, used by all three.
-- **Owner check:** none — objective defect.
+ARM5, ARM6, ARM7, ARM9 and ARM13/14 were only ever written down because they were
+reachable while the comparison build existed. ARM8 is the one worth remembering: the
+dead staleness check is what let a deleted feature keep answering with two-year-old
+numbers, silently, on a URL that still returned 200.
 
-### [ ] ARM7 — `_load()` is not thread-safe and can cache a broken module forever
+### [ ] ARM11 — Summary cache key omits slippage params — **DEFERRED, untouched**
 
-FastAPI runs sync endpoints in a threadpool. On a cold process two concurrent
-requests both see `_swing_fn is None`, both see a stale stamp, both call `_generate()`.
-`Path.write_text` truncates before writing, so a third thread can import a
-half-written file. The broken module object then stays in `sys.modules`, and every
-later request re-imports **that same broken object** — no restart fixes it.
+### [ ] ARM12 — Summary measured on a different venue — **DEFERRED, untouched**
 
-- **Bot A fix:** `threading.Lock`, write to `.tmp` + `os.replace`, pop `sys.modules`
-  on import failure.
-- **Owner check:** none — objective defect. Bot B to attempt a concurrent hammer test.
+Both are real and both are still true. Neither has anything to do with the B1 work.
 
-### [ ] ARM8 — The staleness check is dead after the first load
+Owner, on why they are being left alone: *"arm 12 is just irrelevant, because I don't
+even look at it … we shouldn't be doing anything to them. Let them be whatever they
+want to be."* The /btc page has a proper results database behind it now, and the
+"konsi best hai" summary table beside it is the thing these two items describe. He
+will deal with it when he next goes there, and it is not ours to change now.
 
-`_load()` returns the cached function before `_sha()` is ever re-evaluated. And even
-if it ran, `importlib.import_module` returns the already-cached `sys.modules` entry,
-not the rewritten file. Edit `firstswing.py` on a live server and the patched chain
-keeps the old engine with no warning.
+Recorded so they are not rediscovered as new:
 
-- **Owner check:** none — objective defect.
-
-### [ ] ARM9 — Generation writes into the source tree on a request path
-
-A read-only checkout, container or non-writable install raises `OSError` → HTTP 500 on
-every `_B1PATCH` request, forever. The UI shows "Internal Server Error" with no hint
-that the patch generator is the cause.
-
-- **Bot A fix:** generate outside the package tree, or fail with a readable message.
-
-### [ ] ARM10 — `localStorage` is shared between the two windows
-
-`BOOK_KEY` is `localStorage`, so with OLD in window A and NEW in window B, changing
-the dropdown in B and then reloading A silently shows A the patched chain. The two
-windows then agree on everything — which is exactly the "the patch did nothing"
-symptom. `sessionStorage` (the chart cache) is per-tab and is fine.
-
-- **Bot A fix:** per-tab book selection, or URL-driven.
-- **Owner check:** the two-window workflow must survive a reload.
-
-### [ ] ARM11 — Summary cache key omits slippage params
-
-Key is `tf|mode|limit|feePct|slippagePts|version`; the request also sends
-`entrySlipPct` and `exitSlipPct`, and the effect deps omit both. Changing entry/exit
-slip serves a cached summary computed under different cost assumptions.
-
-### [ ] ARM12 — The summary is measured on a different venue
-
-`getBtcSummary` never sends `symbol`, and the endpoint defaults to `BTCUSDT`
-(Binance spot). Every book on the page is `BTCUSDT_BYBIT`. The summary table beside
-the comparison is therefore not comparable to either window.
-
-- **Owner check:** is the "konsi best hai" table meant to be Bybit at all?
-
-### [ ] ARM13 / ARM14 — Cosmetic
-- [ ] no `VERSION_LABELS` entry for the patched id → footer prints the raw id
-- [ ] `BtcVersion` union omits the patched id and several others; `books.ts` types
-      `version` as bare `string`, so a typo is caught nowhere
+  ARM11  page.tsx:560 summary cacheKey is
+         `tf|mode|limit|feePct|slippagePts|version` while the request also sends
+         entrySlipPct and exitSlipPct — changing slip can serve a cached summary
+         computed under different costs.
+  ARM12  `getBtcSummary` never sends `symbol` and the endpoint defaults to
+         `BTCUSDT` (Binance spot); every book on the page is `BTCUSDT_BYBIT`. The
+         summary numbers are not comparable to the books beside them.
 
 ---
 
-## 4. Harness hygiene
+## 5. Harness hygiene — all closed, each verified
 
-- [ ] **ARM15 — the patch is installed outside the `try`.** `build_family_module()`
+- [x] **ARM15 — the patch is installed outside the `try`.** `build_family_module()`
       and the `todo` computation run after the swap and before the `try`, so an
       exception there leaks the patched chain for the rest of the process.
-- [ ] **ARM16 — `complete: true` is written unconditionally.** The committed artifact
+- [x] **ARM16 — `complete: true` is written unconditionally.** The committed artifact
       says `complete: true` after a 2-book run. Anyone reading it concludes the family
       comparison finished. Only ONE book is in scope now, so this must be exact.
-- [ ] **ARM17 — dead filter.** `state.get(side, {}).get("__all__", {})` always yields
+- [x] **ARM17 — dead filter.** `state.get(side, {}).get("__all__", {})` always yields
       `{}`; it reads like a resume set that was never wired up.
-- [ ] **ARM18 — the shim signature lies.** The replacement takes `_p=False` while the
+- [x] **ARM18 — the shim signature lies.** The replacement takes `_p=False` while the
       real keyword is `patched=`, so any caller passing `patched=` raises `TypeError`.
 
 ---
 
-## 5. Deliberately out of scope
+## 6. Deliberately out of scope
 
 - [ ] **ARM19** `/api/btc/seed` and `src/live/*` build chains from the shipped
       `SwingEngine` directly. Not reachable from a `_B1PATCH` request, but the live
@@ -364,7 +337,7 @@ the comparison is therefore not comparable to either window.
 
 ---
 
-## 6. Gates before anything is adopted
+## 7. Gates before anything is adopted
 
 - [ ] G1 — ARM1, ARM2, ARM3, ARM4 closed.
 - [ ] G2 — the guard rejects **something** and accepts something. A guard that never
@@ -376,7 +349,7 @@ the comparison is therefore not comparable to either window.
       the unpatched run of the **same** harness.
 - [ ] G6 — the owner has looked at the marks and agreed.
 
-## 7. Not being done yet
+## 8. Not being done yet
 
 - [ ] Re-running the other 160 books. ARM3 means the earlier family run is void for the
       in-sample half. Deferred until this one book is right — it is 4 runs, not 648,
