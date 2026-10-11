@@ -552,6 +552,28 @@ class SwingEngine:
     def _check_chop(self) -> None:
         if self.just_fired_b2:
             return
+        # A cross that opens before the leg has reached minBars is DISCARDED, not
+        # parked. The owner, 2026-10-11: "if any FS comes before 50th bar, we look.
+        # We neglect it. We just going to neglect it. We will wait 50th bar, and we
+        # will be looking new FS after the 50th bar ... if we are just declaring,
+        # like FS is there, but it hasn't given the signal of 50th bar, and the 50th
+        # bar comes, then we are declaring that there is an FS. So this is wrong,
+        # because we have to enter at FS."
+        #
+        # What the engine did instead: _chop_cross_active was set on any cross, and
+        # _confirm() was re-entered on every following bar until bars_seen reached
+        # minBars. So a cross that opened at bars_seen 46 or 47 survived untouched
+        # and fired the moment bars_seen hit 50 - declaring the swing off an FS the
+        # owner had already said to throw away. Measured on the live chain, that
+        # happened on 481 of 2952 swings, gaps of 1 to 13 bars.
+        #
+        # Fix: the cross is only armed if the leg has already reached minBars when
+        # it opens. An early cross leaves _chop_cross_active False, so the same
+        # pivot is re-tested on every later bar and the cross is armed fresh on the
+        # first bar at or after minBars - which is the "new FS after the 50th bar".
+        if self.bars_seen < self.min_bars:
+            self._chop_cross_active = False
+            return
         # Use snapshot of latest sealed before this bar's walker kill (break-before-kill)
         # If a new H/L was sealed in this same bar that kills the victim, chop must still see victim.
         # Snapshot is stored as _snap_high/low in process_bar; if not set, fall back to latest.

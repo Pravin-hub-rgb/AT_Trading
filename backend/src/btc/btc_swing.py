@@ -105,7 +105,7 @@ def compute_btc_swings(
             ):
                 fs_at_idx = eng.last_chop_cross_idx
                 fs_at_time = (
-                    candles[fs_at_idx].date[11:16]
+                    candles[fs_at_idx].date
                     if 0 <= fs_at_idx < len(candles)
                     else conf_time
                 )
