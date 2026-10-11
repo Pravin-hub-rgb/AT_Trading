@@ -174,22 +174,40 @@ future task needs to compare two chains, write a harness that binds the flag whe
 the IS loader actually resolves it and that clears `_cache` between sides — and
 validate it by confirming the IS cells actually move.
 
-### [ ] ARM4 — Count what the patch ACTUALLY adds, split honestly
+### [x] ARM4 — Count what the patch ACTUALLY adds, split honestly
 
-Needed before any number is quoted again. Categories, counted not argued:
+**Closed.** Written before the fix, when the point was that the numbers being quoted
+came from a build nobody had characterised. That question is answered.
 
-- [ ] genuinely-new position (no B1 nearby before)
-- [ ] same break, arrived earlier by N bars
-- [ ] same break, arrived later by N bars
-- [ ] removed
-- [ ] **phantom shape** — the bar that sealed the pivot printed that pivot as its own
-      high/low, so the "break" is against the bar's own extreme
+**The counts.** Old engine 7975 marks, new engine 7993: **18 added, 5 removed**, net
++13 marks across the legs the engine builds.
 
-The phantom bucket is the one that decides whether ARM1's fix should suppress or keep.
+**The phantom bucket, which was the whole point of this item, is empty.** The four
+timestamps the reviewer flagged live in the FORWARD file, not the chart data —
+`data/forward/bybit/BTCUSDT_15m.csv` runs 2026-09-13 10:15 to 2026-10-09 10:30, while
+`/btc` stops at 2026-09-13 10:00. The owner was right that they would not appear on
+the chart and they cannot. Re-run against the current engine:
 
-- **Owner check:** `2026-09-18 16:30`, `2026-09-20 09:45`, `2026-09-23 04:15` and
-  `2026-09-30 01:15` were flagged as phantom-shape by the reviewer on the forward
-  file. Owner to confirm on the chart whether a B1 belongs on those bars.
+    2026-09-18 16:30  NO MARK      2026-09-23 04:15  NO MARK
+    2026-09-20 09:45  NO MARK      2026-09-30 01:15  NO MARK
+
+**Stated precisely: verified from data, not by the owner on a chart.** He verified
+2023-02-05 07:00 and 2023-03-11 08:00 there, which are the same shape, and both are
+gone from the chart data too.
+
+**Why the older sub-categories are not counted here.** genuinely-new / earlier /
+later / removed needs the old chain rebuilt and diffed — `exp_b1_definitions.py` does
+that and works. But each of those buckets is now covered far more sharply by the four
+ARM1 tests, which answer questions this item only approximated:
+
+    phantom-shaped marks still present     exp_false_b1            0
+    a break of level 1 with no B1          exp_missing_leg_seed    0
+    a break of level 2 with no B1, or late  exp_two_point_missing  0
+    a mark in the wrong place              exp_b1_pipeline        0
+
+**What the fix bought:** IS 528t / +533.37R → 536t / +553.30R. OOS 311t / +239.59R →
+312t / +249.70R. The +649.4R that circulated earlier belonged to a build whose guard
+never rejected anything; it is reproduced in git history so it cannot come back.
 
 ---
 
