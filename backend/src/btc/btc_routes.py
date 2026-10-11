@@ -846,7 +846,10 @@ def btc_backtest(
         htf, htf_err = _load_window("15m", None, symbol)
         if htf_err is None:
             htf_candles, htf_flow = htf
-            htf_swings = _compute_swings(htf_flow, mode)
+            # Patched like every other chain in this request. A bias timeline
+            # built from the SHIPPED chain while the LTF chain below it is
+            # patched gates entries on a chain the comparison never showed.
+            htf_swings = _compute_swings(htf_flow, mode, patched=_patched)
             bias_timeline = sorted(
                 (
                     int(htf_candles[s["confirmed_at_idx"]]["ts"]),
@@ -905,10 +908,10 @@ def btc_backtest(
             htf_candles, htf_flow = htf_win  # type: ignore
             ltf_candles, ltf_flow = ltf_win  # type: ignore
             # HTF swings
-            htf_swings = _compute_swings(htf_flow, mode, min_bars=20)
+            htf_swings = _compute_swings(htf_flow, mode, min_bars=20, patched=_patched)
             # LTF swings
             ltf_min = 50 if ltf_tf == "15m" else 14
-            ltf_swings = _compute_swings(ltf_flow, mode, min_bars=ltf_min)
+            ltf_swings = _compute_swings(ltf_flow, mode, min_bars=ltf_min, patched=_patched)
             # HTF fine for 1h
             htf_fine = _load_fine_1m(htf_candles[0]["ts"], htf_candles[-1]["ts"], symbol)
             ltf_fine = _load_fine_1m(ltf_candles[0]["ts"], ltf_candles[-1]["ts"], symbol)
@@ -1266,7 +1269,8 @@ def btc_backtest(
             htf_win, htf_err = _load_window("1h", None, symbol)
             if htf_err is None and htf_win is not None:
                 htf_candles, htf_flow = htf_win  # type: ignore
-                htf_swings = _compute_swings(htf_flow, mode, min_bars=min_bars)
+                htf_swings = _compute_swings(htf_flow, mode, min_bars=min_bars,
+                                            patched=_patched)
                 htf_ts = [int(c["ts"]) for c in htf_candles]
         except Exception:
             htf_swings = None
@@ -2173,8 +2177,12 @@ def btc_summary(
         return JSONResponse(status_code=400, content={"detail": "slippage_pts must be 0..1000"})
     if version not in BTC_VERSIONS:
         return JSONResponse(status_code=400, content={"detail": f"version must be one of {BTC_VERSIONS}"})
+    # Same suffix handling as /backtest and /chart. Without it the summary table
+    # below is built on the SHIPPED chains while the trades beside it come from the
+    # patched ones, and the page shows two different books at once.
+    _patched = version.endswith("_B1PATCH")
 
-    # group presets by their reference TF, load each TF\'s data once
+    # group presets by their reference TF, load each TF's data once
     by_tf: dict = {}
     for p in _MASTER_PRESETS:
         ptf = p.get("bestTf", "15m")
@@ -2193,7 +2201,7 @@ def btc_summary(
             htf, htf_err = _load_window("15m", None, symbol)
             if htf_err is None:
                 htf_candles, htf_flow = htf
-                htf_swings = _compute_swings(htf_flow, mode)
+                htf_swings = _compute_swings(htf_flow, mode, patched=_patched)
                 bias_timeline = sorted(
                     (
                         int(htf_candles[s["confirmed_at_idx"]]["ts"]),
@@ -2209,7 +2217,7 @@ def btc_summary(
             fine = _load_fine_1m(candles_p[0]["ts"], candles_p[-1]["ts"], symbol) or None
 
         for p in presets:
-            sw_p = _compute_swings(flow_p, mode, min_bars=p["min_bars"])
+            sw_p = _compute_swings(flow_p, mode, min_bars=p["min_bars"], patched=_patched)
             row = _run_preset(
                 candles_p, sw_p, p, fee_pct, slippage_pts,
                 bias_timeline=bias_timeline if p["bias"] == "15m" else None,
