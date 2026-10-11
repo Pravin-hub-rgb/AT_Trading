@@ -326,3 +326,81 @@ Report in this order, and do not skip to the numbers:
 
 If you cannot solve it, say so and leave the tree clean. That is a genuinely useful
 outcome. A change that is not verified against both dates is worse than no change.
+
+---
+
+## ADDITIONAL OWNER CASES, 2026-07-20 ? read these before starting
+
+The owner walked two legs on the chart in detail. Both are now the acceptance
+criteria, alongside 2024-07-16.
+
+### Case A ? 2023-01-03, the leg that starts at 05:45
+
+Owner's walkthrough, his own words:
+
+> "5:45, this is a red candle. As it's a red candle, the extreme is the top of the red
+> candle, and 6:00 breaks the top of it, so B1 is marked here at 6:00. Then also the
+> low of 5:45 is also an extreme. This also gets broken by 6:30, so flip is marked over
+> here. Then later B2 is marked at 11:00 ... FS is marked at 23:30. But why FS is not
+> marked before here? Because the 50 candle is somewhere around 17:00 ... and there are
+> many down breaks, but low breaks happened at 20:00, some happened at 18:15 too. So
+> why these are not marked? Is there a rule that there should be a one candle gap,
+> something like that, just like B2 have a rule that this must be a one candle gap rule
+> for B2. So is there a rule for FS too? ... So then this flip happens at 20:15. So now
+> from here we are looking for an FS, which is upside direction. And so if that's the
+> case, then 21:30 is the right candidate to mark an FS. But that doesn't happen. But
+> finally, the FS is marked at 23:30. So what is going on?"
+
+**He does not accept 23:30. He wants 21:30.**
+
+The candles:
+
+```
+time     open       high         low        close
+05:45    (leg start, RED candle)
+06:00    B1  - breaks the top of the 05:45 red candle
+06:30    FLIP - breaks the low of 05:45
+11:00    B2
+~18:00   the 50th bar from 05:45
+18:15    price breaks lower - owner asks why no FS. There is no pivot here.
+20:00    price breaks lower - owner asks why no FS. There is no pivot here.
+20:15    FLIP - direction becomes down
+20:30    high 16680.0  - owner sees a clear A-shape corner on the white flow line
+21:30    high 16686.0  - breaks 20:30's high. Owner says FS belongs HERE.
+22:15    high 16654.0  - breaks 16686.0? owner asks about this one too
+23:30    pivot 16635.5 breaks - this is where the engine puts the FS today
+```
+
+Answer to one of his questions, which is confirmed in the code: **yes, there is a
+one-candle-gap rule for the FS/chop target**, the same shape as the B2 rule -
+`gap_high = self.bar_highs.get(p.idx + 1); if gap_high is None or gap_high > p.px:
+return None`. There are also two more: the pivot must be at least two bars old, and
+it must have formed after the leg's direction was established.
+
+What is NOT known: why 21:30 gets nothing. A trace of the committed engine shows the
+candidate pivot at 21:30 is 16680.0 and that the raw low-level candidate is rejected,
+but the trace conflates "the walker has no pivot" with "a gate rejected the pivot the
+walker had", so it does not actually answer it. **Reproduce with the gates separated
+before forming any theory.**
+
+### What was already tried for this, and what it cost
+
+An attempt was made to fix 2024-07-16 by letting a cross inside the 50-bar window still
+spend its level without arming, plus a spent-level ledger keyed on price and shared
+across the chain. It moved 2024-07-16 from 18:00 to 19:00 - the owner's answer - and
+kept B1 at 2892/2892 with no missing and no late marks and no look-ahead.
+
+It was reverted because it moved the chain from 2952 swings / 7993 marks to
+2891 / 7853 and removed 486 marks while adding 346, and because Case A above was not
+checked. Making it per-engine instead of chain-wide did not move Case A either - the
+FS stayed at 23:30 - so the ledger was not the reason 21:30 is blocked, though it may
+still be too broad: a chain-wide set keyed on bare price treats every occurrence of
+16680.0 as the same level, and that price recurs across 129,715 candles.
+
+## The owner's working method, which the prompt should not override
+
+He asked for many examples, not one: "you came up with only one example, and I talked
+about giving me many, many examples: look at this, look at that, and we just keep on
+fixing it until there is no example." He reads them on the chart and says yes or no.
+So: produce a list of dates, not a single case, and keep going until the list is
+empty. Do not narrow down to one convenient example.
