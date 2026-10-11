@@ -1,0 +1,44 @@
+{
+ "1_chain_equal": {
+  "shipped": 7975,
+  "patched": 7975,
+  "identical": true,
+  "only_shipped": 0,
+  "only_patched": 0
+ },
+ "2_level_never_existed": {
+  "count": 0,
+  "first": []
+ },
+ "3_not_a_real_crossing": {
+  "count": 0,
+  "first": []
+ },
+ "4_self_breaks": {
+  "count": 0,
+  "first": []
+ },
+ "6_direction_sanity": {
+  "note": "dropped - B1 stamps the direction it locked, swing.dir is the direction the leg confirmed in after any flips, so they legitimately disagree and the check had no meaning",
+  "counts": {
+   "B1": {
+    "up": 1451,
+    "down": 1498
+   },
+   "B2": {
+    "up": 1259,
+    "down": 1259
+   },
+   "FLIP": {
+    "up": 1291,
+    "down": 1217
+   }
+  }
+ },
+ "5_mirroring": {
+  "B1_up": 1451,
+  "B1_down": 1498,
+  "ratio_up_over_down": 0.9686,
+  "balanced_within_5pct": true
+ }
+}

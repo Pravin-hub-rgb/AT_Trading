@@ -67,7 +67,13 @@ TF, MIN_BARS, SYMBOL = "15m", 50, "BTCUSDT_BYBIT"
 def _probe_hook(state, kind, dir_):
     """Called inside the engine at mark time. Appends one classified record."""
     up = dir_ == "up"
-    piv = state.e_hi_pivot if up else state.e_lo_pivot
+    # The pivot that was ACTUALLY standing when this bar was processed, i.e.
+    # before this bar's own seal refreshed e_hi_pivot/e_lo_pivot further up in
+    # process_bar. Reading e_hi_pivot here reports the pivot this bar just
+    # sealed, so every mark looks like piv_idx == g_idx and every one of them
+    # looks like a phantom. That is what made 2023-02-04 15:45 - which the owner
+    # confirmed correct, the 12:30 pivot broken on a later bar - come out wrong.
+    piv = state.e_hi_pivot_prev if up else state.e_lo_pivot_prev
     bar_hi, bar_lo = state.hi, state.lo
     piv_px = piv.px if piv is not None else None
     piv_idx = piv.idx if piv is not None else -1
