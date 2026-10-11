@@ -1,0 +1,48 @@
+{
+  "candles": 129715,
+  "full_marks": 7993,
+  "cuts": [
+    {
+      "label": "12% = 15565 candles",
+      "cut": 15565,
+      "marks": 957,
+      "verdict": "PREFIX",
+      "detail": "identical for all 957 marks, then stops early",
+      "pass": true
+    },
+    {
+      "label": "35% = 45400 candles",
+      "cut": 45400,
+      "marks": 2731,
+      "verdict": "PREFIX",
+      "detail": "identical for all 2731 marks, then stops early",
+      "pass": true
+    },
+    {
+      "label": "57% = 75234 candles",
+      "cut": 75234,
+      "marks": 4620,
+      "verdict": "PREFIX",
+      "detail": "identical for all 4620 marks, then stops early",
+      "pass": true
+    },
+    {
+      "label": "82% = 106366 candles",
+      "cut": 106366,
+      "marks": 6509,
+      "verdict": "PREFIX",
+      "detail": "identical for all 6509 marks, then stops early",
+      "pass": true
+    },
+    {
+      "label": "n-1 (last bar removed)",
+      "cut": 129714,
+      "marks": 7993,
+      "verdict": "EQUAL",
+      "detail": "same 7993 marks; the dropped final bar produced none",
+      "pass": true
+    }
+  ],
+  "index_mismatches": 0,
+  "pass": true
+}
