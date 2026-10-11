@@ -168,10 +168,9 @@ export const BOOK_OPTIONS: BookOption[] = [
     // ---- The OLD/NEW ENGINE pair is retired. The B1 arming fix was promoted into
     // ---- firstswing.py once the owner confirmed the marks on the chart
     // ---- (2023-01-03 12:45 and 2023-02-04 15:45 correct; 2023-02-05 07:00 and
-    // ---- 2023-03-11 08:00 phantom and gone). Both entries now produce the same
-    // ---- chain, 7975 marks, so there was nothing left to compare. The B1PATCH
-    // ---- id still resolves server-side so old links keep working - it is an
-    // ---- alias for this book now, not a second chain.
+    // ---- 2023-03-11 08:00 phantom and gone). Both entries produced the same
+    // ---- chain, so there was nothing left to compare, and the comparison build
+    // ---- behind them has been deleted rather than left serving stale results.
     id: "fsent_champ_long",
     label: "FSENT CHAMP LONG - IS 535t +553.0R dd11.4 | OOS 310t +240.4R dd16.6",
     shortLabel: "FSENT-LONG",

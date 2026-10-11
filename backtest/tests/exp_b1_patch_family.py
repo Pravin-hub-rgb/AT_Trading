@@ -109,16 +109,6 @@ def run_side(state: dict, side: str, books: list[str], limit: int) -> None:
     # So the install moves inside the try. That is the whole fix: the try now opens
     # one line earlier than the code it was protecting.
     try:
-        if side == "new":
-            from src.btc.patched_swings import compute_swings_patched
-
-            # ARM18. The parameter is named `patched`, matching the real
-            # _compute_swings signature. It was `_p`, so any caller passing
-            # patched= raised TypeError - the shim lied about being a drop-in.
-            def _patched(flow, mode, min_bars=14, patched=False):
-                return compute_swings_patched(flow, mode, min_bars)
-
-            R._compute_swings = _patched
         sim = build_family_module()
         # ARM17. The old line filtered against state[side]["__all__"], a key that
         # is never written anywhere, so it always evaluated to "nothing filtered"

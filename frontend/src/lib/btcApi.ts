@@ -63,10 +63,8 @@ export interface BtcChartResponse {
   count: number;
   first_ts: string | null;
   last_ts: string | null;
-  /** suffix stripped back to the base version; identical for the comparison pair */
+  /** the version this chart was drawn for */
   version?: string;
-  /** true when the swing chain came from the B1 arming-patched engine */
-  b1_patch?: boolean;
   candles: BtcCandle[];
   swings: BtcSwing[];
   flow: BtcFlowSegment[];

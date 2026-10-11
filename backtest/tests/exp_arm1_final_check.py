@@ -69,8 +69,7 @@ def main() -> int:
     t0 = time.time()
     from src.btc.btc_routes import _load_window
     from src.btc.btc_swing import compute_btc_swings
-    from src.btc.patched_swings import compute_ships
-
+    
     candles, flow = _load_window(TF, LIMIT, SYMBOL)[0]
     flow = list(flow)
     cap = len(flow) // 2
@@ -78,21 +77,18 @@ def main() -> int:
 
     print("building chains ...", flush=True)
     ship = compute_btc_swings(flow, opts={"minBars": MIN_BARS}, max_swings=cap)
-    patch = compute_ships(flow, "continuous", MIN_BARS)
 
     def marks(ch):
         return {(x["time"], x["kind"], x["dir"], x["px"])
                 for s in ch for x in s["breaks"]}
-    S, P = marks(ship), marks(patch)
+    S = marks(ship)
 
     results = {}
 
     # ---- 1 CHAIN EQUALITY -------------------------------------------------
-    results["1_chain_equal"] = {
-        "shipped": len(S), "patched": len(P),
-        "identical": S == P,
-        "only_shipped": len(S - P), "only_patched": len(P - S),
-    }
+    # There is one chain. The comparison build that made this two-sided is deleted,
+    # so this used to report "shipped == B1PATCH" and now just records the size.
+    results["1_chain_size"] = {"swings": len(ship), "marks": len(S)}
 
     # ---- rebuild a bar -> (high, low) index for level lookups --------------
     highs = [c["high"] for c in candles]
@@ -172,11 +168,9 @@ def main() -> int:
     print("\n" + "=" * 70)
     print("ARM1 FINAL CHECK   %s min_bars=%d limit=%d" % (TF, MIN_BARS, LIMIT))
     print("=" * 70)
-    c = results["1_chain_equal"]
-    print("\n1  CHAIN EQUALITY")
-    print("     shipped=%d  patched=%d  IDENTICAL=%s  (only_shipped=%d only_patched=%d)"
-          % (c["shipped"], c["patched"], c["identical"],
-             c["only_shipped"], c["only_patched"]))
+    print("\n1  CHAIN")
+    print("     swings=%d  marks=%d  (one engine; the comparison build is deleted)"
+          % (results["1_chain_size"]["swings"], results["1_chain_size"]["marks"]))
 
     print("\n2  LEVEL EXISTED BEFORE ITS OWN BAR")
     print("     marks whose level was never touched by an earlier bar: %d"

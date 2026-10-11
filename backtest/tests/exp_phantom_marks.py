@@ -133,14 +133,14 @@ def _install(engine_cls):
         setattr(engine_cls, meth, make())
 
 
-def run(patched: bool) -> list:
-    """Walk one chain, recording every mark as the engine emits it.
+def run(patched: bool = False) -> list:
+    """Walk the chain, recording every mark as the engine emits it.
 
-    `patched=True` used to load the generated firstswing_b1patch module. That
-    module is gone: the guard now lives in firstswing.py itself, so patched_swings
-    hands back the shipped chain and there is nothing separate to load. The side
-    is kept as a parameter so the two columns in the output stay comparable and
-    so the equality can be re-checked later rather than assumed.
+    The two-column form of this harness is gone with the comparison build: the B1
+    arming fix lives in firstswing.py now, there is one chain, and patched_swings.py
+    - which used to provide the second one - has been deleted along with the two
+    modules it generated. The parameter is kept only so the summary header keeps
+    reading sensibly; both columns are the same chain by construction.
     """
     global _RECORDS
     from src.btc.btc_swing import compute_btc_swings
@@ -150,17 +150,8 @@ def run(patched: bool) -> list:
     from src.btc.btc_routes import _load_window
     _, flow = _load_window(TF, LIMIT, SYMBOL)[0]
     flow = list(flow)
-    if patched:
-        from src.btc.patched_swings import compute_ships
-        fn = lambda: compute_ships(flow, "continuous", MIN_BARS)
-    else:
-        fn = lambda: compute_btc_swings(flow, opts={"minBars": MIN_BARS},
-                                       max_swings=len(flow) // 2)
-    fn()
+    compute_btc_swings(flow, opts={"minBars": MIN_BARS}, max_swings=len(flow) // 2)
     return list(_RECORDS)
-
-
-LIMIT = 200000
 
 
 def summarise(name, recs) -> dict:
