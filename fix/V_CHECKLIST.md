@@ -74,6 +74,54 @@ once, without needing a written-down rule for each.
 only 1511 swings end on one, so a swing can carry a B2 and still end on a FLIP. That
 selection rule is not written down anywhere.
 
+
+### [ ] V11 - inside bar after a green candle is skipped entirely
+
+Owner, 2026-07-20, walking the flow line on the chart: "If you look at the flow
+line. So the flow line is coming from the high of 2:15 candle. Then we go to the low
+of 2:45. Then there is this red candle here at 3:00, which is inside candle, and we
+have not marked anything here. So according to me, this would go like low of 2:45,
+then again the high of 2:45 because it's a green candle, then the low of 3:00, then
+the high of 3:30."
+
+So an inside bar does not participate in the structure at all: the high the inside
+candle would have made, and the low it would have made, are both skipped, and the
+next swing point is taken from the candle after it. Reported as a possible mirror
+asymmetry - the owner noticed the downside side behaving correctly while the upside
+side skips. Not reproduced or dismissed yet; no date pinned, so it needs one before
+it can be measured.
+
+### [ ] V12 - the FS pivot can be a level an earlier candle already broke
+
+Owner, 2025-07-20, on the 14:45 low 118037.0: "15:15 breaks it, so it is considered
+as B1 ... But 15:30 is not breaking any pivot. That pivot was already broken by
+15:15. So there is no fresh pivot."
+
+The B1 at 15:15 breaks it correctly. The FS at 15:30 is placed on the same level
+after it was already spent. The owner's core rule covers this: "if any of these are
+marked where the previous candles have broken the pivot, and yet they are not marked
+there, and yet they are marked after the candle ... that is the fundamental
+breakdown of not following the rule."
+
+NOT FIXED. Two candidate mechanisms were found and neither is confirmed:
+
+- The chop path targets `latest_sealed_low/high`, and the walker only seals a pivot
+  once price has traded back through it. On this bar the pivot was still invisible to
+  the chop path at 15:15 - the very bar B1 caught it on - so the FS waited for the
+  seal at 15:30. A V-corner tracking the extreme at the moment the running extreme
+  flips would expose it immediately, but replacing the chop target with that made the
+  chain produce zero swings, so the interaction with the walker gates is not
+  understood yet.
+- A chain-wide spent-level ledger keyed on price, so a level broken by a B1 on one
+  leg cannot be re-broken by the FS on the next. B1 breaks `locked_level`
+  (`e_hi_prev.px`), which carries no pivot index, so the existing per-pivot ledger
+  could never see it. Re-applying this on top of the committed 50-bar fix did not
+  reproduce the 2024-07-16 19:00 case, so something in the combination is wrong and
+  it was reverted rather than left in.
+
+This is the live defect. 2024-07-16 and 2025-07-20 are the owner's two reference
+cases: the first is fixed and confirmed correct by the owner, the second is not.
+
 ---
 
 ## Closed

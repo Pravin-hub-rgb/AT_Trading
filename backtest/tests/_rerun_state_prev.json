@@ -1,0 +1,124 @@
+{
+ "fsent_champ_long_htf15_htffs": {
+  "book": "fsent_champ_long_htf15_htffs",
+  "done": true,
+  "eras": {
+   "is": {
+    "dd_net": 22.29,
+    "n": 777,
+    "net": 974.18,
+    "win": 0.447
+   },
+   "oos": {
+    "dd_net": 10.34,
+    "n": 418,
+    "net": 361.36,
+    "win": 0.4
+   }
+  },
+  "pins": {
+   "dd_net": 21.98,
+   "n": 778,
+   "net": 945.91,
+   "oos_dd_net": 10.37,
+   "oos_n": 418,
+   "oos_net": 359.98,
+   "oos_win": 0.4,
+   "win": 0.447
+  },
+  "plane": "multi",
+  "round": 1,
+  "swing": "htf15"
+ },
+ "fsent_champ_long_htfesmcl4": {
+  "book": "fsent_champ_long_htfesmcl4",
+  "done": true,
+  "eras": {
+   "is": {
+    "dd_net": 21.81,
+    "n": 804,
+    "net": 963.62,
+    "win": 0.445
+   },
+   "oos": {
+    "dd_net": 14.4,
+    "n": 436,
+    "net": 288.41,
+    "win": 0.378
+   }
+  },
+  "pins": {
+   "dd_net": 22.16,
+   "n": 806,
+   "net": 941.42,
+   "oos_dd_net": 14.33,
+   "oos_n": 436,
+   "oos_net": 286.22,
+   "oos_win": 0.378,
+   "win": 0.447
+  },
+  "plane": "multi",
+  "round": 1,
+  "swing": "sw10"
+ },
+ "fsent_champ_long_htffs": {
+  "book": "fsent_champ_long_htffs",
+  "done": true,
+  "eras": {
+   "is": {
+    "dd_net": 21.44,
+    "n": 786,
+    "net": 937.53,
+    "win": 0.439
+   },
+   "oos": {
+    "dd_net": 14.4,
+    "n": 408,
+    "net": 288.77,
+    "win": 0.373
+   }
+  },
+  "pins": {
+   "dd_net": 21.79,
+   "n": 787,
+   "net": 908.14,
+   "oos_dd_net": 14.34,
+   "oos_n": 408,
+   "oos_net": 286.97,
+   "oos_win": 0.373,
+   "win": 0.439
+  },
+  "plane": "multi",
+  "round": 1,
+  "swing": "sw10"
+ },
+ "trail_half_skipn8_nodelay": {
+  "book": "trail_half_skipn8_nodelay",
+  "done": true,
+  "eras": {
+   "is": {
+    "dd_net": 38.66,
+    "n": 390,
+    "net": 725.8,
+    "win": 0.21
+   },
+   "oos": {
+    "dd_net": 56.52,
+    "n": 222,
+    "net": 90.2,
+    "win": 0.182
+   }
+  },
+  "pins": {
+   "dd_net": 38.66,
+   "n": 390,
+   "net": 725.8,
+   "oos_dd_net": 56.52,
+   "oos_n": 222,
+   "oos_net": 90.2
+  },
+  "plane": "multi",
+  "round": 1,
+  "swing": "sw10"
+ }
+}
