@@ -112,12 +112,19 @@ def run_side(state: dict, side: str, books: list[str], limit: int) -> None:
         if side == "new":
             from src.btc.patched_swings import compute_swings_patched
 
-            def _patched(flow, mode, min_bars=14, _p=False):
+            # ARM18. The parameter is named `patched`, matching the real
+            # _compute_swings signature. It was `_p`, so any caller passing
+            # patched= raised TypeError - the shim lied about being a drop-in.
+            def _patched(flow, mode, min_bars=14, patched=False):
                 return compute_swings_patched(flow, mode, min_bars)
 
             R._compute_swings = _patched
         sim = build_family_module()
-        todo = [b for b in books if b not in (state.get(side, {}).get("__all__", {}))]
+        # ARM17. The old line filtered against state[side]["__all__"], a key that
+        # is never written anywhere, so it always evaluated to "nothing filtered"
+        # and read like a resume set that had been wired up. Resume is handled per
+        # era below by `need`, which is the filter that actually works.
+        todo = list(books)
         if limit:
             todo = todo[:limit]
         for era in ERAS:
@@ -166,21 +173,56 @@ def run_side(state: dict, side: str, books: list[str], limit: int) -> None:
 
 def report(state: dict, books: list[str]) -> None:
     old, new = state.get("old", {}), state.get("new", {})
+    # ARM16. Count what actually ran, not what was on the list. `complete` used to
+    # be written unconditionally, so a two-book smoke test left a file claiming the
+    # family comparison was finished - and the pin-check line below divided by the
+    # full book count, so it could print "0 mismatches out of 322" while two books
+    # had been measured. Nothing about that output looked wrong.
+    ran, errored, skipped = 0, 0, 0
+    for side in SIDES:
+        for era in ERAS:
+            for k in books:
+                cell = (state.get(side, {}) or {}).get(era, {}) or {}
+                if k not in cell:
+                    skipped += 1
+                elif cell[k].get("error"):
+                    errored += 1
+                else:
+                    ran += 1
+    expected = len(books) * len(SIDES) * len(ERAS)
+
     bad = []
+    checked = 0
     for era in ERAS:
         for k in books:
             v = (old.get(era, {}) or {}).get(k, {})
-            if v.get("vs_pin") not in (None,) and abs(v.get("vs_pin") or 0) >= 0.5:
+            if "vs_pin" not in v or v.get("vs_pin") is None:
+                continue
+            checked += 1
+            if abs(v["vs_pin"]) >= 0.5:
                 bad.append((era, k, v["vs_pin"]))
+
     state["pin_mismatches"] = bad
-    state["complete"] = True
+    state["pins_checked"] = checked
+    state["cells_expected"] = expected
+    state["cells_ran"] = ran
+    state["cells_errored"] = errored
+    state["cells_skipped"] = skipped
+    state["complete"] = (ran == expected and not errored)
     save(state)
     print("\n=== PIN CHECK (shipped column vs registry) ===")
-    print("  %d mismatches out of %d book-era cells" % (len(bad), len(books) * len(ERAS)))
+    print("  %d mismatches out of %d book-era cells actually measured"
+          % (len(bad), checked))
+    if checked < expected and expected:
+        print("  NOT a full run: %d of %d expected cells were never measured"
+              % (checked, expected))
     for era, k, d in bad[:40]:
         print("    %-3s %-36s %+.1f" % (era, k, d))
-    if not bad:
+    if not bad and checked == expected:
         print("  harness reproduces every pin - the patched column is trustworthy")
+    elif not bad:
+        print("  !! %d cells were never measured, so 'no mismatches' means nothing"
+              % (expected - checked))
     else:
         print("  !! patched column is UNVERIFIED until these are explained")
     print("\n=== MOVED BOOKS (patched net differs from shipped by >=0.5R) ===")
