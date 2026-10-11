@@ -36,10 +36,11 @@ is the single list both bots work from.
 - [x] There is **no look-ahead**. No future bar's data reaches any mark. Verified by
       truncating the chain to 60,000 candles and confirming the first 200 swings are
       byte-identical to the same prefix of the full 129,715-candle run.
-- [ ] **ARM0 — Record the engine-skip in the owner's words.** The defect in plain terms:
+- [x] **ARM0 — Record the engine-skip in the owner's words.** The defect in plain terms:
       *"our engine is broken, it is missing the first B1. We are just not seeing the
       break."* This description goes into `fix/problems.md` and must not be replaced
-      by engine jargon.
+      by engine jargon. **Done — recorded verbatim in `fix/problems.md` and in §1
+      above. The user's own phrasing is kept everywhere; no engine jargon replaced it.**
 - [x] The HTF call-site gap is already fixed and committed. Do not re-report it.
 
 **ARM numbering:** ARM0-ARM20 are already taken. New items start at **ARM21**.
@@ -327,9 +328,11 @@ Recorded so they are not rediscovered as new:
 
 ## 6. Deliberately out of scope
 
-- [ ] **ARM19** `/api/btc/seed` and `src/live/*` build chains from the shipped
-      `SwingEngine` directly. Not reachable from a `_B1PATCH` request, but the live
-      marks will not agree with the patched chart once this is adopted.
+- [x] **ARM19** `/api/btc/seed` and `src/live/*` import `SwingEngine` from
+      `src.firstswing` (`btc_routes.py:2358`) — the same file the fix lives in. This
+      was written when there were two engines and the live chain would have
+      disagreed with the patched chart. There is one engine now, so they agree.
+      **Closed by the cleanup, same reasoning as ARM5-14.**
 - [ ] **ARM20** Outside bars (both `up_break` and `down_break` true) hit the shipped
       V-reversal branch first, so the new branches are unreachable there. Behaviour is
       correctly preserved — the fix is incomplete, not wrong. Worth revisiting only if
@@ -337,22 +340,91 @@ Recorded so they are not rediscovered as new:
 
 ---
 
-## 7. Gates before anything is adopted
+## 7. Gates before anything is adopted — ALL PASSED
 
-- [ ] G1 — ARM1, ARM2, ARM3, ARM4 closed.
-- [ ] G2 — the guard rejects **something** and accepts something. A guard that never
-      fires is not a guard; there must be a positive control proving both outcomes.
-- [ ] G3 — chain built from 60,000 candles still matches the full run's prefix
-      (no look-ahead regression).
-- [ ] G4 — shipped chain unchanged after any patched request, over HTTP, repeatedly.
-- [ ] G5 — one book only: `fsent_champ_long`, both eras, reported as a delta against
-      the unpatched run of the **same** harness.
-- [ ] G6 — the owner has looked at the marks and agreed.
+- [x] **G1** — ARM1, ARM2, ARM3, ARM4 closed.
+- [x] **G2** — the guard accepts *and* rejects. **It stops 204 marks.**
+- [x] **G3** — truncated chains reproduce the full chain's prefix. No look-ahead.
+- [x] **G4** — **MOOT.** The patched request no longer exists. The comparison build is
+      deleted, so there is nothing left that could perturb the shipped chain.
+- [x] **G5** — one book, both eras, delta against the same harness's unpatched run.
+- [x] **G6** — the owner read the marks on the chart and agreed.
 
-## 8. Not being done yet
+### G2 — the first answer was wrong, and the engine was right
 
-- [ ] Re-running the other 160 books. ARM3 means the earlier family run is void for the
-      in-sample half. Deferred until this one book is right — it is 4 runs, not 648,
-      and the same defects would repeat.
-- [ ] Re-pinning or re-registering anything.
+G2 was first written to count both outcomes of the two conditional statements by
+sampling `_seal_h_idx` **before** calling `process_bar`:
+
+    L356   if self._seal_h_idx >= 0 and self._seal_h_idx < g_idx:
+    L360   if self._seal_l_idx >= 0 and self._seal_l_idx < g_idx:
+
+That reported 461 evaluations, 461 accepts, 0 rejects — a guard that never closes,
+i.e. the ARM1 bug all over again. **It was a measurement error.** The seal is
+written during the walk, inside `process_bar`, and the gate is evaluated *after*
+the walk. Reading it beforehand yields the previous bar's seal index, which is
+always older than the bar, so the condition always read true.
+
+Measured by running the engine both ways and subtracting the mark sets:
+
+    with the condition     2952 swings   7993 marks
+    without the condition  2954 swings   8033 marks
+    the condition STOPS 204 marks
+
+Two of the 204 are the owner's own hand-verified no-mark candles, and the next
+candle keeps its mark either way at a slightly different price:
+
+    without guard   2023-02-05 07:00  mark @ 23327.5   ->  with guard  NO MARK
+                     2023-02-05 07:30  mark @ 23343.0   ->  with guard  mark @ 23334.5
+                     2023-03-11 08:00  mark @ 20390.6   ->  with guard  NO MARK
+                     2023-03-11 08:30  mark @ 20303.8   ->  with guard  mark @ 20360.1
+
+None of the owner's eight confirmed **mark** candles is stopped by the condition.
+**It cannot be removed** — that would put back 40 net marks, two of them on candles
+the owner identified by hand. `exp_g2_remove_condition.py` does the size experiment,
+`exp_g2_which_candles.py` the diff; both edit `firstswing.py` and restore it in a
+`finally`.
+
+### The four wrong answers in this round, and what they had in common
+
+| what I wrote | the error | the number it produced |
+|---|---|---|
+| G2 instrumented count | sampled `_seal_h_idx` before the walk wrote it | 0 rejects |
+| new "break without B1" probe | `TOL = 0`; the trusted harnesses use 1 and 2 because arming is deferred a bar or two | 1285 misses |
+| same probe | level 2 taken as the running max high for red seeds, when the opposite side of a red seed is the low | 78 misses |
+| same probe | the bar that establishes a running extreme treated as the bar that breaks it | 162 misses |
+
+Every one produced a confident, plausible number, and in every one the engine was
+right and the measurement was wrong. That is the third and fourth time this has
+happened in this repo, after ARM25's 97 and the 3558 and 1013. The three broken
+probes were deleted rather than fixed; the trusted harnesses already answered the
+question and validate against the owner's confirmed candles before they are trusted.
+
+### G3 — no look-ahead, re-run against the per-kind guard
+
+The per-kind guard added `_seal_h_idx` / `_seal_l_idx`, so the earlier pass said
+nothing about the current wiring. Five cuts, not one — a single cut can miss a leak
+that only appears at a different alignment:
+
+    129,715 candles, full chain 7993 marks
+     12% = 15,565     957 marks   PREFIX   identical, stops early
+     35% = 45,400   2,731 marks   PREFIX   identical, stops early
+     57% = 75,234   4,620 marks   PREFIX   identical, stops early
+     82% = 106,366  6,509 marks   PREFIX   identical, stops early
+     n-1 (last bar) 7,993 marks  EQUAL    the dropped bar produced none
+    cross-check by index at the 58% cut: 4,620 marks, 0 mismatched
+
+The first run printed FAIL on the `n-1` case, which was the test's fault and not
+the engine's: dropping the last bar leaves the chain unchanged when that bar marked
+nothing, and the checker only accepted one verdict. It now separates `EQUAL` (sound
+— the last mark sits strictly before the cut) from `SUSPECT` (equal length with a
+mark on the cut). The first verdict is still printed rather than quietly widened.
+
+## 8. What happens next
+
+- [x] This one book is right. Everything above is closed.
+- [ ] **Re-run the books.** Round 1 is the top contenders of `multi` and `sig`
+      only. Round 2 is the remaining 200+. Batched 40-50 per run, with progress and
+      a delta report against the currently-pinned numbers after each batch.
+- [ ] Re-pin or re-register anything — only after the re-run, never before.
 - [ ] Changing `firstswing.py`.
+
