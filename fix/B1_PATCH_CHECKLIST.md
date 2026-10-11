@@ -96,6 +96,45 @@ in sample. Reproduced and confirmed here so the number cannot come back.
 **Both engines are now one engine.** The OLD/NEW dropdown pair is retired;
 `fsent_champ_long_B1PATCH` remains as a server-side alias so old links keep working.
 
+**THE RULE, AS THE OWNER SETTLED IT**
+
+> "If the swing calculation starts from a green candle, the low of it would be an
+> extreme. For a red candle, the high of it would be the extreme. So this is candle
+> colour based, and any pivot after it on the opposite direction would be considered
+> as ... those are the two points we are looking for. Anyone breaking either is
+> considered as B1. That's it."
+
+  level 1   the seed candle's extreme — its LOW when the seed is green, its HIGH when red
+  level 2   the first pivot on the opposite side
+
+A leg has exactly one B1, at the **first** crossing of either level. `pidx >= si`,
+not `>`: the seed's own extreme becomes a real pivot the moment the walker confirms
+it, which is the level broken on 2023-01-14 06:45 and the reason an earlier version
+of the detector wrongly called that confirmed B1 false.
+
+**FOUR TESTS, FOUR DIRECTIONS, all 0.** Each validates itself against the owner's own
+confirmed candles and prints its chain verdict only if that passes — the three earlier
+tools that were wrong never did this.
+
+| direction | test | result |
+|---|---|---|
+| a mark is in the wrong place | `exp_b1_pipeline` | 0 of 7,993 |
+| a mark breaks neither locked level | `exp_false_b1` | 0 of 2,953 legs |
+| level 1 broke, no B1 | `exp_missing_leg_seed` | 0 of 2,953 legs |
+| level 2 broke, no B1, or B1 late | `exp_two_point_missing` | 0 of 2,953 legs |
+
+Stated honestly: four tools agreeing is not proof, and three earlier tools agreed
+with nothing and were wrong in ways only the owner caught on a chart. What changed is
+that each of these validates against his candles first and refuses to print a verdict
+if it fails. The owner checked ten candles personally and all ten are right.
+
+**Ten candles the owner ruled on, current chain:** 2023-01-03 12:45, 2023-01-14 06:45,
+2023-02-04 15:45, 2023-02-05 07:00 (none), 2023-02-05 07:30, 2023-02-13 04:30,
+2023-02-13 16:45, 2023-03-11 08:00 (none), 2023-03-11 08:30, 2026-08-14 22:45.
+
+**Numbers after the fix:** IS 536t / +553.30R, OOS 312t / +249.70R. Pre-fix pins were
+IS 528t / +533.37R and OOS 311t / +239.59R. Still stale everywhere else — see §7.
+
 ### [x] ARM2 — The measurement and the patch use different fields
 
 **Closed by ARM1.** The guard tests `e_hi_pivot.idx` / `e_lo_pivot.idx` — the sealed
@@ -155,6 +194,24 @@ owner's rule.
 Kept as a closed item rather than deleted because the failure mode is the dangerous
 one: a validator that reads a field the current bar has already overwritten produces
 confident, wrong counts, and it did so twice.
+
+### [x] ARM26 — the per-kind guard was wrong the first time
+
+**Closed.** The first attempt took a single minimum across both seal kinds, which
+diverged the whole chain (7975 → 7993 marks) and lost four of the owner's confirmed
+candles. Reverted, not kept. The shipped version tracks `_seal_h_idx` and
+`_seal_l_idx` separately, because an up break is answered only by an H seal.
+
+Owner, on the case that forced it — 2023-02-13 04:30 versus 16:45, same day, same
+shape, opposite outcome:
+
+| | batch the walker emitted on that bar | outcome |
+|---|---|---|
+| 16:45 | H@16:30 (older) + L@16:45 (own low) | no own high, `e_hi_pivot` untouched → B1 |
+| 04:30 | H@04:00 (older) + L@04:15 (older) + H@04:30 (own high) | own high overwrote `e_hi_pivot` → no B1, wrongly |
+
+The old guard asked whether `e_hi_pivot` was older than the bar. It could not see that
+21822.4 also broke 21814.1, the 04:00 candle's high, which the owner confirmed by eye.
 
 ## 4. Wiring — the patch must apply everywhere, or nowhere
 ### [ ] ARM5 — `/api/btc/summary` never strips the suffix
