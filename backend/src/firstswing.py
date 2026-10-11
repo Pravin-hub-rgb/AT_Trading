@@ -232,9 +232,42 @@ class SwingEngine:
         # terminate. Used by the same-bar V-reversal arm exception (below).
         self._pending_leg_dir = self.walker.dir
 
+        # The walker emits its seals as a batch on the bar they CONFIRM, but each
+        # seal carries the idx of the candle the extreme actually belongs to. That
+        # is the distinction the arming guard needs and e_hi_pivot cannot provide:
+        # by the time the guard runs, e_hi_pivot has already been overwritten by
+        # this bar's own batch, so on every seal bar it reads idx == g_idx and the
+        # guard concludes nothing older was broken.
+        #
+        # Tracked per kind, because an up break is answered only by an H seal. The
+        # owner's two candles on the same day are identical apart from this:
+        #
+        #   16:45  batch = H@16:30 (older) + L@16:45 (own low). No H seal of its
+        #          own, so the high pivot standing is still the 16:30 one and the
+        #          break of it arms. B1 lands there. Correct.
+        #
+        #   04:30  batch = H@04:00 (older) + L@04:15 (older) + H@04:30 (own high).
+        #          It seals its OWN high as well as breaking the 04:00 high, so
+        #          e_hi_pivot becomes 21822.4 @ g_idx and the guard refuses - while
+        #          21822.4 did break 21814.1, the 04:00 candle's high, which the
+        #          owner confirmed by eye: "4:30 clearly breaks this pivot high, and
+        #          the B1 is not marked here."
+        #
+        #   07:00 (2023-02-05)  batch = H@07:00 only, its own high. No older H
+        #          seal, so nothing was broken and no B1. "So what is wrong here?
+        #          I cannot see the issue." Correct.
+        self._seal_h_idx = -1
+        self._seal_l_idx = -1
+
         for p in self.walker.process_bar(c, g_idx):
             if not p.sealed:
                 continue
+            tgt = self._seal_h_idx if p.kind == "H" else self._seal_l_idx
+            if tgt < 0 or p.idx < tgt:
+                if p.kind == "H":
+                    self._seal_h_idx = p.idx
+                else:
+                    self._seal_l_idx = p.idx
             if self.bars_seen >= 2:
                 if self.defer_same_bar_arm:
                     # Same-bar arm guard: defer to NEXT bar (the V-reversal
@@ -303,12 +336,13 @@ class SwingEngine:
         # real chain, 4,102 breaks were dropped while not armed and 3,941 of
         # them (96%) broke a pivot sealed on an earlier bar.
         #
-        # So the same-direction break is accepted whenever the pivot it broke
-        # was sealed on an earlier bar. Owner-verified on the chart:
-        # 2023-01-03 12:45 breaks the 12:30 pivot and B1 belongs on that bar,
-        # not one candle later at 13:00. The phantom stays suppressed - the
-        # e_hi_pivot.idx < g_idx test is exactly that distinction, since
-        # e_hi_pivot is refreshed by this bar's own seal above.
+        # So the same-direction break is accepted whenever the walker sealed, on
+        # this bar and of the matching kind, a pivot belonging to an EARLIER
+        # candle - which is then a real break of that pivot. Owner-verified on the
+        # chart: 2023-01-03 12:45 (seals the 12:30 pivot, crosses it, B1 there),
+        # 2023-02-04 15:45, 2023-01-14 06:45, 2026-08-14 22:45, and the pair on
+        # 2023-02-13 - 04:30 broken, 16:45 working - which differ only in whether
+        # the bar sealed its own extreme as well.
         if self.defer_same_bar_arm and self._pending_arm and self.state == "watch":
             if self._pending_leg_dir == "down" and up_break:
                 self.armed = True
@@ -319,11 +353,11 @@ class SwingEngine:
                 self._pending_arm = False
                 up_break = False
             elif self._pending_leg_dir == "up" and up_break:
-                if self.e_hi_pivot.idx < g_idx:
+                if self._seal_h_idx >= 0 and self._seal_h_idx < g_idx:
                     self.armed = True
                     self._pending_arm = False
             elif self._pending_leg_dir == "down" and down_break:
-                if self.e_lo_pivot.idx < g_idx:
+                if self._seal_l_idx >= 0 and self._seal_l_idx < g_idx:
                     self.armed = True
                     self._pending_arm = False
         if self.armed:
