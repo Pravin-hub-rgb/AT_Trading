@@ -98,7 +98,14 @@ _RECORDS: list = []
 
 
 def _install(engine_cls):
-    """Wrap the three marking methods so each mark is classified as it happens."""
+    """Wrap the three marking methods so each mark is classified as it happens.
+
+    Idempotent: both sides now run the same class, and wrapping twice would make
+    the second run record every mark a second time.
+    """
+    if getattr(engine_cls, "_phantom_probe_installed", False):
+        return
+    setattr(engine_cls, "_phantom_probe_installed", True)
     for meth, kind in (("_lock", "B1"), ("_confirm_direction", "B2"), ("_flip", "FLIP")):
         orig = getattr(engine_cls, meth)
 
@@ -121,20 +128,29 @@ def _install(engine_cls):
 
 
 def run(patched: bool) -> list:
+    """Walk one chain, recording every mark as the engine emits it.
+
+    `patched=True` used to load the generated firstswing_b1patch module. That
+    module is gone: the guard now lives in firstswing.py itself, so patched_swings
+    hands back the shipped chain and there is nothing separate to load. The side
+    is kept as a parameter so the two columns in the output stay comparable and
+    so the equality can be re-checked later rather than assumed.
+    """
     global _RECORDS
+    from src.btc.btc_swing import compute_btc_swings
+    from src.firstswing import SwingEngine
     _RECORDS = []
-    if patched:
-        from src.btc.btc_swing_b1patch import compute_btc_swings
-        from src.firstswing_b1patch import SwingEngine
-    else:
-        from src.btc.btc_swing import compute_btc_swings
-        from src.firstswing import SwingEngine
     _install(SwingEngine)
     from src.btc.btc_routes import _load_window
-    from src.walker import FlowCandle
     _, flow = _load_window(TF, LIMIT, SYMBOL)[0]
     flow = list(flow)
-    compute_btc_swings(flow, opts={"minBars": MIN_BARS}, max_swings=len(flow) // 2)
+    if patched:
+        from src.btc.patched_swings import compute_ships
+        fn = lambda: compute_ships(flow, "continuous", MIN_BARS)
+    else:
+        fn = lambda: compute_btc_swings(flow, opts={"minBars": MIN_BARS},
+                                       max_swings=len(flow) // 2)
+    fn()
     return list(_RECORDS)
 
 

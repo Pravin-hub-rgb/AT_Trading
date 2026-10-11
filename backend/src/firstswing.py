@@ -291,9 +291,24 @@ class SwingEngine:
         # the just-sealed pivot: 2026-09-03 09:27 breaking the sealed 09:26
         # high 23970.15). On the arming bar the SAME-direction break is
         # seed-colour flow extension (red seed: high->low; green seed: low->high)
-        # and is suppressed, so B1 locks in the V direction. A same-direction
-        # break (2025-09-30 09:44 up-break past the sealed up-leg top) stays
-        # deferred to the next bar � no phantom B1.
+        # and is suppressed, so B1 locks in the V direction.
+        #
+        # A same-direction break (2025-09-30 09:44 up-break past the sealed
+        # up-leg top) used to stay deferred to the next bar unconditionally,
+        # which cost a full candle on every one of them. The suppression was
+        # only ever meant for the phantom - breaking a level sealed on THIS
+        # bar, which is circular - but the implementation could not tell that
+        # apart from breaking a level sealed EARLIER that merely happens to
+        # land on a bar where a different seal is arriving. Measured on the
+        # real chain, 4,102 breaks were dropped while not armed and 3,941 of
+        # them (96%) broke a pivot sealed on an earlier bar.
+        #
+        # So the same-direction break is accepted whenever the pivot it broke
+        # was sealed on an earlier bar. Owner-verified on the chart:
+        # 2023-01-03 12:45 breaks the 12:30 pivot and B1 belongs on that bar,
+        # not one candle later at 13:00. The phantom stays suppressed - the
+        # e_hi_pivot.idx < g_idx test is exactly that distinction, since
+        # e_hi_pivot is refreshed by this bar's own seal above.
         if self.defer_same_bar_arm and self._pending_arm and self.state == "watch":
             if self._pending_leg_dir == "down" and up_break:
                 self.armed = True
@@ -303,6 +318,14 @@ class SwingEngine:
                 self.armed = True
                 self._pending_arm = False
                 up_break = False
+            elif self._pending_leg_dir == "up" and up_break:
+                if self.e_hi_pivot.idx < g_idx:
+                    self.armed = True
+                    self._pending_arm = False
+            elif self._pending_leg_dir == "down" and down_break:
+                if self.e_lo_pivot.idx < g_idx:
+                    self.armed = True
+                    self._pending_arm = False
         if self.armed:
             self._step(down_break, up_break)
 
