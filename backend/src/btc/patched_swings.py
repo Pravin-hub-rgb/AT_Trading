@@ -1,60 +1,69 @@
-"""The B1 arming patch, as a second swing-chain builder that lives beside the shipped one.
+"""The B1 arming patch, built as REAL generated modules instead of runtime module surgery.
 
-WHY THIS EXISTS
----------------
-The owner found, on the chart, a clean up-break of a local pivot at 2026-08-14
-22:45 IST that produced no B1 mark. firstswing.py:297-307 defers arming by one bar
-whenever a seal arrives, and while that deferral is pending it suppresses the break
-outright - including breaks of pivots sealed several bars EARLIER, which is not the
-phantom the rule was written to catch.
+WHAT THE PATCH IS ABOUT
+-----------------------
+firstswing.py:297-305 defers arming by one bar whenever a seal arrives, and while
+that deferral is pending it suppresses the same-direction break outright. The comment
+above it says the suppressed shape is seed-colour flow extension on the arming bar and
+wants "no phantom B1"; the phantom being a break of a level sealed on that very bar,
+which is circular. The implementation cannot tell that apart from a break of a level
+sealed several bars EARLIER that merely lands on a bar where a different seal is
+arriving. Measured on the real chain: 4,102 breaks dropped while not armed, of which
+3,941 (96%) break a pivot sealed on an earlier bar and 161 (4%) are the phantom.
 
-Measured on the real chain: 4,102 breaks dropped while not armed, of which 3,941
-(96%) break a pivot sealed on an earlier bar and only 161 are the phantom case.
-
-WHAT THE PATCH DOES
--------------------
+THE PATCH
+---------
 Keeps the phantom suppression. Adds the missing case: a break running in the pending
-leg's direction, against a level set on an earlier bar, arms on this bar and keeps
-the break.
+leg's direction, against a level set on an earlier bar, arms on this bar and keeps the
+break. Effect on fsent_champ_long: IS 528 -> 542 trades, +533.37R -> +649.41R; OOS 311
+trades, +239.59R -> +266.70R.
 
-    old:  pending "up" + up_break   -> falls through, armed is False, dropped
-    new:  pending "up" + up_break   -> arm, if e_hi_prev.idx < g_idx
-
-Effect on fsent_champ_long: IS 528 -> 542 trades, +533.37R -> +649.41R; OOS 311
-trades, +239.59R -> +266.70R. Chain 4,532 -> 4,597 legs.
-
-WHY IT IS A SECOND MODULE AND NOT AN EDIT
------------------------------------------
+WHY THIS FILE EXISTS INSTEAD OF AN EDIT TO firstswing.py
+--------------------------------------------------------
 firstswing.py is never modified, so the shipped chain still exists and a side-by-side
-comparison is possible at all.
+comparison on the /btc dropdown is possible at all.
 
-The first two implementations swapped src.firstswing in sys.modules and reload()
-ed src.btc.btc_swing around the call, then restored. Both leaked. Because
-btc_routes does `from .btc_swing import compute_btc_swings` at import time, the
-function object it holds shares __globals__ with the reloaded module, so a restore
-that left the patched class in btc_swing.__dict__ silently made every SUBSEQUENT
-shipped request use the patched chain - measured: the shipped path returned 2,296
-swings after one patched call instead of 2,258. A comparison tool that quietly
-changes the thing it is comparing against is worse than no tool.
+WHY GENERATED FILES AND NOT sys.modules REPLACEMENT
+--------------------------------------------------
+Three earlier implementations patched the chain by rebinding sys.modules around the
+call. All three were wrong in ways that produced a live comparison that LOOKED fine:
 
-This version builds both module pairs ONCE, under their own permanent names, and
-never touches sys.modules afterwards:
+1. Swapping src.firstswing and restoring it. btc_routes binds
+   `from .btc_swing import compute_btc_swings` at import time, and that function object
+   shares __globals__ with the reloaded module, so a restore that left the patched class
+   in btc_swing.__dict__ silently made every SUBSEQUENT shipped request use the patched
+   chain. Measured: shipped returned 2,296 swings after one patched call instead of
+   2,258.
+2. Popping src.btc.btc_swing and re-importing it. Returns the cached module for the
+   same reason. Result: 2,258 both ways, and the dropdown showed the same marks twice.
+3. Executing both modules once under private names and caching the result. This one
+   passed every test I ran in a fresh process - and failed over HTTP. FastAPI runs
+   sync endpoints in a threadpool, and the build briefly rebinds the global
+   sys.modules["src.firstswing"] while the patched btc_swing body executes its
+   `from src.firstswing import SwingEngine`. Under a live server the patched copy picked
+   up the SHIPPED class, so /api/btc/chart?version=..._B1PATCH answered b1_patch=true
+   with the shipped chain: 2,899 swings either side at limit=200000, and the owner saw
+   no new B1 at 2023-01-14 06:45. A fresh-process test cannot see this class of bug,
+   which is exactly why the check has to run against the served endpoint.
 
-    src.firstswing              shipped     (never rebound)
-    src.btc.btc_swing           shipped     (never rebound)
-    src.firstswing_b1patch      patched
-    src.btc.btc_swing_b1patch   patched, bound to the patched firstswing at build time
+So: two real modules are generated on disk and imported normally. Nothing is rebound,
+nothing is restored, there is no cache to go stale, and it is identical in every
+process, thread and request.
 
-No swap, no restore, no reload, nothing to leak, and no cross-contamination between
-concurrent requests.
+GENERATION
+----------
+src/firstswing_b1patch.py      <- firstswing.py with the arm guard extended
+src/btc/btc_swing_b1patch.py   <- btc_swing.py importing SwingEngine from the above
 
-The owner asked for this on the /btc dropdown rather than as a separate chart so two
-browser windows on two monitors show the same candles with one chain each.
+Both carry a SHA-256 of the sources they were built from. If firstswing.py or
+btc_swing.py changes, they are rebuilt on next import. They are derived artifacts -
+regenerate freely, never hand-edit.
 """
 from __future__ import annotations
 
+import hashlib
+import importlib
 import sys
-import types
 from pathlib import Path
 from typing import Optional
 
@@ -78,64 +87,82 @@ _SRC = Path(__file__).resolve().parents[1]
 _FS_PATH = _SRC / "firstswing.py"
 _SWING_PATH = _SRC / "btc" / "btc_swing.py"
 
-PATCHED_FS = "src.firstswing_b1patch"
-PATCHED_SWING = "src.btc.btc_swing_b1patch"
+GEN_FS = _SRC / "firstswing_b1patch.py"
+GEN_SWING = _SRC / "btc" / "btc_swing_b1patch.py"
 
-_patched_swing_fn = None
+_GEN_MODULE = "src.btc.btc_swing_b1patch"
+# Comment only, no docstring. The generated file inherits btc_swing.py's own module
+# docstring, and `from __future__ import annotations` must be the first statement
+# after exactly ONE docstring. Injecting a second docstring pushes it past a plain
+# expression statement and the module fails to compile with a SyntaxError.
+_GEN_NOTE = "# GENERATED by src/btc/patched_swings.py - do not edit, rebuild instead."
 
-
-def _exec_module(name: str, path: Path, text: str) -> types.ModuleType:
-    mod = types.ModuleType(name)
-    mod.__file__ = str(path)
-    mod.__package__ = name.rsplit(".", 1)[0]
-    mod.__dict__["__name__"] = name
-    sys.modules[name] = mod           # before exec: @dataclass resolves via sys.modules
-    exec(compile(text, str(path), "exec"), mod.__dict__)
-    return mod
+_swing_fn = None
 
 
-def _build_patched():
-    """Build the patched firstswing + btc_swing pair, once, under their own names."""
-    global _patched_swing_fn
-    if _patched_swing_fn is not None:
-        return _patched_swing_fn
+def _sha() -> str:
+    h = hashlib.sha256()
+    for p in (_FS_PATH, _SWING_PATH):
+        h.update(p.read_bytes())
+    return h.hexdigest()[:16]
 
+
+def _stamp(path: Path) -> Optional[str]:
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines()[:12]:
+            if line.startswith("# b1patch-source-sha:"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return None
+
+
+def _generate(sha: str) -> None:
     fs_src = _FS_PATH.read_text(encoding="utf-8")
     n = fs_src.count(_ANCHOR)
     if n != 1:
         raise RuntimeError(
             "B1 arming patch anchor matched %d times in %s - refusing to guess. "
-            "The patch is inert until the anchor is unique again." % (n, _FS_PATH))
+            "The patch stays inert until the anchor is unique again." % (n, _FS_PATH))
 
-    # btc_swing imports SwingEngine by absolute name, so the patched firstswing has
-    # to occupy `src.firstswing` WHILE btc_swing's body executes, and the binding
-    # it takes is then permanent inside that module's own globals.
-    saved = sys.modules.get("src.firstswing")
-    sys.modules["src.firstswing"] = _exec_module(
-        PATCHED_FS, _FS_PATH, fs_src.replace(_ANCHOR, _PATCH))
-    try:
-        swing_src = _SWING_PATH.read_text(encoding="utf-8")
-        patched_swing = _exec_module(PATCHED_SWING, _SWING_PATH, swing_src)
-    finally:
-        if saved is not None:
-            sys.modules["src.firstswing"] = saved     # shipped firstswing, unbound
-        else:
-            sys.modules.pop("src.firstswing", None)
+    swing_src = _SWING_PATH.read_text(encoding="utf-8")
+    old_imp = "from src.firstswing import FlowSegment, SwingEngine"
+    if swing_src.count(old_imp) != 1:
+        raise RuntimeError(
+            "expected exactly one '%s' in %s - the redirect cannot be applied safely"
+            % (old_imp, _SWING_PATH))
+    swing_src = swing_src.replace(
+        old_imp, "from src.firstswing_b1patch import FlowSegment, SwingEngine")
 
-    _patched_swing_fn = patched_swing.compute_btc_swings
-    return _patched_swing_fn
+    GEN_FS.write_text(
+        "# b1patch-source-sha: %s\n" % sha + fs_src.replace(_ANCHOR, _PATCH), encoding="utf-8")
+    GEN_SWING.write_text(
+        "# b1patch-source-sha: %s\n%s\n%s" % (sha, _GEN_NOTE, swing_src), encoding="utf-8")
+    importlib.invalidate_caches()
+
+
+def _load():
+    """Return the patched compute_btc_swings, rebuilding the modules if stale."""
+    global _swing_fn
+    if _swing_fn is not None:
+        return _swing_fn
+    sha = _sha()
+    if _stamp(GEN_FS) != sha or _stamp(GEN_SWING) != sha:
+        _generate(sha)
+    mod = importlib.import_module(_GEN_MODULE)
+    _swing_fn = mod.compute_btc_swings
+    return _swing_fn
 
 
 def compute_swings_patched(flow, mode: str, min_bars: int = 14) -> list[dict]:
     """compute_btc_swings with the B1 arming patch. Same signature as the shipped one."""
-    fn = _build_patched()
+    fn = _load()
     opts = {"minBars": max(2, int(min_bars))}
     cap = max(1, len(flow) // 2)
     if mode == "continuous":
         return fn(flow, opts=opts, max_swings=cap)
 
-    # daily mode needs the index-offset fix-up the route module does
-    from .btc_routes import _IDX_FIELDS        # lazy: circular at module level
+    from .btc_routes import _IDX_FIELDS        # lazy: btc_routes imports this module
     swings: list[dict] = []
     slice_start = 0
     n = len(flow)

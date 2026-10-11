@@ -156,3 +156,8 @@ backtest/tests/_sfl.err
 # exp_signal_both_long.py / exp_signal_fs_ladder.py.
 backtest/tests/_signal_both_long.json
 backtest/tests/_signal_fs_ladder.json
+
+# B1 arming patch: generated from src/firstswing.py + src/btc/btc_swing.py on import.
+# Rebuilt automatically when either source hash changes - never edit or commit these.
+backend/src/firstswing_b1patch.py
+backend/src/btc/btc_swing_b1patch.py
