@@ -607,38 +607,63 @@ class SwingEngine:
         _inside_window = self.bars_seen < self.min_bars
         if _inside_window:
             self._chop_cross_active = False
-        # Use snapshot of latest sealed before this bar's walker kill (break-before-kill)
-        # If a new H/L was sealed in this same bar that kills the victim, chop must still see victim.
-        # Snapshot is stored as _snap_high/low in process_bar; if not set, fall back to latest.
-        # We access via getattr to stay compatible with direct _check_chop calls (tests).
+        # The chop reads the LATEST sealed pivot, straight. The break-before-kill
+        # snapshot (_snap_high/_snap_low) used to be swapped in here so the chop
+        # would still see a victim pivot that this same candle's walker kill was
+        # about to remove.
+        #
+        # That snapshot is taken BEFORE the bar is processed, so it is always one
+        # candle behind. Owner, 2026-10-12, on the FS rule:
+        #
+        #   "In FS case, any new pivot of that direction comes, that replaces the
+        #    older one. That's it. [...] As soon as a new pivot is shown, the
+        #    previous one is already retired. We don't have to look for the
+        #    previous pivot to be broken."
+        #
+        # Swapping in a one-candle-old pivot is exactly what that rule forbids -
+        # it kept aiming at a retired level while the real, newest pivot was
+        # already sealed and visible.
+        #
+        #   2023-03-19  18:00 low 27131.0 sealed on the 18:30 candle. The 18:30
+        #     candle's low 27087.6 crossed it - the first, uncontaminated break -
+        #     but the snapshot still showed the older 27033.4, so nothing was
+        #     marked. 19:00 then marked 27131.0, already contaminated, on a candle
+        #     that broke no fresh pivot at all.
+        #   2023-07-02  07:00 low 30545.6 was the newest pivot and 30544.7 broke
+        #     it cleanly, but the snapshot showed the retired 30547.2, so the
+        #     clean break was skipped and the mark slid to 07:30.
+        #
+        # break-before-kill still applies where it is actually needed: the B2 and
+        # FLIP paths read latest_sealed_* directly and were never given the
+        # snapshot.
         if self.dir == "down":
-            # Temporarily swap latest for snap for this check
-            _orig = self.latest_sealed_high
-            _snap = getattr(self, "_snap_high", None)
-            if _snap is not None:
-                self.latest_sealed_high = _snap
             tgt = self._chop_target_high()
-            self.latest_sealed_high = _orig
             if tgt and self.hi > tgt.px:
-                # Was this level already broken by the PREVIOUS candle? Then this
-                # bar is not a new break, it is the same break one bar later. The
-                # pivot is spent and we wait for a fresh one.
+                # FRESHNESS, over EVERY bar since the pivot formed - not just the
+                # previous one.
                 #
-                # OWNER, 2025-07-20: "can't we do this check like where we are
-                # marking fs has just the prev candle has broken that or not?"
+                # OWNER, 2026-10-12: "why can't we do the simplest check of is it
+                # breaking any previous fresh uncontaminated bar or not? The 18:00
+                # is already being breached by the 18:30 candle, so that is
+                # contaminated. This is a simple check."
                 #
-                #   2025-07-20  pivot 118037.0, FS wanted at 15:30. The 15:15 candle
-                #     low was 117938.4, already through it. Skip, look for a new one.
-                #   2024-07-16  pivot 63845.8, FS wanted at 18:00. The 17:45 candle
-                #     high was 64127.0, already through it. Owner's answer: 19:00.
-                #   2023-01-03  pivot 16680.0, FS wanted at 21:30. The 21:15 candle
-                #     high was 16679.5, NOT through it. So 21:30 really is the first
-                #     break of the 20:30 corner, and the mark belongs there.
+                # The one-bar version could not see this. On 2023-03-19 the 18:00
+                # low 27131.0 was broken by the 18:30 candle (low 27087.6), but on
+                # that bar the chop was still aiming at the older pivot 27033.4,
+                # because the break-before-kill snapshot had not yet picked up the
+                # pivot that sealed on that very candle. So the break was never
+                # attributed to 27131.0, the level was never spent, and 19:00 came
+                # along and marked it - 2 bars late, on an already contaminated
+                # level.
                 #
-                # Local, like the owner asked: no cross-leg ledger, no extra state -
-                # bar_highs / bar_lows already hold every bar.
-                _prev = self.bar_highs.get(self.g_idx - 1)
-                if _prev is not None and _prev > tgt.px:
+                # bar_highs / bar_lows already hold every bar, so this stays local.
+                _prior = None
+                for _k in range(tgt.idx + 1, self.g_idx):
+                    _h = self.bar_highs.get(_k)
+                    if _h is not None and _h > tgt.px:
+                        _prior = _k
+                        break
+                if _prior is not None:
                     self._spent.add((tgt.idx, round(tgt.px, 4)))
                     self._chop_cross_active = False
                     return
@@ -660,32 +685,19 @@ class SwingEngine:
             else:
                 self._chop_cross_active = False
         elif self.dir == "up":
-            _orig_low = self.latest_sealed_low
-            _snap_low = getattr(self, "_snap_low", None)
-            if _snap_low is not None:
-                self.latest_sealed_low = _snap_low
             tgt = self._chop_target_low()
-            self.latest_sealed_low = _orig_low
             if tgt and self.lo < tgt.px:
-                # Was this level already broken by the PREVIOUS candle? Then this
-                # bar is not a new break, it is the same break one bar later. The
-                # pivot is spent and we wait for a fresh one.
-                #
-                # OWNER, 2025-07-20: "can't we do this check like where we are
-                # marking fs has just the prev candle has broken that or not?"
-                #
-                #   2025-07-20  pivot 118037.0, FS wanted at 15:30. The 15:15 candle
-                #     low was 117938.4, already through it. Skip, look for a new one.
-                #   2024-07-16  pivot 63845.8, FS wanted at 18:00. The 17:45 candle
-                #     high was 64127.0, already through it. Owner's answer: 19:00.
-                #   2023-01-03  pivot 16680.0, FS wanted at 21:30. The 21:15 candle
-                #     high was 16679.5, NOT through it. So 21:30 really is the first
-                #     break of the 20:30 corner, and the mark belongs there.
-                #
-                # Local, like the owner asked: no cross-leg ledger, no extra state -
-                # bar_highs / bar_lows already hold every bar.
-                _prev = self.bar_lows.get(self.g_idx - 1)
-                if _prev is not None and _prev < tgt.px:
+                # FRESHNESS over EVERY bar since the pivot formed. See the mirror
+                # branch above for the full note. OWNER, 2026-10-12: "the 18:00 is
+                # already being breached by the 18:30 candle, so that is
+                # contaminated. This is a simple check."
+                _prior = None
+                for _k in range(tgt.idx + 1, self.g_idx):
+                    _l = self.bar_lows.get(_k)
+                    if _l is not None and _l < tgt.px:
+                        _prior = _k
+                        break
+                if _prior is not None:
                     self._spent.add((tgt.idx, round(tgt.px, 4)))
                     self._chop_cross_active = False
                     return

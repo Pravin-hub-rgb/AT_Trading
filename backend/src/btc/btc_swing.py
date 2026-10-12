@@ -76,9 +76,16 @@ def compute_btc_swings(
         if swing_index > 0:
             eng.defer_same_bar_arm = True
         swing_found = False
+        # The bar this leg's warmup counts from. NOT seg.start_idx: that is where
+        # the DIRECTION was established, which can be many bars after the engine
+        # was constructed, so it is not what minBars counts against. bars_seen
+        # starts at 0 on this bar, so the 50th bar is leg_start_idx + min_bars - 1.
+        leg_start_pos = None
 
         for pos in range(next_start_pos, len(candles)):
             c = candles[pos]
+            if leg_start_pos is None:
+                leg_start_pos = pos
             eng.process_bar(c, pos)  # g_idx == window position (chart logical idx)
 
             if not eng.declared or eng.start_idx < 0:
@@ -146,6 +153,18 @@ def compute_btc_swings(
                     "confirmed_at_time": conf_time,
                     "fs_at_idx": fs_at_idx,
                     "fs_at_time": fs_at_time,
+                    # Owner, 2026-10-12: "I think we should be also marking the
+                    # 50th bar so that I can clearly rule it out ... according to
+                    # the study that I have chosen on the dropdown, the MB should
+                    # be shown." leg_start_idx is the bar minBars counts from,
+                    # so min_bars_idx is the first bar on which this leg is
+                    # allowed to declare.
+                    "leg_start_idx": (leg_start_pos if leg_start_pos is not None
+                                      else eng.start_idx),
+                    "min_bars": int(_opts.get("minBars", 14)),
+                    "min_bars_idx": ((leg_start_pos if leg_start_pos is not None
+                                      else eng.start_idx)
+                                     + int(_opts.get("minBars", 14)) - 1),
                 }
             )
             swing_index += 1
