@@ -129,6 +129,19 @@ class SwingEngine:
         self.bar_lows: dict[int, float] = {}
         self.latest_sealed_high: Optional[Lvl] = None
         self.latest_sealed_low: Optional[Lvl] = None
+        # Pivots already broken, keyed on (pivot_idx, price), shared across the
+        # whole chain by btc_swing.compute_btc_swings.
+        #
+        # OWNER, 2025-07-20: "It is breaking a pivot, that's it. Who is stopping it?"
+        # and: "we were blocked by 50th bar gate so now as the 15:15 is already
+        # contaminated ... and 15:30 is not breaching any pivot so we look for new."
+        #
+        # Keyed on the index as well as the price because a price recurs across
+        # 129,715 candles: 16680.0 alone cannot identify a level. Keyed across the
+        # chain because compute_btc_swings builds a fresh SwingEngine per swing, so a
+        # per-engine set could never see a level an earlier leg already broke.
+        self._spent_pivots: set = set()
+        self.spent_pivots: Optional[set] = None   # chain-wide override
 
         self.state: State = "watch"
         self.dir: Optional[Literal["up", "down"]] = None
@@ -173,6 +186,11 @@ class SwingEngine:
         self._chop_cross_active: bool = False
         self.break_marks: list[FsBreakMark] = []
         self.seed_idx: int = -1
+
+    @property
+    def _spent(self) -> set:
+        """Pivots already broken. Chain-wide when the chain supplies one."""
+        return self._spent_pivots if self.spent_pivots is None else self.spent_pivots
 
     @property
     def locked(self) -> bool:
@@ -491,6 +509,8 @@ class SwingEngine:
         self.start_px = s.px
         self.locked_level = self.e_hi_prev.px if dir == "up" else self.e_lo_prev.px
         self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="B1", dir=dir, px=self.locked_level))
+        _lv = self.e_hi_prev if dir == "up" else self.e_lo_prev
+        self._spent.add((_lv.idx, round(_lv.px, 4)))
 
     def _confirm_direction(self) -> None:
         self.dir_confirmed = True
@@ -548,6 +568,8 @@ class SwingEngine:
         # as_b2: same state transition as a flip, but the break is recorded as
         # the live B1 legs B2 (flip-back into a direction whose B1 never got B2).
         self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="B2" if as_b2 else "FLIP", dir=dir, px=self.locked_level))
+        _lv = self.e_hi_prev if dir == "up" else self.e_lo_prev
+        self._spent.add((_lv.idx, round(_lv.px, 4)))
 
     def _check_chop(self) -> None:
         if self.just_fired_b2:
@@ -571,9 +593,20 @@ class SwingEngine:
         # it opens. An early cross leaves _chop_cross_active False, so the same
         # pivot is re-tested on every later bar and the cross is armed fresh on the
         # first bar at or after minBars - which is the "new FS after the 50th bar".
-        if self.bars_seen < self.min_bars:
+        # A cross inside the 50-bar window is still a break, so it still SPENTS
+        # its pivot - the owner's 15:15 case: the 14:45 pivot is contaminated the
+        # moment 15:15 breaks it, so the FS cannot use it at 15:30. But the swing
+        # may not be DECLARED inside the window, so the cross is not armed.
+        #
+        # This cannot be a bare early return: the owner, 2025-07-20 - "we were
+        # blocked by 50th bar gate so now as the 15:15 is already contaminated".
+        # An early return meant the engine never even saw the break, so the pivot
+        # stayed fresh and 15:30 re-used it. That was 2024-07-16 as well: the
+        # 17:45 bar broke the 17:15 high 63845.8 unseen, and 18:00 declared the
+        # swing off it. The owner's answer there was 19:00.
+        _inside_window = self.bars_seen < self.min_bars
+        if _inside_window:
             self._chop_cross_active = False
-            return
         # Use snapshot of latest sealed before this bar's walker kill (break-before-kill)
         # If a new H/L was sealed in this same bar that kills the victim, chop must still see victim.
         # Snapshot is stored as _snap_high/low in process_bar; if not set, fall back to latest.
@@ -587,6 +620,31 @@ class SwingEngine:
             tgt = self._chop_target_high()
             self.latest_sealed_high = _orig
             if tgt and self.hi > tgt.px:
+                # Was this level already broken by the PREVIOUS candle? Then this
+                # bar is not a new break, it is the same break one bar later. The
+                # pivot is spent and we wait for a fresh one.
+                #
+                # OWNER, 2025-07-20: "can't we do this check like where we are
+                # marking fs has just the prev candle has broken that or not?"
+                #
+                #   2025-07-20  pivot 118037.0, FS wanted at 15:30. The 15:15 candle
+                #     low was 117938.4, already through it. Skip, look for a new one.
+                #   2024-07-16  pivot 63845.8, FS wanted at 18:00. The 17:45 candle
+                #     high was 64127.0, already through it. Owner's answer: 19:00.
+                #   2023-01-03  pivot 16680.0, FS wanted at 21:30. The 21:15 candle
+                #     high was 16679.5, NOT through it. So 21:30 really is the first
+                #     break of the 20:30 corner, and the mark belongs there.
+                #
+                # Local, like the owner asked: no cross-leg ledger, no extra state -
+                # bar_highs / bar_lows already hold every bar.
+                _prev = self.bar_highs.get(self.g_idx - 1)
+                if _prev is not None and _prev > tgt.px:
+                    self._spent.add((tgt.idx, round(tgt.px, 4)))
+                    self._chop_cross_active = False
+                    return
+                self._spent.add((tgt.idx, round(tgt.px, 4)))
+                if _inside_window:
+                    return      # pivot spent, swing not declarable yet
                 if not self._chop_cross_active:
                     # completing break = the TRANSITION into the cross
                     self.last_chop_cross_idx = self.g_idx
@@ -609,6 +667,31 @@ class SwingEngine:
             tgt = self._chop_target_low()
             self.latest_sealed_low = _orig_low
             if tgt and self.lo < tgt.px:
+                # Was this level already broken by the PREVIOUS candle? Then this
+                # bar is not a new break, it is the same break one bar later. The
+                # pivot is spent and we wait for a fresh one.
+                #
+                # OWNER, 2025-07-20: "can't we do this check like where we are
+                # marking fs has just the prev candle has broken that or not?"
+                #
+                #   2025-07-20  pivot 118037.0, FS wanted at 15:30. The 15:15 candle
+                #     low was 117938.4, already through it. Skip, look for a new one.
+                #   2024-07-16  pivot 63845.8, FS wanted at 18:00. The 17:45 candle
+                #     high was 64127.0, already through it. Owner's answer: 19:00.
+                #   2023-01-03  pivot 16680.0, FS wanted at 21:30. The 21:15 candle
+                #     high was 16679.5, NOT through it. So 21:30 really is the first
+                #     break of the 20:30 corner, and the mark belongs there.
+                #
+                # Local, like the owner asked: no cross-leg ledger, no extra state -
+                # bar_highs / bar_lows already hold every bar.
+                _prev = self.bar_lows.get(self.g_idx - 1)
+                if _prev is not None and _prev < tgt.px:
+                    self._spent.add((tgt.idx, round(tgt.px, 4)))
+                    self._chop_cross_active = False
+                    return
+                self._spent.add((tgt.idx, round(tgt.px, 4)))
+                if _inside_window:
+                    return      # pivot spent, swing not declarable yet
                 if not self._chop_cross_active:
                     # completing break = the TRANSITION into the cross
                     self.last_chop_cross_idx = self.g_idx
@@ -632,6 +715,10 @@ class SwingEngine:
         p = self.latest_sealed_high
         if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
             return None
+        # Already broken earlier, so not fresh. Owner, 2025-07-20: "15:30 is
+        # not breaching any pivot so we look for new."
+        if (p.idx, round(p.px, 4)) in self._spent:
+            return None
         # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): the
         # opposing pivot must have FORMED after the current leg was established
         # (B2 or flip) � breaking a pre-existing pivot does not complete the leg.
@@ -648,6 +735,8 @@ class SwingEngine:
         # the LATEST sealed low pivot ONLY � "any new L kills old L". No fallback.
         p = self.latest_sealed_low
         if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
+            return None
+        if (p.idx, round(p.px, 4)) in self._spent:
             return None
         # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): see above.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:

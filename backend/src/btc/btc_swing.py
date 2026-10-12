@@ -64,8 +64,13 @@ def compute_btc_swings(
     swing_index = 0
     next_start_pos = 0
 
+    # One set for the whole chain: a pivot broken by any mark on any leg is
+    # spent for every later leg too. See firstswing._spent_pivots.
+    spent_pivots: set = set()
+
     while swing_index < cap:
         eng = SwingEngine(_opts)
+        eng.spent_pivots = spent_pivots
         # Swings after the first: same-bar arm guard (a Walker seal arms the
         # engine from the NEXT bar) — identical to the Nifty batch helper.
         if swing_index > 0:
