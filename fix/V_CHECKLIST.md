@@ -91,7 +91,43 @@ asymmetry - the owner noticed the downside side behaving correctly while the ups
 side skips. Not reproduced or dismissed yet; no date pinned, so it needs one before
 it can be measured.
 
+### [ ] V13 — B2 is not marked when the B1 level itself is broken
+
+Owner, 2026-10-12, walking **2023-03-19** on the chart:
+
+> "The calculation of this swing starts from 19th March 2023 4:45. Okay, so B1 is at
+> 6:00, then B2 is at 7:00. First of all, why B2 is not marked at 6:30? [...]
+> B1 breaks the high of 4:45. So 6:00 is marked as B1. Now B1 high itself is a pivot.
+> So it got broken by 6:30 candle, but B2 is not marked there."
+
+Read off the chart, full timestamps:
+
+| time | what the owner identifies |
+|---|---|
+| **2023-03-19 04:45** | leg starts; the extreme is the high of this candle |
+| **2023-03-19 05:15** | second pivot created |
+| **2023-03-19 06:00** | **B1** — breaks the high of 2023-03-19 04:45 |
+| **2023-03-19 06:30** | breaks the B1 high, which is now itself a pivot — **B2 is NOT marked here**, owner expects it here |
+| **2023-03-19 07:00** | B2 marked here instead |
+
+Either the 04:45 high or the 05:15 pivot may be broken first, and that break is B1.
+Then the B1 high becomes a pivot in its own right, and its break should be B2.
+
+**Recorded, not yet measured.** No detector exists and no rule is written down for
+what makes B2 rather than FS or FLIP. The owner's own note: "I said we shouldn't be
+working on B2. But there is a serious concern there." B2 validation stays deferred
+(V2) until the owner opens it, but this case is pinned here so it is not lost.
+
+The owner also states the level question as a standing rule while walking this case:
+
+> "B1 high itself is a pivot. So it got broken by 6:30 candle, but B2 is not marked
+> there."
+
+This is the second leg's chop against a level created by the first leg's B1 — the
+same shape as the V12 contamination rule, but landing on B2 rather than FS.
+
 ### [ ] V12 - the FS pivot can be a level an earlier candle already broke
+
 
 Owner, 2025-07-20, on the 14:45 low 118037.0: "15:15 breaks it, so it is considered
 as B1 ... But 15:30 is not breaking any pivot. That pivot was already broken by
