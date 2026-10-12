@@ -3,7 +3,7 @@
  "symbol": "BTCUSDT_BYBIT",
  "min_bars": 50,
  "candles": 129715,
- "swings": 2952,
- "marks": 7993,
- "sha256": "87a103eacf552fa55333c2a3a930b681ecf6db0ff7b24055fd987aedce3a1b98"
+ "swings": 2753,
+ "marks": 7505,
+ "sha256": "ec02df271897b3bd1fadd77798059890b20eb089764905738905b7912eb3b856"
 }

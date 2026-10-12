@@ -34,17 +34,78 @@ sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(ROOT / "backend"))
 
 from src.btc.btc_routes import _load_window
-from src.btc.btc_swing import compute_btc_swings, compute_btc_flow
+from src.btc.btc_swing import compute_btc_swings
+from src.btc.btc_display_walk import display_flow
 
 TF, MIN_BARS, SYMBOL, LIMIT = "15m", 50, "BTCUSDT_BYBIT", 200000
 OUT = HERE / "_fs_breaks_pivot.json"
 
+# The owner's own rulings, recorded verbatim.
+#
+# GATE, owner 2026-10-12, asked whether FS may sit ON the 50th bar:
+#   "If it is greater than equal to, then FS is at the correct place. [...] If it
+#    is allowed on the same bar of the 50th gate, then yes, this is correct."
+#   The gate is `bars_seen < min_bars` (firstswing.py L607/L771), so bars_seen
+#   == min_bars is already OUTSIDE the window. The 2025-07-20 leg reaches its
+#   50th bar at 15:15, and the 15:15 candle is the first to cross the 14:45
+#   pivot 118037.0 - so 15:15 is the FS. The owner's earlier 16:15 answer came
+#   from the stale break-before-kill snapshot hiding that break; with the snapshot
+#   gone the 15:15 crossing is visible and the gate permits it.
+#
+#   The owner's alternative, recorded so the rule stays testable: "Only if it is
+#   not allowed, then we go ahead [...] the pivot is at the low of 15:30, which
+#   is got broken by 16:15." 16:15's low 117903.6 does cross 15:30's low
+#   117926.7, so that reading is self-consistent too - it is simply not the gate
+#   this engine implements.
+#
+# FRESHNESS, owner 2026-10-12:
+#   "If a previous candle have already crossed it, then it is already
+#    contaminated. But if previous candle have just seen it, haven't crossed it,
+#    and yet another candle have crossed it, that candle can be marked as FS."
+#   Touch (equal) is NOT contamination; only a strict cross is.
+#
+# FS TARGET, owner 2026-10-12 - this is what the stale snapshot was breaking:
+#   "In FS case, any new pivot of that direction comes, that replaces the older
+#    one. That's it. [...] As soon as a new pivot is shown, the previous one is
+#    already retired. We don't have to look for the previous pivot to be broken.
+#    That would be for B1 and B2, or flip."
+#
+# 2023-03-19, owner: "The 18:00 low, 27.131 [...] it broke by 18:30. [...] it is
+# not breaking any low, any pivot low." The 18:30 candle's low 27087.6 is the
+# first cross of the 18:00 pivot 27131.0, and the leg's 50th bar is 17:00, so
+# 18:30 is the FS.
 CONFIRMED_FS = {
+    "2023-03-19 18:30": True,
+    "2023-07-02 07:00": True,
+    "2023-10-15 15:15": True,
+    "2025-08-22 21:45": True,
     "2024-07-16 19:00": True,
-    "2025-07-20 16:15": True,
+    "2025-07-20 15:15": True,
+    # must NOT be marked
+    "2023-03-19 19:00": False,
+    "2023-07-02 06:30": False,
     "2024-07-16 18:00": False,
     "2025-07-20 15:30": False,
 }
+
+
+# the pivot each engine aimed at, keyed by the bar the cross landed on
+from src.firstswing import SwingEngine
+TARGET = {}
+_r_c = SwingEngine._confirm
+
+
+def _cap(self, src, trig=None):
+    if (self.t[11:16] >= self.time_cap and self.bars_seen >= self.min_bars
+            and self._chop_cross_active):
+        h = self.last_confirm_hit or {}
+        # key by the CROSS bar, because that is what fs_at_idx is - not by the
+        # declaring bar, which can be a bar or two later (the snap mechanism).
+        TARGET[self.last_chop_cross_idx] = (h.get("idx"), h.get("px"))
+    return _r_c(self, src, trig)
+
+
+SwingEngine._confirm = _cap
 
 
 def main():
@@ -52,13 +113,38 @@ def main():
     candles = list(candles)
     flow = list(flow)
     sw = compute_btc_swings(flow, opts={"minBars": MIN_BARS}, max_swings=max(1, len(flow) // 2))
-    segs = compute_btc_flow(flow, day_mode="continuous")
+    # The line the owner actually SEES, not the pre-splice one.
+    #
+    # display_pivots() is what btc_routes.py serves as "flow" (btc_display_walk),
+    # and it re-draws the candles the walker swallows inside an insider stack.
+    # Validating against compute_btc_flow instead was checking a line that no
+    # longer appears on the chart: on 2023-01-08 that line draws four points
+    # where the chart draws eight, and the 07:45 low the owner rules a real
+    # pivot is absent from it.
+    segs = display_flow(flow, day_mode="continuous")
 
-    # corners of the white line: every segment endpoint
+    # Corners of the white line, WITH their direction.
+    #
+    # Direction matters and the first version dropped it. A segment's dir is "B"
+    # when it rises and "S" when it falls, so the point a segment ENDS at is a LOW
+    # (a V, the owner's word) when that segment rose, and a HIGH (an A) when it fell.
+    #
+    # Without that, the freshness scan asked "did any bar trade above 16554.0" for a
+    # corner that was actually a LOW at 16554.0 - true on the very next bar, every
+    # time - and reported 2860 of 2863 as stale. That was the detector, not the engine.
+    # A segment's dir is "B" when it RISES and "S" when it FALLS, so the point it
+    # ENDS at is a peak (A, high) when the segment rose into it, and a valley
+    # (V, low) when it fell into it. The first version had these inverted, which
+    # made every up-leg look like it was aiming at a valley: check 2 then failed on
+    # a case where the engine was right (2025-06-28 aims at candle 10:00's HIGH
+    # 107174.9 for an up leg) and check 5 scanned for a break on the wrong side,
+    # which is why it reported a breaker exactly 1 bar later in 2860 of 2863 cases.
     corners = {}
     for s in segs:
-        corners.setdefault(s["endIdx"], []).append(("end", s["endPx"], s["dir"]))
-        corners.setdefault(s["startIdx"], []).append(("start", s["startPx"], s["dir"]))
+        end_kind = "high" if s["dir"] == "B" else "low"    # rose into it -> peak
+        start_kind = "low" if s["dir"] == "B" else "high"  # fell into it -> peak
+        corners.setdefault(s["endIdx"], set()).add((end_kind, round(s["endPx"], 1)))
+        corners.setdefault(s["startIdx"], set()).add((start_kind, round(s["startPx"], 1)))
 
     fs_rows = []
     for s in sw:
@@ -67,7 +153,9 @@ def main():
             continue
         fs_rows.append({"swing": s["swing_index"], "idx": fa,
                         "time": candles[fa]["date"][:16], "dir": s["dir"],
-                        "start_idx": s["seg"]["start_idx"]})
+                        "start_idx": s["seg"]["start_idx"],
+                        "target_idx": TARGET.get(fa, (None, None))[0],
+                        "target_px": TARGET.get(fa, (None, None))[1]})
 
     print("=" * 86)
     print("FS BREAKS A PIVOT?   pivots taken from the WHITE FLOW LINE the owner sees")
@@ -90,38 +178,49 @@ def main():
     okc = collections.Counter()
     for r in fs_rows:
         i = r["idx"]
-        want_high = (r["dir"] == "up")     # an up leg ends by breaking a high corner
+        # Which side gets breached, read off the leg, not guessed.
+        #
+        # firstswing._check_chop: a DOWN leg aims at a sealed HIGH and fires when
+        # self.hi > tgt.px, so a down leg breaks UPWARD through a peak. An UP leg
+        # aims at a sealed LOW and fires when self.lo < tgt.px, so an up leg breaks
+        # DOWNWARD through a valley.
+        #
+        # This line had it exactly backwards. Checking it against the real candles
+        # (n=2863) the engine aims at: up -> LOW 1460/1461, down -> HIGH 1401/1402.
+        # Scanning "high > lvl" for an up leg tested whether price rose above a
+        # valley, which the very next candle satisfies by construction - producing a
+        # false "breaker exactly +1 bar later" in 2861 of 2863 cases.
+        want_high = (r["dir"] == "down")
         cc = candles[i]
 
-        # nearest flow-line corner on the right side that this bar breaches
-        hit = None
-        for j in sorted((k for k in corners if k < i), reverse=True):
-            if i - j > 60:
-                break
-            for kind, lvl, _d in corners[j]:
-                if want_high and cc["high"] > lvl:
-                    hit = (j, lvl)
-                    break
-                if (not want_high) and cc["low"] < lvl:
-                    hit = (j, lvl)
-                    break
-            if hit:
-                break
-        if not hit:
-            fails["1_no_corner_broken"].append(r)
+        # The pivot the engine AIMED AT. Asking "is the nearest flow-line corner
+        # fresh" instead was comparing the wrong thing: the previous run reported
+        # 2450 and 2665 failures that way, and reconciliation then showed the
+        # engine's target and the flow line agree on the level in 2863 of 2863
+        # cases - so the earlier freshness count was measuring a different level.
+        pj, lvl = r.get("target_idx"), r.get("target_px")
+        if pj is None or lvl is None or pj >= i:
+            fails["1_no_pivot_aimed_at"].append(r)
             continue
         okc["1"] += 1
-        pj, lvl = hit
 
         # 2. the corner must really turn the line (it is an endpoint of a segment)
-        turns = len(corners.get(pj, [])) >= 2
+        need = "high" if want_high else "low"
+        turns = (need, round(lvl, 1)) in corners.get(pj, set())
         if not turns:
-            fails["2_not_a_corner"].append(dict(r, corner=candles[pj]["date"][:16],
-                                               level=round(lvl, 1)))
+            fails["2_target_is_not_a_flow_corner"].append(
+                dict(r, corner=candles[pj]["date"][:16], level=round(lvl, 1)))
             continue
         okc["2"] += 1
 
-        # 3. freshness
+        brk = (cc["high"] > lvl) if want_high else (cc["low"] < lvl)
+        if not brk:
+            fails["3_bar_does_not_break_target"].append(
+                dict(r, corner=candles[pj]["date"][:16], level=round(lvl, 1)))
+            continue
+        okc["3"] += 1
+
+        # 4. freshness
         already = None
         for k in range(pj + 1, i):
             if want_high and candles[k]["high"] > lvl:
@@ -131,36 +230,30 @@ def main():
                 already = k
                 break
         if already is not None:
-            fails["3_corner_not_fresh"].append(dict(r, corner=candles[pj]["date"][:16],
-                                                    level=round(lvl, 1),
-                                                    earlier=candles[already]["date"][:16]))
+            fails["5_pivot_not_fresh"].append(dict(r, corner=candles[pj]["date"][:16],
+                                                   level=round(lvl, 1),
+                                                   earlier=candles[already]["date"][:16]))
             continue
-        okc["3"] += 1
-
-        # 4. the 50-bar window
-        if i < r["start_idx"] + MIN_BARS:
-            fails["4_inside_window"].append(dict(r, corner=candles[pj]["date"][:16],
-                                                  bars_in=i - r["start_idx"]))
-            continue
-        okc["4"] += 1
+        okc["5"] += 1
 
     n = len(fs_rows)
     print("CHECK RESULTS")
     print("-" * 86)
-    print("   1  FS bar breaks a flow-line corner : %4d ok  %4d FAIL"
-          % (okc["1"], len(fails["1_no_corner_broken"])))
-    print("   2  that point is a real corner     : %4d ok  %4d FAIL"
-          % (okc["2"], len(fails["2_not_a_corner"])))
-    print("   3  the corner is FRESH             : %4d ok  %4d FAIL"
-          % (okc["3"], len(fails["3_corner_not_fresh"])))
-    print("   4  FS outside the 50-bar window    : %4d ok  %4d FAIL"
-          % (okc["4"], len(fails["4_inside_window"])))
+    print("   1  engine aimed at a pivot         : %4d ok  %4d FAIL"
+          % (okc["1"], len(fails["1_no_pivot_aimed_at"])))
+    print("   2  that pivot is a flow-line corner: %4d ok  %4d FAIL"
+          % (okc["2"], len(fails["2_target_is_not_a_flow_corner"])))
+    print("   3  the FS bar breaks that pivot    : %4d ok  %4d FAIL"
+          % (okc["3"], len(fails["3_bar_does_not_break_target"])))
+    print("   5  the pivot is FRESH              : %4d ok  %4d FAIL"
+          % (okc["5"], len(fails["5_pivot_not_fresh"])))
     print("-" * 86)
     print("   FS checked %d    fully valid %d    with a defect %d"
-          % (n, okc["4"], n - okc["4"]))
+          % (n, okc["5"], n - okc["5"]))
     print()
 
-    for k in ("1_no_corner_broken", "2_not_a_corner", "3_corner_not_fresh", "4_inside_window"):
+    for k in ("1_no_pivot_aimed_at", "2_target_is_not_a_flow_corner",
+              "3_bar_does_not_break_target", "5_pivot_not_fresh"):
         if not fails[k]:
             continue
         print("%s  -  %d, first 10:" % (k.upper(), len(fails[k])))
