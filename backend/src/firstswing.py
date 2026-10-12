@@ -639,24 +639,34 @@ class SwingEngine:
         if self.dir == "down":
             tgt = self._chop_target_high()
             if tgt and self.hi > tgt.px:
-                # FRESHNESS, over EVERY bar since the pivot formed - not just the
-                # previous one.
+                # FRESHNESS - a second line of defence, CURRENTLY UNREACHABLE.
                 #
-                # OWNER, 2026-10-12: "why can't we do the simplest check of is it
-                # breaking any previous fresh uncontaminated bar or not? The 18:00
-                # is already being breached by the 18:30 candle, so that is
-                # contaminated. This is a simple check."
+                # The rule is the owner's and it is correct:
+                #   "if a previous candle have already crossed it, then it is
+                #    already contaminated. But if previous candle have just seen
+                #    it, haven't crossed it, and yet another candle have crossed
+                #    it, that candle can be marked as FS."
                 #
-                # The one-bar version could not see this. On 2023-03-19 the 18:00
-                # low 27131.0 was broken by the 18:30 candle (low 27087.6), but on
-                # that bar the chop was still aiming at the older pivot 27033.4,
-                # because the break-before-kill snapshot had not yet picked up the
-                # pivot that sealed on that very candle. So the break was never
-                # attributed to 27131.0, the level was never spent, and 19:00 came
-                # along and marked it - 2 bars late, on an already contaminated
-                # level.
+                # It does not run today, and this scan was proven dead by
+                # disabling it in both branches: the chain stayed at 2,753 swings
+                # / 7,505 marks / identical sha. Do not read it as protection.
                 #
-                # bar_highs / bar_lows already hold every bar, so this stays local.
+                # Why it cannot fire: any crossing spends the pivot on the
+                # crossing bar itself - the _spent.add below runs BEFORE the
+                # _inside_window return - so by the time the engine is aiming at
+                # a pivot, no earlier bar can have crossed it without that pivot
+                # already being spent and rejected by _chop_target_high's spent
+                # check. The only remaining route is the gap rule blocking
+                # attribution on the pivot's own next bar, and that does not occur
+                # on this data.
+                #
+                # An earlier version of this comment claimed the scan fixed the
+                # 2023-03-19 case. It did not. That came from removing the stale
+                # break-before-kill snapshot in the same commit. That claim is
+                # withdrawn here so the next reader does not trust it.
+                #
+                # Keep the code: it is cheap, local, and correct if the spend
+                # ordering above ever changes. Fix the comment, not the rule.
                 _prior = None
                 for _k in range(tgt.idx + 1, self.g_idx):
                     _h = self.bar_highs.get(_k)
@@ -687,10 +697,9 @@ class SwingEngine:
         elif self.dir == "up":
             tgt = self._chop_target_low()
             if tgt and self.lo < tgt.px:
-                # FRESHNESS over EVERY bar since the pivot formed. See the mirror
-                # branch above for the full note. OWNER, 2026-10-12: "the 18:00 is
-                # already being breached by the 18:30 candle, so that is
-                # contaminated. This is a simple check."
+                # FRESHNESS - see the mirror branch above for the full note. Also
+                # currently unreachable, and the 2023-03-19 fix came from the
+                # snapshot removal rather than from this scan.
                 _prior = None
                 for _k in range(tgt.idx + 1, self.g_idx):
                     _l = self.bar_lows.get(_k)
