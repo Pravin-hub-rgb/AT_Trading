@@ -442,14 +442,18 @@ class SwingEngine:
         if self.dir == "down":
             b2_fired = False
             if down_break:
+                # Mirror of the up branch: B2 breaks the standing extreme
+                # (e_lo_prev), never e_lo_pivot, which already carries this
+                # candle's own low. See the full note in the up branch.
+                _tgt = self.e_lo_prev
                 if (
-                    self.e_lo_pivot is not None
-                    and self.e_lo_pivot.idx >= self.b1_bar_idx
-                    and self.lo < self.e_lo_pivot.px
+                    _tgt is not None
+                    and _tgt.idx >= self.b1_bar_idx
+                    and self.lo < _tgt.px
                 ):
                     # B2 1-candle pivot gap (permanent default b2_gap_bars=1)
                     if getattr(self, "b2_gap_bars", 0) > 0:
-                        p = self.e_lo_pivot  # type: ignore
+                        p = _tgt  # type: ignore
                         if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
                             gap_low = self.bar_lows.get(p.idx + 1)
                             if gap_low is not None and gap_low >= p.px:
@@ -468,13 +472,38 @@ class SwingEngine:
         elif self.dir == "up":
             b2_fired = False
             if up_break:
+                # B2 breaks the standing EXTREME, not e_hi_pivot.
+                #
+                # OWNER, 2026-10-12, 2023-03-19: "B2 and flip [...] these depend
+                # upon not any pivot. These depend on the extreme pivot only. Till
+                # the swing has formed, the extreme pivots [...] are the target
+                # that should be breached by B2 and flip."
+                #
+                #   "4:45 high is an extreme, and then it creates a pivot at 5:15
+                #    [...] 6:00 breaks the high extreme, so B1 is marked here
+                #    correctly. Now as it has breached the pivot of 4:45, now we are
+                #    looking. So 6:00 is the new extreme. Now 6:30 breaches it, so
+                #    B2 should be marked over here."
+                #
+                # e_hi_pivot is the extreme INCLUDING this bar - the walker seal
+                # loop above has already overwritten it with this candle's own high.
+                # Comparing self.hi against it is the bar against itself, which is
+                # never true, so B2 could not fire on the very candle that made the
+                # new extreme. e_hi_prev is the extreme as it stood before this bar,
+                # and is the same level up_break already tested.
+                #
+                # On 2023-03-19 06:30 the old code read e_hi_pivot 27153.9 and
+                # asked whether 27153.9 > 27153.9. e_hi_prev is 27123.1, and
+                # 27153.9 > 27123.1, so B2 lands on 06:30 as the owner ruled.
+                # The 06:15 gap is clean: its high 27111.5 never crossed 27123.1.
+                _tgt = self.e_hi_prev
                 if (
-                    self.e_hi_pivot is not None
-                    and self.e_hi_pivot.idx >= self.b1_bar_idx
-                    and self.hi > self.e_hi_pivot.px
+                    _tgt is not None
+                    and _tgt.idx >= self.b1_bar_idx
+                    and self.hi > _tgt.px
                 ):
                     if getattr(self, "b2_gap_bars", 0) > 0:
-                        p = self.e_hi_pivot  # type: ignore
+                        p = _tgt
                         if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
                             gap_high = self.bar_highs.get(p.idx + 1)
                             if gap_high is not None and gap_high <= p.px:
