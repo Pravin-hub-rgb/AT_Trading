@@ -294,6 +294,30 @@ class WalkerEngine:
                         self.stamp_px = p.near
                     flipped_this_bar = True
 
+            # A resolved stack keeps its OWN far side as a sealed pivot.
+            #
+            # The pending's px is, by construction, the extreme of the candle
+            # that opened it (px = c.high when dir is down, else c.low). When
+            # the stack resolves without ever sealing that candle, the level is
+            # silently discarded and the previous same-kind pivot stays
+            # standing - so a level the white line draws can never be aimed at.
+            #
+            # 2023-01-23: pending k=H idx=2127 px=22698.5 resolves on the 09:45
+            # bar and emits only 09:00 L 22642.5. latest_sealed_high stays
+            # 08:30 @22767.0, a pivot the line has already retired, so the FS
+            # lands at 10:30 instead of 09:45.
+            #
+            # OWNER: "as soon as a new pivot is shown, the previous one is
+            # already retired." Emitted only when the stack actually resolved
+            # and only when nothing in this batch already sealed it, so this
+            # can never duplicate a pivot the walker produced itself.
+            if pend is not None and self.pending is None:
+                if not any(p.idx == pend.idx and p.kind == pend.kind
+                           for p in self.bar_out):
+                    self._emit(AlgoPivot(idx=pend.idx, time=pend.time,
+                                         kind=pend.kind, px=pend.px,
+                                         sealed=True))
+
         for step in ([] if skip_steps else _bar_steps(c)):
             if step["side"] == "low":
                 if self.dir == "down":
