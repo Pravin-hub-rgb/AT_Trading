@@ -186,6 +186,22 @@ class SwingEngine:
         self._chop_cross_active: bool = False
         self.break_marks: list[FsBreakMark] = []
         self.seed_idx: int = -1
+        # OWNER 2026-10-13, alternation: "we cannot be having B2 B2, or flip
+        # and flip. We can have B2 flip B2, or flip B2 flip." A B2 closes the
+        # leg, so a second B2 in the same direction must never be marked - a
+        # volatile candle that sustains the leg is then simply not marked, and
+        # we wait for the next candle. Reset whenever the direction changes.
+        self._b2_done_in_dir: bool = False
+        # kind of the most recent mark on this leg, for alternation:
+        # "we cannot be having B2 B2, or flip and flip"
+        self._last_mark_kind: str = ""
+        # The side of this swing's B1. Deliberately NOT cleared by a B2: after
+        # B1->B2->FLIP, a break back on B1's side is that leg's B2 again
+        # ("B2 returns to B1's side after the FLIP"), NOT a second FLIP.
+        self._b1_side: str = ""
+        # Candle body, for the volatile-bar sustainability rule.
+        self.op: float = float("nan")
+        self.cl: float = float("nan")
 
     @property
     def _spent(self) -> set:
@@ -204,6 +220,11 @@ class SwingEngine:
         self.t = c.date if len(c.date) >= 16 else ""
         self.hi = c.high
         self.lo = c.low
+        # Candle BODY, for the sustainability rule: a mark is only decided once
+        # the candle has closed, so a volatile bar (breaks both extremes) is
+        # resolved by its colour - green sustained up, red sustained down.
+        self.op = c.open
+        self.cl = c.close
         self.ts_map[g_idx] = c.date
 
         self.just_fired_b2 = False
@@ -414,11 +435,20 @@ class SwingEngine:
                 # from a flip-born direction: this break IS that legs B2, not a
                 # new flip. (1 Sep 2026 swing 6: B1(up)@11:55 -> FLIP(down)@12:01
                 # -> high-extreme break @12:05 was marked FLIP instead of B2.)
+                # OWNER 2026-10-13, 2023-01-18 02:30: "The first check you should
+                # do for each swing is that if in a swing there is B1 and FLIP, so
+                # is FLIP and B2 opposite direction? ... Now the second flip
+                # cannot be the opposite direction. That's it. ... 02:30 breaking
+                # the extreme high, which was 01:30's high. So this should be a
+                # B2, not a flip."
+                #
+                # So: once a leg has a direction, a break against it is that
+                # leg's B2 - it can never be a FLIP. A FLIP always goes WITH the
+                # new direction, never against it.
                 if (
-                    self.flip_established
-                    and self.ever_b1_dir == "up"
-                    and self.e_hi_pivot is not None
-                    and self.hi > self.e_hi_pivot.px
+                    self._b1_side == "up"
+                    and self.e_hi_prev is not None
+                    and self.hi > self.e_hi_prev.px
                 ):
                     self._flip("up", as_b2=True)
                 else:
@@ -427,16 +457,88 @@ class SwingEngine:
                 return
             if self.dir == "up" and down_break and not up_break:
                 if (
-                    self.flip_established
-                    and self.ever_b1_dir == "down"
-                    and self.e_lo_pivot is not None
-                    and self.lo < self.e_lo_pivot.px
+                    self._b1_side == "down"
+                    and self.e_lo_prev is not None
+                    and self.lo < self.e_lo_prev.px
                 ):
                     self._flip("down", as_b2=True)
                 else:
                     self._flip("down")
                 self._check_chop()
                 return
+            if up_break and down_break:
+                # VOLATILE bar - it broke BOTH extremes, so neither the one-sided
+                # branch above can claim it and the old code fell through to a
+                # bare return: the candle produced NO mark at all, and the leg
+                # waited a bar or more for the next one-sided break.
+                #
+                # OWNER 2026-10-13: "we are waiting for marks after it closes...
+                # so we see if it is a green, what means it sustained on the B1
+                # direction which was up, so we mark it B2 ... and same candle
+                # later will also have a down extreme and later if that low is
+                # broken we mark flip on the candle which breaks it."
+                #
+                # So the CLOSE decides: green sustained up, red sustained down.
+                # Sustained the leg  -> this is that direction's B2.
+                # Sustained against  -> this is a FLIP the other way.
+                green = self.cl > self.op
+                sustained = "up" if green else "down"
+                if sustained == self.dir:
+                    # Sustained the CURRENT leg. If a FLIP has happened since B1
+                    # then this candle sustained the FLIP's side, and B2 belongs
+                    # to B1's side - so it is not a B2, and it cannot be a FLIP
+                    # either (already this direction). NO MARK; wait.
+                    # OWNER 2023-06-10 22:30, green, leg up from the 12:45 FLIP:
+                    # "we cannot mark it anything here ... so we have to wait".
+                    if self._last_mark_kind == "FLIP":
+                        pass
+                    elif not self._b2_done_in_dir:
+                        _t = self.e_hi_prev if self.dir == "up" else self.e_lo_prev
+                        gap_ok = True
+                        if getattr(self, "b2_gap_bars", 0) > 0 and _t is not None:
+                            p = _t  # type: ignore
+                            if not (p.idx <= self.g_idx - 1 - self.b2_gap_bars):
+                                gap_ok = False
+                            else:
+                                if self.dir == "up":
+                                    gh = self.bar_highs.get(p.idx + 1)
+                                    gap_ok = gh is not None and gh <= p.px
+                                else:
+                                    gl = self.bar_lows.get(p.idx + 1)
+                                    gap_ok = gl is not None and gl >= p.px
+                        if gap_ok:
+                            self.b2_pivot = Lvl(
+                                px=self.hi if self.dir == "up" else self.lo,
+                                idx=self.g_idx, time=self.t,
+                            )
+                            self._confirm_direction()
+                else:
+                    # Sustained against the leg. Alternation: if the last mark
+                    # was a FLIP, the partner of "B2 flip B2" is a B2, never a
+                    # second FLIP. OWNER: "we cannot be having ... flip and flip".
+                    if self._last_mark_kind == "FLIP":
+                        self._flip(sustained, as_b2=True)
+                    else:
+                        self._flip(sustained)
+                self._check_chop()
+                return
+            self._check_chop()
+            return
+        # VOLATILE candle while the direction is not yet confirmed: it breaks
+        # BOTH extremes, so the CLOSE decides (OWNER 2026-10-13, 2025-08-21
+        # 17:00): "if you look at the candle colour, which is red ... the B1
+        # direction is up and the colour is not matching its direction, and
+        # also this is a volatile candle, so we should be considering it as
+        # flip rather than B2."
+        # Colour arbitrates VOLATILE candles only - a one-sided B2 is unaffected,
+        # which is why the confirmed red B2s 2023-03-19 06:30 and 2023-01-06
+        # 19:15 stay B2s.
+        if up_break and down_break:
+            _sus = "up" if self.cl > self.op else "down"
+            if _sus != self.dir:
+                self._flip(_sus)
+            else:
+                self._b2_if_gap_allows()   # no mark if the pivot is contaminated
             self._check_chop()
             return
         if self.dir == "down":
@@ -516,7 +618,6 @@ class SwingEngine:
                         self._confirm_direction()
                         self._check_chop()
                         b2_fired = True
-                    b2_fired = True
             if down_break and not b2_fired:
                 self._flip("down")
                 self._check_chop()
@@ -524,6 +625,9 @@ class SwingEngine:
     def _lock(self, dir: Literal["up", "down"]) -> None:
         self.dir = dir
         self.base_dir = dir
+        self._b2_done_in_dir = False  # fresh leg: a B2 is allowed again
+        self._last_mark_kind = "B1"
+        self._b1_side = dir
         self.same_side_breaks = 1
         self.corner_pivot = None
         self.b2_pivot = None
@@ -543,6 +647,8 @@ class SwingEngine:
 
     def _confirm_direction(self) -> None:
         self.dir_confirmed = True
+        self._b2_done_in_dir = True  # alternation: no second B2 in this direction
+        self._last_mark_kind = "B2"
         self.ever_b1_dir = None  # B1+B2 complete - the leg is done, later flip-backs are genuine FLIPs
         # Chop may only target pivots formed AFTER this bar (fresh structure):
         # a break of a pre-B2 pivot is not the opposing break that completes
@@ -563,9 +669,43 @@ class SwingEngine:
         self.b2_pivot = None
         self.just_fired_b2 = True
 
+    def _b2_if_gap_allows(self) -> bool:
+        """Mark a B2 in the current leg direction if the 1-candle pivot gap is
+        clean. Returns True if a B2 was marked.
+
+        OWNER 2026-10-13: "if they break an extreme pivot for B2 there is a one
+        candle gap. If there isn't a one candle gap, then we think we are
+        neglecting it. But that pivot is already contaminated. So we should be
+        waiting for the new extremes."  A contaminated pivot -> NO MARK, and we
+        wait for the fresh extreme to be broken instead.
+        """
+        if self._b2_done_in_dir:
+            return False
+        _t = self.e_hi_prev if self.dir == "up" else self.e_lo_prev
+        if getattr(self, "b2_gap_bars", 0) > 0 and _t is not None:
+            p = _t  # type: ignore
+            if not (p.idx <= self.g_idx - 1 - self.b2_gap_bars):
+                return False
+            if self.dir == "up":
+                gh = self.bar_highs.get(p.idx + 1)
+                if not (gh is not None and gh <= p.px):
+                    return False
+            else:
+                gl = self.bar_lows.get(p.idx + 1)
+                if not (gl is not None and gl >= p.px):
+                    return False
+        self.b2_pivot = Lvl(
+            px=self.hi if self.dir == "up" else self.lo, idx=self.g_idx, time=self.t,
+        )
+        self._confirm_direction()
+        return True
+
     def _flip(self, dir: Literal["up", "down"], as_b2: bool = False) -> None:
         self.dir = dir
         self.base_dir = None
+        # a FLIP re-opens the leg, so a B2 may follow it (flip B2 flip)
+        self._b2_done_in_dir = False
+        self._last_mark_kind = "B2" if as_b2 else "FLIP"
         self.same_side_breaks = 0
         self.corner_pivot = None
         self.b2_pivot = None

@@ -1,0 +1,12 @@
+{
+ "method": "running_extreme_captured_target",
+ "swings": 2764,
+ "marks": 7570,
+ "gate_passed": true,
+ "flip_n": 2123,
+ "b2_n": 2683,
+ "flip_self_fail": [],
+ "b2_self_fail": [],
+ "lvl_mismatch": [],
+ "first_cross_candidates": []
+}

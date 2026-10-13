@@ -52,10 +52,23 @@ is recorded for what makes a swing "first".
 1..13 bar gap found in V4 belongs with this — whether a swing may confirm bars after
 its FS is stamped is part of the same question.
 
-### [ ] V2 — B2 has never been independently validated
+### [x] V2 — B2 independently validated (2026-10-13)
 
-2523 B2 marks. `break_kind` is B2 on 1511 of 2952 swings, so roughly half of all
-swings end on a B2. No rule recorded, no detector.
+Rule (owner's words): **B2 breaks the running extreme formed after B1** — *"the highest
+point is 6:30, so anyone reaching it would be marked as B2. And 12:00 is irrelevant because
+these are points inside the extreme."* Not a sealed pivot, not B1's own level. Confirmed
+shape `B1 → FLIP → B2`.
+
+`exp_v2_b2_flip.py`, chain 2764 / 7562. Gate: **7/7 PASS**. All three checks clean:
+
+| check | B2 (2380) | FLIP (2418) |
+|---|---|---|
+| mark candle crosses the level it broke | 0 fail | 0 fail |
+| captured target == running max/min from leg start | 0 fail | 0 fail |
+| an earlier bar crossed the same target | 0 fail | 0 fail |
+
+Regressions unchanged: two_point 0/0, fs_breaks 10/10, g3 PASS (4373 marks, 0 mismatches).
+Engine untouched — target captured at runtime. This closes V3's FLIP half too.
 
 ### [ ] V3 — FLIP has never been independently validated
 
