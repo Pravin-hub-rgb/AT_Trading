@@ -417,6 +417,40 @@ flag mid-run changes later decisions. That is fine for the question asked — *d
 the B2 path exist* — but this test does **not** propose a corrected chain, and
 the divergence must not be read as one.
 
+### Marks that moved rather than relabelled
+
+The colour fix removed 109 mark-keys and added 103. 78 of those are same-bar
+`B2 ↔ FLIP` swaps. The remainder is a distinct shape: **a FLIP disappears and a
+B2 appears later the same day** — 67 bars lost a mark, 36 gained one, because
+the B1 now locks the other way and the leg re-sequences behind it.
+
+Owner traced and ruled correct:
+
+```
+2023-01-01   FLIP 06:00 · FLIP->B2 07:00 · B2->FLIP 12:45 · FLIP->B2 17:30
+2023-02-12   FLIP->B2 06:00 · B2->FLIP 15:15
+2023-02-25   FLIP 04:45 gone · B2 05:15 appears (+0.5h)
+2023-06-03   FLIP 12:30 added · B2 13:00 gone · FLIP->B2 14:00 · B2->FLIP 20:45
+2023-09-09   FLIP 22:45 gone -> B2 23:30 (+0.8h)
+2023-10-18   FLIP 20:45 gone -> B2 21:30 (+0.8h)
+2023-11-28   FLIP 11:45 gone -> B2 13:15 (+1.5h)
+```
+
+Correction to an earlier figure: this category was first reported as "71 removed
+/ 25 added". The correct counts are 109/103 at mark-key level, of which 78 are
+swaps, leaving 67 lost and 36 gained.
+
+### What is verified, and what is not
+
+Chart-verified across this work: both flip directions of the volatile-B1 colour
+rule, same-bar relabels, marks that moved later, marks added, and marks removed.
+
+Not chart-verified: the remaining individual instances of each shape. The
+harness covers those structurally and
+`exp_dir_confirmed_b2_path.py` proved the largest suppression bucket rather than
+assuming it, but no amount of testing turns 7,734 marks into 7,734 owner
+confirmations.
+
 `exp_v7_freeze.py` is stale by design (fixture predates the V13 and volatile changes) —
 drift is expected and is not a failure.
 
