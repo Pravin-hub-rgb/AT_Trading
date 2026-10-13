@@ -1,6 +1,6 @@
 {
   "candles": 129715,
-  "full_marks": 7740,
+  "full_marks": 7734,
   "cuts": [
     {
       "label": "12% = 15565 candles",
@@ -13,33 +13,33 @@
     {
       "label": "35% = 45400 candles",
       "cut": 45400,
-      "marks": 2677,
+      "marks": 2676,
       "verdict": "PREFIX",
-      "detail": "identical for all 2677 marks, then stops early",
+      "detail": "identical for all 2676 marks, then stops early",
       "pass": true
     },
     {
       "label": "57% = 75234 candles",
       "cut": 75234,
-      "marks": 4476,
+      "marks": 4473,
       "verdict": "PREFIX",
-      "detail": "identical for all 4476 marks, then stops early",
+      "detail": "identical for all 4473 marks, then stops early",
       "pass": true
     },
     {
       "label": "82% = 106366 candles",
       "cut": 106366,
-      "marks": 6297,
+      "marks": 6292,
       "verdict": "PREFIX",
-      "detail": "identical for all 6297 marks, then stops early",
+      "detail": "identical for all 6292 marks, then stops early",
       "pass": true
     },
     {
       "label": "n-1 (last bar removed)",
       "cut": 129714,
-      "marks": 7740,
+      "marks": 7734,
       "verdict": "EQUAL",
-      "detail": "same 7740 marks; the dropped final bar produced none",
+      "detail": "same 7734 marks; the dropped final bar produced none",
       "pass": true
     }
   ],
