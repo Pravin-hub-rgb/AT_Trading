@@ -399,14 +399,24 @@ class SwingEngine:
         # 2023-02-13 - 04:30 broken, 16:45 working - which differ only in whether
         # the bar sealed its own extreme as well.
         if self.defer_same_bar_arm and self._pending_arm and self.state == "watch":
+            # A candle that breaks BOTH extremes is VOLATILE, whatever the arm
+            # guard below is about to do to one of the flags. Record that now,
+            # because the guard's whole job is to drop a same-direction break,
+            # and a volatile candle must not lose its other side to it - the
+            # direction then belongs to the CLOSE, same as B2 (:500) and FLIP
+            # (:553). Suppressing one side of a volatile bar would hide the
+            # volatility from _step entirely.
+            _volatile = bool(up_break and down_break)
             if self._pending_leg_dir == "down" and up_break:
                 self.armed = True
                 self._pending_arm = False
-                down_break = False
+                if not _volatile:
+                    down_break = False
             elif self._pending_leg_dir == "up" and down_break:
                 self.armed = True
                 self._pending_arm = False
-                up_break = False
+                if not _volatile:
+                    up_break = False
             elif self._pending_leg_dir == "up" and up_break:
                 if self._seal_h_idx >= 0 and self._seal_h_idx < g_idx:
                     self.armed = True
@@ -440,7 +450,21 @@ class SwingEngine:
 
     def _step(self, down_break: bool, up_break: bool) -> None:
         if self.state == "watch":
-            if down_break:
+            if down_break and up_break:
+                # VOLATILE - it broke BOTH extremes, so "which break" cannot
+                # decide the direction and `if down_break` first would silently
+                # lock every such bar DOWN. The CLOSE decides, exactly as it
+                # already does for B2 (:500) and for a volatile candle before
+                # confirmation (:553).
+                #
+                # OWNER 2026-10-13, 2026-05-18 21:30: "as the 21:30 was
+                # sustained green cause that's volatile case so ... b1 should be
+                # up." Same candle also broke the 21:15 high (76575.0 > 76450.0)
+                # and the 21:15 low (76200.0 < 76230.2), so it is volatile on
+                # the chart, and the engine had it locked down because the arm
+                # guard had already dropped its up-break.
+                self._lock("up" if self.cl > self.op else "down")
+            elif down_break:
                 self._lock("down")
             elif up_break:
                 self._lock("up")
