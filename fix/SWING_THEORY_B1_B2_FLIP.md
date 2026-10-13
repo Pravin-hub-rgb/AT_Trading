@@ -372,6 +372,31 @@ candles and source, not inferred from indices.
 that was skipped. This repo has a long run of confident, wrong measurements and
 that pattern is still live.
 
+### The volatile-B1 colour fix, owner-verified 2026-10-13
+
+`5d6cab2` made a volatile B1 take its direction from the candle colour, matching
+what B2 and FLIP had always done. It moved **51 B1 directions** and **78 mark
+kinds** (`B2 ↔ FLIP` at the same bar), and moved 212 marks in total. The owner
+traced these on the chart and ruled every line correct:
+
+| date | what was checked | ruling |
+|---|---|---|
+| 2026-05-18 | `B1↑ 21:30` `FLIP↓ 21:45` `B2↑ 22:45` `FLIP↓ 23:45` `B2↑ 00:30` — all five bars appeared only after the fix | correct |
+| 2023-01-01 | `B1↓→↑ 05:45`, FLIP `06:00` **added**, `FLIP→B2 07:00`, `B2→FLIP 12:45`, `FLIP→B2 17:30` | correct |
+| 2023-02-12 | `B1↑→↓ 05:30` (red volatile), `FLIP→B2 06:00`, `B2→FLIP 15:15` | correct |
+| 2023-02-25 | `B1↓→↑ 04:30`, FLIP `04:45` **removed** → `B2↑ 05:15` (mark moved 30 min later), `B2→FLIP 10:45` | correct |
+| 2023-05-13 | `B1↑→↓ 12:30` (red volatile), `B2→FLIP 13:00` | correct |
+| 2023-06-03 | `B1↑→↓ 12:15`, FLIP `12:30` **added** / B2 `13:00` **removed**, `FLIP→B2 14:00`, `B2→FLIP 20:45` | correct |
+
+Both flip directions are now covered — green volatile → `B1↑` and red volatile →
+`B1↓` — and all four kinds of change appear: direction flip, relabel, mark moved
+later, and mark added or removed.
+
+**Sampled, not exhaustive.** 6 of 51 direction flips and 11 of 78 kind changes
+were put in front of the owner. `exp_swing_invariants.py` covers the rest
+structurally; no chart review has, and no chart review can, cover all 7,734
+marks.
+
 `exp_v7_freeze.py` is stale by design (fixture predates the V13 and volatile changes) —
 drift is expected and is not a failure.
 
