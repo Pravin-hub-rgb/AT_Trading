@@ -921,6 +921,25 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       // a B1/B2/FLIP/FS/SUS belongs to (e.g. "B1-3", "FLIP-3", "FS-3").
       const swingNo = s.swing_index + 1;
 
+      // minBars gate marker (MB) — the 50th bar of this leg, drawn like every
+      // other mark so it carries the swing number and can be tied to its own leg.
+      // Owner, 2026-10-12: "we are also having MB 50 dash 28 50 C. So I will know
+      // this flip is related to this MB. And you are just putting a vertical line.
+      // This is wrong, because I cannot tell who is it."
+      if (s.min_bars_idx != null && s.min_bars_idx >= 0) {
+        const g = candles[s.min_bars_idx];
+        if (g) {
+          markers.push({
+            time: g.ts as Time,
+            position: "belowBar",
+            shape: "arrowUp",
+            color: "#38bdf8",
+            text: `MB${s.min_bars ?? 0}-${swingNo}`,
+            size: 1,
+          });
+        }
+      }
+
       // Break markers (B1/B2/FLIP) — one arrow per break at its actual bar.
       // Defensive fallback for older backend responses that lack `breaks`:
       // draw the decisive break at the swing's end bar so marks are never missing.

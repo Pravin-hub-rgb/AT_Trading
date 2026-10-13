@@ -61,6 +61,15 @@ export interface WholeDaySwingPoint {
    */
   fs_at_idx?: number;
   fs_at_time?: string;
+  /**
+   * Bar the leg's minBars warmup counts from. Distinct from `start_idx`, which
+   * is where the direction was established and can sit many bars later.
+   */
+  leg_start_idx?: number;
+  /** Effective minBars for this leg. */
+  min_bars?: number;
+  /** leg_start_idx + min_bars - 1: first bar this leg may declare on. */
+  min_bars_idx?: number;
 }
 
 interface ZigzagSegment {

@@ -616,6 +616,9 @@ export default function BtcPage() {
         confirmed_at_time: s.confirmed_at_time,
         fs_at_idx: s.fs_at_idx,
         fs_at_time: s.fs_at_time,
+        leg_start_idx: s.leg_start_idx,
+        min_bars: s.min_bars,
+        min_bars_idx: s.min_bars_idx,
       })),
     [data],
   );

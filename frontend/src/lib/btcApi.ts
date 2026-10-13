@@ -46,6 +46,12 @@ export interface BtcSwing {
   /** Bar where the swing's OWN opposing pivot broke (FS marker point). */
   fs_at_idx?: number;
   fs_at_time?: string;
+  /** Bar the leg's minBars warmup counts from (0-based, = bars_seen 0). */
+  leg_start_idx?: number;
+  /** Effective minBars for this leg. */
+  min_bars?: number;
+  /** leg_start_idx + min_bars - 1: first bar this leg may declare on. */
+  min_bars_idx?: number;
 }
 
 export interface BtcFlowSegment {
