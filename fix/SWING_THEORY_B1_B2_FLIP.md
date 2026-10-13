@@ -304,10 +304,19 @@ only). BTC 15m, 2840 swings.
 | B2-B2 | 1 (`2023-01-23 20:15`, owner-confirmed correct) |
 | unexplained breaks | **0** — every suppressed candidate is accounted for by the gap rule, alternation, or colour rule |
 
-Chain: 2840 swings, **7740 marks** (B1 2840 / B2 2742 / FLIP 2158).
-Full-chain fingerprint, sha256 of sorted `time|kind|dir|px|swing` rows + FS rows,
-`minBars=50`, `max_swings=len(candles)//2`: **`c864262630560f83`** (10580 rows).
-Recheck this after any engine edit; the frontend MB work left it unchanged.
+Chain: 2840 swings, **7734 marks** (B1 2840 / B2 2751 / FLIP 2143), after the
+volatile-B1 colour fix (`5d6cab2`). Before it: 7740 (B1 2840 / B2 2742 / FLIP
+2158). Full-chain fingerprint, sha256 of sorted `time|kind|dir|px|swing` rows +
+FS rows, `minBars=50`, `max_swings=len(candles)//2`:
+**`393577a28ffd3e02`** (was `c864262630560f83` — that move is expected, the fix
+is a deliberate behaviour change, not a display change).
+
+`exp_swing_invariants.py` (added 2026-10-13) is the standing gate: 7 emitted-mark
+invariants plus the **suppressed-break** half, which classifies all 20,460 bars
+where the engine saw a break and emitted no mark. 0 unexplained. That half
+exists because `breaks` only ever contains marks that *were* emitted, so a
+suppressed break cannot appear in the payload — the 2023-09-03 volatile FLIP bug
+produced no mark at all and was invisible to any emitted-mark-only check.
 
 `exp_v2_gate_deferral.py` (2026-10-13): B2 2742 marks, 968 of them with suppressed
 candidates (1769 bars); FLIP 2158 marks, 5 with suppressed candidates (5 bars).
@@ -385,3 +394,13 @@ drift is expected and is not a failure.
    we wait for the fresh extreme. (§6.1, §6.4)
 10. The gap rule is correct even when it discards a large move and marks a tiny
     extension — *"even a 0.5 point break is a break."* (§6.4)
+11. **A volatile B1 takes its direction from the candle colour**, exactly like
+    volatile B2 and volatile FLIP. Rule 8 was never applied to B1 — B1 was the
+    only kind whose direction came from *which extreme broke*, and the watch
+    branch tested `if down_break` first, so a volatile B1 always locked DOWN.
+    The same-bar arm guard compounded it by deleting one of the two breaks
+    before `_step` ran, hiding the volatility entirely.
+    Owner 2026-10-13, 2026-05-18 21:30 (green → `B1↑`) and 2023-02-12 05:30
+    (red → `B1↓`). 197 volatile B1s in the chain, all 51 flips of which are
+    colour-consistent. One-sided B1s still take direction from the break, not
+    the colour — checking colour on every B1 produces ~398 false alarms.
