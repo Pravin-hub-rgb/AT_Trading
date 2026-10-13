@@ -913,8 +913,13 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
 
     const markers: SeriesMarker<Time>[] = [];
     for (const s of wholeDaySwings) {
-      // Skip swing_index 0 and 1 — those already have fsMarkers/fsBreaks markers.
-      if (s.swing_index < 2) continue;
+      // Skip swing_index 0 and 1 ONLY when fsBreaks will actually draw them.
+      // No page supplies fsBreaks (checked 2026-10-13: declared at :91 and
+      // iterated at :803, but never passed), so the unconditional skip meant the
+      // first two swings were drawn NOWHERE - the owner saw no marks at all for
+      // swings 0 and 1 on 2023-01-01. Their marks are in the payload (4 and 3
+      // breaks); only the rendering dropped them.
+      if (s.swing_index < 2 && fsBreaks && fsBreaks.length > 0) continue;
 
       // Human swing number: swing_index 0 = 1st, 1 = 2nd, 2 = 3rd, 3 = 4th ...
       // Every mark below is suffixed with this so you always know which swing
