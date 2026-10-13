@@ -30,8 +30,8 @@ BOOKS = {
                      "exit_fs_max_gap_h": 4.0},
         "swing": "sw10",
         # See the FS_EXIT ladder in exp_fs_exit.py.
-        "pins": {"n": 506, "net": 268.64,
-                 "dd_net": 38.64, "oos_n": 295, "oos_net": 78.99, "oos_dd_net": 50.18},
+        "pins": {"n": 422, "net": 138.22,
+                 "dd_net": 72.23, "oos_n": 254, "oos_net": -17.78, "oos_dd_net": 46.97},
     },
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
@@ -85,8 +85,8 @@ BOOKS = {
           # removes a cohort worth -1.5R in IS and +9.6R in OOS - it deletes
           # profitable trades out of sample. The in-sample move was re-sequencing,
           # not selection. Closed in method/EXT_STOP_R_RIDGE.md.
-          "pins": {"n": 536, "net": 553.3,
-                 "dd_net": 15.31, "oos_n": 312, "oos_net": 249.67, "oos_dd_net": 16.86},
+          "pins": {"n": 497, "net": 466.92,
+                 "dd_net": 25.08, "oos_n": 281, "oos_net": 215.32, "oos_dd_net": 11.2},
       },
 
     # SINGLE-VARIANT ABLATION of fsent_champ_long: the 3-loss streak halt off.
@@ -313,8 +313,8 @@ BOOKS = {
                        "exp_persist": 7, "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 640, "net": 706.72,
-                 "dd_net": 34.86, "oos_n": 302, "oos_net": 199.66, "oos_dd_net": 19.49},
+          "pins": {"n": 612, "net": 515.49,
+                 "dd_net": 48.76, "oos_n": 269, "oos_net": 192.64, "oos_dd_net": 14.16},
     },
     "fsent_champ_long_mode_fd": {
           "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='fd' - fractional-dimension regime: low FD=trend->flip, high FD=range->B2. Closest drawdown of the four (13.4R IS / 12.2R OOS) but still worse than base, and fails out of sample on both second lanes.",
@@ -326,8 +326,8 @@ BOOKS = {
                        "exp_persist": 7, "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 536, "net": 539.52,
-                 "dd_net": 16.74, "oos_n": 289, "oos_net": 234.82, "oos_dd_net": 22.35},
+          "pins": {"n": 488, "net": 447.88,
+                 "dd_net": 25.94, "oos_n": 276, "oos_net": 191.21, "oos_dd_net": 13.92},
     },
     "fsent_champ_long_mode_flip_quality": {
           "desc": "CANDIDATE, NOT ADOPTED - DISQUALIFIED 2026-10-08 as a regime proxy. fsent_champ_long with mode='flip_quality' - B2/flip by chop AND a HTF-magnitude floor, so it filters the chop branch. It held the base drawdown exactly (13.4R IS / 11.9R OOS) and was ahead on all three books of its family in the lane test (+4.8R / +4.8R / +54.0R), which is why it was the closest of the four. Period control then disqualified it: the mode is IN-SAMPLE INERT on all three books. In IS the arm and the base take the SAME trades - 0 new, 0 dropped on fsent_utcsat_long and fsent_champ_short, and on this book the entire +1.41R is ONE dropped trade - so all three IS cells are non-estimable and every R of the mode's effect is out of sample. Out of sample b after a half-year fixed effect is +0.2122 against an MDE of 0.8569: inside the noise floor, 96% of the raw gap explained by the calendar. The one powered cell is fsent_champ_short OOS (b +1.3963, t 2.016) - the FS-short mirror, a different architecture with 23.9R drawdown, and the source of the whole +54.01R - and one cell of one architecture on one era cannot carry the other five. The earlier 3-of-3 lane result was real and was not sufficient; being drawdown-neutral is not the same as being useful. Two corrections recorded on 2026-10-08: the 'fails on both second lanes (-7.0R, -4.1R)' sentence was measured on champion_multi_sw10/utcsat_multi_sw10, a DIFFERENT architecture (pivot_rule=origin, no FS side, no exp_mltf), and the first period-control harness labelled survivors as cohort=1, which produced a meaningless t of 7.672. Remains registered and pinned so the measurements are re-derivable. The branch also READS chop_thresh, which is not in this book's config, so it was never the base plus a mode string. See method/FLIP_QUALITY_PERIOD_CONTROL.md, method/MODE_CONFIRM2_RIGHT_LANES.md.",
@@ -339,8 +339,8 @@ BOOKS = {
                        "exp_persist": 7, "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 535, "net": 552.49,
-                 "dd_net": 15.65, "oos_n": 290, "oos_net": 236.9, "oos_dd_net": 16.86},
+          "pins": {"n": 488, "net": 461.66,
+                 "dd_net": 25.08, "oos_n": 265, "oos_net": 186.82, "oos_dd_net": 11.2},
     },
     # fsent_sig_multi is the sig book's WHOLE filter set with max_positions 1 -> 0.
     # It is the only candidate in this file whose out-of-sample effect survives the
@@ -359,8 +359,8 @@ BOOKS = {
                        "exp_mltf": True, "exp_persist": 7,
                        "pivot_rule": "leg", "exp_fs_entry_side": "long"},
           "swing": "htf15",
-          "pins": {"n": 565, "net": 637.39,
-                 "dd_net": 15.07, "win": 0.43, "oos_n": 321, "oos_net": 319.35, "oos_dd_net": 15.79, "oos_win": 0.414},
+          "pins": {"n": 535, "net": 539.77,
+                 "dd_net": 28.38, "win": 0.452, "oos_n": 302, "oos_net": 270.17, "oos_dd_net": 11.05, "oos_win": 0.434},
     },
     "fsent_champ_long_causalfloor": {
           "desc": "CANDIDATE, NOT ADOPTED. **The name is historical and wrong - this is NOT a causality fix, and nothing about it is a fix at all.** It is fsent_champ_long with one number changed: exp_window_floor_s, the wait between a window opening and the LTF entry being allowed, from the shipped 2700 seconds to 7200 seconds. That is the whole mechanism: a longer wait, not a corrected one. It came out of a sweep of that one parameter, 7200 was the best value found, and a value chosen by a sweep carries selection pressure - it was not derived from a rule.  IT WAS ORIGINALLY REGISTERED AS A CAUSALITY FIX AND THAT WAS WRONG. The first description claimed the shipped gate let an LTF entry run up to 900 seconds before its 1h window candle closed, and that this book removed those trades. That claim was withdrawn on 2026-10-10 - the six trades it pointed at sit exactly on the boundary, where the 15m bar closes at the same instant the 1h window closes, which is legal. method/WINDOW_FLOOR_LEAK.md, which carried the finding, was deleted with it; this text is the correction. Read method/WITHDRAWN_WINDOW_LOOKAHEAD.md before believing anything here about causality.  MEASURED against the parent (528 / +533.37 / 13.42 IS, 311 / +239.59 / 11.88 OOS): IS 513 / +529.84R / DD 13.62R / WR 39.6%, OOS 308 / +248.90R / DD 11.88R / WR 38.0%. It earns LESS in sample and about the same out of sample - it gives up trades to buy a smaller drawdown, and on this evidence it does not buy enough.  The book does have ZERO negative half-years where the parent has one, but that is NOT a regime discovery and must not be read as one: across 155 half-year cells the 6 negative ones are indistinguishable from the 149 positive ones in loss concentration (35.2% vs 36.1%) and losing-streak length (8.3 vs 8.1). The same expectancy is landing slightly red, not a condition that can be filtered. That finding lives in method/PERIOD_2025H1_WHAT_HAPPENED.md.  FOR THE RECORD, since it bounds every causality claim in this family: a slack audit on 2026-10-10 (exp_window_slack_audit.py, 29 books, both eras, 22154 trades) measured the gap between each trade's decision instant and the close of its 1h window candle. The gate at unified.py:1034 is permissive by 900 seconds in principle, but ZERO trades anywhere in the family landed in that band - the distribution is 21992 trades at 900s or more of clearance, 147 exactly on the boundary, and none between. The shipping book is clean at 311 of 311. The 15 apparent violations are all fsent_champ_long_mode_union and are a REPORTING defect in that book's window_start field, not lookahead - see method/WINDOW_SLACK_AUDIT.md.  PAIRED PERMUTATION vs the shipping book (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.7256 in sample, p = 0.0230 out of sample, gap -3.52 IS / +9.31 OOS - out of sample only, and negative in sample. Significance here means this arm's choice of trades is unlikely to be a reshuffle of the parent's. It does NOT mean the book is better in absolute terms; the same audit shows it is not. See method/NULL_AUDIT_P5.md.",
@@ -375,8 +375,8 @@ BOOKS = {
                        "pivot_rule": "leg", "exp_fs_entry_side": "long",
                        "exp_window_floor_s": 7200},
           "swing": "sw10",
-          "pins": {"n": 522, "net": 569.57,
-                 "dd_net": 15.9, "win": 0.423, "oos_n": 305, "oos_net": 258.13, "oos_dd_net": 17.06, "oos_win": 0.393},
+          "pins": {"n": 483, "net": 466.98,
+                 "dd_net": 24.47, "win": 0.429, "oos_n": 277, "oos_net": 216.05, "oos_dd_net": 11.2, "oos_win": 0.43},
     },
     "fsent_champ_long_mode_chop": {
           "desc": "REGISTERED FOR COMPLETENESS, NOT A CANDIDATE - and the interesting thing about it is how close it is to doing nothing. mode='chop' instead of mode='atr_high': the regime classifier that decides whether a bar belongs to the decisive or the flip bucket now reads a chop threshold (chop_thresh=58.0) instead of an ATR percentile band. EVERY ONE of the other 31 fsent books is mode='atr_high', so this axis had never been registered anywhere in the family and the 2026-10-09 HTF-FS rejection only ever spoke to the ATR classifier. MEASURED in sample it is the shipping book exactly: 528 / +533.37 / DD 13.42, identical n, net and drawdown to fsent_champ_long. Out of sample it diverges slightly - 294 / +244.45 / DD 11.88 against the parent's 311 / +239.59 / 11.88 - so the two classifiers agree on every bar of the in-sample era and part company on 17 trades out of sample. CONCLUSION WORTH KEEPING: the regime classifier is NOT a live axis on this book. Swapping ATR for chop moves the number by less than half a percent of the net, and in sample not at all, so no result in this family should be attributed to the classifier rather than to the things that actually move it. Registered because an axis that was never measured should not stay that way, and because 'we never tested the chop classifier' is exactly the sentence that let the 2026-09 HTF-FS test be read as a general result. PAIRED PERMUTATION vs the shipping book (exp_null_audit.py, 4000 draws, seed 20261010): p = 1.0000 in sample, p = 0.7603 out of sample, gap +0.00R IS and +4.86R OOS. p = 1.0000 is not a rounding curiosity and is worth reading carefully: the in-sample trade list is BYTE-IDENTICAL to the shipping book's, so the permutation is comparing the parent against itself and 1.0000 is the correct answer rather than a null result. It is the precise form of the claim above - the chop classifier and the ATR classifier select the same bars on every in-sample bar, so this is not a small effect, it is no effect at all on half the data.",
@@ -390,8 +390,8 @@ BOOKS = {
                        "exp_mltf": True, "exp_persist": 7,
                        "pivot_rule": "leg", "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 536, "net": 553.3,
-                 "dd_net": 15.31, "win": 0.425, "oos_n": 291, "oos_net": 234.08, "oos_dd_net": 16.86, "oos_win": 0.375},
+          "pins": {"n": 495, "net": 462.58,
+                 "dd_net": 25.08, "win": 0.43, "oos_n": 265, "oos_net": 186.82, "oos_dd_net": 11.2, "oos_win": 0.411},
     },
     "fsent_champ_long_htffs": {
           "desc": "CANDIDATE, NOT ADOPTED - the strongest arm in this family on the owner's own rule, and the first one that adds return without adding a negative half-year. ONE parameter from the shipping book: exp_htf_fs_entry='flip', so the HTF flip-bucket window opens on the swing's FS print instead of on the break, while the decisive and b2 buckets keep their breaks. That is the selective form of the arm rejected on 2026-10-09 - 'all' was rejected partly because it collapsed flip/decisive/b2 into one fs_both set and the book stopped distinguishing regimes; this keeps two of the three intact. MEASURED against the parent 528 / +533.37 / 13.42 IS and 311 / +239.59 / 11.88 OOS: IS 770t / +897.94R / DD 19.78R / WR 42.3%, OOS 415t / +300.43R / DD 14.35R / WR 36.9%. That is +364.57R in sample and +60.84R out of sample on 242 more trades. THE OWNER'S RULE: drawdown 19.78R is inside the 29R budget, and the negative half-year count is UNCHANGED at 1 - this arm does not bring back the 2025-H1 cell that htf_fs='all' re-broke, which is the specific failure that sank the earlier test. PERIOD CONTROL PASSES BOTH WAYS: with a calendar-year fixed effect b = +1.34 at t = +3.24, and with the stricter half-year fixed effect b = +1.40 at t = +3.40, better in 5 of 6 years. It is also the largest gain the half-year test has ever survived in this family. CAUSALITY IS CLEAN, measured in HTF_FS_ENTRY_REJECTED.md: window_start minus its own FS print is exactly 0.0h at min, median and max in both eras, and zero entries precede their window_start - an FS-anchored window opens precisely at the print, not before it. WHAT IT COSTS: the same objection that applies to every FS-entered window applies here - 95% of the gain sits in 197 windows the book was not trading before, trades per window roughly doubles, and the drawdown goes from 13.42R to 19.78R. The return is real and survives a period control, but it is bought with breadth rather than with a better read of the existing windows, and it is bought with 46% more drawdown than the parent. Nothing is adopted: the 2021-22 era is reused old data, not a holdout. PAIRED PERMUTATION vs the shipping book, 2026-10-10 (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.0272 in sample, p = 0.5956 out of sample, gap +364.57R IS and +60.84R OOS - significant IN SAMPLE ONLY. The in-sample result is the strongest of its shape in this family and the out-of-sample one is not distinguishable from a reshuffle of the parent. So the honest ranking is unchanged by this arm: fsent_champ_long_mcloff remains the only book that clears in BOTH eras (0.0312 / 0.0117), and htf15_htffs' in-sample p of 0.0105 is the single lowest in-sample figure measured anywhere in the family paired with an out-of-sample figure of 0.4904. That pattern - very strong in sample, flat out of it - is exactly what the forward window exists to distinguish, and it is the reason +364R is not a recommendation.",
@@ -406,8 +406,8 @@ BOOKS = {
                        "pivot_rule": "leg", "exp_fs_entry_side": "long",
                        "exp_htf_fs_entry": "flip"},
           "swing": "sw10",
-          "pins": {"n": 787, "net": 908.14,
-                 "dd_net": 21.79, "win": 0.439, "oos_n": 408, "oos_net": 286.97, "oos_dd_net": 14.34, "oos_win": 0.373},
+          "pins": {"n": 754, "net": 757.99,
+                 "dd_net": 22.45, "win": 0.426, "oos_n": 389, "oos_net": 313.35, "oos_dd_net": 14.74, "oos_win": 0.396},
     },
     "fsent_champ_long_htf15_htffs": {
           "desc": "CANDIDATE, NOT ADOPTED - FAILS THE DRAWDOWN BUDGET, and is registered with that stated first because it is the arm that looks best on a net column and is disqualified by a single number. fsent_champ_long_htf15 with exp_htf_fs_entry='flip'. MEASURED: IS 761t / +925.79R / DD 29.62R / WR 42.8%, OOS 393t / +304.17R / DD 14.35R / WR 37.9%. WHY IT IS NOT THE PICK: in-sample drawdown 29.62R is OVER the owner's 29R ceiling, before any consideration of the return. It also re-creates a negative half-year that its own parent does not have (htf15 has 0, this has 1), so it fails the zero-negative rule twice over. The period control passes - b = +1.05 at t = +3.29 on the half-year fixed effect, better in 5 of 6 years - so the gain itself is not a period artifact; it is the risk it carries that disqualifies it. Registered because it is the highest in-sample net measured anywhere in the fsent family, +925.79R, and burying the number that beats every other one while omitting the ceiling it breaches is the failure mode this family has been guarding against all cycle. PAIRED PERMUTATION vs the shipping book (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.0105 in sample, p = 0.4904 out of sample, gap +392.43R IS and +64.58R OOS. THE STRONGEST IN-SAMPLE RESULT IN THE ENTIRE FAMILY, and not significant out of sample. Stating that pair next to each other is the point: a p of 0.0105 on its own is the number a person would quote, and the 0.4904 beside it is the number that decides. It is disqualified on the drawdown ceiling before either of them is consulted, but if that ceiling were lifted it would still be an in-sample-only result.",
@@ -422,16 +422,16 @@ BOOKS = {
                        "pivot_rule": "leg", "exp_fs_entry_side": "long",
                        "exp_htf_fs_entry": "flip"},
           "swing": "htf15",
-          "pins": {"n": 778, "net": 945.91,
-                 "dd_net": 21.98, "win": 0.447, "oos_n": 418, "oos_net": 359.98, "oos_dd_net": 10.37, "oos_win": 0.4},
+          "pins": {"n": 756, "net": 765.86,
+                 "dd_net": 29.76, "win": 0.429, "oos_n": 396, "oos_net": 346.07, "oos_dd_net": 14.74, "oos_win": 0.409},
     },
     "fsent_sig_multi_htffs": {
           "desc": "CANDIDATE, NOT ADOPTED - the best risk profile of the three FS-entered arms and it still fails the owner's rule on the negative cell. fsent_sig_multi with exp_htf_fs_entry='flip'. MEASURED: IS 434t / +666.32R / DD 17.82R / WR 45.2%, OOS 220t / +234.48R / DD 7.99R / WR 46.8%. Out-of-sample drawdown 7.99R and win rate 46.8% are the best numbers on this entry anywhere in the family, and the period control is positive (b = +0.42 at t = +1.81 half-year, better in 3 of 6 years) though the weakest of the three. WHY IT IS NOT THE PICK: it adds a negative half-year that sig_multi does not have - sig_multi is one of only two books in this family with ZERO negative cells, and this arm gives that up. Trading the single best-behaved shape in the family for a wider one is a bad exchange at this ratio, and the owner does not trade there. Registered with that named, because the out-of-sample numbers on it are the best in the family and the reason they are not adopted is not that they are bad - it is that the rule they break is the one the book was chosen for. PAIRED PERMUTATION vs the shipping book (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.5091 in sample, p = 0.9708 out of sample, gap +132.95R IS and -5.11R OOS - NOT significant in either era, and the out-of-sample gap is NEGATIVE. Worth being blunt about the ordering here, because the risk numbers point the other way: this arm has the best out-of-sample drawdown (7.99R) and the best out-of-sample win rate (46.8%) anywhere in the family, and it is the one whose edge is least distinguishable from its parent. Good risk profile is not evidence of edge, and a book can be quietly pleasant to hold and still be indistinguishable from reshuffling its parent's trades.",
           "engine": "patched",
           "params": {'mode': 'atr_high', 'atr_high_thresh': 0.65, 'atr_low_thresh': 0.35, 'sl_buf_atr': 0.01, 'chop_thresh': 58.0, 'cooldown_bars': 8, 'max_consecutive_losses': 3, 'max_positions': 0, 'ext_stop_r': 3.0, 'exp_partial_r': 0.0, 'exp_fs_entry_side': 'short', 'exp_bias_momentum_min': 0.8, 'exp_trail_skip_n': 2, 'exp_fs_small_swing': 6.0, 'exp_skip_weekend': 1, 'window_end': 'exit', 'exp_htf_fs_entry': 'flip'},
           "swing": "sw10",
-          "pins": {"n": 433, "net": 710.13,
-                 "dd_net": 16.37, "win": 0.487, "oos_n": 220, "oos_net": 208.78, "oos_dd_net": 7.88, "oos_win": 0.479},
+          "pins": {"n": 417, "net": 511.52,
+                 "dd_net": 19.4, "win": 0.451, "oos_n": 225, "oos_net": 197.73, "oos_dd_net": 8.98, "oos_win": 0.46},
     },
     "fsent_champ_long_mcloff": {
           "desc": "CANDIDATE, NOT ADOPTED - and the best-EVIDENCED one in the registry. It changes ONE INTEGER: max_consecutive_losses from 3 to 0, which turns the loss-run cutoff OFF. The autopsy of the parent's negative half-year found 2025-H1 was not a disaster but a coin flip that landed red: 60 trades, net -0.69R, mean -0.011R per trade, 20 winners making +29.6R against 40 losers making -30.3R. In that exact situation the cutoff is not protecting the book, it is cutting winners - it stops the book right before the recovery trade that follows every streak. MEASURED against the parent 528 / +533.37 / 13.42 IS and 311 / +239.59 / 11.88 OOS: IS 575t / +566.58R / DD 15.13R / WR 39.7%, OOS 337t / +270.91R / DD 14.16R / WR 37.1%. IT DOMINATES THE PARENT ON RETURN IN BOTH ERAS (+33.21R IS, +31.32R OOS) on 47 and 26 MORE trades, for 1.71R and 2.28R of extra drawdown. ZERO negative half-years out of 12. PERIOD CONTROL IS THE REASON TO TRUST IT - this is the only arm in the whole family whose effect is SIGN HOLDS and POWERED in BOTH eras: b = +1.21 (t = 3.37, MDE 0.70) IS and b = +1.86 (t = 3.97, MDE 0.92) OOS, cluster-bootstrap b_boot +1.28 and +1.92. Compare fsent_champ_long_htf15 (underpowered), fsent_champ_long_biasmom05 (b NEGATIVE and significant at t = -9.63 OOS) and htf_fs=all (underpowered). Still NOT adopted: the period control compares this arm to champ_long, NOT to absolute zero, and a book that is meaningfully better than its parent can still be negative in some unseen half-year. The cutoff also has a real purpose under position sizing, which is a risk decision and not a signal decision. Forward evidence does not exist for it yet. See method/MAXCONSEC_LOSSES_FINDING.md. PAIRED PERMUTATION vs the shipping book, 2026-10-10 (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.0312 in sample, p = 0.0117 out of sample, gap +33.22 IS and +31.32 OOS - the only book in the family significant in BOTH eras. Significance means this arm's choice of trades is unlikely to be a reshuffle of the parent's; it does NOT mean the book is statistically better in absolute terms, which the same audit shows it is not (the shipping book sits at the 58th and 45th percentile of a reshuffle of its own trades, and the corrected absolute null is M = 771.09R IS / 384.36R OOS against the 381.7 / 205.5 quoted in BASE_BOOK_NULL.md, which was measured on a different book). See method/NULL_AUDIT_P5.md.",
@@ -445,8 +445,8 @@ BOOKS = {
                        "exp_mltf": True, "exp_persist": 7,
                        "pivot_rule": "leg", "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 574, "net": 589.12,
-                 "dd_net": 15.63, "win": 0.423, "oos_n": 336, "oos_net": 279.76, "oos_dd_net": 16.8, "oos_win": 0.39},
+          "pins": {"n": 533, "net": 504.12,
+                 "dd_net": 23.3, "win": 0.439, "oos_n": 300, "oos_net": 213.27, "oos_dd_net": 11.05, "oos_win": 0.42},
     },
     "fsent_champ_long_htfesmcl4": {
           "desc": "CANDIDATE, NOT ADOPTED - the largest-return arm measured in this family, and registered because the owner asked for every arm to be visible rather than pre-filtered. It stacks the HTF-side FS entry (exp_htf_fs_entry=all) with max_consecutive_losses=4, which is the one setting that clears the 2022-H2 cell that the FS entry alone re-broke. MEASURED against the parent 528 / +533.37 / 13.42 IS and 311 / +239.59 / 11.88 OOS: IS 793t / +917.80R / DD 27.74R / WR 43.0%, OOS 437t / +326.22R / DD 14.20R / WR 37.8%. ZERO negative half-years out of 12. THREE REASONS IT IS NOT THE RECOMMENDATION DESPITE THE NET. (1) In-sample drawdown 27.74R is at the owner's 29R budget ceiling, against 15.13R for fsent_champ_long_mcloff on less than half the return. (2) PERIOD CONTROL IS UNDERPOWERED OUT OF SAMPLE - b = +0.027 with t = 0.05 and MDE 1.16, i.e. the out-of-sample effect is indistinguishable from nothing, and the cluster bootstrap goes NEGATIVE at -0.03. (3) The FS entry collapses the flip/decisive/b2 regime buckets into one fs_entered set, so this arm stops distinguishing regimes - see method/HTF_FS_ENTRY_REJECTED.md. It buys +384R of in-sample return mostly by admitting 528 new trades rather than by improving the ones it had. Registered as the high-return end of the range so the owner can see what the ceiling costs. PAIRED PERMUTATION vs the shipping book, 2026-10-10 (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.0285 in sample, p = 0.5311 out of sample, gap +384.44 IS and +86.63 OOS - significant in sample, NOT out of sample. Significance means this arm's choice of trades is unlikely to be a reshuffle of the parent's; it does NOT mean the book is statistically better in absolute terms, which the same audit shows it is not (the shipping book sits at the 58th and 45th percentile of a reshuffle of its own trades, and the corrected absolute null is M = 771.09R IS / 384.36R OOS against the 381.7 / 205.5 quoted in BASE_BOOK_NULL.md, which was measured on a different book). See method/NULL_AUDIT_P5.md.",
@@ -461,8 +461,8 @@ BOOKS = {
                        "pivot_rule": "leg", "exp_fs_entry_side": "long",
                        "exp_htf_fs_entry": "all"},
           "swing": "sw10",
-          "pins": {"n": 806, "net": 941.42,
-                 "dd_net": 22.16, "win": 0.447, "oos_n": 436, "oos_net": 286.22, "oos_dd_net": 14.33, "oos_win": 0.378},
+          "pins": {"n": 763, "net": 770.53,
+                 "dd_net": 20.02, "win": 0.417, "oos_n": 425, "oos_net": 339.08, "oos_dd_net": 15.04, "oos_win": 0.393},
     },
     "fsent_champ_long_biasmom05": {
           "desc": "CANDIDATE, NOT ADOPTED - the HTF-side sibling of fsent_champ_long_htf15, and the one that fixes the negative half-year WITHOUT adding drawdown. Where htf15 lengthens the 1h leg, this arms the other HTF knob: exp_bias_momentum_min=0.5, a floor on the RATIO of this HTF leg's magnitude to the previous one, so the book only takes entries while the 1h leg is growing rather than shrinking. It is the closest existing knob to 'the HTF window opens on strength' - it is literally the 1h leg's own measure deciding whether its window counts. MEASURED against the parent 528 / +533.37 / 13.42 IS and 311 / +239.59 / 11.88 OOS: IS 488t / +501.48R / DD 13.42R / WR 39.5%, OOS 287t / +217.13R / DD 13.47R / WR 37.6%. THE POINT OF THIS BOOK IS ITS DRAWDOWN: in-sample max DD is 13.42R, EXACTLY the parent's, and out-of-sample is 13.47R against the parent's 11.88R - a 1.6R cost. Every other arm that removes the negative half-year pays for it in drawdown; this one does not. It costs return instead: -31.9R IS and -22.5R OOS, on 40 and 24 fewer trades. It is the low-drawdown branch of the owner's rule, against htf15's high-return branch (IS DD 17.28R, OOS 16.86R, but IS +567.57R / OOS +254.88R). Both are registered so the choice is visible rather than averaged. ZERO negative half-years out of 12, same as htf15. NOTE: this knob is ON the sig books at 0.8 and OFF on the champ books, and 0.8 was chosen there - see fsent_sig_multi. It was never swept on the champ architecture, which is why 0.5 and 1.0 were only measured here for the first time. Still NOT adopted: no period control has been run on this arm, the negative-cell removal has not been shown to survive a half-year fixed effect, and the OOS window is 2021-22, which is not a holdout - see method/OOS_IS_NOT_A_HOLDOUT.md. See method/HTF_SWEEP_OWNER_RULE.md.",
@@ -476,8 +476,8 @@ BOOKS = {
                        "pivot_rule": "leg", "exp_fs_entry_side": "long",
                        "exp_bias_momentum_min": 0.5},
           "swing": "sw10",
-          "pins": {"n": 499, "net": 525.85,
-                 "dd_net": 15.37, "win": 0.423, "oos_n": 290, "oos_net": 228.64, "oos_dd_net": 15.72, "oos_win": 0.39},
+          "pins": {"n": 462, "net": 460.72,
+                 "dd_net": 22.78, "win": 0.433, "oos_n": 255, "oos_net": 182.27, "oos_dd_net": 8.91, "oos_win": 0.439},
     },
     "fsent_champ_long_htf15": {
           "desc": "CANDIDATE, NOT ADOPTED - the only arm found so far that fixes the shipping book's one negative half-year WITHOUT losing return, and it does so by moving a knob almost nobody has touched: the HTF swing length. THIS IS THE ONE FROM THE OWNER'S OWN RULE. Asked on 2026-10-09 for something that never goes negative - 'kabhi negative nahi hona chahiye' - the sweep of the HTF plane (1h swings, min_bars 10 -> 3..40) found that fsent_champ_long's single negative half-year, 2025-H1 at -0.7R, disappears at min_bars 13 and the net RISES from +773.0R to +796.5R (14) and +822.4R (15). MEASURED: IS 520t / +567.57R / DD 17.28R / WR 41.2%, OOS 280t / +254.88R / DD 16.86R / WR 37.1%. Against the parent that is +34.2R IS and +15.3R OOS on 8 and 31 fewer trades. WHY THIS IS NOT A GRID PEAK: the region around it is a genuine plateau, not a spike. min_bars 12 gives +783.5R but still 1 negative cell; 13 gives +787.6R with 0; 14 +796.5R with 0; 15 +822.4R with 0; 16 +746.1R with 0; 18 falls back to +708.7R with 1 negative again. By contrast min_bars 30 posts the single best number in the whole sweep at +847.3R with 0 negative - and is a SPIKE: 24 gives +645.4R with 2 negatives, 28 gives +659.6R with 2, 32 gives +696.3R with 0, 34 gives +562.5R. A 200R peak with a 60R trough either side is not an edge, so 30 is rejected and 15 is kept. WHAT CHANGED MECHANICALLY: the HTF plane is engine slot 2 and its swing series feeds the leg ratio, the bias-momentum breaks, the bias flips and _sw_ts_dir_mag, which is the flip/decisive classification every trade is tagged with. A longer 1h leg means fewer, larger HTF windows - 1601 swings at min_bars 10 down to 1479 at 15 - so the regime the router sees is coarser and it sits on fewer regime flips. That is why it is a genuinely different book rather than a re-tuned one. NOTE ON REGISTRATION: the HTF swing length is NOT an engine parameter, it is the registry's `swing` FIELD selecting a precomputed series, so this book needs the `htf15` series added to run_experiment.get_data - it is there, built at min_bars=15 on the 1h flow candles. A book that wanted a different HTF length would need its own series there, not a params edit. STILL NOT ADOPTED: period control gives b=+0.5681 IS and +0.3723 OOS, both positive with 97-98% of the raw gap surviving the half-year fixed effect, so it is not a regime proxy - but both cells are UNDERPOWERED against their own MDEs (1.0372 and 0.8050), so the magnitude is not established. In-sample drawdown rises 13.42R -> 17.28R and OOS 11.88R -> 16.86R, which fits the owner's 29R budget but is a real cost. And the OOS window is 2021-22, which is not a holdout - see method/OOS_IS_NOT_A_HOLDOUT.md. See method/HTF_SWEEP_OWNER_RULE.md.",
@@ -490,8 +490,8 @@ BOOKS = {
                        "exp_mltf": True, "exp_persist": 7,
                        "pivot_rule": "leg", "exp_fs_entry_side": "long"},
           "swing": "htf15",
-          "pins": {"n": 529, "net": 589.54,
-                 "dd_net": 20.08, "win": 0.427, "oos_n": 300, "oos_net": 300.73, "oos_dd_net": 16.53, "oos_win": 0.41},
+          "pins": {"n": 500, "net": 505.24,
+                 "dd_net": 26.26, "win": 0.446, "oos_n": 281, "oos_net": 254.81, "oos_dd_net": 11.28, "oos_win": 0.434},
     },
     "fsent_sig_multi": {
           "desc": "CANDIDATE, NOT ADOPTED - the strongest non-shipping result in the repo, and still not an adoption. fsent_sig_full's entire filter set (bias_momentum 0.8, fs_small_swing 6.0, trail_skip_n 2, weekends skipped, FS entry on shorts, ext_stop_r 3.0, halt on 3) with max_positions 1 -> 0, i.e. the single-slot gate removed and concurrency enabled. ONE value differs from fsent_sig_full; the other 15 are identical. WHAT IT IS, in plain terms: the same signals, and the book simply stops standing aside. Of 50 extra out-of-sample trades, 48 were taken while a serial position was already open and only 2 after it closed; 47 of the 50 joined a position in the SAME direction, so this is adding to an existing bet rather than hedging. Those extras earned +25.1R at a 46% win rate, against -0.3R given up on trades the serial book took instead. In sample the same mechanism gives 108 extras earning +186.2R for a net +188.8R. MEASURED: IS 329t / +484.59R / DD 13.39R / WR 45.6%, OOS 195t / +219.82R / DD 7.64R / WR 47.2%. Against the shipping book out of sample that is 92% of the net on 63% of the trades, at 64% of the drawdown, with a 10-point better win rate, and BOTH direction columns stay alive (+136.7R long, +83.1R short) which matters because the FS-side autopsy found the two families pointing in opposite directions. GATES: period control positive in both eras with 99% of the raw gap surviving, so this is NOT a regime proxy - the ATR% ceiling's signature does not appear. The half-year partition is 12 of 12. Tail dependence IMPROVES in every cell of both eras: removing the top 10 trades leaves 40.1% of in-sample profit against the parent's 22.0%, and 30.7% out of sample against 22.4%, which is the opposite of mode_union's 96%. WHY IT IS NOT ADOPTED - CORRECTED 2026-10-08, because the original reason was wrong. I previously wrote here that the out-of-sample magnitude is underpowered (b +0.3303 against an MDE of 2.1999) and therefore should not be adopted. THAT ARGUMENT IS WITHDRAWN. The 'OOS' era is 2021-01-01 to 2022-12-31 and IS is 2023-01-01 to 2026-09-13 - the OOS window is two years OLDER than the in-sample window and has been re-scored many times. It is not a holdout and never was, as method/FORWARD_TEST_PLAN.md states in its own second paragraph ('reused many times, not a holdout'). A power gate on that window is a real measurement of a real limitation OF THAT WINDOW and is not a forward verdict in either direction: it does not say this arm is bad, it says we have no forward data on it. THE CORRECT REASON THIS IS NOT ADOPTED: the adoption decision is BLOCKED ON FORWARD DATA, which does not exist on this machine. method/FORWARD_TEST_PLAN.md is ACTIVE with a hard boundary at 2026-09-13 10:03 IST and five pre-registered gates; it was scored once on 2026-09-25 and produced 5 trades and NO VERDICT (n<50); data/forward/bybit/ is not present locally now. This book is NOT on the contract's pre-registered candidate list, and because no forward window exists on disk nothing is burned - so it can be added before a new window starts, which is the cheapest high-value action available. The in-sample magnitude IS powered (b +2.1619, t +2.240, MDE 1.8920, month-cluster bootstrap +1.8501) and the 2021-22 magnitude is not (b +0.3303, MDE 2.1999); both are true and neither is a forward statement. The 2.16-vs-0.33 gap is a 2023-26 versus 2021-22 difference and should have been labelled as such when first reported. The tightest partition cells matter: 2021-H1 is +39.6 against +39.9 and 2021-H2 +35.8 against +40.5, so the FIRST out-of-sample half-year is worth almost nothing and the gain is concentrated in 2022-H1 and 2022-H2. DO NOT carry the in-sample +2.16R per trade as a forward expectation; the honest figure is roughly +0.33R and even that is not established. Concurrency shape: depth 5 in sample, 4 out, but 69% of entries happen with nothing else open, so this is the same book that occasionally takes a second position, not a crowded one. A cap of 3 costs 1.5R in sample, nothing out of sample, and lowers drawdown in both eras - a free bound on the tail. Two notes on measurement, both of which cost real time and are recorded so they are not repeated: the sibling sweep on the multi books returns BYTE-IDENTICAL results because those books carry exp_mltf=True, which bypasses the max_positions gate entirely in the harness - so this knob is inert on them and meaningful only on the serial sig book; and max_positions must be set alongside the regime knobs rather than alone, since a 0.40% min-stop floor on this book costs 4.1% of the long book's net in sample against 4.1% gained out of sample. See method/SIG_MULTI_STUDY.md.",
@@ -505,8 +505,8 @@ BOOKS = {
                        "exp_trail_skip_n": 2, "exp_fs_small_swing": 6.0,
                        "exp_skip_weekend": 1, "window_end": "exit"},
           "swing": "sw10",
-          "pins": {"n": 337, "net": 464.6,
-                 "dd_net": 13.84, "win": 0.457, "oos_n": 200, "oos_net": 190.5, "oos_dd_net": 9.76, "oos_win": 0.477},
+          "pins": {"n": 292, "net": 372.96,
+                 "dd_net": 13.43, "win": 0.445, "oos_n": 186, "oos_net": 182.77, "oos_dd_net": 7.61, "oos_win": 0.508},
     },
     "fsent_champ_long_mode_union": {
           "desc": "CANDIDATE, NOT ADOPTED. fsent_champ_long with mode='union' - admits either HTF interval set. Highest net of the four (813 / +580.0 IS, 442 / +303.8 OOS) and the WORST shape: mean R 0.69 against the base 0.77, drawdown 23.8R / 18.2R, and it loses on both second lanes in both eras. A bigger book, not a better one.",
@@ -518,8 +518,8 @@ BOOKS = {
                        "exp_persist": 7, "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 821, "net": 527.31,
-                 "dd_net": 29.68, "oos_n": 442, "oos_net": 315.88, "oos_dd_net": 14.64},
+          "pins": {"n": 779, "net": 495.69,
+                 "dd_net": 47.61, "oos_n": 431, "oos_net": 196.03, "oos_dd_net": 17.95},
     },
     "fsent_champ_long_nohalt": {
           "desc": "fsent_champ_long with max_consecutive_losses=0 (the 3-loss streak halt removed) and ext_stop_r=0.0 (provably inert since C17, written explicitly because omitting the key would inherit BP's 1.5). Every behavioural knob identical to the base. PAIRED PERMUTATION vs the shipping book, 2026-10-10 (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.0312 in sample, p = 0.0117 out of sample, gap +33.22 IS and +31.32 OOS - the same book as fsent_champ_long_mcloff, to two decimal places. Significance means this arm's choice of trades is unlikely to be a reshuffle of the parent's; it does NOT mean the book is statistically better in absolute terms, which the same audit shows it is not (the shipping book sits at the 58th and 45th percentile of a reshuffle of its own trades, and the corrected absolute null is M = 771.09R IS / 384.36R OOS against the 381.7 / 205.5 quoted in BASE_BOOK_NULL.md, which was measured on a different book). See method/NULL_AUDIT_P5.md.",
@@ -533,8 +533,8 @@ BOOKS = {
                        "pivot_rule": "leg",
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
-          "pins": {"n": 574, "net": 589.12,
-                 "dd_net": 15.63, "oos_n": 336, "oos_net": 279.76, "oos_dd_net": 16.8},
+          "pins": {"n": 533, "net": 504.12,
+                 "dd_net": 23.3, "oos_n": 300, "oos_net": 213.27, "oos_dd_net": 11.05},
       },
 
     "fsent_champ_short": {
@@ -551,8 +551,8 @@ BOOKS = {
           "swing": "sw10",
           # Directional FS entry: ONE side enters at the swing FS print, the
           # other side unchanged. exp_fs_directional_leg.py, both eras.
-          "pins": {"n": 534, "net": 626.93,
-                 "dd_net": 32.4, "oos_n": 330, "oos_net": 235.47, "oos_dd_net": 21.54},
+          "pins": {"n": 467, "net": 569.33,
+                 "dd_net": 12.67, "oos_n": 298, "oos_net": 195.01, "oos_dd_net": 12.75},
       },
     # Directional FS entry, continued: a second shipping-family book and the
     # highest-OOS book in the registry. Same knob, different base book.
@@ -570,8 +570,8 @@ BOOKS = {
                        "exp_fs_entry_side": "long"},
           "swing": "sw10",
           # exp_fs_directional_leg.py, both eras. dd_net pending measure.
-          "pins": {"n": 532, "net": 553.55,
-                 "dd_net": 26.75, "oos_n": 311, "oos_net": 248.84, "oos_dd_net": 16.86},
+          "pins": {"n": 493, "net": 470.03,
+                 "dd_net": 23.81, "oos_n": 280, "oos_net": 212.94, "oos_dd_net": 11.2},
       },
 
     "fsent_utcsat_short": {
@@ -587,8 +587,8 @@ BOOKS = {
                        "exp_fs_entry_side": "short"},
           "swing": "sw10",
           # exp_fs_directional_leg.py, both eras. dd_net pending measure.
-          "pins": {"n": 532, "net": 618.38,
-                 "dd_net": 32.46, "oos_n": 329, "oos_net": 225.6, "oos_dd_net": 22.3},
+          "pins": {"n": 459, "net": 547.82,
+                 "dd_net": 12.67, "oos_n": 295, "oos_net": 209.67, "oos_dd_net": 15.38},
       },
     "fsent_champ_trailhalf": {
         "desc": "CANDIDATE: fsent_champ_long + exp_trail_half=1. Multi check on 2026-10-06: OOS +287.0 / avgR 1.032 / PF 3.00 / DD 16.5 vs base +245.0 / 0.793 / 2.76 / 11.9. Lifts total and per-trade, at DD cost. NOT adopted - needs exp_port_differential parity + cohort autopsy first.",
@@ -603,8 +603,8 @@ BOOKS = {
                        "exp_fs_entry_side": "long",
                        "exp_trail_half": 1},
         "swing": "sw10",
-        "pins": {"n": 495, "net": 560.12,
-                 "dd_net": 33.32, "oos_n": 280, "oos_net": 239.17, "oos_dd_net": 14.14},
+        "pins": {"n": 451, "net": 416.35,
+                 "dd_net": 29.38, "oos_n": 253, "oos_net": 242.71, "oos_dd_net": 15.13},
     },
     "fsent_utcsat_trailhalf": {
         "desc": "CANDIDATE: fsent_utcsat_long + exp_trail_half=1. Repeats the fsent_champ_trailhalf lift (OOS +286.4 / avgR 1.034 / PF 3.00 / DD 16.5 vs base +244.2 / 0.793 / 2.75 / 11.9). NOT adopted.",
@@ -619,8 +619,8 @@ BOOKS = {
                        "exp_fs_entry_side": "long",
                        "exp_trail_half": 1},
         "swing": "sw10",
-        "pins": {"n": 494, "net": 519.22,
-                 "dd_net": 34.66, "oos_n": 279, "oos_net": 238.58, "oos_dd_net": 14.14},
+        "pins": {"n": 446, "net": 419.14,
+                 "dd_net": 23.49, "oos_n": 253, "oos_net": 241.94, "oos_dd_net": 15.9},
     },
 
     "fsent_dirmatch_long": {
@@ -740,8 +740,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 373, "net": 184.93,
-                 "dd_net": 17.21, "oos_n": 248, "oos_net": 107.29, "oos_dd_net": 12.83},
+          "pins": {"n": 334, "net": 167.14,
+                 "dd_net": 17.58, "oos_n": 208, "oos_net": 118.71, "oos_dd_net": 14.39},
       },
 
     "fsent_sig_sw10_long": {
@@ -764,8 +764,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 355, "net": 118.17,
-                 "dd_net": 22.9, "oos_n": 228, "oos_net": 86.16, "oos_dd_net": 12},
+          "pins": {"n": 326, "net": 133.1,
+                 "dd_net": 18.09, "oos_n": 203, "oos_net": 106.76, "oos_dd_net": 8.08},
       },
 
     "fsent_sig_sw20_short": {
@@ -788,8 +788,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 347, "net": 207,
-                 "dd_net": 20.52, "oos_n": 205, "oos_net": 95.07, "oos_dd_net": 12.11},
+          "pins": {"n": 341, "net": 246.02,
+                 "dd_net": 16.92, "oos_n": 190, "oos_net": 151.23, "oos_dd_net": 12.91},
       },
 
     "fsent_sig_sw20_short_wr": {
@@ -811,8 +811,8 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 347, "net": 207,
-                 "dd_net": 20.52, "win": 0.372, "oos_n": 205, "oos_net": 95.07, "oos_dd_net": 12.11, "oos_win": 0.312},
+          "pins": {"n": 341, "net": 246.02,
+                 "dd_net": 16.92, "win": 0.337, "oos_n": 190, "oos_net": 151.23, "oos_dd_net": 12.91, "oos_win": 0.384},
       },
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
@@ -856,8 +856,8 @@ BOOKS = {
           # at all, so nothing downstream was harmed by believing the smaller
           # number. That is luck, not a property of the process - the identical
           # mistake in the other direction would have shipped an inflated book.
-          "pins": {"n": 249, "net": 291.24,
-                 "dd_net": 11.45, "win": 0.39, "oos_n": 152, "oos_net": 154.35, "oos_dd_net": 9.45, "oos_win": 0.414},
+          "pins": {"n": 217, "net": 206.87,
+                 "dd_net": 14.24, "win": 0.378, "oos_n": 135, "oos_net": 127.47, "oos_dd_net": 4.41, "oos_win": 0.43},
       },
     "fsent_sig_full": {
           "desc": "Best exhaustive candidate on the one-position signal ladder: FS-short + momentum + no partial + trail skip + small-swing exit at FS + weekend skip.",
@@ -879,8 +879,8 @@ BOOKS = {
                        "exp_skip_weekend": 1,
                        "window_end": "exit"},
           "swing": "sw10",
-          "pins": {"n": 248, "net": 340.66,
-                 "dd_net": 12.31, "win": 0.407, "oos_n": 156, "oos_net": 170.6, "oos_dd_net": 7.8, "oos_win": 0.465},
+          "pins": {"n": 215, "net": 208.95,
+                 "dd_net": 14, "win": 0.419, "oos_n": 132, "oos_net": 133.91, "oos_dd_net": 4.99, "oos_win": 0.473},
       },
     # ===== FS TWEAKS — registered as candidate books, measured 2026-10-06 =====
     # Same stack as fsent_sig_full (and its both-side mirror), one lever added
@@ -910,8 +910,8 @@ BOOKS = {
                    "exp_trail_half": 1,
                    "exp_trail_delay_r": 1.0},
         "swing": "sw10",
-        "pins": {"n": 214, "net": 435.11,
-                 "dd_net": 13.41, "win": 0.35, "oos_n": 126, "oos_net": 161.41, "oos_dd_net": 8.41, "oos_win": 0.408},
+        "pins": {"n": 187, "net": 153.55,
+                 "dd_net": 16.05, "win": 0.401, "oos_n": 112, "oos_net": 134.57, "oos_dd_net": 6.49, "oos_win": 0.432},
     },
     "fsent_sig_decay_crossed": {
         "desc": "fsent_sig_full + P36 decay gate, mode 'crossed', thr 0.75, legs 4. Halves the book; OOS R/trd +1.91, PF 4.60, DD ~base — filter shape, half the trades.",
@@ -936,8 +936,8 @@ BOOKS = {
                    "exp_decay_thr": 0.75,
                    "exp_decay_legs": 4},
         "swing": "sw10",
-        "pins": {"n": 103, "net": 219.52,
-                 "dd_net": 8.62, "win": 0.456, "oos_n": 69, "oos_net": 113.12, "oos_dd_net": 7.11, "oos_win": 0.493},
+        "pins": {"n": 95, "net": 131.96,
+                 "dd_net": 8.62, "win": 0.442, "oos_n": 63, "oos_net": 52.58, "oos_dd_net": 9.07, "oos_win": 0.397},
     },
     "fsent_sig_half_crossed": {
         "desc": "fsent_sig_full + trail_half + decay_crossed. The sharpest shape: OOS avgR +2.27, PF 4.85, on n=62. NOT adopted — smallest sample of the three, OOS total well below base.",
@@ -963,8 +963,8 @@ BOOKS = {
                    "exp_decay_thr": 0.75,
                    "exp_decay_legs": 4},
         "swing": "sw10",
-        "pins": {"n": 98, "net": 368.63,
-                 "dd_net": 8.75, "win": 0.398, "oos_n": 64, "oos_net": 123.93, "oos_dd_net": 8.09, "oos_win": 0.422},
+        "pins": {"n": 93, "net": 132,
+                 "dd_net": 8.59, "win": 0.43, "oos_n": 61, "oos_net": 86.79, "oos_dd_net": 10.75, "oos_win": 0.344},
     },
     "fsent_both_trail_half": {
         "desc": "fsent_sig_full stack with exp_fs_entry_side='both' + exp_trail_half. Best measured both-side tweak here, but OOS +96.9 on n=141 — the lane stays far below the short-only book. Keep as the ceiling on 'both'.",
@@ -987,8 +987,8 @@ BOOKS = {
                    "window_end": "exit",
                    "exp_trail_half": 1},
         "swing": "sw10",
-        "pins": {"n": 258, "net": 75.81,
-                 "dd_net": 28.67, "win": 0.291, "oos_n": 146, "oos_net": 68.46, "oos_dd_net": 13.22, "oos_win": 0.31},
+        "pins": {"n": 238, "net": 35.73,
+                 "dd_net": 26.13, "win": 0.303, "oos_n": 130, "oos_net": 30.55, "oos_dd_net": 13.87, "oos_win": 0.341},
     },
     # ===== THE SIGNAL BOOK =====
     # ===== THE SIGNAL BOOK =====
@@ -1019,8 +1019,8 @@ BOOKS = {
           "swing": "sw10",
           # exp_fs_single.py / exp_fs_untested.py arm set, both eras.
           # peak concurrent positions verified = 1.
-          "pins": {"n": 304, "net": 214.21,
-                 "dd_net": 11.11, "oos_n": 182, "oos_net": 140.07, "oos_dd_net": 9.46},
+          "pins": {"n": 266, "net": 203.02,
+                 "dd_net": 13.42, "oos_n": 162, "oos_net": 136.39, "oos_dd_net": 6.91},
       },
     "fsswing6_c": {
           "desc": "champion leg + exit at own-swing FS when its leg is under 6x ATR",
@@ -1042,8 +1042,8 @@ BOOKS = {
                        "exp_fs_small_swing": 6.0},
           "swing": "sw10",
           # exp_fs_small_swing.py, both eras. Monotonic 3->6 ATR.
-          "pins": {"n": 506, "net": 274.63,
-                 "dd_net": 36.61, "oos_n": 291, "oos_net": 96.83, "oos_dd_net": 48.17},
+          "pins": {"n": 422, "net": 97.88,
+                 "dd_net": 69.09, "oos_n": 259, "oos_net": -14.71, "oos_dd_net": 46.22},
       },
     # ===== SWING-SIZE EXIT AT FS, single plane =====
     # ===== SWING-SIZE EXIT AT FS, single plane =====
@@ -1107,8 +1107,8 @@ BOOKS = {
                      "exit_fs_max_gap_h": 6.0},
         "swing": "sw10",
         # See the FS_EXIT ladder in exp_fs_exit.py.
-        "pins": {"n": 517, "net": 272.06,
-                 "dd_net": 46.21, "oos_n": 303, "oos_net": 86.83, "oos_dd_net": 50.69},
+        "pins": {"n": 434, "net": 170.04,
+                 "dd_net": 72.42, "oos_n": 270, "oos_net": -6.09, "oos_dd_net": 47.24},
     },
     # ===== P36 DECAY GATE (engine knob, measured 2026-10-02 IS+OOS) =====
 }

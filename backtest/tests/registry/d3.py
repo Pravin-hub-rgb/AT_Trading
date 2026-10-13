@@ -64,8 +64,8 @@ BOOKS = {
         # single and multi of this book produce the same trade count, the same net,
         # and the same trade-list hash. The multi leg is only meaningful where
         # cooldown_bars is kept alongside the pause, as this entry does.
-        "pins": {"n": 451, "net": 176.62,
-                 "dd_net": 45.05, "oos_n": 265, "oos_net": 66.08, "oos_dd_net": 55.25},
+        "pins": {"n": 385, "net": 144.23,
+                 "dd_net": 56.35, "oos_n": 220, "oos_net": 19.29, "oos_dd_net": 47.73},
     },
     # REMOVED 2026-10-02: skip1pause_multi_sw10. Verified identical to
     # skipwin1_multi_sw10 on unified.py - same count, same net, same trade list.
@@ -132,8 +132,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=323 net=28.35. Full sweep incl. gross/dd/win-rate:
         #   gross +100.84R  net +28.35R  dd 45.34R  win 26.9%  n=323
-        "pins": {"n": 299, "net": 40.72,
-                 "dd_net": 35.75, "oos_n": 204, "oos_net": 76.73, "oos_dd_net": 50.97},
+        "pins": {"n": 289, "net": -22.14,
+                 "dd_net": 62.27, "oos_n": 162, "oos_net": -10.6, "oos_dd_net": 35.3},
     },
     "skipwinhalt_sig_sw10": {
         "desc": "baseline single + skip the next HTF window after a HALT (3 straight losses)",
@@ -293,8 +293,8 @@ BOOKS = {
         #   20h 338/+218.94  24h 323/+225.08
         # One smooth peak around 10h, so the age cap is picking up a real
         # concentration rather than one lucky bar. Past ~16h it turns against.
-        "pins": {"n": 370, "net": 310.78,
-                 "dd_net": 29.37, "oos_n": 224, "oos_net": 90.4, "oos_dd_net": 35.7},
+        "pins": {"n": 308, "net": 149.33,
+                 "dd_net": 62.78, "oos_n": 191, "oos_net": -18.76, "oos_dd_net": 54.64},
     },
     "legskip2_multi_sw10": {
         "desc": "king + skip entry if HTF leg already progressed 2R (tighter ext)",
@@ -346,8 +346,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=454 net=358.92. Full sweep incl. gross/dd/win-rate:
         #   gross +466.44R  net +358.92R  dd 21.18R  win 30.8%  n=454
-        "pins": {"n": 457, "net": 296.61,
-                 "dd_net": 46.53, "oos_n": 257, "oos_net": 98.5, "oos_dd_net": 26.06},
+        "pins": {"n": 380, "net": 100.97,
+                 "dd_net": 56.9, "oos_n": 223, "oos_net": -51.88, "oos_dd_net": 63.74},
     },
 
     "utcsat_multi_sw10": {
@@ -375,8 +375,8 @@ BOOKS = {
         # a Saturday and were carrying -16.80R gross. The other 29, and the 40
         # that appear, are the cooldown and streak-halt chain moving - removing
         # trades re-opens entries that the skip had closed off.
-        "pins": {"n": 458, "net": 261.85,
-                 "dd_net": 46.31, "oos_n": 259, "oos_net": 102.43, "oos_dd_net": 22.86},
+        "pins": {"n": 384, "net": 113.83,
+                 "dd_net": 48.33, "oos_n": 224, "oos_net": -42.77, "oos_dd_net": 54.63},
     },
     "utcsat_swingpause_sig_sw10": {
         "desc": "swingpause single + SKIP UTC-SATURDAY only (UTC Sun = +51.7R is KEPT)",
@@ -437,8 +437,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=432 net=268.79. Full sweep incl. gross/dd/win-rate:
         #   gross +365.58R  net +268.79R  dd 41.70R  win 30.3%  n=432
-        "pins": {"n": 437, "net": 246.35,
-                 "dd_net": 49.86, "oos_n": 265, "oos_net": 69.36, "oos_dd_net": 43.45},
+        "pins": {"n": 373, "net": 97.65,
+                 "dd_net": 61.13, "oos_n": 240, "oos_net": -29.13, "oos_dd_net": 50.96},
     },
     "chopband_swingpause_sig_sw10": {
         "desc": "swingpause single + skip entries in the 15m-chop transition band [55,61)",
@@ -592,8 +592,8 @@ BOOKS = {
         # all 115 registry books in one pass.
         # Was n=392 net=315.45. Full sweep incl. gross/dd/win-rate:
         #   gross +407.37R  net +315.45R  dd 36.41R  win 31.6%  n=392
-        "pins": {"n": 393, "net": 199.2,
-                 "dd_net": 44.94, "oos_n": 233, "oos_net": 68.61, "oos_dd_net": 32.47},
+        "pins": {"n": 335, "net": 85.2,
+                 "dd_net": 45.99, "oos_n": 213, "oos_net": -40.57, "oos_dd_net": 54.68},
     },
     "fullstack_atrr_utcsat_multi_sw10": {
         "desc": "EXP: utcsat multi + chop15 band + ATR ratio blow-off",
@@ -848,8 +848,8 @@ BOOKS = {
         #   gross +290.91R  net +185.08R  dd 47.70R  win 29.0%  n=493
         # all 115 registry books in one pass.
         #   gross +290.91R  net +185.08R  dd 47.70R  win 29.0%  n=493
-        "pins": {"n": 499, "net": 211.48,
-                 "dd_net": 55.06, "oos_n": 291, "oos_net": 89.83, "oos_dd_net": 48.73},
+        "pins": {"n": 417, "net": 115.4,
+                 "dd_net": 63.85, "oos_n": 250, "oos_net": -18.8, "oos_dd_net": 47.76},
     },
     "causalsl_swingpause_sig_sw10": {
         "desc": "swingpause single + causal SL",
@@ -885,8 +885,8 @@ BOOKS = {
         #   gross +328.97R  net +237.43R  dd 36.53R  win 30.6%  n=448
         # all 115 registry books in one pass.
         #   gross +328.97R  net +237.43R  dd 36.53R  win 30.6%  n=448
-        "pins": {"n": 452, "net": 228.84,
-                 "dd_net": 48.03, "oos_n": 261, "oos_net": 118.52, "oos_dd_net": 29.28},
+        "pins": {"n": 379, "net": 131.3,
+                 "dd_net": 56.79, "oos_n": 224, "oos_net": -22.39, "oos_dd_net": 36.13},
     },
 
     # ===== D3 BIAS MOMENTUM (1h swing magnitude ratio) =====
@@ -908,8 +908,8 @@ BOOKS = {
         #   gross +385.93R  net +277.86R  dd 46.63R  win 30.5%  n=456
         # all 115 registry books in one pass.
         #   gross +385.93R  net +277.86R  dd 46.63R  win 30.5%  n=456
-        "pins": {"n": 467, "net": 278.75,
-                 "dd_net": 44.14, "oos_n": 269, "oos_net": 91.02, "oos_dd_net": 46.2},
+        "pins": {"n": 391, "net": 142.04,
+                 "dd_net": 58.46, "oos_n": 238, "oos_net": -12.25, "oos_dd_net": 40.36},
     },
     "bm08_multi_sw10": {
         "desc": "king + bias momentum min 0.8 (stricter)",
@@ -927,8 +927,8 @@ BOOKS = {
         #   gross +342.15R  net +248.81R  dd 38.30R  win 31.5%  n=391
         # all 115 registry books in one pass.
         #   gross +342.15R  net +248.81R  dd 38.30R  win 31.5%  n=391
-        "pins": {"n": 405, "net": 274.81,
-                 "dd_net": 40.56, "oos_n": 215, "oos_net": 114.43, "oos_dd_net": 29.58},
+        "pins": {"n": 322, "net": 150.16,
+                 "dd_net": 44.76, "oos_n": 198, "oos_net": 9.94, "oos_dd_net": 30.95},
     },
     "bm05_utcsat_multi_sw10": {
         "desc": "utcsat king + bias momentum min 0.5",
@@ -946,8 +946,8 @@ BOOKS = {
         #   gross +396.58R  net +298.15R  dd 35.33R  win 31.0%  n=420
         # all 115 registry books in one pass.
         #   gross +396.58R  net +298.15R  dd 35.33R  win 31.0%  n=420
-        "pins": {"n": 425, "net": 289.02,
-                 "dd_net": 40.69, "oos_n": 244, "oos_net": 109.96, "oos_dd_net": 21.72},
+        "pins": {"n": 357, "net": 145.21,
+                 "dd_net": 47.49, "oos_n": 216, "oos_net": -37.39, "oos_dd_net": 49.25},
     },
     "bm08_utcsat_multi_sw10": {
         "desc": "utcsat king + bias momentum min 0.8",
@@ -965,8 +965,8 @@ BOOKS = {
         #   gross +349.60R  net +264.66R  dd 29.71R  win 32.6%  n=359
         # all 115 registry books in one pass.
         #   gross +349.60R  net +264.66R  dd 29.71R  win 32.6%  n=359
-        "pins": {"n": 369, "net": 305.38,
-                 "dd_net": 30.7, "oos_n": 198, "oos_net": 106.24, "oos_dd_net": 16.31},
+        "pins": {"n": 306, "net": 167.44,
+                 "dd_net": 46.23, "oos_n": 183, "oos_net": 12.53, "oos_dd_net": 22.36},
     },
     "bm05_swingpause_sig_sw10": {
         "desc": "swingpause single + bias momentum min 0.5 — FAILS on single (-29.6R)",

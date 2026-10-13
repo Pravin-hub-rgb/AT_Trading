@@ -120,13 +120,29 @@ def equity_quality(trades, years):
     uw_pct = 100.0 * uw_pct_sum / n
 
     # ulcer: mean of (dd/peak)^2 over points where peak>0, scaled
+    #
+    # The 1e-9 guard is not enough. A book that takes its first profits early
+    # and then gives them back can leave `peak` at a tiny positive number while
+    # `cum` has fallen well below it. The ratio then explodes: on
+    # fsent_champ_long_htfesmcl4 the peak after trade 3 is 0.068 and cum reaches
+    # -4.825, so (peak-cum)/peak is 7195% and the squared term is 5.2e7. That one
+    # point carried the whole book to ulcer 365.75 while every other book sat
+    # between 3.8 and 12. The same series recomputed from its own dd column
+    # gives 5.89.
+    #
+    # The peak is floored at a fraction of the book's own total so a
+    # near-zero early peak cannot become a denominator. Points whose peak is
+    # below that floor are not counted rather than counted with a clamped
+    # denominator, so an early losing run simply contributes nothing to the
+    # average instead of contributing a fabricated one.
     peak = cum = 0.0
     ulcer_sq = 0.0
     ulcer_n = 0
+    peak_floor = abs(total) * 0.01 if total else 0.0
     for x in nets:
         cum += x
         peak = max(peak, cum)
-        if peak > 1e-9:
+        if peak > peak_floor and peak > 1e-9:
             ulcer_sq += (100.0 * (peak - cum) / peak) ** 2
             ulcer_n += 1
     ulcer = math.sqrt(ulcer_sq / ulcer_n) if ulcer_n else 0.0
