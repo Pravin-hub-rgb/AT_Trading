@@ -129,6 +129,9 @@ class SwingEngine:
         self.bar_lows: dict[int, float] = {}
         self.latest_sealed_high: Optional[Lvl] = None
         self.latest_sealed_low: Optional[Lvl] = None
+        # bar of the last same-kind pivot we stored - see the seal-loop comment
+        self._last_h_gidx: int = -1
+        self._last_l_gidx: int = -1
         # Pivots already broken, keyed on (pivot_idx, price), shared across the
         # whole chain by btc_swing.compute_btc_swings.
         #
@@ -316,7 +319,18 @@ class SwingEngine:
                     self.armed = True
             if p.kind == "H":
                 # Any new H kills old H � gap validated at chop-target time, not here
-                self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
+                # The walker can emit TWO H pivots on the same bar: the tracked
+                # extreme (idx=hi_idx) first, then the retired pending one.
+                # Last-write-wins stored the weaker, later bar. Measured
+                # 2023-01-12 21:30: H 18120.0@21:00 then H 18111.0@21:15 - the
+                # first is the pivot the white flow line draws and the one the
+                # owner confirms the 21:45 FS breaks; the second clobbered it,
+                # so the engine aimed one bar late. display_flow is immune
+                # because it runs _dedupe then _enforce_alternation over the
+                # stream; this intake did neither.
+                if self._last_h_gidx != self.g_idx:
+                    self._last_h_gidx = self.g_idx
+                    self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_hi_pivot  # type: ignore
                 assert cur is not None
                 if p.px > cur.px:
@@ -334,7 +348,9 @@ class SwingEngine:
                     self._push_unique(self.normal_highs, Lvl(px=p.px, idx=p.idx, time=p.time))
             else:
                 # Any new L kills old L � gap validated at chop-target time, not here
-                self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
+                if self._last_l_gidx != self.g_idx:
+                    self._last_l_gidx = self.g_idx
+                    self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
                 cur = self.e_lo_pivot  # type: ignore
                 assert cur is not None
                 if p.px < cur.px:
