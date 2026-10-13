@@ -975,7 +975,7 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
               : b.kind === "B2"
                 ? "#60a5fa"
                 : "#94a3b8",
-          text: `${b.kind}-${swingNo}`,
+          text: `${b.kind}${b.dir === "down" ? "↓" : "↑"}-${swingNo}`,
           size: 1,
         });
       }
