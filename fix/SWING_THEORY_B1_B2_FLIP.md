@@ -397,6 +397,26 @@ were put in front of the owner. `exp_swing_invariants.py` covers the rest
 structurally; no chart review has, and no chart review can, cover all 7,734
 marks.
 
+### The 88% bucket was tested, not assumed
+
+`exp_swing_invariants.py` puts 17,950 of 20,460 suppressed breaks into a single
+bucket — *"confirmed + with-the-leg → no B2 by design"* — 88% of everything it
+classifies. That rested on one structural claim read straight off `_step`: once
+`dir_confirmed` is set there is **no plain-B2 path at all**.
+
+`exp_dir_confirmed_b2_path.py` tests it by forcing `dir_confirmed = False` for
+exactly one `_step` call on each such bar and restoring it immediately, so only
+that one decision changes.
+
+**Result: 6,668 bars produced a B2 that does not exist in the baseline.**
+`dir_confirmed` is what suppresses them. The bucket is correctly attributed and
+the harness is not resting on an unexamined assumption.
+
+Note the forced run's chain diverges (7,734 → 12,403 marks) because flipping the
+flag mid-run changes later decisions. That is fine for the question asked — *does
+the B2 path exist* — but this test does **not** propose a corrected chain, and
+the divergence must not be read as one.
+
 `exp_v7_freeze.py` is stale by design (fixture predates the V13 and volatile changes) —
 drift is expected and is not a failure.
 
