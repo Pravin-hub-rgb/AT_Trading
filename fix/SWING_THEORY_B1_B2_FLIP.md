@@ -263,7 +263,22 @@ was always false and every post-FLIP break became a plain FLIP. Fixed to use
 
 - FS anchors on a **sealed pivot**, and the FS bar **breaks that pivot**.
 - The pivot must be **fresh** (formed inside the current window).
-- The 50-bar gate applies **here** (see §4).
+- The pivot must also survive the **one-candle gap rule**, same as B1/B2
+  (`firstswing.py:917-920` for a high, `:950-951` for a low). The bar immediately
+  after a candidate pivot must **not** breach it; if it does, the pivot is
+  contaminated and is rejected outright rather than marked.
+  Owner-verified 2025-08-22 21:45 (swing 2038, up leg): pivot low 21:00 @ 116605.1
+  was breached by 21:15 @ 116313.7 on the very next candle → rejected. Next pivot
+  21:15 @ 116313.7 survived, because 21:30's low merely *equalled* it, and was
+  broken at 21:45 @ 116075.0. So **21:45 is correct and 21:15 would have been
+  wrong** — do not "fix" it as late.
+- The 50-bar gate applies **here** (see §4), and FS may land **on** the gate bar
+  but never before it. Owner ruling 2023-07-02: the 07:00 candle closes at 07:15,
+  so at 07:15 it is simultaneously the minBars-50 bar and an FS — legitimate. An
+  FS at 06:45 would be inside the window and must not be marked. Gate (timing) and
+  gap rule (pivot quality) are independent and both must pass.
+  Owner-verified 2023-07-02 07:00 (MB gate and FS on the same bar), 2023-03-19
+  17:00→18:30, 2023-03-20 06:15→06:30, 2025-08-22 20:15→21:45.
 - `defer_same_bar_arm`: a seal arms the engine on the **next** bar, except the
   V-reversal case (a bar that both seals its own extreme and crosses an older pivot of
   the matching kind is a real break — owner-verified on 2023-01-03 12:45, 2023-02-04
@@ -272,77 +287,36 @@ was always false and every post-FLIP break became a plain FLIP. Fixed to use
   cross of a pre-B2 pivot completes the leg early — owner case 2023-01-02 swing 8:
   B2@13:26 then cross of the pre-B2 13:24 low @13:27 would mark fs_at mid-swing.
 
-### 7.1 KNOWN: the engine aims at an FS pivot one bar later than the chart — 40 cases
-
-**Left unfixed by owner decision, 2026-10-13: explain it, change nothing.**
-
-`exp_fs_breaks_pivot.py` reports 40 FS marks failing check 2 (*"that pivot is a flow-line
-corner"*). Every other check passes — the engine aimed on the correct side (1), the FS bar
-genuinely breaks that level (3), and the level was fresh (5). Owner spot-checked 6 of the
-40 on the chart and ruled **all 6 FS marks correctly placed**, including case 4
-(`2023-03-20 14:45`), where he said: *"the FS is marked correctly, but according to what it
-is being marked is wrong."*
-
-**Root cause, from `walker.py:226-235`:**
-
-```python
-p_idx, p_px = p.idx, p.px
-if pk == "H" and self.hi_px is not None and self.hi_px > p_px:
-    if hi_after:
-        p_idx, p_px = self.hi_idx, self.hi_px   # replace with walker's TRACKED extreme
-```
-
-A sealed pivot's location is replaced by the walker's **tracked extreme**
-(`hi_idx`/`hi_px`, `lo_idx`/`lo_px`). Those tracked extremes only advance when
-`_bar_steps` runs — and per the **ONION RULE** (`walker.py:188-204`) a candle nested
-inside an insider stack sets `skip_steps = True` and is deliberately not stepped:
-
-```
-188  # ---- ONION RULE: nested insider absorbs into the stack ----
-189  if c.high < stack_hi and c.low > stack_lo:
-204      skip_steps = True
-```
-
-`display_flow` deliberately re-splices exactly those swallowed candles, so the white line
-*does* draw their extremes. The engine's walker does not. Both are looking at the same
-move — which is why the price is close (median ~11 points) while **the bar is always
-exactly one late, in all 40**.
-
-| FS bar | leg | engine aims | line draws | delta |
-|---|---|---|---|---|
-| `2023-01-12 21:45` | down | 21:15 @ 18111.0 | 21:00 @ 18120.0 | −9.0 |
-| `2023-01-25 01:00` | down | 00:15 @ 23028.5 | 00:00 @ 23041.0 | −12.5 |
-| `2023-03-20 14:45` | up | 14:15 @ 28155.8 | 14:00 @ 28143.1 | +12.7 |
-| `2025-10-23 07:45` | down | 07:15 @ 108220.0 | 07:00 @ 108342.2 | −122.2 |
-
-**Why the mark still lands correctly:** the FS bar clears both candidates, because the
-line's earlier pivot is the weaker one. The mark is right; the reasoning is wrong.
-
-**Not a fix, deliberately.** Making the walker track swallowed candles would fight the
-ONION rule, which is documented and intentional. The alternative — giving the engine the
-display's spliced pivot stream — leaves `walker.py` untouched but couples the engine to a
-display module, and would move FS targets well beyond these 40 (~50% of bars are
-swallowed). Neither was authorised. **The 40 stay as a known, accepted deviation.**
-
 ---
 
 ## 8. Verification state (2026-10-13)
 
-Branch `fix/fs-and-pivot-breaks`. BTC 15m, 2764 swings.
+Branch `fix/fs-and-pivot-breaks` at `d71304f`, plus `0818cde` (frontend MB markers
+only). BTC 15m, 2840 swings.
 
 | check | result |
 |---|---|
-| `exp_two_point_missing.py` | 2765 legs, **0 missing, 0 late** |
-| `exp_fs_breaks_pivot.py` | 2764 ok / 0 fail on checks 1, 3, 5 (check-2's 40 fails are suspected **artefacts** — that test still reads the old `compute_btc_flow` corners) |
-| `exp_g3_no_lookahead.py` | PASS, 4379 marks, 0 mismatches |
+| `exp_two_point_missing.py` | **0 missing, 0 late** |
+| `exp_fs_breaks_pivot.py` | 2840 ok / **0 fail on all four checks** — the old 40 check-2 failures are **closed**, not artefacts |
+| `exp_g3_no_lookahead.py` | PASS, 4476 marks, 0 mismatches |
 | `exp_v2_b2_flip.py` | gate 7/7 PASS; placement, target = running extreme, first-cross all **0 fail** |
 | **FLIP-FLIP alternation** | **0** (was 380) |
 | B2-B2 | 1 (`2023-01-23 20:15`, owner-confirmed correct) |
-| unexplained breaks | **0** — all 960 accounted for by the gap rule, alternation, or colour rule |
+| unexplained breaks | **0** — every suppressed candidate is accounted for by the gap rule, alternation, or colour rule |
 
-Chain: 2764 swings, **7570 marks** (B1 2764 / B2 2683 / FLIP 2123).
+Chain: 2840 swings, **7740 marks** (B1 2840 / B2 2742 / FLIP 2158).
+Full-chain fingerprint, sha256 of sorted `time|kind|dir|px|swing` rows + FS rows,
+`minBars=50`, `max_swings=len(candles)//2`: **`c864262630560f83`** (10580 rows).
+Recheck this after any engine edit; the frontend MB work left it unchanged.
 
-### Owner-confirmed dates — all 33 verified
+`exp_v2_gate_deferral.py` (2026-10-13): B2 2742 marks, 968 of them with suppressed
+candidates (1769 bars); FLIP 2158 marks, 5 with suppressed candidates (5 bars).
+All classified, none unexplained — but this test cannot by itself tell the gate
+doing its job from misfiring. It is a review list, not a verdict.
+
+### Owner-confirmed dates — all 34 verified
+
+`d71304f` and the MB review added four, all confirmed on-chart 2026-10-13:
 
 ```
 2023-03-19 06:00 B1 | 06:30 B2 | 2023-03-20 06:30 FLIP | 13:30 B2   (V13 walkthrough)
@@ -358,6 +332,36 @@ Chain: 2764 swings, **7570 marks** (B1 2764 / B2 2683 / FLIP 2123).
 ```
 
 Plus 15/15 spot-checked FLIP<->B2 relabels confirmed correct (3 batches of 5).
+
+### The four MB-review dates, owner-verified 2026-10-13
+
+Each checked as `MB gate -> FS`, in chronological order:
+
+| date | MB gate | FS | why it is correct |
+|---|---|---|---|
+| 2023-03-19 | 17:00 | 18:30 | 18:00 pivot, broken at 18:30 |
+| 2023-03-20 | 06:15 | 06:30 | 05:30 pivot low first broken at 06:30 |
+| 2023-07-02 | 07:00 | 07:00 | FS **on** the gate bar — owner-ruled legal |
+| 2025-08-22 | 20:15 | 21:45 | 21:00 pivot contaminated by 21:15; gap rule moved FS to 21:45 |
+
+### Measurement trap — the "refused break" claim was wrong
+
+On 2026-10-13 a scan reported "a break happened at 06:15 inside the window and was
+refused", and listed 458 swings as "decisive" on that reasoning. **That inference
+was invalid.** It tested `breaks[0].idx < min_bars_idx <= fs_at_idx`, which only
+establishes that the leg's *first mark* preceded its gate bar — it says nothing
+about whether any break was suppressed. `breaks` lists marks that *were* emitted;
+a suppressed break appears nowhere in it.
+
+The owner corrected it directly on 2023-03-20: no break occurred at 06:15 at all.
+The raw counts (227 FS exactly on the gate bar, 458 within two bars) are real but
+mostly ordinary spacing, not evidence that the gate bound. The genuine
+gap-rule evidence is the 2025-08-22 walk-through above, which was read off
+candles and source, not inferred from indices.
+
+**Do not cite an index comparison as proof that a rule fired.** Check the candle
+that was skipped. This repo has a long run of confident, wrong measurements and
+that pattern is still live.
 
 `exp_v7_freeze.py` is stale by design (fixture predates the V13 and volatile changes) —
 drift is expected and is not a failure.

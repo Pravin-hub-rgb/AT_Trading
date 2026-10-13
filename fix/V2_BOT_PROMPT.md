@@ -244,6 +244,18 @@ measurement's fault.
   during the FS work.
 - The FS freshness scan in `_check_chop` is **dead code** — disabling it outright leaves
   the chain byte-identical. Do not cite it as evidence that anything works.
+- The **gap rule applies to FS as well as B1/B2** — `firstswing.py:917-920` (high) and
+  `:950-951` (low), inside the two FS pivot selectors. A pivot whose very next candle
+  breaches it is rejected outright. Verified 2025-08-22: pivot 21:00 rejected by 21:15,
+  FS correctly delayed to 21:45. That case looks "late" and is not a bug.
+- FS may land **on** the minBars gate bar but never before it (owner ruling 2026-10-13,
+  2023-07-02: the 07:00 candle closes at 07:15, so it is legitimately both MB-50 and FS).
+- **Never infer that a rule fired from an index comparison.** A check like
+  `breaks[0].idx < gate <= fs_at_idx` only shows the leg's first *emitted* mark preceded
+  the gate — a suppressed break is absent from `breaks` entirely, so it cannot appear.
+  This produced a false "the break at 06:15 was refused" claim on 2026-10-13; the owner
+  found no break there at all. To show the gate or gap rule did work, read the actual
+  candle that was skipped and show its values.
 - `bars_seen` resets per leg, so `min_bars` is never reached inside a leg.
 
 ## Verification you must run before reporting anything
