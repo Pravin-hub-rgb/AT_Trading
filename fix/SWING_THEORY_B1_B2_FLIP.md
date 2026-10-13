@@ -272,6 +272,58 @@ was always false and every post-FLIP break became a plain FLIP. Fixed to use
   cross of a pre-B2 pivot completes the leg early — owner case 2023-01-02 swing 8:
   B2@13:26 then cross of the pre-B2 13:24 low @13:27 would mark fs_at mid-swing.
 
+### 7.1 KNOWN: the engine aims at an FS pivot one bar later than the chart — 40 cases
+
+**Left unfixed by owner decision, 2026-10-13: explain it, change nothing.**
+
+`exp_fs_breaks_pivot.py` reports 40 FS marks failing check 2 (*"that pivot is a flow-line
+corner"*). Every other check passes — the engine aimed on the correct side (1), the FS bar
+genuinely breaks that level (3), and the level was fresh (5). Owner spot-checked 6 of the
+40 on the chart and ruled **all 6 FS marks correctly placed**, including case 4
+(`2023-03-20 14:45`), where he said: *"the FS is marked correctly, but according to what it
+is being marked is wrong."*
+
+**Root cause, from `walker.py:226-235`:**
+
+```python
+p_idx, p_px = p.idx, p.px
+if pk == "H" and self.hi_px is not None and self.hi_px > p_px:
+    if hi_after:
+        p_idx, p_px = self.hi_idx, self.hi_px   # replace with walker's TRACKED extreme
+```
+
+A sealed pivot's location is replaced by the walker's **tracked extreme**
+(`hi_idx`/`hi_px`, `lo_idx`/`lo_px`). Those tracked extremes only advance when
+`_bar_steps` runs — and per the **ONION RULE** (`walker.py:188-204`) a candle nested
+inside an insider stack sets `skip_steps = True` and is deliberately not stepped:
+
+```
+188  # ---- ONION RULE: nested insider absorbs into the stack ----
+189  if c.high < stack_hi and c.low > stack_lo:
+204      skip_steps = True
+```
+
+`display_flow` deliberately re-splices exactly those swallowed candles, so the white line
+*does* draw their extremes. The engine's walker does not. Both are looking at the same
+move — which is why the price is close (median ~11 points) while **the bar is always
+exactly one late, in all 40**.
+
+| FS bar | leg | engine aims | line draws | delta |
+|---|---|---|---|---|
+| `2023-01-12 21:45` | down | 21:15 @ 18111.0 | 21:00 @ 18120.0 | −9.0 |
+| `2023-01-25 01:00` | down | 00:15 @ 23028.5 | 00:00 @ 23041.0 | −12.5 |
+| `2023-03-20 14:45` | up | 14:15 @ 28155.8 | 14:00 @ 28143.1 | +12.7 |
+| `2025-10-23 07:45` | down | 07:15 @ 108220.0 | 07:00 @ 108342.2 | −122.2 |
+
+**Why the mark still lands correctly:** the FS bar clears both candidates, because the
+line's earlier pivot is the weaker one. The mark is right; the reasoning is wrong.
+
+**Not a fix, deliberately.** Making the walker track swallowed candles would fight the
+ONION rule, which is documented and intentional. The alternative — giving the engine the
+display's spliced pivot stream — leaves `walker.py` untouched but couples the engine to a
+display module, and would move FS targets well beyond these 40 (~50% of bars are
+swallowed). Neither was authorised. **The 40 stay as a known, accepted deviation.**
+
 ---
 
 ## 8. Verification state (2026-10-13)
