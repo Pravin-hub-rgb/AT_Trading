@@ -1,0 +1,134 @@
+{
+ "is | decisive (B2 or FLIP)": {
+  "n": 419,
+  "net": 140.16,
+  "avgR": 0.335,
+  "pf": 1.413,
+  "wr": 24.3,
+  "max_dd": 39.5,
+  "ulcer": 27.15,
+  "max_streak": 23,
+  "top5_share_pct": 221.4
+ },
+ "is | b2 only": {
+  "n": 419,
+  "net": 140.16,
+  "avgR": 0.335,
+  "pf": 1.413,
+  "wr": 24.3,
+  "max_dd": 39.5,
+  "ulcer": 27.15,
+  "max_streak": 23,
+  "top5_share_pct": 221.4
+ },
+ "is | flip only": {
+  "n": 716,
+  "net": 279.31,
+  "avgR": 0.39,
+  "pf": 1.503,
+  "wr": 26.1,
+  "max_dd": 52.6,
+  "ulcer": 12.55,
+  "max_streak": 21,
+  "top5_share_pct": 195.8
+ },
+ "is | htf_fs = all three": {
+  "n": 716,
+  "net": 279.31,
+  "avgR": 0.39,
+  "pf": 1.503,
+  "wr": 26.1,
+  "max_dd": 52.6,
+  "ulcer": 12.55,
+  "max_streak": 21,
+  "top5_share_pct": 195.8
+ },
+ "is | FS print (long)": {
+  "n": 497,
+  "net": 428.22,
+  "avgR": 0.862,
+  "pf": 2.865,
+  "wr": 38.6,
+  "max_dd": 23.2,
+  "ulcer": 18.06,
+  "max_streak": 12,
+  "top5_share_pct": 81.5
+ },
+ "is | FS print (both)": {
+  "n": 578,
+  "net": 358.6,
+  "avgR": 0.62,
+  "pf": 2.38,
+  "wr": 36.0,
+  "max_dd": 22.6,
+  "ulcer": 15.89,
+  "max_streak": 14,
+  "top5_share_pct": 97.2
+ },
+ "oos | decisive (B2 or FLIP)": {
+  "n": 249,
+  "net": 2.04,
+  "avgR": 0.008,
+  "pf": 1.011,
+  "wr": 24.9,
+  "max_dd": 42.1,
+  "ulcer": 73.95,
+  "max_streak": 17,
+  "top5_share_pct": 4813.7
+ },
+ "oos | b2 only": {
+  "n": 249,
+  "net": 2.04,
+  "avgR": 0.008,
+  "pf": 1.011,
+  "wr": 24.9,
+  "max_dd": 42.1,
+  "ulcer": 73.95,
+  "max_streak": 17,
+  "top5_share_pct": 4813.7
+ },
+ "oos | flip only": {
+  "n": 358,
+  "net": 60.38,
+  "avgR": 0.169,
+  "pf": 1.229,
+  "wr": 25.1,
+  "max_dd": 38.2,
+  "ulcer": 118.9,
+  "max_streak": 17,
+  "top5_share_pct": 328.5
+ },
+ "oos | htf_fs = all three": {
+  "n": 372,
+  "net": 56.84,
+  "avgR": 0.153,
+  "pf": 1.209,
+  "wr": 24.7,
+  "max_dd": 47.3,
+  "ulcer": 62.69,
+  "max_streak": 15,
+  "top5_share_pct": 358.6
+ },
+ "oos | FS print (long)": {
+  "n": 281,
+  "net": 194.25,
+  "avgR": 0.691,
+  "pf": 2.64,
+  "wr": 40.9,
+  "max_dd": 10.5,
+  "ulcer": 6.39,
+  "max_streak": 7,
+  "top5_share_pct": 71.4
+ },
+ "oos | FS print (both)": {
+  "n": 347,
+  "net": 120.8,
+  "avgR": 0.348,
+  "pf": 1.81,
+  "wr": 35.4,
+  "max_dd": 18.3,
+  "ulcer": 31.41,
+  "max_streak": 13,
+  "top5_share_pct": 109.8
+ }
+}
