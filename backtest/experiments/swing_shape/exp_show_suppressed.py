@@ -88,13 +88,22 @@ def main() -> int:
 
     LBL = {
         "gap_contaminated": ("The candle after the extreme ALSO breached it, so the",
-                             "level was contaminated - no B2."),
-        "gap_too_fresh": ("The extreme was only 1 bar old. The rule needs it to",
-                          "survive one whole candle before a break counts."),
+                             "level was contaminated - no B2. Never fires on 15m IS:",
+                             "the target is the running extreme, which by definition",
+                             "nothing has breached. Vestigial path."),
+        "gap_too_fresh": ("The extreme was only 1 bar old. It must survive a whole",
+                          "candle before a break counts. NO WHITE PIVOT IS INVOLVED",
+                          "- owner verified 2023-01-01 swing 1, where 18:30 / 18:45",
+                          "/ 19:00 are lower-high AND lower-low with no reversal bar,",
+                          "so there is no pivot at any of those candles to name."),
         "not_armed": ("self.armed is false - the minBars / pending-arm window.",
                       "_step never ran, so no mark of any kind was possible."),
         "volatile_sustains_flipped_leg": ("Volatile candle sustained a direction that",
-                                           "had already flipped since B1 - NO MARK."),
+                                           "had ALREADY flipped since B1, so a second",
+                                           "mark in that direction is impossible: it",
+                                           "cannot be B2 (B2 belongs to B1's side) and",
+                                           "cannot be a FLIP (already that direction).",
+                                           "NO MARK is the correct outcome here."),
     }
 
     for reason in ("gap_contaminated", "gap_too_fresh",

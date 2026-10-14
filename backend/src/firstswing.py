@@ -12,9 +12,9 @@ compute_whole_day_swings() for all swings in a day.
   frontend FsV2Engine (backend/debug/firstswing_cf11277.ts chopTargetHigh/Low):
   "any new H kills old H / any new L kills old L" � killed pivots are dead, there
   is NO fallback scan to older pivots. Gap check at chop-target time (next candle
-  must not breach pivot; requires pivot idx <= g_idx - 2) prevents micro-pivot noise.
+  must not breach it; requires extreme idx <= g_idx - 2) prevents single-bar extreme noise.
   Backend-only additions kept deliberately (user-approved fixes beyond the TS):
-  minBars=14 declaration guard, B2 1-candle pivot gap (b2_gap_bars=1),
+  minBars=14 declaration guard, B2 1-candle EXTREME gap (b2_gap_bars=1),
   fresh-structure rule (chop may only target pivots formed after dir_established),
   flip-back-as-B2 (as_b2), first_chop_cross tracking for fs_at markers.
 """
@@ -601,7 +601,7 @@ class SwingEngine:
             if _sus != self.dir:
                 self._flip(_sus)
             else:
-                self._b2_if_gap_allows()   # no mark if the pivot is contaminated
+                self._b2_if_gap_allows()   # no mark if the extreme is contaminated
             self._check_chop()
             return
         if self.dir == "down":
@@ -616,7 +616,16 @@ class SwingEngine:
                     and _tgt.idx >= self.b1_bar_idx
                     and self.lo < _tgt.px
                 ):
-                    # B2 1-candle pivot gap (permanent default b2_gap_bars=1)
+                    # B2 1-candle EXTREME gap (permanent default b2_gap_bars=1).
+                    # NOT a pivot gap. The target is the RUNNING EXTREME and no
+                    # white pivot is involved anywhere in this test. Owner checked
+                    # this on the chart 2026-10-14 for swing 1: 18:30 / 18:45 /
+                    # 19:00 are lower-high AND lower-low with no reversal bar, so
+                    # there is no pivot at any of those three candles to refer to.
+                    # What the rule actually requires is that the extreme SURVIVE
+                    # one candle. Each of those candles set a new low and broke
+                    # the previous candle's low, so each extreme was contaminated
+                    # the moment it was made.
                     if getattr(self, "b2_gap_bars", 0) > 0:
                         p = _tgt  # type: ignore
                     if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
@@ -873,7 +882,7 @@ class SwingEngine:
         # pivot is re-tested on every later bar and the cross is armed fresh on the
         # first bar at or after minBars - which is the "new FS after the 50th bar".
         # A cross inside the 50-bar window is still a break, so it still SPENTS
-        # its pivot - the owner's 15:15 case: the 14:45 pivot is contaminated the
+        # that extreme - the owner's 15:15 case: the 14:45 extreme is contaminated the
         # moment 15:15 breaks it, so the FS cannot use it at 15:30. But the swing
         # may not be DECLARED inside the window, so the cross is not armed.
         #
@@ -1024,7 +1033,7 @@ class SwingEngine:
         # (B2 or flip) � breaking a pre-existing pivot does not complete the leg.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
             return None
-        # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
+        # Gap rule: the EXTREME must survive one candle - the bar right after it # must not breach it. No white pivot is involved.
         gap_high = self.bar_highs.get(p.idx + 1)
         if gap_high is None or gap_high > p.px:
             return None
@@ -1041,7 +1050,7 @@ class SwingEngine:
         # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): see above.
         if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
             return None
-        # Gap rule: next candle after pivot must not breach pivot (1-candle gap)
+        # Gap rule: the EXTREME must survive one candle - the bar right after it # must not breach it. No white pivot is involved.
         gap_low = self.bar_lows.get(p.idx + 1)
         if gap_low is None or gap_low < p.px:
             return None
