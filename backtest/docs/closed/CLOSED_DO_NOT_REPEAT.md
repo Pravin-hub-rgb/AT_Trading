@@ -669,3 +669,75 @@ condition on the bar before it that picks the tail as a side effect.
 Harnesses deleted per the owner's instruction rather than kept per the policy
 above. The numbers are all here, and the shipping book was verified unchanged
 after the revert (`exp_fastcheck.py fsent_champ_long` PASS on both eras).
+
+---
+
+## FS-BREAK CONFIRMATION ENTRY — closed 2026-10-14, nothing adopted
+
+The owner's idea, verbatim: *"when for FS, when the high of or long, when the high
+of FS will break, then we will enter. For short, when FS low will be broken, then
+we'll enter."*
+
+This is NOT a re-run of FS entry. `method/FS_ENTRY.md` already measured entering
+AT the FS print (36% of the book gone, M2 inverts 4/4) and
+`method/DIRECTIONAL_FS_P80.md` closed the directional FS trigger at P82 on a
+permutation test. This asks a different question, on top of the print: take the
+FS trade only once the FS candle's **own extreme** breaks — a continuation
+filter on the FS arm, aimed at the 36% `FS_ENTRY.md` left open.
+
+**Result: it loses, 7 of 8 book x era cells negative on net R.**
+
+| book | era | base (FS print) | +8 bars | +4 bars | +16 bars |
+|---|---|---|---|---|---|
+| `fsent_champ_long` | IS | 497 / **+561.36R** | 402 / +458.00R | 374 / +379.99R | 431 / +521.70R |
+| | OOS | 281 / **+251.07R** | 224 / +214.65R | 217 / +206.72R | 249 / +241.33R |
+| `fsent_champ_short` | IS | 466 / **+667.52R** | 398 / +601.06R | 362 / +618.91R | 416 / +631.07R |
+| | OOS | 298 / **+231.12R** | 238 / +233.27R | 209 / +218.64R | 256 / +225.01R |
+| `fsent_champ_long_htffs` | IS | 753 / **+906.62R** | 627 / +753.96R | 590 / +681.56R | 676 / +865.48R |
+| | OOS | 389 / **+366.43R** | 339 / +344.58R | 315 / +330.18R | 365 / **+374.50R** |
+| `fsent_champ_long_mcloff` | IS | 533 / **+605.33R** | 440 / +496.55R | 407 / +416.38R | 467 / +556.91R |
+| | OOS | 300 / **+251.66R** | 236 / +214.86R | 228 / +208.78R | 262 / **+255.85R** |
+
+The single positive OOS cell at the 8-bar arm is `fsent_champ_short` at **+2.15R**
+on a 60-trade reduction. That is noise and is not treated as a win.
+
+**The mechanism is M2 again, and it is the third sighting.** Waiting makes the
+trade smaller and not better. Every arm throws away 13-17% of the entries and the
+survivors are strictly worse in R, because by the time the FS candle's extreme
+has broken, the move that made the FS worth taking is largely behind us. This is
+the same reason `method/FS_ENTRY.md` found M2 inverts when it becomes legal: the
+information that made the swing interesting is consumed before the entry.
+
+**What the arm does improve, which is the only reason it is worth writing down.**
+Quality rises while size falls — it is a selection effect, not an edge:
+
+| cell | PF base -> 16 bars | WR | maxDD |
+|---|---|---|---|
+| `fsent_champ_long` IS | 3.84 -> **4.16** | 43.3% -> 44.3% | 19.57 -> **12.80** |
+| `fsent_champ_short` IS | 4.46 -> **4.83** | 40.1% -> 41.3% | 8.65 -> 9.07 |
+| `fsent_champ_long_htffs` OOS | 3.40 -> **3.59** | 39.6% -> 40.0% | 10.59 -> 11.84 |
+| `fsent_champ_long_mcloff` OOS | 3.11 -> **3.68** | 42.0% -> 44.7% | 8.30 -> **7.21** |
+
+So the break condition is a decent *filter* and a bad *entry*. If this is picked up
+again, the promising form is not "enter later" but either a per-trade risk change
+on the trades it would have dropped, or using the level as a trail trigger on the
+FS entry rather than as an entry delay. Both are different mechanisms and neither
+is measured.
+
+**Causality is clean and that is not why it failed.** The knob reads
+`candles_ltf[fs_at_idx].high/low` and `candles_ltf[j]` for `j > fs_at_idx`. The FS
+candle has closed (`fs_at_idx >= seg.end_idx`) and the entering bar `j` is the bar
+the break happens on, so nothing settles later than the decision bar. No swing
+field is read except this swing's own `fs_at_idx`. Contrast `exp_require_dir_match`
+and `exp_max_swing_age`, which read the swing's FINAL direction and settle
+mid-swing — this does not, and it is not in their family.
+
+**Identity gate passed on landing**: `exp_fastcheck.py fsent_sig_full` ->
+`shipped 325t/+114.6R vs patched-off 325t/+114.6R -> IDENTICAL`. The default is
+off and byte-identical, so no shipping book moved.
+
+`exp_fs_break_confirm=1.0` and `exp_fs_confirm_bars` stay in `unified.py`,
+default-off, because the harness is kept per policy above and a knob the harness
+needs is not dead code. Harness kept:
+`backtest/experiments/fs_break_confirm/exp_fs_break_confirm.py`, results beside
+it in `fs_break_confirm_results.json`.

@@ -462,6 +462,32 @@ max_positions=0,
                            # "short" = SHORTS enter at the swing FS print, longs at break
                            # "both"  = both sides at FS (measured weaker than either one)
                            # "" (default) = off; every side enters at the break as before
+    exp_fs_break_confirm=0.0,  # OWNER 2026-10-14: "when for FS, when the high of
+                              # or long, when the high of FS will break, then we
+                              # will enter. For short, when FS low will be broken,
+                              # then we'll enter."
+                              #
+                              # Only moves the side exp_fs_entry_side already put
+                              # on FS. An FS signal for an "up" swing waits until a
+                              # LATER candle's high exceeds the FS candle's own
+                              # high; an "down" swing waits until a later candle's
+                              # low goes under the FS candle's own low. Until that
+                              # break the trade is not taken at all.
+                              #
+                              # CAUSAL: reads candles_ltf[fs_at_idx].high/low and
+                              # candles_ltf[j] for j > fs_at_idx. The FS candle has
+                              # closed by definition (fs_at_idx >= seg.end_idx) and
+                              # the entering bar j has closed before the break is
+                              # known. The entry IS the bar the break happens on, so
+                              # nothing here settles later than the decision bar.
+                              # No swing field is read - only this swing's own
+                              # fs_at_idx, which is settled at the FS print.
+                              #
+                              # 0.0 = off, which leaves every existing book
+                              # byte-identical.
+    exp_fs_confirm_bars=8,    # how many LTF bars after FS to wait for that break.
+                              # 8 on 15m = 2h. Beyond it the FS is treated as not
+                              # confirmed and the trade is dropped.
     # Weekend entry blackout, in the candle's OWN timezone (UTC), not the
     # exchange-local one that exp_skip_utc_sat/sun use. This is the knob the
     # signal book runs on (fsent_sig_full, and the whole fsent_sig_* ladder).
@@ -871,12 +897,41 @@ max_positions=0,
         # swing end bar, so that bar has closed before the print is used.
         _lbreak="fs_"+exp_fs_entry_side
     ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)
+    # ── exp_fs_break_confirm: wait for the FS candle's own extreme to break ───
+    # swing_index -> the bar the FS trade may actually be taken on, or -1 if the
+    # break never arrives inside exp_fs_confirm_bars. Built only when the knob is
+    # on, so the default path is untouched.
+    _fs_confirm_at={}
+    if exp_fs_break_confirm:
+        _cap=max(1,int(exp_fs_confirm_bars))
+        for _s in swings_ltf:
+            _fi=int(_s.get("fs_at_idx",-1))
+            _si=int(_s.get("swing_index",-1))
+            if _si<0 or not (0<=_fi<len(candles_ltf)): continue
+            _up=(_s.get("dir")=="up")
+            _ref=float(candles_ltf[_fi]["high"]) if _up else float(candles_ltf[_fi]["low"])
+            _hit=-1
+            for _j in range(_fi+1, min(_fi+1+_cap, len(candles_ltf))):
+                _c=candles_ltf[_j]
+                if (float(_c["high"])>_ref) if _up else (float(_c["low"])<_ref):
+                    _hit=_j; break
+            _fs_confirm_at[_si]=_hit
     filtered=[]
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
         bar=ltf_store.pos(bar_time)  # position via timestamp lookup
         if bar < 0 or bar >= len(candles_ltf): continue
         bar_ts=candle_ts_ltf[bar]
+        # Move an FS entry from the FS print to the bar where the FS candle's own
+        # extreme actually breaks. Dropped entirely if it never breaks inside the
+        # cap. swing_start_px is left exactly as _collect_signals set it (seg
+        # start_px, the same level every other FS signal uses) so the ONLY thing
+        # that changes is WHEN we enter - not what the stop is anchored to.
+        if exp_fs_break_confirm and sig.get("kind")=="FS":
+            _nb=_fs_confirm_at.get(int(sig.get("swing_no",-1)),-1)
+            if _nb<0: continue
+            bar=_nb
+            bar_ts=candle_ts_ltf[bar]
         # P36 decay gate, evaluated at the entry bar on legs confirmed by then.
         if _decay_blocks(exp_decay_mode, sig["dir"], bar_ts, exp_decay_thr, exp_decay_legs):
             continue
