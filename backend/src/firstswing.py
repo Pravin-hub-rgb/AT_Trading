@@ -179,6 +179,15 @@ class SwingEngine:
 
         self.sustain_streak: int = 0
         self.armed: bool = False
+        # DEBUG-ONLY suppression ledger. Default off; costs one bool test per
+        # suppression site. Set opts["debugSuppressed"]=True to record WHY each
+        # detected break produced no mark, with the candle, the price and the
+        # level that was rejected. This exists because the suppression paths are
+        # SILENT - they leave no row anywhere, which is why 12,981 armed
+        # suppressed breaks had no attribution. It changes no decision and, with
+        # the flag off, records nothing.
+        self._dbg_suppressed: bool = bool(opts.get("debugSuppressed", False))
+        self.suppressed: list = []
         self.last_confirm_hit: Optional[dict] = None
         self.first_chop_cross_idx: int = -1
         self.first_chop_cross_px: float = float("nan")
@@ -427,6 +436,15 @@ class SwingEngine:
                     self._pending_arm = False
         if self.armed:
             self._step(down_break, up_break)
+        elif down_break or up_break:
+            self._supp("not_armed",
+                       side=("both" if (down_break and up_break)
+                             else "down" if down_break else "up"),
+                       high=(round(float(c.high), 1) if up_break else None),
+                       low=(round(float(c.low), 1) if down_break else None),
+                       pending_leg=self._pending_leg_dir,
+                       e_hi=round(float(self.e_hi.px), 1) if self.e_hi else None,
+                       e_lo=round(float(self.e_lo.px), 1) if self.e_lo else None)
 
         if self.dir == "down" and c.low < self.e_lo.px:
             self._set_cand(Lvl(px=c.low, idx=g_idx, time=self.t))
@@ -531,7 +549,12 @@ class SwingEngine:
                     # OWNER 2023-06-10 22:30, green, leg up from the 12:45 FLIP:
                     # "we cannot mark it anything here ... so we have to wait".
                     if self._last_mark_kind == "FLIP":
-                        pass
+                        self._supp("volatile_sustains_flipped_leg", kind="none",
+                                   side="both", sustained=sustained,
+                                   close=round(float(self.cl), 1),
+                                   open=round(float(self.op), 1),
+                                   high=round(float(self.hi), 1),
+                                   low=round(float(self.lo), 1))
                     elif not self._b2_done_in_dir:
                         _t = self.e_hi_prev if self.dir == "up" else self.e_lo_prev
                         gap_ok = True
@@ -596,18 +619,28 @@ class SwingEngine:
                     # B2 1-candle pivot gap (permanent default b2_gap_bars=1)
                     if getattr(self, "b2_gap_bars", 0) > 0:
                         p = _tgt  # type: ignore
-                        if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
-                            gap_low = self.bar_lows.get(p.idx + 1)
-                            if gap_low is not None and gap_low >= p.px:
-                                self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
-                                self._confirm_direction()
-                                self._check_chop()
-                                b2_fired = True
+                    if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
+                        gap_low = self.bar_lows.get(p.idx + 1)
+                        if gap_low is not None and gap_low >= p.px:
+                            self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
+                            self._confirm_direction()
+                            self._check_chop()
+                            b2_fired = True
+                        else:
+                            self._supp("gap_contaminated", kind="B2", side="down",
+                                       lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                       lvl_bar=p.idx,
+                                       gap_px=(round(float(gap_low), 1) if gap_low is not None else None))
                     else:
-                        self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
-                        self._confirm_direction()
-                        self._check_chop()
-                        b2_fired = True
+                        self._supp("gap_too_fresh", kind="B2", side="down",
+                                   lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                   lvl_bar=p.idx,
+                                   bars_since=(self.g_idx - p.idx) if p.idx is not None else None)
+                else:
+                    self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
+                    self._confirm_direction()
+                    self._check_chop()
+                    b2_fired = True
             if up_break and not b2_fired:
                 self._flip("up")
                 self._check_chop()
@@ -663,6 +696,15 @@ class SwingEngine:
                                 self._confirm_direction()
                                 self._check_chop()
                                 b2_fired = True
+                            else:
+                                self._supp("gap_contaminated", kind="B2", side="up",
+                                           lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                           lvl_bar=p.idx,
+                                           gap_px=(round(float(gap_high), 1) if gap_high is not None else None))
+                        else:
+                            self._supp("gap_too_fresh", kind="B2", side="up",
+                                       lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                       lvl_bar=p.idx, bars_since=(self.g_idx - p.idx) if p.idx is not None else None)
                     else:
                         self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
                         self._confirm_direction()
@@ -718,6 +760,14 @@ class SwingEngine:
         )
         self.b2_pivot = None
         self.just_fired_b2 = True
+
+    def _supp(self, reason: str, **kw) -> None:
+        """Record one silent suppression. No-op unless debugSuppressed is on."""
+        if not self._dbg_suppressed:
+            return
+        rec = {"time": self.t, "reason": reason, "dir": self.dir, "bar": self.g_idx}
+        rec.update(kw)
+        self.suppressed.append(rec)
 
     def _b2_if_gap_allows(self) -> bool:
         """Mark a B2 in the current leg direction if the 1-candle gap is

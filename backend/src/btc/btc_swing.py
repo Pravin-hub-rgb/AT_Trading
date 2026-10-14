@@ -165,6 +165,10 @@ def compute_btc_swings(
                     "min_bars_idx": ((leg_start_pos if leg_start_pos is not None
                                       else eng.start_idx)
                                      + int(_opts.get("minBars", 14)) - 1),
+                    # Debug-only. Empty unless opts["debugSuppressed"] is set, in
+                    # which case it lists every detected break that produced no
+                    # mark, with the reason. Never affects any mark or any price.
+                    "suppressed": list(getattr(eng, "suppressed", []) or []),
                 }
             )
             swing_index += 1
