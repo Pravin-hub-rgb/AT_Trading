@@ -40,6 +40,7 @@ Usage:
 """
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -48,11 +49,39 @@ THEORY = ROOT / "fix" / "SWING_THEORY_B1_B2_FLIP.md"
 ENGINE = ROOT / "backend" / "src" / "firstswing.py"
 ENGINE_DOC = ROOT / "backend" / "src" / "live" / "MANIFEST.md"
 
-# Markdown files where the phrase is allowed to appear - the owner's own quotes.
+# Markdown files where the phrase is allowed to appear - the owner's own quotes,
+# and the closed log recording the misreading itself.
 ALLOWED = {
     "SWING_THEORY_B1_B2_FLIP.md",
     "CLOSED_DO_NOT_REPEAT.md",
 }
+
+# A CITATION is not a CLAIM. The phrase is fine inside "double quotes", inside
+# `backticks`, or when a line explicitly marks it as a known misreading - all
+# three are ways of pointing AT the phrase rather than asserting a rule with it.
+# Only bare prose is a violation. This scan was widened on 2026-10-14 when it
+# flagged two correct lines in the sweep log that merely NAMED the incident:
+#   the "extreme pivot" incident ...
+#   ... after `extreme pivot` and the dead `chop_thresh`
+# Neither asserts anything. A filename allowlist was the wrong instrument
+# because it cannot tell a citation from a claim on any given line.
+CITATION_MARKERS = ("incident", "misread", "closed", "do not repeat", "not a type")
+
+
+def bare_prose(text: str) -> str:
+    """Strip quoted spans, backticked spans and fenced code, then return prose."""
+    out, in_fence = [], False
+    for line in text.splitlines():
+        if line.strip().startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        line = re.sub(r"`[^`]*`", " ", line)
+        line = re.sub(r"\"[^\"]*\"", " ", line)
+        line = re.sub(r"'[^']*'", " ", line)
+        out.append(line)
+    return "\n".join(out)
 
 fails: list[str] = []
 notes: list[str] = []
@@ -101,15 +130,14 @@ def main() -> int:
             if md.name in ALLOWED:
                 continue
             body = md.read_text(encoding="utf-8", errors="replace")
-            low = body.lower()
-            n = low.count("extreme pivot")
+            n = bare_prose(body).lower().count("extreme pivot")
             if n:
-                print("  [FAIL] 'extreme pivot' x%d in %s"
+                print("  [FAIL] 'extreme pivot' x%d as BARE PROSE in %s"
                       % (n, md.relative_to(ROOT)))
                 fails.append(str(md.relative_to(ROOT)))
             else:
                 notes.append(str(md.relative_to(ROOT)))
-    print("  [ok] scanned %d markdown files outside quotes, none use the phrase"
+    print("  [ok] scanned %d markdown files outside quotes, no bare-prose use"
           % len(notes))
 
     # 4. the engine must carry translations next to its quotes

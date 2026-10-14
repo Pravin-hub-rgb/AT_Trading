@@ -1,0 +1,14 @@
+{
+  "stage": "graveyard_chop_routing",
+  "book": "fsent_champ_long",
+  "chop_hi": 10.392002474621046,
+  "atr_lo": 0.28489656110449085,
+  "joint_cell": {
+    "n": 106,
+    "mean": 1.19
+  },
+  "rest": {
+    "n": 391,
+    "mean": 1.113
+  }
+}

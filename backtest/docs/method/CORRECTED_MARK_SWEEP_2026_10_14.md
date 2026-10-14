@@ -566,3 +566,124 @@ one family: every other book is exactly one mechanism from long - entry side,
 swing chain, HTF flip entry, loss-halt off. Recorded here so nobody later reads
 five green cells as five independent confirmations. It is one signal measured
 four ways.
+---
+
+## D2 - IDENTITY GATE AND FULL RE-VERIFY
+
+    exp_baseline_freeze.py --compare
+      IDENTICAL - chain fingerprints and all 10 book/era cells match the freeze
+
+    exp_theory_wording_gate.py    pass
+    exp_knob_liveness.py          pass - all 4 claims hold
+    exp_book_uniqueness.py        pass - no duplicates, 4 variants reported
+    exp_inverse_fs.py             chain == A1 freeze
+
+Every number in this sweep was produced against chain 83a3af3f6ebf0ffa. Nothing
+in the engine, the registry or the pins was changed at any point.
+
+The wording gate needed a real fix rather than an exemption. It failed on two
+correct lines in this log that merely NAMED the incident in quotes and backticks.
+The filename allowlist was the wrong instrument because it cannot tell a citation
+from a claim on any given line. It now strips quoted, backticked and fenced spans
+and flags only BARE PROSE - stricter in the place that matters, not looser.
+
+## C1 - THE INVERSE CONDITION: swings whose extreme is never broken
+
+Census on the corrected chain, 2840 swings:
+
+    both (B2 + FLIP)  1348   47.5%
+    b2_only           1028   36.2%
+    flip_only          464   16.3%   <- the C1 population
+    fs_only              0    0.0%
+    none                 0    0.0%
+
+A first attempt classified every swing into "both" because B1 is present on nearly
+all of them; the classifier now keys on B2/FLIP presence only.
+
+Forward move in the LEG direction, mean / median dollars:
+
+    bucket        n      +8 bars          +24 bars         +48 bars
+    both       1348    +15.3 /  -3.1     +3.9 /  -3.6    +18.2 /  -7.8
+    b2_only    1028     +0.8 /  +0.4    +41.5 / +21.7    +10.5 /  -1.0
+    flip_only   464    +31.6 /  +5.9    +51.4 /  +7.6    +57.4 /  +3.7
+
+CLOSED NEGATIVE. The means look alarming - +57.4 at +48 bars for the never-broken
+group versus +14.9 for the rest - and mean and median are printed together
+precisely so that reads correctly. Every % that went the leg's way is ~50%. The
+means are a fat tail, not a signal: the MEDIAN forward move for the never-broken
+population is +3.7 dollars on a 60k instrument. There is no missed opportunity
+here, and the 464 FLIP-only swings are correctly classified.
+
+TWO CAVEATS STATED, NOT BURIED
+
+  1. The comparison is CONFOUNDED. The two groups end differently - a B2 swing
+     ends on a break of its extreme, a FLIP-only swing ends on a reversal.
+     Measuring forward from two structurally different endpoints compares the
+     endpoints, not the populations.
+  2. A true missed-B2 counterfactual needs an ENTRY RULE for swings that never
+     broke their extreme - where would it have entered? That is a strategy design
+     decision, not a measurement. Until the owner picks that rule the number
+     cannot be read as recoverable value.
+
+The robust statistic resolves it either way: +3.7 median is noise.
+
+The 464 are evenly spread - 15.5-17.1% by year, 15.0% down legs vs 17.6% up, all
+source=chop. No regime or directional concentration to exploit.
+
+## C2 - GRAVEYARD AUDIT: chop x ATR routing, re-tested on the corrected chain
+
+One graveyard entry was closed on the PRE-CORRECTION chain (2026-10-07, IS
+528 / +533.37 - old marks) and closed for a reason that could be chain-dependent:
+an ERA SPLIT. But the observation UNDERNEATH it did not era-split. The entry
+records the joint cell chop-HIGH + ATR-LOW as the book's best region in both eras
+and surviving outlier removal. So the question is whether the CELL survives
+correction - not whether to retry the routing, which stays closed.
+
+Two bugs in the first attempt, both mine and both worth recording:
+
+  - CHOP_HI=55 and ATR_LO=0.55 were HARD-CODED and both sat outside the data. 1h
+    CHOP p90 is 25.7; 15m ATR% p90 is 0.57. The "high chop" cells were therefore
+    EMPTY and the test was vacuous. A gate whose test cell cannot occur looks
+    exactly like a gate whose test cell found nothing.
+  - Buckets were SORTED by value before computing drawdown and losing streak. Both
+    are path dependent, so sorting produced maxDD=182 and streak=254 - nonsense.
+    Order is now preserved.
+
+Thresholds derived from this book's own 497 trades (chop p50 = 10.39,
+ATR p50 = 0.285):
+
+    bucket                  n    mean    median     maxDD   maxStreak
+    chop HI / atr LO      106   +1.190   -0.158      5.67         7
+    chop HI / atr HI      143   +0.923   -0.100      5.08         5
+    chop LO / atr LO      142   +1.524   -0.300     14.43        17
+    chop LO / atr HI      106   +0.818   -0.177      9.62         8
+
+THE RECORDED JOINT CELL DOES NOT REPRODUCE. chop-LO/atr-LO has the HIGHEST mean
+(+1.524 against +1.190), so "high chop + low ATR is the best region" is not what
+the corrected chain shows.
+
+But a cleaner pattern did appear, and it is about risk rather than return:
+HIGH CHOP roughly HALVES drawdown (5.1-5.7 against 9.6-14.4) and shortens the
+worst losing streak two to threefold (5-7 against 8-17). ATR contributes nothing
+on either axis.
+
+NOT PROPOSED, AND OOS NOT OPENED. This is a characterisation of IS, not a filter.
+The original died by era-split, so the only honest next step is a decision by the
+owner on whether a chop filter is worth one OOS reveal - and if it is, exactly
+one, after the fact. Nothing in unified.py changed and no mode branch was added.
+
+## HOUSEKEEPING - LEFT AS FOUND, ON PURPOSE
+
+Two known-dirty items are documented rather than fixed, because the owner asked
+that the books be left alone and both fixes would require either editing the
+registry or re-approving a shared baseline mid-run:
+
+  - `exp_craze_patch_gate.py check` fails against a stale tracked baseline
+    (aa189c5..., 125663 bytes / 2359 lines) while the engine is legitimately
+    148608 bytes / 2710 lines. Re-baselining is an approval, not a fix.
+  - `exp_origin_lookahead.py` flags six negative books that are not marked
+    status="reference": decayC_c -40.97, decayC_u -34.11, decayE_c -1.48,
+    gap_campaign3 -40.62, gap_entry_cap3 -45.48, skipwinhalt_multi_sw10 -22.14.
+    Those are registry edits and were left alone deliberately.
+
+Both are recorded here so they read as known state rather than as new failures.
