@@ -1,0 +1,149 @@
+{
+  "stage": "fs_coverage_decomp",
+  "coverage": {
+    "is": {
+      "swings_with_fs": 2840,
+      "also_have_B2_or_FLIP": 2840,
+      "FS_only_no_break_mark": 0
+    },
+    "oos": {
+      "swings_with_fs": 1571,
+      "also_have_B2_or_FLIP": 1571,
+      "FS_only_no_break_mark": 0
+    }
+  },
+  "decomp": {
+    "fsent_champ_long": {
+      "is": {
+        "base": {
+          "n": 497,
+          "net": 561.36,
+          "avgR": 1.129,
+          "pf": 3.84
+        },
+        "fs_both": {
+          "n": 803,
+          "net": 753.18,
+          "avgR": 0.938,
+          "pf": 3.45
+        },
+        "survivors": {
+          "n": 150,
+          "net": 258.51,
+          "avgR": 1.723,
+          "pf": 7.29
+        },
+        "newcomers": {
+          "n": 653,
+          "net": 494.67,
+          "avgR": 0.758,
+          "pf": 2.85
+        },
+        "dropped_from_base": {
+          "n": 347,
+          "net": 302.84,
+          "avgR": 0.873,
+          "pf": 2.93
+        }
+      },
+      "oos": {
+        "base": {
+          "n": 281,
+          "net": 251.07,
+          "avgR": 0.893,
+          "pf": 3.29
+        },
+        "fs_both": {
+          "n": 446,
+          "net": 181.95,
+          "avgR": 0.408,
+          "pf": 2.03
+        },
+        "survivors": {
+          "n": 86,
+          "net": 58.63,
+          "avgR": 0.682,
+          "pf": 2.88
+        },
+        "newcomers": {
+          "n": 360,
+          "net": 123.32,
+          "avgR": 0.343,
+          "pf": 1.85
+        },
+        "dropped_from_base": {
+          "n": 195,
+          "net": 192.44,
+          "avgR": 0.987,
+          "pf": 3.46
+        }
+      }
+    },
+    "fsent_champ_short": {
+      "is": {
+        "base": {
+          "n": 466,
+          "net": 667.52,
+          "avgR": 1.432,
+          "pf": 4.46
+        },
+        "fs_both": {
+          "n": 803,
+          "net": 753.18,
+          "avgR": 0.938,
+          "pf": 3.45
+        },
+        "survivors": {
+          "n": 115,
+          "net": 91.3,
+          "avgR": 0.794,
+          "pf": 2.95
+        },
+        "newcomers": {
+          "n": 688,
+          "net": 661.88,
+          "avgR": 0.962,
+          "pf": 3.53
+        },
+        "dropped_from_base": {
+          "n": 351,
+          "net": 576.22,
+          "avgR": 1.642,
+          "pf": 4.94
+        }
+      },
+      "oos": {
+        "base": {
+          "n": 298,
+          "net": 231.12,
+          "avgR": 0.776,
+          "pf": 2.85
+        },
+        "fs_both": {
+          "n": 446,
+          "net": 181.95,
+          "avgR": 0.408,
+          "pf": 2.03
+        },
+        "survivors": {
+          "n": 78,
+          "net": 26.02,
+          "avgR": 0.334,
+          "pf": 1.82
+        },
+        "newcomers": {
+          "n": 368,
+          "net": 155.93,
+          "avgR": 0.424,
+          "pf": 2.08
+        },
+        "dropped_from_base": {
+          "n": 220,
+          "net": 205.1,
+          "avgR": 0.932,
+          "pf": 3.21
+        }
+      }
+    }
+  }
+}

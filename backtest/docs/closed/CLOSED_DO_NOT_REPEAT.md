@@ -876,3 +876,85 @@ Identity gate: `exp_fastcheck.py fsent_champ_long` -> shipped 325t/+114.6R vs
 patched-off 325t/+114.6R IDENTICAL; IS 497/+466.92, OOS 281/+215.32, every pinned
 field reproduced. Harness:
 `backtest/experiments/fs_break_confirm/exp_fs_trail_trigger.py`.
+
+### FS COVERAGE: the open question in FS_ENTRY.md is CLOSED - the answer is zero
+
+`method/FS_ENTRY.md` left one thing open: *"2900 swings exist in IS and 1634 in
+OOS, all with an FS - so a true FS-only engine could in principle take swings that
+never produced a B2/flip entry, which would be a much larger book. That is not
+simulated here."*
+
+`method/FS_ONLY_ENGINE.md` answered it on 2026-09-28: zero such swings. Re-measured
+on the **corrected chain** (the volatile-B1 fix of 2026-10-13), both eras:
+
+| era | swings with an FS | ...that also carry a B2/FLIP mark | FS-only, no break mark |
+|---|---|---|---|
+| IS | 2840 | **2840** | **0** |
+| OOS | 1571 | **1571** | **0** |
+
+**Every confirmed swing already has a break mark. The coverage gain is exactly
+zero.** An FS-only book cannot be larger than the break-entry book, because there
+is no swing the break book misses and FS would reach. The hope stated in
+FS_ENTRY.md is dead and stays dead — the answer did not change with the chain.
+
+### The trade-level decomposition P74 asked for, and never got
+
+P74: *"the missing measurement is a trade-level decomposition - how many of the
+champion's 500 survive into the FS arm, how many FS-arm trades are new, and the
+net R of survivors vs newcomers. Without it, +146 trades for +79.4R is not a
+claim, it is an arithmetic coincidence."*
+
+Routed **both** sides to FS (`exp_fs_entry_side="both"` + `exp_htf_fs_entry="all"`),
+so the label "FS-only" is earned rather than borrowed. Identity key is
+`(entry_ts, dir, swing_no)` — the same key the repo already dedups marks on.
+
+**`fsent_champ_long`, IS:** base 497 / +561.36R -> FS 803 / +753.18R (+306, +191.82R)
+
+| group | n | net | avgR |
+|---|---|---|---|
+| survivors, same trade in both | **150** | +258.51R | +1.723 |
+| newcomers, FS arm only | 653 | +494.67R | **+0.758** |
+| base trades the FS arm dropped | 347 | +302.84R | **+0.873** |
+
+**`fsent_champ_long`, OOS:** base 281 / +251.07R -> FS 446 / +181.95R (+165, **-69.12R**)
+
+| group | n | net | avgR |
+|---|---|---|---|
+| survivors | 86 | +58.63R | +0.682 |
+| newcomers | 360 | +123.32R | **+0.343** |
+| dropped from base | 195 | +192.44R | **+0.987** |
+
+`fsent_champ_short` behaves identically — OOS newcomers +0.424R against dropped
+survivors +0.932R, net **-49.17R**. (Both books collapse to the same FS-both
+configuration, so that row is the same book measured twice; the directional
+distinction is gone by construction there.)
+
+**Two findings, and the first is the important one.**
+
+1. **Only ~30% of the base book survives routing** — 150 of 497 in IS, 86 of 281 in
+   OOS. The two books are not variants of each other; they are mostly
+   *different trades*. So any "+N trades for +R" reading that treats the FS arm
+   as an addition is wrong by construction, which is exactly P74's objection.
+
+2. **The newcomers are individually worse than the survivors they replace, in
+   both eras.** IS +0.758R against +0.873R dropped. OOS +0.343R against +0.987R
+   dropped. If the newcomers were pure additions they would be remarkable; they
+   are a swap of better trades for worse ones, and the OOS swap is bad enough to
+   turn +251.07R into +181.95R.
+
+**And it is an era split on top of that**: +191.82R in IS against -69.12R in OOS.
+The same signature that closed regime routing on chop, and the one P80 named when
+it asked for a paired bootstrap that was never run.
+
+**So P73's "+146 trades for +79.4R" is confirmed to be an arithmetic
+coincidence.** Not because the numbers were wrong — they reproduce — but because
+the newcomers are worth less than what they displace, in both eras, and the one
+era where the headline is positive is the in-sample one.
+
+**Nothing adopted.** No shipping book moved. Identity gate held throughout.
+
+Harness: `backtest/experiments/fs_break_confirm/exp_fs_coverage_decomp.py`,
+results beside it. This closes the FS-entry family: the trigger was measured
+(FS_ENTRY.md), the directional form was closed by permutation (P80/P82), the
+entry-delay forms are above, the stop-trigger form is above, and the coverage
+argument for a bigger FS-only book is now zero rather than unmeasured.
