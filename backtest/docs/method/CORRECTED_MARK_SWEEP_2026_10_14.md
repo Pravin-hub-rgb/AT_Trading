@@ -107,3 +107,92 @@ tested as a knob. It is the natural next candidate after B1.
 ---
 
 *(B1, B2, C1, C2, D1, D2 appended below as they complete.)*
+---
+
+## A3 — lookahead gate sweep. TWO FAILURES, both characterised.
+
+**A3.1 `exp_craze_patch_gate.py check` FAILS — the patched engine changed.**
+
+```
+baseline sha256 aa189c5fe1acf881a631bbe69af50814558fd2d425890bef9f97fe534105bb18
+lines     2359 -> 2710
+bytes   125663 -> 148608
+n_exp_kwargs 117 -> 126
+n_continue    80 -> 82
+```
+
+Legitimate engine growth — three of the nine new kwargs are this session's
+(`exp_fs_break_confirm`, `exp_fs_confirm_bars`, `exp_fs_trail_trigger`), the rest
+are concurrent work. **The gate is doing its job**: every number that harness
+produces comes from those bytes, so all of them are now stale.
+
+**Deliberately NOT re-baselined here.** The baseline is a tracked file
+(`backtest/tests/_craze_patch_gate.json`) and another process was mid-run against
+it; re-writing a gate underneath a live run is exactly the kind of quiet state
+change this repo warns about. It needs a deliberate re-approval in its own commit
+once the tree is quiet. **Until then, no number from that harness is quotable.**
+
+**A3.2 `exp_origin_lookahead.py` FAILS — six losing books not marked `reference`.**
+
+`decayC_c` −40.97 · `decayC_u` −34.11 · `decayE_c` −1.48 · `gap_campaign3` −40.62 ·
+`gap_entry_cap3` −45.48 · `skipwinhalt_multi_sw10` −22.14.
+
+Per the sweep rules, a negative-net book that is not quarantined is hygiene debt:
+it can re-enter a shortlist on size alone. Deferred to D1 for the same reason —
+`status: "reference"` changes what `shortlisted()` returns, and another process
+was running.
+
+Ten further books use quarantined knobs (`exp_require_dir_match`,
+`exp_max_swing_age`, `exp_min_swing_ratio`) and are already handled by the
+`GRAVEYARD_KNOBS` quarantine in `exp_signal_metrics.py`.
+
+---
+
+## B1 — `b2_gap_bars` sweep. NO WINNER; the pinned value stands.
+
+The never-swept knob. Gap length, not break magnitude — the owner's ruling was
+*"even a 0.5 point break is a break"*, which argues about size and never ruled on
+length.
+
+**The harness verified itself**: gap=1 reproduces the A1 freeze fingerprint
+`83a3af3f6ebf0ffa` exactly, or the run aborts. It did.
+
+The chain moves a lot:
+
+| gap | swings | marks | fingerprint |
+|---|---|---|---|
+| 0 | 2979 | 8545 | fed09ca4d0ff8c5a |
+| **1 (pinned)** | 2840 | 7734 | **83a3af3f6ebf0ffa** |
+| 2 | 2762 | 7362 | 16a40e3e76b4d4b7 |
+| 3 | 2706 | 7106 | 79290600b1c221c7 |
+
+IS only, by design:
+
+| book | gap=0 | gap=1 | gap=2 | gap=3 |
+|---|---|---|---|---|
+| `fsent_champ_long` | +500.1 | +561.4 | **+635.7** | +464.8 |
+| `fsent_champ_short` | **+781.7** | +667.5 | +601.1 | +520.6 |
+| `fsent_champ_long_htf15` | +507.7 | +600.1 | **+636.0** | +557.5 |
+| `fsent_champ_long_htffs` | **+970.5** | +906.6 | +846.7 | +764.2 |
+| `fsent_champ_long_mcloff` | +516.1 | +605.3 | **+643.0** | +511.5 |
+| **TOTAL IS** | +3276.1 | +3340.9 | **+3362.7** | +2818.6 |
+
+**gap=2 leads the total by +21.8R on +3340.9 — +0.65%.** And it wins **only 3 of
+5 books**. gap=0 wins the other 2, with two of the largest individual gains in the
+table (`short` +114.2, `htffs` +63.9) while losing badly on `long` (−61.3).
+
+A "winner" that depends on which book you ask is not a winner. **OOS was not
+opened**, because the sweep rule is that a consistent IS winner earns exactly one
+OOS reveal, and this arm is not consistent. The pinned value of 1 stands, and this
+is a result rather than a null: the default was right, and now there is a number
+saying so instead of an assumption.
+
+**The more interesting secondary finding.** The mark count moves 10% (7734 → 8545
+at gap=0) and the books barely move — most are within ±3% of baseline, and the
+largest swing in the table is `champ_short` at ±12%. The books are strikingly
+insensitive to the size of the B2/FLIP population. Whatever they are trading, it
+is close to insensitive to which B2s and FLIPs exist. That is worth knowing before
+anyone spends more effort on mark-level rules — and it is the strongest argument
+yet for why four consecutive mark-shaping experiments all landed inside noise.
+
+**Harness**: `backtest/experiments/b2_gap_sweep/exp_b2_gap_sweep.py`.

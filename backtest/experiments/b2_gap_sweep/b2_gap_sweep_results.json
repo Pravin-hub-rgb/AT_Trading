@@ -1,0 +1,135 @@
+{
+  "stage": "b2_gap_sweep",
+  "era": "is",
+  "baseline_fingerprint": "83a3af3f6ebf0ffa",
+  "arms": {
+    "0": {
+      "fsent_champ_long": {
+        "n": 478,
+        "net": 500.11,
+        "dd": 14.23,
+        "pf": 3.69
+      },
+      "fsent_champ_short": {
+        "n": 451,
+        "net": 781.7,
+        "dd": 11.92,
+        "pf": 5.21
+      },
+      "fsent_champ_long_htf15": {
+        "n": 478,
+        "net": 507.72,
+        "dd": 16.56,
+        "pf": 3.73
+      },
+      "fsent_champ_long_htffs": {
+        "n": 782,
+        "net": 970.46,
+        "dd": 13.32,
+        "pf": 4.16
+      },
+      "fsent_champ_long_mcloff": {
+        "n": 514,
+        "net": 516.08,
+        "dd": 13.87,
+        "pf": 3.6
+      }
+    },
+    "1": {
+      "fsent_champ_long": {
+        "n": 497,
+        "net": 561.36,
+        "dd": 19.57,
+        "pf": 3.84
+      },
+      "fsent_champ_short": {
+        "n": 466,
+        "net": 667.52,
+        "dd": 8.65,
+        "pf": 4.46
+      },
+      "fsent_champ_long_htf15": {
+        "n": 500,
+        "net": 600.12,
+        "dd": 21.05,
+        "pf": 4.17
+      },
+      "fsent_champ_long_htffs": {
+        "n": 753,
+        "net": 906.62,
+        "dd": 12.86,
+        "pf": 4.04
+      },
+      "fsent_champ_long_mcloff": {
+        "n": 533,
+        "net": 605.33,
+        "dd": 17.67,
+        "pf": 3.94
+      }
+    },
+    "2": {
+      "fsent_champ_long": {
+        "n": 505,
+        "net": 635.74,
+        "dd": 16.1,
+        "pf": 4.2
+      },
+      "fsent_champ_short": {
+        "n": 477,
+        "net": 601.13,
+        "dd": 11.68,
+        "pf": 3.89
+      },
+      "fsent_champ_long_htf15": {
+        "n": 500,
+        "net": 636.05,
+        "dd": 13.11,
+        "pf": 4.33
+      },
+      "fsent_champ_long_htffs": {
+        "n": 729,
+        "net": 846.74,
+        "dd": 13.86,
+        "pf": 3.87
+      },
+      "fsent_champ_long_mcloff": {
+        "n": 545,
+        "net": 643.03,
+        "dd": 21.54,
+        "pf": 3.99
+      }
+    },
+    "3": {
+      "fsent_champ_long": {
+        "n": 499,
+        "net": 464.84,
+        "dd": 16.41,
+        "pf": 3.36
+      },
+      "fsent_champ_short": {
+        "n": 502,
+        "net": 520.65,
+        "dd": 10.99,
+        "pf": 3.49
+      },
+      "fsent_champ_long_htf15": {
+        "n": 511,
+        "net": 557.45,
+        "dd": 12.43,
+        "pf": 3.96
+      },
+      "fsent_champ_long_htffs": {
+        "n": 729,
+        "net": 764.18,
+        "dd": 18.02,
+        "pf": 3.61
+      },
+      "fsent_champ_long_mcloff": {
+        "n": 542,
+        "net": 511.5,
+        "dd": 20.86,
+        "pf": 3.4
+      }
+    }
+  }
+}
