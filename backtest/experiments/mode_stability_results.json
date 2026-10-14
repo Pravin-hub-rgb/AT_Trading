@@ -1,0 +1,398 @@
+{
+ "pairs": [
+  {
+   "book": "fsent_champ_long",
+   "shipped_mode": "atr_high",
+   "winner_mode": "garch",
+   "e1_claim": "+175.92 IS / +40.98 OOS",
+   "shipped": {
+    "is": {
+     "n": 497,
+     "net": 466.92,
+     "dd_net": 25.08,
+     "win": 0.433
+    },
+    "oos": {
+     "n": 281,
+     "net": 215.32,
+     "dd_net": 11.2,
+     "win": 0.427
+    }
+   },
+   "winner": {
+    "is": {
+     "n": 538,
+     "net": 642.84,
+     "dd_net": 22.13,
+     "win": 0.442
+    },
+    "oos": {
+     "n": 301,
+     "net": 256.3,
+     "dd_net": 17.12,
+     "win": 0.419
+    }
+   },
+   "d_is": 175.92,
+   "d_oos": 40.98,
+   "region_verdict": "LIVE but PATCHY - 3/5 IS, 2/5 OOS positive, IS spread 225.2R",
+   "knob_sweep": {
+    "42": {
+     "is": {
+      "n": 551,
+      "net": 417.63,
+      "dd_net": 29.09,
+      "win": 0.414
+     },
+     "oos": {
+      "n": 314,
+      "net": 201.77,
+      "dd_net": 24.53,
+      "win": 0.364
+     }
+    },
+    "50": {
+     "is": {
+      "n": 574,
+      "net": 550.11,
+      "dd_net": 32.84,
+      "win": 0.423
+     },
+     "oos": {
+      "n": 313,
+      "net": 226.06,
+      "dd_net": 15.48,
+      "win": 0.396
+     }
+    },
+    "58": {
+     "is": {
+      "n": 538,
+      "net": 642.84,
+      "dd_net": 22.13,
+      "win": 0.442
+     },
+     "oos": {
+      "n": 301,
+      "net": 256.3,
+      "dd_net": 17.12,
+      "win": 0.419
+     }
+    },
+    "66": {
+     "is": {
+      "n": 517,
+      "net": 470.03,
+      "dd_net": 24.18,
+      "win": 0.42
+     },
+     "oos": {
+      "n": 269,
+      "net": 195.15,
+      "dd_net": 11.2,
+      "win": 0.416
+     }
+    },
+    "74": {
+     "is": {
+      "n": 504,
+      "net": 456.14,
+      "dd_net": 25.08,
+      "win": 0.419
+     },
+     "oos": {
+      "n": 269,
+      "net": 184.4,
+      "dd_net": 11.2,
+      "win": 0.416
+     }
+    }
+   }
+  },
+  {
+   "book": "fsent_champ_long_mcloff",
+   "shipped_mode": "atr_high",
+   "winner_mode": "garch",
+   "e1_claim": "+171.56 IS / +36.04 OOS",
+   "shipped": {
+    "is": {
+     "n": 533,
+     "net": 504.12,
+     "dd_net": 23.3,
+     "win": 0.439
+    },
+    "oos": {
+     "n": 300,
+     "net": 213.27,
+     "dd_net": 11.05,
+     "win": 0.42
+    }
+   },
+   "winner": {
+    "is": {
+     "n": 578,
+     "net": 675.68,
+     "dd_net": 22.31,
+     "win": 0.445
+    },
+    "oos": {
+     "n": 325,
+     "net": 249.31,
+     "dd_net": 18.08,
+     "win": 0.412
+    }
+   },
+   "d_is": 171.56,
+   "d_oos": 36.04,
+   "region_verdict": "LIVE but PATCHY - 2/5 IS, 1/5 OOS positive, IS spread 190.9R",
+   "knob_sweep": {
+    "42": {
+     "is": {
+      "n": 599,
+      "net": 484.81,
+      "dd_net": 33.0,
+      "win": 0.421
+     },
+     "oos": {
+      "n": 341,
+      "net": 190.62,
+      "dd_net": 23.92,
+      "win": 0.359
+     }
+    },
+    "50": {
+     "is": {
+      "n": 618,
+      "net": 587.21,
+      "dd_net": 31.75,
+      "win": 0.432
+     },
+     "oos": {
+      "n": 337,
+      "net": 210.68,
+      "dd_net": 21.13,
+      "win": 0.386
+     }
+    },
+    "58": {
+     "is": {
+      "n": 578,
+      "net": 675.68,
+      "dd_net": 22.31,
+      "win": 0.445
+     },
+     "oos": {
+      "n": 325,
+      "net": 249.31,
+      "dd_net": 18.08,
+      "win": 0.412
+     }
+    },
+    "66": {
+     "is": {
+      "n": 553,
+      "net": 501.1,
+      "dd_net": 23.96,
+      "win": 0.425
+     },
+     "oos": {
+      "n": 289,
+      "net": 196.95,
+      "dd_net": 16.96,
+      "win": 0.412
+     }
+    },
+    "74": {
+     "is": {
+      "n": 538,
+      "net": 494.19,
+      "dd_net": 23.3,
+      "win": 0.428
+     },
+     "oos": {
+      "n": 289,
+      "net": 198.25,
+      "dd_net": 11.05,
+      "win": 0.419
+     }
+    }
+   }
+  },
+  {
+   "book": "fsent_champ_long_htf15",
+   "shipped_mode": "atr_high",
+   "winner_mode": "union",
+   "e1_claim": " +70.73 IS / +66.57 OOS",
+   "shipped": {
+    "is": {
+     "n": 500,
+     "net": 505.24,
+     "dd_net": 26.26,
+     "win": 0.446
+    },
+    "oos": {
+     "n": 281,
+     "net": 254.81,
+     "dd_net": 11.28,
+     "win": 0.434
+    }
+   },
+   "winner": {
+    "is": {
+     "n": 786,
+     "net": 575.97,
+     "dd_net": 49.17,
+     "win": 0.407
+    },
+    "oos": {
+     "n": 451,
+     "net": 321.38,
+     "dd_net": 15.48,
+     "win": 0.404
+    }
+   },
+   "d_is": 70.73,
+   "d_oos": 66.57,
+   "region_verdict": "SKIPPED - union routes on nothing, no neighbourhood exists",
+   "knob_sweep": {}
+  },
+  {
+   "book": "fsent_champ_short",
+   "shipped_mode": "atr_high",
+   "winner_mode": "session",
+   "e1_claim": " +20.03 IS / +72.28 OOS",
+   "shipped": {
+    "is": {
+     "n": 467,
+     "net": 569.33,
+     "dd_net": 12.67,
+     "win": 0.401
+    },
+    "oos": {
+     "n": 298,
+     "net": 195.01,
+     "dd_net": 12.75,
+     "win": 0.393
+    }
+   },
+   "winner": {
+    "is": {
+     "n": 508,
+     "net": 589.36,
+     "dd_net": 18.71,
+     "win": 0.402
+    },
+    "oos": {
+     "n": 294,
+     "net": 267.29,
+     "dd_net": 19.46,
+     "win": 0.388
+    }
+   },
+   "d_is": 20.03,
+   "d_oos": 72.28,
+   "region_verdict": "REGIONAL - inverting the routing removes the gain in both eras, so the routing itself is the mechanism",
+   "knob_sweep": {
+    "session_flip": {
+     "is": {
+      "n": 543,
+      "net": 535.84,
+      "dd_net": 31.51,
+      "win": 0.39
+     },
+     "oos": {
+      "n": 306,
+      "net": 149.01,
+      "dd_net": 33.41,
+      "win": 0.363
+     }
+    }
+   }
+  },
+  {
+   "book": "fsent_champ_long_htffs",
+   "shipped_mode": "atr_high",
+   "winner_mode": "session",
+   "e1_claim": "-124.91 IS / +15.72 OOS",
+   "shipped": {
+    "is": {
+     "n": 754,
+     "net": 757.99,
+     "dd_net": 22.45,
+     "win": 0.426
+    },
+    "oos": {
+     "n": 389,
+     "net": 313.35,
+     "dd_net": 14.74,
+     "win": 0.396
+    }
+   },
+   "winner": {
+    "is": {
+     "n": 707,
+     "net": 633.08,
+     "dd_net": 27.31,
+     "win": 0.426
+    },
+    "oos": {
+     "n": 405,
+     "net": 329.07,
+     "dd_net": 14.74,
+     "win": 0.395
+    }
+   },
+   "d_is": -124.91,
+   "d_oos": 15.72,
+   "region_verdict": "REGIONAL - inverting the routing removes the gain in both eras, so the routing itself is the mechanism",
+   "knob_sweep": {
+    "session_flip": {
+     "is": {
+      "n": 623,
+      "net": 556.5,
+      "dd_net": 28.95,
+      "win": 0.416
+     },
+     "oos": {
+      "n": 319,
+      "net": 136.4,
+      "dd_net": 25.48,
+      "win": 0.355
+     }
+    }
+   }
+  }
+ ],
+ "identity": {
+  "fsent_champ_long|is": {
+   "ok": true
+  },
+  "fsent_champ_long|oos": {
+   "ok": true
+  },
+  "fsent_champ_long_mcloff|is": {
+   "ok": true
+  },
+  "fsent_champ_long_mcloff|oos": {
+   "ok": true
+  },
+  "fsent_champ_long_htf15|is": {
+   "ok": true
+  },
+  "fsent_champ_long_htf15|oos": {
+   "ok": true
+  },
+  "fsent_champ_short|is": {
+   "ok": true
+  },
+  "fsent_champ_short|oos": {
+   "ok": true
+  },
+  "fsent_champ_long_htffs|is": {
+   "ok": true
+  },
+  "fsent_champ_long_htffs|oos": {
+   "ok": true
+  }
+ }
+}

@@ -1,0 +1,268 @@
+{
+ "arms": [
+  "atr_high",
+  "b2_vs_flip_chop",
+  "htf_mag"
+ ],
+ "books": [
+  "fsent_champ_long_htf15",
+  "fsent_champ_long_htffs",
+  "fsent_champ_long_mcloff",
+  "fsent_champ_long",
+  "fsent_champ_short"
+ ],
+ "identity": {
+  "fsent_champ_long_htf15|is": {
+   "ok": true
+  },
+  "fsent_champ_long_htf15|oos": {
+   "ok": true
+  },
+  "fsent_champ_long_htffs|is": {
+   "ok": true
+  },
+  "fsent_champ_long_htffs|oos": {
+   "ok": true
+  },
+  "fsent_champ_long_mcloff|is": {
+   "ok": true
+  },
+  "fsent_champ_long_mcloff|oos": {
+   "ok": true
+  },
+  "fsent_champ_long|is": {
+   "ok": true
+  },
+  "fsent_champ_long|oos": {
+   "ok": true
+  },
+  "fsent_champ_short|is": {
+   "ok": true
+  },
+  "fsent_champ_short|oos": {
+   "ok": true
+  }
+ },
+ "rows": {
+  "fsent_champ_long_htf15": {
+   "atr_high": {
+    "is": {
+     "n": 500,
+     "net": 505.24,
+     "dd_net": 26.26,
+     "win": 0.446
+    },
+    "oos": {
+     "n": 281,
+     "net": 254.81,
+     "dd_net": 11.28,
+     "win": 0.434
+    }
+   },
+   "b2_vs_flip_chop": {
+    "is": {
+     "n": 498,
+     "net": 500.91,
+     "dd_net": 26.26,
+     "win": 0.444
+    },
+    "oos": {
+     "n": 263,
+     "net": 229.04,
+     "dd_net": 11.28,
+     "win": 0.422
+    }
+   },
+   "htf_mag": {
+    "is": {
+     "n": 575,
+     "net": 399.14,
+     "dd_net": 27.72,
+     "win": 0.421
+    },
+    "oos": {
+     "n": 344,
+     "net": 220.28,
+     "dd_net": 16.02,
+     "win": 0.394
+    }
+   }
+  },
+  "fsent_champ_long_htffs": {
+   "atr_high": {
+    "is": {
+     "n": 754,
+     "net": 757.99,
+     "dd_net": 22.45,
+     "win": 0.426
+    },
+    "oos": {
+     "n": 389,
+     "net": 313.35,
+     "dd_net": 14.74,
+     "win": 0.396
+    }
+   },
+   "b2_vs_flip_chop": {
+    "is": {
+     "n": 754,
+     "net": 757.99,
+     "dd_net": 22.45,
+     "win": 0.426
+    },
+    "oos": {
+     "n": 408,
+     "net": 307.06,
+     "dd_net": 14.74,
+     "win": 0.395
+    }
+   },
+   "htf_mag": {
+    "is": {
+     "n": 574,
+     "net": 434.29,
+     "dd_net": 27.7,
+     "win": 0.416
+    },
+    "oos": {
+     "n": 316,
+     "net": 158.37,
+     "dd_net": 24.91,
+     "win": 0.356
+    }
+   }
+  },
+  "fsent_champ_long_mcloff": {
+   "atr_high": {
+    "is": {
+     "n": 533,
+     "net": 504.12,
+     "dd_net": 23.3,
+     "win": 0.439
+    },
+    "oos": {
+     "n": 300,
+     "net": 213.27,
+     "dd_net": 11.05,
+     "win": 0.42
+    }
+   },
+   "b2_vs_flip_chop": {
+    "is": {
+     "n": 531,
+     "net": 499.78,
+     "dd_net": 23.3,
+     "win": 0.437
+    },
+    "oos": {
+     "n": 285,
+     "net": 194.75,
+     "dd_net": 11.05,
+     "win": 0.411
+    }
+   },
+   "htf_mag": {
+    "is": {
+     "n": 621,
+     "net": 496.46,
+     "dd_net": 33.36,
+     "win": 0.42
+    },
+    "oos": {
+     "n": 343,
+     "net": 149.55,
+     "dd_net": 22.7,
+     "win": 0.354
+    }
+   }
+  },
+  "fsent_champ_long": {
+   "atr_high": {
+    "is": {
+     "n": 497,
+     "net": 466.92,
+     "dd_net": 25.08,
+     "win": 0.433
+    },
+    "oos": {
+     "n": 281,
+     "net": 215.32,
+     "dd_net": 11.2,
+     "win": 0.427
+    }
+   },
+   "b2_vs_flip_chop": {
+    "is": {
+     "n": 495,
+     "net": 462.58,
+     "dd_net": 25.08,
+     "win": 0.43
+    },
+    "oos": {
+     "n": 265,
+     "net": 186.82,
+     "dd_net": 11.2,
+     "win": 0.411
+    }
+   },
+   "htf_mag": {
+    "is": {
+     "n": 573,
+     "net": 443.57,
+     "dd_net": 27.7,
+     "win": 0.419
+    },
+    "oos": {
+     "n": 315,
+     "net": 159.42,
+     "dd_net": 24.91,
+     "win": 0.357
+    }
+   }
+  },
+  "fsent_champ_short": {
+   "atr_high": {
+    "is": {
+     "n": 467,
+     "net": 569.33,
+     "dd_net": 12.67,
+     "win": 0.401
+    },
+    "oos": {
+     "n": 298,
+     "net": 195.01,
+     "dd_net": 12.75,
+     "win": 0.393
+    }
+   },
+   "b2_vs_flip_chop": {
+    "is": {
+     "n": 466,
+     "net": 571.15,
+     "dd_net": 12.67,
+     "win": 0.404
+    },
+    "oos": {
+     "n": 276,
+     "net": 210.17,
+     "dd_net": 13.27,
+     "win": 0.373
+    }
+   },
+   "htf_mag": {
+    "is": {
+     "n": 585,
+     "net": 553.25,
+     "dd_net": 38.36,
+     "win": 0.39
+    },
+    "oos": {
+     "n": 322,
+     "net": 206.77,
+     "dd_net": 33.41,
+     "win": 0.379
+    }
+   }
+  }
+ }
+}
