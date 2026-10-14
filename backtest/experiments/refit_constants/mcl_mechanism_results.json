@@ -1,0 +1,258 @@
+{
+  "q1": {
+    "fsent_champ_long": {
+      "n0": 533,
+      "runs": 108,
+      "max_run": 13,
+      "rows": [
+        {
+          "N": 1,
+          "firings": 299,
+          "lost": 149,
+          "shadow_pct": 50.2
+        },
+        {
+          "N": 2,
+          "firings": 115,
+          "lost": 71,
+          "shadow_pct": 38.3
+        },
+        {
+          "N": 3,
+          "firings": 61,
+          "lost": 36,
+          "shadow_pct": 41.0
+        },
+        {
+          "N": 4,
+          "firings": 34,
+          "lost": 23,
+          "shadow_pct": 32.4
+        },
+        {
+          "N": 6,
+          "firings": 12,
+          "lost": 6,
+          "shadow_pct": 50.0
+        },
+        {
+          "N": 8,
+          "firings": 4,
+          "lost": 1,
+          "shadow_pct": 75.0
+        },
+        {
+          "N": 12,
+          "firings": 1,
+          "lost": 1,
+          "shadow_pct": 0.0
+        }
+      ]
+    },
+    "fsent_champ_short": {
+      "n0": 505,
+      "runs": 94,
+      "max_run": 12,
+      "rows": [
+        {
+          "N": 1,
+          "firings": 305,
+          "lost": 142,
+          "shadow_pct": 53.4
+        },
+        {
+          "N": 2,
+          "firings": 128,
+          "lost": 72,
+          "shadow_pct": 43.8
+        },
+        {
+          "N": 3,
+          "firings": 68,
+          "lost": 39,
+          "shadow_pct": 42.6
+        },
+        {
+          "N": 4,
+          "firings": 46,
+          "lost": 32,
+          "shadow_pct": 30.4
+        },
+        {
+          "N": 6,
+          "firings": 14,
+          "lost": 11,
+          "shadow_pct": 21.4
+        },
+        {
+          "N": 8,
+          "firings": 6,
+          "lost": 5,
+          "shadow_pct": 16.7
+        },
+        {
+          "N": 12,
+          "firings": 1,
+          "lost": 1,
+          "shadow_pct": 0.0
+        }
+      ]
+    },
+    "fsent_champ_long_htf15": {
+      "n0": 535,
+      "runs": 109,
+      "max_run": 22,
+      "rows": [
+        {
+          "N": 1,
+          "firings": 293,
+          "lost": 145,
+          "shadow_pct": 50.5
+        },
+        {
+          "N": 2,
+          "firings": 114,
+          "lost": 63,
+          "shadow_pct": 44.7
+        },
+        {
+          "N": 3,
+          "firings": 60,
+          "lost": 35,
+          "shadow_pct": 41.7
+        },
+        {
+          "N": 4,
+          "firings": 32,
+          "lost": 23,
+          "shadow_pct": 28.1
+        },
+        {
+          "N": 6,
+          "firings": 13,
+          "lost": 10,
+          "shadow_pct": 23.1
+        },
+        {
+          "N": 8,
+          "firings": 3,
+          "lost": 1,
+          "shadow_pct": 66.7
+        },
+        {
+          "N": 12,
+          "firings": 1,
+          "lost": 1,
+          "shadow_pct": 0.0
+        }
+      ]
+    },
+    "fsent_champ_long_htffs": {
+      "n0": 802,
+      "runs": 161,
+      "max_run": 13,
+      "rows": [
+        {
+          "N": 1,
+          "firings": 462,
+          "lost": 220,
+          "shadow_pct": 52.4
+        },
+        {
+          "N": 2,
+          "firings": 183,
+          "lost": 106,
+          "shadow_pct": 42.1
+        },
+        {
+          "N": 3,
+          "firings": 88,
+          "lost": 49,
+          "shadow_pct": 44.3
+        },
+        {
+          "N": 4,
+          "firings": 59,
+          "lost": 40,
+          "shadow_pct": 32.2
+        },
+        {
+          "N": 6,
+          "firings": 17,
+          "lost": 6,
+          "shadow_pct": 64.7
+        },
+        {
+          "N": 8,
+          "firings": 7,
+          "lost": 4,
+          "shadow_pct": 42.9
+        },
+        {
+          "N": 12,
+          "firings": 3,
+          "lost": 2,
+          "shadow_pct": 33.3
+        }
+      ]
+    }
+  },
+  "q1b": {
+    "fsent_champ_long": {
+      "n": 3,
+      "skipped": 55,
+      "skipped_net": 30.97,
+      "skipped_wr": 38.2,
+      "kept_net": 574.35
+    },
+    "fsent_champ_short": {
+      "n": 3,
+      "skipped": 58,
+      "skipped_net": 6.99,
+      "skipped_wr": 20.7,
+      "kept_net": 662.97
+    },
+    "fsent_champ_long_htf15": {
+      "n": 3,
+      "skipped": 51,
+      "skipped_net": 17.11,
+      "skipped_wr": 37.3,
+      "kept_net": 624.66
+    },
+    "fsent_champ_long_htffs": {
+      "n": 3,
+      "skipped": 83,
+      "skipped_net": 40.38,
+      "skipped_wr": 28.9,
+      "kept_net": 928.68
+    }
+  },
+  "q1c": {
+    "fsent_champ_long": {
+      "lost_cd8": 36,
+      "lost_cd0": 71
+    },
+    "fsent_champ_short": {
+      "lost_cd8": 39,
+      "lost_cd0": 77
+    },
+    "fsent_champ_long_htf15": {
+      "lost_cd8": 35,
+      "lost_cd0": 77
+    },
+    "fsent_champ_long_htffs": {
+      "lost_cd8": 49,
+      "lost_cd0": 118
+    }
+  },
+  "q2": {
+    "long_n": 497,
+    "htffs_n": 753,
+    "shared": 233,
+    "shared_r": 389.08,
+    "htffs_only": 520,
+    "htffs_only_r": 517.55,
+    "long_only": 264,
+    "long_only_r": 172.28
+  }
+}

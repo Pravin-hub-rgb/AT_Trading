@@ -374,3 +374,102 @@ eras of the risk-adjusted measure.
 
 NOTHING PROMOTED. No champion picked, no book deleted, no config edited. The
 registry is exactly as it was before this sweep.
+---
+
+## WHAT max_consecutive_losses ACTUALLY DOES (exp_mcl_mechanism.py)
+
+Read in the shipping engine, backend/src/btc/engines/htf_ltf/unified.py:1312 and
+the booking block after it:
+
+    entry gate                        booking, once the trade closes
+    ---------------                    -----------------------------------
+    if halt_skip_next:                 if max_consecutive_losses > 0:
+        halt_skip_next=False                if r_multiple <= 0:
+        consecutive_losses = 0                  consecutive_losses += 1
+        continue    <-- DROP the signal         if >= max_consecutive_losses:
+                                              halt_skip_next = True
+                                              consecutive_losses = 0  <-- RESET ON FIRE
+                                       else:
+                                           consecutive_losses = 0
+
+Three properties, each measured:
+
+### 1. It resets when it fires, so it can never end a run
+
+The counter is zeroed the instant the halt fires. A losing run of length L therefore
+triggers floor(L/N) halts, not one. It never stops trading; it keeps nibbling one
+trade per N losses. There is no recovery condition and no wait for a win.
+
+    book                    n(0)   runs  longest run
+    fsent_champ_long         533    108        13
+    fsent_champ_short        505     94        12
+    fsent_champ_long_htf15   535    109        22
+    fsent_champ_long_htffs   802    161        13
+
+### 2. Roughly 40-50% of its skips are shadowed by the cooldown
+
+`continue` drops a SIGNAL, not a trade. If cooldown_bars=8 had already blocked
+that signal, the halt removes nothing. Measured on long at mcl=3: 61 firings, only
+36 trades actually lost - 41% shadowed.
+
+Direct test, holding everything else fixed:
+
+    book                    lost @cd=8   lost @cd=0
+    fsent_champ_long               36           71
+    fsent_champ_short              39           77
+    fsent_champ_long_htf15         35           77
+    fsent_champ_long_htffs         49          118
+
+With the cooldown off the halt is twice as effective. So about half of what mcl
+appears to do on these books is really the cooldown, and mcl is shadowed by it.
+
+### 3. THE HALT DELETES WINNERS - in every book
+
+Walk the mcl=0 sequence, apply the engine's own rule, and price what it drops:
+
+    book                  skipped   their NET   their WR%   kept NET
+    fsent_champ_long          55       +31.0R      38.2%     +574.4R
+    fsent_champ_short         58        +7.0R      20.7%     +663.0R
+    fsent_champ_long_htf15    51       +17.1R      37.3%     +624.7R
+    fsent_champ_long_htffs    83       +40.4R      28.9%     +928.7R
+
+The trades it throws away are profitable in aggregate in all four books. The
+mechanism is not neutral - it is working against the strategy, deleting positive
+expectancy trades, and the Net difference it produces is well inside the
+era-to-era sign flip already documented.
+
+### What mcl is, stated plainly
+
+It is a THROTTLE, not a streak breaker: "every N consecutive losses, discard one
+signal", half-masked by the cooldown, discarding net-positive trades. The name
+`max_consecutive_losses` implies a risk control that caps the worst run. It does
+not, which is exactly why mcl=0 showed a WORSE MaxConsecL than mcl=3 in all four
+books - the halt was never shortening the streak to begin with.
+
+This is the third instance in this sweep of a NAME promising something the CODE
+does not do, after `extreme pivot` and the dead `chop_thresh`. Worth treating as
+a pattern: the config is the spec, and the spec is frequently wrong.
+
+## IS htffs JUST long WITH MORE TRADES?  NO.
+
+    long  n=497          htffs n=753          overlap 233 of 753 (30.9%)
+
+    bucket                            n      gross R   R/trade
+    shared entries                 233       +389.1     1.670
+    htffs ONLY (extra entries)     520       +517.5     0.995
+    long ONLY (htffs dropped)      264       +172.3     0.653
+
+htffs is not a volume clone. It adds 520 entries long never takes at ~1.0 R/trade
+AND drops 264 of long's entries - the weak ones, at 0.65 R/trade. Both operations
+add value independently. Per-trade economics:
+
+    long   +561.4 / 497 = 1.13 R/trade
+    htffs  +906.6 / 753 = 1.20 R/trade
+
+So htffs has BOTH better per-trade economics and 1.52x the volume, which is why
+its NET/DD is far ahead in both eras. The volume is real but it is not the reason
+htffs wins - the quality per trade is higher too.
+
+The legitimate concern that remains is concentration, not fake edge: 753 IS trades
+means 158.6R of trading cost against long's 94.4R. That is already subtracted in
+every NET figure above.
