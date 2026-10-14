@@ -1009,3 +1009,111 @@ at the canonical block as the single source of truth.
 theory doc, or if "extreme pivot" reappears anywhere outside the owner's own
 quotes. Docs and comments only — no behaviour change, and the chain fingerprint
 was verified identical afterwards.
+
+---
+
+## SWING SHAPE AS A FEATURE - the whole shape space, tested. Nothing adopted.
+
+The chain has a rigid shape that NO book has ever used: `B1 -> B2/FLIP strict
+alternation -> FS`, and FS is the LAST event in 2840/2840 IS swings and 1571/1571
+OOS (proved by exp_fs_terminal_gate.py, 0 violations on 15m mb50 and 1h mb10/mb15
+both eras, ~8600 swings). So the entire swing history is in the past at the entry
+bar, and shape is fully observable before every trade is taken. 14 distinct
+sequences on 15m; terminal B2 1667 / FLIP 1173; 0-6 alternations.
+
+Every one of the five books enters on FS with identical logic regardless of shape.
+`exp_shape_quality.py` asks whether that is leaving anything on the table.
+
+    terminal    long   short   htf15   htffs        (mean R, IS)
+    B2        +0.854  +1.108  +0.848  +1.051
+    FLIP      +1.560  +1.905  +1.756  +1.451
+
+On IS, FLIP-terminal trades beat B2-terminal trades in all four books. 95% block
+bootstrap on the difference: 3 of 4 "not separable", htf15 "SIGNIFICANT" at
+[-1.762, -0.074] - a CI that touches zero.
+
+Then OOS:
+
+              IS diff    OOS diff
+    long       -0.7069     +0.1866   <- FLIP better   ->  B2 better
+    short      -0.7970     +0.3209   <- FLIP better   ->  B2 better
+    htf15      -0.9087     -0.0728   <- FLIP better   ->  FLIP better
+    htffs      -0.4002     +0.1455   <- FLIP better   ->  B2 better
+
+SIGN FLIP ON THREE OF FOUR BOOKS, and 7 of 8 bootstrap CIs across both eras say
+"not separable". Terminal kind does not carry a stable edge. Alternation depth is
+dominated by sample size at the deep end (depth 3+ is n=3-20 and goes negative in
+both eras for htffs). Nothing adopted.
+
+THE LESSON, WHICH IS THE REASON THIS IS HERE
+
+The shape space is rich, fully observable at entry, and completely unused - and
+it carries no edge. The most attractive property an idea can have is that it is
+EASY to measure. This one was measurably worthless. Do not reopen it without a
+mechanism that predicts WHY depth or terminal kind would matter; "it is available
+so it must be useful" is the reasoning that produced seven era splits already.
+
+## VOLATILE CANDLES AS A FEATURE - strong on IS, inverted on OOS. Nothing adopted.
+
+Volatile candles are where the youngest logic in the engine sits and where none of
+it has been tested as a population: the close-colour rule (5d6cab2, 2026-10-13),
+and firstswing.py:528-534 where a volatile candle sustaining an already-flipped
+leg produces NO MARK AT ALL ("we cannot mark it anything here ... so we have to
+wait", owner 2023-06-10 22:30). 197 volatile B1s and 51 direction flips were
+recorded when the colour rule landed. That category did not exist before the fix.
+
+`exp_volatile_b1.py` detects volatility the way the engine does - a candle whose
+high exceeds the running high AND whose low breaches the running low, both against
+prior candles in the same leg - and splits swings into clean / volatile-early
+(before the first FLIP) / volatile-late.
+
+volatile-early, mean R against the same book's clean swings:
+
+    book      IS clean -> vol-early    OOS clean -> vol-early
+    long       1.083  ->  1.528  +41%   0.915  ->  0.244  -73%
+    short      1.257  ->  4.346 +246%   0.875  -> -0.126
+    htf15      1.184  ->  1.613  +36%   1.070  ->  0.271  -75%
+    htffs      1.116  ->  1.842  +65%   1.022  ->  0.095  -91%
+
+IS: volatile-early is 40% to 246% BETTER in all four books. OOS: WORSE in all
+four, and negative on short. Four books agreeing on IS is not evidence here -
+four books reading the SAME signal agreeing on IS is what an era effect looks
+like. This is the seventh appearance of this shape.
+
+Note also that short's volatile-early carries mean +4.35R and PF 10.77 on n=28.
+Means on tiny groups are exactly the fat-tail artefact documented in the C1
+section, so treat the IS magnitude as untrustworthy even before the era flip.
+
+Nothing adopted. The harness stays - the next person will want to know a
+population this clean was tested and found empty.
+
+## SUPPRESSION ACCOUNTING - 12,981 breaks still unexplained
+
+The invariant harness counts 20,460 ARMED breaks that never became an emitted
+mark, against 7,734 that did. 73% of everything the engine detects is discarded.
+A whole sweep has been run without anyone asking where it goes.
+
+Attributable today:
+
+    gap rule (b2_gap_bars, isolated by chain toggle)      811
+    dir_confirmed (measured by exp_dir_confirmed_b2_path) 6,668
+    RESIDUAL - not attributed                            12,981
+
+The residual is 63.4% of armed suppressions and 1.68x the emitted mark count. The
+4,102 not-armed drops are a SEPARATE bucket (firstswing.py:428, source comment
+records 96% of them broke a pivot sealed on an earlier bar) and are not part of
+the 20,460; conflating them would make the residual look smaller than it is.
+
+Two more paths are inventoried but unmeasured, both of which are SILENT - they
+produce no row in the swing record at all:
+
+    firstswing.py:528-534  volatile candle sustains an already-flipped leg -> NO MARK
+    firstswing.py:535      _b2_done_in_dir -> one B2 per direction per swing
+
+Closing the residual needs counters inside the walk, not a read of the finished
+chain. NOT DONE - it needs engine instrumentation and is a separate, riskier
+change.
+
+Side finding from the toggle: `b2_gap_bars` removes 599 B2 marks AND 73 FLIP
+marks. A knob named for B2 also suppresses FLIP. Not a defect found, just not
+something the name would tell you.

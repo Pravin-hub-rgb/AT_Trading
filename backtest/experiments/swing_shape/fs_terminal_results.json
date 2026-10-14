@@ -1,0 +1,59 @@
+{
+  "stage": "fs_terminal_gate",
+  "chains": {
+    "15m mb50|is": {
+      "swings": 2840,
+      "checked": 2840,
+      "violations": 0,
+      "terminal": {
+        "B2": 1667,
+        "FLIP": 1173
+      }
+    },
+    "15m mb50|oos": {
+      "swings": 1571,
+      "checked": 1571,
+      "violations": 0,
+      "terminal": {
+        "B2": 919,
+        "FLIP": 652
+      }
+    },
+    "1h  mb10|is": {
+      "swings": 1250,
+      "checked": 1250,
+      "violations": 0,
+      "terminal": {
+        "B2": 716,
+        "FLIP": 534
+      }
+    },
+    "1h  mb10|oos": {
+      "swings": 723,
+      "checked": 723,
+      "violations": 0,
+      "terminal": {
+        "B2": 428,
+        "FLIP": 295
+      }
+    },
+    "1h  mb15|is": {
+      "swings": 1403,
+      "checked": 1403,
+      "violations": 0,
+      "terminal": {
+        "B2": 817,
+        "FLIP": 586
+      }
+    },
+    "1h  mb15|oos": {
+      "swings": 830,
+      "checked": 830,
+      "violations": 0,
+      "terminal": {
+        "B2": 490,
+        "FLIP": 340
+      }
+    }
+  }
+}

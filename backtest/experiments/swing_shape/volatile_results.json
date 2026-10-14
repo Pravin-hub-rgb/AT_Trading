@@ -1,0 +1,217 @@
+{
+  "stage": "volatile_population",
+  "eras": {
+    "is": {
+      "fsent_champ_long": {
+        "clean": {
+          "n": 456,
+          "gross": 493.72,
+          "mean": 1.0827,
+          "pf": 3.7,
+          "dd": 18.72,
+          "mc": 15
+        },
+        "volatile-early": {
+          "n": 36,
+          "gross": 55.01,
+          "mean": 1.5281,
+          "pf": 5.06,
+          "dd": 3.44,
+          "mc": 6
+        },
+        "volatile-late": {
+          "n": 5,
+          "gross": 12.62,
+          "mean": 2.5244,
+          "pf": 8.64,
+          "dd": 1.0,
+          "mc": 1
+        }
+      },
+      "fsent_champ_short": {
+        "clean": {
+          "n": 428,
+          "gross": 537.91,
+          "mean": 1.2568,
+          "pf": 4.06,
+          "dd": 8.82,
+          "mc": 9
+        },
+        "volatile-early": {
+          "n": 28,
+          "gross": 121.68,
+          "mean": 4.3456,
+          "pf": 10.77,
+          "dd": 3.99,
+          "mc": 5
+        },
+        "volatile-late": {
+          "n": 10,
+          "gross": 7.94,
+          "mean": 0.7939,
+          "pf": 2.7,
+          "dd": 2.08,
+          "mc": 2
+        }
+      },
+      "fsent_champ_long_htf15": {
+        "clean": {
+          "n": 461,
+          "gross": 545.84,
+          "mean": 1.184,
+          "pf": 4.14,
+          "dd": 19.23,
+          "mc": 22
+        },
+        "volatile-early": {
+          "n": 34,
+          "gross": 54.83,
+          "mean": 1.6125,
+          "pf": 5.3,
+          "dd": 3.21,
+          "mc": 6
+        },
+        "volatile-late": {
+          "n": 5,
+          "gross": -0.55,
+          "mean": -0.1092,
+          "pf": 0.79,
+          "dd": 1.47,
+          "mc": 1
+        }
+      },
+      "fsent_champ_long_htffs": {
+        "clean": {
+          "n": 688,
+          "gross": 767.55,
+          "mean": 1.1156,
+          "pf": 3.87,
+          "dd": 12.52,
+          "mc": 12
+        },
+        "volatile-early": {
+          "n": 50,
+          "gross": 92.08,
+          "mean": 1.8416,
+          "pf": 5.0,
+          "dd": 8.91,
+          "mc": 7
+        },
+        "volatile-late": {
+          "n": 15,
+          "gross": 46.99,
+          "mean": 3.1327,
+          "pf": 6.88,
+          "dd": 3.0,
+          "mc": 3
+        }
+      }
+    },
+    "oos": {
+      "fsent_champ_long": {
+        "clean": {
+          "n": 258,
+          "gross": 236.0,
+          "mean": 0.9147,
+          "pf": 3.36,
+          "dd": 9.85,
+          "mc": 7
+        },
+        "volatile-early": {
+          "n": 16,
+          "gross": 3.91,
+          "mean": 0.2444,
+          "pf": 1.48,
+          "dd": 5.46,
+          "mc": 7
+        },
+        "volatile-late": {
+          "n": 7,
+          "gross": 11.17,
+          "mean": 1.5951,
+          "pf": 8.41,
+          "dd": 1.12,
+          "mc": 2
+        }
+      },
+      "fsent_champ_short": {
+        "clean": {
+          "n": 267,
+          "gross": 233.55,
+          "mean": 0.8747,
+          "pf": 3.15,
+          "dd": 9.7,
+          "mc": 10
+        },
+        "volatile-early": {
+          "n": 24,
+          "gross": -3.02,
+          "mean": -0.1257,
+          "pf": 0.79,
+          "dd": 7.25,
+          "mc": 5
+        },
+        "volatile-late": {
+          "n": 7,
+          "gross": 0.59,
+          "mean": 0.0839,
+          "pf": 1.29,
+          "dd": 1.83,
+          "mc": 3
+        }
+      },
+      "fsent_champ_long_htf15": {
+        "clean": {
+          "n": 258,
+          "gross": 275.92,
+          "mean": 1.0695,
+          "pf": 3.87,
+          "dd": 9.42,
+          "mc": 11
+        },
+        "volatile-early": {
+          "n": 16,
+          "gross": 4.34,
+          "mean": 0.2712,
+          "pf": 1.57,
+          "dd": 4.46,
+          "mc": 6
+        },
+        "volatile-late": {
+          "n": 7,
+          "gross": 11.17,
+          "mean": 1.5951,
+          "pf": 8.41,
+          "dd": 1.12,
+          "mc": 2
+        }
+      },
+      "fsent_champ_long_htffs": {
+        "clean": {
+          "n": 348,
+          "gross": 355.62,
+          "mean": 1.0219,
+          "pf": 3.64,
+          "dd": 8.75,
+          "mc": 9
+        },
+        "volatile-early": {
+          "n": 29,
+          "gross": 2.75,
+          "mean": 0.0949,
+          "pf": 1.2,
+          "dd": 5.94,
+          "mc": 9
+        },
+        "volatile-late": {
+          "n": 12,
+          "gross": 8.05,
+          "mean": 0.6713,
+          "pf": 3.05,
+          "dd": 3.54,
+          "mc": 5
+        }
+      }
+    }
+  }
+}
