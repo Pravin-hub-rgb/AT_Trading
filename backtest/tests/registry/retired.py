@@ -116,14 +116,80 @@ LOW_OOS = {
 # and the test caught it.
 DANGLING_ALIAS = {"swingpause_cd0_single_sw10"}
 
-RETIRED = ERA_FITTED | BOTH_NEGATIVE | INVERSE | LOW_OOS | DANGLING_ALIAS
+# ---- RE-RETIRED 2026-10-14, on the corrected chain -------------------------
+# The bar-1 set above was measured on the chain that existed on 2026-10-08. The
+# engine has since moved: B1 arming (77711a6), V13 (88ecd00), the volatile-B1
+# colour rule and the same-bar duplicate-pivot fix (5d6cab2, d71304f). The chain
+# went from 2753 swings / 7505 marks to 2840 / 7734, and every pin was re-measured
+# (dd02cf1, 120 books, both eras).
+#
+# So bar 1 was re-applied to the NEW numbers rather than trusted. 69 books are
+# negative in at least one era on the corrected chain and all 69 are still active
+# in the registry - the 2026-10-08 retirement had not caught them because they
+# were positive then. Applying the owner's rule literally, no exceptions:
+#
+#     IS < 0  OR  OOS < 0   ->  retire
+#
+#     OWNER 2026-10-14: "any of on IS or OOS is negative retire that 's it..
+#                            no more discussion"
+#
+# 6 of the 69 are negative in BOTH eras and 63 are era-fitted (IS positive, OOS
+# negative), which is the overfit shape this repo has already seen repeatedly.
+# Three of them lose by less than 0.25R - gap_wage28 -0.14, gap_campaign3 -0.18,
+# gap_entry_cap3 -0.22. They are retired anyway: the rule is the rule and an
+# exception would become a loop of "is this one an exception".
+#
+# This set is kept separate from ERA_FITTED rather than merged into it, because
+# ERA_FITTED's own assert counts 28 members measured on the old chain. Merging
+# would make that assert lie. The two are unioned into RETIRED below.
+RE_RETIRED_ANY_ERA_NEGATIVE = {
+    "age50_utcsat_multi_sw10", "b2doji_utcsat_multi_sw10",
+    "baseline_no_partial_sw10", "bm05_multi_sw10", "bm05_utcsat_multi_sw10",
+    "cap12d", "cap16d", "cap20d", "cap32d", "cap48d", "causalsl_multi_sw10",
+    "causalsl_utcsat_multi_sw10", "champion_multi_sw10",
+    "champion_multi_sw10_entry1", "champion_multi_sw10_entry_both",
+    "champion_multi_sw10_leg", "champion_multi_sw10_leg_no_entry",
+    "chopband_multi_sw10", "combined_b2age_utcsat_multi_sw10",
+    "curfew624_utcsat_multi_sw10", "decayA_c", "decayA_u", "decayB_c",
+    "decayB_u", "decayC_c", "decayC_u", "decayE_c", "decayE_u",
+    "ext25_utcsat_multi_sw10", "ext2_utcsat_multi_sw10",
+    "ext35_utcsat_multi_sw10", "ext4_utcsat_multi_sw10", "fsexit4_c",
+    "fsexit6_c", "fsswing6_c", "gap_campaign3", "gap_campaign4", "gap_cd15",
+    "gap_cd5", "gap_cooldown4", "gap_curfew_a4_b8", "gap_entry_cap3",
+    "gap_mcl5", "gap_persist1", "gap_r_cap1", "gap_r_cap3", "gap_skip_decisive",
+    "gap_slbuf010", "gap_trail_prevbar", "gap_wage24", "gap_wage28",
+    "gap_window_r_cap2", "htfrr25_multi_sw10", "htfrr4_multi_sw10",
+    "persist3_multi_sw10", "persist4_multi_sw10", "persist5_multi_sw10",
+    "persist6_multi_sw10", "skipwinhalt_multi_sw10", "trail_delay1",
+    "trail_half", "trail_half_delay1", "utcsat_cap16d",
+    "utcsat_chopband_multi_sw10", "utcsat_entry_minus_1", "utcsat_multi_sw10",
+    "wage12_utcsat_multi_sw10", "wage24_multi_sw10", "wage24_utcsat_multi_sw10",
+}
+
+# A retired target with a live alias pointing at it raises KeyError from
+# registry.helpers the moment anything iterates EXPERIMENTS. Checked explicitly
+# rather than assumed - the 2026-10-08 pass had this exact bug and the test caught
+# it. _ALIAS_TARGETS is defined below RETIRED, so it is read lazily here.
+def _alias_targets_for_retirement():
+    return {alias for alias, target in _ALIAS_TARGETS.items()
+            if target in RE_RETIRED_ANY_ERA_NEGATIVE}
+
+RETIRED = (ERA_FITTED | BOTH_NEGATIVE | INVERSE | LOW_OOS | DANGLING_ALIAS
+           | RE_RETIRED_ANY_ERA_NEGATIVE)
 
 assert len(ERA_FITTED) == 28, f"bar-1 era-fitted drifted: {len(ERA_FITTED)}"
 assert len(BOTH_NEGATIVE) == 1, f"bar-1 both-negative drifted: {len(BOTH_NEGATIVE)}"
 assert len(INVERSE) == 3, f"bar-1 inverse drifted: {len(INVERSE)}"
 assert len(LOW_OOS) == 52, f"bar-2 drifted: {len(LOW_OOS)}"
 assert len(DANGLING_ALIAS) == 1, f"alias count drifted: {len(DANGLING_ALIAS)}"
-assert len(RETIRED) == 85, f"retired total drifted: {len(RETIRED)}"
+# 85 before the 2026-10-14 re-retirement. The 69 re-retired keys are all still
+# active books, so the union - not the sum - is the number that matters; it is
+# asserted below rather than assumed.
+assert len(RE_RETIRED_ANY_ERA_NEGATIVE) == 69, (
+    f"re-retired set drifted: {len(RE_RETIRED_ANY_ERA_NEGATIVE)}")
+_retired_before_reretire = 85
+assert len(RETIRED) > _retired_before_reretire, (
+    f"re-retirement added nothing: {len(RETIRED)}")
 
 # The registry's only two alias rows, asserted so this file cannot be edited into
 # a state that breaks alias resolution. The failure mode otherwise is a KeyError

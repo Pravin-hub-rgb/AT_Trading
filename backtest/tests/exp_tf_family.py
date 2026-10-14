@@ -94,8 +94,24 @@ MB_VARIANTS = (("mb50_count", 50), ("mb25_duration", 25))
 # registry means the gate can still fail - if the engine drifts, the run stops
 # matching the pins - but it cannot fail because a note went out of date.
 def _expected_pins(book: str) -> dict:
+    # A retired book no longer resolves through EXPERIMENTS, so read it from the
+    # archive instead. champion_multi_sw10 and utcsat_multi_sw10 were both
+    # re-retired on 2026-10-14 (negative OOS on the corrected chain), and this
+    # module is imported at module scope by every study harness - so a plain
+    # registry lookup raised KeyError at import and took the whole file down.
+    # The retired config IS the config, and retired.py reads it live from the
+    # family modules, so nothing here can drift.
     from experiment_registry import EXPERIMENTS as _X
-    p = (_X[book].get("pins") or {})
+    entry = _X.get(book)
+    if entry is None:
+        from registry.retired import archived as _archived
+        entry = _archived().get(book)
+    if entry is None:
+        raise KeyError(
+            "neither active nor archived: %r - the family module names it and "
+            "the registry cannot produce its pins, so the identity gate has "
+            "nothing to compare against" % (book,))
+    p = (entry.get("pins") or {})
     return {"is": (p.get("n"), p.get("net")),
             "oos": (p.get("oos_n"), p.get("oos_net"))}
 

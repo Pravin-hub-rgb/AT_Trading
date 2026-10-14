@@ -310,11 +310,17 @@ export const BOOK_OPTIONS: BookOption[] = [
     config: { ...V19, version: "utcsat_causal" },
   },
   {
-    id: "utcsat_entry_minus_1",
-    label: "CHAMPION ENTRY-1 + skip UTC-Saturday - 380t +101.0R",
-    shortLabel: "ENTRY1-SAT",
+    // RETIRED 2026-10-14. Was "utcsat_entry_minus_1" - IS 380 / +100.97R,
+    // OOS 223 / -51.88R. Removed from this list on the owner's rule: any book
+    // negative in either era is retired, no exceptions. The archived config and
+    // pins are intact in backtest/tests/registry/retired.py under the key
+    // "utcsat_entry_minus_1", so restoring it is one line. Its sibling
+    // champion_entry_minus_1 is unaffected and stays.
+    id: "utcsat_entry_minus_1_retired",
+    label: "RETIRED - utcsat_entry_minus_1 (OOS -51.9R)",
+    shortLabel: "RETIRED",
     slMode: "causal",
-    hint: "entry-bar excluded stop, UTC Saturdays skipped - both settled at the entry bar",
+    hint: "Retired 2026-10-14: negative out of sample. Not tradeable. Kept as a placeholder so this entry's removal is visible rather than silent.",
     measured: { isN: 380, isNet: 100.97, oosN: 223, oosNet: -51.88 },
     config: { ...V19, version: "utcsat_entry_minus_1" },
   },
