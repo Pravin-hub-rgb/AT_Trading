@@ -473,3 +473,96 @@ htffs wins - the quality per trade is higher too.
 The legitimate concern that remains is concentration, not fake edge: 753 IS trades
 means 158.6R of trading cost against long's 94.4R. That is already subtracted in
 every NET figure above.
+---
+
+## ARE cooldown_bars AND max_consecutive_losses REDUNDANT? (exp_cd_mcl_redundancy.py)
+
+First, a correction to my own last message. I called the halt "broken" and "working
+against the strategy." The owner is right that it is working as designed: lose
+three in a row, skip the NEXT trade, take the one after. That is exactly what the
+code does and exactly what was intended. The measurements stand; my verdict on
+them did not.
+
+The useful question is not whether the halt is sound in the abstract but whether
+it earns its place GIVEN cooldown is already on. Both gates block entries after a
+loss - one on a TIME window, one on a COUNT.
+
+### The cooldown is the real gate, by a wide margin
+
+cd=8 vs cd=0, holding mcl=3, NET, IS:
+
+    book                    cd=0      cd=8       dNET      dNET%     DD 0     DD 8    DD%
+    fsent_champ_long      +325.04   +466.92    +141.88      +44%   40.23    19.57    -51%
+    fsent_champ_short     +408.19   +569.33    +161.14      +39%   18.49     8.65    -53%
+    fsent_champ_long_htf15 +378.36  +505.24    +126.88      +34%   38.07    21.05    -45%
+    fsent_champ_long_htffs +542.28   +757.99    +215.71      +40%   40.36    12.86    -68%
+
+Cooldown alone is worth +34% to +44% of net and cuts drawdown by 45-68%. That is
+the largest single-gate effect measured anywhere in this sweep.
+
+### The cd=8 pin is confirmed, at both mcl levels
+
+    book                    best cd @mcl=0    best cd @mcl=3
+    fsent_champ_long              8                8
+    fsent_champ_short             4                8
+    fsent_champ_long_htf15       12                8
+    fsent_champ_long_htffs        4                8
+
+cd=8 is the argmax in all four books at the shipped mcl=3. At mcl=0 the curve is
+flat from 4 to 12 on short/htf15/htffs, so those are ties rather than a better
+value. The pin is right and is not sensitive to the mcl setting.
+
+### MCL on its own does nothing
+
+cd=0, so nothing else is blocking entries:
+
+    book                    neither    halt alone     dNET    dNET OOS
+    fsent_champ_long       +326.24      +325.04      -1.20      +8.76
+    fsent_champ_short      +416.60      +408.19      -8.41      +7.04
+    fsent_champ_long_htf15 +360.03      +378.36     +18.33     +21.68
+    fsent_champ_long_htffs +533.38      +542.28      +8.90      -4.59
+
+Every effect is inside +-5% of a 325-542R book, and IS and OOS disagree in sign
+for three of four. Alone it is indistinguishable from noise. That is the direct
+answer to "is mcl a viable gate by itself" - no.
+
+### On top of cooldown it is redundant, but not harmless
+
+cd=8 fixed, mcl 0 -> 3, IS:
+
+    book                  dNET      dDD    dMaxCL
+    fsent_champ_long     -37.20    +1.90       -1
+    fsent_champ_short     +2.49    -3.15       -2
+    fsent_champ_long_htf15 -34.53   -0.94        0
+    fsent_champ_long_htffs -52.51   -2.84       -1
+
+It costs net in three of four. It buys a small reduction in DD and losing streak
+in three of four - and on long it buys a 1-trade streak reduction while making DD
+WORSE. So the owner's read is correct: if cooldown is on, the second gate is
+largely redundant. It is not free, but it is also not the catastrophe the gross
+numbers implied.
+
+### Per-book, because the answer is not uniform
+
+    book                  keep mcl=3?   why
+    fsent_champ_short        YES        MaxCL 12->10 and DD 11.80->8.65, best risk
+                                        profile of any cell, for +2.49R
+    fsent_champ_long_htffs   YES        MaxCL 13->12 and DD 15.70->12.86, costs
+                                        52.51R which the best NET/DD absorbs
+    fsent_champ_long_htf15   MARGINAL    DD 21.99->21.05, MaxCL unchanged, -34.53R
+    fsent_champ_long         NO         DD gets WORSE 17.67->19.57 for -37.20R;
+                                        only MaxCL improves, by one trade
+
+On the owner's own priority - drawdown and losing streak first - mcl=3 earns its
+place on short and htffs, is a coin-flip on htf15, and does not earn it on long.
+That is a per-book decision, not a global one, and it is the one place in this
+sweep where the halt is measurably doing the job its name implies.
+
+## THE FIVE BOOKS ARE ONE FAMILY
+
+fsent_champ_long, short, long_htf15, long_htffs, long_mcloff are separate books
+and all five stay in the registry and stay runnable. Nothing is retired. They are
+one family: every other book is exactly one mechanism from long - entry side,
+swing chain, HTF flip entry, loss-halt off. Recorded here so nobody later reads
+five green cells as five independent confirmations. It is one signal measured
+four ways.
