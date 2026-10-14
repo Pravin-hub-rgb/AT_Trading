@@ -140,7 +140,7 @@ class FirstSwingEngine:
         self.e_lo = Lvl(px=inf, idx=-1, time="")
         self.e_hi_prev = Lvl(px=-inf, idx=-1, time="")
         self.e_lo_prev = Lvl(px=inf, idx=-1, time="")
-        # Walker extreme pivots
+        # Walker sealed pivots - NOT what B2/FLIP target (that is e_hi_prev / e_lo_prev)
         self.e_hi_pivot: Lvl | None = None
         self.e_lo_pivot: Lvl | None = None
         self.normal_highs: list[Lvl] = []

@@ -201,8 +201,10 @@ Chain went to **0 swings, 0 marks**. The seed-low problem above: the target neve
 advances, so no leg ever completes.
 
 **2. Keep `e_hi_prev` / `e_lo_prev` but drop the walker-era gates** (the
-`dir_established` rule, the 1-candle gap rule, and the "pivot must be ≥2 bars old"
-rule). Still **0 swings**. All three gates were written on the assumption that a walker
+`dir_established` rule, the 1-candle gap rule, and the "the **running extreme**
+must be ≥2 bars old" rule — note: the extreme, not a white pivot; B2 and FLIP
+never require a white marker to exist, only FS does).
+Still **0 swings**. All three gates were written on the assumption that a walker
 pivot is already behind price; they are not statements that make sense about a V corner.
 Note this for whoever removes them later — they are load-bearing for the walker path.
 

@@ -621,6 +621,16 @@ class SwingEngine:
                 # the swing has formed, the extreme pivots [...] are the target
                 # that should be breached by B2 and flip."
                 #
+                # TRANSLATION, because "extreme pivot" reads as a type of pivot and
+                # is the single most misread phrase in this engine. It means the
+                # RUNNING EXTREME: the highest price (up leg) / lowest price (down
+                # leg) reached since this leg began. It moves every candle and
+                # needs NO white sealed pivot to exist. FS is the opposite - it
+                # anchors on a sealed white pivot. Do not mix the two.
+                # Re-affirmed by the owner 2026-10-13: "It should be for B2 flip,
+                # it is extreme pivots." Full statement: fix/SWING_THEORY_B1_B2_FLIP.md
+                # top of file.
+                #
                 #   "4:45 high is an extreme, and then it creates a pivot at 5:15
                 #    [...] 6:00 breaks the high extreme, so B1 is marked here
                 #    correctly. Now as it has breached the pivot of 4:45, now we are
@@ -710,14 +720,24 @@ class SwingEngine:
         self.just_fired_b2 = True
 
     def _b2_if_gap_allows(self) -> bool:
-        """Mark a B2 in the current leg direction if the 1-candle pivot gap is
+        """Mark a B2 in the current leg direction if the 1-candle gap is
         clean. Returns True if a B2 was marked.
+
+        TARGET: the RUNNING EXTREME (`e_hi_prev` / `e_lo_prev`) - NOT a sealed
+        white pivot. B2 and FLIP never require a white marker to exist. FS is
+        the one that anchors on a sealed pivot. See the two-anchors block at the
+        top of fix/SWING_THEORY_B1_B2_FLIP.md.
 
         OWNER 2026-10-13: "if they break an extreme pivot for B2 there is a one
         candle gap. If there isn't a one candle gap, then we think we are
         neglecting it. But that pivot is already contaminated. So we should be
-        waiting for the new extremes."  A contaminated pivot -> NO MARK, and we
+        waiting for the new extremes."  A contaminated extreme -> NO MARK, and we
         wait for the fresh extreme to be broken instead.
+
+        TRANSLATION of that quote, because "extreme pivot" reads as a type of
+        pivot: the running low (or high) must survive ONE candle before a break of
+        it can be marked. If the very next candle breaches it too, it was never
+        real - mark nothing at all, not B2 and not FLIP, and wait.
         """
         if self._b2_done_in_dir:
             return False

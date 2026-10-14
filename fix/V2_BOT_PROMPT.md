@@ -177,6 +177,14 @@ compared against a cross. Capture `_tgt` (= `e_hi_prev`/`e_lo_prev`) at runtime 
 
 ### 6.2 `_tgt` IS the running extreme — a running max IS correct (corrected 2026-10-13)
 
+> **Canonical statement of the rule lives in
+> `fix/SWING_THEORY_B1_B2_FLIP.md` — the "READ THIS FIRST" block at the top of
+> that file.** If the two ever disagree, that file wins. In one line:
+> **B2 and FLIP break the RUNNING EXTREME (moves every candle, no white marker
+> needed). FS breaks a SEALED WHITE PIVOT.** These are two different rules and
+> mixing them up is the most common error in this repo — it happened in a live
+> session on 2026-10-13 and the owner had to re-state the ruling.
+
 **The old 6.2 here was WRONG**, and it is what made a correct reconstruction look wrong.
 It claimed `e_hi_prev` is a *sealed* extreme and that a running `max(hi[start:i])` is "a
 different series". It is not. `firstswing.py:391-396`:

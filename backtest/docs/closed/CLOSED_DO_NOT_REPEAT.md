@@ -958,3 +958,54 @@ results beside it. This closes the FS-entry family: the trigger was measured
 (FS_ENTRY.md), the directional form was closed by permutation (P80/P82), the
 entry-delay forms are above, the stop-trigger form is above, and the coverage
 argument for a bigger FS-only book is now zero rather than unmeasured.
+
+---
+
+## "EXTREME PIVOT" IS NOT A TYPE OF PIVOT — the rule is stated, and it gets misread
+
+Not an experiment. A **terminology** closure, written 2026-10-13 because it cost a
+live session.
+
+**What happened.** The owner asked whether a specific bar should have produced a B2.
+A chart example was built on the running low at `2024-05-10 18:15` (62900.0), and
+the answer given was "the gap rule blocked that mark". The owner's response:
+
+> *"Does 18:15 candle's low, was there a pivot? What are you talking about? ... There
+> is no marks there."*
+
+There was no white pivot at 18:15. It was only the lowest price touched since the
+leg began. Under the actual rule it was a legitimate candidate target — and under
+the owner's reading of it, it was never a target at all and nothing was blocked.
+**The example was meaningless, and it was presented as a finding.**
+
+**The cause.** The owner's own ruling is quoted in `firstswing.py` and in
+`SWING_THEORY_B1_B2_FLIP.md` §6.1 using the phrase **"extreme pivot"**:
+
+> *"if they break an extreme pivot for B2 there is a one candle gap."*
+
+Read literally that is a type of pivot — which is the opposite of the ruling. The
+same document's §3 says the opposite thing correctly (*"the running extreme, not a
+sealed pivot"*), but the two statements sat ~100 lines apart with nothing tying
+them together. B2/FLIP use the extreme; FS uses a sealed pivot. Nothing said so
+anywhere near the gap-rule discussion.
+
+**The ruling, re-affirmed by the owner the same day, 2026-10-13:**
+
+> *"It should be for B2 flip, it is extreme pivots."*
+
+**What changed.** The theory doc now opens with a two-anchor block stating the
+difference before any section; every occurrence of "extreme pivot" carries a
+translation beneath it while the owner's quotes stay verbatim; the gap rule is
+stated once, applied to the running extreme; `fix/V2_BOT_PROMPT.md` §6.2 points
+at the canonical block as the single source of truth.
+
+**The transferable rule, for whoever reads this next:**
+
+> Any question about a B2 or FLIP must say which anchor it means. If a mark is
+> being discussed without naming the running extreme or the white pivot, the
+> discussion is not yet answerable.
+
+`exp_theory_wording_gate.py` now fails if the two-anchor block is removed from the
+theory doc, or if "extreme pivot" reappears anywhere outside the owner's own
+quotes. Docs and comments only — no behaviour change, and the chain fingerprint
+was verified identical afterwards.

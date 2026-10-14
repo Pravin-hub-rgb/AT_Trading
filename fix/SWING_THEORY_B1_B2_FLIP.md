@@ -1,5 +1,63 @@
 # Swing Theory — B1, B2, FLIP (and FS)
 
+## ⬛ READ THIS FIRST — the two anchors. They are different rules.
+
+This is the single most misread thing in this document, and it was misread
+**on 2026-10-13** — by me, in a live session, producing a chart example that was
+meaningless to the owner. He then re-affirmed the ruling the same day. Do not
+repeat it.
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                                                                      │
+│   B2 and FLIP  break the RUNNING EXTREME.                           │
+│   FS           breaks a SEALED WHITE PIVOT.                         │
+│                                                                      │
+│   RUNNING EXTREME  = the lowest price (down leg) or highest price    │
+│                      (up leg) reached since this leg began.           │
+│                      It moves every candle.                         │
+│                      It is NOT a white dot on the chart.             │
+│                      It needs no white marker to exist.              │
+│                                                                      │
+│   SEALED WHITE PIVOT = the white marker the walker draws. A fixed     │
+│                      level that survives until price breaks it.     │
+│                                                                      │
+│   These are two DIFFERENT rules. Do not mix them.                   │
+│                                                                      │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+**Owner, re-affirmed 2026-10-13:** *"It should be for B2 flip, it is extreme
+pivots."* Earlier, 2026-10-12 on 2023-03-19: *"B2 and flip […] these depend upon
+**not any pivot**. These depend on the **extreme** pivot only. Till the swing has
+formed, the extreme pivots […] are the target that should be breached by B2 and
+flip."*
+
+### ⚠️ the phrase "extreme pivot" is ambiguous — here is what it means
+
+The owner's own wording in §6.1 says "if they break an **extreme pivot** for B2".
+That reads as *a type of pivot*, which is the opposite of the ruling. Throughout
+this document and the engine, **"extreme pivot" always means the running
+extreme.** It never means a white sealed pivot. The owner's quotes are kept
+verbatim; translations sit beneath them.
+
+### The gap rule, stated once, applied to the RUNNING EXTREME
+
+```
+The gap rule applies to the RUNNING EXTREME.
+
+The extreme must survive ONE candle before a break of it can be marked.
+If the very next candle is breached too, the extreme was never real.
+
+Then: NO MARK AT ALL — not B2, not FLIP. Wait for the next extreme.
+```
+
+Concretely, for a down leg: if the low is `L` and the **very next** candle also
+prints below `L`, that low is discarded. The first markable break is of a
+*later* low. There is no white pivot required anywhere in this.
+
+---
+
 **Status:** working theory, owner-ruled. Every rule below is traceable to a dated
 chart walkthrough by the owner. Where the code and this document disagree, the
 document wins and the code is the bug.
@@ -172,6 +230,12 @@ the FLIP is marked on the candle that breaks *that*.** Not on the volatile candl
 > "volatile B2 gaps apply… we have to wait for its break after one candle, more than a
 > candle."
 
+**Translation — "extreme pivot" here means the RUNNING EXTREME, not a white
+pivot.** See the block at the top of this document. In plain terms: the running
+low (or high) must survive one candle before a break of it can be marked; if the
+very next candle breaches it too, it was never a real level and we wait for the
+next one.
+
 So a volatile candle **cannot** be B2 when the extreme it broke is contaminated (no
 one-candle gap). In that case **no mark at all** — not B2, not FLIP — and we wait for a
 fresh extreme to be broken instead.
@@ -262,6 +326,8 @@ was always false and every post-FLIP break became a plain FLIP. Fixed to use
 ## 7. FS (first swing) — separate family, only partly ruled
 
 - FS anchors on a **sealed pivot**, and the FS bar **breaks that pivot**.
+  **This is FS only.** B2 and FLIP do NOT work this way — they break the running
+  extreme and need no white pivot at all. See the two-anchors block at the top.
 - The pivot must be **fresh** (formed inside the current window).
 - The pivot must also survive the **one-candle gap rule**, same as B1/B2
   (`firstswing.py:917-920` for a high, `:950-951` for a low). The bar immediately
