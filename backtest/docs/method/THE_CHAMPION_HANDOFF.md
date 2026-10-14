@@ -1,5 +1,30 @@
 # THE CHAMPION HANDOFF — P55 to P98
 
+<!-- MARK-CORRECTION-NOTICE -->
+> **MARK-CORRECTION NOTICE (2026-10-14). — SUPERSEDED ON EVERY FIGURE.**
+>
+> This page opens with `champion_multi_sw10`, **IS 500t +325.8R A** /
+> **OOS 279t +70.1R**, M = 193.4R. **All three are superseded.**
+>
+> The engine was corrected at the mark level on 2026-10-11 to 2026-10-13 (B1
+> arming fix, V13, volatile-B1 colour rule, same-bar duplicate-pivot fix).
+> Chain **2753 swings / 7505 marks** → **2840 / 7734**.
+>
+> | | this page (Sept 2026) | corrected chain |
+> |---|---|---|
+> | champion | `champion_multi_sw10` | **`fsent_champ_long`** |
+> | IS | 500t / +325.8R | 497t / **+466.92R** / dd 25.08 |
+> | OOS | 279t / +70.1R | 281t / **+215.32R** / dd 11.20 |
+>
+> Also: **69 books were retired on the same date** (any era negative → out), so
+> `champion_multi_sw10` itself is retired — OOS −45.20R. It no longer resolves in
+> the registry. See `docs/method/RETIRED_BOOKS.md`.
+>
+> The reasoning below is kept as the dated record it was; the numbers it reasons
+> about are not current. Current: `docs/method/SCORECARD_LEADERBOARD.md`, and
+> `python exp_pinverify.py` to verify anything.
+<!-- /MARK-CORRECTION-NOTICE -->
+
 **The authoritative record. Validated / exploratory / retracted, with the
 accounting basis each result is actually stated on.**
 

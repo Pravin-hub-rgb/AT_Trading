@@ -1,5 +1,30 @@
 # MASTER LEADERBOARD — All Experiments, One Place
 
+<!-- MARK-CORRECTION-NOTICE -->
+> **MARK-CORRECTION NOTICE (2026-10-14). — SUPERSEDED, DO NOT QUOTE THE FIGURES BELOW.**
+>
+> This page was written against the chain of **2753 swings / 7505 marks**. The
+> engine has since been corrected at the mark level — B1 arming fix (`77711a6`),
+> V13 (`88ecd00`), volatile-B1 colour rule and same-bar duplicate-pivot fix
+> (`5d6cab2`, `d71304f`) — giving **2840 swings / 7734 marks**. Every net, trade
+> count, retention and ranking below is **no longer what the engine produces.**
+>
+> **What changed on the corrected chain:**
+>
+> | | |
+> |---|---|
+> | registry | **215 entries → 93 active**; 69 books retired under the owner's rule (any era negative → out). See `docs/method/RETIRED_BOOKS.md` |
+> | pins | all 120 re-measured and re-pinned (`dd02cf1`); 51 pinned books verify at **0 mismatches** |
+> | `/results` | regenerated; 25 books, none retired |
+> | V7 tripwire | re-pinned to `5a4c55331ba079a9` |
+> | ranking | `docs/method/SCORECARD_LEADERBOARD.md` regenerated — the order changed, `champ_long_htf15` is now first |
+>
+> **Current numbers:** `fsent_champ_long` (shipping) IS 497 / **+466.92** / dd 25.08, OOS 281 / **+215.32** / dd 11.20.
+>
+> Verify anything here with `python exp_pinverify.py`. Do not quote a figure from
+> this page without checking it against that.
+<!-- /MARK-CORRECTION-NOTICE -->
+
 > **Created:** 2026-09-23  
 > **Bar:** OOS/IS retention **≥30% = good** (your bar: 30-40%)  
 > **True OOS:** 2021-2022 separate data (`data/unseen/bybit/`) — never touched during development  

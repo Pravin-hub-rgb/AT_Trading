@@ -1,5 +1,25 @@
 # BOOK CATEGORIES — position first, then family
 
+<!-- MARK-CORRECTION-NOTICE -->
+> **MARK-CORRECTION NOTICE (2026-10-14).** The figures below predate the mark
+> corrections of 2026-10-11 to 2026-10-13 (B1 arming fix, V13, volatile-B1 colour
+> rule, same-bar duplicate-pivot fix). Chain **2753 swings / 7505 marks** ->
+> **2840 / 7734**. Every net, every trade count and every ranking here is
+> **superseded** and kept as a dated record, not as current.
+>
+> **Two changes since that text was written:**
+>
+> 1. **69 books retired** on the corrected chain, under the owner's rule: any
+>    book negative in IS or OOS is out. **215 registry entries are now 93
+>    active.** See `docs/method/RETIRED_BOOKS.md`.
+> 2. **Category membership changed with them.** Most of the `utcsat_*`,
+>    `cap*`, `persist*`, `decay*`, `trail_half*` and `gap_*` families were retired
+>    or partly retired, so the per-family counts and the "which book do we ship"
+>    answer this page supports are both out of date.
+>
+> Current: `python exp_pinverify.py`, `docs/method/SCORECARD_LEADERBOARD.md`
+> (regenerated), `docs/method/OPTIMAL_BOOK_STUDY_HTFFS.md`.
+<!-- /MARK-CORRECTION-NOTICE -->
 
 <!-- C17-NOTICE -->
 > **C17 NOTICE (2026-10-07).** The figures in this document were measured before

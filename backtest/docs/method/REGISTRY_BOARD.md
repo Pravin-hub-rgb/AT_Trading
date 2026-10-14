@@ -1,5 +1,29 @@
 # Registry books - measured board
 
+<!-- MARK-CORRECTION-NOTICE -->
+> **MARK-CORRECTION NOTICE (2026-10-14).** Everything below this line was
+> measured before the **mark corrections** of 2026-10-11 to 2026-10-13 - the B1
+> arming fix (`77711a6`), V13 (`88ecd00`), the volatile-B1 colour rule and the
+> same-bar duplicate-pivot fix (`5d6cab2`, `d71304f`). The chain moved from
+> **2753 swings / 7505 marks** to **2840 / 7734**, so the swing set, the entries
+> and every net figure below are **superseded**. They are kept as the dated record
+> they were and are **not** what the engine produces today.
+>
+> **Current numbers, all on the corrected chain:**
+>
+> | | IS | OOS |
+> |---|---|---|
+> | active books | **93** (162 minus 69 retired) | |
+> | `fsent_champ_long` (shipping) | 497 / **+466.92** / dd 25.08 | 281 / **+215.32** / dd 11.20 |
+> | `fsent_champ_long_htf15` | 500 / **+505.24** / dd 26.26 | 281 / **+254.81** / dd 11.28 |
+>
+> **69 books were retired on the same date** under the owner's rule - any book
+> negative in IS or OOS is out. See `docs/method/RETIRED_BOOKS.md`.
+>
+> Verify with `python exp_pinverify.py` (51 pinned books, 0 mismatches as of
+> this date). What changed and why: `C17_WINDOW_END_CAUSALITY.md` for the
+> earlier gate fix, `CORRECTED_MARK_SWEEP_2026_10_14.md` for the mark work.
+<!-- /MARK-CORRECTION-NOTICE -->
 
 <!-- C17-NOTICE -->
 > **C17 NOTICE (2026-10-07).** The figures in this document were measured before

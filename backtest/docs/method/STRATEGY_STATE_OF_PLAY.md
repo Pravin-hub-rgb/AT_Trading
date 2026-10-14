@@ -1,5 +1,24 @@
 # STRATEGY STATE OF PLAY — September 2026
 
+<!-- MARK-CORRECTION-NOTICE -->
+> **MARK-CORRECTION NOTICE (2026-10-14). — SUPERSEDED.**
+>
+> The header says "all numbers are on the CURRENT shipped engine". That was true
+> on 2026-09-22 and **is not true now.** The engine was corrected at the mark
+> level on 2026-10-11 to 2026-10-13: B1 arming fix, V13, the volatile-B1 colour
+> rule and the same-bar duplicate-pivot fix. Chain **2753 swings / 7505 marks**
+> → **2840 / 7734**.
+>
+> Everything below is kept as the dated record it was. **Do not read a number
+> off this page as current.**
+>
+> Current state: **93 active books** (69 retired on 2026-10-14 under the owner's
+> rule — any book negative in IS or OOS is out, no exceptions). Shipping book
+> `fsent_champ_long`: IS 497 / **+466.92** / dd 25.08, OOS 281 / **+215.32** /
+> dd 11.20. Current ranking: `docs/method/SCORECARD_LEADERBOARD.md`. Retirements:
+> `docs/method/RETIRED_BOOKS.md`. Verify with `python exp_pinverify.py`.
+<!-- /MARK-CORRECTION-NOTICE -->
+
 > **UPDATED:** 2026-09-22 — Post trail-ratchet fix. All numbers are on the CURRENT shipped engine.
 
 ## 1. The Honest Numbers (Corrected)

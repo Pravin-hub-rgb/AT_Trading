@@ -33,6 +33,18 @@ for p in ("backtest/tests", "backtest", "backend"):
     sys.path.insert(0, str(ROOT / p))
 
 MARK = "<!-- C17-NOTICE -->"
+# Added 2026-10-14: the mark corrections superseded a further set of documents,
+# and this scan only knew about the C17 gate fix. These four carry a
+# MARK-CORRECTION-NOTICE instead (same shape, different cause and date), so they
+# are listed here to keep the coverage check honest about what is already
+# handled rather than silently skipped.
+MARK_NOTICED = {
+    "backtest/docs/method/MASTER_LEADERBOARD.md",
+    "backtest/docs/method/STRATEGY_STATE_OF_PLAY.md",
+    "backtest/docs/method/THE_CHAMPION_HANDOFF.md",
+    "backtest/docs/method/REGISTRY_BOARD.md",
+    "backtest/docs/method/BOOK_CATEGORIES.md",
+}
 
 NOTICE = """
 {d}

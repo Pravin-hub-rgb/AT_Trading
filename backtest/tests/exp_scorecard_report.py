@@ -14,6 +14,12 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "backtest" / "tests" / "_scorecard.json"
 OUT_MD = ROOT / "backtest" / "docs" / "method" / "SCORECARD_LEADERBOARD.md"
 OUT_HTML = ROOT / "backtest" / "docs" / "method" / "scorecard.html"
+# The chain this scorecard was measured on. Stated in the output so the doc
+# cannot claim freshness without naming what it is fresh against - the previous
+# version of SCORECARD_LEADERBOARD.md had no chain line at all, which is part of
+# why it read as current for a week after it stopped being so.
+DATE = "2026-10-14"
+CHAIN = "2840 swings / 7734 marks, fingerprint 5a4c55331ba079a9"
 
 # tier order from `finding optimal book.md`, highest priority first.
 # score is 1 = best on that tier. Only tiers we can measure honestly are scored;
@@ -93,6 +99,103 @@ def main():
     html = HTML.replace("__DATA__", json.dumps(payload, separators=(",", ":")))
     OUT_HTML.write_text(html, encoding="utf-8")
     print("\n  wrote %s" % OUT_HTML.relative_to(ROOT))
+
+    # The markdown twin. It was OUT_MD = ... at module scope and never written,
+    # so SCORECARD_LEADERBOARD.md sat at its 2026-10-09 content while the html
+    # beside it tracked the data - two artifacts of the same study disagreeing,
+    # with nothing announcing which was current.
+    md = []
+    md.append("# Scorecard leaderboard - 12 candidates through the owner's framework")
+    md.append("")
+    md.append("**Regenerated %s.** Harnesses: `exp_scorecard.py` (measurement),"
+              " `exp_scorecard_report.py` (this file and `scorecard.html`)." % DATE)
+    md.append("Framework: `backtest/docs/learn/finding optimal book.md`.")
+    md.append("Chain: **2840 swings / 7734 marks**, fingerprint `5a4c55331ba079a9`"
+              " - the marks corrected by the B1 arming fix, V13 and the"
+              " volatile-B1 work. The previous version of this file predates all"
+              " of that.")
+    md.append("")
+    md.append("**Net R was deliberately ranked last**, weighted %.1f of %.1f total"
+              " - exactly as the framework asks. That is what makes this"
+              " leaderboard worth reading: **the book with the biggest return"
+              " does not finish first.**"
+              % (WEIGHTS[-1][2], sum(w for _k, _l, w in WEIGHTS)))
+    md.append("")
+    md.append("Interactive: `scorecard.html` (sortable).")
+    md.append("")
+    md.append("---")
+    md.append("")
+    md.append("# 1. The leaderboard")
+    md.append("")
+    md.append("Lower score is better. Score is a weighted sum of per-tier **ranks**"
+              " (1 = best), so a book that wins the tiers you care about beats one"
+              " with a bigger headline.")
+    md.append("")
+    md.append("| # | book | score | neg | OOS R | retention | underwtr | worst roll | top5% | net/DD | **net R** |")
+    md.append("|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|")
+    for i, (score, name, v, t) in enumerate(rows, 1):
+        neg = t["neg"]
+        pill = "0" if neg == 0 else "**%d**" % neg
+        md.append("| %d | `%s` | **%.1f** | %s | %.0f | %.0f%% | %d | %+.0f | %.0f%% | %.0f | %+.0f |"
+                  % (i, name.replace("fsent_", ""), round(score, 1), pill,
+                     t["oos_net"], t["retention"], -t["dd_duration"],
+                     t["worst_roll"], t["tail_spread"], t["net_dd"], t["net"]))
+    md.append("")
+    md.append("`neg` counts the book-negative half-years - the owner's decisive"
+              " test. A book with 0 there has never had a losing half-year in"
+              " either era.")
+    md.append("")
+    md.append("---")
+    md.append("")
+    md.append("# 2. What the score weights, in the framework's order")
+    md.append("")
+    md.append("| tier | what it measures | weight |")
+    md.append("|---|---|---:|")
+    for key, lbl, w in WEIGHTS:
+        md.append("| `%s` | %s | %.1f |" % (key, lbl, w))
+    md.append("")
+    md.append("The order is the framework's own:"
+              " **validity, OOS performance, OOS retention, drawdown,"
+              " worst rolling periods, distribution of winners, tail"
+              " dependence, parameter robustness, cost robustness, simplicity,"
+              " and raw net R last.**")
+    md.append("")
+    md.append("---")
+    md.append("")
+    md.append("# 3. Where this stands")
+    md.append("")
+    best_ret = max(rows, key=lambda r: r[3]["retention"])
+    best_nd = max(rows, key=lambda r: r[3]["net_dd"])
+    top = rows[0]
+    md.append("- **The ranking's winner is `%s`** at %.1f."
+              % (top[1].replace("fsent_", ""), round(top[0], 1)))
+    md.append("- **Best OOS retention is `%s` at %.0f%%.**"
+              % (best_ret[1].replace("fsent_", ""), best_ret[3]["retention"]))
+    md.append("- **Best net/DD is `%s` at %.0f.**"
+              % (best_nd[1].replace("fsent_", ""), best_nd[3]["net_dd"]))
+    md.append("")
+    md.append("These are three different books answering three different"
+              " questions, and the framework says retention outranks net/DD."
+              " **All twelve are separate, runnable books - this table ranks"
+              " attention order, it does not retire anything.**")
+    md.append("")
+    md.append("---")
+    md.append("")
+    md.append("# 4. Limits")
+    md.append("")
+    md.append("- **Twelve books, one era split.** Retention has moved by several"
+              " points between runs, so a 2-3 point gap is not a ranking.")
+    md.append("- **Cost sensitivity is an approximation** and is labelled one"
+              " elsewhere: the per-trade cost is re-applied to the same trade"
+              " series, so it measures what costs eat, not fills that would differ"
+              " at a different fee.")
+    md.append("- **Tier 0 validity is not recomputed here.** It is enforced by"
+              " `exp_fastcheck` and the causality audit, and every book in this"
+              " table passed it.")
+    md.append("- **Nothing is adopted by this file.** It orders attention.")
+    md.append("")
+    OUT_MD.write_text("\n".join(md) + "\n", encoding="utf-8")
+    print("  wrote %s" % OUT_MD.relative_to(ROOT))
     return rows
 
 
