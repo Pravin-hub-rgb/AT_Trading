@@ -1,0 +1,457 @@
+{
+  "stage": "fs_trail_trigger",
+  "knob": "exp_fs_trail_trigger",
+  "identity_gate": "PASS (fsent_champ_long 497/+466.92 IS, 281/+215.32 OOS)",
+  "results": {
+    "fsent_champ_long": {
+      "is": {
+        "base (FS print)": {
+          "n": 497,
+          "net": 561.36,
+          "dd": 19.57,
+          "pf": 3.84,
+          "win": 43.3
+        },
+        "stop->breakeven, 8b": {
+          "n": 525,
+          "net": 284.96,
+          "dd": 18.1,
+          "pf": 2.93,
+          "win": 23.4
+        },
+        "stop->breakeven, 16b": {
+          "n": 542,
+          "net": 263.19,
+          "dd": 18.06,
+          "pf": 2.85,
+          "win": 21.2
+        },
+        "stop->FS extreme, 8b": {
+          "n": 520,
+          "net": 302.08,
+          "dd": 15.95,
+          "pf": 2.88,
+          "win": 25.6
+        },
+        "stop->FS extreme, 16b": {
+          "n": 537,
+          "net": 290.41,
+          "dd": 15.94,
+          "pf": 2.87,
+          "win": 23.8
+        },
+        "stop->FS extreme, 32b": {
+          "n": 545,
+          "net": 285.15,
+          "dd": 19.48,
+          "pf": 2.88,
+          "win": 22.2
+        }
+      },
+      "oos": {
+        "base (FS print)": {
+          "n": 281,
+          "net": 251.07,
+          "dd": 9.85,
+          "pf": 3.29,
+          "win": 42.7
+        },
+        "stop->breakeven, 8b": {
+          "n": 302,
+          "net": 202.47,
+          "dd": 7.75,
+          "pf": 3.24,
+          "win": 29.5
+        },
+        "stop->breakeven, 16b": {
+          "n": 301,
+          "net": 193.15,
+          "dd": 7.87,
+          "pf": 3.25,
+          "win": 26.9
+        },
+        "stop->FS extreme, 8b": {
+          "n": 297,
+          "net": 192.62,
+          "dd": 7.74,
+          "pf": 2.98,
+          "win": 30.3
+        },
+        "stop->FS extreme, 16b": {
+          "n": 297,
+          "net": 183.06,
+          "dd": 7.74,
+          "pf": 2.97,
+          "win": 27.9
+        },
+        "stop->FS extreme, 32b": {
+          "n": 300,
+          "net": 186.24,
+          "dd": 7.44,
+          "pf": 3.11,
+          "win": 26.7
+        }
+      }
+    },
+    "fsent_champ_short": {
+      "is": {
+        "base (FS print)": {
+          "n": 466,
+          "net": 667.52,
+          "dd": 8.65,
+          "pf": 4.46,
+          "win": 40.1
+        },
+        "stop->breakeven, 8b": {
+          "n": 505,
+          "net": 602.58,
+          "dd": 11.8,
+          "pf": 5.15,
+          "win": 27.5
+        },
+        "stop->breakeven, 16b": {
+          "n": 503,
+          "net": 571.86,
+          "dd": 14.92,
+          "pf": 5.2,
+          "win": 25.4
+        },
+        "stop->FS extreme, 8b": {
+          "n": 503,
+          "net": 608.09,
+          "dd": 13.17,
+          "pf": 4.72,
+          "win": 29.4
+        },
+        "stop->FS extreme, 16b": {
+          "n": 508,
+          "net": 580.71,
+          "dd": 14.13,
+          "pf": 4.78,
+          "win": 28.1
+        },
+        "stop->FS extreme, 32b": {
+          "n": 511,
+          "net": 574.61,
+          "dd": 13.17,
+          "pf": 4.89,
+          "win": 27.2
+        }
+      },
+      "oos": {
+        "base (FS print)": {
+          "n": 298,
+          "net": 231.12,
+          "dd": 10.58,
+          "pf": 2.85,
+          "win": 39.3
+        },
+        "stop->breakeven, 8b": {
+          "n": 323,
+          "net": 223.63,
+          "dd": 8.52,
+          "pf": 3.46,
+          "win": 22.3
+        },
+        "stop->breakeven, 16b": {
+          "n": 322,
+          "net": 215.08,
+          "dd": 9.81,
+          "pf": 3.49,
+          "win": 20.5
+        },
+        "stop->FS extreme, 8b": {
+          "n": 318,
+          "net": 234.21,
+          "dd": 8.37,
+          "pf": 3.4,
+          "win": 25.5
+        },
+        "stop->FS extreme, 16b": {
+          "n": 320,
+          "net": 221.06,
+          "dd": 9.7,
+          "pf": 3.31,
+          "win": 23.4
+        },
+        "stop->FS extreme, 32b": {
+          "n": 321,
+          "net": 195.01,
+          "dd": 9.6,
+          "pf": 3.07,
+          "win": 22.4
+        }
+      }
+    },
+    "fsent_champ_long_htf15": {
+      "is": {
+        "base (FS print)": {
+          "n": 500,
+          "net": 600.12,
+          "dd": 21.05,
+          "pf": 4.17,
+          "win": 44.6
+        },
+        "stop->breakeven, 8b": {
+          "n": 521,
+          "net": 312.78,
+          "dd": 17.02,
+          "pf": 3.28,
+          "win": 24.0
+        },
+        "stop->breakeven, 16b": {
+          "n": 535,
+          "net": 248.72,
+          "dd": 20.21,
+          "pf": 2.92,
+          "win": 20.9
+        },
+        "stop->FS extreme, 8b": {
+          "n": 517,
+          "net": 338.25,
+          "dd": 16.79,
+          "pf": 3.23,
+          "win": 26.5
+        },
+        "stop->FS extreme, 16b": {
+          "n": 532,
+          "net": 298.28,
+          "dd": 17.93,
+          "pf": 3.04,
+          "win": 24.6
+        },
+        "stop->FS extreme, 32b": {
+          "n": 547,
+          "net": 328.97,
+          "dd": 21.06,
+          "pf": 3.27,
+          "win": 23.4
+        }
+      },
+      "oos": {
+        "base (FS print)": {
+          "n": 281,
+          "net": 291.43,
+          "dd": 9.98,
+          "pf": 3.76,
+          "win": 43.4
+        },
+        "stop->breakeven, 8b": {
+          "n": 304,
+          "net": 253.58,
+          "dd": 7.75,
+          "pf": 3.86,
+          "win": 30.9
+        },
+        "stop->breakeven, 16b": {
+          "n": 305,
+          "net": 225.15,
+          "dd": 6.98,
+          "pf": 3.77,
+          "win": 27.9
+        },
+        "stop->FS extreme, 8b": {
+          "n": 302,
+          "net": 250.99,
+          "dd": 8.27,
+          "pf": 3.7,
+          "win": 31.8
+        },
+        "stop->FS extreme, 16b": {
+          "n": 300,
+          "net": 220.26,
+          "dd": 8.27,
+          "pf": 3.53,
+          "win": 29.0
+        },
+        "stop->FS extreme, 32b": {
+          "n": 306,
+          "net": 222.75,
+          "dd": 7.59,
+          "pf": 3.69,
+          "win": 27.8
+        }
+      }
+    },
+    "fsent_champ_long_htffs": {
+      "is": {
+        "base (FS print)": {
+          "n": 753,
+          "net": 906.62,
+          "dd": 12.86,
+          "pf": 4.04,
+          "win": 42.6
+        },
+        "stop->breakeven, 8b": {
+          "n": 818,
+          "net": 606.52,
+          "dd": 12.77,
+          "pf": 3.61,
+          "win": 24.7
+        },
+        "stop->breakeven, 16b": {
+          "n": 825,
+          "net": 469.83,
+          "dd": 14.14,
+          "pf": 3.09,
+          "win": 21.6
+        },
+        "stop->FS extreme, 8b": {
+          "n": 821,
+          "net": 694.07,
+          "dd": 13.02,
+          "pf": 3.69,
+          "win": 28.5
+        },
+        "stop->FS extreme, 16b": {
+          "n": 826,
+          "net": 573.45,
+          "dd": 14.44,
+          "pf": 3.26,
+          "win": 26.4
+        },
+        "stop->FS extreme, 32b": {
+          "n": 835,
+          "net": 543.44,
+          "dd": 16.8,
+          "pf": 3.14,
+          "win": 24.9
+        }
+      },
+      "oos": {
+        "base (FS print)": {
+          "n": 389,
+          "net": 366.43,
+          "dd": 10.59,
+          "pf": 3.4,
+          "win": 39.6
+        },
+        "stop->breakeven, 8b": {
+          "n": 426,
+          "net": 335.41,
+          "dd": 11.05,
+          "pf": 3.83,
+          "win": 26.8
+        },
+        "stop->breakeven, 16b": {
+          "n": 435,
+          "net": 318.24,
+          "dd": 10.26,
+          "pf": 3.74,
+          "win": 24.4
+        },
+        "stop->FS extreme, 8b": {
+          "n": 426,
+          "net": 293.96,
+          "dd": 11.48,
+          "pf": 3.17,
+          "win": 26.8
+        },
+        "stop->FS extreme, 16b": {
+          "n": 432,
+          "net": 295.45,
+          "dd": 10.94,
+          "pf": 3.33,
+          "win": 25.7
+        },
+        "stop->FS extreme, 32b": {
+          "n": 440,
+          "net": 302.57,
+          "dd": 10.72,
+          "pf": 3.49,
+          "win": 25.0
+        }
+      }
+    },
+    "fsent_champ_long_mcloff": {
+      "is": {
+        "base (FS print)": {
+          "n": 533,
+          "net": 605.33,
+          "dd": 17.67,
+          "pf": 3.94,
+          "win": 43.9
+        },
+        "stop->breakeven, 8b": {
+          "n": 599,
+          "net": 340.7,
+          "dd": 16.96,
+          "pf": 3.04,
+          "win": 23.7
+        },
+        "stop->breakeven, 16b": {
+          "n": 621,
+          "net": 286.34,
+          "dd": 18.9,
+          "pf": 2.76,
+          "win": 20.5
+        },
+        "stop->FS extreme, 8b": {
+          "n": 590,
+          "net": 367.47,
+          "dd": 18.02,
+          "pf": 3.03,
+          "win": 26.4
+        },
+        "stop->FS extreme, 16b": {
+          "n": 608,
+          "net": 318.98,
+          "dd": 20.24,
+          "pf": 2.78,
+          "win": 23.5
+        },
+        "stop->FS extreme, 32b": {
+          "n": 621,
+          "net": 307.24,
+          "dd": 20.83,
+          "pf": 2.79,
+          "win": 21.9
+        }
+      },
+      "oos": {
+        "base (FS print)": {
+          "n": 300,
+          "net": 251.66,
+          "dd": 8.3,
+          "pf": 3.11,
+          "win": 42.0
+        },
+        "stop->breakeven, 8b": {
+          "n": 335,
+          "net": 207.44,
+          "dd": 7.99,
+          "pf": 3.04,
+          "win": 28.1
+        },
+        "stop->breakeven, 16b": {
+          "n": 339,
+          "net": 193.39,
+          "dd": 8.15,
+          "pf": 3.0,
+          "win": 25.4
+        },
+        "stop->FS extreme, 8b": {
+          "n": 331,
+          "net": 196.85,
+          "dd": 7.81,
+          "pf": 2.82,
+          "win": 29.0
+        },
+        "stop->FS extreme, 16b": {
+          "n": 333,
+          "net": 187.9,
+          "dd": 8.29,
+          "pf": 2.81,
+          "win": 27.0
+        },
+        "stop->FS extreme, 32b": {
+          "n": 336,
+          "net": 190.28,
+          "dd": 8.29,
+          "pf": 2.92,
+          "win": 25.6
+        }
+      }
+    }
+  }
+}

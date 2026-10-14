@@ -814,3 +814,65 @@ same mechanism as this one and neither is measured.
 Identity gate re-run after `2.0` landed: `exp_fastcheck.py fsent_champ_long` ->
 IS 497/+466.92, OOS 281/+215.32, every pinned field reproduced, default still
 byte-identical.
+
+### The trail-trigger form, and a correction to what the section above claims
+
+The two leads this file left open after the entry-delay arms were (a) a trail
+trigger on the FS entry and (b) a per-trade risk change on the trades it would
+have dropped. **(a) is now measured — and it closes the premise, not just the arm.**
+
+`exp_fs_trail_trigger`: the entry stays on the FS print, nothing is dropped, and
+once the FS candle's own extreme breaks the stop ratchets — `1.0` to breakeven,
+`2.0` to the FS candle's opposite extreme. Entry price, risk, `sl0` and the 3R
+target are all fixed at entry and never recomputed; only the live stop moves,
+only tighter, only to a level on the losing side of the current bar. Causal: the
+ratchet is applied inside the bar loops at bars at or after the trigger bar, so
+nothing settles later than the bar it is used on.
+
+**It loses, and much harder than the entry delay did.** IS, per book:
+
+| book | base | breakeven 8b | FS extreme 8b | delta (FS extreme) |
+|---|---|---|---|---|
+| `fsent_champ_long` | 497 / +561.36R | 525 / +284.96R | 520 / +302.08R | **-259.28R** |
+| `fsent_champ_short` | 466 / +667.52R | 505 / +602.58R | 503 / +608.09R | **-59.43R** |
+| `fsent_champ_long_htf15` | 500 / +600.12R | 521 / +312.78R | 517 / +338.25R | **-261.87R** |
+| `fsent_champ_long_htffs` | 753 / +906.62R | 818 / +606.52R | 821 / +694.07R | **-212.55R** |
+| `fsent_champ_long_mcloff` | 533 / +605.33R | 599 / +340.70R | 590 / +367.47R | **-237.86R** |
+
+Negative on 5 of 5 books in IS and on every arm in every era. OOS is better than
+IS but still negative on 4 of 5 books. Win rate collapses from ~43% to 21-30%
+while trade count RISES — the stop scratches the tail that was paying.
+
+**WHY, and this corrects the claim made above.** This section said the FS-extreme
+level is "a real discriminator of trade quality". It is not. The level breaks on
+the MAJORITY of FS swings:
+
+| cap | swings whose FS extreme breaks |
+|---|---|
+| 8 bars | **1856 of 2840 — 65.4%** |
+| 16 bars | 2135 of 2840 — 75.2% |
+| 32 bars | 2346 of 2840 — 82.6% |
+
+A level that fires two times in three cannot discriminate good trades from bad
+ones. What looked like a quality gain in the entry-delay arms was largely the
+**arithmetic of removing trades** — dropping 13-17% mechanically raises profit
+factor and lowers maxDD whether or not the survivors are better. That reading was
+wrong and this test is what falsified it.
+
+So both costs are now explained by one fact, and they are opposite errors on the
+same signal:
+- **delay the entry** — you give up the move that made the FS worth taking
+- **ratchet the stop** — you scratch the tail, and it fires on 65-83% so it
+  scratches most of the book
+
+**Do not read the PF/maxDD improvement in the arms above as evidence of edge.**
+Read it as selection.
+
+(b), the per-trade risk change on the trades it would have dropped, remains
+unmeasured and is now the weaker of the two leads — the underlying claim that
+those trades are identifiable is what this section got wrong.
+
+Identity gate: `exp_fastcheck.py fsent_champ_long` -> shipped 325t/+114.6R vs
+patched-off 325t/+114.6R IDENTICAL; IS 497/+466.92, OOS 281/+215.32, every pinned
+field reproduced. Harness:
+`backtest/experiments/fs_break_confirm/exp_fs_trail_trigger.py`.

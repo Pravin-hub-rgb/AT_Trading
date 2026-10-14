@@ -495,9 +495,41 @@ max_positions=0,
                               # fs is red we enter directly but if long and fs is
                               # red on the break of red high we enter and vice
                               # versa".
+    exp_fs_trail_trigger=0.0,  # THE OTHER HALF OF THE SAME IDEA, and the form
+                              # worth measuring: keep the entry ON the FS print
+                              # and use the FS candle's extreme as a STOP
+                              # trigger instead of as an entry delay.
+                              #
+                              #   1.0 = when the FS candle's extreme breaks,
+                              #         ratchet the stop to breakeven
+                              #   2.0 = ratchet it to the FS candle's own
+                              #         opposite extreme (long -> the FS
+                              #         candle's low, short -> its high)
+                              #
+                              # Why this is a different mechanism from
+                              # exp_fs_break_confirm: that one PAYS for the
+                              # confirmation with the entry and loses 13-17% of
+                              # the book. This one keeps every trade and only
+                              # tightens the stop on the trades whose FS
+                              # confirmed, so it can bank the quality gain that
+                              # was measurable in both eras without paying the
+                              # size loss.
+                              #
+                              # CAUSAL: the ratchet is applied inside the bar
+                              # loop, at bar j >= the trigger bar, and reads only
+                              # candles_ltf up to j. The trigger condition (did
+                              # the FS candle's extreme break) is settled at the
+                              # trigger bar itself. swing_start_px, risk and the
+                              # 3R target are all computed at the ENTRY and are
+                              # untouched, so only the stop moves.
+                              #
+                              # 0.0 = off, which leaves every existing book
+                              # byte-identical.
     exp_fs_confirm_bars=8,    # how many LTF bars after FS to wait for that break.
                               # 8 on 15m = 2h. Beyond it the FS is treated as not
-                              # confirmed and the trade is dropped.
+                              # confirmed. exp_fs_break_confirm uses this as an
+                              # entry delay; exp_fs_trail_trigger uses it as how
+                              # long the stop stays loose.
     # Weekend entry blackout, in the candle's OWN timezone (UTC), not the
     # exchange-local one that exp_skip_utc_sat/sun use. This is the knob the
     # signal book runs on (fsent_sig_full, and the whole fsent_sig_* ladder).
@@ -912,7 +944,7 @@ max_positions=0,
     # break never arrives inside exp_fs_confirm_bars. Built only when the knob is
     # on, so the default path is untouched.
     _fs_confirm_at={}
-    if exp_fs_break_confirm:
+    if exp_fs_break_confirm or exp_fs_trail_trigger:
         _cap=max(1,int(exp_fs_confirm_bars))
         for _s in swings_ltf:
             _fi=int(_s.get("fs_at_idx",-1))
@@ -1330,6 +1362,25 @@ max_positions=0,
             if exp_min_sl_pct>0 and risk<exp_min_sl_pct*entry: continue
             target=entry-3.0*risk
         sl0=sl; sl_cur=sl; best=entry
+        # ── exp_fs_trail_trigger: ratchet the STOP, never delay the ENTRY ──────
+        # Computed once per trade. The trigger bar is where the FS candle's own
+        # extreme broke, which _fs_confirm_at already resolved at a bar no later
+        # than itself; the level is applied inside the bar loop only for bars at
+        # or after it, so nothing here is knowable earlier than it is used.
+        _fs_trig_bar=-1; _fs_trig_px=0.0; _fs_trig_ts=None
+        if exp_fs_trail_trigger and sig.get("kind")=="FS":
+            _sn=int(sig.get("swing_no",-1))
+            _ent=_fs_confirm_at.get(_sn)
+            if _ent is not None and _ent[0]>=0:
+                for _s in swings_ltf:
+                    if int(_s.get("swing_index",-1))!=_sn: continue
+                    _fi=int(_s.get("fs_at_idx",-1))
+                    if not (0<=_fi<len(candles_ltf)): break
+                    _fs_trig_bar=_ent[0]
+                    _fs_trig_ts=int(candles_ltf[_fs_trig_bar]["ts"])
+                    _fs_trig_px=(float(candles_ltf[_fi]["low"]) if direction==1
+                                 else float(candles_ltf[_fi]["high"])) if exp_fs_trail_trigger>=2.0 else entry
+                    break
         _partial_taken=False; _partial_r=0.0
         _trail_skip_rem=exp_trail_skip_n
         # Trail events: timestamp-based (confirmed_at_time â†’ position via store)
@@ -1358,6 +1409,18 @@ max_positions=0,
                 _cur_r=(best-entry)*direction/risk
                 if _cur_r>=exp_partial_r:
                     _partial_taken=True; _partial_r=exp_partial_r
+            # FS-extreme stop trigger. Only ever TIGHTENS, and only to a level on
+            # the losing side of the price running at bar j, so it cannot arm a
+            # stop that the same bar immediately takes out. risk, sl0 and the 3R
+            # target were all fixed at entry and are not recomputed.
+            if _fs_trig_bar>=0 and j>=_fs_trig_bar:
+                _ft=(_fs_trig_px-sl_buf_atr*atr15[j]) if (direction==1 and sl_buf_atr>0) else _fs_trig_px
+                if direction!=1 and sl_buf_atr>0:
+                    _ft=_fs_trig_px+sl_buf_atr*atr15[j]
+                if direction==1:
+                    if _ft>sl_cur and _ft<best: sl_cur=_ft
+                else:
+                    if _ft<sl_cur and _ft>best: sl_cur=_ft
             if direction==1:
                 # D3 ordering fix 2026-09-20: the ratchet applies BEFORE the SL
                 # check â€” the stop is armed the instant the swing confirms (bar
@@ -1467,6 +1530,21 @@ max_positions=0,
                     _cur_rf=(best_f-entry)*direction/risk
                     if _cur_rf>=exp_partial_r:
                         _partial_taken=True; _partial_r=exp_partial_r
+                # Same FS-extreme stop trigger as the 15m loop above, keyed on the
+                # TRIGGER BAR'S TIMESTAMP because this loop walks 1m fine candles.
+                # `_partial_taken`/`risk` are shared with the outer loop and are
+                # not touched here. Only ever tightens, only to a level on the
+                # losing side of the 1m price, so it cannot arm and take out in
+                # the same bar.
+                if _fs_trig_ts is not None and ts>=_fs_trig_ts:
+                    _tf=_fs_trig_px
+                    if sl_buf_atr>0:
+                        _atr_f=(atr15[bar] if 0<=bar<len(atr15) else 0.0)
+                        _tf=(_tf-_atr_f*sl_buf_atr) if direction==1 else (_tf+_atr_f*sl_buf_atr)
+                    if direction==1:
+                        if _tf>sl_cur_f and _tf<lo: sl_cur_f=_tf
+                    else:
+                        if _tf<sl_cur_f and _tf>hi: sl_cur_f=_tf
                 if direction==1:
                     # D3 ordering fix 2026-09-20: ratchet BEFORE the SL check â€”
                     # the stop is armed at the activation instant (bar open), so
