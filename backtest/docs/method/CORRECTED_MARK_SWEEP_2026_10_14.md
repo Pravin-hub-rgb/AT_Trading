@@ -299,3 +299,78 @@ one parameter made hashes match; that is a tautology, since a long book and a
 short book differ only in side by definition. The gate now fails ONLY on truly
 identical hashes and REPORTS the variant structure instead, because whether a
 variant counts as independent confirmation is the owner's call, not a script's.
+---
+
+## KNOB LIVENESS GATE (exp_knob_liveness.py) - the claim, as a test not a comment
+
+Owner instruction: annotate, delete nothing, but back the claim with a test because
+a comment rots. Four assertions, all PASS:
+
+| # | assertion | result |
+|---|---|---|
+| 1 | chop_thresh 40/58/74 identical under mode=atr_high | PASS - all sha a16f6ad995ab, n=466 |
+| 2 | ext_stop_r 0.0/3.0/5.0 identical AND 1.0 differs | PASS - 1.0 -> n=348 vs 466 |
+| 3 | max_positions ABSENT equivalent to 0 | PASS - sha a16f6ad995ab both |
+| 4 | chop_thresh IS LIVE under mode=b2_vs_flip_chop | PASS - 40 -> n=585, 74 -> n=465 |
+
+Assertion 4 is the one that earns the file. "Dead" was only ever true for one mode,
+and under production mode `b2_vs_flip_chop` the same key swings the book from 585
+trades to 465. A comment saying "chop_thresh is dead" would have been a lie waiting
+for a mode flip.
+
+### The keys stay in the registry
+
+  chop_thresh    BP default 58.0 == the books' value, so removal is a no-op TODAY,
+                 but live under production mode. Deleting it defers the breakage.
+  ext_stop_r     ALL books carry it. BP default is 1.5, INSIDE the live band.
+                 Deleting it does not no-op, it switches a trailing stop on.
+  max_positions  absent from BP entirely; removal is safe but buys nothing.
+  cooldown_bars  books pin 8, BP defaults 10, measured -126.8R. Same trap.
+
+## MCL MATRIX (exp_mcl_matrix.py) - NET, both eras, 4 books x 8 values
+
+The +44R was GROSS. NET of fees/slip/funding it is +37.2R on IS for long: the 36
+extra trades at mcl=0 cost 101.2R of trading cost against 94.4R at mcl=3, so ~7R
+came straight off the top. Cross-check: mcloff (pin mcl=0) reproduces long@mcl=0 to
+the decimal in BOTH eras, which verifies the NET accounting against the registry.
+
+### The finding that decides it: mcl=0 buys profit with pain
+
+    book                    mcl=0 MaxCL   mcl=3 MaxCL    mcl=0 DD   mcl=3 DD
+    fsent_champ_long              13          12        17.7       19.6
+    fsent_champ_short             12          10        11.8        8.7
+    fsent_champ_long_htf15        22          22        22.0       21.1
+    fsent_champ_long_htffs        13          12        15.7       12.9
+
+Turning the halt OFF makes the worst losing streak WORSE or equal in all four
+books, and the drawdown worse in three of four. A loss-halt exists to shorten the
+bad run. At mcl=0 it does not. So the extra NET is being bought with exactly the
+two things the owner said matter most.
+
+### And it does not generalise
+
+    book                    dNET IS    dNET OOS      agree?
+    fsent_champ_long         +37.20      -2.05      *** SIGN FLIP ***
+    fsent_champ_short         -2.49     +46.74      *** SIGN FLIP ***
+    fsent_champ_long_htf15   +34.53     +15.36      same sign
+    fsent_champ_long_htffs   +52.51     +40.54      same sign
+
+Two of four reverse direction between eras. Short is the clearest: the pin beats
+mcl=0 by 2.5R on IS and loses by 46.7R on OOS. Nothing here is a stable win.
+
+### mcl=1 is pathological on every axis
+
+NET collapses and drawdown peaks at mcl=1 in all four books (long 308R / DD 22.3;
+short 349R / 14.9; htf15 357R / 23.2; htffs 631R / 20.9). The neighbour of the
+optimum being catastrophic is why the whole ladder was plotted instead of a
+two-point test.
+
+### Standout book: fsent_champ_long_htffs
+
+Best NET/DD in BOTH eras at its pin - IS 58.9 (+757.99R, DD 12.86, PF 4.04,
+MaxCL 12), OOS 29.6 (+313.35R, DD 10.59, PF 3.40, MaxCL 10). It also holds the
+lowest losing streak of its own ladder at mcl=3. No other book is as good on both
+eras of the risk-adjusted measure.
+
+NOTHING PROMOTED. No champion picked, no book deleted, no config edited. The
+registry is exactly as it was before this sweep.

@@ -1,0 +1,34 @@
+{
+  "stage": "knob_liveness",
+  "probe_book": "fsent_champ_short",
+  "results": [
+    {
+      "n": 1,
+      "label": "chop_thresh 40 vs 58 vs 74 identical under mode=atr_high",
+      "expect": "inert (identical)",
+      "pass": true,
+      "detail": "40/58/74 -> a16f6ad995ab n=466, a16f6ad995ab n=466, a16f6ad995ab n=466"
+    },
+    {
+      "n": 2,
+      "label": "ext_stop_r 0.0/3.0/5.0 identical AND 1.0 genuinely differs",
+      "expect": "inert (identical)",
+      "pass": true,
+      "detail": "0.0/3.0/5.0 identical=True ; 1.0 differs=True (n=348 vs 466)"
+    },
+    {
+      "n": 3,
+      "label": "max_positions ABSENT equivalent to 0",
+      "expect": "inert (identical)",
+      "pass": true,
+      "detail": "0 -> n=466 a16f6ad995ab ; absent -> n=466 a16f6ad995ab"
+    },
+    {
+      "n": 4,
+      "label": "chop_thresh IS live under mode=b2_vs_flip_chop",
+      "expect": "live (differs)",
+      "pass": true,
+      "detail": "mode=b2_vs_flip_chop: 40 -> n=585 d6984444bdc6 ; 74 -> n=465 fc982a442310"
+    }
+  ]
+}
