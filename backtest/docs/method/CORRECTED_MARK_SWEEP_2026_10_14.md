@@ -196,3 +196,106 @@ anyone spends more effort on mark-level rules — and it is the strongest argume
 yet for why four consecutive mark-shaping experiments all landed inside noise.
 
 **Harness**: `backtest/experiments/b2_gap_sweep/exp_b2_gap_sweep.py`.
+
+---
+
+## A4 - is the 50-bar gate one knob or two? ANSWERED: one knob, FS only
+
+`minBars` reaches the engine in exactly one place:
+
+    backend/src/firstswing.py:836   def _check_chop
+        _inside_window = self.bars_seen < self.min_bars
+
+That is the FS gate. `_b2_if_gap_allows`, `_confirm_direction` and `_flip` never
+read `min_bars`, so B2/FLIP are NOT gated by it. And `min_bars_idx` in
+btc_swing.py is a DISPLAY marker (the MB50 chart label), not a gate.
+
+So the two 50s share a constant but already do different jobs, exactly as theory
+rule 6 states. The concern that they were conflated was wrong. No change needed.
+
+## B2 - re-fit the pinned constants. IS ONLY, OOS NEVER OPENED
+
+All five knobs verified SIM-ONLY (absent from firstswing.py), so the chain is
+fixed at 83a3af3f6ebf0ffa for every arm and the A1 identity gate holds throughout.
+
+v1 swept one value across all five books while the baseline let each book sit at
+its own pin. That is not a comparison - and it mattered: `fsent_champ_long_mcloff`
+has its own max_consecutive_losses = 0, not 3. v1's mcl column is discarded.
+
+v2 sweeps each book independently around its OWN pin, holding the other four.
+
+Per-book verdicts:
+
+| knob | result |
+|---|---|
+| chop_thresh | INERT in all 5 books |
+| atr_high_thresh | flat in all 5 (spread 23-40R, no optimum) |
+| sl_buf_atr | 0.005 better by 1-3R in all 5 - noise |
+| cooldown_bars | pin 8 CONFIRMED in 4 of 5 (htffs differs by +0.4R) |
+| max_consecutive_losses | non-monotonic, 0 best on long/short/htffs |
+
+### Dead knobs - the config lying about the code
+
+Same failure shape as the "extreme pivot" incident: the CONFIG claims something
+the CODE does not do.
+
+All five books run `mode="atr_high"`, not `mode="b2_vs_flip_chop"`. In atr_high
+mode:
+
+  - `chop_thresh` is NEVER READ. 40 through 74 give identical trades in every
+    book. Four of five configs carry a value that does nothing.
+  - `ext_stop_r` is live only in a narrow band. 0.0, 3.0 and 5.0 all produce
+    IDENTICAL trade sets (n=497); only 1.0 differs (n=368). So the long book's
+    pin of 0.0 and everyone else's 3.0 are the same setting.
+
+### The loss-halt costs money
+
+max_consecutive_losses on fsent_champ_long, IS, own pin 3:
+
+    0 -> +605.3R (n=533)      <-- halt disabled
+    1 -> +380.6R (n=497)
+    2 -> +543.8R
+    3 -> +561.4R  <-- the pin
+    4 -> +596.3R
+    8 -> +602.5R
+   12 -> +606.3R
+
+Non-monotonic and strange: halting after ONE loss costs 225R, but not halting at
+all is the best result on the book. mcl=3 gives up 44R against mcl=0. The pin is
+worse than having no pin. This is IS evidence only and earns at most one OOS
+reveal, after the owner rules on it.
+
+### B2 conclusion
+
+No candidate here is worth an OOS reveal on its own. The best single delta is
++45R on a +3340.9R portfolio (+1.4%), and that one is a boundary artifact from a
+non-monotonic curve. The real output of B2 is not a better number - it is three
+dead knobs and a risk control that hurts.
+
+## BOOK STRUCTURE - the five books are one signal, four slices
+
+exp_book_uniqueness.py hashes each book's closed-trade set at its own pin. No two
+share a hash. But the pairwise LIVE-mechanism structure is decisive:
+
+    fsent_champ_long  vs short      differ by exp_fs_entry_side
+    fsent_champ_long  vs long_htf15 differ by the swing chain
+    fsent_champ_long  vs long_htffs differ by exp_htf_fs_entry
+    fsent_champ_long  vs long_mcloff differ by max_consecutive_losses
+
+Every other pair differs by two or more mechanisms. So long is a hub and the
+other four are each ONE knob away from it.
+
+Consequence: "+3340.9R across 5 books" is one strategy measured four ways, not
+five confirmations. Five positive cells is one positive cell plus four
+sensitivity checks. The edge is not thereby fake; the EVIDENCE FOR IT is one
+strategy's worth and should not be described as five.
+
+Note the trap this replaces. `fsent_champ_long_mcloff` is NOT a duplicate - at
+their own pins the two trade 497 and 533 times and hash differently. Proved
+trade-for-trade: long mcl=3 vs mcloff mcl=3 -> both n=497, sha 0ee53f50459e,
+identical. So the loss-halt is the only live difference between them. An early
+draft of the uniqueness gate called such pairs "duplicates" because realigning
+one parameter made hashes match; that is a tautology, since a long book and a
+short book differ only in side by definition. The gate now fails ONLY on truly
+identical hashes and REPORTS the variant structure instead, because whether a
+variant counts as independent confirmation is the owner's call, not a script's.

@@ -1,0 +1,1110 @@
+{
+  "stage": "refit_per_book",
+  "era": "is",
+  "baseline_fingerprint": "83a3af3f6ebf0ffa",
+  "baseline_total_is": 3340.95,
+  "baseline_per_book": {
+    "fsent_champ_long": {
+      "n": 497,
+      "net": 561.36,
+      "dd": 19.57,
+      "pf": 3.84
+    },
+    "fsent_champ_short": {
+      "n": 466,
+      "net": 667.52,
+      "dd": 8.65,
+      "pf": 4.46
+    },
+    "fsent_champ_long_htf15": {
+      "n": 500,
+      "net": 600.12,
+      "dd": 21.05,
+      "pf": 4.17
+    },
+    "fsent_champ_long_htffs": {
+      "n": 753,
+      "net": 906.62,
+      "dd": 12.86,
+      "pf": 4.04
+    },
+    "fsent_champ_long_mcloff": {
+      "n": 533,
+      "net": 605.33,
+      "dd": 17.67,
+      "pf": 3.94
+    }
+  },
+  "inert_in_atr_high": [
+    "chop_thresh"
+  ],
+  "books": {
+    "chop_thresh": {
+      "fsent_champ_long": {
+        "own_pin": 58.0,
+        "verdict": "inert",
+        "spread": 0.0,
+        "best_value": 40,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 40,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 48,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 54,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 58,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 62,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 68,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 74,
+            "net": 561.36,
+            "delta": 0.0
+          }
+        ]
+      },
+      "fsent_champ_short": {
+        "own_pin": 58.0,
+        "verdict": "inert",
+        "spread": 0.0,
+        "best_value": 40,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 40,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 48,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 54,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 58,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 62,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 68,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 74,
+            "net": 667.52,
+            "delta": 0.0
+          }
+        ]
+      },
+      "fsent_champ_long_htf15": {
+        "own_pin": 58.0,
+        "verdict": "inert",
+        "spread": 0.0,
+        "best_value": 40,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 40,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 48,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 54,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 58,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 62,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 68,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 74,
+            "net": 600.12,
+            "delta": 0.0
+          }
+        ]
+      },
+      "fsent_champ_long_htffs": {
+        "own_pin": 58.0,
+        "verdict": "inert",
+        "spread": 0.0,
+        "best_value": 40,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 40,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 48,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 54,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 58,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 62,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 68,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 74,
+            "net": 906.62,
+            "delta": 0.0
+          }
+        ]
+      },
+      "fsent_champ_long_mcloff": {
+        "own_pin": 58.0,
+        "verdict": "inert",
+        "spread": 0.0,
+        "best_value": 40,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 40,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 48,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 54,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 58,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 62,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 68,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 74,
+            "net": 605.33,
+            "delta": 0.0
+          }
+        ]
+      }
+    },
+    "atr_high_thresh": {
+      "fsent_champ_long": {
+        "own_pin": 0.65,
+        "verdict": "flat",
+        "spread": 30.65,
+        "best_value": 0.6,
+        "best_delta": 18.68,
+        "curve": [
+          {
+            "value": 0.45,
+            "net": 549.39,
+            "delta": -11.97
+          },
+          {
+            "value": 0.55,
+            "net": 565.72,
+            "delta": 4.36
+          },
+          {
+            "value": 0.6,
+            "net": 580.04,
+            "delta": 18.68
+          },
+          {
+            "value": 0.65,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 0.7,
+            "net": 556.7,
+            "delta": -4.66
+          },
+          {
+            "value": 0.8,
+            "net": 556.7,
+            "delta": -4.66
+          }
+        ]
+      },
+      "fsent_champ_short": {
+        "own_pin": 0.65,
+        "verdict": "flat",
+        "spread": 26.69,
+        "best_value": 0.7,
+        "best_delta": 1.93,
+        "curve": [
+          {
+            "value": 0.45,
+            "net": 642.76,
+            "delta": -24.76
+          },
+          {
+            "value": 0.55,
+            "net": 652.24,
+            "delta": -15.28
+          },
+          {
+            "value": 0.6,
+            "net": 656.43,
+            "delta": -11.09
+          },
+          {
+            "value": 0.65,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 0.7,
+            "net": 669.45,
+            "delta": 1.93
+          },
+          {
+            "value": 0.8,
+            "net": 669.45,
+            "delta": 1.93
+          }
+        ]
+      },
+      "fsent_champ_long_htf15": {
+        "own_pin": 0.65,
+        "verdict": "flat",
+        "spread": 23.33,
+        "best_value": 0.6,
+        "best_delta": 18.68,
+        "curve": [
+          {
+            "value": 0.45,
+            "net": 604.6,
+            "delta": 4.48
+          },
+          {
+            "value": 0.55,
+            "net": 604.09,
+            "delta": 3.97
+          },
+          {
+            "value": 0.6,
+            "net": 618.8,
+            "delta": 18.68
+          },
+          {
+            "value": 0.65,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 0.7,
+            "net": 595.47,
+            "delta": -4.65
+          },
+          {
+            "value": 0.8,
+            "net": 595.47,
+            "delta": -4.65
+          }
+        ]
+      },
+      "fsent_champ_long_htffs": {
+        "own_pin": 0.65,
+        "verdict": "flat",
+        "spread": 39.57,
+        "best_value": 0.6,
+        "best_delta": 0.71,
+        "curve": [
+          {
+            "value": 0.45,
+            "net": 867.76,
+            "delta": -38.86
+          },
+          {
+            "value": 0.55,
+            "net": 907.05,
+            "delta": 0.43
+          },
+          {
+            "value": 0.6,
+            "net": 907.33,
+            "delta": 0.71
+          },
+          {
+            "value": 0.65,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 0.7,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 0.8,
+            "net": 906.62,
+            "delta": 0.0
+          }
+        ]
+      },
+      "fsent_champ_long_mcloff": {
+        "own_pin": 0.65,
+        "verdict": "flat",
+        "spread": 34.68,
+        "best_value": 0.6,
+        "best_delta": 18.53,
+        "curve": [
+          {
+            "value": 0.45,
+            "net": 589.18,
+            "delta": -16.15
+          },
+          {
+            "value": 0.55,
+            "net": 622.98,
+            "delta": 17.65
+          },
+          {
+            "value": 0.6,
+            "net": 623.86,
+            "delta": 18.53
+          },
+          {
+            "value": 0.65,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 0.7,
+            "net": 600.68,
+            "delta": -4.65
+          },
+          {
+            "value": 0.8,
+            "net": 600.68,
+            "delta": -4.65
+          }
+        ]
+      }
+    },
+    "sl_buf_atr": {
+      "fsent_champ_long": {
+        "own_pin": 0.01,
+        "verdict": "candidate",
+        "spread": 71.08,
+        "best_value": 0.005,
+        "best_delta": 1.12,
+        "curve": [
+          {
+            "value": 0.0,
+            "net": 491.4,
+            "delta": -69.96
+          },
+          {
+            "value": 0.005,
+            "net": 562.48,
+            "delta": 1.12
+          },
+          {
+            "value": 0.01,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 0.02,
+            "net": 559.12,
+            "delta": -2.24
+          },
+          {
+            "value": 0.04,
+            "net": 554.76,
+            "delta": -6.6
+          },
+          {
+            "value": 0.1,
+            "net": 542.32,
+            "delta": -19.04
+          }
+        ]
+      },
+      "fsent_champ_short": {
+        "own_pin": 0.01,
+        "verdict": "candidate",
+        "spread": 113.91,
+        "best_value": 0.005,
+        "best_delta": 2.82,
+        "curve": [
+          {
+            "value": 0.0,
+            "net": 556.43,
+            "delta": -111.09
+          },
+          {
+            "value": 0.005,
+            "net": 670.34,
+            "delta": 2.82
+          },
+          {
+            "value": 0.01,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 0.02,
+            "net": 662.06,
+            "delta": -5.46
+          },
+          {
+            "value": 0.04,
+            "net": 651.52,
+            "delta": -16.0
+          },
+          {
+            "value": 0.1,
+            "net": 670.02,
+            "delta": 2.5
+          }
+        ]
+      },
+      "fsent_champ_long_htf15": {
+        "own_pin": 0.01,
+        "verdict": "candidate",
+        "spread": 72.92,
+        "best_value": 0.005,
+        "best_delta": 1.14,
+        "curve": [
+          {
+            "value": 0.0,
+            "net": 528.34,
+            "delta": -71.78
+          },
+          {
+            "value": 0.005,
+            "net": 601.26,
+            "delta": 1.14
+          },
+          {
+            "value": 0.01,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 0.02,
+            "net": 597.85,
+            "delta": -2.27
+          },
+          {
+            "value": 0.04,
+            "net": 593.41,
+            "delta": -6.71
+          },
+          {
+            "value": 0.1,
+            "net": 580.72,
+            "delta": -19.4
+          }
+        ]
+      },
+      "fsent_champ_long_htffs": {
+        "own_pin": 0.01,
+        "verdict": "candidate",
+        "spread": 170.17,
+        "best_value": 0.005,
+        "best_delta": 1.87,
+        "curve": [
+          {
+            "value": 0.0,
+            "net": 738.32,
+            "delta": -168.3
+          },
+          {
+            "value": 0.005,
+            "net": 908.49,
+            "delta": 1.87
+          },
+          {
+            "value": 0.01,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 0.02,
+            "net": 902.92,
+            "delta": -3.7
+          },
+          {
+            "value": 0.04,
+            "net": 895.69,
+            "delta": -10.93
+          },
+          {
+            "value": 0.1,
+            "net": 878.63,
+            "delta": -27.99
+          }
+        ]
+      },
+      "fsent_champ_long_mcloff": {
+        "own_pin": 0.01,
+        "verdict": "candidate",
+        "spread": 84.94,
+        "best_value": 0.005,
+        "best_delta": 1.17,
+        "curve": [
+          {
+            "value": 0.0,
+            "net": 521.56,
+            "delta": -83.77
+          },
+          {
+            "value": 0.005,
+            "net": 606.5,
+            "delta": 1.17
+          },
+          {
+            "value": 0.01,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 0.02,
+            "net": 602.98,
+            "delta": -2.35
+          },
+          {
+            "value": 0.04,
+            "net": 598.39,
+            "delta": -6.94
+          },
+          {
+            "value": 0.1,
+            "net": 585.29,
+            "delta": -20.04
+          }
+        ]
+      }
+    },
+    "cooldown_bars": {
+      "fsent_champ_long": {
+        "own_pin": 8,
+        "verdict": "pin_confirmed",
+        "spread": 107.17,
+        "best_value": 8,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 0,
+            "net": 454.19,
+            "delta": -107.17
+          },
+          {
+            "value": 4,
+            "net": 538.26,
+            "delta": -23.1
+          },
+          {
+            "value": 8,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 12,
+            "net": 515.35,
+            "delta": -46.01
+          },
+          {
+            "value": 20,
+            "net": 467.26,
+            "delta": -94.1
+          }
+        ]
+      },
+      "fsent_champ_short": {
+        "own_pin": 8,
+        "verdict": "pin_confirmed",
+        "spread": 135.94,
+        "best_value": 8,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 0,
+            "net": 531.58,
+            "delta": -135.94
+          },
+          {
+            "value": 4,
+            "net": 665.06,
+            "delta": -2.46
+          },
+          {
+            "value": 8,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 12,
+            "net": 629.39,
+            "delta": -38.13
+          },
+          {
+            "value": 20,
+            "net": 621.5,
+            "delta": -46.02
+          }
+        ]
+      },
+      "fsent_champ_long_htf15": {
+        "own_pin": 8,
+        "verdict": "pin_confirmed",
+        "spread": 94.94,
+        "best_value": 8,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 0,
+            "net": 505.18,
+            "delta": -94.94
+          },
+          {
+            "value": 4,
+            "net": 597.28,
+            "delta": -2.84
+          },
+          {
+            "value": 8,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 12,
+            "net": 585.67,
+            "delta": -14.45
+          },
+          {
+            "value": 20,
+            "net": 541.4,
+            "delta": -58.72
+          }
+        ]
+      },
+      "fsent_champ_long_htffs": {
+        "own_pin": 8,
+        "verdict": "candidate",
+        "spread": 166.67,
+        "best_value": 4,
+        "best_delta": 0.39,
+        "curve": [
+          {
+            "value": 0,
+            "net": 740.34,
+            "delta": -166.28
+          },
+          {
+            "value": 4,
+            "net": 907.01,
+            "delta": 0.39
+          },
+          {
+            "value": 8,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 12,
+            "net": 905.64,
+            "delta": -0.98
+          },
+          {
+            "value": 20,
+            "net": 864.93,
+            "delta": -41.69
+          }
+        ]
+      },
+      "fsent_champ_long_mcloff": {
+        "own_pin": 8,
+        "verdict": "pin_confirmed",
+        "spread": 134.26,
+        "best_value": 8,
+        "best_delta": 0.0,
+        "curve": [
+          {
+            "value": 0,
+            "net": 471.07,
+            "delta": -134.26
+          },
+          {
+            "value": 4,
+            "net": 592.7,
+            "delta": -12.63
+          },
+          {
+            "value": 8,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 12,
+            "net": 578.08,
+            "delta": -27.25
+          },
+          {
+            "value": 20,
+            "net": 533.64,
+            "delta": -71.69
+          }
+        ]
+      }
+    },
+    "max_consecutive_losses": {
+      "fsent_champ_long": {
+        "own_pin": 3,
+        "verdict": "candidate",
+        "spread": 225.71,
+        "best_value": 12,
+        "best_delta": 44.96,
+        "curve": [
+          {
+            "value": 0,
+            "net": 605.33,
+            "delta": 43.97
+          },
+          {
+            "value": 1,
+            "net": 380.61,
+            "delta": -180.75
+          },
+          {
+            "value": 2,
+            "net": 543.8,
+            "delta": -17.56
+          },
+          {
+            "value": 3,
+            "net": 561.36,
+            "delta": 0.0
+          },
+          {
+            "value": 4,
+            "net": 596.28,
+            "delta": 34.92
+          },
+          {
+            "value": 6,
+            "net": 580.98,
+            "delta": 19.62
+          },
+          {
+            "value": 8,
+            "net": 602.54,
+            "delta": 41.18
+          },
+          {
+            "value": 12,
+            "net": 606.32,
+            "delta": 44.96
+          }
+        ]
+      },
+      "fsent_champ_short": {
+        "own_pin": 3,
+        "verdict": "candidate",
+        "spread": 240.29,
+        "best_value": 0,
+        "best_delta": 2.44,
+        "curve": [
+          {
+            "value": 0,
+            "net": 669.96,
+            "delta": 2.44
+          },
+          {
+            "value": 1,
+            "net": 429.67,
+            "delta": -237.85
+          },
+          {
+            "value": 2,
+            "net": 625.02,
+            "delta": -42.5
+          },
+          {
+            "value": 3,
+            "net": 667.52,
+            "delta": 0.0
+          },
+          {
+            "value": 4,
+            "net": 583.06,
+            "delta": -84.46
+          },
+          {
+            "value": 6,
+            "net": 664.24,
+            "delta": -3.28
+          },
+          {
+            "value": 8,
+            "net": 660.61,
+            "delta": -6.91
+          },
+          {
+            "value": 12,
+            "net": 667.43,
+            "delta": -0.09
+          }
+        ]
+      },
+      "fsent_champ_long_htf15": {
+        "own_pin": 3,
+        "verdict": "candidate",
+        "spread": 209.88,
+        "best_value": 8,
+        "best_delta": 42.64,
+        "curve": [
+          {
+            "value": 0,
+            "net": 641.77,
+            "delta": 41.65
+          },
+          {
+            "value": 1,
+            "net": 432.88,
+            "delta": -167.24
+          },
+          {
+            "value": 2,
+            "net": 578.89,
+            "delta": -21.23
+          },
+          {
+            "value": 3,
+            "net": 600.12,
+            "delta": 0.0
+          },
+          {
+            "value": 4,
+            "net": 624.26,
+            "delta": 24.14
+          },
+          {
+            "value": 6,
+            "net": 605.92,
+            "delta": 5.8
+          },
+          {
+            "value": 8,
+            "net": 642.76,
+            "delta": 42.64
+          },
+          {
+            "value": 12,
+            "net": 642.76,
+            "delta": 42.64
+          }
+        ]
+      },
+      "fsent_champ_long_htffs": {
+        "own_pin": 3,
+        "verdict": "candidate",
+        "spread": 217.39,
+        "best_value": 0,
+        "best_delta": 62.44,
+        "curve": [
+          {
+            "value": 0,
+            "net": 969.06,
+            "delta": 62.44
+          },
+          {
+            "value": 1,
+            "net": 751.67,
+            "delta": -154.95
+          },
+          {
+            "value": 2,
+            "net": 804.76,
+            "delta": -101.86
+          },
+          {
+            "value": 3,
+            "net": 906.62,
+            "delta": 0.0
+          },
+          {
+            "value": 4,
+            "net": 919.68,
+            "delta": 13.06
+          },
+          {
+            "value": 6,
+            "net": 944.96,
+            "delta": 38.34
+          },
+          {
+            "value": 8,
+            "net": 961.72,
+            "delta": 55.1
+          },
+          {
+            "value": 12,
+            "net": 951.2,
+            "delta": 44.58
+          }
+        ]
+      },
+      "fsent_champ_long_mcloff": {
+        "own_pin": 0,
+        "verdict": "candidate",
+        "spread": 225.71,
+        "best_value": 12,
+        "best_delta": 0.99,
+        "curve": [
+          {
+            "value": 0,
+            "net": 605.33,
+            "delta": 0.0
+          },
+          {
+            "value": 1,
+            "net": 380.61,
+            "delta": -224.72
+          },
+          {
+            "value": 2,
+            "net": 543.8,
+            "delta": -61.53
+          },
+          {
+            "value": 3,
+            "net": 561.36,
+            "delta": -43.97
+          },
+          {
+            "value": 4,
+            "net": 596.28,
+            "delta": -9.05
+          },
+          {
+            "value": 6,
+            "net": 580.98,
+            "delta": -24.35
+          },
+          {
+            "value": 8,
+            "net": 602.54,
+            "delta": -2.79
+          },
+          {
+            "value": 12,
+            "net": 606.32,
+            "delta": 0.99
+          }
+        ]
+      }
+    }
+  },
+  "summary": {
+    "chop_thresh": {
+      "pin_confirmed": 0,
+      "candidate": 0,
+      "inert": 0,
+      "flat": 0
+    },
+    "atr_high_thresh": {
+      "pin_confirmed": 0,
+      "candidate": 0,
+      "inert": 0,
+      "flat": 0
+    },
+    "sl_buf_atr": {
+      "pin_confirmed": 0,
+      "candidate": 5,
+      "inert": 0,
+      "flat": 0
+    },
+    "cooldown_bars": {
+      "pin_confirmed": 4,
+      "candidate": 1,
+      "inert": 0,
+      "flat": 0
+    },
+    "max_consecutive_losses": {
+      "pin_confirmed": 0,
+      "candidate": 5,
+      "inert": 0,
+      "flat": 0
+    }
+  }
+}

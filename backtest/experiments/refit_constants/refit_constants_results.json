@@ -1,0 +1,237 @@
+{
+  "stage": "refit_constants",
+  "era": "is",
+  "baseline_fingerprint": "83a3af3f6ebf0ffa",
+  "baseline_total_is": 3340.95,
+  "pins": {
+    "chop_thresh": 58.0,
+    "atr_high_thresh": 0.65,
+    "sl_buf_atr": 0.01,
+    "cooldown_bars": 8,
+    "max_consecutive_losses": 3
+  },
+  "baseline_per_book": {
+    "fsent_champ_long": {
+      "n": 497,
+      "net": 561.36,
+      "dd": 19.57,
+      "pf": 3.84
+    },
+    "fsent_champ_short": {
+      "n": 466,
+      "net": 667.52,
+      "dd": 8.65,
+      "pf": 4.46
+    },
+    "fsent_champ_long_htf15": {
+      "n": 500,
+      "net": 600.12,
+      "dd": 21.05,
+      "pf": 4.17
+    },
+    "fsent_champ_long_htffs": {
+      "n": 753,
+      "net": 906.62,
+      "dd": 12.86,
+      "pf": 4.04
+    },
+    "fsent_champ_long_mcloff": {
+      "n": 533,
+      "net": 605.33,
+      "dd": 17.67,
+      "pf": 3.94
+    }
+  },
+  "knobs": {
+    "chop_thresh": {
+      "pin": 58.0,
+      "spread": 0.0,
+      "verdict": "not_wired",
+      "best_value": 40,
+      "best_delta": 0.0,
+      "curve": [
+        {
+          "value": 40,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 48,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 54,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 58,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 62,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 68,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 74,
+          "total_is": 3340.95,
+          "delta": 0.0
+        }
+      ]
+    },
+    "atr_high_thresh": {
+      "pin": 0.65,
+      "spread": 132.77,
+      "verdict": "candidate",
+      "best_value": 0.6,
+      "best_delta": 45.51,
+      "curve": [
+        {
+          "value": 0.45,
+          "total_is": 3253.69,
+          "delta": -87.26
+        },
+        {
+          "value": 0.55,
+          "total_is": 3352.08,
+          "delta": 11.13
+        },
+        {
+          "value": 0.6,
+          "total_is": 3386.46,
+          "delta": 45.51
+        },
+        {
+          "value": 0.65,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 0.7,
+          "total_is": 3328.92,
+          "delta": -12.03
+        },
+        {
+          "value": 0.8,
+          "total_is": 3328.92,
+          "delta": -12.03
+        }
+      ]
+    },
+    "sl_buf_atr": {
+      "pin": 0.01,
+      "spread": 513.02,
+      "verdict": "candidate",
+      "best_value": 0.005,
+      "best_delta": 8.12,
+      "curve": [
+        {
+          "value": 0.0,
+          "total_is": 2836.05,
+          "delta": -504.9
+        },
+        {
+          "value": 0.005,
+          "total_is": 3349.07,
+          "delta": 8.12
+        },
+        {
+          "value": 0.01,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 0.02,
+          "total_is": 3324.93,
+          "delta": -16.02
+        },
+        {
+          "value": 0.04,
+          "total_is": 3293.77,
+          "delta": -47.18
+        },
+        {
+          "value": 0.1,
+          "total_is": 3256.98,
+          "delta": -83.97
+        }
+      ]
+    },
+    "cooldown_bars": {
+      "pin": 8,
+      "spread": 638.59,
+      "verdict": "pin_confirmed",
+      "best_value": 8,
+      "best_delta": 0.0,
+      "curve": [
+        {
+          "value": 0,
+          "total_is": 2702.36,
+          "delta": -638.59
+        },
+        {
+          "value": 4,
+          "total_is": 3300.31,
+          "delta": -40.64
+        },
+        {
+          "value": 8,
+          "total_is": 3340.95,
+          "delta": 0.0
+        },
+        {
+          "value": 12,
+          "total_is": 3214.13,
+          "delta": -126.82
+        },
+        {
+          "value": 20,
+          "total_is": 3028.73,
+          "delta": -312.22
+        }
+      ]
+    },
+    "max_consecutive_losses": {
+      "pin": 3,
+      "spread": 1001.64,
+      "verdict": "candidate",
+      "best_value": 6,
+      "best_delta": 36.13,
+      "curve": [
+        {
+          "value": 1,
+          "total_is": 2375.44,
+          "delta": -965.51
+        },
+        {
+          "value": 2,
+          "total_is": 3096.27,
+          "delta": -244.68
+        },
+        {
+          "value": 3,
+          "total_is": 3296.98,
+          "delta": -43.97
+        },
+        {
+          "value": 4,
+          "total_is": 3319.56,
+          "delta": -21.39
+        },
+        {
+          "value": 6,
+          "total_is": 3377.08,
+          "delta": 36.13
+        }
+      ]
+    }
+  }
+}
