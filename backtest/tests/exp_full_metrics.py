@@ -75,13 +75,22 @@ def compute(rs, dates):
             dd_dur = i - cur_peak_i
             worst_dd_dur = max(worst_dd_dur, dd_dur)
     # ulcer: RMS of pct drawdown
+    #
+    # Same small-peak fault that was fixed in exp_equity_quality.ulcer: guarding
+    # only `peak > 0` lets a peak of 0.068 divide a cum of -4.8, and one such
+    # point carries the whole book (fsent_sig_sw10_long exports ulcer 152 here,
+    # against 5-14 for every other signal book). Peak is floored at 1% of the
+    # book's own net and points under it are skipped rather than counted against
+    # a clamped denominator.
     uplist = []
     peak = cum = 0.0
+    total = sum(rs)
+    peak_floor = abs(total) * 0.01 if total else 0.0
     for x in rs:
         cum += x
         if cum > peak:
             peak = cum
-        if peak > 0:
+        if peak > peak_floor and peak > 1e-9:
             uplist.append(100.0 * (peak - cum) / peak)
     ulcer = math.sqrt(sum(u * u for u in uplist) / len(uplist)) if uplist else 0.0
     # downside deviation (sortino denominator) on R
