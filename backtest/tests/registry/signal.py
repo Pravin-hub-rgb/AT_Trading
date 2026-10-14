@@ -33,6 +33,94 @@ BOOKS = {
         "pins": {"n": 422, "net": 138.22,
                  "dd_net": 72.23, "oos_n": 254, "oos_net": -17.78, "oos_dd_net": 46.97},
     },
+    # ===== MODE CENSUS SURVIVORS (2026-10-14, exp_mode_census.py) =====
+    # exp_mode_census.py swept all 26 mode branches in unified.py across 5
+    # books, 135 cells, 0 errors, and found a mode beating the shipped
+    # atr_high in both eras on EVERY book. With 26 modes against 5 books a
+    # winner per book is what chance produces, so the census promoted nothing
+    # and pointed at exp_mode_stability.py instead. Only 2 of the 5 survived
+    # that, and they are the 2 registered here.
+    #
+    # WHAT DID NOT SURVIVE, so it is not redone:
+    #   garch on fsent_champ_long       +175.92 IS / +40.98 OOS - FAILED
+    #   garch on fsent_champ_long_mcloff +171.56 IS / +36.04 OOS - FAILED
+    #   session on fsent_champ_long_htffs IS -124.91        - FAILED
+    # garch routes on chop_thresh (unified.py:1051-1053). Sweeping it on
+    # fsent_champ_long: 42 -> -49.29 IS, 50 -> +83.19, 58 -> +175.92,
+    # 66 -> +3.11, 74 -> -10.78. The gain exists at 58 and nowhere else, and
+    # 58 is the value 86 of the shipped books already use - the knob measured
+    # DEAD under atr_high in exp_knob_liveness.py. garch is the same dead
+    # threshold reached by a different branch, not a new edge. Do not
+    # re-register garch on the strength of its IS number.
+    #
+    # HOW TO READ THE TWO BELOW. session/union were not chosen by looking at
+    # IS and then confirmed; they were the only two whose effect survived
+    # having the thing that causes it removed.
+
+    "fsent_champ_short_session": {
+          "desc": "champ_short routed by SESSION (Asia B2 / London-NY FLIP) instead of atr_high",
+          "engine": "patched",
+          "params": {"mode": "session",
+                       "sl_buf_atr": 0.01,
+                       "cooldown_bars": 8,
+                       "ext_stop_r": 0.0,
+                       "exp_partial_r": 0.0,
+                       "exp_mltf": True,
+                       "exp_persist": 7,
+                       "pivot_rule": "leg",
+                       "exp_fs_entry_side": "short"},
+          "swing": "sw10",
+          # THE STRONGEST SURVIVOR. Session routing is Asia(0,3) -> B2,
+          # London/NY(1,2) -> FLIP, at unified.py:1028-1031.
+          #
+          # STABILITY: the engine already contains the exact inverse routing,
+          # session_flip (unified.py:1032-1035). Inverting the routing kills
+          # the gain in BOTH eras - IS 589.36 -> 535.84, OOS 267.29 -> 149.01.
+          # That is the point of registering this: the routing is the
+          # mechanism, not a threshold that happens to sit at a good number.
+          # session_flip is NOT registered - it is the control.
+          #
+          # OOS +267.29 against the shipped +195.01 is +72.28R on the same book,
+          # and it is a genuine reroute - trade count 508 vs 569 IS, 294 vs 280
+          # OOS - not the same trades relabelled.
+          "pins": {"n": 508, "net": 589.36,
+                   "dd_net": 18.71, "oos_n": 294, "oos_net": 267.29, "oos_dd_net": 19.46},
+      },
+
+    "fsent_champ_long_htf15_union": {
+          "desc": "htf15 routed by UNION (trust both HTF windows) instead of atr_high",
+          "engine": "patched",
+          "params": {"mode": "union",
+                       "atr_high_thresh": 0.65,
+                       "sl_buf_atr": 0.01,
+                       "cooldown_bars": 8,
+                       "ext_stop_r": 0.0,
+                       "exp_partial_r": 0.0,
+                       "exp_mltf": True,
+                       "exp_persist": 7,
+                       "pivot_rule": "leg",
+                       "exp_fs_entry_side": "long"},
+          "swing": "htf15",
+          # union sets use="union" with no routing at all (unified.py:1026-1027):
+          # it takes BOTH the B2 and the FLIP 1h window wherever either exists,
+          # instead of atr_high picking between them on the ATR%.
+          # IS 505.24 -> 575.97, OOS 254.81 -> 321.38 (+66.57R out of sample),
+          # and trades rise 500 -> 786 IS. More trades AND more net.
+          #
+          # STABILITY: NOT TESTED, and that is why this one is registered with
+          # its caveat rather than as a winner. union routes on no parameter, so
+          # there is no neighbourhood to sweep and no inverse branch in the
+          # engine - exp_mode_stability.py recorded it SKIPPED rather than
+          # counting it as passed. The honest statement is that the census
+          # number is unreplicated, not that it is confirmed. Treat the OOS
+          # figure as one reveal spent, not as a proof.
+          #
+          # Do not build on this until it survives a replication on a book it
+          # was not selected on.
+          "pins": {"n": 786, "net": 575.97,
+                   "dd_net": 49.17, "oos_n": 451, "oos_net": 321.38, "oos_dd_net": 15.48},
+      },
+
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
     # Measured 2026-10-04 by exp_fs_directional_leg.py on CAUSAL leg-family
