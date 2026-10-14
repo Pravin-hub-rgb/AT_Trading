@@ -18,6 +18,26 @@ a break and emitted nothing, it classifies the bar against the gate state the
 engine itself was holding, and anything that does not land in a named bucket is
 reported as UNEXPLAINED. The headline number is that count, and it must be 0.
 
+SCOPE - READ THIS BEFORE TRUSTING THE "0 UNEXPLAINED" LINE
+
+The original version of this harness reported "20460 suppressed breaks examined,
+0 unexplained" and that number was HALF THE STORY. `_step` is only called when
+`self.armed` is True (firstswing.py:428), so the harness was logging armed bars
+only. Measured on 2026-10-14: there are a further 20,290 bars where the engine
+saw a break and was NOT ARMED, 9,878 of them volatile, and NONE of them ever
+reached this harness.
+
+Those are pre-arm warmup, not defects - every one of them has `_pending_arm`
+False and `state == "watch"`, i.e. the engine had not yet been armed by a seal
+and was not doing anything at all. But they were outside the check, and a reader
+had no way to know that. So the probe below now watches `process_bar` as well
+and those bars are counted and reported as their own bucket rather than being
+invisible.
+
+`process_bar`'s break flags are recomputed at its ENTRY, before it mutates
+anything, from the same `e_hi_prev`/`e_lo_prev` the engine uses at firstswing.py:374.
+That is exact, not an approximation.
+
 Usage:
     python -u exp_swing_invariants.py
 
@@ -81,6 +101,28 @@ def _step_probe(self, down_break: bool, up_break: bool):  # type: ignore[no-unty
 
 
 SwingEngine._step = _step_probe  # type: ignore[method-assign]
+
+# A SECOND probe on process_bar, so the bars the engine never armed are counted
+# rather than invisible. See the SCOPE note above.
+_UNARMED: list[dict] = []
+_orig_pb = SwingEngine.process_bar
+
+
+def _pb_probe(self, c, g_idx):  # type: ignore[no-untyped-def]
+    hp, lp = self.e_hi_prev, self.e_lo_prev
+    up = hp is not None and float(c.high) > hp.px
+    dn = lp is not None and float(c.low) < lp.px
+    r = _orig_pb(self, c, g_idx)
+    if (up or dn) and not getattr(self, "armed", False):
+        _UNARMED.append({
+            "g": int(g_idx), "up": up, "dn": dn, "vol": bool(up and dn),
+            "state": self.state,
+            "pending": bool(getattr(self, "_pending_arm", False)),
+        })
+    return r
+
+
+SwingEngine.process_bar = _pb_probe  # type: ignore[method-assign]
 
 
 def main() -> int:
@@ -311,13 +353,38 @@ def main() -> int:
             flag = "   <-- "
         print("    %-52s %6d%s" % (k, v, flag))
     print()
-    print("    suppressed breaks examined : %d" % suppressed_total)
+    u_tot = len(_UNARMED)
+    u_vol = [u for u in _UNARMED if u["vol"]]
+    u_pre = [u for u in _UNARMED if u["state"] == "watch" and not u["pending"]]
+    u_defer = [u for u in _UNARMED if u["state"] == "watch" and u["pending"]]
+    odd = [u for u in _UNARMED if u["state"] != "watch"]
+    buckets["PRE-ARM WARMUP - engine not armed, nothing in flight"] = len(u_pre)
+    buckets["PENDING-ARM DEFERRAL - same-bar arm guard (firstswing.py:401)"] = len(u_defer)
+    if odd:
+        buckets["UNARMED - not watch / UNEXPLAINED"] = len(odd)
+        unexplained.extend(odd)
+    print("  SCOPE - bars where the engine was NEVER ARMED, so they were outside")
+    print("  the classification above. Counted here so they cannot be invisible:")
+    print("    bars with a break, never armed : %d   (volatile %d)" % (u_tot, len(u_vol)))
+    print("    ...pre-arm warmup (watch, no pending arm) : %d" % len(u_pre))
+    print("    ...pending-arm deferral (the same-bar arm guard) : %d" % len(u_defer))
+    if odd:
+        print("    ...not in watch at all : %d   <-- these count as UNEXPLAINED" % len(odd))
+    print("    TOTAL break-without-a-mark : %d  (%d armed + %d never armed)"
+          % (suppressed_total + u_tot, suppressed_total, u_tot))
+    print()
+    print("    suppressed breaks classified above : %d" % suppressed_total)
     check("every suppressed break has a named cause", not unexplained,
           "%d unexplained" % len(unexplained))
     if unexplained:
-        for st in unexplained[:10]:
-            print("        %s state=%s dir=%s up=%s dn=%s cl=%.1f op=%.1f"
-                  % (st["t"][:16], st["state"], st["dir"], st["up"], st["dn"], st["cl"], st["op"]))
+        for u in unexplained[:10]:
+            if "t" in u:
+                print("        %s state=%s dir=%s up=%s dn=%s cl=%.1f op=%.1f"
+                      % (u["t"][:16], u["state"], u["dir"], u["up"], u["dn"],
+                         u["cl"], u["op"]))
+            else:
+                print("        UNARMED g=%s state=%s vol=%s pending=%s up=%s dn=%s"
+                      % (u["g"], u["state"], u["vol"], u["pending"], u["up"], u["dn"]))
     print()
 
     print("=" * 78)

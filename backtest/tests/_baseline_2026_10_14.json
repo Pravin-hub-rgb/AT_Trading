@@ -1,0 +1,99 @@
+{
+  "frozen_at": "2026-10-14",
+  "engine_commit": "1bb4be1",
+  "row_format": "time|kind|dir|px|swing (price included)",
+  "eras": {
+    "is": {
+      "chain_15m_mb50": {
+        "fingerprint": "83a3af3f6ebf0ffa",
+        "swings": 2840,
+        "marks": 7734,
+        "rows": 10574
+      },
+      "chain_1h_mb10": {
+        "fingerprint": "01a14a5564e5b6db",
+        "swings": 1540,
+        "marks": 3686,
+        "rows": 5226
+      },
+      "books": {
+        "fsent_champ_long": {
+          "n": 497,
+          "net": 561.36,
+          "dd": 19.57,
+          "pf": 3.84
+        },
+        "fsent_champ_short": {
+          "n": 466,
+          "net": 667.52,
+          "dd": 8.65,
+          "pf": 4.46
+        },
+        "fsent_champ_long_htf15": {
+          "n": 500,
+          "net": 600.12,
+          "dd": 21.05,
+          "pf": 4.17
+        },
+        "fsent_champ_long_htffs": {
+          "n": 753,
+          "net": 906.62,
+          "dd": 12.86,
+          "pf": 4.04
+        },
+        "fsent_champ_long_mcloff": {
+          "n": 533,
+          "net": 605.33,
+          "dd": 17.67,
+          "pf": 3.94
+        }
+      }
+    },
+    "oos": {
+      "chain_15m_mb50": {
+        "fingerprint": "8981622657925d4d",
+        "swings": 1571,
+        "marks": 4344,
+        "rows": 5915
+      },
+      "chain_1h_mb10": {
+        "fingerprint": "1ba99c2e91217cb9",
+        "swings": 922,
+        "marks": 2231,
+        "rows": 3153
+      },
+      "books": {
+        "fsent_champ_long": {
+          "n": 281,
+          "net": 251.07,
+          "dd": 9.85,
+          "pf": 3.29
+        },
+        "fsent_champ_short": {
+          "n": 298,
+          "net": 231.12,
+          "dd": 10.58,
+          "pf": 2.85
+        },
+        "fsent_champ_long_htf15": {
+          "n": 281,
+          "net": 291.43,
+          "dd": 9.98,
+          "pf": 3.76
+        },
+        "fsent_champ_long_htffs": {
+          "n": 389,
+          "net": 366.43,
+          "dd": 10.59,
+          "pf": 3.4
+        },
+        "fsent_champ_long_mcloff": {
+          "n": 300,
+          "net": 251.66,
+          "dd": 8.3,
+          "pf": 3.11
+        }
+      }
+    }
+  }
+}
