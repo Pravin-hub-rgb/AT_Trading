@@ -741,3 +741,76 @@ default-off, because the harness is kept per policy above and a knob the harness
 needs is not dead code. Harness kept:
 `backtest/experiments/fs_break_confirm/exp_fs_break_confirm.py`, results beside
 it in `fs_break_confirm_results.json`.
+
+### The owner's colour condition, which is the version actually asked for
+
+`exp_fs_break_confirm=1.0` above delays **every** FS entry. The owner's own
+framing was narrower and is worth recording separately, because it is the
+sharper hypothesis and because it produced a near-identical result for a reason
+worth knowing:
+
+> "we enter on fs if long and fs is green we enter directly if short fs is red we
+> enter directly but if long and fs is red on the break of red high we enter and
+> vice versa"
+
+i.e. delay only when the FS candle's COLOUR opposes the trade. Implemented as
+`exp_fs_break_confirm=2.0`.
+
+**It loses, and the reason it loses is that the condition almost never fires the
+"enter directly" branch.** On `fsent_champ_long` IS, base is 497 trades, the
+colour-conditioned arm is 405, and the unconditional arm is 402 — **only 3 trades
+differ**. About 97% of FS entries already carry an opposing colour, because an FS
+candle breaks the swing's *opposing* pivot and is therefore usually red on an up
+swing and green on a down swing. The colour gate is nearly a no-op, so this is
+the same experiment wearing a condition.
+
+| book | era | base | colour-opposed (8b) | delta |
+|---|---|---|---|---|
+| `fsent_champ_long` | IS | 497 / +561.36R | 405 / +456.01R | -92 / **-105.35R** |
+| | OOS | 281 / +251.07R | 233 / +229.83R | -48 / **-21.24R** |
+| `fsent_champ_short` | IS | 466 / +667.52R | 399 / +598.77R | -67 / **-68.75R** |
+| | OOS | 298 / +231.12R | 240 / +242.15R | -58 / **+11.03R** |
+| `fsent_champ_long_htf15` | IS | 500 / +600.12R | 415 / +474.21R | -85 / **-125.91R** |
+| | OOS | 281 / +291.43R | 238 / +280.52R | -43 / **-10.91R** |
+| `fsent_champ_long_htffs` | IS | 753 / +906.62R | 631 / +756.33R | -122 / **-150.29R** |
+| | OOS | 389 / +366.43R | 334 / +342.30R | -55 / **-24.13R** |
+| `fsent_champ_long_mcloff` | IS | 533 / +605.33R | 445 / +496.44R | -88 / **-108.89R** |
+| | OOS | 300 / +251.66R | 246 / +231.78R | -54 / **-19.88R** |
+
+**IS is negative in 5 of 5 books at every confirmation window.** Summed over all
+five books:
+
+| window | IS | OOS | total |
+|---|---|---|---|
+| 4 bars | **-857.35R** | -125.50R | **-982.85R** |
+| 8 bars | **-559.19R** | -65.13R | **-624.32R** |
+| 16 bars | **-202.99R** | +18.88R | **-184.11R** |
+
+**The 16-bar window is the only arm that looks alive, and it should not be taken
+at face value.** At 16 bars OOS is positive on 3 of 5 books — `htf15` +10.65R,
+`mcloff` +11.09R, `htffs` +8.60R, with PF up and maxDD down on every one of
+them. But the same arm is negative in IS on all five books (-34R to -49R each).
+
+**OOS-positive / IS-negative is an era split**, and that is the signature that
+closed regime routing on chop above ("era split, the seventh appearance"). A
+filter that suits one period and harms the other is not a filter that works; it
+is a filter that fits. The proper test is the paired bootstrap over the trade
+differences that P80 named and never ran, and that test is still outstanding
+here too.
+
+**Same mechanism as the unconditional arm and as FS_ENTRY.md's M2 inversion**:
+by the time the FS candle's extreme breaks, the move that made the FS worth
+taking is behind you. Confirmation is worth having; paying for it with the entry
+is not.
+
+**Not closed as a lead, only as an entry rule.** Quality improves in BOTH eras at
+16 bars - pf 3.29->3.77 and maxDD 9.85->6.21 on `fsent_champ_long` OOS, pf
+3.11->3.78 and maxDD 8.30->7.21 on `mcloff` OOS, with WR up in every cell. So the
+FS-extreme level is a real discriminator of trade quality. The forms still worth
+trying are a **trail trigger on the FS entry** rather than an entry delay, and a
+**per-trade risk change** on the trades it would have dropped. Neither is the
+same mechanism as this one and neither is measured.
+
+Identity gate re-run after `2.0` landed: `exp_fastcheck.py fsent_champ_long` ->
+IS 497/+466.92, OOS 281/+215.32, every pinned field reproduced, default still
+byte-identical.

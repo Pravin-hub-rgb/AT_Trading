@@ -485,6 +485,16 @@ max_positions=0,
                               #
                               # 0.0 = off, which leaves every existing book
                               # byte-identical.
+                              # 1.0 = EVERY FS entry waits for that break.
+                              # 2.0 = only the entries whose FS candle COLOUR
+                              # opposes the trade wait. Long + a red FS candle,
+                              # or short + a green one. When the colour agrees
+                              # the print itself is already the entry and is
+                              # left alone. OWNER 2026-10-14: "we enter on fs if
+                              # long and fs is green we enter directly if short
+                              # fs is red we enter directly but if long and fs is
+                              # red on the break of red high we enter and vice
+                              # versa".
     exp_fs_confirm_bars=8,    # how many LTF bars after FS to wait for that break.
                               # 8 on 15m = 2h. Beyond it the FS is treated as not
                               # confirmed and the trade is dropped.
@@ -915,7 +925,13 @@ max_positions=0,
                 _c=candles_ltf[_j]
                 if (float(_c["high"])>_ref) if _up else (float(_c["low"])<_ref):
                     _hit=_j; break
-            _fs_confirm_at[_si]=_hit
+            # Does the FS candle's colour OPPOSE the trade this swing would take?
+            # An FS signal's direction IS the swing direction: an "up" swing is a
+            # long, a "down" swing is a short. Long + a red FS candle opposes;
+            # short + a green FS candle opposes. Only then is the entry delayed.
+            _green=float(candles_ltf[_fi]["close"])>float(candles_ltf[_fi]["open"])
+            _op=(not _green) if _up else _green
+            _fs_confirm_at[_si]=(_hit,_op)
     filtered=[]
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
@@ -928,10 +944,16 @@ max_positions=0,
         # start_px, the same level every other FS signal uses) so the ONLY thing
         # that changes is WHEN we enter - not what the stop is anchored to.
         if exp_fs_break_confirm and sig.get("kind")=="FS":
-            _nb=_fs_confirm_at.get(int(sig.get("swing_no",-1)),-1)
-            if _nb<0: continue
-            bar=_nb
-            bar_ts=candle_ts_ltf[bar]
+            _ent=_fs_confirm_at.get(int(sig.get("swing_no",-1)))
+            if _ent is None: continue
+            _hit,_op=_ent
+            # 2.0+ = only delay when the FS candle's colour opposes the trade.
+            # Colour agreeing means the FS bar already ran in our direction, so
+            # the print itself is the entry and nothing is delayed.
+            if exp_fs_break_confirm<2.0 or _op:
+                if _hit<0: continue
+                bar=_hit
+                bar_ts=candle_ts_ltf[bar]
         # P36 decay gate, evaluated at the entry bar on legs confirmed by then.
         if _decay_blocks(exp_decay_mode, sig["dir"], bar_ts, exp_decay_thr, exp_decay_legs):
             continue

@@ -64,14 +64,15 @@ for p in ("backtest/tests", "backtest", "backend"):
     sys.path.insert(0, str(ROOT / p))
 
 HERE = Path(__file__).resolve().parent
-BOOKS = ["fsent_champ_long", "fsent_champ_short", "fsent_champ_long_htffs",
-         "fsent_champ_long_mcloff"]
+BOOKS = ["fsent_champ_long", "fsent_champ_short", "fsent_champ_long_htf15",
+         "fsent_champ_long_htffs", "fsent_champ_long_mcloff"]
 ARMS = [("base (FS print)", {}),
-        ("FS break confirm", {"exp_fs_break_confirm": 1.0}),
-        ("FS break confirm, 4 bars", {"exp_fs_break_confirm": 1.0,
-                                      "exp_fs_confirm_bars": 4}),
-        ("FS break confirm, 16 bars", {"exp_fs_break_confirm": 1.0,
-                                       "exp_fs_confirm_bars": 16})]
+        ("colour-opposed only", {"exp_fs_break_confirm": 2.0}),
+        ("colour-opposed, 4 bars", {"exp_fs_break_confirm": 2.0,
+                                    "exp_fs_confirm_bars": 4}),
+        ("colour-opposed, 16 bars", {"exp_fs_break_confirm": 2.0,
+                                     "exp_fs_confirm_bars": 16}),
+        ("ALL FS entries wait, 8b", {"exp_fs_break_confirm": 1.0})]
 
 
 def load_era(era: str) -> dict:
