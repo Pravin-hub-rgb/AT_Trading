@@ -80,7 +80,21 @@ def episodes(rs, threshold=3.0):
 
 def main():
     d = json.load(open("_full_study.json", encoding="utf-8"))
-    keys = [k for k in d if d[k].get("_series")]
+    # The per-trade series and dates live in _full_study.json, but the startup
+    # block this harness also prints does NOT - exp_startup_yearly.py writes that,
+    # into _startup_yearly.json. Reading both out of _full_study.json raised
+    # KeyError 'startup' on every book, so the harness had been unrunnable and
+    # the doc it feeds kept quoting its last pre-mark-fix numbers. Both inputs
+    # are regenerated in the same pass so the two halves cannot be from
+    # different chains.
+    try:
+        _start = json.load(open("_startup_yearly.json", encoding="utf-8"))
+    except FileNotFoundError:
+        _start = {}
+    for _k, _v in _start.items():
+        if isinstance(_v, dict) and isinstance(_v.get("startup"), dict):
+            d.setdefault(_k, {}).setdefault("startup", _v["startup"])
+    keys = [k for k in d if d[k].get("_series") and "startup" in d[k]]
 
     rows = []
     for k in keys:
