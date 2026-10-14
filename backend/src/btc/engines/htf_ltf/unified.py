@@ -261,6 +261,34 @@ def _r_touch_end(trade, fine_ltf, fine_ts, ext_r):
         k+=1
     return e_ts
 
+# Every branch of the regime-mode chain inside
+# simulate_htf_ltf_streak_halt(). Kept here, next to the chain, so that adding a
+# mode is a two-line change: add the elif, add the name. The chain raises on
+# anything not in this set - see the guard above `for sig in ltf_sigs:`.
+HTF_MODES = frozenset((
+    "chop",                    # decisive when 1h chop is high, else flip
+    "atr_low",                 # decisive when ATR% is low, else flip
+    "atr_high",                # decisive when ATR% is high, else flip
+    "chop_or_atr_low",
+    "chop_and_atr_low",
+    "b2_vs_flip_chop",         # B2 when chop high, else flip
+    "decisive_vs_flip_chop",
+    "htf_dir",                 # B2 when the 1h swing direction agrees
+    "htf_mag",
+    "htf_mag_inv",
+    "flip_quality",            # b2_vs_flip_chop plus a magnitude floor
+    "ltf_dir",
+    "dynamic_chop",
+    "union",                   # take whichever of B2/FLIP exists at all
+    "session",                 # Asia -> B2, London/NY -> flip
+    "session_flip",            # the inverse of session; used as its control
+    "entropy", "entropy_inv",
+    "fd", "fd_inv",
+    "hmm", "hmm_inv",
+    "garch", "garch_inv",
+    "soft_chop", "soft_atr", "soft_ensemble",
+))
+
 def simulate_htf_ltf_streak_halt(
     candles_htf, swings_htf, candles_ltf, swings_ltf, fine_ltf=None,
     *,
@@ -965,6 +993,31 @@ max_positions=0,
             _op=(not _green) if _up else _green
             _fs_confirm_at[_si]=(_hit,_op)
     filtered=[]
+    # UNKNOWN MODE IS A HARD ERROR, checked once here rather than per bar.
+    #
+    # This chain used to end in `else: use="flip"`, and `use="flip"` was also
+    # assigned before the chain started. A mode string that matched nothing -
+    # a typo in a registry entry, a renamed branch, an experiment passing a mode
+    # that was never implemented - therefore fell through silently and traded
+    # as plain flip. Measured on fsent_champ_long: mode="GARBAGE_MODE_xyz"
+    # returned n=495 / +462.58R, byte-identical to the fallback, with no error
+    # and no log line. A book could silently stop being the book its entry
+    # claims it is and nothing in the harness would notice.
+    #
+    # The chain is also reached only from inside `for sig in ltf_sigs:`, so a
+    # book with zero LTF signals would never have raised even with the guard
+    # inline here. Validating once, above the loop, makes the failure depend on
+    # the config alone.
+    #
+    # Verified before raising: all 94 dict books in the registry carry a mode
+    # that is in this set, and no caller outside the registry passes one that
+    # is not. HTF_MODES is derived from the branches below so a new mode cannot
+    # be added without being listed here.
+    if mode not in HTF_MODES:
+        raise ValueError(
+            "unknown HTF regime mode %r. Valid modes: %s"
+            % (mode, ", ".join(sorted(HTF_MODES)))
+        )
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
         bar=ltf_store.pos(bar_time)  # position via timestamp lookup
@@ -993,7 +1046,11 @@ max_positions=0,
         ch=chop_per_ltf[bar] if bar < len(chop_per_ltf) else 50.0
         atrp=atr_pct[bar] if bar < len(atr_pct) else 0.5
         # decide which HTF interval set to use
-        use="flip"
+        # Every branch below is covered by HTF_MODES, which is enforced by the
+        # guard above `for sig in ltf_sigs:`. Reaching the final `else` is
+        # therefore a bug in this chain, not a config the caller may pass, so it
+        # raises instead of quietly trading as flip.
+        use=None
         if mode=="chop":
             use="decisive" if ch > chop_thresh else "flip"
         elif mode=="atr_low":
@@ -1084,7 +1141,10 @@ max_positions=0,
             elif _p<50.0-_hw: use="flip"
             else: use="decisive"
         else:
-            use="flip"
+            raise AssertionError(
+                "HTF_MODES lists %r as valid but the regime chain does not route "
+                "it - add the elif above this line" % (mode,)
+            )
         # v19: hold the old regime for PERSIST consecutive disagreements.
         if PERSIST>0:
             if _rg_s is None: _rg_s=use

@@ -1,0 +1,82 @@
+{
+ "sets": {
+  "declared": [
+   "atr_high",
+   "atr_low",
+   "b2_vs_flip_chop",
+   "chop",
+   "chop_and_atr_low",
+   "chop_or_atr_low",
+   "decisive_vs_flip_chop",
+   "dynamic_chop",
+   "entropy",
+   "entropy_inv",
+   "fd",
+   "fd_inv",
+   "flip_quality",
+   "garch",
+   "garch_inv",
+   "hmm",
+   "hmm_inv",
+   "htf_dir",
+   "htf_mag",
+   "htf_mag_inv",
+   "ltf_dir",
+   "session",
+   "session_flip",
+   "soft_atr",
+   "soft_chop",
+   "soft_ensemble",
+   "union"
+  ],
+  "chain": [
+   "atr_high",
+   "atr_low",
+   "b2_vs_flip_chop",
+   "chop",
+   "chop_and_atr_low",
+   "chop_or_atr_low",
+   "decisive_vs_flip_chop",
+   "dynamic_chop",
+   "entropy",
+   "entropy_inv",
+   "fd",
+   "fd_inv",
+   "flip_quality",
+   "garch",
+   "garch_inv",
+   "hmm",
+   "hmm_inv",
+   "htf_dir",
+   "htf_mag",
+   "htf_mag_inv",
+   "ltf_dir",
+   "session",
+   "session_flip",
+   "soft_atr",
+   "soft_chop",
+   "soft_ensemble",
+   "union"
+  ],
+  "missing": [],
+  "extra": []
+ },
+ "bug": {
+  "GARBAGE_MODE_xyz": {
+   "raised": true
+  },
+  "": {
+   "raised": true
+  },
+  "atr-hiogh": {
+   "raised": true
+  },
+  "Session": {
+   "raised": true
+  },
+  "union_": {
+   "raised": true
+  }
+ },
+ "pin_mismatches": []
+}
