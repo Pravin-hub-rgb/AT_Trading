@@ -5,7 +5,18 @@
 `exp_optimalbook_study.py` states that tier 4 of
 `docs/learn/finding optimal book.md` — parameter plateau, cost sensitivity,
 cross-asset — "is a separate harness per axis and is **NOT faked here**". This
-document is two of those axes. The third, cross-asset, is still open.
+document is two of those axes:
+
+| axis | harness | doc |
+|---|---|---|
+| which break opens the window | `exp_entry_break_study.py` | this doc, axis 1 |
+| parameter plateau | `exp_plateau_atr.py` | this doc, axis 2 |
+| **cross-asset** | `exp_cross_asset_eth.py` | **`CROSS_ASSET_TIER4.md`** |
+
+**Tier 4 is now complete on all three axes.** Read the cross-asset result
+alongside the table in `OPTIMAL_BOOK_STUDY_HTFFS.md` — it is the strongest
+evidence in this set that the edge is a property of the phenomenon and not of
+BTC's price history.
 
 ---
 
@@ -191,7 +202,11 @@ survive the whole range.
   it is the current pin.
 - **Only one threshold was swept.** `chop_thresh` (58.0), `cooldown_bars` (8) and
   `max_consecutive_losses` (3) are all unswept here and are all load-bearing.
-- **Cross-asset (tier 4's third axis) is still not measured.**
+- **Cost sensitivity is not a separate sweep here.** `exp_scorecard.py` computes
+  it (1.5× / 2× / 3×) for the 12 books it covers, and it is labelled an
+  approximation: the per-trade cost is re-applied to the same trade series, so
+  it measures how much of the edge costs eat but cannot capture fills that would
+  differ at a different fee level.
 
 ## What this does and does not authorise
 

@@ -1,0 +1,97 @@
+{
+ "window": [
+  1735669800,
+  1766717100
+ ],
+ "eth_15m_bars": 34498,
+ "btc_15m_bars": 34498,
+ "eth_1m_fine_bars": 0,
+ "btc_1m_fine_bars": 517456,
+ "eth_1h_is_resampled": true,
+ "books": {
+  "fsent_champ_long": {
+   "btc": {
+    "n": 247,
+    "net": 98.43,
+    "dd_net": 22.6,
+    "win": 0.405
+   },
+   "eth": {
+    "n": 250,
+    "net": 139.12,
+    "dd_net": 22.24,
+    "win": 0.336
+   }
+  },
+  "fsent_champ_long_mcloff": {
+   "btc": {
+    "n": 266,
+    "net": 104.81,
+    "dd_net": 26.28,
+    "win": 0.402
+   },
+   "eth": {
+    "n": 268,
+    "net": 148.36,
+    "dd_net": 23.94,
+    "win": 0.34
+   }
+  },
+  "fsent_champ_long_htf15": {
+   "btc": {
+    "n": 247,
+    "net": 98.43,
+    "dd_net": 22.6,
+    "win": 0.405
+   },
+   "eth": {
+    "n": 249,
+    "net": 139.23,
+    "dd_net": 22.24,
+    "win": 0.337
+   }
+  },
+  "fsent_champ_long_htffs": {
+   "btc": {
+    "n": 404,
+    "net": 177.58,
+    "dd_net": 22.34,
+    "win": 0.364
+   },
+   "eth": {
+    "n": 407,
+    "net": 229.07,
+    "dd_net": 33.54,
+    "win": 0.383
+   }
+  },
+  "fsent_sig_multi": {
+   "btc": {
+    "n": 160,
+    "net": 64.72,
+    "dd_net": 22.65,
+    "win": 0.462
+   },
+   "eth": {
+    "n": 151,
+    "net": 119.33,
+    "dd_net": 16.96,
+    "win": 0.344
+   }
+  },
+  "fsent_sig_full": {
+   "btc": {
+    "n": 112,
+    "net": 27.63,
+    "dd_net": 29.24,
+    "win": 0.402
+   },
+   "eth": {
+    "n": 111,
+    "net": 22.76,
+    "dd_net": 14.92,
+    "win": 0.279
+   }
+  }
+ }
+}
