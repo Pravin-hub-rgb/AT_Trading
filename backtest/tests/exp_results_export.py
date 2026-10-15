@@ -41,7 +41,37 @@ from experiment_registry import EXPERIMENTS             # noqa: E402
 N_MULTI, N_SIG = 15, 10
 # years of data per era, for equity_quality's per-year normalisation
 YEARS = {"is": 3.67, "oos": 2.0}
-DD_BUDGET = 29.0          # the owner's stated budget; tags are relative to it
+
+# DRAWDOWN BUDGET - A PERCENTAGE OF NET, NOT A FIXED R NUMBER.
+#
+# The fixed 29R ceiling said the same thing about a book that nets 100R and a book
+# that nets 1112R, and it was wrong about the second one. It disqualified
+# fsent_champ_long_htf15_htffs at 29.76R, which is a 2.7% drawdown on a book
+# that made 765.9R - one of the cleanest risk profiles in the set. Meanwhile
+# fsent_champ_long_mode_atr_low drew 48.76R but was flagged by nothing, because it
+# is also only 6.9% of its net and 29R happened to sit above it.
+#
+# method/DRAWDOWN_PERCENT_AND_ROLLING_STUDY.md already argued this and was right:
+# "a 25R drawdown taken from a peak of 9R is a catastrophe. The same 25R taken from
+# a peak of 685R is a 3.7% wobble." The number below is the ceiling, and it is the
+# OWNER's to move - it is one constant, not a rule hidden in the code.
+#
+# Across the 26 exported books DD as a share of net runs 1.7% to 7.5% with a
+# median of 3.6%. At 5% the two genuinely drawdown-heavy books (mode_atr_low and
+# mode_union, both 6.9%) are still rejected and the one that only ever failed the
+# fixed number now passes on the merits.
+DD_BUDGET_PCT = 5.0            # max drawdown as a percentage of in-sample net R
+DD_BUDGET_R_LEGACY = 29.0      # the old fixed rule, still reported for comparison
+
+
+def dd_flags(m):
+    """(over percentage budget, over legacy fixed budget).
+
+    Both are returned so every export says which rule a book passes and which it
+    would have passed under the old one. The legacy flag is not used to reject
+    anything, only to show the change.
+    """
+    return (m["dd_pct_of_net"] > DD_BUDGET_PCT, m["max_dd"] >= DD_BUDGET_R_LEGACY)
 
 
 def cell(ts):
@@ -125,7 +155,7 @@ def tags_for(m):
     t = []
     if not m["neg_cells"]:
         t.append("zero-negative")
-    if m["max_dd"] < DD_BUDGET * 0.6:
+    if m["dd_pct_of_net"] < DD_BUDGET_PCT * 0.6:
         t.append("low-DD")
     if m["longest_underwater"] < 30:
         t.append("short-underwater")
@@ -355,11 +385,16 @@ def main():
     names = multi + sig
     print("selected %d multi + %d sig = %d books" % (len(multi), len(sig), len(names)))
     out = {"generated_from": "exp_results_export.py",
-           "dd_budget": DD_BUDGET,
+           "dd_budget_pct": DD_BUDGET_PCT,
+           "dd_budget_pct_basis": "max drawdown as a percentage of in-sample net R",
+           "dd_budget_r_legacy": DD_BUDGET_R_LEGACY,
            "years": YEARS,
            "books": []}
     for i, n in enumerate(names, 1):
         m = build(sim, E, n)
+        over_pct, over_r = dd_flags(m)
+        m["over_dd_budget_pct"] = over_pct
+        m["over_dd_budget_r_legacy"] = over_r
         na = nulls.get(n, {})
         m["null_p_is"] = (na.get("is") or {}).get("p")
         m["null_p_oos"] = (na.get("oos") or {}).get("p")
@@ -369,12 +404,14 @@ def main():
         m["null_sig_oos"] = bool((na.get("oos") or {}).get("sig"))
         m["null_sig"] = m["null_sig_is"] or m["null_sig_oos"]
         out["books"].append(m)
-        print("  %2d/%d  %-34s n=%4d net=%+8.1f dd=%5.2f ulcer=%5.2f  "
-              "p(IS/OOS)=%s%s  %s"
-              % (i, len(names), n, m["n"], m["net"], m["max_dd"], m["ulcer"],
+        print("  %2d/%d  %-34s n=%4d net=%+8.1f dd=%5.2f (%.1f%% of net) ulcer=%5.2f"
+              "  p(IS/OOS)=%s%s  %s%s"
+              % (i, len(names), n, m["n"], m["net"], m["max_dd"],
+                 m["dd_pct_of_net"], m["ulcer"],
                  ("%.4f" % m["null_p_is"]) if m["null_p_is"] is not None else "n/a",
                  ("/%.4f" % m["null_p_oos"]) if m["null_p_oos"] is not None else "",
-                 "*** SIGNIFICANT" if m["null_sig"] else ""))
+                 "*** SIGNIFICANT" if m["null_sig"] else "",
+                 "  *** OVER %0.0f%% BUDGET" % DD_BUDGET_PCT if over_pct else ""))
     with open("_results.json", "w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
     import os

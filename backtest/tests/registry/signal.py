@@ -918,32 +918,27 @@ BOOKS = {
           # Base params copied from champion_single_sw10/sw20 verbatim.
           # NOTE: the single books carry neither exp_mltf nor exp_persist.
           # exp_fs_single.py, both eras.
-          "pins": {"n": 341, "net": 246.02,
-                 "dd_net": 16.92, "oos_n": 190, "oos_net": 151.23, "oos_dd_net": 12.91},
+"pins": {"n": 341, "net": 246.02,
+                   "dd_net": 16.92, "win": 0.337, "oos_n": 190, "oos_net": 151.23, "oos_dd_net": 12.91, "oos_win": 0.384},
       },
 
-    "fsent_sig_sw20_short_wr": {
-          "desc": "sw20 + SHORTS enter at swing FS - only >=40% win rate on the board PAIRED PERMUTATION vs the shipping book, 2026-10-10 (exp_null_audit.py, 4000 draws, seed 20261010): p = 0.0177 in sample, p = 0.1570 out of sample, gap -114.86 IS and -57.58 OOS - the same book as fsent_sig_sw20_short. Significance means this arm's choice of trades is unlikely to be a reshuffle of the parent's; it does NOT mean the book is statistically better in absolute terms, which the same audit shows it is not (the shipping book sits at the 58th and 45th percentile of a reshuffle of its own trades, and the corrected absolute null is M = 771.09R IS / 384.36R OOS against the 381.7 / 205.5 quoted in BASE_BOOK_NULL.md, which was measured on a different book). See method/NULL_AUDIT_P5.md.",
-          "engine": "patched",
-          "params": { "max_positions": 1,
-                       "mode": "atr_high",
-                       "atr_high_thresh": 0.65,
-                       "atr_low_thresh": 0.35,
-                       "sl_buf_atr": 0.01,
-                       "chop_thresh": 58.0,
-                       "cooldown_bars": 8,
-                       "max_consecutive_losses": 3,
-                       "ext_stop_r": 3.0,
-                       "exp_partial_r": 7.5,
-                       "window_end": "exit",
-                       "exp_fs_entry_side": "short"},
-          "swing": "sw20",
-          # Base params copied from champion_single_sw10/sw20 verbatim.
-          # NOTE: the single books carry neither exp_mltf nor exp_persist.
-          # exp_fs_single.py, both eras.
-          "pins": {"n": 341, "net": 246.02,
-                 "dd_net": 16.92, "win": 0.337, "oos_n": 190, "oos_net": 151.23, "oos_dd_net": 12.91, "oos_win": 0.384},
-      },
+# fsent_sig_sw20_short_wr IS GONE. It was not a second book.
+    #
+    # Removed 2026-10-15 on the owner's instruction to collapse repeats. It was a
+    # byte-identical duplicate of fsent_sig_sw20_short: same swing (sw20), same
+    # params key for key, same pins, and its own desc said so in writing -
+    # "the same book as fsent_sig_sw20_short". The only difference was that its
+    # pins carried the win-rate fields the other one lacked, which is two extra
+    # recorded numbers about the same trades, not a different strategy.
+    #
+    # The two sat next to each other in every export and every dropdown, which
+    # made one book look like corroboration for itself. This is the second
+    # instance in this repo - results_db.py:9 records fsent_single_sw20_short_wr
+    # being the first, with the same rule written down there: "a number with one
+    # home is a number that can be checked."
+    #
+    # fsent_sig_sw20_short is the survivor and keeps the win-rate fields, so
+    # nothing measurable is lost by the merge.
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
     # ===== SWING-SIZE EXIT AT FS (the owner proposal) =====
     # Enter at B2/flip as the book does; when the swing CONFIRMS, measure that

@@ -85,7 +85,11 @@ CANDIDATES = [
     'fsent_sig_wk_pause_short',
     'fsent_sig_decay_crossed',
     'fsent_sig_sw10_short',
-    'fsent_sig_sw20_short_wr',
+    # fsent_sig_sw20_short_wr was here and was this same book under a second
+    # name - identical params, identical swing, identical pins, and its own
+    # desc said so. Removed 2026-10-15 when the duplicate was merged. It was
+    # counted twice in the audit and it also dragged the null distribution
+    # toward itself for no reason.
     'fsent_sig_sw20_short',
 ]
 

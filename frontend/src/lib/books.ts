@@ -292,7 +292,7 @@ export const BOOK_OPTIONS: BookOption[] = [
     label: "SIG SW20 SHORT (serial, 20-bar HTF swings) - IS 341t +246.0R | OOS 190t +151.2R",
     shortLabel: "SIG-SW20",
     slMode: "causal",
-    hint: "the highest-net serial book in the shortlist. The looser sw20 HTF swing rule keeps a wider window open, so more trades fit inside it. Highest OOS net of the five serial picks but the widest losing run of them (12) and the top 5% of trades carry 71% of the net. NOTE: fsent_sig_sw20_short_wr is byte-identical to this book in every metric - one of the two is a duplicate and should not be read as independent corroboration.",
+    hint: "the highest-net serial book in the shortlist. The looser sw20 HTF swing rule keeps a wider window open, so more trades fit inside it. Highest OOS net of the five serial picks but the widest losing run of them (12) and the top 5% of trades carry 71% of the net. It used to appear twice in this file, alongside fsent_sig_sw20_short_wr - the same params, the same swing chain, the same pins, under a second name. That duplicate was merged on 2026-10-15 and this is the surviving entry; do not read the pair as two books agreeing.",
     measured: { isN: 341, isNet: 246.02, oosN: 190, oosNet: 151.23 },
     config: {
       ...V19,
