@@ -87,39 +87,34 @@ BOOKS = {
                    "dd_net": 18.71, "oos_n": 294, "oos_net": 267.29, "oos_dd_net": 19.46},
       },
 
-    "fsent_champ_long_htf15_union": {
-          "desc": "htf15 routed by UNION (trust both HTF windows) instead of atr_high",
-          "engine": "patched",
-          "params": {"mode": "union",
-                       "atr_high_thresh": 0.65,
-                       "sl_buf_atr": 0.01,
-                       "cooldown_bars": 8,
-                       "ext_stop_r": 0.0,
-                       "exp_partial_r": 0.0,
-                       "exp_mltf": True,
-                       "exp_persist": 7,
-                       "pivot_rule": "leg",
-                       "exp_fs_entry_side": "long"},
-          "swing": "htf15",
-          # union sets use="union" with no routing at all (unified.py:1026-1027):
-          # it takes BOTH the B2 and the FLIP 1h window wherever either exists,
-          # instead of atr_high picking between them on the ATR%.
-          # IS 505.24 -> 575.97, OOS 254.81 -> 321.38 (+66.57R out of sample),
-          # and trades rise 500 -> 786 IS. More trades AND more net.
-          #
-          # STABILITY: NOT TESTED, and that is why this one is registered with
-          # its caveat rather than as a winner. union routes on no parameter, so
-          # there is no neighbourhood to sweep and no inverse branch in the
-          # engine - exp_mode_stability.py recorded it SKIPPED rather than
-          # counting it as passed. The honest statement is that the census
-          # number is unreplicated, not that it is confirmed. Treat the OOS
-          # figure as one reveal spent, not as a proof.
-          #
-          # Do not build on this until it survives a replication on a book it
-          # was not selected on.
-          "pins": {"n": 786, "net": 575.97,
-                   "dd_net": 49.17, "oos_n": 451, "oos_net": 321.38, "oos_dd_net": 15.48},
-      },
+    # fsent_champ_long_htf15_union WAS REGISTERED HERE AND WAS REMOVED AGAIN.
+    # Do not put it back on the strength of its IS and OOS nets.
+    #
+    # It looked like a winner: IS 505.24 -> 575.97, OOS 254.81 -> 321.38, both
+    # eras positive, and it was already past the stability harness as "SKIPPED,
+    # nothing to sweep" rather than failed. The nets are real. The book is not.
+    #
+    # The census ranked modes on NET, and net pays for volume. union takes both
+    # the B2 and the FLIP 1h window wherever either exists, so it simply takes
+    # more trades. It did not get better - it got more:
+    #                      IS trades   IS R/trade   OOS trades   OOS R/trade
+    #   htf15 shipped            500        1.010          281          0.907
+    #   + union                  786        0.733          451          0.713
+    #   per-trade quality fell 27% in both eras while the count rose 57% and
+    #   60%. Profit factor 3.13 -> 2.40. That is dilution, not edge.
+    #
+    # Year by year, which is where it shows (exp_mode_yearly.py):
+    #              trades/yr   2020     2021     2022     2023
+    #   htf15 shipped    136   164.44    99.41   109.87   131.51
+    #   + union          214   141.25   223.53   198.91    12.28
+    # 2023 paid 12.28R across a whole year. OOS trades per year went 140 -> 225.
+    #
+    # THE LESSON, because the mistake was in the selection rule and not in the
+    # engine: a mode has to beat the shipped mode on net AND on R-per-trade AND
+    # without adding trades. Under that rule union fails on both counts, and so
+    # does every mode on 4 of the 5 census books. Re-run the census with the
+    # three-part test before ranking anything again - see
+    # exp_mode_strict.py.
 
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
     # ===== DIRECTIONAL FS ENTRY (engine knob exp_fs_entry_side) =====
