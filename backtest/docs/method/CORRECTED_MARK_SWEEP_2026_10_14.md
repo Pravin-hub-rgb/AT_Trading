@@ -687,3 +687,64 @@ registry or re-approving a shared baseline mid-run:
     Those are registry edits and were left alone deliberately.
 
 Both are recorded here so they read as known state rather than as new failures.
+---
+
+## DECAY CENSUS - the gate that had never been switched on. 120 cells, 0 wins.
+
+exp_decay_mode / exp_decay_thr / exp_decay_legs - the P36 decay gate at
+unified.py:820. Four files in the repo NAME it. None of them sets a value.
+exp_decay_mode defaults to 0 and mode 0 returns False on the first line, so this
+gate has been dead code in every number this repo has ever produced.
+
+Causality checked before use, per pipeline 4c. _decay_legs stamps each leg with
+confirmed_at_time, _decay_frac filters `L[0] <= t` at the entry bar and reads
+candles only to `bisect(candle_ts_ltf, t) - 1`. Nothing after the entry bar is
+read. Legal rule, unlike the M2 / end_px / prevpos families.
+
+4 modes x 3 thresholds x 2 leg-windows x 5 books = 120 cells, both eras.
+Identity gate first: exp_decay_mode=0 reproduced every pinned book to the
+decimal.
+
+    cells tested .................. 120
+    cells that BLOCK anything ..... 120
+    cells that IMPROVE net ........ 0
+
+Every single setting lost. And the loss is monotone in how much it removes -
+on fsent_champ_long:
+
+    mode1 thr=0.75 legs=4   n 497->378  (-119 trades)  dNET  -105.36
+    mode1 thr=0.50 legs=4   n 497->237  (-260 trades)  dNET  -245.76
+    mode1 thr=0.25 legs=4   n 497->114  (-383 trades)  dNET  -421.71
+
+Worst cell overall is htffs mode4 thr=0.25 legs=4 at **-776.15R**.
+
+### WHY THIS IS A NULL AND NOT A FLIP
+
+The obvious suspicion is that the gate is simply inverted - the other bot's
+`session`/`session_flip` pair is exactly that shape, and an inverted filter loses
+while its twin wins. Two checks say no.
+
+1. thr=1.01 blocks NOTHING on any of the four modes (n=497, identical to base).
+   So the threshold is a plain monotone "block more as it falls", and the top of
+   its range is a true no-op. There is no complementary mode on the other side
+   of 1.0 waiting to collect what this one rejects.
+2. Modes 1/5, 2/6, 3/7 and 4/8 are the natural inverse pairs. **Every mode 5-8
+   cell was identical to its partner** - the inverse modes did not even appear as
+   separate cells, because at thr<1 the `>=` and `<` tests partition identically
+   across this data. There is no twin to run.
+
+So this is not a gate with the sign flipped. It is a gate that identifies a
+condition these books' good trades are already IN, and removing them removes the
+book. 120 of 120.
+
+### What it means
+
+The decay signal is not a filter, it is a description of when this strategy is
+already committed. Every one of the 120 cells is a way of asking "what if we
+stopped trading the parts that already look weak" and the answer each time is
+"less". That is worth knowing and it is the same shape as the mcl finding: a
+mechanism that sounds protective, whose job the book is already doing.
+
+Recorded rather than deleted, per pipeline section 5. Nothing promoted, no knob
+added, no book or pin touched. Own directory, no overlap with the concurrent
+mode-census work.
