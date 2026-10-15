@@ -156,3 +156,6 @@ backtest/tests/_sfl.err
 # exp_signal_both_long.py / exp_signal_fs_ladder.py.
 backtest/tests/_signal_both_long.json
 backtest/tests/_signal_fs_ladder.json
+
+# harness stderr, same reasoning as *.log above
+*.err

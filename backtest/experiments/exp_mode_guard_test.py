@@ -118,8 +118,11 @@ def main() -> int:
     print("RESULT: %s" % ("PASS" if ok else "FAIL"))
     print("The guard removes a silent fallback. It must not move a single pinned number,")
     print("and the check above is what establishes that.")
-    RESULTS.write_text(io.open(RESULTS, "w", encoding="utf-8").write(
-        __import__("json").dumps(out, indent=1)), encoding="utf-8")
+    # Was: RESULTS.write_text(io.open(RESULTS, "w", ...).write(...)). The inner
+    # write() already saved the file and returns a byte count, which write_text
+    # then rejects - so every run ended in a TypeError after printing PASS.
+    # Harmless, but a spurious traceback trains people to ignore stderr.
+    RESULTS.write_text(json.dumps(out, indent=1), encoding="utf-8")
     print("wrote %s  (%.0fs)" % (RESULTS.name, time.time() - t0))
     return 0 if ok else 1
 
