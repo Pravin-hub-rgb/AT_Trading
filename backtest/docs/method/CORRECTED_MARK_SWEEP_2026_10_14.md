@@ -921,3 +921,46 @@ repo that the inverse-mechanism test is the thing that separates real from
 illusory, and it took four attempts to find one candidate worth the name.
 
 Nothing promoted, no registry entry, no pin touched. Own directory.
+## exp_trail_skip_n VERIFIED - 2 of 3 promote, htffs does not
+
+Owner excluded short from the scope, then asked for a full verification before
+anything is adopted. Five checks, each added because something went wrong earlier.
+
+1. IDENTITY clean - skip_n=0 reproduces all three pins to the decimal.
+
+2. THE CENSUS LADDER WAS A BOUNDARY ARTIFACT. The census topped out at skip_n=5
+   and 5 was the best value on all three books. Extended to 32, the IS argmax is
+   32 on ALL THREE, and htf15 LOSES on OOS at exactly that value. Picking on IS
+   net alone would have promoted it and been wrong.
+
+3. PICKED ON RISK, NOT NET. Highest IS net among values whose IS DD is not worse
+   than the pin's:
+
+     long    DD-safe at 3,4,5,6 -> 4   IS +530.42  OOS +260.53 HOLDS
+     htf15   DD-safe at 2..6    -> 6   IS +639.84  OOS +328.54 HOLDS
+     htffs   DD-safe at 2 ONLY  -> 2   IS +799.52  OOS +281.75 LOSES
+
+   htffs has NO promotable value. Its only DD-safe setting loses on OOS, and its
+   DD-safe window is one rung against long's four and htf15's five. The +2570R at
+   skip_n=32 costs DD 12.86 -> 30.05 and MaxCL 12 -> 23.
+
+5. THE PURGE TEST SETTLES SELECTOR vs RIGHT TAIL. At the pin almost everything
+   exits on the trail, so purging SL trades proves nothing there. Above skip_n=4
+   the SL population is large and every one exits at exactly -1.000 (median and
+   p10 identical). Purging them RAISES the net on all three books
+   (long +616 -> +860, htf15 +724 -> +959, htffs +1505 -> +1834). A right-tail
+   bet loses exactly that way. These trades convert weak early trail exits into
+   ordinary -1.000 losses while survivors go from -0.20 to +2.31 median.
+
+   That is why two of three hold on OOS where swing shape, volatile candles and
+   mark continuation all died.
+
+RECOMMENDATION: long=4, htf15=6, htffs=none. Both winners improve IS drawdown
+19.57 -> 17.99 and 21.05 -> 18.09 and cut htf15's worst streak 22 -> 13.
+
+CAVEAT THAT TRAVELS WITH IT: OOS drawdown RISES for both (+2.2 and +3.0). The IS
+drawdown gain does not carry; what carries is the losing streak and the net. If
+OOS drawdown matters equally for the owner, only long at skip_n=3 is free on both
+(+230.92 OOS vs +269.79 at 5).
+
+Nothing promoted, no registry entry, no pin touched.

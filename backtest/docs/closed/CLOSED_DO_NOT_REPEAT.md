@@ -1175,3 +1175,96 @@ sources. On this data that is the only version of "look for new edge" that is
 supported.
 
 Nothing promoted, no knob added, no book or pin touched.
+---
+
+## exp_trail_skip_n VERIFIED - two of three books promote, htffs does not.
+
+Owner ruled fsent_champ_short out of scope, then asked for a full verification
+before anything is adopted. This file runs the five checks a promotion needs,
+each one added because something went wrong earlier in this sweep.
+
+### 1. IDENTITY - clean
+
+skip_n=0 reproduces all three pinned books to the decimal. long +466.92,
+htf15 +505.24, htffs +757.99.
+
+### 2. THE CENSUS LADDER WAS A BOUNDARY ARTIFACT - and admitting that changed the answer
+
+The census swept skip_n in {0,1,2,3,5} and 5 was the top of the grid. That is the
+same boundary artifact I called out on the mcl sweep and then repeated here.
+Extended to 32:
+
+    book            IS at skip_n=32     OOS at skip_n=32   OOS verdict
+    long              +974.53 (+507.61)   +416.23 (+200.91)  HOLDS
+    htf15             +875.80 (+370.56)   +218.70  (-36.11)  LOSES
+    htffs            +2570.11 (+1812.12)  +340.05  (+26.70)  HOLDS
+
+So the IS argmax was 32 on ALL THREE books, and one of the three dies at exactly
+that value on OOS. Picking on IS net alone would have promoted htf15 and been
+wrong.
+
+### 3+5. CHOOSING ON RISK, NOT ON NET
+
+The owner says drawdown and losing streak matter most. So the pick is the highest
+IS net among values whose IS DD is NOT worse than the pin's.
+
+    fsent_champ_long       DD-safe at 3,4,5,6 -> pick 4
+      IS   +530.42 vs pin +466.92   DD 17.99 vs 19.57   MaxCL 13 vs 12
+      OOS  +260.53 vs pin +215.32   -> +45.21 HOLDS   DD 12.05, MaxCL 8
+
+    fsent_champ_long_htf15  DD-safe at 2,3,4,5,6 -> pick 6
+      IS   +639.84 vs pin +505.24   DD 18.09 vs 21.05   MaxCL 13 vs 22
+      OOS  +328.54 vs pin +254.81   -> +73.73 HOLDS   DD 12.98, MaxCL 11
+
+    fsent_champ_long_htffs  DD-safe at 2 ONLY -> pick 2
+      IS   +799.52 vs pin +757.99   DD 11.97 vs 12.86   MaxCL 14 vs 12
+      OOS  +281.75 vs pin +313.35   -> -31.60 LOSES
+
+htffs has NO promotable value. Its only DD-safe setting is skip_n=2, and that
+loses on OOS. Its DD-safe window is a single rung while long has four and htf15
+has five, so there is nowhere safe to go. The +2570R at skip_n=32 comes with DD
+30.05 and MaxCL 23 - against a pin of DD 12.86 and MaxCL 12.
+
+### THE PURGE TEST - it is a selector, not a right tail
+
+The census could not tell these apart, because at skip_n=0 essentially every
+trade exits on the trail and almost none hit the stop:
+
+    skip_n   n   trail exit   SL exit   median R (kept)
+        0  753          749        4      -0.20
+        5  617          288      329      +2.31
+
+At the pin there is nothing to purge, so the test is uninformative there. Above
+skip_n=4 the SL population is large and every one of those trades exits at
+exactly -1.000 (median and p10 both -1.000). Purging them leaves:
+
+    long   skip=5   full +616.44   purged +860.44
+    htf15  skip=5   full +723.83   purged +958.83
+    htffs  skip=5   full +1504.82  purged +1833.82
+
+The net RISES when the SL exits are removed. That is the opposite of a right-tail
+bet, where the gain lives in the trades the filter removes. These trades convert
+weak early trail exits into ordinary -1.000 losses, and the survivors are worth
++2.31 median instead of -0.20. That is a genuine selection effect, and it is why
+two of three books hold on OOS where shape / volatile / continuation all died.
+
+### RECOMMENDATION, and the caveat that must travel with it
+
+    book                    promote?   value    IS net    OOS net   IS DD   OOS DD
+    fsent_champ_long          YES       4       +530.42   +260.53    17.99    12.05
+    fsent_champ_long_htf15    YES       6       +639.84   +328.54    18.09    12.98
+    fsent_champ_long_htffs    NO        -          -          -        -        -
+
+Both winners IMPROVE drawdown and cut the worst losing streak versus their pins:
+long MaxCL 12 -> 13 IS (one worse) but 7 -> 8 OOS (one worse), while DD falls
+19.57 -> 17.99 IS and 9.85 -> 12.05 OOS; htf15 MaxCL 22 -> 13 IS and 11 -> 11
+OOS, DD 21.05 -> 18.09 IS and 9.98 -> 12.98 OOS. Net and drawdown move together
+here, unlike the gross ladder, which is the whole point of picking on risk.
+
+Caveat that travels with it: OOS drawdown RISES for both winners (+2.2 and +3.0).
+The IS drawdown improvement does not carry to OOS. What carries is the losing
+streak and the net. If OOS drawdown matters as much as IS drawdown for the owner,
+then only skip_n=3 on long is genuinely free on both, at +230.92 OOS versus
++269.79 at 5.
+
+Nothing promoted, no registry entry, no pin touched.

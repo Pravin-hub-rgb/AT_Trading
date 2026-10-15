@@ -1,0 +1,2151 @@
+{
+  "stage": "verify_trail_skip_n",
+  "books": [
+    "fsent_champ_long",
+    "fsent_champ_long_htf15",
+    "fsent_champ_long_htffs"
+  ],
+  "ladder": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "eras": {
+    "is": {
+      "fsent_champ_long": {
+        "0": {
+          "m": {
+            "n": 497,
+            "gross": 561.36,
+            "cost": 68.01,
+            "fund": 26.43,
+            "net": 466.92,
+            "npt": 0.939,
+            "wr": 43.3,
+            "aw": 3.53,
+            "al": -0.7,
+            "payo": 5.03,
+            "pf": 3.84,
+            "dd": 19.57,
+            "ddt": 35,
+            "ddd": 124.3,
+            "mc": 12,
+            "hold_h": 43.9,
+            "tpy": 134.4,
+            "net_dd": 23.9
+          },
+          "purge": {
+            "kept_n": 497,
+            "kept_net": 561.36,
+            "kept_med": -0.172,
+            "dropped_n": 0,
+            "dropped_all_minus_1": true
+          }
+        },
+        "1": {
+          "m": {
+            "n": 497,
+            "gross": 560.84,
+            "cost": 68.01,
+            "fund": 26.43,
+            "net": 466.4,
+            "npt": 0.938,
+            "wr": 43.3,
+            "aw": 3.53,
+            "al": -0.7,
+            "payo": 5.02,
+            "pf": 3.83,
+            "dd": 19.64,
+            "ddt": 35,
+            "ddd": 124.3,
+            "mc": 12,
+            "hold_h": 43.9,
+            "tpy": 134.4,
+            "net_dd": 23.7
+          },
+          "purge": {
+            "kept_n": 350,
+            "kept_net": 707.84,
+            "kept_med": 0.382,
+            "dropped_n": 147,
+            "dropped_all_minus_1": true
+          }
+        },
+        "2": {
+          "m": {
+            "n": 488,
+            "gross": 573.21,
+            "cost": 67.7,
+            "fund": 29.05,
+            "net": 476.46,
+            "npt": 0.976,
+            "wr": 45.9,
+            "aw": 3.57,
+            "al": -0.85,
+            "payo": 4.17,
+            "pf": 3.54,
+            "dd": 19.82,
+            "ddt": 34,
+            "ddd": 126.4,
+            "mc": 11,
+            "hold_h": 50.9,
+            "tpy": 132.1,
+            "net_dd": 24.0
+          },
+          "purge": {
+            "kept_n": 286,
+            "kept_net": 775.21,
+            "kept_med": 1.045,
+            "dropped_n": 202,
+            "dropped_all_minus_1": true
+          }
+        },
+        "3": {
+          "m": {
+            "n": 459,
+            "gross": 585.3,
+            "cost": 66.54,
+            "fund": 31.39,
+            "net": 487.37,
+            "npt": 1.062,
+            "wr": 44.2,
+            "aw": 4.01,
+            "al": -0.9,
+            "payo": 4.47,
+            "pf": 3.55,
+            "dd": 16.14,
+            "ddt": 32,
+            "ddd": 122.3,
+            "mc": 13,
+            "hold_h": 59.2,
+            "tpy": 124.2,
+            "net_dd": 30.2
+          },
+          "purge": {
+            "kept_n": 245,
+            "kept_net": 799.3,
+            "kept_med": 1.446,
+            "dropped_n": 214,
+            "dropped_all_minus_1": true
+          }
+        },
+        "4": {
+          "m": {
+            "n": 447,
+            "gross": 629.01,
+            "cost": 63.58,
+            "fund": 35.01,
+            "net": 530.42,
+            "npt": 1.187,
+            "wr": 42.7,
+            "aw": 4.55,
+            "al": -0.94,
+            "payo": 4.85,
+            "pf": 3.62,
+            "dd": 17.99,
+            "ddt": 34,
+            "ddd": 120.2,
+            "mc": 13,
+            "hold_h": 68.3,
+            "tpy": 121.0,
+            "net_dd": 29.5
+          },
+          "purge": {
+            "kept_n": 211,
+            "kept_net": 865.01,
+            "kept_med": 1.909,
+            "dropped_n": 236,
+            "dropped_all_minus_1": true
+          }
+        },
+        "5": {
+          "m": {
+            "n": 429,
+            "gross": 616.44,
+            "cost": 59.17,
+            "fund": 36.55,
+            "net": 520.72,
+            "npt": 1.214,
+            "wr": 40.6,
+            "aw": 4.97,
+            "al": -0.97,
+            "payo": 5.11,
+            "pf": 3.48,
+            "dd": 17.27,
+            "ddt": 34,
+            "ddd": 120.2,
+            "mc": 13,
+            "hold_h": 75.0,
+            "tpy": 116.1,
+            "net_dd": 30.1
+          },
+          "purge": {
+            "kept_n": 185,
+            "kept_net": 860.44,
+            "kept_med": 2.31,
+            "dropped_n": 244,
+            "dropped_all_minus_1": true
+          }
+        },
+        "6": {
+          "m": {
+            "n": 393,
+            "gross": 615.29,
+            "cost": 54.24,
+            "fund": 36.24,
+            "net": 524.81,
+            "npt": 1.335,
+            "wr": 38.4,
+            "aw": 5.63,
+            "al": -0.97,
+            "payo": 5.8,
+            "pf": 3.62,
+            "dd": 13.85,
+            "ddt": 22,
+            "ddd": 88.4,
+            "mc": 13,
+            "hold_h": 83.1,
+            "tpy": 106.4,
+            "net_dd": 37.9
+          },
+          "purge": {
+            "kept_n": 162,
+            "kept_net": 846.29,
+            "kept_med": 2.689,
+            "dropped_n": 231,
+            "dropped_all_minus_1": true
+          }
+        },
+        "8": {
+          "m": {
+            "n": 349,
+            "gross": 590.76,
+            "cost": 46.97,
+            "fund": 37.72,
+            "net": 506.07,
+            "npt": 1.45,
+            "wr": 35.5,
+            "aw": 6.53,
+            "al": -0.97,
+            "payo": 6.7,
+            "pf": 3.69,
+            "dd": 24.83,
+            "ddt": 33,
+            "ddd": 135.4,
+            "mc": 13,
+            "hold_h": 98.6,
+            "tpy": 94.5,
+            "net_dd": 20.4
+          },
+          "purge": {
+            "kept_n": 135,
+            "kept_net": 804.76,
+            "kept_med": 3.082,
+            "dropped_n": 214,
+            "dropped_all_minus_1": true
+          }
+        },
+        "12": {
+          "m": {
+            "n": 314,
+            "gross": 753.46,
+            "cost": 43.4,
+            "fund": 46.57,
+            "net": 663.5,
+            "npt": 2.113,
+            "wr": 33.1,
+            "aw": 9.25,
+            "al": -0.99,
+            "payo": 9.33,
+            "pf": 4.62,
+            "dd": 29.38,
+            "ddt": 33,
+            "ddd": 135.4,
+            "mc": 14,
+            "hold_h": 129.4,
+            "tpy": 84.9,
+            "net_dd": 22.6
+          },
+          "purge": {
+            "kept_n": 107,
+            "kept_net": 960.46,
+            "kept_med": 4.391,
+            "dropped_n": 207,
+            "dropped_all_minus_1": true
+          }
+        },
+        "16": {
+          "m": {
+            "n": 300,
+            "gross": 803.42,
+            "cost": 39.95,
+            "fund": 50.12,
+            "net": 713.35,
+            "npt": 2.378,
+            "wr": 32.0,
+            "aw": 10.47,
+            "al": -0.99,
+            "payo": 10.6,
+            "pf": 4.99,
+            "dd": 28.97,
+            "ddt": 33,
+            "ddd": 131.8,
+            "mc": 14,
+            "hold_h": 160.1,
+            "tpy": 81.1,
+            "net_dd": 24.6
+          },
+          "purge": {
+            "kept_n": 99,
+            "kept_net": 1004.42,
+            "kept_med": 5.283,
+            "dropped_n": 201,
+            "dropped_all_minus_1": true
+          }
+        },
+        "24": {
+          "m": {
+            "n": 285,
+            "gross": 913.64,
+            "cost": 38.54,
+            "fund": 63.21,
+            "net": 811.89,
+            "npt": 2.849,
+            "wr": 30.5,
+            "aw": 12.77,
+            "al": -1.0,
+            "payo": 12.82,
+            "pf": 5.63,
+            "dd": 25.79,
+            "ddt": 33,
+            "ddd": 121.8,
+            "mc": 14,
+            "hold_h": 213.3,
+            "tpy": 77.1,
+            "net_dd": 31.5
+          },
+          "purge": {
+            "kept_n": 88,
+            "kept_net": 1110.64,
+            "kept_med": 7.348,
+            "dropped_n": 197,
+            "dropped_all_minus_1": true
+          }
+        },
+        "32": {
+          "m": {
+            "n": 272,
+            "gross": 1087.91,
+            "cost": 37.25,
+            "fund": 76.14,
+            "net": 974.53,
+            "npt": 3.583,
+            "wr": 28.7,
+            "aw": 16.43,
+            "al": -1.0,
+            "payo": 16.43,
+            "pf": 6.61,
+            "dd": 22.24,
+            "ddt": 33,
+            "ddd": 114.7,
+            "mc": 14,
+            "hold_h": 259.4,
+            "tpy": 73.6,
+            "net_dd": 43.8
+          },
+          "purge": {
+            "kept_n": 78,
+            "kept_net": 1281.91,
+            "kept_med": 10.074,
+            "dropped_n": 194,
+            "dropped_all_minus_1": true
+          }
+        }
+      },
+      "fsent_champ_long_htf15": {
+        "0": {
+          "m": {
+            "n": 500,
+            "gross": 600.12,
+            "cost": 67.24,
+            "fund": 27.63,
+            "net": 505.24,
+            "npt": 1.01,
+            "wr": 44.6,
+            "aw": 3.54,
+            "al": -0.68,
+            "payo": 5.18,
+            "pf": 4.17,
+            "dd": 21.05,
+            "ddt": 36,
+            "ddd": 124.3,
+            "mc": 22,
+            "hold_h": 45.0,
+            "tpy": 136.8,
+            "net_dd": 24.0
+          },
+          "purge": {
+            "kept_n": 499,
+            "kept_net": 601.12,
+            "kept_med": -0.141,
+            "dropped_n": 1,
+            "dropped_all_minus_1": true
+          }
+        },
+        "1": {
+          "m": {
+            "n": 500,
+            "gross": 599.62,
+            "cost": 67.24,
+            "fund": 27.63,
+            "net": 504.74,
+            "npt": 1.009,
+            "wr": 44.6,
+            "aw": 3.54,
+            "al": -0.69,
+            "payo": 5.16,
+            "pf": 4.16,
+            "dd": 21.11,
+            "ddt": 36,
+            "ddd": 124.3,
+            "mc": 22,
+            "hold_h": 45.0,
+            "tpy": 136.8,
+            "net_dd": 23.9
+          },
+          "purge": {
+            "kept_n": 357,
+            "kept_net": 742.62,
+            "kept_med": 0.398,
+            "dropped_n": 143,
+            "dropped_all_minus_1": true
+          }
+        },
+        "2": {
+          "m": {
+            "n": 501,
+            "gross": 626.12,
+            "cost": 68.57,
+            "fund": 30.42,
+            "net": 527.14,
+            "npt": 1.052,
+            "wr": 48.3,
+            "aw": 3.5,
+            "al": -0.85,
+            "payo": 4.1,
+            "pf": 3.83,
+            "dd": 17.36,
+            "ddt": 34,
+            "ddd": 126.4,
+            "mc": 16,
+            "hold_h": 52.0,
+            "tpy": 137.0,
+            "net_dd": 30.4
+          },
+          "purge": {
+            "kept_n": 302,
+            "kept_net": 825.12,
+            "kept_med": 1.082,
+            "dropped_n": 199,
+            "dropped_all_minus_1": true
+          }
+        },
+        "3": {
+          "m": {
+            "n": 476,
+            "gross": 693.8,
+            "cost": 67.72,
+            "fund": 33.75,
+            "net": 592.34,
+            "npt": 1.244,
+            "wr": 47.3,
+            "aw": 4.09,
+            "al": -0.9,
+            "payo": 4.54,
+            "pf": 4.07,
+            "dd": 17.33,
+            "ddt": 34,
+            "ddd": 122.4,
+            "mc": 16,
+            "hold_h": 61.6,
+            "tpy": 130.2,
+            "net_dd": 34.2
+          },
+          "purge": {
+            "kept_n": 263,
+            "kept_net": 906.8,
+            "kept_med": 1.567,
+            "dropped_n": 213,
+            "dropped_all_minus_1": true
+          }
+        },
+        "4": {
+          "m": {
+            "n": 457,
+            "gross": 738.78,
+            "cost": 65.39,
+            "fund": 38.01,
+            "net": 635.37,
+            "npt": 1.39,
+            "wr": 45.5,
+            "aw": 4.67,
+            "al": -0.94,
+            "payo": 4.99,
+            "pf": 4.17,
+            "dd": 20.0,
+            "ddt": 36,
+            "ddd": 120.3,
+            "mc": 16,
+            "hold_h": 71.7,
+            "tpy": 125.0,
+            "net_dd": 31.8
+          },
+          "purge": {
+            "kept_n": 228,
+            "kept_net": 967.78,
+            "kept_med": 1.94,
+            "dropped_n": 229,
+            "dropped_all_minus_1": true
+          }
+        },
+        "5": {
+          "m": {
+            "n": 440,
+            "gross": 723.83,
+            "cost": 61.25,
+            "fund": 39.33,
+            "net": 623.25,
+            "npt": 1.416,
+            "wr": 43.4,
+            "aw": 5.05,
+            "al": -0.97,
+            "payo": 5.23,
+            "pf": 4.01,
+            "dd": 19.29,
+            "ddt": 36,
+            "ddd": 120.3,
+            "mc": 16,
+            "hold_h": 78.4,
+            "tpy": 120.1,
+            "net_dd": 32.3
+          },
+          "purge": {
+            "kept_n": 205,
+            "kept_net": 958.83,
+            "kept_med": 2.299,
+            "dropped_n": 235,
+            "dropped_all_minus_1": true
+          }
+        },
+        "6": {
+          "m": {
+            "n": 412,
+            "gross": 737.2,
+            "cost": 57.57,
+            "fund": 39.79,
+            "net": 639.84,
+            "npt": 1.553,
+            "wr": 42.0,
+            "aw": 5.61,
+            "al": -0.97,
+            "payo": 5.76,
+            "pf": 4.17,
+            "dd": 18.09,
+            "ddt": 25,
+            "ddd": 112.7,
+            "mc": 13,
+            "hold_h": 87.1,
+            "tpy": 112.5,
+            "net_dd": 35.4
+          },
+          "purge": {
+            "kept_n": 184,
+            "kept_net": 965.2,
+            "kept_med": 2.668,
+            "dropped_n": 228,
+            "dropped_all_minus_1": true
+          }
+        },
+        "8": {
+          "m": {
+            "n": 367,
+            "gross": 673.0,
+            "cost": 52.39,
+            "fund": 41.68,
+            "net": 578.93,
+            "npt": 1.577,
+            "wr": 38.4,
+            "aw": 6.33,
+            "al": -0.97,
+            "payo": 6.5,
+            "pf": 4.06,
+            "dd": 28.89,
+            "ddt": 35,
+            "ddd": 135.5,
+            "mc": 16,
+            "hold_h": 103.5,
+            "tpy": 100.2,
+            "net_dd": 20.0
+          },
+          "purge": {
+            "kept_n": 151,
+            "kept_net": 889.0,
+            "kept_med": 2.993,
+            "dropped_n": 216,
+            "dropped_all_minus_1": true
+          }
+        },
+        "12": {
+          "m": {
+            "n": 319,
+            "gross": 789.89,
+            "cost": 46.82,
+            "fund": 49.1,
+            "net": 693.97,
+            "npt": 2.175,
+            "wr": 34.8,
+            "aw": 8.97,
+            "al": -0.99,
+            "payo": 9.08,
+            "pf": 4.85,
+            "dd": 27.96,
+            "ddt": 31,
+            "ddd": 135.5,
+            "mc": 24,
+            "hold_h": 135.2,
+            "tpy": 87.0,
+            "net_dd": 24.8
+          },
+          "purge": {
+            "kept_n": 116,
+            "kept_net": 992.89,
+            "kept_med": 4.423,
+            "dropped_n": 203,
+            "dropped_all_minus_1": true
+          }
+        },
+        "16": {
+          "m": {
+            "n": 308,
+            "gross": 805.29,
+            "cost": 44.33,
+            "fund": 52.12,
+            "net": 708.84,
+            "npt": 2.301,
+            "wr": 33.1,
+            "aw": 9.88,
+            "al": -0.98,
+            "payo": 10.04,
+            "pf": 4.97,
+            "dd": 28.52,
+            "ddt": 30,
+            "ddd": 131.9,
+            "mc": 22,
+            "hold_h": 164.1,
+            "tpy": 84.0,
+            "net_dd": 24.9
+          },
+          "purge": {
+            "kept_n": 106,
+            "kept_net": 1007.29,
+            "kept_med": 5.145,
+            "dropped_n": 202,
+            "dropped_all_minus_1": true
+          }
+        },
+        "24": {
+          "m": {
+            "n": 288,
+            "gross": 855.49,
+            "cost": 41.98,
+            "fund": 64.84,
+            "net": 748.67,
+            "npt": 2.6,
+            "wr": 31.6,
+            "aw": 11.55,
+            "al": -0.99,
+            "payo": 11.64,
+            "pf": 5.38,
+            "dd": 28.44,
+            "ddt": 30,
+            "ddd": 121.9,
+            "mc": 24,
+            "hold_h": 220.1,
+            "tpy": 78.5,
+            "net_dd": 26.3
+          },
+          "purge": {
+            "kept_n": 93,
+            "kept_net": 1050.49,
+            "kept_med": 6.406,
+            "dropped_n": 195,
+            "dropped_all_minus_1": true
+          }
+        },
+        "32": {
+          "m": {
+            "n": 272,
+            "gross": 992.13,
+            "cost": 40.38,
+            "fund": 75.96,
+            "net": 875.8,
+            "npt": 3.22,
+            "wr": 29.8,
+            "aw": 14.58,
+            "al": -0.99,
+            "payo": 14.73,
+            "pf": 6.25,
+            "dd": 26.65,
+            "ddt": 30,
+            "ddd": 114.8,
+            "mc": 24,
+            "hold_h": 269.4,
+            "tpy": 74.2,
+            "net_dd": 32.9
+          },
+          "purge": {
+            "kept_n": 83,
+            "kept_net": 1181.13,
+            "kept_med": 7.913,
+            "dropped_n": 189,
+            "dropped_all_minus_1": true
+          }
+        }
+      },
+      "fsent_champ_long_htffs": {
+        "0": {
+          "m": {
+            "n": 753,
+            "gross": 906.62,
+            "cost": 106.06,
+            "fund": 42.57,
+            "net": 757.99,
+            "npt": 1.007,
+            "wr": 42.6,
+            "aw": 3.75,
+            "al": -0.69,
+            "payo": 5.44,
+            "pf": 4.04,
+            "dd": 12.86,
+            "ddt": 50,
+            "ddd": 87.8,
+            "mc": 12,
+            "hold_h": 43.1,
+            "tpy": 204.2,
+            "net_dd": 58.9
+          },
+          "purge": {
+            "kept_n": 749,
+            "kept_net": 910.62,
+            "kept_med": -0.184,
+            "dropped_n": 4,
+            "dropped_all_minus_1": true
+          }
+        },
+        "1": {
+          "m": {
+            "n": 753,
+            "gross": 905.96,
+            "cost": 106.06,
+            "fund": 42.57,
+            "net": 757.33,
+            "npt": 1.006,
+            "wr": 42.6,
+            "aw": 3.75,
+            "al": -0.69,
+            "payo": 5.43,
+            "pf": 4.03,
+            "dd": 12.92,
+            "ddt": 50,
+            "ddd": 87.8,
+            "mc": 12,
+            "hold_h": 43.1,
+            "tpy": 204.2,
+            "net_dd": 58.6
+          },
+          "purge": {
+            "kept_n": 544,
+            "kept_net": 1114.96,
+            "kept_med": 0.302,
+            "dropped_n": 209,
+            "dropped_all_minus_1": true
+          }
+        },
+        "2": {
+          "m": {
+            "n": 716,
+            "gross": 946.13,
+            "cost": 100.84,
+            "fund": 45.78,
+            "net": 799.52,
+            "npt": 1.117,
+            "wr": 45.8,
+            "aw": 3.88,
+            "al": -0.84,
+            "payo": 4.62,
+            "pf": 3.91,
+            "dd": 11.97,
+            "ddt": 25,
+            "ddd": 49.6,
+            "mc": 14,
+            "hold_h": 51.3,
+            "tpy": 194.1,
+            "net_dd": 66.8
+          },
+          "purge": {
+            "kept_n": 425,
+            "kept_net": 1237.13,
+            "kept_med": 0.959,
+            "dropped_n": 291,
+            "dropped_all_minus_1": true
+          }
+        },
+        "3": {
+          "m": {
+            "n": 665,
+            "gross": 1064.49,
+            "cost": 95.78,
+            "fund": 50.13,
+            "net": 918.59,
+            "npt": 1.381,
+            "wr": 43.8,
+            "aw": 4.81,
+            "al": -0.9,
+            "payo": 5.37,
+            "pf": 4.18,
+            "dd": 17.96,
+            "ddt": 40,
+            "ddd": 87.8,
+            "mc": 13,
+            "hold_h": 61.9,
+            "tpy": 180.3,
+            "net_dd": 51.1
+          },
+          "purge": {
+            "kept_n": 351,
+            "kept_net": 1378.49,
+            "kept_med": 1.37,
+            "dropped_n": 314,
+            "dropped_all_minus_1": true
+          }
+        },
+        "4": {
+          "m": {
+            "n": 638,
+            "gross": 1367.44,
+            "cost": 93.77,
+            "fund": 57.79,
+            "net": 1215.88,
+            "npt": 1.906,
+            "wr": 43.1,
+            "aw": 6.2,
+            "al": -0.93,
+            "payo": 6.66,
+            "pf": 5.05,
+            "dd": 20.21,
+            "ddt": 34,
+            "ddd": 90.5,
+            "mc": 13,
+            "hold_h": 72.9,
+            "tpy": 173.0,
+            "net_dd": 60.2
+          },
+          "purge": {
+            "kept_n": 313,
+            "kept_net": 1692.44,
+            "kept_med": 1.984,
+            "dropped_n": 325,
+            "dropped_all_minus_1": true
+          }
+        },
+        "5": {
+          "m": {
+            "n": 617,
+            "gross": 1504.82,
+            "cost": 88.8,
+            "fund": 61.86,
+            "net": 1354.16,
+            "npt": 2.195,
+            "wr": 42.5,
+            "aw": 7.03,
+            "al": -0.95,
+            "payo": 7.38,
+            "pf": 5.45,
+            "dd": 26.45,
+            "ddt": 85,
+            "ddd": 212.4,
+            "mc": 26,
+            "hold_h": 81.2,
+            "tpy": 167.3,
+            "net_dd": 51.2
+          },
+          "purge": {
+            "kept_n": 288,
+            "kept_net": 1833.82,
+            "kept_med": 2.417,
+            "dropped_n": 329,
+            "dropped_all_minus_1": true
+          }
+        },
+        "6": {
+          "m": {
+            "n": 583,
+            "gross": 1654.58,
+            "cost": 85.02,
+            "fund": 65.98,
+            "net": 1503.58,
+            "npt": 2.579,
+            "wr": 42.4,
+            "aw": 8.0,
+            "al": -0.96,
+            "payo": 8.36,
+            "pf": 6.15,
+            "dd": 30.73,
+            "ddt": 82,
+            "ddd": 219.0,
+            "mc": 12,
+            "hold_h": 91.2,
+            "tpy": 158.1,
+            "net_dd": 48.9
+          },
+          "purge": {
+            "kept_n": 268,
+            "kept_net": 1969.58,
+            "kept_med": 2.824,
+            "dropped_n": 315,
+            "dropped_all_minus_1": true
+          }
+        },
+        "8": {
+          "m": {
+            "n": 523,
+            "gross": 1633.35,
+            "cost": 73.5,
+            "fund": 70.57,
+            "net": 1489.29,
+            "npt": 2.848,
+            "wr": 41.9,
+            "aw": 8.81,
+            "al": -0.97,
+            "payo": 9.07,
+            "pf": 6.54,
+            "dd": 32.12,
+            "ddt": 69,
+            "ddd": 208.6,
+            "mc": 26,
+            "hold_h": 113.9,
+            "tpy": 141.8,
+            "net_dd": 46.4
+          },
+          "purge": {
+            "kept_n": 233,
+            "kept_net": 1923.35,
+            "kept_med": 3.545,
+            "dropped_n": 290,
+            "dropped_all_minus_1": true
+          }
+        },
+        "12": {
+          "m": {
+            "n": 463,
+            "gross": 1810.16,
+            "cost": 68.4,
+            "fund": 86.55,
+            "net": 1655.21,
+            "npt": 3.575,
+            "wr": 40.4,
+            "aw": 11.12,
+            "al": -0.98,
+            "payo": 11.37,
+            "pf": 7.7,
+            "dd": 32.72,
+            "ddt": 37,
+            "ddd": 140.3,
+            "mc": 23,
+            "hold_h": 152.1,
+            "tpy": 125.5,
+            "net_dd": 50.6
+          },
+          "purge": {
+            "kept_n": 195,
+            "kept_net": 2078.16,
+            "kept_med": 5.002,
+            "dropped_n": 268,
+            "dropped_all_minus_1": true
+          }
+        },
+        "16": {
+          "m": {
+            "n": 429,
+            "gross": 2010.28,
+            "cost": 61.47,
+            "fund": 98.15,
+            "net": 1850.66,
+            "npt": 4.314,
+            "wr": 39.6,
+            "aw": 13.33,
+            "al": -0.99,
+            "payo": 13.46,
+            "pf": 8.83,
+            "dd": 32.3,
+            "ddt": 37,
+            "ddd": 136.6,
+            "mc": 23,
+            "hold_h": 191.5,
+            "tpy": 116.3,
+            "net_dd": 57.3
+          },
+          "purge": {
+            "kept_n": 173,
+            "kept_net": 2266.28,
+            "kept_med": 5.738,
+            "dropped_n": 256,
+            "dropped_all_minus_1": true
+          }
+        },
+        "24": {
+          "m": {
+            "n": 371,
+            "gross": 2414.77,
+            "cost": 55.44,
+            "fund": 120.15,
+            "net": 2239.19,
+            "npt": 6.036,
+            "wr": 40.7,
+            "aw": 17.44,
+            "al": -0.99,
+            "payo": 17.55,
+            "pf": 12.04,
+            "dd": 32.07,
+            "ddt": 37,
+            "ddd": 130.6,
+            "mc": 23,
+            "hold_h": 273.8,
+            "tpy": 102.5,
+            "net_dd": 69.8
+          },
+          "purge": {
+            "kept_n": 154,
+            "kept_net": 2631.77,
+            "kept_med": 6.885,
+            "dropped_n": 217,
+            "dropped_all_minus_1": true
+          }
+        },
+        "32": {
+          "m": {
+            "n": 367,
+            "gross": 2766.76,
+            "cost": 55.49,
+            "fund": 141.16,
+            "net": 2570.11,
+            "npt": 7.003,
+            "wr": 38.4,
+            "aw": 21.23,
+            "al": -1.0,
+            "payo": 21.23,
+            "pf": 13.24,
+            "dd": 30.05,
+            "ddt": 37,
+            "ddd": 123.3,
+            "mc": 23,
+            "hold_h": 331.7,
+            "tpy": 101.4,
+            "net_dd": 85.5
+          },
+          "purge": {
+            "kept_n": 141,
+            "kept_net": 2992.76,
+            "kept_med": 9.667,
+            "dropped_n": 226,
+            "dropped_all_minus_1": true
+          }
+        }
+      }
+    },
+    "oos": {
+      "fsent_champ_long": {
+        "0": {
+          "m": {
+            "n": 281,
+            "gross": 251.07,
+            "cost": 26.95,
+            "fund": 8.8,
+            "net": 215.32,
+            "npt": 0.766,
+            "wr": 42.7,
+            "aw": 3.0,
+            "al": -0.68,
+            "payo": 4.42,
+            "pf": 3.29,
+            "dd": 9.85,
+            "ddt": 19,
+            "ddd": 55.3,
+            "mc": 7,
+            "hold_h": 39.6,
+            "tpy": 141.5,
+            "net_dd": 21.9
+          },
+          "purge": {
+            "kept_n": 281,
+            "kept_net": 251.07,
+            "kept_med": -0.12,
+            "dropped_n": 0,
+            "dropped_all_minus_1": true
+          }
+        },
+        "1": {
+          "m": {
+            "n": 282,
+            "gross": 250.19,
+            "cost": 27.29,
+            "fund": 8.9,
+            "net": 214.01,
+            "npt": 0.759,
+            "wr": 42.9,
+            "aw": 2.98,
+            "al": -0.69,
+            "payo": 4.34,
+            "pf": 3.27,
+            "dd": 9.88,
+            "ddt": 19,
+            "ddd": 55.3,
+            "mc": 7,
+            "hold_h": 39.6,
+            "tpy": 142.0,
+            "net_dd": 21.7
+          },
+          "purge": {
+            "kept_n": 199,
+            "kept_net": 333.19,
+            "kept_med": 0.485,
+            "dropped_n": 83,
+            "dropped_all_minus_1": true
+          }
+        },
+        "2": {
+          "m": {
+            "n": 262,
+            "gross": 216.33,
+            "cost": 25.48,
+            "fund": 9.39,
+            "net": 181.47,
+            "npt": 0.693,
+            "wr": 43.5,
+            "aw": 2.96,
+            "al": -0.82,
+            "payo": 3.61,
+            "pf": 2.78,
+            "dd": 8.04,
+            "ddt": 13,
+            "ddd": 56.6,
+            "mc": 6,
+            "hold_h": 45.9,
+            "tpy": 132.5,
+            "net_dd": 22.6
+          },
+          "purge": {
+            "kept_n": 153,
+            "kept_net": 325.33,
+            "kept_med": 0.837,
+            "dropped_n": 109,
+            "dropped_all_minus_1": true
+          }
+        },
+        "3": {
+          "m": {
+            "n": 251,
+            "gross": 265.89,
+            "cost": 23.82,
+            "fund": 11.16,
+            "net": 230.92,
+            "npt": 0.92,
+            "wr": 43.0,
+            "aw": 3.66,
+            "al": -0.9,
+            "payo": 4.05,
+            "pf": 3.06,
+            "dd": 10.53,
+            "ddt": 16,
+            "ddd": 59.4,
+            "mc": 8,
+            "hold_h": 55.7,
+            "tpy": 126.4,
+            "net_dd": 21.9
+          },
+          "purge": {
+            "kept_n": 128,
+            "kept_net": 388.9,
+            "kept_med": 1.436,
+            "dropped_n": 123,
+            "dropped_all_minus_1": true
+          }
+        },
+        "4": {
+          "m": {
+            "n": 240,
+            "gross": 296.45,
+            "cost": 23.66,
+            "fund": 12.27,
+            "net": 260.53,
+            "npt": 1.086,
+            "wr": 40.4,
+            "aw": 4.45,
+            "al": -0.94,
+            "payo": 4.72,
+            "pf": 3.2,
+            "dd": 12.05,
+            "ddt": 15,
+            "ddd": 59.4,
+            "mc": 8,
+            "hold_h": 63.1,
+            "tpy": 120.9,
+            "net_dd": 21.6
+          },
+          "purge": {
+            "kept_n": 110,
+            "kept_net": 426.46,
+            "kept_med": 2.334,
+            "dropped_n": 130,
+            "dropped_all_minus_1": true
+          }
+        },
+        "5": {
+          "m": {
+            "n": 224,
+            "gross": 305.4,
+            "cost": 22.45,
+            "fund": 13.15,
+            "net": 269.79,
+            "npt": 1.204,
+            "wr": 37.5,
+            "aw": 5.22,
+            "al": -0.95,
+            "payo": 5.5,
+            "pf": 3.3,
+            "dd": 15.56,
+            "ddt": 24,
+            "ddd": 76.5,
+            "mc": 9,
+            "hold_h": 73.1,
+            "tpy": 113.7,
+            "net_dd": 17.3
+          },
+          "purge": {
+            "kept_n": 95,
+            "kept_net": 434.4,
+            "kept_med": 2.681,
+            "dropped_n": 129,
+            "dropped_all_minus_1": true
+          }
+        },
+        "6": {
+          "m": {
+            "n": 221,
+            "gross": 343.55,
+            "cost": 21.85,
+            "fund": 14.17,
+            "net": 307.53,
+            "npt": 1.392,
+            "wr": 36.7,
+            "aw": 5.93,
+            "al": -0.98,
+            "payo": 6.08,
+            "pf": 3.52,
+            "dd": 15.75,
+            "ddt": 18,
+            "ddd": 71.9,
+            "mc": 9,
+            "hold_h": 81.4,
+            "tpy": 112.1,
+            "net_dd": 19.5
+          },
+          "purge": {
+            "kept_n": 87,
+            "kept_net": 477.56,
+            "kept_med": 3.281,
+            "dropped_n": 134,
+            "dropped_all_minus_1": true
+          }
+        },
+        "8": {
+          "m": {
+            "n": 208,
+            "gross": 328.31,
+            "cost": 19.9,
+            "fund": 15.79,
+            "net": 292.62,
+            "npt": 1.407,
+            "wr": 36.1,
+            "aw": 6.1,
+            "al": -0.97,
+            "payo": 6.27,
+            "pf": 3.54,
+            "dd": 15.76,
+            "ddt": 18,
+            "ddd": 69.1,
+            "mc": 9,
+            "hold_h": 98.6,
+            "tpy": 105.6,
+            "net_dd": 18.6
+          },
+          "purge": {
+            "kept_n": 80,
+            "kept_net": 456.31,
+            "kept_med": 3.395,
+            "dropped_n": 128,
+            "dropped_all_minus_1": true
+          }
+        },
+        "12": {
+          "m": {
+            "n": 182,
+            "gross": 296.81,
+            "cost": 17.11,
+            "fund": 16.42,
+            "net": 263.28,
+            "npt": 1.447,
+            "wr": 32.4,
+            "aw": 7.09,
+            "al": -0.99,
+            "payo": 7.19,
+            "pf": 3.45,
+            "dd": 15.5,
+            "ddt": 18,
+            "ddd": 79.1,
+            "mc": 15,
+            "hold_h": 128.3,
+            "tpy": 92.4,
+            "net_dd": 17.0
+          },
+          "purge": {
+            "kept_n": 61,
+            "kept_net": 417.81,
+            "kept_med": 3.886,
+            "dropped_n": 121,
+            "dropped_all_minus_1": true
+          }
+        },
+        "16": {
+          "m": {
+            "n": 146,
+            "gross": 283.54,
+            "cost": 13.29,
+            "fund": 15.18,
+            "net": 255.07,
+            "npt": 1.747,
+            "wr": 29.5,
+            "aw": 8.92,
+            "al": -0.97,
+            "payo": 9.18,
+            "pf": 3.83,
+            "dd": 23.25,
+            "ddt": 31,
+            "ddd": 180.8,
+            "mc": 17,
+            "hold_h": 161.1,
+            "tpy": 74.1,
+            "net_dd": 11.0
+          },
+          "purge": {
+            "kept_n": 48,
+            "kept_net": 381.54,
+            "kept_med": 4.493,
+            "dropped_n": 98,
+            "dropped_all_minus_1": true
+          }
+        },
+        "24": {
+          "m": {
+            "n": 139,
+            "gross": 290.71,
+            "cost": 10.77,
+            "fund": 19.09,
+            "net": 260.84,
+            "npt": 1.877,
+            "wr": 29.5,
+            "aw": 9.48,
+            "al": -1.0,
+            "payo": 9.48,
+            "pf": 3.97,
+            "dd": 25.14,
+            "ddt": 30,
+            "ddd": 175.3,
+            "mc": 17,
+            "hold_h": 215.8,
+            "tpy": 70.5,
+            "net_dd": 10.4
+          },
+          "purge": {
+            "kept_n": 41,
+            "kept_net": 388.71,
+            "kept_med": 5.685,
+            "dropped_n": 98,
+            "dropped_all_minus_1": true
+          }
+        },
+        "32": {
+          "m": {
+            "n": 131,
+            "gross": 451.27,
+            "cost": 10.22,
+            "fund": 24.82,
+            "net": 416.23,
+            "npt": 3.177,
+            "wr": 31.3,
+            "aw": 13.19,
+            "al": -0.99,
+            "payo": 13.26,
+            "pf": 6.04,
+            "dd": 26.44,
+            "ddt": 28,
+            "ddd": 165.7,
+            "mc": 20,
+            "hold_h": 291.7,
+            "tpy": 66.5,
+            "net_dd": 15.7
+          },
+          "purge": {
+            "kept_n": 42,
+            "kept_net": 540.27,
+            "kept_med": 9.452,
+            "dropped_n": 89,
+            "dropped_all_minus_1": true
+          }
+        }
+      },
+      "fsent_champ_long_htf15": {
+        "0": {
+          "m": {
+            "n": 281,
+            "gross": 291.43,
+            "cost": 27.45,
+            "fund": 9.17,
+            "net": 254.81,
+            "npt": 0.907,
+            "wr": 43.4,
+            "aw": 3.25,
+            "al": -0.66,
+            "payo": 4.91,
+            "pf": 3.76,
+            "dd": 9.98,
+            "ddt": 18,
+            "ddd": 41.6,
+            "mc": 11,
+            "hold_h": 39.3,
+            "tpy": 141.5,
+            "net_dd": 25.5
+          },
+          "purge": {
+            "kept_n": 281,
+            "kept_net": 291.43,
+            "kept_med": -0.104,
+            "dropped_n": 0,
+            "dropped_all_minus_1": true
+          }
+        },
+        "1": {
+          "m": {
+            "n": 282,
+            "gross": 290.55,
+            "cost": 27.78,
+            "fund": 9.27,
+            "net": 253.5,
+            "npt": 0.899,
+            "wr": 43.6,
+            "aw": 3.23,
+            "al": -0.67,
+            "payo": 4.82,
+            "pf": 3.73,
+            "dd": 10.01,
+            "ddt": 18,
+            "ddd": 41.6,
+            "mc": 11,
+            "hold_h": 39.4,
+            "tpy": 142.0,
+            "net_dd": 25.3
+          },
+          "purge": {
+            "kept_n": 200,
+            "kept_net": 372.55,
+            "kept_med": 0.569,
+            "dropped_n": 82,
+            "dropped_all_minus_1": true
+          }
+        },
+        "2": {
+          "m": {
+            "n": 267,
+            "gross": 273.32,
+            "cost": 26.36,
+            "fund": 9.97,
+            "net": 237.0,
+            "npt": 0.888,
+            "wr": 45.3,
+            "aw": 3.24,
+            "al": -0.81,
+            "payo": 3.98,
+            "pf": 3.3,
+            "dd": 8.0,
+            "ddt": 20,
+            "ddd": 66.2,
+            "mc": 6,
+            "hold_h": 46.2,
+            "tpy": 135.0,
+            "net_dd": 29.6
+          },
+          "purge": {
+            "kept_n": 159,
+            "kept_net": 381.32,
+            "kept_med": 0.966,
+            "dropped_n": 108,
+            "dropped_all_minus_1": true
+          }
+        },
+        "3": {
+          "m": {
+            "n": 260,
+            "gross": 321.5,
+            "cost": 24.85,
+            "fund": 11.98,
+            "net": 284.67,
+            "npt": 1.095,
+            "wr": 45.0,
+            "aw": 3.87,
+            "al": -0.91,
+            "payo": 4.23,
+            "pf": 3.46,
+            "dd": 10.53,
+            "ddt": 16,
+            "ddd": 59.4,
+            "mc": 8,
+            "hold_h": 56.1,
+            "tpy": 131.0,
+            "net_dd": 27.0
+          },
+          "purge": {
+            "kept_n": 134,
+            "kept_net": 447.51,
+            "kept_med": 1.727,
+            "dropped_n": 126,
+            "dropped_all_minus_1": true
+          }
+        },
+        "4": {
+          "m": {
+            "n": 246,
+            "gross": 336.39,
+            "cost": 24.14,
+            "fund": 12.64,
+            "net": 299.61,
+            "npt": 1.218,
+            "wr": 41.5,
+            "aw": 4.63,
+            "al": -0.95,
+            "payo": 4.9,
+            "pf": 3.47,
+            "dd": 12.05,
+            "ddt": 15,
+            "ddd": 59.4,
+            "mc": 11,
+            "hold_h": 62.1,
+            "tpy": 123.9,
+            "net_dd": 24.9
+          },
+          "purge": {
+            "kept_n": 114,
+            "kept_net": 468.39,
+            "kept_med": 2.333,
+            "dropped_n": 132,
+            "dropped_all_minus_1": true
+          }
+        },
+        "5": {
+          "m": {
+            "n": 233,
+            "gross": 337.3,
+            "cost": 23.2,
+            "fund": 13.81,
+            "net": 300.29,
+            "npt": 1.289,
+            "wr": 38.6,
+            "aw": 5.26,
+            "al": -0.95,
+            "payo": 5.54,
+            "pf": 3.49,
+            "dd": 12.91,
+            "ddt": 16,
+            "ddd": 51.0,
+            "mc": 11,
+            "hold_h": 72.0,
+            "tpy": 118.2,
+            "net_dd": 23.3
+          },
+          "purge": {
+            "kept_n": 101,
+            "kept_net": 469.3,
+            "kept_med": 2.681,
+            "dropped_n": 132,
+            "dropped_all_minus_1": true
+          }
+        },
+        "6": {
+          "m": {
+            "n": 224,
+            "gross": 365.66,
+            "cost": 22.48,
+            "fund": 14.64,
+            "net": 328.54,
+            "npt": 1.467,
+            "wr": 37.1,
+            "aw": 6.05,
+            "al": -0.97,
+            "payo": 6.25,
+            "pf": 3.68,
+            "dd": 12.98,
+            "ddt": 16,
+            "ddd": 48.4,
+            "mc": 11,
+            "hold_h": 81.2,
+            "tpy": 113.5,
+            "net_dd": 25.3
+          },
+          "purge": {
+            "kept_n": 91,
+            "kept_net": 498.66,
+            "kept_med": 3.125,
+            "dropped_n": 133,
+            "dropped_all_minus_1": true
+          }
+        },
+        "8": {
+          "m": {
+            "n": 212,
+            "gross": 342.93,
+            "cost": 21.12,
+            "fund": 16.64,
+            "net": 305.17,
+            "npt": 1.439,
+            "wr": 35.8,
+            "aw": 6.26,
+            "al": -0.97,
+            "payo": 6.42,
+            "pf": 3.59,
+            "dd": 14.4,
+            "ddt": 18,
+            "ddd": 69.1,
+            "mc": 11,
+            "hold_h": 97.7,
+            "tpy": 107.5,
+            "net_dd": 21.2
+          },
+          "purge": {
+            "kept_n": 81,
+            "kept_net": 473.93,
+            "kept_med": 3.125,
+            "dropped_n": 131,
+            "dropped_all_minus_1": true
+          }
+        },
+        "12": {
+          "m": {
+            "n": 185,
+            "gross": 295.63,
+            "cost": 18.51,
+            "fund": 17.35,
+            "net": 259.76,
+            "npt": 1.404,
+            "wr": 31.9,
+            "aw": 7.12,
+            "al": -0.99,
+            "payo": 7.22,
+            "pf": 3.38,
+            "dd": 14.1,
+            "ddt": 26,
+            "ddd": 121.6,
+            "mc": 12,
+            "hold_h": 126.5,
+            "tpy": 93.9,
+            "net_dd": 18.4
+          },
+          "purge": {
+            "kept_n": 61,
+            "kept_net": 419.63,
+            "kept_med": 3.796,
+            "dropped_n": 124,
+            "dropped_all_minus_1": true
+          }
+        },
+        "16": {
+          "m": {
+            "n": 148,
+            "gross": 169.43,
+            "cost": 15.23,
+            "fund": 15.0,
+            "net": 139.2,
+            "npt": 0.941,
+            "wr": 26.4,
+            "aw": 7.06,
+            "al": -0.97,
+            "payo": 7.26,
+            "pf": 2.6,
+            "dd": 21.79,
+            "ddt": 33,
+            "ddd": 142.8,
+            "mc": 21,
+            "hold_h": 152.2,
+            "tpy": 75.1,
+            "net_dd": 6.4
+          },
+          "purge": {
+            "kept_n": 44,
+            "kept_net": 273.43,
+            "kept_med": 4.414,
+            "dropped_n": 104,
+            "dropped_all_minus_1": true
+          }
+        },
+        "24": {
+          "m": {
+            "n": 133,
+            "gross": 121.67,
+            "cost": 11.52,
+            "fund": 16.79,
+            "net": 93.37,
+            "npt": 0.702,
+            "wr": 24.8,
+            "aw": 6.72,
+            "al": -1.0,
+            "payo": 6.72,
+            "pf": 2.22,
+            "dd": 30.78,
+            "ddt": 39,
+            "ddd": 166.6,
+            "mc": 27,
+            "hold_h": 199.5,
+            "tpy": 67.5,
+            "net_dd": 3.0
+          },
+          "purge": {
+            "kept_n": 33,
+            "kept_net": 221.67,
+            "kept_med": 5.552,
+            "dropped_n": 100,
+            "dropped_all_minus_1": true
+          }
+        },
+        "32": {
+          "m": {
+            "n": 119,
+            "gross": 249.91,
+            "cost": 10.05,
+            "fund": 21.16,
+            "net": 218.7,
+            "npt": 1.838,
+            "wr": 26.9,
+            "aw": 10.51,
+            "al": -0.99,
+            "payo": 10.57,
+            "pf": 3.89,
+            "dd": 27.0,
+            "ddt": 27,
+            "ddd": 165.7,
+            "mc": 27,
+            "hold_h": 272.8,
+            "tpy": 60.4,
+            "net_dd": 8.1
+          },
+          "purge": {
+            "kept_n": 33,
+            "kept_net": 335.91,
+            "kept_med": 8.934,
+            "dropped_n": 86,
+            "dropped_all_minus_1": true
+          }
+        }
+      },
+      "fsent_champ_long_htffs": {
+        "0": {
+          "m": {
+            "n": 389,
+            "gross": 366.43,
+            "cost": 39.7,
+            "fund": 13.38,
+            "net": 313.35,
+            "npt": 0.806,
+            "wr": 39.6,
+            "aw": 3.37,
+            "al": -0.65,
+            "payo": 5.19,
+            "pf": 3.4,
+            "dd": 10.59,
+            "ddt": 25,
+            "ddd": 51.5,
+            "mc": 10,
+            "hold_h": 38.2,
+            "tpy": 195.5,
+            "net_dd": 29.6
+          },
+          "purge": {
+            "kept_n": 388,
+            "kept_net": 367.43,
+            "kept_med": -0.187,
+            "dropped_n": 1,
+            "dropped_all_minus_1": true
+          }
+        },
+        "1": {
+          "m": {
+            "n": 390,
+            "gross": 367.73,
+            "cost": 39.74,
+            "fund": 13.47,
+            "net": 314.53,
+            "npt": 0.806,
+            "wr": 40.0,
+            "aw": 3.34,
+            "al": -0.65,
+            "payo": 5.12,
+            "pf": 3.41,
+            "dd": 10.62,
+            "ddt": 25,
+            "ddd": 51.5,
+            "mc": 10,
+            "hold_h": 38.6,
+            "tpy": 196.0,
+            "net_dd": 29.6
+          },
+          "purge": {
+            "kept_n": 281,
+            "kept_net": 476.73,
+            "kept_med": 0.205,
+            "dropped_n": 109,
+            "dropped_all_minus_1": true
+          }
+        },
+        "2": {
+          "m": {
+            "n": 376,
+            "gross": 335.95,
+            "cost": 39.59,
+            "fund": 14.62,
+            "net": 281.75,
+            "npt": 0.749,
+            "wr": 42.0,
+            "aw": 3.28,
+            "al": -0.84,
+            "payo": 3.92,
+            "pf": 2.84,
+            "dd": 13.66,
+            "ddt": 27,
+            "ddd": 51.5,
+            "mc": 10,
+            "hold_h": 46.5,
+            "tpy": 190.2,
+            "net_dd": 20.6
+          },
+          "purge": {
+            "kept_n": 209,
+            "kept_net": 502.95,
+            "kept_med": 1.209,
+            "dropped_n": 167,
+            "dropped_all_minus_1": true
+          }
+        },
+        "3": {
+          "m": {
+            "n": 355,
+            "gross": 392.13,
+            "cost": 37.21,
+            "fund": 17.26,
+            "net": 337.66,
+            "npt": 0.951,
+            "wr": 41.4,
+            "aw": 3.93,
+            "al": -0.9,
+            "payo": 4.39,
+            "pf": 3.11,
+            "dd": 13.8,
+            "ddt": 22,
+            "ddd": 52.7,
+            "mc": 10,
+            "hold_h": 57.0,
+            "tpy": 178.4,
+            "net_dd": 24.5
+          },
+          "purge": {
+            "kept_n": 177,
+            "kept_net": 570.14,
+            "kept_med": 1.514,
+            "dropped_n": 178,
+            "dropped_all_minus_1": true
+          }
+        },
+        "4": {
+          "m": {
+            "n": 335,
+            "gross": 420.93,
+            "cost": 34.98,
+            "fund": 18.64,
+            "net": 367.31,
+            "npt": 1.096,
+            "wr": 40.6,
+            "aw": 4.46,
+            "al": -0.93,
+            "payo": 4.78,
+            "pf": 3.27,
+            "dd": 12.44,
+            "ddt": 19,
+            "ddd": 43.7,
+            "mc": 9,
+            "hold_h": 66.5,
+            "tpy": 168.4,
+            "net_dd": 29.5
+          },
+          "purge": {
+            "kept_n": 158,
+            "kept_net": 597.93,
+            "kept_med": 2.057,
+            "dropped_n": 177,
+            "dropped_all_minus_1": true
+          }
+        },
+        "5": {
+          "m": {
+            "n": 306,
+            "gross": 388.73,
+            "cost": 31.88,
+            "fund": 19.45,
+            "net": 337.41,
+            "npt": 1.103,
+            "wr": 39.5,
+            "aw": 4.63,
+            "al": -0.93,
+            "payo": 4.98,
+            "pf": 3.26,
+            "dd": 11.18,
+            "ddt": 15,
+            "ddd": 43.7,
+            "mc": 12,
+            "hold_h": 77.8,
+            "tpy": 154.8,
+            "net_dd": 30.2
+          },
+          "purge": {
+            "kept_n": 142,
+            "kept_net": 552.74,
+            "kept_med": 2.304,
+            "dropped_n": 164,
+            "dropped_all_minus_1": true
+          }
+        },
+        "6": {
+          "m": {
+            "n": 294,
+            "gross": 360.66,
+            "cost": 29.21,
+            "fund": 20.39,
+            "net": 311.06,
+            "npt": 1.058,
+            "wr": 38.8,
+            "aw": 4.68,
+            "al": -0.96,
+            "payo": 4.86,
+            "pf": 3.08,
+            "dd": 13.58,
+            "ddt": 16,
+            "ddd": 50.5,
+            "mc": 10,
+            "hold_h": 87.7,
+            "tpy": 148.7,
+            "net_dd": 22.9
+          },
+          "purge": {
+            "kept_n": 128,
+            "kept_net": 526.66,
+            "kept_med": 2.681,
+            "dropped_n": 166,
+            "dropped_all_minus_1": true
+          }
+        },
+        "8": {
+          "m": {
+            "n": 278,
+            "gross": 358.99,
+            "cost": 28.42,
+            "fund": 22.48,
+            "net": 308.08,
+            "npt": 1.108,
+            "wr": 36.3,
+            "aw": 5.27,
+            "al": -0.98,
+            "payo": 5.39,
+            "pf": 3.07,
+            "dd": 14.98,
+            "ddt": 30,
+            "ddd": 84.5,
+            "mc": 14,
+            "hold_h": 104.7,
+            "tpy": 140.6,
+            "net_dd": 20.6
+          },
+          "purge": {
+            "kept_n": 107,
+            "kept_net": 529.99,
+            "kept_med": 3.166,
+            "dropped_n": 171,
+            "dropped_all_minus_1": true
+          }
+        },
+        "12": {
+          "m": {
+            "n": 240,
+            "gross": 319.58,
+            "cost": 23.96,
+            "fund": 21.87,
+            "net": 273.74,
+            "npt": 1.141,
+            "wr": 32.5,
+            "aw": 6.15,
+            "al": -0.99,
+            "payo": 6.22,
+            "pf": 2.99,
+            "dd": 18.96,
+            "ddt": 25,
+            "ddd": 81.2,
+            "mc": 16,
+            "hold_h": 131.1,
+            "tpy": 121.5,
+            "net_dd": 14.4
+          },
+          "purge": {
+            "kept_n": 80,
+            "kept_net": 479.58,
+            "kept_med": 3.572,
+            "dropped_n": 160,
+            "dropped_all_minus_1": true
+          }
+        },
+        "16": {
+          "m": {
+            "n": 204,
+            "gross": 303.38,
+            "cost": 20.76,
+            "fund": 22.03,
+            "net": 260.59,
+            "npt": 1.277,
+            "wr": 28.9,
+            "aw": 7.57,
+            "al": -0.99,
+            "payo": 7.67,
+            "pf": 3.12,
+            "dd": 19.22,
+            "ddt": 57,
+            "ddd": 218.1,
+            "mc": 14,
+            "hold_h": 158.9,
+            "tpy": 103.3,
+            "net_dd": 13.6
+          },
+          "purge": {
+            "kept_n": 62,
+            "kept_net": 445.38,
+            "kept_med": 4.115,
+            "dropped_n": 142,
+            "dropped_all_minus_1": true
+          }
+        },
+        "24": {
+          "m": {
+            "n": 190,
+            "gross": 357.34,
+            "cost": 20.21,
+            "fund": 26.56,
+            "net": 310.57,
+            "npt": 1.635,
+            "wr": 28.4,
+            "aw": 9.13,
+            "al": -1.0,
+            "payo": 9.15,
+            "pf": 3.63,
+            "dd": 26.78,
+            "ddt": 35,
+            "ddd": 139.4,
+            "mc": 14,
+            "hold_h": 212.8,
+            "tpy": 96.1,
+            "net_dd": 11.6
+          },
+          "purge": {
+            "kept_n": 55,
+            "kept_net": 492.34,
+            "kept_med": 5.312,
+            "dropped_n": 135,
+            "dropped_all_minus_1": true
+          }
+        },
+        "32": {
+          "m": {
+            "n": 167,
+            "gross": 388.62,
+            "cost": 18.44,
+            "fund": 30.13,
+            "net": 340.05,
+            "npt": 2.036,
+            "wr": 26.3,
+            "aw": 11.63,
+            "al": -1.0,
+            "payo": 11.63,
+            "pf": 4.16,
+            "dd": 24.93,
+            "ddt": 35,
+            "ddd": 134.3,
+            "mc": 20,
+            "hold_h": 260.5,
+            "tpy": 84.5,
+            "net_dd": 13.6
+          },
+          "purge": {
+            "kept_n": 44,
+            "kept_net": 511.62,
+            "kept_med": 6.884,
+            "dropped_n": 123,
+            "dropped_all_minus_1": true
+          }
+        }
+      }
+    }
+  },
+  "recommendation": {
+    "fsent_champ_long": {
+      "is_pick": "32",
+      "is_net": 974.53,
+      "oos_net": 416.23,
+      "oos_holds": true,
+      "all_dropped_minus_1": true
+    },
+    "fsent_champ_long_htf15": {
+      "is_pick": "32",
+      "is_net": 875.8,
+      "oos_net": 218.7,
+      "oos_holds": false,
+      "all_dropped_minus_1": true
+    },
+    "fsent_champ_long_htffs": {
+      "is_pick": "32",
+      "is_net": 2570.11,
+      "oos_net": 340.05,
+      "oos_holds": true,
+      "all_dropped_minus_1": true
+    }
+  }
+}
