@@ -829,3 +829,95 @@ the decay gate got. That is the only version of "look for new edge" that this
 data supports.
 
 Nothing promoted, no knob added, no book or pin touched. Own directory.
+---
+
+## UNTOUCHED-KNOB CENSUS - all 7 fire. One has a mechanism, and it is not the
+## one the net first suggests.
+
+Last untouched input space. Read from the signature, every one of these was named
+in the engine and swept by nothing:
+
+    exp_window_floor_s     only ever 2_700    exp_cap_days     only ever 16
+    exp_window_floor_mode  only ever "fixed"  exp_min_sl_pct   only ever 0
+    exp_no_opposite        only ever 0        exp_trail_half   only 0 or 1
+    exp_trail_skip_n       0..3, never swept
+
+Firing check first, the lesson of the decay gate. **All 7 fire.** Not one is a
+NULL. So this space is genuinely live, unlike the decay gate.
+
+## exp_trail_skip_n - the first candidate that survives OOS. Mechanism found.
+
+The knob drops the first N trailing-stop events outright
+(`_trail_skip_rem -= 1; _tr_ok = False` at unified.py:1493). Naive reading of
+the net: "skip 5 trail events and htffs nearly doubles".
+
+    book              IS skip_n=5    IS pin    OOS skip_n=5   OOS pin   agrees
+    long               +520.72      +466.92      +269.79      +215.32    BOTH
+    short              +484.64      +569.33      +174.98      +195.01    neither
+    long_htf15         +623.25      +505.24      +300.29      +254.81    BOTH
+    long_htffs        +1354.16      +757.99      +337.41      +313.35    BOTH
+
+Three of four, both eras. That is the shape that shape / volatile / continuation
+all failed to produce.
+
+### BUT THE MECHANISM IS NOT "BETTER EXITS"
+
+Exit-reason census on htffs, which is the big winner:
+
+    skip_n     n   trail exit   SL exit   win%   median R
+        0    753          749        4    42.6%      -0.20
+        2    716          425      291    45.8%      -0.23
+        3    665          351      314    43.8%      -0.40
+        5    617          288      329    42.5%      -1.00
+        8    523          233      290    41.9%      -1.00
+
+At skip_n=0, 749 of 753 trades exit on the TRAIL and only 4 hit the stop. At
+skip_n=5 it has INVERTED: 288 trail, 329 SL. The knob is not improving exits. It
+is **turning trailing stops off for the first N moves, so positions that would
+have been closed early at a small profit instead ride until the stop**.
+
+The median R tells the truth: -0.20 at the pin, -1.00 from skip_n=4 onward. Every
+extra "win" bought this way costs more when it fails. Net rises because the
+average winner grows, not because the median trade improves. That is a
+right-tail bet, and it is the same fat-tail structure that killed the
+volatile-early result earlier in this sweep.
+
+### Why it is still interesting, and why nothing is promoted
+
+  - short LOST at skip_n=5 (-84.69R on IS). A knob that pays on three books and
+    costs on the fourth is not a family-level rule.
+  - DD RISES with it on both winners: htffs 12.86 -> 26.45, htf15 21.05 -> 19.29
+    is better but htffs doubles. MaxConsecL on htffs goes 12 -> 26.
+  - The owner has said drawdown and losing streak matter most. This knob trades
+    both away to buy net.
+
+So: STRONG on era agreement, but it fails the owner's own stated risk priority and
+is non-uniform across books. Registered as evidence, NOT promoted. The next step
+if the owner wants it is a per-book value chosen on the risk constraint, not the
+net argmax.
+
+## The other six
+
+  exp_cap_days=32   the only big loser: dIS +125.51/+121.81/+111.84 across three
+                    books, dOOS -22.91/+15.74/-28.26. OOS agrees on ONE of three.
+                    Textbook IS-only. The same "hold longer pays" illusion.
+  exp_trail_half=1  +603.43 on htffs IS, -33.91 OOS. One book, one era. WEAK.
+  exp_min_sl_pct    0.001/0.002 wins on 3 books, OOS agrees on all 3, but the
+                    size is +5.96/+3.39/+2.87R. Noise-level. NOT WORTH IT.
+  exp_no_opposite   nothing beats the pin anywhere. A real gate, no gain.
+  exp_window_floor  16 IS candidates, OOS agrees on 11, but the deltas are
+    _s / _mode    +3 to +13R. Also noise-level. Note 0 (enter immediately) gives
+                    MORE trades and slightly more net than the 2_700 floor - the
+                    entry-latency floor is roughly neutral, which is worth knowing
+                    given exp_edge_decay measured a 37-bar median latency.
+
+## The pattern across all four negative-plus-one cycles
+
+shape, volatile, continuation all produced IS gains that died on OOS. skip_n
+survives OOS on three books. The difference is not statistical luck - it is that
+skip_n has a MECHANISM verified by an independent measurement (the exit-reason
+census), while the others had only a number. That is the first evidence in this
+repo that the inverse-mechanism test is the thing that separates real from
+illusory, and it took four attempts to find one candidate worth the name.
+
+Nothing promoted, no registry entry, no pin touched. Own directory.
