@@ -67,6 +67,30 @@ def rank_key(entry):
     return (p.get("net", 0.0) or 0.0) + (p.get("oos_net", 0.0) or 0.0)
 
 
+def is_sig(entry):
+    """Is this book one-position-at-a-time? Asked of the PARAMS, never the name.
+
+    Was `k.startswith("fsent_sig")`, which mis-filed four registered books:
+
+        fsent_sig_multi        name says sig, max_positions=0
+        fsent_sig_multi_htffs  name says sig, max_positions=0
+        fsent_sig_multi_acc    name says sig, max_positions=0
+        fsent_both_trail_half  name says multi, max_positions=1
+
+    The first three are multi books whose names carry the word "multi", and the
+    exporter filed all three under sig purely because they start with fsent_sig.
+    That is the same class of mistake as exp_results_export.py's own position_mode
+    helper below exists to avoid, and BASELINE.md:63 is explicit that comparing a
+    signal book against a multi-position book is off by a hundred R. A book named
+    for the mechanism it uses is not evidence of how many positions it holds.
+
+    max_positions is also the right key because it is the one the engine reads.
+    1 = serial, 0 = concurrent.
+    """
+    p = entry.get("params") or {}
+    return p.get("max_positions") == 1
+
+
 def select():
     sig, multi = [], []
     for k, e in EXPERIMENTS.items():
@@ -75,7 +99,7 @@ def select():
         r = rank_key(e)
         if r is None:
             continue
-        (sig if k.startswith("fsent_sig") else multi).append((r, k))
+        (sig if is_sig(e) else multi).append((r, k))
     sig.sort(reverse=True)
     multi.sort(reverse=True)
     # the shipping book always ships, whatever its rank

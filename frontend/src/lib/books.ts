@@ -268,6 +268,93 @@ export const BOOK_OPTIONS: BookOption[] = [
       max_consecutive_losses: 3,
     },
   },
+  // ---------------------------------------------------------------------------
+  // THE SHORTLIST - added 2026-10-15, the top 5 serial and top 5 multi by the
+  // gates in backtest/experiments/exp_selection_final.py. Deliberately a top 5
+  // per class rather than one winner per class: the owner picks, these are the
+  // shortlist the pick is made from.
+  //
+  // The four serial books below and the multi ones further down are NOT variants
+  // of each other. BASELINE.md:63 - a signal book cannot be compared against a
+  // multi-position book, they are different objects and mixing them is off by a
+  // hundred R. Nothing here is promoted; these are all still candidates.
+  //
+  // Stability was measured on all ten (exp_top10_stability.py, 289 probes). Four
+  // params are INERT on all ten - the trade list is byte-identical at every value
+  // tried: chop_thresh, atr_low_thresh, sl_buf_atr, ext_stop_r. They are written
+  // here anyway and that is correct: this config is merged as {...V19, ...entry},
+  // so deleting a key hands the book the DEFAULT instead. ext_stop_r is the live
+  // example - V19 ships 3.0 and the knob saturates at 2.5, so dropping it to the
+  // default 1.5 removes 10-15% of trades on every book in the list.
+  // ---------------------------------------------------------------------------
+  {
+    id: "fsent_sig_sw20_short",
+    label: "SIG SW20 SHORT (serial, 20-bar HTF swings) - IS 341t +246.0R | OOS 190t +151.2R",
+    shortLabel: "SIG-SW20",
+    slMode: "causal",
+    hint: "the highest-net serial book in the shortlist. The looser sw20 HTF swing rule keeps a wider window open, so more trades fit inside it. Highest OOS net of the five serial picks but the widest losing run of them (12) and the top 5% of trades carry 71% of the net. NOTE: fsent_sig_sw20_short_wr is byte-identical to this book in every metric - one of the two is a duplicate and should not be read as independent corroboration.",
+    measured: { isN: 341, isNet: 246.02, oosN: 190, oosNet: 151.23 },
+    config: {
+      ...V19,
+      version: "fsent_sig_sw20_short",
+      ext_stop_r: 3.0,
+      htf_min_bars: 20,       // sw20 chain
+    },
+  },
+  {
+    id: "fsent_sig_wk_pause_short",
+    label: "SIG WK-PAUSE SHORT (serial) - IS 266t +203.0R | OOS 162t +136.4R",
+    shortLabel: "SIG-WKPAUSE",
+    slMode: "causal",
+    hint: "the best SPREAD of the five serial picks - the top 5% of trades carry only 49% of the net, the lowest of any book that passed the gates. Its 100-trade rolling window is positive 100% of the time out of sample and it clears the 29R drawdown budget at 13.4R. A filter can be switched off here and the book still survives, which is worth reading as a caution rather than a compliment.",
+    measured: { isN: 266, isNet: 203.02, oosN: 162, oosNet: 136.39 },
+    config: {
+      ...V19,
+      version: "fsent_sig_wk_pause_short",
+      ext_stop_r: 3.0,
+    },
+  },
+  {
+    id: "fsent_sig_fs_mom",
+    label: "SIG FS-MOM (serial, bias-momentum gate) - IS 217t +206.9R | OOS 135t +127.5R",
+    shortLabel: "SIG-FSMOM",
+    slMode: "causal",
+    hint: "the SMOOTHEST of the five serial picks and the one to watch: lowest ulcer out of sample (5.7 against 6.6 to 19.5 for the rest), lowest drawdown as a share of net (3.5%), every 20-trade rolling window positive out of sample, and the fewest parameters in the set at 14. It gives up about 24R of OOS net against the top pick to get there. Six of its own filters can be switched off and it still clears both eras.",
+    measured: { isN: 217, isNet: 206.87, oosN: 135, oosNet: 127.47 },
+    config: {
+      ...V19,
+      version: "fsent_sig_fs_mom",
+      ext_stop_r: 3.0,
+    },
+  },
+  {
+    id: "fsent_champ_long_htf15_htffs",
+    label: "CHAMP HTF15 HTF-FS (flip bucket on FS) - IS 756t +765.9R | OOS 396t +346.1R",
+    shortLabel: "HTF15-FS",
+    slMode: "causal",
+    hint: "the highest-net multi book in the shortlist, and it MISSES THE OWNER'S 29R DRAWDOWN BUDGET: 29.76R in sample against a budget of 29.0R. It is listed because it is the shortlist, not because it is adoptable - the sw10 sibling of this same book, fsent_champ_long_htffs, clears the budget at 22.45R for 2R less in sample. Read the drawdown before the net.",
+    measured: { isN: 756, isNet: 765.86, oosN: 396, oosNet: 346.07 },
+    config: {
+      ...V19,
+      version: "fsent_champ_long_htf15_htffs",
+      ext_stop_r: 3.0,
+      htf_min_bars: 15,       // htf15 chain
+    },
+  },
+  {
+    id: "fsent_champ_long_htf15_tskip6",
+    label: "CHAMP HTF15 TSKIP6 (serial + trail-skip 6) - IS 412t +639.8R | OOS 224t +328.5R",
+    shortLabel: "HTF15-TSKIP6",
+    slMode: "causal",
+    hint: "the best book in the shortlist on the thing that is hardest to fake: 1.467R per trade out of sample, the highest per-trade figure of any multi book in the registry, and the smoothest by ulcer at 3.3 against 6.0 to 20.4 for the rest. Only 224 trades out of sample, so it is not buying its return with volume. Clears the budget at 22.81R. Its one weak point is spread - the top 5% of trades carry 74% of the net, and it falls apart if exp_trail_skip_n is set to 0, which is the knob the book is named for.",
+    measured: { isN: 412, isNet: 639.84, oosN: 224, oosNet: 328.54 },
+    config: {
+      ...V19,
+      version: "fsent_champ_long_htf15_tskip6",
+      ext_stop_r: 3.0,
+      htf_min_bars: 15,       // htf15 chain
+    },
+  },
   {
     id: "fsent_champ_short",
     label: "FSENT CHAMP SHORT (FS entry on SHORT side - the mirror) - IS 467t +569.3R | OOS 298t +195.0R",
