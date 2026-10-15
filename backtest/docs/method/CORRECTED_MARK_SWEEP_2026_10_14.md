@@ -964,3 +964,119 @@ OOS drawdown matters equally for the owner, only long at skip_n=3 is free on bot
 (+230.92 OOS vs +269.79 at 5).
 
 Nothing promoted, no registry entry, no pin touched.
+---
+
+## SERIAL LADDER - the whole experiment on max_positions=1. One winner, and it
+## is the knob the engine doc says IS the entire multi edge.
+
+Owner: "we only are working on max position = unlimited .. we didn't test any
+these so max position = 1 'sig' book. So if we pick a base where there are very
+less filter and wanna test some hypothesis there ... because you have been working
+on multi only."
+
+Correct, and it was the most load-bearing correction in this sweep. Checking the
+registry: EVERY exp_trail_skip_n result in this repo is a multi book.
+fsent_sig_full and fsent_sig_trail_delay1 are serial but carry skip_n=2 and were
+never swept. So the finding registered earlier today had never once been tested
+where only one position can be open.
+
+BASE - fsent_sig_sw10_short, max_positions=1, exp_fs_entry_side=short
+
+    ON (11)  mode atr_high, atr_high_thresh 0.65, atr_low_thresh 0.35,
+             chop_thresh 58.0, cooldown_bars 8, exp_partial_r 7.5, ext_stop_r 3.0,
+             max_consecutive_losses 3, max_positions 1, sl_buf_atr 0.01
+    OFF      exp_bias_momentum_min, exp_fs_small_swing, exp_skip_weekend,
+             exp_trail_skip_n, exp_trail_half, exp_trail_delay_r, exp_mltf,
+             exp_persist, exp_decay_*, exp_causal_sl, exp_ltf_no_entry,
+             exp_no_opposite, exp_min_sl_pct
+
+    pins  IS 334t / +167.14R / dd_net 17.58   OOS 208t / +118.71R / dd_net 14.39
+
+Identity note: this lens measures n=333 against a declared 334 with net and
+dd_net exact to the decimal. That one-trade gap is the same gross-versus-net lens
+difference the registration gate hit on the two skip_n books, so identity passes on
+the equity path and the count is not treated as a broken base.
+
+## PHASE 1 - THE TRANSFER TEST. IT DOES NOT TRANSFER.
+
+exp_trail_skip_n on the serial path, full ladder, both eras:
+
+    skip_n      IS net      IS dd_net    OOS net     OOS dd_net
+        0     +167.14        17.58      +118.71       14.39
+        1     +166.75        17.62      +118.45       14.45
+        2     +165.56        15.72      +125.64       11.75
+        3     +130.99        13.88       +81.23       12.32
+        4     +144.45        15.83       +99.87       15.67
+        5     +136.08        18.62       +84.60       13.77
+        6     +145.78        19.01       +86.80       16.59
+        8      +98.15        16.31       +68.55       21.22
+       12      +81.08        17.58       +77.59       13.82
+       16      +94.67        20.47      +102.54       12.28
+       24     +127.86        15.78       +59.67       11.01
+
+**Every single value loses IS except the pin itself.** The DD-safe values on IS are
+0, 2, 3, 4, 8, 12, 24 and the best of them IS the PIN, skip_n=0. On OOS only
+skip_n=2 beats the base (+125.64 against +118.71) and that is +6.93R on a book
+doing +118.71R - noise, and it sits on the one rung where 2 trades are dropped.
+
+So the honest conclusion, and it corrects the entry I wrote into the registry two
+hours ago: **the skip_n finding is a property of the MULTI book, not of the
+trailing stop.** It does not generalise to the serial path. The two registered
+books are correct as registered - they ARE multi books - but the finding must not
+be described as a trailing-stop property. The registry descs already scope them
+to their parents; this is the cross-book caveat they should carry.
+
+## PHASE 2 - TEN KNOBS CENSUSED, EIGHT FIRE, ONE WINS
+
+    knob                     verdict on the serial base
+    exp_no_opposite          NULL - dead, changes no trade
+    exp_trail_half           fires, best net = the PIN (0). Nothing.
+    exp_trail_skip_n         fires, best net = the PIN (0). Nothing.
+    exp_min_sl_pct           fires, best net = the PIN (0.0). Nothing.
+    exp_cap_days             fires, best net = the PIN (16). Nothing.
+    exp_window_floor_s       fires. +0/+900 beat the pin. SMALL.
+    exp_trail_delay_r        fires, all values lose
+    exp_decay_mode           fires, all values lose
+    exp_persist              fires, all values lose
+    exp_mltf                 fires and IS THE ONLY BIG WINNER.
+
+exp_persist is worth naming because the engine's own header says it is
+"INHERITED, NOT EARNED" - bit-identical on IS alone, -2.40R on OOS. On this
+serial base it loses at every value including its own pin of 0. Confirmed dead on
+the path it was inherited into.
+
+## THE WINNER - exp_mltf=1 - and it is not a new idea, it is the engine doc
+
+unified.py:41 states the position gate is the entire multi edge: "With the gate on,
+the same config is +137.72R IS but -13.26R OOS over 230 trades. Turning it off
+gives +325.78R IS / +70.15R OOS." This test reproduces that on a DIFFERENT and
+much leaner base, and it is the only knob in the census that improves both eras:
+
+                        IS net     IS dd_net   IS MaxCL   OOS net    OOS dd_net
+    base (mltf=0)     +167.14       17.58        9       +118.71       14.39
+    mltf=1            +448.37       12.67       10       +220.91       12.18
+
+    +281.23R IS and +102.20R OOS, with drawdown IMPROVING in both eras
+    (17.58 -> 12.67 and 14.39 -> 12.18).
+
+Mechanism confirmed by the only measurement that can separate selection from
+noise on this family - position overlap:
+
+    IS    base  n=333  trail=333 sl=0  overlap  0%  median R -0.42
+          mltf1 n=477  trail=476 sl=1  overlap 36%  median R -0.19
+    OOS   base  n=208  trail=208 sl=0  overlap  0%  median R -0.36
+          mltf1 n=305  trail=305 sl=0  overlap 38%  median R -0.19
+
+36-38% of holding time now has more than one position open, which is exactly what
+the knob does - and the median trade IMPROVES (-0.42 -> -0.19), so unlike
+skip_n this is not a right-tail bet. It takes more trades and each is better.
+Drawdown falls while volume rises 43%, which is the opposite of every other
+candidate in this sweep.
+
+This is NOT a discovery. It is the shipped engine's documented behaviour,
+discovered here on the lean base the owner asked for, and it lands on the one book
+that had it switched OFF. The obvious follow-up is to check how many registered
+books are serial with mltf off, since this repo appears to have that combination
+under-explored - but that is the owner's call, not this commit's.
+
+Nothing promoted. No registry entry, no pin changed, no book edited.

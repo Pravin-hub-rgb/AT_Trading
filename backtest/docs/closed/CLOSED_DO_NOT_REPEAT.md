@@ -1268,3 +1268,67 @@ then only skip_n=3 on long is genuinely free on both, at +230.92 OOS versus
 +269.79 at 5.
 
 Nothing promoted, no registry entry, no pin touched.
+---
+
+## exp_trail_skip_n DOES NOT TRANSFER TO THE SERIAL PATH - read this before
+## treating the two registered skip_n books as a trailing-stop finding
+
+Owner, 2026-10-14: "we only are working on max position = unlimited .. we didn't
+test any these so max position = 1 'sig' book ... because you have been working
+on multi only."
+
+That was the most load-bearing correction in this sweep, and it was right.
+Every exp_trail_skip_n result in this repo is a MULTI book. fsent_sig_full and
+fsent_sig_trail_delay1 are serial but carry skip_n=2 and were never swept. The
+finding registered earlier today had never been tested where only one position
+can be open.
+
+Tested on fsent_sig_sw10_short (max_positions=1, 11 filters ON, every other knob
+OFF), full ladder 0..32, both eras:
+
+  skip_n   IS net     IS dd_net    OOS net    OOS dd_net
+      0   +167.14       17.58      +118.71       14.39
+      2   +165.56       15.72      +125.64       11.75
+      3   +130.99       13.88       +81.23       12.32
+      5   +136.08       18.62       +84.60       13.77
+      8    +98.15       16.31       +68.55       21.22
+     12    +81.08       17.58       +77.59       13.82
+     24   +127.86       15.78       +59.67       11.01
+
+EVERY value loses IS except the pin itself. DD-safe on IS is 0, 2, 3, 4, 8, 12, 24
+and the best of them IS skip_n=0. On OOS only skip_n=2 beats the base, +6.93R on
+a book doing +118.71R, which is noise.
+
+CONCLUSION: the skip_n gain is a property of the MULTI book, not of the trailing
+stop. The two registered books are correct as registered - they are multi books,
+and their descs scope them to their parents - but they must NOT be read as "the
+trailing stop benefits from skipping early trail events" in general. It does
+not.
+
+Ten knobs were censused on the same lean base with a firing check first. Eight
+fire. For six of them the best net IS the pin, or every value loses: exp_trail_half,
+exp_trail_skip_n, exp_min_sl_pct, exp_cap_days, exp_trail_delay_r, exp_decay_mode,
+exp_persist. exp_no_opposite is a NULL, dead on this base.
+
+exp_persist deserves a line of its own because unified.py calls it "INHERITED, NOT
+EARNED" - bit-identical on IS alone, -2.40R on OOS, kept only because removing it
+is a separate open question. On this serial base it loses at EVERY value
+including its own pin of 0. So the knob the engine admits it never earned is
+confirmed dead on the path it was inherited into.
+
+The single winner is exp_mltf=1, and it is not a discovery - unified.py:41
+documents it as the entire multi edge. On this lean base it reproduces:
+
+                    IS net    IS dd_net    OOS net   OOS dd_net
+  base (mltf=0)   +167.14      17.58      +118.71      14.39
+  mltf=1          +448.37      12.67      +220.91      12.18
+
++281.23R IS, +102.20R OOS, drawdown IMPROVING in both eras, and the mechanism is
+confirmed by position overlap: 0% on the base, 36% IS / 38% OOS with mltf on, with
+median trade IMPROVING -0.42 -> -0.19. Unlike skip_n this is not a right-tail
+bet. It takes 43% more trades and each one is better.
+
+Worth checking with the owner: how many registered books are serial with mltf
+off. This repo looks to have that combination under-explored.
+
+Nothing promoted, no registry entry, no pin change.
