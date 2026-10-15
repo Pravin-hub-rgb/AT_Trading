@@ -42,36 +42,35 @@ N_MULTI, N_SIG = 15, 10
 # years of data per era, for equity_quality's per-year normalisation
 YEARS = {"is": 3.67, "oos": 2.0}
 
-# DRAWDOWN BUDGET - A PERCENTAGE OF NET, NOT A FIXED R NUMBER.
+# DRAWDOWN BUDGET - NONE. THERE IS NO FIXED NUMBER.
 #
-# The fixed 29R ceiling said the same thing about a book that nets 100R and a book
-# that nets 1112R, and it was wrong about the second one. It disqualified
-# fsent_champ_long_htf15_htffs at 29.76R, which is a 2.7% drawdown on a book
-# that made 765.9R - one of the cleanest risk profiles in the set. Meanwhile
-# fsent_champ_long_mode_atr_low drew 48.76R but was flagged by nothing, because it
-# is also only 6.9% of its net and 29R happened to sit above it.
+# This started as a flat 29.0R ceiling, which was wrong twice over. It is now
+# removed rather than replaced by another invented constant.
 #
-# method/DRAWDOWN_PERCENT_AND_ROLLING_STUDY.md already argued this and was right:
-# "a 25R drawdown taken from a peak of 9R is a catastrophe. The same 25R taken from
-# a peak of 685R is a 3.7% wobble." The number below is the ceiling, and it is the
-# OWNER's to move - it is one constant, not a rule hidden in the code.
+# Removing it is the owner's call and it is what the risk-adjustment review said
+# to do: "Koi universal number nahi hai. Main bina context ke ye nahi bolunga
+# ki 10% DD good hai aur 20% bad." A ceiling that disqualifies a book for its
+# drawdown also disqualifies it for being large - fsent_champ_long_htf15_htffs
+# was rejected at 29.76R, which is 2.7% of its net, and passed
+# fsent_both_trail_half at 26.13R, which is 39.4%.
 #
-# Across the 26 exported books DD as a share of net runs 1.7% to 7.5% with a
-# median of 3.6%. At 5% the two genuinely drawdown-heavy books (mode_atr_low and
-# mode_union, both 6.9%) are still rejected and the one that only ever failed the
-# fixed number now passes on the merits.
-DD_BUDGET_PCT = 5.0            # max drawdown as a percentage of in-sample net R
-DD_BUDGET_R_LEGACY = 29.0      # the old fixed rule, still reported for comparison
+# What replaces it is not a better number, it is more axes and no verdict:
+#   net_to_dd          net R per unit of drawdown
+#   dd_pct_of_peak     drawdown against the equity peak it fell from (scale free)
+#   dd_days            how long the water was under it
+#   recover_days       how long to get the peak back
+#   worst_3m/6m/12m    calendar-time bad stretches
+#   worst_roll20/50/100 trade-count bad stretches
+#   dd_pct_1 / _2      the same drawdown as a share of account at 1% and 2% risk
+#
+# DD_BUDGET_R_LEGACY is kept only so an export can still say what the old rule
+# would have said. It gates nothing.
+DD_BUDGET_R_LEGACY = 29.0
 
 
 def dd_flags(m):
-    """(over percentage budget, over legacy fixed budget).
-
-    Both are returned so every export says which rule a book passes and which it
-    would have passed under the old one. The legacy flag is not used to reject
-    anything, only to show the change.
-    """
-    return (m["dd_pct_of_net"] > DD_BUDGET_PCT, m["max_dd"] >= DD_BUDGET_R_LEGACY)
+    """No percentage gate any more. The legacy verdict is reported, not applied."""
+    return (m["dd_pct_of_peak"], m["max_dd"] >= DD_BUDGET_R_LEGACY)
 
 
 def cell(ts):
@@ -155,7 +154,7 @@ def tags_for(m):
     t = []
     if not m["neg_cells"]:
         t.append("zero-negative")
-    if m["dd_pct_of_net"] < DD_BUDGET_PCT * 0.6:
+    if m["dd_pct_of_peak"] < 3.0:
         t.append("low-DD")
     if m["longest_underwater"] < 30:
         t.append("short-underwater")
@@ -258,7 +257,91 @@ def build(sim, E, name):
     for t, r in zip(allts, allrs):
         per_h[cell(t)].append(r)
     halfs = {k: round(sum(v), 2) for k, v in sorted(per_h.items())}
-    neg = sorted(k for k, v in per_h.items() if sum(v) < 0)
+
+    # A HALF-YEAR THAT HAS NOT FINISHED IS NOT A HALF-YEAR.
+    #
+    # 2026-H2 is Jul-Dec and this export was generated on 2026-10-15, so every
+    # book was being judged on roughly 3.5 months of a 6-month period. Counting
+    # it put a negative mark on books for a period they had barely lived
+    # through: all four serial books in the shortlist carried their ONLY
+    # negative half-year there, and dropping it leaves them at zero negatives.
+    # 2026-H1 is complete and stays in.
+    #
+    # A cell is counted only if the whole period is behind the data. The cutoff
+    # is derived from the last trade's own timestamp rather than hardcoded, so
+    # this keeps working as the data grows instead of needing a date edit.
+    data_end = max(int(t["exit_ts"]) for t in merged) if merged else 0
+    end_dt = datetime.fromtimestamp(data_end, tz=timezone.utc) if data_end else None
+
+    def period_complete(key):
+        if end_dt is None:
+            return True
+        y, half = key.split("-")
+        y = int(y)
+        half = 1 if half.endswith("1") else 2
+        last_month = 6 if half == 1 else 12
+        # period is complete once the data reaches the END of its final month
+        return (y, last_month) <= (end_dt.year, end_dt.month)
+
+    neg = sorted(k for k, v in per_h.items()
+                 if sum(v) < 0 and period_complete(k))
+    partial = sorted(k for k in per_h if not period_complete(k))
+
+    # Calendar-time drawdown shape. `merged` is the trade dicts, `allts` their
+    # entry timestamps. All three of the numbers below answer a question
+    # longest_underwater (a trade COUNT) cannot: how long would a person have
+    # sat in a losing position, and how long until they were flat again.
+    dd_days = 0.0
+    recover_days = 0
+    cum = pk = 0.0
+    pk_ts = None
+    worst_dd = 0.0
+    dd_from_ts = None
+    dd_to_ts = None
+    in_dd = False
+    for t, r in zip(merged, allrs):
+        cum += r
+        ts = int(t["exit_ts"])
+        # Recovery is checked BEFORE the new-peak branch. A trade that climbs
+        # back to the old peak satisfies cum >= pk, so the previous version -
+        # which tested for it inside the drawdown branch - could never see it
+        # and reported zero for every book.
+        if in_dd and cum >= pk - 1e-9:
+            recover_days = (ts - (dd_to_ts or ts)) // 86400
+            in_dd = False
+        if cum > pk:
+            pk = cum
+            pk_ts = ts
+        else:
+            d = pk - cum
+            if d > 1e-9:
+                in_dd = True
+            if d > worst_dd:
+                worst_dd = d
+                dd_from_ts = pk_ts
+                dd_to_ts = ts
+    if dd_from_ts is not None and dd_to_ts is not None:
+        dd_days = (dd_to_ts - dd_from_ts) / 86400.0
+
+    # worst N-month calendar windows, because a 20-trade rolling window answers
+    # a different question than "was there a bad quarter".
+    def worst_window(months):
+        pts = [(int(t["exit_ts"]), r) for t, r in zip(merged, allrs)]
+        if not pts:
+            return None
+        first = datetime.fromtimestamp(pts[0][0], tz=timezone.utc)
+        best = None
+        j = 0
+        for i in range(len(pts)):
+            while j < len(pts):
+                d0 = datetime.fromtimestamp(pts[j][0], tz=timezone.utc)
+                if (d0.year - first.year) * 12 + (d0.month - first.month) >= months:
+                    break
+                j += 1
+            s = sum(r for _ts, r in pts[i:j])
+            if best is None or s < best:
+                best = s
+        return round(best, 2) if best is not None else None
 
     sd = (sum((r - net / n) ** 2 for r in allrs) / max(1, n - 1)) ** .5
     is_e = per_era_trades["is"][1]
@@ -334,8 +417,17 @@ def build(sim, E, name):
         retention=round(100.0 * eoos / eis, 1) if eis else None,
         is_sign=sum(is_e) > 0, oos_sign=sum(oos_e) > 0,
         # periods
-        halfs=halfs, neg_cells=neg,
+        halfs=halfs, neg_cells=neg, partial_cells=partial,
         years_positive=lens.get("pos_year_pct"),
+        # calendar-time drawdown shape. max_dd in R is the primary measure here
+        # because the engine risks a FIXED amount per R, not a share of equity -
+        # r_multiple = move/risk in unified.py. So R IS the account unit and
+        # these are how long that unit was under water.
+        dd_days=round(dd_days, 1),
+        recover_days=recover_days,
+        worst_3m=worst_window(3),
+        worst_6m=worst_window(6),
+        worst_12m=worst_window(12),
         # complexity
         params=len(params),
         tuned=len([1 for k2, v2 in params.items()
@@ -385,15 +477,14 @@ def main():
     names = multi + sig
     print("selected %d multi + %d sig = %d books" % (len(multi), len(sig), len(names)))
     out = {"generated_from": "exp_results_export.py",
-           "dd_budget_pct": DD_BUDGET_PCT,
-           "dd_budget_pct_basis": "max drawdown as a percentage of in-sample net R",
+           "dd_budget": None,              # no universal ceiling exists
+           "dd_budget_note": "no fixed drawdown limit is applied; see net_to_dd, dd_pct_of_peak, dd_days, recover_days, worst_3m/6m/12m",
            "dd_budget_r_legacy": DD_BUDGET_R_LEGACY,
            "years": YEARS,
            "books": []}
     for i, n in enumerate(names, 1):
         m = build(sim, E, n)
         over_pct, over_r = dd_flags(m)
-        m["over_dd_budget_pct"] = over_pct
         m["over_dd_budget_r_legacy"] = over_r
         na = nulls.get(n, {})
         m["null_p_is"] = (na.get("is") or {}).get("p")
@@ -404,14 +495,13 @@ def main():
         m["null_sig_oos"] = bool((na.get("oos") or {}).get("sig"))
         m["null_sig"] = m["null_sig_is"] or m["null_sig_oos"]
         out["books"].append(m)
-        print("  %2d/%d  %-34s n=%4d net=%+8.1f dd=%5.2f (%.1f%% of net) ulcer=%5.2f"
-              "  p(IS/OOS)=%s%s  %s%s"
+        print("  %2d/%d  %-34s n=%4d net=%+8.1f dd=%5.2f (%.1f%% of peak) N/DD=%5.1f"
+              "  ulcer=%5.2f  p(IS/OOS)=%s%s  %s"
               % (i, len(names), n, m["n"], m["net"], m["max_dd"],
-                 m["dd_pct_of_net"], m["ulcer"],
+                 m["dd_pct_of_peak"], m["net_to_dd"], m["ulcer"],
                  ("%.4f" % m["null_p_is"]) if m["null_p_is"] is not None else "n/a",
                  ("/%.4f" % m["null_p_oos"]) if m["null_p_oos"] is not None else "",
-                 "*** SIGNIFICANT" if m["null_sig"] else "",
-                 "  *** OVER %0.0f%% BUDGET" % DD_BUDGET_PCT if over_pct else ""))
+                 "*** SIGNIFICANT" if m["null_sig"] else ""))
     with open("_results.json", "w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
     import os
