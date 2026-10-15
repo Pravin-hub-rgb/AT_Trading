@@ -1117,3 +1117,61 @@ change.
 Side finding from the toggle: `b2_gap_bars` removes 599 B2 marks AND 73 FLIP
 marks. A knob named for B2 also suppresses FLIP. Not a defect found, just not
 something the name would tell you.
+---
+
+## MARK CONTINUATION AND WHAT IT ENDS - the third IS-effect to die on OOS, and the stopping rule
+
+Tested the one hypothesis in this sweep that was not a knob fit. exp_edge_decay
+showed the signal accrues rather than decays, which implies a mark followed by
+~16 bars of continuation should be a different trade from one followed by
+immediate failure. It is the first condition here on the thing the FS gate
+throws away: we enter 37 bars after the mark, so whether the swing trended or
+failed is visible at the entry bar.
+
+Causality: score = (close[i0+16] - close[i0]) / ATR(i0+16) signed by leg
+direction, i0 = last mark before FS. Window closes strictly before entry; 532 IS
+and 294 OOS swings skipped for exactly that reason.
+
+The score separates perfectly on the RAW DISTRIBUTION - and that test was
+circular, because the score IS the forward move:
+
+  IS   above median n=1153 mean RA +2.422, >0 in 100.0%
+       below median n=1155 mean RA -0.746, >0 in  32.3%
+
+100% of high-continuation swings moving the right way is the definition of the
+statistic, not an edge. The book test is the real one:
+
+  book             IS HIGH/LOW        OOS HIGH/LOW
+  long         +310/+130  strong    +103/+112  FLAT
+  short        +440/+136  strong    +142/ +74  holds
+  long_htf15   +311/+165  strong    +112/+138  REVERSES
+  long_htffs   +435/+333  strong    +155/+187  REVERSES
+
+Checked the obvious confound first, because the IS margin looked too good. If
+high-continuation trades carried a tighter stop their R would be inflated by
+arithmetic. On fsent_champ_long: HIGH median r_multiple +0.036 at risk $810.9,
+LOW median -0.405 at risk $748.7. HIGH has the LARGER stop, so the IS result is
+more impressive, not less - not a stop-size artefact. It is real on IS and it
+still dies on OOS.
+
+CLOSED NEGATIVE. Three for three with an identical signature: swing shape,
+volatile candles, mark continuation. Large, consistent, four-book IS effects that
+reverse in two to three cells on OOS.
+
+THE FINDING IS THE STOPPING RULE
+
+    THE EDGE IN THIS BOOK FAMILY IS AN ERA EFFECT.
+
+Every hypothesis tested against this data finds large IS gains, because IS is
+where the family was fitted. The family itself is not fake - the A1 freeze has all
+five books positive in both eras - but its IS margin is not evidence of anything
+portable, and no further IS-only hypothesis in this direction is worth running.
+
+Phase 3 of the plan was "hypotheses after the inventory". The inventory is done
+and the hypothesis phase returned three negatives with the same shape. So the
+remaining untested knobs (window_floor, cap_days, trail_half) get run as a census
+with the inverse test, the same treatment the decay gate got - not as hypothesis
+sources. On this data that is the only version of "look for new edge" that is
+supported.
+
+Nothing promoted, no knob added, no book or pin touched.

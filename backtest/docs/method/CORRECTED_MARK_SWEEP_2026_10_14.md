@@ -748,3 +748,84 @@ mechanism that sounds protective, whose job the book is already doing.
 Recorded rather than deleted, per pipeline section 5. Nothing promoted, no knob
 added, no book or pin touched. Own directory, no overlap with the concurrent
 mode-census work.
+---
+
+## MARK CONTINUATION - the one hypothesis that was not a knob fit. Result: NO.
+
+exp_edge_decay found the signal is not decaying but ACCRUING at roughly +0.04
+reward/ATR per bar for ~24 bars after a mark, with the FS entry landing near
++16 bars worth of it. That produced one testable claim:
+
+    a mark followed by ~16 bars of continuation should be a DIFFERENT trade from
+    a mark followed by immediate failure.
+
+This mattered because it is the first condition in this whole sweep on the one
+thing the FS gate throws away. Every other hypothesis conditioned on something the
+engine already filters on. This one conditions on whether the swing trended or
+failed - and because we enter 37 bars after the mark on median, that is PAST
+information visible at the entry bar.
+
+Causality: score = (close[i0+16] - close[i0]) / ATR(i0+16), signed by leg
+direction, where i0 is the last mark before FS. The window closes strictly before
+the entry bar; 532 IS swings and 294 OOS swings were skipped precisely because
+their window would close at or after entry.
+
+The score separates PERFECTLY on the raw distribution. That is the trap:
+
+    IS    above median  n=1153  mean RA +2.422   >0 in 100.0% of swings
+          below median  n=1155  mean RA -0.746   >0 in  32.3%
+    OOS  above median  n= 638  mean RA +2.497   >0 in 100.0%
+          below median  n= 639  mean RA -0.824   >0 in  29.4%
+
+"100.0% of high-continuation swings moved the right way" is not a trading edge.
+It is the definition of the score - it IS the forward move. The distribution test
+was circular and should not have been run as a check.
+
+The book test is the real one, and it splits by era:
+
+    book                IS HIGH/LOW     OOS HIGH/LOW
+    long            +310/+130  strong   +103/+112   FLAT
+    short           +440/+136  strong   +142/ +74   holds
+    long_htf15      +311/+165  strong   +112/+138   REVERSES
+    long_htffs      +435/+333  strong   +155/+187   REVERSES
+
+IS is emphatic and consistent: HIGH continuation trades better in all four books,
+by a wide margin. OOS keeps it in ONE of four. Same shape as the shape result and
+the volatile result - a large IS effect that does not survive.
+
+### THE CONFOUND, checked because the numbers looked too good
+
+If high-continuation trades simply carry a tighter stop, their R-multiple is
+inflated by arithmetic and none of the IS margin is signal. On fsent_champ_long:
+
+    bucket    median r_multiple    median risk $
+    HIGH             +0.036            810.9
+    LOW              -0.405            748.7
+
+The stop geometry is NOT the explanation - HIGH trades have a slightly LARGER
+risk in dollars, which makes their better R more impressive, not less. So the IS
+result is not a stop-size artefact. It is real on IS and it still dies on OOS.
+
+CLOSED NEGATIVE. Three for three now: swing shape, volatile candles, and mark
+continuation all produced large consistent IS effects that reverse or vanish on
+OOS. That consistency is itself the finding, and it is worth stating plainly:
+
+    THE EDGE IN THIS BOOK FAMILY IS AN ERA EFFECT.
+
+Every hypothesis tested against this data finds large IS gains, because IS is
+where the family was fitted. The moment a hypothesis is checked on OOS, two or
+three out of four cells reverse. The book's OOS numbers stay strongly positive
+(the A1 freeze has all five books positive in both eras), so the family is not
+fake - but its IS margin is not evidence of anything portable, and no further
+IS-only hypothesis in this direction is worth running.
+
+THAT IS THE STOPPING RULE, AND IT IS THE USEFUL OUTPUT
+
+Phase 3 of the plan was "hypotheses only after the inventory". The inventory is
+done and the hypothesis phase produced three negatives with the same signature.
+The remaining untested knobs (window_floor, cap_days, trail_half) should be run
+as a census with the inverse test, NOT as hypothesis sources - the same treatment
+the decay gate got. That is the only version of "look for new edge" that this
+data supports.
+
+Nothing promoted, no knob added, no book or pin touched. Own directory.

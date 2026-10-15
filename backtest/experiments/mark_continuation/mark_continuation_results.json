@@ -1,0 +1,165 @@
+{
+  "stage": "mark_continuation",
+  "window": 16,
+  "atr_window": 14,
+  "eras": {
+    "is": {
+      "median_ra": 0.7727,
+      "n_scored": 2308,
+      "n_skipped": 532,
+      "books": {
+        "fsent_champ_long": {
+          "HIGH cont.": {
+            "n": 210,
+            "gross": 310.09,
+            "dd": 6.07,
+            "mc": 9,
+            "pf": 5.67,
+            "mean_ra": 2.4878
+          },
+          "LOW cont.": {
+            "n": 200,
+            "gross": 130.22,
+            "dd": 16.82,
+            "mc": 20,
+            "pf": 2.33,
+            "mean_ra": -0.8069
+          }
+        },
+        "fsent_champ_short": {
+          "HIGH cont.": {
+            "n": 195,
+            "gross": 440.09,
+            "dd": 6.8,
+            "mc": 9,
+            "pf": 7.14,
+            "mean_ra": 2.4924
+          },
+          "LOW cont.": {
+            "n": 189,
+            "gross": 135.85,
+            "dd": 10.15,
+            "mc": 12,
+            "pf": 2.5,
+            "mean_ra": -0.8258
+          }
+        },
+        "fsent_champ_long_htf15": {
+          "HIGH cont.": {
+            "n": 213,
+            "gross": 310.72,
+            "dd": 9.53,
+            "mc": 14,
+            "pf": 5.66,
+            "mean_ra": 2.4763
+          },
+          "LOW cont.": {
+            "n": 193,
+            "gross": 164.74,
+            "dd": 15.52,
+            "mc": 19,
+            "pf": 2.88,
+            "mean_ra": -0.84
+          }
+        },
+        "fsent_champ_long_htffs": {
+          "HIGH cont.": {
+            "n": 343,
+            "gross": 434.58,
+            "dd": 6.66,
+            "mc": 8,
+            "pf": 4.69,
+            "mean_ra": 2.5496
+          },
+          "LOW cont.": {
+            "n": 289,
+            "gross": 333.1,
+            "dd": 10.06,
+            "mc": 10,
+            "pf": 3.48,
+            "mean_ra": -0.7517
+          }
+        }
+      }
+    },
+    "oos": {
+      "median_ra": 0.7395,
+      "n_scored": 1277,
+      "n_skipped": 294,
+      "books": {
+        "fsent_champ_long": {
+          "HIGH cont.": {
+            "n": 114,
+            "gross": 102.99,
+            "dd": 7.54,
+            "mc": 7,
+            "pf": 3.6,
+            "mean_ra": 2.6494
+          },
+          "LOW cont.": {
+            "n": 113,
+            "gross": 112.03,
+            "dd": 7.28,
+            "mc": 6,
+            "pf": 3.32,
+            "mean_ra": -0.7405
+          }
+        },
+        "fsent_champ_short": {
+          "HIGH cont.": {
+            "n": 128,
+            "gross": 142.01,
+            "dd": 6.42,
+            "mc": 5,
+            "pf": 4.02,
+            "mean_ra": 2.5575
+          },
+          "LOW cont.": {
+            "n": 110,
+            "gross": 74.48,
+            "dd": 6.74,
+            "mc": 6,
+            "pf": 2.55,
+            "mean_ra": -0.5886
+          }
+        },
+        "fsent_champ_long_htf15": {
+          "HIGH cont.": {
+            "n": 118,
+            "gross": 112.12,
+            "dd": 5.63,
+            "mc": 5,
+            "pf": 4.0,
+            "mean_ra": 2.7426
+          },
+          "LOW cont.": {
+            "n": 108,
+            "gross": 138.09,
+            "dd": 6.29,
+            "mc": 6,
+            "pf": 3.97,
+            "mean_ra": -0.6874
+          }
+        },
+        "fsent_champ_long_htffs": {
+          "HIGH cont.": {
+            "n": 180,
+            "gross": 155.25,
+            "dd": 7.51,
+            "mc": 10,
+            "pf": 3.48,
+            "mean_ra": 2.6471
+          },
+          "LOW cont.": {
+            "n": 142,
+            "gross": 187.07,
+            "dd": 7.51,
+            "mc": 10,
+            "pf": 4.02,
+            "mean_ra": -0.802
+          }
+        }
+      }
+    }
+  }
+}
