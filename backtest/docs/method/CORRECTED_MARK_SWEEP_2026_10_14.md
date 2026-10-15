@@ -1080,3 +1080,103 @@ books are serial with mltf off, since this repo appears to have that combination
 under-explored - but that is the owner's call, not this commit's.
 
 Nothing promoted. No registry entry, no pin changed, no book edited.
+---
+
+## exp_mltf ON THE LEAN SERIAL BASE - full metrics, and yes it clears every bar
+
+Owner: "exp_mtlf kaa poora mujhe metrics do win rate etc etc? and if this good for
+making a book?"
+
+    fsent_sig_sw10_short, max_positions=1, exp_mltf 0 -> 1
+
+    metric                     IS base   IS mltf     OOS base  OOS mltf
+    trades                        333       477           208       305
+    trades/yr                   90.7     129.9         104.5     153.2
+    GROSS R                    229.67    546.86        145.98    258.03
+    cost (fee+slip+fund)       62.53     98.49         27.27     37.12
+    NET R                      167.14    448.37        118.71    220.91
+    NET per trade               0.502     0.940         0.571     0.724
+    WIN RATE %                  34.8      41.3          36.1      40.7
+    AvgWin R                     3.39      3.76          3.29      3.08
+    AvgLoss R                   -0.75     -0.69         -0.76     -0.69
+    Payoff                       4.51      5.43          4.35      4.50
+    PROFIT FACTOR                2.41      3.82          2.45      3.08
+    maxDD (net)                 17.58     12.67         14.39     12.18
+    DD duration (trades)          38        18            47        24
+    underwater %                86.8      78.2          83.7      78.0
+    Sortino                    209.10    618.89        156.25    320.78
+    Calmar                       2.59      9.64          4.12      9.07
+    max losing streak               9        12            11        11
+    avg hold (h)                 37.8      41.1          35.0      37.5
+    trail exits                  333       476           208       305
+    stop exits                     0         1             0         0
+
+EVERY RISK AXIS IMPROVES EXCEPT ONE. Win rate +6.5 and +4.6 points, profit factor
+2.41 -> 3.82 and 2.45 -> 3.08, drawdown DOWN in both eras, drawdown duration
+halved in both (38 -> 18 trades, 47 -> 24), underwater time down 8.6 and 5.6
+points, Sortino and Calmar roughly tripled. Net per trade rises 0.502 -> 0.940 on
+IS, which is why 43% more volume does not dilute anything.
+
+THE ONE AXIS THAT WORSENS: the IS losing streak goes 9 -> 12. OOS holds at 11.
+Given the owner ranks losing streak first, this is the honest caveat and it is the
+single thing standing between this and a clean sheet.
+
+### THE OWNER'S OWN BAR - "kabhi negative nahi hona chahiye"
+
+    half-year     base     mltf=1        |  half-year     base     mltf=1
+    2023-H1     +10.40    +55.44        |  2021-H1      +23.22    +37.59
+    2023-H2      +1.08    +50.82        |  2021-H2      +66.24    +82.61
+    2024-H1     +53.26    +85.78        |  2022-H1      +32.19    +83.77
+    2024-H2     +31.97    +61.18        |  2022-H2      -2.94    +16.94
+    2025-H1      +2.71    +26.04        |
+    2025-H2     +17.90    +88.92        |  negative: base 1 of 4
+    2026-H1     +43.66    +71.23        |          mltf=1 0 of 4
+    2026-H2      +6.16     +8.96        |
+    negative: base 0 of 8 |  mltf=1 0 of 8 |
+
+mltf=1 is the ONLY arm in the entire census that FIXES a negative half-year rather
+than adding one: 2022-H2 goes -2.94 -> +16.94 on OOS. Every other knob either
+left the negative in place or created new ones.
+
+### TAIL DEPENDENCE - and this is the strongest result in the file
+
+Removing the largest winners one at a time, as a percentage of the base:
+
+    drop top N     OOS base    OOS mltf     kept
+    top 0          118.71      220.91      186%
+    top 1           91.29      193.49      212%
+    top 3           65.77      167.97      255%
+    top 5           46.34      147.87      319%
+    top 10           9.39      104.22     1109%
+
+The base collapses to 8% of itself when its top 10 trades are removed. mltf=1 keeps
+47% of the ratio and 104.22R absolute. **Its edge is LESS dependent on the right
+tail than the base's, not more.** That is the exact opposite of every candidate in
+this sweep - skip_n, cap_days, trail_half all bought net from a fat tail. This one
+buys it from breadth.
+
+### VERDICT: yes, it is a book
+
+    [PASS] positive in both eras
+    [PASS] improves OOS net            +102.20
+    [PASS] improves IS net             +281.23
+    [PASS] no worse OOS drawdown       14.39 -> 12.18
+    [PASS] no worse OOS losing streak  11 -> 11
+    [PASS] ZERO negative half-years, both eras
+    [PASS] clears SHORTLIST_IS_MIN 130 and SHORTLIST_OOS_MIN 50 in both eras
+
+WITH TWO THINGS THE OWNER MUST WEIGH FIRST
+
+1. IT IS NOT A NEW MECHANISM. unified.py:41 already documents exp_mltf as the
+   entire multi edge - "With the gate on, the same config is +137.72R IS but
+   -13.26R OOS over 230 trades. Turning it off gives +325.78R IS / +70.15R OOS."
+   This file CONFIRMS that on a lean serial base. A book built on it repackages
+   documented shipping behaviour rather than discovering anything, and naming it a
+   champion would overstate what was learned.
+
+2. THE IS LOSING STREAK WORSENS 9 -> 12. Everything else in the risk set improves.
+   If the streak matters as much as the drawdown, that one cell is the argument
+   against, and it should be looked at trade by trade before adoption rather than
+   averaged away by a Calmar of 9.64.
+
+Nothing promoted. No registry entry, no pin changed.
