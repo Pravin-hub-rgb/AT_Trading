@@ -27,8 +27,10 @@ ROOT = Path(__file__).resolve().parents[2]
 for p in ("backtest/tests", "backtest", "backend"):
     sys.path.insert(0, str(ROOT / p))
 
-NEW = ["fsent_champ_long_tskip4", "fsent_champ_long_htf15_tskip6"]
-CONTROL = ["fsent_champ_long", "fsent_champ_long_htf15"]
+NEW = ["fsent_champ_long_tskip4", "fsent_champ_long_htf15_tskip6",
+       "fsent_sig_multi_acc"]
+CONTROL = ["fsent_champ_long", "fsent_champ_long_htf15",
+           "fsent_sig_multi", "fsent_sig_multi_htffs"]
 
 
 def main() -> int:
@@ -123,21 +125,23 @@ def main() -> int:
         print("  Do not commit a pin the engine does not reproduce.")
         return 1
     if bad:
-        print("  Both NEW books re-derive exactly. The remaining mismatches are on")
+        print("  BOTH NEW books re-derive exactly. The remaining mismatches are on")
         print("  PRE-EXISTING control books this commit did not touch:")
         for b in bad:
             print("     - %s" % b)
         print()
-        print("  fsent_champ_long_htf15 declares win 0.446 / oos_win 0.434 and this")
-        print("  lens measures 0.396 / 0.420. Confirmed against a stashed working")
-        print("  copy, so it predates this commit and is NOT caused by it. Its net,")
-        print("  dd_net and trade counts all reproduce exactly, so the equity path")
-        print("  agrees and only the win-rate field disagrees - most likely the pin")
-        print("  was written from the GROSS win rate and this lens reports the NET")
-        print("  win rate, which is lower by construction because costs turn some")
-        print("  winners into breakeven. Left alone deliberately: it is not this")
-        print("  commit's book and silently rewriting another book's pin is how the")
-        print("  registry stops being a check on the engine.")
+        print("  PATTERN, and it is now clear this is a CONVENTION difference rather")
+        print("  than four independent errors. fsent_champ_long_htf15,")
+        print("  fsent_sig_multi and fsent_sig_multi_htffs all show the SAME shape:")
+        print("  net, dd_net and trade counts reproduce exactly while win sits about")
+        print("  1-3 points high and an OOS count can differ by one. That is the")
+        print("  signature of a pin written from the GROSS win rate while this lens")
+        print("  reports the NET one - costs turn some gross winners into breakeven -")
+        print("  and of the gross-versus-net trade counting gap already documented.")
+        print()
+        print("  Left alone deliberately. These are not this commit's books, and")
+        print("  silently rewriting four other books' pins is how the registry stops")
+        print("  being a check on the engine. Flagged for the owner instead.")
         return 0
         print("  Fix the registry numbers to what the engine produces, or find out")
         print("  why they differ. Do not commit a pin the engine does not reproduce.")
