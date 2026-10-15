@@ -1,0 +1,212 @@
+{
+ "years": {
+  "is": 3.67,
+  "oos": 2.0
+ },
+ "rows": [
+  {
+   "label": "champ_short SHIPPED",
+   "book": "fsent_champ_short",
+   "mode": null,
+   "era": "is",
+   "n": 466,
+   "net": 569.33,
+   "r_per_trade": 1.222,
+   "trades_per_year": 127.0,
+   "years": {
+    "2023": 161.38,
+    "2024": 185.55,
+    "2025": 139.4,
+    "2026": 82.99
+   },
+   "worst_year": 82.99,
+   "n_years": 4
+  },
+  {
+   "label": "champ_short SHIPPED",
+   "book": "fsent_champ_short",
+   "mode": null,
+   "era": "oos",
+   "n": 298,
+   "net": 195.01,
+   "r_per_trade": 0.654,
+   "trades_per_year": 149.0,
+   "years": {
+    "2021": 110.51,
+    "2022": 84.5
+   },
+   "worst_year": 84.5,
+   "n_years": 2
+  },
+  {
+   "label": "  + session",
+   "book": "fsent_champ_short",
+   "mode": "session",
+   "era": "is",
+   "n": 507,
+   "net": 589.36,
+   "r_per_trade": 1.162,
+   "trades_per_year": 138.1,
+   "years": {
+    "2023": 155.82,
+    "2024": 212.32,
+    "2025": 140.65,
+    "2026": 80.58
+   },
+   "worst_year": 80.58,
+   "n_years": 4
+  },
+  {
+   "label": "  + session",
+   "book": "fsent_champ_short",
+   "mode": "session",
+   "era": "oos",
+   "n": 294,
+   "net": 267.3,
+   "r_per_trade": 0.909,
+   "trades_per_year": 147.0,
+   "years": {
+    "2021": 153.41,
+    "2022": 113.88
+   },
+   "worst_year": 113.88,
+   "n_years": 2
+  },
+  {
+   "label": "  + flip_quality",
+   "book": "fsent_champ_short",
+   "mode": "flip_quality",
+   "era": "is",
+   "n": 463,
+   "net": 573.54,
+   "r_per_trade": 1.239,
+   "trades_per_year": 126.2,
+   "years": {
+    "2023": 163.78,
+    "2024": 185.55,
+    "2025": 141.22,
+    "2026": 82.99
+   },
+   "worst_year": 82.99,
+   "n_years": 4
+  },
+  {
+   "label": "  + flip_quality",
+   "book": "fsent_champ_short",
+   "mode": "flip_quality",
+   "era": "oos",
+   "n": 282,
+   "net": 231.62,
+   "r_per_trade": 0.821,
+   "trades_per_year": 141.0,
+   "years": {
+    "2021": 130.76,
+    "2022": 100.86
+   },
+   "worst_year": 100.86,
+   "n_years": 2
+  },
+  {
+   "label": "  + hmm",
+   "book": "fsent_champ_short",
+   "mode": "hmm",
+   "era": "is",
+   "n": 466,
+   "net": 581.32,
+   "r_per_trade": 1.247,
+   "trades_per_year": 127.0,
+   "years": {
+    "2023": 161.38,
+    "2024": 185.55,
+    "2025": 141.22,
+    "2026": 93.17
+   },
+   "worst_year": 93.17,
+   "n_years": 4
+  },
+  {
+   "label": "  + hmm",
+   "book": "fsent_champ_short",
+   "mode": "hmm",
+   "era": "oos",
+   "n": 279,
+   "net": 227.91,
+   "r_per_trade": 0.817,
+   "trades_per_year": 139.5,
+   "years": {
+    "2021": 127.05,
+    "2022": 100.86
+   },
+   "worst_year": 100.86,
+   "n_years": 2
+  },
+  {
+   "label": "htf15 SHIPPED",
+   "book": "fsent_champ_long_htf15",
+   "mode": null,
+   "era": "is",
+   "n": 500,
+   "net": 505.24,
+   "r_per_trade": 1.01,
+   "trades_per_year": 136.2,
+   "years": {
+    "2023": 164.44,
+    "2024": 99.41,
+    "2025": 109.87,
+    "2026": 131.51
+   },
+   "worst_year": 99.41,
+   "n_years": 4
+  },
+  {
+   "label": "htf15 SHIPPED",
+   "book": "fsent_champ_long_htf15",
+   "mode": null,
+   "era": "oos",
+   "n": 281,
+   "net": 254.81,
+   "r_per_trade": 0.907,
+   "trades_per_year": 140.5,
+   "years": {
+    "2021": 152.84,
+    "2022": 101.97
+   },
+   "worst_year": 101.97,
+   "n_years": 2
+  },
+  {
+   "label": "  + union",
+   "book": "fsent_champ_long_htf15",
+   "mode": "union",
+   "era": "is",
+   "n": 786,
+   "net": 575.97,
+   "r_per_trade": 0.733,
+   "trades_per_year": 214.2,
+   "years": {
+    "2023": 141.25,
+    "2024": 223.53,
+    "2025": 198.91,
+    "2026": 12.28
+   },
+   "worst_year": 12.28,
+   "n_years": 4
+  },
+  {
+   "label": "  + union",
+   "book": "fsent_champ_long_htf15",
+   "mode": "union",
+   "era": "oos",
+   "n": 451,
+   "net": 321.38,
+   "r_per_trade": 0.713,
+   "trades_per_year": 225.5,
+   "years": {
+    "2021": 178.46,
+    "2022": 142.91
+   },
+   "worst_year": 142.91,
+   "n_years": 2
+  }
+ ]
+}

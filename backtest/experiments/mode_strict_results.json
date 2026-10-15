@@ -1,0 +1,1207 @@
+{
+ "select_book": "fsent_champ_short",
+ "shipped_mode": "atr_high",
+ "candidates": {
+  "hmm": {
+   "desc": "hmm range-score vs chop_thresh",
+   "knobs": [
+    "chop_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 467,
+     "net": 581.32,
+     "dd_net": 12.67,
+     "win": 0.406
+    },
+    "oos": {
+     "n": 279,
+     "net": 227.91,
+     "dd_net": 12.75,
+     "win": 0.387
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 475,
+      "net": 563.1,
+      "dd_net": 19.88,
+      "win": 0.397
+     },
+     "oos": {
+      "n": 279,
+      "net": 223.59,
+      "dd_net": 12.75,
+      "win": 0.394
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 469,
+      "net": 568.59,
+      "dd_net": 19.88,
+      "win": 0.397
+     },
+     "oos": {
+      "n": 279,
+      "net": 223.59,
+      "dd_net": 12.75,
+      "win": 0.394
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 467,
+      "net": 581.32,
+      "dd_net": 12.67,
+      "win": 0.406
+     },
+     "oos": {
+      "n": 279,
+      "net": 227.91,
+      "dd_net": 12.75,
+      "win": 0.387
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    }
+   },
+   "verdict": "PATCHY - 3/5 IS, 5/5 OOS positive, spread 18.2R",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 495,
+       "net": 462.58,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 266,
+       "net": 188.18,
+       "dd_net": 11.2,
+       "win": 0.414
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 498,
+       "net": 500.91,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 268,
+       "net": 227.99,
+       "dd_net": 11.28,
+       "win": 0.418
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "flip_quality": {
+   "desc": "b2_vs_flip_chop + htf_mag floor",
+   "knobs": [
+    "chop_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 464,
+     "net": 573.54,
+     "dd_net": 12.19,
+     "win": 0.406
+    },
+    "oos": {
+     "n": 282,
+     "net": 231.62,
+     "dd_net": 13.27,
+     "win": 0.39
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 585,
+      "net": 554.11,
+      "dd_net": 38.36,
+      "win": 0.39
+     },
+     "oos": {
+      "n": 327,
+      "net": 212.02,
+      "dd_net": 29.02,
+      "win": 0.382
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 548,
+      "net": 476.18,
+      "dd_net": 38.22,
+      "win": 0.385
+     },
+     "oos": {
+      "n": 285,
+      "net": 209.66,
+      "dd_net": 16.9,
+      "win": 0.372
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 464,
+      "net": 573.54,
+      "dd_net": 12.19,
+      "win": 0.406
+     },
+     "oos": {
+      "n": 282,
+      "net": 231.62,
+      "dd_net": 13.27,
+      "win": 0.39
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 460,
+      "net": 574.82,
+      "dd_net": 12.19,
+      "win": 0.403
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 457,
+      "net": 546.84,
+      "dd_net": 12.19,
+      "win": 0.399
+     },
+     "oos": {
+      "n": 276,
+      "net": 219.38,
+      "dd_net": 13.27,
+      "win": 0.377
+     }
+    }
+   },
+   "verdict": "PATCHY - 2/5 IS, 5/5 OOS positive, spread 98.6R",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 488,
+       "net": 461.66,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.82,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 496,
+       "net": 495.04,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 263,
+       "net": 229.04,
+       "dd_net": 11.28,
+       "win": 0.422
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "chop": {
+   "desc": "decisive when chop high",
+   "knobs": [
+    "chop_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 466,
+     "net": 571.15,
+     "dd_net": 12.67,
+     "win": 0.404
+    },
+    "oos": {
+     "n": 276,
+     "net": 210.17,
+     "dd_net": 13.27,
+     "win": 0.373
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 650,
+      "net": 660.48,
+      "dd_net": 32.13,
+      "win": 0.423
+     },
+     "oos": {
+      "n": 347,
+      "net": 257.62,
+      "dd_net": 27.17,
+      "win": 0.389
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 560,
+      "net": 569.69,
+      "dd_net": 34.31,
+      "win": 0.398
+     },
+     "oos": {
+      "n": 291,
+      "net": 188.29,
+      "dd_net": 22.66,
+      "win": 0.357
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    }
+   },
+   "verdict": "MOSTLY REGIONAL - 5/5 IS, 4/5 OOS positive, spread 90.8R",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 495,
+       "net": 462.58,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.82,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 498,
+       "net": 500.91,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 263,
+       "net": 229.04,
+       "dd_net": 11.28,
+       "win": 0.422
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "b2_vs_flip_chop": {
+   "desc": "B2 when chop high",
+   "knobs": [
+    "chop_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 466,
+     "net": 571.15,
+     "dd_net": 12.67,
+     "win": 0.404
+    },
+    "oos": {
+     "n": 276,
+     "net": 210.17,
+     "dd_net": 13.27,
+     "win": 0.373
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 585,
+      "net": 554.11,
+      "dd_net": 38.36,
+      "win": 0.39
+     },
+     "oos": {
+      "n": 327,
+      "net": 212.02,
+      "dd_net": 29.02,
+      "win": 0.382
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 548,
+      "net": 476.18,
+      "dd_net": 38.22,
+      "win": 0.385
+     },
+     "oos": {
+      "n": 285,
+      "net": 209.66,
+      "dd_net": 16.9,
+      "win": 0.372
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    }
+   },
+   "verdict": "PATCHY - 3/5 IS, 5/5 OOS positive, spread 95.0R",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 495,
+       "net": 462.58,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.82,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 498,
+       "net": 500.91,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 263,
+       "net": 229.04,
+       "dd_net": 11.28,
+       "win": 0.422
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "decisive_vs_flip_chop": {
+   "desc": "decisive when chop high",
+   "knobs": [
+    "chop_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 466,
+     "net": 571.15,
+     "dd_net": 12.67,
+     "win": 0.404
+    },
+    "oos": {
+     "n": 276,
+     "net": 210.17,
+     "dd_net": 13.27,
+     "win": 0.373
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 650,
+      "net": 660.48,
+      "dd_net": 32.13,
+      "win": 0.423
+     },
+     "oos": {
+      "n": 347,
+      "net": 257.62,
+      "dd_net": 27.17,
+      "win": 0.389
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 560,
+      "net": 569.69,
+      "dd_net": 34.31,
+      "win": 0.398
+     },
+     "oos": {
+      "n": 291,
+      "net": 188.29,
+      "dd_net": 22.66,
+      "win": 0.357
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    }
+   },
+   "verdict": "MOSTLY REGIONAL - 5/5 IS, 4/5 OOS positive, spread 90.8R",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 495,
+       "net": 462.58,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.82,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 498,
+       "net": 500.91,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 263,
+       "net": 229.04,
+       "dd_net": 11.28,
+       "win": 0.422
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "htf_mag_inv": {
+   "desc": "inverted on HTF magnitude",
+   "knobs": [
+    "chop_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 467,
+     "net": 570.7,
+     "dd_net": 12.67,
+     "win": 0.403
+    },
+    "oos": {
+     "n": 277,
+     "net": 210.29,
+     "dd_net": 13.27,
+     "win": 0.372
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 277,
+      "net": 210.29,
+      "dd_net": 13.27,
+      "win": 0.372
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 467,
+      "net": 570.7,
+      "dd_net": 12.67,
+      "win": 0.403
+     },
+     "oos": {
+      "n": 277,
+      "net": 210.29,
+      "dd_net": 13.27,
+      "win": 0.372
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 467,
+      "net": 570.7,
+      "dd_net": 12.67,
+      "win": 0.403
+     },
+     "oos": {
+      "n": 277,
+      "net": 210.29,
+      "dd_net": 13.27,
+      "win": 0.372
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 467,
+      "net": 570.7,
+      "dd_net": 12.67,
+      "win": 0.403
+     },
+     "oos": {
+      "n": 277,
+      "net": 210.29,
+      "dd_net": 13.27,
+      "win": 0.372
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 467,
+      "net": 570.7,
+      "dd_net": 12.67,
+      "win": 0.403
+     },
+     "oos": {
+      "n": 277,
+      "net": 210.29,
+      "dd_net": 13.27,
+      "win": 0.372
+     }
+    }
+   },
+   "verdict": "DEAD - identical across the sweep, so htf_mag_inv is not winning via chop_thresh",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 496,
+       "net": 453.59,
+       "dd_net": 25.08,
+       "win": 0.427
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.82,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 497,
+       "net": 494.57,
+       "dd_net": 26.26,
+       "win": 0.443
+      },
+      "oos": {
+       "n": 263,
+       "net": 229.04,
+       "dd_net": 11.28,
+       "win": 0.422
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "chop_and_atr_low": {
+   "desc": "decisive on BOTH",
+   "knobs": [
+    "chop_thresh",
+    "atr_low_thresh"
+   ],
+   "result": {
+    "is": {
+     "n": 466,
+     "net": 571.15,
+     "dd_net": 12.67,
+     "win": 0.404
+    },
+    "oos": {
+     "n": 276,
+     "net": 210.17,
+     "dd_net": 13.27,
+     "win": 0.373
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "chop_thresh=42.0": {
+     "is": {
+      "n": 606,
+      "net": 821.82,
+      "dd_net": 23.64,
+      "win": 0.446
+     },
+     "oos": {
+      "n": 274,
+      "net": 201.77,
+      "dd_net": 17.14,
+      "win": 0.38
+     }
+    },
+    "chop_thresh=50.0": {
+     "is": {
+      "n": 494,
+      "net": 621.65,
+      "dd_net": 19.95,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 275,
+      "net": 201.89,
+      "dd_net": 13.27,
+      "win": 0.371
+     }
+    },
+    "chop_thresh=58.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=66.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "chop_thresh=74.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_low_thresh=0.24999999999999997": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_low_thresh=0.3": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_low_thresh=0.35": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_low_thresh=0.39999999999999997": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_low_thresh=0.44999999999999996": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    }
+   },
+   "verdict": "DEAD - identical across the sweep, so chop_and_atr_low is not winning via atr_low_thresh",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 495,
+       "net": 462.58,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.35,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 498,
+       "net": 500.91,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 262,
+       "net": 230.88,
+       "dd_net": 11.28,
+       "win": 0.424
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  },
+  "soft_atr": {
+   "desc": "soft band on ATR%",
+   "knobs": [
+    "atr_high_thresh",
+    "soft_width"
+   ],
+   "result": {
+    "is": {
+     "n": 466,
+     "net": 571.15,
+     "dd_net": 12.67,
+     "win": 0.404
+    },
+    "oos": {
+     "n": 276,
+     "net": 210.17,
+     "dd_net": 13.27,
+     "win": 0.373
+    }
+   },
+   "strict_pass": true,
+   "sweep": {
+    "atr_high_thresh=0.55": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_high_thresh=0.6": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_high_thresh=0.65": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_high_thresh=0.7000000000000001": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "atr_high_thresh=0.75": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "soft_width=42.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "soft_width=50.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "soft_width=58.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "soft_width=66.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    },
+    "soft_width=74.0": {
+     "is": {
+      "n": 466,
+      "net": 571.15,
+      "dd_net": 12.67,
+      "win": 0.404
+     },
+     "oos": {
+      "n": 276,
+      "net": 210.17,
+      "dd_net": 13.27,
+      "win": 0.373
+     }
+    }
+   },
+   "verdict": "DEAD - identical across the sweep, so soft_atr is not winning via soft_width",
+   "replication": {
+    "fsent_champ_long": {
+     "result": {
+      "is": {
+       "n": 495,
+       "net": 462.58,
+       "dd_net": 25.08,
+       "win": 0.43
+      },
+      "oos": {
+       "n": 265,
+       "net": 186.82,
+       "dd_net": 11.2,
+       "win": 0.411
+      }
+     },
+     "strict_pass": false
+    },
+    "fsent_champ_long_htf15": {
+     "result": {
+      "is": {
+       "n": 498,
+       "net": 500.91,
+       "dd_net": 26.26,
+       "win": 0.444
+      },
+      "oos": {
+       "n": 263,
+       "net": 229.04,
+       "dd_net": 11.28,
+       "win": 0.422
+      }
+     },
+     "strict_pass": false
+    }
+   }
+  }
+ },
+ "identity_ok": true,
+ "shipped": {
+  "is": {
+   "n": 467,
+   "net": 569.33,
+   "dd_net": 12.67,
+   "win": 0.401
+  },
+  "oos": {
+   "n": 298,
+   "net": 195.01,
+   "dd_net": 12.75,
+   "win": 0.393
+  }
+ },
+ "replication_held": {
+  "fsent_champ_long": [],
+  "fsent_champ_long_htf15": []
+ }
+}
