@@ -1,0 +1,90 @@
+{
+ "min_bars": {
+  "4": {
+   "is": {
+    "n_4h_candles": 8108,
+    "n_4h_swings": 396,
+    "agree": {
+     "n": 237,
+     "net": -34.1,
+     "r_trade": -0.1439,
+     "wr": 18.6
+    },
+    "disagree": {
+     "n": 266,
+     "net": 139.28,
+     "r_trade": 0.5236,
+     "wr": 25.2
+    },
+    "unknown": 0
+   },
+   "oos": {
+    "n_4h_candles": 4379,
+    "n_4h_swings": 224,
+    "agree": {
+     "n": 149,
+     "net": -8.62,
+     "r_trade": -0.0578,
+     "wr": 20.1
+    },
+    "disagree": {
+     "n": 129,
+     "net": -25.06,
+     "r_trade": -0.1943,
+     "wr": 23.3
+    },
+    "unknown": 0
+   }
+  },
+  "6": {
+   "is": {
+    "n_4h_candles": 8108,
+    "n_4h_swings": 396,
+    "agree": {
+     "n": 237,
+     "net": -34.1,
+     "r_trade": -0.1439,
+     "wr": 18.6
+    },
+    "disagree": {
+     "n": 266,
+     "net": 139.28,
+     "r_trade": 0.5236,
+     "wr": 25.2
+    },
+    "unknown": 0
+   },
+   "oos": {
+    "n_4h_candles": 4379,
+    "n_4h_swings": 224,
+    "agree": {
+     "n": 149,
+     "net": -8.62,
+     "r_trade": -0.0578,
+     "wr": 20.1
+    },
+    "disagree": {
+     "n": 129,
+     "net": -25.06,
+     "r_trade": -0.1943,
+     "wr": 23.3
+    },
+    "unknown": 0
+   }
+  }
+ },
+ "base": {
+  "is": {
+   "n": 503,
+   "net": 105.18,
+   "r_trade": 0.2091,
+   "wr": 22.1
+  },
+  "oos": {
+   "n": 278,
+   "net": -33.68,
+   "r_trade": -0.1212,
+   "wr": 21.6
+  }
+ }
+}
