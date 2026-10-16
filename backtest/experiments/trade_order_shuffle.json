@@ -1,0 +1,626 @@
+{
+ "draws": 2000,
+ "seed": 20261015,
+ "books": {
+  "fsent_sig_sw20_short": {
+   "is": {
+    "observed": {
+     "net": 246.02,
+     "max_dd": 16.92,
+     "dd_days": 88.1,
+     "loss_run": 9,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 56.15,
+     "dd_days": 34.65,
+     "loss_run": 10.6,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 246.02026501968638,
+     "max_dd": 16.19304746145176,
+     "dd_days": 107.61493055555556,
+     "loss_run": 12.0,
+     "roll50_pct": 97.43150684931507
+    },
+    "null_p95_worse": {
+     "net": 246.0202650196864,
+     "max_dd": 25.164699239723145,
+     "dd_days": 239.89524305555548,
+     "loss_run": 18.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 151.23,
+     "max_dd": 12.91,
+     "dd_days": 53.8,
+     "loss_run": 12,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 61.6,
+     "dd_days": 23.35,
+     "loss_run": 90.25,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 151.22665991811152,
+     "max_dd": 11.897095915680417,
+     "dd_days": 74.22881944444444,
+     "loss_run": 9.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 151.22665991811155,
+     "max_dd": 19.37136499318896,
+     "dd_days": 152.84149305555553,
+     "loss_run": 14.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_sig_wk_pause_short": {
+   "is": {
+    "observed": {
+     "net": 203.02,
+     "max_dd": 13.42,
+     "dd_days": 154.0,
+     "loss_run": 12,
+     "roll50_pct": 99.53917050691244
+    },
+    "pct_rank": {
+     "max_dd": 53.25,
+     "dd_days": 70.1,
+     "loss_run": 83.3,
+     "roll50_pct": 53.0
+    },
+    "null_median": {
+     "net": 203.01618527323086,
+     "max_dd": 13.164617067426938,
+     "dd_days": 119.01493055555555,
+     "loss_run": 10.0,
+     "roll50_pct": 99.53917050691244
+    },
+    "null_p95_worse": {
+     "net": 203.0161852732309,
+     "max_dd": 20.715814048427635,
+     "dd_days": 262.90725694444444,
+     "loss_run": 15.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 136.39,
+     "max_dd": 6.91,
+     "dd_days": 70.8,
+     "loss_run": 8,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 14.95,
+     "dd_days": 59.5,
+     "loss_run": 56.1,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 136.3927320319728,
+     "max_dd": 8.77346476271434,
+     "dd_days": 62.919444444444444,
+     "loss_run": 8.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 136.3927320319728,
+     "max_dd": 14.228413032272305,
+     "dd_days": 131.17361111111111,
+     "loss_run": 13.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_sig_trail_delay1": {
+   "is": {
+    "observed": {
+     "net": 153.55,
+     "max_dd": 16.05,
+     "dd_days": 149.6,
+     "loss_run": 8,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 49.85,
+     "dd_days": 30.6,
+     "loss_run": 42.15,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 153.5491263218479,
+     "max_dd": 16.05855409258063,
+     "dd_days": 196.77951388888889,
+     "loss_run": 9.0,
+     "roll50_pct": 97.82608695652173
+    },
+    "null_p95_worse": {
+     "net": 153.5491263218479,
+     "max_dd": 25.869929188038128,
+     "dd_days": 401.67499999999995,
+     "loss_run": 13.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 134.57,
+     "max_dd": 6.49,
+     "dd_days": 28.7,
+     "loss_run": 7,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 8.4,
+     "dd_days": 1.6,
+     "loss_run": 54.9,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 134.56826935467885,
+     "max_dd": 9.28637283982778,
+     "dd_days": 89.4829861111111,
+     "loss_run": 7.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 134.56826935467888,
+     "max_dd": 14.604627407503886,
+     "dd_days": 196.51982638888887,
+     "loss_run": 11.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_sig_full": {
+   "is": {
+    "observed": {
+     "net": 208.96,
+     "max_dd": 14.01,
+     "dd_days": 154.0,
+     "loss_run": 7,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 56.45,
+     "dd_days": 57.65,
+     "loss_run": 25.75,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 208.95591129993102,
+     "max_dd": 13.535905774356117,
+     "dd_days": 139.99652777777777,
+     "loss_run": 9.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 208.95591129993102,
+     "max_dd": 20.777059037906508,
+     "dd_days": 302.7934027777777,
+     "loss_run": 13.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 133.91,
+     "max_dd": 4.99,
+     "dd_days": 29.2,
+     "loss_run": 4,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 0.65,
+     "dd_days": 7.2,
+     "loss_run": 3.6,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 133.90663009460187,
+     "max_dd": 8.405714609265669,
+     "dd_days": 65.94409722222221,
+     "loss_run": 6.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 133.9066300946019,
+     "max_dd": 13.49643742336925,
+     "dd_days": 142.3211458333333,
+     "loss_run": 10.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_sig_fs_mom": {
+   "is": {
+    "observed": {
+     "net": 206.87,
+     "max_dd": 14.24,
+     "dd_days": 154.0,
+     "loss_run": 14,
+     "roll50_pct": 97.61904761904762
+    },
+    "pct_rank": {
+     "max_dd": 56.95,
+     "dd_days": 43.95,
+     "loss_run": 93.85,
+     "roll50_pct": 39.65
+    },
+    "null_median": {
+     "net": 206.8746338320249,
+     "max_dd": 13.689181502103969,
+     "dd_days": 164.30243055555553,
+     "loss_run": 10.0,
+     "roll50_pct": 99.4047619047619
+    },
+    "null_p95_worse": {
+     "net": 206.87463383202493,
+     "max_dd": 21.44032509313962,
+     "dd_days": 354.02416666666664,
+     "loss_run": 15.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 127.47,
+     "max_dd": 4.41,
+     "dd_days": 44.8,
+     "loss_run": 5,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 0.2,
+     "dd_days": 21.5,
+     "loss_run": 7.25,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 127.46970730536154,
+     "max_dd": 8.14538496691041,
+     "dd_days": 67.440625,
+     "loss_run": 8.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 127.46970730536155,
+     "max_dd": 12.684717404021645,
+     "dd_days": 146.62937499999998,
+     "loss_run": 12.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_champ_long_htf15_htffs": {
+   "is": {
+    "observed": {
+     "net": 765.86,
+     "max_dd": 29.76,
+     "dd_days": 242.3,
+     "loss_run": 13,
+     "roll50_pct": 85.28995756718528
+    },
+    "pct_rank": {
+     "max_dd": 99.7,
+     "dd_days": 99.95,
+     "loss_run": 78.9,
+     "roll50_pct": 0.15
+    },
+    "null_median": {
+     "net": 765.8579611774462,
+     "max_dd": 15.505910653866561,
+     "dd_days": 52.85625,
+     "loss_run": 11.0,
+     "roll50_pct": 98.44413012729845
+    },
+    "null_p95_worse": {
+     "net": 765.8579611774463,
+     "max_dd": 23.319256287205224,
+     "dd_days": 107.74677083333331,
+     "loss_run": 17.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 346.07,
+     "max_dd": 14.74,
+     "dd_days": 64.8,
+     "loss_run": 10,
+     "roll50_pct": 97.69452449567723
+    },
+    "pct_rank": {
+     "max_dd": 81.2,
+     "dd_days": 84.8,
+     "loss_run": 54.4,
+     "roll50_pct": 23.05
+    },
+    "null_median": {
+     "net": 346.07150953207343,
+     "max_dd": 11.856473851702276,
+     "dd_days": 39.909375,
+     "loss_run": 10.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 346.0715095320735,
+     "max_dd": 18.450809183505065,
+     "dd_days": 86.72666666666666,
+     "loss_run": 15.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_champ_long_htfesmcl4": {
+   "is": {
+    "observed": {
+     "net": 770.53,
+     "max_dd": 20.02,
+     "dd_days": 87.8,
+     "loss_run": 17,
+     "roll50_pct": 86.81626928471248
+    },
+    "pct_rank": {
+     "max_dd": 86.45,
+     "dd_days": 86.1,
+     "loss_run": 96.0,
+     "roll50_pct": 0.0
+    },
+    "null_median": {
+     "net": 770.5288182038919,
+     "max_dd": 15.424619268809966,
+     "dd_days": 52.647222222222226,
+     "loss_run": 12.0,
+     "roll50_pct": 98.31697054698458
+    },
+    "null_p95_worse": {
+     "net": 770.5288182038919,
+     "max_dd": 23.216047800252635,
+     "dd_days": 109.95288194444444,
+     "loss_run": 17.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 339.08,
+     "max_dd": 15.04,
+     "dd_days": 25.7,
+     "loss_run": 11,
+     "roll50_pct": 94.68085106382979
+    },
+    "pct_rank": {
+     "max_dd": 72.4,
+     "dd_days": 15.1,
+     "loss_run": 60.9,
+     "roll50_pct": 16.95
+    },
+    "null_median": {
+     "net": 339.07931061580496,
+     "max_dd": 12.876028041633163,
+     "dd_days": 44.18888888888889,
+     "loss_run": 11.0,
+     "roll50_pct": 98.93617021276596
+    },
+    "null_p95_worse": {
+     "net": 339.079310615805,
+     "max_dd": 20.093644889636906,
+     "dd_days": 93.29791666666667,
+     "loss_run": 16.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_champ_long_htf15_tskip6": {
+   "is": {
+    "observed": {
+     "net": 639.84,
+     "max_dd": 22.81,
+     "dd_days": 112.7,
+     "loss_run": 13,
+     "roll50_pct": 98.34710743801652
+    },
+    "pct_rank": {
+     "max_dd": 93.2,
+     "dd_days": 90.75,
+     "loss_run": 91.1,
+     "roll50_pct": 13.35
+    },
+    "null_median": {
+     "net": 639.8414265095154,
+     "max_dd": 15.585445246387465,
+     "dd_days": 64.77847222222222,
+     "loss_run": 10.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 639.8414265095155,
+     "max_dd": 23.868529729569097,
+     "dd_days": 130.68406249999995,
+     "loss_run": 15.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 328.54,
+     "max_dd": 14.9,
+     "dd_days": 59.4,
+     "loss_run": 11,
+     "roll50_pct": 98.28571428571429
+    },
+    "pct_rank": {
+     "max_dd": 58.05,
+     "dd_days": 50.4,
+     "loss_run": 75.8,
+     "roll50_pct": 12.3
+    },
+    "null_median": {
+     "net": 328.5410405099934,
+     "max_dd": 14.212631447673193,
+     "dd_days": 59.09583333333333,
+     "loss_run": 10.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 328.5410405099934,
+     "max_dd": 22.67085921594086,
+     "dd_days": 131.1592361111111,
+     "loss_run": 15.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_champ_long_htffs": {
+   "is": {
+    "observed": {
+     "net": 757.99,
+     "max_dd": 22.45,
+     "dd_days": 242.3,
+     "loss_run": 13,
+     "roll50_pct": 84.6590909090909
+    },
+    "pct_rank": {
+     "max_dd": 93.6,
+     "dd_days": 100.0,
+     "loss_run": 80.9,
+     "roll50_pct": 0.0
+    },
+    "null_median": {
+     "net": 757.9924200166331,
+     "max_dd": 15.396701525821435,
+     "dd_days": 53.552083333333336,
+     "loss_run": 11.0,
+     "roll50_pct": 98.1534090909091
+    },
+    "null_p95_worse": {
+     "net": 757.9924200166331,
+     "max_dd": 22.980788730102443,
+     "dd_days": 111.29621527777778,
+     "loss_run": 17.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 313.35,
+     "max_dd": 14.74,
+     "dd_days": 64.8,
+     "loss_run": 10,
+     "roll50_pct": 97.6470588235294
+    },
+    "pct_rank": {
+     "max_dd": 78.35,
+     "dd_days": 78.8,
+     "loss_run": 48.1,
+     "roll50_pct": 32.55
+    },
+    "null_median": {
+     "net": 313.3467450361502,
+     "max_dd": 12.202659010892425,
+     "dd_days": 45.25555555555555,
+     "loss_run": 11.0,
+     "roll50_pct": 99.41176470588235
+    },
+    "null_p95_worse": {
+     "net": 313.3467450361502,
+     "max_dd": 18.730820011079356,
+     "dd_days": 93.27350694444445,
+     "loss_run": 16.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  },
+  "fsent_champ_long_mcloff_htf15": {
+   "is": {
+    "observed": {
+     "net": 539.77,
+     "max_dd": 28.38,
+     "dd_days": 126.4,
+     "loss_run": 22,
+     "roll50_pct": 92.79835390946502
+    },
+    "pct_rank": {
+     "max_dd": 99.8,
+     "dd_days": 95.35,
+     "loss_run": 99.9,
+     "roll50_pct": 2.55
+    },
+    "null_median": {
+     "net": 539.7706444901572,
+     "max_dd": 12.581170613267892,
+     "dd_days": 58.097569444444446,
+     "loss_run": 10.0,
+     "roll50_pct": 99.79423868312757
+    },
+    "null_p95_worse": {
+     "net": 539.7706444901573,
+     "max_dd": 19.168040253427314,
+     "dd_days": 124.27527777777776,
+     "loss_run": 15.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   },
+   "oos": {
+    "observed": {
+     "net": 270.17,
+     "max_dd": 11.05,
+     "dd_days": 59.4,
+     "loss_run": 8,
+     "roll50_pct": 100.0
+    },
+    "pct_rank": {
+     "max_dd": 67.5,
+     "dd_days": 73.7,
+     "loss_run": 37.5,
+     "roll50_pct": 100.0
+    },
+    "null_median": {
+     "net": 270.1659238858291,
+     "max_dd": 9.940247999214808,
+     "dd_days": 41.82604166666667,
+     "loss_run": 9.0,
+     "roll50_pct": 100.0
+    },
+    "null_p95_worse": {
+     "net": 270.16592388582916,
+     "max_dd": 15.179872978640494,
+     "dd_days": 93.06229166666665,
+     "loss_run": 13.0,
+     "roll50_pct": 100.0
+    },
+    "net_invariance_ok": true
+   }
+  }
+ }
+}

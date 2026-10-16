@@ -1,0 +1,71 @@
+{
+ "score": {
+  "fsent_champ_long_htf15_htffs": 66.8,
+  "fsent_champ_long_htfesmcl4": 61.1,
+  "fsent_champ_long_htffs": 63.7,
+  "fsent_champ_long_htf15_tskip6": 70.9,
+  "fsent_champ_short_session": 59.1,
+  "fsent_champ_long_mcloff_htf15": 68.6,
+  "fsent_champ_long_tskip4": 59.6,
+  "fsent_champ_short": 57.6,
+  "fsent_champ_long_htf15": 64.4,
+  "fsent_utcsat_short": 50.0,
+  "fsent_champ_long_nohalt": 50.7,
+  "fsent_champ_long_mcloff": 54.5,
+  "fsent_sig_multi_htffs": 61.1,
+  "fsent_champ_long_mode_atr_low": 46.0,
+  "fsent_champ_long_mode_union": 32.6,
+  "fsent_champ_long": 49.5,
+  "fsent_sig_sw20_short": 51.9,
+  "fsent_sig_full": 53.7,
+  "fsent_sig_wk_pause_short": 55.7,
+  "fsent_sig_fs_mom": 45.4,
+  "fsent_sig_trail_delay1": 40.0,
+  "fsent_sig_sw10_short": 40.2,
+  "fsent_sig_sw10_long": 33.6,
+  "fsent_sig_half_crossed": 44.9,
+  "fsent_sig_decay_crossed": 46.6,
+  "fsent_both_trail_half": 21.4
+ },
+ "rank": {
+  "fsent_champ_long_htf15_tskip6": 1,
+  "fsent_champ_long_mcloff_htf15": 2,
+  "fsent_champ_long_htf15_htffs": 3,
+  "fsent_champ_long_htf15": 4,
+  "fsent_champ_long_htffs": 5,
+  "fsent_champ_long_htfesmcl4": 6,
+  "fsent_sig_multi_htffs": 7,
+  "fsent_champ_long_tskip4": 8,
+  "fsent_champ_short_session": 9,
+  "fsent_champ_short": 10,
+  "fsent_sig_wk_pause_short": 11,
+  "fsent_champ_long_mcloff": 12,
+  "fsent_sig_full": 13,
+  "fsent_sig_sw20_short": 14,
+  "fsent_champ_long_nohalt": 15,
+  "fsent_utcsat_short": 16,
+  "fsent_champ_long": 17,
+  "fsent_sig_decay_crossed": 18,
+  "fsent_champ_long_mode_atr_low": 19,
+  "fsent_sig_fs_mom": 20,
+  "fsent_sig_half_crossed": 21,
+  "fsent_sig_sw10_short": 22,
+  "fsent_sig_trail_delay1": 23,
+  "fsent_sig_sw10_long": 24,
+  "fsent_champ_long_mode_union": 25,
+  "fsent_both_trail_half": 26
+ },
+ "n_books": 26,
+ "monte_carlo": {
+  "draws": 20000,
+  "sig": {
+   "real_best": 55.7,
+   "p": 0.5056
+  },
+  "multi": {
+   "real_best": 70.9,
+   "p": 0.31285
+  }
+ },
+ "untested_significance_score": 0.15
+}
