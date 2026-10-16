@@ -64,8 +64,12 @@ BOOKS = {
         # single and multi of this book produce the same trade count, the same net,
         # and the same trade-list hash. The multi leg is only meaningful where
         # cooldown_bars is kept alongside the pause, as this entry does.
-        "pins": {"n": 385, "net": 144.23,
-                 "dd_net": 56.35, "oos_n": 220, "oos_net": 19.29, "oos_dd_net": 47.73},
+        "pins": {"n": 385, "net": 144.23, "dd_net": 56.35, "wr_net": 0.255,
+                "gross_win": 0.268, "oos_n": 220, "oos_net": 19.29, "oos_dd_net": 47.73,
+                "oos_wr_net": 0.223, "oos_gross_win": 0.232, "n_all": 605, "net_all": 163.52,
+                "dd_net_all": 56.35},
+        "pins_legacy": {"n": 385, "net": 144.23, "dd_net": 56.35, "oos_n": 220,
+                       "oos_net": 19.29, "oos_dd_net": 47.73},
     },
     # REMOVED 2026-10-02: skip1pause_multi_sw10. Verified identical to
     # skipwin1_multi_sw10 on unified.py - same count, same net, same trade list.
@@ -927,8 +931,12 @@ BOOKS = {
         #   gross +342.15R  net +248.81R  dd 38.30R  win 31.5%  n=391
         # all 115 registry books in one pass.
         #   gross +342.15R  net +248.81R  dd 38.30R  win 31.5%  n=391
-        "pins": {"n": 322, "net": 150.16,
-                 "dd_net": 44.76, "oos_n": 198, "oos_net": 9.94, "oos_dd_net": 30.95},
+        "pins": {"n": 322, "net": 150.16, "dd_net": 44.76, "wr_net": 0.267,
+                "gross_win": 0.276, "oos_n": 198, "oos_net": 9.94, "oos_dd_net": 30.95,
+                "oos_wr_net": 0.268, "oos_gross_win": 0.273, "n_all": 520, "net_all": 160.09,
+                "dd_net_all": 44.76},
+        "pins_legacy": {"n": 322, "net": 150.16, "dd_net": 44.76, "oos_n": 198,
+                       "oos_net": 9.94, "oos_dd_net": 30.95},
     },
     "bm05_utcsat_multi_sw10": {
         "desc": "utcsat king + bias momentum min 0.5",
@@ -965,8 +973,12 @@ BOOKS = {
         #   gross +349.60R  net +264.66R  dd 29.71R  win 32.6%  n=359
         # all 115 registry books in one pass.
         #   gross +349.60R  net +264.66R  dd 29.71R  win 32.6%  n=359
-        "pins": {"n": 306, "net": 167.44,
-                 "dd_net": 46.23, "oos_n": 183, "oos_net": 12.53, "oos_dd_net": 22.36},
+        "pins": {"n": 306, "net": 167.44, "dd_net": 46.23, "wr_net": 0.275,
+                "gross_win": 0.284, "oos_n": 183, "oos_net": 12.53, "oos_dd_net": 22.36,
+                "oos_wr_net": 0.273, "oos_gross_win": 0.29, "n_all": 489, "net_all": 179.98,
+                "dd_net_all": 46.23},
+        "pins_legacy": {"n": 306, "net": 167.44, "dd_net": 46.23, "oos_n": 183,
+                       "oos_net": 12.53, "oos_dd_net": 22.36},
     },
     "bm05_swingpause_sig_sw10": {
         "desc": "swingpause single + bias momentum min 0.5 — FAILS on single (-29.6R)",

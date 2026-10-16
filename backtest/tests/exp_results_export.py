@@ -89,11 +89,26 @@ def position_mode(entry):
 
 def rank_key(entry):
     """Rank books by the registry's own pins - net across both eras. The pins are
-    already verified, so this selects without re-running anything."""
+    already verified, so this selects without re-running anything.
+
+    `net` in the registry is the IS-dataset figure, not the total; `n` and `net`
+    read like totals and are not. exp_repin_all.py re-derived the merged figures
+    as `net_all`, so prefer that when present. The sum is kept as the fallback
+    for entries pinned before that field existed, and the two must agree - a
+    disagreement would mean a pin was written on the wrong span.
+    """
     p = entry.get("pins") or {}
     if not p.get("n"):
         return None
-    return (p.get("net", 0.0) or 0.0) + (p.get("oos_net", 0.0) or 0.0)
+    total = p.get("net_all")
+    summed = (p.get("net", 0.0) or 0.0) + (p.get("oos_net", 0.0) or 0.0)
+    if total is None:
+        return summed
+    if abs(float(total) - summed) > 0.02:
+        raise AssertionError(
+            f"{entry.get('desc', '')[:40]!r}: net_all {total} != net + oos_net "
+            f"{summed:.2f}. A pin written on the wrong span is worse than no pin.")
+    return float(total)
 
 
 def is_sig(entry):

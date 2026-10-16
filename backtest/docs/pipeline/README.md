@@ -159,3 +159,17 @@ backtest/tests/          the registry, the runner, the verifiers
   strong as an overlay and was contaminated at the base.
 - **Do not quote a number from a doc.** The engine has moved; most prose numbers
   in this repo predate the causal stop fix. Run it.
+- **A pin named `n` or `net` is one dataset, not the total.** `exp_repin_all.py`
+  found the registry split across two datasets - IS is 2023-01..2026-08, OOS is a
+  separate 2021-22 file - and `n`/`net`/`dd_net` are the IS side only while
+  `oos_*` are the OOS side. 535 + 302 = 837 and the lens reports 837, so a reader
+  who treats `net` as the total understates every book by its out-of-sample leg.
+  `n_all`, `net_all` and `dd_net_all` were added for the merged figures.
+- **`win` was gross, and `wr` is net.** Costs, slippage and funding turn trades
+  positive, so a gross win rate sitting next to net figures reads as a contradiction
+  when it is a lens difference. On `fsent_champ_long_mcloff_htf15` that was 24
+  trades and 4.5 points. It is now `gross_win` alongside `wr_net`.
+- **A prose figure that claims to be this book's result is a claim, and it rots.**
+  `fsent_champ_long_mcloff_htf15` carried `IS 560t / +616.17R / DD 15.13R` for six
+  days after the chain moved; 13 books were doing it. `exp_desc_pin_audit.py` now
+  fails the build on it, and every measured claim carries the chain that made it.

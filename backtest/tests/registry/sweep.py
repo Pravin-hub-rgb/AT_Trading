@@ -40,8 +40,12 @@ BOOKS = {
         # The b3_k ladder is a fifth sibling of the decay conclusion: b3_k=2
         # gives IS +41.78 / OOS +25.70 on 167 and 79 trades. Small, low drawdown
         # on both sides, and nowhere near the champion - the arm is real and weak.
-        "pins": {"n": 419, "net": 140.16,
-                 "dd_net": 39.47, "oos_n": 249, "oos_net": 2.04, "oos_dd_net": 42.09},
+        "pins": {"n": 419, "net": 140.16, "dd_net": 39.47, "wr_net": 0.243,
+                "gross_win": 0.258, "oos_n": 249, "oos_net": 2.04, "oos_dd_net": 42.09,
+                "oos_wr_net": 0.249, "oos_gross_win": 0.257, "n_all": 668, "net_all": 142.2,
+                "dd_net_all": 42.09},
+        "pins_legacy": {"n": 419, "net": 140.16, "dd_net": 39.47, "oos_n": 249,
+                       "oos_net": 2.04, "oos_dd_net": 42.09},
     },
     "gap_slbuf010": {
         "desc": "champion leg + sl_buf_atr 0.10",
@@ -388,8 +392,12 @@ BOOKS = {
         # a=4.0/b=4.0 is a degenerate band that closes instantly, and the
         # a=4.0/b=8.0 version of the same knob is active. Same knob, one value
         # inert and one not - you cannot tell that from reading the knob.
-        "pins": {"n": 302, "net": 165.01,
-                 "dd_net": 39.39, "oos_n": 186, "oos_net": 8.08, "oos_dd_net": 28.19},
+        "pins": {"n": 302, "net": 165.01, "dd_net": 39.39, "wr_net": 0.285,
+                "gross_win": 0.295, "oos_n": 186, "oos_net": 8.08, "oos_dd_net": 28.19,
+                "oos_wr_net": 0.263, "oos_gross_win": 0.269, "n_all": 488, "net_all": 173.09,
+                "dd_net_all": 39.39},
+        "pins_legacy": {"n": 302, "net": 165.01, "dd_net": 39.39, "oos_n": 186,
+                       "oos_net": 8.08, "oos_dd_net": 28.19},
     },
     "gap_bm_min07": {
         "desc": "champion leg + bias-momentum threshold 0.7",
@@ -403,8 +411,12 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_bias_momentum_min": 0.7},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 353, "net": 116.86,
-                 "dd_net": 49.03, "oos_n": 213, "oos_net": 10.52, "oos_dd_net": 28.3},
+        "pins": {"n": 353, "net": 116.85, "dd_net": 49.03, "wr_net": 0.266,
+                "gross_win": 0.278, "oos_n": 213, "oos_net": 10.52, "oos_dd_net": 28.3,
+                "oos_wr_net": 0.268, "oos_gross_win": 0.277, "n_all": 566, "net_all": 127.37,
+                "dd_net_all": 49.03},
+        "pins_legacy": {"n": 353, "net": 116.86, "dd_net": 49.03, "oos_n": 213,
+                       "oos_net": 10.52, "oos_dd_net": 28.3},
     },
     "gap_bm_min06": {
         "desc": "champion leg + bias-momentum threshold 0.6",
@@ -418,8 +430,12 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_bias_momentum_min": 0.6},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 381, "net": 161.73,
-                 "dd_net": 50.14, "oos_n": 230, "oos_net": 4.64, "oos_dd_net": 35.26},
+        "pins": {"n": 381, "net": 161.73, "dd_net": 50.14, "wr_net": 0.268,
+                "gross_win": 0.278, "oos_n": 230, "oos_net": 4.64, "oos_dd_net": 35.26,
+                "oos_wr_net": 0.248, "oos_gross_win": 0.257, "n_all": 611, "net_all": 166.38,
+                "dd_net_all": 50.14},
+        "pins_legacy": {"n": 381, "net": 161.73, "dd_net": 50.14, "oos_n": 230,
+                       "oos_net": 4.64, "oos_dd_net": 35.26},
     },
     "gap_campaign3": {
         "desc": "champion leg + campaign max total 3",
@@ -523,8 +539,12 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_wage_h": 32},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 283, "net": 129.72,
-                 "dd_net": 60.27, "oos_n": 180, "oos_net": 0.83, "oos_dd_net": 54.42},
+        "pins": {"n": 283, "net": 129.72, "dd_net": 60.27, "wr_net": 0.261,
+                "gross_win": 0.279, "oos_n": 180, "oos_net": 0.84, "oos_dd_net": 54.42,
+                "oos_wr_net": 0.228, "oos_gross_win": 0.233, "n_all": 463, "net_all": 130.56,
+                "dd_net_all": 60.27},
+        "pins_legacy": {"n": 283, "net": 129.72, "dd_net": 60.27, "oos_n": 180,
+                       "oos_net": 0.83, "oos_dd_net": 54.42},
     },
     "gap_wage24": {
         "desc": "champion leg + wage window 24h",
@@ -700,8 +720,12 @@ BOOKS = {
         #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
         #   present in 2021-22 and absent from 2023-26. An IS-only reading would
         #   have called it inert and thrown away the best OOS number here.
-        "pins": {"n": 404, "net": 124.34,
-                 "dd_net": 55.77, "oos_n": 237, "oos_net": 22.23, "oos_dd_net": 41.05},
+        "pins": {"n": 404, "net": 124.34, "dd_net": 55.77, "wr_net": 0.243,
+                "gross_win": 0.255, "oos_n": 237, "oos_net": 22.24, "oos_dd_net": 41.05,
+                "oos_wr_net": 0.232, "oos_gross_win": 0.236, "n_all": 641, "net_all": 146.57,
+                "dd_net_all": 55.77},
+        "pins_legacy": {"n": 404, "net": 124.34, "dd_net": 55.77, "oos_n": 237,
+                       "oos_net": 22.23, "oos_dd_net": 41.05},
     },
     "gap_skip_decisive": {
         "desc": "champion leg + skip decisive signals",

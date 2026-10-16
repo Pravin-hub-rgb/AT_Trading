@@ -130,8 +130,11 @@ BOOKS = {
                     "exp_decay_mode": 3},
         "swing": "sw10",
         # Part of the P36 decay grid - see decayE_*.
-        "pins": {"n": 285, "net": 84.27,
-                 "dd_net": 58.4, "oos_n": 145, "oos_net": 3.49, "oos_dd_net": 29.01},
+        "pins": {"n": 285, "net": 84.27, "dd_net": 58.4, "wr_net": 0.239, "gross_win": 0.246,
+                "oos_n": 145, "oos_net": 3.49, "oos_dd_net": 29.01, "oos_wr_net": 0.255,
+                "oos_gross_win": 0.262, "n_all": 430, "net_all": 87.76, "dd_net_all": 58.4},
+        "pins_legacy": {"n": 285, "net": 84.27, "dd_net": 58.4, "oos_n": 145, "oos_net": 3.49,
+                       "oos_dd_net": 29.01},
     },
     "decayE_c": {
         "desc": "champion leg + decay block long on SELLING decay, short on buying decay (crossed)",
@@ -505,8 +508,12 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 494, "net": 218.56,
-                 "dd_net": 45.98, "oos_n": 298, "oos_net": 16.72, "oos_dd_net": 52.83},
+        "pins": {"n": 494, "net": 218.56, "dd_net": 45.98, "wr_net": 0.251,
+                "gross_win": 0.263, "oos_n": 298, "oos_net": 16.73, "oos_dd_net": 52.83,
+                "oos_wr_net": 0.228, "oos_gross_win": 0.238, "n_all": 792, "net_all": 235.28,
+                "dd_net_all": 52.83},
+        "pins_legacy": {"n": 494, "net": 218.56, "dd_net": 45.98, "oos_n": 298,
+                       "oos_net": 16.72, "oos_dd_net": 52.83},
     },
     "utcsat_cap16d": {
         "desc": "cap_days 16 days",
@@ -558,8 +565,11 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 439, "net": 145.44,
-                 "dd_net": 45.28, "oos_n": 264, "oos_net": 12.73, "oos_dd_net": 48.12},
+        "pins": {"n": 439, "net": 145.45, "dd_net": 45.28, "wr_net": 0.26, "gross_win": 0.264,
+                "oos_n": 264, "oos_net": 12.74, "oos_dd_net": 48.12, "oos_wr_net": 0.227,
+                "oos_gross_win": 0.235, "n_all": 703, "net_all": 158.18, "dd_net_all": 48.12},
+        "pins_legacy": {"n": 439, "net": 145.44, "dd_net": 45.28, "oos_n": 264,
+                       "oos_net": 12.73, "oos_dd_net": 48.12},
     },
 
     # ===== OPTIMAL LANES (from exp37, fine fills, corrected engine) =====
