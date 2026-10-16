@@ -10,7 +10,7 @@ import {
 
 /* ------------------------------------------------------------------ config */
 
-type Group = "Significance" | "Return" | "Risk" | "Drawdown %" | "Smoothness" | "Consistency" | "Tail" | "Costs" | "Size";
+type Group = "Significance" | "Return" | "Risk" | "Drawdown %" | "Drawdown time" | "Smoothness" | "Consistency" | "Tail" | "Costs" | "Size";
 
 interface Metric {
   key: keyof ResultBook;
@@ -56,6 +56,17 @@ const METRICS: Metric[] = [
   { key: "dd_pct_of_peak", label: "DD of peak", group: "Drawdown %", lowerBetter: true, dp: 2, suffix: "%", hint: "The standard measure: (equity - peak) / peak. This is what separates a 29R dip on a 1230R book from a 29R dip on a 295R one." },
   { key: "dd_recover_pct", label: "Recover cost", group: "Drawdown %", lowerBetter: true, dp: 1, suffix: "%", hint: "Gain needed to climb back to the peak, which is asymmetric - a 30% fall needs 42.9%. Arithmetic, not a forecast." },
 
+  // Calendar-time drawdown shape. The trade-count numbers above answer "how many
+  // trades did that take"; these answer "how long was a person sitting in it",
+  // which is the question that decides whether a book is livable. A book with a
+  // small DD of peak and a three-figure recovery time is the case the
+  // risk-adjustment review was written about.
+  { key: "dd_days", label: "DD days", group: "Drawdown time", lowerBetter: true, dp: 0, suffix: "d", hint: "Peak to trough of the DEEPEST drawdown, in calendar days." },
+  { key: "recover_days", label: "Recovery", group: "Drawdown time", lowerBetter: true, dp: 0, suffix: "d", hint: "Days from that trough until equity was back at that peak. Blank means it never got back." },
+  { key: "worst_3m", label: "Worst 3m", group: "Drawdown time", dp: 1, suffix: "R", hint: "Worst total across any 3 calendar months. The trade-count rolling windows and a bad quarter are different questions." },
+  { key: "worst_6m", label: "Worst 6m", group: "Drawdown time", dp: 1, suffix: "R", hint: "Worst total across any 6 calendar months." },
+  { key: "worst_12m", label: "Worst 12m", group: "Drawdown time", dp: 1, suffix: "R", hint: "Worst total across any 12 calendar months. Negative means it has had a losing year." },
+
   { key: "top1_contrib", label: "Top 1%", group: "Tail", dp: 0, suffix: "%", hint: "Share of profit from the best 1% of trades. High means a few trades carry it." },
   { key: "top5_contrib", label: "Top 5%", group: "Tail", dp: 0, suffix: "%", hint: "40-60% is normal for trend following. 70-90% is a warning zone." },
   { key: "top10_contrib", label: "Top 10%", group: "Tail", dp: 0, suffix: "%", hint: "Share of profit from the best 10% of trades." },
@@ -78,7 +89,7 @@ const GROUPS: Group[] = ["Significance", "Return", "Risk", "Smoothness", "Consis
 
 const TAG_META: Record<BookTag, { label: string; tone: string; hint: string }> = {
   "zero-negative": { label: "zero-negative", tone: "ok", hint: "No negative half-year in any of the 12 cells." },
-  "low-DD": { label: "low-DD", tone: "ok", hint: "Max drawdown under 60% of the 29R budget." },
+  "low-DD": { label: "low-DD", tone: "ok", hint: "Max drawdown under 3% of the equity peak it fell from." },
   "short-underwater": { label: "short-underwater", tone: "ok", hint: "Never below its peak for 30+ trades." },
   "low-tail": { label: "low-tail", tone: "ok", hint: "Best 5% of trades carry under 80% of the profit." },
   "cost-2x-safe": { label: "2x-cost-safe", tone: "ok", hint: "Still profitable at double fees." },

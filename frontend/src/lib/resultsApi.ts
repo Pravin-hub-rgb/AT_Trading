@@ -69,6 +69,15 @@ export interface ResultBook {
   dd_pct_2: number;
   dd_pct_of_peak: number | null;
   dd_recover_pct: number | null;
+  // Calendar-time drawdown shape. The trade-count measures above say how many
+  // trades the fall took; these say how long a person would have been sitting
+  // in it. recover_days is null when the deepest drawdown never got back to its
+  // own peak, which is a real answer and not a missing value.
+  dd_days: number;
+  recover_days: number | null;
+  worst_3m: number | null;
+  worst_6m: number | null;
+  worst_12m: number | null;
   // Share of k-trade rolling windows that ended profitable.
   roll10_prof_pct: number;
   roll20_prof_pct: number;
@@ -113,7 +122,14 @@ export interface ResultBook {
 
 export interface ResultsPayload {
   generated_from: string;
-  dd_budget: number;
+  // null, deliberately. There is no fixed drawdown ceiling: a limit that rejects
+  // a 29R dip on a 1230R book also passes a 29R dip on a 66R one, so it cannot
+  // tell a big book from a small one. dd_budget_r_legacy is kept beside it so
+  // an old export can still be read. See dd_pct_of_peak, net_to_dd, dd_days and
+  // recover_days for the measures that do discriminate.
+  dd_budget: number | null;
+  dd_budget_note?: string;
+  dd_budget_r_legacy?: number;
   books: ResultBook[];
   count: number;
   artifact_mtime: number;
