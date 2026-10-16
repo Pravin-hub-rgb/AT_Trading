@@ -1,0 +1,294 @@
+{
+ "books": {
+  "fsent_sig_sw20_short": {
+   "cls": "SIG",
+   "is": {
+    "n": 341,
+    "net": 246.02,
+    "max_dd": 16.92,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.4,
+    "capital_r": 1,
+    "dd_per_capital_R": 16.915,
+    "net_per_capital_R": 246.02,
+    "dd_per_mean_R": 41.822,
+    "net_per_mean_R": 608.28,
+    "dd_pct_of_net": 6.88
+   },
+   "oos": {
+    "n": 190,
+    "net": 151.23,
+    "max_dd": 12.91,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.39,
+    "capital_r": 1,
+    "dd_per_capital_R": 12.909,
+    "net_per_capital_R": 151.227,
+    "dd_per_mean_R": 32.915,
+    "net_per_mean_R": 385.59,
+    "dd_pct_of_net": 8.54
+   }
+  },
+  "fsent_sig_wk_pause_short": {
+   "cls": "SIG",
+   "is": {
+    "n": 266,
+    "net": 203.02,
+    "max_dd": 13.42,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.34,
+    "capital_r": 1,
+    "dd_per_capital_R": 13.423,
+    "net_per_capital_R": 203.016,
+    "dd_per_mean_R": 39.587,
+    "net_per_mean_R": 598.73,
+    "dd_pct_of_net": 6.61
+   },
+   "oos": {
+    "n": 162,
+    "net": 136.39,
+    "max_dd": 6.91,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.34,
+    "capital_r": 1,
+    "dd_per_capital_R": 6.909,
+    "net_per_capital_R": 136.393,
+    "dd_per_mean_R": 20.393,
+    "net_per_mean_R": 402.57,
+    "dd_pct_of_net": 5.07
+   }
+  },
+  "fsent_sig_trail_delay1": {
+   "cls": "SIG",
+   "is": {
+    "n": 187,
+    "net": 153.55,
+    "max_dd": 16.05,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.4,
+    "capital_r": 1,
+    "dd_per_capital_R": 16.046,
+    "net_per_capital_R": 153.549,
+    "dd_per_mean_R": 39.717,
+    "net_per_mean_R": 380.07,
+    "dd_pct_of_net": 10.45
+   },
+   "oos": {
+    "n": 111,
+    "net": 134.57,
+    "max_dd": 6.49,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.43,
+    "capital_r": 1,
+    "dd_per_capital_R": 6.493,
+    "net_per_capital_R": 134.568,
+    "dd_per_mean_R": 15.155,
+    "net_per_mean_R": 314.09,
+    "dd_pct_of_net": 4.83
+   }
+  },
+  "fsent_sig_full": {
+   "cls": "SIG",
+   "is": {
+    "n": 215,
+    "net": 208.96,
+    "max_dd": 14.01,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.3,
+    "capital_r": 1,
+    "dd_per_capital_R": 14.005,
+    "net_per_capital_R": 208.956,
+    "dd_per_mean_R": 45.98,
+    "net_per_mean_R": 686.02,
+    "dd_pct_of_net": 6.7
+   },
+   "oos": {
+    "n": 131,
+    "net": 133.91,
+    "max_dd": 4.99,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.33,
+    "capital_r": 1,
+    "dd_per_capital_R": 4.99,
+    "net_per_capital_R": 133.907,
+    "dd_per_mean_R": 15.275,
+    "net_per_mean_R": 409.94,
+    "dd_pct_of_net": 3.73
+   }
+  },
+  "fsent_sig_fs_mom": {
+   "cls": "SIG",
+   "is": {
+    "n": 217,
+    "net": 206.87,
+    "max_dd": 14.24,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.28,
+    "capital_r": 1,
+    "dd_per_capital_R": 14.236,
+    "net_per_capital_R": 206.875,
+    "dd_per_mean_R": 50.917,
+    "net_per_mean_R": 739.91,
+    "dd_pct_of_net": 6.88
+   },
+   "oos": {
+    "n": 135,
+    "net": 127.47,
+    "max_dd": 4.41,
+    "peak_concurrent": 1,
+    "mean_concurrent": 0.29,
+    "capital_r": 1,
+    "dd_per_capital_R": 4.41,
+    "net_per_capital_R": 127.47,
+    "dd_per_mean_R": 15.326,
+    "net_per_mean_R": 442.95,
+    "dd_pct_of_net": 3.46
+   }
+  },
+  "fsent_champ_long_htf15_htffs": {
+   "cls": "MULTI",
+   "is": {
+    "n": 756,
+    "net": 765.86,
+    "max_dd": 29.76,
+    "peak_concurrent": 13,
+    "mean_concurrent": 1.01,
+    "capital_r": 13,
+    "dd_per_capital_R": 2.289,
+    "net_per_capital_R": 58.912,
+    "dd_per_mean_R": 29.389,
+    "net_per_mean_R": 756.34,
+    "dd_pct_of_net": 3.89
+   },
+   "oos": {
+    "n": 396,
+    "net": 346.07,
+    "max_dd": 14.74,
+    "peak_concurrent": 9,
+    "mean_concurrent": 0.89,
+    "capital_r": 9,
+    "dd_per_capital_R": 1.637,
+    "net_per_capital_R": 38.452,
+    "dd_per_mean_R": 16.616,
+    "net_per_mean_R": 390.24,
+    "dd_pct_of_net": 4.26
+   }
+  },
+  "fsent_champ_long_htfesmcl4": {
+   "cls": "MULTI",
+   "is": {
+    "n": 762,
+    "net": 770.53,
+    "max_dd": 20.02,
+    "peak_concurrent": 13,
+    "mean_concurrent": 1.01,
+    "capital_r": 13,
+    "dd_per_capital_R": 1.54,
+    "net_per_capital_R": 59.271,
+    "dd_per_mean_R": 19.802,
+    "net_per_mean_R": 762.06,
+    "dd_pct_of_net": 2.6
+   },
+   "oos": {
+    "n": 425,
+    "net": 339.08,
+    "max_dd": 15.04,
+    "peak_concurrent": 8,
+    "mean_concurrent": 0.91,
+    "capital_r": 8,
+    "dd_per_capital_R": 1.88,
+    "net_per_capital_R": 42.385,
+    "dd_per_mean_R": 16.561,
+    "net_per_mean_R": 373.33,
+    "dd_pct_of_net": 4.44
+   }
+  },
+  "fsent_champ_long_htf15_tskip6": {
+   "cls": "MULTI",
+   "is": {
+    "n": 412,
+    "net": 639.84,
+    "max_dd": 22.81,
+    "peak_concurrent": 10,
+    "mean_concurrent": 1.12,
+    "capital_r": 10,
+    "dd_per_capital_R": 2.281,
+    "net_per_capital_R": 63.984,
+    "dd_per_mean_R": 20.359,
+    "net_per_mean_R": 571.17,
+    "dd_pct_of_net": 3.56
+   },
+   "oos": {
+    "n": 224,
+    "net": 328.54,
+    "max_dd": 14.9,
+    "peak_concurrent": 7,
+    "mean_concurrent": 1.05,
+    "capital_r": 7,
+    "dd_per_capital_R": 2.128,
+    "net_per_capital_R": 46.934,
+    "dd_per_mean_R": 14.129,
+    "net_per_mean_R": 311.61,
+    "dd_pct_of_net": 4.53
+   }
+  },
+  "fsent_champ_long_htffs": {
+   "cls": "MULTI",
+   "is": {
+    "n": 753,
+    "net": 757.99,
+    "max_dd": 22.45,
+    "peak_concurrent": 13,
+    "mean_concurrent": 1.01,
+    "capital_r": 13,
+    "dd_per_capital_R": 1.727,
+    "net_per_capital_R": 58.307,
+    "dd_per_mean_R": 22.289,
+    "net_per_mean_R": 752.52,
+    "dd_pct_of_net": 2.96
+   },
+   "oos": {
+    "n": 389,
+    "net": 313.35,
+    "max_dd": 14.74,
+    "peak_concurrent": 8,
+    "mean_concurrent": 0.86,
+    "capital_r": 8,
+    "dd_per_capital_R": 1.842,
+    "net_per_capital_R": 39.168,
+    "dd_per_mean_R": 17.225,
+    "net_per_mean_R": 366.29,
+    "dd_pct_of_net": 4.7
+   }
+  },
+  "fsent_champ_long_mcloff_htf15": {
+   "cls": "MULTI",
+   "is": {
+    "n": 535,
+    "net": 539.77,
+    "max_dd": 28.38,
+    "peak_concurrent": 10,
+    "mean_concurrent": 0.75,
+    "capital_r": 10,
+    "dd_per_capital_R": 2.838,
+    "net_per_capital_R": 53.977,
+    "dd_per_mean_R": 37.678,
+    "net_per_mean_R": 716.62,
+    "dd_pct_of_net": 5.26
+   },
+   "oos": {
+    "n": 302,
+    "net": 270.17,
+    "max_dd": 11.05,
+    "peak_concurrent": 6,
+    "mean_concurrent": 0.69,
+    "capital_r": 6,
+    "dd_per_capital_R": 1.841,
+    "net_per_capital_R": 45.028,
+    "dd_per_mean_R": 15.902,
+    "net_per_mean_R": 388.96,
+    "dd_pct_of_net": 4.09
+   }
+  }
+ }
+}
