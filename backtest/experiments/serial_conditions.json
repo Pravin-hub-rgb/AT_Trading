@@ -1,0 +1,20 @@
+{
+ "condition2": "DOES NOT HOLD",
+ "oos_supported": [
+  "fsent_champ_long_mcloff_htf15"
+ ],
+ "multis": [
+  "fsent_champ_long_htf15_htffs",
+  "fsent_champ_long_htfesmcl4",
+  "fsent_champ_long_htf15_tskip6",
+  "fsent_champ_long_htffs",
+  "fsent_champ_long_mcloff_htf15"
+ ],
+ "sigmas": [
+  "fsent_sig_sw20_short",
+  "fsent_sig_wk_pause_short",
+  "fsent_sig_trail_delay1",
+  "fsent_sig_full",
+  "fsent_sig_fs_mom"
+ ]
+}
