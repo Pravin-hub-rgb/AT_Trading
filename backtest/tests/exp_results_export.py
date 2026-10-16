@@ -287,41 +287,49 @@ def build(sim, E, name):
                  if sum(v) < 0 and period_complete(k))
     partial = sorted(k for k in per_h if not period_complete(k))
 
-    # Calendar-time drawdown shape. `merged` is the trade dicts, `allts` their
-    # entry timestamps. All three of the numbers below answer a question
-    # longest_underwater (a trade COUNT) cannot: how long would a person have
-    # sat in a losing position, and how long until they were flat again.
-    dd_days = 0.0
-    recover_days = 0
+    # Calendar-time drawdown shape.
+    #
+    # TWO PASSES ON PURPOSE, because the single-pass version was wrong and gave
+    # 1014 and 1160 days to books whose equity curve never spends that long
+    # under water. It measured the first recovery against the DEEPEST trough,
+    # which may not have happened yet at that point in the scan, so the base
+    # moved underneath it and the result was the gap between two unrelated
+    # points. The owner caught it by looking at the equity curve on /results.
+    #
+    # Pass 1 finds the deepest drawdown and the exact peak and trough that made
+    # it. Pass 2 asks a single question about that one drawdown: how long from
+    # its peak to its trough, and how long from that trough until equity was
+    # back at that peak. Both are about ONE episode, so neither can borrow a
+    # number from a different one.
     cum = pk = 0.0
     pk_ts = None
     worst_dd = 0.0
-    dd_from_ts = None
-    dd_to_ts = None
-    in_dd = False
+    dd_peak_ts = dd_peak_val = dd_trough_ts = None
     for t, r in zip(merged, allrs):
         cum += r
         ts = int(t["exit_ts"])
-        # Recovery is checked BEFORE the new-peak branch. A trade that climbs
-        # back to the old peak satisfies cum >= pk, so the previous version -
-        # which tested for it inside the drawdown branch - could never see it
-        # and reported zero for every book.
-        if in_dd and cum >= pk - 1e-9:
-            recover_days = (ts - (dd_to_ts or ts)) // 86400
-            in_dd = False
         if cum > pk:
             pk = cum
             pk_ts = ts
         else:
             d = pk - cum
-            if d > 1e-9:
-                in_dd = True
             if d > worst_dd:
                 worst_dd = d
-                dd_from_ts = pk_ts
-                dd_to_ts = ts
-    if dd_from_ts is not None and dd_to_ts is not None:
-        dd_days = (dd_to_ts - dd_from_ts) / 86400.0
+                dd_peak_ts = pk_ts
+                dd_peak_val = pk
+                dd_trough_ts = ts
+
+    dd_days = 0.0
+    recover_days = None
+    if worst_dd > 0 and dd_peak_ts is not None and dd_trough_ts is not None:
+        dd_days = (dd_trough_ts - dd_peak_ts) / 86400.0
+        # walk forward from the trough until equity is back at the peak value
+        cum = 0.0
+        for t, r in zip(merged, allrs):
+            cum += r
+            if int(t["exit_ts"]) > dd_trough_ts and cum >= dd_peak_val - 1e-9:
+                recover_days = (int(t["exit_ts"]) - dd_trough_ts) // 86400
+                break
 
     # worst N-month calendar windows, because a 20-trade rolling window answers
     # a different question than "was there a bad quarter".

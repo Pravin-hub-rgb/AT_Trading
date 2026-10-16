@@ -1,0 +1,262 @@
+[
+ {
+  "name": "fsent_champ_long_htf15_htffs",
+  "n": 1152,
+  "series_worst_dd": 29.76,
+  "reported_max_dd": 29.76,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 124,
+  "dd_days": 242.3,
+  "recover_days": 9
+ },
+ {
+  "name": "fsent_champ_long_htfesmcl4",
+  "n": 1187,
+  "series_worst_dd": 20.02,
+  "reported_max_dd": 20.02,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 79,
+  "dd_days": 87.8,
+  "recover_days": 50
+ },
+ {
+  "name": "fsent_champ_long_htffs",
+  "n": 1142,
+  "series_worst_dd": 22.45,
+  "reported_max_dd": 22.45,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 123,
+  "dd_days": 242.3,
+  "recover_days": 9
+ },
+ {
+  "name": "fsent_champ_long_htf15_tskip6",
+  "n": 636,
+  "series_worst_dd": 22.81,
+  "reported_max_dd": 22.81,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 35,
+  "dd_days": 112.7,
+  "recover_days": 39
+ },
+ {
+  "name": "fsent_champ_short_session",
+  "n": 853,
+  "series_worst_dd": 18.78,
+  "reported_max_dd": 18.78,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 63,
+  "dd_days": 71.9,
+  "recover_days": 34
+ },
+ {
+  "name": "fsent_champ_long_mcloff_htf15",
+  "n": 837,
+  "series_worst_dd": 28.38,
+  "reported_max_dd": 28.38,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 82,
+  "dd_days": 126.4,
+  "recover_days": 140
+ },
+ {
+  "name": "fsent_champ_long_tskip4",
+  "n": 687,
+  "series_worst_dd": 23.66,
+  "reported_max_dd": 23.66,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 65,
+  "dd_days": 120.2,
+  "recover_days": 11
+ },
+ {
+  "name": "fsent_champ_short",
+  "n": 764,
+  "series_worst_dd": 12.75,
+  "reported_max_dd": 12.75,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 49,
+  "dd_days": 43.0,
+  "recover_days": 22
+ },
+ {
+  "name": "fsent_champ_long_htf15",
+  "n": 781,
+  "series_worst_dd": 26.26,
+  "reported_max_dd": 26.26,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 75,
+  "dd_days": 126.4,
+  "recover_days": 140
+ },
+ {
+  "name": "fsent_utcsat_short",
+  "n": 753,
+  "series_worst_dd": 15.38,
+  "reported_max_dd": 15.38,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 59,
+  "dd_days": 113.0,
+  "recover_days": 39
+ },
+ {
+  "name": "fsent_champ_long_nohalt",
+  "n": 833,
+  "series_worst_dd": 23.3,
+  "reported_max_dd": 23.3,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 71,
+  "dd_days": 111.3,
+  "recover_days": 22
+ },
+ {
+  "name": "fsent_champ_long_mcloff",
+  "n": 833,
+  "series_worst_dd": 23.3,
+  "reported_max_dd": 23.3,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 71,
+  "dd_days": 111.3,
+  "recover_days": 22
+ },
+ {
+  "name": "fsent_sig_multi_htffs",
+  "n": 641,
+  "series_worst_dd": 19.4,
+  "reported_max_dd": 19.4,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 39,
+  "dd_days": 121.3,
+  "recover_days": 12
+ },
+ {
+  "name": "fsent_champ_long_mode_atr_low",
+  "n": 881,
+  "series_worst_dd": 48.76,
+  "reported_max_dd": 48.76,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 96,
+  "dd_days": 237.7,
+  "recover_days": 9
+ },
+ {
+  "name": "fsent_champ_long_mode_union",
+  "n": 1210,
+  "series_worst_dd": 47.61,
+  "reported_max_dd": 47.61,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 113,
+  "dd_days": 155.0,
+  "recover_days": 81
+ },
+ {
+  "name": "fsent_champ_long",
+  "n": 778,
+  "series_worst_dd": 25.08,
+  "reported_max_dd": 25.08,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 91,
+  "dd_days": 126.4,
+  "recover_days": 6
+ },
+ {
+  "name": "fsent_sig_sw20_short",
+  "n": 531,
+  "series_worst_dd": 16.92,
+  "reported_max_dd": 16.92,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 38,
+  "dd_days": 88.1,
+  "recover_days": 73
+ },
+ {
+  "name": "fsent_sig_full",
+  "n": 346,
+  "series_worst_dd": 14.01,
+  "reported_max_dd": 14.01,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 33,
+  "dd_days": 154.0,
+  "recover_days": 54
+ },
+ {
+  "name": "fsent_sig_wk_pause_short",
+  "n": 428,
+  "series_worst_dd": 13.42,
+  "reported_max_dd": 13.42,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 41,
+  "dd_days": 154.0,
+  "recover_days": 65
+ },
+ {
+  "name": "fsent_sig_fs_mom",
+  "n": 352,
+  "series_worst_dd": 14.24,
+  "reported_max_dd": 14.24,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 39,
+  "dd_days": 154.0,
+  "recover_days": 103
+ },
+ {
+  "name": "fsent_sig_trail_delay1",
+  "n": 298,
+  "series_worst_dd": 16.05,
+  "reported_max_dd": 16.05,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 37,
+  "dd_days": 149.6,
+  "recover_days": 58
+ },
+ {
+  "name": "fsent_sig_sw10_short",
+  "n": 541,
+  "series_worst_dd": 17.58,
+  "reported_max_dd": 17.58,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 65,
+  "dd_days": 145.9,
+  "recover_days": 32
+ },
+ {
+  "name": "fsent_sig_sw10_long",
+  "n": 529,
+  "series_worst_dd": 18.09,
+  "reported_max_dd": 18.09,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 83,
+  "dd_days": 109.1,
+  "recover_days": 253
+ },
+ {
+  "name": "fsent_sig_half_crossed",
+  "n": 154,
+  "series_worst_dd": 10.75,
+  "reported_max_dd": 10.75,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 24,
+  "dd_days": 316.6,
+  "recover_days": 27
+ },
+ {
+  "name": "fsent_sig_decay_crossed",
+  "n": 158,
+  "series_worst_dd": 9.07,
+  "reported_max_dd": 9.07,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 24,
+  "dd_days": 314.0,
+  "recover_days": 27
+ },
+ {
+  "name": "fsent_both_trail_half",
+  "n": 367,
+  "series_worst_dd": 26.13,
+  "reported_max_dd": 26.13,
+  "dd_agrees": true,
+  "longest_dd_run_trades": 105,
+  "dd_days": 526.9,
+  "recover_days": null
+ }
+]
