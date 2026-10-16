@@ -25,9 +25,11 @@ CAP = HERE / "capital_normalised_risk.json"
 MD = HERE / "pick_scorecard.md"
 
 BOOKS = [
-    ("fsent_champ_long_htffs", "htffs"),
-    ("fsent_champ_long_mcloff_htf15", "mcloff_htf15"),
-    ("fsent_champ_long", "champ_long"),
+    ("fsent_champ_long_mcloff_htf15", "107 mcloff_htf15"),
+    ("fsent_champ_long_htf15_tskip6", "110 tskip6"),
+    ("fsent_champ_long_htf15_htffs", "109 htf15_htffs"),
+    ("fsent_champ_long_htfesmcl4", "108 htfesmcl4"),
+    ("fsent_champ_long_htffs", "106 htffs"),
 ]
 
 

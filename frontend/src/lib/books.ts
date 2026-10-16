@@ -68,6 +68,8 @@ export type BookId = string;
 
 export interface BookOption {
   id: BookId;
+  /** 1xx = multi (max_positions 0), 2xx = serial (max_positions 1). */
+  code?: string;
   label: string;
   shortLabel?: string;
   /** "causal" = a rule a live trader could place. "retro" = the origin pivot. */
@@ -179,7 +181,8 @@ export const BOOK_OPTIONS: BookOption[] = [
     // ---- chain, so there was nothing left to compare, and the comparison build
     // ---- behind them has been deleted rather than left serving stale results.
     id: "fsent_champ_long",
-    label: "FSENT CHAMP LONG - IS 497t +466.9R | OOS 281t +215.3R",
+    code: "101",
+    label: "101 - FSENT CHAMP LONG - IS 497t +466.9R | OOS 281t +215.3R",
     shortLabel: "FSENT-LONG",
     slMode: "causal",
     hint: "The shipping book, on the B1 arming fix. A break that used to be suppressed while arming was deferred is now accepted when the pivot it broke was sealed on an EARLIER bar; the phantom - breaking a level sealed on that very bar - stays suppressed. Marks were verified one by one against the candles: 0 marks sit on a level that did not already exist, 0 fail to actually cross their level, 0 are self-breaks, and up/down are balanced. Note the out-of-sample figure is flat versus the pre-fix pin (+240.4R against +239.6R): this fix was made because the marks were wrong, not because it added edge.",
@@ -188,7 +191,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_champ_long_atr_low",
-    label: "FSENT CHAMP LONG + atr_low (regime sign flipped) - IS 612t +515.5R | OOS 269t +192.6R",
+    code: "102",
+    label: "102 - FSENT CHAMP LONG + atr_low (regime sign flipped) - IS 612t +515.5R | OOS 269t +192.6R",
     shortLabel: "FSENT-ATRLOW",
     slMode: "causal",
     hint: "one knob from the book above: atr_high -> atr_low, so decisive windows are taken when 15m bars are QUIET instead of big - more trades, more R, deeper drawdown",
@@ -197,7 +201,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_champ_long_mcloff",
-    label: "FSENT CHAMP LONG MCL-OFF (loss-run cutoff OFF) - IS 533t +504.1R | OOS 300t +213.3R",
+    code: "103",
+    label: "103 - FSENT CHAMP LONG MCL-OFF (loss-run cutoff OFF) - IS 533t +504.1R | OOS 300t +213.3R",
     shortLabel: "MCL-OFF",
     slMode: "causal",
     hint: "the base book with ONE integer changed: max_consecutive_losses 3 -> 0, so the 3-loss halt stops cutting the recovery trade that follows every streak. This is the ONLY book in the family that clears a null in BOTH eras - paired permutation p = 0.0312 in sample and 0.0117 out of sample (exp_null_audit.py, 4000 draws) - and the only one whose period control is POWERED in both eras, b = +1.21 at t = 3.37 and b = +1.86 at t = 3.97. Zero negative half-years out of 12. Earns LESS than the base in sample by design (-32.8R IS) and MORE out of sample (+34.6R). Its out-of-sample era is 2021-22, reused old data, NOT a holdout - see method/OOS_IS_NOT_A_HOLDOUT.md",
@@ -206,7 +211,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
     {
       id: "fsent_sig_multi",
-      label: "SIG MULTI (serial, FS on shorts) - IS 292t +373.0R | OOS 185t +182.8R",
+      code: "104",
+      label: "104 - SIG MULTI (serial, FS on shorts) - IS 292t +373.0R | OOS 185t +182.8R",
       shortLabel: "SIG-MULTI",
       slMode: "causal",
       hint: "RANKED #1 of 35 on the rolling-weighted score, and the most DIFFERENT book here. Every one of its rolling 50-trade windows was profitable - the worst 50-trade stretch in the whole sample is still +10.0R. Zero negative half-years, zero negative years, and zero startup drawdown, meaning it has never once gone below where it started. Median drawdown from ANY start date over one year is 8.95% against 12.48% for FSENT-LONG. Its paired permutation is p 0.9283 / 0.9138, i.e. no edge distinguishable from reshuffling the parent, so it is a candidate on BEHAVIOUR and not on evidence of an edge.",
@@ -215,7 +221,8 @@ export const BOOK_OPTIONS: BookOption[] = [
     },
     {
       id: "fsent_sig_multi_htffs",
-      label: "SIG MULTI + HTF-FS (flip bucket on FS) - IS 417t +511.5R | OOS 224t +197.7R",
+      code: "105",
+      label: "105 - SIG MULTI + HTF-FS (flip bucket on FS) - IS 417t +511.5R | OOS 224t +197.7R",
       shortLabel: "SIG-MULTI+HTFFS",
       slMode: "causal",
       hint: "RANKED #3 of 35 and the NEWEST arm in this family - one parameter (exp_htf_fs_entry='flip') added to SIG MULTI. Zero negative half-years, zero negative years, every rolling 50 and rolling 100 window profitable, zero startup drawdown, and it is one of only five books in the family that survives deleting its best 10% of trades (+85.3R). Its bad-luck tail is the shallowest of any large book: from ANY start date the worst 1-year drawdown is 17.82% but the 10th percentile is 6.85%. The honest caveat: p 0.5091 / 0.9708 - behaves beautifully, and shows no edge.",
@@ -224,7 +231,8 @@ export const BOOK_OPTIONS: BookOption[] = [
     },
     {
       id: "fsent_champ_long_htffs",
-      label: "FSENT CHAMP LONG HTF-FS (flip bucket on FS) - IS 753t +758.0R | OOS 389t +313.4R",
+      code: "106",
+      label: "106 - FSENT CHAMP LONG HTF-FS (flip bucket on FS) - IS 753t +758.0R | OOS 389t +313.4R",
       shortLabel: "HTF-FS",
       slMode: "causal",
       hint: "The HTF-FS entry on the champion book, and the strongest single arm in the family on return-to-drawdown: 45.4 net per unit of drawdown, better than anything else here including MCL-OFF at 37.4. Five parameters, the same complexity as MCL-OFF. All eight in-sample half-years positive. But it recovers its own worst drawdown in TWO TRADES and its out-of-sample permutation is 0.5956, and it is the one book whose tail dependence degrades out of sample - top 10% of trades contribute 116.9% there. Look at it on the chart; do not read the net as a verdict.",
@@ -233,7 +241,8 @@ export const BOOK_OPTIONS: BookOption[] = [
     },
     {
       id: "fsent_champ_long_mcloff_htf15",
-      label: "MCL-OFF + HTF15 swing rule - IS 535t +539.8R | OOS 302t +270.2R",
+      code: "107",
+      label: "107 - MCL-OFF + HTF15 swing rule - IS 535t +539.8R | OOS 302t +270.2R",
       shortLabel: "MCL-OFF+HTF15",
       slMode: "causal",
       hint: "MCL-OFF (the loss-run cutoff turned off) combined with the tighter htf15 swing rule. Ranked #9 of 35. Zero negative half-years and zero negative years, median 1-year drawdown from any start date 13.14%, and the strongest in-sample permutation of any book that has zero negative half-years: p 0.0115. Out of sample it is 0.1445 - the best p any zero-negative-half-year book has on the far side, though still short of 0.05. Worth watching rather than adopting.",
@@ -242,7 +251,8 @@ export const BOOK_OPTIONS: BookOption[] = [
     },
     {
       id: "fsent_champ_long_htfesmcl4",
-    label: "FSENT CHAMP LONG HTF-FS + MCL4 - IS 762t +770.5R | OOS 425t +339.1R",
+      code: "108",
+    label: "108 - FSENT CHAMP LONG HTF-FS + MCL4 - IS 762t +770.5R | OOS 425t +339.1R",
     shortLabel: "HTF-FS+MCL4",
     slMode: "causal",
     hint: "the highest-net book here - but read this: it trades 1.47x more than FSENT-LONG at only 1.10x the R per trade, and that 1.10x has a t of 0.46, so nearly all the extra return is MORE BETS rather than a better bet. It also collapses the HTF flip/decisive/b2 regime buckets into one set, so the book stops telling regimes apart. Drawdown nearly doubles to 27.7R. Look at it on the chart, not as a winner.",
@@ -256,7 +266,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_sig_full",
-    label: "FSENT SIG FULL (serial, FS entry on shorts) - IS 215t +209.0R | OOS 131t +133.9R",
+    code: "201",
+    label: "201 - FSENT SIG FULL (serial, FS entry on shorts) - IS 215t +209.0R | OOS 131t +133.9R",
     shortLabel: "FSENT-SIG",
     slMode: "causal",
     hint: "one position at a time, never overlapping - the lowest drawdown in the set; shorts enter at the FS print but the LONGS carry the P&L",
@@ -289,7 +300,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   // ---------------------------------------------------------------------------
   {
     id: "fsent_sig_sw20_short",
-    label: "SIG SW20 SHORT (serial, 20-bar HTF swings) - IS 341t +246.0R | OOS 190t +151.2R",
+    code: "202",
+    label: "202 - SIG SW20 SHORT (serial, 20-bar HTF swings) - IS 341t +246.0R | OOS 190t +151.2R",
     shortLabel: "SIG-SW20",
     slMode: "causal",
     hint: "the highest-net serial book in the shortlist. The looser sw20 HTF swing rule keeps a wider window open, so more trades fit inside it. Highest OOS net of the five serial picks but the widest losing run of them (12) and the top 5% of trades carry 71% of the net. It used to appear twice in this file, alongside fsent_sig_sw20_short_wr - the same params, the same swing chain, the same pins, under a second name. That duplicate was merged on 2026-10-15 and this is the surviving entry; do not read the pair as two books agreeing.",
@@ -303,7 +315,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_sig_wk_pause_short",
-    label: "SIG WK-PAUSE SHORT (serial) - IS 266t +203.0R | OOS 162t +136.4R",
+    code: "203",
+    label: "203 - SIG WK-PAUSE SHORT (serial) - IS 266t +203.0R | OOS 162t +136.4R",
     shortLabel: "SIG-WKPAUSE",
     slMode: "causal",
     hint: "the best SPREAD of the five serial picks - the top 5% of trades carry only 49% of the net, the lowest of any book that passed the gates. Its 100-trade rolling window is positive 100% of the time out of sample and it clears the 29R drawdown budget at 13.4R. A filter can be switched off here and the book still survives, which is worth reading as a caution rather than a compliment.",
@@ -316,7 +329,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_sig_fs_mom",
-    label: "SIG FS-MOM (serial, bias-momentum gate) - IS 217t +206.9R | OOS 135t +127.5R",
+    code: "204",
+    label: "204 - SIG FS-MOM (serial, bias-momentum gate) - IS 217t +206.9R | OOS 135t +127.5R",
     shortLabel: "SIG-FSMOM",
     slMode: "causal",
     hint: "the SMOOTHEST of the five serial picks and the one to watch: lowest ulcer out of sample (5.7 against 6.6 to 19.5 for the rest), lowest drawdown as a share of net (3.5%), every 20-trade rolling window positive out of sample, and the fewest parameters in the set at 14. It gives up about 24R of OOS net against the top pick to get there. Six of its own filters can be switched off and it still clears both eras.",
@@ -329,7 +343,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_champ_long_htf15_htffs",
-    label: "CHAMP HTF15 HTF-FS (flip bucket on FS) - IS 756t +765.9R | OOS 396t +346.1R",
+    code: "109",
+    label: "109 - CHAMP HTF15 HTF-FS (flip bucket on FS) - IS 756t +765.9R | OOS 396t +346.1R",
     shortLabel: "HTF15-FS",
     slMode: "causal",
     hint: "the highest-net multi book in the shortlist, and it MISSES THE OWNER'S 29R DRAWDOWN BUDGET: 29.76R in sample against a budget of 29.0R. It is listed because it is the shortlist, not because it is adoptable - the sw10 sibling of this same book, fsent_champ_long_htffs, clears the budget at 22.45R for 2R less in sample. Read the drawdown before the net.",
@@ -343,7 +358,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_champ_long_htf15_tskip6",
-    label: "CHAMP HTF15 TSKIP6 (serial + trail-skip 6) - IS 412t +639.8R | OOS 224t +328.5R",
+    code: "110",
+    label: "110 - CHAMP HTF15 TSKIP6 (serial + trail-skip 6) - IS 412t +639.8R | OOS 224t +328.5R",
     shortLabel: "HTF15-TSKIP6",
     slMode: "causal",
     hint: "the best book in the shortlist on the thing that is hardest to fake: 1.467R per trade out of sample, the highest per-trade figure of any multi book in the registry, and the smoothest by ulcer at 3.3 against 6.0 to 20.4 for the rest. Only 224 trades out of sample, so it is not buying its return with volume. Clears the budget at 22.81R. Its one weak point is spread - the top 5% of trades carry 74% of the net, and it falls apart if exp_trail_skip_n is set to 0, which is the knob the book is named for.",
@@ -357,7 +373,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_champ_short",
-    label: "FSENT CHAMP SHORT (FS entry on SHORT side - the mirror) - IS 466t +569.3R | OOS 298t +195.0R",
+    code: "111",
+    label: "111 - FSENT CHAMP SHORT (FS entry on SHORT side - the mirror) - IS 466t +569.3R | OOS 298t +195.0R",
     shortLabel: "FSENT-SHORT",
     slMode: "causal",
     hint: "the fsent_champ_long mirror - shorts enter at the FS print and longs at the break; same knob count, opposite side",
@@ -366,7 +383,8 @@ export const BOOK_OPTIONS: BookOption[] = [
   },
   {
     id: "fsent_sig_trail_delay1",
-    label: "FSENT SIG TRAIL DELAY1 (half profit + trail after +1R) - IS 187t +153.6R | OOS 111t +134.6R",
+    code: "205",
+    label: "205 - FSENT SIG TRAIL DELAY1 (half profit + trail after +1R) - IS 187t +153.6R | OOS 111t +134.6R",
     shortLabel: "SIG-TRAIL",
     slMode: "causal",
     hint: "sig_full plus two knobs only - bank half at the midpoint, then trail the rest after +1R - fewer trades, more R, same serial one-position behaviour",
@@ -378,90 +396,35 @@ export const BOOK_OPTIONS: BookOption[] = [
       max_consecutive_losses: 3,
     },
   },
-  {
-    id: "champion_causal",
-    label: "CHAMPION CAUSAL (leg stop) - ships - IS 421t +127.4R",
-    shortLabel: "CAUSAL",
-    slMode: "causal",
-    hint: "stop at the leg extreme up to the entry bar - knowable live - the pinned shipping book",
-    measured: { isN: 421, isNet: 127.39, oosN: 251, oosNet: -31.05 },
-    config: { ...V19, version: "unified" },
-  },
-  {
-    id: "utcsat_causal",
-    label: "CHAMPION CAUSAL + skip UTC-Saturday - 384t +113.8R",
-    shortLabel: "CAUSAT-SAT",
-    slMode: "causal",
-    hint: "causal stop, UTC Saturdays skipped - 57 of the 86 removed entries were Saturday and losing",
-    measured: { isN: 384, isNet: 113.83, oosN: 224, oosNet: -42.77 },
-    config: { ...V19, version: "utcsat_causal" },
-  },
-  {
-    // RETIRED 2026-10-14. Was "utcsat_entry_minus_1" - IS 380 / +100.97R,
-    // OOS 223 / -51.88R. Removed from this list on the owner's rule: any book
-    // negative in either era is retired, no exceptions. The archived config and
-    // pins are intact in backtest/tests/registry/retired.py under the key
-    // "utcsat_entry_minus_1", so restoring it is one line. Its sibling
-    // champion_entry_minus_1 is unaffected and stays.
-    id: "utcsat_entry_minus_1_retired",
-    label: "RETIRED - utcsat_entry_minus_1 (OOS -51.9R)",
-    shortLabel: "RETIRED",
-    slMode: "causal",
-    hint: "Retired 2026-10-14: negative out of sample. Not tradeable. Kept as a placeholder so this entry's removal is visible rather than silent.",
-    measured: { isN: 380, isNet: 100.97, oosN: 223, oosNet: -51.88 },
-    config: { ...V19, version: "utcsat_entry_minus_1" },
-  },
-  {
-    id: "champion_entry_minus_1",
-    label: "CHAMPION ENTRY-1 (leg extreme, entry bar excluded) - 420t +130.5R net",
-    shortLabel: "ENTRY-1",
-    slMode: "causal",
-    hint: "same as CAUSAL but the stop ignores the entry bar's own extreme - sits beside the RETRO book, not beside CAUSAL",
-    measured: { isN: 420, isNet: 130.54, oosN: 249, oosNet: -45.25 },
-    config: { ...V19, version: "entry_minus_1" },
-  },
-  {
-    id: "v1",
-    label: "v1 Honest — 1h Flip cap 16d",
-    hint: "baseline · 1h flip, fixed 3R, cap 16d",
-    config: {
-      ...V19,
-      version: "v1",
-      tf: "1h",
-      htf_tf: "1h",
-      htf_ltf_ver: "v1",
-      ltf_min_bars: 20,
-      htf_min_bars: 20,
-      min_bars: 20,
-      fee_pct: 0.05,
-      sl_buf_atr: 0.25,
-      ext_stop_r: 1.5,
-      chop_thresh: 61.8,
-      cooldown_bars: 20,
-      max_consecutive_losses: 5,
-    },
-  },
-  {
-    id: "v7",
-    label: "v7 TimeCap 16d — 1h Flip, no cooldown",
-    hint: "v1 with the cooldown removed",
-    config: {
-      ...V19,
-      version: "v7",
-      tf: "1h",
-      htf_tf: "1h",
-      htf_ltf_ver: "v1",
-      ltf_min_bars: 20,
-      htf_min_bars: 20,
-      min_bars: 20,
-      fee_pct: 0.05,
-      sl_buf_atr: 0.25,
-      ext_stop_r: 1.5,
-      chop_thresh: 61.8,
-      cooldown_bars: 0,
-      max_consecutive_losses: 5,
-    },
-  },
+  // REMOVED 2026-10-16, on the owner's call. Six entries went:
+  //
+  //   champion_causal          IS 421t +127.4R | OOS 251t  -31.05R
+  //   utcsat_causal            IS 384t +113.8R | OOS 224t  -42.77R
+  //   champion_entry_minus_1   IS 420t +130.5R | OOS 249t  -45.25R
+  //   utcsat_entry_minus_1     IS 380t +101.0R | OOS 223t  -51.88R  (already
+  //                           retired 2026-10-14, still here as a placeholder)
+  //   v1                       no measured object at all
+  //   v7                       no measured object at all
+  //
+  // The first three are the books this file's own header called "the champion
+  // books ... the pinned shipping book". ALL FOUR lose money out of sample on
+  // 2021-22. Not one of them is in the Python registry, so no pin, no
+  // significance audit and no retention check has ever run against any of them.
+  // They existed only here, in a TypeScript dropdown, carrying numbers that
+  // reconciled against nothing and therefore drifted silently.
+  //
+  // That is why they sat beside the real candidates with no marker
+  // distinguishing them. The owner's rule - any book negative in either era is
+  // out - retired utcsat_entry_minus_1 on 2026-10-14. The other three escaped it
+  // for one reason only: they were not registry books, so the rule could not
+  // see them.
+  //
+  // Nothing is lost. The engine versions "unified", "entry_minus_1",
+  // "utcsat_causal" and "utcsat_entry_minus_1" remain in BtcVersion and in the
+  // backend; this removes them from the selection list only. Re-adding one means
+  // pasting the entry back and running exp_sync_dropdown.py - and it will still
+  // show a negative out-of-sample number, which is the entire point.
+
 ];
 
 // The book the chart opens on. Was "v19_retro", which was the 500t origin-pivot

@@ -83,6 +83,12 @@ CANDIDATES = {
     "HTF15_TSKIP6": ("fsent_champ_long_htf15_tskip6", {}),
     "HTFFS": ("fsent_champ_long_htffs", {}),
     "TSKIP4": ("fsent_champ_long_tskip4", {}),
+    # added 2026-10-16: the two multi books that were on the shortlist but had no
+    # forward row at all, so the scorecard showed them as zero trades rather than
+    # as "not run". Zero and unmeasured are different, and this file already
+    # refuses to print a measured 0 for something it did not measure.
+    "HTF15_HTFFS": ("fsent_champ_long_htf15_htffs", {}),
+    "HTFESMCL4": ("fsent_champ_long_htfesmcl4", {}),
 }
 KILL_LINE_PCT = {"CHAMPION_BASE": 64.3, "CHAMPION_N3": 64.3,
                  "KING_BASE": 55.3, "KING_WN3": 55.3,
