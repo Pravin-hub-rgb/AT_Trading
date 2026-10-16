@@ -35,7 +35,8 @@ def dd_recovery(pairs):
     pk_ts = None
     worst_dd = 0.0
     dd_peak_ts = dd_peak_val = dd_trough_ts = None
-    for ts, r in pairs:
+    dd_trough_val = 0.0
+    for i, (ts, r) in enumerate(pairs):
         cum += r
         ts = int(ts)
         if cum > pk:
@@ -48,16 +49,18 @@ def dd_recovery(pairs):
                 dd_peak_ts = pk_ts
                 dd_peak_val = pk
                 dd_trough_ts = ts
+                dd_trough_val = cum
+                dd_trough_i = i
 
     dd_days = 0.0
     recover_days = None
     if worst_dd > 0 and dd_peak_ts is not None and dd_trough_ts is not None:
         dd_days = (dd_trough_ts - dd_peak_ts) / DAY
-        cum = 0.0
-        for ts, r in pairs:
-            cum += r
-            if int(ts) > dd_trough_ts and cum >= dd_peak_val - 1e-9:
-                recover_days = (int(ts) - dd_trough_ts) // DAY
+        cum = dd_trough_val
+        for i in range(dd_trough_i + 1, len(pairs)):
+            cum += pairs[i][1]
+            if cum >= dd_peak_val - 1e-9:
+                recover_days = (int(pairs[i][0]) - dd_trough_ts) // DAY
                 break
     return worst_dd, dd_days, recover_days, dd_peak_ts, dd_trough_ts
 
@@ -180,12 +183,42 @@ def main() -> int:
     # 20.0 / 2.2 = 9.09, so the 10th day wins -> day 314.  314 - 304 = 10.
     check("recover_days", rec, 10)
 
+    # ---- CASE 7  NON-MONOTONIC TIMESTAMPS - the real one ----------------
+    # merged trades are sorted by ENTRY time, so their EXIT times are not in
+    # order. The second version of this code walked the whole list asking "is
+    # this trade's exit after the trough", and a trade sitting EARLIER in the
+    # list but closing later satisfied it - at which point equity was still near
+    # the peak and the condition matched at once. A book that recovered two rows
+    # after its worst drawdown reported 1064 days because of this.
+    #
+    # Here: entry order is 0,1,2,... but exits are 0, 4000, 1, 2, ... so the
+    # trade at row 1 sits early in the list and closes long after the trough.
+    print("CASE 7  exit times out of order (sorted by entry, not exit)")
+    s = [(0, 100.0)]
+    for i in range(1, 200):                 # steady climb, equity ~300
+        s.append((i * d, 1.0))
+    s.append((200 * d, -20.0))              # the deepest dip
+    for i in range(1, 6):                   # closed quickly, 5 days later
+        s.append((200 * d + i * d, 5.0))
+    # now scramble the exit times of the EARLY trades far into the future,
+    # exactly as overlapping holds would
+    scrambled = []
+    for i, (ts, r) in enumerate(s):
+        if 5 <= i < 50:
+            scrambled.append(((ts // d + 5000) * d, r))
+        else:
+            scrambled.append((ts, r))
+    w, ddd, rec, _, _ = dd_recovery(scrambled)
+    check("worst drawdown", round(w, 3), 20.0)
+    # the dip is 20R and closes at +5R per trade, so 4 trades -> 4 days
+    check("recover_days", rec, 4)
+
     print()
     if FAILS:
         print("FAILED: %s" % ", ".join(FAILS))
         print("Do not trust these numbers until they pass.")
         return 1
-    print("all 18 checks passed")
+    print("all checks passed")
     print()
     print("What this does NOT do: it proves the arithmetic on series whose answers")
     print("were worked out by hand. It says nothing about whether a real book's")

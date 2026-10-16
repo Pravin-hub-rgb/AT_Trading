@@ -85,6 +85,14 @@ CANDIDATES = [
     'fsent_sig_wk_pause_short',
     'fsent_sig_decay_crossed',
     'fsent_sig_sw10_short',
+    # 2026-10-15: fsent_champ_long_htf15_tskip6 was never audited. It has the
+    # highest R-per-trade of any multi book in the registry at 1.52 and it was
+    # the leading book on most of the shortlist columns, and its null_p_is /
+    # null_p_oos have both been n/a on /results. A book nobody has tested for
+    # significance should not be a candidate, however good its net looks.
+    'fsent_champ_long_htf15_tskip6',
+    'fsent_champ_long_tskip4',
+    'fsent_both_trail_half',
     # fsent_sig_sw20_short_wr was here and was this same book under a second
     # name - identical params, identical swing, identical pins, and its own
     # desc said so. Removed 2026-10-15 when the duplicate was merged. It was

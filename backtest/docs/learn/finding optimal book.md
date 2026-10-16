@@ -1096,3 +1096,174 @@ You want:
 > **“If the next monster trend doesn't come for a long time, I'm still okay.”**
 
 That's a much better definition of a healthy trend-following distribution.
+
+---
+
+# 7. RISK-ADJUSTMENT: THE DRAWDOWN SECTION (added 2026-10-15)
+
+Everything above judges a strategy by its return distribution. This section
+judges it by what it does to the account while it waits. Both are required, and
+neither substitutes for the other.
+
+## 7.1 There is no fixed drawdown ceiling, and the reason is arithmetic
+
+A flat R limit cannot tell a big book from a small one. Consider two books with
+the same 29R maximum drawdown:
+
+| | net | max DD | net/DD |
+|---|---:|---:|---:|
+| Strategy A | 1000R | 29R | **34.5x** |
+| Strategy B | 150R | 29R | **5.2x** |
+
+Same pain, wildly different business. And in this repo the fixed 29R rule made
+exactly that mistake twice in one export:
+
+| book | net | max DD | DD as % of peak | 29R rule said | correct verdict |
+|---|---:|---:|---:|---|---|
+| `fsent_champ_long_htf15_htffs` | 765.9R | 29.76R | **2.7%** | **REJECT** | pass |
+| `fsent_both_trail_half` | 35.7R | 26.13R | **39.4%** | **pass** | reject |
+
+It killed the cleanest risk profile in the set and waved through the worst one.
+
+**So: no universal number.** "I will not tell you 10% DD is good and 20% is bad
+without context." What you get instead is a set of measures and a comparison.
+
+## 7.2 Percentage drawdown is measured against the PEAK, not against net
+
+```
+peak equity 200R, trough 171R  ->  (200-171)/200 = 14.5%
+peak equity 1100R, drawdown 29R ->  29/1100      =  2.64%
+```
+
+Same 29R, six-fold difference in what it means. `dd_pct_of_peak` is the standard
+measure, `(equity - peak) / peak`. Dividing by net is wrong for the same reason
+the flat R limit is wrong - net is an outcome, not a scale.
+
+**Our risk unit is fixed 1R, not a share of equity.** `unified.py` computes
+`r_multiple = move / risk`, so every trade risks the same fixed amount and R *is*
+the account unit. Two consequences:
+
+- `max_dd` in R is the primary measure and needs no assumption at all.
+- `dd_pct_1` / `dd_pct_2` convert the same drawdown to a share of the account at
+  1% and 2% risk per R. Those only become account percentages once a position
+  size is chosen. **Position size is a live decision, not a backtest input, so
+  DD% here is stated at both levels rather than one.**
+
+If the strategy ever moves to equity-proportional sizing, the peak-based
+percentage becomes the primary measure automatically. It is already computed.
+
+## 7.3 Recovery days is the metric that decides it
+
+Max drawdown says how deep the fall was. Recovery days says how long you were
+under water. These are different questions and only the first one is usually
+asked.
+
+> "A strategy with 5% historical DD can still be unsuitable if its worst
+> drawdown has not recovered for eight months. Another with 12% DD can be
+> manageable if returns are robust and the recovery pattern is acceptable."
+
+Recovery is complete when equity **touches or crosses the old peak again** -
+not when it starts climbing from the trough.
+
+Screening bands, not pass/fail:
+
+| recovery duration | reading |
+|---|---|
+| 1-7 days | fast |
+| 8-30 days | generally manageable |
+| 31-90 days | prolonged drawdown |
+| 91-180 days | serious concern, investigate |
+| 180+ days | major concern, especially if recurring |
+| never recovered | unresolved drawdown |
+
+These are labels. A crypto swing book and a low-frequency trend-follower should
+not be graded on the same scale.
+
+## 7.4 Never look at only the maximum
+
+One recovery number describes one drawdown. Five describe the distribution:
+
+| metric | what it catches |
+|---|---|
+| **max recover days** | the worst one you ever sat through |
+| **median recover days** | the typical one - a good max with a bad median is a lottery |
+| **p90 recover days** | how bad the bad ones usually are |
+| **% of drawdowns recovered** | how many ever made it back |
+| **current unrecovered days** | whether you are in one right now |
+
+**One drawdown is one peak-to-recovery period.** Consecutive dips inside a single
+prolonged underwater stretch must NOT be counted separately, or recovery quality
+looks better than it was:
+
+> "If multiple drawdowns fall within the same prolonged underwater period, do
+> not count them separately to artificially improve recovery quality."
+
+BTC trades 24/7, so **calendar days are the primary unit**; underwater trade
+count is kept alongside because it scales with book frequency.
+
+## 7.5 The eight measures that go on the sheet
+
+1. Net R
+2. Max DD in R
+3. Max DD in % of peak
+4. Net R / Max DD
+5. Maximum DD duration (days)
+6. Worst rolling 50 and 100 trades
+7. Net R after dropping the top 1 / 5 / 10 winners
+8. Out-of-sample performance
+
+Plus recovery per 7.4 and calendar worst 3 / 6 / 12 months, because a 20-trade
+rolling window and "was there a bad quarter" are different questions.
+
+## 7.6 Tail dependence is where a book quietly dies
+
+`top5_contrib` above 100% means the winners pay for the losers and then some.
+The book `fsent_both_trail_half` shows what that looks like:
+
+```
+net                 66.28R
+drop top 1  ->       41.00R   (62% survives)
+drop top 3  ->       -2.31R   LOSS
+drop top 5  ->      -29.75R
+drop top 10 ->      -65.60R
+
+top5_contrib = 263%
+largest single trade = +25.29R = 38% of the entire book
+```
+
+Remove three winners and the book is a loser. That is not an edge, it is one
+lucky trade with a lot of noise attached. **Read `cap10_net` next to `net` on
+every sheet.**
+
+## 7.7 How to actually use all of this
+
+**A hard cutoff on drawdown percentage is the wrong instrument.** The review is
+explicit: decide what you can live with in rupees and in percent, then compare.
+
+The order that follows from that:
+
+1. **Eliminate what is broken** - negative OOS, negative half-years, one-trade
+   books, drawdowns that never recovered.
+2. **Among what survives, compare return against drawdown** - net R, max DD,
+   recovery duration, worst rolling periods, together.
+3. **Look at the equity curve** before deciding anything a table cannot settle.
+
+That last step is not optional. `recover_days` once reported 1014 and 1160 days
+for books whose curve was visibly climbing upward. The numbers were wrong, the
+table agreed with the wrong numbers, and the chart was the only thing that
+caught it. **Any metric nobody has compared against the chart is a metric that
+can be confidently wrong.**
+
+## 7.8 Two gates that looked like quality and were not
+
+Recorded so they are not rebuilt:
+
+**A luck filter.** "No negative 50-trade rolling window in OOS" rejected three
+books at `-5.57R`, `-5.85R` and `-1.53R` on books making 260-328R. Their rolling
+windows were 96.9%, 98.3% and 96.5% positive. The rule was not selecting for
+smoothness, it was selecting for having got lucky with its worst window.
+
+**A number with no source.** A 5% drawdown budget was adopted to replace the 29R
+one. It was picked by looking at where the distribution happened to fall, and it
+was wrong in the same direction as the rule it replaced. **A threshold nobody
+can cite is a threshold that was invented.**

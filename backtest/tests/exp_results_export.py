@@ -305,7 +305,9 @@ def build(sim, E, name):
     pk_ts = None
     worst_dd = 0.0
     dd_peak_ts = dd_peak_val = dd_trough_ts = None
-    for t, r in zip(merged, allrs):
+    dd_trough_i = None
+    dd_trough_val = 0.0
+    for i, (t, r) in enumerate(zip(merged, allrs)):
         cum += r
         ts = int(t["exit_ts"])
         if cum > pk:
@@ -318,18 +320,110 @@ def build(sim, E, name):
                 dd_peak_ts = pk_ts
                 dd_peak_val = pk
                 dd_trough_ts = ts
+                dd_trough_i = i
+                dd_trough_val = cum
 
     dd_days = 0.0
     recover_days = None
     if worst_dd > 0 and dd_peak_ts is not None and dd_trough_ts is not None:
         dd_days = (dd_trough_ts - dd_peak_ts) / 86400.0
-        # walk forward from the trough until equity is back at the peak value
-        cum = 0.0
-        for t, r in zip(merged, allrs):
-            cum += r
-            if int(t["exit_ts"]) > dd_trough_ts and cum >= dd_peak_val - 1e-9:
-                recover_days = (int(t["exit_ts"]) - dd_trough_ts) // 86400
+        # Walk forward FROM THE TROUGH, by list position, carrying the equity
+        # level the trough actually left.
+        #
+        # Two bugs lived here and both are now tested in exp_dd_recovery_test.py.
+        #
+        # The first walked the whole list asking "is this trade's exit_ts after
+        # the trough". merged is sorted by ENTRY time so its exit times are NOT
+        # monotonic, and a trade sitting earlier in the list but closing later
+        # satisfied that test - at which point equity was still near the peak and
+        # the condition matched immediately. That is how a book that recovered two
+        # rows after its worst drawdown reported 1064 days.
+        #
+        # The second started cum at zero, so it was comparing a running total
+        # that had not yet reached the peak against a peak value it would reach
+        # later, and returned None for every book.
+        cum = dd_trough_val
+        for i in range(dd_trough_i + 1, len(merged)):
+            cum += allrs[i]
+            if cum >= dd_peak_val - 1e-9:
+                recover_days = (int(merged[i]["exit_ts"]) - dd_trough_ts) // 86400
                 break
+
+    # EVERY drawdown, not just the worst one.
+    #
+    # recover_days alone answers one question about one episode. The review asked
+    # for five: the longest, the median, the 90th percentile, what share of
+    # drawdowns ever recovered, and how long the book has been unrecovered as of
+    # the last bar. A book can have a good worst case and a bad distribution, and
+    # the reverse, so neither number stands alone.
+    #
+    # One drawdown is one peak-to-recovery period. Consecutive dips inside one
+    # prolonged underwater stretch are NOT counted separately - the review was
+    # explicit that splitting them "artificially flatters recovery quality". So a
+    # drawdown opens when equity first falls below a peak and closes only when
+    # that same peak is regained.
+    dd_episodes = []          # (peak_ts, trough_ts, trough_val, peak_val, rec_ts)
+    pk2 = -1e18
+    pk2_ts = None
+    open_peak_ts = None
+    open_peak_val = None
+    trough_ts = None
+    trough_val = None
+    cum = 0.0
+    for t, r in zip(merged, allrs):
+        cum += r
+        ts = int(t["exit_ts"])
+        if cum > pk2:
+            # a new high: any open drawdown is now recovered at this bar
+            if open_peak_ts is not None:
+                dd_episodes.append((open_peak_ts, trough_ts, trough_val,
+                                    open_peak_val, ts))
+                open_peak_ts = None
+            pk2 = cum
+            pk2_ts = ts
+        else:
+            if open_peak_ts is None:
+                open_peak_ts = pk2_ts
+                open_peak_val = pk2
+                trough_ts = ts
+                trough_val = cum
+            elif cum < trough_val:
+                trough_ts = ts
+                trough_val = cum
+    if open_peak_ts is not None:
+        # still unrecovered at the end of the data
+        dd_episodes.append((open_peak_ts, trough_ts, trough_val, open_peak_val, None))
+
+    recs = sorted((e[4] - e[1]) // 86400 for e in dd_episodes if e[4] is not None)
+    n_open = sum(1 for e in dd_episodes if e[4] is None)
+    n_eps = len(dd_episodes)
+
+    def _pct(vals, q):
+        if not vals:
+            return None
+        i = min(int(len(vals) * q), len(vals) - 1)
+        return vals[i]
+
+    med_rec = _pct(recs, 0.5)
+    p90_rec = _pct(recs, 0.9)
+    pct_recovered = (100.0 * len(recs) / n_eps) if n_eps else 100.0
+    # how long the LAST bar has been below its own peak
+    current_underwater = None
+    if n_open:
+        current_underwater = (int(merged[-1]["exit_ts"]) - dd_episodes[-1][1]) // 86400 if merged else None
+    # bands, from the review. Screening labels, not pass/fail.
+    def band(d):
+        if d is None:
+            return "unresolved"
+        if d <= 7:
+            return "fast"
+        if d <= 30:
+            return "manageable"
+        if d <= 90:
+            return "prolonged"
+        if d <= 180:
+            return "serious"
+        return "major"
 
     # worst N-month calendar windows, because a 20-trade rolling window answers
     # a different question than "was there a bad quarter".
@@ -433,6 +527,16 @@ def build(sim, E, name):
         # these are how long that unit was under water.
         dd_days=round(dd_days, 1),
         recover_days=recover_days,
+        recover_band=band(recover_days),
+        # The five numbers the review asked for. recover_days answers about ONE
+        # drawdown; these describe the whole distribution.
+        dd_episodes=n_eps,
+        dd_episodes_recovered=len(recs),
+        pct_dd_recovered=round(pct_recovered, 1),
+        med_recover_days=med_rec,
+        p90_recover_days=p90_rec,
+        current_underwater_days=current_underwater,
+        unrecovered_now=(n_open > 0),
         worst_3m=worst_window(3),
         worst_6m=worst_window(6),
         worst_12m=worst_window(12),
