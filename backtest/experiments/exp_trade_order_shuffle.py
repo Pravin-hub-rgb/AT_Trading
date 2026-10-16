@@ -1,40 +1,57 @@
-"""E5-A  TRADE-ORDER SHUFFLE - are the drawdown numbers an artefact of ordering?
+"""E5-A  TRADE-ORDER SHUFFLE - is the drawdown number an artefact of ordering?
 
-THE QUESTION
-------------
-Every drawdown figure in this repo is computed over the trades IN THE ORDER THEY
-ACTUALLY HAPPENED. That order was not chosen. It is one draw from the set of
-arrangements those same trades could have arrived in, and if the real order was
-lucky - winners clustered together, losers spread out - then the drawdown,
-recovery time and losing streaks are better than the trades themselves deserve.
-
-Net R does not care. It is a sum. But:
-
-    max DD, DD days, recovery days, ulcer, longest losing run,
-    and every rolling-window percentage ARE order-dependent.
-
-If the observed order sits comfortably inside the shuffled distribution, the
-numbers describe the book. If it sits at the far tail, the book was lucky with
-its sequence and a different sequence would have hurt more.
-
-WHAT IS SHUFFLED
+WHAT THIS IS NOT
 ----------------
-The R values. The timestamps stay where they are, so each shuffled arrangement is
-"the same outcomes, in a different order, spread over the same calendar". This
-is exactly the question the risk review raised: trade-order shuffle is for
-drawdown and recovery risk, and it leaves the total return untouched.
+**This is not a profitability test. It cannot tell you whether the strategy
+works, and nothing here should be read as saying so.**
 
-NET R IS THE CONTROL. It must not move. If it does, the shuffle is broken and
-the whole comparison is meaningless, so it is asserted on every book rather than
-assumed.
+It shuffles trades that never happened in that order. It therefore answers one
+narrow question and no other: **is the drawdown number in the table a property of
+the book, or a property of the one order its trades happened to arrive in?**
 
-WHAT IT CANNOT ANSWER
----------------------
-Shuffling trades destroys the market's path dependence, so this is a LOWER BOUND
-on the sequence risk, not the whole of it. The block bootstrap in
-exp_null_audit.py is the construction that keeps serial structure, and it asks a
-different question - how uncertain the total is, not how the order reads. Both
-are needed and neither replaces the other.
+THE OBJECTION, WHICH IS CORRECT
+-------------------------------
+> "The market will not shuffle. We take trades in specific HTF windows. If the
+>  HTF says long is right, we only take long. Does shuffle go against the
+>  premise of the whole strategy?"
+
+Yes, and that is exactly why this cannot be used to judge the strategy. A
+shuffled arrangement puts the outcome of trade 57 on the timestamp of trade 1.
+No 1h window ever produced that. The reshuffle is not a possible history.
+
+What survives that objection:
+
+    The set of trades is fixed, and so is their total. Net R, win rate and profit
+    factor are unchanged by construction - and net R is asserted unchanged on
+    every book, because if it moved the whole comparison would be meaningless.
+
+    Only the PATH moves. Max drawdown, days under water, recovery time, longest
+    losing run and every rolling-window percentage are functions of order. If
+    the observed order sits at the lucky end of that distribution, those numbers
+    are flattering the book.
+
+Worked example. 100 trades, 70 winners of +3R and 30 losers of -1R:
+
+    total is +180R in every arrangement, always.
+
+    losers first:  equity 0 -> -30R -> +180R    max drawdown 30R, long recovery
+    mixed:        equity wanders around 0        max drawdown 4R, short recovery
+
+Same trades, same money, drawdown differing by nearly 8x. Which one the book
+actually experienced is what this test asks about.
+
+Note that shuffling does NOT change how many winners there are. It cannot turn 70
+winners into 40 - the outcomes are the outcomes. Only their order moves.
+
+LIMITS, STATED WHERE THEY WILL BE READ
+--------------------------------------
+  - Not a strategy test. A shuffled book never traded.
+  - Serial dependence is destroyed, so this is a LOWER BOUND on sequence risk,
+    not the whole of it. A block bootstrap (exp_block_bootstrap_dd.py) keeps
+    runs intact and is the construction to use for a stress estimate.
+  - Times are kept, trades are not. A shuffled outcome lands on a real
+    timestamp, which is what makes the day counts comparable but is also why the
+    result is a bound and not a scenario.
 
 Output: trade_order_shuffle.json
 """
