@@ -74,6 +74,15 @@ CANDIDATES = {
     # window is not a holdout, so a power gate on it says nothing about the future.
     "FSENT_SIG_MULTI": ("fsent_sig_multi", {}),
     "FSENT_CHAMP_LONG": ("fsent_champ_long", {}),
+    # The four retired aliases above (champion_multi_sw10, utcsat_multi_sw10)
+    # were dropped from the registry, so this harness could not run at all -
+    # KeyError on the first config. Re-pointed on 2026-10-16 at the books that
+    # actually exist now and are being considered, so the forward window keeps
+    # being scored instead of quietly going stale.
+    "MCLOFF_HTF15": ("fsent_champ_long_mcloff_htf15", {}),
+    "HTF15_TSKIP6": ("fsent_champ_long_htf15_tskip6", {}),
+    "HTFFS": ("fsent_champ_long_htffs", {}),
+    "TSKIP4": ("fsent_champ_long_tskip4", {}),
 }
 KILL_LINE_PCT = {"CHAMPION_BASE": 64.3, "CHAMPION_N3": 64.3,
                  "KING_BASE": 55.3, "KING_WN3": 55.3,
@@ -189,7 +198,14 @@ def pre_registered_verdict(name, summ, n):
     """R2/R4/R5 — fixed in method/FORWARD_TEST_PLAN.md before any forward data was scored."""
     net = summ["net"]; pf = summ["net"]["pf"]; dd = summ["net"]["max_dd"]
     r2 = net["sum_r"] > 0 and net["avg_r"] > 0.20 and pf > 1.20
-    kill = KILL_LINE_PCT[name]
+    kill = KILL_LINE_PCT.get(name)
+    if kill is None:
+        # Not pre-registered. These books entered consideration after the
+        # forward window already existed, so no kill line was agreed in advance
+        # and none is invented now - a threshold written after seeing the
+        # result is the thing pre-registration exists to prevent. They are
+        # scored for information only and carry no verdict.
+        return "R5=NOT PRE-REGISTERED - scored for information only, no verdict"
     r4 = dd < kill
     if n < 50:
         r5 = "provisional (n<50) — NO VERDICT"
@@ -230,6 +246,9 @@ def main():
               "fine_1m_bars": len(fine), "candidates": {}}
 
     for name, (key, flags) in CANDIDATES.items():
+        if key not in EXPERIMENTS:
+            print("  SKIP %s - %s is retired from the registry" % (name, key))
+            continue
         params = {**BP, **EXPERIMENTS[key]["params"]}
         params.setdefault("exp_partial_r", 0.0)
         out = sim(c1h, sw10, c15, sw15, fine_ltf=fine, **{**params, **flags})
@@ -257,13 +276,26 @@ def main():
               f"PF={g['pf']:.2f} DD={n['max_dd']:.1f}R", flush=True)
         print(f"    months: {fwd_sum['positive_months']}/{fwd_sum['months']} positive  "
               f"{fwd_sum['monthly_net']}", flush=True)
-        print(f"    R2={verdict['R2_edge_survival']} R4={verdict['R4_dd_containment']} "
-              f"R5={verdict['R5_sample_size']}", flush=True)
+        if isinstance(verdict, str):
+            print("    %s" % verdict, flush=True)
+        else:
+            print(f"    R2={verdict['R2_edge_survival']} R4={verdict['R4_dd_containment']} "
+                  f"R5={verdict['R5_sample_size']}", flush=True)
 
     # R3 — CHAMPION_N3 must not be materially worse than CHAMPION_BASE
-    base = result["candidates"]["CHAMPION_BASE"]["forward"]["net"]["sum_r"]
-    cand = result["candidates"]["CHAMPION_N3"]["forward"]["net"]["sum_r"]
-    if base > 0:
+    # R3 - CHAMPION_N3 must not be materially worse than CHAMPION_BASE. Both
+    # books are retired from the registry, so the comparison has no anchors and
+    # is skipped rather than raising on the missing key.
+    have = result["candidates"]
+    if "CHAMPION_BASE" in have and "CHAMPION_N3" in have:
+        base = have["CHAMPION_BASE"]["forward"]["net"]["sum_r"]
+        cand = have["CHAMPION_N3"]["forward"]["net"]["sum_r"]
+    else:
+        base = cand = None
+    if base is None:
+        r3 = None
+        detail = {"note": "R3 not run - both anchors are retired from the registry"}
+    elif base > 0:
         r3 = (cand - base) > -0.05 * base
         detail = {"anchor_net_r": base, "candidate_net_r": cand,
                   "delta_r": round(cand - base, 4), "limit_r": round(-0.05 * base, 4)}
