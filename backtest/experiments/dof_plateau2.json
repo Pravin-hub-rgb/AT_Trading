@@ -1,0 +1,213 @@
+{
+ "fsent_champ_long_biasmom05|exp_bias_momentum_min": {
+  "best_net": 470.69,
+  "book": "fsent_champ_long_biasmom05",
+  "cells": [
+   {
+    "avg_r": 0.9395,
+    "dd": 25.08,
+    "n": 497,
+    "net": 466.92,
+    "value": 0.0
+   },
+   {
+    "avg_r": 0.9471,
+    "dd": 25.08,
+    "n": 497,
+    "net": 470.69,
+    "value": 0.2
+   },
+   {
+    "avg_r": 0.9033,
+    "dd": 25.98,
+    "n": 489,
+    "net": 441.71,
+    "value": 0.35
+   },
+   {
+    "avg_r": 0.9972,
+    "dd": 22.78,
+    "n": 462,
+    "net": 460.72,
+    "value": 0.5
+   },
+   {
+    "avg_r": 0.9637,
+    "dd": 19.14,
+    "n": 435,
+    "net": 419.21,
+    "value": 0.65
+   },
+   {
+    "avg_r": 0.9967,
+    "dd": 19.14,
+    "n": 382,
+    "net": 380.75,
+    "value": 0.8
+   },
+   {
+    "avg_r": 0.8743,
+    "dd": 16.77,
+    "n": 326,
+    "net": 285.03,
+    "value": 1.0
+   }
+  ],
+  "good_cells": 7,
+  "good_spread": 1.0,
+  "knob": "exp_bias_momentum_min",
+  "registered": 0.5,
+  "shape": "PLATEAU",
+  "total_cells": 7
+ },
+ "fsent_champ_long_htf15_tskip6|exp_trail_skip_n": {
+  "best_net": 639.84,
+  "book": "fsent_champ_long_htf15_tskip6",
+  "cells": [
+   {
+    "avg_r": 1.0105,
+    "dd": 26.26,
+    "n": 500,
+    "net": 505.24,
+    "value": 0
+   },
+   {
+    "avg_r": 1.0095,
+    "dd": 26.32,
+    "n": 500,
+    "net": 504.74,
+    "value": 1
+   },
+   {
+    "avg_r": 1.0522,
+    "dd": 23.49,
+    "n": 501,
+    "net": 527.14,
+    "value": 2
+   },
+   {
+    "avg_r": 1.2444,
+    "dd": 22.83,
+    "n": 476,
+    "net": 592.34,
+    "value": 3
+   },
+   {
+    "avg_r": 1.3903,
+    "dd": 26.13,
+    "n": 457,
+    "net": 635.37,
+    "value": 4
+   },
+   {
+    "avg_r": 1.4165,
+    "dd": 25.43,
+    "n": 440,
+    "net": 623.25,
+    "value": 5
+   },
+   {
+    "avg_r": 1.553,
+    "dd": 22.81,
+    "n": 412,
+    "net": 639.84,
+    "value": 6
+   },
+   {
+    "avg_r": 1.5299,
+    "dd": 36.66,
+    "n": 397,
+    "net": 607.39,
+    "value": 7
+   },
+   {
+    "avg_r": 1.5775,
+    "dd": 35.97,
+    "n": 367,
+    "net": 578.93,
+    "value": 8
+   },
+   {
+    "avg_r": 1.4857,
+    "dd": 36.62,
+    "n": 339,
+    "net": 503.65,
+    "value": 10
+   }
+  ],
+  "good_cells": 10,
+  "good_spread": 10,
+  "knob": "exp_trail_skip_n",
+  "registered": 6,
+  "shape": "PLATEAU",
+  "total_cells": 10
+ },
+ "fsent_champ_long_tskip4|exp_trail_skip_n": {
+  "best_net": 530.42,
+  "book": "fsent_champ_long_tskip4",
+  "cells": [
+   {
+    "avg_r": 0.9395,
+    "dd": 25.08,
+    "n": 497,
+    "net": 466.92,
+    "value": 0
+   },
+   {
+    "avg_r": 0.9384,
+    "dd": 25.15,
+    "n": 497,
+    "net": 466.4,
+    "value": 1
+   },
+   {
+    "avg_r": 0.9763,
+    "dd": 25.94,
+    "n": 488,
+    "net": 476.46,
+    "value": 2
+   },
+   {
+    "avg_r": 1.0618,
+    "dd": 21.52,
+    "n": 459,
+    "net": 487.37,
+    "value": 3
+   },
+   {
+    "avg_r": 1.1866,
+    "dd": 23.66,
+    "n": 447,
+    "net": 530.42,
+    "value": 4
+   },
+   {
+    "avg_r": 1.2138,
+    "dd": 22.96,
+    "n": 429,
+    "net": 520.72,
+    "value": 5
+   },
+   {
+    "avg_r": 1.3354,
+    "dd": 20.1,
+    "n": 393,
+    "net": 524.81,
+    "value": 6
+   },
+   {
+    "avg_r": 1.4501,
+    "dd": 31.31,
+    "n": 349,
+    "net": 506.07,
+    "value": 8
+   }
+  ],
+  "good_cells": 8,
+  "good_spread": 8,
+  "knob": "exp_trail_skip_n",
+  "registered": 4,
+  "shape": "PLATEAU",
+  "total_cells": 8
+ }
+}

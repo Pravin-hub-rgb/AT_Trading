@@ -1,0 +1,50 @@
+{
+ "book": "fsent_champ_long_htf15_tskip6",
+ "scope": "oos",
+ "n_trades": 224,
+ "observed": {
+  "net": 328.54,
+  "gross": 365.66,
+  "dd": 14.9
+ },
+ "sets": 4000,
+ "seed": 20261016,
+ "table": [
+  {
+   "n_trials": 40,
+   "p_net": 0.0165,
+   "p_gross": 0.0047,
+   "p_dd_worse": 1.0
+  },
+  {
+   "n_trials": 100,
+   "p_net": 0.0372,
+   "p_gross": 0.0138,
+   "p_dd_worse": 1.0
+  },
+  {
+   "n_trials": 126,
+   "p_net": 0.047,
+   "p_gross": 0.017,
+   "p_dd_worse": 1.0
+  },
+  {
+   "n_trials": 252,
+   "p_net": 0.089,
+   "p_gross": 0.0328,
+   "p_dd_worse": 1.0
+  },
+  {
+   "n_trials": 464,
+   "p_net": 0.1618,
+   "p_gross": 0.0568,
+   "p_dd_worse": 1.0
+  },
+  {
+   "n_trials": 1000,
+   "p_net": 0.3262,
+   "p_gross": 0.1283,
+   "p_dd_worse": 1.0
+  }
+ ]
+}

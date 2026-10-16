@@ -1,0 +1,478 @@
+{
+ "books": 95,
+ "numeric": {
+  "atr_high_thresh": {
+   "n": 1,
+   "values": [
+    0.65
+   ],
+   "why": "ATR high threshold"
+  },
+  "atr_low_thresh": {
+   "n": 1,
+   "values": [
+    0.35
+   ],
+   "why": "ATR low threshold"
+  },
+  "chop_thresh": {
+   "n": 5,
+   "values": [
+    52.0,
+    58.0,
+    61.0,
+    61.8,
+    65.0
+   ],
+   "why": "chop threshold"
+  },
+  "cooldown_bars": {
+   "n": 3,
+   "values": [
+    8.0,
+    10.0,
+    20.0
+   ],
+   "why": "bars between entries"
+  },
+  "exp_partial_r": {
+   "n": 2,
+   "values": [
+    0.0,
+    7.5
+   ],
+   "why": "partial take-profit level in R"
+  },
+  "exp_persist": {
+   "n": 1,
+   "values": [
+    7.0
+   ],
+   "why": "bars a signal persists"
+  },
+  "exp_trail_skip_n": {
+   "n": 5,
+   "values": [
+    2.0,
+    3.0,
+    4.0,
+    6.0,
+    8.0
+   ],
+   "why": "trailing events to drop"
+  },
+  "ext_stop_r": {
+   "n": 3,
+   "values": [
+    0.0,
+    1.5,
+    3.0
+   ],
+   "why": "extension stop in R"
+  },
+  "max_consecutive_losses": {
+   "n": 3,
+   "values": [
+    0.0,
+    3.0,
+    4.0
+   ],
+   "why": "loss streak gate length"
+  },
+  "sl_buf_atr": {
+   "n": 2,
+   "values": [
+    0.01,
+    0.25
+   ],
+   "why": "stop buffer as a fraction of ATR"
+  }
+ },
+ "structural": {
+  "exp_fs_entry_side": {
+   "n": 3,
+   "values": [
+    "\"both\"",
+    "\"long\"",
+    "\"short\""
+   ],
+   "why": "long / short / off - a different book"
+  },
+  "exp_mltf": {
+   "n": 1,
+   "values": [
+    "true"
+   ],
+   "why": "multi-timeframe filter on/off"
+  },
+  "mode": {
+   "n": 7,
+   "values": [
+    "\"atr_high\"",
+    "\"atr_low\"",
+    "\"chop\"",
+    "\"fd\"",
+    "\"flip_quality\"",
+    "\"session\"",
+    "\"union\""
+   ],
+   "why": "which regime branch in unified.py runs - a different book"
+  },
+  "pivot_rule": {
+   "n": 2,
+   "values": [
+    "\"leg\"",
+    "\"leg_no_entry\""
+   ],
+   "why": "how the HTF leg is cut"
+  },
+  "swing": {
+   "n": 3,
+   "values": [
+    "\"htf15\"",
+    "\"sw10\"",
+    "\"sw20\""
+   ],
+   "why": "which swing series the book is built on (registry field)"
+  },
+  "window_end": {
+   "n": 1,
+   "values": [
+    "\"exit\""
+   ],
+   "why": "entry or exit window end"
+  }
+ },
+ "structural_combinations": 126,
+ "unclassified": {
+  "exp31_lb": {
+   "n": 2,
+   "values": [
+    "50",
+    "60"
+   ]
+  },
+  "exp_bias_momentum_min": {
+   "n": 5,
+   "values": [
+    "0.5",
+    "0.6",
+    "0.7",
+    "0.8",
+    "0.9"
+   ]
+  },
+  "exp_campaign_block_mixed": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_campaign_max_addons": {
+   "n": 2,
+   "values": [
+    "1",
+    "2"
+   ]
+  },
+  "exp_campaign_max_total": {
+   "n": 2,
+   "values": [
+    "1",
+    "2"
+   ]
+  },
+  "exp_campaign_require_marked_r": {
+   "n": 1,
+   "values": [
+    "0.5"
+   ]
+  },
+  "exp_cap_days": {
+   "n": 3,
+   "values": [
+    "1",
+    "4",
+    "999"
+   ]
+  },
+  "exp_cohort_loss_n": {
+   "n": 2,
+   "values": [
+    "1",
+    "2"
+   ]
+  },
+  "exp_cohort_rearm": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_cohort_swingpause": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_curfew_a": {
+   "n": 1,
+   "values": [
+    "4.0"
+   ]
+  },
+  "exp_curfew_b": {
+   "n": 1,
+   "values": [
+    "4.0"
+   ]
+  },
+  "exp_decay_legs": {
+   "n": 1,
+   "values": [
+    "4"
+   ]
+  },
+  "exp_decay_mode": {
+   "n": 3,
+   "values": [
+    "3",
+    "4",
+    "5"
+   ]
+  },
+  "exp_decay_thr": {
+   "n": 1,
+   "values": [
+    "0.75"
+   ]
+  },
+  "exp_event_mode": {
+   "n": 1,
+   "values": [
+    "\"shift\""
+   ]
+  },
+  "exp_event_shift_min": {
+   "n": 1,
+   "values": [
+    "1440"
+   ]
+  },
+  "exp_fs_small_swing": {
+   "n": 1,
+   "values": [
+    "6.0"
+   ]
+  },
+  "exp_geom_b1_max": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_geom_b1_min": {
+   "n": 1,
+   "values": [
+    "96"
+   ]
+  },
+  "exp_geom_mag_min_atr": {
+   "n": 1,
+   "values": [
+    "4.0"
+   ]
+  },
+  "exp_geom_start_dist_max_atr": {
+   "n": 1,
+   "values": [
+    "1.0"
+   ]
+  },
+  "exp_htf_fs_entry": {
+   "n": 2,
+   "values": [
+    "\"all\"",
+    "\"flip\""
+   ]
+  },
+  "exp_loss_streak_action": {
+   "n": 1,
+   "values": [
+    "\"halt\""
+   ]
+  },
+  "exp_loss_streak_mode": {
+   "n": 1,
+   "values": [
+    "\"halt\""
+   ]
+  },
+  "exp_loss_streak_n": {
+   "n": 1,
+   "values": [
+    "3"
+   ]
+  },
+  "exp_ma_trail_period": {
+   "n": 1,
+   "values": [
+    "20"
+   ]
+  },
+  "exp_max_swing_age": {
+   "n": 2,
+   "values": [
+    "10",
+    "25"
+   ]
+  },
+  "exp_min_swing_ratio": {
+   "n": 1,
+   "values": [
+    "3.0"
+   ]
+  },
+  "exp_require_dir_match": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_skip_utc_sat": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_skip_weekend": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_skipwin": {
+   "n": 2,
+   "values": [
+    "1",
+    "2"
+   ]
+  },
+  "exp_swingpause": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_trail_delay_r": {
+   "n": 2,
+   "values": [
+    "1.0",
+    "3.0"
+   ]
+  },
+  "exp_trail_half": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_trail_max_dist": {
+   "n": 2,
+   "values": [
+    "0.6",
+    "1.0"
+   ]
+  },
+  "exp_union_dual_only": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_wage_h": {
+   "n": 1,
+   "values": [
+    "32"
+   ]
+  },
+  "exp_window_entry_cap": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_window_floor_s": {
+   "n": 1,
+   "values": [
+    "7200"
+   ]
+  },
+  "exp_window_loss_kill_action": {
+   "n": 1,
+   "values": [
+    "\"close\""
+   ]
+  },
+  "exp_window_loss_kill_n": {
+   "n": 1,
+   "values": [
+    "1"
+   ]
+  },
+  "exp_window_loss_kill_scope": {
+   "n": 1,
+   "values": [
+    "\"window\""
+   ]
+  },
+  "exp_window_win_kill_action": {
+   "n": 1,
+   "values": [
+    "\"close\""
+   ]
+  },
+  "exp_window_win_kill_n": {
+   "n": 3,
+   "values": [
+    "1",
+    "2",
+    "3"
+   ]
+  },
+  "exp_window_win_kill_scope": {
+   "n": 1,
+   "values": [
+    "\"window\""
+   ]
+  },
+  "htf_rr": {
+   "n": 1,
+   "values": [
+    "3.0"
+   ]
+  },
+  "max_positions": {
+   "n": 2,
+   "values": [
+    "0",
+    "1"
+   ]
+  }
+ },
+ "varying_numeric_knobs": {
+  "chop_thresh": 5,
+  "cooldown_bars": 3,
+  "exp_partial_r": 2,
+  "exp_trail_skip_n": 5,
+  "ext_stop_r": 3,
+  "max_consecutive_losses": 3,
+  "sl_buf_atr": 2
+ },
+ "varying_structural_switches": {
+  "exp_fs_entry_side": 3,
+  "mode": 7,
+  "pivot_rule": 2,
+  "swing": 3
+ }
+}
