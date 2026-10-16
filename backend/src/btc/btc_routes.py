@@ -116,7 +116,14 @@ except Exception:
 # them. A key that cannot do what its name says should not be selectable.
 # The engine modules still exist under engines/htf_ltf/ if any of those
 # books is wanted again; it needs a branch here first.
-BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff", "fsent_sig_multi", "fsent_sig_multi_htffs", "fsent_champ_long_htffs", "fsent_champ_long_mcloff_htf15"]
+BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v12", "v19", "v19_champion", "v19_causal", "v19_c16", "unified", "entry_minus_1", "utcsat_causal", "utcsat_entry_minus_1", "fsent_champ_long", "fsent_champ_long_atr_low", "fsent_sig_full", "fsent_sig_trail_delay1", "fsent_champ_short", "fsent_champ_long_htfesmcl4", "fsent_champ_long_mcloff", "fsent_sig_multi", "fsent_sig_multi_htffs", "fsent_champ_long_htffs", "fsent_champ_long_mcloff_htf15",
+                # Added 2026-10-16. These six were on the frontend dropdown from
+                # the start and had pins, monthly breakdowns and scorecard rows,
+                # but no entry here - so selecting one returned 400. The list
+                # and the dispatch had drifted apart and nothing joined them.
+                # exp_dropdown_check.py is that join; it now runs in CI.
+                "fsent_champ_long_htf15_htffs", "fsent_champ_long_htf15_tskip6",
+                "fsent_sig_sw20_short", "fsent_sig_wk_pause_short", "fsent_sig_fs_mom"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -141,9 +148,20 @@ STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified
                                # that score were all sig-family and three of them
                                # were not reachable from the dropdown at all, which
                                # made them unjudgeable. Added 2026-10-10.
-                               "fsent_sig_multi", "fsent_sig_multi_htffs",
-                               "fsent_champ_long_htffs",
-                               "fsent_champ_long_mcloff_htf15"}
+"fsent_sig_multi", "fsent_sig_multi_htffs",
+                                "fsent_champ_long_htffs",
+                                "fsent_champ_long_mcloff_htf15",
+                                # 2026-10-16: the six that were selectable on the
+                                # page but unroutable here. All six are complete
+                                # HTF+LTF books, so all six belong in this set -
+                                # running one of them through the nested htf_ltf
+                                # path as well is the bug the set exists to
+                                # prevent, the same way "unified" was missed once.
+                                "fsent_champ_long_htf15_htffs",
+                                "fsent_champ_long_htf15_tskip6",
+                                "fsent_sig_sw20_short",
+                                "fsent_sig_wk_pause_short",
+                                "fsent_sig_fs_mom"}
 _HTF_CLOSE_OFFSET = 3600   # a 1h candle's open -> its close
 
 VERSION_LABELS = {
@@ -1955,6 +1973,150 @@ def btc_backtest(
             exp_fs_entry_side="long",
             pivot_rule="leg",
             exp_htf_fs_entry="all",       # <- the second change: HTF enters on FS
+        )
+        trades = nested.get("ltf_trades", [])
+    # ---------------------------------------------------------------------
+    # Added 2026-10-16. Six books were on the frontend dropdown with no branch
+    # here, so selecting any of them returned 400 "version must be one of ..."
+    # and the OWNER SAW IT, because the dropdown is how books get looked at.
+    #
+    # The mismatch was invisible from either side alone. books.ts listed 16
+    # books; BTC_VERSIONS knew 11 of them; the dispatch knew 10. A book could
+    # be added to the registry, given pins, given a monthly breakdown, appear on
+    # the page with a full set of metrics - and still be impossible to actually
+    # run. Nothing checked the join.
+    #
+    # Each branch below duplicates the call rather than sharing a config dict,
+    # for the reason given on fsent_sig_trail_delay1 above: a shared dict lets
+    # the next person move a pin by editing one line. The differences from
+    # fsent_champ_long are marked.
+    # ---------------------------------------------------------------------
+    elif version == "fsent_champ_long_atr_low":
+        # fsent_champ_long with the regime sign flipped: decisive windows are
+        # taken when the 15m bars are QUIET rather than busy. More trades, more
+        # R, deeper drawdown. One knob.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            mode="atr_low",                  # <- the only difference
+            atr_high_thresh=0.65, atr_low_thresh=0.35,
+            sl_buf_atr=0.01, chop_thresh=58.0, cooldown_bars=8,
+            max_consecutive_losses=3, max_positions=0,
+            ext_stop_r=3.0, exp_partial_r=0.0, exp_persist=7,
+            pivot_rule="leg", exp_fs_entry_side="long",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_htf15_htffs":
+        # fsent_champ_long_htffs on the htf15 swing series: the hour chart
+        # swings at min_bars=15 instead of 10, so the HTF windows are fewer and
+        # longer. htf_min_bars arrives on the request, not here - the same way
+        # it does for fsent_champ_long_mcloff_htf15 above.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65, atr_low_thresh=0.35,
+            sl_buf_atr=0.01, chop_thresh=58.0, cooldown_bars=8,
+            max_consecutive_losses=3, max_positions=0,
+            ext_stop_r=3.0, exp_partial_r=0.0, exp_persist=7,
+            pivot_rule="leg",
+            exp_fs_entry_side="long",
+            exp_mltf=True,
+            exp_htf_fs_entry="flip",          # <- the HTF-FS entry gate
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_htf15_tskip6":
+        # fsent_champ_long on the htf15 series, dropping the first six
+        # trailing-stop events. Converts weak early trail exits into ordinary
+        # stop exits at exactly -1.000R.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65, atr_low_thresh=0.35,
+            sl_buf_atr=0.01, chop_thresh=58.0, cooldown_bars=8,
+            max_consecutive_losses=3, max_positions=0,
+            ext_stop_r=3.0, exp_partial_r=0.0, exp_persist=7,
+            pivot_rule="leg",
+            exp_fs_entry_side="long",
+            exp_mltf=True,
+            exp_trail_skip_n=6,               # <- the only difference
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_sw20_short":
+        # SERIAL (max_positions=1), short side only, on the sw20 swing series -
+        # 20-bar HTF legs rather than 10. Banks 7.5R, window ends at exit.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65, atr_low_thresh=0.35,
+            sl_buf_atr=0.01, chop_thresh=58.0, cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=1,                  # <- serial
+            ext_stop_r=3.0,
+            exp_partial_r=7.5,
+            exp_persist=7, pivot_rule="leg",
+            window_end="exit",
+            exp_fs_entry_side="short",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_wk_pause_short":
+        # fsent_sig_sw20_short on sw10, plus weekend and swing-pause gates.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65, atr_low_thresh=0.35,
+            sl_buf_atr=0.01, chop_thresh=58.0, cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=1,
+            ext_stop_r=3.0,
+            exp_partial_r=7.5,
+            exp_persist=7, pivot_rule="leg",
+            window_end="exit",
+            exp_fs_entry_side="short",
+            exp_skip_weekend=1,                # <- weekend gate
+            exp_swingpause=1,                  # <- and the swing pause
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_sig_fs_mom":
+        # fsent_sig_wk_pause_short plus the bias-momentum gate at 0.8, and
+        # without the 7.5R partial.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf, swings_htf=swings_htf,
+            candles_ltf=candles, swings_ltf=swings, fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65, atr_low_thresh=0.35,
+            sl_buf_atr=0.01, chop_thresh=58.0, cooldown_bars=8,
+            max_consecutive_losses=3,
+            max_positions=1,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,                 # <- no partial, unlike wk_pause
+            exp_persist=7, pivot_rule="leg",
+            window_end="exit",
+            exp_fs_entry_side="short",
+            exp_skip_weekend=1,
+            exp_swingpause=1,
+            exp_bias_momentum_min=0.8,         # <- the bias-momentum gate
         )
         trades = nested.get("ltf_trades", [])
     elif version == "v19_champion":
