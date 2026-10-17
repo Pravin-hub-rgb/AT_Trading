@@ -23,13 +23,36 @@ Legend: **[x]** done · **[~]** in progress · **[ ]** open · **[!]** needs an 
       window closes. Minimum 50 trades or six months, whichever is later.
 
 - [!] **A3. The loss cap: on or off?**
-      This is a capital decision, not a performance one.
-      - **On** (the registered default, `max_consecutive_losses=3`): costs 4–5%
-        of trades; worst rolling-50 window goes from −20R to −5.85R.
-      - **Off**: only if the capital is deep enough to sit through the drawdown
-        without acting on it.
-      Note 107 already ships with the cap at 0, so "off" is 107's current
-      behaviour and "on" would be the change.
+      This is a capital decision, not a performance one. Measured on the
+      current chain (`exp_mcl_profile.py`, both eras, three settings):
+
+      **For 110**, registered `3` against `0`:
+
+      | axis | off | on | better |
+      |---|---:|---:|---|
+      | max DD (net) IS | 26.22 | 23.93 | **on** |
+      | max DD (net) OOS | 17.00 | 14.90 | **on** |
+      | max losing streak IS | 15 | 13 | **on** |
+      | max losing streak OOS | 10 | 9 | **on** |
+      | worst rolling-20 R IS | −20.2 | −19.0 | **on** |
+      | worst rolling-20 R OOS | −13.9 | −9.8 | **on** |
+      | underwater % IS | 76.0 | 73.7 | **on** |
+      | net R OOS | +386.8 | +336.2 | **off** |
+      | worst half-year IS | +0.6 (0 neg) | −1.4 (1 neg) | **off** |
+      | worst half-year OOS | +6.3 (0 neg) | +0.1 (0 neg) | **off** |
+
+      So the cap is not free and it is not obvious: it buys depth of drawdown
+      and streak length, and it pays for them with net and, notably, with the
+      only negative half-year either setting produces.
+
+      **For 107** the registered value is already `0`, so "off" is its current
+      behaviour. At off it runs a **22-loss streak** on IS and a 28.38R drawdown,
+      but with **no negative half-year in either era** (+7.4 IS, +22.3 OOS).
+
+      The honest reading: off is conservative about *consistency* and not
+      conservative about *pain*. It has fewer losing half-years and more net,
+      and deeper drawdowns and longer losing streaks. Which of those matters
+      more is the owner's call about capital, not a backtest question.
 
 - [ ] **A4. Minimum sample, or stop early?**
       The proposed rule is 50 trades or six months. Confirm, or set another.

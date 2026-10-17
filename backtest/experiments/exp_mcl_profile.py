@@ -125,12 +125,69 @@ def profile(trades):
     }
 
 
+def rolling_windows(rs):
+    """Wins spread through time - the axis the owner actually judges on."""
+    out = {}
+    for w in (10, 20, 50):
+        wins = 0
+        tot = 0
+        for i in range(0, max(len(rs) - w + 1, 0)):
+            s = sum(rs[i:i + w])
+            tot += 1
+            if s > 0:
+                wins += 1
+        out["roll%d" % w] = (round(100.0 * wins / tot, 1) if tot else 0.0,
+                             round(min((sum(rs[i:i + w]) for i in range(max(len(rs) - w + 1, 0))), default=0.0), 2))
+    return out
+
+
+def half_years(tr):
+    """Worst calendar half-year. A book that bleeds in one half-year is a
+    different animal from one that bleeds evenly.
+
+    The field is `entry_date`, not `date`. The first version of this looked for
+    `date`, matched nothing, and reported "worst half-year +0.0 (0 of 0 neg)" for
+    every variant - which reads like a clean result rather than a metric that
+    never ran. A half-year breakdown that silently measures zero periods is
+    worse than no column at all.
+    """
+    by = {}
+    for t in tr:
+        d = str(t.get("entry_date") or "")
+        if len(d) < 7:
+            continue
+        key = "%sH%d" % (d[:4], 1 if int(d[5:7]) <= 6 else 2)
+        by[key] = by.get(key, 0.0) + net_r([t])
+    return {k: round(v, 2) for k, v in by.items()}
+
+
 def run(sim, data, cfg, swing):
     p = {**BP, **(cfg.get("params") or {})}
     o = sim(data["c1h"], get_swings(data, swing), data["c15"], data["sw15"],
             fine_ltf=data["fine"], **p)
     tr = o["ltf_trades"] if isinstance(o, dict) else o
-    return profile(sorted(tr, key=lambda t: int(t["entry_ts"])))
+    tr = sorted([t for t in tr if t.get("outcome") != "open"], key=lambda t: int(t["entry_ts"]))
+    pr = profile(tr)
+    if pr is None:
+        return None
+    rs = [net_r([t]) for t in tr]
+    pr.update(rolling_windows(rs))
+    hy = half_years(tr)
+    pr["half_worst"] = min(hy.values()) if hy else 0.0
+    pr["half_neg"] = sum(1 for v in hy.values() if v < 0)
+    pr["half_n"] = len(hy)
+    # recovery: how long from a new peak to getting back to it
+    cum = peak = 0.0
+    rec = 0
+    for r in rs:
+        cum += r
+        if cum > peak:
+            peak = cum
+            rec = 0
+        else:
+            rec += 1
+    pr["worst_recovery"] = rec
+    return pr
 
 
 def main() -> int:
@@ -161,24 +218,48 @@ def main() -> int:
         base = EXPERIMENTS[name]
         swing = base.get("swing") or "sw10"
         reg_mcl = (base.get("params") or {}).get("max_consecutive_losses")
-        alt = dict(base)
-        alt["params"] = dict(base.get("params") or {})
-        alt["params"]["max_consecutive_losses"] = 0
-
+        variants = [("off=0", 0)]
+        if reg_mcl != 0:
+            variants.append(("on=%s" % reg_mcl, reg_mcl))
+            variants.append(("mid=1", 1))
         res = {}
-        for era in ("is", "oos"):
-            res[("reg", era)] = run(sim, ERA[era], base, swing)
-            res[("alt", era)] = run(sim, ERA[era], alt, swing)
+        for lbl, val in variants:
+            alt = dict(base)
+            alt["params"] = dict(base.get("params") or {})
+            alt["params"]["max_consecutive_losses"] = val
+            for era in ("is", "oos"):
+                res[(lbl, era)] = run(sim, ERA[era], alt, swing)
         print("%s %s  reg=%s  (%.0fs)" % (code, name, reg_mcl, time.time() - t0), flush=True)
-        L.append("## %s `%s` - registered `max_consecutive_losses=%s`, alternative `0`"
-                 % (code, name, reg_mcl))
+        L.append("## %s `%s`" % (code, name))
         L.append("")
-        L.append("| metric | IS registered | IS at 0 | OOS registered | OOS at 0 |")
-        L.append("|---|---:|---:|---:|---:|")
+        L.append("| metric | " + " | ".join("%s IS | %s OOS" % (l, l) for l, _ in variants) + " |")
+        L.append("|---|" + "---|" * (2 * len(variants)))
         for label, key, fmt in ROWS:
-            L.append("| %s | %s | %s | %s | %s |" % (
-                label, fmt % res[("reg", "is")][key], fmt % res[("alt", "is")][key],
-                fmt % res[("reg", "oos")][key], fmt % res[("alt", "oos")][key]))
+            cells = []
+            for lbl, _ in variants:
+                a, b = res[(lbl, "is")], res[(lbl, "oos")]
+                cells.append(fmt % a[key] if a else "-")
+                cells.append(fmt % b[key] if b else "-")
+            L.append("| %s | %s |" % (label, " | ".join(cells)))
+        for w in (10, 20, 50):
+            cells = []
+            for lbl, _ in variants:
+                a, b = res[(lbl, "is")], res[(lbl, "oos")]
+                cells.append("%.1f%% / %+.1f" % a["roll%d" % w] if a else "-")
+                cells.append("%.1f%% / %+.1f" % b["roll%d" % w] if b else "-")
+            L.append("| roll %d (win%% / worst R) | %s |" % (w, " | ".join(cells)))
+        cells = []
+        for lbl, _ in variants:
+            a, b = res[(lbl, "is")], res[(lbl, "oos")]
+            cells.append("%+.1f (%d of %d neg)" % (a["half_worst"], a["half_neg"], a["half_n"]) if a else "-")
+            cells.append("%+.1f (%d of %d neg)" % (b["half_worst"], b["half_neg"], b["half_n"]) if b else "-")
+        L.append("| worst half-year | %s |" % " | ".join(cells))
+        cells = []
+        for lbl, _ in variants:
+            a, b = res[(lbl, "is")], res[(lbl, "oos")]
+            cells.append("%d" % a["worst_recovery"] if a else "-")
+            cells.append("%d" % b["worst_recovery"] if b else "-")
+        L.append("| worst recovery (trades) | %s |" % " | ".join(cells))
         L.append("")
 
     io.open(MD, "w", encoding="utf-8").write("\n".join(L))
