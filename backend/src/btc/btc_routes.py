@@ -2027,7 +2027,6 @@ def btc_backtest(
             ext_stop_r=3.0, exp_partial_r=0.0, exp_persist=7,
             pivot_rule="leg",
             exp_fs_entry_side="long",
-            exp_mltf=True,
             exp_htf_fs_entry="flip",          # <- the HTF-FS entry gate
         )
         trades = nested.get("ltf_trades", [])
@@ -2048,7 +2047,6 @@ def btc_backtest(
             ext_stop_r=3.0, exp_partial_r=0.0, exp_persist=7,
             pivot_rule="leg",
             exp_fs_entry_side="long",
-            exp_mltf=True,
             exp_trail_skip_n=6,               # <- the only difference
         )
         trades = nested.get("ltf_trades", [])
