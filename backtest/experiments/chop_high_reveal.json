@@ -1,0 +1,52 @@
+{
+ "book": "fsent_champ_long",
+ "chop_median_is": 10.39,
+ "eras": {
+  "is": {
+   "unfiltered": {
+    "label": "unfiltered",
+    "trades": 497,
+    "net": 466.92,
+    "dd": 25.08,
+    "rpt": 0.9395,
+    "max_streak": 12
+   },
+   "filtered": {
+    "label": "chop >= 10.39",
+    "trades": 249,
+    "net": 217.21,
+    "dd": 11.37,
+    "rpt": 0.8723,
+    "max_streak": 9
+   },
+   "paired": 497,
+   "unpaired": 0,
+   "dropped": 248,
+   "coverage": 50.1
+  },
+  "oos": {
+   "unfiltered": {
+    "label": "unfiltered",
+    "trades": 281,
+    "net": 215.32,
+    "dd": 11.2,
+    "rpt": 0.7663,
+    "max_streak": 7
+   },
+   "filtered": {
+    "label": "chop >= 10.39",
+    "trades": 154,
+    "net": 116.18,
+    "dd": 5.82,
+    "rpt": 0.7544,
+    "max_streak": 6
+   },
+   "paired": 281,
+   "unpaired": 0,
+   "dropped": 127,
+   "coverage": 54.8
+  }
+ },
+ "verdict": "B",
+ "verdict_reason": "drawdown ratio 0.520 but net retains only 54.0%"
+}
