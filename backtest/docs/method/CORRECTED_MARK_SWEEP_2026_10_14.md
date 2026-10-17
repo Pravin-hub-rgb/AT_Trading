@@ -1,5 +1,36 @@
 # CORRECTED-MARK SWEEP — 2026-10-14
 
+## STATUS — CLOSED 2026-10-16
+
+Every phase in this sweep is done and every open item is closed. One item is
+deliberately left to the owner and is not a task.
+
+| phase | what | outcome |
+|---|---|---|
+| A1 | baseline frozen | 2840 swings / 7734 marks, fingerprint `83a3af3f...` |
+| A2 | colour-rule consistency audit | clean |
+| A3 | lookahead gate sweep | **two failures**, both characterised |
+| B1 | `b2_gap_bars` sweep | **no winner**, the pinned value stands |
+| A4 | is the 50-bar gate one knob or two | **one**, FS only |
+| B2 | re-fit the pinned constants | IS only, **OOS never opened** |
+| D2 | identity gate + full re-verify | clean |
+| C1 | inverse condition | characterised |
+| C2 | graveyard audit | characterising only, OOS sealed |
+| — | decay census | 120 cells, **0 wins** |
+| — | mark continuation | **no** |
+| — | untouched-knob census | 7 fire, 1 winner |
+| — | `exp_trail_skip_n` verified | **2 of 3 promote** |
+| — | serial ladder, phase 1 transfer | **does not transfer** |
+| — | phase 2, ten knobs | 8 fire, 1 wins |
+| — | **untouched census: window_floor / cap_days / trail_half** | **run 2026-10-16, 16 cells, 0 wins** |
+| — | housekeeping item 1, stale patch baseline | **re-approved 2026-10-16**, reason recorded |
+| — | housekeeping item 2, six unflagged books | **already retired**, check passes |
+
+**Open, and it is yours:** the chop x ATR routing in C2 needs exactly one OOS
+reveal, chosen after the fact. It was not run. Everything else here is closed.
+
+---
+
 Work done after the volatile-B1 colour fix (`5d6cab2`) landed, i.e. on the
 corrected chain: **2840 swings / 7734 marks, fingerprint `83a3af3f6ebf0ffa`**
 (IS) and `8981622657925d4d` (OOS).
@@ -672,21 +703,39 @@ The original died by era-split, so the only honest next step is a decision by th
 owner on whether a chop filter is worth one OOS reveal - and if it is, exactly
 one, after the fact. Nothing in unified.py changed and no mode branch was added.
 
-## HOUSEKEEPING - LEFT AS FOUND, ON PURPOSE
+## HOUSEKEEPING - BOTH ITEMS CLOSED 2026-10-16
 
-Two known-dirty items are documented rather than fixed, because the owner asked
-that the books be left alone and both fixes would require either editing the
-registry or re-approving a shared baseline mid-run:
+Two known-dirty items were documented rather than fixed, because both fixes
+required either re-approving a shared baseline or editing the registry. Both are
+now closed:
 
-  - `exp_craze_patch_gate.py check` fails against a stale tracked baseline
-    (aa189c5..., 125663 bytes / 2359 lines) while the engine is legitimately
-    148608 bytes / 2710 lines. Re-baselining is an approval, not a fix.
-  - `exp_origin_lookahead.py` flags six negative books that are not marked
-    status="reference": decayC_c -40.97, decayC_u -34.11, decayE_c -1.48,
-    gap_campaign3 -40.62, gap_entry_cap3 -45.48, skipwinhalt_multi_sw10 -22.14.
-    Those are registry edits and were left alone deliberately.
+  - `exp_craze_patch_gate.py check` was failing against a stale tracked baseline
+    (aa189c5..., 125663 bytes / 2359 lines) while the engine was legitimately
+    larger. **Re-approved 2026-10-16** at ab43cf44... (151701 bytes / 2770
+    lines / 126 exp_* kwargs), after auditing every commit that moved the
+    patched engine since the baseline was written on 2026-10-05 (`19140c4`):
 
-Both are recorded here so they read as known state rather than as new failures.
+        ddd31dc  exp_max_concurrent added - it did not exist and the doc
+                 claiming it did was wrong
+        f4b7468  the HTF window END was carrying the START's shift, so every
+                 pin inherited it
+        9ce3565  the window floor was never a knob and had a 900-second hole
+        d439c97  a real 900-second lookahead in the HTF window gate, fixed with
+                 every pin re-derived
+
+    The 117 -> 126 kwargs are those additions. No commit touched the file
+    without saying so in its subject line, so the growth is accounted for rather
+    than unexplained. The baseline JSON now carries `approved`,
+    `previous_sha256`, `approval_reason` and `how_to_verify_this_was_safe`, so
+    the next failure can be answered the same way - read what moved and why, do
+    not simply write.
+
+  - `exp_origin_lookahead.py` flagged six negative books missing
+    status="reference": decayC_c, decayC_u, decayE_c, gap_campaign3,
+    gap_entry_cap3, skipwinhalt_multi_sw10. **No registry edit was needed - all
+    six have since been retired**, so they are no longer in EXPERIMENTS and the
+    check passes. The note above was stale, not outstanding.
+
 ---
 
 ## DECAY CENSUS - the gate that had never been switched on. 120 cells, 0 wins.
@@ -827,6 +876,39 @@ The remaining untested knobs (window_floor, cap_days, trail_half) should be run
 as a census with the inverse test, NOT as hypothesis sources - the same treatment
 the decay gate got. That is the only version of "look for new edge" that this
 data supports.
+
+**RUN 2026-10-16.** `backtest/experiments/exp_untouched_census.py`, on
+fsent_champ_long, IS only. 16 cells. **Zero wins, same shape as the decay gate.**
+
+| knob | fires? | what the grid shows |
+|---|---|---|
+| `exp_window_floor_mode` | **NO** | floor / min / gate all byte-identical to off. Dead knob. |
+| `exp_window_floor_s` | yes | monotone: 1800s +474.56, 3600s +467.10, 7200s +466.98, 14400s +412.22 |
+| `exp_cap_days` | yes | monotone in TRADES: 1d 291t/+40.66, 8d 454t/+294.30, 999d 556t/+625.54 |
+| `exp_trail_half` | yes | 0 -> 1 costs 50.6R net AND raises DD 25.08 -> 29.38 |
+
+Read through the inverse test, which is the whole point of a census:
+
+  - **window_floor_s has a mechanism.** Its cost rises monotonically as the knob
+    gets stronger, which is what a real control looks like. But no value beats
+    off by more than +7.6R on 497 trades, which is noise, and the best cell is
+    the smallest one tested - the shape of a knob nobody needs.
+  - **cap_days is not a filter, it is a volume dial.** Net tracks trade count
+    almost exactly and 16 days is identical to off, so anything above that is
+    "no cap at all". Reading 999 as +625R would be reading the absence of a cap
+    as an edge.
+  - **trail_half only pays in combination.** On the base it costs net and depth.
+    It earns its place in fsent_sig_trail_delay1, which pairs it with
+    exp_trail_delay_r=1.0 - already registered, already measured.
+
+So the three knobs the inventory flagged as untested are now measured: one dead,
+one with a mechanism and no gain, one a truncation dial, one that only works
+paired. The census produced no candidate. That is the correct output for this
+shape of test and it is the same answer the decay gate gave at 120 cells.
+
+**Still open, and it is an owner decision, not a task:** the chop x ATR routing
+described above. It needs exactly one OOS reveal, chosen by the owner, after the
+fact. It was not run here.
 
 Nothing promoted, no knob added, no book or pin touched. Own directory.
 ---

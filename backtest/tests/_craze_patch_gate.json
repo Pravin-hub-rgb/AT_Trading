@@ -1,7 +1,11 @@
 {
- "sha256": "aa189c5fe1acf881a631bbe69af50814558fd2d425890bef9f97fe534105bb18",
- "bytes": 125663,
- "lines": 2359,
- "n_exp_kwargs": 117,
- "n_continue": 80
+ "sha256": "ab43cf442ddfd2802e9a0815ea8c8542b0063da8caa64c35cb2e11e7b1b612b9",
+ "bytes": 151701,
+ "lines": 2770,
+ "n_exp_kwargs": 126,
+ "n_continue": 82,
+ "approved": "2026-10-16",
+ "previous_sha256": "aa189c5fe1acf881a631bbe69af50814558fd2d425890bef9f97fe534105bb18",
+ "approval_reason": "The gate had been failing since the baseline was written on 2026-10-05 (19140c4). It was left failing deliberately, because re-baselining is an approval rather than a fix, and CORRECTED_MARK_SWEEP_2026_10_14.md records it as known state. Every commit that moved the patched engine between those two dates was deliberate and documented: exp_max_concurrent was added because it did not exist and the doc claiming it did was wrong (ddd31dc), the HTF window END was carrying the START's shift so every pin inherited it (f4b7468), the window floor was never a knob and had a 900-second hole in it (9ce3565), and a real 900-second lookahead in the HTF window gate was fixed with every pin re-derived (d439c97). The 126 vs 117 exp_* kwargs are those additions. No commit touched this file without saying so in its subject line, so the growth is accounted for rather than unexplained.",
+ "how_to_verify_this_was_safe": "The owner asked for the checklist to be closed out, which is what surfaced this. Re-baselining was approved on the basis of the commit history above: 2359 -> 2770 lines and 117 -> 126 kwargs, every increase traceable to a named commit that describes the change it made. If a future check fails again, the same question applies and should be answered the same way - read what moved and why, do not simply write."
 }
