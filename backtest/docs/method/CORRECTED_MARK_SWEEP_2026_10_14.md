@@ -2,8 +2,8 @@
 
 ## STATUS — CLOSED 2026-10-16
 
-Every phase in this sweep is done and every open item is closed. One item is
-deliberately left to the owner and is not a task.
+Every phase in this sweep is done. Every open item is closed or explicitly
+declined. Nothing is outstanding.
 
 | phase | what | outcome |
 |---|---|---|
@@ -23,11 +23,13 @@ deliberately left to the owner and is not a task.
 | — | serial ladder, phase 1 transfer | **does not transfer** |
 | — | phase 2, ten knobs | 8 fire, 1 wins |
 | — | **untouched census: window_floor / cap_days / trail_half** | **run 2026-10-16, 16 cells, 0 wins** |
+| — | **chop-high filter, the one OOS reveal** | **run 2026-10-16, verdict B — declined by owner** |
 | — | housekeeping item 1, stale patch baseline | **re-approved 2026-10-16**, reason recorded |
 | — | housekeeping item 2, six unflagged books | **already retired**, check passes |
 
-**Open, and it is yours:** the chop x ATR routing in C2 needs exactly one OOS
-reveal, chosen after the fact. It was not run. Everything else here is closed.
+**Nothing is open.** The last item, the chop-high filter, was pre-registered,
+run, and declined by the owner. The reasoning is recorded below so the decision
+is not re-litigated by someone who only reads the numbers.
 
 ---
 
@@ -698,10 +700,44 @@ HIGH CHOP roughly HALVES drawdown (5.1-5.7 against 9.6-14.4) and shortens the
 worst losing streak two to threefold (5-7 against 8-17). ATR contributes nothing
 on either axis.
 
-NOT PROPOSED, AND OOS NOT OPENED. This is a characterisation of IS, not a filter.
-The original died by era-split, so the only honest next step is a decision by the
-owner on whether a chop filter is worth one OOS reveal - and if it is, exactly
-one, after the fact. Nothing in unified.py changed and no mode branch was added.
+NOT PROPOSED. **And the one OOS reveal was spent on 2026-10-16 - verdict B,
+declined by the owner.** Pre-registered first, in
+`CHOP_HIGH_FILTER_PREREG_2026_10_16.md` (commit 8dea64e), then run.
+
+    IS   unfiltered  497t +466.92R dd 25.08 streak 12 r/t +0.9395
+         chop>=10.39 249t +217.21R dd 11.37 streak  9 r/t +0.8723
+    OOS  unfiltered  281t +215.32R dd 11.20 streak  7 r/t +0.7663
+         chop>=10.39 154t +116.18R dd  5.82 streak  6 r/t +0.7544
+
+The RISK PATTERN CARRIED, which is worth keeping: drawdown ratio 0.453 in
+sample and 0.520 out of sample. Halved in both eras. That was the open question
+and the answer is that C2's finding was not another chain artefact.
+
+It is still not a book, and the reason is arithmetic rather than taste:
+
+    trades   497 -> 249      half the book
+    net     +467 -> +217     half the money
+    DD       25 -> 11       half the drawdown
+    R/trade 0.94 -> 0.87     slightly WORSE than the book it filters
+    net/DD  18.6 -> 19.1     barely moved
+
+Sitting out half the signals halves the drawdown on any book. This does exactly
+that and makes each remaining trade slightly worse, so net-per-drawdown barely
+moves. It is a smaller book, not a better one.
+
+A second reason it could not have been registered as written: the chop used here
+is not the chop the engine has. This analysis computes 100 x net_range / sum_TR,
+where high means CHOPPY. `unified.py:91` computes
+100 x log10(sum_TR / net_range) / log10(14), where high means TRENDING. The two
+correlate at **-0.83**. Gating on the engine's own chop at the equivalent
+threshold keeps only 127 of the 249 trades and drops net-per-drawdown from 18.6
+to 8.9 - a materially worse book than the one measured. Registering either would
+have produced a book that does not match the reveal it came from.
+
+**Do not revisit.** The OOS era is spent for this purpose, as the
+pre-registration states.
+
+Nothing in unified.py changed and no mode branch was added.
 
 ## HOUSEKEEPING - BOTH ITEMS CLOSED 2026-10-16
 
@@ -906,9 +942,9 @@ one with a mechanism and no gain, one a truncation dial, one that only works
 paired. The census produced no candidate. That is the correct output for this
 shape of test and it is the same answer the decay gate gave at 120 cells.
 
-**Still open, and it is an owner decision, not a task:** the chop x ATR routing
-described above. It needs exactly one OOS reveal, chosen by the owner, after the
-fact. It was not run here.
+**Now also closed:** the chop x ATR routing described above was pre-registered,
+run on 2026-10-16, and came back verdict B. The owner declined it. Full numbers
+and the arithmetic are in the C2 section above; do not revisit it.
 
 Nothing promoted, no knob added, no book or pin touched. Own directory.
 ---
