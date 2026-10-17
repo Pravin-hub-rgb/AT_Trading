@@ -389,6 +389,30 @@ max_positions=0,
       #   0.006   0.60%
       #   0.010   1.00%
       exp_min_sl_pct=0.0,
+      # UNIFIED: ADVERSE STOP-FILL SLIPPAGE, in basis points of the fill price.
+      # 0.0 = off, which is the shipped behaviour and reproduces every pin exactly.
+      #
+      # WHY IT EXISTS. The backtest fills a stop at min(sl, bar_open) - at the
+      # stop price, or at the open when the bar gapped through it. The exchange
+      # does not. A stop is a conditional MARKET order on Bybit (tpslMode=Full),
+      # so a wick through the stop fills wherever the wick went, which is worse
+      # than the stop price every single time. That difference is the only place
+      # a backtest R and a live R can diverge, and until this knob existed there
+      # was no way to measure it: `net_r` applies fees AFTER a trade is booked, so
+      # scaling costs changes arithmetic and not which trades exist.
+      #
+      # SEMANTICS: adverse only, applied to the exit fill, never to the entry.
+      #   0.0     off (shipped)
+      #   10      0.10%
+      #   50      0.50%
+      #   100     1.00%
+      #   1000    10.00% - the doc's "what if slippage got catastrophic" end
+      #
+      # Applied to all four stop/trail fill sites, long and short, intrabar and
+      # the end-of-data finalize path, so the knob means one thing everywhere.
+      # It does NOT move which trades qualify: the stop is still tested at
+      # sl_cur. Only the price you get is worse, which is what the exchange does.
+      exp_stop_slip_bps=0.0,
       # UNIFIED: OPPOSITE-DIRECTION LOCK. 0 = off (shipped). 1 = while any trade
       # is open, refuse a NEW entry in the opposite direction; same-direction
       # entries stay allowed.
@@ -1516,6 +1540,7 @@ max_positions=0,
                             sl_cur=cand
                 if lo <= sl_cur:
                     fill=min(sl_cur, float(c["open"]))
+                    if exp_stop_slip_bps: fill=fill*(1.0-exp_stop_slip_bps/10000.0)
                     exit_idx,exit_px=j,fill
                     outcome="sl" if sl_cur <= sl0 else "trail"
                     break
@@ -1538,6 +1563,7 @@ max_positions=0,
                             sl_cur=cand
                 if hi >= sl_cur:
                     fill=max(sl_cur, float(c["open"]))
+                    if exp_stop_slip_bps: fill=fill*(1.0+exp_stop_slip_bps/10000.0)
                     exit_idx,exit_px=j,fill
                     outcome="sl" if sl_cur >= sl0 else "trail"
                     break
@@ -1641,6 +1667,7 @@ max_positions=0,
                                 sl_cur_f=cand
                     if lo <= sl_cur_f:
                         fill=min(sl_cur_f, float(c["open"]))
+                        if exp_stop_slip_bps: fill=fill*(1.0-exp_stop_slip_bps/10000.0)
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f <= sl0 else "trail")
                         break
                 else:
@@ -1661,6 +1688,7 @@ max_positions=0,
                                 sl_cur_f=cand
                     if hi >= sl_cur_f:
                         fill=max(sl_cur_f, float(c["open"]))
+                        if exp_stop_slip_bps: fill=fill*(1.0+exp_stop_slip_bps/10000.0)
                         fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f >= sl0 else "trail")
                         break
             if fk is None:

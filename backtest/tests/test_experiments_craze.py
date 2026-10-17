@@ -1204,8 +1204,20 @@ def _patch_015_busy_until_init(s: str) -> str:
                   '            sl0=sl; sl_cur=sl; best=entry\n'
                   '            _exp_5m_stats["confirmed"] += 1; _exp_5m_stats["delayed"] += 1\n')
     #    Coarse partial check: AFTER best-update, BEFORE SL check
+    #
+    # 2026-10-16: all four anchors below grew a line. The engine now applies
+    # exp_stop_slip_bps to the exit fill, immediately after the fill is
+    # computed and before it is recorded - so the slippage is part of the price
+    # the trade exits at, which is the whole point of the knob. Each anchor had
+    # to grow with it. Leaving them alone does not fail loudly in a useful way:
+    # the count assertion fires with "coarse long stop anchor", which reads like
+    # a patcher bug rather than "the engine you are patching changed shape".
+    SLIP_L = '                    if exp_stop_slip_bps: fill=fill*(1.0-exp_stop_slip_bps/10000.0)\n'
+    SLIP_S = '                    if exp_stop_slip_bps: fill=fill*(1.0+exp_stop_slip_bps/10000.0)\n'
+    SLIP_LF = '                        if exp_stop_slip_bps: fill=fill*(1.0-exp_stop_slip_bps/10000.0)\n'
+    SLIP_SF = '                        if exp_stop_slip_bps: fill=fill*(1.0+exp_stop_slip_bps/10000.0)\n'
     t_ma_long = ('                if lo <= sl_cur:\n'
-                 '                    fill=min(sl_cur, float(c["open"]))\n'
+                 '                    fill=min(sl_cur, float(c["open"]))\n' + SLIP_L +
                  '                    exit_idx,exit_px=j,fill\n'
                  '                    outcome="sl" if sl_cur <= sl0 else "trail"\n'
                  '                    break\n')
@@ -1216,7 +1228,7 @@ def _patch_015_busy_until_init(s: str) -> str:
                   '                    outcome="ma_trail"\n'
                   '                    break\n')
     t_ma_short = ('                if hi >= sl_cur:\n'
-                  '                    fill=max(sl_cur, float(c["open"]))\n'
+                  '                    fill=max(sl_cur, float(c["open"]))\n' + SLIP_S +
                   '                    exit_idx,exit_px=j,fill\n'
                   '                    outcome="sl" if sl_cur >= sl0 else "trail"\n'
                   '                    break\n')
@@ -1227,7 +1239,7 @@ def _patch_015_busy_until_init(s: str) -> str:
                   '                    outcome="ma_trail"\n'
                   '                    break\n')
     t_ma_fine_long = ('                    if lo <= sl_cur_f:\n'
-                      '                        fill=min(sl_cur_f, float(c["open"]))\n'
+                      '                        fill=min(sl_cur_f, float(c["open"]))\n' + SLIP_LF +
                       '                        fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f <= sl0 else "trail")\n'
                       '                        break\n')
     assert s.count(t_ma_fine_long) == 1, "fine long stop anchor"
@@ -1238,7 +1250,7 @@ def _patch_015_busy_until_init(s: str) -> str:
                   '                            fk,exit_px_f,outcome_f=k,float(candles_ltf[_mj]["close"]),"ma_trail"\n'
                   '                            break\n')
     t_ma_fine_short = ('                    if hi >= sl_cur_f:\n'
-                       '                        fill=max(sl_cur_f, float(c["open"]))\n'
+                       '                        fill=max(sl_cur_f, float(c["open"]))\n' + SLIP_SF +
                        '                        fk,exit_px_f,outcome_f=k,fill,("sl" if sl_cur_f >= sl0 else "trail")\n'
                        '                        break\n')
     assert s.count(t_ma_fine_short) == 1, "fine short stop anchor"
