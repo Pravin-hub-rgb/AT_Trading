@@ -59,10 +59,14 @@ from run_experiment import net_r, get_swings, get_data  # noqa: E402
 from exp_tf_family import build_family_module  # noqa: E402
 from exp_signal_metrics import load_era  # noqa: E402
 
-BOOKS = [("fsent_champ_long_mcloff_htf15", "107"),
-         ("fsent_champ_long_htf15_tskip6", "110")]
+ALL_BOOKS = [("fsent_champ_long_mcloff_htf15", "107"),
+             ("fsent_champ_long_htf15_tskip6", "110"),
+             ("fsent_champ_long_htffs", "106"),
+             ("fsent_champ_long_htf15_htffs", "109"),
+             ("fsent_champ_long_htfesmcl4", "108")]
+BOOKS = ALL_BOOKS
 
-OUT = HERE / "four_techniques.json"
+OUT = HERE / ("four_techniques_%s.json" % (sys.argv[1].lower() if len(sys.argv) > 1 else "all"))
 MD = HERE / "four_techniques.md"
 
 
@@ -241,6 +245,19 @@ GRIDS = {
     "fsent_champ_long_mcloff_htf15": (
         "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
         "exp_persist", [5, 6, 7, 8, 9]),
+    # 106, 109 carry exp_htf_fs_entry; 108 carries exp_mcl_cooldown. Each gets
+    # the two knobs that are actually load-bearing for that book rather than a
+    # copied grid, for the reason the review makes: sweeping inert knobs proves
+    # nothing and costs the runs that matter.
+    "fsent_champ_long_htffs": (
+        "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
+        "exp_persist", [5, 6, 7, 8, 9]),
+    "fsent_champ_long_htf15_htffs": (
+        "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
+        "exp_persist", [5, 6, 7, 8, 9]),
+    "fsent_champ_long_htfesmcl4": (
+        "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
+        "exp_persist", [5, 6, 7, 8, 9]),
 }
 
 
@@ -298,6 +315,15 @@ WF_GRIDS = {
         "exp_trail_skip_n", [0, 2, 4, 6, 8, 12, 16],
         "exp_persist", [6, 7, 8]),
     "fsent_champ_long_mcloff_htf15": (
+        "cooldown_bars", [4, 8, 12, 16],
+        "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_htffs": (
+        "cooldown_bars", [4, 8, 12, 16],
+        "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_htf15_htffs": (
+        "cooldown_bars", [4, 8, 12, 16],
+        "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_htfesmcl4": (
         "cooldown_bars", [4, 8, 12, 16],
         "exp_persist", [6, 7, 8]),
 }
