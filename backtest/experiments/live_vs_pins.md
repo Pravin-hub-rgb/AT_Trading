@@ -13,11 +13,11 @@ inert. Measured rather than assumed:
 
 | book | pin n | pin net | live n | live net | reproduces the pin? |
 |---|---:|---:|---:|---:|---|
-| `fsent_champ_long` | 497 | +466.92 | 497 | +466.92 | yes |
-| `fsent_champ_long_htffs` | 753 | +757.99 | 753 | +757.99 | yes |
-| `fsent_champ_long_htfesmcl4` | 762 | +770.53 | 762 | +770.53 | yes |
-| `fsent_champ_long_mcloff_htf15` | 535 | +539.77 | 535 | +539.77 | yes |
-| `fsent_champ_long_htf15_htffs` | 756 | +765.86 | 756 | +765.86 | yes |
-| `fsent_champ_long_htf15_tskip6` | 412 | +639.84 | 412 | +639.84 | yes |
+| `fsent_champ_long` | 487 | +459.41 | 487 | +459.41 | yes |
+| `fsent_champ_long_htffs` | 751 | +756.98 | 751 | +756.98 | yes |
+| `fsent_champ_long_htfesmcl4` | 762 | +771.87 | 762 | +771.87 | yes |
+| `fsent_champ_long_mcloff_htf15` | 525 | +538.40 | 525 | +538.40 | yes |
+| `fsent_champ_long_htf15_htffs` | 754 | +764.85 | 754 | +764.85 | yes |
+| `fsent_champ_long_htf15_tskip6` | 395 | +644.04 | 395 | +644.04 | yes |
 
 **6 of 6 books reproduce their pin on the live engine.**

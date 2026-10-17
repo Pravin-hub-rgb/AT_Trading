@@ -39,9 +39,9 @@ BOOKS = {
         # The b3_k ladder is a fifth sibling of the decay conclusion: b3_k=2
         # gives IS +41.78 / OOS +25.70 on 167 and 79 trades. Small, low drawdown
         # on both sides, and nowhere near the champion - the arm is real and weak.
-        "pins": {"n": 419, "net": 140.16, "dd_net": 39.47, "wr_net": 0.243,
-                "gross_win": 0.258, "oos_n": 249, "oos_net": 2.04, "oos_dd_net": 42.09,
-                "oos_wr_net": 0.249, "oos_gross_win": 0.257, "n_all": 668, "net_all": 142.2,
+        "pins": {"n": 418, "net": 144.83, "dd_net": 39.47, "wr_net": 0.249,
+                "gross_win": 0.263, "oos_n": 246, "oos_net": -0.34, "oos_dd_net": 42.09,
+                "oos_wr_net": 0.244, "oos_gross_win": 0.252, "n_all": 664, "net_all": 144.49,
                 "dd_net_all": 42.09},
         "pins_legacy": {"n": 419, "net": 140.16, "dd_net": 39.47, "oos_n": 249,
                        "oos_net": 2.04, "oos_dd_net": 42.09},
@@ -408,10 +408,10 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_bias_momentum_min": 0.6},
         "swing": "sw10",
         # Part of the 2026-10-02 script-grid sweep - see gap_bm_min09.
-        "pins": {"n": 381, "net": 161.73, "dd_net": 50.14, "wr_net": 0.268,
-                "gross_win": 0.278, "oos_n": 230, "oos_net": 4.64, "oos_dd_net": 35.26,
-                "oos_wr_net": 0.248, "oos_gross_win": 0.257, "n_all": 611, "net_all": 166.38,
-                "dd_net_all": 50.14},
+        "pins": {"n": 380, "net": 161.79, "dd_net": 50.08, "wr_net": 0.268,
+                "gross_win": 0.279, "oos_n": 230, "oos_net": 4.64, "oos_dd_net": 35.26,
+                "oos_wr_net": 0.248, "oos_gross_win": 0.257, "n_all": 610, "net_all": 166.43,
+                "dd_net_all": 50.08},
         "pins_legacy": {"n": 381, "net": 161.73, "dd_net": 50.14, "oos_n": 230,
                        "oos_net": 4.64, "oos_dd_net": 35.26},
     },
@@ -681,9 +681,9 @@ BOOKS = {
         #   +104.12R against +72.79R OUT of sample. The knob only fires on bars
         #   present in 2021-22 and absent from 2023-26. An IS-only reading would
         #   have called it inert and thrown away the best OOS number here.
-        "pins": {"n": 404, "net": 124.34, "dd_net": 55.77, "wr_net": 0.243,
-                "gross_win": 0.255, "oos_n": 237, "oos_net": 22.24, "oos_dd_net": 41.05,
-                "oos_wr_net": 0.232, "oos_gross_win": 0.236, "n_all": 641, "net_all": 146.57,
+        "pins": {"n": 402, "net": 109.72, "dd_net": 55.77, "wr_net": 0.244,
+                "gross_win": 0.256, "oos_n": 234, "oos_net": 19.75, "oos_dd_net": 44.62,
+                "oos_wr_net": 0.226, "oos_gross_win": 0.231, "n_all": 636, "net_all": 129.47,
                 "dd_net_all": 55.77},
         "pins_legacy": {"n": 404, "net": 124.34, "dd_net": 55.77, "oos_n": 237,
                        "oos_net": 22.23, "oos_dd_net": 41.05},

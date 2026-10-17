@@ -482,10 +482,10 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 494, "net": 218.56, "dd_net": 45.98, "wr_net": 0.251,
-                "gross_win": 0.263, "oos_n": 298, "oos_net": 16.73, "oos_dd_net": 52.83,
-                "oos_wr_net": 0.228, "oos_gross_win": 0.238, "n_all": 792, "net_all": 235.28,
-                "dd_net_all": 52.83},
+        "pins": {"n": 493, "net": 223.42, "dd_net": 45.98, "wr_net": 0.256,
+                "gross_win": 0.268, "oos_n": 295, "oos_net": 14.24, "oos_dd_net": 56.42,
+                "oos_wr_net": 0.224, "oos_gross_win": 0.234, "n_all": 788, "net_all": 237.66,
+                "dd_net_all": 56.42},
         "pins_legacy": {"n": 494, "net": 218.56, "dd_net": 45.98, "oos_n": 298,
                        "oos_net": 16.72, "oos_dd_net": 52.83},
     },
@@ -537,9 +537,9 @@ BOOKS = {
         # noise. The finding is the direction, not a number. Note also that the
         # peak here is 32 (+375.53R), not "off" - so the honest reading is that
         # 16 is simply too tight, not that no cap is best.
-        "pins": {"n": 439, "net": 145.45, "dd_net": 45.28, "wr_net": 0.26, "gross_win": 0.264,
-                "oos_n": 264, "oos_net": 12.74, "oos_dd_net": 48.12, "oos_wr_net": 0.227,
-                "oos_gross_win": 0.235, "n_all": 703, "net_all": 158.18, "dd_net_all": 48.12},
+        "pins": {"n": 438, "net": 145.5, "dd_net": 45.28, "wr_net": 0.26, "gross_win": 0.265,
+                "oos_n": 261, "oos_net": 5.09, "oos_dd_net": 48.12, "oos_wr_net": 0.222,
+                "oos_gross_win": 0.23, "n_all": 699, "net_all": 150.59, "dd_net_all": 48.12},
         "pins_legacy": {"n": 439, "net": 145.44, "dd_net": 45.28, "oos_n": 264,
                        "oos_net": 12.73, "oos_dd_net": 48.12},
     },

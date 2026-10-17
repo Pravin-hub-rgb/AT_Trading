@@ -410,7 +410,21 @@ max_positions=0,
       # interval convention exp_max_concurrent uses, and the same one
       # exp_maxcap_sweep.py counts with. Direction is the direction of the trade
       # being BLOCKED, compared against every currently-open trade.
-      exp_no_opposite=0,
+      #
+      # 2026-10-16: DEFAULT IS NOW 1, ON. Owner decision, on the strength of the
+      # exposure argument above and not the R - the R is close to neutral and was
+      # never the reason. Re-measured on this corrected engine across all 54
+      # pinned books / 108 book-eras (exp_no_opposite.py), because the only prior
+      # figures were from 2026-10-08 and predate the causal-stop fix:
+      #
+      #   35,078 trades -> 476 refused (1.36%)
+      #   net better 43 / worse 30 / unchanged 35, sum of changes +266.91R
+      #   drawdown better 19 / worse 6
+      #
+      # So it is cheap, it fires rarely, and it helps more often than it hurts.
+      # Set to 0 per-book only to reproduce a historical trade list - every pin
+      # in the registry was re-derived under this default.
+      exp_no_opposite=1,
       # UNIFIED: regime hysteresis. v19 hardcoded PERSIST=7 in the function body,
       # so it could not be switched off and v18 could not share the code path.
       #

@@ -127,3 +127,14 @@ worst forward number; 108 ranked fourth and has the best. Where they disagree,
 the forward window is the better evidence, because the ranking was built on
 searched data. One window of 26 days is not enough to settle it, but it is not
 nothing either.
+
+## One thing that is already settled
+
+exp_no_opposite, the opposite-direction lock, is **ON by default for every
+book** as of 2026-10-16, and both candidates' pins were re-derived under it.
+It refuses a new trade when a trade in the opposite direction is already open.
+
+It is worth stating what this means for the forward test: it applies to **both
+arms equally**, so it does not favour either candidate and it is not a variable
+here. It is simply the engine's behaviour from this point forward. The forward
+numbers for 107 and 110 below are already post-lock.

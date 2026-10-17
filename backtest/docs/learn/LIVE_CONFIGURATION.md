@@ -161,20 +161,41 @@ whole trade.
 Refuses a new trade if a trade in the **opposite direction** is already open.
 Same-direction stacking is still allowed.
 
+**SETTLED 2026-10-16: this is now the engine default, ON, for every book.**
+`unified.py` carries it as `exp_no_opposite=1`, and because the harness is built by
+patching that file's source text, the backtest and the live bot inherited the
+change from one edit. All 54 book pins were re-derived under it.
+
+The figures are no longer the stale 2026-10-08 pair. Re-measured on the
+corrected engine, 54 books / 108 book-eras:
+
 ```
-affects 1.3–1.5% of trades (8 of 528 in sample, 4 of 311 out of sample)
-BASE   IS   +533.4 → +534.3   (better by 0.9R)
-       OOS  +239.6 → +240.6   (better by 1.0R)
+35,078 trades  ->  476 refused (1.36%)
+net better 43 / worse 30 / unchanged 35,   sum of all changes +266.91R
+drawdown better 19 / worse 6
 ```
 
-Those figures are from 2026-10-08 and **predate the causal-stop fix**, so they
-need re-measuring before they are trusted. The shape — rare, near-neutral on net
-— is what matters and it is not in doubt.
+**The reason to want it is not the R.** On one symbol, a long and a short held
+together net to roughly zero exposure while paying fees twice and occupying
+margin twice. On a multi book holding up to eight positions, that is not a
+rounding error, it is a position-sizing bug you have not had yet. The numbers
+above answer whether it is free; they are free.
 
-**The reason to want it anyway is not the R.** On one symbol, a long and a short
-held together net to roughly zero exposure while paying fees twice and
-occupying margin twice. On a multi book holding up to eight positions, that is
-not a rounding error, it is a position-sizing bug you have not had yet.
+On the two candidates:
 
-**Recommended ON**, on the strength of the exposure argument rather than the
-1.5% net difference.
+| book | era | fires | net off | net on | d net | DD | streak |
+|---|---|---:|---:|---:|---:|---|---|
+| `107` | IS | 10 (1.87%) | +539.77 | +538.40 | −1.37 | unchanged | unchanged |
+| `107` | OOS | 7 (2.32%) | +270.17 | +272.92 | **+2.75** | unchanged | unchanged |
+| `110` | IS | 17 (4.13%) | +639.84 | +644.04 | **+4.20** | 22.81 → 23.93 | unchanged |
+| `110` | OOS | 8 (3.57%) | +328.54 | +336.16 | **+7.62** | unchanged | 11 → **9** |
+
+Three of four book-eras improve on net. 110's OOS era improves on net, drawdown
+and losing streak at once.
+
+**It reaches the live bot with no wiring at all.** `live_loop.py` forwards seven
+knobs to the engine and this is not one of them, so it inherits the new default
+automatically. Verified against the live engine's signature.
+
+To reproduce a historical trade list, set `exp_no_opposite: 0` on that book
+explicitly. Do not flip the engine default back.

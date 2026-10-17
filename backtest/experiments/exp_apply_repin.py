@@ -89,7 +89,7 @@ def emit_dict(prefix, d, lead, indent_first=True, width=92):
 def process(path, newpins, live):
     src = io.open(path, encoding="utf-8").read()
     lines = src.split("\n")
-    out, changed, shadowed = [], [], []
+    out, changed, shadowed, skipped_legacy = [], [], [], []
     cur = None
     i = 0
     while i < len(lines):
@@ -123,8 +123,21 @@ def process(path, newpins, live):
                 p = {k: newpins[cur][k] for k in ORDER if k in newpins[cur]}
                 newblk = emit_dict('"pins"', p, lead)
                 newblk[-1] = newblk[-1] + ","
-                newblk += emit_dict('"pins_legacy"', parsed, lead)
-                newblk[-1] = newblk[-1] + ","
+                # Only mint pins_legacy if this book does not already carry one.
+                # These books were re-pinned once already, so most already have a
+                # pins_legacy from that generation. Writing a second one produces
+                # a DUPLICATE LITERAL KEY in the same dict literal, which Python
+                # resolves silently by keeping the last - so the complete copy
+                # just written is discarded and the older, smaller one survives.
+                # It looks like it worked. It did not.
+                nxt = j + 1
+                has_legacy = nxt < len(lines) and \
+                    lines[nxt].lstrip().startswith('"pins_legacy":')
+                if not has_legacy:
+                    newblk += emit_dict('"pins_legacy"', parsed, lead)
+                    newblk[-1] = newblk[-1] + ","
+                else:
+                    skipped_legacy.append(cur)
                 changed.append((cur, blob, "\n".join(newblk)))
                 out.extend(newblk)
                 i = j + 1
@@ -132,7 +145,7 @@ def process(path, newpins, live):
             shadowed.append((cur, path.name))
         out.append(line)
         i += 1
-    return "\n".join(out), changed, shadowed
+    return "\n".join(out), changed, shadowed, skipped_legacy
 
 
 def main() -> int:
@@ -148,7 +161,7 @@ def main() -> int:
         f = REGDIR / (stem + ".py")
         if not f.exists():
             continue
-        txt, ch, sh = process(f, newpins, live)
+        txt, ch, sh, _sk = process(f, newpins, live)
         rendered[f] = txt
         if ch:
             per_file[f.name] = len(ch)

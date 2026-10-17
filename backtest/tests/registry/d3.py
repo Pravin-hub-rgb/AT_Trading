@@ -61,9 +61,9 @@ BOOKS = {
         # single and multi of this book produce the same trade count, the same net,
         # and the same trade-list hash. The multi leg is only meaningful where
         # cooldown_bars is kept alongside the pause, as this entry does.
-        "pins": {"n": 385, "net": 144.23, "dd_net": 56.35, "wr_net": 0.255,
-                "gross_win": 0.268, "oos_n": 220, "oos_net": 19.29, "oos_dd_net": 47.73,
-                "oos_wr_net": 0.223, "oos_gross_win": 0.232, "n_all": 605, "net_all": 163.52,
+        "pins": {"n": 382, "net": 128.28, "dd_net": 56.35, "wr_net": 0.254,
+                "gross_win": 0.267, "oos_n": 217, "oos_net": 24.14, "oos_dd_net": 45.14,
+                "oos_wr_net": 0.226, "oos_gross_win": 0.235, "n_all": 599, "net_all": 152.41,
                 "dd_net_all": 56.35},
         "pins_legacy": {"n": 385, "net": 144.23, "dd_net": 56.35, "oos_n": 220,
                        "oos_net": 19.29, "oos_dd_net": 47.73},

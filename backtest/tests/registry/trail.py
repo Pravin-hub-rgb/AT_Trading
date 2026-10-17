@@ -151,9 +151,9 @@ BOOKS = {
         # What it still needs before it could ship: a sweep of skip_n and
         # delay_r on THIS engine to confirm 4 and 1.0 are not flukes, since they
         # were chosen against different engine code.
-        "pins": {"n": 362, "net": 256.64, "dd_net": 69.62, "wr_net": 0.196,
-                "gross_win": 0.207, "oos_n": 213, "oos_net": 24.19, "oos_dd_net": 37.59,
-                "oos_wr_net": 0.197, "oos_gross_win": 0.197, "n_all": 575, "net_all": 280.83,
+        "pins": {"n": 353, "net": 262.36, "dd_net": 69.62, "wr_net": 0.204,
+                "gross_win": 0.215, "oos_n": 205, "oos_net": 41.93, "oos_dd_net": 37.59,
+                "oos_wr_net": 0.21, "oos_gross_win": 0.21, "n_all": 558, "net_all": 304.29,
                 "dd_net_all": 69.62},
         "pins_legacy": {"n": 363, "net": 256.64, "dd_net": 69.62, "oos_n": 215,
                        "oos_net": 24.19, "oos_dd_net": 37.59},
@@ -247,10 +247,9 @@ BOOKS = {
         # on the strength of the sweep alone - what it establishes is that the
         # effect is broad and survives OOS, which the single inherited point could
         # not show.
-        "pins": {"n": 323, "net": 238.39, "dd_net": 70.22, "wr_net": 0.152,
-                "gross_win": 0.155, "oos_n": 199, "oos_net": 21.62, "oos_dd_net": 37.37,
-                "oos_wr_net": 0.161, "oos_gross_win": 0.166, "n_all": 522, "net_all": 260.01,
-                "dd_net_all": 70.22},
+        "pins": {"n": 313, "net": 250.87, "dd_net": 70.22, "wr_net": 0.157, "gross_win": 0.16,
+                "oos_n": 193, "oos_net": 28.28, "oos_dd_net": 37.37, "oos_wr_net": 0.166,
+                "oos_gross_win": 0.171, "n_all": 506, "net_all": 279.15, "dd_net_all": 70.22},
         "pins_legacy": {"n": 324, "net": 238.39, "dd_net": 70.22, "oos_n": 202,
                        "oos_net": 21.62, "oos_dd_net": 37.37},
     },
@@ -265,9 +264,9 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 3},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 373, "net": 213.59, "dd_net": 69.84, "wr_net": 0.217,
-                "gross_win": 0.228, "oos_n": 220, "oos_net": 30.13, "oos_dd_net": 44.29,
-                "oos_wr_net": 0.2, "oos_gross_win": 0.2, "n_all": 593, "net_all": 243.71,
+        "pins": {"n": 367, "net": 210.38, "dd_net": 69.84, "wr_net": 0.221,
+                "gross_win": 0.232, "oos_n": 215, "oos_net": 43.97, "oos_dd_net": 44.29,
+                "oos_wr_net": 0.209, "oos_gross_win": 0.209, "n_all": 582, "net_all": 254.34,
                 "dd_net_all": 69.84},
         "pins_legacy": {"n": 374, "net": 213.59, "dd_net": 69.84, "oos_n": 222,
                        "oos_net": 30.13, "oos_dd_net": 44.29},
@@ -283,10 +282,10 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 6, "exp_trail_delay_r": 3.0},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 319, "net": 291.76, "dd_net": 70.39, "wr_net": 0.157,
-                "gross_win": 0.163, "oos_n": 206, "oos_net": 11.58, "oos_dd_net": 40.29,
-                "oos_wr_net": 0.184, "oos_gross_win": 0.184, "n_all": 525, "net_all": 303.35,
-                "dd_net_all": 70.39},
+        "pins": {"n": 302, "net": 320.32, "dd_net": 68.89, "wr_net": 0.166,
+                "gross_win": 0.172, "oos_n": 197, "oos_net": 30.25, "oos_dd_net": 40.29,
+                "oos_wr_net": 0.198, "oos_gross_win": 0.198, "n_all": 499, "net_all": 350.57,
+                "dd_net_all": 68.89},
         "pins_legacy": {"n": 320, "net": 291.76, "dd_net": 70.39, "oos_n": 209,
                        "oos_net": 11.58, "oos_dd_net": 40.29},
     },
@@ -301,10 +300,10 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_delay_r": 3.0},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 340, "net": 144.07, "dd_net": 70.47, "wr_net": 0.203,
-                "gross_win": 0.215, "oos_n": 227, "oos_net": 66.08, "oos_dd_net": 50.41,
-                "oos_wr_net": 0.229, "oos_gross_win": 0.238, "n_all": 567, "net_all": 210.15,
-                "dd_net_all": 70.47},
+        "pins": {"n": 324, "net": 173.57, "dd_net": 67.91, "wr_net": 0.213,
+                "gross_win": 0.225, "oos_n": 224, "oos_net": 53.2, "oos_dd_net": 50.41,
+                "oos_wr_net": 0.223, "oos_gross_win": 0.232, "n_all": 548, "net_all": 226.77,
+                "dd_net_all": 67.91},
         "pins_legacy": {"n": 341, "net": 144.07, "dd_net": 70.47, "oos_n": 230,
                        "oos_net": 66.08, "oos_dd_net": 50.41},
     },
@@ -319,10 +318,9 @@ BOOKS = {
                     "pivot_rule": "leg", "exp_trail_half": 1, "exp_trail_skip_n": 8, "exp_trail_delay_r": 1.0},
         "swing": "sw10",
         # Part of the swept surface - see trail_half_skipn8_nodelay.
-        "pins": {"n": 323, "net": 238.39, "dd_net": 70.22, "wr_net": 0.152,
-                "gross_win": 0.155, "oos_n": 194, "oos_net": 21, "oos_dd_net": 37.98,
-                "oos_wr_net": 0.16, "oos_gross_win": 0.165, "n_all": 517, "net_all": 259.39,
-                "dd_net_all": 70.22},
+        "pins": {"n": 313, "net": 250.87, "dd_net": 70.22, "wr_net": 0.157, "gross_win": 0.16,
+                "oos_n": 188, "oos_net": 27.67, "oos_dd_net": 37.98, "oos_wr_net": 0.165,
+                "oos_gross_win": 0.17, "n_all": 501, "net_all": 278.53, "dd_net_all": 70.22},
         "pins_legacy": {"n": 324, "net": 238.39, "dd_net": 70.22, "oos_n": 197, "oos_net": 21,
                        "oos_dd_net": 37.98},
     },

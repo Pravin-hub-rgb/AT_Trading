@@ -258,11 +258,13 @@ def main():
         s = rec["stats"]
         newpins[name] = {
             "n": s["is"]["n"], "net": s["is"]["net"],
+            "dd_net": s["is"]["dd_net"],
             "wr_net": s["is"]["wr_net"], "gross_win": s["is"]["wr_gross"],
             "oos_n": s["oos"]["n"], "oos_net": s["oos"]["net"],
+            "oos_dd_net": s["oos"]["dd_net"],
             "oos_wr_net": s["oos"]["wr_net"], "oos_gross_win": s["oos"]["wr_gross"],
-            "dd_net": s["all"]["dd_net"],
             "n_all": s["all"]["n"], "net_all": s["all"]["net"],
+            "dd_net_all": s["all"]["dd_net"],
         }
     io.open(OUT, "w", encoding="utf-8").write(
         json.dumps({"measured": done, "new_pins": newpins}, indent=1, sort_keys=True))
