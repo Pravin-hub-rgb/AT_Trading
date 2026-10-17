@@ -156,8 +156,7 @@ BOOKS = {
         "desc": "OPT cd10 w24 ext1.5 (their champion multi, fine fills)",
         "engine": "patched",
         "params": {"exp31_lb": 30, "chop_thresh": 55.0, "exp_persist": 2,
-                    "exp_wage_h": 24, "cooldown_bars": 10, "exp_mltf": True,
-                    "ext_stop_r": 1.5},
+                    "exp_wage_h": 24, "cooldown_bars": 10, "ext_stop_r": 1.5},
         "swing": "sw20",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -217,8 +216,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 7.5, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 7.5, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw20",
         # pin was n=487 net=208.4; now n=493 net=213.33 (win rate 31.8%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
@@ -240,8 +238,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit",
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "origin"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -309,8 +306,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit",
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg_no_entry",
                     "exp_ltf_no_entry": 1,
                     "exp_causal_sl": 1},
@@ -345,8 +341,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit",
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -380,8 +375,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 3, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 3, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -398,8 +392,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 4, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 4, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -416,8 +409,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 5, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 5, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -434,8 +426,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 6, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 6, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -457,8 +448,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 8, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 8, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -482,8 +472,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "htf_rr": 2.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -500,8 +489,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "htf_rr": 2.5,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -518,8 +506,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "htf_rr": 3.5,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -536,8 +523,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "htf_rr": 4.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -556,8 +542,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 2.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -574,8 +559,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 2.5,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -592,8 +576,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.5,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -610,8 +593,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 4.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -635,8 +617,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_wage_h": 12, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -654,8 +635,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_wage_h": 24, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -692,8 +672,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_curfew_a": 6, "exp_curfew_b": 24, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -730,8 +709,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 1.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 1.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -748,8 +726,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 2.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 2.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -766,8 +743,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 3.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 3.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -784,8 +760,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 4.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 4.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -802,8 +777,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 5.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit"},
+                    "exp_partial_r": 5.0, "exp_persist": 7, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:

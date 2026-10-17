@@ -16,8 +16,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skipwin": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skipwin": 1, "window_end": "exit"},
         "swing": "sw10",
         # the rerun makes that much starker: skipping the next window after a loss
         # turns a roughly break-even idea into a reliably negative one.
@@ -35,8 +34,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skipwin": 2, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skipwin": 2, "window_end": "exit"},
         "swing": "sw10",
         # the rerun makes that much starker: skipping the next window after a loss
         # turns a roughly break-even idea into a reliably negative one.
@@ -53,8 +51,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_swingpause": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_swingpause": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=444 net=241.06. Full sweep incl. gross/dd/win-rate:
@@ -127,8 +124,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skipwin_halt": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skipwin_halt": 1, "window_end": "exit"},
         "swing": "sw10",
         # without it this family runs at -38R, with it +28R - but it does not come
         # close to plain bar cooldown (+239R). Skip-window is not a cooldown
@@ -193,8 +189,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_weekend": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_weekend": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -246,8 +241,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_kinds": "FLIP", "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_kinds": "FLIP", "window_end": "exit"},
         "swing": "sw10",
         # pin was n=285 net=242.7; now n=286 net=202.45 (win rate 26.2%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
@@ -282,8 +276,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_wage_h": 24, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_wage_h": 24, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=364 net=240.58. Full sweep incl. gross/dd/win-rate:
@@ -307,8 +300,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_legskip_r": 2.0, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_legskip_r": 2.0, "window_end": "exit"},
         "swing": "sw10",
         # pin was n=269 net=267.3; now n=269 net=235.96 (win rate 31.6%).
         # dd not re-measured - _net_stats no longer exposes a drawdown field.
@@ -340,8 +332,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "window_end": "exit",
+                    "exp_partial_r": 0.0, "exp_persist": 7, "window_end": "exit",
                     "pivot_rule": "leg_no_entry",
                     "exp_skip_utc_sat": 1},
         "swing": "sw10",
@@ -361,8 +352,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=453 net=279.47. Full sweep incl. gross/dd/win-rate:
@@ -433,8 +423,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_chop15_lo": 55.0,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_chop15_lo": 55.0,
                     "exp_chop15_hi": 61.0, "window_end": "exit"},
         "swing": "sw10",
         # the filter still admits the same trades - only what they are worth moved.
@@ -587,8 +576,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_chop15_lo": 55.0, "exp_chop15_hi": 61.0,
                     "window_end": "exit"},
         "swing": "sw10",
@@ -606,8 +594,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_chop15_lo": 55.0, "exp_chop15_hi": 61.0,
                     "exp_atr_ratio_max": 1.4, "window_end": "exit"},
         "swing": "sw10",
@@ -844,8 +831,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_causal_sl": 1, "window_end": "exit"},
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_causal_sl": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
         # Was n=None net=None. Full sweep incl. gross/dd/win-rate:
@@ -880,8 +866,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_causal_sl": 1, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -903,8 +888,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_bias_momentum_min": 0.5,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_bias_momentum_min": 0.5,
                     "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -922,8 +906,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_bias_momentum_min": 0.8,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_bias_momentum_min": 0.8,
                     "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -945,8 +928,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_bias_momentum_min": 0.5, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -964,8 +946,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_skip_utc_sat": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_skip_utc_sat": 1,
                     "exp_bias_momentum_min": 0.8, "window_end": "exit"},
         "swing": "sw10",
         # all 115 registry books in one pass.
@@ -1005,8 +986,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_bias_momentum_min": 0.5,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_bias_momentum_min": 0.5,
                     "window_end": "exit"},
         "swing": "sw20",
         # all 115 registry books in one pass.
@@ -1112,8 +1092,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_require_dir_match": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_require_dir_match": 1,
                     "window_end": "exit"},
         "swing": "sw10",
         # one; the net moved because the stop rule changed underneath it.
@@ -1150,8 +1129,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_max_swing_age": 25,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_max_swing_age": 25,
                     "window_end": "exit"},
         "swing": "sw10",
         # pin was n=295 net=355.6; now n=293 net=319.22 (win rate 37.2%).
@@ -1189,8 +1167,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_require_dir_match": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_require_dir_match": 1,
                     "exp_max_swing_age": 25, "window_end": "exit"},
         "swing": "sw10",
         # one; the net moved because the stop rule changed underneath it.
@@ -1227,8 +1204,7 @@ BOOKS = {
                     "atr_low_thresh": 0.35, "sl_buf_atr": 0.01,
                     "chop_thresh": 58.0, "cooldown_bars": 8,
                     "max_consecutive_losses": 3, "ext_stop_r": 3.0,
-                    "exp_partial_r": 0.0, "exp_mltf": True,
-                    "exp_persist": 7, "exp_require_dir_match": 1,
+                    "exp_partial_r": 0.0, "exp_persist": 7, "exp_require_dir_match": 1,
                     "exp_max_swing_age": 10, "window_end": "exit"},
         "swing": "sw10",
         # one; the net moved because the stop rule changed underneath it.
