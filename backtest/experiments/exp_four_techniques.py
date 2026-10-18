@@ -64,7 +64,18 @@ ALL_BOOKS = [("fsent_champ_long_mcloff_htf15", "107"),
              ("fsent_champ_long_htffs", "106"),
              ("fsent_champ_long_htf15_htffs", "109"),
              ("fsent_champ_long_htfesmcl4", "108")]
-BOOKS = ALL_BOOKS
+# The eight multi books that were on the registry but never reached the scorecard.
+# They are the actual test of whether the shortlist was right, so they get the
+# same battery as the five that were chosen.
+REST_BOOKS = [("fsent_sig_multi_acc", "acc"),
+              ("fsent_champ_long_htf15", "htf15"),
+              ("fsent_champ_long_mcloff", "mcloff"),
+              ("fsent_champ_long_causalfloor", "causalfloor"),
+              ("fsent_champ_long_mode_chop", "modechop"),
+              ("fsent_champ_long_biasmom05", "biasmom05"),
+              ("fsent_sig_multi_htffs", "sigm_htffs"),
+              ("fsent_sig_multi", "sigm")]
+BOOKS = REST_BOOKS if '--rest' in sys.argv else ALL_BOOKS
 
 OUT = HERE / ("four_techniques_%s.json" % (sys.argv[1].lower() if len(sys.argv) > 1 else "all"))
 MD = HERE / "four_techniques.md"
@@ -258,6 +269,35 @@ GRIDS = {
     "fsent_champ_long_htfesmcl4": (
         "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
         "exp_persist", [5, 6, 7, 8, 9]),
+    # ---- the eight never-scored books ----
+    # Each is swept on its OWN load-bearing knob where it has one, not on a
+    # copied grid. Two of them carry exp_trail_skip_n, which is the knob that
+    # produced the only cliff found anywhere in this battery, so those two get it
+    # on the A axis specifically.
+    "fsent_sig_multi": (
+        "exp_trail_skip_n", [0, 1, 2, 3, 4, 6, 8],
+        "cooldown_bars", [4, 8, 12]),
+    "fsent_sig_multi_htffs": (
+        "exp_trail_skip_n", [0, 1, 2, 3, 4, 6, 8],
+        "cooldown_bars", [4, 8, 12]),
+    "fsent_champ_long_biasmom05": (
+        "exp_bias_momentum_min", [0.3, 0.5, 0.7],
+        "cooldown_bars", [4, 8, 12]),
+    "fsent_champ_long_causalfloor": (
+        "exp_window_floor_s", [2700, 4500, 7200, 10800],
+        "cooldown_bars", [4, 8, 12]),
+    "fsent_sig_multi_acc": (
+        "cooldown_bars", [4, 8, 12, 16],
+        "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_htf15": (
+        "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
+        "exp_persist", [5, 6, 7, 8, 9]),
+    "fsent_champ_long_mcloff": (
+        "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
+        "exp_persist", [5, 6, 7, 8, 9]),
+    "fsent_champ_long_mode_chop": (
+        "cooldown_bars", [2, 4, 6, 8, 10, 12, 16],
+        "exp_persist", [5, 6, 7, 8, 9]),
 }
 
 
@@ -276,8 +316,8 @@ def t1(sim, ERA, log):
                 cells["%s|%s" % (a, b)] = s
             rec[era] = {"ax_a": [ka, va], "ax_b": [kb, vb], "cells": cells}
             nets = [c["net"] for c in cells.values() if c]
-            reg = cells.get("%s|%s" % ((cfg.get("params") or {}).get(ka),
-                                      (cfg.get("params") or {}).get(kb)))
+            reg = cells.get("%s|%s" % ((cfg.get("params") or {}).get(ka, BP.get(ka)),
+                                       (cfg.get("params") or {}).get(kb, BP.get(kb))))
             log("  %s %s  %d cells  net range %+.1f .. %+.1f   registered %+.1f"
                 % (code, era.upper(), len(cells), min(nets), max(nets),
                    reg["net"] if reg else float("nan")))
@@ -312,20 +352,31 @@ def t1(sim, ERA, log):
 # costs more than the decision is worth is not a free check.
 WF_GRIDS = {
     "fsent_champ_long_htf15_tskip6": (
-        "exp_trail_skip_n", [0, 2, 4, 6, 8, 12, 16],
-        "exp_persist", [6, 7, 8]),
+        "exp_trail_skip_n", [0, 2, 4, 6, 8, 12, 16], "exp_persist", [6, 7, 8]),
     "fsent_champ_long_mcloff_htf15": (
-        "cooldown_bars", [4, 8, 12, 16],
-        "exp_persist", [6, 7, 8]),
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
     "fsent_champ_long_htffs": (
-        "cooldown_bars", [4, 8, 12, 16],
-        "exp_persist", [6, 7, 8]),
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
     "fsent_champ_long_htf15_htffs": (
-        "cooldown_bars", [4, 8, 12, 16],
-        "exp_persist", [6, 7, 8]),
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
     "fsent_champ_long_htfesmcl4": (
-        "cooldown_bars", [4, 8, 12, 16],
-        "exp_persist", [6, 7, 8]),
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
+    "fsent_sig_multi": (
+        "exp_trail_skip_n", [0, 2, 4], "cooldown_bars", [4, 8, 12]),
+    "fsent_sig_multi_htffs": (
+        "exp_trail_skip_n", [0, 2, 4], "cooldown_bars", [4, 8, 12]),
+    "fsent_champ_long_biasmom05": (
+        "exp_bias_momentum_min", [0.3, 0.5, 0.7], "cooldown_bars", [4, 8, 12]),
+    "fsent_champ_long_causalfloor": (
+        "exp_window_floor_s", [2700, 7200, 10800], "cooldown_bars", [4, 8, 12]),
+    "fsent_sig_multi_acc": (
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_htf15": (
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_mcloff": (
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
+    "fsent_champ_long_mode_chop": (
+        "cooldown_bars", [4, 8, 12, 16], "exp_persist", [6, 7, 8]),
 }
 WF_FOLDS = 3
 
@@ -348,8 +399,8 @@ def t2(sim, ERA, log):
             cache[(a, b)] = closed(sim_book(sim, data, cfg, swing, **{ka: a, kb: b}))
         log("  %s: %d cells run once" % (code, len(cache)))
 
-        reg_a = (cfg.get("params") or {}).get(ka)
-        reg_b = (cfg.get("params") or {}).get(kb)
+        reg_a = (cfg.get("params") or {}).get(ka, BP.get(ka))
+        reg_b = (cfg.get("params") or {}).get(kb, BP.get(kb))
         rec = []
         for k in range(WF_FOLDS):
             # train everything up to the end of this fold's window, then score
@@ -366,8 +417,13 @@ def t2(sim, ERA, log):
                 continue
             tw = [t for t in cache[(best[0], best[1])] if t_lo <= int(t["entry_ts"]) < t_hi]
             ts = stats(rs_of(tw))
-            rw = [t for t in cache[(reg_a, reg_b)] if t_lo <= int(t["entry_ts"]) < t_hi]
-            rs_ = stats(rs_of(rw))
+            # A book that never set a knob falls back to the base default, which
+            # may not be a member of the grid at all. Only compare against it when
+            # it actually is one of the swept cells.
+            reg_key = (reg_a, reg_b) if (reg_a, reg_b) in cache else None
+            rw = ([t for t in cache[reg_key] if t_lo <= int(t["entry_ts"]) < t_hi]
+                  if reg_key else [])
+            rs_ = stats(rs_of(rw)) if rw else None
             rec.append({"fold": k + 1,
                         "chosen": "%s=%s %s=%s" % (ka, best[0], kb, best[1]),
                         "train_net": best[2]["net"], "train_dd": best[2]["dd"],
@@ -376,10 +432,10 @@ def t2(sim, ERA, log):
                         "test_n": ts["n"] if ts else 0,
                         "reg_test_net": rs_["net"] if rs_ else None,
                         "reg_test_dd": rs_["dd"] if rs_ else None})
-            log("  %s fold %d  train picked %-26s (%+.1fR dd %.1f)  ->  blind test %+.1fR dd %.1f (n=%d)  | registered same window %+.1fR dd %.1f"
+            log("  %s fold %d  train picked %-26s (%+.1fR dd %.1f)  ->  blind test %+.1fR dd %.1f (n=%d)  | registered same window %s"
                 % (code, k + 1, rec[-1]["chosen"], best[2]["net"], best[2]["dd"],
                    ts["net"] if ts else 0.0, ts["dd"] if ts else 0.0, ts["n"] if ts else 0,
-                   rs_["net"] if rs_ else 0.0, rs_["dd"] if rs_ else 0.0))
+                   ("%+.1fR dd %.1f" % (rs_["net"], rs_["dd"])) if rs_ else "not in grid"))
         out[name] = rec
     return out
 

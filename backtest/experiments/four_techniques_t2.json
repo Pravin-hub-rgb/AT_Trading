@@ -4180,179 +4180,284 @@
   }
  },
  "t2": {
-  "fsent_champ_long_mcloff_htf15": [
+  "fsent_sig_multi_acc": [
    {
     "fold": 1,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 252.51,
-    "train_dd": 27.51,
-    "test_net": 94.04,
-    "test_dd": 10.15,
-    "test_n": 125,
-    "reg_test_net": 90.97,
-    "reg_test_dd": 10.15
+    "chosen": "cooldown_bars=4 exp_persist=6",
+    "train_net": 231.0,
+    "train_dd": 14.12,
+    "test_net": 121.73,
+    "test_dd": 9.09,
+    "test_n": 111,
+    "reg_test_net": null,
+    "reg_test_dd": null
    },
    {
     "fold": 2,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 351.81,
-    "train_dd": 27.51,
-    "test_net": 99.31,
-    "test_dd": 13.2,
-    "test_n": 134,
-    "reg_test_net": 98.38,
-    "reg_test_dd": 13.2
+    "chosen": "cooldown_bars=4 exp_persist=8",
+    "train_net": 338.67,
+    "train_dd": 14.12,
+    "test_net": 107.67,
+    "test_dd": 8.93,
+    "test_n": 112,
+    "reg_test_net": null,
+    "reg_test_dd": null
    },
    {
     "fold": 3,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 546.02,
-    "train_dd": 27.51,
-    "test_net": 194.21,
-    "test_dd": 11.59,
-    "test_n": 145,
-    "reg_test_net": 191.45,
-    "reg_test_dd": 11.59
+    "chosen": "cooldown_bars=4 exp_persist=8",
+    "train_net": 449.73,
+    "train_dd": 14.12,
+    "test_net": 111.05,
+    "test_dd": 11.08,
+    "test_n": 144,
+    "reg_test_net": null,
+    "reg_test_dd": null
    }
   ],
-  "fsent_champ_long_htf15_tskip6": [
+  "fsent_champ_long_htf15": [
    {
     "fold": 1,
-    "chosen": "exp_trail_skip_n=16 exp_persist=8",
-    "train_net": 412.09,
-    "train_dd": 30.95,
-    "test_net": 34.6,
-    "test_dd": 14.02,
-    "test_n": 63,
-    "reg_test_net": 94.06,
-    "reg_test_dd": 11.04
+    "chosen": "cooldown_bars=16 exp_persist=6",
+    "train_net": 251.01,
+    "train_dd": 22.83,
+    "test_net": 90.9,
+    "test_dd": 7.85,
+    "test_n": 116,
+    "reg_test_net": 87.23,
+    "reg_test_dd": 8.73
    },
    {
     "fold": 2,
-    "chosen": "exp_trail_skip_n=16 exp_persist=8",
-    "train_net": 518.14,
-    "train_dd": 30.95,
-    "test_net": 106.05,
-    "test_dd": 28.31,
-    "test_n": 83,
-    "reg_test_net": 106.75,
-    "reg_test_dd": 23.93
+    "chosen": "cooldown_bars=16 exp_persist=6",
+    "train_net": 332.84,
+    "train_dd": 22.83,
+    "test_net": 81.83,
+    "test_dd": 14.4,
+    "test_n": 126,
+    "reg_test_net": 80.9,
+    "reg_test_dd": 14.4
    },
    {
     "fold": 3,
-    "chosen": "exp_trail_skip_n=16 exp_persist=8",
-    "train_net": 730.37,
-    "train_dd": 30.95,
-    "test_net": 212.23,
-    "test_dd": 10.5,
-    "test_n": 58,
-    "reg_test_net": 219.46,
-    "reg_test_dd": 11.27
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 502.76,
+    "train_dd": 26.26,
+    "test_net": 177.95,
+    "test_dd": 9.88,
+    "test_n": 139,
+    "reg_test_net": 177.95,
+    "reg_test_dd": 9.88
    }
   ],
-  "fsent_champ_long_htffs": [
+  "fsent_champ_long_mcloff": [
    {
     "fold": 1,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 507.22,
-    "train_dd": 22.81,
-    "test_net": 180.97,
-    "test_dd": 10.75,
-    "test_n": 188,
-    "reg_test_net": 172.56,
-    "reg_test_dd": 13.31
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 234.55,
+    "train_dd": 23.3,
+    "test_net": 78.39,
+    "test_dd": 10.25,
+    "test_n": 127,
+    "reg_test_net": 78.39,
+    "reg_test_dd": 10.25
    },
    {
     "fold": 2,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 597.27,
-    "train_dd": 22.81,
-    "test_net": 90.05,
-    "test_dd": 19.88,
-    "test_n": 188,
-    "reg_test_net": 89.67,
-    "reg_test_dd": 20.42
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 307.92,
+    "train_dd": 23.3,
+    "test_net": 73.36,
+    "test_dd": 11.48,
+    "test_n": 126,
+    "reg_test_net": 73.36,
+    "reg_test_dd": 11.48
    },
    {
     "fold": 3,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 770.93,
-    "train_dd": 22.81,
-    "test_net": 173.66,
-    "test_dd": 14.05,
-    "test_n": 175,
-    "reg_test_net": 167.39,
-    "reg_test_dd": 14.05
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 502.69,
+    "train_dd": 23.3,
+    "test_net": 194.77,
+    "test_dd": 9.93,
+    "test_n": 154,
+    "reg_test_net": 194.77,
+    "reg_test_dd": 9.93
    }
   ],
-  "fsent_champ_long_htf15_htffs": [
+  "fsent_champ_long_causalfloor": [
    {
     "fold": 1,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 495.3,
-    "train_dd": 28.93,
-    "test_net": 175.18,
-    "test_dd": 10.75,
-    "test_n": 192,
-    "reg_test_net": 168.09,
-    "reg_test_dd": 13.31
+    "chosen": "exp_window_floor_s=7200 cooldown_bars=8",
+    "train_net": 220.11,
+    "train_dd": 24.47,
+    "test_net": 73.11,
+    "test_dd": 9.16,
+    "test_n": 116,
+    "reg_test_net": 73.11,
+    "reg_test_dd": 9.16
    },
    {
     "fold": 2,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 590.23,
-    "train_dd": 28.93,
-    "test_net": 94.93,
-    "test_dd": 17.21,
-    "test_n": 182,
-    "reg_test_net": 93.94,
-    "reg_test_dd": 18.68
+    "chosen": "exp_window_floor_s=7200 cooldown_bars=8",
+    "train_net": 281.26,
+    "train_dd": 24.47,
+    "test_net": 61.15,
+    "test_dd": 12.19,
+    "test_n": 113,
+    "reg_test_net": 61.15,
+    "reg_test_dd": 12.19
    },
    {
     "fold": 3,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 779.26,
-    "train_dd": 28.93,
-    "test_net": 189.03,
-    "test_dd": 14.05,
-    "test_n": 179,
-    "reg_test_net": 182.75,
-    "reg_test_dd": 14.05
+    "chosen": "exp_window_floor_s=2700 cooldown_bars=8",
+    "train_net": 459.41,
+    "train_dd": 25.08,
+    "test_net": 178.66,
+    "test_dd": 10.08,
+    "test_n": 144,
+    "reg_test_net": 177.28,
+    "reg_test_dd": 11.0
    }
   ],
-  "fsent_champ_long_htfesmcl4": [
+  "fsent_champ_long_mode_chop": [
    {
     "fold": 1,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 482.44,
-    "train_dd": 18.37,
-    "test_net": 150.04,
-    "test_dd": 13.32,
-    "test_n": 189,
-    "reg_test_net": 140.36,
-    "reg_test_dd": 14.79
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 213.62,
+    "train_dd": 25.08,
+    "test_net": 68.14,
+    "test_dd": 10.42,
+    "test_n": 116,
+    "reg_test_net": 68.14,
+    "reg_test_dd": 10.42
    },
    {
     "fold": 2,
-    "chosen": "cooldown_bars=16 exp_persist=6",
-    "train_net": 583.52,
-    "train_dd": 19.57,
-    "test_net": 101.09,
-    "test_dd": 19.57,
-    "test_n": 192,
-    "reg_test_net": 100.97,
-    "reg_test_dd": 20.02
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 276.66,
+    "train_dd": 25.08,
+    "test_net": 63.05,
+    "test_dd": 10.69,
+    "test_n": 117,
+    "reg_test_net": 62.8,
+    "reg_test_dd": 10.69
    },
    {
     "fold": 3,
-    "chosen": "cooldown_bars=12 exp_persist=6",
-    "train_net": 779.45,
-    "train_dd": 20.02,
-    "test_net": 197.95,
-    "test_dd": 15.42,
-    "test_n": 184,
-    "reg_test_net": 195.56,
-    "reg_test_dd": 15.42
+    "chosen": "cooldown_bars=8 exp_persist=6",
+    "train_net": 455.33,
+    "train_dd": 25.08,
+    "test_net": 178.66,
+    "test_dd": 10.08,
+    "test_n": 144,
+    "reg_test_net": 178.66,
+    "reg_test_dd": 10.08
+   }
+  ],
+  "fsent_champ_long_biasmom05": [
+   {
+    "fold": 1,
+    "chosen": "exp_bias_momentum_min=0.5 cooldown_bars=8",
+    "train_net": 229.55,
+    "train_dd": 22.78,
+    "test_net": 72.69,
+    "test_dd": 8.0,
+    "test_n": 108,
+    "reg_test_net": 72.69,
+    "reg_test_dd": 8.0
+   },
+   {
+    "fold": 2,
+    "chosen": "exp_bias_momentum_min=0.7 cooldown_bars=4",
+    "train_net": 276.36,
+    "train_dd": 18.1,
+    "test_net": 51.52,
+    "test_dd": 11.78,
+    "test_n": 104,
+    "reg_test_net": 36.72,
+    "reg_test_dd": 11.84
+   },
+   {
+    "fold": 3,
+    "chosen": "exp_bias_momentum_min=0.5 cooldown_bars=8",
+    "train_net": 459.33,
+    "train_dd": 22.78,
+    "test_net": 193.06,
+    "test_dd": 10.2,
+    "test_n": 141,
+    "reg_test_net": 193.06,
+    "reg_test_dd": 10.2
+   }
+  ],
+  "fsent_sig_multi_htffs": [
+   {
+    "fold": 1,
+    "chosen": "exp_trail_skip_n=4 cooldown_bars=12",
+    "train_net": 265.63,
+    "train_dd": 14.91,
+    "test_net": 114.77,
+    "test_dd": 13.81,
+    "test_n": 100,
+    "reg_test_net": 110.24,
+    "reg_test_dd": 10.69
+   },
+   {
+    "fold": 2,
+    "chosen": "exp_trail_skip_n=4 cooldown_bars=4",
+    "train_net": 419.34,
+    "train_dd": 17.02,
+    "test_net": 154.97,
+    "test_dd": 12.47,
+    "test_n": 97,
+    "reg_test_net": 134.08,
+    "reg_test_dd": 10.71
+   },
+   {
+    "fold": 3,
+    "chosen": "exp_trail_skip_n=4 cooldown_bars=4",
+    "train_net": 549.33,
+    "train_dd": 17.02,
+    "test_net": 129.99,
+    "test_dd": 13.72,
+    "test_n": 106,
+    "reg_test_net": 118.8,
+    "reg_test_dd": 10.65
+   }
+  ],
+  "fsent_sig_multi": [
+   {
+    "fold": 1,
+    "chosen": "exp_trail_skip_n=2 cooldown_bars=8",
+    "train_net": 217.58,
+    "train_dd": 9.49,
+    "test_net": 99.72,
+    "test_dd": 7.82,
+    "test_n": 67,
+    "reg_test_net": 99.72,
+    "reg_test_dd": 7.82
+   },
+   {
+    "fold": 2,
+    "chosen": "exp_trail_skip_n=2 cooldown_bars=4",
+    "train_net": 340.3,
+    "train_dd": 11.98,
+    "test_net": 123.85,
+    "test_dd": 11.98,
+    "test_n": 71,
+    "reg_test_net": 110.28,
+    "reg_test_dd": 11.3
+   },
+   {
+    "fold": 3,
+    "chosen": "exp_trail_skip_n=2 cooldown_bars=4",
+    "train_net": 378.44,
+    "train_dd": 13.43,
+    "test_net": 38.14,
+    "test_dd": 13.43,
+    "test_n": 87,
+    "reg_test_net": 38.18,
+    "reg_test_dd": 13.43
    }
   ]
  }
