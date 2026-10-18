@@ -75,9 +75,23 @@ REST_BOOKS = [("fsent_sig_multi_acc", "acc"),
               ("fsent_champ_long_biasmom05", "biasmom05"),
               ("fsent_sig_multi_htffs", "sigm_htffs"),
               ("fsent_sig_multi", "sigm")]
-BOOKS = ALL_BOOKS  # all 13 multi books
+# NOTE ON THE TWO LISTS. ALL_BOOKS is five books, not thirteen - the name is
+# older than the second list and reads as "everything". The thirteen are
+# ALL_BOOKS + REST_BOOKS, and they must be run as two passes because T1 is a
+# 2-axis grid over five to seven values per axis and running all thirteen in
+# one process serialises for hours.
+#
+# The two passes write to SEPARATE files on purpose. main() loads an existing
+# output and merges into it before writing, so running the eight with --rest
+# against the same filename would replace the five-book section rather than
+# extend it - which is exactly what happened the first time this was tried, and
+# it silently kept a five-book file while the log cheerfully reported a
+# thirteen-book run. The suffix keeps them apart; exp_merge_rest.py joins them.
+BOOKS = REST_BOOKS if "--rest" in sys.argv else ALL_BOOKS
 
-OUT = HERE / ("four_techniques_%s.json" % (sys.argv[1].lower() if len(sys.argv) > 1 else "all"))
+_WHICH = sys.argv[1].lower() if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else "all"
+_SUF = "_rest" if "--rest" in sys.argv else ""
+OUT = HERE / ("four_techniques_%s%s.json" % (_WHICH, _SUF))
 MD = HERE / "four_techniques.md"
 
 
@@ -441,7 +455,7 @@ def t2(sim, ERA, log):
 
 
 def main() -> int:
-    which = (sys.argv[1] if len(sys.argv) > 1 else "t3").lower()
+    which = _WHICH
     t0 = time.time()
     logf = io.open(HERE / "four_run.log", "a", encoding="utf-8")
 
