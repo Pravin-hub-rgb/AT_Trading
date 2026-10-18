@@ -367,6 +367,14 @@ def simulate_htf_ltf_streak_halt(
       # Already implemented downstream at v7_timecap.py:119 - this only makes
       # the two reachable from a book instead of hardcoded to 0.0/"off".
       htf_breakeven_r=0.0,
+      # UNIFIED: DIRECTIONAL HTF TARGET. 0.0 = off (use htf_rr for both
+      # directions, which is the shipped behaviour). Above zero, SHORT trades aim
+      # there while LONG trades keep htf_rr.
+      #
+      # Direction is known when the order is placed, so this needs no prediction and
+      # no lookahead - which is the entire reason it is worth having when eight
+      # state-variable signals all flipped between eras.
+      htf_rr_short=0.0,
       htf_trail="off",
     chop_thresh=61.8, atr_low_thresh=0.35, atr_high_thresh=0.65,
     mode="chop",  # chop, atr_low, atr_both, chop_or_atr, soft_chop, soft_atr, soft_ensemble, garch, garch_inv
@@ -772,9 +780,9 @@ max_positions=0,
     _fb_flip = ("fs_both" if "flip" in _move else "flip")
     _fb_dec = ("fs_both" if "decisive" in _move else "decisive")
     _fb_b2 = ("fs_both" if "b2" in _move else "b2")
-    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_flip, sl_mode="swing", rr_target=htf_rr, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
-    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_dec, sl_mode="swing", rr_target=htf_rr, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
-    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_b2, sl_mode="swing", rr_target=htf_rr, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_flip, sl_mode="swing", rr_target=htf_rr, rr_target_short=htf_rr_short, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_dec, sl_mode="swing", rr_target=htf_rr, rr_target_short=htf_rr_short, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_b2, sl_mode="swing", rr_target=htf_rr, rr_target_short=htf_rr_short, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     # C17 (2026-10-07): store the window END as a KNOWABLE instant, not as the
     # OPEN of the bar that detected the exit. exit_ts is the open of a fine (1m)

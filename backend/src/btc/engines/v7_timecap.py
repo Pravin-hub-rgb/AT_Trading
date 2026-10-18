@@ -12,6 +12,7 @@ def simulate_btc_trades_v7(
     sl_mode: str="swing",
     sl_pct: float=0.5,
     rr_target: float=3.0,
+    rr_target_short: float=0.0,
     trailing: str="off",
     breakeven_r: float=0.0,
     skip_first: bool=True,
@@ -72,18 +73,32 @@ def simulate_btc_trades_v7(
             if bias_now != want:
                 continue
         entry=float(candles[i]["close"])
+        # Directional target. rr_target applies to longs; rr_target_short applies
+        # to shorts WHEN IT IS SET. Zero means "use rr_target for both", so the
+        # shipped behaviour is bit-for-bit untouched.
+        #
+        # WHY THIS EXISTS. The owner observed that across eight books, longs
+        # consistently wanted a further target (4-5R) and shorts a closer one
+        # (2.5-3R). That is what a trend follower should do - long trades ride
+        # and need room, short trades are counter-trend and should take profit
+        # while it is there. Direction is on the ticket when the order is placed,
+        # so this needs no prediction and no lookahead, which is what separates it
+        # from the eight state-variable signals that all flipped between eras.
+        _rr_s = float(rr_target_short or 0.0)
+        _rr_l = float(rr_target)
+        _rr = _rr_l if direction == 1 else (_rr_s if _rr_s > 0 else _rr_l)
         if direction==1:
             sl= sig["swing_start_px"] if sl_mode=="swing" else entry*(1-sl_pct/100)
             if sl >= entry: continue
             risk=entry-sl
             if risk < 0.0005*entry: continue
-            target=entry+rr_target*risk
+            target=entry+_rr*risk
         else:
             sl= sig["swing_start_px"] if sl_mode=="swing" else entry*(1+sl_pct/100)
             if sl <= entry: continue
             risk=sl-entry
             if risk < 0.0005*entry: continue
-            target=entry-rr_target*risk
+            target=entry-_rr*risk
         sl0=sl
         sl_cur=sl
         best=entry
