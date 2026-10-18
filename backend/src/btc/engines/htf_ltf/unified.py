@@ -344,6 +344,30 @@ def simulate_htf_ltf_streak_halt(
       # percentile is computed once per run, causally, from the candidate
       # signals available at that point in the walk - not from the final answer.
       ext_stop_pct=0.0,
+      # UNIFIED: HTF TRADE RISK MANAGEMENT, decoupled from the target.
+      #
+      # The HTF trade is currently a fixed target and a fixed stop: it aims at
+      # htf_rr and its stop is the swing start (sl_mode="swing"). That welds two
+      # decisions together - how far to aim, and what happens on failure - and
+      # the htf_rr sweep showed that aiming further has a knife-edge break-even:
+      # 79% of 3R-reachers carried on to 4R against 97% in the other era, with
+      # break-even at roughly 80%. A parameter sitting on its own break-even
+      # gives opposite answers in two markets for no structural reason, and no
+      # state variable can fix that because the population itself changed.
+      #
+      # These two knobs remove the choice instead of trying to predict it.
+      #
+      #   htf_breakeven_r   once price reaches this multiple of risk, move the
+      #                     stop to breakeven. 0.0 = off (shipped). A failure then
+      #                     costs 0R instead of the full risk, which drops the
+      #                     required carry rate from ~80% toward zero.
+      #   htf_trail         "off" (shipped) or "swing", which lets a trade that
+      #                     reached breakeven keep running to a new swing pivot.
+      #
+      # Already implemented downstream at v7_timecap.py:119 - this only makes
+      # the two reachable from a book instead of hardcoded to 0.0/"off".
+      htf_breakeven_r=0.0,
+      htf_trail="off",
     chop_thresh=61.8, atr_low_thresh=0.35, atr_high_thresh=0.65,
     mode="chop",  # chop, atr_low, atr_both, chop_or_atr, soft_chop, soft_atr, soft_ensemble, garch, garch_inv
     soft_width=4.0,  # Idea D: half-width of soft band (0 = hard switch)
@@ -748,9 +772,9 @@ max_positions=0,
     _fb_flip = ("fs_both" if "flip" in _move else "flip")
     _fb_dec = ("fs_both" if "decisive" in _move else "decisive")
     _fb_b2 = ("fs_both" if "b2" in _move else "b2")
-    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_flip, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
-    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_dec, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
-    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_b2, sl_mode="swing", rr_target=htf_rr, trailing="off", breakeven_r=0.0, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_flip = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_flip, sl_mode="swing", rr_target=htf_rr, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_decisive = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_dec, sl_mode="swing", rr_target=htf_rr, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
+    htf_trades_b2 = simulate_btc_trades_v7(candles_htf, swings_htf, entry_break=_fb_b2, sl_mode="swing", rr_target=htf_rr, trailing=htf_trail, breakeven_r=htf_breakeven_r, skip_first=True, fine=fine_ltf, cap_days=exp_cap_days, pivot_rule=pivot_rule)
     fine_ts=[int(c["ts"]) for c in fine_ltf] if fine_ltf else []
     # C17 (2026-10-07): store the window END as a KNOWABLE instant, not as the
     # OPEN of the bar that detected the exit. exit_ts is the open of a fine (1m)
