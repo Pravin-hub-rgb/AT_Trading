@@ -75,7 +75,7 @@ REST_BOOKS = [("fsent_sig_multi_acc", "acc"),
               ("fsent_champ_long_biasmom05", "biasmom05"),
               ("fsent_sig_multi_htffs", "sigm_htffs"),
               ("fsent_sig_multi", "sigm")]
-BOOKS = REST_BOOKS if '--rest' in sys.argv else ALL_BOOKS
+BOOKS = ALL_BOOKS  # all 13 multi books
 
 OUT = HERE / ("four_techniques_%s.json" % (sys.argv[1].lower() if len(sys.argv) > 1 else "all"))
 MD = HERE / "four_techniques.md"
