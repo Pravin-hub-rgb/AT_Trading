@@ -95,6 +95,32 @@ def _chop_series_1h(candles_1h, lb=14):
             chop[i]=50.0
     return chop
 
+def _ext_level(hrisk, ext_stop_pct, sample, ext_stop_r_default):
+    """The admission threshold for ext_stop_r, as a fixed level or a percentile.
+
+    With ext_stop_pct at 0 (the shipped default) this returns ext_stop_r and
+    nothing changes. With it above 0 the threshold is the given percentile of the
+    extensions seen SO FAR in this run, so the gate blocks the same fraction of
+    entries regardless of how volatile the period is.
+
+    Causal and deliberately so. The percentile is built from extensions already
+    computed during this walk, never from the final answer, so a bar cannot be
+    blocked by knowledge of a later bar. Until enough samples exist to mean
+    anything it falls back to the fixed level rather than extrapolating from a
+    handful of points - a gate that swings wildly early in a run is worse than no
+    percentile at all.
+    """
+    if ext_stop_pct <= 0.0:
+        return ext_stop_r_default
+    if hrisk <= 0:
+        return 0.0
+    if len(sample) < 30:
+        return ext_stop_r_default
+    s = sorted(sample)
+    i = min(len(s) - 1, max(0, int(ext_stop_pct * (len(s) - 1))))
+    return s[i]
+
+
 def _atr_pct_15m(candles_15m):
     n=len(candles_15m)
     tr=[0.0]*n
@@ -293,6 +319,31 @@ def simulate_htf_ltf_streak_halt(
     candles_htf, swings_htf, candles_ltf, swings_ltf, fine_ltf=None,
     *,
     sl_buf_atr=0.25, ext_stop_r=1.5,
+      # UNIFIED: ext_stop_r IN PERCENTILE TERMS. 0.0 = off, which is the shipped
+      # behaviour and reproduces every pin exactly.
+      #
+      # WHY IT EXISTS. ext_stop_r answers "how far has price already travelled
+      # from this window's open, in units of the window's own risk". That number
+      # is not comparable across time: a 3R move means something different when
+      # the swing is wide than when it is tight, and 2021-22 measured 3.5x more
+      # volatile than 2023-26 on the engine's own ATR. So one fixed value sets a
+      # different effective gate in each regime, which is exactly the signature
+      # that made htf_rr look like it had a regime-dependent optimum.
+      #
+      # SEMANTICS: replace the fixed level with the given PERCENTILE of ext
+      # across this run's own candidate signals, so the gate blocks the same
+      # FRACTION of entries in every regime instead of the same distance.
+      #
+      #   0.0     off - use ext_stop_r as shipped
+      #   0.70    block the top 30% of entries by extension
+      #   0.85    block the top 15%
+      #   0.95    block the top 5%
+      #
+      # Applied at both admission sites (the union branch at ~1212 and the
+      # decisive/flip/b2 branch at ~1261) so the gate means one thing. The
+      # percentile is computed once per run, causally, from the candidate
+      # signals available at that point in the walk - not from the final answer.
+      ext_stop_pct=0.0,
     chop_thresh=61.8, atr_low_thresh=0.35, atr_high_thresh=0.65,
     mode="chop",  # chop, atr_low, atr_both, chop_or_atr, soft_chop, soft_atr, soft_ensemble, garch, garch_inv
     soft_width=4.0,  # Idea D: half-width of soft band (0 = hard switch)
@@ -1056,6 +1107,10 @@ max_positions=0,
             "unknown HTF regime mode %r. Valid modes: %s"
             % (mode, ", ".join(sorted(HTF_MODES)))
         )
+    # Sample buffer for ext_stop_pct. Built fresh per run so one run's extensions
+    # never leak into the next, and only ever appended to from inside this walk.
+    _EXT_SAMPLE = []
+    ext_stop_r_default = ext_stop_r
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
         bar=ltf_store.pos(bar_time)  # position via timestamp lookup
@@ -1209,11 +1264,13 @@ max_positions=0,
             # union unpacks into _s/_e and never binds s/e, so capture here,
             # outside the union-gate anchor block, for the reporting fields.
             if _union_matched: win_start=_s; win_end=_e
-            if ext_stop_r>0:
-                hrisk=abs(pe-psl)
-                if hrisk>0:
-                    ext=(float(candles_ltf[bar]["close"])-pe)*d/hrisk
-                    if ext>ext_stop_r: continue
+            if ext_stop_r > 0 or ext_stop_pct > 0:
+                hrisk = abs(pe - psl)
+                if hrisk > 0:
+                    ext = (float(candles_ltf[bar]["close"]) - pe) * d / hrisk
+                    _EXT_SAMPLE.append(ext)
+                    _LVL = _ext_level(hrisk, ext_stop_pct, _EXT_SAMPLE, ext_stop_r_default)
+                    if _LVL > 0 and ext > _LVL: continue
             filtered.append((sig,use,win_start,win_end))
             continue
         elif use=="flip":
@@ -1258,11 +1315,13 @@ max_positions=0,
                     _floor = _fs_t if exp_window_floor_mode == "fs" else max(_floor, _fs_t)
         if not (_floor < bar_ts+900 < e): continue
         if sig["dir"] != d: continue
-        if ext_stop_r>0:
-            hrisk=abs(pe-psl)
-            if hrisk>0:
-                ext=(float(candles_ltf[bar]["close"])-pe)*d/hrisk
-                if ext > ext_stop_r: continue
+        if ext_stop_r > 0 or ext_stop_pct > 0:
+            hrisk = abs(pe - psl)
+            if hrisk > 0:
+                ext = (float(candles_ltf[bar]["close"]) - pe) * d / hrisk
+                _EXT_SAMPLE.append(ext)
+                _LVL = _ext_level(hrisk, ext_stop_pct, _EXT_SAMPLE, ext_stop_r_default)
+                if _LVL > 0 and ext > _LVL: continue
         filtered.append((sig, use, win_start, win_end))
     # Now simulate LTF with filtered signals (same as v1_15m LTF walk, swing trail)
     n=len(candles_ltf)
