@@ -28,9 +28,19 @@ rounding step would be a bug nobody could find.
 """
 import json
 import math
+import os
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
+
+# Where /results actually reads from. This was a bare relative filename, which
+# meant the export landed in whatever directory the script happened to be run
+# from while the API kept serving a different file. Running it from the repo
+# root wrote a perfectly good 36-book artifact next to the .gitignore and left
+# the UI serving a stale 26-book one, with nothing to indicate the split. The
+# exporter printed success either way.
+_HERE = os.path.dirname(os.path.abspath(__file__))
+ARTIFACT = os.path.join(_HERE, "_results.json")
 
 sys.path.insert(0, ".")
 from exp_tf_family import build_family_module          # noqa: E402
@@ -136,6 +146,19 @@ def is_sig(entry):
 
 
 def select():
+    """Every registered book ships, not just the top N.
+
+    This used to cut to N_MULTI/N_SIG by rank, which quietly hid five of the
+    thirteen multi books that the whole selection work is actually about -
+    `acc`, `cfloor`, `mchop`, `bmom` and `sigm` all fell below the cut on net.
+    The artifact then served a UI showing 26 confident rows while the books
+    under discussion were simply absent, and nothing on screen indicated that.
+
+    A ranked cut is defensible for a leaderboard. It is not defensible for the
+    artifact the selection is decided from, where an omission is indistinguishable
+    from a non-existence. The ranking is still available - it is what
+    rank_key computes - but selection no longer depends on it.
+    """
     sig, multi = [], []
     for k, e in EXPERIMENTS.items():
         if not isinstance(e, dict) or not k.startswith("fsent"):
@@ -146,11 +169,13 @@ def select():
         (sig if is_sig(e) else multi).append((r, k))
     sig.sort(reverse=True)
     multi.sort(reverse=True)
-    # the shipping book always ships, whatever its rank
-    names = [k for _r, k in multi[:N_MULTI]]
+    names = [k for _r, k in multi]
     if "fsent_champ_long" not in names:
         names.append("fsent_champ_long")
-    return names, [k for _r, k in sig[:N_SIG]]
+    sig_names = [k for _r, k in sig]
+    print("  registered: %d multi + %d sig = %d books"
+          % (len(multi), len(sig), len(names) + len(sig_names)))
+    return names, sig_names
 
 
 def series_of(rs):
@@ -629,10 +654,9 @@ def main():
                  ("%.4f" % m["null_p_is"]) if m["null_p_is"] is not None else "n/a",
                  ("/%.4f" % m["null_p_oos"]) if m["null_p_oos"] is not None else "",
                  "*** SIGNIFICANT" if m["null_sig"] else ""))
-    with open("_results.json", "w", encoding="utf-8") as f:
+    with open(ARTIFACT, "w", encoding="utf-8") as f:
         json.dump(out, f, separators=(",", ":"))
-    import os
-    print("\nwrote _results.json (%.2f MB)" % (os.path.getsize("_results.json") / 1e6))
+    print("\nwrote %s (%.2f MB)" % (ARTIFACT, os.path.getsize(ARTIFACT) / 1e6))
     return 0
 
 
