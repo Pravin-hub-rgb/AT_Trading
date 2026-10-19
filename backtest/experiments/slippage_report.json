@@ -1,0 +1,10 @@
+{
+ "fee_pct_per_side": 0.055,
+ "entry_slip_pct": 0.005,
+ "exit_slip_pct": 0.01,
+ "round_trip_bps": 12.5,
+ "fee_bps_rt": 11.0,
+ "slip_bps_rt": 1.5,
+ "stop_gap_modelled": false,
+ "verdict": "base case is optimistic; stop-gap slippage is absent entirely"
+}

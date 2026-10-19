@@ -20,7 +20,27 @@ V18 = {
 
 # Per-instrument overrides (from btc_routes.py:878-889)
 # Peer model: asymmetric % slippage (entry orderly, exit adverse during fast move)
-# Very conservative: 0.005%/0.010% — honest when we have no fill data
+#
+# NOTE ON THE UNITS, which these comments previously got wrong by 10x.
+# btc_routes.py defines entry_slip_pct as a PERCENT with "0.001 = 1bp". So
+# 0.005% is 0.5 bp, not 5 bp, and 0.010% is 1.0 bp, not 10 bp. The comments
+# below used to say "5bp" and "10bp" while the values said 0.005 and 0.010.
+# Anyone reading the comment would believe the slippage component was ten
+# times larger than it is.
+#
+# What this actually amounts to, per round trip:
+#     fee       2 x 0.055% = 11.0 bp
+#     slippage  0.5 + 1.0  =  1.5 bp
+#     total                 12.5 bp  (0.125% of price)
+# So slippage is 12% of the modelled cost and the fee is 88%. The exit is
+# assumed 2x worse than the entry, which is the right asymmetry for a trailing
+# stop. Neither figure is a measurement; no fill log has ever been read.
+#
+# NONE of this models the stop GAP. A stop-market fills at whatever the book
+# offers when it is hit, not at the stop price, and exp_stop_slip_bps - which
+# does model that - defaults to 0.0. Every net R reported anywhere in this repo
+# therefore fills stops at the stop price to the tick. The error is
+# one-directional: the numbers are optimistic.
 SYMBOL_PARAMS = {
     "BTCUSDT": {
         "chop_thresh": 61.8,
