@@ -118,7 +118,10 @@
       "dd": 3850.67,
       "streak": 166,
       "calmar": -1.0,
-      "d_net": -4380.54
+      "d_net": -4380.54,
+      "wins_at_0": 214,
+      "trades_lost": 198,
+      "pct_trades_lost": 92.5
      }
     ],
     "cost": [
@@ -128,13 +131,14 @@
      },
      {
       "mult": 2.0,
-      "net": 523.7
+      "net": 436.79
      },
      {
       "mult": 3.0,
-      "net": 509.0
+      "net": 335.17
      }
-    ]
+    ],
+    "cost_per_trade": 0.1935
    },
    "oos": {
     "base": {
@@ -253,7 +257,10 @@
       "dd": 1566.34,
       "streak": 57,
       "calmar": -1.0,
-      "d_net": -1838.31
+      "d_net": -1838.31,
+      "wins_at_0": 126,
+      "trades_lost": 113,
+      "pct_trades_lost": 89.7
      }
     ],
     "cost": [
@@ -263,13 +270,14 @@
      },
      {
       "mult": 2.0,
-      "net": 264.66
+      "net": 233.81
      },
      {
       "mult": 3.0,
-      "net": 256.4
+      "net": 194.7
      }
-    ]
+    ],
+    "cost_per_trade": 0.1326
    }
   },
   "fsent_champ_long_htf15_tskip6": {
@@ -390,7 +398,10 @@
       "dd": 2340.08,
       "streak": 53,
       "calmar": -0.99,
-      "d_net": -2968.49
+      "d_net": -2968.49,
+      "wins_at_0": 163,
+      "trades_lost": 136,
+      "pct_trades_lost": 83.4
      }
     ],
     "cost": [
@@ -400,13 +411,14 @@
      },
      {
       "mult": 2.0,
-      "net": 632.98
+      "net": 548.7
      },
      {
       "mult": 3.0,
-      "net": 621.92
+      "net": 453.35
      }
-    ]
+    ],
+    "cost_per_trade": 0.2414
    },
    "oos": {
     "base": {
@@ -525,7 +537,10 @@
       "dd": 718.24,
       "streak": 36,
       "calmar": -0.99,
-      "d_net": -1047.45
+      "d_net": -1047.45,
+      "wins_at_0": 82,
+      "trades_lost": 62,
+      "pct_trades_lost": 75.6
      }
     ],
     "cost": [
@@ -535,13 +550,14 @@
      },
      {
       "mult": 2.0,
-      "net": 330.11
+      "net": 299.92
      },
      {
       "mult": 3.0,
-      "net": 324.06
+      "net": 263.68
      }
-    ]
+    ],
+    "cost_per_trade": 0.1678
    }
   },
   "fsent_champ_long_htffs": {
@@ -662,7 +678,10 @@
       "dd": 5025.15,
       "streak": 148,
       "calmar": -1.0,
-      "d_net": -5782.13
+      "d_net": -5782.13,
+      "wins_at_0": 298,
+      "trades_lost": 282,
+      "pct_trades_lost": 94.6
      }
     ],
     "cost": [
@@ -672,13 +691,14 @@
      },
      {
       "mult": 2.0,
-      "net": 735.95
+      "net": 608.46
      },
      {
       "mult": 3.0,
-      "net": 714.92
+      "net": 459.93
      }
-    ]
+    ],
+    "cost_per_trade": 0.1978
    },
    "oos": {
     "base": {
@@ -797,7 +817,10 @@
       "dd": 2059.3,
       "streak": 79,
       "calmar": -1.0,
-      "d_net": -2372.65
+      "d_net": -2372.65,
+      "wins_at_0": 148,
+      "trades_lost": 134,
+      "pct_trades_lost": 90.5
      }
     ],
     "cost": [
@@ -807,13 +830,14 @@
      },
      {
       "mult": 2.0,
-      "net": 302.49
+      "net": 260.39
      },
      {
       "mult": 3.0,
-      "net": 291.62
+      "net": 207.42
      }
-    ]
+    ],
+    "cost_per_trade": 0.1365
    }
   },
   "fsent_champ_long_htf15_htffs": {
@@ -934,7 +958,10 @@
       "dd": 5260.66,
       "streak": 148,
       "calmar": -1.0,
-      "d_net": -6025.51
+      "d_net": -6025.51,
+      "wins_at_0": 300,
+      "trades_lost": 284,
+      "pct_trades_lost": 94.7
      }
     ],
     "cost": [
@@ -944,13 +971,14 @@
      },
      {
       "mult": 2.0,
-      "net": 743.74
+      "net": 613.14
      },
      {
       "mult": 3.0,
-      "net": 722.63
+      "net": 461.42
      }
-    ]
+    ],
+    "cost_per_trade": 0.2012
    },
    "oos": {
     "base": {
@@ -1069,7 +1097,10 @@
       "dd": 1977.6,
       "streak": 76,
       "calmar": -1.0,
-      "d_net": -2323.68
+      "d_net": -2323.68,
+      "wins_at_0": 156,
+      "trades_lost": 141,
+      "pct_trades_lost": 90.4
      }
     ],
     "cost": [
@@ -1079,13 +1110,14 @@
      },
      {
       "mult": 2.0,
-      "net": 335.02
+      "net": 290.85
      },
      {
       "mult": 3.0,
-      "net": 323.96
+      "net": 235.62
      }
-    ]
+    ],
+    "cost_per_trade": 0.1398
    }
   },
   "fsent_champ_long_htfesmcl4": {
@@ -1206,7 +1238,10 @@
       "dd": 5078.37,
       "streak": 153,
       "calmar": -1.0,
-      "d_net": -5850.24
+      "d_net": -5850.24,
+      "wins_at_0": 298,
+      "trades_lost": 281,
+      "pct_trades_lost": 94.3
      }
     ],
     "cost": [
@@ -1216,13 +1251,14 @@
      },
      {
       "mult": 2.0,
-      "net": 750.53
+      "net": 622.69
      },
      {
       "mult": 3.0,
-      "net": 729.2
+      "net": 473.5
      }
-    ]
+    ],
+    "cost_per_trade": 0.1958
    },
    "oos": {
     "base": {
@@ -1341,7 +1377,10 @@
       "dd": 2202.99,
       "streak": 67,
       "calmar": -1.0,
-      "d_net": -2542.07
+      "d_net": -2542.07,
+      "wins_at_0": 162,
+      "trades_lost": 147,
+      "pct_trades_lost": 90.7
      }
     ],
     "cost": [
@@ -1351,13 +1390,14 @@
      },
      {
       "mult": 2.0,
-      "net": 327.18
+      "net": 282.18
      },
      {
       "mult": 3.0,
-      "net": 315.28
+      "net": 225.28
      }
-    ]
+    ],
+    "cost_per_trade": 0.1339
    }
   }
  }

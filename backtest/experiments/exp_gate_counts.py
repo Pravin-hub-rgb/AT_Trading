@@ -31,23 +31,25 @@ def main():
         sp = G.t1_span(t1[name])
         folds = [x for x in t2[name] if x.get("reg_test_net") is not None]
         sl = t3[name]["is"]["slippage"]
-        n0 = sl[0]["n"]
-        n1000 = [s for s in sl if s["bps"] == 1000][0]["n"]
+        s1000 = [s for s in sl if s["bps"] == 1000][0]
+
+        w = sum(1 for x in folds if x["test_net"] > x["reg_test_net"])
+        ti = sum(1 for x in folds if x["test_net"] == x["reg_test_net"])
 
         crit = {
             "G1 tail10 IS": v_is["tail10"] > 0,
             "G1 tail10 OOS": v_oos["tail10"] > 0,
-            "G1 top10 IS": v_is["top10pct"] < G.TH["g1_top10pct"],
-            "G1 top10 OOS": v_oos["top10pct"] < G.TH["g1_top10pct"],
+            "G1 top10 IS": v_is["net"] > 0 and v_is["top10pct"] < G.TH["g1_top10pct"],
+            "G1 top10 OOS": v_oos["net"] > 0 and v_oos["top10pct"] < G.TH["g1_top10pct"],
             "G2 span IS": sp["is"] < G.TH["g2_span"],
             "G2 span OOS": sp["oos"] < G.TH["g2_span"],
             "G2 cliff": not (sp["is_cliff"] or sp["oos_cliff"]),
-            "G2 walkfwd": (sum(1 for x in folds if x["test_net"] > x["reg_test_net"])
-                           + sum(1 for x in folds if x["test_net"] == x["reg_test_net"])) >= G.TH["g2_folds"],
+            "G2 walkfwd": (bool(folds)
+                         and (w >= G.TH["g2_folds"] or ti == len(folds))),
             "G3 BE slip IS": G.break_even(t3[name]["is"]["slippage"]) >= G.TH["g3_be_is"],
             "G3 BE slip OOS": G.break_even(t3[name]["oos"]["slippage"]) >= G.TH["g3_be_oos"],
             "G3 cost 3x": t3[name]["is"]["cost"][-1]["net"] > 0 and t3[name]["oos"]["cost"][-1]["net"] > 0,
-            "G3 lost<50%": 100.0 * (n0 - n1000) / n0 < 50,
+            "G3 lost<50%": s1000.get("pct_trades_lost", 0.0) < G.TH["g3_lost_frac"],
             "G4 dd>25R": t4[name]["is"]["frac_paths_dd_over_25"] < G.TH["g4_dd25"],
             "G4 dd>50R": (t4[name]["is"]["frac_paths_dd_over_50"] <= G.TH["g4_dd50"]
                           and t4[name]["oos"]["frac_paths_dd_over_50"] <= G.TH["g4_dd50"]),

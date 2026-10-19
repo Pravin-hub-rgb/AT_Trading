@@ -75,23 +75,41 @@ REPORT = HERE.parent / "docs" / "learn" / "VERIFIED_SUITE.md"
 # --------------------------------------------------------------------------
 # metrics, each computed twice where a second derivation exists
 # --------------------------------------------------------------------------
+# A NOTE ON WHAT "INDEPENDENT DERIVATION" HAS TO MEAN HERE, because three
+# earlier versions of these functions did not meet it and the suite reported
+# "0 disagreements" while checking nothing.
+#
+# m_pf_equiv was written as  p*E[w] / (1-p)*E[l], which is algebraically the
+# same expression as w/l - the probabilities cancel exactly. m_wr_equiv was
+# 100 - 100*loss_fraction, which is 100*win_fraction. m_net_equity was
+# 1.0 + sum(rs) - 1.0. All three are the primary formula wearing different
+# punctuation, so no error in the primary could ever be caught. The PF checker
+# in particular was the one that COULD have caught a real bug, and it had
+# already been used to excuse a wrong PF formula (1/(total/w)) before being
+# replaced by an identity.
+#
+# An algebraically rearranged copy of a formula is not a check. The second
+# derivation below is pandas: a different library, different accumulation, and
+# for drawdown a genuinely different algorithm (cummax instead of a running
+# max in a Python loop). That is still not a proof of correctness, but it will
+# catch a slip in either implementation, which an identity cannot do at all.
+# --------------------------------------------------------------------------
 def m_net(rs):
     return round(sum(rs), 2)
 
 
-def m_net_equity(rs):
-    eq = 1.0
-    for r in rs:
-        eq += r
-    return round(eq - 1.0, 2)
+def m_net_pandas(rs):
+    import pandas as pd
+    return round(float(pd.Series(rs).sum()), 2)
 
 
 def m_rpt(rs):
     return round(sum(rs) / len(rs), 4) if rs else 0.0
 
 
-def m_rpt_equiv(rs, net):
-    return round(net / len(rs), 4) if rs else 0.0
+def m_rpt_pandas(rs):
+    import pandas as pd
+    return round(float(pd.Series(rs).mean()), 4) if rs else 0.0
 
 
 def m_pf(rs):
@@ -100,36 +118,21 @@ def m_pf(rs):
     return round(w / l, 3) if l else 0.0
 
 
-def m_pf_equiv(rs):
-    """Independent derivation: PF is the ratio of the positive mass to the
-    negative mass, which can be written as E[r]/E[r | r<=0] scaled by the win
-    fraction. Expressed differently so a slip in either form shows up.
-
-    The first version of this wrote 1/(tot/w), which is not profit factor at
-    all - it returns 1.857 where the true value is 2.167 for a three-winner,
-    three-loser sample. That error sat in the CROSS-CHECK, not in the primary
-    formula, which is the worst place for it: the primary number was always
-    right and the checker disagreed, so the checker would have been deleted as
-    the broken one. Which is roughly what happened for a while.
-    """
-    w = [r for r in rs if r > 0]
-    l = [r for r in rs if r <= 0]
-    if not w or not l:
-        return 0.0
-    n = len(rs)
-    p_win = len(w) / n
-    # E[r]/E[r|r<=0] weighted by probability, rescaled back to a ratio
-    return round((p_win * (sum(w) / len(w))) / ((1 - p_win) * (-sum(l) / len(l))), 3)
+def m_pf_pandas(rs):
+    import pandas as pd
+    s = pd.Series(rs)
+    pos = float(s[s > 0].sum())
+    neg = float(-s[s <= 0].sum())
+    return round(pos / neg, 3) if neg else 0.0
 
 
 def m_wr(rs):
     return round(100.0 * sum(1 for r in rs if r > 0) / len(rs), 1) if rs else 0.0
 
 
-def m_wr_equiv(rs):
-    if not rs:
-        return 0.0
-    return round(100.0 - 100.0 * sum(1 for r in rs if r <= 0) / len(rs), 1)
+def m_wr_pandas(rs):
+    import pandas as pd
+    return round(100.0 * float((pd.Series(rs) > 0).mean()), 1) if rs else 0.0
 
 
 def dd_forward(rs):
@@ -225,18 +228,46 @@ def ulcer(rs):
     return round(math.sqrt(sum(x * x for x in dds) / len(dds)), 3)
 
 
-def ulcer_pct(rs):
-    """Same index but with drawdown expressed as a fraction of the running peak,
-    which is the form that is comparable between books of different size."""
-    cum = peak = 0.0
+def ulcer_pct(rs, risk_frac=0.01):
+    """Ulcer Index on a fixed-fractional equity curve, in percent.
+
+    The previous version of this divided the running drawdown in R by the
+    running peak in R. Both start at zero, so early in a sample the peak sits
+    near zero while the drawdown does not, and the quotient explodes - book 108
+    OOS reported 610% where the true figure is 2.1%, because at trade 12 the R
+    peak was 0.068 and the drawdown was 4.82 R. A 7166% drawdown is not a
+    property of the book; it is an artefact of dividing by something near zero.
+
+    The Ulcer Index is defined on a percentage equity curve with a non-zero
+    starting equity, so that is what this builds: start at 1.0, risk a fixed
+    fraction of CURRENT equity on each trade, and return fraction*r. That makes
+    it genuinely comparable between books, which the R version never was -
+    1R is 5 bp of price on some trades in these books and 1600 bp on others.
+
+    risk_frac=0.01 is the conventional 1%. It is a parameter, not a fact, and
+    the caller should treat comparisons at a different fraction as a different
+    measurement rather than a correction.
+    """
+    eq = 1.0
+    peak = 1.0
     dds = []
     for r in rs:
-        cum += r
-        peak = max(peak, cum)
-        dds.append((peak - cum) / peak if peak > 0 else 0.0)
+        eq *= (1.0 + risk_frac * r)
+        peak = max(peak, eq)
+        dds.append(100.0 * (peak - eq) / peak)
     if not dds:
         return 0.0
-    return round(math.sqrt(sum(x * x for x in dds) / len(dds)) * 100, 3)
+    return round(math.sqrt(sum(x * x for x in dds) / len(dds)), 3)
+
+
+def ulcer_pct_pandas(rs, risk_frac=0.01):
+    """Same quantity via pandas cummax, as an independent second derivation."""
+    import pandas as pd
+    eq = (1.0 + risk_frac * pd.Series(rs)).cumprod()
+    if len(eq) == 0:
+        return 0.0
+    dd = 100.0 * (eq.cummax() - eq) / eq.cummax()
+    return round(float(math.sqrt((dd * dd).mean())), 3)
 
 
 def analyse(tr):
@@ -245,24 +276,38 @@ def analyse(tr):
     w = [r for r in rs if r > 0]
     l = [r for r in rs if r <= 0]
     ddf, dur = dd_forward(rs)
-    peak_at_max = 0.0
+    # dd_pct must use the peak as it stood AT THE TROUGH, not the global peak.
+    # The global peak of a book ending at +540R makes an early 28R drawdown look
+    # like 5% when it was 92% of the equity then standing. Tracked here at the
+    # point of maximum drawdown, which is what "how big was this dip" means.
     _c = _p = 0.0
+    _peak_at_max = 0.0
+    _dd_at_max = 0.0
     for _r in rs:
         _c += _r
         _p = max(_p, _c)
-    peak_at_max = _p
+        _dd = _p - _c
+        if _dd > _dd_at_max:
+            _dd_at_max = _dd
+            _peak_at_max = _p
+    peak_at_max = _peak_at_max
     ddr = dd_reverse(rs)
     roll = {k: rolling(rs, k) for k in (10, 20, 50)}
     rolld = {k: rolling_direct(rs, k) for k in (10, 20, 50)}
 
     st = cur = 0
+    cur_len = 0
     strk = []
     for r in rs:
         if r < 0:
             cur += 1
-            strk.append(cur)
+            cur_len += 1
         else:
-            cur = 0
+            if cur_len:
+                strk.append(cur_len)
+            cur_len = 0
+    if cur_len:
+        strk.append(cur_len)
     maxst = max(strk) if strk else 0
 
     cum = peak = 0.0
@@ -277,15 +322,15 @@ def analyse(tr):
     srt = sorted(rs, reverse=True)
     return {
         "n": n,
-        "net": m_net(rs), "net_eq": m_net_equity(rs),
-        "rpt": m_rpt(rs), "rpt_eq": m_rpt_equiv(rs, m_net(rs)),
-        "pf": m_pf(rs), "pf_eq": m_pf_equiv(rs),
-        "wr": m_wr(rs), "wr_eq": m_wr_equiv(rs),
+        "net": m_net(rs), "net_pd": m_net_pandas(rs),
+        "rpt": m_rpt(rs), "rpt_pd": m_rpt_pandas(rs),
+        "pf": m_pf(rs), "pf_pd": m_pf_pandas(rs),
+        "wr": m_wr(rs), "wr_pd": m_wr_pandas(rs),
         "dd_fwd": round(ddf, 2), "dd_rev": round(ddr, 2),
         "dd_dur": dur,
         "dd_pct": round(100.0 * ddf / peak_at_max, 1) if peak_at_max > 0 else 0.0,
         "roll": roll, "roll_direct": rolld,
-        "ulcer": ulcer(rs), "ulcer_pct": ulcer_pct(rs),
+        "ulcer": ulcer(rs), "ulcer_pct": ulcer_pct(rs), "ulcer_pct_pd": ulcer_pct_pandas(rs),
         "uw_pct": round(100.0 * uw / n, 1) if n else 0.0,
         "streak": maxst,
         "avg_streak": round(statistics.mean(strk), 2) if strk else 0.0,
@@ -294,8 +339,19 @@ def analyse(tr):
         "tail1": round(sum(rs) - srt[0], 2),
         "tail3": round(sum(rs) - sum(srt[:3]), 2),
         "tail10": round(sum(rs) - sum(srt[:10]), 2),
-        "top5pct": round(100.0 * sum(srt[:max(1, int(0.05 * n))]) / sum(rs), 1) if sum(rs) else 0.0,
-        "top10pct": round(100.0 * sum(srt[:max(1, int(0.10 * n))]) / sum(rs), 1) if sum(rs) else 0.0,
+        # top5pct / top10pct answer "what share of the total profit did the very
+        # best trades produce", which is only meaningful against the POPULATION
+        # OF WINNERS - you cannot ask how much of the profit came from the top
+        # decile of trades when most trades are losers. The previous version
+        # took the top 10% of ALL trades, and the gate comment described it as
+        # "top 10% of winners" - so the documented test and the executed test
+        # were different questions. 107 IS reports 103.7 on the trades basis
+        # and 67.5 on the winners basis; both clear 120, but only one of them
+        # is what the rules say was tested.
+        "top5pct": round(100.0 * sum(sorted(w, reverse=True)[:max(1, int(0.05 * len(w)))]) / sum(rs), 1)
+                     if (w and sum(rs) > 0) else 0.0,
+        "top10pct": round(100.0 * sum(sorted(w, reverse=True)[:max(1, int(0.10 * len(w)))]) / sum(rs), 1)
+                     if (w and sum(rs) > 0) else 0.0,
         "avgw": round(sum(w) / len(w), 2) if w else 0.0,
         "avgl": round(-sum(l) / len(l), 2) if l else 0.0,
         "medw": round(statistics.median(w), 2) if w else 0.0,
@@ -319,16 +375,26 @@ NM = {"fsent_champ_long_mcloff_htf15": "107",
 
 
 def verify(res):
+    """Cross-check every metric that has a second implementation.
+
+    The previous version checked five metrics and skipped the ones that turned
+    out to be wrong. An independent audit found dd_pct understated 17x,
+    ulcer_pct overstated 286x, avg_streak reporting the wrong statistic and
+    topXpct computed over the wrong population - none of which verify() ever
+    looked at. A checker that covers the easy fields and misses the hard ones
+    is decoration. These now cover dd_pct, ulcer, streak and tail as well.
+    """
     bad = []
     for name in res:
         for era in ("is", "oos"):
             p = res[name][era]
             if not p:
                 continue
-            for a, b, lab in ((p["net"], p["net_eq"], "net"),
-                              (p["rpt"], p["rpt_eq"], "expectancy"),
-                              (p["pf"], p["pf_eq"], "profit factor"),
-                              (p["wr"], p["wr_eq"], "win rate"),
+            for a, b, lab in ((p["net"], p["net_pd"], "net"),
+                              (p["rpt"], p["rpt_pd"], "expectancy"),
+                              (p["pf"], p["pf_pd"], "profit factor"),
+                              (p["wr"], p["wr_pd"], "win rate"),
+                              (p["ulcer_pct"], p["ulcer_pct_pd"], "ulcer index"),
                               (p["dd_fwd"], p["dd_rev"], "max drawdown")):
                 if abs(float(a) - float(b)) > 0.02:
                     bad.append((NM[name], era, lab, a, b))
@@ -336,6 +402,20 @@ def verify(res):
                 if p["roll"][k] != p["roll_direct"][k]:
                     bad.append((NM[name], era, "rolling %d" % k,
                                 p["roll"][k], p["roll_direct"][k]))
+            # dd_pct must never exceed 100 by construction, and must be
+            # non-trivial: a drawdown against the equity standing at the trough
+            # is a large fraction, so a small value is the signature of the old
+            # global-peak bug.
+            if p["dd_fwd"] > 0 and not (0.0 <= p["dd_pct"] <= 100.0):
+                bad.append((NM[name], era, "dd_pct range", p["dd_pct"], "0..100"))
+            if not (0.0 <= p["ulcer_pct"] <= 100.0):
+                bad.append((NM[name], era, "ulcer range", p["ulcer_pct"], "0..100"))
+            if not (0.0 <= p["avg_streak"] <= p["streak"] + 1e-9):
+                bad.append((NM[name], era, "avg_streak vs streak",
+                            p["avg_streak"], p["streak"]))
+            if not (p["tail1"] >= p["tail3"] >= p["tail10"] - 1e-9):
+                bad.append((NM[name], era, "tail ordering",
+                            (p["tail1"], p["tail3"], p["tail10"]), "descending"))
     return bad
 
 
@@ -438,8 +518,13 @@ def report(res, bad):
           "  expectancy, better rolling windows and a shallower worst window is a",
           "  different book, not a worse one. That is the case that got missed when",
           "  exclusion rested on net alone.",
-          "- **Ulcer is not comparable across books of different size** unless the",
-          "  percentage form is used. Both are reported.",
+          "- **`R` is not one unit of risk in these books.** Stop distance ranges",
+          "  0.055% to 16.6% of price, a 300x spread, so `net` is a sum of",
+          "  differently-sized risks and `R per trade` is not a fixed-fractional",
+          "  return. The `net ret` column is net OOS over net IS and inherits",
+          "  that limitation. The ulcer% column is the one built on a real",
+          "  percentage equity curve at 1% fixed fractional risk, and is the only",
+          "  drawdown figure here comparable across books of different size.",
           "- **The tail columns are the ones that quietly kill books.** If net after",
           "  removing the best ten winners is near zero, the edge is ten episodes.",
           "- **Nothing here changes the forward test.** Which book goes live is",

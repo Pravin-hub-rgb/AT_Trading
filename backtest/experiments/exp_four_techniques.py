@@ -173,17 +173,42 @@ def t3(sim, ERA, log):
                                      exp_stop_slip_bps=bps))
                 s = stats(rs_of(tr))
                 slip.append(dict(bps=bps, **s, d_net=round(s["net"] - b["net"], 2)))
+            # Trades that were winning at zero slippage and are NOT winning at
+            # this slippage. The gate used to measure 100*(n0-n1)/n0, which
+            # counts trades that VANISHED because a changed fill shifted a
+            # downstream path - 107 read 33% and passed while its net at this
+            # slippage was -3842R. A vanished trade is not a lost trade, and the
+            # count had nothing to do with profitability. Matches on entry_ts
+            # are approximate on purpose: it is a stress measure, not a ledger.
+            if bps == 1000:
+                r0 = rs_of(base)
+                wins0 = {t["entry_ts"] for t in base if net_r([t]) > 0}
+                wins1 = {t["entry_ts"] for t in tr if net_r([t]) > 0}
+                lost = len(wins0 - wins1)
+                slip[-1]["wins_at_0"] = len(wins0)
+                slip[-1]["trades_lost"] = lost
+                slip[-1]["pct_trades_lost"] = round(100.0 * lost / len(wins0), 1) if wins0 else 0.0
             # cost multiple: post-hoc is legitimate for fees. A fee does not
             # change which trades exist, so scaling it needs no engine run.
-            br = rs_of(base)
+            #
+            # The per-trade cost used to be a hardcoded 0.028 R. That is wrong by
+            # 4x to 9x: cost is not a constant because the R denominator is not,
+            # since stops in these books run from 0.055% to 16.6% of price. A
+            # fixed 0.028 implied a 2.5-4% average stop against an actual median
+            # of 1.26%, so the "3x cost" gate was testing roughly one seventh
+            # of the cost the book actually pays. It is now derived from the
+            # trades themselves: gross r_multiple minus net_r, averaged.
+            gross = sum(float(t["r_multiple"]) for t in base)
+            cost_rt = (gross - b["net"]) / b["n"] if b["n"] else 0.0
             cost = []
             for mult in (1.0, 2.0, 3.0):
                 if mult == 1.0:
                     cost.append(dict(mult=1.0, net=b["net"]))
                 else:
                     cost.append(dict(mult=mult,
-                                     net=round(b["net"] - 0.028 * (mult - 1.0) * b["n"], 2)))
-            rec[era] = {"base": b, "slippage": slip, "cost": cost}
+                                     net=round(b["net"] - cost_rt * (mult - 1.0) * b["n"], 2)))
+            rec[era] = {"base": b, "slippage": slip, "cost": cost,
+                        "cost_per_trade": round(cost_rt, 4)}
             log("  %s %s slip 0->1000bps: net %+.1f -> %+.1f  dd %.1f -> %.1f  streak %d -> %d"
                 % (code, era.upper(), b["net"], slip[-1]["net"],
                    b["dd"], slip[-1]["dd"], b["streak"], slip[-1]["streak"]))

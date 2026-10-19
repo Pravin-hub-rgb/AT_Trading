@@ -7,37 +7,37 @@ before any of these numbers existed. No threshold was moved to make a book pass.
 
 | book | G1 evidence | G2 robust | G3 execution | G4 survivable | survives |
 |---|---|---|---|---|---|
-| `sigm` | pass | FAIL | pass | pass | no |
-| `sigm_h` | pass | FAIL | pass | pass | no |
-| `107` | pass | pass | pass | FAIL | no |
+| `sigm` | pass | FAIL | FAIL | pass | no |
+| `sigm_h` | pass | FAIL | FAIL | pass | no |
+| `107` | pass | pass | FAIL | FAIL | no |
 | `htf15` | pass | pass | FAIL | FAIL | no |
-| `bmom` | pass | pass | FAIL | pass | no |
+| `bmom` | pass | FAIL | FAIL | pass | no |
 | `cfloor` | pass | FAIL | FAIL | pass | no |
-| `110` | pass | FAIL | pass | pass | no |
-| `acc` | pass | FAIL | pass | FAIL | no |
-| `mchop` | pass | pass | FAIL | FAIL | no |
+| `110` | pass | FAIL | FAIL | pass | no |
+| `acc` | pass | FAIL | FAIL | FAIL | no |
+| `mchop` | pass | FAIL | FAIL | FAIL | no |
 | `mcloff` | pass | pass | FAIL | FAIL | no |
-| `109` | pass | pass | pass | FAIL | no |
-| `106` | pass | pass | pass | FAIL | no |
-| `108` | pass | pass | pass | FAIL | no |
+| `109` | pass | pass | FAIL | FAIL | no |
+| `106` | pass | pass | FAIL | FAIL | no |
+| `108` | pass | pass | FAIL | FAIL | no |
 
 ## What failed, per book
 
 | book | tail10 IS | top10% IS | top10% OOS | T1 span IS | T1 span OOS | cliff | WF wins | BE slip IS | BE slip OOS | lost@1000 IS | dd>25R | dd>50R | worst50 OOS | DD pct IS | DD pct OOS |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `sigm` | ok | ok | ok | 106 | 84 | ok | 1/3 | 100 | 100 | 21% | 0.7% | 0.0% | ok | 55.0 | 5.8 |
-| `sigm_h` | ok | ok | ok | 100 | 82 | ok | 3/3 | 100 | 100 | 26% | 1.4% | 0.0% | ok | 90.3 | 3.6 |
-| `107` | ok | ok | ok | 14 | 35 | ok | 3/3 | 100 | 100 | 33% | 0.4% | 0.0% | ok | 99.8 | 71.2 |
-| `htf15` | ok | ok | ok | 20 | 43 | ok | 2/3 | 50 | 100 | 38% | 0.7% | 0.0% | ok | 99.5 | 60.4 |
-| `bmom` | ok | ok | ok | 54 | 49 | ok | 1/3 | 50 | 100 | 35% | 0.6% | 0.0% | ok | 98.0 | 19.8 |
-| `cfloor` | ok | ok | ok | 70 | 22 | ok | 1/3 | 50 | 100 | 35% | 1.8% | 0.0% | ok | 97.8 | 53.0 |
-| `110` | ok | ok | ok | 234 | 206 | **FAIL** | 0/3 | 100 | 100 | 39% | 2.8% | 0.0% | ok | 95.8 | 66.7 |
-| `acc` | ok | ok | ok | 30 | 8 | ok | 0/3 | 100 | 100 | 32% | 1.1% | 0.0% | **FAIL** | 37.1 | 68.8 |
-| `mchop` | ok | ok | ok | 45 | 15 | ok | 1/3 | 50 | 100 | 36% | 2.5% | 0.0% | **FAIL** | 97.6 | 37.5 |
-| `mcloff` | ok | ok | ok | 31 | 40 | ok | 0/3 | 50 | 100 | 32% | 0.8% | 0.0% | **FAIL** | 98.4 | 53.0 |
-| `109` | ok | ok | ok | 14 | 37 | ok | 3/3 | 100 | 100 | 39% | 2.9% | 0.0% | **FAIL** | 99.4 | 80.9 |
-| `106` | ok | ok | ok | 15 | 34 | ok | 3/3 | 100 | 100 | 40% | 2.2% | 0.0% | **FAIL** | 93.6 | 78.4 |
-| `108` | ok | ok | ok | 9 | 18 | ok | 3/3 | 100 | 100 | 37% | 3.5% | 0.0% | **FAIL** | 84.4 | 72.5 |
+| `sigm` | ok | ok | ok | 106 | 84 | ok | 1/3 | 153 | 180 | 72% | 0.7% | 0.0% | ok | 55.0 | 5.8 |
+| `sigm_h` | ok | ok | ok | 100 | 82 | ok | 3/3 | 142 | 132 | 75% | 1.4% | 0.0% | ok | 90.3 | 3.6 |
+| `107` | ok | ok | ok | 14 | 35 | ok | 3/3 | 107 | 131 | 92% | 0.4% | 0.0% | ok | 99.8 | 71.2 |
+| `htf15` | ok | ok | ok | 20 | 43 | ok | 2/3 | 97 | 138 | 94% | 0.7% | 0.0% | ok | 99.5 | 60.4 |
+| `bmom` | ok | ok | ok | 54 | 49 | ok | 1/3 | 96 | 102 | 92% | 0.6% | 0.0% | ok | 98.0 | 19.8 |
+| `cfloor` | ok | ok | ok | 70 | 22 | ok | 1/3 | 92 | 116 | 93% | 1.8% | 0.0% | ok | 97.8 | 53.0 |
+| `110` | ok | ok | ok | 234 | 206 | **FAIL** | 0/3 | 174 | 204 | 83% | 2.8% | 0.0% | ok | 95.8 | 66.7 |
+| `acc` | ok | ok | ok | 30 | 8 | ok | 0/3 | 103 | 116 | 87% | 1.1% | 0.0% | **FAIL** | 37.1 | 68.8 |
+| `mchop` | ok | ok | ok | 45 | 15 | ok | 1/3 | 91 | 102 | 93% | 2.5% | 0.0% | **FAIL** | 97.6 | 37.5 |
+| `mcloff` | ok | ok | ok | 31 | 40 | ok | 0/3 | 100 | 103 | 92% | 0.8% | 0.0% | **FAIL** | 98.4 | 53.0 |
+| `109` | ok | ok | ok | 14 | 37 | ok | 3/3 | 102 | 124 | 95% | 2.9% | 0.0% | **FAIL** | 99.4 | 80.9 |
+| `106` | ok | ok | ok | 15 | 34 | ok | 3/3 | 102 | 114 | 95% | 2.2% | 0.0% | **FAIL** | 93.6 | 78.4 |
+| `108` | ok | ok | ok | 9 | 18 | ok | 3/3 | 109 | 108 | 94% | 3.5% | 0.0% | **FAIL** | 84.4 | 72.5 |
 
 ## Survivors, ranked by the Gate 5 order
 
