@@ -110,6 +110,32 @@ const SHIPPING = "fsent_champ_long";
 
 /* ---------------------------------------------------------------- helpers */
 
+  /** PBO renders as a fraction with a fixed width so the banner does not reflow. */
+  function fmtPbo(v: number | null | undefined): string {
+    if (v === null || v === undefined || Number.isNaN(v)) return "—";
+    return v.toFixed(3);
+  }
+
+  /** 107, 110, sigm … for the books that were part of the thirteen-book selection. */
+  function bookCode(b: ResultBook): string | null {
+    return b.analysis?.code ?? null;
+  }
+
+  /** The single criterion that killed it, or the four gates it cleared. */
+  function gateSummary(b: ResultBook): { text: string; ok: boolean } {
+    const a = b.analysis;
+    if (!a) return { text: "—", ok: true };
+    if (a.survives_all_gates && a.dsr_pass) return { text: "cleared", ok: true };
+    if (a.survives_all_gates) return { text: "gates ok, DSR fail", ok: false };
+    const failed = Object.entries(a.gates)
+      .filter(([, v]) => v === "FAIL")
+      .map(([k]) => k);
+    return {
+      text: `${a.gate_passed} · fail ${failed.join(" ") || "-"}`,
+      ok: false,
+    };
+  }
+
 function short(name: string) {
   return name.replace(/^fsent_/, "").replace(/_htf15$/, "+htf15");
 }
@@ -363,6 +389,44 @@ const filtered = useMemo(() => {
         </p>
       </div>
 
+      {/* ---------------------------------------------------------------------
+          Verdict banner.
+
+          Placed directly under the header and above the filters, before any
+          metric can be read, because the failure mode this guards against is
+          exactly a reader sorting by net and finding a plausible-looking row.
+          The numbers in the table are real and they are not a recommendation.
+          --------------------------------------------------------------------- */}
+      {data.verdict && (
+        <div className="rounded-md border border-[#8b2c2c] bg-[#2d1214] p-4">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 shrink-0 rounded bg-[#8b2c2c] px-2 py-0.5 text-xs font-bold text-white">
+              NOT CLEARED
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-[#f0d4d4]">
+                {data.verdict.headline}
+              </div>
+              <p className="mt-1 max-w-5xl text-sm text-[#c9a5a5]">{data.verdict.reason}</p>
+              {data.verdict.pbo && (
+                <p className="mt-2 text-xs text-[#a88a8a]">
+                  Measured PBO — OOS {fmtPbo(data.verdict.pbo.oos)} · IS{" "}
+                  {fmtPbo(data.verdict.pbo.is)} — against a bar of {data.verdict.pbo_bar}.
+                  Thirteen variants were tried and the trial count was never accounted for until now.
+                </p>
+              )}
+              <p className="mt-2 max-w-5xl text-xs text-[#a88a8a]">
+                Closest: <span className="text-[#e6edf3]">{data.verdict.closest.join(", ")}</span>{" "}
+                — {data.verdict.closest_note} Next step: {data.verdict.next_step}
+              </p>
+              <p className="mt-1 text-xs text-[#8b6b6b]">
+                Reasoning: <code className="text-[#6366f1]">{data.verdict.see}</code>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* filters */}
       <div className="flex flex-wrap items-center gap-2">
         {(["all", "multi", "sig"] as const).map((f) => (
@@ -471,6 +535,17 @@ const filtered = useMemo(() => {
               <th className="sticky left-0 bg-[#161b22] px-3 py-2 text-left text-xs font-semibold text-[#8b949e]">
                 book
               </th>
+              {/* Verdict column sits beside the name, not behind a tab. The
+                  failure mode this exists to prevent is a reader sorting by net,
+                  finding a plausible row and scrolling on - so the reason a book
+                  is NOT cleared has to be as visible as the number that makes it
+                  look attractive. */}
+              <th
+                className="px-3 py-2 text-left text-xs font-semibold text-[#8b949e]"
+                title="Result of the pre-declared gate sequence and the Deflated Sharpe test. Thirteen variants were tried; accounting for that, no book is distinguishable from luck."
+              >
+                cleared?
+              </th>
               {/* Trades is always visible, whatever group is open. It is the one
                   number that changes how every other number should be read: 25
                   trades and 900 trades producing the same net are not equivalent
@@ -544,6 +619,14 @@ const filtered = useMemo(() => {
                     onClick={() => toggle(b.name)}
                   >
                     <span className="text-[#e6edf3]">{short(b.name)}</span>
+                    {bookCode(b) && (
+                      <span
+                        className="ml-1.5 rounded bg-[#1c2430] px-1 text-[10px] font-semibold text-[#8b949e]"
+                        title="Short handle for this book, used in the research docs and in conversation"
+                      >
+                        {bookCode(b)}
+                      </span>
+                    )}
                     {b.name === SHIPPING && (
                       <span className="ml-1.5 text-[10px] text-[#6366f1]">shipping</span>
                     )}
@@ -563,6 +646,31 @@ const filtered = useMemo(() => {
                           ? "1 at a time"
                           : "not stated"}
                     </span>
+                  </td>
+                  <td
+                    className={`px-3 py-1.5 text-left text-[11px] ${
+                      on ? "bg-[#161b22]" : "bg-[#0d1117]"
+                    }`}
+                  >
+                    {(() => {
+                      const g = gateSummary(b);
+                      if (!b.analysis) {
+                        return <span className="text-[#484f58]">not evaluated</span>;
+                      }
+                      return (
+                        <span
+                          className={g.ok ? "text-[#3fb950]" : "text-[#d29922]"}
+                          title={
+                            b.analysis.survives_all_gates
+                              ? "Cleared every pre-declared gate criterion, but failed the Deflated Sharpe test once 13 trials are accounted for"
+                              : `Failed: ${b.analysis.gate_fails.join(", ")}` +
+                                (b.analysis.dsr_pass ? "" : " · DSR fail")
+                          }
+                        >
+                          {g.text}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td
                     className={`px-3 py-1.5 text-right tabular-nums ${

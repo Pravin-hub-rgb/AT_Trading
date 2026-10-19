@@ -28,7 +28,46 @@ export type BookTag =
 /** One point of the equity series: [trade R, cumulative R, drawdown R]. */
 export type EquityPoint = [number, number, number];
 
+/**
+ * Per-book result of the selection work that happened after the original
+ * export. Added by exp_enrich_results.py; absent on books that were never part
+ * of the thirteen-book multi selection, which is most of them.
+ *
+ * The point of carrying it per book is that a reader looking at one row cannot
+ * see a confident-looking net and miss the fact that the selection procedure
+ * failed its own overfitting check. It rides on the book rather than in a
+ * banner that can be scrolled past.
+ */
+export interface BookAnalysis {
+  /** short handle used in conversation and docs - 107, 110, sigm, ... */
+  code: string;
+  /** e.g. "15/16" - how many pre-declared gate criteria passed */
+  gate_passed: string;
+  gate_fails: string[];
+  gates: { G1: string; G2: string; G3: string; G4: string };
+  survives_all_gates: boolean;
+  /** Deflated Sharpe probability per era; absent if pbo_dsr.json is missing */
+  dsr?: { oos?: { sr: number; dsr: number; p: number; n: number };
+          is?: { sr: number; dsr: number; p: number; n: number } };
+  /** true only if DSR cleared p<0.05 in both eras */
+  dsr_pass?: boolean;
+  verdict: string;
+}
+
+export interface VerdictBlock {
+  headline: string;
+  reason: string;
+  pbo: { oos: number | null; is: number | null } | null;
+  pbo_bar: number;
+  book_count_tried: number;
+  closest: string[];
+  closest_note: string;
+  next_step: string;
+  see: string;
+}
+
 export interface ResultBook {
+  analysis?: BookAnalysis;
   name: string;
   desc: string;
   family: "multi" | "sig";
@@ -130,6 +169,8 @@ export interface ResultsPayload {
   dd_budget: number | null;
   dd_budget_note?: string;
   dd_budget_r_legacy?: number;
+  /** stamped by exp_enrich_results.py - the answer, at the top of the payload */
+  verdict?: VerdictBlock;
   books: ResultBook[];
   count: number;
   artifact_mtime: number;
