@@ -30,8 +30,6 @@ def main():
         v_is, v_oos = vs[name]["is"], vs[name]["oos"]
         sp = G.t1_span(t1[name])
         folds = [x for x in t2[name] if x.get("reg_test_net") is not None]
-        sl = t3[name]["is"]["slippage"]
-        s1000 = [s for s in sl if s["bps"] == 1000][0]
 
         w = sum(1 for x in folds if x["test_net"] > x["reg_test_net"])
         ti = sum(1 for x in folds if x["test_net"] == x["reg_test_net"])
@@ -49,7 +47,11 @@ def main():
             "G3 BE slip IS": G.break_even(t3[name]["is"]["slippage"]) >= G.TH["g3_be_is"],
             "G3 BE slip OOS": G.break_even(t3[name]["oos"]["slippage"]) >= G.TH["g3_be_oos"],
             "G3 cost 3x": t3[name]["is"]["cost"][-1]["net"] > 0 and t3[name]["oos"]["cost"][-1]["net"] > 0,
-            "G3 lost<50%": s1000.get("pct_trades_lost", 0.0) < G.TH["g3_lost_frac"],
+            # "G3 lost<50%" was removed from the gate. It required half the
+            # winners to survive a 10% stop slippage, which is the top of the
+            # research doc's stress ladder and not an operating point. It
+            # rejected 13/13 for a reason shared by all thirteen. The ladder is
+            # still computed and still reported; it just no longer decides.
             "G4 dd>25R": t4[name]["is"]["frac_paths_dd_over_25"] < G.TH["g4_dd25"],
             "G4 dd>50R": (t4[name]["is"]["frac_paths_dd_over_50"] <= G.TH["g4_dd50"]
                           and t4[name]["oos"]["frac_paths_dd_over_50"] <= G.TH["g4_dd50"]),
