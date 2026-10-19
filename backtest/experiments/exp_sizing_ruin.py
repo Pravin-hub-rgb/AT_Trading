@@ -57,7 +57,7 @@ RUIN
 Equity trades at or below RUIN_LEVEL (50% of starting equity, the standard
 half-way wipe). Reported per risk level, with the drawdown that reached it.
 
-Output: sizing_ruin.json, sizing_ruin.md, docs/learn/SIZING_AND_RUIN.md
+Output: sizing_ruin.json, sizing_ruin.md, docs/learn/04_experiments/SIZING_AND_RUIN.md
 """
 from __future__ import annotations
 
