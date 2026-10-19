@@ -1,0 +1,74 @@
+{
+ "source": "data\\forward\\bybit\\BTCUSDT_1m.csv",
+ "bars": 51778,
+ "first": "2026-09-13 10:03:00",
+ "last": "2026-10-19 09:00:00",
+ "taker_bps": 5.5,
+ "by_distance": [
+  {
+   "distance_pct": 0.5,
+   "hits": 19743,
+   "gap_through": 0,
+   "gap_rate_pct": 0.0,
+   "p50_gap_bps": 0.0,
+   "p95_gap_bps": 0.0,
+   "p99_gap_bps": 0.0,
+   "max_gap_bps": 0.0,
+   "mean_gap_bps": 0.0,
+   "reach_rate_pct": 38.13,
+   "unresolved": 32034
+  },
+  {
+   "distance_pct": 1.26,
+   "hits": 4793,
+   "gap_through": 0,
+   "gap_rate_pct": 0.0,
+   "p50_gap_bps": 0.0,
+   "p95_gap_bps": 0.0,
+   "p99_gap_bps": 0.0,
+   "max_gap_bps": 0.0,
+   "mean_gap_bps": 0.0,
+   "reach_rate_pct": 9.26,
+   "unresolved": 46984
+  },
+  {
+   "distance_pct": 1.95,
+   "hits": 1251,
+   "gap_through": 0,
+   "gap_rate_pct": 0.0,
+   "p50_gap_bps": 0.0,
+   "p95_gap_bps": 0.0,
+   "p99_gap_bps": 0.0,
+   "max_gap_bps": 0.0,
+   "mean_gap_bps": 0.0,
+   "reach_rate_pct": 2.42,
+   "unresolved": 50526
+  },
+  {
+   "distance_pct": 3.0,
+   "hits": 0,
+   "gap_through": 0,
+   "gap_rate_pct": 0.0,
+   "p50_gap_bps": 0.0,
+   "p95_gap_bps": 0.0,
+   "p99_gap_bps": 0.0,
+   "max_gap_bps": 0.0,
+   "mean_gap_bps": 0.0,
+   "reach_rate_pct": 0.0,
+   "unresolved": 51777
+  },
+  {
+   "distance_pct": 5.0,
+   "hits": 0,
+   "gap_through": 0,
+   "gap_rate_pct": 0.0,
+   "p50_gap_bps": 0.0,
+   "p95_gap_bps": 0.0,
+   "p99_gap_bps": 0.0,
+   "max_gap_bps": 0.0,
+   "mean_gap_bps": 0.0,
+   "reach_rate_pct": 0.0,
+   "unresolved": 51777
+  }
+ ]
+}

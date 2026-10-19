@@ -122,7 +122,15 @@ def gap_distribution(d):
     g = (prev_close - op[1:]) / prev_close * 10000.0  # positive = down gap
     g = sorted(g[g > 0])
     if not g:
-        return None
+        # Bybit's continuous-contract klines set each candle's open to the prior
+        # close, so a downward open gap essentially does not exist in this feed.
+        # That is a property of the DATA GRANULARITY, not a fact about the
+        # market - true intrabar gaps need tick data. Returns zeros rather than
+        # None so the caller can print a number with a caveat attached instead
+        # of dying on a format error, which is what happened first time.
+        return {"count": 0, "p50": 0.0, "p95": 0.0, "p99": 0.0, "max": 0.0,
+                "over_10bps": 0, "over_50bps": 0, "over_100bps": 0,
+                "no_gaps": True}
     return {
         "count": len(g),
         "p50": round(g[len(g) // 2], 2),
@@ -200,16 +208,31 @@ def main():
          "| stop distance | hits | gap-through rate | p50 gap | p95 gap | p99 gap | worst |",
          "|---|---:|---:|---:|---:|---:|---:|"]
     for r in rows:
-        L.append("| %%%.2f | %d | %%%.3f | %%.1f bps | %%.1f bps | %%.1f bps | %%.1f bps |"
+        L.append("| %.2f | %d | %.3f | %.1f bps | %.1f bps | %.1f bps | %.1f bps |"
                  % (r["distance_pct"], r["hits"], r["gap_rate_pct"], r["p50_gap_bps"],
                     r["p95_gap_bps"], r["p99_gap_bps"], r["max_gap_bps"]))
-    L += ["", "## Why distance changes the answer", "",
+    L += ["", "## The finding that matters", "",
+          "Zero gap-throughs, across every stop distance, on real Bybit data.",
+          "That is NOT the market being calm and it is NOT synthetic data - the",
+          "whole feed was verified byte-for-byte against a fresh download. It is",
+          "that Bybit's continuous-contract klines set each candle's open to the",
+          "previous close, so a minute can never open somewhere the previous one",
+          "did not already trade.",
+          "",
+          "The consequence for the engine: `fill = min(stop, open)` in",
+          "`unified.py:1760` will resolve to `stop` essentially every time,",
+          "because `open` is never already past the stop. The gap branch exists,",
+          "is correct, and is almost never taken.",
+          "",
+          "So stop-gap risk cannot be measured from candles at all. It needs tick",
+          "data or live fill acknowledgements. Until then every reported net R",
+          "assumes a clean stop fill, and that assumption is unfalsifiable from",
+          "anything in this repository.", "",
+          "## Why distance changes the answer", "",
           "A wider stop is not a bigger number, it is a rarer event. At 0.5% the",
-          "stop sits inside ordinary noise and gaps are routine; at 3% the stop",
-          "is only reached when something has already gone wrong, and the gap",
-          "distribution is far thinner. Charging every book one slippage figure",
-          "therefore measures a number that belongs to none of them, which is",
-          "what a single assumed constant does.", "",
+          "stop sits inside ordinary noise; at 3% the stop is only reached when",
+          "something has already gone wrong. Charging every book one slippage",
+          "figure therefore measures a number that belongs to none of them.", "",
           "## Caveats", "",
           "- %d minutes of one symbol in one regime. A month with a large" % len(d),
           "  liquidation cascade would produce a heavier tail than this shows.",
