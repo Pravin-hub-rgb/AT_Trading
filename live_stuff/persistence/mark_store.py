@@ -8,7 +8,7 @@ import sqlite3
 import time
 from typing import Optional
 from .database import Database
-from engine.mark import Mark
+from _vendored.mark import Mark
 
 
 def insert_mark(db: Database, mark: Mark) -> int:

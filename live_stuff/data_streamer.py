@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real-time data streamer for v18 live trading."""
+"""Real-time data streamer for book 107 live trading."""
 
 import asyncio
 import json
