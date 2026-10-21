@@ -14,6 +14,13 @@ from pathlib import Path
 from datetime import datetime, timezone, timedelta
 import bisect
 
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
 import config
 from rate_manager import RateManager
 
@@ -152,8 +159,10 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
             self._tg = TelegramAlert()
         except Exception:
             pass
-        # Phase 15: Cached LTF trade (in-memory, no DB reads on every tick)
+        # Phase 15: Cached LTF trades (in-memory, no DB reads on every tick).
+        # Paper mode can hold several concurrent trades (book max_positions=0).
         self._open_ltf_trade: dict | None = None
+        self._open_ltf_trades: dict[int, dict] = {}
         # Monotonic counters for g_idx (never decrease across window trims)
         self._bar_counter_15m: int = 0
         self._bar_counter_1h: int = 0

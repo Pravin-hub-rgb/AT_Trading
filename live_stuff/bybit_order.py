@@ -7,6 +7,8 @@ Usage:
 """
 
 import os
+import sys
+import math
 import time
 import random
 import logging
@@ -15,6 +17,13 @@ from typing import Optional
 from dotenv import load_dotenv
 from pybit.unified_trading import HTTP
 import config
+
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        try:
+            _stream.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
 
 logger = logging.getLogger("bybit_order")
 if not logger.handlers:
@@ -86,12 +95,20 @@ class BybitTrader:
 
             # Derive precision from qty_step (0.001 -> 3 decimals)
             if self.qty_step > 0:
-                self.qty_precision = max(0, round(-__import__("math").log10(self.qty_step)))
+                self.qty_precision = max(0, round(-math.log10(self.qty_step)))
 
             logger.info(f"Instruments: tick={self.tick_size} qty_step={self.qty_step} "
                         f"min_qty={self.min_qty} min_notional={self.min_notional}")
         except Exception as e:
             logger.warning(f"Instrument fetch failed (using config defaults): {e}")
+
+    def format_price(self, price: float) -> str:
+        tick = self.tick_size or 0.1
+        decimals = max(0, round(-math.log10(tick))) if tick > 0 else 1
+        return f"{price:.{decimals}f}"
+
+    def format_qty(self, qty: float) -> str:
+        return f"{qty:.{self.qty_precision}f}"
 
     def set_leverage(self, leverage: int = None) -> dict:
         """Set leverage on Bybit. Called once on startup."""
@@ -293,6 +310,8 @@ class BybitTrader:
         stop_loss: str = None,
         take_profit: str = None,
         order_link_id: str = None,
+        reduce_only: bool = False,
+        tpsl_mode: str = None,
     ) -> dict:
         """Place a market order with optional SL/TP.
 
@@ -302,6 +321,7 @@ class BybitTrader:
             stop_loss: SL price as string
             take_profit: TP price as string
             order_link_id: unique ID for dedup (auto-generated if None)
+            reduce_only: close-only order; never flips or increases position
         """
         if not self.is_connected:
             logger.warning("No session — order not placed")
@@ -322,6 +342,12 @@ class BybitTrader:
             params["stopLoss"] = stop_loss
         if take_profit:
             params["takeProfit"] = take_profit
+        if reduce_only:
+            params["reduceOnly"] = True
+        if tpsl_mode:
+            params["tpslMode"] = tpsl_mode
+            if tpsl_mode == "Partial" and stop_loss:
+                params["slOrderType"] = "Market"
 
         try:
             resp = self.session.place_order(**params)
@@ -342,6 +368,8 @@ class BybitTrader:
         stop_loss: str = None,
         take_profit: str = None,
         order_link_id: str = None,
+        reduce_only: bool = False,
+        tpsl_mode: str = None,
     ) -> dict:
         """Place market order with exponential backoff retry, with per-attempt
         session self-heal.
@@ -366,7 +394,8 @@ class BybitTrader:
                         delay = min(RETRY_BASE_DELAY * (2 ** attempt) + random.uniform(0, 1), RETRY_MAX_DELAY)
                         time.sleep(delay)
                     continue
-            resp = self.place_market_order(side, qty, stop_loss, take_profit, order_link_id=link_id)
+            resp = self.place_market_order(side, qty, stop_loss, take_profit, order_link_id=link_id,
+                                            reduce_only=reduce_only, tpsl_mode=tpsl_mode)
             resp["_order_link_id"] = link_id
 
             if resp.get("retCode") == 0:
@@ -395,6 +424,44 @@ class BybitTrader:
                 logger.error(f"Order failed after {MAX_RETRIES} attempts: {ret_msg}")
 
         return last_resp or {"retCode": -1, "retMsg": "all retries failed"}
+
+    def place_entry_with_partial_sl(
+        self,
+        side: str,
+        qty: str,
+        stop_loss: float,
+        order_link_id: str = None,
+    ) -> dict:
+        sl = self.format_price(stop_loss)
+        resp = self.place_market_order_retry(
+            side, qty, stop_loss=sl, order_link_id=order_link_id,
+            tpsl_mode="Partial",
+        )
+        if resp.get("retCode") == 0:
+            link_id = resp.get("_order_link_id")
+            time.sleep(0.15)
+            ok, stops = self.get_open_stop_orders()
+            attached = []
+            if ok:
+                attached = [
+                    o for o in stops
+                    if o.get("parentOrderLinkId") == link_id
+                    and o.get("stopOrderType") == "PartialStopLoss"
+                ]
+            resp["_stop_order"] = attached[0] if attached else None
+        return resp
+
+    def close_reduce_only(self, qty: float, order_link_id: str = None) -> dict:
+        ok, pos = self.get_position_checked()
+        if not ok:
+            return {"retCode": -1, "retMsg": "position query failed"}
+        if pos is None:
+            return {"retCode": 0, "retMsg": "no position", "closed": False}
+        close_side = "Sell" if pos["side"] == "Buy" else "Buy"
+        return self.place_market_order_retry(
+            close_side, self.format_qty(qty), reduce_only=True,
+            order_link_id=order_link_id,
+        )
 
     def close_position_retry(self, max_attempts: int = 3) -> dict:
         """Close current position at market, with retries.
@@ -428,12 +495,18 @@ class BybitTrader:
                 return {"retCode": 0, "retMsg": "no position", "closed": False}
             else:
                 close_side = "Sell" if pos["side"] == "Buy" else "Buy"
-                # M5: attach SL to the close order (position's own SL, or a
-                # wide panic SL for unprotected orphans) — never naked to fill.
+                if not self._has_protective_stop(pos):
+                    panic = self._panic_sl_price(pos)
+                    if panic is not None:
+                        resp = self.update_sl(panic)
+                        if resp.get("retCode") != 0:
+                            logger.warning("panic SL placement failed before close: %s",
+                                           resp.get("retMsg", "unknown"))
                 resp = self.place_market_order_retry(close_side, str(pos["size"]),
-                                                     stop_loss=self._close_sl(pos))
+                                                     reduce_only=True)
                 if resp.get("retCode") == 0:
-                    return {"retCode": 0, "retMsg": "closed", "closed": True}
+                    return {"retCode": 0, "retMsg": "closed", "closed": True,
+                            "order_id": resp.get("result", {}).get("orderId")}
                 last_err = resp.get("retMsg", "close order failed")
 
             if attempt < max_attempts - 1:
@@ -444,26 +517,25 @@ class BybitTrader:
         logger.error(f"close_position_retry FAILED after {max_attempts} attempts: {last_err}")
         return {"retCode": -1, "retMsg": f"close failed after {max_attempts} attempts: {last_err}"}
 
-    def _close_sl(self, pos: dict) -> str | None:
-        """M5: SL for a close order.
+    def _has_protective_stop(self, pos: dict) -> bool:
+        if float(pos.get("stop_loss", 0) or 0) > 0:
+            return True
+        ok, orders = self.get_open_stop_orders()
+        if not ok:
+            return True
+        for o in orders:
+            if (o.get("stopOrderType") in ("StopLoss", "PartialStopLoss", "TrailingStop")
+                    and float(o.get("qty", 0) or 0) > 0):
+                return True
+        return False
 
-        Normal exits: the position already carries the exchange-side SL —
-        re-attach it to the close order (no-op protection; the SL must survive
-        until the fill lands).
-        Orphan/force-closes with no exchange SL: attach a wide panic SL at
-        ±PANIC_SL_PCT from entry — an unprotected position is never naked
-        between order placement and fill.
-        """
-        sl = float(pos.get("stop_loss", 0) or 0)
-        if sl > 0:
-            return f"{sl:.1f}"
+    def _panic_sl_price(self, pos: dict) -> float | None:
         entry = float(pos.get("entry_price", 0) or 0)
         if entry <= 0:
             return None
-        import config
         if pos.get("side") == "Buy":
-            return f"{entry * (1 - config.PANIC_SL_PCT / 100.0):.1f}"
-        return f"{entry * (1 + config.PANIC_SL_PCT / 100.0):.1f}"
+            return entry * (1 - config.PANIC_SL_PCT / 100.0)
+        return entry * (1 + config.PANIC_SL_PCT / 100.0)
 
     def close_position(self, side: str = None) -> dict:
         """Close current position at market.
@@ -482,17 +554,128 @@ class BybitTrader:
         close_side = "Sell" if pos["side"] == "Buy" else "Buy"
         qty = str(pos["size"])
 
-        return self.place_market_order(close_side, qty, stop_loss=self._close_sl(pos))
+        return self.place_market_order(close_side, qty, reduce_only=True)
+
+    def get_open_stop_orders(self) -> tuple[bool, list[dict]]:
+        """Return open conditional/TP-SL orders for the symbol."""
+        if not self.is_connected:
+            return False, []
+        try:
+            resp = self.session.get_open_orders(
+                category="linear", symbol=self.symbol,
+                orderFilter="StopOrder", limit=50,
+            )
+            if resp.get("retCode") != 0:
+                logger.error("open stop-order query failed: %s", resp.get("retMsg", "unknown"))
+                return False, []
+            active_statuses = {"New", "Untriggered", "PartiallyFilled", "Triggered", "PendingCancel"}
+            out = []
+            for o in resp.get("result", {}).get("list", []):
+                status = o.get("orderStatus")
+                if not status or status in active_statuses:
+                    out.append(o)
+            return True, out
+        except Exception as e:
+            logger.error(f"open stop-order query exception: {e}")
+            return False, []
+
+    def amend_partial_sl(self, order_id: str, trigger_price: float) -> dict:
+        """Move an existing partial SL in place."""
+        if not self.is_connected:
+            return {"retCode": -1, "retMsg": "no session"}
+        try:
+            resp = self.session.amend_order(
+                category="linear", symbol=self.symbol, orderId=order_id,
+                triggerPrice=self.format_price(trigger_price),
+            )
+            if resp.get("retCode") == 0:
+                logger.info("PARTIAL SL AMENDED: %s -> %s", order_id,
+                            self.format_price(trigger_price))
+            else:
+                logger.error("PARTIAL SL AMEND FAILED: %s %s",
+                             order_id, resp.get("retMsg", "unknown"))
+            return resp
+        except Exception as e:
+            logger.error(f"partial SL amend exception: {e}")
+            return {"retCode": -1, "retMsg": str(e)}
+
+    def place_partial_sl(self, qty: float, stop_loss: float) -> dict:
+        """Add a partial SL when no amendable order exists."""
+        if not self.is_connected:
+            return {"retCode": -1, "retMsg": "no session"}
+        ok, before = self.get_open_stop_orders()
+        before_ids = {o.get("orderId") for o in before} if ok else set()
+        try:
+            resp = self.session.set_trading_stop(
+                category="linear", symbol=self.symbol, tpslMode="Partial",
+                positionIdx=0, stopLoss=self.format_price(stop_loss),
+                slSize=self.format_qty(qty),
+            )
+            if resp.get("retCode") == 0:
+                time.sleep(0.2)
+                ok, after = self.get_open_stop_orders()
+                new = [o for o in after if o.get("orderId") not in before_ids] if ok else []
+                resp["_stop_order"] = new[0] if new else None
+            else:
+                logger.error("PARTIAL SL PLACE FAILED: %s", resp.get("retMsg", "unknown"))
+            return resp
+        except Exception as e:
+            logger.error(f"partial SL place exception: {e}")
+            return {"retCode": -1, "retMsg": str(e)}
+
+    def cancel_order_by_id(self, order_id: str) -> dict:
+        """Cancel one open order by exchange orderId."""
+        if not self.is_connected:
+            return {"retCode": -1, "retMsg": "no session"}
+        try:
+            resp = self.session.cancel_order(
+                category="linear", symbol=self.symbol, orderId=order_id,
+            )
+            if resp.get("retCode") == 0:
+                logger.info("ORDER CANCELLED: %s", order_id)
+            else:
+                logger.error("ORDER CANCEL FAILED: %s %s",
+                             order_id, resp.get("retMsg", "unknown"))
+            return resp
+        except Exception as e:
+            logger.error(f"order cancel exception: {e}")
+            return {"retCode": -1, "retMsg": str(e)}
+
+    def _order_info(self, o: dict) -> dict:
+        return {
+            "orderId": o.get("orderId"),
+            "orderLinkId": o.get("orderLinkId"),
+            "status": o.get("orderStatus"),
+            "cumExecQty": float(o.get("cumExecQty", 0) or 0),
+            "avgPrice": float(o.get("avgPrice", 0) or 0),
+            "cumExecFee": float(o.get("cumExecFee", 0) or 0),
+            "cumExecValue": float(o.get("cumExecValue", 0) or 0),
+            "qty": float(o.get("qty", 0) or 0),
+            "side": o.get("side"),
+            "createdTime": o.get("createdTime"),
+            "updatedTime": o.get("updatedTime"),
+        }
+
+    def get_order_by_id(self, order_id: str) -> tuple[bool, Optional[dict]]:
+        """Query an order by exchange orderId (open first, then history)."""
+        if not self.is_connected:
+            return False, None
+        query_ok = False
+        for fn in (self.session.get_open_orders, self.session.get_order_history):
+            try:
+                resp = fn(category="linear", symbol=self.symbol, orderId=order_id)
+                if resp.get("retCode") != 0:
+                    continue
+                query_ok = True
+                for o in resp.get("result", {}).get("list", []):
+                    if o.get("orderId") == order_id:
+                        return True, self._order_info(o)
+            except Exception as e:
+                logger.error(f"order-by-id query failed: {e}")
+        return query_ok, None
 
     def get_order_by_link_id(self, order_link_id: str) -> tuple[bool, Optional[dict]]:
-        """C7: query open orders + order history for an orderLinkId.
-
-        Returns (ok, order):
-            (True, order_dict) — found (open or historical)
-            (True, None)       — queries succeeded, order NOT found
-            (False, None)      — queries failed (network/API) — state unknown
-        order_dict: {orderId, status, cumExecQty, avgPrice, side}
-        """
+        """C7: query open orders + order history for an orderLinkId."""
         if not self.is_connected:
             return False, None
         try:
@@ -500,13 +683,7 @@ class BybitTrader:
                 category="linear", symbol=self.symbol, orderLinkId=order_link_id)
             for o in resp.get("result", {}).get("list", []):
                 if o.get("orderLinkId") == order_link_id:
-                    return True, {
-                        "orderId": o.get("orderId"),
-                        "status": o.get("orderStatus"),
-                        "cumExecQty": float(o.get("cumExecQty", 0) or 0),
-                        "avgPrice": float(o.get("avgPrice", 0) or 0),
-                        "side": o.get("side"),
-                    }
+                    return True, self._order_info(o)
         except Exception as e:
             logger.error(f"open-order query failed: {e}")
             return False, None
@@ -515,64 +692,75 @@ class BybitTrader:
                 category="linear", symbol=self.symbol, orderLinkId=order_link_id)
             for o in resp.get("result", {}).get("list", []):
                 if o.get("orderLinkId") == order_link_id:
-                    return True, {
-                        "orderId": o.get("orderId"),
-                        "status": o.get("orderStatus"),
-                        "cumExecQty": float(o.get("cumExecQty", 0) or 0),
-                        "avgPrice": float(o.get("avgPrice", 0) or 0),
-                        "side": o.get("side"),
-                    }
+                    return True, self._order_info(o)
             return True, None
         except Exception as e:
             logger.error(f"order-history query failed: {e}")
             return False, None
 
+    def get_order_fill(self, order_link_id: str) -> tuple[str, Optional[dict]]:
+        """Resolve an order's actual fill without using aggregate position size."""
+        ok, order = self.get_order_by_link_id(order_link_id)
+        if not ok:
+            return "unknown", None
+        if order is None:
+            return "flat", None
+        if order["cumExecQty"] > 0:
+            return "filled", order
+        if order["status"] in ("Cancelled", "Rejected", "Deactivated", "Expired"):
+            return "flat", None
+        return "unknown", None
+
+    def get_order_executions(self, order_id: str) -> tuple[bool, list[dict]]:
+        """Return fills for an order, including triggered partial SL orders."""
+        if not self.is_connected:
+            return False, []
+        try:
+            resp = self.session.get_executions(
+                category="linear", symbol=self.symbol, orderId=order_id, limit=50,
+            )
+            if resp.get("retCode") != 0:
+                logger.error("execution query failed: %s", resp.get("retMsg", "unknown"))
+                return False, []
+            out = []
+            for e in (resp.get("result", {}) or {}).get("list", []):
+                out.append({
+                    "execId": e.get("execId"),
+                    "orderId": e.get("orderId"),
+                    "orderLinkId": e.get("orderLinkId"),
+                    "execQty": float(e.get("execQty", 0) or 0),
+                    "execPrice": float(e.get("execPrice", 0) or 0),
+                    "execFee": float(e.get("execFee", 0) or 0),
+                    "execTime": int(e.get("execTime", 0) or 0),
+                    "closedSize": float(e.get("closedSize", 0) or 0),
+                    "stopOrderType": e.get("stopOrderType"),
+                    "side": e.get("side"),
+                })
+            return True, out
+        except Exception as e:
+            logger.error(f"execution query exception: {e}")
+            return False, []
+
     def verify_entry_order(self, order_link_id: str,
                            expected_side: str = None) -> tuple[str, Optional[dict]]:
-        """C7: resolve the true state of a market entry after a lost/failed response.
-
-        Position-first (market orders fill instantly — a position at entry time
-        is ours: one-way mode + the in-trade guard guarantee no other
-        position), order-by-linkId as tie-breaker.
-
-        Args:
-            order_link_id: the linkId the entry order was placed with
-            expected_side: "long"/"short" — if a position exists with the
-                WRONG side, state is "unknown" (never adopt a mismatch)
-
-        Returns (state, info):
-            ("filled", {qty, avgPrice, side})  — order landed -> ADOPT
-            ("flat", None)                     — confirmed never landed -> safe to fail
-            ("unknown", None)                  — queries failed -> cannot determine
-        """
-        ok, pos = self.get_position_checked()
-        if ok:
-            if pos is not None:
-                want = ("Buy" if expected_side == "long"
-                        else "Sell" if expected_side == "short" else None)
-                if want and pos["side"] != want:
-                    logger.error(f"verify_entry_order: position side mismatch "
-                                 f"({pos['side']} vs expected {want}) — state unknown")
-                    return "unknown", None
-                return "filled", {"qty": pos["size"], "avgPrice": pos["entry_price"],
-                                  "side": pos["side"]}
-            # Genuinely flat per the position query — confirm via order history
-            # (covers the near-impossible instant-SL case and any lag).
-            ok2, order = self.get_order_by_link_id(order_link_id)
-            if not ok2:
-                return "unknown", None
-            if order and order["status"] in ("Filled", "PartiallyFilled") and order["cumExecQty"] > 0:
-                return "filled", {"qty": order["cumExecQty"], "avgPrice": order["avgPrice"],
-                                  "side": order["side"]}
-            return "flat", None
-        # Position query FAILED (state unknown) — order history as tie-breaker.
-        ok2, order = self.get_order_by_link_id(order_link_id)
-        if not ok2:
+        """Resolve a market entry by its own order fill, never by aggregate size."""
+        ok, order = self.get_order_by_link_id(order_link_id)
+        if not ok:
             return "unknown", None
-        if order and order["status"] in ("Filled", "PartiallyFilled") and order["cumExecQty"] > 0:
-            return "filled", {"qty": order["cumExecQty"], "avgPrice": order["avgPrice"],
-                              "side": order["side"]}
-        if order and order["status"] in ("Cancelled", "Rejected", "Deactivated", "Expired"):
+        if order is not None:
+            want = ("Buy" if expected_side == "long"
+                    else "Sell" if expected_side == "short" else None)
+            if want and order.get("side") and order["side"] != want:
+                logger.error("verify_entry_order: order side mismatch "
+                             "(%s vs expected %s) — state unknown", order["side"], want)
+                return "unknown", None
+            if order["cumExecQty"] > 0:
+                return "filled", order
+            if order["status"] in ("Cancelled", "Rejected", "Deactivated", "Expired"):
+                return "flat", None
+            return "unknown", None
+        ok_pos, pos = self.get_position_checked()
+        if ok_pos and pos is None:
             return "flat", None
         return "unknown", None
 

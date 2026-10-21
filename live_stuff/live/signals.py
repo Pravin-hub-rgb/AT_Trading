@@ -42,6 +42,7 @@ from persistence.database import Database
 from persistence.mark_store import get_marks
 from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
 from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end
+from .state import is_gray_leg
 
 logger = logging.getLogger("live_loop")
 if not logger.handlers:
@@ -91,21 +92,41 @@ class SignalsMixin:
         # Only log signals that are new since last call, to avoid spam on full seed replay
         new_sigs = []
         for s in raw_sigs:
-            k = (int(s["bar"]), s.get("kind", ""), int(s["dir"]))
+            try:
+                sbar = int(s["bar"])
+            except (TypeError, ValueError):
+                date_str = str(s["bar"])
+                sbar = next((i for i, c in enumerate(c15) if c.get("date") == date_str), -1)
+                if sbar < 0:
+                    continue
+            k = (sbar, s.get("kind", ""), int(s["dir"]))
             if k not in self._logged_filter_keys:
                 new_sigs.append(s)
         # On first seed, raw_sigs may be 50+ — cap to last 5 new
         if len(new_sigs) > 5:
             # Mark older as seen without logging
             for s in new_sigs[:-5]:
-                self._logged_filter_keys.add((int(s["bar"]), s.get("kind", ""), int(s["dir"])))
+                try:
+                    sbar = int(s["bar"])
+                except (TypeError, ValueError):
+                    date_str = str(s["bar"])
+                    sbar = next((i for i, c in enumerate(c15) if c.get("date") == date_str), -1)
+                self._logged_filter_keys.add((sbar, s.get("kind", ""), int(s["dir"])))
             new_sigs = new_sigs[-5:]
         if not new_sigs:
             return
         to_log = new_sigs
         for sig in to_log:
-            self._logged_filter_keys.add((int(sig["bar"]), sig.get("kind", ""), int(sig["dir"])))
-            bar = int(sig["bar"])
+            try:
+                bar = int(sig["bar"])
+            except (TypeError, ValueError):
+                # _collect_signals can carry a date string instead of an index
+                date_str = str(sig["bar"])
+                bar = next((i for i, c in enumerate(c15) if c.get("date") == date_str), -1)
+                if bar < 0:
+                    print(f"[filter] skip signal with unknown bar {date_str!r}")
+                    continue
+            self._logged_filter_keys.add((bar, sig.get("kind", ""), int(sig["dir"])))
             if bar >= len(c15):
                 continue
             candle = c15[bar]
@@ -402,7 +423,41 @@ class SignalsMixin:
         """
         return (int(time.time()) - entry_ts) > max_bars * 900
 
+    def _at_position_limit(self) -> bool:
+        """Book position gate.
+
+        Paper honours the book's max_positions (0 = unlimited) so live paper
+        trades match the researched concurrency. Live uses the verified
+        per-leg partial-SL cap (10).
+        """
+        if not self.paper_mode:
+            return len(self._open_ltf_trades) >= int(getattr(config, "LIVE_MAX_LEGS", 10))
+        max_pos = int(self.v18.get("max_positions", 1) or 0)
+        return max_pos > 0 and len(self._open_ltf_trades) >= max_pos
+
+    def _close_gray_legs_from_engine(self, ltf_trades: list[dict]):
+        """Close open gray shadows using the engine's own exit when available.
+
+        Live ticks normally close them first; this is the parity/recovery path.
+        """
+        if not any(is_gray_leg(t) for t in self._open_ltf_trades.values()):
+            return
+        closed = {
+            (int(t["entry_ts"]), t["dir"]): t
+            for t in ltf_trades
+            if t.get("outcome") != "open"
+        }
+        for trade_id, trade in list(self._open_ltf_trades.items()):
+            if not is_gray_leg(trade):
+                continue
+            t = closed.get((int(trade["entry_ts"]), trade["direction"]))
+            if t is None:
+                continue
+            self._close_gray_leg(
+                trade, int(t["exit_ts"]), float(t["exit_price"]), t["outcome"])
+
     def _journal_trades(self, ltf_trades: list[dict]):
+        self._close_gray_legs_from_engine(ltf_trades)
         existing = self._get_existing_trades_set()
         new_trades = []
         for t in ltf_trades:
@@ -433,7 +488,7 @@ class SignalsMixin:
             # and never execute while the daily halt is active. Applies ONLY to
             # open trades; closed trades are history and always journal normally.
             if t.get("outcome") == "open":
-                in_trade = self._open_ltf_trade is not None
+                in_trade = self._at_position_limit()
                 stale = self._is_stale_entry(int(t["entry_ts"]))
                 if in_trade:
                     why, exit_reason = "in-trade", "stale_skip"
@@ -471,8 +526,13 @@ class SignalsMixin:
                     # C4: already closed elsewhere — never double-count
                     # daily loss, cost accounting, or trade stats.
                     print(f"[trade] {t['dir']} entry {t.get('entry_date', '?')} already closed — skipping duplicate journal")
-                    if self._open_ltf_trade and self._open_ltf_trade["id"] == trade_id:
-                        self._cache_ltf_trade_close()
+                    if trade_id in self._open_ltf_trades:
+                        self._cache_ltf_trade_close(trade_id)
+                    continue
+                if is_gray_leg(self._open_ltf_trades.get(int(trade_id))):
+                    self._cache_ltf_trade_close(trade_id)
+                    print(f"[gray] engine closed {t['dir']} @ {t['exit_price']:.2f} "
+                          f"({r_mult:+.2f}R, no costs)")
                     continue
                 self._check_daily_loss_limit(r_mult)
                 # Cost calculation (peer model: asymmetric % slippage)

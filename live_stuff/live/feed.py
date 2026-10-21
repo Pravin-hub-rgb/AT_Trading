@@ -202,10 +202,22 @@ class FeedMixin:
 
         now_ms = int(time.time() * 1000)
 
+        # Pagination must reach the live tail. Clamp absurdly old seeds to the
+        # fetch cap instead of stopping short and leaving a gap before "now".
+        max_seed_15m_ms = now_ms - 20000 * 900000
+        if seed_15m_ms < max_seed_15m_ms:
+            print("[seed] 15m: seed older than 208d cap - clamping to last 208d")
+            seed_15m_ms = max_seed_15m_ms
+        max_seed_1h_ms = now_ms - 5000 * 3600000
+        if seed_1h_ms < max_seed_1h_ms:
+            print("[seed] 1h: seed older than 208d cap - clamping to last 208d")
+            seed_1h_ms = max_seed_1h_ms
+
         # --- 15m: timestamp IS the first candle, no lookback ---
         try:
             print(f"[seed] 15m: first candle = {self._to_ist_str(seed_15m_ms)} (no lookback)")
-            raw_15m = self._fetch_klines_from_sync(self.symbol, "15m", seed_15m_ms, limit=2000)
+            want_15m = min(20000, max(2000, (now_ms - seed_15m_ms) // 900000 + 50))
+            raw_15m = self._fetch_klines_from_sync(self.symbol, "15m", seed_15m_ms, limit=want_15m)
             # Filter out live/incomplete candle (close_time > now)
             raw_15m = [c for c in raw_15m if c.get("close_time", c.get("open_time", 0)) <= now_ms]
             print(f"[seed] 15m: {len(raw_15m)} candles (filtered live)")
@@ -247,7 +259,8 @@ class FeedMixin:
         start_1h_ms = seed_1h_ms - chop_lookback_ms
         try:
             print(f"[seed] 1h: chop lookback = {self._to_ist_str(start_1h_ms)} -> seed = {self._to_ist_str(seed_1h_ms)}")
-            raw_1h = self._fetch_klines_from_sync(self.symbol, "1h", start_1h_ms, limit=500)
+            want_1h = min(5000, max(500, (now_ms - start_1h_ms) // 3600000 + 50))
+            raw_1h = self._fetch_klines_from_sync(self.symbol, "1h", start_1h_ms, limit=want_1h)
             # Filter out live/incomplete candle
             raw_1h = [c for c in raw_1h if c.get("close_time", c.get("open_time", 0)) <= now_ms]
             print(f"[seed] 1h: {len(raw_1h)} candles (filtered live)")
@@ -369,7 +382,8 @@ class FeedMixin:
                 start_15m_ms = (last_15m_ts * 1000) + step_ms
                 ist_start = self._to_ist_str(start_15m_ms)
                 print(f"[recover] 15m: fetching from {ist_start} (swing_end + 1 bar) to now")
-                raw_15m = self._fetch_klines_from_sync(self.symbol, "15m", start_15m_ms, limit=2000)
+                want_15m = min(20000, max(2000, (now_ms - start_15m_ms) // 900000 + 50))
+                raw_15m = self._fetch_klines_from_sync(self.symbol, "15m", start_15m_ms, limit=want_15m)
                 raw_15m = [c for c in raw_15m if c.get("close_time", c.get("open_time", 0)) <= now_ms]
                 print(f"[recover] 15m: {len(raw_15m)} candles (filtered live)")
                 candles_15m = self._normalize_candles(raw_15m)
@@ -404,7 +418,8 @@ class FeedMixin:
                 fetch_start_1h_ms = start_1h_ms - chop_lookback_ms
                 ist_start = self._to_ist_str(start_1h_ms)
                 print(f"[recover] 1h: fetching from {ist_start} (swing_end + 1 bar + 15 lookback) to now")
-                raw_1h = self._fetch_klines_from_sync(self.symbol, "1h", fetch_start_1h_ms, limit=500)
+                want_1h = min(5000, max(500, (now_ms - fetch_start_1h_ms) // 3600000 + 50))
+                raw_1h = self._fetch_klines_from_sync(self.symbol, "1h", fetch_start_1h_ms, limit=want_1h)
                 raw_1h = [c for c in raw_1h if c.get("close_time", c.get("open_time", 0)) <= now_ms]
                 print(f"[recover] 1h: {len(raw_1h)} candles (filtered live)")
                 candles_1h = self._normalize_candles(raw_1h)

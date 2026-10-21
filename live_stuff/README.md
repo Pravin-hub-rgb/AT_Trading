@@ -112,3 +112,16 @@ Do not edit `_vendored/` in place; re-vendor and re-run the parity check.
 - `docs/seed_marks.json` is vendored but not auto-loaded yet; it is a tail seed
   reserved for a future boot path.
 - Live basis (no 1m) is +1 trade / -1.27R versus the pins. Accepted.
+- Paper mode honours the book's `max_positions=0` (multiple concurrent trades).
+  Live order execution now uses one exchange net position plus one attached
+  partial SL per leg, capped at `LIVE_MAX_LEGS=10`, with an aggregate notional
+  cap (`MAX_AGGREGATE_NOTIONAL`). Demo-tested with 3 and 10 legs, one triggered
+  SL, reconcile of only that leg, and exit of the remaining legs; DB restore
+  with an open leg also passed. Full process restart + real partial fill still
+  pending; do not treat live as production-ready.
+- Min-qty rejects (`qty < 0.001 BTC`) are kept as internal gray shadow legs when
+  `GRAY_MIN_QTY_ENABLED=true` (default). They consume no exchange order or
+  margin, but occupy a live leg slot and update cooldown/streak state on a
+  shadow SL/trail/cap exit. They are excluded from exchange reconcile, fees,
+  funding, and the daily live-risk limit. Set the env var to `false` to restore
+  the old skip behaviour.

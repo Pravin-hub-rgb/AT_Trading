@@ -34,6 +34,13 @@ DEFAULT_RISK_INR = 250.0
 # Max leverage — hard cap, rejected if implied leverage exceeds this
 MAX_LEVERAGE = 3
 
+# Concurrent live legs. Book max concurrency is 10; demo accepted 11 partial SLs.
+LIVE_MAX_LEGS = int(os.getenv("LIVE_MAX_LEGS", "10"))
+
+# Aggregate open notional cap. Default covers the observed book-107 max ($6,165.56).
+# 0 disables the cap. This is a capital-policy setting, not a strategy parameter.
+MAX_AGGREGATE_NOTIONAL = float(os.getenv("MAX_AGGREGATE_NOTIONAL", "6500"))
+
 # Balance safety — never use more than this fraction of available balance
 BALANCE_SAFETY_MARGIN = 0.95
 
@@ -74,6 +81,10 @@ EXIT_SLIP_PCT = 0.010
 # BTCUSDT precision — 0.001 BTC increments
 QTY_PRECISION = 3
 MIN_BTC_QTY = 0.001
+
+# Keep unsizeable min-qty entries as internal gray legs: no exchange order,
+# but the leg stays open and preserves cooldown/strategy state.
+GRAY_MIN_QTY_ENABLED = os.getenv("GRAY_MIN_QTY_ENABLED", "true").lower() == "true"
 
 # =============================================================================
 # RATE MANAGER

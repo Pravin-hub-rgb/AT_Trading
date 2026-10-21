@@ -20,6 +20,10 @@ from rate_manager import RateManager
 RISK_INR_FILE = Path(__file__).resolve().parents[1] / "risk_inr.txt"
 
 
+def is_gray_leg(trade: dict | None) -> bool:
+    return bool(trade and trade.get("exchange_state") == "gray")
+
+
 def read_risk_inr() -> float:
     """Read risk amount in INR from risk_inr.txt. Edit file to change (no restart needed)."""
     try:
@@ -40,7 +44,7 @@ from bybit_streamer import BybitStreamer, backfill_klines_bybit
 from book import BOOK_NAME, BOOK_PARAMS, SWING, SWING_1H_LABEL, get_book_params
 from persistence.database import Database
 from persistence.mark_store import get_marks
-from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
+from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_open_ltf_trades, get_ltf_trades
 from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end
 
 logger = logging.getLogger("live_loop")
@@ -206,24 +210,34 @@ class StateMixin:
             print(f"[htf] restore failed: {e}")
 
     def _restore_ltf_trade(self):
-        """Phase 15: Load cached LTF trade from DB on boot.
-        
-        Called once at startup. Subsequent reads use self._open_ltf_trade (instant).
-        Cache is updated when trades open/close — no DB reads on every tick.
+        """Phase 15: Load all open LTF trades from DB on boot.
+
+        Called once at startup. Subsequent reads use self._open_ltf_trades
+        (instant). Cache is updated when trades open/close — no DB reads on
+        every tick.
         """
         try:
-            row = get_open_ltf_trade(self.db)
-            self._open_ltf_trade = row
-            if row:
-                print(f"[ltf] Restored open trade from DB: {row['direction']} @ {row['entry_price']:.2f} SL={row['sl_current']:.2f} TP={row['tp_price']:.2f} (id={row['id']})")
+            rows = get_open_ltf_trades(self.db)
+            self._open_ltf_trades = {int(r["id"]): r for r in rows}
+            self._open_ltf_trade = rows[-1] if rows else None
+            if rows:
+                print(f"[ltf] Restored {len(rows)} open trade(s) from DB")
+                for row in rows:
+                    tag = " GRAY" if self._is_gray_leg(row) else ""
+                    print(f"[ltf]   {row['direction']} @ {row['entry_price']:.2f} "
+                          f"SL={row['sl_current']:.2f} TP={row['tp_price']:.2f}{tag} (id={row['id']})")
         except Exception as e:
             print(f"[ltf] restore failed: {e}")
+
+    @staticmethod
+    def _is_gray_leg(trade: dict | None) -> bool:
+        return is_gray_leg(trade)
 
     def _cache_ltf_trade_open(self, trade_id: int, direction: str, entry_ts: int,
                                entry_price: float, sl_initial: float, tp_price: float,
                                cap_ts: int, htf_window_id: int):
         """Phase 15: Update cache when trade opens."""
-        self._open_ltf_trade = {
+        rec = {
             "id": trade_id,
             "direction": direction,
             "entry_ts": entry_ts,
@@ -234,16 +248,52 @@ class StateMixin:
             "cap_ts": cap_ts,
             "htf_window_id": htf_window_id,
             "status": "open",
+            "qty": 0.0,
+            "entry_order_id": None,
+            "entry_order_link_id": None,
+            "entry_fill_price": None,
+            "sl_order_id": None,
+            "sl_order_link_id": None,
+            "sl_order_status": None,
+            "exchange_state": "none",
+            "exit_order_id": None,
+            "exit_fill_price": None,
+            "fee_paid": 0.0,
+            "funding_paid": 0.0,
+            "last_sync_ts": None,
         }
+        self._open_ltf_trades[int(trade_id)] = rec
+        self._open_ltf_trade = rec
 
-    def _cache_ltf_trade_close(self):
-        """Phase 15: Clear cache when trade closes."""
-        self._open_ltf_trade = None
+    def _cache_ltf_trade_close(self, trade_id: int | None = None):
+        """Phase 15: Clear one cached trade (default: primary), keep the rest."""
+        if trade_id is None and self._open_ltf_trade:
+            trade_id = int(self._open_ltf_trade["id"])
+        if trade_id is not None:
+            self._open_ltf_trades.pop(int(trade_id), None)
+        if self._open_ltf_trades:
+            self._open_ltf_trade = list(self._open_ltf_trades.values())[-1]
+        else:
+            self._open_ltf_trade = None
 
-    def _cache_ltf_trade_update_sl(self, new_sl: float):
-        """Phase 15: Update cached SL when trailing."""
-        if self._open_ltf_trade:
-            self._open_ltf_trade["sl_current"] = new_sl
+    def _cache_ltf_trade_exchange(self, trade_id: int, **fields):
+        """Update cached per-leg exchange fields for one trade."""
+        trade_id = int(trade_id)
+        rec = self._open_ltf_trades.get(trade_id)
+        if rec is None:
+            return
+        rec.update(fields)
+        if self._open_ltf_trade and int(self._open_ltf_trade["id"]) == trade_id:
+            self._open_ltf_trade = rec
+
+    def _cache_ltf_trade_update_sl(self, new_sl: float, trade_id: int | None = None):
+        """Phase 15: Update cached SL for one trade (default: primary)."""
+        if trade_id is None and self._open_ltf_trade:
+            trade_id = int(self._open_ltf_trade["id"])
+        if trade_id is not None and int(trade_id) in self._open_ltf_trades:
+            self._open_ltf_trades[int(trade_id)]["sl_current"] = new_sl
+            if self._open_ltf_trade and int(self._open_ltf_trade["id"]) == int(trade_id):
+                self._open_ltf_trade["sl_current"] = new_sl
 
     def _print_status(self):
         """Print current status (HTF bias, position, etc.) — Phase 2 rolling record."""
@@ -273,9 +323,13 @@ class StateMixin:
         else:
             htf_str = f"HTF: NO BIAS | CHOP={self.chop_index:.1f} REGIME={self.regime.upper()} ATR={self.atr_14:.1f}"
 
-        open_trade = self._open_ltf_trade
-        if open_trade:
-            pos_str = f"POS: {open_trade['direction']} @ {open_trade['entry_price']:.2f} SL={open_trade['sl_current']:.2f} TP={open_trade['tp_price']:.2f}"
+        trades = list(self._open_ltf_trades.values())
+        if trades:
+            legs = [f"{'GRAY ' if self._is_gray_leg(t) else ''}"
+                    f"{t['direction']} @ {t['entry_price']:.2f} "
+                    f"SL={t['sl_current']:.2f} TP={t['tp_price']:.2f}"
+                    for t in trades]
+            pos_str = f"POS: {len(legs)} open | " + " | ".join(legs)
         else:
             pos_str = "POS: FLAT"
 

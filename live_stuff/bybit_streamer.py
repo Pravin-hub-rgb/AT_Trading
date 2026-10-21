@@ -352,6 +352,7 @@ class BybitStreamer:
         base = REST_BASE_DEMO if self.demo else REST_BASE
 
         all_candles = []
+        seen = set()
         cur = start_ms
         now_ms = int(time.time() * 1000)
 
@@ -374,9 +375,13 @@ class BybitStreamer:
                 break
 
             for k in data:
+                ot = int(k[0])
+                if ot in seen:
+                    continue
+                seen.add(ot)
                 all_candles.append({
-                    "open_time": int(k[0]),
-                    "close_time": int(k[0]) + step_ms,
+                    "open_time": ot,
+                    "close_time": ot + step_ms,
                     "open": float(k[1]),
                     "high": float(k[2]),
                     "low": float(k[3]),
@@ -385,13 +390,13 @@ class BybitStreamer:
                     "is_closed": True,
                 })
 
-            nxt = int(data[-1][0]) + step_ms
-            if nxt <= cur or len(data) < batch_limit:
+            newest = max(int(k[0]) for k in data)
+            nxt = newest + step_ms
+            if nxt <= cur or nxt >= now_ms or len(data) < batch_limit:
                 break
             cur = nxt
 
-        all_candles.reverse()
-        now_ms = int(time.time() * 1000)
+        all_candles.sort(key=lambda c: c["open_time"])
         all_candles = [c for c in all_candles if c["close_time"] <= now_ms]
         return all_candles
 
@@ -456,6 +461,7 @@ def backfill_klines_bybit(symbol: str, interval: str, limit: int = 100,
     step_ms = {"1": 60000, "5": 300000, "15": 900000, "60": 3600000, "240": 14400000}.get(interval, 900000)
 
     all_candles = []
+    seen = set()
     cur = start_ms if start_ms > 0 else 0
     now_ms = int(time.time() * 1000)
 
@@ -480,9 +486,13 @@ def backfill_klines_bybit(symbol: str, interval: str, limit: int = 100,
             break
 
         for k in data:
+            ot = int(k[0])
+            if ot in seen:
+                continue
+            seen.add(ot)
             all_candles.append({
-                "open_time": int(k[0]),
-                "close_time": int(k[0]) + step_ms,
+                "open_time": ot,
+                "close_time": ot + step_ms,
                 "open": float(k[1]),
                 "high": float(k[2]),
                 "low": float(k[3]),
@@ -491,15 +501,13 @@ def backfill_klines_bybit(symbol: str, interval: str, limit: int = 100,
                 "is_closed": True,
             })
 
-        nxt = int(data[-1][0]) + step_ms
-        if nxt <= cur or len(data) < batch_limit:
+        # Bybit returns newest first; advance from the newest bar, never data[-1].
+        newest = max(int(k[0]) for k in data)
+        nxt = newest + step_ms
+        if nxt <= cur or nxt >= now_ms or len(data) < batch_limit:
             break
         cur = nxt
 
-        if len(all_candles) >= limit:
-            break
-
-    all_candles.reverse()
-    now_ms = int(time.time() * 1000)
+    all_candles.sort(key=lambda c: c["open_time"])
     all_candles = [c for c in all_candles if c["close_time"] <= now_ms]
     return all_candles

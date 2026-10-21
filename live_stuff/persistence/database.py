@@ -54,7 +54,19 @@ CREATE TABLE IF NOT EXISTS ltf_trades (
     r_multiple REAL,
     trail_next_pivot REAL,
     trail_activation_idx INTEGER,
-    trail_confirmed BOOLEAN
+    trail_confirmed BOOLEAN,
+    entry_order_id TEXT,
+    entry_order_link_id TEXT,
+    entry_fill_price REAL,
+    sl_order_id TEXT,
+    sl_order_link_id TEXT,
+    sl_order_status TEXT,
+    exchange_state TEXT DEFAULT 'none',
+    exit_order_id TEXT,
+    exit_fill_price REAL,
+    fee_paid REAL DEFAULT 0,
+    funding_paid REAL DEFAULT 0,
+    last_sync_ts INTEGER
 );
 
 -- Marks: append-only journal (never update/delete)
@@ -140,6 +152,7 @@ class Database:
         self._migrate_htf_windows()
         self._migrate_trading_state()
         self._migrate_ltf_trades()
+        self._migrate_ltf_exchange_fields()
         self._create_indexes()  # M4 — after migrations (rebuild drops ltf indexes)
         self._conn.commit()
 
@@ -218,6 +231,28 @@ class Database:
             self._conn.execute("ALTER TABLE ltf_trades_rebuild RENAME TO ltf_trades")
             logging.getLogger("database").info(
                 "M1: ltf_trades rebuilt — htf_window_id is now nullable")
+
+    def _migrate_ltf_exchange_fields(self):
+        """Add per-leg exchange order/fill fields to ltf_trades."""
+        cursor = self._conn.execute("PRAGMA table_info(ltf_trades)")
+        existing = {row[1] for row in cursor.fetchall()}
+        migrations = [
+            ("entry_order_id", "TEXT"),
+            ("entry_order_link_id", "TEXT"),
+            ("entry_fill_price", "REAL"),
+            ("sl_order_id", "TEXT"),
+            ("sl_order_link_id", "TEXT"),
+            ("sl_order_status", "TEXT"),
+            ("exchange_state", "TEXT DEFAULT 'none'"),
+            ("exit_order_id", "TEXT"),
+            ("exit_fill_price", "REAL"),
+            ("fee_paid", "REAL DEFAULT 0"),
+            ("funding_paid", "REAL DEFAULT 0"),
+            ("last_sync_ts", "INTEGER"),
+        ]
+        for col, typedef in migrations:
+            if col not in existing:
+                self._conn.execute(f"ALTER TABLE ltf_trades ADD COLUMN {col} {typedef}")
 
     def _create_indexes(self):
         """M4: query-path indexes. Created AFTER migrations because the M1

@@ -13,6 +13,7 @@ Usage:
                                        # seed Bybit from specific timestamps
 """
 
+import os
 import sys
 import time
 import re
@@ -158,6 +159,7 @@ def main():
                 close_resp = session.place_order(
                     category="linear", symbol=symbol, side=side,
                     orderType="Market", qty=qty, positionIdx=0,
+                    reduceOnly=True,
                 )
                 if close_resp.get("retCode") == 0:
                     print("[shutdown] Position flattened")
@@ -165,12 +167,19 @@ def main():
                     print(f"[shutdown] Flatten failed: {close_resp.get('retMsg', 'unknown')}")
             else:
                 print("[shutdown] No open position")
-            # Cancel all open orders
-            try:
-                session.cancel_all_orders(category="linear", symbol=symbol)
-                print("[shutdown] Orders cancelled")
-            except Exception as e:
-                print(f"[shutdown] Cancel error: {e}")
+            check = session.get_positions(category="linear", symbol=symbol)
+            still_open = any(
+                p["symbol"] == symbol and float(p.get("size", 0) or 0) > 0
+                for p in check.get("result", {}).get("list", [])
+            )
+            if still_open:
+                print("[shutdown] Position still open — keeping protective orders")
+            else:
+                try:
+                    session.cancel_all_orders(category="linear", symbol=symbol)
+                    print("[shutdown] Orders cancelled")
+                except Exception as e:
+                    print(f"[shutdown] Cancel error: {e}")
         except Exception as e:
             print(f"[shutdown] Flatten error: {e}")
 

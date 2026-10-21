@@ -136,6 +136,10 @@ def close_ltf_trade(
     exit_price: float,
     exit_reason: str,
     r_multiple: float,
+    exit_order_id: Optional[str] = None,
+    exit_fill_price: Optional[float] = None,
+    fee_paid: Optional[float] = None,
+    funding_paid: Optional[float] = None,
 ) -> int:
     """Close an LTF trade.
 
@@ -145,12 +149,27 @@ def close_ltf_trade(
     Returns:
         cursor.rowcount: 1 = closed now, 0 = already closed (no-op)
     """
+    sets = ["status = 'closed'", "exit_ts = ?", "exit_price = ?",
+            "exit_reason = ?", "r_multiple = ?"]
+    params: list = [exit_ts, exit_price, exit_reason, r_multiple]
+    if exit_order_id is not None:
+        sets.append("exit_order_id = ?")
+        params.append(exit_order_id)
+    if exit_fill_price is not None:
+        sets.append("exit_fill_price = ?")
+        params.append(exit_fill_price)
+    if fee_paid is not None:
+        sets.append("fee_paid = ?")
+        params.append(fee_paid)
+    if funding_paid is not None:
+        sets.append("funding_paid = ?")
+        params.append(funding_paid)
+    params.append(trade_id)
     with db.transaction() as conn:
         cursor = conn.execute(
-            """UPDATE ltf_trades
-               SET status = 'closed', exit_ts = ?, exit_price = ?, exit_reason = ?, r_multiple = ?
-               WHERE id = ? AND status = 'open'""",
-            (exit_ts, exit_price, exit_reason, r_multiple, trade_id),
+            f"""UPDATE ltf_trades SET {", ".join(sets)}
+                WHERE id = ? AND status = 'open'""",
+            params,
         )
         return cursor.rowcount
 
@@ -173,6 +192,38 @@ def update_trade_qty(db: Database, trade_id: int, actual_qty: float):
         )
 
 
+_EXCHANGE_FIELDS = {
+    "entry_order_id", "entry_order_link_id", "entry_fill_price",
+    "sl_order_id", "sl_order_link_id", "sl_order_status",
+    "exchange_state", "exit_order_id", "exit_fill_price",
+    "fee_paid", "funding_paid", "last_sync_ts",
+}
+
+
+def update_trade_exchange(db: Database, trade_id: int, **fields) -> int:
+    """Update per-leg exchange order/fill fields."""
+    unknown = set(fields) - _EXCHANGE_FIELDS
+    if unknown:
+        raise ValueError(f"unknown exchange fields: {sorted(unknown)}")
+    if not fields:
+        return 0
+    sets = ", ".join(f"{name} = ?" for name in fields)
+    params = list(fields.values()) + [trade_id]
+    with db.transaction() as conn:
+        cursor = conn.execute(
+            f"UPDATE ltf_trades SET {sets} WHERE id = ?",
+            params,
+        )
+        return cursor.rowcount
+
+
+def get_ltf_trade(db: Database, trade_id: int) -> Optional[dict]:
+    row = db.conn.execute(
+        "SELECT * FROM ltf_trades WHERE id = ?", (trade_id,)
+    ).fetchone()
+    return dict(row) if row else None
+
+
 def get_open_ltf_trade(db: Database) -> Optional[dict]:
     """Get the currently open LTF trade, if any."""
     row = db.conn.execute(
@@ -183,6 +234,14 @@ def get_open_ltf_trade(db: Database) -> Optional[dict]:
         return None
     
     return dict(row)
+
+
+def get_open_ltf_trades(db: Database) -> list[dict]:
+    """Get all currently open LTF trades, oldest first (paper multi-position)."""
+    rows = db.conn.execute(
+        "SELECT * FROM ltf_trades WHERE status = 'open' ORDER BY id ASC"
+    ).fetchall()
+    return [dict(row) for row in rows]
 
 
 def get_ltf_trades(db: Database, from_ts: int = 0, to_ts: int = 0) -> list[dict]:
