@@ -115,10 +115,13 @@ Do not edit `_vendored/` in place; re-vendor and re-run the parity check.
 - Paper mode honours the book's `max_positions=0` (multiple concurrent trades).
   Live order execution now uses one exchange net position plus one attached
   partial SL per leg, capped at `LIVE_MAX_LEGS=10`, with an aggregate notional
-  cap (`MAX_AGGREGATE_NOTIONAL`). Demo-tested with 3 and 10 legs, one triggered
+  cap (`MAX_AGGREGATE_NOTIONAL`).   Demo-tested with 3 and 10 legs, one triggered
   SL, reconcile of only that leg, and exit of the remaining legs; DB restore
-  with an open leg also passed. Full process restart + real partial fill still
-  pending; do not treat live as production-ready.
+  with an open leg also passed. Full hard-kill restart recovery is now
+  demo-tested both ways: leg alive at boot (restore + boot SL sync + clean
+  exit) and SL fired while the process was down (boot reconcile closes the
+  leg from the actual SL executions and re-arms cooldown/streak). Real
+  partial fill is still pending; do not treat live as production-ready.
 - Min-qty rejects (`qty < 0.001 BTC`) are kept as internal gray shadow legs when
   `GRAY_MIN_QTY_ENABLED=true` (default). They consume no exchange order or
   margin, but occupy a live leg slot and update cooldown/streak state on a

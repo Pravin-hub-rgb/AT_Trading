@@ -3,7 +3,7 @@
 Status: paper multi-position is implemented and tested. Live per-leg wiring is implemented;
 fake-trader entry/exit/reconcile and Bybit adapter v2 tests pass.
 Phase 0 core mechanics passed on Bybit demo (3 legs, per-leg partial SL, amend, trigger, 10+ legs, exit sequencing).
-Still pending: real demo partial-fill + restart, trail-isolation test, aggregate-cap test, paper regression.
+Still pending: real demo partial-fill across restart, paper forward parity sample, gray restore with real legs.
 No production live changes until Phase 0–6 are checked.
 
 ## Definitions (locked before coding)
@@ -138,7 +138,7 @@ Aggregate exposure (all open legs, time-weighted):
 - [x] Fake-trader: min-qty rejection and qty-step rounding. **`test_per_leg_execution.py` with gray disabled: qty 0 rejected, no order. `test_gray_legs.py`: min-qty opens gray, no exchange calls.**
 - [x] Fake-trader: gray lifecycle. **`test_gray_legs.py`: tick SL closes with zero fees, cooldown 8 and streak 1, daily P&L untouched; trail is DB-only; flat reconcile keeps gray and closes real legs; toggle off restores `stale_skip`. LiveLoop integration covers journaling, cap occupancy, restart restore, and no duplicate journaling.**
 - [x] Demo integration: 3 and 10 legs, one trigger, restart restore, exit the rest. **`test_real_multi_leg.py`: 3 legs and 10 legs (10 entries/10 stops at risk INR 800) -> leg-2 stop filled -> reconcile closed only that leg -> remaining legs exited; total flat, 0 stops. `test_real_execution_demo.py`: DB restore with open leg -> reconcile keeps it.**
-- [ ] Demo integration: full process restart with a triggered SL, real partial fill. **Partial-fill + full process restart still open.**
+- [x] Demo integration: hard-kill process restart with a real leg. **Two-phase test killed with `Stop-Process -Force` (no cleanup) after a real entry, then a fresh real `LiveLoop` booted on the same DB. Scenario 1: leg alive at boot -> `[ltf] Restored 1 open trade(s)`, `_boot_sync_sl` amended the exchange SL to the DB value, clean `_execute_exit("cap")`, account flat. Scenario 2: SL tightened to `cur - 2.0` before the kill -> it fired while the process was dead -> boot `_reconcile_bybit_position` found the SL executions ("SL already fired @ 82732.80 - closing DB"), closed the leg, re-armed cooldown 8 and streak.** **(`test_real_kill_open.py` + `test_real_kill_restore.py`.)** Real partial fill across restart still open.
 - [ ] Demo/restart: gray restore with real legs, cap interaction, and forward shadow parity. **Fake coverage only.**
 - [x] Paper regression: existing multi-position test passes. **`test_multi_position.py` updated for cap 10.**
 - [ ] Live-data smoke still passes.
@@ -151,7 +151,7 @@ Aggregate exposure (all open legs, time-weighted):
 - [ ] Capital policy chosen and documented.
 - [ ] Confirm live risk amount: `risk_inr.txt` is currently 250 INR (~$2.94 at INR 85), not the $5/R used in the capital/SL analysis; demo multi-leg tests monkeypatched 500/800 INR for sizing.
 - [ ] Aggregate margin guard tested with 10 legs.
-- [ ] Restart/reconcile tested with an exchange-triggered SL.
+- [x] Restart/reconcile tested with an exchange-triggered SL. **Hard-kill restart scenario 2 (2026-10-21): boot reconcile closed the leg from the real SL executions.**
 - [ ] No production live until forward evidence clears the gate.
 
 ## Open decisions
