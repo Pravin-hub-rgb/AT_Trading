@@ -29,8 +29,9 @@ def open_htf_window(
       - hrisk: risk per unit (abs(entry - sl))
       - lvl_1_5r: 1.5R gate price
       - lvl_3r: 3R target price
-      - regime: 'flip' or 'b2' — flip and b2 windows are independent v7 runs
-        and can be open simultaneously
+      -       regime: 'flip' | 'b2' | 'decisive' — window families are independent
+        v7 runs and can be open simultaneously; regime stores the ENGINE
+        bucket name the book's regime rule selects
     
     Returns:
         The window id
@@ -59,9 +60,9 @@ def close_htf_window(db: Database, window_id: int, close_ts: int, reason: str):
 def get_open_htf_window(db: Database, regime: Optional[str] = None) -> Optional[dict]:
     """Get the currently open HTF window, if any.
 
-    regime: 'flip' | 'b2' — filter to that regime's window. None (default)
-    keeps the legacy behavior: return the most recently opened open window
-    regardless of regime.
+    regime: 'flip' | 'b2' | 'decisive' — filter to that regime's window. None
+    (default) keeps the legacy behavior: return the most recently opened open
+    window regardless of regime.
     """
     if regime is not None:
         row = db.conn.execute(

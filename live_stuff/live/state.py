@@ -112,6 +112,30 @@ class StateMixin:
         window = tr[lo_i:n]
         return sum(window) / len(window) if window else 0.0
 
+    def _compute_regime(self) -> str:
+        """Engine regime rule, mirrored from vendored unified (regime chain).
+
+        The engine routes each bar into the window set by bucket NAME: mode
+        atr_high → 'decisive' if ATR%(15m) > atr_high_thresh else 'flip',
+        atr_low the opposite, chop modes by the chop index. Live mirrors the
+        last closed bar so status/linkage describe the SAME window family the
+        engine gates with, named the way the engine stamps it.
+        """
+        mode = (self.v18 or {}).get("mode", "chop")
+        if mode == "atr_high":
+            if self.atr_14 > 0 and self.window_15m:
+                atrp = self.atr_14 / float(self.window_15m[-1]["close"]) * 100.0
+                return "decisive" if atrp > float(self.v18.get("atr_high_thresh", 0.65)) else "flip"
+            return "flip"
+        if mode == "atr_low":
+            if self.atr_14 > 0 and self.window_15m:
+                atrp = self.atr_14 / float(self.window_15m[-1]["close"]) * 100.0
+                return "decisive" if atrp < float(self.v18.get("atr_low_thresh", 0.65)) else "flip"
+            return "flip"
+        if mode == "b2_vs_flip_chop":
+            return "b2" if self.chop_index > self._chop_thresh else "flip"
+        return "decisive" if self.chop_index > self._chop_thresh else "flip"
+
     def _update_htf_metrics(self, price: float | None = None):
         """Recompute rolling HTF metrics: chop, ATR, regime, unrealized R."""
         # Only recompute chop/ATR when explicitly called (candle close)
@@ -125,7 +149,7 @@ class StateMixin:
                 self.atr_14 = self._compute_atr_14()
             except Exception:
                 self.atr_14 = 0.0
-            self.regime = "b2" if self.chop_index > self._chop_thresh else "flip"
+            self.regime = self._compute_regime()
             self._chop_stale = False
         # Unrealized R of each 1h window (flip and b2 tracked independently).
         # Consumers select the regime-appropriate one via self.regime.
@@ -143,15 +167,31 @@ class StateMixin:
             self.htf_current_r_b2 = (float(price) - self.htf_entry_px_b2) * d / self.htf_hrisk_b2
         else:
             self.htf_current_r_b2 = 0.0
+        if self.htf_window_open_dec and self.htf_hrisk_dec > 1e-9:
+            if price is None:
+                price = float(self.window_15m[-1]["close"]) if self.window_15m else self.htf_entry_px_dec
+            d = 1 if self.htf_window_dir_dec == "long" else -1
+            self.htf_current_r_dec = (float(price) - self.htf_entry_px_dec) * d / self.htf_hrisk_dec
+        else:
+            self.htf_current_r_dec = 0.0
 
     def _active_htf(self) -> dict:
         """Active (regime-selected) HTF window fields.
 
-        v18 gates each signal against the window set chosen by chop at the
-        signal bar: chop > thresh → b2 window, else flip window. This returns
-        whichever window the CURRENT regime selects, so status/gate/diagnostics
-        always describe the window the sim would actually use.
+        The engine gates each signal against the window set chosen by its
+        per-bar regime rule (unified's regime chain: chop/atr_high/... bucket
+        names decisive/flip/b2). This returns whichever window family the
+        CURRENT regime selects, named like the engine's own buckets, so
+        status/gate/diagnostics always describe the window the sim would
+        actually use.
         """
+        if self.regime == "decisive":
+            return {
+                "open": self.htf_window_open_dec, "dir": self.htf_window_dir_dec,
+                "entry_px": self.htf_entry_px_dec, "sl": self.htf_sl_dec,
+                "hrisk": self.htf_hrisk_dec, "r": self.htf_current_r_dec,
+                "id": self.htf_window_id_dec, "tag": "DECISIVE",
+            }
         if self.regime == "b2":
             return {
                 "open": self.htf_window_open_b2, "dir": self.htf_window_dir_b2,
@@ -173,17 +213,17 @@ class StateMixin:
     def _restore_htf_state(self):
         """Restore persisted HTF windows on boot (Phase 2.5 + Phase 15: full matrix).
 
-        Restores BOTH regime windows — flip and b2 are independent v7 runs and
-        can be open simultaneously. The regime switch selects which one is
-        active for metrics/status/linkage.
+        Restores ALL regime windows — flip, b2 and decisive are independent
+        v7 runs and can be open simultaneously. The regime rule selects which
+        one is active for metrics/status/linkage.
         """
         try:
             from persistence.trade_store import get_open_htf_window
-            for regime in ("flip", "b2"):
+            for regime in ("flip", "b2", "decisive"):
                 row = get_open_htf_window(self.db, regime=regime)
                 if not row:
                     continue
-                sfx = "" if regime == "flip" else "_b2"
+                sfx = {"flip": "", "b2": "_b2", "decisive": "_dec"}[regime]
                 # M3: a window whose 16d cap passed while we were down cannot
                 # still be alive — close it in the DB, never restore it.
                 if time.time() > int(row["entry_ts"]) + CAP_DAYS * 86400:

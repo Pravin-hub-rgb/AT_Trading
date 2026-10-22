@@ -177,7 +177,7 @@ class SignalsMixin:
                     outcome = "PASS"
                     reason = f"regime {self.regime} chop {self.chop_index:.1f}"
             # Also include regime info in log even when rejected, for observability
-            flag = "B2" if self.regime == "b2" else "FLIP"
+            flag = self.regime.upper()  # engine bucket name: FLIP/B2/DECISIVE
             print(f"[filter] {outcome:6} {kind} {sdir} @ {px:.2f} bar={bar} {date} | HTF[{w['tag']}] {w['dir'] or 'none'} {ext_r_str} gate {self.v18['ext_stop_r']}R | regime {flag} chop {self.chop_index:.1f} | {reason}")
 
     def _run_v18_simulation(self):
@@ -220,9 +220,10 @@ class SignalsMixin:
         ltf_trades = result["ltf_trades"]
         htf_trades = result.get("htf_trades", [])
         htf_trades_b2 = result.get("htf_trades_b2", [])
+        htf_trades_dec = result.get("htf_trades_decisive", [])
 
-        # Track HTF window state (flip + b2 tracked independently)
-        self._track_htf_windows(htf_trades, htf_trades_b2, c1h)
+        # Track HTF window state (flip + b2 + decisive tracked independently)
+        self._track_htf_windows(htf_trades, htf_trades_b2, c1h, htf_trades_dec)
 
         self._journal_marks("15m", sw15, c15)
         self._journal_marks("1h", sw1h, c1h)
@@ -241,14 +242,22 @@ class SignalsMixin:
         htf_dir = w["dir"] if w["open"] else "none"
         print(f"[live] engine: {len(sw15)} 15m sw, {len(sw1h)} 1h sw, {len(ltf_trades)} LTF trades | HTF[{w['tag']}]: {htf_status} {htf_dir}")
 
+    def _window_id_for_regime(self, trade_regime: str):
+        """Map a trade's regime stamp (htf_regime) to the tracked window id
+        of the SAME family — decisive trades link to the decisive window,
+        never to the flip bucket."""
+        return {"flip": self.htf_window_id, "b2": self.htf_window_id_b2,
+                "decisive": self.htf_window_id_dec}.get(trade_regime, self.htf_window_id)
+
     def _track_htf_windows(self, htf_trades: list[dict], htf_trades_b2: list[dict],
-                           c1h: list[dict]):
+                           c1h: list[dict], htf_trades_decisive: list[dict] | None = None):
         """Track and log HTF window state changes — Phase 2 rolling record.
 
         Persists open/close to htf_windows table so state survives restarts.
-        Flip and b2 windows are tracked INDEPENDENTLY — they come from separate
-        v7 runs and can be open simultaneously. The regime switch (chop vs
-        thresh) selects which one is active for metrics/status/linkage.
+        Flip, b2 and decisive windows are tracked INDEPENDENTLY — they come
+        from separate v7 runs and can be open simultaneously. The regime rule
+        (mirror of the engine's per-bar routing, state._compute_regime) selects
+        which one is active for metrics/status/linkage.
 
         An empty trade list for a regime means no trades for it in this window
         slice — that regime's window state is preserved as-is (a truncated seed
@@ -258,15 +267,17 @@ class SignalsMixin:
             self._track_window_regime("flip", htf_trades)
         if htf_trades_b2:
             self._track_window_regime("b2", htf_trades_b2)
+        if htf_trades_decisive:
+            self._track_window_regime("decisive", htf_trades_decisive)
         self._update_htf_metrics()
 
     def _track_window_regime(self, regime: str, htf_trades: list[dict]):
-        """Track open/close of ONE regime's HTF window (flip or b2).
+        """Track open/close of ONE regime's HTF window (flip/b2/decisive).
 
-        Mirrors the Phase 2 tracker but parameterized by regime so both window
+        Mirrors the Phase 2 tracker but parameterized by regime so all window
         families share identical open/close/persist logic.
         """
-        sfx = "" if regime == "flip" else "_b2"
+        sfx = {"flip": "", "b2": "_b2", "decisive": "_dec"}[regime]
         latest_htf = htf_trades[-1]
         htf_status = latest_htf.get("outcome", "open")
         entry_ts = int(latest_htf.get("entry_ts", 0))
@@ -472,7 +483,7 @@ class SignalsMixin:
             # self.regime here could mis-link if chop crossed the threshold
             # between signal and journal.
             trade_regime = t.get("htf_regime", "flip")
-            wid = self.htf_window_id_b2 if trade_regime == "b2" else self.htf_window_id
+            wid = self._window_id_for_regime(trade_regime)
             htf_id = int(wid) if wid is not None else None  # M1: NULL, not 0 sentinel
             trade_id = open_ltf_trade(
                 self.db,

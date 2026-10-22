@@ -1359,6 +1359,7 @@ max_positions=0,
     n=len(candles_ltf)
     if n==0:
         return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,
+                "htf_trades_decisive": htf_trades_decisive,
                 "ltf_trades": [], "intervals": intervals_flip}
     candle_ts=candle_ts_ltf
     # ATR for SL buffer
@@ -1905,4 +1906,5 @@ max_positions=0,
     parent_intervals = sorted(_parent_ivs.values(), key=lambda x: x[0])
 
     return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,
+            "htf_trades_decisive": htf_trades_decisive,
             "ltf_trades": ltf_trades, "intervals": parent_intervals}

@@ -117,8 +117,9 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         self.htf_current_r = 0.0            # unrealized R of the 1h leg vs current 15m close
         self.htf_hrisk = 0.0                # abs(entry - sl) for R calc
         # B2 window tracking — independent v7 run, can be open simultaneously
-        # with the flip window. `self.regime` (chop > thresh) selects which
-        # window is ACTIVE for metrics/status/linkage.
+        # with the flip window. `self.regime` (state._compute_regime, mirror
+        # of the engine's regime chain) selects which window is ACTIVE for
+        # metrics/status/linkage.
         self.htf_window_open_b2 = False
         self.htf_window_dir_b2 = None       # 'long' | 'short'
         self.htf_window_start_ts_b2 = 0
@@ -127,10 +128,21 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         self.htf_sl_b2 = 0.0
         self.htf_current_r_b2 = 0.0         # unrealized R of the b2 1h leg
         self.htf_hrisk_b2 = 0.0             # abs(entry - sl) for b2 R calc
+        # DECISIVE window tracking — atr_high books (e.g. 107) route their
+        # volatile bucket here; the engine result exposes it via
+        # htf_trades_decisive. Tracked independently like flip/b2.
+        self.htf_window_open_dec = False
+        self.htf_window_dir_dec = None
+        self.htf_window_start_ts_dec = 0
+        self.htf_window_id_dec: int | None = None
+        self.htf_entry_px_dec = 0.0
+        self.htf_sl_dec = 0.0
+        self.htf_current_r_dec = 0.0        # unrealized R of the decisive 1h leg
+        self.htf_hrisk_dec = 0.0            # abs(entry - sl) for decisive R calc
         self.chop_index = 50.0              # current 1h chop (last value)
         self._chop_stale = True              # recompute on next _update_htf_metrics
         self.atr_14 = 0.0                   # current 15m ATR(14) in price units
-        self.regime = 'flip'                # 'flip' or 'b2' (chop > thresh ? b2 : flip)
+        self.regime = 'flip'                # 'flip' | 'b2' | 'decisive' (engine regime rule, state._compute_regime)
         # Dedup for open-swing mark printing (Phase 1.6)
         self._printed_marks: set = set()
         # Dedup for filter diagnostics (Phase 3)
@@ -227,7 +239,7 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
                 self.on_tick(price, ts_ms // 1000)
                 # Rolling R update on every tick so status/gate is live
                 # (either regime window — metrics computes the right one)
-                if self.htf_window_open or self.htf_window_open_b2:
+                if self.htf_window_open or self.htf_window_open_b2 or self.htf_window_open_dec:
                     try:
                         self._update_htf_metrics(price=float(price))
                     except Exception:
