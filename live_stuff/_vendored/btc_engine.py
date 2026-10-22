@@ -164,16 +164,27 @@ def _collect_signals(
                        or (_which == "short" and not _up))
             if not _use_fs:
                 _seg0 = s.get("seg") or {}
-                _got = False
+                _pv_conf = str(swings[si - 1].get("confirmed_at_time") or "") if si > 0 else ""
+                _pv_conf_i = int(swings[si - 1].get("confirmed_at_idx", -1)) if si > 0 else -1
                 for _b in (s.get("breaks") or []):
-                    if _b.get("kind") in ("B2", "FLIP", "DECISIVE") and _b.get("time"):
-                        out.append({"bar": _b["time"],
-                                    "dir": 1 if _b.get("dir") == "up" else -1,
-                                    "swing_start_px": float(_seg0.get("start_px") or 0.0),
-                                    "swing_no": int(s.get("swing_index", si)),
-                                    "kind": _b.get("kind")})
-                        _got = True
-                        break
+                    if _b.get("kind") not in ("B2", "FLIP", "DECISIVE") or not _b.get("time"):
+                        continue
+                    # Pre-FS filter: reject signals before previous swing's
+                    # FS. Skip the mark (don't kill the swing) - the swing
+                    # stays alive for post-FS marks that are fully tradeable.
+                    if filter_pre_fs:
+                        if _pv_conf and _b["time"] < _pv_conf:
+                            continue
+                        elif not _pv_conf and _pv_conf_i >= 0:
+                            _bpos = store.pos(_b["time"]) if store else -1
+                            if _bpos >= 0 and _bpos < _pv_conf_i:
+                                continue
+                    out.append({"bar": _b["time"],
+                                "dir": 1 if _b.get("dir") == "up" else -1,
+                                "swing_start_px": float(_seg0.get("start_px") or 0.0),
+                                "swing_no": int(s.get("swing_index", si)),
+                                "kind": _b.get("kind")})
+                    break
                 continue
             _i = s.get("fs_at_idx")
             fs_t = None

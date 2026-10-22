@@ -30,7 +30,12 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REGDIR = HERE.parent / "tests" / "registry"
 SRC = HERE / "repin_all.json"
-ANCHOR = "as of 2026-10-15 (exp_repin_all.py, net lens)"
+# The anchor says WHICH chain produced the numbers, and - since the wait-for-FS
+# gate moved the engine and only this book's own claims are rewritten - it also
+# says the cross-references to other books are still the pre-gate ones.
+ANCHOR = ("as of 2026-10-22 (exp_repin_all.py, net lens, wait-for-FS gate; "
+          "cross-references are pre-gate)")
+OLD_ANCHORS = ("as of 2026-10-15 (exp_repin_all.py, net lens)",)
 
 MERGE_ORDER = ("trail", "sweep", "signal", "risk", "d3", "kingsweep")
 
@@ -61,6 +66,13 @@ def fix_desc_span(text, pins):
         return rep
 
     out = CLAIM.sub(sub, out)
+    # Move an existing anchor to the new chain before anything else looks for
+    # one. Without this a desc would keep the old anchor and gain the new one
+    # next to it, and the reader would be told two different things.
+    for old in OLD_ANCHORS:
+        if old in out:
+            out = out.replace(old, ANCHOR)
+            edits.append((old, ANCHOR))
     # The anchor is added whenever the desc makes a measured claim, whether or
     # not the numbers had moved. A claim that is currently correct still needs
     # to say which chain made it correct, otherwise there is no signal the day

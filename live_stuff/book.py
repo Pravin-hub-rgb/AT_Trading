@@ -1,9 +1,17 @@
 """Book 107 - the single strategy this deployment runs.
 
 Book: fsent_champ_long_mcloff_htf15 (code 107)
-Source: backtest/tests/registry, measured 2026-10-15 (repin_all, net lens).
-Pins:  IS 2026: 525t / +538.40R / DD 28.38R / WR 41.1%
-       OOS 2021-22: 295t / +272.92R / DD 11.05R / WR 38.1%
+Source: backtest/tests/registry, measured 2026-10-22 (repin_all, net lens,
+        wait-for-FS gate).
+Pins:  IS 2026: 520t / +508.37R / DD 27.23R / WR 40.0%
+       OOS 2021-22: 290t / +220.71R / DD 9.61R / WR 41.0%
+
+The wait-for-FS gate is in the engine, not here: an entry on a mark may only be
+taken once the PREVIOUS swing has printed its FS. Entering at this swing's own
+FS print is a different thing and is unchanged. The gate cost this book
+30.03R in sample and 52.21R out of sample - it removed 51 in-sample and 48
+out-of-sample entries that were taken before the previous swing was declared,
+and the chain that replaced them was worth less than what it removed.
 
 These 15 values are the merged engine signature: registry BP + the book's
 own params. Everything else is unified.py's default, which is part of the

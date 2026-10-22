@@ -25,10 +25,15 @@ something. We draw swing highs and swing lows on both charts, and a trade
    swing low it must protect) and a 3R target.
 2. On the **15m chart**, a "ladder" builds: swing highs and swing lows chain into
    a staircase pattern (down, down, down… then a break **up**).
-3. When both align — the 1h window is open in the right direction, chop is not
-   too high, and the 15m staircase just broke in the same direction — **that bar
-   close is the entry**. Stop goes just below the last 15m swing low (plus a tiny
-   0.01-ATR buffer).
+3. One more reading decides **which** 1h window actually gates the bar: the
+   book's regime router. Book 107 (`mode="atr_high"`) reads the 15m **ATR%
+   (ATR(14)/close × 100)** — above 0.65 the **DECISIVE** window family gates;
+   below it the **FLIP** family does (exact chains in §2/§3).
+4. When both align — the 1h window is open in the right direction, the regime
+   router allows it, and the 15m trigger fires (longs: FS; shorts: the first
+   B2 mark — see "Entry triggers" in §3) — **that bar close is the entry**.
+   Stop goes at the leg extreme (the pivot the leg defends, `pivot_rule="leg"`)
+   plus a tiny 0.01-ATR buffer.
 
 This "1h sets the door open, 15m walks through it" idea is the whole strategy.
 Everything else is safety rules around it.
@@ -60,15 +65,26 @@ the signals it produces are the signals the backtest would have taken.
 
 At any moment, the active 1h window is described by:
 - status: **OPEN** or **CLOSED**
-- direction: **LONG** (the only side for book 107)
+- direction: **long or short** — window families exist on both sides, and
+  book 107 trades both (long via FS, short via the first B2 mark)
 - entry price, stop price (−1R), 1.5R level, 3R level
 - current unrealized R (that price moved how many R already?)
 
-Chop (a "range-ness" score from 0–100) is computed on the 1h chart. If chop is
-above 58.0, the "b2" window is active; below 58.0, the "flip" window is. The
-engine keeps **both** windows alive independently and switches between them based
-on the current chop. This is what makes the regime get picked per bar rather than
-globally.
+Book 107's regime is **not** driven by chop. The engine's regime chain
+(`unified.py:1183`) reads how wild the 15m chart currently is — **ATR(14) of
+the 15m candles as a percent of price** (ATR% = ATR/close × 100). The mode is
+`atr_high`:
+
+- **ATR% above 0.65 → the "decisive" family** gates this bar.
+- **ATR% below 0.65 → the "flip" family** gates this bar.
+
+The engine computes **all three window families every bar** (decisive, flip,
+and a third "b2" family that belongs to *other* books' rules — 107 never
+trades behind it) and the router picks the gating family **per bar close**, so
+the same instant a regime flips, the gate switches to the new family. The live
+status/tracker mirrors this same rule (`state._compute_regime`), so what you
+see printed (REGIME=... → DECISIVE/FLIP) is the family the engine would gate
+with at that bar.
 
 ---
 
@@ -78,9 +94,12 @@ Every 15m signal has to pass **all** of these to become a live order:
 
 1. **HTF window exists.** A 1h swing-break must already be open in the same
    direction (long only for book 107). No window = no trade.
-2. **Regime matches.** The signal must come from the regime that the current
-   chop selects (chop > 58 → "b2" regime's window; otherwise "flip" regime's
-   window). Windows and signals from the other regime are diagnostics only.
+2. **Regime matches.** The signal must come from the window family the regime
+   router selects **for that bar** (ATR% > 0.65 → "decisive" family; otherwise
+   "flip"). Every trade carries the regime family it was gated with
+   (`htf_regime` stamp), and windows/signals from the other families are
+   diagnostics only. Note: "b2" windows seen in tables belong to other books'
+   rules; book 107's families are decisive/flip.
 3. **3R extension not done.** The 1h window must not have already traveled its
    3R target (`ext_stop_r=3.0`, `htf_rr=3.0`). If the move is already past 3R,
    we do not chase it.
@@ -98,6 +117,73 @@ Every 15m signal has to pass **all** of these to become a live order:
 8. **Cap on concurrency.** Book allows up to 10 open legs (`max_positions=0`
    means "no hard cap from the strategy itself"; the live executor allows
    `LIVE_MAX_LEGS=10`).
+9. **Wait for the previous swing's FS.** A signal may not be taken until the
+   swing BEFORE the one it belongs to has printed its FS. This is the engine's
+   `filter_pre_fs` gate and it is the last rule, not the first: it decides
+   *when* a mark may be used, not *which* marks count. See the subsection
+   below — it is the rule with the most history and the least documentation.
+
+### The wait-for-FS rule (added 2026-10-22)
+
+**The rule.** No entry may be taken before the **previous** swing has printed
+its FS. The swing you are trading on is still forming — its own extreme is not
+final until its FS prints, and that print is *after* the entry bar — so the
+only swing whose declaration you can know at entry time is the previous one.
+Waiting for it is the most the rule can ask for without asking for the future.
+
+**What it does NOT touch.** Entering at a swing's **own** FS print is a
+different thing and is unchanged: the swing is declaring itself at that
+instant, so it is declared by construction. What the rule covers is the
+**fall-through side** — the side that enters on a mark (B2 / FLIP / DECISIVE)
+instead of at the print. That is the side that was broken.
+
+**Where it lives.** In the engine, in `_collect_signals` (`btc_engine.py`), in
+the `fs_` branch's fall-through sub-loop. It is not a book parameter and not a
+live-loop rule: it is engine-level, so every book that uses that path obeys
+it, and the vendored copy that `live_stuff` runs is byte-identical to the
+research one. The HTF leg cannot reach it — the HTF side is only ever handed
+`"fs_both"`, which has no fall-through.
+
+**Why it was added.** The fall-through sub-loop was re-implemented on
+2026-10-04 (`539935c`, "DIRECTIONAL FS ENTRY") with no pre-FS check and an
+early return past the normal loop's C13a filter. From that date, every
+fall-through entry was taken on an **undeclared** swing — the exact thing the
+normal path had forbidden since 2026-09-11. For book 107 that was 51
+in-sample and 48 out-of-sample entries.
+
+**What it cost.** The pre-FS entries were worth **+36.56R in sample** and
+**+50.19R out of sample** as a group. Removing them shifted the chain, and
+the trades that replaced them were worth only ~+7.8R / ~+4.5R. Book 107 goes
+from 525t / +538.40R to **520t / +508.37R** in sample and from 295t / +272.92R
+to **290t / +220.71R** out of sample — **-30.03R in sample and -52.21R out of
+sample**. The out-of-sample cost is roughly twice the in-sample cost on most
+books in the family. That is the honest price of the rule, and it is not a
+rounding error.
+
+**How it is checked.** Not by reading the code. `exp_gate_sweep.py` re-derives
+every /results book on both eras with the gate on and off, and asserts for
+every trade that the entry is not before the previous swing's confirmation.
+On the gated engine the fall-through count is **0**.
+
+### Entry triggers (quick note — where each side fires)
+
+- **Long** = the **FS print** of a declared up-swing: the 15m candle that
+  closes with the declaration (chop-target or sustain confirm, leg ≥50 bars).
+  An open (undeclared) up-swing cannot FS yet — nothing fires.
+- **Short** = the **first B2 mark** of the forming down leg (`B1 → B2`):
+  fires that candle's close, before the leg declares. But only once the
+  **previous** swing has declared — the wait-for-FS rule above. The live
+  engine call appends the open leg's marks to the signal list every 15m close
+  ("L5"), so the B2 candle is the entry candle. When the leg later declares,
+  its declared break list carries the same mark — the dedupe key
+  `(entry_ts, dir)` skips it, no double entry.
+- **FLIP** (leg's origin broken against it) is also a tradeable mark in the
+  mark's OWN direction (a flip-up on a down leg = a long signal), but
+  **FCFS**: the *first* tradeable mark of a leg owns that leg's single
+  entry — if B2 fired first, later marks of the same leg stay diagnostic.
+  A flip re-arms a fresh leg, so the counters reset.
+- B1 never trades (structure only). `stale` guard (>2 bars old at journal
+  time) is the recovery safety net, not the normal path.
 
 ---
 
