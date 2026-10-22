@@ -5758,10 +5758,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.13171707073231692,
-   "null_p_oos": 0.37940514871282177,
-   "null_dnet_is": 303.61,
-   "null_dnet_oos": 123.76,
+   "null_p_is": 0.09047738065483629,
+   "null_p_oos": 0.435391152211947,
+   "null_dnet_is": 327.62,
+   "null_dnet_oos": 99.83,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -5780,16 +5780,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.2195866800010952,
-      "dsr": -50.862881928208694,
+      "sr": 0.18054325248028427,
+      "dsr": -51.57789914097641,
       "p": 1.0,
-      "n": 425
+      "n": 394
      },
      "is": {
-      "sr": 0.22194975471398673,
-      "dsr": -72.96251326913924,
+      "sr": 0.22578333465872358,
+      "dsr": -72.50567513766372,
       "p": 1.0,
-      "n": 762
+      "n": 736
      }
     },
     "dsr_pass": false,
@@ -11301,10 +11301,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.13021744563859036,
-   "null_p_oos": 0.23194201449637591,
-   "null_dnet_is": 298.94,
-   "null_dnet_oos": 130.75,
+   "null_p_is": 0.08872781804548863,
+   "null_p_oos": 0.21544613846538366,
+   "null_dnet_is": 291.1,
+   "null_dnet_oos": 116.23,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -11324,16 +11324,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.23877543384927621,
-      "dsr": -48.64717570293654,
+      "sr": 0.20422202536867587,
+      "dsr": -49.6168998928633,
       "p": 1.0,
-      "n": 395
+      "n": 365
      },
      "is": {
-      "sr": 0.22202677781269564,
-      "dsr": -72.80378712780168,
+      "sr": 0.2253315138957089,
+      "dsr": -70.51668959750265,
       "p": 1.0,
-      "n": 754
+      "n": 716
      }
     },
     "dsr_pass": false,
@@ -16825,10 +16825,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.12871782054486378,
-   "null_p_oos": 0.3926518370407398,
-   "null_dnet_is": 291.07,
-   "null_dnet_oos": 98.02,
+   "null_p_is": 0.08847788052986753,
+   "null_p_oos": 0.37790552361909524,
+   "null_dnet_is": 294.44,
+   "null_dnet_oos": 85.97,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -16847,16 +16847,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.2227197255226001,
-      "dsr": -49.212903759087254,
+      "sr": 0.1864088472969321,
+      "dsr": -49.77837347000339,
       "p": 1.0,
-      "n": 388
+      "n": 356
      },
      "is": {
-      "sr": 0.22095310569341842,
-      "dsr": -72.96852863612149,
+      "sr": 0.22458918663610494,
+      "dsr": -70.52662811329918,
       "p": 1.0,
-      "n": 751
+      "n": 721
      }
     },
     "dsr_pass": false,
@@ -19955,13 +19955,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.0857285678580355,
-   "null_p_oos": 0.38240439890027494,
-   "null_dnet_is": 172.92,
-   "null_dnet_oos": 113.22,
-   "null_sig_is": false,
+   "null_p_is": 0.006748312921769558,
+   "null_p_oos": 0.16420894776305925,
+   "null_dnet_is": 186.86,
+   "null_dnet_oos": 143.57,
+   "null_sig_is": true,
    "null_sig_oos": false,
-   "null_sig": false,
+   "null_sig": true,
    "analysis": {
     "code": "110",
     "gate_passed": "12/16",
@@ -19980,16 +19980,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.26714201430564927,
-      "dsr": -35.599543494084216,
+      "sr": 0.26264029465227606,
+      "dsr": -34.962922443754245,
       "p": 1.0,
-      "n": 216
+      "n": 208
      },
      "is": {
-      "sr": 0.2890270647457071,
-      "dsr": -46.79739173721164,
+      "sr": 0.2872823064586375,
+      "dsr": -46.451029775148065,
       "p": 1.0,
-      "n": 395
+      "n": 390
      }
     },
     "dsr_pass": false,
@@ -25856,13 +25856,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": true,
-   "null_p_is": 0.9885028742814297,
-   "null_p_oos": 0.8132966758310423,
-   "null_dnet_is": 28.77,
-   "null_dnet_oos": -19.3,
-   "null_sig_is": false,
+   "null_p_is": 0.015246188452886777,
+   "null_p_oos": 0.976005998500375,
+   "null_dnet_is": 324.19,
+   "null_dnet_oos": -2.14,
+   "null_sig_is": true,
    "null_sig_oos": false,
-   "null_sig": false
+   "null_sig": true
   },
   {
    "name": "fsent_champ_long_tskip4",
@@ -29197,10 +29197,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.9242689327668083,
-   "null_p_oos": 0.9062734316420895,
-   "null_dnet_is": 63.5,
-   "null_dnet_oos": 45.2,
+   "null_p_is": 0.05573606598350413,
+   "null_p_oos": 0.6840789802549363,
+   "null_dnet_is": 115.03,
+   "null_dnet_oos": 66.36,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -33355,10 +33355,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.10222444388902774,
-   "null_p_oos": 0.011247188202949263,
-   "null_dnet_is": 72.85,
-   "null_dnet_oos": 54.84,
+   "null_p_is": 0.20044988752811796,
+   "null_p_oos": 0.015996000999750064,
+   "null_dnet_is": 73.49,
+   "null_dnet_oos": 58.31,
    "null_sig_is": false,
    "null_sig_oos": true,
    "null_sig": true,
@@ -33377,16 +33377,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.2850887468316321,
-      "dsr": -38.32078261267427,
+      "sr": 0.25728534562956923,
+      "dsr": -37.103431043008655,
       "p": 1.0,
-      "n": 295
+      "n": 290
      },
      "is": {
-      "sr": 0.24430764391124168,
-      "dsr": -57.14502436654874,
+      "sr": 0.2359072739238376,
+      "dsr": -57.242817321132925,
       "p": 1.0,
-      "n": 525
+      "n": 520
      }
     },
     "dsr_pass": false,
@@ -37219,13 +37219,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.3421644588852787,
-   "null_p_oos": 0.11822044488877781,
-   "null_dnet_is": 38.32,
-   "null_dnet_oos": 39.49,
+   "null_p_is": 0.501374656335916,
+   "null_p_oos": 0.02899275181204699,
+   "null_dnet_is": 27.09,
+   "null_dnet_oos": 49.72,
    "null_sig_is": false,
-   "null_sig_oos": false,
-   "null_sig": false,
+   "null_sig_oos": true,
+   "null_sig": true,
    "analysis": {
     "code": "htf15",
     "gate_passed": "14/16",
@@ -37242,16 +37242,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.28322406082575274,
-      "dsr": -37.21747249539964,
+      "sr": 0.2636781561823487,
+      "dsr": -35.87465098337667,
       "p": 1.0,
-      "n": 274
+      "n": 266
      },
      "is": {
-      "sr": 0.23930012197732747,
-      "dsr": -55.7054625801744,
+      "sr": 0.23811151457981444,
+      "dsr": -53.04883088742805,
       "p": 1.0,
-      "n": 490
+      "n": 479
      }
     },
     "dsr_pass": false,
@@ -41388,13 +41388,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.0069982504373906525,
-   "null_p_oos": 0.8732816795801049,
-   "null_dnet_is": 37.2,
-   "null_dnet_oos": -2.05,
-   "null_sig_is": true,
+   "null_p_is": 0.16920769807548114,
+   "null_p_oos": 0.2124468882779305,
+   "null_dnet_is": 36.94,
+   "null_dnet_oos": 9.17,
+   "null_sig_is": false,
    "null_sig_oos": false,
-   "null_sig": true
+   "null_sig": false
   },
   {
    "name": "fsent_champ_long_mcloff",
@@ -45526,13 +45526,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.0069982504373906525,
-   "null_p_oos": 0.8732816795801049,
-   "null_dnet_is": 37.2,
-   "null_dnet_oos": -2.05,
-   "null_sig_is": true,
+   "null_p_is": 0.16920769807548114,
+   "null_p_oos": 0.2124468882779305,
+   "null_dnet_is": 36.94,
+   "null_dnet_oos": 9.17,
+   "null_sig_is": false,
    "null_sig_oos": false,
-   "null_sig": true,
+   "null_sig": false,
    "analysis": {
     "code": "mcloff",
     "gate_passed": "14/16",
@@ -45549,16 +45549,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.2476889479543615,
-      "dsr": -37.282088731270946,
+      "sr": 0.22580570683071813,
+      "dsr": -35.27512287418147,
       "p": 1.0,
-      "n": 293
+      "n": 286
      },
      "is": {
-      "sr": 0.2302787729922502,
-      "dsr": -57.35100438725344,
+      "sr": 0.22152574552335333,
+      "dsr": -57.35325841973427,
       "p": 1.0,
-      "n": 524
+      "n": 520
      }
     },
     "dsr_pass": false,
@@ -49915,13 +49915,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": true,
-   "null_p_is": 0.7258185453636591,
-   "null_p_oos": 0.49687578105473634,
-   "null_dnet_is": 48.57,
-   "null_dnet_oos": -22.68,
+   "null_p_is": 0.50912271932017,
+   "null_p_oos": 0.028742814296425893,
+   "null_dnet_is": 85.86,
+   "null_dnet_oos": -67.94,
    "null_sig_is": false,
-   "null_sig_oos": false,
-   "null_sig": false
+   "null_sig_oos": true,
+   "null_sig": true
   },
   {
    "name": "fsent_champ_trailhalf",
@@ -53374,10 +53374,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.10172456885778555,
-   "null_p_oos": 0.9840039990002499,
-   "null_dnet_is": -50.57,
-   "null_dnet_oos": 27.39,
+   "null_p_is": 0.7038240439890028,
+   "null_p_oos": 0.46613346663334165,
+   "null_dnet_is": -31.56,
+   "null_dnet_oos": 45.31,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -56813,10 +56813,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.16445888527868033,
-   "null_p_oos": 0.9887528117970508,
-   "null_dnet_is": -47.78,
-   "null_dnet_oos": 26.62,
+   "null_p_is": 0.7058235441139715,
+   "null_p_oos": 0.48037990502374406,
+   "null_dnet_is": -31.64,
+   "null_dnet_oos": 44.63,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -60538,10 +60538,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.9922519370157461,
-   "null_p_oos": 0.8782804298925269,
-   "null_dnet_is": 0.06,
-   "null_dnet_oos": 0.72,
+   "null_p_is": 0.9165208697825543,
+   "null_p_oos": 0.7673081729567608,
+   "null_dnet_is": 1.04,
+   "null_dnet_oos": 2.71,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -60562,16 +60562,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.26587016902975324,
-      "dsr": -35.90147383364227,
+      "sr": 0.23912942579655788,
+      "dsr": -33.612409424278795,
       "p": 1.0,
-      "n": 270
+      "n": 253
      },
      "is": {
-      "sr": 0.223288803126047,
-      "dsr": -54.609762619416564,
+      "sr": 0.229449003549428,
+      "dsr": -52.62644546304204,
       "p": 1.0,
-      "n": 475
+      "n": 470
      }
     },
     "dsr_pass": false,
@@ -71967,10 +71967,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": null,
-   "null_p_oos": 0.05173706573356661,
-   "null_dnet_is": -4.34,
-   "null_dnet_oos": -28.5,
+   "null_p_is": 1.0,
+   "null_p_oos": 0.20169957510622344,
+   "null_dnet_is": 0.0,
+   "null_dnet_oos": -13.37,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -71991,16 +71991,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.23993664379670607,
-      "dsr": -35.35533463781527,
+      "sr": 0.21882836244215698,
+      "dsr": -33.54256400245336,
       "p": 1.0,
-      "n": 259
+      "n": 251
      },
      "is": {
-      "sr": 0.2191281203286734,
-      "dsr": -55.248687524825336,
+      "sr": 0.22591732099334824,
+      "dsr": -53.30630855723909,
       "p": 1.0,
-      "n": 485
+      "n": 481
      }
     },
     "dsr_pass": false,
@@ -75713,10 +75713,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.5483629092726818,
-   "null_p_oos": 0.05173706573356661,
-   "null_dnet_is": -5.26,
-   "null_dnet_oos": -28.5,
+   "null_p_is": 0.569857535616096,
+   "null_p_oos": 0.20169957510622344,
+   "null_dnet_is": -6.21,
+   "null_dnet_oos": -13.37,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -79467,10 +79467,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.1322169457635591,
-   "null_p_oos": 0.2751812046988253,
-   "null_dnet_is": -19.04,
-   "null_dnet_oos": -24.11,
+   "null_p_is": 0.36265933516620846,
+   "null_p_oos": 0.09997500624843789,
+   "null_dnet_is": 8.75,
+   "null_dnet_oos": -33.02,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -83085,16 +83085,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.2744810477576206,
-      "dsr": -31.923019972450458,
+      "sr": 0.2406350686120533,
+      "dsr": -30.88497932219881,
       "p": 1.0,
-      "n": 251
+      "n": 246
      },
      "is": {
-      "sr": 0.23178907414917715,
-      "dsr": -53.60715747541162,
+      "sr": 0.2260511072350952,
+      "dsr": -51.97541382611222,
       "p": 1.0,
-      "n": 456
+      "n": 451
      }
     },
     "dsr_pass": false,
@@ -90412,10 +90412,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.4988752811797051,
-   "null_p_oos": 0.8147963009247688,
-   "null_dnet_is": 102.41,
-   "null_dnet_oos": -20.32,
+   "null_p_is": 0.4333916520869783,
+   "null_p_oos": 0.7508122969257686,
+   "null_dnet_is": -110.73,
+   "null_dnet_oos": 26.35,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -93554,10 +93554,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.7770557360659835,
-   "null_p_oos": 0.846788302924269,
-   "null_dnet_is": 44.6,
-   "null_dnet_oos": -17.59,
+   "null_p_is": 0.7760559860034991,
+   "null_p_oos": 0.47138215446138465,
+   "null_dnet_is": -44.12,
+   "null_dnet_oos": -47.46,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -93577,16 +93577,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.25886068173204746,
-      "dsr": -33.71933957199819,
+      "sr": 0.1968774733305613,
+      "dsr": -32.10814539491722,
       "p": 1.0,
-      "n": 224
+      "n": 208
      },
      "is": {
-      "sr": 0.2399028487669835,
-      "dsr": -53.136688502854966,
+      "sr": 0.22728651761511215,
+      "dsr": -50.389819839360456,
       "p": 1.0,
-      "n": 415
+      "n": 399
      }
     },
     "dsr_pass": false,
@@ -97083,10 +97083,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.5968507873031742,
-   "null_p_oos": 0.9525118720319921,
-   "null_dnet_is": 80.9,
-   "null_dnet_oos": -5.66,
+   "null_p_is": 0.3284178955261185,
+   "null_p_oos": 0.828542864283929,
+   "null_dnet_is": -134.33,
+   "null_dnet_oos": 17.04,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -100703,16 +100703,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.25135454472188323,
-      "dsr": -37.079657279683424,
+      "sr": 0.22253594455395478,
+      "dsr": -36.430851161812626,
       "p": 1.0,
-      "n": 301
+      "n": 277
      },
      "is": {
-      "sr": 0.2570297579318687,
-      "dsr": -48.06213620368355,
+      "sr": 0.19126886642221455,
+      "dsr": -44.11674720721307,
       "p": 1.0,
-      "n": 472
+      "n": 421
      }
     },
     "dsr_pass": false,
@@ -103028,10 +103028,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.8347913021744564,
-   "null_p_oos": 0.8022994251437141,
-   "null_dnet_is": -93.96,
-   "null_dnet_oos": -32.56,
+   "null_p_is": 0.6170957260684828,
+   "null_p_oos": 0.8250437390652337,
+   "null_dnet_is": -164.55,
+   "null_dnet_oos": -23.03,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false,
@@ -103052,16 +103052,16 @@
     "survives_all_gates": false,
     "dsr": {
      "oos": {
-      "sr": 0.3148696759347547,
-      "dsr": -29.058041022796104,
+      "sr": 0.3040998562670148,
+      "dsr": -26.27408519434803,
       "p": 1.0,
-      "n": 185
+      "n": 172
      },
      "is": {
-      "sr": 0.22172443174906858,
-      "dsr": -47.40262480392579,
+      "sr": 0.19862171712923,
+      "dsr": -44.48677662558834,
       "p": 1.0,
-      "n": 291
+      "n": 270
      }
     },
     "dsr_pass": false,
@@ -104818,10 +104818,10 @@
     "never-negative-50"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.5191202199450138,
-   "null_p_oos": 0.6878280429892527,
-   "null_dnet_is": -260.05,
-   "null_dnet_oos": -87.85,
+   "null_p_is": 0.4966258435391152,
+   "null_p_oos": 0.39615096225943514,
+   "null_dnet_is": -250.02,
+   "null_dnet_oos": -97.09,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -106961,10 +106961,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.2909272681829543,
-   "null_p_oos": 0.5543614096475881,
-   "null_dnet_is": -263.9,
-   "null_dnet_oos": -78.93,
+   "null_p_is": 0.10122469382654337,
+   "null_p_oos": 0.36140964758810296,
+   "null_dnet_is": -299.42,
+   "null_dnet_oos": -83.11,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -108684,10 +108684,10 @@
     "never-negative-50"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.5426143464133967,
-   "null_p_oos": 0.7590602349412647,
-   "null_dnet_is": -257.96,
-   "null_dnet_oos": -81.42,
+   "null_p_is": 0.2329417645588603,
+   "null_p_oos": 0.5498625343664084,
+   "null_dnet_is": -299.38,
+   "null_dnet_oos": -87.41,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -111258,13 +111258,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.22369407648087977,
-   "null_p_oos": 0.5661084728817796,
-   "null_dnet_is": -220.9,
-   "null_dnet_oos": -64.1,
-   "null_sig_is": false,
+   "null_p_is": 0.010497375656085979,
+   "null_p_oos": 0.4053986503374156,
+   "null_dnet_is": -325.21,
+   "null_dnet_oos": -69.04,
+   "null_sig_is": true,
    "null_sig_oos": false,
-   "null_sig": false
+   "null_sig": true
   },
   {
    "name": "fsent_sig_trail_delay1",
@@ -112768,10 +112768,10 @@
     "never-negative-50"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.3924018995251187,
-   "null_p_oos": 0.8662834291427143,
-   "null_dnet_is": -313.37,
-   "null_dnet_oos": -80.76,
+   "null_p_is": 0.18245438640339914,
+   "null_p_oos": 0.6955761059735066,
+   "null_dnet_is": -326.79,
+   "null_dnet_oos": -82.82,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -118109,13 +118109,13 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.05373656585853537,
-   "null_p_oos": 0.24393901524618844,
-   "null_dnet_is": -299.78,
-   "null_dnet_oos": -96.61,
-   "null_sig_is": false,
+   "null_p_is": 0.005248687828042989,
+   "null_p_oos": 0.25343664083979006,
+   "null_dnet_is": -346.15,
+   "null_dnet_oos": -77.31,
+   "null_sig_is": true,
    "null_sig_oos": false,
-   "null_sig": false
+   "null_sig": true
   },
   {
    "name": "fsent_sig_decay_crossed",
@@ -118939,10 +118939,10 @@
     "never-negative-50"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.8202949262684329,
-   "null_p_oos": 0.5881029742564359,
-   "null_dnet_is": -334.96,
-   "null_dnet_oos": -162.74,
+   "null_p_is": 0.40639840039990005,
+   "null_p_oos": 0.23719070232441888,
+   "null_dnet_is": -368.19,
+   "null_dnet_oos": -144.11,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -119739,10 +119739,10 @@
     "consistent-eras"
    ],
    "over_dd_budget_r_legacy": false,
-   "null_p_is": 0.8320419895026243,
-   "null_p_oos": 0.8975256185953512,
-   "null_dnet_is": -334.92,
-   "null_dnet_oos": -128.53,
+   "null_p_is": 0.46663334166458387,
+   "null_p_oos": 0.20219945013746563,
+   "null_dnet_is": -366.23,
+   "null_dnet_oos": -147.43,
    "null_sig_is": false,
    "null_sig_oos": false,
    "null_sig": false
@@ -121685,9 +121685,9 @@
    ],
    "over_dd_budget_r_legacy": false,
    "null_p_is": 0.00024993751562109475,
-   "null_p_oos": 0.07523119220194951,
-   "null_dnet_is": -431.19,
-   "null_dnet_oos": -184.77,
+   "null_p_oos": 0.14946263434141466,
+   "null_dnet_is": -399.15,
+   "null_dnet_oos": -131.85,
    "null_sig_is": true,
    "null_sig_oos": false,
    "null_sig": true
@@ -121695,18 +121695,18 @@
  ],
  "verdict": {
   "headline": "NO BOOK IS CLEARED FOR DEPLOYMENT",
-  "reason": "Thirteen book variants were explored. The multiple-testing correction was not applied when the shortlist was made, and when it was applied it failed: PBO 0.57-1.00 against a 0.15 bar, and Deflated Sharpe fails for all thirteen books in both eras. The history does not identify which variant to trade.",
+  "reason": "Thirteen book variants were explored. The multiple-testing correction was not applied when the shortlist was made, and when it was applied it failed: PBO 0.81 OOS and 0.99 IS (S=8) against a 0.15 bar, and Deflated Sharpe fails for all thirteen books in both eras. The history does not identify which variant to trade.",
   "pbo": {
-   "oos": 0.5714285714285714,
-   "is": 1.0
+   "oos": 0.8142857142857143,
+   "is": 0.9857142857142858
   },
   "pbo_bar": 0.15,
   "book_count_tried": 13,
   "closest": [
    "107",
-   "108"
+   "106"
   ],
-  "closest_note": "107 and 108 each fail exactly one criterion out of eighteen, both in survivability. 106 and 109 overlap 85-93% with them, so choosing between the four is closer to picking three than four.",
+  "closest_note": "107 and 106 each fail exactly 1 criterion out of 16 (G4 DDpct IS / G4 worst50 OOS). Out of sample the permutation separates 107 from its parent (p=0.0160) and does not separate 106 (p=0.3779), so the pair is not separable on the numbers either.",
   "next_step": "Forward evidence on a frozen candidate, scored once. The standard operational gate is 20-50 round trips or one quarter; the forward window currently holds about one month.",
   "see": "backtest/docs/learn/02_verdict/PBO_DSR_GATE.md"
  },

@@ -140,6 +140,68 @@ def dsr_table():
     return {"per_book": out, "pbo": pb}
 
 
+def _pbo_text(dsr):
+    """The PBO figures, quoted from the data rather than remembered.
+
+    They were hardcoded once, and the hardcoded range went stale the moment the
+    engine changed. A number on this page that nobody recomputed is worse than
+    no number.
+    """
+    pb = (dsr or {}).get("pbo") or {}
+    if not pb:
+        return "not measured"
+    return "%.2f OOS and %.2f IS (S=8)" % (pb.get("oos") or 0.0, pb.get("is") or 0.0)
+
+
+def _coded_rows(art, gates):
+    """The coded books with their gate result and their out-of-sample numbers.
+
+    Ordered by how close each book is to clearing the criteria, and then by the
+    axis that decides - the out-of-sample permutation - and only then by net.
+    Net is the last tie-break on purpose: this repo has said more than once
+    that a bigger net is not the decider, and a page that sorts on it would be
+    re-teaching the thing the page exists to correct.
+    """
+    rows = []
+    for b in art.get("books", []):
+        name = b.get("name")
+        g = (gates or {}).get(name)
+        if not g:
+            continue
+        p = b.get("null_p_oos")
+        rows.append({"name": name, "code": g["code"], "fails": g["fails"],
+                     "passed": g["passed"], "total": g["total"],
+                     "oos_net": b.get("oos_net") or 0.0,
+                     "oos_p": 1.0 if p is None else float(p),
+                     "oos_p_shown": p})
+    rows.sort(key=lambda r: (len(r["fails"]), r["oos_p"], -r["oos_net"]))
+    return rows
+
+
+def _closest_codes(art, gates):
+    rows = _coded_rows(art, gates)
+    return [r["code"] for r in rows[:2]]
+
+
+def _closest_note(art, gates):
+    rows = _coded_rows(art, gates)
+    if len(rows) < 2:
+        return "no coded book has a gate result"
+    a, b = rows[0], rows[1]
+    n_fail = len(a["fails"])
+    total = a["total"]
+    crit = ", ".join(a["fails"]) if a["fails"] else "none"
+    crit_b = ", ".join(b["fails"]) if b["fails"] else "none"
+    pa = ("%.4f" % a["oos_p"]) if a["oos_p_shown"] is not None else "n/a"
+    pb = ("%.4f" % b["oos_p"]) if b["oos_p_shown"] is not None else "n/a"
+    return ("%s and %s each fail exactly %d criterion%s out of %d (%s / %s). "
+            "Out of sample the permutation separates %s from its parent "
+            "(p=%s) and does not separate %s (p=%s), so the pair is not "
+            "separable on the numbers either."
+            % (a["code"], b["code"], n_fail, "" if n_fail == 1 else "s", total,
+               crit, crit_b, a["code"], pa, b["code"], pb))
+
+
 def main():
     print("enriching %s" % ARTIFACT)
     art = _load(ARTIFACT)
@@ -178,18 +240,15 @@ def main():
         "headline": "NO BOOK IS CLEARED FOR DEPLOYMENT",
         "reason": ("Thirteen book variants were explored. The multiple-testing "
                    "correction was not applied when the shortlist was made, and "
-                   "when it was applied it failed: PBO 0.57-1.00 against a 0.15 "
-                   "bar, and Deflated Sharpe fails for all thirteen books in "
-                   "both eras. The history does not identify which variant to "
-                   "trade."),
+                   "when it was applied it failed: PBO %s against a %.2f bar, "
+                   "and Deflated Sharpe fails for all thirteen books in both "
+                   "eras. The history does not identify which variant to trade."
+                   % (_pbo_text(dsr), 0.15)),
         "pbo": (dsr or {}).get("pbo"),
         "pbo_bar": 0.15,
         "book_count_tried": len(CODES),
-        "closest": ["107", "108"],
-        "closest_note": ("107 and 108 each fail exactly one criterion out of "
-                         "eighteen, both in survivability. 106 and 109 overlap "
-                         "85-93% with them, so choosing between the four is "
-                         "closer to picking three than four."),
+        "closest": _closest_codes(art, gates),
+        "closest_note": _closest_note(art, gates),
         "next_step": ("Forward evidence on a frozen candidate, scored once. The "
                       "standard operational gate is 20-50 round trips or one "
                       "quarter; the forward window currently holds about one "
