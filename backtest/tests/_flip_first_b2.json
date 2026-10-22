@@ -1,0 +1,65 @@
+{
+ "is": {
+  "added_kinds": {
+   "B2": 40,
+   "FS": 4
+  },
+  "added_n": 44,
+  "added_net": 0.57,
+  "b2_only": {
+   "dd": 24.26,
+   "n": 508,
+   "net": 425.49,
+   "wr": 0.388
+  },
+  "control": {
+   "dd": 29.65,
+   "n": 526,
+   "net": 537.13,
+   "wr": 0.407
+  },
+  "dropped_kinds": {
+   "B2": 2,
+   "FLIP": 58,
+   "FS": 2
+  },
+  "dropped_n": 62,
+  "dropped_net": 112.21,
+  "pin": {
+   "n": 525,
+   "net": 538.4
+  },
+  "pin_ok": true
+ },
+ "oos": {
+  "added_kinds": {
+   "B2": 30,
+   "FS": 3
+  },
+  "added_n": 33,
+  "added_net": 40.59,
+  "b2_only": {
+   "dd": 10.86,
+   "n": 275,
+   "net": 203.36,
+   "wr": 0.404
+  },
+  "control": {
+   "dd": 11.05,
+   "n": 295,
+   "net": 273.52,
+   "wr": 0.427
+  },
+  "dropped_kinds": {
+   "FLIP": 51,
+   "FS": 2
+  },
+  "dropped_n": 53,
+  "dropped_net": 110.75,
+  "pin": {
+   "n": 295,
+   "net": 272.92
+  },
+  "pin_ok": true
+ }
+}
