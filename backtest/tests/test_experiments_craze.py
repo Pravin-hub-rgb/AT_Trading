@@ -1,11 +1,18 @@
 """CRAZE harness â€” runs the SHIPPED engine source with minimal asserted patches.
 
 Safety model (no retyped engine, no look-ahead):
-- We load backend/src/btc/engines/htf_ltf/v18_streak_halt.py SOURCE TEXT.
+- We load backend/src/btc/engines/htf_ltf/unified.py SOURCE TEXT.
 - With no experiment flags, we exec the unmodified text -> byte-identical engine.
 - Each experiment is a tiny, assertion-checked text patch (token counts asserted).
 - Identity gate: patched-with-flags-off MUST reproduce the shipped engine's
   trade list exactly (same n, same R list) before any experiment result is shown.
+
+The identity gate's "shipped" side is the engine THIS FILE PATCHES, which is
+unified.py. It used to be v18_streak_halt, a frozen archive that no longer
+ships - v18 was removed from BTC_VERSIONS in btc_routes.py - so the gate was
+diffing the current engine against a dead one and reported DIVERGED for a
+divergence that was never in the harness. run_experiment.py:66-81 made the
+same correction and left the reason written down.
 
 Experiments:
   split_mb   : trail events from a slower/faster 15m swing chain (Exp 11)
@@ -25,7 +32,7 @@ SRC = ENGINE.read_text(encoding="utf-8")
 from replay_harness import load_candles, INSTRUMENT
 from engine.v18_params import SWING, get_v18_params, V18_ENGINE
 from src.btc.btc_routes import _compute_swings
-import src.btc.engines.htf_ltf.v18_streak_halt as shipped_mod
+import src.btc.engines.htf_ltf.unified as shipped_mod
 
 _P = dict(get_v18_params(INSTRUMENT)); _P.update(V18_ENGINE)
 BASE = {k: _P[k] for k in ["sl_buf_atr", "ext_stop_r", "chop_thresh",
@@ -1628,9 +1635,9 @@ def _patch_016_pe_fine(s: str) -> str:
     # them together is what keeps the branch verbatim.
     # _best_f_prev is likewise engine-native now - the fine trail reads it when
     # exp_trail_delay_prevbar is set.
-    t_ret = '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n            "ltf_trades": ltf_trades, "intervals": parent_intervals}'
+    t_ret = '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n            "htf_trades_decisive": htf_trades_decisive,\n            "ltf_trades": ltf_trades, "intervals": parent_intervals}'
     assert s.count(t_ret) == 1, "ret"
-    s = s.replace(t_ret, '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n             "ltf_trades": ltf_trades, "intervals": parent_intervals,\n             "retest_stats": retest_stats,\n             "five_m_stats": _exp_5m_stats, "cohort_stats": _exp_cohort_stats,\n             "shadow_rows": _exp_shadow_rows, "weekly_state_rows": _exp_weekly_state_rows,\n             "event_stats": _exp_event_stats, "campaign_stats": _exp_campaign_stats,\n             "loss_window_kill_stats": _exp_loss_window_kill_stats,\n             "win_window_kill_stats": _exp_win_window_kill_stats}\n')
+    s = s.replace(t_ret, '    return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,\n             "htf_trades_decisive": htf_trades_decisive,\n             "ltf_trades": ltf_trades, "intervals": parent_intervals,\n             "retest_stats": retest_stats,\n             "five_m_stats": _exp_5m_stats, "cohort_stats": _exp_cohort_stats,\n             "shadow_rows": _exp_shadow_rows, "weekly_state_rows": _exp_weekly_state_rows,\n             "event_stats": _exp_event_stats, "campaign_stats": _exp_campaign_stats,\n             "loss_window_kill_stats": _exp_loss_window_kill_stats,\n             "win_window_kill_stats": _exp_win_window_kill_stats}\n')
     return s
 
 
@@ -1710,8 +1717,8 @@ def main():
     t_ship = r_ship["ltf_trades"] if isinstance(r_ship, dict) else r_ship
     s_ship = stats(t_ship)
     show("shipped", s_ship)
-    assert s_ship["n"] == 340 and abs(s_ship["gross"] - 225.3) < 0.1, \
-        "ANCHOR MISMATCH â€” aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
+    assert s_ship["n"] == 369 and abs(s_ship["gross"] - 207.55) < 0.1, \
+        "ANCHOR MISMATCH — aborting (got %dt %+.1fR)" % (s_ship["n"], s_ship["gross"])
     for flags in [dict(), dict(b3_k=4), dict(exp_momentum=True),
                   dict(b3_k=4, exp_momentum=True)]:
         sim = build_module()
