@@ -10,7 +10,14 @@ from typing import Optional
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
-from src.btc.btc_config import BTC_TFS, SYMBOLS, btc_csv_path, load_btc_df
+from src.btc.btc_config import (
+    BTC_FORWARD_DATA_DIR,
+    BTC_TFS,
+    SYMBOLS,
+    btc_csv_path,
+    load_btc_df,
+    load_btc_df_with_forward,
+)
 from src.btc.btc_engine import simulate_btc_trades, trade_stats
 from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts, EXCHANGES
 from src.btc.btc_swing import compute_btc_flow, compute_btc_swings
@@ -232,11 +239,14 @@ _IDX_FIELDS = ("confirmed_at_idx", "fs_at_idx")
 MIN_FUNDING_PCT = 0.01
 
 
-def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT"):
+def _load_window(tf: str, limit: int | None, symbol: str = "BTCUSDT", include_forward: bool = False):
     """Validated load of one timeframe window. Returns (candles, flow) or
     (None, JSONResponse-error)."""
     try:
-        df = load_btc_df(tf, symbol)
+        if include_forward and symbol == "BTCUSDT_BYBIT" and tf in ("15m", "1h", "1m"):
+            df = load_btc_df_with_forward(tf, symbol)
+        else:
+            df = load_btc_df(tf, symbol)
     except FileNotFoundError:
         return None, JSONResponse(
             status_code=404,
@@ -551,14 +561,19 @@ def _run_preset(candles: list[dict], swings: list[dict], p: dict,
     }
 
 
-def _load_fine_1m(t0: int, t1: int, symbol: str = "BTCUSDT") -> list[dict]:
-    """1m candles for [t0, t1] from the 1m CSV â€” for 1m-precise exit fills.
+def _load_fine_1m(t0: int, t1: int, symbol: str = "BTCUSDT", include_forward: bool = False) -> list[dict]:
+    """1m candles for [t0, t1] from the 1m CSV — for 1m-precise exit fills.
 
     Returns [] when the 1m CSV is missing. Filters the frame BEFORE building
     dicts so a full-window backtest still only materialises the needed rows.
+    When include_forward=True and symbol is BTCUSDT_BYBIT, forward 1m data
+    is appended (used for exit fills in the forward window).
     """
     try:
-        df = load_btc_df("1m", symbol)
+        if include_forward and symbol == "BTCUSDT_BYBIT":
+            df = load_btc_df_with_forward("1m", symbol)
+        else:
+            df = load_btc_df("1m", symbol)
     except FileNotFoundError:
         return []
     df = df[(df["ts"] >= t0) & (df["ts"] <= t1)]
@@ -672,6 +687,7 @@ def btc_chart(
     min_bars: int = 14,
     symbol: str = "BTCUSDT",
     version: str = "",
+    include_forward: bool = False,
 ):
     """Candles + REAL swing chain (B1/B2/FLIP/FS-SUS) for ONE window.
 
@@ -698,7 +714,7 @@ def btc_chart(
             status_code=400,
             content={"detail": f"version must be one of {BTC_VERSIONS}"},
         )
-    win, err = _load_window(tf, limit, symbol)
+    win, err = _load_window(tf, limit, symbol, include_forward=include_forward)
     if err:
         return err
     candles, flow = win
@@ -708,6 +724,8 @@ def btc_chart(
         "mode": mode,
         "symbol": symbol,
         "version": version,
+        "include_forward": include_forward,
+        "forward_available": BTC_FORWARD_DATA_DIR.exists(),
         "count": len(candles),
         "first_ts": candles[0]["date"] if candles else None,
         "last_ts": candles[-1]["date"] if candles else None,
@@ -747,6 +765,7 @@ def btc_backtest(
     htf_ltf_ver: str = "v1",
     cooldown_bars: int = 0,
     symbol: str = "BTCUSDT",
+    include_forward: bool = False,
 ):
     """Position engine over the swing chain: entries on swing breaks,
     swing/pct SL, fixed R target, breakeven-R and trailing.
@@ -806,11 +825,10 @@ def btc_backtest(
     if htf_ltf_ver not in ("v1", "v3", "v5", "v6", "v11", "v12", "v13", "v15", "v16", "v17", "v18", "v19"):
         return JSONResponse(status_code=400, content={"detail": "htf_ltf_ver must be v1 | v3 | v5 | v6 | v11 | v12 | v13 | v15 | v16 | v17"})
 
-    win, err = _load_window(tf, limit, symbol)
+    win, err = _load_window(tf, limit, symbol, include_forward=include_forward)
     if err:
         return err
     candles, flow = win
-
     swings = _compute_swings(flow, mode, min_bars=min_bars)
 
     # HTF leg is genuinely a different timeframe. It used to be fed the SAME
@@ -821,7 +839,7 @@ def btc_backtest(
     candles_htf: list = candles
     swings_htf: list = swings
     if htf_tf != tf:
-        hwin, herr = _load_window(htf_tf, limit, symbol)
+        hwin, herr = _load_window(htf_tf, limit, symbol, include_forward=include_forward)
         if herr is not None:
             return herr
         candles_htf, hflow = hwin
@@ -831,11 +849,11 @@ def btc_backtest(
     # the signal TF's bars (no hidden intrabar stops). tf=1m already exact.
     fine: Optional[list[dict]] = None
     if fill_tf == "1m" and tf != "1m":
-        fine = _load_fine_1m(candles[0]["ts"], candles[-1]["ts"], symbol)
+        fine = _load_fine_1m(candles[0]["ts"], candles[-1]["ts"], symbol, include_forward=include_forward)
         if not fine:
             return JSONResponse(
                 status_code=400,
-                content={"detail": "fill_tf=1m needs data/btc/BTCUSDT_1m.csv â€” missing or empty for this window."},
+                content={"detail": "fill_tf=1m needs data/btc/BTCUSDT_1m.csv — missing or empty for this window."},
             )
 
     # Daily-color streak regime gate (3-1-1) over the trade window's days.
@@ -848,7 +866,7 @@ def btc_backtest(
     bias_applied = False
     bias_timeline: list[tuple[int, str]] | None = None
     if bias == "15m" and tf in ("1m", "5m"):
-        htf, htf_err = _load_window("15m", None, symbol)
+        htf, htf_err = _load_window("15m", None, symbol, include_forward=include_forward)
         if htf_err is None:
             htf_candles, htf_flow = htf
             # Patched like every other chain in this request. A bias timeline
@@ -907,8 +925,8 @@ def btc_backtest(
         htf_tf = "1h"
         ltf_tf = htf_ltf
         # Load HTF window (full)
-        htf_win, htf_err = _load_window(htf_tf, None, symbol)
-        ltf_win, ltf_err = _load_window(ltf_tf, limit, symbol)  # use same limit as chart window for LTF
+        htf_win, htf_err = _load_window(htf_tf, None, symbol, include_forward=include_forward)
+        ltf_win, ltf_err = _load_window(ltf_tf, limit, symbol, include_forward=include_forward)  # use same limit as chart window for LTF
         if htf_err is None and ltf_err is None and htf_win is not None and ltf_win is not None:
             htf_candles, htf_flow = htf_win  # type: ignore
             ltf_candles, ltf_flow = ltf_win  # type: ignore
@@ -918,8 +936,8 @@ def btc_backtest(
             ltf_min = 50 if ltf_tf == "15m" else 14
             ltf_swings = _compute_swings(ltf_flow, mode, min_bars=ltf_min)
             # HTF fine for 1h
-            htf_fine = _load_fine_1m(htf_candles[0]["ts"], htf_candles[-1]["ts"], symbol)
-            ltf_fine = _load_fine_1m(ltf_candles[0]["ts"], ltf_candles[-1]["ts"], symbol)
+            htf_fine = _load_fine_1m(htf_candles[0]["ts"], htf_candles[-1]["ts"], symbol, include_forward=include_forward)
+            ltf_fine = _load_fine_1m(ltf_candles[0]["ts"], ltf_candles[-1]["ts"], symbol, include_forward=include_forward)
             # Use HTF-LTF engine
             if htf_ltf_ver == "v3" and simulate_htf_ltf_ext_stop is not None:
                 # v3 Extension Stop: block fresh same-dir LTF entries once the
@@ -1271,7 +1289,7 @@ def btc_backtest(
         htf_swings = None
         htf_ts = None
         try:
-            htf_win, htf_err = _load_window("1h", None, symbol)
+            htf_win, htf_err = _load_window("1h", None, symbol, include_forward=include_forward)
             if htf_err is None and htf_win is not None:
                 htf_candles, htf_flow = htf_win  # type: ignore
                 htf_swings = _compute_swings(htf_flow, mode, min_bars=min_bars)

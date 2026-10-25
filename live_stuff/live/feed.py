@@ -41,7 +41,7 @@ from book import BOOK_NAME, BOOK_PARAMS, SWING, SWING_1H_LABEL, get_book_params
 from persistence.database import Database
 from persistence.mark_store import get_marks
 from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
-from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end
+from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end, insert_candles_bulk, load_candles
 
 logger = logging.getLogger("live_loop")
 if not logger.handlers:
@@ -163,26 +163,13 @@ class FeedMixin:
 
         # Reset engines to clean slate
         try:
-            from _vendored.firstswing import SwingEngine as _SE
             try:
                 with self.db.transaction() as _conn:
                     _conn.execute("DELETE FROM meta WHERE key IN ('swing_state_15m','swing_state_1h','swing_state_1h_htf15')")
             except Exception:
                 pass
-            self.swing_15m.eng = _SE(self.swing_15m.opts)
-            self.swing_15m.swing_index = 0
-            self.swing_15m.next_start_pos = 0
-            self.swing_15m._pos = 0
-            self.swing_15m._candles = {}
-            self.swing_15m.ts_map = {}
-            self.swing_15m._pending = []
-            self.swing_1h.eng = _SE(self.swing_1h.opts)
-            self.swing_1h.swing_index = 0
-            self.swing_1h.next_start_pos = 0
-            self.swing_1h._pos = 0
-            self.swing_1h._candles = {}
-            self.swing_1h.ts_map = {}
-            self.swing_1h._pending = []
+            self.swing_15m._reset()
+            self.swing_1h._reset()
             self.all_swings_15m = []
             self.all_swings_1h = []
             self._printed_marks = set()
@@ -239,6 +226,12 @@ class FeedMixin:
                 print(f"[seed] 15m range: {first_ist} -> {last_ist}")
                 cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
                 self.window_15m = [c for c in candles_15m if c["ts"] >= cutoff] or candles_15m
+                # Option B: persist full candle history for simulation
+                self.all_candles_15m = candles_15m
+                try:
+                    insert_candles_bulk(self.db, "15m", candles_15m)
+                except Exception:
+                    pass
                 for c in candles_15m:
                     fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
                     g_idx = self._bar_counter_15m
@@ -282,6 +275,12 @@ class FeedMixin:
                 print(f"[seed] 1h range: {first_ist} -> {last_ist}")
                 cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
                 self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
+                # Option B: persist full candle history for simulation
+                self.all_candles_1h = candles_1h
+                try:
+                    insert_candles_bulk(self.db, "1h", candles_1h)
+                except Exception:
+                    pass
                 # Find seed point index — lookback bars are for chop ONLY, not the swing engine
                 seed_1h_sec = seed_1h_ms // 1000
                 engine_start = 0
@@ -335,14 +334,24 @@ class FeedMixin:
         return result
 
     def _recover_from_crash(self) -> bool:
-        """Recover state after crash by backfilling from last swing endpoint.
+        """Recover state after crash by replaying persisted candle history.
 
-        Reads the rolling swing endpoint pair from DB (last_15m_swing_1/2 and
-        last_1h_swing_1/2). Fetches candles from end_ts + 1 bar to now,
-        replays through swing engine, re-runs v18 simulation.
+        Option B: Load ALL candles from the DB candles table, reset swing
+        engines to a clean slate, and re-feed every candle from g_idx 0.
+        This guarantees g_idx == position in all_candles_*, so the simulation
+        sees the FULL chain (no trim / no rebase).
+
+        Falls back to exchange fetch if no candles are persisted (e.g. fresh
+        DB or upgrading from pre-Option-B code that only stored swing endpoints).
 
         Returns True if recovery succeeded, False if no previous state exists.
         """
+        db_candles_15m = load_candles(self.db, "15m")
+        db_candles_1h = load_candles(self.db, "1h")
+
+        if db_candles_15m and db_candles_1h:
+            return self._recover_from_db(db_candles_15m, db_candles_1h)
+
         last_15m_ts, prev_15m_ts = get_last_swing_end(self.db, "15m")
         last_1h_ts, prev_1h_ts = get_last_swing_end(self.db, "1h")
 
@@ -357,31 +366,19 @@ class FeedMixin:
             print(f"[recover] 1h: using backup swing_2 = {prev_1h_ts}")
             last_1h_ts = prev_1h_ts
 
+        print(f"[recover] No candles in DB — exchange fallback (partial history)")
         self._seeding = True
         now_ms = int(time.time() * 1000)
 
         # Reset engines to clean slate
         try:
-            from _vendored.firstswing import SwingEngine as _SE
             try:
                 with self.db.transaction() as _conn:
                     _conn.execute("DELETE FROM meta WHERE key IN ('swing_state_15m','swing_state_1h','swing_state_1h_htf15')")
             except Exception:
                 pass
-            self.swing_15m.eng = _SE(self.swing_15m.opts)
-            self.swing_15m.swing_index = 0
-            self.swing_15m.next_start_pos = 0
-            self.swing_15m._pos = 0
-            self.swing_15m._candles = {}
-            self.swing_15m.ts_map = {}
-            self.swing_15m._pending = []
-            self.swing_1h.eng = _SE(self.swing_1h.opts)
-            self.swing_1h.swing_index = 0
-            self.swing_1h.next_start_pos = 0
-            self.swing_1h._pos = 0
-            self.swing_1h._candles = {}
-            self.swing_1h.ts_map = {}
-            self.swing_1h._pending = []
+            self.swing_15m._reset()
+            self.swing_1h._reset()
             self.all_swings_15m = []
             self.all_swings_1h = []
             self._printed_marks = set()
@@ -406,6 +403,12 @@ class FeedMixin:
                 if candles_15m:
                     cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
                     self.window_15m = [c for c in candles_15m if c["ts"] >= cutoff] or candles_15m
+                    # Option B: persist recovered candles + populate all_candles
+                    self.all_candles_15m = candles_15m
+                    try:
+                        insert_candles_bulk(self.db, "15m", candles_15m)
+                    except Exception:
+                        pass
                     for c in candles_15m:
                         fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
                         g_idx = self._bar_counter_15m
@@ -442,6 +445,12 @@ class FeedMixin:
                 if candles_1h:
                     cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
                     self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
+                    # Option B: persist recovered candles + populate all_candles
+                    self.all_candles_1h = candles_1h
+                    try:
+                        insert_candles_bulk(self.db, "1h", candles_1h)
+                    except Exception:
+                        pass
                     # Find engine start — lookback bars for chop only, not the swing engine
                     start_1h_sec = start_1h_ms // 1000
                     engine_start = 0
@@ -486,6 +495,113 @@ class FeedMixin:
                     self._seeding = False
         except Exception as _e:
             print(f"[recover] post-recover prime warning: {_e}")
+            self._seeding = False
+
+        return True
+
+    def _recover_from_db(self, candles_15m: list[dict], candles_1h: list[dict]) -> bool:
+        """Rebuild the full swing chain from persisted DB candles.
+
+        Resets both swing engines to a clean slate (no state restore), then
+        feeds every candle from g_idx 0 so that g_idx == position in
+        all_candles_*. Persists any missing candles to DB.
+        """
+        self._seeding = True
+        print(f"[recover-db] 15m: {len(candles_15m)} candles, 1h: {len(candles_1h)} candles from DB")
+
+        # Reset engines to clean slate
+        try:
+            from _vendored.firstswing import SwingEngine as _SE
+            try:
+                with self.db.transaction() as _conn:
+                    _conn.execute("DELETE FROM meta WHERE key IN ('swing_state_15m','swing_state_1h','swing_state_1h_htf15')")
+            except Exception:
+                pass
+            self.swing_15m._reset()
+            self.swing_1h._reset()
+            self.all_swings_15m = []
+            self.all_swings_1h = []
+            self.all_candles_15m = candles_15m
+            self.all_candles_1h = candles_1h
+            self._printed_marks = set()
+            self._logged_filter_keys = set()
+            self._bar_counter_15m = 0
+            self._bar_counter_1h = 0
+        except Exception as _e:
+            print(f"[recover-db] engine reset warning: {_e}")
+
+        # --- 15m: feed all DB candles through the swing engine ---
+        for c in candles_15m:
+            fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+            g_idx = self._bar_counter_15m
+            self._bar_counter_15m += 1
+            result = self.swing_15m.process_bar(fc, g_idx)
+            if result:
+                self.all_swings_15m.append(result)
+                try:
+                    end_time = result["seg"].get("end_time", "")
+                    if end_time:
+                        from datetime import datetime as _dt
+                        end_ts = int(_dt.strptime(end_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+                        set_last_swing_end(self.db, "15m", end_ts)
+                except Exception:
+                    pass
+        print(f"[recover-db] 15m: {len(candles_15m)} candles, {len(self.all_swings_15m)} swings")
+
+        # --- 1h: feed all DB candles through the swing engine ---
+        for c in candles_1h:
+            fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
+            g_idx = self._bar_counter_1h
+            self._bar_counter_1h += 1
+            result = self.swing_1h.process_bar(fc, g_idx)
+            if result:
+                self.all_swings_1h.append(result)
+                try:
+                    end_time = result["seg"].get("end_time", "")
+                    if end_time:
+                        from datetime import datetime as _dt
+                        end_ts = int(_dt.strptime(end_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+                        set_last_swing_end(self.db, "1h", end_ts)
+                except Exception:
+                    pass
+        print(f"[recover-db] 1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
+
+        # Restore open-swing dedup from the last open swing (Phase 1.6)
+        try:
+            open15 = self.swing_15m.get_open_swing()
+            if open15:
+                for b in open15.get("breaks", []):
+                    key = ("15m", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open15.get("swing_index", -1))
+                    self._printed_marks.add(key)
+                print(f"[recover-db] 15m open: sw{open15['swing_index']} dir={open15['dir']} breaks={len(open15.get('breaks',[]))}")
+            open1h = self.swing_1h.get_open_swing()
+            if open1h:
+                for b in open1h.get("breaks", []):
+                    key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
+                    self._printed_marks.add(key)
+                print(f"[recover-db] 1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
+        except Exception as _e:
+            print(f"[recover-db] open-swing dedup warning: {_e}")
+
+        self._seeding = False
+
+        # Build rolling windows from full history (for display/telemetry)
+        now_cutoff = int(time.time())
+        self.window_15m = [c for c in candles_15m if c["ts"] >= now_cutoff - WINDOW_DAYS_15M * 86400] or candles_15m
+        self.window_1h = [c for c in candles_1h if c["ts"] >= now_cutoff - WINDOW_DAYS_1H * 86400] or candles_1h
+
+        # Prime rolling metrics + initial v18 simulation on full chain
+        try:
+            self._chop_stale = True
+            self._update_htf_metrics()
+            if len(candles_15m) >= SWING["min_bars_15m"] + 5 and len(candles_1h) >= SWING["min_bars_1h"] + 5:
+                self._seeding = True
+                try:
+                    self._run_v18_simulation()
+                finally:
+                    self._seeding = False
+        except Exception as _e:
+            print(f"[recover-db] post-recover prime warning: {_e}")
             self._seeding = False
 
         return True

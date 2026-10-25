@@ -71,6 +71,8 @@ export interface BtcChartResponse {
   last_ts: string | null;
   /** the version this chart was drawn for */
   version?: string;
+  include_forward?: boolean;
+  forward_available?: boolean;
   candles: BtcCandle[];
   swings: BtcSwing[];
   flow: BtcFlowSegment[];
@@ -95,11 +97,13 @@ export async function getBtcChart(
   minBars?: number,
   symbol: BtcSymbol = "BTCUSDT",
   version = "",
+  includeForward = false,
 ): Promise<BtcChartResponse> {
   const params = new URLSearchParams({ tf, mode, symbol });
   if (version) params.set("version", version);
   if (limit && limit > 0) params.set("limit", String(limit));
   if (minBars && minBars >= 2) params.set("min_bars", String(minBars));
+  if (includeForward) params.set("include_forward", "1");
   const res = await fetch(`${API_BASE}/api/btc/chart?${params.toString()}`, {
     headers: { "Content-Type": "application/json" },
   });
@@ -312,6 +316,7 @@ export async function getBtcBacktest(
   symbol: BtcSymbol = "BTCUSDT",
   htfTf: BtcTf = "1h",
   htfMinBars: number = 10,
+  includeForward: boolean = true,
 ): Promise<BtcBacktestResponse> {
   const q = new URLSearchParams({
     tf,
@@ -339,6 +344,7 @@ export async function getBtcBacktest(
     htf_ltf_ver: htfLtfVer,
   });
   if (limit && limit > 0) q.set("limit", String(limit));
+  if (includeForward) q.set("include_forward", "1");
   const res = await fetch(`${API_BASE}/api/btc/backtest?${q.toString()}`, {
     headers: { "Content-Type": "application/json" },
   });

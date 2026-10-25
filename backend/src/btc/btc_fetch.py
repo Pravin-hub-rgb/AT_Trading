@@ -8,6 +8,7 @@ Supports:
 from __future__ import annotations
 
 import json
+import os
 import time
 import urllib.request
 import warnings
@@ -25,6 +26,13 @@ TF_MS = {
 TF_BYBIT = {"1m": "1", "5m": "5", "15m": "15", "1h": "60", "4h": "240"}
 SEED_IST = "2025-01-01 05:30:00"
 
+# Resolve repo root from this file's location: backend/src/btc/btc_fetch.py
+# parents[0]=btc, parents[1]=src, parents[2]=backend, parents[3]=repo root
+_ROOT = Path(__file__).resolve().parents[3]
+_BYBIT_ROOT = Path(os.environ.get("BTC_USDT_DATA_DIR", str(_ROOT.parent / "btc_data")))
+_BTC_BYBIT_LEGACY = _ROOT / "data" / "bybit"
+BTC_BYBIT_DATA_DIR = _BTC_BYBIT_LEGACY if _BTC_BYBIT_LEGACY.is_dir() else _BYBIT_ROOT / "is"
+
 EXCHANGES = {
     "spot": {
         "label": "Binance Spot",
@@ -41,15 +49,17 @@ EXCHANGES = {
     "bybit": {
         "label": "Bybit Perp",
         "url": "https://api.bybit.com/v5/market/kline",
-        "dir": "bybit",
+        "dir": None,  # resolved via BTC_BYBIT_DATA_DIR below
         "limit": 1000,
     },
 }
 
 
 def _data_dir(exchange: str) -> Path:
-    """Path to data/<exchange>/ (project root, three levels up from backend/src/btc/)."""
+    """Path to data/<exchange>/ (project root, resolved via parents[3])."""
     cfg = EXCHANGES[exchange]
+    if cfg["dir"] is None:
+        return BTC_BYBIT_DATA_DIR
     return Path(__file__).resolve().parents[3] / "data" / cfg["dir"]
 
 
@@ -79,12 +89,16 @@ def ts_to_ms(ist_wall: str) -> int:
 
 
 def fetch_tf(exchange: str, tf: str, since_ms: int) -> dict[str, tuple[float, float, float, float]]:
-    """{ist_wall: (o, h, l, c)} for all candles from since_ms to now."""
+    """{ist_wall: (o, h, l, c)} for all CLOSED candles from since_ms to now.
+
+    The last candle that is still forming (open_time + step > now) is dropped
+    so we never persist a half-baked bar to the IS CSVs.
+    """
     cfg = EXCHANGES[exchange]
     step_ms = TF_MS[tf]
     now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     out: dict[str, tuple[float, float, float, float]] = {}
-    cur = since_ms + step_ms  # start AFTER the last stored candle
+    cur = since_ms + step_ms  # since_ms is already one-step-before-last, so cur = last_ts
     retries = 0
 
     while cur < now_ms:
@@ -131,6 +145,9 @@ def fetch_tf(exchange: str, tf: str, since_ms: int) -> dict[str, tuple[float, fl
         retries = 0
         for k in rows:
             open_time_ms = int(k[0])
+            # Skip candles that haven't closed yet
+            if open_time_ms + step_ms > now_ms:
+                continue
             utc = datetime.fromtimestamp(open_time_ms / 1000.0, tz=timezone.utc)
             ist = (utc + IST).strftime("%Y-%m-%d %H:%M:%S")
             out[ist] = (float(k[1]), float(k[2]), float(k[3]), float(k[4]),
@@ -145,21 +162,30 @@ def fetch_tf(exchange: str, tf: str, since_ms: int) -> dict[str, tuple[float, fl
 
 def merge_csv(exchange: str, tf: str,
               new_rows: dict[str, tuple], seed: bool = False) -> int:
-    """Append new timestamps to the main CSV; returns rows written."""
+    """Append or UPDATE rows in the CSV; returns new rows written.
+
+    Existing rows are overwritten with fresh (more complete) values so a
+    partial candle from a prior run gets finalized when the candle later closes.
+    """
     path = _data_dir(exchange) / f"BTCUSDT_{tf}.csv"
     existing: dict[str, str] = {}
-    header = "timestamp,open,high,low,close,volume,x,y\n"
+    canonical_header = "timestamp,open,high,low,close,volume,x,y\n"
+    header = canonical_header
     if path.exists() and not seed:
         with open(path, encoding="utf-8") as f:
-            header = f.readline()
+            f.readline()  # discard old header (we always write canonical)
             for line in f:
                 if line.strip():
-                    existing[line.split(",", 1)[0]] = line
-    # count new rows BEFORE adding them to existing
+                    ts = line.split(",", 1)[0]
+                    parts = line.strip().split(",")
+                    if len(parts) == 7:
+                        # Old format: timestamp,open,high,low,close,x,y -> insert volume=0
+                        parts.insert(5, "0")
+                        line = ",".join(parts) + "\n"
+                    existing[ts] = line
+    # count new rows BEFORE merging (overwriting existing)
     new_count = sum(1 for k in new_rows if k not in existing)
     for k in new_rows:
-        if k in existing:
-            continue
         vals = new_rows[k]
         o, h, l, c = vals[0], vals[1], vals[2], vals[3]
         vol = vals[4] if len(vals) > 4 else 0.0
@@ -179,14 +205,18 @@ def refresh_tf(exchange: str, tf: str) -> dict:
 
     last = last_ts(exchange, tf)
     seeding = last is None
+    step_ms = TF_MS[tf]
     if seeding:
         since_ms = ts_to_ms(SEED_IST)
         start_ms = since_ms
         note = f"seeding from {SEED_IST}"
     else:
         since_ms = ts_to_ms(last)
-        start_ms = since_ms
-        note = f"appending after {last}"
+        # Start one step before last_ts so the previously-stored last candle
+        # (which may have been incomplete at the time of the prior fetch) is
+        # re-queried and finalized with its closed values.
+        start_ms = since_ms - step_ms
+        note = f"refreshing from {last}"
 
     new_rows = fetch_tf(exchange, tf, start_ms)
     added = merge_csv(exchange, tf, new_rows, seed=seeding)

@@ -93,6 +93,20 @@ CREATE TABLE IF NOT EXISTS trading_state (
     last_loss_bar INTEGER
 );
 
+-- Candle history: persisted from seed + live closes so the trading
+-- simulation can run on the FULL candle chain (not just the trimmed
+-- rolling window). See .kilo/plans/1792658668907-rolling-window-data-loss-plan.md
+CREATE TABLE IF NOT EXISTS candles (
+    tf TEXT NOT NULL,
+    ts INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    open REAL,
+    high REAL,
+    low REAL,
+    close REAL,
+    PRIMARY KEY (tf, ts)
+);
+
 -- Meta: miscellaneous key-value pairs
 CREATE TABLE IF NOT EXISTS meta (
     key TEXT PRIMARY KEY,
@@ -262,6 +276,7 @@ class Database:
             "CREATE INDEX IF NOT EXISTS idx_ltf_status_entry ON ltf_trades(status, entry_ts)",
             "CREATE INDEX IF NOT EXISTS idx_htf_status_regime ON htf_windows(status, regime)",
             "CREATE INDEX IF NOT EXISTS idx_marks_tf_ts ON marks(tf, ts)",
+            "CREATE INDEX IF NOT EXISTS idx_candles_tf_ts ON candles(tf, ts)",
         ]:
             self._conn.execute(stmt)
 

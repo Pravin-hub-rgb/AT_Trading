@@ -257,7 +257,9 @@ def _collect_signals(
                 swing_done = True
                 continue
 
-            # Skip if break candle trimmed from window
+            # Skip if break candle trimmed from window.
+            # With Option B, the store holds the FULL candle history so this
+            # guard is harmless - all break candles are always present.
             if store and not store.by_date(b_time):
                 swing_done = True
                 continue

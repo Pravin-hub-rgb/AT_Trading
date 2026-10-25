@@ -42,7 +42,9 @@ export default function BtcFetchPanel({ exchange = "spot" }: { exchange?: Exchan
   const info = EXCHANGE_INFO[exchange];
   const [status, setStatus] = useState<FetchStatus | null>(null);
   const [busy, setBusy] = useState(false);
-  const [selected, setSelected] = useState<Set<TfKey>>(new Set(["15m", "1h"]));
+  const [selected, setSelected] = useState<Set<TfKey>>(
+    exchange === "bybit" ? new Set(["1m", "15m", "1h"]) : new Set(["15m", "1h"])
+  );
   const [result, setResult] = useState<FetchResult[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 

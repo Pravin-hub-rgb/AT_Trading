@@ -12,6 +12,7 @@ const links = [
   { href: "/chart", label: "Chart" },
   { href: "/btc", label: "BTC" },
   { href: "/results", label: "Results" },
+  { href: "/forward-testing", label: "Forward Testing" },
 ];
 
 export default function Navbar() {

@@ -43,7 +43,12 @@ _BTC_BYBIT_LEGACY = ROOT_DIR / "data" / "bybit"
 _BTC_BYBIT_OOS_LEGACY = ROOT_DIR / "data" / "unseen" / "bybit"
 BTC_BYBIT_DATA_DIR = _BTC_BYBIT_LEGACY if _BTC_BYBIT_LEGACY.is_dir() else BTC_BYBIT_ROOT / "is"
 BTC_BYBIT_OOS_DATA_DIR = (_BTC_BYBIT_OOS_LEGACY if _BTC_BYBIT_OOS_LEGACY.is_dir()
-                         else BTC_BYBIT_ROOT / "oos")
+                          else BTC_BYBIT_ROOT / "oos")
+
+# Forward data directory: IS + forward concatenated by exp_forward_eval.py.
+# Lives inside the repo (data/forward/bybit/). IS data ends at Sep 13 2026 10:02;
+# forward data is the post-cutoff slice that has never been searched or tuned.
+BTC_FORWARD_DATA_DIR = ROOT_DIR / "data" / "forward" / "bybit"
 
 
 def btc_bybit_oos_dir() -> Path:
@@ -109,10 +114,34 @@ def load_btc_df(tf: str, symbol: str = "BTCUSDT") -> pd.DataFrame:
         .drop_duplicates(subset="timestamp", keep="last")
         .reset_index(drop=True)
     )
-    # naive IST wall time -> UTC epoch seconds (chart adds IST back to display)
     df["ts"] = (df["timestamp"].astype("int64") // 10**9) - IST_OFFSET_SEC
 
     if len(_df_cache) >= _DF_CACHE_MAX:
         _df_cache.clear()
     _df_cache[key] = df
+    return df
+
+
+def load_btc_df_with_forward(
+    tf: str, symbol: str = "BTCUSDT_BYBIT"
+) -> pd.DataFrame:
+    """Load IS + forward Bybit data concatenated.
+
+    Used by the /chart endpoint when include_forward=1. Forward CSVs live at
+    BTC_FORWARD_DATA_DIR and are appended after IS data without revising any
+    existing row (timestamps are deduped, keeping the forward copy).
+    """
+    df = load_btc_df(tf, symbol)
+    fwd_path = BTC_FORWARD_DATA_DIR / f"BTCUSDT_{tf}.csv"
+    if fwd_path.exists():
+        fdf = pd.read_csv(fwd_path)
+        fdf["timestamp"] = pd.to_datetime(fdf["timestamp"])
+        concat = pd.concat([df, fdf])
+        concat = (
+            concat.sort_values("timestamp")
+            .drop_duplicates(subset="timestamp", keep="last")
+            .reset_index(drop=True)
+        )
+        concat["ts"] = (concat["timestamp"].astype("int64") // 10**9) - IST_OFFSET_SEC
+        return concat
     return df

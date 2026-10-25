@@ -181,32 +181,52 @@ class SignalsMixin:
             print(f"[filter] {outcome:6} {kind} {sdir} @ {px:.2f} bar={bar} {date} | HTF[{w['tag']}] {w['dir'] or 'none'} {ext_r_str} gate {self.v18['ext_stop_r']}R | regime {flag} chop {self.chop_index:.1f} | {reason}")
 
     def _run_v18_simulation(self):
-        if len(self.window_15m) < SWING["min_bars_15m"] + 5 or len(self.window_1h) < SWING["min_bars_1h"] + 5:
-            print(f"[live] windows too small: 15m={len(self.window_15m)} 1h={len(self.window_1h)}")
+        """Sync entry point — schedules the async simulation.
+
+        If an event loop is running (live streaming), schedule the async
+        version as a task so the streamer isn't blocked. If no loop is
+        running (seed/recovery pre-loop), run it directly via asyncio.run.
+        A guard flag prevents overlapping simulations.
+        """
+        if getattr(self, "_sim_running", False):
+            return
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            self._sim_running = True
+            try:
+                asyncio.run(self._run_v18_simulation_async())
+            finally:
+                self._sim_running = False
+            return
+        self._sim_running = True
+        task = loop.create_task(self._run_v18_simulation_async())
+        task.add_done_callback(lambda t: setattr(self, "_sim_running", False))
+
+    async def _run_v18_simulation_async(self):
+        if len(self.all_candles_15m) < SWING["min_bars_15m"] + 5 or len(self.all_candles_1h) < SWING["min_bars_1h"] + 5:
+            print(f"[live] candles too small: 15m={len(self.all_candles_15m)} 1h={len(self.all_candles_1h)}")
             return
 
-        c15 = self.window_15m
-        c1h = self.window_1h
-        # L3: indices must live in the same space as the trimmed windows
-        sw15 = self._rebase_swings_to_window(self.all_swings_15m, c15)
-        sw1h = self._rebase_swings_to_window(self.all_swings_1h, c1h)
-        # L5: forming swing's marks are invisible to the declared-only chain
+        c15 = list(self.all_candles_15m)
+        c1h = list(self.all_candles_1h)
+        # Option B: use full swing chains directly (no rebased trim)
+        sw15 = list(self.all_swings_15m)
+        sw1h = list(self.all_swings_1h)
+        # L5: forming swing's marks are appended (idx already aligns with all_candles_*)
         try:
             open15 = self.swing_15m.get_open_swing()
             if open15 and open15.get("breaks"):
-                rebased_open = self._rebase_swings_to_window([open15], c15)
-                if rebased_open:
-                    sw15 = sw15 + rebased_open
+                sw15 = sw15 + [open15]
             open1h = self.swing_1h.get_open_swing()
             if open1h and open1h.get("breaks"):
-                rebased_open1h = self._rebase_swings_to_window([open1h], c1h)
-                if rebased_open1h:
-                    sw1h = sw1h + rebased_open1h
+                sw1h = sw1h + [open1h]
         except Exception as _oe:
             print(f"[live] open-swing append warning: {_oe}")
 
         try:
-            result = simulate_htf_ltf_streak_halt(
+            result = await asyncio.to_thread(
+                simulate_htf_ltf_streak_halt,
                 c1h, sw1h, c15, sw15,
                 fine_ltf=[],
                 **self.v18,

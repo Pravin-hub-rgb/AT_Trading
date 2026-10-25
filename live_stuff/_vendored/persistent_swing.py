@@ -26,7 +26,12 @@ class PersistentSwingEngine:
         # BTC 24/7: match compute_btc_swings which forces timeCap="00:00"
         if isinstance(self.opts, dict) and "timeCap" not in self.opts:
             self.opts = {**self.opts, "timeCap": "00:00"}
+        # Chain-wide spent_pivots: shared across every SwingEngine in this chain,
+        # matching compute_btc_swings (btc_swing.py:69-73) which creates ONE set
+        # and assigns it to each freshly-constructed engine.
+        self._spent_pivots: set = set()
         self.eng = SwingEngine(self.opts)
+        self.eng.spent_pivots = self._spent_pivots  # chain-wide: share from first engine
         self.swing_index = 0
         self.next_start_pos = 0
         self.ts_map: dict[int, str] = {}
@@ -78,9 +83,29 @@ class PersistentSwingEngine:
                 except Exception:
                     e.break_marks = raw_marks if isinstance(raw_marks, list) else []
                 e.seed_idx = state.get("seed_idx", -1)
+                self._spent_pivots = set(tuple(p) for p in state.get("spent_pivots", []))
+                e.spent_pivots = self._spent_pivots  # restore chain-wide set
                 print(f"[swing] {self.tf}: restored (swing_index={self.swing_index}, armed={e.armed}, dir={e.dir})")
         except Exception as e:
             print(f"[swing] {self.tf}: load failed: {e}")
+
+    def _reset(self) -> None:
+        """Reset engine to a clean slate for rebuilding from full candle history.
+
+        Used during crash recovery (Option B): instead of restoring persisted
+        state, we re-feed all candles from g_idx 0 to guarantee g_idx == position
+        in all_candles_*.
+        """
+        from .firstswing import SwingEngine as _SE
+        self._spent_pivots = set()
+        self.eng = _SE(self.opts)
+        self.eng.spent_pivots = self._spent_pivots
+        self.swing_index = 0
+        self.next_start_pos = 0
+        self.ts_map = {}
+        self._candles = {}
+        self._pending = []
+        self._pos = 0
 
     def _save_state(self):
         if not self.db:
@@ -113,6 +138,7 @@ class PersistentSwingEngine:
                 "_pending_arm": e._pending_arm,
                 "break_marks": ser_marks,
                 "seed_idx": e.seed_idx,
+                "spent_pivots": [list(p) for p in self._spent_pivots],
             }
             with self.db.transaction() as conn:
                 conn.execute(
@@ -176,10 +202,12 @@ class PersistentSwingEngine:
 
     def _new_engine(self, first: bool = False) -> None:
         old_ts_map = self.eng.ts_map.copy()
+        old_spent = self._spent_pivots
         self.eng = SwingEngine(self.opts)
         # First swing: no defer (matches compute_btc_swings swing_index==0)
         self.eng.defer_same_bar_arm = not first
         self.eng.ts_map = old_ts_map
+        self.eng.spent_pivots = old_spent  # chain-wide: share spent pivots
 
     def process_bar(self, candle: FlowCandle, g_idx: int) -> Optional[dict]:
         """Process a single bar. Returns swing dict if a swing completed.

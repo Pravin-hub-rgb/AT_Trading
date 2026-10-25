@@ -48,7 +48,7 @@ from book import BOOK_NAME, BOOK_CODE, BOOK_PARAMS, SWING, SWING_1H_LABEL, get_b
 from persistence.database import Database
 from persistence.mark_store import get_marks
 from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
-from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end
+from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end, insert_candle, load_candles
 
 logger = logging.getLogger("live_loop")
 if not logger.handlers:
@@ -92,6 +92,10 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         self.paper_mode = paper_mode
         self.window_15m: list[dict] = []
         self.window_1h: list[dict] = []
+        self.all_candles_15m: list[dict] = []
+        self.all_candles_1h: list[dict] = []
+        # Guard against overlapping async simulations
+        self._sim_running = False
         self.trading_state = get_trading_state(db)
         # Book 107 - params are the tested book, not the old v18 symbol table.
         self.v18 = get_book_params(self.v18_instrument)
@@ -253,8 +257,15 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
             self._maybe_reset_daily()  # C5: midnight reset before sim/journal
             ts = candle["close_time"] // 1000
             date = self._to_ist_str(candle["open_time"])
-            self.window_15m.append({"date": date, "ts": ts, "open": candle["open"],
-                                     "high": candle["high"], "low": candle["low"], "close": candle["close"]})
+            candle_dict = {"date": date, "ts": ts, "open": candle["open"],
+                             "high": candle["high"], "low": candle["low"], "close": candle["close"]}
+            self.window_15m.append(candle_dict)
+            # Option B: persist to full candle store for simulation
+            self.all_candles_15m.append(candle_dict)
+            try:
+                insert_candle(self.db, "15m", candle_dict)
+            except Exception:
+                pass
             # Trim window
             cutoff = int(time.time()) - WINDOW_DAYS_15M * 86400
             self.window_15m = [c for c in self.window_15m if c["ts"] >= cutoff]
@@ -307,8 +318,15 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
             self._maybe_reset_daily()  # C5: midnight reset before sim/journal
             ts = candle["close_time"] // 1000
             date = self._to_ist_str(candle["open_time"])
-            self.window_1h.append({"date": date, "ts": ts, "open": candle["open"],
-                                    "high": candle["high"], "low": candle["low"], "close": candle["close"]})
+            candle_dict = {"date": date, "ts": ts, "open": candle["open"],
+                                    "high": candle["high"], "low": candle["low"], "close": candle["close"]}
+            self.window_1h.append(candle_dict)
+            # Option B: persist to full candle store for simulation
+            self.all_candles_1h.append(candle_dict)
+            try:
+                insert_candle(self.db, "1h", candle_dict)
+            except Exception:
+                pass
             cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
             self.window_1h = [c for c in self.window_1h if c["ts"] >= cutoff]
             fc = FlowCandle(date=date, open=candle["open"], high=candle["high"],
