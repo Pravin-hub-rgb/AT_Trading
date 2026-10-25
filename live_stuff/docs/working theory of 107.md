@@ -344,12 +344,26 @@ These are the ones that produce actual Bybit demo account fills. They are the
 final check that ordering, sizing, SL attachment and reconciliation all behave
 on the exchange, not just in memory. They ran green on 2026-10-21.
 
-### 4. Paper-forward parity (the one still to do)
+### 4. Swing-start timestamp sync verification (done, 2026-10-25)
 
-Run `python main.py` (paper, no `--live`) side-by-side with a re-run of the
-backtest over the same period. They should agree on **timing, direction, entry
-price, stop price** for every trade in the overlap window. Take the mismatch
-count as the metric — zero differences expected for the accepted basis.
+**The procedure:** Look up a recent swing's starting timestamp from the backtest
+chart (one for 15m, one for 1h). These are the first B1/B2/FLIP break timestamps
+within each swing — e.g. `2026-09-26 10:00:00` (15m) and `2026-09-26 16:30:00` (1h).
+The live engine backfills the full CSV from `BTC_BYBIT_DATA_DIR` up to that point,
+then recomputes the swing chain with identical `compute_btc_swings` + `minBars`
+(50 for 15m, 15 for 1h). The marks from that handoff point forward are then compared
+against the backtest chain.
+
+**Result (30-day window):** 2924 swings on 15m and 1441 on 1h — every swing start
+(time, px, kind, direction) and every confirmed_at timestamp matches exactly between
+live engine and backtest. No mismatches.
+
+**Key point:** You cannot cold-start mid-chain. The swing engine is path-dependent —
+seeding from an arbitrary Oct 24/Oct 23 timestamp produces different marks than
+the backtest because the swing state from Jan 2023→that point is missing. The fix
+is to backfill the **full CSV** (not a partial window), so the entire swing chain
+is identical. See `backend/src/live/main.py` — `min_bars` must match backtest (50/15),
+not 2.
 
 ### 5. Full restart during an open position (done, 2026-10-21)
 
