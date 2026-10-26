@@ -505,26 +505,33 @@ class SignalsMixin:
             trade_regime = t.get("htf_regime", "flip")
             wid = self._window_id_for_regime(trade_regime)
             htf_id = int(wid) if wid is not None else None  # M1: NULL, not 0 sentinel
+            entry_ts = int(t["entry_ts"])
+            is_hist = (getattr(self, "_seeding", False) or
+                       entry_ts in getattr(self, "_gap_history_ts", set()))
             trade_id = open_ltf_trade(
                 self.db,
                 direction=t["dir"],
-                entry_ts=int(t["entry_ts"]),
+                entry_ts=entry_ts,
                 entry_price=float(t["entry_price"]),
                 sl_initial=float(t["sl"]),
                 tp_price=float(t["target"]),
                 cap_ts=cap_ts,
                 htf_window_id=htf_id,
+                origin="seed_history" if is_hist else "live",
             )
             # C3/C5: stale-entry guard — never execute a trade that is not fresh,
             # and never execute while the daily halt is active. Applies ONLY to
             # open trades; closed trades are history and always journal normally.
+            # P0c: gap-backfilled (historical) trades are never sent to exchange.
             if t.get("outcome") == "open":
                 in_trade = self._at_position_limit()
-                stale = self._is_stale_entry(int(t["entry_ts"]))
+                stale = self._is_stale_entry(entry_ts)
                 if in_trade:
                     why, exit_reason = "in-trade", "stale_skip"
                 elif getattr(self, "_seeding", False):
                     why, exit_reason = "seeding", "stale_skip"
+                elif is_hist:
+                    why, exit_reason = "gap-history", "gap_skip"
                 elif stale:
                     why, exit_reason = "stale", "stale_skip"
                 elif self._daily_halted:
@@ -565,7 +572,9 @@ class SignalsMixin:
                     print(f"[gray] engine closed {t['dir']} @ {t['exit_price']:.2f} "
                           f"({r_mult:+.2f}R, no costs)")
                     continue
-                self._check_daily_loss_limit(r_mult)
+                # Daily loss gate only applies to live trades, not seed-history replay
+                if not is_hist:
+                    self._check_daily_loss_limit(r_mult)
                 # Cost calculation (peer model: asymmetric % slippage)
                 r_mult = float(t["r_multiple"])
                 risk = abs(float(t["entry_price"]) - float(t["sl"]))
@@ -580,9 +589,11 @@ class SignalsMixin:
                 else:
                     cost_r = 0.0
                 net_r = r_mult - cost_r
-                self._cum_cost_r += cost_r
-                self._cum_net_r += net_r
-                self._trade_count += 1
+                # Seed-history trades must not pollute live cumulative stats
+                if not is_hist:
+                    self._cum_cost_r += cost_r
+                    self._cum_net_r += net_r
+                    self._trade_count += 1
                 print(f"[trade] {t['dir']} sw{t['swing_no']} @ {t['entry_price']:.2f} -> {t['exit_price']:.2f} ({t['outcome']}, {r_mult:+.2f}R, cost {cost_r:.2f}R, net {net_r:+.2f}R)")
             else:
                 print(f"[trade] {t['dir']} sw{t['swing_no']} @ {t['entry_price']:.2f} OPEN (SL={t['sl']:.2f} TP={t['target']:.2f})")

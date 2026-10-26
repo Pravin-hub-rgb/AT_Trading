@@ -111,11 +111,14 @@ def open_ltf_trade(
     tp_price: float,
     cap_ts: int,
     htf_window_id: Optional[int],
+    origin: str = "live",
 ) -> int:
     """Open a new LTF trade.
 
     M1: htf_window_id is nullable — NULL means "taken while no window of the
     trade's regime was open" (never the 0 sentinel).
+
+    M5: origin tags trade source — "live" (default) or "seed_history".
 
     Returns:
         The trade id
@@ -123,9 +126,9 @@ def open_ltf_trade(
     with db.transaction() as conn:
         cursor = conn.execute(
             """INSERT INTO ltf_trades 
-               (direction, entry_ts, entry_price, sl_initial, sl_current, tp_price, cap_ts, htf_window_id, status)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open')""",
-            (direction, entry_ts, entry_price, sl_initial, sl_initial, tp_price, cap_ts, htf_window_id),
+               (direction, entry_ts, entry_price, sl_initial, sl_current, tp_price, cap_ts, htf_window_id, status, origin)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'open', ?)""",
+            (direction, entry_ts, entry_price, sl_initial, sl_initial, tp_price, cap_ts, htf_window_id, origin),
         )
         return cursor.lastrowid
 

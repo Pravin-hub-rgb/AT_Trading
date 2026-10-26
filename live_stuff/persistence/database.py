@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS ltf_trades (
     exit_fill_price REAL,
     fee_paid REAL DEFAULT 0,
     funding_paid REAL DEFAULT 0,
-    last_sync_ts INTEGER
+     last_sync_ts INTEGER,
+     origin TEXT DEFAULT 'live'
 );
 
 -- Marks: append-only journal (never update/delete)
@@ -167,6 +168,7 @@ class Database:
         self._migrate_trading_state()
         self._migrate_ltf_trades()
         self._migrate_ltf_exchange_fields()
+        self._migrate_ltf_origin()
         self._create_indexes()  # M4 — after migrations (rebuild drops ltf indexes)
         self._conn.commit()
 
@@ -267,6 +269,13 @@ class Database:
         for col, typedef in migrations:
             if col not in existing:
                 self._conn.execute(f"ALTER TABLE ltf_trades ADD COLUMN {col} {typedef}")
+
+    def _migrate_ltf_origin(self):
+        """M5: add origin column to distinguish seed-history trades from live."""
+        cursor = self._conn.execute("PRAGMA table_info(ltf_trades)")
+        cols = {row[1] for row in cursor.fetchall()}
+        if "origin" not in cols:
+            self._conn.execute("ALTER TABLE ltf_trades ADD COLUMN origin TEXT DEFAULT 'live'")
 
     def _create_indexes(self):
         """M4: query-path indexes. Created AFTER migrations because the M1

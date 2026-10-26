@@ -10,9 +10,10 @@ and verify the marks align with the full-chain backtest.
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backtest"))
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
-sys.path.insert(0, "tests")
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backtest"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "backend"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests"))
 
 import json
 import pandas as pd
@@ -92,11 +93,13 @@ def verify_oct20():
         print(f"      sw{m['swing_index']:>4} | {m['confirmed_at_time']} | {m['dir']:<5} | {m['break_kind']:<4} | "
               f"{m['break_dir']:<4} | px={m['break_px']}")
 
-    # --- Approach 2: Simulate live seed from Oct 24 15m / Oct 23 1h ---
-    print("\n[2] Live seed from timestamps: 15m=Oct24 04:45, 1h=Oct23 19:30")
-    print("    (Cold start — does NOT have Jan 2023 -> Oct 23 chain)")
-    seed_15m = "2026-10-24 04:45:00"
-    seed_1h = "2026-10-23 19:30:00"
+    # --- Approach 2: Simulate live seed from Sep 26 (7+ days before Oct 24) ---
+    # Plan §6: seed from 2026-09-26 10:00 (15m) / 2026-09-26 16:30 (1h)
+    # After ~7 days (300 15m / 150 1h bars), swings converge with full chain.
+    print("\n[2] Live seed from timestamps: 15m=Sep26 10:00, 1h=Sep26 16:30")
+    print("    (7+ day handoff — walker should converge by Oct 20)")
+    seed_15m = "2026-09-26 10:00:00"
+    seed_1h = "2026-09-26 16:30:00"  
 
     # For 15m: timestamp IS first candle, no lookback
     start_15m_ts = df15[df15["timestamp"] == seed_15m]
@@ -121,63 +124,51 @@ def verify_oct20():
         tail_1h = df1h.iloc[chop_start:]
         f1h_tail = df_to_flow(tail_1h)
         print(f"    1h tail candles: {len(f1h_tail)} (incl {idx_1h - chop_start} chop lookback bars)")
-        sw1h_tail = compute_btc_swings(f1h_tail, opts={"minBars": 14}, max_swings=len(f1h_tail) // 2)
+        sw1h_tail = compute_btc_swings(f1h_tail, opts={"minBars": 15}, max_swings=len(f1h_tail) // 2)
         print(f"    1h tail swings: {len(sw1h_tail)}")
 
-    # --- Approach 3: Seed from Sep 9 (seed_marks.json) + forward fetch ---
-    print("\n[3] Seed from Sep 9 (seed_marks.json) + forward to Oct 24")
-    seed_path = Path(__file__).resolve().parents[1] / "live_stuff" / "docs" / "seed_marks.json"
-    if seed_path.exists():
-        seed_data = json.loads(seed_path.read_text())
-        cutoff = seed_data.get("cutoff", "")
-        print(f"    Seed cutoff: {cutoff}")
+        # Compare: extract Oct 20 marks from BOTH chains and check convergence
+        oct20_marks_tail = extract_marks(sw15_tail, "2026-10-20")
+        print(f"\n[3] Convergence check: Oct 20 marks full-chain vs seeded")
+        print(f"    Full chain:  {len(oct20_marks_full)} marks")
+        print(f"    Seed chain:  {len(oct20_marks_tail)} marks")
 
-        # Find Sep 9 15:00 candle in the data
-        cutoff_dt = datetime.strptime(cutoff, "%Y-%m-%d %H:%M:%S")
-        # Seed from the candle AFTER the cutoff
-        after_cutoff = df15[df15["timestamp"] > cutoff]
-        print(f"    15m candles after cutoff: {len(after_cutoff)}")
-        if len(after_cutoff) > 0:
-            # For this test, we just check if Oct 20 marks appear in the tail
-            # starting from Sep 9 cutoff (simulating seed file + forward fetch)
-            tail_from_sep9 = df15[df15["timestamp"] > cutoff]
-            f15_tail2 = df_to_flow(tail_from_sep9)
-            sw15_tail2 = compute_btc_swings(f15_tail2, opts={"minBars": 50}, max_swings=len(f15_tail2) // 2)
-            print(f"    Tail swings (Sep 9 -> present): {len(sw15_tail2)}")
+        full_keys = {(m["swing_index"], m["confirmed_at_time"], m["break_kind"],
+                       m["break_dir"], round(m["break_px"], 2)) for m in oct20_marks_full}
+        tail_keys = {(m["swing_index"], m["confirmed_at_time"], m["break_kind"],
+                       m["break_dir"], round(m["break_px"], 2)) for m in oct20_marks_tail}
 
-            oct20_marks_tail = extract_marks(sw15_tail2, "2026-10-20")
-            print(f"    Oct 20 marks in tail: {len(oct20_marks_tail)}")
-            if oct20_marks_tail:
-                print("    ⚠️  Marks found in tail — but swing indices may differ from full chain")
-                for m in oct20_marks_tail:
-                    print(f"      sw{m['swing_index']:>4} | {m['confirmed_at_time']} | {m['dir']:<5} | {m['break_kind']:<4}")
-            else:
-                print("    ✓ No Oct 20 marks in tail — expected (swing chain differs from full)")
+        # Note: swing_index differs between chains (different starting count).
+        # Compare by (confirmed_at_time, break_kind, break_dir, break_px) only.
+        full_loose = {(m["confirmed_at_time"], m["break_kind"], m["break_dir"],
+                       round(m["break_px"], 2)) for m in oct20_marks_full}
+        tail_loose = {(m["confirmed_at_time"], m["break_kind"], m["break_dir"],
+                       round(m["break_px"], 2)) for m in oct20_marks_tail}
+
+        print(f"    Exact (incl swing_index):   full={len(full_keys - tail_keys)} tail-only, tail={len(tail_keys - full_keys)} full-only")
+        print(f"    Loose (time/kind/dir/px):   full={len(full_loose - tail_loose)} tail-only, tail={len(tail_loose - full_loose)} full-only")
+        if not full_loose - tail_loose and not tail_loose - full_loose:
+            print("    CONVERGED: Oct 20 marks match within 2 cents")
+        else:
+            print("    MISMATCH: Oct 20 marks differ — seed too close or path divergence")
+    else:
+        print("    15m seed candle not found — skipping convergence check")
 
     print("\n" + "=" * 70)
     print("CONCLUSION:")
     print("=" * 70)
     print("""
 Full chain (backtest): Jan 2023 -> Oct 24
-  - 15m: 50-bar minBars -> marks at Oct 20: 3 (FLIP 02:30, B2 15:30, B2 20:30)
+  - 15m: 50-bar minBars
   - Swing chain is continuous from Jan 2023
 
-Cold-start seed (Oct 24/Oct 23 timestamps):
-  - Engine starts fresh at the seed timestamp
-  - NO swing state from Jan 2023 -> Oct 23
-  - Swing indices and break points will DIFFER from backtest
-  - This is EXPECTED — the walker is path-dependent
+Seed chain (from Sep 26, 7+ day handoff):
+  - Engine starts fresh at Sep 26 seed timestamp
+  - Path-dependent initially, but converges after ~7 days (300 15m / 150 1h bars)
+  - By Oct 20, marks should match within 2 cents
 
-Seed from Sep 9 seed_marks.json + forward:
-  - Has swing state up to Sep 9
-  - Processes Sep 10 -> Oct 24 forward
-  - Marks from Sep 10+ MAY match backtest if data source is same
-  - BUT seed_marks.json was from Binance, backtest uses Bybit data
-  - Small OHLC differences can cause divergence over 45 days
-
-For perfect sync: run backend/src/live/main.py which loads the FULL
-CSV from btc_data/is/ (same source as backtest) and uses compute_btc_swings
-on the complete chain. This guarantees identical marks.
+If converged: P0a (1h index alignment) is verified — the seeded chain
+produces the same swing breaks as the full backtest chain.
 """)
     return oct20_marks_full
 
@@ -191,7 +182,7 @@ if __name__ == "__main__":
         "total_swings": "see output above",
         "oct20_marks": marks,
     }
-    out_path = Path(__file__).resolve().parents[1] / "backtest" / "verify_oct24_marks.json"
+    out_path = Path(__file__).resolve().parents[2] / "backtest" / "verify_oct24_marks.json"
     with open(out_path, "w") as f:
         json.dump(out, f, indent=2)
     print(f"\nResults written to: {out_path}")

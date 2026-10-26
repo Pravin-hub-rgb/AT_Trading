@@ -85,6 +85,11 @@ class RiskMixin:
             for t in reversed(trades):
                 if t["status"] != "closed":
                     continue
+                # Skip seed-history trades — historical replay, not live streak.
+                # BREAK (not continue): seed-history boundary is a natural stopping
+                # point; losses across the seed/live boundary don't form one streak.
+                if t.get("origin") == "seed_history":
+                    break
                 # Skip order failures — not real trading losses
                 # Skip stale_skip — not a trade at all (C3: journaled-only entry)
                 # Skip halted_skip — daily halt was active (C5: never executed)

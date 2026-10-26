@@ -41,7 +41,7 @@ from book import BOOK_NAME, BOOK_PARAMS, SWING, SWING_1H_LABEL, get_book_params
 from persistence.database import Database
 from persistence.mark_store import get_marks
 from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
-from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end, insert_candles_bulk, load_candles
+from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end, insert_candles_bulk, insert_candle, load_candles
 
 logger = logging.getLogger("live_loop")
 if not logger.handlers:
@@ -176,6 +176,22 @@ class FeedMixin:
             self._logged_filter_keys = set()
             self._bar_counter_15m = 0
             self._bar_counter_1h = 0
+            # P0b: Reset ALL streak/cooldown/daily fields — not just daily ones.
+            # A fresh seed must start clean; stale cooldown_remaining or
+            # consecutive_losses from a previous halt can block trading.
+            self._daily_pnl_r = 0.0
+            self._daily_halted = False
+            self._last_trade_date = None
+            self.trading_state.update({
+                "cooldown_remaining": 0,
+                "consecutive_losses": 0,
+                "halted": False,
+                "last_loss_bar": None,
+                "daily_pnl_r": 0.0,
+                "daily_halted": False,
+                "last_trade_date": "",
+            })
+            save_trading_state(self.db, self.trading_state)
         except Exception as _e:
             print(f"[seed] engine reset warning: {_e}")
 
@@ -273,40 +289,47 @@ class FeedMixin:
                 first_ist = candles_1h[0].get("date", "?")
                 last_ist = candles_1h[-1].get("date", "?")
                 print(f"[seed] 1h range: {first_ist} -> {last_ist}")
+                # 1h: split lookback from seed candles
+                # Lookback bars warm up chop(ATR/Dreiss) ONLY — they must NOT enter
+                # all_candles_1h because swing g_idx must be 0 == seed bar (backtest
+                # alignment). Lookback is transient: never persisted, deleted on restart.
                 cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
-                self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
-                # Option B: persist full candle history for simulation
-                self.all_candles_1h = candles_1h
-                try:
-                    insert_candles_bulk(self.db, "1h", candles_1h)
-                except Exception:
-                    pass
-                # Find seed point index — lookback bars are for chop ONLY, not the swing engine
                 seed_1h_sec = seed_1h_ms // 1000
                 engine_start = 0
                 for idx, c in enumerate(candles_1h):
                     if c["ts"] >= seed_1h_sec:
                         engine_start = idx
                         break
-                print(f"[seed]  1h: engine starts at bar {engine_start} ({candles_1h[engine_start]['date']}), "
-                      f"lookback {engine_start} bars for chop only")
-                for i in range(engine_start, len(candles_1h)):
-                    c = candles_1h[i]
+                lookback_1h = candles_1h[:engine_start]
+                seed_candles_1h = candles_1h[engine_start:]
+                # window_1h keeps lookback for chop display/warmup (state._compute_chop)
+                self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
+                # Persist + simulate seed candles ONLY — no lookback
+                self.all_candles_1h = seed_candles_1h
+                try:
+                    insert_candles_bulk(self.db, "1h", seed_candles_1h)
+                except Exception:
+                    pass
+                print(f"[seed]  1h: lookback={len(lookback_1h)} bars (chop only), "
+                      f"engine starts at seed bar 0 ({seed_candles_1h[0]['date'] if seed_candles_1h else '?'})")
+                for i in range(len(seed_candles_1h)):
+                    c = seed_candles_1h[i]
                     fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
                     g_idx = self._bar_counter_1h
                     self._bar_counter_1h += 1
                     result_1h = self.swing_1h.process_bar(fc, g_idx)
                     if result_1h:
                         self.all_swings_1h.append(result_1h)
-                self._show_recent_marks(self.all_swings_1h, candles_1h, "1h")
+                self._show_recent_marks(self.all_swings_1h, seed_candles_1h, "1h")
                 open1h = self.swing_1h.get_open_swing()
                 if open1h:
                     for b in open1h.get("breaks", []):
                         key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
                         self._printed_marks.add(key)
                     print(f"[swing]  1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
-                print(f"[seed]  1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
-                result["1h"] = {"candles": len(candles_1h), "swings": len(self.all_swings_1h),
+                print(f"[seed]  1h: {len(seed_candles_1h)} candles (seed), {len(self.all_swings_1h)} swings")
+                result["1h"] = {"candles": len(seed_candles_1h), "swings": len(self.all_swings_1h),
+                                "lookback": len(lookback_1h),
                                 "open": {"dir": open1h["dir"], "breaks": len(open1h.get("breaks", []))} if open1h else None}
         except Exception as e:
             import traceback
@@ -315,6 +338,7 @@ class FeedMixin:
             result["1h"] = {"error": str(e)}
 
         self._seeding = False
+        self._gap_history_ts.clear()
         print(f"[seed] Seeded total: {len(self.all_swings_15m)} 15m swings, {len(self.all_swings_1h)} 1h swings")
 
         # Prime rolling metrics + initial v18 simulation
@@ -385,6 +409,10 @@ class FeedMixin:
             self._logged_filter_keys = set()
             self._bar_counter_15m = 0
             self._bar_counter_1h = 0
+            # NOTE: daily loss state is NOT reset here — _recover_from_crash must
+            # PRESERVE an active daily halt so the bot doesn't resume trading after
+            # a crash on the same day it was legitimately halted (5R loss hit).
+            # Only _seed_from_timestamps (fresh seed) resets daily state.
         except Exception as _e:
             print(f"[recover] engine reset warning: {_e}")
 
@@ -444,24 +472,28 @@ class FeedMixin:
                 candles_1h = self._normalize_candles(raw_1h)
                 if candles_1h:
                     cutoff = int(time.time()) - WINDOW_DAYS_1H * 86400
-                    self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
-                    # Option B: persist recovered candles + populate all_candles
-                    self.all_candles_1h = candles_1h
-                    try:
-                        insert_candles_bulk(self.db, "1h", candles_1h)
-                    except Exception:
-                        pass
-                    # Find engine start — lookback bars for chop only, not the swing engine
+                    # 1h: split lookback from seed candles — lookback is for chop
+                    # ONLY and must NOT enter all_candles_1h (swing g_idx 0 == seed bar).
                     start_1h_sec = start_1h_ms // 1000
                     engine_start = 0
                     for idx, c in enumerate(candles_1h):
                         if c["ts"] >= start_1h_sec:
                             engine_start = idx
                             break
-                    print(f"[recover]  1h: engine starts at bar {engine_start} ({candles_1h[engine_start]['date']}), "
-                          f"lookback {engine_start} bars for chop only")
-                    for i in range(engine_start, len(candles_1h)):
-                        c = candles_1h[i]
+                    lookback_1h = candles_1h[:engine_start]
+                    seed_candles_1h = candles_1h[engine_start:]
+                    # window_1h keeps lookback for chop display/warmup
+                    self.window_1h = [c for c in candles_1h if c["ts"] >= cutoff] or candles_1h
+                    # Persist + simulate seed candles ONLY — no lookback
+                    self.all_candles_1h = seed_candles_1h
+                    try:
+                        insert_candles_bulk(self.db, "1h", seed_candles_1h)
+                    except Exception:
+                        pass
+                    print(f"[recover]  1h: lookback={len(lookback_1h)} bars (chop only), "
+                          f"engine starts at seed bar 0 ({seed_candles_1h[0]['date'] if seed_candles_1h else '?'})")
+                    for i in range(len(seed_candles_1h)):
+                        c = seed_candles_1h[i]
                         fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"], low=c["low"], close=c["close"])
                         g_idx = self._bar_counter_1h
                         self._bar_counter_1h += 1
@@ -474,13 +506,14 @@ class FeedMixin:
                             key = ("1h", b.get("idx", -1), b.get("kind", ""), b.get("dir", ""), open1h.get("swing_index", -1))
                             self._printed_marks.add(key)
                         print(f"[recover]  1h open: sw{open1h['swing_index']} dir={open1h['dir']} breaks={len(open1h.get('breaks',[]))}")
-                    print(f"[recover]  1h: {len(candles_1h)} candles, {len(self.all_swings_1h)} swings")
+                    print(f"[recover]  1h: {len(seed_candles_1h)} candles (seed), {len(self.all_swings_1h)} swings")
             except Exception as e:
                 import traceback
                 print(f"[recover] 1h recovery failed: {e}")
                 traceback.print_exc()
 
         self._seeding = False
+        self._gap_history_ts.clear()
         print(f"[recover] Seeded total: {len(self.all_swings_15m)} 15m swings, {len(self.all_swings_1h)} 1h swings")
 
         # Prime rolling metrics + initial v18 simulation
@@ -521,12 +554,13 @@ class FeedMixin:
             self.swing_1h._reset()
             self.all_swings_15m = []
             self.all_swings_1h = []
-            self.all_candles_15m = candles_15m
             self.all_candles_1h = candles_1h
             self._printed_marks = set()
             self._logged_filter_keys = set()
             self._bar_counter_15m = 0
             self._bar_counter_1h = 0
+            # NOTE: daily loss state preserved from DB on DB recovery — an active
+            # halt must survive a restart, not be cleared on crash recovery.
         except Exception as _e:
             print(f"[recover-db] engine reset warning: {_e}")
 
@@ -542,7 +576,8 @@ class FeedMixin:
                     end_time = result["seg"].get("end_time", "")
                     if end_time:
                         from datetime import datetime as _dt
-                        end_ts = int(_dt.strptime(end_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+                        ist_dt = _dt.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                        end_ts = int((ist_dt - IST).replace(tzinfo=timezone.utc).timestamp())
                         set_last_swing_end(self.db, "15m", end_ts)
                 except Exception:
                     pass
@@ -560,7 +595,8 @@ class FeedMixin:
                     end_time = result["seg"].get("end_time", "")
                     if end_time:
                         from datetime import datetime as _dt
-                        end_ts = int(_dt.strptime(end_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+                        ist_dt = _dt.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                        end_ts = int((ist_dt - IST).replace(tzinfo=timezone.utc).timestamp())
                         set_last_swing_end(self.db, "1h", end_ts)
                 except Exception:
                     pass
@@ -634,6 +670,84 @@ class FeedMixin:
                 except RuntimeError:
                     return _asyncio.run(res)
             return res
+
+    def _backfill_gap(self, tf: str, last_ts: int, incoming_ts: int):
+        """Fetch and process missing candles between last_ts and incoming_ts.
+
+        Maintains g_idx continuity — gap candles are inserted at correct
+        g_idx positions so swing indices align with the backtest chain.
+        Called from _on_15m_close / _on_1h_close on gap detection.
+        """
+        step_s = 900 if tf == "15m" else 3600
+        # B3: last_ts is a close_time == next bar's open (bybit/binance convention),
+        # so fetch from last_ts to capture the FIRST missing bar, not last_ts + step_s.
+        fetch_start_ms = last_ts * 1000
+        fetch_end_exclusive = incoming_ts  # filter excludes incoming candle itself
+        if fetch_start_ms > fetch_end_exclusive * 1000:
+            return
+        missing_bars = (incoming_ts - last_ts) // step_s - 1
+        want = min(missing_bars + 50, 5000)
+        try:
+            raw = self._fetch_klines_from_sync(self.symbol, tf, fetch_start_ms, limit=want)
+            raw = [c for c in raw
+                   if last_ts < c.get("close_time", c.get("open_time", 0)) // 1000 < incoming_ts]
+            if not raw:
+                print(f"[live] {tf}: gap backfill returned 0 candles")
+                return
+            gap_candles = self._normalize_candles(raw)
+            print(f"[live] {tf}: backfilling {len(gap_candles)} gap candles "
+                  f"({gap_candles[0]['date']} -> {gap_candles[-1]['date']})")
+            # P0c: record gap candle timestamps. Trades whose entry_ts falls
+            # in this set are historical replay — tagged seed_history, excluded
+            # from live stats/daily-loss, and not sent to the exchange.
+            # Persistent (no flag lifetime/race issues — survives sim errors,
+            # cancellation, pre-gap in-flight sim clearing).
+            self._gap_history_ts.update(c["ts"] for c in gap_candles)
+            try:
+                # Process each gap candle with proper g_idx
+                window = self.window_15m if tf == "15m" else self.window_1h
+                all_candles = self.all_candles_15m if tf == "15m" else self.all_candles_1h
+                swing_eng = self.swing_15m if tf == "15m" else self.swing_1h
+                swings = self.all_swings_15m if tf == "15m" else self.all_swings_1h
+                if tf == "15m":
+                    counter_attr = "_bar_counter_15m"
+                else:
+                    counter_attr = "_bar_counter_1h"
+                for c in gap_candles:
+                    cd = {"date": c["date"], "ts": c["ts"],
+                          "open": c["open"], "high": c["high"], "low": c["low"], "close": c["close"]}
+                    window.append(cd)
+                    all_candles.append(cd)
+                    try:
+                        insert_candle(self.db, tf, cd)
+                    except Exception:
+                        pass
+                    fc = FlowCandle(date=c["date"], open=c["open"], high=c["high"],
+                                    low=c["low"], close=c["close"])
+                    g_idx = getattr(self, counter_attr)
+                    setattr(self, counter_attr, g_idx + 1)
+                    result = swing_eng.process_bar(fc, g_idx)
+                    if result:
+                        swings.append(result)
+                        try:
+                            from datetime import datetime as _dt
+                            end_time = result["seg"].get("end_time", "")
+                            if end_time:
+                                ist_dt = _dt.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                                end_ts = int((ist_dt - IST).replace(tzinfo=timezone.utc).timestamp())
+                                set_last_swing_end(self.db, tf, end_ts)
+                        except Exception:
+                            pass
+                        for b in result.get("breaks", []):
+                            print(f"[mark] {tf} {b['kind']} {b['dir']} sw{b['swing_no']} @ {b['px']:.2f} ({b['time']})")
+            except Exception as e:
+                import traceback
+                print(f"[live] {tf} gap backfill failed: {e}")
+                traceback.print_exc()
+        except Exception as e:
+            import traceback
+            print(f"[live] {tf} gap backfill fetch failed: {e}")
+            traceback.print_exc()
 
     def _show_recent_marks(self, swings: list[dict], candles: list[dict], tf: str):
         """Show the most recent marks from seeding."""

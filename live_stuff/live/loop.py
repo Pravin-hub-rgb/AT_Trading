@@ -155,6 +155,10 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         self.rate_manager = RateManager()
         # Seed file flag — when True, _journal_marks suppresses bulk historical print
         self._seeding = False
+        # P0c: persistent set of gap-backfilled candle timestamps. Trades whose
+        # entry_ts falls in this set are tagged seed_history and excluded from
+        # live stats/execution — survives sim errors, cancellation, races.
+        self._gap_history_ts: set[int] = set()
         self._session_dead_flag = False     # H6: background session health probe
         # Order execution (Bybit demo/live)
         self.trader = None
@@ -191,6 +195,10 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         self._got_1h_boundary = False
         self._boundary_ts: int | None = None
         self._boundary_deadline: float | None = None
+        # P1b: idempotency guard — ts of the last boundary fire, so a
+        # delayed/stale candle cannot re-trigger simulation for the same
+        # boundary (real-money double-execution protection).
+        self._last_boundary_fired_ts: int | None = None
         # Restore persisted HTF window if any (Phase 2.5 + Phase 15: full matrix)
         self._restore_htf_state()
         # Phase 15: Load cached LTF trade from DB
@@ -215,6 +223,11 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         Has a hard timeout so the bot never gets stuck."""
         now = time.monotonic()
 
+        # P1b: idempotency — never fire twice for the same boundary ts.
+        if (self._boundary_ts is not None
+                and getattr(self, "_last_boundary_fired_ts", None) == self._boundary_ts):
+            return
+
         # Timeout safety (one candle missing or delayed)
         if self._boundary_deadline and now > self._boundary_deadline:
             print(f"[boundary] TIMEOUT at {self._boundary_ts} | "
@@ -228,6 +241,16 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
 
     def _fire_boundary_simulation(self):
         """Run simulation once with complete data and reset state."""
+        # P1b: idempotency — capture ts before reset; bail if already fired.
+        _ts = self._boundary_ts
+        if _ts is not None and getattr(self, "_last_boundary_fired_ts", None) == _ts:
+            # Already fired for this boundary — just reset state and return.
+            self._got_15m_boundary = False
+            self._got_1h_boundary = False
+            self._boundary_ts = None
+            self._boundary_deadline = None
+            return
+        self._last_boundary_fired_ts = _ts
         self._update_htf_metrics()
         self._run_v18_simulation()
         # Reset
@@ -256,6 +279,21 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         try:
             self._maybe_reset_daily()  # C5: midnight reset before sim/journal
             ts = candle["close_time"] // 1000
+            # B3: dedupe — skip reconnect duplicates and stale/out-of-order candles
+            if self.all_candles_15m:
+                last_ts = self.all_candles_15m[-1]["ts"]
+                if ts == last_ts:
+                    print(f"[live] 15m: duplicate candle ts={ts}, skipping")
+                    return
+                if ts < last_ts:
+                    print(f"[live] 15m: stale/out-of-order candle ts={ts} (last={last_ts}), skipping")
+                    return
+                # Gap detection
+                expected = last_ts + 900  # 15m
+                if ts > expected:
+                    gap_bars = (ts - last_ts) // 900 - 1
+                    print(f"[live] 15m: GAP detected — {gap_bars} bar(s) missing before ts={ts} (last={last_ts})")
+                    self._backfill_gap("15m", last_ts, ts)
             date = self._to_ist_str(candle["open_time"])
             candle_dict = {"date": date, "ts": ts, "open": candle["open"],
                              "high": candle["high"], "low": candle["low"], "close": candle["close"]}
@@ -289,7 +327,8 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
                     end_time = result["seg"].get("end_time", "")
                     if end_time:
                         from datetime import datetime as _dt
-                        end_ts = int(_dt.strptime(end_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+                        ist_dt = _dt.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                        end_ts = int((ist_dt - IST).replace(tzinfo=timezone.utc).timestamp())
                         set_last_swing_end(self.db, "15m", end_ts)
                 except Exception:
                     pass
@@ -305,6 +344,12 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
                 self._boundary_deadline = time.monotonic() + self._BOUNDARY_TIMEOUT
                 self._try_fire_boundary()
             else:
+                # P1b: cancel any stale boundary wait before running sim.
+                if self._boundary_deadline is not None:
+                    self._got_15m_boundary = False
+                    self._got_1h_boundary = False
+                    self._boundary_ts = None
+                    self._boundary_deadline = None
                 self._update_htf_metrics()
                 self._run_v18_simulation()
         except Exception as e:
@@ -317,6 +362,21 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
         try:
             self._maybe_reset_daily()  # C5: midnight reset before sim/journal
             ts = candle["close_time"] // 1000
+            # B3: dedupe — skip reconnect duplicates and stale/out-of-order candles
+            if self.all_candles_1h:
+                last_ts = self.all_candles_1h[-1]["ts"]
+                if ts == last_ts:
+                    print(f"[live]  1h: duplicate candle ts={ts}, skipping")
+                    return
+                if ts < last_ts:
+                    print(f"[live]  1h: stale/out-of-order candle ts={ts} (last={last_ts}), skipping")
+                    return
+                # Gap detection
+                expected = last_ts + 3600  # 1h
+                if ts > expected:
+                    gap_bars = (ts - last_ts) // 3600 - 1
+                    print(f"[live]  1h: GAP detected — {gap_bars} bar(s) missing before ts={ts} (last={last_ts})")
+                    self._backfill_gap("1h", last_ts, ts)
             date = self._to_ist_str(candle["open_time"])
             candle_dict = {"date": date, "ts": ts, "open": candle["open"],
                                     "high": candle["high"], "low": candle["low"], "close": candle["close"]}
@@ -341,7 +401,8 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
                     end_time = result["seg"].get("end_time", "")
                     if end_time:
                         from datetime import datetime as _dt
-                        end_ts = int(_dt.strptime(end_time, "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc).timestamp())
+                        ist_dt = _dt.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+                        end_ts = int((ist_dt - IST).replace(tzinfo=timezone.utc).timestamp())
                         set_last_swing_end(self.db, "1h", end_ts)
                 except Exception:
                     pass
@@ -351,11 +412,28 @@ class LiveLoop(FeedMixin, StateMixin, SignalsMixin, ExecutionMixin, RiskMixin, T
             self._chop_stale = True
             # 1h boundary: wait for 15m candle before running simulation
             if self._is_1h_boundary(ts):
-                self._got_1h_boundary = True
-                self._boundary_ts = ts
-                self._boundary_deadline = time.monotonic() + self._BOUNDARY_TIMEOUT
-                self._try_fire_boundary()
+                # P1b: if 15m side already moved past this boundary, run sim directly
+                # instead of setting up a stale barrier wait.
+                if not self._got_15m_boundary:
+                    if self._boundary_deadline is not None:
+                        self._got_15m_boundary = False
+                        self._got_1h_boundary = False
+                        self._boundary_ts = None
+                        self._boundary_deadline = None
+                    self._update_htf_metrics()
+                    self._run_v18_simulation()
+                else:
+                    self._got_1h_boundary = True
+                    self._boundary_ts = ts
+                    self._boundary_deadline = time.monotonic() + self._BOUNDARY_TIMEOUT
+                    self._try_fire_boundary()
             else:
+                # P1b: cancel any stale boundary wait before running sim.
+                if self._boundary_deadline is not None:
+                    self._got_15m_boundary = False
+                    self._got_1h_boundary = False
+                    self._boundary_ts = None
+                    self._boundary_deadline = None
                 self._update_htf_metrics()
                 self._run_v18_simulation()
         except Exception as e:

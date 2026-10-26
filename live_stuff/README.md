@@ -50,7 +50,6 @@ Parity on the IS dataset (2023-01-01 to 2026-09-13):
 | `bybit_streamer.py` | Bybit WebSocket + REST candles |
 | `bybit_order.py` | Bybit order execution and position queries |
 | `rate_manager.py` | INR/USDT rate |
-| `docs/seed_marks.json` | seed marks for fast cold start |
 
 ## Install
 
@@ -109,8 +108,8 @@ Do not edit `_vendored/` in place; re-vendor and re-run the parity check.
 - Restart recovery (`_recover_from_crash`) rebuilds swing history only from the
   last completed swing, not the full rolling window. After long downtime, start
   with explicit seed timestamps so the whole chain is rebuilt.
-- `docs/seed_marks.json` is vendored but not auto-loaded yet; it is a tail seed
-  reserved for a future boot path.
+- `docs/seed_marks.json` has been deleted (was stale Binance data). Cold start uses
+  explicit seed timestamps via `python main.py "2026-09-01 00:00" "2026-09-01 00:00"`.
 - Live basis (no 1m) is +1 trade / -1.27R versus the pins. Accepted.
 - Paper mode honours the book's `max_positions=0` (multiple concurrent trades).
   Live order execution now uses one exchange net position plus one attached
