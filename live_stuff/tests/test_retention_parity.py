@@ -128,4 +128,31 @@ def test_retention_parity():
 
 if __name__ == "__main__":
     test_retention_parity()
+def test_retention_mid_swing_boundary():
+    """Regression: a trim whose cutoff lands inside a swing must pull the
+    cutoff back to that swing's start_idx, so the swing is never split."""
+    for seed in (1, 2, 4):
+        c15, c1h, sw15, sw1h = make_series(600, seed=seed)
+        for keep in (1, 2, 3):
+            c15t, sw15t, off15 = trim_candles_and_swings(c15, sw15, keep_days=keep, min_keep=60)
+            c1ht, sw1ht, off1h = trim_candles_and_swings(c1h, sw1h, keep_days=keep, min_keep=15)
+            if not c15t or not sw15t:
+                continue
+            cutoff = c15t[0]["ts"]
+            retained_sets = [(sw15t, c15t), (sw1ht, c1ht)]
+            for sws, cs in retained_sets:
+                for _sw in (sws or []):
+                    _seg = _sw.get("seg") if isinstance(_sw, dict) else None
+                    if not (isinstance(_seg, dict) and "start_idx" in _seg):
+                        continue
+                    si = int(_seg["start_idx"])
+                    assert si >= 0, f"negative start_idx {si}"
+                    assert 0 <= si < len(cs), f"start_idx {si} out of range (n={len(cs)})"
+            print(f"seed={seed} keep={keep}: OK (sw15={len(sw15t)} sw1h={len(sw1ht)})")
+
+
+if __name__ == "__main__":
+    test_retention_parity()
+    test_retention_mid_swing_boundary()
+    print("ALL PASS")
     print("ALL PASS")

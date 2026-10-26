@@ -983,13 +983,20 @@ max_positions=0,
     # Rolling percentile of chop (for dynamic_chop mode)
     chop_pct_per_ltf=[50.0]*len(candles_ltf)
     _lookback=672
+    import numpy as _np
+    _chop_arr=_np.asarray(chop, dtype=float)
+    _n_htf=len(_chop_arr)
+    _chop_pct_per_htf=[50.0]*_n_htf
+    for _j in range(_n_htf):
+        _s=max(0,_j-_lookback)
+        _w=_chop_arr[_s:_j+1]
+        if _w.size:
+            _cur=float(_chop_arr[_j]); _below=int((_w < _cur).sum())
+            _chop_pct_per_htf[_j]=_below/len(_w)*100.0
     for i,ts in enumerate(candle_ts_ltf):
         j=bs.bisect_right(candle_ts_htf_close, ts+900)-1
         if j>=0:
-            _s=max(0,j-_lookback); _w=chop[_s:j+1]
-            if _w:
-                _cur=chop[j]; _below=sum(1 for c in _w if c<_cur)
-                chop_pct_per_ltf[i]=_below/len(_w)*100.0
+            chop_pct_per_ltf[i]=_chop_pct_per_htf[j]
     # --- Session per LTF bar (Idea H): 0=Asia(0-7), 1=London(7-14), 2=NY(14-21), 3=Night(21-24) ---
     session_per_ltf=[0]*len(candles_ltf)
     import datetime as _dts

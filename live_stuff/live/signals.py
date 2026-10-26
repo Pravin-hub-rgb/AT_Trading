@@ -211,40 +211,58 @@ class SignalsMixin:
 
         c15 = list(self.all_candles_15m)
         c1h = list(self.all_candles_1h)
-        # Option B: use full swing chains directly (no rebased trim)
-        sw15 = list(self.all_swings_15m)
-        sw1h = list(self.all_swings_1h)
+        # Base swing chains (open swings handled separately via IncrementalSim).
+        sw15_base = list(self.all_swings_15m)
+        sw1h_base = list(self.all_swings_1h)
+        open_swings = {}
         # L5: forming swing's marks are appended (idx already aligns with all_candles_*)
         try:
             open15 = self.swing_15m.get_open_swing()
             if open15 and open15.get("breaks"):
-                sw15 = sw15 + [open15]
+                open_swings["15m"] = open15
+        except Exception as _oe:
+            print(f"[live] open-swing append warning: {_oe}")
+        try:
             open1h = self.swing_1h.get_open_swing()
             if open1h and open1h.get("breaks"):
-                sw1h = sw1h + [open1h]
+                open_swings["1h"] = open1h
         except Exception as _oe:
             print(f"[live] open-swing append warning: {_oe}")
 
-        # Bounded sim input: drop candles/swings older than SIM_RETENTION_DAYS.
-        # Full stores + DB untouched; only the sim input is trimmed (re-indexed).
+        # sw15/sw1h (full, incl. open) for journaling/marks/trailing downstream.
+        sw15 = list(sw15_base)
+        sw1h = list(sw1h_base)
+        if open_swings.get("15m"):
+            sw15 = sw15 + [open_swings["15m"]]
+        if open_swings.get("1h"):
+            sw1h = sw1h + [open_swings["1h"]]
+
+        # Incremental sim driver (Step E): retention + idempotent skip gate.
         try:
             _keep = int(getattr(config, "SIM_RETENTION_DAYS", 90))
         except Exception:
             _keep = 90
-        c15, sw15, _off15 = trim_candles_and_swings(c15, sw15, keep_days=_keep)
-        c1h, sw1h, _off1h = trim_candles_and_swings(c1h, sw1h, keep_days=_keep)
+        if not getattr(self, "_inc_sim", None):
+            from .incremental import IncrementalSim
+            self._inc_sim = IncrementalSim(self.v18, keep_days=_keep)
+        else:
+            self._inc_sim.keep_days = _keep
 
-        try:
-            result = await asyncio.to_thread(
-                simulate_htf_ltf_streak_halt,
-                c1h, sw1h, c15, sw15,
-                fine_ltf=[],
-                **self.v18,
-            )
-        except Exception as e:
+        result, changed = await asyncio.to_thread(
+            self._inc_sim.on_bar,
+            c15, c1h, sw15_base, sw1h_base,
+            open_swings=open_swings or None,
+            force=False,
+        )
+        if result is None:
+            print(f"[live] sim skipped (too few bars): 15m={len(c15)} 1h={len(c1h)}")
+            return
+        if isinstance(result, dict) and result.get("error"):
             import traceback
-            print(f"[live] simulation error: {e}")
-            traceback.print_exc()
+            print(f"[live] simulation error: {result['error']}")
+            return
+        if not changed:
+            print(f"[live] sim unchanged (skip) ts15={c15[-1]['ts'] if c15 else 0}")
             return
 
         ltf_trades = result["ltf_trades"]
