@@ -281,6 +281,26 @@ class SignalsMixin:
         htf_trades_b2 = result.get("htf_trades_b2", [])
         htf_trades_dec = result.get("htf_trades_decisive", [])
 
+        # Shadow mode (Step E cutover): run the batch oracle alongside the
+        # incremental sim and log any trade-list divergence. Incremental stays
+        # authoritative; shadow never changes behaviour.
+        if getattr(config, "SHADOW_SIM", False):
+            try:
+                from _vendored.unified import simulate_htf_ltf_streak_halt
+                from parity import trade_list_diff
+                _batch = await asyncio.to_thread(
+                    simulate_htf_ltf_streak_halt,
+                    c1h, sw1h, c15, sw15, fine_ltf=[], **self.v18,
+                )
+                _batch_trades = _batch.get("ltf_trades", []) if isinstance(_batch, dict) else []
+                _diff = trade_list_diff(_batch_trades, ltf_trades)
+                if not _diff.get("equal"):
+                    print(f"[shadow] DIVERGENCE: {_diff.get('reason')} "
+                          f"only_batch={_diff.get('only_in_a')} only_inc={_diff.get('only_in_b')}")
+                else:
+                    print(f"[shadow] parity OK ({len(ltf_trades)} trades)")
+            except Exception as _se:
+                print(f"[shadow] error: {_se}")
         # Track HTF window state (flip + b2 + decisive tracked independently)
         self._track_htf_windows(htf_trades, htf_trades_b2, c1h, htf_trades_dec)
 

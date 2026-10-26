@@ -111,6 +111,9 @@ WINDOW_DAYS_15M = 30
 WINDOW_DAYS_1H = 20
 CAP_DAYS = 16
 SIM_RETENTION_DAYS = int(os.getenv("SIM_RETENTION_DAYS", "90"))
+# Shadow mode: run the batch oracle alongside the incremental sim and log
+# any trade-list divergence. Used for cutover validation; default off.
+SHADOW_SIM = os.getenv("SHADOW_SIM", "0").lower() in ("1", "true", "yes")
 
 # Status print interval (seconds)
 STATUS_INTERVAL = 30
