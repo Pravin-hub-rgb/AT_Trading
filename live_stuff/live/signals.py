@@ -43,6 +43,7 @@ from persistence.mark_store import get_marks
 from persistence.trade_store import open_ltf_trade, close_ltf_trade, get_open_ltf_trade, get_ltf_trades
 from persistence.state_store import get_trading_state, save_trading_state, get_last_swing_end, set_last_swing_end
 from .state import is_gray_leg
+from .retention import trim_candles_and_swings
 
 logger = logging.getLogger("live_loop")
 if not logger.handlers:
@@ -223,6 +224,15 @@ class SignalsMixin:
                 sw1h = sw1h + [open1h]
         except Exception as _oe:
             print(f"[live] open-swing append warning: {_oe}")
+
+        # Bounded sim input: drop candles/swings older than SIM_RETENTION_DAYS.
+        # Full stores + DB untouched; only the sim input is trimmed (re-indexed).
+        try:
+            _keep = int(getattr(config, "SIM_RETENTION_DAYS", 90))
+        except Exception:
+            _keep = 90
+        c15, sw15, _off15 = trim_candles_and_swings(c15, sw15, keep_days=_keep)
+        c1h, sw1h, _off1h = trim_candles_and_swings(c1h, sw1h, keep_days=_keep)
 
         try:
             result = await asyncio.to_thread(

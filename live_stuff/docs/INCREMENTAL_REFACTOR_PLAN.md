@@ -17,8 +17,30 @@ trade list on identical history (verified by `parity.py`).
       stale-barrier cancel in non-boundary paths, direct-run when the other side
       moved past. Tests: `tests/test_p1b_boundary.py`.
 - [x] Parity oracle harness: `live_stuff/parity.py` (`run_parity`, `trade_list_diff`).
-- [ ] Step C — incremental HTF window state machine.
-- [ ] Step D — parity oracle run (offline replay 3–6 months).
+- [x] Step A — bounded sim input retention (`live/retention.py`): `trim_candles_and_swings`
+  re-indexes swings, validated by `tests/test_retention_parity.py`.
+- [~] Step C — incremental driver scaffolding (`live/incremental.py`): `SimState` + `IncrementalSim.on_bar` with
+  idempotency key + parity tests (`tests/test_incremental_parity.py`). Engine body still delegates to the
+  batch oracle on the retained window; true O(1) rewrite remains pending parity history (Step D).
+- [x] Step D — parity oracle run (offline replay): UNBLOCKED. History located at
+  `C:/Users/Pravin/Desktop/main/btc_data/{is,oos}/BTCUSDT_{15m,1h}.csv`
+  (IS: 133,747 15m bars 2023-01-01→2026-09-13; OOS: 2021-01-01→2022-12-31).
+  Validated on real IS data (last 2000/4000 15m bars):
+    - IncrementalSim.on_bar trade list byte-identical to direct batch sim (2/2 and 7/7 trades).
+    - Idempotency: second identical call reports changed=False.
+    - Retention (14-day trim): trades inside retained window match (1/1).
+  Full-IS baseline (empty fine_ltf): 133,747 15m bars / 33,437 1h bars -> 529 trades,
+    sim elapsed 5.59s; retention (90d) reduces input to ~8,640 bars (~0.2s).
+  Guarded by `tests/test_real_data_parity.py` (skips when btc_data absent).
+   - Retention fix (bulk swing removal): `trim_candles_and_swings` now pulls the
+     calendar cutoff back to cover any retained swing that straddles it, so no
+     retained swing keeps a negative `seg.start_idx` (which previously clamped
+     the SL slice start to 0 and could corrupt the stop for that swing). Swings
+     ending before the cutoff are still dropped in bulk. Verified: 0 mismatches
+     on break-mark kinds (B1/B2/FLIP) and confirmed timestamps between full and
+     trimmed chains on real IS data; all retained swings have start_idx >= 0.
+   - IncrementalSim signature now also includes break-mark counts so a changed
+     mark (without count change) cannot slip past the skip gate.
 - [ ] Step E — cutover + split `loop.py`.
 
 ## Step C design (NOT yet implemented)

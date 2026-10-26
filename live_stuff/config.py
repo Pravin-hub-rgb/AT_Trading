@@ -110,6 +110,7 @@ RATE_CACHE_FILE = Path(__file__).resolve().parent / "last_rate.json"
 WINDOW_DAYS_15M = 30
 WINDOW_DAYS_1H = 20
 CAP_DAYS = 16
+SIM_RETENTION_DAYS = int(os.getenv("SIM_RETENTION_DAYS", "90"))
 
 # Status print interval (seconds)
 STATUS_INTERVAL = 30
