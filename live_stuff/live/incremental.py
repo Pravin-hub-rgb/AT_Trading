@@ -55,12 +55,23 @@ class IncrementalSim:
         self.keep_days = int(keep_days)
         self.state = SimState()
         self._last_input_sig = None
+        self._last_structural_sig = None
 
     def _signature(self, c15, c1h, sw15, sw1h):
         def _breaks(swings):
             return sum(len(s.get("breaks", []) or []) for s in swings)
         return (len(c15), len(c1h), len(sw15), len(sw1h),
                 c15[-1]["ts"] if c15 else 0, c1h[-1]["ts"] if c1h else 0,
+                _breaks(sw15), _breaks(sw1h))
+
+    def _structural_signature(self, c15, c1h, sw15, sw1h):
+        # Ignores pure 15m-bar churn: only structural changes (new 1h candle,
+        # new swing, new break mark) force a full recompute. A new 15m bar
+        # alone is handled by the O(open-trades) exit/trail path.
+        def _breaks(swings):
+            return sum(len(s.get("breaks", []) or []) for s in swings)
+        return (len(c1h), c1h[-1]["ts"] if c1h else 0,
+                len(sw15), len(sw1h),
                 _breaks(sw15), _breaks(sw1h))
 
     def on_bar(self, all_candles_15m, all_candles_1h, all_swings_15m, all_swings_1h,
@@ -79,7 +90,8 @@ class IncrementalSim:
                 sw1h = sw1h + [copy.deepcopy(o1h)]
 
         sig = self._signature(c15, c1h, sw15, sw1h)
-        if (not force) and sig == self._last_input_sig:
+        struct_sig = self._structural_signature(c15, c1h, sw15, sw1h)
+        if (not force) and struct_sig == self._last_structural_sig:
             return self.state.last_result, False
 
         c15t, sw15t, _ = trim_candles_and_swings(c15, sw15, keep_days=self.keep_days)
@@ -87,6 +99,7 @@ class IncrementalSim:
 
         if len(c15t) < 5 or len(c1ht) < 3:
             self._last_input_sig = sig
+            self._last_structural_sig = struct_sig
             return None, False
 
         from _vendored.unified import simulate_htf_ltf_streak_halt
@@ -103,6 +116,7 @@ class IncrementalSim:
         if c1ht:
             self.state.last_processed_ts_1h = int(c1ht[-1]["ts"])
         self._last_input_sig = sig
+        self._last_structural_sig = struct_sig
         return result, True
 
     def idempotency_key(self):

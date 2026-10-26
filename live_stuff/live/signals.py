@@ -263,6 +263,17 @@ class SignalsMixin:
             return
         if not changed:
             print(f"[live] sim unchanged (skip) ts15={c15[-1]['ts'] if c15 else 0}")
+            # Structural state unchanged: skip full recompute, but still
+            # refresh trailing SL and journal marks on the new bar.
+            try:
+                self._journal_marks("15m", sw15, c15)
+                self._journal_marks("1h", sw1h, c1h)
+            except Exception as _e:
+                print(f"[live] journal_marks (skip) warning: {_e}")
+            try:
+                self._trail_sl(sw15)
+            except Exception as _e:
+                print(f"[live] trail_sl (skip) warning: {_e}")
             return
 
         ltf_trades = result["ltf_trades"]
