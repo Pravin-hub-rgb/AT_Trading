@@ -1127,6 +1127,7 @@ max_positions=0,
     # never leak into the next, and only ever appended to from inside this walk.
     _EXT_SAMPLE = []
     ext_stop_r_default = ext_stop_r
+    bar = 0  # default for empty ltf_sigs (brick4 safety)
     for sig in ltf_sigs:
         bar_time=sig["bar"]  # datetime string
         bar=ltf_store.pos(bar_time)  # position via timestamp lookup
@@ -1894,4 +1895,21 @@ max_positions=0,
                 "htf_trades_decisive": htf_trades_decisive,
                 "ltf_trades": ltf_trades, "intervals": parent_intervals}
 
-    return _run_ltf_walk()
+    # Brick 4: reuse extracted LTF walk so result carries _state + _ltf_kwargs
+    # for incremental reuse. Build kwargs from this scope.
+    try:
+        from live.ltf_walk import run_ltf_walk as _ext_run, PARAMS as _EXT_PARAMS
+    except Exception:
+        from ltf_walk import run_ltf_walk as _ext_run, PARAMS as _EXT_PARAMS
+    _ltf_kwargs = {}
+    for _p in _EXT_PARAMS:
+        try:
+            _ltf_kwargs[_p] = eval(_p)
+        except Exception:
+            _ltf_kwargs[_p] = None
+    _ltf_result = _ext_run(**_ltf_kwargs)
+    try:
+        _ltf_result["_ltf_kwargs"] = {k: (v if not isinstance(v, list) else list(v)) for k, v in _ltf_kwargs.items()}
+    except Exception:
+        pass
+    return _ltf_result

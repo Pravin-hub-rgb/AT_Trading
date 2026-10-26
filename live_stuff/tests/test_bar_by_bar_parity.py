@@ -94,7 +94,7 @@ def test_bar_by_bar_incremental_parity():
 
         batch_trades = run_batch(prefix15, prefix1h, sw15, sw1h, v18)
 
-        res, changed = inc.on_bar(prefix15, prefix1h, sw15, sw1h, force=True)
+        res, changed = inc.on_bar(prefix15, prefix1h, sw15, sw1h, force=(i == start))
         inc_trades = (res or {}).get("ltf_trades", []) if res else []
 
         diff = trade_list_diff(batch_trades, inc_trades)

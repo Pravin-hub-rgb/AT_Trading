@@ -1,22 +1,6 @@
-"""Incremental sim driver (Step C scaffolding).
-
-This module provides the *interface* and state container for an incremental
-O(1)-per-bar sim, but the per-bar engine body still delegates to the
-vendored batch sim (`simulate_htf_ltf_streak_halt`) on the retained window
-(Step A). That keeps the live trade list byte-identical to the backtest
-oracle today, while exposing the state hooks (`SimState`, `on_bar`,
-idempotency key) that the true O(1) rewrite will fill in once parity
-history is available.
-
-Why delegate rather than rewrite: the batch engine is ~1900 lines with
-intricate HTF-window / LTF-exit / streak-halt interactions. Reimplementing
-it incrementally without a 3-6 month replay corpus to gate parity would
-violate the "live trade list must exactly match backtest" hard rule. This
-driver bounds cost via retention (Step A) and is parity-tested.
-"""
+"""Incremental sim driver (Step C scaffolding)."""
 from __future__ import annotations
 import copy
-import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -25,7 +9,6 @@ from .retention import trim_candles_and_swings
 
 @dataclass
 class SimState:
-    """State carried across bars (mirrors plan Step C)."""
     last_processed_ts_15m: int = 0
     last_processed_ts_1h: int = 0
     last_boundary_fired_ts: int = 0
@@ -42,20 +25,19 @@ class SimState:
     htf_sl: float = 0.0
     htf_hrisk: float = 0.0
     htf_current_r: float = 0.0
-    # Last sim result for diffing / journaling.
     last_trades: List[Dict[str, Any]] = field(default_factory=list)
     last_result: Optional[Dict[str, Any]] = None
 
 
 class IncrementalSim:
-    """Per-bar driver. Delegates engine to batch sim on retained window."""
-
     def __init__(self, v18_params: Dict[str, Any], keep_days: int = 90):
         self.v18 = dict(v18_params)
         self.keep_days = int(keep_days)
         self.state = SimState()
         self._last_input_sig = None
         self._last_structural_sig = None
+        self._cached_kwargs = None
+        self._cached_state = None
 
     def _signature(self, c15, c1h, sw15, sw1h):
         def _breaks(swings):
@@ -65,9 +47,6 @@ class IncrementalSim:
                 _breaks(sw15), _breaks(sw1h))
 
     def _structural_signature(self, c15, c1h, sw15, sw1h):
-        # Ignores pure 15m-bar churn: only structural changes (new 1h candle,
-        # new swing, new break mark) force a full recompute. A new 15m bar
-        # alone is handled by the O(open-trades) exit/trail path.
         def _breaks(swings):
             return sum(len(s.get("breaks", []) or []) for s in swings)
         return (len(c1h), c1h[-1]["ts"] if c1h else 0,
@@ -76,7 +55,6 @@ class IncrementalSim:
 
     def on_bar(self, all_candles_15m, all_candles_1h, all_swings_15m, all_swings_1h,
                open_swings=None, force=False):
-        """Process one 15m close. Returns (result_dict, changed_bool)."""
         c15 = [dict(c) for c in (all_candles_15m or [])]
         c1h = [dict(c) for c in (all_candles_1h or [])]
         sw15 = [copy.deepcopy(s) for s in (all_swings_15m or [])]
@@ -91,8 +69,7 @@ class IncrementalSim:
 
         sig = self._signature(c15, c1h, sw15, sw1h)
         struct_sig = self._structural_signature(c15, c1h, sw15, sw1h)
-        if (not force) and struct_sig == self._last_structural_sig:
-            return self.state.last_result, False
+        non_structural = (not force) and (struct_sig == self._last_structural_sig)
 
         c15t, sw15t, _ = trim_candles_and_swings(c15, sw15, keep_days=self.keep_days)
         c1ht, sw1ht, _ = trim_candles_and_swings(c1h, sw1h, keep_days=self.keep_days)
@@ -101,6 +78,59 @@ class IncrementalSim:
             self._last_input_sig = sig
             self._last_structural_sig = struct_sig
             return None, False
+
+        if (non_structural and self._cached_kwargs is not None
+                and self._cached_state is not None):
+            try:
+                # Safety: if previous last bar carried a filtered HTF signal,
+                # that signal may become an allowed entry now -> full recompute.
+                try:
+                    from _vendored.btc_engine import CandleStore as _CS
+                except Exception:
+                    from btc_engine import CandleStore as _CS
+                _prev_n = self._cached_state.get("processed_n", 0)
+                _filtered = self._cached_kwargs.get("filtered", []) or []
+                _candles_prev = self._cached_kwargs.get("candles_ltf", [])
+                _store = _CS(_candles_prev) if _candles_prev else None
+                _pending = False
+                if _store is not None and isinstance(_prev_n, int) and _prev_n > 0:
+                    for _sig in _filtered:
+                        try:
+                            _s = _sig[0] if isinstance(_sig, (tuple, list)) else _sig
+                            _i = _store.pos(_s["bar"])
+                        except Exception:
+                            _i = -1
+                        if _i == _prev_n - 1:
+                            _pending = True
+                            break
+                if _pending:
+                    raise RuntimeError("pending boundary entry")
+                from live.ltf_walk import run_ltf_walk
+                kw = copy.deepcopy(self._cached_kwargs)
+                kw["candles_ltf"] = [dict(x) for x in c15t]
+                kw["candle_ts_ltf"] = [int(x["ts"]) for x in c15t]
+                kw["candle_ts_htf"] = [int(x["ts"]) for x in c1ht]
+                kw["swings_ltf"] = copy.deepcopy(sw15t)
+                state_in = copy.deepcopy(self._cached_state)
+                result = run_ltf_walk(**kw, state=state_in)
+                if not isinstance(result, dict) or result.get("error"):
+                    raise RuntimeError((result or {}).get("error", "incr failed"))
+                new_trades = list(result.get("ltf_trades", []))
+                old_trades = list((self.state.last_result or {}).get("ltf_trades", []))
+                changed = (new_trades != old_trades)
+                self.state.last_result = result
+                self.state.last_trades = new_trades
+                self._cached_state = result.get("_state", state_in)
+                self._cached_kwargs = result.get("_ltf_kwargs", kw)
+                if c15t:
+                    self.state.last_processed_ts_15m = int(c15t[-1]["ts"])
+                if c1ht:
+                    self.state.last_processed_ts_1h = int(c1ht[-1]["ts"])
+                self._last_input_sig = sig
+                self._last_structural_sig = struct_sig
+                return result, changed
+            except Exception:
+                pass
 
         from _vendored.unified import simulate_htf_ltf_streak_halt
         try:
@@ -111,6 +141,8 @@ class IncrementalSim:
 
         self.state.last_result = result
         self.state.last_trades = list((result or {}).get("ltf_trades", []))
+        self._cached_kwargs = (result or {}).get("_ltf_kwargs")
+        self._cached_state = (result or {}).get("_state")
         if c15t:
             self.state.last_processed_ts_15m = int(c15t[-1]["ts"])
         if c1ht:
