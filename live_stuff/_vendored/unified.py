@@ -793,36 +793,13 @@ max_positions=0,
     # had already closed: measured 4 entries in IS and 3 in OOS on this book,
     # all entered on a knowably-dead window. The end side now takes no shift at
     # all and the start keeps its own. Dead-window entries after the fix: 0.
-    _wend_settle = 60 if fine_ltf else 3600
+    try:
+        from live.htf_windows import to_intervals as _htf_to_intervals
+    except Exception:
+        from htf_windows import to_intervals as _htf_to_intervals
     def to_intervals(trades):
-        # Window end: "exit" = HTF trade exit (SL/target/cap) â€” default, best R.
-        # "r_touch" = first touch of 1.5R â€” tested 2026-09-08: +200.6R vs +331R (removed 88 trades avg +1.48R). Rejected.
-        # "bias_flip" = next OPPOSITE-direction HTF entry (bias-based, not trade-based).
-        # Tested 2026-09-08: 485t +368.6R vs exit 330t +331.1R (+37.5R) BUT added cohort t=1.21 (not significant),
-        # 2026 worse (+55.1/DD7.3 vs +69.0/DD5.0), 2023 flat R at 85% more churn. net/DD 38.6 vs 34.0. NOT adopted.
-        iv=[]
-        last_htf_ts=int(candles_htf[-1]["ts"]) if candles_htf else 0
-        for t in trades:
-            if t["outcome"]=="open":
-                # L1: still-open HTF window = active bias through end of slice.
-                # Truncated causal slices always end with the governing window
-                # open; dropping it zeroed every LTF gate (C10 L1).
-                iv.append([int(t["entry_ts"]), last_htf_ts + 3600,
-                           1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
-                continue
-            wend = _r_touch_end(t, fine_ltf, fine_ts, ext_stop_r) if window_end=="r_touch" else int(t["exit_ts"]) + _wend_settle
-
-            iv.append([int(t["entry_ts"]), wend, 1 if t["dir"]=="long" else -1, float(t["entry_price"]), float(t["sl"])])
-        iv.sort(key=lambda x: x[0])
-        if window_end=="bias_flip":
-            last_ts=int(candles_htf[-1]["ts"])
-            for i,w in enumerate(iv):
-                nxt=None
-                for j in range(i+1,len(iv)):
-                    if iv[j][2]!=w[2]:
-                        nxt=iv[j][0]; break
-                w[1]=(nxt-1) if nxt is not None else max(w[1], last_ts)
-        return [tuple(w) for w in iv]
+        return _htf_to_intervals(trades, candles_htf=candles_htf, fine_ltf=fine_ltf,
+                                 fine_ts=fine_ts, ext_stop_r=ext_stop_r, window_end=window_end)
     intervals_flip=to_intervals(htf_trades_flip)
     intervals_decisive=to_intervals(htf_trades_decisive)
     intervals_b2=to_intervals(htf_trades_b2)
