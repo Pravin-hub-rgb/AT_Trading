@@ -129,8 +129,9 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
                 # but no entry here - so selecting one returned 400. The list
                 # and the dispatch had drifted apart and nothing joined them.
                 # exp_dropdown_check.py is that join; it now runs in CI.
-                "fsent_champ_long_htf15_htffs", "fsent_champ_long_htf15_tskip6",
-                "fsent_sig_sw20_short", "fsent_sig_wk_pause_short", "fsent_sig_fs_mom"]
+                 "fsent_champ_long_htf15_htffs", "fsent_champ_long_htf15_tskip6",
+                 "fsent_sig_sw20_short", "fsent_sig_wk_pause_short", "fsent_sig_fs_mom",
+                 "fsent_champ_long_mcloff_htf15_retro"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -145,8 +146,9 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
 #   fsent_champ_long        - DIRECTIONAL FS entry, long side only, atr_high
 #   fsent_champ_long_atr_low - the same book with the regime sign flipped
 STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified",
-                              "entry_minus_1", "fsent_champ_long",
-                              "fsent_champ_long_atr_low", "fsent_sig_full",
+                                "entry_minus_1", "fsent_champ_long",
+                                "fsent_champ_long_mcloff_htf15_retro",
+                               "fsent_champ_long_atr_low", "fsent_sig_full",
                               "fsent_sig_trail_delay1", "fsent_champ_short",
 "fsent_champ_long_htfesmcl4",
                                "fsent_champ_long_mcloff",
@@ -194,6 +196,12 @@ VERSION_LABELS = {
                 "(IS 499t / +239.12R, OOS 280 / +72.8R)",
     "fsent_champ_long": "FSENT CHAMP LONG - FS entry on longs only, atr_high. "
                         "IS 528t / +533.37R / DD 13.42R, OOS 311t / +239.59R / DD 11.88R",
+    "fsent_champ_long_mcloff_htf15_retro": "RETRO 107 - Originally the buggy twin of "
+                                            "fsent_champ_long_mcloff_htf15 (3 bugs). Fixed step-by-step: "
+                                            "(1) cooldown look-ahead (529→687), (2) filter_pre_fs regression "
+                                            "in CAUSAL corrected — now applied in BOTH per theory §9, "
+                                            "(3) SL pivot extended leg extreme (prev_end+1 to break bar, "
+                                            "687→782). Both versions now trade-for-trade identical.",
     "fsent_champ_long_atr_low": "FSENT CHAMP LONG + atr_low (regime sign flipped). "
                         "IS 641t / +721.30R / DD 28.90R, OOS 315t / +280.70R / DD 14.60R",
     "fsent_sig_full": "FSENT SIG FULL - serial one-position book, FS entry on the SHORT "
@@ -1604,6 +1612,41 @@ def btc_backtest(
             exp_persist=7,
             exp_fs_entry_side="long",
             pivot_rule="leg",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_champ_long_mcloff_htf15_retro":
+        # RETRO 107: originally the buggy twin of fsent_champ_long_mcloff_htf15.
+        # All three bugs fixed step-by-step:
+        #   Step 1: cooldown look-ahead fixed (529→687 trades)
+        #   Step 2: filter_pre_fs corrected (was a code regression in CAUSAL that
+        #           disabled the gate via 'and causal_lookahead' — now properly
+        #           applied in BOTH versions per theory doc §9)
+        #   Step 3: SL pivot — extended leg extreme (prev_end+1 to break bar)
+        #           instead of seg_start (687→782 trades)
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=0,   # <- same as fsent_champ_long_mcloff_htf15
+            max_positions=0,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            pivot_rule="leg",
+            exp_fs_entry_side="long",
+            cooldown_lookahead=0,
+            causal_lookahead=0,
         )
         trades = nested.get("ltf_trades", [])
     elif version == "fsent_sig_full":
