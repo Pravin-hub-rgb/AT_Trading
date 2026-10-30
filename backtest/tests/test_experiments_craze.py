@@ -333,7 +333,7 @@ def _patch_005_filtered_append(s: str) -> str:
     # the trigger to fs_long/fs_short/fs_both on one side. The routing lines
     # come BEFORE the call, so the anchor is the call with _lbreak instead of
     # the literal "decisive".
-    t6 = '    ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)\n'
+    t6 = '    ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule, causal_lookahead=causal_lookahead)\n'
     assert s.count(t6) == 1, "collect sigs"
     s = s.replace(t6, t6 +
                   '    _exp_weekly_state_rows=[]\n')
@@ -797,10 +797,10 @@ def _patch_012_chop_init(s: str) -> str:
                   '            _active=[_t for _t in ltf_trades if int(_t.get("exit_ts") or 0)>_now]\n'
                   '            _sr={"signal":dict(sig),"use":use,"bar_time":bar_time,"entry_idx":i,"entry_ts":_now,"active_count":len(_active),"active": [{"dir":_t.get("dir"),"entry_ts":_t.get("entry_ts"),"exit_ts":_t.get("exit_ts"),"r_multiple":_t.get("r_multiple"),"entry_price":_t.get("entry_price"),"sl":_t.get("sl")} for _t in _active],"reason":"accepted"}\n'
                   '            _exp_shadow_rows.append(_sr)\n')
-    t_cd = '        if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue\n'
+    t_cd = '        if cooldown_bars > 0 and last_loss_bar >= 0 and last_loss_bar < i and i - last_loss_bar < cooldown_bars: continue\n'
     assert s.count(t_cd) == 1, "cooldown anchor"
     s = s.replace(t_cd,
-                  '        if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars:\n'
+                  '        if cooldown_bars > 0 and last_loss_bar >= 0 and last_loss_bar < i and i - last_loss_bar < cooldown_bars:\n'
                   '            if exp_shadow_book: _sr["reason"]="cooldown"\n'
                   '            continue\n')
     t_hs_chk = ('        if halt_skip_next:\n'

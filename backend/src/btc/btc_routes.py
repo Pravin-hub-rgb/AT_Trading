@@ -1645,7 +1645,6 @@ def btc_backtest(
             exp_persist=7,
             pivot_rule="leg",
             exp_fs_entry_side="long",
-            cooldown_lookahead=0,
             causal_lookahead=0,
         )
         trades = nested.get("ltf_trades", [])

@@ -741,7 +741,6 @@ max_positions=0,
     exp_trail_half=0,
     exp_trail_delay_prevbar=0,
     exp_trail_skip_n=0,
-    cooldown_lookahead=0,
     causal_lookahead=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
@@ -1499,10 +1498,7 @@ max_positions=0,
         # match. That anchor exists to inject exp_mltf gating. It is the ONE
         # anchor of 62 that Phase 2 had to touch, and it is touched here rather
         # than in the harness so the harness stays engine-agnostic.
-        if cooldown_lookahead:
-            if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue
-        else:
-            if cooldown_bars > 0 and last_loss_bar >= 0 and last_loss_bar < i and i - last_loss_bar < cooldown_bars: continue
+        if cooldown_bars > 0 and last_loss_bar >= 0 and last_loss_bar < i and i - last_loss_bar < cooldown_bars: continue
         # Streak halt (causal): after N consecutive losses BOOKED, skip NEXT entry
         if halt_skip_next:
             halt_skip_next=False
