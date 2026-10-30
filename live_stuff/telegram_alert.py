@@ -1,4 +1,4 @@
-"""Telegram alerts for Backbencher v18 — entry, exit, errors, status.
+"""Telegram alerts for Backbencher book 107 — entry, exit, errors, status.
 
 Usage:
     from telegram_alert import TelegramAlert

@@ -105,6 +105,7 @@ def _collect_signals(
     #                       old behaviour so the two books stay comparable.
     pivot_rule: str = "leg",
     filter_pre_fs: bool = True,
+    causal_lookahead: bool = False,
 ) -> list[dict]:
     """Entry signals from swing break marks.
 
@@ -162,18 +163,58 @@ def _collect_signals(
             _up = s.get("dir") == "up"
             _use_fs = (_which == "both" or (_which == "long" and _up)
                        or (_which == "short" and not _up))
-            if not _use_fs:
+            # Retro (causal_lookahead=True): original `not _use_fs` gate +
+            # filter_pre_fs + seg_start SL. Causal (False): gate on `not _up`
+            # (same result for _which="long" since _use_fs==_up here), skip
+            # the pre-FS filter, and use the leg extreme up to the break bar
+            # as the SL pivot instead of the swing's structural origin.
+            _enter = (not _use_fs) if causal_lookahead else (not _up)
+            if _enter:
                 _seg0 = s.get("seg") or {}
-                _got = False
+                _pv_conf = str(swings[si - 1].get("confirmed_at_time") or "") if si > 0 else ""
+                _pv_conf_i = int(swings[si - 1].get("confirmed_at_idx", -1)) if si > 0 else -1
+                _sw_idx = int(_seg0.get("start_idx", 0)) if _seg0.get("start_idx", -1) >= 0 else 0
+                # Causal SL pivot: extend the leg range to include all candles from
+                # the previous swing's end+1 to the break bar, capturing the true
+                # extreme low (for longs) or high (for shorts) of the move. The swing's
+                # start_idx is only where the swing was declared (B2 candle), which can
+                # skip gap candles with the true extreme.
+                if not causal_lookahead and si > 0:
+                    _prev_seg = swings[si - 1].get("seg") or {}
+                    _prev_end = int(_prev_seg.get("end_idx", -1)) if _prev_seg.get("end_idx", -1) >= 0 else -1
+                    if _prev_end >= 0 and _prev_end + 1 < _sw_idx:
+                        _sw_idx = _prev_end + 1
                 for _b in (s.get("breaks") or []):
-                    if _b.get("kind") in ("B2", "FLIP", "DECISIVE") and _b.get("time"):
-                        out.append({"bar": _b["time"],
-                                    "dir": 1 if _b.get("dir") == "up" else -1,
-                                    "swing_start_px": float(_seg0.get("start_px") or 0.0),
-                                    "swing_no": int(s.get("swing_index", si)),
-                                    "kind": _b.get("kind")})
-                        _got = True
-                        break
+                    if _b.get("kind") not in ("B2", "FLIP", "DECISSIVE") or not _b.get("time"):
+                        continue
+                    if filter_pre_fs:
+                        if _pv_conf and _b["time"] < _pv_conf:
+                            continue
+                        elif not _pv_conf and _pv_conf_i >= 0:
+                            _bpos = store.pos(_b["time"]) if store else -1
+                            if _bpos >= 0 and _bpos < _pv_conf_i:
+                                continue
+                    if causal_lookahead:
+                        _piv = float(_seg0.get("start_px") or 0.0)
+                    else:
+                        _br_idx = store.pos(_b["time"]) if store else -1
+                        if _br_idx < 0:
+                            _br_idx = _sw_idx
+                        _hi_i = _br_idx + 1
+                        _lo_leg = [float(c["low"]) for c in candles[_sw_idx:_hi_i]] if candles is not None else []
+                        _hi_leg = [float(c["high"]) for c in candles[_sw_idx:_hi_i]] if candles is not None else []
+                        if not _lo_leg or not _hi_leg:
+                            _piv = float(_seg0.get("start_px") or 0.0)
+                        elif _b.get("dir") == "up":
+                            _piv = min(_lo_leg)
+                        else:
+                            _piv = max(_hi_leg)
+                    out.append({"bar": _b["time"],
+                                "dir": 1 if _b.get("dir") == "up" else -1,
+                                "swing_start_px": _piv,
+                                "swing_no": int(s.get("swing_index", si)),
+                                "kind": _b.get("kind")})
+                    break
                 continue
             _i = s.get("fs_at_idx")
             fs_t = None
@@ -246,7 +287,9 @@ def _collect_signals(
                 swing_done = True
                 continue
 
-            # Skip if break candle trimmed from window
+            # Skip if break candle trimmed from window.
+            # With Option B, the store holds the FULL candle history so this
+            # guard is harmless - all break candles are always present.
             if store and not store.by_date(b_time):
                 swing_done = True
                 continue

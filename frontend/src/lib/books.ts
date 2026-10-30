@@ -187,8 +187,8 @@ export const BOOK_OPTIONS: BookOption[] = [
     slMode: "causal",
     hint: "The shipping book, on the B1 arming fix. A break that used to be suppressed while arming was deferred is now accepted when the pivot it broke was sealed on an EARLIER bar; the phantom - breaking a level sealed on that very bar - stays suppressed. Marks were verified one by one against the candles: 0 marks sit on a level that did not already exist, 0 fail to actually cross their level, 0 are self-breaks, and up/down are balanced. Note the out-of-sample figure is flat versus the pre-fix pin (+240.4R against +239.6R): this fix was made because the marks were wrong, not because it added edge.",
     measured: { isN: 497, isNet: 466.92, oosN: 281, oosNet: 215.32 },
-    config: { ...V19, version: "fsent_champ_long", ext_stop_r: 0.0 },
-  },
+     config: { ...V19, version: "fsent_champ_long", ext_stop_r: 0.0 },
+   },
   {
     id: "fsent_champ_long_atr_low",
     code: "102",
@@ -248,6 +248,16 @@ export const BOOK_OPTIONS: BookOption[] = [
       hint: "MCL-OFF (the loss-run cutoff turned off) combined with the tighter htf15 swing rule. Ranked #9 of 35. Zero negative half-years and zero negative years, median 1-year drawdown from any start date 13.14%, and the strongest in-sample permutation of any book that has zero negative half-years: p 0.0115. Out of sample it is 0.1445 - the best p any zero-negative-half-year book has on the far side, though still short of 0.05. Worth watching rather than adopting.",
       measured: { isN: 535, isNet: 539.77, oosN: 302, oosNet: 270.17 },
       config: { ...V19, version: "fsent_champ_long_mcloff_htf15", ext_stop_r: 3.0, htf_min_bars: 15 },
+    },
+    {
+      id: "fsent_champ_long_mcloff_htf15_retro",
+      code: "107-R",
+      label: "107-R - MCL-OFF + HTF15 RETRO (All 3 bugs fixed) - ~782t",
+      shortLabel: "MCL-OFF+HTF15-R",
+      slMode: "causal",
+      hint: "Originally the buggy twin of 107 (529 trades). Three bugs fixed step-by-step: (1) cooldown look-ahead fixed — future losses no longer block entries (529→687), (2) filter_pre_fs regression in CAUSAL corrected — gate now applied in BOTH versions per theory §9 (Feb 3 short blocked in both), (3) SL pivot uses extended leg extreme (prev_end+1 to break bar) instead of seg_start (687→782). Mar 30 long SL moved from 28623.72 to 28309.12 capturing the true extreme low. Both versions now trade-for-trade identical.",
+      measured: { isN: 782, isNet: 326.30, oosN: 459, oosNet: 179.23 },
+      config: { ...V19, version: "fsent_champ_long_mcloff_htf15_retro", ext_stop_r: 3.0, max_consecutive_losses: 0, htf_min_bars: 15 },
     },
     {
       id: "fsent_champ_long_htfesmcl4",

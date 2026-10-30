@@ -4,7 +4,7 @@ Single responsibility: persist cooldown/halt state and swing endpoints to/from S
 """
 
 import time
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 from .database import Database
 
 
@@ -107,4 +107,46 @@ def set_last_swing_end(db: Database, tf: str, ts: int):
             "INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)",
             (f"last_{tf}_swing_1", str(ts)),
         )
+
+
+def insert_candle(db: Database, tf: str, candle: dict) -> None:
+    """Persist a single candle to the candles table (REPLACE on pk)."""
+    with db.transaction() as conn:
+        conn.execute(
+            "INSERT OR REPLACE INTO candles (tf, ts, date, open, high, low, close) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (tf, candle["ts"], candle["date"],
+             candle["open"], candle["high"], candle["low"], candle["close"]),
+        )
+
+
+def insert_candles_bulk(db: Database, tf: str, candles: List[dict]) -> None:
+    """Bulk-insert candles into the candles table. Use for seed/backfill."""
+    if not candles:
+        return
+    with db.transaction() as conn:
+        conn.executemany(
+            "INSERT OR REPLACE INTO candles (tf, ts, date, open, high, low, close) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [(tf, c["ts"], c["date"], c["open"], c["high"], c["low"], c["close"])
+             for c in candles],
+        )
+
+
+def load_candles(db: Database, tf: str) -> List[dict]:
+    """Load ALL persisted candles for a timeframe, ordered by ts ascending.
+
+    Used during recovery so the simulation runs on the full candle chain
+    instead of the trimmed rolling window (eliminates data loss from
+    _rebase_swings_to_window).
+    """
+    rows = db.conn.execute(
+        "SELECT ts, date, open, high, low, close FROM candles WHERE tf = ? ORDER BY ts ASC",
+        (tf,),
+    ).fetchall()
+    return [
+        {"ts": r["ts"], "date": r["date"], "open": r["open"],
+         "high": r["high"], "low": r["low"], "close": r["close"]}
+        for r in rows
+    ]
 

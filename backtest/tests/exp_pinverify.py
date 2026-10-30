@@ -59,10 +59,20 @@ def main(argv):
             _trade_costs(tr, 0.055, 2, 0.005, 0.01, 0.01)
             nt = _net_stats(trade_stats(tr), tr)["net_total_r"]
             dd = re_._net_dd(tr)
+            # The registry's `n` is the CLOSED-trade count. That is the lens the
+            # pins are written under - exp_repin_all's _era_stats drops open
+            # trades, because an open trade has no exit and no realised R - and
+            # it is the count exp_desc_pin_audit.py checks the prose against.
+            # Comparing it with the RAW trade count only agreed by accident,
+            # while every book happened to end its era on a closed trade. The
+            # wait-for-FS gate moved the last trade of several books onto an
+            # open one, and the accident stopped holding. Compare like with like.
+            n_closed = sum(1 for t in tr if t.get("outcome") != "open")
             p = cfg["pins"]
-            ok = (p["n"] == len(tr) and abs((p.get("net") or 0) - nt) < TOL
+            ok = (p["n"] == n_closed and abs((p.get("net") or 0) - nt) < TOL
                   and abs((p.get("dd_net") or 0) - dd) < TOL)
-            res[key] = {"n": len(tr), "net": round(nt, 2), "dd_net": round(dd, 2),
+            res[key] = {"n": len(tr), "n_closed": n_closed,
+                        "net": round(nt, 2), "dd_net": round(dd, 2),
                         "pin_n": p["n"], "pin_net": p["net"], "pin_dd_net": p.get("dd_net"),
                         "OK": ok, "secs": round(time.time() - ts, 1)}
         except Exception as e:
@@ -74,10 +84,10 @@ def main(argv):
             print("[%3d/%3d] %-38s ERROR %s" % (i, len(books), key, r["err"][:70]))
         elif r["OK"]:
             print("[%3d/%3d] %-38s OK   n=%4d %+9.2f dd %6.2f  (%.1fs)"
-                  % (i, len(books), key, r["n"], r["net"], r["dd_net"], r["secs"]))
+                  % (i, len(books), key, r["n_closed"], r["net"], r["dd_net"], r["secs"]))
         else:
-            print("[%3d/%3d] %-38s FAIL engine %d/%+.2f/%.2f  pin %s/%s/%s"
-                  % (i, len(books), key, r["n"], r["net"], r["dd_net"],
+            print("[%3d/%3d] %-38s FAIL engine %d (closed %d) /%+.2f/%.2f  pin %s/%s/%s"
+                  % (i, len(books), key, r["n"], r["n_closed"], r["net"], r["dd_net"],
                      r["pin_n"], r["pin_net"], r["pin_dd_net"]))
         sys.stdout.flush()
 

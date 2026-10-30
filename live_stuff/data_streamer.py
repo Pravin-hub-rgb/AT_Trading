@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real-time data streamer for v18 live trading."""
+"""Real-time data streamer for book 107 live trading."""
 
 import asyncio
 import json
@@ -153,23 +153,44 @@ async def backfill_klines(symbol: str, interval: str, limit: int = 100) -> list[
 
 
 async def fetch_klines_from(symbol: str, interval: str, start_ms: int, limit: int = 500) -> list[dict]:
-    """Fetch klines starting from a specific timestamp (ms)."""
+    """Fetch klines from start_ms, paging forward until now or `limit` bars."""
     import urllib.request
-    url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&startTime={start_ms}&limit={limit}"
-    req = urllib.request.Request(url)
-    req.add_header("User-Agent", "Backbencher/1.0")
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        data = json.loads(resp.read().decode())
-    candles = []
-    for k in data:
-        candles.append({
-            "open_time": int(k[0]),
-            "close_time": int(k[6]),
-            "open": float(k[1]),
-            "high": float(k[2]),
-            "low": float(k[3]),
-            "close": float(k[4]),
-            "volume": float(k[5]),
-            "is_closed": True,
-        })
+    step_ms = {"1m": 60000, "5m": 300000, "15m": 900000, "1h": 3600000, "4h": 14400000}.get(interval, 900000)
+    now_ms = int(time.time() * 1000)
+    candles: list[dict] = []
+    seen: set[int] = set()
+    cur = int(start_ms)
+
+    while len(candles) < limit:
+        batch_limit = min(1000, limit - len(candles))
+        url = (f"https://api.binance.com/api/v3/klines?symbol={symbol}"
+               f"&interval={interval}&startTime={cur}&limit={batch_limit}")
+        req = urllib.request.Request(url)
+        req.add_header("User-Agent", "Backbencher/1.0")
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read().decode())
+        if not data:
+            break
+        for k in data:
+            ot = int(k[0])
+            if ot in seen:
+                continue
+            seen.add(ot)
+            candles.append({
+                "open_time": ot,
+                "close_time": int(k[6]),
+                "open": float(k[1]),
+                "high": float(k[2]),
+                "low": float(k[3]),
+                "close": float(k[4]),
+                "volume": float(k[5]),
+                "is_closed": True,
+            })
+        newest = max(int(k[0]) for k in data)
+        nxt = newest + step_ms
+        if nxt <= cur or nxt >= now_ms or len(data) < batch_limit:
+            break
+        cur = nxt
+
+    candles.sort(key=lambda c: c["open_time"])
     return candles

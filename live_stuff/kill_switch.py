@@ -77,6 +77,7 @@ def main():
                 orderType="Market",
                 qty=str(size),
                 positionIdx=0,
+                reduceOnly=True,
             )
             if resp.get("retCode") == 0:
                 print(f"[kill] FLATTENED: {close_side} {size} BTC — order id={resp['result']['orderId']}")

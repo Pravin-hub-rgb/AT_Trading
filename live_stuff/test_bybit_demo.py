@@ -67,8 +67,8 @@ def test_bybit_backfill():
         return False
 
 
-async def test_bybit_ws():
-    """Test Bybit public WebSocket (trades + klines, 5 seconds)."""
+async def _test_bybit_ws():
+    """Test Bybit public WebSocket (trades + klines, 8 seconds)."""
     print("\n=== Bybit WebSocket test (8s) ===")
     try:
         import websockets
@@ -103,10 +103,16 @@ async def test_bybit_ws():
         return False
 
 
+def test_bybit_ws():
+    """Sync pytest entrypoint for the async WebSocket test."""
+    asyncio.run(_test_bybit_ws())
+
+
+
 if __name__ == "__main__":
     r1 = test_pybit_rest()
     r2 = test_bybit_backfill()
-    r3 = asyncio.run(test_bybit_ws())
+    r3 = asyncio.run(_test_bybit_ws())
     print(f"\nResults: REST={r1} Backfill={r2} WebSocket={r3}")
     if not r3:
         print("\nNOTE: Bybit WebSocket is geo-blocked from India.")

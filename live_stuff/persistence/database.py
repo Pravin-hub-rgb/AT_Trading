@@ -54,7 +54,20 @@ CREATE TABLE IF NOT EXISTS ltf_trades (
     r_multiple REAL,
     trail_next_pivot REAL,
     trail_activation_idx INTEGER,
-    trail_confirmed BOOLEAN
+    trail_confirmed BOOLEAN,
+    entry_order_id TEXT,
+    entry_order_link_id TEXT,
+    entry_fill_price REAL,
+    sl_order_id TEXT,
+    sl_order_link_id TEXT,
+    sl_order_status TEXT,
+    exchange_state TEXT DEFAULT 'none',
+    exit_order_id TEXT,
+    exit_fill_price REAL,
+    fee_paid REAL DEFAULT 0,
+    funding_paid REAL DEFAULT 0,
+     last_sync_ts INTEGER,
+     origin TEXT DEFAULT 'live'
 );
 
 -- Marks: append-only journal (never update/delete)
@@ -79,6 +92,20 @@ CREATE TABLE IF NOT EXISTS trading_state (
     consecutive_losses INTEGER NOT NULL DEFAULT 0,
     halted BOOLEAN NOT NULL DEFAULT 0,
     last_loss_bar INTEGER
+);
+
+-- Candle history: persisted from seed + live closes so the trading
+-- simulation can run on the FULL candle chain (not just the trimmed
+-- rolling window). See .kilo/plans/1792658668907-rolling-window-data-loss-plan.md
+CREATE TABLE IF NOT EXISTS candles (
+    tf TEXT NOT NULL,
+    ts INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    open REAL,
+    high REAL,
+    low REAL,
+    close REAL,
+    PRIMARY KEY (tf, ts)
 );
 
 -- Meta: miscellaneous key-value pairs
@@ -140,6 +167,8 @@ class Database:
         self._migrate_htf_windows()
         self._migrate_trading_state()
         self._migrate_ltf_trades()
+        self._migrate_ltf_exchange_fields()
+        self._migrate_ltf_origin()
         self._create_indexes()  # M4 — after migrations (rebuild drops ltf indexes)
         self._conn.commit()
 
@@ -219,6 +248,35 @@ class Database:
             logging.getLogger("database").info(
                 "M1: ltf_trades rebuilt — htf_window_id is now nullable")
 
+    def _migrate_ltf_exchange_fields(self):
+        """Add per-leg exchange order/fill fields to ltf_trades."""
+        cursor = self._conn.execute("PRAGMA table_info(ltf_trades)")
+        existing = {row[1] for row in cursor.fetchall()}
+        migrations = [
+            ("entry_order_id", "TEXT"),
+            ("entry_order_link_id", "TEXT"),
+            ("entry_fill_price", "REAL"),
+            ("sl_order_id", "TEXT"),
+            ("sl_order_link_id", "TEXT"),
+            ("sl_order_status", "TEXT"),
+            ("exchange_state", "TEXT DEFAULT 'none'"),
+            ("exit_order_id", "TEXT"),
+            ("exit_fill_price", "REAL"),
+            ("fee_paid", "REAL DEFAULT 0"),
+            ("funding_paid", "REAL DEFAULT 0"),
+            ("last_sync_ts", "INTEGER"),
+        ]
+        for col, typedef in migrations:
+            if col not in existing:
+                self._conn.execute(f"ALTER TABLE ltf_trades ADD COLUMN {col} {typedef}")
+
+    def _migrate_ltf_origin(self):
+        """M5: add origin column to distinguish seed-history trades from live."""
+        cursor = self._conn.execute("PRAGMA table_info(ltf_trades)")
+        cols = {row[1] for row in cursor.fetchall()}
+        if "origin" not in cols:
+            self._conn.execute("ALTER TABLE ltf_trades ADD COLUMN origin TEXT DEFAULT 'live'")
+
     def _create_indexes(self):
         """M4: query-path indexes. Created AFTER migrations because the M1
         table rebuild drops ltf_trades' indexes (DROP TABLE drops them)."""
@@ -227,6 +285,7 @@ class Database:
             "CREATE INDEX IF NOT EXISTS idx_ltf_status_entry ON ltf_trades(status, entry_ts)",
             "CREATE INDEX IF NOT EXISTS idx_htf_status_regime ON htf_windows(status, regime)",
             "CREATE INDEX IF NOT EXISTS idx_marks_tf_ts ON marks(tf, ts)",
+            "CREATE INDEX IF NOT EXISTS idx_candles_tf_ts ON candles(tf, ts)",
         ]:
             self._conn.execute(stmt)
 

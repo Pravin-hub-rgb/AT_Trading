@@ -1,329 +1,129 @@
-# Backbencher - Live Trading Engine
+# Backbencher - Book 107 Live Engine
 
-**Codename:** Backbencher
-**The student who fails every win-rate exam (36.4%) yet tops the life game (+331R gross, PF 2.81).**
+Self-contained live/paper engine for **book 107** (`fsent_champ_long_mcloff_htf15`).
+Deploy this folder on its own; it has no imports from `backend/` or `backtest/`.
 
-> ## ⚠️ NEW CHAT? START HERE
-> **Read `docs/HANDOFF.md` FIRST.** It has the true build status, the verified v18
-> parameter matrix, what to keep/kill in this folder, and the exact next steps.
-> The code in `engine/` is a toy placeholder — do NOT trust it or extend it.
+> **Status: paper/demo only.** Book 107 won the Gate-5 ordering but no book has
+> cleared PBO/DSR yet. Do not point this at live capital until forward evidence
+> clears the gate.
 
----
+## Book 107
 
-## What Is This?
+| | |
+|---|---|
+| Engine | vendored `unified` (`simulate_htf_ltf_streak_halt`) |
+| Data | **15m + 1h only - no 1m** |
+| Swing series | `htf15` (1h continuous, minBars 15) / 15m minBars 50 |
+| Side | long-only |
+| Chop | 58.0 |
+| Cooldown | 8 bars |
+| SL buffer | 0.01 ATR |
+| Ext stop | 3.0R |
+| HTF RR | 3.0 |
+| Cap | 16 days |
+| Streak halt | off (`max_consecutive_losses=0`) |
 
-A production-grade live trading engine for BTCUSDT that:
-- Produces marks (B1, B2, FLIP) identical to full-history backtest
-- Runs on a small VPS (1GB RAM, limited storage)
-- Survives restarts, downtime (hours to weeks), and network gaps
-- Tracks open trades (bias, SL, 3R, 16-day exit) across restarts
-- Is verifiable: compare live marks against backtest daily
+Parity on the IS dataset (2023-01-01 to 2026-09-13):
 
----
+- pin basis (with 1m): **525 trades / +538.40R / DD 28.38R**
+- live basis (no 1m): **526 trades / +537.13R / DD 29.65R**
+- delta: +1 trade, -1.27R, +1.27R DD - accepted.
 
-## Strategy
+## Layout
 
-**v18 HTF-LTF Streak Halt 5L:**
-- **HTF (1h):** Determines bias direction and regime
-  - HIGH chop (>61.8): use B2 entries
-  - LOW chop (≤61.8): use Flip entries
-- **LTF (15m):** Precise entry after HTF bias established
-- **Trade:** Entry at mark, SL at pivot (-1R), TP at 3R, cap at 16 days
-- **Cooldown:** 20 bars after every loss
-- **Streak halt:** Halt after 5 consecutive losses, resume on next winner
+| Path | Purpose |
+|---|---|
+| `main.py` | CLI entry point, paper/live switch, risk banner |
+| `live_loop.py` | compatibility shim; import `LiveLoop` from here |
+| `live/loop.py` | `LiveLoop` composition + event handlers |
+| `live/feed.py` | seeding, crash recovery, backfill, candle normalisation |
+| `live/state.py` | HTF metrics, swing/trade caches, restores, status |
+| `live/signals.py` | engine run, journaling, regime/window tracking |
+| `live/execution.py` | Bybit entry/exit, sizing, reconciliation |
+| `live/risk.py` | daily loss, streak persistence, R maths |
+| `live/trading.py` | live ticks and SL ratchet |
+| `_vendored/` | sealed engine copy - see `_vendored/MANIFEST.md` |
+| `persistence/` | SQLite schema, trade/mark/state stores |
+| `book.py` | book 107 params + swing settings |
+| `config.py` | symbol, windows, leverage, database path |
+| `data_streamer.py` | Binance WebSocket + REST candles |
+| `bybit_streamer.py` | Bybit WebSocket + REST candles |
+| `bybit_order.py` | Bybit order execution and position queries |
+| `rate_manager.py` | INR/USDT rate |
 
----
+## Install
 
-## Installation
-
-### Local Development
+Python 3.10+.
 
 ```bash
-# Clone the repo
-git clone git@github.com:Pravin-hub-rgb/AT_Trading.git
-cd AT_Trading/live_stuff
-
-# No external dependencies for core engine!
-# Only need websocket-client for live ticks:
-pip install websocket-client
+pip install -r requirements.txt
 ```
 
-### VPS Deployment
+## Run
 
 ```bash
-# On VPS (Ubuntu/Debian)
-sudo apt update
-sudo apt install python3 python3-pip
+# paper mode (default), Binance, forever
+python main.py
 
-# Copy files to VPS
+# 120-second test run
+python main.py 120
+
+# Bybit paper
+python main.py --exchange bybit --symbol BTCUSDT_BYBIT
+
+# Bybit live orders - not advised until the gate clears
+python main.py --live --exchange bybit --symbol BTCUSDT_BYBIT
+
+# cold start with explicit seed timestamps (15m, then 1h)
+python main.py "2026-09-01 00:00" "2026-09-01 00:00"
+```
+
+State is stored in `backbencher.db`. Edit `risk_inr.txt` to change risk per
+trade without a restart. `.env` (see `.env.example`) holds API keys and is
+ignored by git.
+
+## Deploy
+
+Copy only this folder to the VPS. Exclude `.env`, `backbencher.db`,
+`last_rate.json`, `test_out.txt`, `test_err.txt`, and `__pycache__`.
+
+```bash
 scp -r live_stuff/ user@vps:/home/user/
-
-# On VPS
 cd live_stuff
-pip3 install websocket-client
-
-# Run
+pip3 install -r requirements.txt
 python3 main.py
 ```
 
----
+Keep it under systemd with `Restart=always`; the loop recovers from downtime by
+replaying candles from the database/seed and re-running the vendored engine.
 
-## Usage
+## Verifying parity
 
-### Run Forever (Live Trading)
+The pin check needs the research dataset, so it is run from the repo, not from
+the deployed folder. Expected: 525 trades / +538.40R / DD 28.38R with 1m data.
+Do not edit `_vendored/` in place; re-vendor and re-run the parity check.
 
-```bash
-python main.py
-```
+## Operational caveats
 
-### Run for Testing (120 seconds)
-
-
-## Architecture
-
-### Core Principle
-
-**Persist the walker's STATE, not the candles.**
-
-- Walker state = 10 numbers (< 1KB)
-- New candle arrives → take one step forward → save new state
-- On restart → load state + replay missing candles = identical result
-
-### 4 Layers
-
-```
-+---------------------------------------------------------+
-|  DATA LAYER                                             |
-|  WebSocket: ticks (for trade monitoring)                |
-|  REST: closed candles (for mark detection)              |
-|  Ghost Streak pattern: dual stream + backfill            |
-+---------------------------------------------------------+
-                          |
-                          v
-+---------------------------------------------------------+
-|  WALKER LAYER (candle level, slow)                      |
-|  15m walker: detects marks, updates trail pivots        |
-|  1h walker: detects marks, updates bias/chop            |
-|  State: < 1KB per TF, saved after every candle          |
-+---------------------------------------------------------+
-                          |
-                          v
-+---------------------------------------------------------+
-|  TRADE LAYER (tick level, fast)                         |
-|  HTF window: direction + cap (from 1h mark)            |
-|  LTF trade: entry + SL + TP + cap (from 15m mark)      |
-|  Monitor: every tick checks SL/TP/cap                   |
-|  Trail: ratchet SL on new swing confirm                  |
-+---------------------------------------------------------+
-                          |
-                          v
-+---------------------------------------------------------+
-|  PERSISTENCE LAYER                                      |
-|  SQLite: walker state, marks (immutable), trades        |
-|  Atomic: all-or-nothing per candle                      |
-|  Restart: load state + replay missing candles           |
-
-
-## API Endpoints
-
-| Endpoint | Description |
-|---|---|
-| `GET /health` | Health check |
-| `GET /marks?tf=15m&from=...&to=...` | Get marks for timeframe |
-| `GET /verify?date=YYYY-MM-DD` | Daily parity check |
-
----
-
-## Verification
-
-### Daily Parity Check
-
-Compare live journal against backtest for a given day:
-
-```python
-from verification.parity import daily_parity_check, format_parity_report
-
-results = daily_parity_check(db, "2026-09-09", backtest_15m, backtest_1h)
-print(format_parity_report(results))
-```
-
-### Replay
-
-Replay candles through walker to verify state:
-
-```python
-from verification.replay import replay_15m
-
-state, marks = replay_15m(candles, initial_state)
-assert state.compute_hash() == expected_hash
-```
-
----
-
-## Database Schema
-
-### walker_state
-```sql
-CREATE TABLE walker_state (
-    tf TEXT PRIMARY KEY,
-    state_json TEXT NOT NULL,
-    state_hash TEXT NOT NULL,
-    updated_at INTEGER NOT NULL
-);
-```
-
-### marks (append-only)
-```sql
-CREATE TABLE marks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ts INTEGER NOT NULL,
-    tf TEXT NOT NULL,
-    kind TEXT NOT NULL,
-    direction TEXT NOT NULL,
-    price REAL NOT NULL,
-    swing_no INTEGER NOT NULL,
-    swing_kind TEXT NOT NULL,
-    algo_version INTEGER NOT NULL DEFAULT 1,
-    journaled_at INTEGER NOT NULL,
-    UNIQUE (ts, tf, kind, direction, swing_no)
-);
-```
-
-### htf_windows
-```sql
-CREATE TABLE htf_windows (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    direction TEXT NOT NULL,
-    entry_ts INTEGER NOT NULL,
-    entry_price REAL NOT NULL,
-    cap_ts INTEGER NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('open','closed')),
-    close_ts INTEGER,
-    close_reason TEXT
-);
-```
-
-
-## Testing
-
-```bash
-# Run all tests
-python tests/test_walker.py
-python tests/run_persistence_tests.py
-python tests/test_trade_engine.py
-python tests/test_data.py
-python tests/test_loop.py
-python tests/test_verification.py
-```
-
----
-
-## VPS Deployment Checklist
-
-- [ ] Copy `live_stuff/` to VPS
-- [ ] `pip3 install websocket-client`
-- [ ] `python3 main.py 120` (test run)
-- [ ] `python3 main.py` (live run)
-- [ ] Set up systemd service for auto-restart
-- [ ] Set up log rotation for `backbencher.db`
-
-### Systemd Service
-
-```ini
-# /etc/systemd/system/backbencher.service
-[Unit]
-Description=Backbencher Trading Engine
-After=network.target
-
-[Service]
-Type=simple
-User=backbencher
-WorkingDirectory=/home/backbencher/live_stuff
-ExecStart=/usr/bin/python3 main.py
-Restart=always
-RestartSec=60
-
-[Install]
-WantedBy=multi-user.target
-```
-
----
-
-## References
-
-- `docs/method/design.md` - Complete architecture design
-- `docs/live_trading_doc.md` - Journey log and decisions
-- `docs/method/backtest_checklist_v18.md` - v18 backtest validation
-- `docs/design_challenge.md` - Original challenge sent to AIs
-
----
-
-## License
-
-Private - All rights reserved.
-
----
-
-**Status:** Ready for VPS deployment
-**Version:** 1.0.0
-**Created:** 2026-09-09
-
-
-### ltf_trades
-```sql
-CREATE TABLE ltf_trades (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    direction TEXT NOT NULL,
-    entry_ts INTEGER NOT NULL,
-    entry_price REAL NOT NULL,
-    sl_initial REAL NOT NULL,
-    sl_current REAL NOT NULL,
-    tp_price REAL NOT NULL,
-    cap_ts INTEGER NOT NULL,
-    htf_window_id INTEGER NOT NULL,
-    status TEXT NOT NULL CHECK (status IN ('open','closed')),
-    exit_ts INTEGER,
-    exit_price REAL,
-    exit_reason TEXT,
-    r_multiple REAL,
-    trail_next_pivot REAL,
-    trail_activation_idx INTEGER,
-    trail_confirmed BOOLEAN
-);
-```
-
-+---------------------------------------------------------+
-```
-
-### Key Components
-
-| Component | File | Purpose |
-|---|---|---|
-| Walker | `engine/walker.py` | Pure `step(state, candle)` function |
-| WalkerState | `engine/walker_state.py` | 15m/1h state dataclasses |
-| Mark | `engine/mark.py` | Swing break signals |
-| HtfWindow | `engine/htf_window.py` | HTF bias window (16-day cap) |
-| LtfTrade | `engine/ltf_trade.py` | LTF trade (entry/SL/TP/trailing) |
-| TradeManager | `engine/trade_manager.py` | Orchestrates windows + trades |
-| Database | `persistence/database.py` | SQLite schema + transactions |
-| Binance | `data/binance.py` | REST API client |
-| Streamer | `data/streamer.py` | WebSocket tick streamer |
-| Bootstrap | `bootstrap.py` | First-run initialization |
-| LiveLoop | `live_loop.py` | Main polling loop |
-
-
-```bash
-python main.py 120
-```
-
-### Run Paper Trading (default)
-
-```bash
-python main.py --paper
-```
-
-### Run Verification Server
-
-```bash
-python -c "from api.verify_endpoint import run_server; run_server()"
-```
+- Restart recovery (`_recover_from_crash`) rebuilds swing history only from the
+  last completed swing, not the full rolling window. After long downtime, start
+  with explicit seed timestamps so the whole chain is rebuilt.
+- `docs/seed_marks.json` has been deleted (was stale Binance data). Cold start uses
+  explicit seed timestamps via `python main.py "2026-09-01 00:00" "2026-09-01 00:00"`.
+- Live basis (no 1m) is +1 trade / -1.27R versus the pins. Accepted.
+- Paper mode honours the book's `max_positions=0` (multiple concurrent trades).
+  Live order execution now uses one exchange net position plus one attached
+  partial SL per leg, capped at `LIVE_MAX_LEGS=10`, with an aggregate notional
+  cap (`MAX_AGGREGATE_NOTIONAL`).   Demo-tested with 3 and 10 legs, one triggered
+  SL, reconcile of only that leg, and exit of the remaining legs; DB restore
+  with an open leg also passed. Full hard-kill restart recovery is now
+  demo-tested both ways: leg alive at boot (restore + boot SL sync + clean
+  exit) and SL fired while the process was down (boot reconcile closes the
+  leg from the actual SL executions and re-arms cooldown/streak). Real
+  partial fill is still pending; do not treat live as production-ready.
+- Min-qty rejects (`qty < 0.001 BTC`) are kept as internal gray shadow legs when
+  `GRAY_MIN_QTY_ENABLED=true` (default). They consume no exchange order or
+  margin, but occupy a live leg slot and update cooldown/streak state on a
+  shadow SL/trail/cap exit. They are excluded from exchange reconcile, fees,
+  funding, and the daily live-risk limit. Set the env var to `false` to restore
+  the old skip behaviour.

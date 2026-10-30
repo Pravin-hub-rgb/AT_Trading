@@ -26,6 +26,7 @@ from src import intraday as intraday_svc
 from src import firstswing as fs_engine
 from src.btc.btc_routes import router as btc_router
 from src.btc.btc_results_routes import router as btc_results_router
+from src.btc.forward_testing_routes import router as forward_router
 
 active_operations: dict = {}
 
@@ -213,6 +214,11 @@ app.include_router(btc_router)
 # backtest/tests/exp_results_export.py writes - it imports nothing from backtest,
 # only reads the file, so the server process stays free of the test harness.
 app.include_router(btc_results_router)
+
+# /forward-testing dashboard. Reads the committed artifact that
+# backtest/tests/exp_forward_eval.py writes - same artifact caching pattern
+# as the results routes above.
+app.include_router(forward_router)
 
 
 def _new_op_id(prefix: str) -> str:

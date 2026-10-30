@@ -13,6 +13,7 @@ Usage:
                                        # seed Bybit from specific timestamps
 """
 
+import os
 import sys
 import time
 import re
@@ -23,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from persistence.database import Database
 from live_loop import LiveLoop, EXCHANGE_BINANCE, EXCHANGE_BYBIT
+from book import BOOK_CODE, BOOK_NAME
 import config
 
 DB_PATH = "backbencher.db"
@@ -76,19 +78,16 @@ def main():
         exchange = EXCHANGE_BYBIT
         symbol = symbol.replace("_BYBIT", "")
 
-    # C9: v18 params are keyed by INSTRUMENT (the dataset they were tuned on).
-    # Bybit perp trading must bind BTCUSDT_BYBIT (chop 58, cooldown 0,
-    # sl_buf 0.10, halt 3 — the validated 261-trade config); binding the bare
-    # spot symbol silently ran different params (chop 61.8, cooldown 20,
-    # sl_buf 0.25, halt 5).
+    # Book params come from book.py (book 107). The internal name
+    # v18_instrument is kept for compatibility; it no longer selects params.
     v18_instrument = f"{symbol}_BYBIT" if exchange == EXCHANGE_BYBIT else symbol
 
     print("=" * 60)
-    print("Backbencher v18 - Live Trading Engine")
+    print(f"Backbencher - Book {BOOK_CODE} Live Trading Engine")
     print("=" * 60)
     print(f"Exchange:  {exchange.upper()}")
     print(f"Symbol:    {symbol}")
-    print(f"Instrument: {v18_instrument} (v18 params)")
+    print(f"Book:      {BOOK_CODE} {BOOK_NAME}")
     print(f"Mode:      {'PAPER' if paper_mode else 'LIVE'}")
     print(f"Database:  {DB_PATH}")
     if max_seconds:
@@ -114,7 +113,7 @@ def main():
     db.connect()
     db.create_tables()
 
-    # Create live loop (uses REAL v18 engine on rolling windows)
+    # Create live loop (uses the vendored unified engine on rolling windows)
     loop = LiveLoop(db, exchange=exchange, symbol=symbol, paper_mode=paper_mode,
                     v18_instrument=v18_instrument)
 
@@ -160,6 +159,7 @@ def main():
                 close_resp = session.place_order(
                     category="linear", symbol=symbol, side=side,
                     orderType="Market", qty=qty, positionIdx=0,
+                    reduceOnly=True,
                 )
                 if close_resp.get("retCode") == 0:
                     print("[shutdown] Position flattened")
@@ -167,12 +167,19 @@ def main():
                     print(f"[shutdown] Flatten failed: {close_resp.get('retMsg', 'unknown')}")
             else:
                 print("[shutdown] No open position")
-            # Cancel all open orders
-            try:
-                session.cancel_all_orders(category="linear", symbol=symbol)
-                print("[shutdown] Orders cancelled")
-            except Exception as e:
-                print(f"[shutdown] Cancel error: {e}")
+            check = session.get_positions(category="linear", symbol=symbol)
+            still_open = any(
+                p["symbol"] == symbol and float(p.get("size", 0) or 0) > 0
+                for p in check.get("result", {}).get("list", [])
+            )
+            if still_open:
+                print("[shutdown] Position still open — keeping protective orders")
+            else:
+                try:
+                    session.cancel_all_orders(category="linear", symbol=symbol)
+                    print("[shutdown] Orders cancelled")
+                except Exception as e:
+                    print(f"[shutdown] Cancel error: {e}")
         except Exception as e:
             print(f"[shutdown] Flatten error: {e}")
 
@@ -196,7 +203,7 @@ def main():
                 on_15m_close=loop._on_15m_close,
                 on_1h_close=loop._on_1h_close,
             )
-        print(f"[live] Backbencher v18 - {exchange.upper()} {symbol}")
+        print(f"[live] Backbencher - Book {BOOK_CODE} - {exchange.upper()} {symbol}")
         print(f"[live] 15m window: 30d | 1h window: 20d")
         print(f"[live] mode={loop.v18['mode']} ext_stop={loop.v18['ext_stop_r']} cd={loop.v18['cooldown_bars']} halt={loop.v18['max_consecutive_losses']}")
         if exchange == EXCHANGE_BYBIT:

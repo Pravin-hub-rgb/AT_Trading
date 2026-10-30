@@ -4,7 +4,7 @@ import { API_BASE } from "./api";
 
 export type BtcTf = "1m" | "5m" | "15m" | "1h" | "4h";
 export type BtcMode = "continuous" | "daily";
-export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19_champion" | "v19_causal" | "v19_c16" | "unified" | "entry_minus_1" | "utcsat_causal" | "utcsat_entry_minus_1" | "fsent_champ_long" | "fsent_champ_long_atr_low" | "fsent_sig_full" | "fsent_sig_trail_delay1";
+export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19_champion" | "v19_causal" | "v19_c16" | "unified" | "entry_minus_1" | "utcsat_causal" | "utcsat_entry_minus_1" | "fsent_champ_long" | "fsent_champ_long_mcloff_htf15_retro" | "fsent_champ_long_atr_low" | "fsent_sig_full" | "fsent_sig_trail_delay1";
 
 export interface BtcCandle {
   date: string;
@@ -71,6 +71,8 @@ export interface BtcChartResponse {
   last_ts: string | null;
   /** the version this chart was drawn for */
   version?: string;
+  include_forward?: boolean;
+  forward_available?: boolean;
   candles: BtcCandle[];
   swings: BtcSwing[];
   flow: BtcFlowSegment[];
@@ -95,11 +97,13 @@ export async function getBtcChart(
   minBars?: number,
   symbol: BtcSymbol = "BTCUSDT",
   version = "",
+  includeForward = false,
 ): Promise<BtcChartResponse> {
   const params = new URLSearchParams({ tf, mode, symbol });
   if (version) params.set("version", version);
   if (limit && limit > 0) params.set("limit", String(limit));
   if (minBars && minBars >= 2) params.set("min_bars", String(minBars));
+  if (includeForward) params.set("include_forward", "1");
   const res = await fetch(`${API_BASE}/api/btc/chart?${params.toString()}`, {
     headers: { "Content-Type": "application/json" },
   });
@@ -312,6 +316,7 @@ export async function getBtcBacktest(
   symbol: BtcSymbol = "BTCUSDT",
   htfTf: BtcTf = "1h",
   htfMinBars: number = 10,
+  includeForward: boolean = true,
 ): Promise<BtcBacktestResponse> {
   const q = new URLSearchParams({
     tf,
@@ -339,6 +344,7 @@ export async function getBtcBacktest(
     htf_ltf_ver: htfLtfVer,
   });
   if (limit && limit > 0) q.set("limit", String(limit));
+  if (includeForward) q.set("include_forward", "1");
   const res = await fetch(`${API_BASE}/api/btc/backtest?${q.toString()}`, {
     headers: { "Content-Type": "application/json" },
   });

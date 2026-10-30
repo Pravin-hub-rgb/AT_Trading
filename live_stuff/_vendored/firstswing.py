@@ -1,0 +1,1417 @@
+"""SwingEngine � single source of truth for all swing detection.
+
+Python port of frontend/src/lib/firstswing.ts.
+Detects 1 or more swings per day.  Use compute_swing_results() for N swings,
+compute_whole_day_swings() for all swings in a day.
+
+- WalkerEngine is SINGLE SOURCE OF TRUTH for sealed pivots
+- Break detection per BAR against PREVIOUS bar frozen extremes (eHiPrev/eLoPrev)
+- Continuation takes precedence over reversal on same bar
+- timeCap gates DECLARATION only, counting runs from bar one
+- Chop target = LATEST sealed pivot only (latest_sealed_high/low), exact like the
+  frontend FsV2Engine (backend/debug/firstswing_cf11277.ts chopTargetHigh/Low):
+  "any new H kills old H / any new L kills old L" � killed pivots are dead, there
+  is NO fallback scan to older pivots. Gap check at chop-target time (next candle
+  must not breach it; requires extreme idx <= g_idx - 2) prevents single-bar extreme noise.
+  Backend-only additions kept deliberately (user-approved fixes beyond the TS):
+  minBars=14 declaration guard, B2 1-candle EXTREME gap (b2_gap_bars=1),
+  fresh-structure rule (chop may only target pivots formed after dir_established),
+  flip-back-as-B2 (as_b2), first_chop_cross tracking for fs_at markers.
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass, field
+from typing import Literal, Optional, Union
+
+from .walker import WalkerEngine, FlowCandle
+
+
+@dataclass
+class FsBreakMark:
+    idx: int
+    time: str
+    kind: Literal["B1", "B2", "FLIP"]
+    dir: Literal["up", "down"]
+    px: float
+
+
+@dataclass
+class Lvl:
+    px: float
+    idx: int
+    time: str
+
+
+State = Literal["watch", "locked", "confirmed"]
+
+
+@dataclass
+class FlowSegment:
+    dir: Literal["B", "S"]
+    start_idx: int
+    start_px: float
+    end_idx: int
+    end_px: float
+
+
+@dataclass
+class FsV2Result:
+    day: str
+    outcome: Literal["real"]
+    conf_idx: int
+    seg: FlowSegment
+    source: Optional[Literal["chop", "sustain"]]
+    dir: Optional[Literal["up", "down"]]
+    breaks: list[FsBreakMark]
+
+
+class SwingEngine:
+    def __init__(self, opts: Optional[dict] = None):
+        opts = opts or {}
+        self.time_cap: str = opts.get("timeCap", "09:29") if isinstance(opts, dict) else getattr(opts, "timeCap", "09:29")
+        if isinstance(opts, dict):
+            self.sustain_bars: int = opts.get("sustainBars", opts.get("sustain_bars", 7))
+            self.min_bars: int = int(opts.get("minBars", opts.get("min_bars", 14)))
+            raw_gap = opts.get("b2GapBars", opts.get("b2_gap_bars", opts.get("requirePivotGap", 1)))
+            if isinstance(raw_gap, bool):
+                self.b2_gap_bars: int = 1 if raw_gap else 0
+            else:
+                try:
+                    self.b2_gap_bars: int = max(0, int(raw_gap))
+                except Exception:
+                    self.b2_gap_bars: int = 1
+        else:
+            self.sustain_bars: int = 7
+            self.min_bars: int = 14
+            self.b2_gap_bars: int = 1
+
+        self.walker = WalkerEngine()
+        self.bars_seen: int = 0
+        self.t: str = "00:00"
+        self.g_idx: int = -1
+        self.hi: float = float("nan")
+        self.lo: float = float("nan")
+        self.ts_map: dict[int, str] = {}  # counter→datetime (for live counter-based g_idx)
+
+        # Same-bar arm guard (swings after the first): a Walker seal emitted
+        # during the CURRENT bar must not arm the engine for THAT bar � otherwise
+        # a B1 can fire on the same bar the engine first got structure.
+        # (30 Sep 2025: the 09:44 bar sealed H 24669.05 and the up-break fired in
+        # that same bar -> phantom B1 up "breaking" the 09:43 high 24667.7, a
+        # stamp shift inside the straight white 09:42->09:44 leg.) With the guard
+        # the seal arms the engine from the NEXT bar: 09:44 no B1, 09:45 B1 down
+        # breaking the 09:42 low 24647.15 � the structure-extreme break. B1 keeps
+        # the approved extreme-break semantics ("09:30 B1 breaking 09:29 low",
+        # old computeSecondSwingResults @ 7fe645d). Applied ONLY to swings after
+        # the first (swing_index >= 1) � the first swing keeps the approved FsV2
+        # session-extreme spec (firstswing_cf11277).
+        if isinstance(opts, dict):
+            self.defer_same_bar_arm: bool = bool(opts.get("defer_same_bar_arm", False))
+        else:
+            self.defer_same_bar_arm = bool(getattr(opts, "defer_same_bar_arm", False))
+        self._pending_arm: bool = False
+        self._pending_leg_dir = None  # walker leg dir at the bar a seal arrived (V-reversal check)
+
+        self.e_hi: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
+        self.e_lo: Lvl = Lvl(px=float("inf"), idx=-1, time="")
+        self.e_hi_prev: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
+        self.e_lo_prev: Lvl = Lvl(px=float("inf"), idx=-1, time="")
+        self.e_hi_pivot_prev: Lvl = Lvl(px=float("-inf"), idx=-1, time="")
+        self.e_lo_pivot_prev: Lvl = Lvl(px=float("inf"), idx=-1, time="")
+
+        self.e_hi_pivot: Optional[Lvl] = None
+        self.e_lo_pivot: Optional[Lvl] = None
+        self.normal_highs: list[Lvl] = []
+        self.normal_lows: list[Lvl] = []
+        self.bar_highs: dict[int, float] = {}
+        self.bar_lows: dict[int, float] = {}
+        self.latest_sealed_high: Optional[Lvl] = None
+        self.latest_sealed_low: Optional[Lvl] = None
+        # bar of the last same-kind pivot we stored - see the seal-loop comment
+        self._last_h_gidx: int = -1
+        self._last_l_gidx: int = -1
+        # Pivots already broken, keyed on (pivot_idx, price), shared across the
+        # whole chain by btc_swing.compute_btc_swings.
+        #
+        # OWNER, 2025-07-20: "It is breaking a pivot, that's it. Who is stopping it?"
+        # and: "we were blocked by 50th bar gate so now as the 15:15 is already
+        # contaminated ... and 15:30 is not breaching any pivot so we look for new."
+        #
+        # Keyed on the index as well as the price because a price recurs across
+        # 129,715 candles: 16680.0 alone cannot identify a level. Keyed across the
+        # chain because compute_btc_swings builds a fresh SwingEngine per swing, so a
+        # per-engine set could never see a level an earlier leg already broke.
+        self._spent_pivots: set = set()
+        self.spent_pivots: Optional[set] = None   # chain-wide override
+
+        self.state: State = "watch"
+        self.dir: Optional[Literal["up", "down"]] = None
+        self.base_dir: Optional[Literal["up", "down"]] = None
+        self.same_side_breaks: int = 0
+        self.corner_pivot: Optional[Lvl] = None
+        self.b2_pivot: Optional[Lvl] = None
+        self.just_fired_b2: bool = False
+        self.b1_bar_idx: int = -1
+        self.allow_corner_record: bool = False
+        self.dir_confirmed: bool = False
+        self.locked_level: float = float("nan")
+        self.flip_established: bool = False   # current dir was born from a FLIP, not a B1
+        self.ever_b1_dir: Optional[Literal["up", "down"]] = None  # dir of last B1 that never got its B2
+        self.dir_established_idx: int = -1    # bar where current leg became confirmed (B2 or flip)
+
+        self.start_idx: int = -1
+        self.start_time: str = ""
+        self.start_px: float = float("nan")
+        self.cand_idx: int = -1
+        self.cand_time: str = ""
+        self.cand_px: float = float("nan")
+
+        self.declared: bool = False
+        self.tier: Optional[Literal["real"]] = None
+        self.end_time: str = ""
+        self.end_idx: int = -1
+        self.end_px: float = float("nan")
+        self.confirmed_at_time: str = ""
+        self.confirmed_at_idx: int = -1
+        self.confirm_source: Optional[Literal["chop", "sustain"]] = None
+
+        self.sustain_streak: int = 0
+        self.armed: bool = False
+        # DEBUG-ONLY suppression ledger. Default off; costs one bool test per
+        # suppression site. Set opts["debugSuppressed"]=True to record WHY each
+        # detected break produced no mark, with the candle, the price and the
+        # level that was rejected. This exists because the suppression paths are
+        # SILENT - they leave no row anywhere, which is why 12,981 armed
+        # suppressed breaks had no attribution. It changes no decision and, with
+        # the flag off, records nothing.
+        self._dbg_suppressed: bool = bool(opts.get("debugSuppressed", False))
+        self.suppressed: list = []
+        self.last_confirm_hit: Optional[dict] = None
+        self.first_chop_cross_idx: int = -1
+        self.first_chop_cross_px: float = float("nan")
+        self.first_chop_cross_time: str = ""
+        self.last_chop_cross_idx: int = -1
+        self.last_chop_cross_px: float = float("nan")
+        self.last_chop_cross_time: str = ""
+        self._chop_cross_active: bool = False
+        self.break_marks: list[FsBreakMark] = []
+        self.seed_idx: int = -1
+        # OWNER 2026-10-13, alternation: "we cannot be having B2 B2, or flip
+        # and flip. We can have B2 flip B2, or flip B2 flip." A B2 closes the
+        # leg, so a second B2 in the same direction must never be marked - a
+        # volatile candle that sustains the leg is then simply not marked, and
+        # we wait for the next candle. Reset whenever the direction changes.
+        self._b2_done_in_dir: bool = False
+        # kind of the most recent mark on this leg, for alternation:
+        # "we cannot be having B2 B2, or flip and flip"
+        self._last_mark_kind: str = ""
+        # The side of this swing's B1. Deliberately NOT cleared by a B2: after
+        # B1->B2->FLIP, a break back on B1's side is that leg's B2 again
+        # ("B2 returns to B1's side after the FLIP"), NOT a second FLIP.
+        self._b1_side: str = ""
+        # Candle body, for the volatile-bar sustainability rule.
+        self.op: float = float("nan")
+        self.cl: float = float("nan")
+
+    @property
+    def _spent(self) -> set:
+        """Pivots already broken. Chain-wide when the chain supplies one."""
+        return self._spent_pivots if self.spent_pivots is None else self.spent_pivots
+
+    @property
+    def locked(self) -> bool:
+        return self.state != "watch"
+
+    def process_bar(self, c: FlowCandle, g_idx: int) -> None:
+        if self.declared:
+            return
+        self.bars_seen += 1
+        self.g_idx = g_idx
+        self.t = c.date if len(c.date) >= 16 else ""
+        self.hi = c.high
+        self.lo = c.low
+        # Candle BODY, for the sustainability rule: a mark is only decided once
+        # the candle has closed, so a volatile bar (breaks both extremes) is
+        # resolved by its colour - green sustained up, red sustained down.
+        self.op = c.open
+        self.cl = c.close
+        self.ts_map[g_idx] = c.date
+
+        self.just_fired_b2 = False
+
+        # Deferred arming: a seal from the PREVIOUS bar arms the engine now
+        # (see defer_same_bar_arm note in __init__).
+        if self.defer_same_bar_arm and self._pending_arm:
+            self.armed = True
+            self._pending_arm = False
+
+        if self.bars_seen == 1:
+            self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
+            self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
+            self.e_hi_prev = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+            self.e_lo_prev = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+            self.e_hi_pivot = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+            self.e_lo_pivot = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+            self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx, time=self.e_hi_pivot.time)
+            self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx, time=self.e_lo_pivot.time)
+            self.latest_sealed_high = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+            self.latest_sealed_low = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+            self.bar_highs.clear()
+            self.bar_lows.clear()
+            self.seed_idx = g_idx
+
+        self.bar_highs[g_idx] = c.high
+        self.bar_lows[g_idx] = c.low
+
+        # Snapshot latest sealed before walker kill (break-before-kill, live-smart)
+        # Walker may seal a new H/L in this same bar that kills the victim (e.g. 09:44 H 24669.05 kills 09:38 H 24668.7)
+        # Live ticks: 09:38 break (hi > tgt) happens before the new H is considered sealed.
+        # So chop must be evaluated against prev_latest, then latest updated for next bar.
+        _snap_high = self.latest_sealed_high
+        _snap_low = self.latest_sealed_low
+        # Keep deep copy for chop (Lvl is mutable dataclass)
+        if _snap_high is not None:
+            _snap_high = Lvl(px=_snap_high.px, idx=_snap_high.idx, time=_snap_high.time)
+        if _snap_low is not None:
+            _snap_low = Lvl(px=_snap_low.px, idx=_snap_low.idx, time=_snap_low.time)
+        self._snap_high = _snap_high
+        self._snap_low = _snap_low
+
+        # Flow direction at bar start � the walker leg the bar's seals will
+        # terminate. Used by the same-bar V-reversal arm exception (below).
+        self._pending_leg_dir = self.walker.dir
+
+        # The walker emits its seals as a batch on the bar they CONFIRM, but each
+        # seal carries the idx of the candle the extreme actually belongs to. That
+        # is the distinction the arming guard needs and e_hi_pivot cannot provide:
+        # by the time the guard runs, e_hi_pivot has already been overwritten by
+        # this bar's own batch, so on every seal bar it reads idx == g_idx and the
+        # guard concludes nothing older was broken.
+        #
+        # Tracked per kind, because an up break is answered only by an H seal. The
+        # owner's two candles on the same day are identical apart from this:
+        #
+        #   16:45  batch = H@16:30 (older) + L@16:45 (own low). No H seal of its
+        #          own, so the high pivot standing is still the 16:30 one and the
+        #          break of it arms. B1 lands there. Correct.
+        #
+        #   04:30  batch = H@04:00 (older) + L@04:15 (older) + H@04:30 (own high).
+        #          It seals its OWN high as well as breaking the 04:00 high, so
+        #          e_hi_pivot becomes 21822.4 @ g_idx and the guard refuses - while
+        #          21822.4 did break 21814.1, the 04:00 candle's high, which the
+        #          owner confirmed by eye: "4:30 clearly breaks this pivot high, and
+        #          the B1 is not marked here."
+        #
+        #   07:00 (2023-02-05)  batch = H@07:00 only, its own high. No older H
+        #          seal, so nothing was broken and no B1. "So what is wrong here?
+        #          I cannot see the issue." Correct.
+        self._seal_h_idx = -1
+        self._seal_l_idx = -1
+
+        for p in self.walker.process_bar(c, g_idx):
+            if not p.sealed:
+                continue
+            tgt = self._seal_h_idx if p.kind == "H" else self._seal_l_idx
+            if tgt < 0 or p.idx < tgt:
+                if p.kind == "H":
+                    self._seal_h_idx = p.idx
+                else:
+                    self._seal_l_idx = p.idx
+            if self.bars_seen >= 2:
+                if self.defer_same_bar_arm:
+                    # Same-bar arm guard: defer to NEXT bar (the V-reversal
+                    # exception is applied after the walker loop, below)
+                    self._pending_arm = True
+                else:
+                    self.armed = True
+            if p.kind == "H":
+                # Any new H kills old H � gap validated at chop-target time, not here
+                # The walker can emit TWO H pivots on the same bar: the tracked
+                # extreme (idx=hi_idx) first, then the retired pending one.
+                # Last-write-wins stored the weaker, later bar. Measured
+                # 2023-01-12 21:30: H 18120.0@21:00 then H 18111.0@21:15 - the
+                # first is the pivot the white flow line draws and the one the
+                # owner confirms the 21:45 FS breaks; the second clobbered it,
+                # so the engine aimed one bar late. display_flow is immune
+                # because it runs _dedupe then _enforce_alternation over the
+                # stream; this intake did neither.
+                if self._last_h_gidx != self.g_idx:
+                    self._last_h_gidx = self.g_idx
+                    self.latest_sealed_high = Lvl(px=p.px, idx=p.idx, time=p.time)
+                cur = self.e_hi_pivot  # type: ignore
+                assert cur is not None
+                if p.px > cur.px:
+                    self.normal_highs.append(cur)
+                    self.e_hi_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
+                    if (
+                        self.dir == "up"
+                        and p.px > self.locked_level
+                        and p.idx >= self.b1_bar_idx
+                        and self.allow_corner_record
+                    ):
+                        if self.corner_pivot is None:
+                            self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
+                else:
+                    self._push_unique(self.normal_highs, Lvl(px=p.px, idx=p.idx, time=p.time))
+            else:
+                # Any new L kills old L � gap validated at chop-target time, not here
+                if self._last_l_gidx != self.g_idx:
+                    self._last_l_gidx = self.g_idx
+                    self.latest_sealed_low = Lvl(px=p.px, idx=p.idx, time=p.time)
+                cur = self.e_lo_pivot  # type: ignore
+                assert cur is not None
+                if p.px < cur.px:
+                    self.normal_lows.append(cur)
+                    self.e_lo_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
+                    if (
+                        self.dir == "down"
+                        and p.px < self.locked_level
+                        and p.idx >= self.b1_bar_idx
+                        and self.allow_corner_record
+                    ):
+                        if self.corner_pivot is None:
+                            self.corner_pivot = Lvl(px=p.px, idx=p.idx, time=p.time)
+                else:
+                    self._push_unique(self.normal_lows, Lvl(px=p.px, idx=p.idx, time=p.time))
+            # NOTE: no white-pivot rebuild and no latest_sealed overwrite here �
+            # latest_sealed_* is updated ONLY at seal time above (lines with
+            # "Any new H/L kills old H/L"), exactly like the frontend engine
+            # (firstswing_cf11277.ts:198/224). Killed pivots stay dead.
+
+        up_break = c.high > self.e_hi_prev.px
+        down_break = c.low < self.e_lo_prev.px
+        # Same-bar arm guard with V-reversal exception: a Walker seal arriving
+        # THIS bar normally defers arming to the next bar � EXCEPT when the
+        # break runs OPPOSITE to the leg the seal terminated (a V reversal off
+        # the just-sealed pivot: 2026-09-03 09:27 breaking the sealed 09:26
+        # high 23970.15). On the arming bar the SAME-direction break is
+        # seed-colour flow extension (red seed: high->low; green seed: low->high)
+        # and is suppressed, so B1 locks in the V direction.
+        #
+        # A same-direction break (2025-09-30 09:44 up-break past the sealed
+        # up-leg top) used to stay deferred to the next bar unconditionally,
+        # which cost a full candle on every one of them. The suppression was
+        # only ever meant for the phantom - breaking a level sealed on THIS
+        # bar, which is circular - but the implementation could not tell that
+        # apart from breaking a level sealed EARLIER that merely happens to
+        # land on a bar where a different seal is arriving. Measured on the
+        # real chain, 4,102 breaks were dropped while not armed and 3,941 of
+        # them (96%) broke a pivot sealed on an earlier bar.
+        #
+        # So the same-direction break is accepted whenever the walker sealed, on
+        # this bar and of the matching kind, a pivot belonging to an EARLIER
+        # candle - which is then a real break of that pivot. Owner-verified on the
+        # chart: 2023-01-03 12:45 (seals the 12:30 pivot, crosses it, B1 there),
+        # 2023-02-04 15:45, 2023-01-14 06:45, 2026-08-14 22:45, and the pair on
+        # 2023-02-13 - 04:30 broken, 16:45 working - which differ only in whether
+        # the bar sealed its own extreme as well.
+        if self.defer_same_bar_arm and self._pending_arm and self.state == "watch":
+            # A candle that breaks BOTH extremes is VOLATILE, whatever the arm
+            # guard below is about to do to one of the flags. Record that now,
+            # because the guard's whole job is to drop a same-direction break,
+            # and a volatile candle must not lose its other side to it - the
+            # direction then belongs to the CLOSE, same as B2 (:500) and FLIP
+            # (:553). Suppressing one side of a volatile bar would hide the
+            # volatility from _step entirely.
+            _volatile = bool(up_break and down_break)
+            if self._pending_leg_dir == "down" and up_break:
+                self.armed = True
+                self._pending_arm = False
+                if not _volatile:
+                    down_break = False
+            elif self._pending_leg_dir == "up" and down_break:
+                self.armed = True
+                self._pending_arm = False
+                if not _volatile:
+                    up_break = False
+            elif self._pending_leg_dir == "up" and up_break:
+                if self._seal_h_idx >= 0 and self._seal_h_idx < g_idx:
+                    self.armed = True
+                    self._pending_arm = False
+            elif self._pending_leg_dir == "down" and down_break:
+                if self._seal_l_idx >= 0 and self._seal_l_idx < g_idx:
+                    self.armed = True
+                    self._pending_arm = False
+        if self.armed:
+            self._step(down_break, up_break)
+        elif down_break or up_break:
+            self._supp("not_armed",
+                       side=("both" if (down_break and up_break)
+                             else "down" if down_break else "up"),
+                       high=(round(float(c.high), 1) if up_break else None),
+                       low=(round(float(c.low), 1) if down_break else None),
+                       pending_leg=self._pending_leg_dir,
+                       e_hi=round(float(self.e_hi.px), 1) if self.e_hi else None,
+                       e_lo=round(float(self.e_lo.px), 1) if self.e_lo else None)
+
+        if self.dir == "down" and c.low < self.e_lo.px:
+            self._set_cand(Lvl(px=c.low, idx=g_idx, time=self.t))
+        if self.dir == "up" and c.high > self.e_hi.px:
+            self._set_cand(Lvl(px=c.high, idx=g_idx, time=self.t))
+
+        self._check_sustain(c)
+
+        if c.high > self.e_hi.px:
+            self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
+        if c.low < self.e_lo.px:
+            self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
+        self.e_hi_prev = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+        self.e_lo_prev = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+        assert self.e_hi_pivot is not None and self.e_lo_pivot is not None
+        self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx, time=self.e_hi_pivot.time)
+        self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx, time=self.e_lo_pivot.time)
+
+        if self.state == "locked":
+            self.allow_corner_record = True
+
+    def _step(self, down_break: bool, up_break: bool) -> None:
+        if self.state == "watch":
+            if down_break and up_break:
+                # VOLATILE - it broke BOTH extremes, so "which break" cannot
+                # decide the direction and `if down_break` first would silently
+                # lock every such bar DOWN. The CLOSE decides, exactly as it
+                # already does for B2 (:500) and for a volatile candle before
+                # confirmation (:553).
+                #
+                # OWNER 2026-10-13, 2026-05-18 21:30: "as the 21:30 was
+                # sustained green cause that's volatile case so ... b1 should be
+                # up." Same candle also broke the 21:15 high (76575.0 > 76450.0)
+                # and the 21:15 low (76200.0 < 76230.2), so it is volatile on
+                # the chart, and the engine had it locked down because the arm
+                # guard had already dropped its up-break.
+                self._lock("up" if self.cl > self.op else "down")
+            elif down_break:
+                self._lock("down")
+            elif up_break:
+                self._lock("up")
+            return
+        if self.dir_confirmed:
+            if self.dir == "down" and up_break and not down_break:
+                # Flip back to a direction that still has a live B1 (never B2d)
+                # from a flip-born direction: this break IS that legs B2, not a
+                # new flip. (1 Sep 2026 swing 6: B1(up)@11:55 -> FLIP(down)@12:01
+                # -> high-extreme break @12:05 was marked FLIP instead of B2.)
+                # OWNER 2026-10-13, 2023-01-18 02:30: "The first check you should
+                # do for each swing is that if in a swing there is B1 and FLIP, so
+                # is FLIP and B2 opposite direction? ... Now the second flip
+                # cannot be the opposite direction. That's it. ... 02:30 breaking
+                # the extreme high, which was 01:30's high. So this should be a
+                # B2, not a flip."
+                #
+                # So: once a leg has a direction, a break against it is that
+                # leg's B2 - it can never be a FLIP. A FLIP always goes WITH the
+                # new direction, never against it.
+                if (
+                    self._b1_side == "up"
+                    and self.e_hi_prev is not None
+                    and self.hi > self.e_hi_prev.px
+                ):
+                    self._flip("up", as_b2=True)
+                else:
+                    self._flip("up")
+                self._check_chop()
+                return
+            if self.dir == "up" and down_break and not up_break:
+                if (
+                    self._b1_side == "down"
+                    and self.e_lo_prev is not None
+                    and self.lo < self.e_lo_prev.px
+                ):
+                    self._flip("down", as_b2=True)
+                else:
+                    self._flip("down")
+                self._check_chop()
+                return
+            if up_break and down_break:
+                # VOLATILE bar - it broke BOTH extremes, so neither the one-sided
+                # branch above can claim it and the old code fell through to a
+                # bare return: the candle produced NO mark at all, and the leg
+                # waited a bar or more for the next one-sided break.
+                #
+                # OWNER 2026-10-13: "we are waiting for marks after it closes...
+                # so we see if it is a green, what means it sustained on the B1
+                # direction which was up, so we mark it B2 ... and same candle
+                # later will also have a down extreme and later if that low is
+                # broken we mark flip on the candle which breaks it."
+                #
+                # So the CLOSE decides: green sustained up, red sustained down.
+                # Sustained the leg  -> this is that direction's B2.
+                # Sustained against  -> this is a FLIP the other way.
+                green = self.cl > self.op
+                sustained = "up" if green else "down"
+                if sustained == self.dir:
+                    # Sustained the CURRENT leg. If a FLIP has happened since B1
+                    # then this candle sustained the FLIP's side, and B2 belongs
+                    # to B1's side - so it is not a B2, and it cannot be a FLIP
+                    # either (already this direction). NO MARK; wait.
+                    # OWNER 2023-06-10 22:30, green, leg up from the 12:45 FLIP:
+                    # "we cannot mark it anything here ... so we have to wait".
+                    if self._last_mark_kind == "FLIP":
+                        self._supp("volatile_sustains_flipped_leg", kind="none",
+                                   side="both", sustained=sustained,
+                                   close=round(float(self.cl), 1),
+                                   open=round(float(self.op), 1),
+                                   high=round(float(self.hi), 1),
+                                   low=round(float(self.lo), 1))
+                    elif not self._b2_done_in_dir:
+                        _t = self.e_hi_prev if self.dir == "up" else self.e_lo_prev
+                        gap_ok = True
+                        if getattr(self, "b2_gap_bars", 0) > 0 and _t is not None:
+                            p = _t  # type: ignore
+                            if not (p.idx <= self.g_idx - 1 - self.b2_gap_bars):
+                                gap_ok = False
+                            else:
+                                if self.dir == "up":
+                                    gh = self.bar_highs.get(p.idx + 1)
+                                    gap_ok = gh is not None and gh <= p.px
+                                else:
+                                    gl = self.bar_lows.get(p.idx + 1)
+                                    gap_ok = gl is not None and gl >= p.px
+                        if gap_ok:
+                            self.b2_pivot = Lvl(
+                                px=self.hi if self.dir == "up" else self.lo,
+                                idx=self.g_idx, time=self.t,
+                            )
+                            self._confirm_direction()
+                else:
+                    # Sustained against the leg. Alternation: if the last mark
+                    # was a FLIP, the partner of "B2 flip B2" is a B2, never a
+                    # second FLIP. OWNER: "we cannot be having ... flip and flip".
+                    if self._last_mark_kind == "FLIP":
+                        self._flip(sustained, as_b2=True)
+                    else:
+                        self._flip(sustained)
+                self._check_chop()
+                return
+            self._check_chop()
+            return
+        # VOLATILE candle while the direction is not yet confirmed: it breaks
+        # BOTH extremes, so the CLOSE decides (OWNER 2026-10-13, 2025-08-21
+        # 17:00): "if you look at the candle colour, which is red ... the B1
+        # direction is up and the colour is not matching its direction, and
+        # also this is a volatile candle, so we should be considering it as
+        # flip rather than B2."
+        # Colour arbitrates VOLATILE candles only - a one-sided B2 is unaffected,
+        # which is why the confirmed red B2s 2023-03-19 06:30 and 2023-01-06
+        # 19:15 stay B2s.
+        if up_break and down_break:
+            _sus = "up" if self.cl > self.op else "down"
+            if _sus != self.dir:
+                self._flip(_sus)
+            else:
+                self._b2_if_gap_allows()   # no mark if the extreme is contaminated
+            self._check_chop()
+            return
+        if self.dir == "down":
+            b2_fired = False
+            if down_break:
+                # Mirror of the up branch: B2 breaks the standing extreme
+                # (e_lo_prev), never e_lo_pivot, which already carries this
+                # candle's own low. See the full note in the up branch.
+                _tgt = self.e_lo_prev
+                if (
+                    _tgt is not None
+                    and _tgt.idx >= self.b1_bar_idx
+                    and self.lo < _tgt.px
+                ):
+                    # B2 1-candle EXTREME gap (permanent default b2_gap_bars=1).
+                    # NOT a pivot gap. The target is the RUNNING EXTREME and no
+                    # white pivot is involved anywhere in this test. Owner checked
+                    # this on the chart 2026-10-14 for swing 1: 18:30 / 18:45 /
+                    # 19:00 are lower-high AND lower-low with no reversal bar, so
+                    # there is no pivot at any of those three candles to refer to.
+                    # What the rule actually requires is that the extreme SURVIVE
+                    # one candle. Each of those candles set a new low and broke
+                    # the previous candle's low, so each extreme was contaminated
+                    # the moment it was made.
+                    if getattr(self, "b2_gap_bars", 0) > 0:
+                        p = _tgt  # type: ignore
+                    if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
+                        gap_low = self.bar_lows.get(p.idx + 1)
+                        if gap_low is not None and gap_low >= p.px:
+                            self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
+                            self._confirm_direction()
+                            self._check_chop()
+                            b2_fired = True
+                        else:
+                            self._supp("gap_contaminated", kind="B2", side="down",
+                                       lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                       lvl_bar=p.idx,
+                                       gap_px=(round(float(gap_low), 1) if gap_low is not None else None))
+                    else:
+                        self._supp("gap_too_fresh", kind="B2", side="down",
+                                   lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                   lvl_bar=p.idx,
+                                   bars_since=(self.g_idx - p.idx) if p.idx is not None else None)
+                else:
+                    self.b2_pivot = Lvl(px=self.lo, idx=self.g_idx, time=self.t)
+                    self._confirm_direction()
+                    self._check_chop()
+                    b2_fired = True
+            if up_break and not b2_fired:
+                self._flip("up")
+                self._check_chop()
+        elif self.dir == "up":
+            b2_fired = False
+            if up_break:
+                # B2 breaks the standing EXTREME, not e_hi_pivot.
+                #
+                # OWNER, 2026-10-12, 2023-03-19: "B2 and flip [...] these depend
+                # upon not any pivot. These depend on the extreme pivot only. Till
+                # the swing has formed, the extreme pivots [...] are the target
+                # that should be breached by B2 and flip."
+                #
+                # TRANSLATION, because "extreme pivot" reads as a type of pivot and
+                # is the single most misread phrase in this engine. It means the
+                # RUNNING EXTREME: the highest price (up leg) / lowest price (down
+                # leg) reached since this leg began. It moves every candle and
+                # needs NO white sealed pivot to exist. FS is the opposite - it
+                # anchors on a sealed white pivot. Do not mix the two.
+                # Re-affirmed by the owner 2026-10-13: "It should be for B2 flip,
+                # it is extreme pivots." Full statement: fix/SWING_THEORY_B1_B2_FLIP.md
+                # top of file.
+                #
+                #   "4:45 high is an extreme, and then it creates a pivot at 5:15
+                #    [...] 6:00 breaks the high extreme, so B1 is marked here
+                #    correctly. Now as it has breached the pivot of 4:45, now we are
+                #    looking. So 6:00 is the new extreme. Now 6:30 breaches it, so
+                #    B2 should be marked over here."
+                #
+                # e_hi_pivot is the extreme INCLUDING this bar - the walker seal
+                # loop above has already overwritten it with this candle's own high.
+                # Comparing self.hi against it is the bar against itself, which is
+                # never true, so B2 could not fire on the very candle that made the
+                # new extreme. e_hi_prev is the extreme as it stood before this bar,
+                # and is the same level up_break already tested.
+                #
+                # On 2023-03-19 06:30 the old code read e_hi_pivot 27153.9 and
+                # asked whether 27153.9 > 27153.9. e_hi_prev is 27123.1, and
+                # 27153.9 > 27123.1, so B2 lands on 06:30 as the owner ruled.
+                # The 06:15 gap is clean: its high 27111.5 never crossed 27123.1.
+                _tgt = self.e_hi_prev
+                if (
+                    _tgt is not None
+                    and _tgt.idx >= self.b1_bar_idx
+                    and self.hi > _tgt.px
+                ):
+                    if getattr(self, "b2_gap_bars", 0) > 0:
+                        p = _tgt
+                        if p.idx <= self.g_idx - 1 - self.b2_gap_bars:
+                            gap_high = self.bar_highs.get(p.idx + 1)
+                            if gap_high is not None and gap_high <= p.px:
+                                self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
+                                self._confirm_direction()
+                                self._check_chop()
+                                b2_fired = True
+                            else:
+                                self._supp("gap_contaminated", kind="B2", side="up",
+                                           lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                           lvl_bar=p.idx,
+                                           gap_px=(round(float(gap_high), 1) if gap_high is not None else None))
+                        else:
+                            self._supp("gap_too_fresh", kind="B2", side="up",
+                                       lvl_px=round(float(p.px), 1), lvl_time=p.time,
+                                       lvl_bar=p.idx, bars_since=(self.g_idx - p.idx) if p.idx is not None else None)
+                    else:
+                        self.b2_pivot = Lvl(px=self.hi, idx=self.g_idx, time=self.t)
+                        self._confirm_direction()
+                        self._check_chop()
+                        b2_fired = True
+            if down_break and not b2_fired:
+                self._flip("down")
+                self._check_chop()
+
+    def _lock(self, dir: Literal["up", "down"]) -> None:
+        self.dir = dir
+        self.base_dir = dir
+        self._b2_done_in_dir = False  # fresh leg: a B2 is allowed again
+        self._last_mark_kind = "B1"
+        self._b1_side = dir
+        self.same_side_breaks = 1
+        self.corner_pivot = None
+        self.b2_pivot = None
+        self.b1_bar_idx = self.g_idx
+        self.state = "locked"
+        self.allow_corner_record = False
+        self.ever_b1_dir = dir
+        self.flip_established = False
+        s = self.e_lo if dir == "up" else self.e_hi
+        self.start_idx = s.idx
+        self.start_time = s.time
+        self.start_px = s.px
+        self.locked_level = self.e_hi_prev.px if dir == "up" else self.e_lo_prev.px
+        self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="B1", dir=dir, px=self.locked_level))
+        _lv = self.e_hi_prev if dir == "up" else self.e_lo_prev
+        self._spent.add((_lv.idx, round(_lv.px, 4)))
+
+    def _confirm_direction(self) -> None:
+        self.dir_confirmed = True
+        self._b2_done_in_dir = True  # alternation: no second B2 in this direction
+        self._last_mark_kind = "B2"
+        self.ever_b1_dir = None  # B1+B2 complete - the leg is done, later flip-backs are genuine FLIPs
+        # Chop may only target pivots formed AFTER this bar (fresh structure):
+        # a break of a pre-B2 pivot is not the opposing break that completes
+        # the leg. (1 Sep 2026 swing 8: B2@13:26, cross of the pre-B2 13:24 low
+        # @13:27 marked fs_at mid-swing 8 bars before the 13:35 top.)
+        self.dir_established_idx = self.g_idx
+        b2 = self.b2_pivot
+        self.locked_level = self.e_hi_prev.px if self.dir == "up" else self.e_lo_prev.px
+        self.break_marks.append(
+            FsBreakMark(
+                idx=b2.idx if b2 else self.g_idx,
+                time=b2.time if b2 else self.t,
+                kind="B2",
+                dir=self.dir,  # type: ignore
+                px=b2.px if b2 else self.locked_level,
+            )
+        )
+        self.b2_pivot = None
+        self.just_fired_b2 = True
+
+    def _supp(self, reason: str, **kw) -> None:
+        """Record one silent suppression. No-op unless debugSuppressed is on."""
+        if not self._dbg_suppressed:
+            return
+        rec = {"time": self.t, "reason": reason, "dir": self.dir, "bar": self.g_idx}
+        rec.update(kw)
+        self.suppressed.append(rec)
+
+    def _b2_if_gap_allows(self) -> bool:
+        """Mark a B2 in the current leg direction if the 1-candle gap is
+        clean. Returns True if a B2 was marked.
+
+        TARGET: the RUNNING EXTREME (`e_hi_prev` / `e_lo_prev`) - NOT a sealed
+        white pivot. B2 and FLIP never require a white marker to exist. FS is
+        the one that anchors on a sealed pivot. See the two-anchors block at the
+        top of fix/SWING_THEORY_B1_B2_FLIP.md.
+
+        OWNER 2026-10-13: "if they break an extreme pivot for B2 there is a one
+        candle gap. If there isn't a one candle gap, then we think we are
+        neglecting it. But that pivot is already contaminated. So we should be
+        waiting for the new extremes."  A contaminated extreme -> NO MARK, and we
+        wait for the fresh extreme to be broken instead.
+
+        TRANSLATION of that quote, because "extreme pivot" reads as a type of
+        pivot: the running low (or high) must survive ONE candle before a break of
+        it can be marked. If the very next candle breaches it too, it was never
+        real - mark nothing at all, not B2 and not FLIP, and wait.
+        """
+        if self._b2_done_in_dir:
+            return False
+        _t = self.e_hi_prev if self.dir == "up" else self.e_lo_prev
+        if getattr(self, "b2_gap_bars", 0) > 0 and _t is not None:
+            p = _t  # type: ignore
+            if not (p.idx <= self.g_idx - 1 - self.b2_gap_bars):
+                return False
+            if self.dir == "up":
+                gh = self.bar_highs.get(p.idx + 1)
+                if not (gh is not None and gh <= p.px):
+                    return False
+            else:
+                gl = self.bar_lows.get(p.idx + 1)
+                if not (gl is not None and gl >= p.px):
+                    return False
+        self.b2_pivot = Lvl(
+            px=self.hi if self.dir == "up" else self.lo, idx=self.g_idx, time=self.t,
+        )
+        self._confirm_direction()
+        return True
+
+    def _flip(self, dir: Literal["up", "down"], as_b2: bool = False) -> None:
+        self.dir = dir
+        self.base_dir = None
+        # a FLIP re-opens the leg, so a B2 may follow it (flip B2 flip)
+        self._b2_done_in_dir = False
+        self._last_mark_kind = "B2" if as_b2 else "FLIP"
+        self.same_side_breaks = 0
+        self.corner_pivot = None
+        self.b2_pivot = None
+        self.b1_bar_idx = -1
+        self.allow_corner_record = False
+        self.dir_confirmed = True
+        self.flip_established = True
+        self.dir_established_idx = self.g_idx  # chop may only target pivots formed after this bar
+        # The pre-flip direction dies with its confirmation hunt: reset the
+        # chop-cross tracking so the NEW direction records its OWN first chop
+        # cross (fs_at), and reset the SUS streak so a stale count from the
+        # dead leg can never confirm sustain against the new locked_level.
+        # (1 Sep 2026: down-leg cross @11:27 survived the 11:28 flip, so the
+        # declared up-swing 11:26-11:30 showed no FS mark at its own 11:34 chop.)
+        self.first_chop_cross_idx = -1
+        self.first_chop_cross_px = float("nan")
+        self.first_chop_cross_time = ""
+        self.last_chop_cross_idx = -1
+        self.last_chop_cross_px = float("nan")
+        self.last_chop_cross_time = ""
+        self._chop_cross_active = False
+        self.last_confirm_hit = None
+        self.sustain_streak = 0
+        s = self.e_lo if dir == "up" else self.e_hi
+        self.start_idx = s.idx
+        self.start_time = s.time
+        self.start_px = s.px
+        self.locked_level = self.e_hi_prev.px if dir == "up" else self.e_lo_prev.px
+        # as_b2: same state transition as a flip, but the break is recorded as
+        # the live B1 legs B2 (flip-back into a direction whose B1 never got B2).
+        self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="B2" if as_b2 else "FLIP", dir=dir, px=self.locked_level))
+        _lv = self.e_hi_prev if dir == "up" else self.e_lo_prev
+        self._spent.add((_lv.idx, round(_lv.px, 4)))
+
+    def _check_chop(self) -> None:
+        if self.just_fired_b2:
+            return
+        # A cross that opens before the leg has reached minBars is DISCARDED, not
+        # parked. The owner, 2026-10-11: "if any FS comes before 50th bar, we look.
+        # We neglect it. We just going to neglect it. We will wait 50th bar, and we
+        # will be looking new FS after the 50th bar ... if we are just declaring,
+        # like FS is there, but it hasn't given the signal of 50th bar, and the 50th
+        # bar comes, then we are declaring that there is an FS. So this is wrong,
+        # because we have to enter at FS."
+        #
+        # What the engine did instead: _chop_cross_active was set on any cross, and
+        # _confirm() was re-entered on every following bar until bars_seen reached
+        # minBars. So a cross that opened at bars_seen 46 or 47 survived untouched
+        # and fired the moment bars_seen hit 50 - declaring the swing off an FS the
+        # owner had already said to throw away. Measured on the live chain, that
+        # happened on 481 of 2952 swings, gaps of 1 to 13 bars.
+        #
+        # Fix: the cross is only armed if the leg has already reached minBars when
+        # it opens. An early cross leaves _chop_cross_active False, so the same
+        # pivot is re-tested on every later bar and the cross is armed fresh on the
+        # first bar at or after minBars - which is the "new FS after the 50th bar".
+        # A cross inside the 50-bar window is still a break, so it still SPENTS
+        # that extreme - the owner's 15:15 case: the 14:45 extreme is contaminated the
+        # moment 15:15 breaks it, so the FS cannot use it at 15:30. But the swing
+        # may not be DECLARED inside the window, so the cross is not armed.
+        #
+        # This cannot be a bare early return: the owner, 2025-07-20 - "we were
+        # blocked by 50th bar gate so now as the 15:15 is already contaminated".
+        # An early return meant the engine never even saw the break, so the pivot
+        # stayed fresh and 15:30 re-used it. That was 2024-07-16 as well: the
+        # 17:45 bar broke the 17:15 high 63845.8 unseen, and 18:00 declared the
+        # swing off it. The owner's answer there was 19:00.
+        _inside_window = self.bars_seen < self.min_bars
+        if _inside_window:
+            self._chop_cross_active = False
+        # The chop reads the LATEST sealed pivot, straight. The break-before-kill
+        # snapshot (_snap_high/_snap_low) used to be swapped in here so the chop
+        # would still see a victim pivot that this same candle's walker kill was
+        # about to remove.
+        #
+        # That snapshot is taken BEFORE the bar is processed, so it is always one
+        # candle behind. Owner, 2026-10-12, on the FS rule:
+        #
+        #   "In FS case, any new pivot of that direction comes, that replaces the
+        #    older one. That's it. [...] As soon as a new pivot is shown, the
+        #    previous one is already retired. We don't have to look for the
+        #    previous pivot to be broken."
+        #
+        # Swapping in a one-candle-old pivot is exactly what that rule forbids -
+        # it kept aiming at a retired level while the real, newest pivot was
+        # already sealed and visible.
+        #
+        #   2023-03-19  18:00 low 27131.0 sealed on the 18:30 candle. The 18:30
+        #     candle's low 27087.6 crossed it - the first, uncontaminated break -
+        #     but the snapshot still showed the older 27033.4, so nothing was
+        #     marked. 19:00 then marked 27131.0, already contaminated, on a candle
+        #     that broke no fresh pivot at all.
+        #   2023-07-02  07:00 low 30545.6 was the newest pivot and 30544.7 broke
+        #     it cleanly, but the snapshot showed the retired 30547.2, so the
+        #     clean break was skipped and the mark slid to 07:30.
+        #
+        # break-before-kill still applies where it is actually needed: the B2 and
+        # FLIP paths read latest_sealed_* directly and were never given the
+        # snapshot.
+        if self.dir == "down":
+            tgt = self._chop_target_high()
+            if tgt and self.hi > tgt.px:
+                # FRESHNESS - a second line of defence, CURRENTLY UNREACHABLE.
+                #
+                # The rule is the owner's and it is correct:
+                #   "if a previous candle have already crossed it, then it is
+                #    already contaminated. But if previous candle have just seen
+                #    it, haven't crossed it, and yet another candle have crossed
+                #    it, that candle can be marked as FS."
+                #
+                # It does not run today, and this scan was proven dead by
+                # disabling it in both branches: the chain stayed at 2,753 swings
+                # / 7,505 marks / identical sha. Do not read it as protection.
+                #
+                # Why it cannot fire: any crossing spends the pivot on the
+                # crossing bar itself - the _spent.add below runs BEFORE the
+                # _inside_window return - so by the time the engine is aiming at
+                # a pivot, no earlier bar can have crossed it without that pivot
+                # already being spent and rejected by _chop_target_high's spent
+                # check. The only remaining route is the gap rule blocking
+                # attribution on the pivot's own next bar, and that does not occur
+                # on this data.
+                #
+                # An earlier version of this comment claimed the scan fixed the
+                # 2023-03-19 case. It did not. That came from removing the stale
+                # break-before-kill snapshot in the same commit. That claim is
+                # withdrawn here so the next reader does not trust it.
+                #
+                # Keep the code: it is cheap, local, and correct if the spend
+                # ordering above ever changes. Fix the comment, not the rule.
+                _prior = None
+                for _k in range(tgt.idx + 1, self.g_idx):
+                    _h = self.bar_highs.get(_k)
+                    if _h is not None and _h > tgt.px:
+                        _prior = _k
+                        break
+                if _prior is not None:
+                    self._spent.add((tgt.idx, round(tgt.px, 4)))
+                    self._chop_cross_active = False
+                    return
+                self._spent.add((tgt.idx, round(tgt.px, 4)))
+                if _inside_window:
+                    return      # pivot spent, swing not declarable yet
+                if not self._chop_cross_active:
+                    # completing break = the TRANSITION into the cross
+                    self.last_chop_cross_idx = self.g_idx
+                    self.last_chop_cross_px = tgt.px
+                    self.last_chop_cross_time = self.t
+                self._chop_cross_active = True
+                if self.first_chop_cross_idx < 0:
+                    self.first_chop_cross_idx = self.g_idx
+                    self.first_chop_cross_px = tgt.px
+                    self.first_chop_cross_time = self.t
+                self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
+                self._confirm("chop")
+            else:
+                self._chop_cross_active = False
+        elif self.dir == "up":
+            tgt = self._chop_target_low()
+            if tgt and self.lo < tgt.px:
+                # FRESHNESS - see the mirror branch above for the full note. Also
+                # currently unreachable, and the 2023-03-19 fix came from the
+                # snapshot removal rather than from this scan.
+                _prior = None
+                for _k in range(tgt.idx + 1, self.g_idx):
+                    _l = self.bar_lows.get(_k)
+                    if _l is not None and _l < tgt.px:
+                        _prior = _k
+                        break
+                if _prior is not None:
+                    self._spent.add((tgt.idx, round(tgt.px, 4)))
+                    self._chop_cross_active = False
+                    return
+                self._spent.add((tgt.idx, round(tgt.px, 4)))
+                if _inside_window:
+                    return      # pivot spent, swing not declarable yet
+                if not self._chop_cross_active:
+                    # completing break = the TRANSITION into the cross
+                    self.last_chop_cross_idx = self.g_idx
+                    self.last_chop_cross_px = tgt.px
+                    self.last_chop_cross_time = self.t
+                self._chop_cross_active = True
+                if self.first_chop_cross_idx < 0:
+                    self.first_chop_cross_idx = self.g_idx
+                    self.first_chop_cross_px = tgt.px
+                    self.first_chop_cross_time = self.t
+                self.last_confirm_hit = {"pool": "normal", "px": tgt.px, "idx": tgt.idx, "time": tgt.time}
+                self._confirm("chop")
+            else:
+                self._chop_cross_active = False
+
+    def _chop_target_high(self) -> Optional[Lvl]:
+        # Exact like the frontend engine (firstswing_cf11277.ts chopTargetHigh):
+        # the LATEST sealed high pivot ONLY � "any new H kills old H". If it
+        # fails a gate there is NO fallback to older pivots; killed pivots are
+        # dead and the market has moved on.
+        p = self.latest_sealed_high
+        if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
+            return None
+        # Already broken earlier, so not fresh. Owner, 2025-07-20: "15:30 is
+        # not breaching any pivot so we look for new."
+        if (p.idx, round(p.px, 4)) in self._spent:
+            return None
+        # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): the
+        # opposing pivot must have FORMED after the current leg was established
+        # (B2 or flip) � breaking a pre-existing pivot does not complete the leg.
+        if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
+            return None
+        # Gap rule: the EXTREME must survive one candle - the bar right after it # must not breach it. No white pivot is involved.
+        gap_high = self.bar_highs.get(p.idx + 1)
+        if gap_high is None or gap_high > p.px:
+            return None
+        return p
+
+    def _chop_target_low(self) -> Optional[Lvl]:
+        # Exact like the frontend engine (firstswing_cf11277.ts chopTargetLow):
+        # the LATEST sealed low pivot ONLY � "any new L kills old L". No fallback.
+        p = self.latest_sealed_low
+        if p is None or p.idx < 0 or p.idx > self.g_idx - 2:
+            return None
+        if (p.idx, round(p.px, 4)) in self._spent:
+            return None
+        # Fresh-structure rule (backend addition, 1 Sep 2026 swing-8 fix): see above.
+        if 0 <= self.dir_established_idx and p.idx <= self.dir_established_idx:
+            return None
+        # Gap rule: the EXTREME must survive one candle - the bar right after it # must not breach it. No white pivot is involved.
+        gap_low = self.bar_lows.get(p.idx + 1)
+        if gap_low is None or gap_low < p.px:
+            return None
+        return p
+
+    def _check_sustain(self, c: FlowCandle) -> None:
+        # SUS removed � swing must need FS (chop). Sustain no longer declares FS.
+        # Keeps Walker white vs yellow aligned: any tick crossing with gap is FS.
+        # Sustained hold without opposite pivot break is no longer a swing.
+        return
+
+    def _confirm(self, src: Literal["chop", "sustain"], trig: Optional[dict] = None) -> None:
+        if self.t[11:16] < self.time_cap:
+            return
+        if self.bars_seen < self.min_bars:
+            return
+        self.declared = True
+        self.tier = "real"
+        self.end_idx = self.cand_idx
+        self.end_time = self.cand_time
+        self.end_px = self.cand_px
+        self.confirmed_at_time = trig["time"] if trig else self.t
+        self.confirmed_at_idx = trig["idx"] if trig else self.g_idx
+        self.confirm_source = src
+
+    def _set_cand(self, l: Lvl) -> None:
+        self.cand_idx = l.idx
+        self.cand_time = l.time
+        self.cand_px = l.px
+
+    def _push_unique(self, pool: list[Lvl], l: Lvl) -> None:
+        if not any(x.idx == l.idx and x.px == l.px for x in pool):
+            pool.append(l)
+
+    def debug_pools(self) -> dict:
+        return {
+            "armed": self.armed,
+            "start_idx": self.start_idx,
+            "start_px": self.start_px,
+            "locked_level_px": self.locked_level,
+            "last_confirm_hit": self.last_confirm_hit,
+            "normal_highs": [f"{l.time}@{l.px:.2f}" for l in self.normal_highs],
+            "normal_lows": [f"{l.time}@{l.px:.2f}" for l in self.normal_lows],
+        }
+
+    def reset(self, seed_px: float, seed_idx: int, seed_time: str) -> None:
+        self.walker = WalkerEngine()
+        self.bars_seen = 1
+        self.t = seed_time
+        self.g_idx = seed_idx
+        self.hi = float("nan")
+        self.lo = float("nan")
+
+        seed = Lvl(px=seed_px, idx=seed_idx, time=seed_time)
+        self.e_hi = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_lo = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_hi_prev = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_lo_prev = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_hi_pivot = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_lo_pivot = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_hi_pivot_prev = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.e_lo_pivot_prev = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.latest_sealed_high = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.latest_sealed_low = Lvl(px=seed.px, idx=seed.idx, time=seed.time)
+        self.bar_highs.clear()
+        self.bar_lows.clear()
+
+        self.normal_highs.clear()
+        self.normal_lows.clear()
+
+        self.state = "watch"
+        self.dir = None
+        self.base_dir = None
+        self.same_side_breaks = 0
+        self.corner_pivot = None
+        self.b2_pivot = None
+        self.just_fired_b2 = False
+        self.b1_bar_idx = -1
+        self.allow_corner_record = False
+        self.dir_confirmed = False
+        self.locked_level = float("nan")
+        self.flip_established = False
+        self.ever_b1_dir = None
+        self.dir_established_idx = -1
+
+        self.start_idx = -1
+        self.start_time = ""
+        self.start_px = float("nan")
+        self.cand_idx = -1
+        self.cand_time = ""
+        self.cand_px = float("nan")
+
+        self.declared = False
+        self.tier = None
+        self.end_time = ""
+        self.end_idx = -1
+        self.end_px = float("nan")
+        self.confirmed_at_time = ""
+        self.confirmed_at_idx = -1
+        self.confirm_source = None
+        self.last_confirm_hit = None
+        self.sustain_streak = 0
+        self.armed = False
+        self._pending_arm = False
+        self.first_chop_cross_idx = -1
+        self.first_chop_cross_px = float("nan")
+        self.first_chop_cross_time = ""
+        self.last_chop_cross_idx = -1
+        self.last_chop_cross_px = float("nan")
+        self.last_chop_cross_time = ""
+        self._chop_cross_active = False
+        self.break_marks.clear()
+        self.ts_map.clear()
+
+    def reset_with_candle(self, c: FlowCandle, g_idx: int) -> None:
+        self.walker = WalkerEngine()
+        self.bars_seen = 1
+        self.t = c.date if len(c.date) >= 16 else ""
+        self.g_idx = g_idx
+        self.hi = float("nan")
+        self.lo = float("nan")
+
+        self.e_hi = Lvl(px=c.high, idx=g_idx, time=self.t)
+        self.e_lo = Lvl(px=c.low, idx=g_idx, time=self.t)
+        self.e_hi_prev = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+        self.e_lo_prev = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+        self.e_hi_pivot = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+        self.e_lo_pivot = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+        self.e_hi_pivot_prev = Lvl(px=self.e_hi_pivot.px, idx=self.e_hi_pivot.idx, time=self.e_hi_pivot.time)
+        self.e_lo_pivot_prev = Lvl(px=self.e_lo_pivot.px, idx=self.e_lo_pivot.idx, time=self.e_lo_pivot.time)
+        self.latest_sealed_high = Lvl(px=self.e_hi.px, idx=self.e_hi.idx, time=self.e_hi.time)
+        self.latest_sealed_low = Lvl(px=self.e_lo.px, idx=self.e_lo.idx, time=self.e_lo.time)
+        self.bar_highs.clear()
+        self.bar_lows.clear()
+
+        self.normal_highs.clear()
+        self.normal_lows.clear()
+
+        self.state = "watch"
+        self.dir = None
+        self.base_dir = None
+        self.same_side_breaks = 0
+        self.corner_pivot = None
+        self.b2_pivot = None
+        self.just_fired_b2 = False
+        self.b1_bar_idx = -1
+        self.allow_corner_record = False
+        self.dir_confirmed = False
+        self.locked_level = float("nan")
+        self.flip_established = False
+        self.ever_b1_dir = None
+        self.dir_established_idx = -1
+
+        self.start_idx = -1
+        self.start_time = ""
+        self.start_px = float("nan")
+        self.cand_idx = -1
+        self.cand_time = ""
+        self.cand_px = float("nan")
+
+        self.declared = False
+        self.tier = None
+        self.end_time = ""
+        self.end_idx = -1
+        self.end_px = float("nan")
+        self.confirmed_at_time = ""
+        self.confirmed_at_idx = -1
+        self.confirm_source = None
+        self.last_confirm_hit = None
+        self.sustain_streak = 0
+        self.armed = False
+        self._pending_arm = False
+        self.first_chop_cross_idx = -1
+        self.first_chop_cross_px = float("nan")
+        self.first_chop_cross_time = ""
+        self.last_chop_cross_idx = -1
+        self.last_chop_cross_px = float("nan")
+        self.last_chop_cross_time = ""
+        self._chop_cross_active = False
+        self.break_marks.clear()
+        self.ts_map.clear()
+
+
+# -- batch helpers ----------------------------------------------------------
+
+def compute_swing_results(
+    candles: list[FlowCandle],
+    opts: Optional[dict] = None,
+    swing_count: Union[int, Literal["whole"]] = 1,
+) -> list[dict]:
+    """Detect N swings per day across all days.
+
+    Args:
+        candles: All candles sorted globally by time.
+        opts: Engine options (timeCap, sustainBars, minBars).
+        swing_count: Number of swings per day. Use "whole" for all swings.
+
+    Returns:
+        List of swing dicts, one per swing, with keys:
+            day, swing_index, seg{dir, start_idx, start_px, end_idx, end_px},
+            source, dir, kind, break_kind, breaks, confirmed_at_idx, confirmed_at_time,
+            fs_at_idx, fs_at_time
+    """
+    from dataclasses import dataclass as _dc, field as _f
+    from typing import Literal as _Lit
+
+    BreakKind = _Lit["B1", "B2", "FLIP"]
+
+    @_dc
+    class _Swing:
+        day: str
+        swing_index: int
+        seg: FlowSegment
+        source: Optional[_Lit["chop", "sustain"]]
+        dir: _Lit["up", "down"]
+        kind: str
+        break_kind: Optional[BreakKind]
+        breaks: list = _f(default_factory=list)
+        confirmed_at_idx: int = -1
+        confirmed_at_time: str = ""
+        fs_at_idx: int = -1
+        fs_at_time: str = ""
+
+    _opts: dict = {}
+    if opts:
+        _opts.update(opts)
+    if "minBars" not in _opts and "min_bars" not in _opts:
+        _opts["minBars"] = 14
+    if "sustainBars" not in _opts and "sustain_bars" not in _opts:
+        _opts["sustain_bars"] = 7
+    if "timeCap" not in _opts and "time_cap" not in _opts:
+        _opts["timeCap"] = "09:29"
+    if "b2GapBars" not in _opts and "b2_gap_bars" not in _opts and "requirePivotGap" not in _opts:
+        _opts["b2GapBars"] = 1
+
+    by_day: dict[str, list[tuple[int, FlowCandle]]] = {}
+    for g_idx, c in enumerate(candles):
+        d = c.date[:10]
+        by_day.setdefault(d, []).append((g_idx, c))
+
+    out: list[_Swing] = []
+    for day, items in by_day.items():
+        swing_index = 0
+        next_start_pos = 0
+        max_swings = 50 if swing_count == "whole" else swing_count
+
+        while swing_index < max_swings:
+            eng = SwingEngine(_opts)
+            # Swings after the first: same-bar arm guard � a Walker seal arms the
+            # engine from the NEXT bar, so a B1 can never fire on the bar the
+            # engine first got structure. The first swing keeps the approved
+            # FsV2 session-extreme semantics untouched.
+            if swing_index > 0:
+                eng.defer_same_bar_arm = True
+            swing_found = False
+
+            for pos in range(next_start_pos, len(items)):
+                g_idx, c = items[pos]
+                eng.process_bar(c, g_idx)
+
+                if not eng.declared or eng.start_idx < 0:
+                    continue
+
+                src_kind = "SUS" if eng.confirm_source == "sustain" else "FS"
+                decisive_break = eng.break_marks[-1] if eng.break_marks else None
+                bk: Optional[BreakKind] = decisive_break.kind if decisive_break else None
+
+                _conf_time = ""
+                if eng.confirmed_at_idx >= 0:
+                    for _gi, _cc in items:
+                        if _gi == eng.confirmed_at_idx:
+                            _conf_time = _cc.date if len(_cc.date) >= 16 else ""
+                            break
+
+                fs_at_idx = eng.confirmed_at_idx
+                fs_at_time = _conf_time
+                # FS marker = the opposing pivot-break that actually COMPLETED the
+                # swing. If the first chop cross happened BEFORE the final extreme
+                # (cross was gate-blocked by minBars, swing then extended), that
+                # cross is stale - fall back to the bar that actually confirmed.
+                if (
+                    eng.confirm_source == "chop"
+                    and eng.first_chop_cross_idx >= 0
+                    and eng.first_chop_cross_idx >= eng.end_idx
+                ):
+                    fs_at_idx = eng.first_chop_cross_idx
+                    fs_at_time = eng.first_chop_cross_time or _conf_time
+
+                out.append(_Swing(
+                    day=day,
+                    swing_index=swing_index,
+                    seg=FlowSegment(
+                        dir="B" if eng.dir == "up" else "S",
+                        start_idx=eng.start_idx,
+                        start_px=eng.start_px,
+                        end_idx=eng.end_idx,
+                        end_px=eng.end_px,
+                    ),
+                    source=eng.confirm_source,
+                    dir=eng.dir,  # type: ignore
+                    kind=src_kind,
+                    break_kind=bk,
+                    breaks=list(eng.break_marks),
+                    confirmed_at_idx=eng.confirmed_at_idx,
+                    confirmed_at_time=_conf_time,
+                    fs_at_idx=fs_at_idx,
+                    fs_at_time=fs_at_time,
+                ))
+                swing_index += 1
+
+                end_abs = eng.end_idx
+                end_pos = -1
+                for p, (gi, _cc) in enumerate(items):
+                    if gi == end_abs:
+                        end_pos = p
+                        break
+                next_start_pos = end_pos + 1 if end_pos >= 0 else pos + 1
+                swing_found = True
+                break
+
+            if not swing_found:
+                break
+
+    return [
+        {
+            "day": s.day,
+            "swing_index": s.swing_index,
+            "seg": {
+                "dir": s.seg.dir,
+                "start_idx": s.seg.start_idx,
+                "start_px": s.seg.start_px,
+                "end_idx": s.seg.end_idx,
+                "end_px": s.seg.end_px,
+            },
+            "source": s.source,
+            "dir": s.dir,
+            "kind": s.kind,
+            "break_kind": s.break_kind,
+            "breaks": [
+                {"idx": b.idx, "time": b.time, "kind": b.kind, "dir": b.dir, "px": b.px}
+                for b in s.breaks
+            ],
+            "confirmed_at_idx": s.confirmed_at_idx,
+            "confirmed_at_time": s.confirmed_at_time,
+            "fs_at_idx": s.fs_at_idx,
+            "fs_at_time": s.fs_at_time,
+        }
+        for s in out
+    ]
+
+
+# Backward-compat aliases
+FirstSwingEngine = SwingEngine
+FsV2Engine = SwingEngine
+compute_whole_day_swings = lambda candles, opts=None: compute_swing_results(candles, opts, swing_count="whole")
+compute_fs_v2_results = lambda candles, opts=None: [
+    FsV2Result(
+        day=r["day"], outcome="real", conf_idx=r["confirmed_at_idx"],
+        seg=FlowSegment(**r["seg"]), source=r["source"], dir=r["dir"],
+        breaks=[FsBreakMark(**b) for b in r["breaks"]],
+    )
+    for r in compute_swing_results(candles, opts, swing_count=1)
+]
+compute_fs_v2_declared = lambda candles, opts=None: [r.seg for r in compute_fs_v2_results(candles, opts)]

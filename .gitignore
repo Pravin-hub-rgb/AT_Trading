@@ -105,6 +105,21 @@ backtest/tests/results.db
 backtest/tests/results.db-wal
 backtest/tests/results.db-shm
 
+# The paper book's SQLite sidecars. The database itself is tracked - it is the
+# book record - but the WAL and SHM are SQLite's own runtime files, and they
+# are rewritten by every bar the running book processes.
+live_stuff/backbencher.db-wal
+live_stuff/backbencher.db-shm
+
+# The paper book's own state, and the rate cache it refreshes on every start.
+# Neither was maintained in history - the last commit to either was 4342b33 -
+# and both are rewritten by the running book, so tracking them meant the tree
+# was dirty after every bar. The database is created on first run
+# (db.create_tables()), so a fresh clone does not need it; this is the same
+# treatment backtest/tests/results.db gets.
+live_stuff/backbencher.db
+live_stuff/last_rate.json
+
 # Commit-message scratch files. These are written, used and deleted in one step,
 # and twice now one was `git add`-ed alongside the change it described because
 # the add and the commit ran in the same shell command.
@@ -159,3 +174,4 @@ backtest/tests/_signal_fs_ladder.json
 
 # harness stderr, same reasoning as *.log above
 *.err
+.andromity/

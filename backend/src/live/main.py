@@ -52,7 +52,7 @@ def journal(rec: dict):
 
 
 def _load_csv_candles(tf: str) -> list[dict]:
-    """Load full history from the local CSV (same source as the backtest).
+    """Load full history from the Bybit CSV (same source as the backtest).
 
     The walker is path-dependent: a rolling window produces a DIFFERENT
     swing chain than full history, so marks fall on the wrong bars.
@@ -60,7 +60,8 @@ def _load_csv_candles(tf: str) -> list[dict]:
     backtest chain exactly.
     """
     import pandas as pd
-    csv_path = Path(__file__).resolve().parents[3] / "data" / "btc" / f"BTCUSDT_{tf}.csv"
+    from src.btc.btc_config import BTC_BYBIT_DATA_DIR
+    csv_path = Path(BTC_BYBIT_DATA_DIR) / f"BTCUSDT_{tf}.csv"
     df = pd.read_csv(csv_path)
     candles = []
     for _, r in df.iterrows():
@@ -81,7 +82,7 @@ def _print_csv_marks(tf: str, eng: MarkEngine, label: str):
     # Compute chain ONCE for the full window, then filter to last 200 candles
     flow = [FlowCandle(date=c["date"], open=c["open"], high=c["high"],
                        low=c["low"], close=c["close"]) for c in eng.candles]
-    swings = compute_btc_swings(flow, opts={"minBars": 2}, max_swings=len(flow) // 2)
+    swings = compute_btc_swings(flow, opts={"minBars": eng.min_bars}, max_swings=len(flow) // 2)
     cutoff_idx = max(0, len(eng.candles) - 200)
     seen = set()
     for s in swings:
@@ -100,8 +101,8 @@ def make_engines():
     log("Backbencher | boot: loading full history from CSV (path-independent chain)...")
     c15 = _load_csv_candles("15m")
     c1h = _load_csv_candles("1h")
-    eng15 = MarkEngine("15m", min_bars=2, window_bars=len(c15) + 100)
-    eng1h = MarkEngine("1h", min_bars=2, window_bars=len(c1h) + 100)
+    eng15 = MarkEngine("15m", min_bars=50, window_bars=len(c15) + 100)
+    eng1h = MarkEngine("1h", min_bars=15, window_bars=len(c1h) + 100)
     eng15.seed(c15)
     eng1h.seed(c1h)
     log(f"seeded 15m: {len(c15)} candles ({c15[0]['date']} -> {c15[-1]['date']})")

@@ -382,7 +382,7 @@ export default function BtcPage() {
     // SAME candles and a DIFFERENT swing chain, so a key without it serves the
     // shipped chain's cached marks after a dropdown switch and the two windows
     // agree on everything - which looks like "the patch did nothing".
-    const cacheKey = `${symbol}|${tf}|${mode}|${limit}|${strategyChainMinBars}|${version}`;
+    const cacheKey = `${symbol}|${tf}|${mode}|${limit}|${strategyChainMinBars}|${version}|fwd=true`;
     // instant restore from cache on tab switch — no loading flash
     const cached = getCachedChart(cacheKey);
     if (cached && !cancelled) {
@@ -392,7 +392,7 @@ export default function BtcPage() {
       setLoading(true);
     }
     setError(null);
-    getBtcChart(tf, mode, limit, strategyChainMinBars, symbol, version)
+    getBtcChart(tf, mode, limit, strategyChainMinBars, symbol, version, true)
       .then((res) => {
         if (!cancelled) {
           setData(res);
@@ -530,11 +530,11 @@ export default function BtcPage() {
     if (!hydrated || !tradesOn) return;
     let cancelled = false;
     setBtError(null);
-    const cacheKey = `${tf}~${bookTf}|${mode}|${limit}|${JSON.stringify(btParams)}|${version}|${htfLtf}|${htfLtfVer}|${symbol}`;
+    const cacheKey = `${tf}~${bookTf}|${mode}|${limit}|${JSON.stringify(btParams)}|${version}|${htfLtf}|${htfLtfVer}|${symbol}|fwd=true`;
     // instant restore from cache on tab switch — no loading flash
     const cached = getCachedBacktest(cacheKey);
     if (cached && !cancelled) setBtData(cached);
-    getBtcBacktest(bookTf, mode, limit, { ...btParams, minBars: bookSizing.minBars }, version, htfLtf, htfLtfVer, symbol, bookSizing.htfTf, bookSizing.htfMinBars)
+    getBtcBacktest(bookTf, mode, limit, { ...btParams, minBars: bookSizing.minBars }, version, htfLtf, htfLtfVer, symbol, bookSizing.htfTf, bookSizing.htfMinBars, true)
       .then((res) => {
         if (!cancelled) {
           setBtData(res);
@@ -807,7 +807,7 @@ export default function BtcPage() {
             {loading
               ? "Loading..."
               : data
-                ? `${data.count} candles · ${data.swings.length} swings · ${breakCount} break marks`
+                ? `${data.count} candles · ${data.swings.length} swings · ${breakCount} break marks${data.include_forward ? " (IS + forward)" : ""}`
                 : "—"}
             {data ? ` · window: ${data.first_ts ?? ""} → ${data.last_ts ?? ""}` : ""}
           </p>

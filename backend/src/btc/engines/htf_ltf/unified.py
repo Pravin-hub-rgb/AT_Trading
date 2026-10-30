@@ -741,6 +741,7 @@ max_positions=0,
     exp_trail_half=0,
     exp_trail_delay_prevbar=0,
     exp_trail_skip_n=0,
+    causal_lookahead=0,
 ):
     from src.btc.engines.v7_timecap import simulate_btc_trades_v7
     from src.btc.btc_engine import _collect_signals, _trail_events, trade_stats
@@ -1087,7 +1088,7 @@ max_positions=0,
         # "up" swing still makes a long. Causal: fs_at_idx is at or after the
         # swing end bar, so that bar has closed before the print is used.
         _lbreak="fs_"+exp_fs_entry_side
-    ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule)
+    ltf_sigs=_collect_signals(swings_ltf, _lbreak, skip_first=True, selection="stream", candles=candles_ltf, pivot_rule=pivot_rule, causal_lookahead=causal_lookahead)
     # ── exp_fs_break_confirm: wait for the FS candle's own extreme to break ───
     # swing_index -> the bar the FS trade may actually be taken on, or -1 if the
     # break never arrives inside exp_fs_confirm_bars. Built only when the knob is
@@ -1359,6 +1360,7 @@ max_positions=0,
     n=len(candles_ltf)
     if n==0:
         return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,
+                "htf_trades_decisive": htf_trades_decisive,
                 "ltf_trades": [], "intervals": intervals_flip}
     candle_ts=candle_ts_ltf
     # ATR for SL buffer
@@ -1496,7 +1498,7 @@ max_positions=0,
         # match. That anchor exists to inject exp_mltf gating. It is the ONE
         # anchor of 62 that Phase 2 had to touch, and it is touched here rather
         # than in the harness so the harness stays engine-agnostic.
-        if cooldown_bars > 0 and i - last_loss_bar < cooldown_bars: continue
+        if cooldown_bars > 0 and last_loss_bar >= 0 and last_loss_bar < i and i - last_loss_bar < cooldown_bars: continue
         # Streak halt (causal): after N consecutive losses BOOKED, skip NEXT entry
         if halt_skip_next:
             halt_skip_next=False
@@ -1905,4 +1907,5 @@ max_positions=0,
     parent_intervals = sorted(_parent_ivs.values(), key=lambda x: x[0])
 
     return {"htf_trades": htf_trades_flip, "htf_trades_b2": htf_trades_b2,
+            "htf_trades_decisive": htf_trades_decisive,
             "ltf_trades": ltf_trades, "intervals": parent_intervals}
