@@ -1,6 +1,0 @@
-1MIN avg: trades 120 wr 32.5 total_r 52.0 avg_r 0.43
-  outcomes: {'target': 39, 'sl': 65, 'cost-to-cost': 16}
-1MIN prev_pivot: trades 120 wr 30.0 total_r 39.0 avg_r 0.33
-  outcomes: {'target': 36, 'sl': 69, 'cost-to-cost': 15}
-1MIN swing_end: trades 120 wr 25.8 total_r 18.0 avg_r 0.15
-  outcomes: {'target': 31, 'sl': 75, 'cost-to-cost': 14}

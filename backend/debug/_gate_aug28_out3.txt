@@ -1,8 +1,0 @@
-=== 28 Aug (pivot_break mode) AFTER gate fix ===
-Swing direction: buying
-First swing confirmed: N/A @ N/A
-1-min FS confirmed idx (5min): N/A
-Trades: 1
-  Entry: 10:50 | dir=short | -0.00R | domination | level=24155.45
-
-=== All events ===

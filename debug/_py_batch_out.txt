@@ -1,5 +1,0 @@
-2026-08-24: declared=True dir=down startIdx=3 endIdx=44 confirmedAt=48 source=chop
-2026-08-25: declared=True dir=down startIdx=6 endIdx=71 confirmedAt=75 source=chop
-2026-08-26: declared=True dir=up startIdx=4 endIdx=33 confirmedAt=34 source=chop
-2026-08-27: declared=True dir=down startIdx=1 endIdx=17 confirmedAt=19 source=chop
-DONE

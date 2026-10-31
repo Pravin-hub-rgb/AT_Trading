@@ -1,8 +1,0 @@
-=== 28 Aug (pivot_break mode) ===
-Swing direction: buying
-Swing2 direction: N/A
-First swing confirmed: N/A @ N/A
-Trades: 1
-  Entry: 10:50 | dir=short | -0.00R | type=N/A
-
-=== Gate-relevant events ===

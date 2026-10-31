@@ -1,9 +1,0 @@
-=== Running backtest with gate trace ===
-Traceback (most recent call last):
-  File "c:\Users\Pravin\Desktop\main\AT_Trading\backend\debug\_check_1min_fs_gate.py", line 40, in <module>
-    data, _ = _intraday_backtest(cfg)
-  File "c:\Users\Pravin\Desktop\main\AT_Trading\backend\server.py", line 80, in _intraday_backtest
-    bt = intraday_svc.run_backtest(df5, labels, cfg=cfg, df_1min=df1)
-  File "c:\Users\Pravin\Desktop\main\AT_Trading\backend\src\intraday.py", line 1564, in run_backtest
-    days.append(simulate_day(g, bias_map[d], cfg=cfg, m1_day=m1_map.get(d), ctx=ctx))
-TypeError: patched_sim() got an unexpected keyword argument 'ctx'

@@ -130,20 +130,16 @@ Commit: `8e033637`.
 
 ---
 
-## The Three Books That Actually Work
+## Verdict
 
-Of 41 unpinned books measured after the fix, only **3** survive as legitimate
-candidates (the rest are dirmatch-based, which is proven look-ahead and closed):
-
-| Book | Family | IS (trades / net R) | Notes |
-|------|--------|---------------------|-------|
-| `champion_multi_sw10` | multi | 736 / +1024.73R | IS only; OOS not yet confirmed |
-| `age25_multi_sw10` | multi | — | ATR-floor variant, see brainstorm |
-| `dualunion_multi` | dual | — | — |
-
-> These are IS figures. The forward-testing window is too thin to confirm OOS
-> at this book granularity. See `backtest/docs/learn/02_verdict/` for the
-> full statistical gate.
+**No book is cleared for deployment.** PBO = 0.81 OOS / 0.99 IS (against a 0.15 bar)
+and Deflated Sharpe fails for all 13 variants in both eras — the multiple-testing
+correction was not applied when the shortlist was made. The shipping book
+`fsent_champ_long` measures IS 665 / +118.4R but OOS 354 / **−20.51R** (oos_sign = false).
+The best OOS performer, `fsent_champ_long_htf15_tskip6`, reaches +110.95R OOS but
+at 73.0R max-DD — well above the 29R budget ceiling. See
+`backtest/docs/learn/02_verdict/PBO_DSR_GATE.md` for the full statistical gate
+and `backtest/docs/method/BASE_BOOK_NULL.md` for the null audit on `champion_multi_sw10`.
 
 ---
 

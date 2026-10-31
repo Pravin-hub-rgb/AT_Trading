@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "<string>", line 17, in <module>
-  File "C:\Users\Pravin\Desktop\main\AT_Trading\backend\.\src\intraday.py", line 1916, in run_backtest
-    days.append(simulate_day(g, bias_map[d], cfg=cfg, m1_day=m1_map.get(d), ctx=ctx))
-  File "C:\Users\Pravin\Desktop\main\AT_Trading\backend\.\src\intraday.py", line 1601, in simulate_day
-    entered = _open_trade(
-  File "C:\Users\Pravin\Desktop\main\AT_Trading\backend\.\src\intraday.py", line 852, in _open_trade
-    or (dirn == -1 and ref_swing_end_dir == "buying" and ref_swing_end_px > entry)
-NameError: free variable 'ref_swing_end_dir' referenced before assignment in enclosing scope
