@@ -611,6 +611,8 @@ max_positions=0,
                            # "short" = SHORTS enter at the swing FS print, longs at break
                            # "both"  = both sides at FS (measured weaker than either one)
                            # "" (default) = off; every side enters at the break as before
+    exp_entry_break="",     # ENTRY BREAK OVERRIDE: "" (default) = use exp_fs_entry_side logic.
+                           # "b2" / "flip" / "decisive" / "b3" / "flipb" = force that break kind.
     exp_fs_break_confirm=0.0,  # OWNER 2026-10-14: "when for FS, when the high of
                               # or long, when the high of FS will break, then we
                               # will enter. For short, when FS low will be broken,
@@ -1081,7 +1083,9 @@ max_positions=0,
     from src.btc.btc_engine import CandleStore
     ltf_store = CandleStore(candles_ltf)
     _lbreak="decisive"
-    if exp_fs_entry_side:
+    if exp_entry_break:
+        _lbreak=exp_entry_break
+    elif exp_fs_entry_side:
         # DIRECTIONAL FS ENTRY. On the chosen side(s) the LTF entry waits for
         # the swing own FS print instead of firing on the decisive break; the
         # other side falls through unchanged. Only the TRIGGER differs - an

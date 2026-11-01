@@ -20,6 +20,37 @@ from src.firstswing import FlowSegment, SwingEngine
 from src.walker import AlgoPivot, FlowCandle, WalkerEngine, _dedupe, _enforce_alternation
 
 
+def _relable_breaks(swings: list[dict]) -> None:
+    for s in swings:
+        brks = s.get("breaks") or []
+        _b1_dir = None
+        _flip_dir = None
+        _b1_count = 0
+        _flip_count = 0
+        for b in brks:
+            bdir = b.get("dir", "")
+            if _b1_dir is None:
+                _b1_dir = bdir
+            if bdir == _b1_dir:
+                _b1_count += 1
+                if _b1_count == 1:
+                    b["kind"] = "B1"
+                elif _b1_count == 2:
+                    b["kind"] = "B2"
+                else:
+                    b["kind"] = "B3"
+            else:
+                if _flip_dir is None:
+                    _flip_dir = bdir
+                _flip_count += 1
+                if _flip_count == 1:
+                    b["kind"] = "FLIP"
+                else:
+                    b["kind"] = "flipb"
+        if brks:
+            s["break_kind"] = brks[-1].get("kind")
+
+
 def compute_btc_swings(
     candles: list[FlowCandle],
     opts: Optional[dict] = None,
@@ -184,6 +215,7 @@ def compute_btc_swings(
         if not swing_found:
             break
 
+    _relable_breaks(out)
     return out
 
 

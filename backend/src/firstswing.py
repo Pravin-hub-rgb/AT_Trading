@@ -204,6 +204,8 @@ class SwingEngine:
         # volatile candle that sustains the leg is then simply not marked, and
         # we wait for the next candle. Reset whenever the direction changes.
         self._b2_done_in_dir: bool = False
+        self._has_b2: bool = False  # True once any B2 has been marked (for B3 gating)
+        self._b3_done_in_dir: bool = False  # B3: allow one more break after B2 on new extreme
         # kind of the most recent mark on this leg, for alternation:
         # "we cannot be having B2 B2, or flip and flip"
         self._last_mark_kind: str = ""
@@ -211,6 +213,7 @@ class SwingEngine:
         # B1->B2->FLIP, a break back on B1's side is that leg's B2 again
         # ("B2 returns to B1's side after the FLIP"), NOT a second FLIP.
         self._b1_side: str = ""
+        self._original_dir: str = ""  # tracks B1 direction for B3/flipb labeling
         # Candle body, for the volatile-bar sustainability rule.
         self.op: float = float("nan")
         self.cl: float = float("nan")
@@ -585,6 +588,32 @@ class SwingEngine:
                         self._flip(sustained)
                 self._check_chop()
                 return
+                self._check_chop()
+                return
+        # B3/flipb: after B2 is marked, every subsequent break is B3/flipb.
+        if self._has_b2:
+            _tgt = self.e_hi_prev if self.dir == "up" else self.e_lo_prev
+            if _tgt is not None and (
+                (self.dir == "up" and self.hi > _tgt.px) or
+                (self.dir == "down" and self.lo < _tgt.px)
+            ):
+                gap_ok = True
+                if getattr(self, "b2_gap_bars", 0) > 0 and _tgt is not None:
+                    p = _tgt
+                    if not (p.idx <= self.g_idx - 1 - self.b2_gap_bars):
+                        gap_ok = False
+                    else:
+                        if self.dir == "up":
+                            gh = self.bar_highs.get(p.idx + 1)
+                            gap_ok = gh is not None and gh <= p.px
+                        else:
+                            gl = self.bar_lows.get(p.idx + 1)
+                            gap_ok = gl is not None and gl >= p.px
+                if gap_ok:
+                    kind = "B3" if self.dir == self._original_dir else "flipb"
+                    self._confirm_direction_b3(kind)
+                    self._check_chop()
+                    return
             self._check_chop()
             return
         # VOLATILE candle while the direction is not yet confirmed: it breaks
@@ -727,8 +756,11 @@ class SwingEngine:
         self.dir = dir
         self.base_dir = dir
         self._b2_done_in_dir = False  # fresh leg: a B2 is allowed again
+        self._has_b2 = False  # fresh leg: no B2 yet
+        self._b3_done_in_dir = False  # fresh leg: B3 allowed again
         self._last_mark_kind = "B1"
         self._b1_side = dir
+        self._original_dir = dir  # track original direction for B3/flipb labeling
         self.same_side_breaks = 1
         self.corner_pivot = None
         self.b2_pivot = None
@@ -749,6 +781,7 @@ class SwingEngine:
     def _confirm_direction(self) -> None:
         self.dir_confirmed = True
         self._b2_done_in_dir = True  # alternation: no second B2 in this direction
+        self._has_b2 = True  # B3 gating: B2 has been marked
         self._last_mark_kind = "B2"
         self.ever_b1_dir = None  # B1+B2 complete - the leg is done, later flip-backs are genuine FLIPs
         # Chop may only target pivots formed AFTER this bar (fresh structure):
@@ -765,6 +798,23 @@ class SwingEngine:
                 kind="B2",
                 dir=self.dir,  # type: ignore
                 px=b2.px if b2 else self.locked_level,
+            )
+        )
+        self.b2_pivot = None
+        self.just_fired_b2 = True
+
+    def _confirm_direction_b3(self, kind="B3") -> None:
+        self._b3_done_in_dir = True
+        self._last_mark_kind = kind
+        b3 = self.b2_pivot
+        self.locked_level = self.e_hi_prev.px if self.dir == "up" else self.e_lo_prev.px
+        self.break_marks.append(
+            FsBreakMark(
+                idx=b3.idx if b3 else self.g_idx,
+                time=b3.time if b3 else self.t,
+                kind=kind,
+                dir=self.dir,
+                px=b3.px if b3 else self.locked_level,
             )
         )
         self.b2_pivot = None
@@ -824,7 +874,9 @@ class SwingEngine:
         self.base_dir = None
         # a FLIP re-opens the leg, so a B2 may follow it (flip B2 flip)
         self._b2_done_in_dir = False
+        self._b3_done_in_dir = False  # fresh leg: B3 allowed again
         self._last_mark_kind = "B2" if as_b2 else "FLIP"
+        # Don't reset _original_dir on flip - keep tracking original direction
         self.same_side_breaks = 0
         self.corner_pivot = None
         self.b2_pivot = None
@@ -856,6 +908,8 @@ class SwingEngine:
         # as_b2: same state transition as a flip, but the break is recorded as
         # the live B1 legs B2 (flip-back into a direction whose B1 never got B2).
         self.break_marks.append(FsBreakMark(idx=self.g_idx, time=self.t, kind="B2" if as_b2 else "FLIP", dir=dir, px=self.locked_level))
+        if as_b2:
+            self._has_b2 = True  # B3 gating
         _lv = self.e_hi_prev if dir == "up" else self.e_lo_prev
         self._spent.add((_lv.idx, round(_lv.px, 4)))
 
@@ -1373,6 +1427,36 @@ def compute_swing_results(
 
             if not swing_found:
                 break
+
+    # Re-label breaks based on direction and per-direction count:
+    # B1/B2/B3 = 1st/2nd/3rd+ break in B1's direction
+    # FLIP/flipb = 1st/2nd+ break in FLIP's direction
+    for s in out:
+        _b1_dir = None
+        _flip_dir = None
+        _b1_count = 0
+        _flip_count = 0
+        for b in (s.breaks or []):
+            if _b1_dir is None:
+                _b1_dir = b.dir
+            if b.dir == _b1_dir:
+                _b1_count += 1
+                if _b1_count == 1:
+                    b.kind = "B1"
+                elif _b1_count == 2:
+                    b.kind = "B2"
+                else:
+                    b.kind = "B3"
+            else:
+                if _flip_dir is None:
+                    _flip_dir = b.dir
+                _flip_count += 1
+                if _flip_count == 1:
+                    b.kind = "FLIP"
+                else:
+                    b.kind = "flipb"
+        if s.breaks:
+            s.break_kind = s.breaks[-1].kind
 
     return [
         {

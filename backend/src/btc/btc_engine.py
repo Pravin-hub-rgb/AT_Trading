@@ -92,6 +92,80 @@ class CandleStore:
                    .replace(tzinfo=timezone.utc).timestamp()) - IST_OFFSET_S
 
 
+def _walk_relabel(swings: list[dict], skip_first: bool = True) -> None:
+    """B3 / flipb post-processing: relabel breaks by CROSS-SWING sequence.
+
+    B3   = 3rd+ consecutive break in the same direction (promoted from B2).
+    flipb = the first B2 break on the FLIP'S SIDE after a FLIP - the same
+            direction as the flip, OPPOSITE the swing's B1. Owner rule,
+            2026-11-01: "flip's are always opposite to the b1", so the b
+            that follows the flip sits on the flip's side; a B2 on the B1's
+            side after a flip is still a plain B2 (it can never become a
+            flipb). Matches the per-swing labeler compute_btc_swings runs
+            first (btc_swing._relable_breaks: b-side marks are numbered
+            B1/B2/B3, the first opposite mark is the FLIP, every later
+            opposite mark is a flipb).
+
+    This runs always so chart data reflects the labels - the books select on
+    the relabeled kinds, so a chart payload that still shows the per-swing
+    name would claim a book "entered on the B2" when the walk already
+    promoted that mark. EVERY mark joins the walk (B1 and per-swing B3/flipb
+    included): counters must see the whole chronological break sequence or
+    e.g. a B1, B2, B2 run never reaches 3. Relabel scope stays B2-only.
+    The flipb window survives B1-side marks (they do not end the flip), and
+    only a B2 on the flip's side consumes it.
+
+    Eligibility is kind0-gated, not kind-gated, on purpose. A once-relabeled
+    mark is "flipb" or "B3" for life, and only its kind0 remembers it was a
+    plain B2. Relabeling strictly on kind made the walk depend on how many
+    times it had already run on this chain: pass 1 consumed _post_flip on
+    the true first post-flip B2; pass 2 no longer saw that mark as B2, so
+    _post_flip survived through it and relabeled the NEXT B2 as a second
+    flipb - the walk drifted with every re-run (fresh chain 470 entries,
+    walked chain 522). kind0 is set once and never overwritten, so every
+    pass of the walk reaches the same labels from the same sequence state.
+    """
+    _dir_break_count = 0
+    _prev_dir: Optional[str] = None
+    _flip_dir: Optional[str] = None
+    _post_flip = False
+    for si, s in enumerate(swings):
+        if skip_first and int(s.get("swing_index", 0)) < 1:
+            continue
+        brks = s.get("breaks") or []
+        for b in brks:
+            kind = b.get("kind", "")
+            bdir = b.get("dir", "")
+            if kind == "FLIP":
+                _post_flip = True
+                _dir_break_count = 0
+                # The FLIP is the swing's first mark OPPOSITE the B1
+                # (btc_swing._relable_breaks), so its dir IS the flipb side.
+                _flip_dir = bdir
+                _prev_dir = bdir
+                continue
+            if bdir == _prev_dir:
+                _dir_break_count += 1
+            else:
+                _dir_break_count = 1
+                _prev_dir = bdir
+            if kind == "B2" or b.get("kind0") == "B2":
+                # Re-label as B3 if 3rd+ consecutive break in same direction.
+                # The mark still HAPPENED - only its name changes. The original
+                # kind is stashed so every book keeps selecting by what broke
+                # (a B3/flipb label must never silently remove a mark from a
+                # decisive/b2/flip book's eligible set); entry_break="b3" /
+                # "flipb" select the re-labeled names on purpose (locked in
+                # below via _sel_relabel).
+                if "kind0" not in b:
+                    b["kind0"] = kind
+                if _post_flip and bdir == _flip_dir:
+                    b["kind"] = "flipb"
+                    _post_flip = False
+                elif _dir_break_count >= 3:
+                    b["kind"] = "B3"
+
+
 def _collect_signals(
     swings: list[dict],
     entry_break: str,
@@ -144,7 +218,21 @@ def _collect_signals(
         "decisive": ("B2", "FLIP"),
         "b2": ("B2",),
         "flip": ("FLIP",),
+        "b3": ("B3",),
+        "b3b2": ("B3",),
+        "flipb": ("flipb",),
+        "flipb2": ("flipb",),
     }.get(entry_break, ("B2", "FLIP"))
+    # B3 / flipb post-processing is shared with /chart: relabel IN PLACE so
+    # the caller's swing chain ends with the same labels the enginebooks
+    # select on.
+    _walk_relabel(swings, skip_first)
+    # b3/flipb books are DEFINED by the sequence labels, so they select the
+    # re-labeled kinds. Every other book selects by what the mark originally
+    # was, so the relabel is cosmetic for them: same marks, same entries,
+    # same R - nothing moves.
+    _sel_relabel = entry_break in ("b3", "flipb", "b3b2", "flipb2")
+
     out: list[dict] = []
     seen: set = set()
     store = CandleStore(candles) if candles is not None else None
@@ -185,7 +273,7 @@ def _collect_signals(
                     if _prev_end >= 0 and _prev_end + 1 < _sw_idx:
                         _sw_idx = _prev_end + 1
                 for _b in (s.get("breaks") or []):
-                    if _b.get("kind") not in ("B2", "FLIP", "DECISSIVE") or not _b.get("time"):
+                    if _b.get("kind") not in ("B2", "FLIP", "DECISSIVE", "B3", "flipb") or not _b.get("time"):
                         continue
                     if filter_pre_fs:
                         if _pv_conf and _b["time"] < _pv_conf:
@@ -276,11 +364,24 @@ def _collect_signals(
         prev_confirmed_idx_fb = int(swings[si - 1].get("confirmed_at_idx", -1)) if si > 0 else -1
 
         swing_done = False  # FCFS: first tradeable mark decides — pass or fail
+        # Ordinal triggers (owner, 2026-11-01): entry_break="flipb2" / "b3b2"
+        # skip the FIRST matching mark and let the SECOND one decide the
+        # swing (the third flip-side mark after the FLIP / the 4th+ same-dir
+        # break). A swing with fewer matches never trades (pass), so the
+        # higher ordinal buys strictly more confirmation. B1-side and
+        # flip-side matches are matched on the SAME kinds as the 1st-ordinal
+        # arms, so the ordinal only moves the trigger, not the definition.
+        _need = 2 if entry_break in ("flipb2", "b3b2") else 1
+        _matched = 0
         for b in brks:
             if swing_done:
                 break
-            if b["kind"] not in tradeable:
+            _selkind = b["kind"] if _sel_relabel else (b.get("kind0") or b["kind"])
+            if _selkind not in tradeable:
                 continue  # B1 never abandons
+            if _matched < _need - 1:
+                _matched += 1
+                continue
             bdir = 1 if b["dir"] == "up" else -1
             b_time = b.get("time", "")
             if not b_time:

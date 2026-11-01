@@ -204,12 +204,12 @@ export interface WholeDaySwing {
   /** "SUS" or "FS" — the kind label at the turning point. */
   kind: string;
   /** "B1", "B2", "FLIP" or null — first break marker kind. */
-  break_kind: "B1" | "B2" | "FLIP" | null;
+  break_kind: "B1" | "B2" | "B3" | "FLIP" | "flipb" | null;
   /** Full ordered list of break marks for this swing (idx is a global bar index). */
   breaks: {
     idx: number;
     time: string;
-    kind: "B1" | "B2" | "FLIP";
+    kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
     dir: "up" | "down";
     px: number;
   }[];
@@ -256,7 +256,7 @@ export const getWholeDaySwings = (
 export interface FsBreakMark {
   idx: number;
   time: string;
-  kind: "B1" | "B2" | "FLIP";
+  kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
   dir: "up" | "down";
   px: number;
 }
