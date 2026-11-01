@@ -18,7 +18,7 @@ from src.btc.btc_config import (
     load_btc_df,
     load_btc_df_with_forward,
 )
-from src.btc.btc_engine import simulate_btc_trades, trade_stats
+from src.btc.btc_engine import simulate_btc_trades, trade_stats, _walk_relabel
 from src.btc.btc_fetch import refresh_tf, refresh_all, last_ts as btc_last_ts, EXCHANGES
 from src.btc.btc_swing import compute_btc_flow, compute_btc_swings
 from src.walker import FlowCandle
@@ -131,7 +131,15 @@ BTC_VERSIONS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v1
                 # exp_dropdown_check.py is that join; it now runs in CI.
                  "fsent_champ_long_htf15_htffs", "fsent_champ_long_htf15_tskip6",
                  "fsent_sig_sw20_short", "fsent_sig_wk_pause_short", "fsent_sig_fs_mom",
-                 "fsent_champ_long_mcloff_htf15_retro"]
+                 "fsent_champ_long_mcloff_htf15_retro",
+                 # 2026-11-01. The b3/flipb entry experiment (backtest/tests/
+                 # exp_b3_flipb_entry.py): Book 107 with the 15m trigger moved to
+                 # the global-walk flipb mark (112) or b3 mark (113), so the owner
+                 # can see the late trigger on the chart. HTF pools unchanged -
+                 # opening the 1h windows on 1h b3/flipb shorts both eras' nets
+                 # (corrected-walk htf arm: IS -50.8, OOS -55.8 net) and is
+                 # deliberately NOT offered.
+                  "fsent_flipb_htf15", "fsent_b3_htf15"]
 
 # Versions that ARE a complete HTF-LTF engine and must not also run through the
 # nested htf_ltf path. Kept as a named set next to BTC_VERSIONS rather than an
@@ -160,6 +168,8 @@ STANDALONE_HTF_LTF_VERSIONS = {"v19_champion", "v19_causal", "v19_c16", "unified
 "fsent_sig_multi", "fsent_sig_multi_htffs",
                                 "fsent_champ_long_htffs",
                                 "fsent_champ_long_mcloff_htf15",
+                                "fsent_b3_htf15",
+                                "fsent_flipb_htf15",
                                 # 2026-10-16: the six that were selectable on the
                                 # page but unroutable here. All six are complete
                                 # HTF+LTF books, so all six belong in this set -
@@ -216,6 +226,21 @@ VERSION_LABELS = {
     "fsent_sig_multi_htffs": "SIG MULTI + HTF-FS - fsent_sig_multi with ONE parameter added, exp_htf_fs_entry='flip', so the HTF flip-bucket window opens on the swing's FS print instead of on the break while decisive and b2 keep their breaks. The newest arm in the family and the most holdable object in it: zero negative half-years, zero negative years, every rolling 50 and rolling 100 window profitable, zero startup drawdown, and one of only five books in the family that survives deleting its best 10% of trades (+85.3R, best in the family by a wide margin). From any start date the worst one-year drawdown is 17.82% but the 10th percentile is 6.85%, the shallowest bad-luck tail among the large books. Causality is clean and measured, not asserted: the gap between window_start and its own FS print is 0.0h at min, median and max, and zero entries precede their window_start. CAVEAT: p 0.5091 / 0.9708 - excellent behaviour, no distinguishable edge.",
     "fsent_champ_long_htffs": "FSENT CHAMP LONG HTF-FS - fsent_champ_long with exp_htf_fs_entry='flip'. The strongest single arm in the family on RETURN TO DRAWDOWN: 45.4 net per unit of drawdown against mcloff's 37.4 and sig_full's 27.4, at the same five-parameter complexity. All eight in-sample half-years positive, which is exactly what htf_fs='all' could not manage. TWO REASONS NOT TO READ THE NET AS A VERDICT: it recovers its own worst drawdown (19.78R, Rs 98,909 at 1% risk on Rs 5 lakh) in TWO TRADES - a very sharp shallow dip, not a deep slow one; and out-of-sample permutation is 0.5956 with tail dependence that DEGRADES out of sample, the top 10% of trades contributing 116.9% there, the worst in the family, leaving -50.7R when they are deleted. IS 770t / +897.94R / dd19.8, OOS 415t / +300.43R / dd14.4.",
     "fsent_champ_long_mcloff_htf15": "MCL-OFF + HTF15 - fsent_champ_long with TWO differences: max_consecutive_losses 3 -> 0 (the three-loss halt stops cutting the recovery trade that follows every streak), and the HTF plane swings at min_bars=15 instead of 10, so the hour-chart windows are fewer and longer. Ranked #9 of 35 on the rolling-weighted score. Zero negative half-years, zero negative years, median one-year drawdown from any start date 13.14%. Of every book here with zero negative half-years this has the strongest in-sample permutation at 0.0115, and the best out-of-sample figure any zero-negative-half-year book has on the far side at 0.1445 - still short of 0.05, so it is the book to WATCH rather than the book to adopt.",
+    "fsent_b3_htf15": "SEQ B3 ENTRY (112/113 family) - Book 107 with the 15m "
+                      "trigger moved to the b3 mark of the global walk (3rd+ "
+                      "same-direction break). IS 411t / -63.7R net, OOS 259t / "
+                      "+25.2R net / DD 26.6 with BOTH halves positive (H1 +5.0, "
+                      "H2 +20.2) (measured 2026-11-01 on the corrected walk, "
+                      "net after costs, exp_b3_flipb_entry.py). The OOS-robust "
+                      "arm under the corrected rules.",
+    "fsent_flipb_htf15": "SEQ FLIPB ENTRY (112/113 family) - Book 107 with the "
+                      "15m trigger moved to the flipb mark: the first B2 on the "
+                      "FLIP'S SIDE (same dir as the FLIP, opposite the swing's "
+                      "B1 - owner rule). IS 445t / +110.3R net / DD 46.7 with "
+                      "BOTH halves positive, OOS 255t / -27.8R net / DD 41.9 "
+                      "with both halves down (measured 2026-11-01 on the "
+                      "corrected walk, net after costs, exp_b3_flipb_entry.py). "
+                      "In-sample star, out-of-sample reverse - not a candidate.",
     "fsent_champ_long_mcloff": "FSENT CHAMP LONG MCL-OFF - the base book with ONE integer "
                                 "changed: max_consecutive_losses 3 -> 0, so the loss-run "
                                 "halt stops cutting the recovery trade that follows every "
@@ -727,6 +752,14 @@ def btc_chart(
         return err
     candles, flow = win
 
+    # Same walk the books run: promoted marks (B2 -> B3/flipb) must carry the
+    # sequence name on the chart and keep kind0 as the original, or a chart
+    # reader sees a book enter "on the B2" when the mark had already joined
+    # the walk as a flipb. skip_first=True mirrors every _collect_signals
+    # call site.
+    swings = _compute_swings(flow, mode, min_bars=min_bars)
+    _walk_relabel(swings, True)
+
     return {
         "tf": tf,
         "mode": mode,
@@ -738,7 +771,7 @@ def btc_chart(
         "first_ts": candles[0]["date"] if candles else None,
         "last_ts": candles[-1]["date"] if candles else None,
         "candles": candles,
-        "swings": _compute_swings(flow, mode, min_bars=min_bars),
+        "swings": swings,
         "flow": compute_btc_flow(flow, mode),
     }
 
@@ -1876,6 +1909,88 @@ def btc_backtest(
             exp_persist=7,
             pivot_rule="leg",
             exp_fs_entry_side="long",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_flipb_htf15":
+        # SEQ FLIPB ENTRY - 2026-11-01, exp_b3_flipb_entry.py. Book 107's
+        # engine call with ONE knob added: the 15m trigger leaves the FS
+        # print and becomes the flipb mark of the global walk in
+        # btc_engine._collect_signals - the first B2 on the FLIP'S SIDE
+        # (same dir as the FLIP, opposite the swing's B1; owner rule
+        # 2026-11-01: "flip's are always opposite to the b1"). The walk
+        # relabels marks and b3/flipb selection takes those exact marks;
+        # the 1h-window dir gate is untouched, so short entries
+        # still only ride short 1h windows, same as 107.
+        #
+        # Everything else is the 107 call verbatim (mcloff, htf15 windows,
+        # atr_high router). HTF pools are NOT moved to 1h b3/flipb - that
+        # arm stays off. This branch exists next to fsent_b3_htf15 as a
+        # full copy, not a shared dict or a tuple-in branch: the house rule
+        # around explicit elseifs exists so editing one book can never
+        # silently move both.
+        #
+        # Measured 2026-11-01 net after costs on FRESH chains per run (the
+        # walk relabels in place and is kind0-idempotent in
+        # btc_engine._collect_signals), CORRECTED flipb definition: IS 445t
+        # / +110.3R / dd 46.7 (both halves positive: H1 +58.7, H2 +51.6),
+        # OOS 255t / -27.8R / dd 41.9 (both halves down: -9.8, -18.1).
+        # In-sample star, out-of-sample reverse - on the chart to SEE the
+        # flip-side trigger, not as a candidate.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=0,   # <- 107's mcl-off, unchanged
+            max_positions=0,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            pivot_rule="leg",
+            exp_entry_break="flipb",
+        )
+        trades = nested.get("ltf_trades", [])
+    elif version == "fsent_b3_htf15":
+        # SEQ B3 ENTRY - 2026-11-01, exp_b3_flipb_entry.py. The sibling of
+        # fsent_flipb_htf15 with the trigger on the b3 mark (3rd+ same-dir
+        # break) instead. Same 107 call with ONE knob.
+        #
+        # Measured 2026-11-01 net after costs on the corrected walk: IS 411t
+        # / -63.7R / dd 95.3, OOS 259t / +25.2R / dd 26.6 with BOTH halves
+        # positive (H1 +5.0, H2 +20.2). IS bleeds; the OOS-robust arm under
+        # the corrected rules - watch before adopting.
+        if simulate_unified is None:
+            return JSONResponse(status_code=500,
+                                content={"detail": "unified engine not loaded"})
+        nested = simulate_unified(
+            candles_htf=candles_htf,
+            swings_htf=swings_htf,
+            candles_ltf=candles,
+            swings_ltf=swings,
+            fine_ltf=fine,
+            mode="atr_high",
+            atr_high_thresh=0.65,
+            atr_low_thresh=0.35,
+            sl_buf_atr=0.01,
+            chop_thresh=58.0,
+            cooldown_bars=8,
+            max_consecutive_losses=0,   # <- 107's mcl-off, unchanged
+            max_positions=0,
+            ext_stop_r=3.0,
+            exp_partial_r=0.0,
+            exp_persist=7,
+            pivot_rule="leg",
+            exp_entry_break="b3",
         )
         trades = nested.get("ltf_trades", [])
     elif version == "fsent_sig_trail_delay1":

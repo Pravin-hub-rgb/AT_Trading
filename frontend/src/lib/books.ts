@@ -259,6 +259,34 @@ export const BOOK_OPTIONS: BookOption[] = [
       measured: { isN: 782, isNet: 326.30, oosN: 459, oosNet: 179.23 },
       config: { ...V19, version: "fsent_champ_long_mcloff_htf15_retro", ext_stop_r: 3.0, max_consecutive_losses: 0, htf_min_bars: 15 },
     },
+  // 2026-11-01: the b3/flipb entry experiment (backtest/tests/
+  // exp_b3_flipb_entry.py) as chart books - 107 with the 15m trigger moved
+  // from the FS print to the global-walk flipb mark (112) or b3 mark (113).
+  // HTF windows are UNCHANGED (the 1h b3/flipb window swap stays off).
+  // Figures measured on the walk-fix engine with the owner-corrected flipb
+  // definition (flip-side only: same dir as the FLIP, opposite the B1),
+  // net after costs, so they are not directly comparable with the
+  // 107/107-R rows above.
+  {
+    id: "fsent_flipb_htf15",
+    code: "112",
+    label: "112 - SEQ FLIPB ENTRY (107, trigger = flipb marks) - IS 445t +110.3R | OOS 255t -27.8R",
+    shortLabel: "FLIPB-107",
+    slMode: "causal",
+    hint: "Book 107 with the 15m trigger on the flipb mark - the first B2 on the FLIP'S SIDE (same dir as the FLIP, opposite the swing's B1), per the owner rule 'a flip is always opposite to the B1'. It bleeds nothing in sample: IS +110.3R/dd 46.7 with BOTH halves positive (H1 +58.7, H2 +51.6, month cells 29>/17<) - but OOS is NEGATIVE (-27.8R/dd 41.9, both halves down). An in-sample star and an out-of-sample reverse: not a candidate. On the chart to SEE the flip-side late entries.",
+    measured: { isN: 445, isNet: 110.3, oosN: 255, oosNet: -27.8 },
+    config: { ...V19, version: "fsent_flipb_htf15", ext_stop_r: 3.0, htf_min_bars: 15, max_consecutive_losses: 0 },
+  },
+  {
+    id: "fsent_b3_htf15",
+    code: "113",
+    label: "113 - SEQ B3 ENTRY (107, trigger = b3 marks) - IS 411t -63.7R | OOS 259t +25.2R",
+    shortLabel: "B3-107",
+    slMode: "causal",
+    hint: "Book 107 with the 15m trigger on the b3 mark - the 3rd+ same-direction break of the walk. It bleeds in sample (-63.7R/dd 95.3) but is the OOS-robust arm under the corrected rules: OOS +25.2R with the smallest drawdown of the arm set at 26.6R and BOTH halves positive (H1 +5.0, H2 +20.2). The mirror of flipb: in-sample reverse, out-of-sample star - watch on the chart, polish before adopting.",
+    measured: { isN: 411, isNet: -63.7, oosN: 259, oosNet: 25.2 },
+    config: { ...V19, version: "fsent_b3_htf15", ext_stop_r: 3.0, htf_min_bars: 15, max_consecutive_losses: 0 },
+  },
     {
       id: "fsent_champ_long_htfesmcl4",
       code: "108",

@@ -75,7 +75,8 @@ interface Props {
     | {
         idx: number;
         time: string;
-        kind: "B1" | "B2" | "FLIP";
+        kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
+        kind0?: "B1" | "B2" | "B3" | "FLIP" | "flipb";
         dir: "up" | "down";
         px: number;
       }[]
@@ -92,7 +93,8 @@ interface Props {
     | {
         idx: number;
         time: string;
-        kind: "B1" | "B2" | "FLIP";
+        kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
+        kind0?: "B1" | "B2" | "B3" | "FLIP" | "flipb";
         dir: "up" | "down";
         px: number;
       }[]
@@ -698,14 +700,16 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
   // ── overlay: ALL markers (consolidated into single effect to prevent interference) ──
   // This combines: bias arrows, Williams fractal tags, fsBreaks (B1/B2/FLIP), and fsMarkers (FS/SUS)
 
-  // Filter intermediate marks: keep the first B1 + ALL B2/FLIP marks.
+  // Filter intermediate marks: keep the first B1 + ALL B2/FLIP marks + ALL
+  // B3/flipb marks (consecutive repeats — the labels mean "again", hiding them
+  // makes the sequence look broken).
   // Previously this kept only the last B2/FLIP, which dropped legitimate
   // intermediate marks in churn cases (e.g. 10 Jan 2025 swing #21:
   // B1@15:45 -> FLIP@16:00 -> B2@17:00 -> FLIP@23:15 — the 16:00 FLIP
   // was filtered out). Whipsaw (FLIP@10:16 + FLIP@10:17) is rare; the
   // cost of showing both is low, but missing real marks is confusing.
   const filterBreaks = <
-    T extends { kind: "B1" | "B2" | "FLIP"; idx: number },
+    T extends { kind: "B1" | "B2" | "B3" | "FLIP" | "flipb"; idx: number },
   >(
     breaks: T[],
   ): T[] => {
@@ -723,6 +727,16 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
     for (const b of nonB1) {
       if (b.kind === "B1") continue;
       const bDir = (b as any).dir as string | undefined;
+      // B3/flipb ARE the repeat-labels — a label that means "again" must never
+      // be hidden by the whipsaw dedup, or e.g. 2 Jan 2023 06:30 flipb↓-3 and
+      // 20:00 B3↓-4 (both consecutive repeats of the previous mark) vanish
+      // and the sequence looks broken. Only B2/FLIP whipsaw gets deduped.
+      if (b.kind === "B3" || b.kind === "flipb") {
+        out.push(b);
+        prevKind = b.kind;
+        prevDir = bDir;
+        continue;
+      }
       if (b.kind === prevKind && bDir === prevDir) continue; // skip same-kind+same-dir whipsaw
       out.push(b);
       prevKind = b.kind;
@@ -812,8 +826,13 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
             ? "#f97316"
             : b.kind === "B2"
               ? "#60a5fa"
-              : "#94a3b8",
-        text: b.kind,
+              : b.kind === "B3"
+                ? "#3b82f6"
+                : b.kind === "flipb"
+                  ? "#ea580c"
+                  : "#94a3b8",
+        text:
+          b.kind0 && b.kind0 !== b.kind ? `${b.kind}(${b.kind0})` : b.kind,
         size: 1,
       });
     }
@@ -851,8 +870,13 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
             ? "#eab308"
             : b.kind === "B2"
               ? "#fde047"
-              : "#facc15",
-        text: b.kind,
+              : b.kind === "B3"
+                ? "#facc15"
+                : b.kind === "flipb"
+                  ? "#f59e0b"
+                  : "#facc15",
+        text:
+          b.kind0 && b.kind0 !== b.kind ? `${b.kind}(${b.kind0})` : b.kind,
         size: 1,
       });
     }
@@ -951,7 +975,8 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
       const brks: {
         idx: number;
         time?: string;
-        kind: "B1" | "B2" | "FLIP";
+        kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
+        kind0?: "B1" | "B2" | "B3" | "FLIP" | "flipb";
         dir: "up" | "down";
         px: number;
       }[] =
@@ -979,8 +1004,14 @@ const StockChart = forwardRef<StockChartHandle, Props>(function StockChart(
               ? "#f97316"
               : b.kind === "B2"
                 ? "#60a5fa"
-                : "#94a3b8",
-          text: `${b.kind}${b.dir === "down" ? "↓" : "↑"}-${swingNo}`,
+                : b.kind === "B3"
+                  ? "#3b82f6"
+                  : b.kind === "flipb"
+                    ? "#ea580c"
+                    : "#94a3b8",
+          text: `${b.kind}${
+            b.kind0 && b.kind0 !== b.kind ? `(${b.kind0})` : ""
+          }${b.dir === "down" ? "↓" : "↑"}-${swingNo}`,
           size: 1,
         });
       }

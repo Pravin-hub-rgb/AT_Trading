@@ -842,30 +842,53 @@ class FirstSecondResponse(BaseModel):
     second: list[FsV2ResultOut]
 
 
-def _filter_breaks_per_swing(breaks: list) -> list:
-    """Keep first B1 + last B2 (when a FLIP follows it) + last decisive break.
+def _relable_breaks_fs(swings_list: list) -> None:
+    """Re-label breaks as B3 or flipb across all swings in the list."""
+    for swing in swings_list:
+        brks = getattr(swing, "breaks", None) or []
+        _b1_dir = None
+        _flip_dir = None
+        _b1_count = 0
+        _flip_count = 0
+        for b in brks:
+            bdir = getattr(b, "dir", None)
+            if _b1_dir is None:
+                _b1_dir = bdir
+            if bdir == _b1_dir:
+                _b1_count += 1
+                if _b1_count == 1:
+                    b.kind = "B1"
+                elif _b1_count == 2:
+                    b.kind = "B2"
+                else:
+                    b.kind = "B3"
+            else:
+                if _flip_dir is None:
+                    _flip_dir = bdir
+                _flip_count += 1
+                if _flip_count == 1:
+                    b.kind = "FLIP"
+                else:
+                    b.kind = "flipb"
 
-    Collapses FLIP@10:16+FLIP@10:17 → FLIP@10:17. A B2 that got flip-cancelled
-    still happened and must stay visible (1 Sep 2026: B2@11:25 was swallowed
-    by FLIP@11:28)."""
+
+def _filter_breaks_per_swing(breaks: list) -> list:
+    """Keep first B1 + all decisive breaks (B2, FLIP, B3, flipb) for chart visibility."""
     if len(breaks) <= 1:
         return breaks
     first = next((b for b in breaks if getattr(b, "kind", None) == "B1"), breaks[0])
     non_b1 = [b for b in breaks if getattr(b, "kind", None) != "B1"]
     if not non_b1:
         return [first]
-    last = non_b1[-1]
-    out = [first]
-    last_flip = next((b for b in reversed(non_b1) if getattr(b, "kind", None) == "FLIP"), None)
-    last_b2 = next((b for b in reversed(non_b1) if getattr(b, "kind", None) == "B2"), None)
-    # Fake-out FLIP before the confirming B2 still happened - keep it visible
-    # (1 Sep 2026 swing 6: B1@11:55 -> FLIP@12:01 -> B2@12:05).
-    if last_flip is not None and last_flip is not last and last_flip is not first:
-        out.append(last_flip)
-    if last_b2 is not None and last_b2 is not last and last_b2 is not first:
-        out.append(last_b2)
-    out.append(last)
-    return out
+    # Keep all non-B1 breaks (B2, FLIP, B3, flipb) for chart visibility
+    out = [first] + non_b1
+    # Dedup adjacent same-kind+same-dir only for B2/FLIP (whipsaw), keep B3/flipb
+    deduped = [out[0]]
+    for b in out[1:]:
+        if b.kind in ("B2", "FLIP") and b.kind == deduped[-1].kind and getattr(b, "dir", None) == getattr(deduped[-1], "dir", None):
+            continue
+        deduped.append(b)
+    return deduped
 
 
 @app.post("/api/swings/first_second")
@@ -903,6 +926,8 @@ def compute_first_second(req: FirstSecondRequest) -> FirstSecondResponse:
 
     # Apply per-swing filter (first B1 + last decisive) for chart cleanliness
     first_filtered: list[FsV2ResultOut] = []
+    # Re-label breaks across all first swings for this day
+    _relable_breaks_fs(first_raw)
     for r in first_raw:
         filtered_breaks = _filter_breaks_per_swing(r.breaks)
         first_filtered.append(
@@ -961,6 +986,7 @@ def compute_first_second(req: FirstSecondRequest) -> FirstSecondResponse:
         if not eng.declared or eng.start_idx < 0:
             continue
         raw_breaks = list(eng.break_marks)
+        _relable_breaks_fs(raw_breaks)
         filtered = _filter_breaks_per_swing(raw_breaks)
         second_out.append(
             FsV2ResultOut(

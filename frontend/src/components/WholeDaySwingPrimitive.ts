@@ -20,7 +20,7 @@ export interface WholeDayBreakMark {
   idx: number;
   /** HH:MM time of the break. */
   time: string;
-  kind: "B1" | "B2" | "FLIP";
+  kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
   dir: "up" | "down";
   px: number;
 }
@@ -48,7 +48,7 @@ export interface WholeDaySwingPoint {
   /** "SUS" or "FS" — label at the confirmation/turning point. */
   kind: string;
   /** "B1", "B2", "FLIP" or null — first break marker kind. */
-  break_kind: "B1" | "B2" | "FLIP" | null;
+  break_kind: "B1" | "B2" | "B3" | "FLIP" | "flipb" | null;
   /** Full ordered list of break marks for this swing (each drawn at its own bar). */
   breaks: WholeDayBreakMark[];
   /** Global bar index where the swing was confirmed/declared. */

@@ -4,7 +4,7 @@ import { API_BASE } from "./api";
 
 export type BtcTf = "1m" | "5m" | "15m" | "1h" | "4h";
 export type BtcMode = "continuous" | "daily";
-export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19_champion" | "v19_causal" | "v19_c16" | "unified" | "entry_minus_1" | "utcsat_causal" | "utcsat_entry_minus_1" | "fsent_champ_long" | "fsent_champ_long_mcloff_htf15_retro" | "fsent_champ_long_atr_low" | "fsent_sig_full" | "fsent_sig_trail_delay1";
+export type BtcVersion = "v1" | "v2" | "v3" | "v4" | "v5" | "v6" | "v7" | "v8" | "v9" | "v10" | "v11" | "v12" | "v13" | "v15" | "v16" | "v17" | "v18" | "v19_champion" | "v19_causal" | "v19_c16" | "unified" | "entry_minus_1" | "utcsat_causal" | "utcsat_entry_minus_1" | "fsent_champ_long" | "fsent_champ_long_mcloff_htf15_retro" | "fsent_flipb_htf15" | "fsent_b3_htf15" | "fsent_champ_long_atr_low" | "fsent_sig_full" | "fsent_sig_trail_delay1";
 
 export interface BtcCandle {
   date: string;
@@ -32,12 +32,12 @@ export interface BtcSwing {
   /** "FS" or "SUS" — label at the swing's structural completion. */
   kind: string;
   /** "B1", "B2", "FLIP" or null — the decisive break kind. */
-  break_kind: "B1" | "B2" | "FLIP" | null;
+  break_kind: "B1" | "B2" | "B3" | "FLIP" | "flipb" | null;
   /** Ordered break marks for this swing (idx = global bar index in window). */
   breaks: {
     idx: number;
     time: string;
-    kind: "B1" | "B2" | "FLIP";
+    kind: "B1" | "B2" | "B3" | "FLIP" | "flipb";
     dir: "up" | "down";
     px: number;
   }[];
